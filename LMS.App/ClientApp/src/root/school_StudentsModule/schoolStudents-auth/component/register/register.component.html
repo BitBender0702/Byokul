@@ -1,0 +1,63 @@
+<div class="container" style="margin-top: 105px;">
+  <!-- <span>.....</span>
+  <span>{{'siteTitle'| translate}}</span> -->
+
+  <!-- <span class="form-inline">
+    <select class="form-control" #selectedLang (change)="switchLanguage(selectedLang.value)">
+      <option *ngFor="let language of translate.getLangs()" [value]="language" [selected]="language===translate.currentLang">
+        {{language}}
+      </option>
+
+    </select>
+  </span> -->
+
+    <h4>User Registration</h4>
+    <p>Enter your email address and password to access account.</p><br><br>
+    <form novalidate="novalidate" [formGroup]="registrationForm">
+      <h2 class="form-signin-heading">Register</h2>
+        <div *ngIf="invalidRegister" class="alert alert-danger">Invalid username or password.</div>
+        <br/>        
+        <label for="firstName" class="sr-only">FirstName</label><br>
+        <input type="text" id="firstName" formControlName="firstName" class="form-control" placeholder="firstName">
+        <div  class="invalid-feedback">
+          First Name is required.
+        </div>
+        <small class="p-error"
+         *ngIf="isSubmitted && registrationForm.controls.firstName.errors ">First Name is required.</small>
+        <br/>
+
+        <label for="lastName" class="sr-only">LastName</label><br>
+        <input type="text" id="lastName" formControlName="lastName" class="form-control" placeholder="lastName">
+        <div class="invalid-feedback">
+          LastName is required.
+        </div>
+        <small class="p-error"
+        *ngIf="isSubmitted && registrationForm.controls.lastName.errors">LastName is required.</small>
+        <br/>
+
+        <label for="email" class="sr-only">Email address</label><br>
+        <input type="email" id="email" formControlName="email" class="form-control" placeholder="Email" required>
+        <br/>
+        
+        <h1>Gender</h1>
+        <select formControlName="gender">
+        <option selected>Please Select</option>
+        <option *ngFor="let c of Gender" [value]=c.id>{{c.name}}</option>
+        </select>
+
+        <br><br>
+
+        <label for="dob" class="sr-only">Date Of Birth</label><br>
+        <input type="date" id="dob" formControlName="dob" class="form-control" placeholder="Date Of Birth">
+        <br/>
+
+        <label for="password" class="sr-only">Password</label><br>
+        <input type="password" id="password" formControlName="password" class="form-control" placeholder="Password" required>
+        <br/>
+        <label for="password" class="sr-only">Confirm Password</label><br>
+        <input type="password" id="password" formControlName="confirmPassword" class="form-control" placeholder="Confirm Password" required>
+        <br/>
+       
+        <button class="btn btn-lg btn-primary" (click)="register()" type="submit">Register</button>
+    </form>
+  </div>

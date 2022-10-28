@@ -1,0 +1,13 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/LMS.App/ClientApp/.angular/cache/13.3.4
+/LMS.Common/bin
+/LMS.Common/obj
+/LMS.Data/bin
+/LMS.Data/obj
+/LMS.DataAccess/bin
+/LMS.DataAccess/obj
+/LMS.Services/bin
+/LMS.Services/obj
