@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LMS.Common.ViewModels.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,5 +15,7 @@ namespace LMS.Common.ViewModels
         public string? UniqueToken { get; set; }
         public DateTime? TokenCreatedOn { get; set; }
         public List<string> UserRoles { get; set; }
+        public Guid? CityId { get; set; }
+        public CityViewModel City { get; set; }
     }
 }

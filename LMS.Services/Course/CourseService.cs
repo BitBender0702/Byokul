@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
 using LMS.Common.ViewModels.Class;
 using LMS.Common.ViewModels.Course;
+using LMS.Common.ViewModels.Post;
 using LMS.Common.ViewModels.School;
 using LMS.Common.ViewModels.Student;
 using LMS.Common.ViewModels.Teacher;
 using LMS.Data.Entity;
 using LMS.DataAccess.Repository;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -24,9 +26,11 @@ namespace LMS.Services
         private IGenericRepository<CourseDiscipline> _courseDisciplineRepository;
         private IGenericRepository<CourseStudent> _courseStudentRepository;
         private IGenericRepository<CourseTeacher> _courseTeacherRepository;
+        private IGenericRepository<Post> _postRepository;
+        private readonly UserManager<User> _userManager;
 
 
-        public CourseService(IMapper mapper, IGenericRepository<Course> courseRepository, IGenericRepository<CourseLanguage> courseLanguageRepository, IGenericRepository<CourseDiscipline> courseDisciplineRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<CourseTeacher> courseTeacherRepository)
+        public CourseService(IMapper mapper, IGenericRepository<Course> courseRepository, IGenericRepository<CourseLanguage> courseLanguageRepository, IGenericRepository<CourseDiscipline> courseDisciplineRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<CourseTeacher> courseTeacherRepository, IGenericRepository<Post> postRepository,UserManager<User> userManager)
         {
             _mapper = mapper;
             _courseRepository = courseRepository;
@@ -34,6 +38,8 @@ namespace LMS.Services
             _courseDisciplineRepository = courseDisciplineRepository;
             _courseStudentRepository = courseStudentRepository;
             _courseTeacherRepository = courseTeacherRepository;
+            _postRepository = postRepository;
+            _userManager = userManager;
         }
 
         public async Task SaveNewCourse(CourseViewModel courseViewModel, string createdById)
@@ -243,6 +249,7 @@ namespace LMS.Services
                 model.Disciplines = await GetDisciplines(course.CourseId);
                 model.Students = await GetStudents(course.CourseId);
                 model.Teachers = await GetTeachers(course.CourseId);
+                model.Posts = await GetPostsByCourseId(course.CourseId);
 
                 return model;
             }
@@ -325,6 +332,28 @@ namespace LMS.Services
             });
 
             return model;
+        }
+
+        public async Task<IEnumerable<PostDetailsViewModel>> GetPostsByCourseId(Guid courseId)
+        {
+            var courseList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == courseId).ToListAsync();
+            var result = _mapper.Map<List<PostDetailsViewModel>>(courseList);
+
+            foreach (var post in result)
+            {
+                var author = await _courseRepository.GetAll().Include(x => x.School).Where(x => x.CourseId == post.ParentId).FirstOrDefaultAsync();
+
+                post.Owner = _mapper.Map<OwnerViewModel>(author.School);
+            }
+
+            foreach (var post in result)
+            {
+                var author = await _userManager.Users.Where(x => x.Id == post.CreatedBy).FirstOrDefaultAsync();
+
+                post.Author = _mapper.Map<AuthorViewModel>(author);
+            }
+
+            return result;
         }
     }
 }

@@ -11,6 +11,6 @@ namespace LMS.Common.ViewModels.School
         public Guid CertificateId { get; set; }
         public string CertificateUrl { get; set; }
         public Guid SchoolId { get; set; }
-        public SchoolViewModel SchoolViewModel { get; set; }
+        public SchoolViewModel School { get; set; }
     }
 }

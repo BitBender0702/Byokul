@@ -1,5 +1,6 @@
 ﻿using LMS.Common.ViewModels.Accessibility;
 using LMS.Common.ViewModels.Class;
+using LMS.Common.ViewModels.Post;
 using LMS.Common.ViewModels.School;
 using LMS.Common.ViewModels.ServiceType;
 using LMS.Common.ViewModels.Student;
@@ -30,5 +31,6 @@ namespace LMS.Common.ViewModels.Course
         public IEnumerable<TeacherViewModel> Teachers { get; set; }
         public IEnumerable<StudentViewModel> Students { get; set; }
         public IEnumerable<DisciplineViewModel> Disciplines { get; set; }
+        public IEnumerable<PostDetailsViewModel> Posts { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using LMS.Data.Entity;
+using Microsoft.AspNetCore.Identity;
 
 namespace LMS.Data.Entity
 {
@@ -13,5 +14,7 @@ namespace LMS.Data.Entity
         public DateTime? DOB { get; set; }
         public int? Gender { get; set; }
         public bool? IsActive { get; set; }
+        public Guid? CityId { get; set; }
+        public City City { get; set; }
     }
 }

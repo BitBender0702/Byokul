@@ -46,6 +46,7 @@ namespace LMS.App.Controllers
                 FirstName = registerViewModel.FirstName,
                 LastName = registerViewModel.LastName,
                 Gender = registerViewModel.Gender,
+                CityId = registerViewModel.CityId,
                 DOB = registerViewModel.DOB,
                 CreatedOn = DateTime.UtcNow
             };

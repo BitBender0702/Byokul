@@ -4,6 +4,7 @@ using LMS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LMS.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20221031133432_Add_PostAttachments_table")]
+    partial class Add_PostAttachments_table
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -184,21 +186,6 @@ namespace LMS.Data.Migrations
                     b.HasIndex("TeacherId");
 
                     b.ToTable("ClassTeachers");
-                });
-
-            modelBuilder.Entity("LMS.Data.Entity.Common.City", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Cities");
                 });
 
             modelBuilder.Entity("LMS.Data.Entity.Country", b =>
@@ -412,7 +399,7 @@ namespace LMS.Data.Migrations
                     b.ToTable("Languages");
                 });
 
-            modelBuilder.Entity("LMS.Data.Entity.Post", b =>
+            modelBuilder.Entity("LMS.Data.Entity.Post.Post", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -421,9 +408,6 @@ namespace LMS.Data.Migrations
                     b.Property<Guid>("AuthorId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("CoverLetter")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("CreatedById")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -431,7 +415,7 @@ namespace LMS.Data.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("DateTime")
+                    b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DeletedById")
@@ -441,6 +425,7 @@ namespace LMS.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
@@ -449,21 +434,11 @@ namespace LMS.Data.Migrations
                     b.Property<Guid>("OwnerId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ParentId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("PostAuthorType")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PostType")
+                    b.Property<int?>("PostType")
                         .HasColumnType("int");
 
                     b.Property<int?>("Status")
                         .HasColumnType("int");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -474,7 +449,7 @@ namespace LMS.Data.Migrations
                     b.ToTable("Posts");
                 });
 
-            modelBuilder.Entity("LMS.Data.Entity.PostAttachment", b =>
+            modelBuilder.Entity("LMS.Data.Entity.Post.PostAttachment", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -512,26 +487,6 @@ namespace LMS.Data.Migrations
                     b.HasIndex("PostId");
 
                     b.ToTable("PostAttachments");
-                });
-
-            modelBuilder.Entity("LMS.Data.Entity.PostTag", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("PostId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("PostTagValue")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PostId");
-
-                    b.ToTable("PostTags");
                 });
 
             modelBuilder.Entity("LMS.Data.Entity.School", b =>
@@ -900,9 +855,6 @@ namespace LMS.Data.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<Guid?>("CityId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
@@ -977,8 +929,6 @@ namespace LMS.Data.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CityId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -1331,7 +1281,7 @@ namespace LMS.Data.Migrations
                     b.Navigation("DeletedBy");
                 });
 
-            modelBuilder.Entity("LMS.Data.Entity.Post", b =>
+            modelBuilder.Entity("LMS.Data.Entity.Post.Post", b =>
                 {
                     b.HasOne("LMS.Data.Entity.User", "CreatedBy")
                         .WithMany()
@@ -1348,7 +1298,7 @@ namespace LMS.Data.Migrations
                     b.Navigation("DeletedBy");
                 });
 
-            modelBuilder.Entity("LMS.Data.Entity.PostAttachment", b =>
+            modelBuilder.Entity("LMS.Data.Entity.Post.PostAttachment", b =>
                 {
                     b.HasOne("LMS.Data.Entity.User", "CreatedBy")
                         .WithMany()
@@ -1360,22 +1310,13 @@ namespace LMS.Data.Migrations
                         .WithMany()
                         .HasForeignKey("DeletedById");
 
-                    b.HasOne("LMS.Data.Entity.Post", "Post")
+                    b.HasOne("LMS.Data.Entity.Post.Post", "Post")
                         .WithMany()
                         .HasForeignKey("PostId");
 
                     b.Navigation("CreatedBy");
 
                     b.Navigation("DeletedBy");
-
-                    b.Navigation("Post");
-                });
-
-            modelBuilder.Entity("LMS.Data.Entity.PostTag", b =>
-                {
-                    b.HasOne("LMS.Data.Entity.Post", "Post")
-                        .WithMany()
-                        .HasForeignKey("PostId");
 
                     b.Navigation("Post");
                 });
@@ -1544,15 +1485,6 @@ namespace LMS.Data.Migrations
                         .HasForeignKey("TeacherId");
 
                     b.Navigation("Teacher");
-                });
-
-            modelBuilder.Entity("LMS.Data.Entity.User", b =>
-                {
-                    b.HasOne("LMS.Data.Entity.Common.City", "City")
-                        .WithMany()
-                        .HasForeignKey("CityId");
-
-                    b.Navigation("City");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

@@ -10,7 +10,6 @@ namespace LMS.App.Controllers
     [Route("students")]
     public class StudentsController : Controller
     {
-        public string containerName = "Test";
         private readonly IStudentsService _studentsService;
         public StudentsController(IStudentsService studentsService)
         {

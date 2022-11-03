@@ -1,13 +1,9 @@
 ﻿using AutoMapper;
 using LMS.Common.ViewModels;
 using LMS.Common.ViewModels.Class;
+using LMS.Common.ViewModels.Post;
 using LMS.Common.ViewModels.School;
 using LMS.Data.Entity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LMS.DataAccess.Automapper
 {
@@ -27,6 +23,19 @@ namespace LMS.DataAccess.Automapper
             CreateMap<SchoolFollower, SchoolFollowerViewModel>();
             CreateMap<User, UserViewModel>();
             CreateMap<SchoolUser, SchoolUserViewModel>();
+            CreateMap<Post, PostViewModel>();
+            CreateMap<PostAttachment, PostAttachmentViewModel>();
+            CreateMap<Post, PostDetailsViewModel>()
+                .ForMember(x => x.CreatedBy, opt => opt.MapFrom(o => o.CreatedBy.Id));
+            CreateMap<School, OwnerViewModel>()
+                .ForMember(x => x.OwnerName, opt => opt.MapFrom(o => o.SchoolName));
+            CreateMap<User, OwnerViewModel>()
+                .ForMember(x => x.OwnerName, opt => opt.MapFrom(o => o.UserName));
+            CreateMap<School, AuthorViewModel>()
+                .ForMember(x => x.AuthorName, opt => opt.MapFrom(o => o.SchoolName));
+            CreateMap<User, AuthorViewModel>()
+                .ForMember(x => x.AuthorName, opt => opt.MapFrom(o => o.UserName));
+
         }
     }
 }

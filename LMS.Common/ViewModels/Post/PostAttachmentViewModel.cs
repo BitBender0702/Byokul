@@ -4,16 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LMS.Common.ViewModels.School
+namespace LMS.Common.ViewModels.Post
 {
-    public class SchoolTagViewModel
+    public class PostAttachmentViewModel
     {
         public Guid Id { get; set; }
-        public Guid? SchoolId { get; set; }
-        public SchoolViewModel School { get; set; }
-        public string SchoolTagValue { get; set; }
+        public Guid? PostId { get; set; }
+        public PostViewModel Post { get; set; }
+        public string FileName { get; set; }
         public DateTime CreatedOn { get; set; }
         public string CreatedBy { get; set; }
         public bool IsDeleted { get; set; }
+        public string? Attachment { get; set; }
     }
 }

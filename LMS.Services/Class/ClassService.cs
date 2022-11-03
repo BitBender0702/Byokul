@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using LMS.Common.ViewModels.Class;
+using LMS.Common.ViewModels.Post;
 using LMS.Common.ViewModels.School;
 using LMS.Common.ViewModels.Student;
 using LMS.Common.ViewModels.Teacher;
 using LMS.Data.Entity;
 using LMS.DataAccess.Repository;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -23,8 +25,10 @@ namespace LMS.Services
         private IGenericRepository<ClassTeacher> _classTeacherRepository;
         private IGenericRepository<ClassStudent> _classStudentRepository;
         private IGenericRepository<ClassDiscipline> _classDisciplineRepository;
+        private IGenericRepository<Post> _postRepository;
+        private readonly UserManager<User> _userManager;
 
-        public ClassService(IMapper mapper, IGenericRepository<Class> classRepository, IGenericRepository<ClassLanguage> classLanguageRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<ClassDiscipline> classDisciplineRepository)
+        public ClassService(IMapper mapper, IGenericRepository<Class> classRepository, IGenericRepository<ClassLanguage> classLanguageRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<ClassDiscipline> classDisciplineRepository, IGenericRepository<Post> postRepository, UserManager<User> userManager)
         {
             _mapper = mapper;
             _classRepository = classRepository;
@@ -32,6 +36,8 @@ namespace LMS.Services
             _classTeacherRepository = classTeacherRepository;
             _classStudentRepository = classStudentRepository;
             _classDisciplineRepository = classDisciplineRepository;
+            _postRepository = postRepository;
+            _userManager = userManager;
         }
         public async Task SaveNewClass(ClassViewModel classViewModel, string createdById)
         {
@@ -245,6 +251,7 @@ namespace LMS.Services
                 model.Disciplines = await GetDisciplines(classes.ClassId);
                 model.Students = await GetStudents(classes.ClassId);
                 model.Teachers = await GetTeachers(classes.ClassId);
+                model.Posts = await GetPostsByClassId(classes.ClassId);
 
                 return model;
             }
@@ -275,8 +282,6 @@ namespace LMS.Services
             {
                 discipleneViewModel.Add(_mapper.Map<DisciplineViewModel>(res.Discipline));
             }
-            //var response = _mapper.Map<IEnumerable<SchoolCertificateViewModel>>(classLanguages);
-            //return response;
             return discipleneViewModel;
         }
 
@@ -326,6 +331,26 @@ namespace LMS.Services
             });
 
             return model;
+        }
+
+        public async Task<IEnumerable<PostDetailsViewModel>> GetPostsByClassId(Guid classId)
+        {
+            var courseList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == classId).ToListAsync();
+            var result = _mapper.Map<List<PostDetailsViewModel>>(courseList);
+
+            foreach (var post in result)
+            {
+                var author = await _classRepository.GetAll().Include(x => x.School).Where(x => x.ClassId == post.ParentId).FirstOrDefaultAsync();
+                post.Owner = _mapper.Map<OwnerViewModel>(author.School);
+            }
+
+            foreach (var post in result)
+            {
+                var author = await _userManager.Users.Where(x => x.Id == post.CreatedBy).FirstOrDefaultAsync();
+                post.Author = _mapper.Map<AuthorViewModel>(author);
+            }
+
+            return result;
         }
     }
 }

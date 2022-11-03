@@ -5,6 +5,7 @@ using LMS.DataAccess.Automapper;
 using LMS.DataAccess.Repository;
 using LMS.Services;
 using LMS.Services.Account;
+using LMS.Services.BigBlueButton;
 using LMS.Services.Blob;
 using LMS.Services.Students;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -36,12 +37,6 @@ builder.Services.AddCors(options =>
         builder.WithOrigins("*")
         .AllowAnyHeader()
         .AllowAnyMethod();
-
-        //builder.AllowAnyOrigin()
-        //.AllowAnyHeader()
-        //.AllowAnyMethod()
-        //.SetIsOriginAllowed(origin => true) // allow any origin 
-        //.AllowCredentials();
     });
 
 });
@@ -51,10 +46,6 @@ builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(configuration.GetConnectionString("DataContext"));
 });
 
-//builder.Services.AddCors(option =>
-//{
-//    option.AddPolicy("AllowOrigin", c => { c.AllowAnyOrigin(); c.AllowAnyMethod(); c.AllowAnyHeader(); });
-//});
 
 builder.Services.Configure<BlobConfig>(configuration.GetSection("MyConfig"));
 
@@ -69,6 +60,8 @@ builder.Services.AddScoped<ITeacherService, TeacherService>();
 builder.Services.AddScoped<IClassService, ClassService>();
 builder.Services.AddScoped<ICourseService, CourseService>();
 builder.Services.AddScoped<IBlobService, BlobService>();
+builder.Services.AddScoped<IPostService, PostService>();
+builder.Services.AddScoped<IBigBlueButtonService, BigBlueButtonService>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
 builder.Services.AddOptions();
@@ -80,7 +73,6 @@ builder.Services.AddScoped<BigBlueButtonAPIClient>(provider =>
     var factory = provider.GetRequiredService<IHttpClientFactory>();
     return new BigBlueButtonAPIClient(settings, factory.CreateClient());
 });
-//builder.Services.AddScoped<IRepository, Repository>();
 
 // Add service for JWT.
 
@@ -99,14 +91,6 @@ builder.Services.AddAuthentication(/*JwtBearerDefaults.AuthenticationScheme*/
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]))
         };
     });
-//.AddCookie(options =>
-//{
-//    options.Events.OnRedirectToLogin = (context) =>
-//    {
-//        context.Response.StatusCode = 401;
-//        return Task.CompletedTask;
-//    };
-//});
 
 
 builder.Services.AddAutoMapper(config =>
@@ -116,13 +100,10 @@ builder.Services.AddAutoMapper(config =>
     config.AddProfile<ClassProfile>();
     config.AddProfile<StudentProfile>();
     config.AddProfile<CourseProfile>();
+    config.AddProfile<CommonProfile>();
 });
 
-
-//StripeConfiguration.SetApiKey(configuration["Stripe:SecretKey"]);
-
-
-
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 var temp = new Seeder(app);
@@ -134,13 +115,13 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseCors("EnableCORS");
-
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
-//app.UseCookiePolicy();
+app.UseSwagger();
+app.UseSwaggerUI();
 
 
 app.MapControllerRoute(
@@ -149,35 +130,7 @@ app.MapControllerRoute(
 
 app.MapFallbackToFile("index.html");
 
-//SpaApplicationBuilderExtensions.UseSpa(app, (spa =>
-//{
-//    // To learn more about options for serving an Angular SPA from ASP.NET Core,
-//    // see https://go.microsoft.com/fwlink/?linkid=864501
-
-//    spa.Options.SourcePath = "ClientApp";
-
-//    if (app.Environment.IsDevelopment())
-//    {
-//        spa.UseAngularCliServer(npmScript: "start");
-//    }
-//}));
-//app.UseSpa(spa =>
-//{
-//    // To learn more about options for serving an Angular SPA from ASP.NET Core,
-//    // see https://go.microsoft.com/fwlink/?linkid=864501
-
-//    spa.Options.SourcePath = "ClientApp";
-
-//    if (app.Environment.IsDevelopment())
-//    {
-//        spa.UseAngularCliServer(npmScript: "start");
-//    }
-//});
-
 app.Run();
-
-
-
 
 public class Seeder
 {

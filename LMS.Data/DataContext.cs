@@ -47,5 +47,9 @@ namespace LMS.Data
         public DbSet<CourseTeacher> CourseTeachers { get; set; }
         public DbSet<SchoolFollower> SchoolFollowers { get; set; }
         public DbSet<SchoolUser> SchoolUsers { get; set; }
+        public DbSet<Post> Posts { get; set; }
+        public DbSet<PostAttachment> PostAttachments { get; set; }
+        public DbSet<PostTag> PostTags { get; set; }
+        public DbSet<City> Cities { get; set; }
     }
 }
