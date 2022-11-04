@@ -27,10 +27,11 @@ namespace LMS.Services
         private IGenericRepository<CourseStudent> _courseStudentRepository;
         private IGenericRepository<CourseTeacher> _courseTeacherRepository;
         private IGenericRepository<Post> _postRepository;
+        private IGenericRepository<CourseFollower> _courseFollowerRepository;
         private readonly UserManager<User> _userManager;
 
 
-        public CourseService(IMapper mapper, IGenericRepository<Course> courseRepository, IGenericRepository<CourseLanguage> courseLanguageRepository, IGenericRepository<CourseDiscipline> courseDisciplineRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<CourseTeacher> courseTeacherRepository, IGenericRepository<Post> postRepository,UserManager<User> userManager)
+        public CourseService(IMapper mapper, IGenericRepository<Course> courseRepository, IGenericRepository<CourseLanguage> courseLanguageRepository, IGenericRepository<CourseDiscipline> courseDisciplineRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<CourseTeacher> courseTeacherRepository, IGenericRepository<Post> postRepository, IGenericRepository<CourseFollower> courseFollowerRepository,UserManager<User> userManager)
         {
             _mapper = mapper;
             _courseRepository = courseRepository;
@@ -39,6 +40,7 @@ namespace LMS.Services
             _courseStudentRepository = courseStudentRepository;
             _courseTeacherRepository = courseTeacherRepository;
             _postRepository = postRepository;
+            _courseFollowerRepository = courseFollowerRepository;
             _userManager = userManager;
         }
 
@@ -354,6 +356,18 @@ namespace LMS.Services
             }
 
             return result;
+        }
+
+        public async Task SaveCourseFollower(Guid courseId, string userId)
+        {
+            var courseFollower = new CourseFollower
+            {
+                CourseId = courseId,
+                UserId = userId
+            };
+
+            _courseFollowerRepository.Insert(courseFollower);
+            _courseFollowerRepository.Save();
         }
     }
 }

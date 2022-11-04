@@ -1,4 +1,5 @@
 using BigBlueButtonAPI.Core;
+using LMS.Common.ViewModels.HubConfig;
 using LMS.Data;
 using LMS.Data.Entity;
 using LMS.DataAccess.Automapper;
@@ -7,6 +8,7 @@ using LMS.Services;
 using LMS.Services.Account;
 using LMS.Services.BigBlueButton;
 using LMS.Services.Blob;
+using LMS.Services.Common;
 using LMS.Services.Students;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -62,7 +64,10 @@ builder.Services.AddScoped<ICourseService, CourseService>();
 builder.Services.AddScoped<IBlobService, BlobService>();
 builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<IBigBlueButtonService, BigBlueButtonService>();
+builder.Services.AddScoped<ICommonService, CommonService>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+builder.Services.AddScoped<TimerManager>();
+
 
 builder.Services.AddOptions();
 builder.Services.AddHttpClient();
@@ -104,6 +109,7 @@ builder.Services.AddAutoMapper(config =>
 });
 
 builder.Services.AddSwaggerGen();
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 var temp = new Seeder(app);
@@ -122,6 +128,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseSwagger();
 app.UseSwaggerUI();
+app.MapHub<ChartHub>("/bigBlueButton");
 
 
 app.MapControllerRoute(

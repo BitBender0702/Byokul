@@ -18,7 +18,7 @@ namespace LMS.Services
         Task<IEnumerable<SpecializationViewModel>> SpecializationList();
         Task<IEnumerable<LanguageViewModel>> LanguageList();
         Task<IEnumerable<SchoolFollowerViewModel>> FollowerList(Guid schoolId);
-        Task SaveSchoolFollower(SchoolFollowerViewModel schoolFollowerViewModel);
+        Task SaveSchoolFollower(Guid schoolId, string userId);
         Task SaveSchoolUser(SchoolUserViewModel schoolUserViewModel);
     }
 }

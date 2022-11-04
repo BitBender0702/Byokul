@@ -51,5 +51,7 @@ namespace LMS.Data
         public DbSet<PostAttachment> PostAttachments { get; set; }
         public DbSet<PostTag> PostTags { get; set; }
         public DbSet<City> Cities { get; set; }
+        public DbSet<ClassFollower> ClassFollowers { get; set; }
+        public DbSet<CourseFollower> CourseFollowers { get; set; }
     }
 }

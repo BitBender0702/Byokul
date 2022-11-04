@@ -97,11 +97,10 @@ namespace LMS.App.Controllers
 
         [Route("saveSchoolFollower")]
         [HttpPost]
-        public async Task<IActionResult> SaveSchoolFollower([FromBody] SchoolFollowerViewModel schoolFollowerViewModel)
+        public async Task<IActionResult> SaveSchoolFollower(Guid schoolId)
         {
-            Request.Headers.LastOrDefault();
             var userId = await GetUserIdAsync(this._userManager);
-            await _schoolService.SaveSchoolFollower(schoolFollowerViewModel);
+            await _schoolService.SaveSchoolFollower(schoolId, userId);
             return Ok("success");
         }
 

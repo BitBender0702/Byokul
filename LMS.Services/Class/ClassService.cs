@@ -26,9 +26,10 @@ namespace LMS.Services
         private IGenericRepository<ClassStudent> _classStudentRepository;
         private IGenericRepository<ClassDiscipline> _classDisciplineRepository;
         private IGenericRepository<Post> _postRepository;
+        private IGenericRepository<ClassFollower> _classFollowerRepository;
         private readonly UserManager<User> _userManager;
 
-        public ClassService(IMapper mapper, IGenericRepository<Class> classRepository, IGenericRepository<ClassLanguage> classLanguageRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<ClassDiscipline> classDisciplineRepository, IGenericRepository<Post> postRepository, UserManager<User> userManager)
+        public ClassService(IMapper mapper, IGenericRepository<Class> classRepository, IGenericRepository<ClassLanguage> classLanguageRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<ClassDiscipline> classDisciplineRepository, IGenericRepository<Post> postRepository, IGenericRepository<ClassFollower> classFollowerRepository, UserManager<User> userManager)
         {
             _mapper = mapper;
             _classRepository = classRepository;
@@ -37,6 +38,7 @@ namespace LMS.Services
             _classStudentRepository = classStudentRepository;
             _classDisciplineRepository = classDisciplineRepository;
             _postRepository = postRepository;
+            _classFollowerRepository = classFollowerRepository;
             _userManager = userManager;
         }
         public async Task SaveNewClass(ClassViewModel classViewModel, string createdById)
@@ -252,6 +254,7 @@ namespace LMS.Services
                 model.Students = await GetStudents(classes.ClassId);
                 model.Teachers = await GetTeachers(classes.ClassId);
                 model.Posts = await GetPostsByClassId(classes.ClassId);
+                model.ClassFollowers = await FollowerList(classes.ClassId);
 
                 return model;
             }
@@ -350,6 +353,27 @@ namespace LMS.Services
                 post.Author = _mapper.Map<AuthorViewModel>(author);
             }
 
+            return result;
+        }
+
+        public async Task SaveClassFollower(Guid classId, string userId)
+        {
+            var classFollower = new ClassFollower
+            {
+                ClassId = classId,
+                UserId = userId
+            };
+
+            _classFollowerRepository.Insert(classFollower);
+            _classFollowerRepository.Save();
+        }
+
+        public async Task<IEnumerable<ClassFollowerViewModel>> FollowerList(Guid classId)
+        {
+            var followerList = await _classFollowerRepository.GetAll().Where(x => x.ClassId == classId)
+                .Include(x => x.Class)
+                .Include(x => x.User).ToListAsync();
+            var result = _mapper.Map<IEnumerable<ClassFollowerViewModel>>(followerList);
             return result;
         }
     }

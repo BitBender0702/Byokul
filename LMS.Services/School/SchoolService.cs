@@ -359,12 +359,12 @@ namespace LMS.Services
             var result = _mapper.Map<IEnumerable<LanguageViewModel>>(languageList);
             return result;
         }
-        public async Task SaveSchoolFollower(SchoolFollowerViewModel schoolFollowerViewModel)
+        public async Task SaveSchoolFollower(Guid schoolId, string userId)
         {
             var schoolFollower = new SchoolFollower
             {
-                SchoolId = schoolFollowerViewModel.SchoolId,
-                UserId = schoolFollowerViewModel.UserId
+                SchoolId = schoolId,
+                UserId = userId
             };
 
             _schoolFollowerRepository.Insert(schoolFollower);

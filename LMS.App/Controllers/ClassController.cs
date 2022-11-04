@@ -59,5 +59,15 @@ namespace LMS.App.Controllers
             var response = await _classService.GetAllClasses();
             return Ok(response);
         }
+
+        [Route("saveClassFollower")]
+        [HttpPost]
+        public async Task<IActionResult> SaveClassFollower(Guid classId)
+        {
+            var userId = await GetUserIdAsync(this._userManager);
+            await _classService.SaveClassFollower(classId, userId);
+            return Ok("success");
+        }
+
     }
 }
