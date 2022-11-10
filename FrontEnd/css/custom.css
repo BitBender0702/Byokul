@@ -1,0 +1,269 @@
+body {
+	font-family: 'Montserrat', sans-serif;
+	font-weight: 400;
+	margin: 0;
+	padding: 0;
+	overflow-X: hidden;
+	color: #313131;
+}
+.f-poppins{
+	font-family: 'Poppins', sans-serif;
+}
+* {
+	padding: 0;
+	margin: 0px;
+}
+
+.btn,
+.form-control,
+select {
+	outline: none !important;
+	box-shadow: none !important;
+}
+
+img {
+	max-width: 100%;
+}
+
+::placeholder {
+	color: #7C8DA7;
+	opacity: 1;
+}
+
+:-ms-input-placeholder {
+	color: #7C8DA7;
+}
+
+::-ms-input-placeholder {
+	color: #7C8DA7;
+}
+
+.rounded-8 {
+	border-radius: 8px;
+}
+
+.bg-gray-gradient {
+	background-color: linear-gradient(180deg, rgba(189, 189, 189, 0.1) 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+.text_dark {
+	color: #313131;
+}
+
+.text_secondary {
+	color: #FFA41C;
+}
+.text_ltgray{
+	color: #7C8DA7;
+}
+
+.fw_300 {
+	font-weight: 300;
+}
+.fw_400 {
+	font-weight: 400;
+}
+
+.fw_700 {
+	font-weight: 700;
+}
+.font_12 {
+	font-size: 12px;
+}
+.font_14 {
+	font-size: 14px;
+}
+
+.font_16 {
+	font-size: 16px;
+}
+
+.font_34 {
+	font-size: 34px;
+}
+
+.font_39 {
+	font-size: 39px;
+}
+
+a.text_dark:hover {
+	color: #ff991c;
+}
+
+.form-control,
+select.form-select {
+	border-left: 2px solid #FF821C !important;
+	box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1) !important;
+	padding: 5px 16px;
+	border-width: 0px 0px 0px 2px;
+	height: 48px;
+
+}
+
+.form-group {
+	margin-bottom: 24px;
+}
+
+.primary_btn {
+	font-weight: 500;
+	background: linear-gradient(90.02deg, #FF7B1C 0.02%, #FFA41C 99.98%);
+	height: 52px;
+	color: #fff !important;
+	transition: 0.5s all;
+}
+
+.primary_btn:hover {
+	background: linear-gradient(90.02deg, #FFA41C 0.02%, #FF7B1C 99.98%);
+}
+
+.language-btn .btn-outline-primary,
+.language-btn .btn-outline-primary:hover {
+	padding: 5px 24px;
+	border: 1px solid #E1E1E1;
+	color: #313131 !important;
+}
+
+.language-btn .btn-check:checked+.btn,
+.language-btn .btn.active,
+.btn.show,
+.language-btn .btn:first-child:active,
+.language-btn :not(.btn-check)+.btn:active {
+	background-color: #fff;
+	border: 2px solid #FF821C;
+}
+
+ul li {
+	position: relative;
+	padding-left: 15px;
+	margin-bottom: 16px;
+}
+
+ul li:before {
+	position: absolute;
+	content: "";
+	width: 6px;
+	height: 6px;
+	background: #FFA41C;
+	border-radius: 50%;
+	left: 0;
+	top: 7px;
+}
+
+.pb_32 {
+	padding-bottom: 32px;
+}
+.bg_eee{
+	background-color:#eeeeee;
+}
+
+/*---- Regsiter page css ----*/
+.back-step {
+	margin-bottom: 70px;
+	display: inline-block;
+}
+
+.register-section {
+	border: 2px solid #FFFFFF;
+	padding: 32px 32px 100px;
+	background: url(../images/register-bg.svg) no-repeat;
+	background-size: cover;
+	min-height: calC(100vh - 100px);
+}
+
+.register-form {
+	max-width: 450px;
+}
+
+.register-form h2 {
+	margin-bottom: 32px;
+}
+
+.al-account {
+	margin: 20px 0 32px;
+}
+
+/*---- landing page css start here ---*/
+.landing-section {
+	padding: 98px 69px;
+}
+
+.landing-left .form-group {
+	margin-bottom: 32px;
+}
+
+/*==== User portal css start here ===*/
+.sidemenu {
+	min-height: 100vh;
+    padding: 28px 22px 63px;
+    border-right: 1px solid #EEEEEE;
+	background: linear-gradient(180deg, #FBFBFB 0%, rgba(251, 251, 251, 0) 100%);
+}
+.sidemenu ul li:before, .notification-box .dropdown .dropdown-toggle:after {
+    display: none;
+}
+.sidemenu li a {
+	padding: 8px 10px;
+    width: 100%;
+    display: block;
+    color: #464E5F;
+    border-radius: 4px;
+}
+.sidemenu li a.active {
+    background: #464E5F;
+    color: #fff;
+    font-weight: 700;
+}
+.sidemenu li a img {
+    min-width: 19px;
+    margin-right: 18px;
+}
+.sidemenu h3 {
+    margin: 40px 0 24px;
+}
+.sidemenu_inner{
+	display: flex;
+    height: 100%;
+    min-height: calC(100vh - 110px);
+    flex-flow: column;
+    justify-content: space-between;
+}
+.sidemenu-right{
+	border-right: 0;
+	border-left: 1px solid #EEEEEE;
+}
+.add-btn {
+    width: 24px;
+    height: 24px;
+    border: 1px solid rgba(255, 130, 28, 0.3);
+    background: #fff;
+    margin-left: 20px;
+}
+.school-name {
+    margin-bottom: 30px;
+}
+.school-img {
+    background: #D9D9D9;
+    width: 31px;
+    height: 31px;
+    border: 1px solid #BFBFBF;
+    overflow: hidden;
+}
+h3.subhead-btn {
+    margin: 73px 0 28px;
+}
+.notification-btn .badge {
+    width: 18px;
+    height: 18px;
+    background: #FF1C1C;
+    position: absolute;
+    right: -15px;
+    top: -8px;
+}
+.notification-box ul li {
+    margin: 0 20px;
+}
+.notification-box .dropdown .dropdown-toggle{
+	width: 32px;
+	height: 32px;
+	border: 2px solid #FFFFFF;
+}

@@ -1,0 +1,76 @@
+@media screen and (max-width:1199px) {
+	.font_39 {
+		font-size: 36px;
+	}
+	.landing-section {
+		padding: 80px 50px;
+	}
+}
+
+@media screen and (max-width:991px) {
+	.landing-left {
+		padding-top: 20px;
+	}
+	.font_39 {
+		font-size: 30px;
+	}
+	.landing-section {
+		padding: 48px 59px;
+	}
+}
+
+@media screen and (max-width:767px) {
+	.back-step {
+		margin-bottom: 30px;
+	}
+
+	.register-section {
+		padding: 20px 20px 100px;
+	}
+
+	.font_34 {
+		font-size: 26px;
+	}
+
+	.register-form h2 {
+		margin-bottom: 24px;
+	}
+
+	.form-group {
+		margin-bottom: 18px;
+	}
+
+	.form-control,
+	select.form-select {
+		height: 45px;
+		font-size: 15px;
+	}
+
+	.primary_btn {
+		height: 48px;
+	}
+
+	.font_14 {
+		font-size: 13px;
+	}
+
+	.al-account {
+		margin: 15px 0 26px;
+	}
+
+	.language-btn label {
+		min-width: 112px;
+	}
+
+	.language-btn {
+		margin-bottom: 10px;
+	}
+
+	.register-section {
+		background-position: center;
+	}
+	.landing-left .form-group {
+		margin-bottom: 20px;
+	}
+
+}
