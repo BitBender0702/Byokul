@@ -42,9 +42,9 @@ namespace LMS.App.Controllers
 
         [Route("updateSchool")]
         [HttpPost]
-        public async Task<IActionResult> UpdateSchool([FromBody] SchoolViewModel schoolViewModel)
+        public async Task<IActionResult> UpdateSchool([FromBody] SchoolUpdateViewModel schoolUpdateViewModel)
         {
-            await _schoolService.UpdateSchool(schoolViewModel);
+            await _schoolService.UpdateSchool(schoolUpdateViewModel);
             return Ok("success");
         }
 
@@ -74,13 +74,6 @@ namespace LMS.App.Controllers
             return Ok();
         }
 
-        [Route("countryList")]
-        [HttpGet]
-        public async Task<IActionResult> CountryList()
-        {
-            return Ok(await _schoolService.CountryList());
-        }
-
         [Route("specializationList")]
         [HttpGet]
         public async Task<IActionResult> SpecializationList()
@@ -104,18 +97,20 @@ namespace LMS.App.Controllers
             return Ok("success");
         }
 
-        [Route("followerList")]
-        [HttpGet]
-        public async Task<IActionResult> FollowerList(Guid schoolId)
-        {
-            return Ok(await _schoolService.FollowerList(schoolId));
-        }
 
         [Route("saveSchoolUser")]
         [HttpPost]
         public async Task<IActionResult> SaveSchoolUser([FromBody] SchoolUserViewModel schoolUserViewModel)
         {
             await _schoolService.SaveSchoolUser(schoolUserViewModel);
+            return Ok("success");
+        }
+
+        [Route("saveSchoolCertificates")]
+        [HttpPost]
+        public async Task<IActionResult> SaveSchoolCertificates(SchoolCertificateViewModel schoolCertificateViewModel)
+        {
+            await _schoolService.SaveSchoolCertificates(schoolCertificateViewModel);
             return Ok("success");
         }
     }

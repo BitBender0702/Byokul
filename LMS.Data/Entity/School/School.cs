@@ -21,6 +21,10 @@ namespace LMS.Data.Entity
         public string SchoolUrl { get; set; }
         public bool IsVarified { get; set; }
         public int? Status { get; set; }
-
+        public string? SchoolSlogan { get; set; }
+        public DateTime? Founded { get; set; }
+        public string? SchoolEmail { get; set; }
+        public Guid? AccessibilityId { get; set; }
+        public Accessibility Accessibility { get; set; }
     }
 }

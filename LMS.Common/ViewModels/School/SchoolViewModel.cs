@@ -1,4 +1,5 @@
-﻿using LMS.Common.ViewModels.Teacher;
+﻿using LMS.Common.ViewModels.Common;
+using LMS.Common.ViewModels.Teacher;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;

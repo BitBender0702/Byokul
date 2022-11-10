@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using LMS.Common.ViewModels.Class;
+using LMS.Common.ViewModels.Common;
 using LMS.Common.ViewModels.Course;
 using LMS.Common.ViewModels.Post;
-using LMS.Common.ViewModels.School;
 using LMS.Common.ViewModels.Student;
 using LMS.Common.ViewModels.Teacher;
 using LMS.Data.Entity;
@@ -27,11 +27,10 @@ namespace LMS.Services
         private IGenericRepository<CourseStudent> _courseStudentRepository;
         private IGenericRepository<CourseTeacher> _courseTeacherRepository;
         private IGenericRepository<Post> _postRepository;
-        private IGenericRepository<CourseFollower> _courseFollowerRepository;
         private readonly UserManager<User> _userManager;
 
 
-        public CourseService(IMapper mapper, IGenericRepository<Course> courseRepository, IGenericRepository<CourseLanguage> courseLanguageRepository, IGenericRepository<CourseDiscipline> courseDisciplineRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<CourseTeacher> courseTeacherRepository, IGenericRepository<Post> postRepository, IGenericRepository<CourseFollower> courseFollowerRepository,UserManager<User> userManager)
+        public CourseService(IMapper mapper, IGenericRepository<Course> courseRepository, IGenericRepository<CourseLanguage> courseLanguageRepository, IGenericRepository<CourseDiscipline> courseDisciplineRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<CourseTeacher> courseTeacherRepository, IGenericRepository<Post> postRepository,UserManager<User> userManager)
         {
             _mapper = mapper;
             _courseRepository = courseRepository;
@@ -40,7 +39,6 @@ namespace LMS.Services
             _courseStudentRepository = courseStudentRepository;
             _courseTeacherRepository = courseTeacherRepository;
             _postRepository = postRepository;
-            _courseFollowerRepository = courseFollowerRepository;
             _userManager = userManager;
         }
 
@@ -286,19 +284,14 @@ namespace LMS.Services
             return discipleneViewModel;
         }
 
-        async Task<IEnumerable<StudentViewModel>> GetStudents(Guid courseId)
+        async Task<int> GetStudents(Guid courseId)
         {
             var courseStudents = _courseStudentRepository.GetAll()
                 .Include(x => x.Student)
                 .ThenInclude(x => x.CreatedBy)
                 .Where(x => x.CourseId == courseId).ToList();
 
-            var studentViewModel = new List<StudentViewModel>();
-            foreach (var res in courseStudents)
-            {
-                studentViewModel.Add(_mapper.Map<StudentViewModel>(res.Student));
-            }
-            return studentViewModel;
+            return courseStudents.Count();
         }
 
         async Task<IEnumerable<TeacherViewModel>> GetTeachers(Guid courseId)
@@ -358,16 +351,5 @@ namespace LMS.Services
             return result;
         }
 
-        public async Task SaveCourseFollower(Guid courseId, string userId)
-        {
-            var courseFollower = new CourseFollower
-            {
-                CourseId = courseId,
-                UserId = userId
-            };
-
-            _courseFollowerRepository.Insert(courseFollower);
-            _courseFollowerRepository.Save();
-        }
     }
 }

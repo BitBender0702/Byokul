@@ -14,6 +14,8 @@ const PROXY_CONFIG = [
       "/school",
       "/students",
       "/teachers",
+      "/posts",
+      "/users"
    ],
     target: target,
     secure: false,

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using LMS.Common.ViewModels.Common;
+using LMS.Common.ViewModels.User;
 using LMS.Data.Entity;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,9 @@ namespace LMS.DataAccess.Automapper
         public CommonProfile()
         {
             CreateMap<City, CityViewModel>();
+            CreateMap<User, UserDetailsViewModel>();
+            CreateMap<UserFollower, UserFollowerViewModel>();
+            CreateMap<User, UserUpdateViewModel>();
         }
     }
 }

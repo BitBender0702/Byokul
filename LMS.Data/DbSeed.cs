@@ -44,8 +44,11 @@ namespace LMS.Data
             {
                 user = new User
                 {
-                    Email = "shivams.aspirefox@gmail.com",
-                    UserName = "shivams.aspirefox@gmail.com",
+                    Email = "dharmendra.aspirefox@gmail.com",
+                    UserName = "dharmendra.aspirefox@gmail.com",
+                    FirstName = "Dharmendra",
+                    LastName = "Sinsinwar",
+
                     EmailConfirmed = true,
                     CreatedOn = DateTime.UtcNow
                 };

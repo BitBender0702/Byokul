@@ -10,10 +10,9 @@ namespace LMS.Services
     public interface IClassService
     {
         Task SaveNewClass(ClassViewModel classViewModel, string createdById);
-        Task UpdateClass(ClassViewModel classViewModel);
+        Task UpdateClass(ClassUpdateViewModel classUpdateViewModel);
         Task DeleteClassById(Guid classId, string deletedById);
         Task<ClassDetailsViewModel> GetClassById(Guid classId);
         Task<IEnumerable<ClassViewModel>> GetAllClasses();
-        Task SaveClassFollower(Guid classId,string userId);
     }
 }

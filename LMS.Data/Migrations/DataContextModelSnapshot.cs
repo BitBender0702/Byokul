@@ -34,7 +34,7 @@ namespace LMS.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Accessibilities");
+                    b.ToTable("Accessibility");
                 });
 
             modelBuilder.Entity("LMS.Data.Entity.City", b =>
@@ -43,13 +43,18 @@ namespace LMS.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("CountryId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Cities");
+                    b.HasIndex("CountryId");
+
+                    b.ToTable("City");
                 });
 
             modelBuilder.Entity("LMS.Data.Entity.Class", b =>
@@ -60,6 +65,9 @@ namespace LMS.Data.Migrations
 
                     b.Property<Guid?>("AccessibilityId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Avatar")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ClassName")
                         .IsRequired()
@@ -90,7 +98,10 @@ namespace LMS.Data.Migrations
                     b.Property<int>("NoOfStudents")
                         .HasColumnType("int");
 
-                    b.Property<long>("Price")
+                    b.Property<long?>("Price")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("Rating")
                         .HasColumnType("bigint");
 
                     b.Property<Guid?>("SchoolId")
@@ -101,6 +112,9 @@ namespace LMS.Data.Migrations
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("ThumbnailUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ClassId");
 
@@ -135,28 +149,7 @@ namespace LMS.Data.Migrations
 
                     b.HasIndex("DisciplineId");
 
-                    b.ToTable("ClassDiscipline");
-                });
-
-            modelBuilder.Entity("LMS.Data.Entity.ClassFollower", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("ClassId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClassId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("ClassFollowers");
+                    b.ToTable("ClassDisciplines");
                 });
 
             modelBuilder.Entity("LMS.Data.Entity.ClassLanguage", b =>
@@ -237,7 +230,7 @@ namespace LMS.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Countries");
+                    b.ToTable("Country");
                 });
 
             modelBuilder.Entity("LMS.Data.Entity.Course", b =>
@@ -561,6 +554,9 @@ namespace LMS.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("AccessibilityId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Avatar")
                         .HasColumnType("nvarchar(max)");
 
@@ -586,14 +582,23 @@ namespace LMS.Data.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("Founded")
+                        .HasColumnType("datetime2");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsVarified")
                         .HasColumnType("bit");
 
+                    b.Property<string>("SchoolEmail")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("SchoolName")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SchoolSlogan")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SchoolUrl")
@@ -607,6 +612,8 @@ namespace LMS.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("SchoolId");
+
+                    b.HasIndex("AccessibilityId");
 
                     b.HasIndex("CountryId");
 
@@ -629,18 +636,7 @@ namespace LMS.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("IssueDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ProviderName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("SchoolId")
@@ -792,7 +788,7 @@ namespace LMS.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ServiceTypes");
+                    b.ToTable("ServiceType");
                 });
 
             modelBuilder.Entity("LMS.Data.Entity.Specialization", b =>
@@ -810,7 +806,7 @@ namespace LMS.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Specializations");
+                    b.ToTable("Specialization");
                 });
 
             modelBuilder.Entity("LMS.Data.Entity.Student", b =>
@@ -839,11 +835,16 @@ namespace LMS.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("StudentId");
 
                     b.HasIndex("CreatedById");
 
                     b.HasIndex("DeletedById");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Students");
                 });
@@ -921,6 +922,9 @@ namespace LMS.Data.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
+                    b.Property<string>("Avatar")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid?>("CityId")
                         .HasColumnType("uniqueidentifier");
 
@@ -933,6 +937,9 @@ namespace LMS.Data.Migrations
 
                     b.Property<DateTime?>("DOB")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -1010,6 +1017,48 @@ namespace LMS.Data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("LMS.Data.Entity.UserFollower", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("FollowerId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FollowerId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserFollowers");
+                });
+
+            modelBuilder.Entity("LMS.Data.Entity.UserLanguage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("LanguageId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LanguageId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserLanguages");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -1145,6 +1194,15 @@ namespace LMS.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("LMS.Data.Entity.City", b =>
+                {
+                    b.HasOne("LMS.Data.Entity.Country", "Country")
+                        .WithMany()
+                        .HasForeignKey("CountryId");
+
+                    b.Navigation("Country");
+                });
+
             modelBuilder.Entity("LMS.Data.Entity.Class", b =>
                 {
                     b.HasOne("LMS.Data.Entity.Accessibility", "Accessibility")
@@ -1193,21 +1251,6 @@ namespace LMS.Data.Migrations
                     b.Navigation("Class");
 
                     b.Navigation("Discipline");
-                });
-
-            modelBuilder.Entity("LMS.Data.Entity.ClassFollower", b =>
-                {
-                    b.HasOne("LMS.Data.Entity.Class", "Class")
-                        .WithMany()
-                        .HasForeignKey("ClassId");
-
-                    b.HasOne("LMS.Data.Entity.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("Class");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("LMS.Data.Entity.ClassLanguage", b =>
@@ -1418,6 +1461,10 @@ namespace LMS.Data.Migrations
 
             modelBuilder.Entity("LMS.Data.Entity.School", b =>
                 {
+                    b.HasOne("LMS.Data.Entity.Accessibility", "Accessibility")
+                        .WithMany()
+                        .HasForeignKey("AccessibilityId");
+
                     b.HasOne("LMS.Data.Entity.Country", "Country")
                         .WithMany()
                         .HasForeignKey("CountryId");
@@ -1435,6 +1482,8 @@ namespace LMS.Data.Migrations
                     b.HasOne("LMS.Data.Entity.Specialization", "Specialization")
                         .WithMany()
                         .HasForeignKey("SpecializationId");
+
+                    b.Navigation("Accessibility");
 
                     b.Navigation("Country");
 
@@ -1551,9 +1600,15 @@ namespace LMS.Data.Migrations
                         .WithMany()
                         .HasForeignKey("DeletedById");
 
+                    b.HasOne("LMS.Data.Entity.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
                     b.Navigation("CreatedBy");
 
                     b.Navigation("DeletedBy");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("LMS.Data.Entity.Teacher", b =>
@@ -1589,6 +1644,36 @@ namespace LMS.Data.Migrations
                         .HasForeignKey("CityId");
 
                     b.Navigation("City");
+                });
+
+            modelBuilder.Entity("LMS.Data.Entity.UserFollower", b =>
+                {
+                    b.HasOne("LMS.Data.Entity.User", "Follower")
+                        .WithMany()
+                        .HasForeignKey("FollowerId");
+
+                    b.HasOne("LMS.Data.Entity.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Follower");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("LMS.Data.Entity.UserLanguage", b =>
+                {
+                    b.HasOne("LMS.Data.Entity.Language", "Language")
+                        .WithMany()
+                        .HasForeignKey("LanguageId");
+
+                    b.HasOne("LMS.Data.Entity.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Language");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

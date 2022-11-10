@@ -60,13 +60,5 @@ namespace LMS.App.Controllers
             return Ok(response);
         }
 
-        [Route("saveCourseFollower")]
-        [HttpPost]
-        public async Task<IActionResult> SaveCourseFollower(Guid courseId)
-        {
-            var userId = await GetUserIdAsync(this._userManager);
-            await _courseService.SaveCourseFollower(courseId, userId);
-            return Ok("success");
-        }
     }
 }

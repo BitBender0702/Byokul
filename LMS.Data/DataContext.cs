@@ -29,18 +29,14 @@ namespace LMS.Data
         public DbSet<Class> Classes { get; set; }
         public DbSet<Course> Courses { get; set; }
         public DbSet<SchoolTag> SchoolTags { get; set; }
-        public DbSet<ServiceType> ServiceTypes { get; set; }
-        public DbSet<Specialization> Specializations { get; set; }
-        public DbSet<Country> Countries { get; set; }
         public DbSet<Language> Languages { get; set; }
         public DbSet<SchoolLanguage> SchoolLanguages { get; set; }
         public DbSet<Discipline> Disciplines { get; set; }
-        public DbSet<ClassDiscipline> ClassDiscipline { get; set; }
+        public DbSet<ClassDiscipline> ClassDisciplines { get; set; }
         public DbSet<ClassTeacher> ClassTeachers { get; set; }
         public DbSet<Student> Students { get; set; }
         public DbSet<ClassStudent> ClassStudents { get; set; }
         public DbSet<ClassLanguage> ClassLanguages { get; set; }
-        public DbSet<Accessibility> Accessibilities { get; set; }
         public DbSet<CourseLanguage> CourseLanguages { get; set; }
         public DbSet<CourseDiscipline> CourseDisciplines { get; set; }
         public DbSet<CourseStudent> CourseStudents { get; set; }
@@ -50,8 +46,7 @@ namespace LMS.Data
         public DbSet<Post> Posts { get; set; }
         public DbSet<PostAttachment> PostAttachments { get; set; }
         public DbSet<PostTag> PostTags { get; set; }
-        public DbSet<City> Cities { get; set; }
-        public DbSet<ClassFollower> ClassFollowers { get; set; }
-        public DbSet<CourseFollower> CourseFollowers { get; set; }
+        public DbSet<UserFollower> UserFollowers { get; set; }
+        public DbSet<UserLanguage> UserLanguages { get; set; }
     }
 }

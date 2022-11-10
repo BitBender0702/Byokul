@@ -22,11 +22,11 @@ namespace LMS.Common.ViewModels.Post
         public DateTime CreatedOn { get; set; }
         public string CreatedBy { get; set; }
         public bool IsDeleted { get; set; }
-        public IEnumerable<IFormFile> PostAttachments { get; set; }
         public IEnumerable<PostTagViewModel> PostTags { get; set; }
         public Guid ParentId { get; set; }
         public OwnerViewModel Owner { get; set; }
         public AuthorViewModel Author { get; set; }
         public string? CoverLetter { get; set; }
+        public IEnumerable<PostAttachmentViewModel> PostAttachments { get; set; }
     }
 }

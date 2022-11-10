@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
-using LMS.Common.ViewModels;
 using LMS.Common.ViewModels.Class;
+using LMS.Common.ViewModels.Common;
 using LMS.Common.ViewModels.Post;
 using LMS.Common.ViewModels.School;
+using LMS.Common.ViewModels.User;
 using LMS.Data.Entity;
 
 namespace LMS.DataAccess.Automapper
@@ -35,6 +36,8 @@ namespace LMS.DataAccess.Automapper
                 .ForMember(x => x.AuthorName, opt => opt.MapFrom(o => o.SchoolName));
             CreateMap<User, AuthorViewModel>()
                 .ForMember(x => x.AuthorName, opt => opt.MapFrom(o => o.UserName));
+            CreateMap<PostAttachment, PostAttachmentViewModel>()
+                .ForMember(x => x.CreatedBy, opt => opt.MapFrom(o => o.CreatedBy.Email));
 
         }
     }

@@ -79,12 +79,12 @@ namespace LMS.Services
             foreach (var attachment in postAttachments)
             {
                 var postAttachment = new PostAttachmentViewModel();
-                postAttachment.Attachment = await _blobService.UploadFileAsync(attachment, containerName);
+                postAttachment.FileName = await _blobService.UploadFileAsync(attachment, containerName);
 
                 var postAttach = new PostAttachment
                 {
                     PostId = postId,
-                    FileName = postAttachment.Attachment,
+                    FileName = postAttachment.FileName,
                     CreatedById = createdById,
                     CreatedOn = DateTime.UtcNow
                 };

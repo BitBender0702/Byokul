@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using LMS.Common.ViewModels.Class;
+using LMS.Common.ViewModels.Common;
 using LMS.Common.ViewModels.Post;
-using LMS.Common.ViewModels.School;
 using LMS.Common.ViewModels.Student;
 using LMS.Common.ViewModels.Teacher;
 using LMS.Data.Entity;
@@ -26,10 +26,10 @@ namespace LMS.Services
         private IGenericRepository<ClassStudent> _classStudentRepository;
         private IGenericRepository<ClassDiscipline> _classDisciplineRepository;
         private IGenericRepository<Post> _postRepository;
-        private IGenericRepository<ClassFollower> _classFollowerRepository;
+        private IGenericRepository<PostAttachment> _postAttachmentRepository;
         private readonly UserManager<User> _userManager;
 
-        public ClassService(IMapper mapper, IGenericRepository<Class> classRepository, IGenericRepository<ClassLanguage> classLanguageRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<ClassDiscipline> classDisciplineRepository, IGenericRepository<Post> postRepository, IGenericRepository<ClassFollower> classFollowerRepository, UserManager<User> userManager)
+        public ClassService(IMapper mapper, IGenericRepository<Class> classRepository, IGenericRepository<ClassLanguage> classLanguageRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<ClassDiscipline> classDisciplineRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, UserManager<User> userManager)
         {
             _mapper = mapper;
             _classRepository = classRepository;
@@ -38,7 +38,7 @@ namespace LMS.Services
             _classStudentRepository = classStudentRepository;
             _classDisciplineRepository = classDisciplineRepository;
             _postRepository = postRepository;
-            _classFollowerRepository = classFollowerRepository;
+            _postAttachmentRepository = postAttachmentRepository;
             _userManager = userManager;
         }
         public async Task SaveNewClass(ClassViewModel classViewModel, string createdById)
@@ -144,41 +144,23 @@ namespace LMS.Services
             }
         }
 
-        public async Task UpdateClass(ClassViewModel classViewModel)
+        public async Task UpdateClass(ClassUpdateViewModel classUpdateViewModel)
         {
-            Class classes = _classRepository.GetById(classViewModel.ClassId);
-            classes.ClassName = classViewModel.ClassName;
-            classes.SchoolId = classViewModel.SchoolId;
-            classes.NoOfStudents = classViewModel.NoOfStudents;
-            classes.StartDate = classViewModel.StartDate;
-            classes.EndDate = classViewModel.EndDate;
-            classes.ServiceTypeId = classViewModel.ServiceTypeId;
-            classes.AccessibilityId = classViewModel.AccessibilityId;
-            classes.Description = classViewModel.Description;
-            classes.Price = classViewModel.Price;
+            Class classes = _classRepository.GetById(classUpdateViewModel.ClassId);
+            classes.Avatar = classUpdateViewModel.Avatar;
+            classes.ClassName = classUpdateViewModel.ClassName;
+            classes.SchoolId = classUpdateViewModel.SchoolId;
+            classes.NoOfStudents = classUpdateViewModel.NoOfStudents;
+            classes.StartDate = classUpdateViewModel.StartDate;
+            classes.EndDate = classUpdateViewModel.EndDate;
+            classes.ServiceTypeId = classUpdateViewModel.ServiceTypeId;
+            classes.AccessibilityId = classUpdateViewModel.AccessibilityId;
+            classes.Price = classUpdateViewModel.Price;
+            classes.Description = classUpdateViewModel.Description;
 
             _classRepository.Update(classes);
             _classRepository.Save();
 
-            if (classViewModel.LanguageIds != null)
-            {
-                await UpdateClassLanguages(classViewModel.LanguageIds, classViewModel.ClassId);
-            }
-
-            if (classViewModel.DisciplineIds != null)
-            {
-                await UpdateClassDisciplines(classViewModel.DisciplineIds, classViewModel.ClassId);
-            }
-
-            if (classViewModel.StudentIds != null)
-            {
-                await UpdateClassStudents(classViewModel.StudentIds, classViewModel.ClassId);
-            }
-
-            if (classViewModel.TeacherIds != null)
-            {
-                await UpdateClassTeachers(classViewModel.TeacherIds, classViewModel.ClassId);
-            }
         }
 
         async Task UpdateClassLanguages(IEnumerable<string> languageIds, Guid classId)
@@ -254,7 +236,6 @@ namespace LMS.Services
                 model.Students = await GetStudents(classes.ClassId);
                 model.Teachers = await GetTeachers(classes.ClassId);
                 model.Posts = await GetPostsByClassId(classes.ClassId);
-                model.ClassFollowers = await FollowerList(classes.ClassId);
 
                 return model;
             }
@@ -288,18 +269,13 @@ namespace LMS.Services
             return discipleneViewModel;
         }
 
-        async Task<IEnumerable<StudentViewModel>> GetStudents(Guid classId)
+        async Task<int> GetStudents(Guid classId)
         {
             var classStudents = _classStudentRepository.GetAll()
                 .Include(x => x.Student)
                 .ThenInclude(x => x.CreatedBy)
                 .Where(x => x.ClassId == classId).ToList();
-            var studentViewModel = new List<StudentViewModel>();
-            foreach (var res in classStudents)
-            {
-                studentViewModel.Add(_mapper.Map<StudentViewModel>(res.Student));
-            }
-            return studentViewModel;
+            return classStudents.Count();
         }
 
         async Task<IEnumerable<TeacherViewModel>> GetTeachers(Guid classId)
@@ -343,6 +319,13 @@ namespace LMS.Services
 
             foreach (var post in result)
             {
+                var attachment = await GetAttachmentsByPostId(post.Id);
+                post.PostAttachments = attachment;
+            }
+
+
+            foreach (var post in result)
+            {
                 var author = await _classRepository.GetAll().Include(x => x.School).Where(x => x.ClassId == post.ParentId).FirstOrDefaultAsync();
                 post.Owner = _mapper.Map<OwnerViewModel>(author.School);
             }
@@ -356,24 +339,11 @@ namespace LMS.Services
             return result;
         }
 
-        public async Task SaveClassFollower(Guid classId, string userId)
+        public async Task<IEnumerable<PostAttachmentViewModel>> GetAttachmentsByPostId(Guid postId)
         {
-            var classFollower = new ClassFollower
-            {
-                ClassId = classId,
-                UserId = userId
-            };
+            var attacchmentList = await _postAttachmentRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.PostId == postId).ToListAsync();
 
-            _classFollowerRepository.Insert(classFollower);
-            _classFollowerRepository.Save();
-        }
-
-        public async Task<IEnumerable<ClassFollowerViewModel>> FollowerList(Guid classId)
-        {
-            var followerList = await _classFollowerRepository.GetAll().Where(x => x.ClassId == classId)
-                .Include(x => x.Class)
-                .Include(x => x.User).ToListAsync();
-            var result = _mapper.Map<IEnumerable<ClassFollowerViewModel>>(followerList);
+            var result = _mapper.Map<List<PostAttachmentViewModel>>(attacchmentList);
             return result;
         }
     }

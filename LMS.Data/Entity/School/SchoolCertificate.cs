@@ -14,9 +14,6 @@ namespace LMS.Data.Entity
         public string CertificateUrl { get; set; }
         public Guid SchoolId { get; set; }
         public School School { get; set; }
-        public string Name { get; set; }
-        public string ProviderName { get; set; }
-        public DateTime IssueDate { get; set; }
-        public string? Description { get; set; }
+        public string? Name { get; set; }
     }
 }

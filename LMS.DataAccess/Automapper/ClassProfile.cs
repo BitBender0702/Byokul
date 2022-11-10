@@ -23,7 +23,6 @@ namespace LMS.DataAccess.Automapper
             CreateMap<Class, ClassDetailsViewModel>()
                 .ForMember(x => x.CreatedBy, opt => opt.MapFrom(o => o.CreatedBy.Email));
             CreateMap<Accessibility, AccessibilityViewModel>();
-            CreateMap<ClassFollower, ClassFollowerViewModel>();
         }
     }
 }

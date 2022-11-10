@@ -1,9 +1,11 @@
 ﻿using LMS.Common.Enums;
 using LMS.Common.ViewModels.Class;
+using LMS.Common.ViewModels.Common;
 using LMS.Common.ViewModels.Course;
 using LMS.Common.ViewModels.Post;
 using LMS.Common.ViewModels.Student;
 using LMS.Common.ViewModels.Teacher;
+using LMS.Common.ViewModels.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,9 +33,9 @@ namespace LMS.Common.ViewModels.School
         public bool IsVarified { get; set; }
         public StatusEnum Status { get; set; }
         public IEnumerable<SchoolCertificateViewModel> SchoolCertificates { get; set; }
-        public IEnumerable<SchoolFollowerViewModel> SchoolFollowers { get; set; }
+        public int SchoolFollowers { get; set; }
         public IEnumerable<UserViewModel> Users { get; set; }
-        public IEnumerable<StudentViewModel> Students { get; set; }
+        public int Students { get; set; }
         public IEnumerable<TeacherViewModel> Teachers { get; set; }
         public IEnumerable<ClassViewModel> Classes { get; set; }
         public IEnumerable<CourseViewModel> Courses { get; set; }

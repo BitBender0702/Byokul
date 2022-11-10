@@ -2,6 +2,7 @@
 using LMS.Common.ViewModels.School;
 using LMS.Common.ViewModels.ServiceType;
 using LMS.Common.ViewModels.Teacher;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +25,10 @@ namespace LMS.Common.ViewModels.Class
         public Guid? AccessibilityId { get; set; }
         public AccessibilityViewModel Accessibility { get; set; }
         public string? Description { get; set; }
-        public long Price { get; set; }
+        public long? Price { get; set; }
+        public long? Rating { get; set; }
+        public string? ThumbnailUrl { get; set; }
+        public IFormFile Thumbnail { get; set; }
         public IEnumerable<string> LanguageIds { get; set; }
         public IEnumerable<string> TeacherIds { get; set; }
         public IEnumerable<string> StudentIds { get; set; }

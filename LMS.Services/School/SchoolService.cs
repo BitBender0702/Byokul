@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using LMS.Common.ViewModels;
 using LMS.Common.ViewModels.Class;
+using LMS.Common.ViewModels.Common;
 using LMS.Common.ViewModels.Course;
 using LMS.Common.ViewModels.Post;
 using LMS.Common.ViewModels.School;
@@ -33,8 +34,9 @@ namespace LMS.Services
         private IGenericRepository<ClassStudent> _classStudentRepository;
         private IGenericRepository<CourseStudent> _courseStudentRepository;
         private IGenericRepository<Post> _postRepository;
+        private IGenericRepository<PostAttachment> _postAttachmentRepository;
         private readonly UserManager<User> _userManager;
-        public SchoolService(IMapper mapper, IGenericRepository<School> schoolRepository, IGenericRepository<SchoolCertificate> schoolCertificateRepository, IGenericRepository<SchoolTag> schoolTagRepository, IGenericRepository<Country> countryRepository, IGenericRepository<Specialization> specializationRepository, IGenericRepository<Language> languageRepository, IGenericRepository<SchoolUser> schoolUserRepository, IGenericRepository<SchoolFollower> schoolFollowerRepository, IGenericRepository<SchoolLanguage> schoolLanguageRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<CourseTeacher> courseTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<Post> postRepository, UserManager<User> userManager)
+        public SchoolService(IMapper mapper, IGenericRepository<School> schoolRepository, IGenericRepository<SchoolCertificate> schoolCertificateRepository, IGenericRepository<SchoolTag> schoolTagRepository, IGenericRepository<Country> countryRepository, IGenericRepository<Specialization> specializationRepository, IGenericRepository<Language> languageRepository, IGenericRepository<SchoolUser> schoolUserRepository, IGenericRepository<SchoolFollower> schoolFollowerRepository, IGenericRepository<SchoolLanguage> schoolLanguageRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<CourseTeacher> courseTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, UserManager<User> userManager)
         {
             _mapper = mapper;
             _schoolRepository = schoolRepository;
@@ -53,6 +55,7 @@ namespace LMS.Services
             _classStudentRepository = classStudentRepository;
             _courseStudentRepository = courseStudentRepository;
             _postRepository = postRepository;
+            _postAttachmentRepository = postAttachmentRepository;
             _userManager = userManager;
         }
 
@@ -153,10 +156,17 @@ namespace LMS.Services
             var user = await _userManager.FindByIdAsync(userId);
 
             var userroles = await _userManager.GetUsersInRoleAsync(role);
-            if (userroles.Count != 0)
+            if (userroles.Any(y => y.Id == user.Id))
             {
-                var rsponse = userroles.Single(c => c.Id == userId);
-                if (rsponse == null)
+                if (userroles.Count != 0)
+                {
+                    var rsponse = userroles.Single(c => c.Id == userId);
+                    if (rsponse == null)
+                    {
+                        await _userManager.AddToRoleAsync(user, role);
+                    }
+                }
+                else
                 {
                     await _userManager.AddToRoleAsync(user, role);
                 }
@@ -167,52 +177,37 @@ namespace LMS.Services
             }
         }
 
-        async Task SaveSchoolCertificate(IEnumerable<SchoolCertificateViewModel> schoolCertificates, Guid schoolId)
+        public async Task SaveSchoolCertificates(SchoolCertificateViewModel schoolCertificates)
         {
-            foreach (var certificate in schoolCertificates)
+            foreach (var certificate in schoolCertificates.Certificates)
             {
                 var schoolCertificate = new SchoolCertificate
                 {
-                    CertificateUrl = certificate.CertificateUrl,
-                    SchoolId = schoolId
+                    CertificateUrl = certificate.Name,
+                    SchoolId = schoolCertificates.SchoolId
                 };
-                try
-                {
-                    _schoolCertificateRepository.Insert(schoolCertificate);
-                }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
-                try
-                {
-                    _schoolCertificateRepository.Save();
-                }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
+                _schoolCertificateRepository.Insert(schoolCertificate);
+                _schoolCertificateRepository.Save();
             }
+
         }
 
-        public async Task UpdateSchool(SchoolViewModel schoolViewModel)
+        public async Task UpdateSchool(SchoolUpdateViewModel schoolUpdateViewModel)
         {
-            School school = _schoolRepository.GetById(schoolViewModel.SchoolId);
-            school.SchoolName = schoolViewModel.SchoolName;
-            school.Avatar = schoolViewModel.Avatar;
-            school.CoveredPhoto = schoolViewModel.CoveredPhoto;
-            school.Description = schoolViewModel.Description;
-            school.SpecializationId = schoolViewModel.SpecializationId;
-            school.CountryId = schoolViewModel.CountryId;
+            School school = _schoolRepository.GetById(schoolUpdateViewModel.SchoolId);
+            school.SchoolName = schoolUpdateViewModel.SchoolName;
+            school.Avatar = schoolUpdateViewModel.Avatar;
+            school.SchoolSlogan = schoolUpdateViewModel.SchoolSlogan;
+            school.Founded = schoolUpdateViewModel.Founded;
+            school.SchoolEmail = schoolUpdateViewModel.SchoolEmail;
+            school.AccessibilityId = schoolUpdateViewModel.AccessibilityId;
+            school.CreatedById = schoolUpdateViewModel.OwnerId;
+            school.Description = schoolUpdateViewModel.Description;
 
             _schoolRepository.Update(school);
             _schoolRepository.Save();
 
-            if (schoolViewModel.LanguageIds != null)
-            {
-                await UpdateSchoolLanguages(schoolViewModel.LanguageIds, schoolViewModel.SchoolId);
-            }
-
+            await AddRoleForUser(schoolUpdateViewModel.OwnerId, "School Owner");
         }
 
         async Task UpdateSchoolLanguages(IEnumerable<string> languageIds, Guid schoolId)
@@ -226,25 +221,13 @@ namespace LMS.Services
             await SaveSchoolLanguages(languageIds, schoolId);
         }
 
-        async Task UpdateSchoolCertificates(IEnumerable<SchoolCertificateViewModel> schoolCertificateViewModel, Guid schoolId)
-        {
-            var schoolCertificate = _schoolCertificateRepository.GetAll().Where(x => x.SchoolId == schoolId).ToList();
-            if (schoolCertificate.Any())
-            {
-                _schoolCertificateRepository.DeleteAll(schoolCertificate);
-            }
 
-
-            await SaveSchoolCertificate(schoolCertificateViewModel, schoolId);
-
-
-        }
 
 
         public async Task<SchoolDetailsViewModel> GetSchoolById(Guid schoolId, string loginUserId)
         {
             SchoolDetailsViewModel model = new SchoolDetailsViewModel();
-            
+
             if (schoolId != null)
             {
                 var schoolLanguages = _schoolLanguageRepository.GetAll()
@@ -284,7 +267,7 @@ namespace LMS.Services
                 var schoolStudents = classStudents.Union(courseStudents).DistinctBy(x => x.StudentId).ToList();
 
                 response.Teachers = schoolTeachers;
-                response.Students = schoolStudents;
+                response.Students = schoolStudents.Count();
 
                 return response;
             }
@@ -339,13 +322,6 @@ namespace LMS.Services
             _schoolRepository.Save();
         }
 
-        public async Task<IEnumerable<CountryViewModel>> CountryList()
-        {
-            var countryList = _countryRepository.GetAll();
-            var result = _mapper.Map<IEnumerable<CountryViewModel>>(countryList);
-            return result;
-        }
-
         public async Task<IEnumerable<SpecializationViewModel>> SpecializationList()
         {
             var specializationList = _specializationRepository.GetAll();
@@ -371,13 +347,10 @@ namespace LMS.Services
             _schoolFollowerRepository.Save();
         }
 
-        public async Task<IEnumerable<SchoolFollowerViewModel>> FollowerList(Guid schoolId)
+        public async Task<int> FollowerList(Guid schoolId)
         {
-            var followerList = await _schoolFollowerRepository.GetAll().Where(x => x.SchoolId == schoolId)
-                .Include(x => x.School)
-                .Include(x => x.User).ToListAsync();
-            var result = _mapper.Map<IEnumerable<SchoolFollowerViewModel>>(followerList);
-            return result;
+            var followerList = await _schoolFollowerRepository.GetAll().Where(x => x.SchoolId == schoolId).ToListAsync();
+            return followerList.Count();
         }
 
         public async Task SaveSchoolUser(SchoolUserViewModel schoolUserViewModel)
@@ -493,6 +466,13 @@ namespace LMS.Services
             var courseList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == schoolId).ToListAsync();
 
             var result = _mapper.Map<List<PostDetailsViewModel>>(courseList);
+
+            foreach (var post in result)
+            {
+                var attachment = await GetAttachmentsByPostId(post.Id);
+                post.PostAttachments = attachment;
+            }
+
             var user = await _userManager.Users.Where(x => x.Id == loginUserId).FirstOrDefaultAsync();
             var role = await _userManager.GetRolesAsync(user);
 
@@ -522,6 +502,14 @@ namespace LMS.Services
                 post.Owner = _mapper.Map<OwnerViewModel>(owner);
             }
 
+            return result;
+        }
+
+        public async Task<IEnumerable<PostAttachmentViewModel>> GetAttachmentsByPostId(Guid postId)
+        {
+            var attacchmentList = await _postAttachmentRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.PostId == postId).ToListAsync();
+
+            var result = _mapper.Map<List<PostAttachmentViewModel>>(attacchmentList);
             return result;
         }
     }

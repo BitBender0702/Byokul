@@ -10,6 +10,8 @@ namespace LMS.Data.Entity
     {
         public Guid StudentId { get; set; }
         public string StudentName { get; set; }
-        
+        public string? UserId { get; set; }
+        public User User { get; set; }
+
     }
 }
