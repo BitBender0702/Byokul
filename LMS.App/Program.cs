@@ -65,6 +65,7 @@ builder.Services.AddScoped<IBlobService, BlobService>();
 builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<IBigBlueButtonService, BigBlueButtonService>();
 builder.Services.AddScoped<ICommonService, CommonService>();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<TimerManager>();
 

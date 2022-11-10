@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace LMS.Data.Entity
 {
-    public class CourseFollower
+    public class UserLanguage
     {
         public Guid Id { get; set; }
-        public Guid? CourseId { get; set; }
-        public Course Course { get; set; }
         public string? UserId { get; set; }
         public User User { get; set; }
+        public Guid? LanguageId { get; set; }
+        public Language Language { get; set; }
     }
 }
