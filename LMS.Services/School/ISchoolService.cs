@@ -21,6 +21,10 @@ namespace LMS.Services
         Task SaveSchoolFollower(Guid schoolId, string userId);
         Task SaveSchoolUser(SchoolUserViewModel schoolUserViewModel);
         Task SaveSchoolCertificates(SchoolCertificateViewModel schoolCertificateViewModel);
+
+        Task SaveSchoolDefaultLogo(string logoUrl);
+
+        Task<IEnumerable<SchoolDefaultLogoViewmodel>> GetSchoolDefaultLogos();
         
     }
 }

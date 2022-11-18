@@ -25,8 +25,19 @@ export class SchoolService{
         return this.http.post(`${this.apiUrl}/school/saveNewSchool`, credentials);
     }
 
+    editSchool(credentials:any): Observable<any> {
+        for (var pair of credentials.entries()) {
+            console.log(pair[0]+ ', ' + pair[1]); 
+        }
+        return this.http.post(`${this.apiUrl}/school/updateSchool`, credentials);
+    }
+
+    getDefaultLogo():Observable<any>{
+        return this.http.get(`${this.apiUrl}/school/defaultLogoList`);
+    }
+
     getCountryList():Observable<any>{
-        return this.http.get(`${this.apiUrl}/school/countryList`);
+        return this.http.get(`${this.apiUrl}/users/countryList`);
     }
 
     getSpecializationList():Observable<any>{

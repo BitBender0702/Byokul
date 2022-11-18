@@ -1,0 +1,63 @@
+{
+    "NewAccount": "Yeni hesap",
+    "LoginAccount": "Giriş yapmak",
+    "Okul": "OKUL",
+    "Name": "İsim",
+    "SurName":"Soyadı",
+    "Gender":"Cinsiyet",
+    "Email": "E-posta",
+    "Password": "Şifre",
+    "RepeatPassword": "Şifreyi tekrar girin",
+    "Register":"Kayıt ol",
+    "AlreadyAccount": "Zaten hesabınız var mı?",
+    "DontHaveAccount": "Hesabınız yok mu?",
+    "CreateForFree": "Ücretsiz Oluşturun",
+    "Login": "Giriş yapmak",
+    "Back": "Geri",
+
+    "ForgotPassword": "Parolanızı mı unuttunuz?",
+    "Submit": "Göndermek",
+    "ResetPassword": "Şifreyi yenile",
+    "LoginInfo1" : "Ücretsiz veya ücretli sınıfları olan bir sanal okul oluşturun.",
+    "LoginInfo2" : "Canlı yayın yapın ve içerik paylaşın.",
+    "LoginInfo3" : "Öğrencilerinizle tanışın ve tartışın.",
+    "LoginInfo4" : "Ve çok daha fazlası, ek bilgi için buraya tıklayın.",
+    "TeachAndLearn":"Öğret ve öğren",
+    "With":"İle birlikte",
+    "Male":"Erkek",
+    "Female":"Dişi",
+    "Other":"Başka",
+    "YouAlsoCan":"Ayrıca",
+    "CreateAccount":"Hesap oluştur",
+    "Or":"veya",
+
+
+    "Here From User Portal":"From User Portal",
+    "MyEarnings":"Kazançlarım",
+    "Subscriptions": "Abonelikler",
+    "Owned":"sahip olunan",
+    "Schools":"okullar",
+    "Classes":"sınıflar",
+    "Courses":"Dersler",
+    "CreatePost":"Gönderi Oluştur",
+
+
+
+
+
+    "Here from Create School":"Here from create school",
+    "CreateSchool":"Okul Oluştur",
+    "Step1":"Adım 1: Okulunuz hakkında bilgi",
+    "Step2":"Adım 2: Okulunuz için Logo Seçin",
+    "SchoolName":"Okul Adı",
+    "Specialization":"Uzmanlık",
+    "TellUsAboutSchool":"Bize okulunuzdan bahsedin",
+    "Next":"Sonraki",
+    "ChooseImageFile":"Bir resim dosyası seçin veya",
+    "DragItHere":"buraya sürükleyin.",
+    "ChooseDefaultLogo":"Veya varsayılan logoyu seçin",
+    "Continue":"Devam et",
+    "YouCreatedNewSchool":"Yeni Okul oluşturdunuz!",
+    "LinkInfo":"İşte Okulunuzun bağlantısı, Öğrenciler veya Öğretmenlerle paylaşabilirsiniz"
+
+  }

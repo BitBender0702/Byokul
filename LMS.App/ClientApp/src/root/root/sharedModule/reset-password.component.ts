@@ -1,9 +1,10 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, Injector, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/root/service/auth.service';
 import { ResetPasswordModel } from 'src/root/interfaces/reset-password';
+import { MultilingualComponent } from './Multilingual/multilingual.component';
 
 @Component({
     selector: 'change-password',
@@ -11,18 +12,23 @@ import { ResetPasswordModel } from 'src/root/interfaces/reset-password';
     styleUrls: []
   })
 
-export class ResetPasswordComponent implements OnInit {
+export class ResetPasswordComponent extends MultilingualComponent implements OnInit {
     invalidPasswordReset!: boolean;
 
     resetPasswordForm!:FormGroup;
     isSubmitted: boolean = false;
     user: any;
     
-    //credentials: ResetPasswordModel = {newPassword:'', confirmPassword:''};
-    private _authService;
-    constructor(private fb: FormBuilder,private router: Router, authService:AuthService, private route:ActivatedRoute) { 
+  private _authService;
+    constructor(injector: Injector,private fb: FormBuilder,private router: Router, authService:AuthService, private route:ActivatedRoute) { 
+      super(injector);
         this._authService = authService;
     }
+
+    switchLanguage(lang:string){
+      this.translate.use(lang);
+    }
+
     ngOnInit(): void {
 
       this.resetPasswordForm = this.fb.group({
@@ -48,15 +54,4 @@ export class ResetPasswordComponent implements OnInit {
               })
     }
 
-    // resetPassword = ( form: NgForm) => {
-    //     if (form.valid) {
-    //       this._authService.resetPassword(this.credentials).subscribe({ 
-    //         next: () => {
-    //           this.invalidPasswordReset = false; 
-    //           this.router.navigateByUrl("school-Teachers/auth/login");
-    //         },
-    //         error: (err: HttpErrorResponse) => this.invalidPasswordReset = true
-    //       })
-    //     }
-    //   }
   }

@@ -1,0 +1,265 @@
+<div class="sidemenu">
+        <div class="text-center">
+                <a href="" class="main-logo"><img src="../../../../assets/images/logo.svg"/></a>
+              </div>
+              <div class="d-flex text-center notification-box justify-content-center">
+                <ul class="list-unstyled d-flex ">
+                  <li class="d-inline-block">
+                    <div class="dropdown">
+                      <button class="bg-transparent dropdown-toggle rounded-circle" type="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <img src="../../../../assets/images/school/user.png" />
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li><a class="dropdown-item" href="#">Another action</a></li>
+                      </ul>
+                    </div>
+                  </li>
+                  <li class="d-inline-block"><button type="button "
+                      class="notification-btn position-relative border-0 bg-transparent"><img src="../../../../assets/images/school/chat-icon.svg" />
+                      <span
+                        class="badge rounded-circle d-inline-flex align-items-center justify-content-center fw_700 font_12">3</span></button>
+                  </li>
+                  <li class="d-inline-block"><button type="button "
+                      class="notification-btn position-relative border-0 bg-transparent"><img
+                        src="../../../../assets/images/school/Notification.svg" /> <span
+                        class="badge rounded-circle d-inline-flex align-items-center justify-content-center fw_700 font_12">3</span></button>
+                  </li>
+    
+    
+                </ul>
+              </div>
+              <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400">{{'MyEarnings'| translate }} $ </button>
+              <hr class="earning-hr" />
+              <div class="custom-tabs">
+                <ul class="nav nav-tabs mb-3 border-0" id="myTab" role="tablist">
+                  <li class="nav-item ps-0 mb-0" role="presentation">
+                    <button class="nav-link active" id="subscriptions-tab" data-bs-toggle="tab"
+                      data-bs-target="#subscriptions-tab-pane" type="button" role="tab" aria-controls="subscriptions-tab-pane"
+                      aria-selected="true">{{'Subscriptions'| translate }}</button>
+                  </li>
+                  <li class="nav-item ps-0 mb-0" role="presentation">
+                    <button class="nav-link" id="owned-tab" data-bs-toggle="tab" data-bs-target="#owned-tab-pane"
+                      type="button" role="tab" aria-controls="owned-tab-pane" aria-selected="false">{{'Owned'| translate }}</button>
+                  </li>
+                </ul>
+                <div class="tab-content" id="pills-tabContent">
+                  <div class="tab-pane fade show active" id="subscriptions-tab-pane" role="tabpanel"
+                    aria-labelledby="subscriptions-tab" tabindex="0">
+                    <div class="accordion" id="accordionPanelsStayOpenExample">
+                      <div class="accordion-item border-0 bg-transparent">
+                        <h2 class="accordion-header" id="headingOne">
+                          <button
+                            class="accordion-button  bg-transparent font_14 text_ltgray fw_400 d-flex align-items-center justify-content-between"
+                            type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true"
+                            aria-controls="collapseOne">
+                            <span>{{'Schools'| translate }} </span>
+                          </button>
+                <a href="#"
+                              class="add-btn d-inline-flex align-items-center justify-content-center rounded-circle"><img
+                                src="../../../../assets/images/school/plus-light.svg" /></a>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                          data-bs-parent="#accordionExample">
+                          <div class="accordion-body p-0">
+
+
+                          <div  *ngFor="let item of sidebarInfo.followedSchools;">
+                            <div class="school-name d-flex align-items-center font_16">
+                              <div class="school-img rounded-circle me-3">
+                                <img [src]="item.avatar" />
+                              </div>
+                              {{item.schoolName}}
+                            </div>
+                          </div>
+
+                          </div>
+                        </div>
+                      </div>
+                      <div class="accordion-item border-0 bg-transparent">
+                        <h2 class="accordion-header" id="headingTwo">
+                          <button
+                            class="accordion-button  bg-transparent font_14 text_ltgray fw_400 d-flex align-items-center justify-content-between"
+                            type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true"
+                            aria-controls="collapseTwo">
+                            <span>{{'Classes'| translate }}</span>
+                          </button>
+                <a href="#"
+                              class="add-btn d-inline-flex align-items-center justify-content-center rounded-circle"><img
+                                src="../../../../assets/images/school/plus-light.svg" /></a>
+                        </h2>
+                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+                          data-bs-parent="#accordionExample">
+                          <div class="accordion-body p-0">
+
+
+                            <div  *ngFor="let item of sidebarInfo.followedClasses;">
+                              <div class="school-name d-flex align-items-center font_16">
+                                <div class="school-img rounded-circle me-3">
+                                  <img [src]="item.avatar" />
+                                </div>
+                                {{item.className}}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="accordion-item border-0 bg-transparent">
+                        <h2 class="accordion-header" id="headingThree">
+                          <button
+                            class="accordion-button  bg-transparent font_14 text_ltgray fw_400 d-flex align-items-center justify-content-between"
+                            type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="true"
+                            aria-controls="collapseThree">
+                            <span>{{'Courses'| translate }} </span>
+                          </button>
+                <a href="#"
+                              class="add-btn d-inline-flex align-items-center justify-content-center rounded-circle"><img
+                                src="../../../../assets/images/school/plus-light.svg" /></a>
+                        </h2>
+                        <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
+                          data-bs-parent="#accordionExample">
+                          <div class="accordion-body p-0">
+
+
+                            <div  *ngFor="let item of sidebarInfo.followedCourses;">
+                              <div class="school-name d-flex align-items-center font_16">
+                                <div class="school-img rounded-circle me-3">
+                                  <img src="../../../assets/images/school/school-1.png" />
+                                </div>
+                                {{item.courseName}}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="tab-pane fade" id="owned-tab-pane" role="tabpanel" aria-labelledby="owned-tab"
+                    tabindex="0">
+                    <div class="accordion" id="accordionPanelsStayOpenExample">
+                      <div class="accordion-item border-0 bg-transparent">
+                        <h2 class="accordion-header" id="headingOne">
+                          <button
+                            class="accordion-button  bg-transparent font_14 text_ltgray fw_400 d-flex align-items-center justify-content-between"
+                            type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true"
+                            aria-controls="collapseOne">
+                            <span>{{'Schools'| translate }} </span>
+                          </button>
+                <a [routerLink]="['/user/createSchool']" class="add-btn d-inline-flex align-items-center justify-content-center rounded-circle"><img
+                                src="../../../../assets/images/school/plus-light.svg" /></a>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                          data-bs-parent="#accordionExample">
+                          <div class="accordion-body p-0">
+
+                            <div  *ngFor="let item of sidebarInfo.ownedSchools;">
+                              <div class="school-name d-flex align-items-center font_16">
+                                <div class="school-img rounded-circle me-3">
+                                  <img [src]="item.avatar" />
+                                </div>
+                                {{item.schoolName}}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="accordion-item border-0 bg-transparent">
+                        <h2 class="accordion-header" id="headingTwo">
+                          <button
+                            class="accordion-button  bg-transparent font_14 text_ltgray fw_400 d-flex align-items-center justify-content-between"
+                            type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true"
+                            aria-controls="collapseTwo">
+                            <span>{{'Classes'| translate }} </span>
+                          </button>
+                <a href="#"
+                              class="add-btn d-inline-flex align-items-center justify-content-center rounded-circle"><img
+                                src="../../../../assets/images/school/plus-light.svg" /></a>
+                        </h2>
+                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+                          data-bs-parent="#accordionExample">
+                          <div class="accordion-body p-0">
+
+                            <div  *ngFor="let item of sidebarInfo.ownedClasses;">
+                              <div class="school-name d-flex align-items-center font_16">
+                                <div class="school-img rounded-circle me-3">
+                                  <img [src]="item.avatar" />
+                                </div>
+                                {{item.className}}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="accordion-item border-0 bg-transparent">
+                        <h2 class="accordion-header" id="headingThree">
+                          <button
+                            class="accordion-button bg-transparent font_14 text_ltgray fw_400 d-flex align-items-center justify-content-between"
+                            type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="true"
+                            aria-controls="collapseThree">
+                            <span>{{'Courses'| translate }} </span>
+                          </button>
+                <a href="#"
+                              class="add-btn d-inline-flex align-items-center justify-content-center rounded-circle"><img
+                                src="../../../../assets/images/school/plus-light.svg" /></a>
+                        </h2>
+                        <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
+                          data-bs-parent="#accordionExample">
+                          <div class="accordion-body p-0">
+
+
+                            <div  *ngFor="let item of sidebarInfo.ownedCourses;">
+                              <div class="school-name d-flex align-items-center font_16">
+                                <div class="school-img rounded-circle me-3">
+                                  <img src="../../../assets/images/school/school-4.png" />
+                                </div>
+                                {{item.courseName}
+                              </div>
+                            </div>
+
+                            <!-- <div class="school-name d-flex align-items-center font_16">
+                              <div class="school-img rounded-circle me-3">
+                                <img src="images/school-6.png" />
+                              </div>
+                              Course Name
+                            </div>
+                            <div class="school-name d-flex align-items-center font_16">
+                              <div class="school-img rounded-circle me-3">
+                                <img src="images/school-7.png" />
+                              </div>
+                              Course Name
+                            </div>
+                            <div class="school-name d-flex align-items-center font_16">
+                              <div class="school-img rounded-circle me-3">
+                                <img src="images/school-8.png" />
+                              </div>
+                              Course Name
+                            </div> -->
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                
+                <div class="d-flex justify-content-between flex-wrap mt-4">
+                  <div class="language-btn">
+                    <input [attr.checked]="selectedLanguage == 'en' ? true : null" (click)="switchLanguage('en')" type="radio" class="btn-check" name="btnradio" id="lang1" autocomplete="off">
+                    <label class="btn btn-outline-primary font_12 rounded-8" for="lang1">English</label>
+                  </div>
+                  <div class="language-btn">
+                    <input [attr.checked]="selectedLanguage == 'ar' ? true : null" (click)="switchLanguage('ar')" type="radio" class="btn-check" name="btnradio" id="lang2" autocomplete="off">
+                    <label class="btn btn-outline-primary font_12 rounded-8" for="lang2">اللغة العربية</label>
+                  </div>
+                  <div class="language-btn">
+                    <input [attr.checked]="selectedLanguage == 'tr' ? true : null" (click)="switchLanguage('tr')" type="radio" class="btn-check" name="btnradio" id="lang3" autocomplete="off">
+                    <label class="btn btn-outline-primary font_12 rounded-8" for="lang3">Türkçe</label>
+                  </div>
+                </div>
+
+
+                
+              </div>
+    
+            </div>

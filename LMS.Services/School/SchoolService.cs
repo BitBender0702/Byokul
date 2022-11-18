@@ -9,6 +9,7 @@ using LMS.Common.ViewModels.Student;
 using LMS.Common.ViewModels.Teacher;
 using LMS.Data.Entity;
 using LMS.DataAccess.Repository;
+using LMS.Services.Blob;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,6 +17,7 @@ namespace LMS.Services
 {
     public class SchoolService : ISchoolService
     {
+        public string containerName = "schoollogo";
         private readonly IMapper _mapper;
         private IGenericRepository<School> _schoolRepository;
         private IGenericRepository<SchoolCertificate> _schoolCertificateRepository;
@@ -35,8 +37,10 @@ namespace LMS.Services
         private IGenericRepository<CourseStudent> _courseStudentRepository;
         private IGenericRepository<Post> _postRepository;
         private IGenericRepository<PostAttachment> _postAttachmentRepository;
+        private IGenericRepository<SchoolDefaultLogo> _schoolDefaultLogoRepository;
         private readonly UserManager<User> _userManager;
-        public SchoolService(IMapper mapper, IGenericRepository<School> schoolRepository, IGenericRepository<SchoolCertificate> schoolCertificateRepository, IGenericRepository<SchoolTag> schoolTagRepository, IGenericRepository<Country> countryRepository, IGenericRepository<Specialization> specializationRepository, IGenericRepository<Language> languageRepository, IGenericRepository<SchoolUser> schoolUserRepository, IGenericRepository<SchoolFollower> schoolFollowerRepository, IGenericRepository<SchoolLanguage> schoolLanguageRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<CourseTeacher> courseTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, UserManager<User> userManager)
+        private readonly IBlobService _blobService;
+        public SchoolService(IMapper mapper, IGenericRepository<School> schoolRepository, IGenericRepository<SchoolCertificate> schoolCertificateRepository, IGenericRepository<SchoolTag> schoolTagRepository, IGenericRepository<Country> countryRepository, IGenericRepository<Specialization> specializationRepository, IGenericRepository<Language> languageRepository, IGenericRepository<SchoolUser> schoolUserRepository, IGenericRepository<SchoolFollower> schoolFollowerRepository, IGenericRepository<SchoolLanguage> schoolLanguageRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<CourseTeacher> courseTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<SchoolDefaultLogo> schoolDefaultLogoRepository, UserManager<User> userManager, IBlobService blobService)
         {
             _mapper = mapper;
             _schoolRepository = schoolRepository;
@@ -56,11 +60,17 @@ namespace LMS.Services
             _courseStudentRepository = courseStudentRepository;
             _postRepository = postRepository;
             _postAttachmentRepository = postAttachmentRepository;
+            _schoolDefaultLogoRepository = schoolDefaultLogoRepository;
             _userManager = userManager;
+            _blobService = blobService;
         }
 
         public async Task SaveNewSchool(SchoolViewModel schoolViewModel, string createdById)
         {
+            if (schoolViewModel.AvatarImage != null)
+            {
+                schoolViewModel.Avatar = await _blobService.UploadFileAsync(schoolViewModel.AvatarImage, containerName);
+            }
             var school = new School
             {
                 SchoolName = schoolViewModel.SchoolName,
@@ -510,6 +520,24 @@ namespace LMS.Services
             var attacchmentList = await _postAttachmentRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.PostId == postId).ToListAsync();
 
             var result = _mapper.Map<List<PostAttachmentViewModel>>(attacchmentList);
+            return result;
+        }
+
+        public async Task SaveSchoolDefaultLogo(string logoUrl)
+        {
+            var schoolDefaultLogo = new SchoolDefaultLogo
+            {
+                LogoUrl = logoUrl,
+            };
+
+            _schoolDefaultLogoRepository.Insert(schoolDefaultLogo);
+            _schoolDefaultLogoRepository.Save();
+        }
+
+        public async Task<IEnumerable<SchoolDefaultLogoViewmodel>> GetSchoolDefaultLogos()
+        {
+            var logoList = _schoolDefaultLogoRepository.GetAll();
+            var result = _mapper.Map<IEnumerable<SchoolDefaultLogoViewmodel>>(logoList);
             return result;
         }
     }

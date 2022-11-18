@@ -1,0 +1,63 @@
+{
+  "NewAccount": "حساب جديد",
+  "LoginAccount": "تسجيل الدخول",
+  "Okul": "Okul",
+  "Name": "اسم",
+  "SurName":"لقب",
+  "Gender":"جنس",
+  "Email": "البريد الإلكتروني",
+  "Password": "كلمة المرور",
+  "RepeatPassword": "اعد كلمة السر",
+  "Register":"يسجل",
+  "AlreadyAccount": "هل لديك حساب؟",
+  "DontHaveAccount": "ليس لديك حساب؟",
+  "CreateForFree": "خلق مجانا",
+  "Login": "تسجيل الدخول",
+  "Back": "خلف",
+
+  "ForgotPassword": "هل نسيت كلمة السر؟",
+  "Submit": "يُقدِّم",
+  "ResetPassword": "إعادة تعيين كلمة المرور",
+  "LoginInfo1" : "أنشئ مدرسة افتراضية بها فصول دراسية مجانية أو مدفوعة.",
+  "LoginInfo2" : "بث مباشر ومشاركة المحتوى.",
+  "LoginInfo3" : "اجتمع مع طلابك وناقشهم.",
+  "LoginInfo4" : "وأكثر من ذلك بكثير ، انقر هنا للحصول على معلومات إضافية.",
+  "TeachAndLearn":"علم وتعلم",
+  "With":"مع",
+  "Male":"ذكر",
+  "Female":"أنثى",
+  "Other":"آخر",
+  "YouAlsoCan":"يمكنك أيضا",
+  "CreateAccount":"إصنع حساب",
+  "Or":"أو",
+
+
+  "Here From User Portal":"From User Portal",
+    "MyEarnings":"أجوري",
+    "Subscriptions": "الاشتراكات",
+    "Owned":"مملوكة",
+    "Schools":"المدارس",
+    "Classes":"الطبقات",
+    "Courses":"الدورات",
+    "CreatePost":"إنشاء منشور",
+
+
+
+
+
+    "Here from Create School":"هنا من إنشاء المدرسة",
+    "CreateSchool":"أنشئ مدرسة",
+    "Step1":"الخطوة 1: معلومات عن مدرستك",
+    "Step2":"الخطوة 2: حدد الشعار لمدرستك",
+    "SchoolName":"اسم المدرسة",
+    "Specialization":"تخصص",
+    "TellUsAboutSchool":"أخبرنا عن مدرستك",
+    "Next":"التالي",
+    "ChooseImageFile":"اختر ملف صورة أو",
+    "DragItHere":"اسحبه هنا.",
+    "ChooseDefaultLogo":"أو اختر الشعار الافتراضي",
+    "Continue":"يكمل",
+    "YouCreatedNewSchool":"لقد أنشأت مدرسة جديدة!",
+    "LinkInfo":"هنا رابط مدرستك ، يمكنك مشاركته مع الطلاب أو المعلمين"
+
+}

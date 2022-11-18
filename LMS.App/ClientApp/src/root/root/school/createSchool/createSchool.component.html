@@ -1,0 +1,138 @@
+
+  <section class="f-poppins">
+    <side-bar></side-bar> 
+        <div class="main_content">
+          <div class="create-post-header d-flex justify-content-between">
+            <div class="search-header position-relative">
+              <input type="search" class="form-control h_44" />
+              <button type="button" class="btn search-icon"><img src="../../../../assets/images/school/search-gray.svg" /></button>
+            </div>
+            <button type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44">{{'CreatePost'| translate }}</button>
+          </div>
+          <div class="live-header d-flex align-items-center justify-content-between">
+            <button (click)="back()" type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
+                src="../../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
+          </div>
+
+          <form id="regForm" class="step-form mx-auto f-monteserrat" [formGroup]="createSchoolForm">
+            <h3 id="create_school" class="font_24 text_dark fw-bold text-center">{{'CreateSchool'| translate }}</h3>
+
+            <!-- One "tab" for each step in the form: -->
+            <!-- <div class="step-icon text-center">
+              <span class="step step1"></span>
+              <span class="step step2"></span>
+            </div> -->
+            <br>
+            <p-steps *ngIf="step<2" [model]="items" [(activeIndex)]="step" [readonly]="true">
+            </p-steps>
+
+		<div class="tab-content registerTabs">
+            <div [ngClass]="step == 0 ? 'tab tab-pane active' : 'tab tab-pane'">
+              <p class="text-center font_16 fw_600 step-desc">{{'Step1'| translate }}</p>
+              <div class="form-group">
+                <input placeholder="{{'SchoolName'| translate }}" formControlName="schoolName" name="schoolname" class="form-control w-100">
+              </div>
+              <div class="form-group">
+                <select class="form-select rounded-8 w-100" formControlName="specializationId">
+                  <option *ngFor="let specialization of specializations; let i = index" [value]="specialization.id" [selected]="i">{{specialization.name}}</option>
+               </select>
+              </div>
+
+              
+              <div class="form-group">
+                <select class="form-select rounded-8 w-100" formControlName="countryId">
+                  <option *ngFor="let country of countries; let i = index" [value]="country.id" [selected]="i">{{country.name}}</option>
+               </select>
+              </div>
+
+              <div class="form-group">
+                <div class="custom-language-select">
+                  <p-multiSelect  [defaultLabel]="'Select Languages'" [panelStyle]="{'width':'100%'}" [filter]="false" [showToggleAll]="false" [options]="languages" optionLabel="name" optionValue="id" name="languageSelect[]" class="form-control" multiple id="languageSelect" formControlName="selectedLanguages">
+                    <option *ngFor="let language of languages; let i = index" [value]="language.id" [selected]="i">{{language.name}}</option>
+                 </p-multiSelect>
+              </div>
+              </div>
+              <div class="form-group">
+                <textarea formControlName="description" class="form-control resize-none" placeholder="{{'TellUsAboutSchool'| translate }}"></textarea>
+              </div>
+				<div class="steps_btns d-flex align-items-center justify-content-center">
+					<button (click)="forwardStep()" type="button"
+                class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 text-uppercase next-step">{{'Next'| translate }}</button>
+				</div>
+            </div>
+
+            <div [ngClass]="step == 1 ? 'tab tab-pane active' : 'tab tab-pane'">
+              <p class="text-center font_16 fw_600 step-desc">{{'Step2'| translate }}</p>
+              <div class="form-group">
+                <div class="preview-zone hidden">
+                  <div class="box box-solid">
+                    <div class="box-header with-border">
+                    </div>
+                    <div class="box-body">
+                      <img style="width: 200px;" class="mb-3" [src]="uploadImage">
+                      <br>
+                      <p>{{uploadImageName}}</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="dropzone-wrapper">
+                  <div class="dropzone-desc">
+                    <i class="glyphicon glyphicon-download-alt"></i>
+                    <p class="text-center fw_400">{{'ChooseImageFile'| translate }} <b>{{'DragItHere'| translate }}</b></p>
+                  </div>
+                  <input type="file" id="avatar" formControlName="avatar" (change)="handleImageInput($event)" class="dropzone"/>
+                </div>
+              </div>
+              <h4 class="font_16 fw_700 text_dark text-center my_32">{{'ChooseDefaultLogo'| translate }}</h4>
+            
+              <div class="select-class-default-icon">
+                <ul class="list-unstyled before-none d-flex flex-wrap justify-content-center">
+                  <li *ngFor="let item of defaultLogos;">
+                    <label class="custom-radio">
+                      <input formControlName="defaultAvatar" type="radio" name="defaultAvatar" (change)="handleDefaultImageInput(item.logoUrl)" [value]="item.logoUrl">
+                      <span class="checkmark d-flex align-items-center justify-content-center"><span
+                          class="school-default-icon position-relative"><svg width="40" height="40" viewBox="0 0 40 40"
+                            fill="none" >
+                            <path
+                              d="M21.0268 38.3811C20.3666 38.635 19.6356 38.635 18.9754 38.3811C13.8115 36.3954 9.37068 32.8914 6.23842 28.3309C3.10615 23.7705 1.42956 18.3679 1.42969 12.8354V5.3668C1.4307 5.05395 1.53238 4.74974 1.71967 4.49916C1.90697 4.24858 2.16994 4.06493 2.46969 3.97537C13.9109 0.581127 26.0914 0.581127 37.5325 3.97537C37.8323 4.06493 38.0953 4.24858 38.2826 4.49916C38.4699 4.74974 38.5715 5.05395 38.5725 5.3668V12.8354C38.5727 18.3679 36.8961 23.7705 33.7638 28.3309C30.6316 32.8914 26.1907 36.3954 21.0268 38.3811Z"
+                              stroke-width="2.85714" stroke-linecap="round" stroke-linejoin="round" />
+                          </svg>
+                          <img [src]="item.logoUrl" />
+                        </span></span>
+                    </label>
+                  </li>
+                </ul>
+
+              </div>
+			  <div class="steps_btns d-flex align-items-center justify-content-center">
+				<button (click)="backStep()"   type="button"
+                class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 text-uppercase prev-step-btn prev-step"
+                id="prevBtn">{{'Back'| translate }}</button>
+
+              <button (click)="forwardStep()" type="button" id="step2_btn"
+                class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 text-uppercase next-step">{{'Continue'| translate }}</button>
+				</div>
+            </div>
+
+            <div [ngClass]="step == 2 ? 'tab tab-pane active final-multiple-step' : 'tab tab-pane final-multiple-step'">
+              <h2 class="font_24 fw-bold text_dark text-center my_32 mt-1">{{'YouCreatedNewSchool'| translate }}</h2>
+              <p class="font_16 text_dark fw_600 text-center mb-0">{{'LinkInfo'| translate }}</p>
+			  <div class="school-link position-relative my_32">
+
+				<input type="text" formControlName = "schoolUrl" class="form-control" placeholder="byokul.com/schoolname1" #userinput/>
+
+				<button type="button" (click)="copyMessage(userinput)" class="border-0 bg-transparent shadow-none p-0 copy-link"><img src="../../../../assets/images/school/copy.svg" /></button>
+				<button type="button" class="border-0 bg-transparent shadow-none p-0 upload-link"><img src="../../../../assets/images/school/Upload-small.svg" /></button>
+			  </div>
+				<div class="steps_btns">
+				  <input (click)="createSchool()" type="submit" id="nextBtn" class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 text-uppercase" value="Finish" />
+				</div>
+            </div>
+		</div>
+          </form>
+       
+        </div>
+        
+  </section>
+  
+

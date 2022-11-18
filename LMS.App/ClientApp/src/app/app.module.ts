@@ -7,13 +7,12 @@ import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 
-import { RootModule } from 'src/root/root.module';
 import { AuthGuard } from 'src/root/service/auth.guard';
 import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [
-    NavMenuComponent,
+    NavMenuComponent
   ],
   imports: [
     CommonModule,
@@ -26,7 +25,7 @@ import { CommonModule } from '@angular/common';
         {
           path: '',
            component:NavMenuComponent ,
-          
+
         }]
       }
     ]),

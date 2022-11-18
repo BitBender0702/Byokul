@@ -5,5 +5,5 @@ export interface RegisterModel {
     firstName:string;
     lastName:string;
     gender:number;
-    dob:Date;
+    dob:string;
   }

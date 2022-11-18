@@ -649,6 +649,21 @@ namespace LMS.Data.Migrations
                     b.ToTable("SchoolCertificates");
                 });
 
+            modelBuilder.Entity("LMS.Data.Entity.SchoolDefaultLogo", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("LogoUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SchoolDefaultLogos");
+                });
+
             modelBuilder.Entity("LMS.Data.Entity.SchoolFollower", b =>
                 {
                     b.Property<Guid>("Id")

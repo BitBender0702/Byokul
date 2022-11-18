@@ -1,0 +1,75 @@
+{
+
+    "NewAccount": "New account in BY",
+    "LoginAccount": "Login In By",
+    "Okul": "Okul",
+    "Name": "Name",
+    "SurName":"SurName",
+    "Gender":"Gender",
+    "Email": "Email",
+    "Password": "Password",
+    "RepeatPassword": "Repeat Password",
+    "Register":"Register",
+    "AlreadyAccount": "Already have an account?",
+    "DontHaveAccount": "Don't have an account?",
+    "CreateForFree": "Create For Free",
+    "Login": "Login",
+    "Back": "Back",
+
+    "ForgotPassword": "Forgot Password?",
+    "Submit": "Submit",
+    "ResetPassword": "Reset Password",
+    "LoginInfo1" : "Create a virtual school with free or paid classrooms.",
+    "LoginInfo2" : "Live stream and share content.",
+    "LoginInfo3" : "Meet with your students and discuss.",
+    "LoginInfo4" : "And so much more, click here for additional information.",
+    "TeachAndLearn":"Teach and learn",
+    "With":"With",
+    "Male":"Male",
+    "Female":"Female",
+    "Other":"Other",
+    "YouAlsoCan":"You also can",
+    "CreateAccount":"Create account",
+    "Or":"or",
+
+
+    "Here From User Portal":"From User Portal",
+    "MyEarnings":"My Earnings",
+    "Subscriptions": "Subscriptions",
+    "Owned":"Owned",
+    "Schools":"Schools",
+    "Classes":"Classes",
+    "Courses":"Courses",
+    "CreatePost":"Create Post",
+
+
+
+
+
+    "Here from Create School":"Here from create school",
+    "CreateSchool":"Create School",
+    "Step1":"Step 1: Information about your School",
+    "Step2":"Step 2: Select Logo for your School",
+    "SchoolName":"School Name",
+    "Specialization":"Specialization",
+    "TellUsAboutSchool":"Tell us about your School",
+    "Next":"Next",
+    "ChooseImageFile":"Choose an image file or",
+    "DragItHere":"drag it here.",
+    "ChooseDefaultLogo":"Or choose default logo",
+    "Continue":"Continue",
+    "YouCreatedNewSchool":"You created new School!",
+    "LinkInfo":"Here is the link to your School, you can share it with Students or Teachers"
+
+
+
+
+
+
+    
+
+
+
+
+
+}

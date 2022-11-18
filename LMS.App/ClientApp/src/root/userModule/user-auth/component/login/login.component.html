@@ -1,0 +1,48 @@
+  <section class="container pt-5">
+    <div class="logo mb-3">
+      <img src="../../../../../assets/images/logo.svg" alt="logo" />
+    </div>
+    <div class="bg-gray-gradient register-section rounded-8 landing-section">
+      <form class="register-form mx-auto mw-100" [formGroup]="loginForm">
+        <div class="row align-items-center">
+          <div class="col-lg-7 order-lg-2">
+            <div class="landing-right">
+              <img src="../../../../../assets/images/landing-screen-vector.svg" alt="icon" />
+            </div>
+          </div>
+          <div class="col-lg-5 ">
+            <div class="landing-left">
+              <h2 class="font_39 fw_700 text-left">{{'TeachAndLearn'| translate }} <br />{{'With'| translate }} <span class="text_secondary">{{'Okul'| translate }}</span>
+              </h2>
+              <ul class="list-unstyled pb-3 mb-0">
+                <li class="font_14">{{'LoginInfo1'| translate }}</li>
+                <li class="font_14">{{'LoginInfo2'| translate }}</li>
+                <li class="font_14">{{'LoginInfo3'| translate }}</li>
+                <li class="font_14">{{'LoginInfo4'| translate }}</li>
+              </ul>
+
+              <div class="form-group">
+                <input type="email" formControlName="email" class="form-control rounded-8" placeholder="{{'Email'| translate }}">
+              </div>
+              <div class="form-group mb-3">
+                <input type="password" formControlName="password" class="form-control rounded-8" placeholder="{{'Password'| translate }}">
+              </div>
+
+              <p class="font_14 fw_300 text-center al-account mt-0"><a [routerLink]="['/user/auth/request-password']"
+                  class="text_dark text-decoration-none">{{'ForgotPassword'| translate }}</a></p>
+
+              <button type="submit" (click)="login()" class="btn primary_btn w-100 rounded-8 text-uppercase">{{'Login'| translate }}</button>
+
+              <p class="font_14 fw_300 text-center al-account">{{'DontHaveAccount'| translate }} <a [routerLink]="['/user/auth/register']"
+                 class="fw_700 text_dark text-decoration-none">{{'CreateForFree'| translate }}</a></p>
+
+              <multi-lingual></multi-lingual>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </section>
+
+<loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
+

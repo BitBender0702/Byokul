@@ -1,0 +1,31 @@
+<!-- <div *ngIf="users.length > 0">
+<h1>Welcome to the Student Page</h1>
+<table>
+    <thead>
+        <tr>
+            <th>UserName</th>
+            <th>Email</th>
+        </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users">
+        <td> {{user.userName}} </td>
+        <td> {{user.email}} </td>
+      </tr>
+    </tbody>
+</table> -->
+
+<h4 class="text-center">User Page</h4>
+<br>
+
+
+<a class="text-muted float-end" [routerLink]="['/user/auth/change-password']"><small>Change Password?</small></a>
+
+
+
+<button class="btn btn-lg btn-primary text-center" style="margin: 20px;" [routerLink]="['/user/newMeeting']">New Meeting</button>
+
+<!-- <button class="btn btn-lg btn-primary text-center" [routerLink]="['/user/createSchool']">Create School</button>
+
+<button class="btn btn-lg btn-primary text-center" [routerLink]="['/user/videoPlayer']">Video Player</button> -->
+

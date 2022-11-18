@@ -13,9 +13,155 @@ a {
 code {
   color: #e01a76;
 }
-
+      
 .btn-primary {
   color: #fff;
   background-color: #1b6ec2;
   border-color: #1861ac;
+}
+
+/* Register and Login Custom Css */
+
+body {
+	font-family: 'Montserrat', sans-serif;
+	font-weight: 400;
+	margin: 0;
+	padding: 0;
+	overflow-X: hidden;
+	color: #313131;
+}
+
+* {
+	padding: 0;
+	margin: 0px;
+}
+
+.btn,
+.form-control,
+select {
+	outline: none !important;
+	box-shadow: none !important;
+}
+
+img {
+	max-width: 100%;
+}
+
+::placeholder {
+	color: #7C8DA7;
+	opacity: 1;
+}
+
+:-ms-input-placeholder {
+	color: #7C8DA7;
+}
+
+::-ms-input-placeholder {
+	color: #7C8DA7;
+}
+
+.rounded-8 {
+	border-radius: 8px;
+}
+
+.bg-gray-gradient {
+	background-color: linear-gradient(180deg, rgba(189, 189, 189, 0.1) 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+.text_dark {
+	color: #313131;
+}
+
+.text_secondary {
+	color: #FFA41C;
+}
+
+.fw_300 {
+	font-weight: 300;
+}
+
+.fw_700 {
+	font-weight: 700;
+}
+
+.font_14 {
+	font-size: 14px;
+}
+
+.font_16 {
+	font-size: 16px;
+}
+
+.font_34 {
+	font-size: 34px;
+}
+a.text_dark:hover {
+    color: #ff991c;
+}
+.form-control,
+select.form-select {
+	border-left: 2px solid #FF821C !important;
+	box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1) !important;
+	padding: 5px 16px;
+	border-width: 0px 0px 0px 2px;
+	height: 48px;
+
+}
+
+.form-group {
+	margin-bottom: 24px;
+}
+
+.primary_btn {
+	font-weight: 500;
+	background: linear-gradient(90.02deg, #FF7B1C 0.02%, #FFA41C 99.98%);
+	height: 52px;
+	color: #fff !important;
+	transition: 0.5s all;
+}
+
+.primary_btn:hover {
+	background: linear-gradient(90.02deg, #FFA41C 0.02%, #FF7B1C 99.98%);
+}
+
+.language-btn .btn-outline-primary,
+.language-btn .btn-outline-primary:hover {
+	padding: 5px 24px;
+	border: 1px solid #E1E1E1;
+	color: #313131 !important;
+}
+
+.language-btn .btn-check:checked+.btn,
+.language-btn .btn.active,
+.btn.show,
+.language-btn .btn:first-child:active,
+.language-btn :not(.btn-check)+.btn:active {
+	background-color: #fff;
+	border: 2px solid #FF821C;
+}
+
+/*---- Regsiter page css ----*/
+.back-step {
+	margin-bottom: 70px;
+	display: inline-block;
+}
+
+.register-section {
+	border: 2px solid #FFFFFF;
+	padding: 32px 32px 100px;
+	background: url("../src/assets/images/register-bg.svg") no-repeat;
+	background-size: cover;
+	min-height: calC(100vh - 100px);
+}
+
+.register-form {
+	max-width: 450px;
+}
+
+.register-form h2 {
+	margin-bottom: 32px;
+}
+
+.al-account {
+	margin: 20px 0 32px;
 }

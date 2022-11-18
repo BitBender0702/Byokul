@@ -1,0 +1,14 @@
+<div class="d-flex justify-content-between flex-wrap">
+    <div class="language-btn">
+      <input [attr.checked]="selectedLanguage == 'en' ? true : null" type="radio" (click)="switchLanguage('en')" class="btn-check" name="btnradio" id="lang1" autocomplete="off" checked>
+      <label class="btn btn-outline-primary font_16 rounded-8" for="lang1">English</label>
+    </div>             
+    <div class="language-btn">
+      <input [attr.checked]="selectedLanguage == 'ar' ? true : null" type="radio" (click)="switchLanguage('ar')" class="btn-check" name="btnradio" id="lang2" autocomplete="off">
+      <label class="btn btn-outline-primary font_16 rounded-8" for="lang2">اللغة العربية</label>
+    </div>
+    <div class="language-btn">
+      <input [attr.checked]="selectedLanguage == 'tr' ? true : null" type="radio" (click)="switchLanguage('tr')" class="btn-check" name="btnradio" id="lang3" autocomplete="off">
+      <label class="btn btn-outline-primary font_16 rounded-8" for="lang3">Türkçe</label>
+    </div>
+  </div>

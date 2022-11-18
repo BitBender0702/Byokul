@@ -30,8 +30,11 @@ namespace LMS.App.Controllers
 
         [Route("saveNewSchool")]
         [HttpPost]
-        public async Task<IActionResult> SaveNewSchool([FromBody] SchoolViewModel schoolViewModel)
+        public async Task<IActionResult> SaveNewSchool(SchoolViewModel schoolViewModel)
         {
+
+            var langList = JsonConvert.DeserializeObject<string[]>(schoolViewModel.LanguageIds.First());
+            schoolViewModel.LanguageIds = langList;
             //TODO: Need to Implement Blob here
             //await _blobService.DeleteFile("", containerName);
             //schoolViewModel.Avatar = await _blobService.UploadFileAsync(schoolViewModel.AvatarImage, containerName);
@@ -112,6 +115,13 @@ namespace LMS.App.Controllers
         {
             await _schoolService.SaveSchoolCertificates(schoolCertificateViewModel);
             return Ok("success");
+        }
+
+        [Route("defaultLogoList")]
+        [HttpGet]
+        public async Task<IActionResult> GetSchoolDefaultLogos()
+        {
+            return Ok(await _schoolService.GetSchoolDefaultLogos());
         }
     }
 }

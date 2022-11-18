@@ -53,12 +53,12 @@ namespace LMS.Services
             _postRepository.Save();
             postViewModel.Id = post.Id;
 
-            if (postViewModel.PostAttachments != null)
+            if (postViewModel.PostAttachments.Count() != 0)
             {
                 await SavePostAttachments(postViewModel.PostAttachments, postViewModel.Id, createdById);
             }
 
-            if (postViewModel.PostTags != null)
+            if (postViewModel.PostTags.Count() != 0)
             {
                 await SavePostTags(postViewModel.PostTags, postViewModel.Id);
             }

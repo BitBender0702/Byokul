@@ -1,0 +1,70 @@
+
+  <section class="container">
+    <div class="logo mb-3 pt-5">
+      <img src="../../../../../assets/images/logo.svg" alt="logo" />
+    </div>
+    <div class="bg-gray-gradient register-section rounded-8">
+      <button (click)="back()" type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
+        src="../../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
+
+      <!-- <a (click)="back()" class="back-step text-decoration-none font_16 text_dark"><img src="../../../../../assets/images/arrow-left.svg"
+          alt="arrow" /> {{'Back'| translate }}</a> -->
+      <form class="register-form mx-auto" [formGroup]="registrationForm">
+        <h2 class="font_34 fw_700 text-center">{{'NewAccount'| translate }} <span class="text_secondary">{{'Okul'| translate }}</span></h2>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <input type="text" class="form-control rounded-8" formControlName="firstName" placeholder="{{'Name'| translate }}">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <input type="text" class="form-control rounded-8" formControlName="lastName" placeholder="{{'SurName'| translate }}">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <input type="text" class="form-control rounded-8" formControlName="dob" placeholder="YYYY/MM/DD">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <select class="form-select rounded-8" formControlName="gender" aria-label="Default select example">
+                <option value="" disabled selected hidden>{{'Gender'| translate }}</option>
+                <option value="1">{{'Male'| translate }}</option>
+                <option value="2">{{'Female'| translate }}</option>
+                <option value="3">{{'Other'| translate }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="form-group">
+              <input type="email" class="form-control rounded-8" formControlName="email" placeholder="{{'Email'| translate }}">
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="form-group">
+              <input type="password" class="form-control rounded-8" formControlName="password" placeholder="{{'Password'| translate }}">
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="form-group">
+              <input type="password" class="form-control rounded-8" formControlName="confirmPassword" placeholder="{{'RepeatPassword'| translate }}">
+            </div>
+          </div>
+          <div class="col-md-12">
+            <button type="submit" (click)="register()" class="btn primary_btn w-100 rounded-8 text-uppercase">{{'Register'| translate }}</button>
+          </div>
+
+        </div>
+        <p class="font_14 fw_300 text-center al-account">{{'AlreadyAccount'| translate }} <a [routerLink]="['/user/auth/login']"
+            class="fw_700 text_dark text-decoration-none">{{'Login'| translate }}</a></p>
+
+        <multi-lingual></multi-lingual>
+
+      </form>
+    </div>
+  </section>
+
+
+<loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>

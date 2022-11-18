@@ -9,7 +9,9 @@ using LMS.Services.Account;
 using LMS.Services.BigBlueButton;
 using LMS.Services.Blob;
 using LMS.Services.Common;
+using LMS.Services.Stripe;
 using LMS.Services.Students;
+using LMS.Services.UserDashboard;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -19,6 +21,7 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Stripe;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -66,8 +69,12 @@ builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<IBigBlueButtonService, BigBlueButtonService>();
 builder.Services.AddScoped<ICommonService, CommonService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserDashboardService, UserDashboardService>();
+builder.Services.AddScoped<IStripeService, StripeService>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<TimerManager>();
+
+StripeConfiguration.ApiKey = configuration.GetSection("Stripe")["SecretKey"];
 
 
 builder.Services.AddOptions();

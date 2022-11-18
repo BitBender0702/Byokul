@@ -48,5 +48,6 @@ namespace LMS.Data
         public DbSet<PostTag> PostTags { get; set; }
         public DbSet<UserFollower> UserFollowers { get; set; }
         public DbSet<UserLanguage> UserLanguages { get; set; }
+        public DbSet<SchoolDefaultLogo> SchoolDefaultLogos { get; set; }
     }
 }
