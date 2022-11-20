@@ -1,9 +1,23 @@
+@media screen and (min-width:1200px) {
+	.main_content{
+		padding-left: 310px !important;
+	}
+}
 @media screen and (max-width:1199px) {
 	.font_39 {
 		font-size: 36px;
 	}
 	.landing-section {
 		padding: 80px 50px;
+	}
+	.sidemenu {
+		left: auto;
+		right: 0;
+		background: #fff;
+		width: 100%;
+		min-width: 320px;
+		box-shadow: 0px 0px 16px #00000026;
+		transition: 0.5s all;
 	}
 }
 
@@ -72,5 +86,57 @@
 	.landing-left .form-group {
 		margin-bottom: 20px;
 	}
+	.main_content {
+		width: 100%;
+		transition: ease-in-out .5s;
+		padding: 40px 15px 40px 15px !important;
+	}
+	
+	.step-desc {
+		margin-bottom: 25px;
+		font-size: 14px !important;
+	}
+	.step-icon {
+		margin: 20px auto;
+	}
+	.font_24 {
+		font-size: 20px;
+	}
+	.dropzone-desc p {
+		font-size: 12px;
+		margin-top: 3px;
+	}
+	.step-form {
+		padding: 0;
+		box-shadow: none;
+		border: none;
+	}
+
+}
+@media (max-width:575px) {
+	.steps_btns button {
+		margin-right: 10px;
+		margin-bottom: 8px;
+		font-size: 13px !important;
+	}
+}
+@media (max-width:451px) {
+	.create-post-header{
+		flex-wrap: wrap;
+	}
+	.search-header {
+		max-width: 100%;
+		width: 100%;
+		margin-bottom: 11px;
+	}
+	.create-post-header .custom-btn {
+		padding: 11px 46px;
+		width: 100%;
+	}
+	.d-flex{
+		flex-wrap: wrap;
+	}
+	
+	
 
 }
