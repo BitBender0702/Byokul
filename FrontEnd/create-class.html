@@ -1,0 +1,586 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>By Okul</title>
+  <link rel="icon" type="image/x-icon" href="images/favicon.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/custom.css" rel="stylesheet" />
+  <link href="css/responsive.css" rel="stylesheet" />
+</head>
+
+<body>
+  <section class="f-poppins">
+    <div class="sidemenu d-xl-block" id="side-bar">
+      <span class="closebtn d-xl-none" onclick="closeSidebar()" title="Close Side Menu">×</span>
+      <div class="text-center">
+        <a href="" class="main-logo"><img src="images/logo.svg" /></a>
+      </div>
+      <div class="d-flex text-center notification-box justify-content-center">
+        <ul class="list-unstyled d-flex ">
+          <li class="d-inline-block">
+            <div class="dropdown">
+              <button class="bg-transparent dropdown-toggle rounded-circle" type="button" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                <img src="images/user.png" />
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Action</a></li>
+                <li><a class="dropdown-item" href="#">Another action</a></li>
+              </ul>
+            </div>
+          </li>
+          <li class="d-inline-block"><button type="button "
+              class="notification-btn position-relative border-0 bg-transparent"><img src="images/chat-icon.svg" />
+              <span
+                class="badge rounded-circle d-inline-flex align-items-center justify-content-center fw_700 font_12">3</span></button>
+          </li>
+          <li class="d-inline-block"><button type="button "
+              class="notification-btn position-relative border-0 bg-transparent"><img src="images/Notification.svg" />
+              <span
+                class="badge rounded-circle d-inline-flex align-items-center justify-content-center fw_700 font_12">3</span></button>
+          </li>
+
+
+        </ul>
+      </div>
+      <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400">My Earnings $ </button>
+      <hr class="earning-hr" />
+      <div class="custom-tabs">
+        <ul class="nav nav-tabs mb-3 border-0" id="myTab" role="tablist">
+          <li class="nav-item ps-0 mb-0" role="presentation">
+            <button class="nav-link active" id="subscriptions-tab" data-bs-toggle="tab"
+              data-bs-target="#subscriptions-tab-pane" type="button" role="tab" aria-controls="subscriptions-tab-pane"
+              aria-selected="true">Subscriptions</button>
+          </li>
+          <li class="nav-item ps-0 mb-0" role="presentation">
+            <button class="nav-link" id="owned-tab" data-bs-toggle="tab" data-bs-target="#owned-tab-pane" type="button"
+              role="tab" aria-controls="owned-tab-pane" aria-selected="false">Owned</button>
+          </li>
+        </ul>
+        <div class="tab-content" id="pills-tabContent">
+          <div class="tab-pane fade show active" id="subscriptions-tab-pane" role="tabpanel"
+            aria-labelledby="subscriptions-tab" tabindex="0">
+            <div class="accordion" id="accordionPanelsStayOpenExample">
+              <div class="accordion-item border-0 bg-transparent">
+                <h2 class="accordion-header" id="headingOne">
+                  <button
+                    class="accordion-button  bg-transparent font_14 text_ltgray fw_400 d-flex align-items-center justify-content-between"
+                    type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true"
+                    aria-controls="collapseOne">
+                    <span>Schools </span>
+                  </button>
+                  <a href="#"
+                    class="add-btn d-inline-flex align-items-center justify-content-center rounded-circle"><img
+                      src="images/plus-light.svg" /></a>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                  data-bs-parent="#accordionExample">
+                  <div class="accordion-body p-0">
+                    <div class="school-name d-flex align-items-center font_16">
+                      <div class="school-img rounded-circle me-3">
+                        <img src="images/school-1.png" />
+                      </div>
+                      School Name
+                    </div>
+                    <div class="school-name d-flex align-items-center font_16">
+                      <div class="school-img rounded-circle me-3">
+                        <img src="images/school-2.png" />
+                      </div>
+                      School Name
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item border-0 bg-transparent">
+                <h2 class="accordion-header" id="headingTwo">
+                  <button
+                    class="accordion-button  bg-transparent font_14 text_ltgray fw_400 d-flex align-items-center justify-content-between"
+                    type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true"
+                    aria-controls="collapseTwo">
+                    <span>Classes </span>
+                  </button>
+                  <a href="#"
+                    class="add-btn d-inline-flex align-items-center justify-content-center rounded-circle"><img
+                      src="images/plus-light.svg" /></a>
+                </h2>
+                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+                  data-bs-parent="#accordionExample">
+                  <div class="accordion-body p-0">
+                    <div class="school-name d-flex align-items-center font_16">
+                      <div class="school-img rounded-circle me-3">
+                        <img src="images/school-3.png" />
+                      </div>
+                      Class Name
+                    </div>
+                    <div class="school-name d-flex align-items-center font_16">
+                      <div class="school-img rounded-circle me-3">
+                        <img src="images/school-4.png" />
+                      </div>
+                      Class Name
+                    </div>
+                    <div class="school-name d-flex align-items-center font_16">
+                      <div class="school-img rounded-circle me-3">
+                        <img src="images/school-5.png" />
+                      </div>
+                      Class Name
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item border-0 bg-transparent">
+                <h2 class="accordion-header" id="headingThree">
+                  <button
+                    class="accordion-button  bg-transparent font_14 text_ltgray fw_400 d-flex align-items-center justify-content-between"
+                    type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="true"
+                    aria-controls="collapseThree">
+                    <span>Courses </span>
+                  </button>
+                  <a href="#"
+                    class="add-btn d-inline-flex align-items-center justify-content-center rounded-circle"><img
+                      src="images/plus-light.svg" /></a>
+                </h2>
+                <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
+                  data-bs-parent="#accordionExample">
+                  <div class="accordion-body p-0">
+                    <div class="school-name d-flex align-items-center font_16">
+                      <div class="school-img rounded-circle me-3">
+                        <img src="images/school-6.png" />
+                      </div>
+                      Course Name
+                    </div>
+                    <div class="school-name d-flex align-items-center font_16">
+                      <div class="school-img rounded-circle me-3">
+                        <img src="images/school-7.png" />
+                      </div>
+                      Course Name
+                    </div>
+                    <div class="school-name d-flex align-items-center font_16">
+                      <div class="school-img rounded-circle me-3">
+                        <img src="images/school-8.png" />
+                      </div>
+                      Course Name
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="owned-tab-pane" role="tabpanel" aria-labelledby="owned-tab" tabindex="0">
+            <div class="accordion" id="accordionPanelsStayOpenExample">
+              <div class="accordion-item border-0 bg-transparent">
+                <h2 class="accordion-header" id="headingOne">
+                  <button
+                    class="accordion-button  bg-transparent font_14 text_ltgray fw_400 d-flex align-items-center justify-content-between"
+                    type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true"
+                    aria-controls="collapseOne">
+                    <span>Schools </span>
+                  </button>
+                  <a href="#"
+                    class="add-btn d-inline-flex align-items-center justify-content-center rounded-circle"><img
+                      src="images/plus-light.svg" /></a>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                  data-bs-parent="#accordionExample">
+                  <div class="accordion-body p-0">
+                    <div class="school-name d-flex align-items-center font_16">
+                      <div class="school-img rounded-circle me-3">
+                        <img src="images/school-1.png" />
+                      </div>
+                      School Name
+                    </div>
+                    <div class="school-name d-flex align-items-center font_16">
+                      <div class="school-img rounded-circle me-3">
+                        <img src="images/school-2.png" />
+                      </div>
+                      School Name
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item border-0 bg-transparent">
+                <h2 class="accordion-header" id="headingTwo">
+                  <button
+                    class="accordion-button  bg-transparent font_14 text_ltgray fw_400 d-flex align-items-center justify-content-between"
+                    type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true"
+                    aria-controls="collapseTwo">
+                    <span>Classes </span>
+                  </button>
+                  <a href="#"
+                    class="add-btn d-inline-flex align-items-center justify-content-center rounded-circle"><img
+                      src="images/plus-light.svg" /></a>
+                </h2>
+                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+                  data-bs-parent="#accordionExample">
+                  <div class="accordion-body p-0">
+                    <div class="school-name d-flex align-items-center font_16">
+                      <div class="school-img rounded-circle me-3">
+                        <img src="images/school-3.png" />
+                      </div>
+                      Class Name
+                    </div>
+                    <div class="school-name d-flex align-items-center font_16">
+                      <div class="school-img rounded-circle me-3">
+                        <img src="images/school-4.png" />
+                      </div>
+                      Class Name
+                    </div>
+                    <div class="school-name d-flex align-items-center font_16">
+                      <div class="school-img rounded-circle me-3">
+                        <img src="images/school-5.png" />
+                      </div>
+                      Class Name
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item border-0 bg-transparent">
+                <h2 class="accordion-header" id="headingThree">
+                  <button
+                    class="accordion-button bg-transparent font_14 text_ltgray fw_400 d-flex align-items-center justify-content-between"
+                    type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="true"
+                    aria-controls="collapseThree">
+                    <span>Courses </span>
+                  </button>
+                  <a href="#"
+                    class="add-btn d-inline-flex align-items-center justify-content-center rounded-circle"><img
+                      src="images/plus-light.svg" /></a>
+                </h2>
+                <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
+                  data-bs-parent="#accordionExample">
+                  <div class="accordion-body p-0">
+                    <div class="school-name d-flex align-items-center font_16">
+                      <div class="school-img rounded-circle me-3">
+                        <img src="images/school-6.png" />
+                      </div>
+                      Course Name
+                    </div>
+                    <div class="school-name d-flex align-items-center font_16">
+                      <div class="school-img rounded-circle me-3">
+                        <img src="images/school-7.png" />
+                      </div>
+                      Course Name
+                    </div>
+                    <div class="school-name d-flex align-items-center font_16">
+                      <div class="school-img rounded-circle me-3">
+                        <img src="images/school-8.png" />
+                      </div>
+                      Course Name
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="d-flex justify-content-between flex-wrap mt-4">
+          <div class="language-btn">
+            <input type="radio" class="btn-check" name="btnradio" id="lang1" autocomplete="off" checked>
+            <label class="btn btn-outline-primary font_12 rounded-8" for="lang1">English</label>
+          </div>
+          <div class="language-btn">
+            <input type="radio" class="btn-check" name="btnradio" id="lang2" autocomplete="off">
+            <label class="btn btn-outline-primary font_12 rounded-8" for="lang2">اللغة العربية</label>
+          </div>
+          <div class="language-btn">
+            <input type="radio" class="btn-check" name="btnradio" id="lang3" autocomplete="off">
+            <label class="btn btn-outline-primary font_12 rounded-8" for="lang3">Türkçe</label>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="main_content">
+
+      <div class="create-post-header d-flex justify-content-between d-none d-xl-flex">
+        <div class="search-header position-relative">
+          <input type="search" class="form-control h_44" />
+          <button type="button" class="btn search-icon" ><img src="images/search-gray.svg" /></button>
+        </div>
+        <button type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44">Create Post</button>
+      </div>
+      <div class="live-header d-flex align-items-center justify-content-between">
+        <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
+            src="images/arrow-left.svg" /> Back</button>
+            <span class="logo_mobile d-xl-none">
+              <img src="images/logo.svg" />
+            </span>
+            <div class="d-xl-none">
+              <button type="button" class="mobile-search border_btn" onclick="openSearch()"><img src="images/search-lg.svg" /></button>
+              <button type="button" class="mobile-search border_btn" onclick="openSidebar()"><img src="images/menu.svg" /></button>
+            </div>     
+           </div>
+
+
+      <form id="regForm" class="step-form mx-auto f-monteserrat">
+        <h3 id="create_school" class="font_24 text_dark fw-bold text-center">Create Class</h3>
+        <!-- One "tab" for each step in the form: -->
+        <div class="step-icon text-center">
+          <span class="step step1"></span>
+          <span class="step step2"></span>
+        </div>
+        <div class="tab-content registerTabs">
+          <div class="tab tab-pane active">
+            <p class="text-center font_16 fw_600 step-desc">Step 1: Information about your School</p>
+            <div class="form-group">
+              <select class="form-select rounded-8 w-100">
+                <option value="1">School Name 1</option>
+                <option value="2">School Name 2</option>
+                <option value="3">School Name 1 3</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <input type="text" placeholder="Class Name" name="classname" class="form-control w-100">
+            </div>
+            <div class="form-group">
+              <input type="text" placeholder="Tell us about your Class" name="aboutclass" class="form-control w-100">
+            </div>
+            <div class="form-group position-relative student-input">
+              <label>Students:</label>
+              <input type="number" placeholder="" name="students" min="1" max="999" class="form-control w-100">
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group position-relative student-input date-input">
+                  <label>Start:</label>
+                  <input type="text" placeholder="10/10/2022" name="start" class="form-control w-100">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group position-relative student-input date-input finish-date">
+                  <label>Finish:</label>
+                  <input type="text" placeholder="01/01/2023" name="finish" class="form-control w-100">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group position-relative student-input date-input">
+                  <label>Paid:</label>
+                  <select class="form-select rounded-8 w-100">
+                    <option value="1">$100</option>
+                    <option value="2">$200</option>
+                    <option value="3">$300</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <select class="form-select rounded-8 w-100">
+                    <option value="1">Private</option>
+                    <option value="2">Public</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="custom-language-select">
+                <select name="languageSelect[]" class="form-control" multiple id="languageSelect">
+                  <option value="portugues">Português</option>
+                  <option value="deutsch">Deutsch</option>
+                  <option value="pycкиn">Русский</option>
+                  <option value="italiano">Italiano</option>
+                  <option value="francais ">Français </option>
+                  <option value="arabic">اللغة العربية</option>
+                  <option value="turkce">Türkçe</option>
+                  <option value="english">English</option>
+                </select>
+              </div>
+            </div>
+            <div class="dropzone-wrapper mb-4">
+              <div class="dropzone-desc">
+                <i class="glyphicon glyphicon-download-alt"></i>
+                <p class="text-center fw_400">Choose an image file or <b>drag it here.</b></p>
+              </div>
+              <input type="file" name="img_logo" class="dropzone">
+            </div>
+            <div class="steps_btns d-flex align-items-center justify-content-center">
+              <button type="button"
+                class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 text-uppercase next-step">Next</button>
+            </div>
+          </div>
+          <div class="tab-pane tab">
+            <p class="text-center font_16 fw_600 step-desc">Step 2: Add Disciplines, Teachers and Students of your Class</p>
+            <div class="tag-form-group">
+              <input type="text" placeholder="Type Discipline Name to add"  class="form-control w-100">
+              <div class="tag-box">
+                <span class="custom-tag">Discipline Name 1</span>
+                <span class="custom-tag">Discipline Name 2</span>
+                <span class="custom-tag">Discipline Name 3</span>
+                <span class="custom-tag">Discipline Name 4</span>
+              </div>
+            </div>
+            <div class="tag-form-group">
+              <input type="text" placeholder="Type Teacher Name to add"  class="form-control w-100">
+              <div class="tag-box">
+                <span class="custom-tag">Teacher 1</span>
+                <span class="custom-tag">Teacher 2</span>
+                <span class="custom-tag">Teacher 3</span>
+              </div>
+            </div>
+            <div class="tag-form-group">
+              <input type="text" placeholder="Type Student Name to add"  class="form-control w-100">
+              <div class="tag-box">
+                <span class="custom-tag">Student Name 1</span>
+                <span class="custom-tag">Student Name 2</span>
+                <span class="custom-tag">Student Name 3</span>
+                <span class="custom-tag">Student Name 4</span>
+              </div>
+            </div>
+            
+            <div class="steps_btns d-flex align-items-center justify-content-between">
+              <button type="button"
+                class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 text-uppercase prev-step-btn prev-step"
+                id="prevBtn">Back</button>
+                <button type="button"
+                class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 text-uppercase prev-step-btn prev-step"
+                id="step2_btn">Add Later</button>
+              <button type="button" id="step2_btn"
+                class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 text-uppercase next-step">Continue</button>
+            </div>
+          </div>
+          <div class="tab tab-pane final-multiple-step">
+            <h2 class="font_24 fw-bold text_dark text-center my_32 mt-1">You created new Class!</h2>
+            <p class="font_16 text_dark fw_600 text-center mb-0">Here is the link to your class, you can share it with 
+              Students or Teachers</p>
+            <div class="school-link position-relative my_32">
+              <input type="text" class="form-control" placeholder="byokul.com/schoolname1/classmname1" />
+              <button type="button" class="border-0 bg-transparent shadow-none p-0 copy-link"><img
+                  src="images/copy.svg" /></button>
+              <button type="button" class="border-0 bg-transparent shadow-none p-0 upload-link"><img
+                  src="images/Upload-small.svg" /></button>
+            </div>
+            <div class="steps_btns">
+              <input type="submit" id="nextBtn"
+                class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 text-uppercase"
+                value="Finish" />
+            </div>
+          </div>
+        </div>
+        <!-- Circles which indicates the steps of the form: -->
+
+      </form>
+      <div class="d-flex justify-content-end mt-5 d-md-none" >
+         <button type="button" class="step-edit-button btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase next-step"><img src="images/Edit-light.svg" alt="edit"/></button>
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://phpcoder.tech/multiselect/js/jquery.multiselect.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+
+
+
+  <script>
+    $(document).ready(function () {
+      $(".next-step").click(function (e) {
+        var activeTab = $(".registerTabs .tab-pane.active");
+        activeTab.next().addClass("active");
+        activeTab.removeClass("active");
+        $(".step-icon .step1").addClass('finish');
+      });
+
+      $(".prev-step").click(function (e) {
+        var activeTab = $(".registerTabs .tab-pane.active");
+        activeTab.prev().addClass("active");
+        activeTab.removeClass("active");
+
+      });
+      $("#step2_btn").click(function () {
+        $("#create_school, .step-icon").addClass('d-none');
+      });
+
+    });
+
+
+  </script>
+  <script>
+    function readFile(input) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+          var htmlPreview =
+            '<img width="200" src="' + e.target.result + '" />' +
+            '<p>' + input.files[0].name + '</p>';
+          var wrapperZone = $(input).parent();
+          var previewZone = $(input).parent().parent().find('.preview-zone');
+          var boxZone = $(input).parent().parent().find('.preview-zone').find('.box').find('.box-body');
+
+          wrapperZone.removeClass('dragover');
+          previewZone.removeClass('hidden');
+          boxZone.empty();
+          boxZone.append(htmlPreview);
+        };
+
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    function reset(e) {
+      e.wrap('<form>').closest('form').get(0).reset();
+      e.unwrap();
+    }
+
+    $(".dropzone").change(function () {
+      readFile(this);
+    });
+
+    $('.dropzone-wrapper').on('dragover', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      $(this).addClass('dragover');
+    });
+
+    $('.dropzone-wrapper').on('dragleave', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      $(this).removeClass('dragover');
+    });
+
+    $('.remove-preview').on('click', function () {
+      var boxZone = $(this).parents('.preview-zone').find('.box-body');
+      var previewZone = $(this).parents('.preview-zone');
+      var dropzone = $(this).parents('.form-group').find('.dropzone');
+      boxZone.empty();
+      previewZone.addClass('hidden');
+      reset(dropzone);
+    });
+
+
+
+  </script>
+  <script>
+    jQuery('#languageSelect').multiselect({
+      columns: 1,
+      placeholder: 'Select Languages',
+      search: true
+    });
+  </script>
+  <script>
+    function openSearch() {
+        document.getElementById("search-overlay").style.display = "block";
+      }
+      function closeSearch() {
+        document.getElementById("search-overlay").style.display = "none";
+      }
+      function closeSidebar() {
+        document.getElementById("side-bar").style.display = "none";
+      }
+      function openSidebar() {
+        document.getElementById("side-bar").style.display = "block";
+      }
+  </script>
+</body>
+
+</html>
