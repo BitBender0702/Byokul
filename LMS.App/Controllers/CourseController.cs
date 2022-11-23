@@ -1,6 +1,7 @@
 ﻿using LMS.Common.ViewModels.Course;
 using LMS.Data.Entity;
 using LMS.Services;
+using LMS.Services.Common;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,16 +12,18 @@ namespace LMS.App.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly ICourseService _courseService;
+        private readonly ICommonService _commonService;
 
-        public CourseController(UserManager<User> userManager, ICourseService courseService)
+        public CourseController(UserManager<User> userManager, ICourseService courseService, ICommonService commonService)
         {
             _userManager = userManager;
             _courseService = courseService;
+            _commonService = commonService;
         }
 
         [Route("saveNewCourse")]
         [HttpPost]
-        public async Task<IActionResult> SaveNewCourse([FromBody] CourseViewModel courseViewModel)
+        public async Task<IActionResult> SaveNewCourse(CourseViewModel courseViewModel)
         {
             var userId = await GetUserIdAsync(this._userManager);
             await _courseService.SaveNewCourse(courseViewModel, userId);
@@ -57,6 +60,21 @@ namespace LMS.App.Controllers
         public async Task<IActionResult> GetAllCourses()
         {
             var response = await _courseService.GetAllCourses();
+            return Ok(response);
+        }
+
+        [Route("languageList")]
+        [HttpGet]
+        public async Task<IActionResult> LanguageList()
+        {
+            return Ok(await _commonService.LanguageList());
+        }
+
+        [Route("getDisciplines")]
+        [HttpGet]
+        public async Task<IActionResult> GetDisciplines()
+        {
+            var response = await _commonService.GetDisciplines();
             return Ok(response);
         }
 

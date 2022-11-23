@@ -6,9 +6,11 @@ using LMS.Common.ViewModels.Student;
 using LMS.Common.ViewModels.Teacher;
 using LMS.Data.Entity;
 using LMS.DataAccess.Repository;
+using LMS.Services.Blob;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +21,7 @@ namespace LMS.Services
 {
     public class ClassService : IClassService
     {
+        public string containerName = "classthumbnail";
         private readonly IMapper _mapper;
         private IGenericRepository<Class> _classRepository;
         private IGenericRepository<ClassLanguage> _classLanguageRepository;
@@ -28,8 +31,9 @@ namespace LMS.Services
         private IGenericRepository<Post> _postRepository;
         private IGenericRepository<PostAttachment> _postAttachmentRepository;
         private readonly UserManager<User> _userManager;
+        private readonly IBlobService _blobService;
 
-        public ClassService(IMapper mapper, IGenericRepository<Class> classRepository, IGenericRepository<ClassLanguage> classLanguageRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<ClassDiscipline> classDisciplineRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, UserManager<User> userManager)
+        public ClassService(IMapper mapper, IGenericRepository<Class> classRepository, IGenericRepository<ClassLanguage> classLanguageRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<ClassDiscipline> classDisciplineRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, UserManager<User> userManager, IBlobService blobService)
         {
             _mapper = mapper;
             _classRepository = classRepository;
@@ -40,9 +44,30 @@ namespace LMS.Services
             _postRepository = postRepository;
             _postAttachmentRepository = postAttachmentRepository;
             _userManager = userManager;
+            _blobService = blobService;
         }
         public async Task SaveNewClass(ClassViewModel classViewModel, string createdById)
         {
+
+            var langList = JsonConvert.DeserializeObject<string[]>(classViewModel.LanguageIds.First());
+            classViewModel.LanguageIds = langList;
+
+            var teacherIdsList = JsonConvert.DeserializeObject<string[]>(classViewModel.TeacherIds.First());
+            classViewModel.TeacherIds = teacherIdsList;
+
+            var studentIds = JsonConvert.DeserializeObject<string[]>(classViewModel.StudentIds.First());
+            classViewModel.StudentIds = studentIds;
+
+            var disciplineIds = JsonConvert.DeserializeObject<string[]>(classViewModel.DisciplineIds.First());
+            classViewModel.DisciplineIds = disciplineIds;
+
+            classViewModel.ClassUrl = JsonConvert.DeserializeObject<string>(classViewModel.ClassUrl);
+
+            if (classViewModel.Thumbnail != null)
+            {
+                classViewModel.ThumbnailUrl = await _blobService.UploadFileAsync(classViewModel.Thumbnail, containerName);
+            }
+
             var classes = new Class
             {
                 ClassName = classViewModel.ClassName,
@@ -54,30 +79,39 @@ namespace LMS.Services
                 Description = classViewModel.Description,
                 Price = classViewModel.Price,
                 AccessibilityId = classViewModel.AccessibilityId,
+                ClassUrl = classViewModel.ClassUrl,
+                ThumbnailUrl = classViewModel.ThumbnailUrl,
                 CreatedById = createdById,
                 CreatedOn = DateTime.UtcNow
             };
 
-            _classRepository.Insert(classes);
-            _classRepository.Save();
+            try
+            {
+                _classRepository.Insert(classes);
+                _classRepository.Save();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
             classViewModel.ClassId = classes.ClassId;
 
-            if (classViewModel.LanguageIds != null)
+            if (classViewModel.LanguageIds.Any())
             {
                 await SaveClassLanguages(classViewModel.LanguageIds, classes.ClassId);
             }
 
-            if (classViewModel.DisciplineIds != null)
+            if (classViewModel.DisciplineIds.Any())
             {
                 await SaveClassDisciplines(classViewModel.DisciplineIds, classes.ClassId);
             }
 
-            if (classViewModel.StudentIds != null)
+            if (classViewModel.StudentIds.Any())
             {
                 await SaveClassStudents(classViewModel.StudentIds, classes.ClassId);
             }
 
-            if (classViewModel.TeacherIds != null)
+            if (classViewModel.TeacherIds.Any())
             {
                 await SaveClassTeachers(classViewModel.TeacherIds, classes.ClassId);
             }

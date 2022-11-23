@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using LMS.Common.ViewModels.Class;
 using LMS.Common.ViewModels.Common;
 using LMS.Common.ViewModels.Course;
 using LMS.Common.ViewModels.Post;
@@ -10,6 +9,7 @@ using LMS.DataAccess.Repository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,6 +44,21 @@ namespace LMS.Services
 
         public async Task SaveNewCourse(CourseViewModel courseViewModel, string createdById)
         {
+
+            var langList = JsonConvert.DeserializeObject<string[]>(courseViewModel.LanguageIds.First());
+            courseViewModel.LanguageIds = langList;
+
+            var teacherIdsList = JsonConvert.DeserializeObject<string[]>(courseViewModel.TeacherIds.First());
+            courseViewModel.TeacherIds = teacherIdsList;
+
+            var studentIds = JsonConvert.DeserializeObject<string[]>(courseViewModel.StudentIds.First());
+            courseViewModel.StudentIds = studentIds;
+
+            var disciplineIds = JsonConvert.DeserializeObject<string[]>(courseViewModel.DisciplineIds.First());
+            courseViewModel.DisciplineIds = disciplineIds;
+
+            courseViewModel.CourseUrl = JsonConvert.DeserializeObject<string>(courseViewModel.CourseUrl);
+
             var course = new Course
             {
                 CourseName = courseViewModel.CourseName,
@@ -52,6 +67,7 @@ namespace LMS.Services
                 AccessibilityId = courseViewModel.AccessibilityId,
                 Description = courseViewModel.Description,
                 Price = courseViewModel.Price,
+                CourseUrl = courseViewModel.CourseUrl,
 
                 CreatedById = createdById,
                 CreatedOn = DateTime.UtcNow
@@ -61,22 +77,22 @@ namespace LMS.Services
             _courseRepository.Save();
             courseViewModel.CourseId = course.CourseId;
 
-            if (courseViewModel.LanguageIds != null)
+            if (courseViewModel.LanguageIds.Any())
             {
                 await SaveCourseLanguages(courseViewModel.LanguageIds, course.CourseId);
             }
 
-            if (courseViewModel.DisciplineIds != null)
+            if (courseViewModel.DisciplineIds.Any())
             {
                 await SaveCourseDisciplines(courseViewModel.DisciplineIds, course.CourseId);
             }
 
-            if (courseViewModel.StudentIds != null)
+            if (courseViewModel.StudentIds.Any())
             {
                 await SaveCourseStudents(courseViewModel.StudentIds, course.CourseId);
             }
 
-            if (courseViewModel.TeacherIds != null)
+            if (courseViewModel.TeacherIds.Any())
             {
                 await SaveCourseTeachers(courseViewModel.TeacherIds, course.CourseId);
             }

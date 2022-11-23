@@ -1,6 +1,7 @@
 ﻿using LMS.Common.ViewModels.Class;
 using LMS.Data.Entity;
 using LMS.Services;
+using LMS.Services.Common;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,16 +12,18 @@ namespace LMS.App.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly IClassService _classService;
+        private readonly ICommonService _commonService;
 
-        public ClassController(UserManager<User> userManager, IClassService classService)
+        public ClassController(UserManager<User> userManager, IClassService classService, ICommonService commonService)
         {
             _userManager = userManager;
             _classService = classService;
+            _commonService = commonService;
         }
 
         [Route("saveNewClass")]
         [HttpPost]
-        public async Task<IActionResult> SaveNewClass([FromBody] ClassViewModel classViewModel)
+        public async Task<IActionResult> SaveNewClass(ClassViewModel classViewModel)
         {
             var userId = await GetUserIdAsync(this._userManager);
             await _classService.SaveNewClass(classViewModel, userId);
@@ -58,6 +61,35 @@ namespace LMS.App.Controllers
         {
             var response = await _classService.GetAllClasses();
             return Ok(response);
+        }
+
+        [Route("getDisciplines")]
+        [HttpGet]
+        public async Task<IActionResult> GetDisciplines()
+        {
+            var response = await _commonService.GetDisciplines();
+            return Ok(response);
+        }
+
+        [Route("languageList")]
+        [HttpGet]
+        public async Task<IActionResult> LanguageList()
+        {
+            return Ok(await _commonService.LanguageList());
+        }
+
+        [Route("getServiceType")]
+        [HttpGet]
+        public async Task<IActionResult> GetServiceType()
+        {
+            return Ok(await _commonService.GetServiceType());
+        }
+
+        [Route("getAccessibility")]
+        [HttpGet]
+        public async Task<IActionResult> GetAccessibility()
+        {
+            return Ok(await _commonService.GetAccessibility());
         }
 
     }

@@ -15,11 +15,21 @@ namespace LMS.App.Controllers
         {
             _studentsService = studentsService;
         }
-        [Route("getStudents")]
+        [Route("getAllStudents")]
         [HttpGet]
-        public async Task<IActionResult> GetStudents()
+        public async Task<IActionResult> GetAllStudents()
         {
-            return Ok(await _studentsService.GetStudents());
+            return Ok(await _studentsService.GetAllStudents());
+        }
+
+        [Route("graduateCertificate")]
+        [HttpGet]
+        public async Task<IActionResult> ClassGraduateCertificate()
+        {
+            Guid classId = new Guid("FBD30D50-4B03-42BC-10EB-08DAC173147E");
+            await _studentsService.ClassGraduateCertificate("052b51ec-2d9d-4573-963a-774fef03ac30",classId,new Guid());
+
+            return Ok();
         }
     }
 }

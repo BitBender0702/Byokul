@@ -12,6 +12,7 @@ using LMS.DataAccess.Repository;
 using LMS.Services.Blob;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace LMS.Services
 {
@@ -71,6 +72,9 @@ namespace LMS.Services
             {
                 schoolViewModel.Avatar = await _blobService.UploadFileAsync(schoolViewModel.AvatarImage, containerName);
             }
+
+            schoolViewModel.SchoolUrl = JsonConvert.DeserializeObject<string>(schoolViewModel.SchoolUrl);
+
             var school = new School
             {
                 SchoolName = schoolViewModel.SchoolName,

@@ -18,6 +18,7 @@ namespace LMS.DataAccess.Automapper
             CreateMap<User, UserDetailsViewModel>();
             CreateMap<UserFollower, UserFollowerViewModel>();
             CreateMap<User, UserUpdateViewModel>();
+            CreateMap<Discipline, DisciplineViewModel>();
         }
     }
 }

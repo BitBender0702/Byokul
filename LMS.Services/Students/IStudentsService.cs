@@ -1,4 +1,5 @@
-﻿using LMS.Data.Entity;
+﻿using LMS.Common.ViewModels.Student;
+using LMS.Data.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,8 @@ namespace LMS.Services.Students
 {
     public interface IStudentsService
     {
-        Task<IEnumerable<User>> GetStudents();
+        Task<IEnumerable<StudentViewModel>> GetAllStudents();
+        Task ClassGraduateCertificate(string userId, Guid classId, Guid providerId);
+        Task SaveClassStudents(Guid classId, Guid studentId);
     }
 }

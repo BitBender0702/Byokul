@@ -9,6 +9,8 @@ import { CreateSchoolComponent } from '../root/school/createSchool/createSchool.
 import { VideoPlayerComponent } from '../root/videoPlayer/video-player.component';
 import { EditSchoolComponent } from '../root/school/editSchool/editSchool.component';
 import { SharedModule } from '../root/sharedModule/shared.module';
+import { CreateClassComponent } from '../root/class/createClass/createClass.component';
+import { CreateCourseComponent } from '../root/course/createCourse/createCourse.component';
 
 
 @NgModule({
@@ -37,6 +39,12 @@ import { SharedModule } from '../root/sharedModule/shared.module';
           },
           {
             path: 'createSchool',component:CreateSchoolComponent
+          },
+          {
+            path: 'createClass',component:CreateClassComponent
+          },
+          {
+            path: 'createCourse',component:CreateCourseComponent
           },
           {
             path: 'editSchool',component:EditSchoolComponent

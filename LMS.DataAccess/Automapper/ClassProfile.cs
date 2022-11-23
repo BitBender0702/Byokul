@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using LMS.Common.ViewModels.Accessibility;
 using LMS.Common.ViewModels.Class;
+using LMS.Common.ViewModels.Common;
 using LMS.Common.ViewModels.School;
 using LMS.Common.ViewModels.ServiceType;
 using LMS.Common.ViewModels.Teacher;

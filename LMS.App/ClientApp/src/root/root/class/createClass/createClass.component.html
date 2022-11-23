@@ -1,0 +1,188 @@
+
+<body>
+  <section class="f-poppins">
+    <side-bar></side-bar> 
+    <div class="main_content">
+
+      <div class="create-post-header d-flex justify-content-between d-none d-xl-flex">
+        <div class="search-header position-relative">
+          <input type="search" class="form-control h_44" />
+          <button type="button" class="btn search-icon" ><img src="../../../../assets/images/school/search-gray.svg" /></button>
+        </div>
+        <button type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44">{{'CreatePost'| translate }}</button>
+      </div>
+      <div class="live-header d-flex align-items-center justify-content-between">
+        <button (click)="back()" type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
+            src="../../../../assets/images/school/arrow-left.svg" /> {{'Back'| translate }}</button>
+            <span class="logo_mobile d-xl-none">
+              <img src="../../../../assets/images/logo.svg" />
+            </span>
+            <div class="d-xl-none">
+              <button type="button" class="mobile-search border_btn" onclick="openSearch()"><img src="../../../../assets/images/search-lg.svg" /></button>
+              <button type="button" class="mobile-search border_btn" onclick="openSidebar()"><img src="../../../../assets/images/menu.svg" /></button>
+            </div>     
+           </div>
+
+
+      <form id="regForm" class="step-form mx-auto f-monteserrat" [formGroup]="createClassForm">
+        <h3 id="create_school" class="font_24 text_dark fw-bold text-center">{{'CreateClass'| translate }}</h3>
+        <!-- One "tab" for each step in the form: -->
+        <!-- <div class="step-icon text-center">
+          <span class="step step1"></span>
+          <span class="step step2"></span>
+        </div> -->
+        <p-steps *ngIf="step<2" [model]="items" [(activeIndex)]="step" [readonly]="true">
+        </p-steps><br>
+        <div class="tab-content registerTabs">
+          <div [ngClass]="step == 0 ? 'tab tab-pane active' : 'tab tab-pane'">
+            <p class="text-center font_16 fw_600 step-desc">{{'CreateClassStep1'| translate }}</p>
+            <div class="form-group">
+              <input formControlName="schoolId" hidden type="text" placeholder="School Name" name="schoolId" class="form-control w-100">
+              <input readonly type="text" placeholder="School Name" name="schoolId" class="form-control w-100">
+            </div>
+            <div class="form-group">
+              <input formControlName="className" type="text" placeholder="{{'ClassName'| translate }}" name="classname" class="form-control w-100">
+            </div>
+            <div class="form-group">
+              <input formControlName="description" type="text" placeholder="{{'TellUsAboutClass'| translate }}" name="aboutclass" class="form-control w-100">
+            </div>
+            <div class="form-group position-relative student-input">
+              <label>{{'Studnets'| translate }}:</label>
+              <input formControlName="noOfStudents" type="number" placeholder="" name="students" min="1" max="999" class="form-control w-100">
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group position-relative student-input date-input">
+                  <label>{{'Start'| translate }}:</label>
+                  <input formControlName="startDate" type="text" placeholder="10/10/2022" name="start" class="form-control w-100">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group position-relative student-input date-input finish-date">
+                  <label>{{'Finish'| translate }}:</label>
+                  <input formControlName="endDate" type="text" placeholder="01/01/2023" name="finish" class="form-control w-100">
+                </div>
+              </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-md-6">
+                  <div class="row">
+                    <div class="col">
+                      <input (click)="getFreeClass()" formControlName="serviceTypeId" type="radio" id="forFree" name="options" [value]="serviceTypes[0].id">
+                      <label for="forFree"> Free </label>
+                    </div>
+  
+                    <div class="col">
+                      <input (click)="getPaidClass()" formControlName="serviceTypeId" type="radio" id="forPaid" name="options" [value]="serviceTypes[1].id">
+                      <label for="forPaid"> Paid </label>
+                    </div>
+                  </div>
+                </div><br>
+               
+                <div *ngIf="isClassPaid" class="col-md-5">
+                  <input formControlName="price" type="text" placeholder="{{'Price'| translate }}" name="price" class="form-control w-100">
+                </div><br>
+            </div>
+
+            <div class="row" style="margin-top:-35px;">
+              <div class="col-md-12">
+                 <div *ngIf="!isClassPaid">
+                    <label>*Please note that certificate creation is not available for free classes</label>
+                 </div><br>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <select class="form-select rounded-8 w-100" formControlName="accessibilityId">
+                    <option *ngFor="let accessibility of accessibility; let i = index" [value]="accessibility.id" [selected]="i">{{accessibility.name}}</option>
+                 </select>
+                </div>
+            </div>
+            </div>
+            <div class="form-group">
+              <div class="custom-language-select">
+                <p-multiSelect  [defaultLabel]="'Select Languages'" [panelStyle]="{'width':'100%'}" [filter]="false" [showToggleAll]="false" [options]="languages" optionLabel="name" optionValue="id" name="languageSelect[]" class="form-control" multiple id="languageSelect" formControlName="languageIds">
+                  <option *ngFor="let language of languages; let i = index" [value]="language.id" [selected]="i">{{language.name}}</option>
+               </p-multiSelect>
+              </div>
+            </div>
+            <div class="dropzone-wrapper mb-4">
+              <div class="dropzone-desc">
+                <i class="glyphicon glyphicon-download-alt"></i>
+                <p class="text-center fw_400">{{'ChooseImageFile'| translate }} <b>{{'DragItHere'| translate }}</b></p>
+              </div>
+              <input formControlName="thumbnail" type="file" name="img_logo" (change)="handleImageInput($event)"  class="dropzone">
+            </div>
+            <div>
+              <p class="text-center">{{uploadImageName}}</p>
+            </div>
+            <div class="steps_btns d-flex align-items-center justify-content-center">
+              <button (click)="forwardStep()" type="button"
+                class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 text-uppercase next-step">{{'Next'| translate }}</button>
+            </div>
+          </div>
+          <div [ngClass]="step == 1 ? 'tab tab-pane active' : 'tab tab-pane'">
+            <p class="text-center font_16 fw_600 step-desc">{{'CreateClassStep2'| translate }}</p>
+            <div class="tag-form-group">
+              <span class="p-fluid">
+              <p-autoComplete (onSelect)="captureDisciplineId($event)" placeholder="{{'TypeDisciplineNameToAdd'| translate }}" class="form-control w-100" formControlName="disciplineIds" [suggestions]="filteredDisciplines" (completeMethod)="filterDisciplines($event)" field="name" [multiple]="true">
+              </p-autoComplete>
+            </span>
+            </div>
+
+            <div class="tag-form-group">
+              <span class="p-fluid">
+              <p-autoComplete [size]="200" (onSelect)="captureTeacherId($event)" placeholder="{{'TypeTeacherNameToAdd'| translate }}" class="form-control w-100" formControlName="teacherIds" [suggestions]="filteredTeachers" (completeMethod)="filterTeachers($event)" field="firstName" [multiple]="true">
+              </p-autoComplete>
+            </span>
+            </div>
+
+            <div class="tag-form-group">
+              <span class="p-fluid">
+              <p-autoComplete (onSelect)="captureStudentId($event)" placeholder="{{'TypeStudentNameToAdd'| translate }}" class="form-control w-100" formControlName="studentIds" dataKey="studentId" [suggestions]="filteredStudents" (completeMethod)="filterStudents($event)" field="studentName" [multiple]="true">
+              </p-autoComplete>
+            </span>
+            </div>
+            
+            <div class="steps_btns d-flex align-items-center justify-content-between">
+              <button (click)="backStep()" type="button"
+                class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 text-uppercase prev-step-btn prev-step"
+                id="prevBtn">{{'Back'| translate }}</button>
+                <button (click)="forwardStep()" type="button"
+                class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 text-uppercase prev-step-btn prev-step"
+                id="step2_btn">{{'AddLater'| translate }}</button>
+              <button (click)="forwardStep()" type="button" id="step2_btn"
+                class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 text-uppercase next-step">{{'Continue'| translate }}</button>
+            </div>
+          </div>
+          <div [ngClass]="step == 2 ? 'tab tab-pane active final-multiple-step' : 'tab tab-pane final-multiple-step'">
+            <h2 class="font_24 fw-bold text_dark text-center my_32 mt-1">{{'YouCreatedNewClass'| translate }}</h2>
+            <p class="font_16 text_dark fw_600 text-center mb-0">{{'ClassLinkInfo'| translate }}</p>
+            <div class="school-link position-relative my_32">
+              <input formControlName = "classUrl" type="text" class="form-control" placeholder="byokul.com/" #userinput/>
+              <button (click)="copyMessage(userinput)" type="button" class="border-0 bg-transparent shadow-none p-0 copy-link"><img
+                  src="../../../../assets/images/school/copy.svg" /></button>
+              <button type="button" class="border-0 bg-transparent shadow-none p-0 upload-link"><img
+                  src="../../../../assets/images/school/Upload-small.svg" /></button>
+            </div>
+            <div class="steps_btns">
+              <input (click)="createClass()" type="submit" id="nextBtn"
+                class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 text-uppercase"
+                value="{{'Finish'| translate }}" />
+            </div>
+          </div>
+        </div>
+        <!-- Circles which indicates the steps of the form: -->
+
+      </form>
+      <div class="d-flex justify-content-end mt-5 d-md-none" >
+         <button type="button" class="step-edit-button btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase next-step"><img src="../../../../assets/images/Edit-light.svg" alt="edit"/></button>
+      </div>
+    </div>
+  </section>
+</body>
+
+<loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>

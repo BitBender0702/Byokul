@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LMS.App.Controllers
 {
-    [Route("Teachers")]
+    [Route("teachers")]
     public class TeachersController : BaseController
     {
         private readonly UserManager<User> _userManager;
@@ -53,7 +53,7 @@ namespace LMS.App.Controllers
         }
 
         [Route("getAllTeachers")]
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> GetAllTeachers()
         {
             var response = await _teacherService.GetAllTeachers();

@@ -27,6 +27,7 @@ namespace LMS.Common.ViewModels.Class
         public Guid? ServiceTypeId { get; set; }
         public ServiceTypeViewModel ServiceType { get; set; }
         public Guid? AccessibilityId { get; set; }
+        public string ClassUrl { get; set; }
         public AccessibilityViewModel Accessibility { get; set; }
         public IEnumerable<LanguageViewModel> Languages { get; set; }
         public IEnumerable<TeacherViewModel> Teachers { get; set; }
