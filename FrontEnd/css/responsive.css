@@ -19,6 +19,7 @@
 		box-shadow: 0px 0px 16px #00000026;
 		transition: 0.5s all;
 	}
+
 }
 
 @media screen and (max-width:991px) {
@@ -30,6 +31,17 @@
 	}
 	.landing-section {
 		padding: 48px 59px;
+	}
+	.School-prof-header .school-profile-icon {
+		width: 180px;
+		height: 180px;
+		min-width: 180px;
+	}
+	.font_24 {
+		font-size: 22px;
+	}
+	.followers_name {
+		margin-bottom: 10px;
 	}
 }
 
