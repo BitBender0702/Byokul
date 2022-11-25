@@ -1204,3 +1204,45 @@ input[type=number]::-webkit-outer-spin-button {
 .medium_thumbox {
 	flex-flow: column;
 }
+
+
+.school-grid-footer.preview-right-action {
+    display: flex;
+    flex-flow: column;
+    position: absolute;
+    right: 10px;
+    z-index: 9;
+    bottom: -18px;
+}
+.preview-right-action button {
+    padding: 0;
+    margin-bottom: 13px;
+}
+.preview-right-action .function-btns img {
+    max-height: 16px;
+}
+.preview-right-action button {
+    padding: 0;
+    margin-bottom: 13px;
+    font-size: 14px;
+}
+.class-preview-right {
+    padding-right: 60px;
+}
+.class-preview-right .hashtag_box {
+    margin-top: 20px;
+}
+
+
+.school-grid-footer.preview-right-action {
+    display: flex;
+    flex-flow: column;
+    position: absolute;
+    right: 10px;
+    z-index: 9;
+    bottom: -10px;
+}
+.close-preview {
+    position: absolute;
+    right: 16px;
+}
