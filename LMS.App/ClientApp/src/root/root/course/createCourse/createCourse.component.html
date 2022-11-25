@@ -1,7 +1,6 @@
 
-<body>
   <section class="f-poppins">
-    <side-bar></side-bar> 
+    <side-bar [isOpenSidebar]="isOpenSidebar"></side-bar> 
 
     <div class="main_content">
 
@@ -20,7 +19,7 @@
             </span>
             <div class="d-xl-none">
               <button type="button" class="mobile-search border_btn" onclick="openSearch()"><img src="../../../../assets/images/search-lg.svg" /></button>
-              <button type="button" class="mobile-search border_btn" onclick="openSidebar()"><img src="../../../../assets/images/menu.svg" /></button>
+              <button type="button" class="mobile-search border_btn" (click)="openSidebar()"><img src="../../../../assets/images/menu.svg" /></button>
             </div>     
            </div>
 
@@ -48,13 +47,13 @@
               <div class="col-md-6">
                 <div class="row">
                   <div class="col">
-                    <input (click)="getFreeCourse()" formControlName="serviceTypeId" type="radio" id="forFree" name="options" [value]="serviceTypes[0].id">
-                    <label for="forFree"> Free </label>
+                    <input (click)="getFreeCourse()" formControlName="serviceTypeId" type="radio" id="forFree" name="serviceTypeId" value="704FEDC6-834C-4921-A63B-7E53C5276B31">
+                    <label for="forFree"> {{'Free'| translate }} </label>
                   </div>
 
                   <div class="col">
-                    <input (click)="getPaidCourse()" formControlName="serviceTypeId" type="radio" id="forPaid" name="options" [value]="serviceTypes[1].id">
-                    <label for="forPaid"> Paid </label>
+                    <input (click)="getPaidCourse()" formControlName="serviceTypeId" type="radio" id="forPaid" name="serviceTypeId" value="0D846894-CAA4-42F3-8E8A-9DBA6467672B">
+                    <label for="forPaid"> {{'Paid'| translate }} </label>
                   </div>
                 </div>
               </div>
@@ -135,7 +134,7 @@
                 value="{{'Finish'| translate }}" />
             </div>
           </div>
-        </div>
+          </div>
 
       </form>
       <div class="d-flex justify-content-end mt-5 d-md-none" >
@@ -143,4 +142,4 @@
       </div>
     </div>
   </section>
-</body>
+

@@ -1,4 +1,4 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, Injector, Input, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { MultilingualComponent } from 'src/root/root/sharedModule/Multilingual/multilingual.component';
 import { UserService } from 'src/root/service/user.service';
@@ -11,8 +11,9 @@ import { UserService } from 'src/root/service/user.service';
 export class SideBarComponent extends MultilingualComponent implements OnInit {
   items!: MenuItem[];
   private _userService;
-
   sidebarInfo:any;
+
+  @Input() isOpenSidebar!:boolean;
 
   constructor(injector: Injector,userService: UserService) {
     super(injector);
@@ -22,13 +23,16 @@ export class SideBarComponent extends MultilingualComponent implements OnInit {
   ngOnInit(): void {
 
     this.selectedLanguage = localStorage.getItem("selectedLanguage");
-
     this._userService.getSidebarInfo().subscribe((response) => {
       this.sidebarInfo = response;
 
       console.log(response);
     });
 
+  }
+
+  closeSidebar(){
+    this.isOpenSidebar = false;
   }
 
 }

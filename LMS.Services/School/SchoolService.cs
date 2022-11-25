@@ -66,7 +66,7 @@ namespace LMS.Services
             _blobService = blobService;
         }
 
-        public async Task SaveNewSchool(SchoolViewModel schoolViewModel, string createdById)
+        public async Task<Guid> SaveNewSchool(SchoolViewModel schoolViewModel, string createdById)
         {
             if (schoolViewModel.AvatarImage != null)
             {
@@ -99,6 +99,8 @@ namespace LMS.Services
             }
 
             await AddRoleForUser(createdById, "School Owner");
+
+            return schoolViewModel.SchoolId;
         }
 
         async Task SaveSchoolLanguages(IEnumerable<string> languageIds, Guid schoolId)
@@ -204,6 +206,17 @@ namespace LMS.Services
                 _schoolCertificateRepository.Save();
             }
 
+        }
+
+        public async Task<SchoolUpdateViewModel> GetSchoolEditDetails(Guid schoolId)
+        {
+            var school = await _schoolRepository.GetAll().Where(x => x.SchoolId == schoolId)
+                .Include(x => x.Accessibility)
+                .Include(x => x.CreatedBy)
+                .FirstOrDefaultAsync();
+
+            var result = _mapper.Map<SchoolUpdateViewModel>(school);
+            return result;
         }
 
         public async Task UpdateSchool(SchoolUpdateViewModel schoolUpdateViewModel)
@@ -351,14 +364,24 @@ namespace LMS.Services
         }
         public async Task SaveSchoolFollower(Guid schoolId, string userId)
         {
-            var schoolFollower = new SchoolFollower
-            {
-                SchoolId = schoolId,
-                UserId = userId
-            };
+            var schoolFollowers = await _schoolFollowerRepository.GetAll().ToListAsync();
 
-            _schoolFollowerRepository.Insert(schoolFollower);
-            _schoolFollowerRepository.Save();
+            if (schoolFollowers.Any(x => x.UserId == userId && x.SchoolId == schoolId))
+            {
+                return;
+            }
+
+            else
+            {
+                var schoolFollower = new SchoolFollower
+                {
+                    SchoolId = schoolId,
+                    UserId = userId
+                };
+
+                _schoolFollowerRepository.Insert(schoolFollower);
+                _schoolFollowerRepository.Save();
+            }
         }
 
         public async Task<int> FollowerList(Guid schoolId)

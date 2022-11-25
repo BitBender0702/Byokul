@@ -48,4 +48,16 @@ export class SchoolService{
         return this.http.get(`${this.apiUrl}/school/languageList`);
     }
 
+    getSchoolById(schoolId:string):Observable<any>{
+        return this.http.get(`${this.apiUrl}/school/getSchoolById` + '?schoolId=' + schoolId);
+    }
+
+    saveSchoolFollower(schoolId:string):Observable<any>{
+        return this.http.post(`${this.apiUrl}/school/saveSchoolFollower` + '?schoolId=' + schoolId,'');
+    }
+
+    getSchoolEditDetails(schoolId:string):Observable<any>{
+        return this.http.get(`${this.apiUrl}/school/getSchoolEditDetails` + '?schoolId=' + schoolId);
+    }
+
 }

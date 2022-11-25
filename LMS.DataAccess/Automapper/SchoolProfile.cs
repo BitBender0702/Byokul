@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using LMS.Common.ViewModels.Accessibility;
 using LMS.Common.ViewModels.Class;
 using LMS.Common.ViewModels.Common;
 using LMS.Common.ViewModels.Post;
@@ -14,6 +15,8 @@ namespace LMS.DataAccess.Automapper
         {
             CreateMap<School, SchoolViewModel>()
                  .ForMember(x => x.CreatedBy, opt => opt.MapFrom(o => o.CreatedBy.Email));
+            CreateMap<School, SchoolUpdateViewModel>()
+                .ForMember(x => x.User, opt => opt.MapFrom(o => o.CreatedBy));
             CreateMap<SchoolCertificate, SchoolCertificateViewModel>();
             CreateMap<SchoolTag, SchoolTagViewModel>();
             CreateMap<Country, CountryViewModel>();

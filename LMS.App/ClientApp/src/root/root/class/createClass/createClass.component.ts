@@ -229,13 +229,9 @@ captureTeacherId(event: any) {
     this.isOpenSearch = false;
   }
 
-  closeSidebar(){
-    this.isOpenSidebar = false;
-
-  }
-
   openSidebar(){
-    this.isOpenSidebar = false;
+    debugger;
+    this.isOpenSidebar = true;
 
   }
 }

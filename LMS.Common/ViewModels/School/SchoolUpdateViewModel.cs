@@ -1,4 +1,5 @@
 ﻿using LMS.Common.ViewModels.Accessibility;
+using LMS.Common.ViewModels.User;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -21,5 +22,6 @@ namespace LMS.Common.ViewModels.School
         public AccessibilityViewModel Accessibility { get; set; }
         public string OwnerId { get; set; }
         public string? Description { get; set; }
+        public UserViewModel? User { get; set; }
     }
 }

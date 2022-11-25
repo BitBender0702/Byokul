@@ -42,10 +42,10 @@ export class ForgetPasswordComponent extends MultilingualComponent implements On
     }
 
     forgotPassword(){
-      this.loadingIcon = true;
       this.isSubmitted = true;
       if (!this.forgotPasswordForm.valid) {
         return;}
+        this.loadingIcon = true;
       this.user = this.forgotPasswordForm.value;
       this._authService.forgetPassword(this.user).pipe(finalize(()=> this.loadingIcon = false)).subscribe({
                 next: () => {

@@ -47,4 +47,14 @@ export class ClassService{
         return this.http.get(`${this.apiUrl}/class/getAccessibility`);
     }
 
+    getClassById(classId:string):Observable<any>{
+        return this.http.get(`${this.apiUrl}/class/getClassById` + '?classId=' + classId);
+    }
+
+    getClassEditDetails(classId:string):Observable<any>{
+        debugger;
+        return this.http.get(`${this.apiUrl}/class/getClassEditDetails` + '?classId=' + classId);
+
+    }
+
 }

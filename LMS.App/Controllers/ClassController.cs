@@ -26,8 +26,16 @@ namespace LMS.App.Controllers
         public async Task<IActionResult> SaveNewClass(ClassViewModel classViewModel)
         {
             var userId = await GetUserIdAsync(this._userManager);
-            await _classService.SaveNewClass(classViewModel, userId);
-            return Ok("success");
+            var classId = await _classService.SaveNewClass(classViewModel, userId);
+            return Ok(classId);
+        }
+
+        [Route("getClassEditDetails")]
+        [HttpGet]
+        public async Task<IActionResult> GetClassEditDetails(Guid classId)
+        {
+            var response = await _classService.GetClassEditDetails(classId);
+            return Ok(response);
         }
 
         [Route("updateClass")]

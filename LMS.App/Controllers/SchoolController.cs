@@ -39,8 +39,16 @@ namespace LMS.App.Controllers
             //await _blobService.DeleteFile("", containerName);
             //schoolViewModel.Avatar = await _blobService.UploadFileAsync(schoolViewModel.AvatarImage, containerName);
             var userId = await GetUserIdAsync(this._userManager);
-            await _schoolService.SaveNewSchool(schoolViewModel, userId);
-            return Ok("success");
+            var schoolId = await _schoolService.SaveNewSchool(schoolViewModel, userId);
+            return Ok(schoolId);
+        }
+
+        [Route("getSchoolEditDetails")]
+        [HttpGet]
+        public async Task<IActionResult> GetSchoolEditDetails(Guid schoolId)
+        {
+            var response = await _schoolService.GetSchoolEditDetails(schoolId);
+            return Ok(response);
         }
 
         [Route("updateSchool")]
@@ -52,11 +60,11 @@ namespace LMS.App.Controllers
         }
 
         [Route("getSchoolById")]
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> GetSchoolById(Guid schoolId)
         {
             var userId = await GetUserIdAsync(this._userManager);
-            var response = await _schoolService.GetSchoolById(schoolId, userId);
+            var response = await _schoolService.GetSchoolById(schoolId, userId);    
             return Ok(response);
         }
 

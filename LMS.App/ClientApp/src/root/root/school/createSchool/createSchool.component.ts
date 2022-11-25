@@ -31,9 +31,9 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
   logoUrl!:string;
   items!: MenuItem[];
   step: number = 0;
-  nextPage:boolean = false;
+  isOpenSidebar:boolean = false;
 
-
+  
   constructor(injector: Injector,private domSanitizer: DomSanitizer,private router: Router,private fb: FormBuilder,schoolService: SchoolService,private http: HttpClient) {
     super(injector);
     this._schoolService = schoolService;
@@ -41,6 +41,7 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
 
   ngOnInit(): void {
 
+    this.step = 0;
     this.selectedLanguage = localStorage.getItem("selectedLanguage");
     this.translate.use(this.selectedLanguage);
 
@@ -115,7 +116,8 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
     this.fileToUpload.append('avatar',this.logoUrl);
 
     this._schoolService.createSchool(this.fileToUpload).subscribe((response:any) => {
-      console.log(response);
+         var schoolId =  response;
+         this.router.navigateByUrl(`user/schoolProfile/${schoolId}`)
 
     });
   }
@@ -126,10 +128,14 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
 
   forwardStep() {
     this.step += 1;
-    this.nextPage = true;
   }
 
   backStep() {
     this.step -= 1;
   }
+
+  openSidebar(){
+    this.isOpenSidebar = true;
+  }
+  
 }

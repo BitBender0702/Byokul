@@ -36,6 +36,7 @@ export class CreateCourseComponent extends MultilingualComponent implements OnIn
   studentIds:string[] = [];
   disciplineIds:string[] = [];
   teacherIds:string[] = [];
+  isOpenSidebar:boolean = false;
 
 
 
@@ -45,6 +46,7 @@ export class CreateCourseComponent extends MultilingualComponent implements OnIn
   }
 
   ngOnInit(): void {
+    this.step = 0;
 
     this.selectedLanguage = localStorage.getItem("selectedLanguage");
     this.translate.use(this.selectedLanguage);
@@ -197,6 +199,12 @@ captureTeacherId(event: any) {
 
   getPaidCourse(){
     this.isCoursePaid = true;
+  }
+
+  openSidebar(){
+    debugger;
+    this.isOpenSidebar = true;
+
   }
 
 }

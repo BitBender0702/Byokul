@@ -46,7 +46,7 @@ namespace LMS.Services
             _userManager = userManager;
             _blobService = blobService;
         }
-        public async Task SaveNewClass(ClassViewModel classViewModel, string createdById)
+        public async Task<Guid> SaveNewClass(ClassViewModel classViewModel, string createdById)
         {
 
             var langList = JsonConvert.DeserializeObject<string[]>(classViewModel.LanguageIds.First());
@@ -116,6 +116,8 @@ namespace LMS.Services
                 await SaveClassTeachers(classViewModel.TeacherIds, classes.ClassId);
             }
 
+            return classViewModel.ClassId;
+
         }
 
         async Task SaveClassLanguages(IEnumerable<string> languageIds, Guid classId)
@@ -176,6 +178,19 @@ namespace LMS.Services
                 _classTeacherRepository.Insert(classTeacher);
                 _classTeacherRepository.Save();
             }
+        }
+
+        public async Task<ClassUpdateViewModel> GetClassEditDetails(Guid classId)
+        {
+            var classes = await _classRepository.GetAll().Where(x => x.ClassId == classId)
+                .Include(x => x.School)
+                .Include(x => x.Accessibility)
+                .Include(x => x.ServiceType)
+                .Include(x => x.CreatedBy)
+                .FirstOrDefaultAsync();
+
+            var result = _mapper.Map<ClassUpdateViewModel>(classes);
+            return result;
         }
 
         public async Task UpdateClass(ClassUpdateViewModel classUpdateViewModel)

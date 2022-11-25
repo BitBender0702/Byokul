@@ -26,8 +26,8 @@ namespace LMS.App.Controllers
         public async Task<IActionResult> SaveNewCourse(CourseViewModel courseViewModel)
         {
             var userId = await GetUserIdAsync(this._userManager);
-            await _courseService.SaveNewCourse(courseViewModel, userId);
-            return Ok("success");
+            var courseId = await _courseService.SaveNewCourse(courseViewModel, userId);
+            return Ok(courseId);
         }
 
         [Route("updateCourse")]

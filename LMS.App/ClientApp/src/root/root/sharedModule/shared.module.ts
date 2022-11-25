@@ -5,12 +5,16 @@ import { TranslateLoader,TranslateModule, } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient,HttpClientModule } from '@angular/common/http';
 import { MultilingualComponent } from './Multilingual/multilingual.component';
+import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.component';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
     declarations: [
-      MultilingualComponent
+      MultilingualComponent,
+      LoadingSpinnerComponent
     ],
     imports: [
+      CommonModule,
         TranslateModule.forRoot({
             loader:{
               provide:TranslateLoader,
@@ -19,7 +23,7 @@ import { MultilingualComponent } from './Multilingual/multilingual.component';
             }
           })
     ],
-    exports:[MultilingualComponent],
+    exports:[MultilingualComponent,LoadingSpinnerComponent],
     providers: [TranslateService]
   })
 

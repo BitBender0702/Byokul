@@ -19,6 +19,7 @@ namespace LMS.DataAccess.Automapper
         public ClassProfile()
         {
             CreateMap<Class, ClassViewModel>();
+            CreateMap<Class, ClassUpdateViewModel>();
             CreateMap<Discipline, DisciplineViewModel>();
             CreateMap<ServiceType, ServiceTypeViewModel>();
             CreateMap<Class, ClassDetailsViewModel>()

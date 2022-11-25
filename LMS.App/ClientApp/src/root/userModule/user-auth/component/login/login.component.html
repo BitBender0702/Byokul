@@ -23,9 +23,13 @@
 
               <div class="form-group">
                 <input type="email" formControlName="email" class="form-control rounded-8" placeholder="{{'Email'| translate }}">
+                <small class="p-error" style="color: orange;"
+                *ngIf="(isSubmitted && loginForm.controls.email.errors)">Valid email address is required.</small>
               </div>
               <div class="form-group mb-3">
                 <input type="password" formControlName="password" class="form-control rounded-8" placeholder="{{'Password'| translate }}">
+                <small class="p-error" style="color: orange;"
+                *ngIf="isSubmitted && loginForm.controls.password.errors">Password is required.</small>
               </div>
 
               <p class="font_14 fw_300 text-center al-account mt-0"><a [routerLink]="['/user/auth/request-password']"

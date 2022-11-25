@@ -1,8 +1,8 @@
 
   <section class="f-poppins">
-    <side-bar></side-bar> 
+    <side-bar [isOpenSidebar]="isOpenSidebar"></side-bar> 
         <div class="main_content">
-          <div class="create-post-header d-flex justify-content-between">
+          <div class="create-post-header d-flex justify-content-between d-none d-xl-flex">
             <div class="search-header position-relative">
               <input type="search" class="form-control h_44" />
               <button type="button" class="btn search-icon"><img src="../../../../assets/images/school/search-gray.svg" /></button>
@@ -12,8 +12,17 @@
           <div class="live-header d-flex align-items-center justify-content-between">
             <button (click)="back()" type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
                 src="../../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
-          </div>
 
+                <span class="logo_mobile d-xl-none">
+                  <img src="../../../../assets/images/logo.svg" />
+                </span>
+
+                <div class="d-xl-none">
+                  <button type="button" class="mobile-search border_btn" onclick="openSearch()"><img src="../../../../assets/images/search-lg.svg" /></button>
+                  <button type="button" class="mobile-search border_btn" (click)="openSidebar()"><img src="../../../../assets/images/menu.svg" /></button>
+                </div>     
+               </div>
+          
           <form id="regForm" class="step-form mx-auto f-monteserrat" [formGroup]="createSchoolForm">
             <h3 id="create_school" class="font_24 text_dark fw-bold text-center">{{'CreateSchool'| translate }}</h3>
 
@@ -80,7 +89,7 @@
                     <i class="glyphicon glyphicon-download-alt"></i>
                     <p class="text-center fw_400">{{'ChooseImageFile'| translate }} <b>{{'DragItHere'| translate }}</b></p>
                   </div>
-                  <input type="file" id="avatar" formControlName="avatar" (change)="handleImageInput($event)" class="dropzone"/>
+                  <input type="file" id="avatar" (change)="handleImageInput($event)" class="dropzone"/>
                 </div>
               </div>
               <h4 class="font_16 fw_700 text_dark text-center my_32">{{'ChooseDefaultLogo'| translate }}</h4>
@@ -130,7 +139,9 @@
             </div>
 		</div>
           </form>
-       
+          <div class="d-flex justify-content-end mt-5 d-md-none" >
+            <button type="button" class="step-edit-button btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase next-step"><img src="../../../../assets/images/Edit-light.svg" alt="edit"/></button>
+         </div>
         </div>
         
   </section>

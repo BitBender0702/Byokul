@@ -50,18 +50,18 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
     }
   
     login(): void {
-
-      this.loadingIcon = true;
+        
       this.isSubmitted = true;
       if (!this.loginForm.valid) {
         return;}
+      this.loadingIcon = true;
       this.user = this.loginForm.value;
       this._authService.loginUser(this.user).pipe(finalize(()=> this.loadingIcon= false)).subscribe({
         next: (response: AuthenticatedResponse) => {
         this.isSubmitted = false;
         const token = response.token;
         localStorage.setItem("jwt", token); 
-        this.router.navigate(["../../createSchool"],{ relativeTo: this.route });
+        this.router.navigate(["../../myEarnings"],{ relativeTo: this.route });
         },
       error: (err: HttpErrorResponse) => this.invalidLogin = true
       })

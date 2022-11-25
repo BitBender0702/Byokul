@@ -10,27 +10,14 @@ import { AuthGuard } from '../service/auth.guard';
 import { StudentsAuthGuard } from './services/students-auth.guard';
 import { ResetPasswordComponent } from '../root/sharedModule/reset-password.component';
 import { UserAuthComponent } from './user-auth.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
 import { TranslateLoader,TranslateModule, } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient,HttpClientModule } from '@angular/common/http';
-
-
-import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
-
-import { MultilingualComponent } from '../root/sharedModule/Multilingual/multilingual.component';
 import { SharedModule } from '../root/sharedModule/shared.module';
-
-
-
-
-
-
-
+import { LandingComponent } from './user-auth/component/landing/landing.component';
 
 @NgModule({
-  declarations: [UserAuthComponent, LoginComponent,RegisterComponent, ChangePasswordComponent, ForgetPasswordComponent,LoadingSpinnerComponent],
+  declarations: [UserAuthComponent,LandingComponent, LoginComponent,RegisterComponent, ChangePasswordComponent, ForgetPasswordComponent],
   imports: [
     SharedModule,
     CommonModule,
@@ -51,9 +38,14 @@ import { SharedModule } from '../root/sharedModule/shared.module';
       children: [
         {
           path: '',
-          redirectTo: 'login',
+          redirectTo: 'landing',
           pathMatch: 'full',
         },
+         {
+          path: 'landing',
+          component: LandingComponent,
+        },
+
         {
           path: 'login',
           component: LoginComponent,

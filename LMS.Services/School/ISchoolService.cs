@@ -10,7 +10,8 @@ namespace LMS.Services
 {
     public interface ISchoolService
     {
-        Task SaveNewSchool(SchoolViewModel leadViewModel, string createdById);
+        Task<Guid> SaveNewSchool(SchoolViewModel leadViewModel, string createdById);
+        Task<SchoolUpdateViewModel> GetSchoolEditDetails(Guid schoolId);
         Task UpdateSchool(SchoolUpdateViewModel schoolUpdateViewModel);
         Task<SchoolDetailsViewModel> GetSchoolById(Guid schoolId,string loginUserId);
         Task<IEnumerable<SchoolViewModel>> GetAllSchools();

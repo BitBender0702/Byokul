@@ -1,7 +1,7 @@
 
 <body>
   <section class="f-poppins">
-    <side-bar></side-bar> 
+    <side-bar [isOpenSidebar]="isOpenSidebar"></side-bar>
     <div class="main_content">
 
       <div class="create-post-header d-flex justify-content-between d-none d-xl-flex">
@@ -18,8 +18,8 @@
               <img src="../../../../assets/images/logo.svg" />
             </span>
             <div class="d-xl-none">
-              <button type="button" class="mobile-search border_btn" onclick="openSearch()"><img src="../../../../assets/images/search-lg.svg" /></button>
-              <button type="button" class="mobile-search border_btn" onclick="openSidebar()"><img src="../../../../assets/images/menu.svg" /></button>
+              <button type="button" class="mobile-search border_btn" (click)="openSearch()"><img src="../../../../assets/images/search-lg.svg" /></button>
+              <button type="button" class="mobile-search border_btn" (click)="openSidebar()"><img src="../../../../assets/images/menu.svg" /></button>
             </div>     
            </div>
 
@@ -47,7 +47,7 @@
               <input formControlName="description" type="text" placeholder="{{'TellUsAboutClass'| translate }}" name="aboutclass" class="form-control w-100">
             </div>
             <div class="form-group position-relative student-input">
-              <label>{{'Studnets'| translate }}:</label>
+              <label>{{'Students'| translate }}:</label>
               <input formControlName="noOfStudents" type="number" placeholder="" name="students" min="1" max="999" class="form-control w-100">
             </div>
             <div class="row">
@@ -69,18 +69,18 @@
                 <div class="col-md-6">
                   <div class="row">
                     <div class="col">
-                      <input (click)="getFreeClass()" formControlName="serviceTypeId" type="radio" id="forFree" name="options" [value]="serviceTypes[0].id">
-                      <label for="forFree"> Free </label>
+                      <input (click)="getFreeClass()" formControlName="serviceTypeId" type="radio" id="forFree" name="serviceTypeId" value="704FEDC6-834C-4921-A63B-7E53C5276B31">
+                      <label for="forFree"> {{'Free'| translate }} </label>
                     </div>
   
                     <div class="col">
-                      <input (click)="getPaidClass()" formControlName="serviceTypeId" type="radio" id="forPaid" name="options" [value]="serviceTypes[1].id">
-                      <label for="forPaid"> Paid </label>
+                      <input (click)="getPaidClass()" formControlName="serviceTypeId" type="radio" id="forPaid" name="serviceTypeId" value="0D846894-CAA4-42F3-8E8A-9DBA6467672B">
+                      <label for="forPaid"> {{'Paid'| translate }} </label>
                     </div>
                   </div>
                 </div><br>
                
-                <div *ngIf="isClassPaid" class="col-md-5">
+                <div *ngIf="isClassPaid" class="col-md-6">
                   <input formControlName="price" type="text" placeholder="{{'Price'| translate }}" name="price" class="form-control w-100">
                 </div><br>
             </div>
@@ -114,7 +114,7 @@
                 <i class="glyphicon glyphicon-download-alt"></i>
                 <p class="text-center fw_400">{{'ChooseImageFile'| translate }} <b>{{'DragItHere'| translate }}</b></p>
               </div>
-              <input formControlName="thumbnail" type="file" name="img_logo" (change)="handleImageInput($event)"  class="dropzone">
+              <input type="file" name="img_logo" (change)="handleImageInput($event)"  class="dropzone">
             </div>
             <div>
               <p class="text-center">{{uploadImageName}}</p>
@@ -184,5 +184,3 @@
     </div>
   </section>
 </body>
-
-<loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
