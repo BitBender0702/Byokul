@@ -56,7 +56,7 @@ img {
 }
 
 .text_dark {
-	color: #313131;
+	color: #313131 !important;
 }
 
 .text_secondary {
@@ -258,6 +258,38 @@ ul li:before {
 	margin-top: 32px;
 	margin-bottom: 32px;
 }
+
+
+/*--- CSS for scroll bar issue---*/
+:-webkit-scrollbar {
+    width: 7px;
+    height: 8px;
+}
+:-webkit-scrollbar-track {
+    background: transparent;
+}
+
+:-webkit-scrollbar-thumb {
+    background-color: #c7c7c7;
+    border-radius: 0;
+    border: 0px solid transparent;
+    background-color: #000;
+}
+
+::-webkit-scrollbar {
+    height: 8px;
+    border-radius: 0;
+    background-clip: padding-box;
+    border: 0px solid transparent;
+    width: 7px;
+    background-color: #E5E5E5;
+}
+
+::-webkit-scrollbar-thumb {
+    box-shadow: inset 0 0 0 10px #7C8DA7;
+}
+
+/*--- CSS for scroll bar issue---*/
 
 /*---- Regsiter page css ----*/
 .back-step {
@@ -833,15 +865,15 @@ input[type=number]::-webkit-outer-spin-button {
 	left: 20px;
 }
 
-.student-input input {
-	padding-left: 100px;
-}
+
 
 .date-input input,
 .student-input select {
 	padding-left: 66px;
 }
-
+.student-input input {
+	padding-left: 100px;
+}
 .finish-date input {
 	padding-left: 75px;
 }
@@ -994,9 +1026,11 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .teacher-tags .custom-tag {
-	border: 1px solid #FAFAFA;
-	background: #FAFAFA;
-	color: #7C8DA7;
+    border: 1px solid #FAFAFA;
+    background: #FAFAFA;
+    color: #7C8DA7;
+    transition: 0.2s all;
+	position: relative;
 }
 
 .vr-border {
@@ -1193,7 +1227,7 @@ input[type=number]::-webkit-outer-spin-button {
 	margin-bottom: 16px;
 }
 
-.list-schol-profile .accordion>.row>div {
+.list-schol-profile >.row>div {
 	margin-bottom: 16px;
 }
 
@@ -1245,4 +1279,148 @@ input[type=number]::-webkit-outer-spin-button {
 .close-preview {
     position: absolute;
     right: 16px;
+}
+.edit-sprofilebtn {
+    background: rgba(124, 141, 167, 0.05) !important;
+    border-radius: 32px;
+    padding: 8px 16px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: 0.4s all;
+    opacity: 0;
+}
+.edit-sprofilebtn:hover {
+    background: rgb(124 141 167 / 33%) !important;
+}
+.edit-profilehover:hover .edit-sprofilebtn{
+	opacity: 1;
+}
+
+/*---- Modal css start here  ---*/
+.modal-header .btn-close{
+	position: absolute;
+}
+.edit-school-modal .modal-dialog{
+	max-width: 700px;
+}
+.edit-school-modal .modal-content{
+background: #FFFFFF;
+border: 1px solid #F1F7FF;
+box-shadow: 0px 4px 20px rgb(0 0 0 / 5%);
+border-radius: 16px
+}
+.edit-school-modal .modal-header{
+	padding: 30px 20px 15px;
+}
+.modal-header .btn-close {
+    position: absolute;
+    background: none;
+    top: 60%;
+    right: 35px;
+    padding: 0;
+    opacity: 1;
+    transform: translateY(-50%);
+}
+.modal-school-icon {
+    border: 2px solid #DEE0E3;
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+}
+.text-line-border:before {
+    content: "";
+    width: 100%;
+    height: 1px;
+    background: #F5F5F5;
+    position: absolute;
+    left: 0;
+    top: 56%;
+    transform: translateY(-50%);
+}
+.line-text {
+    background-color: #fff;
+    display: inline-block;
+    position: relative;
+    z-index: 999;
+    padding: 0 5px;
+}
+textarea.ht_96{
+	height: 96px;
+}
+.resize-none{
+	resize: none;
+}
+.hover-tags .custom-tag:hover {
+    background: #7C8DA7;
+    color: #FAFAFA;
+    padding-right: 20px;
+	cursor: pointer;
+}
+.hover-tags .custom-tag .delete-tag{
+	display: nonw;
+}
+.hover-tags .custom-tag:hover .delete-tag {
+    display: block;
+    top: 3px;
+    right: 7px;
+}
+.owner-input select {
+    padding-left: 84px;
+}
+
+.edit-school-modal .modal-body, .edit-school-modal .modal-header, .edit-school-modal .modal-footer {
+    padding-left: 32px;
+    padding-right: 32px;
+}
+.grid-active, .list-active{
+	display: block !important;
+}
+.cost_theme {
+    color: #FF821C;
+    margin-right: 8px;
+}
+.payment-profile {
+    padding: 4px 16px;
+    background: #FAFAFA;
+    border-radius: 16px;
+}
+.classes-grid{
+	border-radius: 4px;
+}
+.classes-grid .school-large-thumbnail {
+    height: 28vh!important;
+}
+.classes-grid .school-grid-footer.above-thumbnail {
+    position: absolute;
+    bottom: 0px;
+    z-index: 9;
+}
+
+.classes-grid .function-btns {
+    padding: 16px 23px;
+}
+.start-date{
+	color:#FF1C1C;
+}
+.language-tag .custom-tag{
+	border: 1px solid #FAFAFA;
+}
+.School-prof-header .user-profile-header{
+	width: 102px;
+    height: 102px;
+    min-width: 102px;
+}
+.minw-142{
+	min-width: 142px;
+}
+.School-prof-header .class-course-image{
+width:150px;
+height: 150px;
+min-width: 150px;
+}
+.univ-logo {
+    position: absolute;
+    right: 54px;
+    top: 0;
 }
