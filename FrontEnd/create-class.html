@@ -8,6 +8,7 @@
   <link rel="icon" type="image/x-icon" href="images/favicon.png" />
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
     rel="stylesheet">
+  <script src="https://kit.fontawesome.com/782679fe11.js" crossorigin="anonymous"></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="css/custom.css" rel="stylesheet" />
@@ -101,7 +102,7 @@
                 <h2 class="accordion-header" id="headingTwo">
                   <button
                     class="accordion-button  bg-transparent font_14 text_ltgray fw_400 d-flex align-items-center justify-content-between"
-                    type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true"
+                    type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false"
                     aria-controls="collapseTwo">
                     <span>Classes </span>
                   </button>
@@ -137,7 +138,7 @@
                 <h2 class="accordion-header" id="headingThree">
                   <button
                     class="accordion-button  bg-transparent font_14 text_ltgray fw_400 d-flex align-items-center justify-content-between"
-                    type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="true"
+                    type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false"
                     aria-controls="collapseThree">
                     <span>Courses </span>
                   </button>
@@ -207,7 +208,7 @@
                 <h2 class="accordion-header" id="headingTwo">
                   <button
                     class="accordion-button  bg-transparent font_14 text_ltgray fw_400 d-flex align-items-center justify-content-between"
-                    type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true"
+                    type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false"
                     aria-controls="collapseTwo">
                     <span>Classes </span>
                   </button>
@@ -243,7 +244,7 @@
                 <h2 class="accordion-header" id="headingThree">
                   <button
                     class="accordion-button bg-transparent font_14 text_ltgray fw_400 d-flex align-items-center justify-content-between"
-                    type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="true"
+                    type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false"
                     aria-controls="collapseThree">
                     <span>Courses </span>
                   </button>
@@ -300,21 +301,24 @@
       <div class="create-post-header d-flex justify-content-between d-none d-xl-flex">
         <div class="search-header position-relative">
           <input type="search" class="form-control h_44" />
-          <button type="button" class="btn search-icon" ><img src="images/search-gray.svg" /></button>
+          <button type="button" class="btn search-icon"><img src="images/search-gray.svg" /></button>
         </div>
-        <button type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44">Create Post</button>
+        <button type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44" data-bs-toggle="modal"
+          data-bs-target="#create-post">Create Post</button>
       </div>
       <div class="live-header d-flex align-items-center justify-content-between">
         <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
             src="images/arrow-left.svg" /> Back</button>
-            <span class="logo_mobile d-xl-none">
-              <img src="images/logo.svg" />
-            </span>
-            <div class="d-xl-none">
-              <button type="button" class="mobile-search border_btn" onclick="openSearch()"><img src="images/search-lg.svg" /></button>
-              <button type="button" class="mobile-search border_btn" onclick="openSidebar()"><img src="images/menu.svg" /></button>
-            </div>     
-           </div>
+        <span class="logo_mobile d-xl-none">
+          <img src="images/logo.svg" />
+        </span>
+        <div class="d-xl-none">
+          <button type="button" class="mobile-search border_btn" onclick="openSearch()"><img
+              src="images/search-lg.svg" /></button>
+          <button type="button" class="mobile-search border_btn" onclick="openSidebar()"><img
+              src="images/menu.svg" /></button>
+        </div>
+      </div>
 
 
       <form id="regForm" class="step-form mx-auto f-monteserrat">
@@ -405,9 +409,10 @@
             </div>
           </div>
           <div class="tab-pane tab">
-            <p class="text-center font_16 fw_600 step-desc">Step 2: Add Disciplines, Teachers and Students of your Class</p>
+            <p class="text-center font_16 fw_600 step-desc">Step 2: Add Disciplines, Teachers and Students of your Class
+            </p>
             <div class="tag-form-group">
-              <input type="text" placeholder="Type Discipline Name to add"  class="form-control w-100">
+              <input type="text" placeholder="Type Discipline Name to add" class="form-control w-100">
               <div class="tag-box">
                 <span class="custom-tag">Discipline Name 1</span>
                 <span class="custom-tag">Discipline Name 2</span>
@@ -416,7 +421,7 @@
               </div>
             </div>
             <div class="tag-form-group">
-              <input type="text" placeholder="Type Teacher Name to add"  class="form-control w-100">
+              <input type="text" placeholder="Type Teacher Name to add" class="form-control w-100">
               <div class="tag-box">
                 <span class="custom-tag">Teacher 1</span>
                 <span class="custom-tag">Teacher 2</span>
@@ -424,7 +429,7 @@
               </div>
             </div>
             <div class="tag-form-group">
-              <input type="text" placeholder="Type Student Name to add"  class="form-control w-100">
+              <input type="text" placeholder="Type Student Name to add" class="form-control w-100">
               <div class="tag-box">
                 <span class="custom-tag">Student Name 1</span>
                 <span class="custom-tag">Student Name 2</span>
@@ -432,12 +437,12 @@
                 <span class="custom-tag">Student Name 4</span>
               </div>
             </div>
-            
+
             <div class="steps_btns d-flex align-items-center justify-content-between">
               <button type="button"
                 class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 text-uppercase prev-step-btn prev-step"
                 id="prevBtn">Back</button>
-                <button type="button"
+              <button type="button"
                 class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 text-uppercase prev-step-btn prev-step"
                 id="step2_btn">Add Later</button>
               <button type="button" id="step2_btn"
@@ -446,7 +451,7 @@
           </div>
           <div class="tab tab-pane final-multiple-step">
             <h2 class="font_24 fw-bold text_dark text-center my_32 mt-1">You created new Class!</h2>
-            <p class="font_16 text_dark fw_600 text-center mb-0">Here is the link to your class, you can share it with 
+            <p class="font_16 text_dark fw_600 text-center mb-0">Here is the link to your class, you can share it with
               Students or Teachers</p>
             <div class="school-link position-relative my_32">
               <input type="text" class="form-control" placeholder="byokul.com/schoolname1/classmname1" />
@@ -465,13 +470,196 @@
         <!-- Circles which indicates the steps of the form: -->
 
       </form>
-      <div class="d-flex justify-content-end mt-5 d-md-none" >
-         <button type="button" class="step-edit-button btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase next-step"><img src="images/Edit-light.svg" alt="edit"/></button>
+      <div class="d-flex justify-content-end mt-5 d-md-none">
+        <button type="button"
+          class="step-edit-button btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase next-step"><img
+            src="images/Edit-light.svg" alt="edit" /></button>
       </div>
 
     </div>
 
   </section>
+
+  <div class="modal fade edit-school-modal" id="create-post" tabindex="-1" aria-labelledby="create-post"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header border-0 justify-content-center position-relative">
+          <div class="custom-language-select liv-postbtn">
+            <ul class="nav nav-tabs border-0" id="myTab" role="tablist">
+              <li class="nav-item p-0">
+                <button class="nav-link active post-attch-btn d-inline-flex justify-content-center align-items-center"
+                  id="live-tab" data-bs-toggle="tab" data-bs-target="#live-tab-pane" type="button" role="tab"
+                  aria-controls="live-tab-pane" aria-selected="true"><img src="images/Play-dark.svg"
+                    class="dark-attach" /><img src="images/Play-light.svg" class="light-attach" /> Live</button>
+              </li>
+              <li class="nav-item p-0">
+                <button class="nav-link post-attch-btn d-inline-flex justify-content-center align-items-center"
+                  id="Post-tab" data-bs-toggle="tab" data-bs-target="#Post-tab-pane" type="button" role="tab"
+                  aria-controls="Post-tab-pane" aria-selected="false"><img src="images/Edit-grey.svg"
+                    class="dark-attach" /><img src="images/Edit-light.svg" class="light-attach" /> Post</button>
+              </li>
+              <li class="nav-item p-0">
+                <button class="nav-link post-attch-btn d-inline-flex justify-content-center align-items-center"
+                  id="reels-tab" data-bs-toggle="tab" data-bs-target="#reels-tab-pane" type="button" role="tab"
+                  aria-controls="reels-tab-pane" aria-selected="false"><img src="images/category-grey.svg"
+                    class="dark-attach" /><img src="images/category-light.svg" class="light-attach" />
+                  Reels</button>
+              </li>
+
+            </ul>
+          </div>
+          <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">Create Post</h1>
+          <div></div>
+          <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"><img
+              src="images/cross.svg" /></button>
+        </div>
+        <div class="modal-body">
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="live-tab-pane" role="tabpanel" aria-labelledby="live-tab"
+              tabindex="0">
+              <form class="latest-form">
+                <div class="form-group">
+                  <label class="font_10">School Name / Class Name</label>
+                  <select class="form-select rounded-8 w-100">
+                    <option value="1">School Name 1</option>
+                    <option value="2">School Name 2</option>
+                    <option value="3">School Name 1 3</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="font_10">Title</label>
+                  <input type="text" placeholder="Title" class="form-control w-100">
+                </div>
+
+                <div class="form-group">
+                  <label class="font_10">Body Text</label>
+                  <input type="text" class="form-control" placeholder="Body Text" />
+                </div>
+                <div class="form-group">
+                  <label class="font_10">Cover Letter before Stream start</label>
+                  <input type="text" class="form-control" placeholder="Cover Letter before Stream start" />
+                </div>
+                <div class="form-group">
+                  <label class="font_10">Comment Throttling</label>
+                  <select class="form-select rounded-8 w-100">
+                    <option value="1">1 Comment per 1 Minute</option>
+                    <option value="2">1 Comment per 1 Minute</option>
+                    <option value="3">1 Comment per 1 Minute</option>
+                  </select>
+                </div>
+                <div class="text-line-border position-relative text-center my-4">
+                  <span class="line-text font_12 text_ltgray fw_400 text-center">Select Media Sources</span>
+                </div>
+                <div class="media-sourcebtn d-flex gap-2 f-monteserrat">
+                  <button type="button" class="post-attch-btn btn web-cmbtn font_12 text_dark m-0"><span
+                      class="text-center"><img src="images/webkam.svg" class=" mx-auto mb-2 dark-attach" /> <img
+                        src="images/webkam-light.svg" class="mx-auto mb-2 light-attach" />Webcam</span></button>
+                  <button type="button" class="post-attch-btn btn web-cmbtn font_12 text_dark m-0"><span
+                      class="text-center"><i class="fa-solid fa-gear d-block mx-auto mb-2 font_20"></i> Streaming
+                      Software</span></button>
+                  <button type="button" class="post-attch-btn btn web-cmbtn font_12 text_dark m-0"><span
+                      class="text-center"><i class="fa-solid fa-microphone d-block mx-auto mb-2 font_20"></i>
+                      Microphone</span></button>
+                  <button type="button" class="post-attch-btn btn web-cmbtn font_12 text_dark m-0">
+                    <span class="text-center"><img src="images/screen-share.svg" class=" mx-auto mb-2 dark-attach" />
+                      <img src="images/screen-share-light.svg" class="mx-auto mb-2 light-attach" />Screen
+                      share</span></button>
+                </div>
+              </form>
+
+
+            </div>
+            <div class="tab-pane fade" id="Post-tab-pane" role="tabpanel" aria-labelledby="Post-tab" tabindex="0">
+              <form class="latest-form">
+                <div class="form-group">
+                  <label class="font_10">School Name / Class Name</label>
+                  <select class="form-select rounded-8 w-100">
+                    <option value="1">School Name 1</option>
+                    <option value="2">School Name 2</option>
+                    <option value="3">School Name 1 3</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="font_10">Title</label>
+                  <input type="text" placeholder="Title" class="form-control w-100">
+                </div>
+
+                <div class="form-group">
+                  <label class="font_10">Body Text</label>
+                  <input type="text" class="form-control" placeholder="Body Text" />
+                </div>
+
+              </form>
+              <div class="img-upl-result pt-4">
+                <span class="position-relative d-inline-block">
+                  <img src="images/post-upload-image.jpg" />
+                  <button type="button"
+                    class="btn dl-post-img d-flex align-items-center justify-content-center rounded-circle position-absolute"><i
+                      class="fa-solid fa-xmark"></i></button>
+                </span>
+                <span class="position-relative d-inline-block">
+                  <img src="images/post-upload-image.jpg" />
+                  <button type="button"
+                    class="btn dl-post-img d-flex align-items-center justify-content-center rounded-circle position-absolute"><i
+                      class="fa-solid fa-xmark"></i></button>
+                </span>
+              </div>
+              <div class="teacher-tags tag-box hashtag_post mt-4 mb-2">
+                <button type="button" class="custom-tag">#Tag 1</button>
+                <button type="button" class="custom-tag">#Tag 2</button>
+                <button type="button" class="custom-tag">#Tag 3</button>
+                <button type="button" class="custom-tag">#Tag 4</button>
+                <button type="button" class="custom-tag">#Tag 5</button>
+                <button type="button" class="custom-tag">#Tag 6</button>
+                <button type="button" class="custom-tag">#Tag 7</button>
+              </div>
+              <div class="teacher-tags hashtag_post tag-boxattachment-outer mt-1 mb-0">
+                <button type="button" class="custom-tag"><img src="images/Paper-gray.svg" class="me-1" /> Attachment
+                  1</button>
+                <button type="button" class="custom-tag"><img src="images/Paper-gray.svg" class="me-1" /> Attachment
+                  2</button>
+                <button type="button" class="custom-tag"><img src="images/Paper-gray.svg" class="me-1" /> Attachment
+                  3</button>
+              </div>
+
+            </div>
+            <div class="tab-pane fade" id="reels-tab-pane" role="tabpanel" aria-labelledby="reels-tab" tabindex="0">
+              ...</div>
+          </div>
+          <hr class="mb-0 sepearator mx-0 mt-3 opacity-100" />
+        </div>
+        <div
+          class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 cr-postfooter pt-0">
+          <div class="post-bot-left d-flex">
+            <button type="button"
+              class="post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center active"><img
+                src="images/gallery-dark.svg" class="dark-attach" /><img src="images/gallery-light.svg"
+                class="light-attach" /></button>
+            <button type="button"
+              class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"><img
+                src="images/Video-dark.svg" class="dark-attach" /><img src="images/Video-light.svg"
+                class="light-attach" /></button>
+            <button type="button"
+              class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"><img
+                src="images/Paper-Plus-dark.svg" class="dark-attach" /><img src="images/Paper-Plus-light.svg"
+                class="light-attach" /></button>
+            <button type="button"
+              class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"><img
+                src="images/hashtag-dark.svg" class="dark-attach" /><img src="images/hashtag-light.svg"
+                class="light-attach" /></button>
+          </div>
+          <div class="post-bot-right d-flex justify-content-end">
+            <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 delay-btn"><i
+                class="fa-solid fa-clock"></i></button>
+            <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 lg_btn"><img
+                src="images/Send-light.svg" class="me-2" /> Nov 15, 2022 at 14:30 </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
 
 
 
@@ -569,17 +757,17 @@
   </script>
   <script>
     function openSearch() {
-        document.getElementById("search-overlay").style.display = "block";
-      }
-      function closeSearch() {
-        document.getElementById("search-overlay").style.display = "none";
-      }
-      function closeSidebar() {
-        document.getElementById("side-bar").style.display = "none";
-      }
-      function openSidebar() {
-        document.getElementById("side-bar").style.display = "block";
-      }
+      document.getElementById("search-overlay").style.display = "block";
+    }
+    function closeSearch() {
+      document.getElementById("search-overlay").style.display = "none";
+    }
+    function closeSidebar() {
+      document.getElementById("side-bar").style.display = "none";
+    }
+    function openSidebar() {
+      document.getElementById("side-bar").style.display = "block";
+    }
   </script>
 </body>
 
