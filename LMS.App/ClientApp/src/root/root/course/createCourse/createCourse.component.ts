@@ -7,6 +7,9 @@ import { FilterService } from "primeng/api";
 import { CreateCourseModel } from 'src/root/interfaces/course/createCourseModel';
 import { CourseService } from 'src/root/service/course.service';
 
+// import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+// import { CreatePostComponent } from '../../createPost/createPost';
+
 @Component({
   selector: 'students-Home',
   templateUrl: './createCourse.component.html',
@@ -27,6 +30,9 @@ export class CreateCourseComponent extends MultilingualComponent implements OnIn
   accessibility:any;
   course!:CreateCourseModel;
   createCourseForm!:FormGroup;
+  createCourseForm1!:FormGroup;
+  createCourseForm2!:FormGroup;
+  createCourseForm3!:FormGroup;
   isSubmitted: boolean = false;
   fileToUpload= new FormData();
   items!: MenuItem[];
@@ -34,9 +40,13 @@ export class CreateCourseComponent extends MultilingualComponent implements OnIn
   nextPage:boolean = false;
   isCoursePaid:boolean = false;
   studentIds:string[] = [];
+  studentInfo:any[] = [];
   disciplineIds:string[] = [];
+  disciplineInfo:any[] = [];
   teacherIds:string[] = [];
+  teacherInfo:any[] = [];
   isOpenSidebar:boolean = false;
+  isStepCompleted: boolean = false;
 
 
 
@@ -78,6 +88,7 @@ export class CreateCourseComponent extends MultilingualComponent implements OnIn
 
   this._courseService.getAccessibility().subscribe((response) => {
     this.accessibility = response;
+    this.createCourseForm1.controls['accessibilityId'].setValue(this.accessibility[0].id, {onlySelf: true});
   });
 
 
@@ -95,21 +106,59 @@ export class CreateCourseComponent extends MultilingualComponent implements OnIn
       price:this.fb.control('')
 
   });
+
+  this.createCourseForm1 = this.fb.group({
+    schoolId: this.fb.control('C65DDBF5-42F5-496D-CFF7-08DA9CA1C8A0', [Validators.required]),
+    courseName: this.fb.control('', [Validators.required]),
+    serviceTypeId: this.fb.control('',[Validators.required]),
+    accessibilityId: this.fb.control('',[Validators.required]),
+    languageIds:this.fb.control('',[Validators.required]),
+    description: this.fb.control(''),
+    price:this.fb.control('')
+
+  });
+
+  this.createCourseForm2 = this.fb.group({
+    disciplineIds:this.fb.control(''),
+    studentIds:this.fb.control(''),
+    teacherIds:this.fb.control('')
+  
+  });
+
+  this.createCourseForm3 = this.fb.group({
+    courseUrl: this.fb.control('',[Validators.required])
+  });
 }
+
+// addPriceValidation(serviceTypeId: string) {
+//   return (group: FormGroup): {[key: string]: any} => {
+//    let f = group.controls[serviceTypeId];
+//    if (f.value != '704FEDC6-834C-4921-A63B-7E53C5276B31') {
+//      return {
+//        price: `Price is required.`
+//      };
+//    }
+//    return {};
+//   }
+// }
 
 captureStudentId(event: any) {
   var studentId = event.studentId;
   this.studentIds.push(studentId);
+  this.studentInfo.push(event);
 }
 
 captureDisciplineId(event: any) {
   var disciplineId = event.id;
   this.disciplineIds.push(disciplineId);
+  this.disciplineInfo.push(event);
 }
 
 captureTeacherId(event: any) {
+  debugger
   var teacherId = event.teacherId;
   this.teacherIds.push(teacherId);
+  this.teacherInfo.push(event);
 }
 
   copyMessage(inputElement:any){
@@ -124,19 +173,26 @@ captureTeacherId(event: any) {
   }
 
   createCourse(){
+    debugger
     this.isSubmitted=true;
-    this.course=this.createCourseForm.value;
-    this.fileToUpload.append('schoolId', this.course.schoolId);
-    this.fileToUpload.append('courseName', this.course.courseName);
-    this.fileToUpload.append('description', this.course.description);
-    this.fileToUpload.append('serviceTypeId',this.course.serviceTypeId);
-    this.fileToUpload.append('accessibilityId',this.course.accessibilityId);
-     this.fileToUpload.append('courseUrl',JSON.stringify(this.course.courseUrl));
-    this.fileToUpload.append('languageIds',JSON.stringify(this.course.languageIds));
-    this.fileToUpload.append('disciplineIds',JSON.stringify(this.disciplineIds));
-    this.fileToUpload.append('studentIds',JSON.stringify(this.studentIds));
-    this.fileToUpload.append('teacherIds',JSON.stringify(this.teacherIds));
-    this.fileToUpload.append('price',this.course.price.toString());
+    if (!this.createCourseForm3.valid) {
+      return;
+    }
+
+    var step3Value=this.createCourseForm3.value;
+    this.fileToUpload.append('courseUrl',JSON.stringify(step3Value.courseUrl));
+
+    // this.fileToUpload.append('schoolId', this.course.schoolId);
+    // this.fileToUpload.append('courseName', this.course.courseName);
+    // this.fileToUpload.append('description', this.course.description);
+    // this.fileToUpload.append('serviceTypeId',this.course.serviceTypeId);
+    // this.fileToUpload.append('accessibilityId',this.course.accessibilityId);
+    //  this.fileToUpload.append('courseUrl',JSON.stringify(this.course.courseUrl));
+    // this.fileToUpload.append('languageIds',JSON.stringify(this.course.languageIds));
+    // this.fileToUpload.append('disciplineIds',JSON.stringify(this.disciplineIds));
+    // this.fileToUpload.append('studentIds',JSON.stringify(this.studentIds));
+    // this.fileToUpload.append('teacherIds',JSON.stringify(this.teacherIds));
+    // this.fileToUpload.append('price',this.course.price.toString());
 
     this._courseService.createCourse(this.fileToUpload).subscribe((response:any) => {
       console.log(response);
@@ -149,8 +205,42 @@ captureTeacherId(event: any) {
   }
 
   forwardStep() {
+    debugger
+    this.isStepCompleted = true;
+    if (!this.createCourseForm1.valid) {
+      return;
+    }
+
+    // var schoolId = this.createCourseForm1.get('schoolId')?.value;
+    this.course=this.createCourseForm1.value;
+    // this.course.schoolId = schoolId;
+
+    this.fileToUpload.append('schoolId', this.course.schoolId);
+    this.fileToUpload.append('courseName', this.course.courseName);
+    this.fileToUpload.append('serviceTypeId',this.course.serviceTypeId);
+    this.fileToUpload.append('accessibilityId',this.course.accessibilityId);
+    this.fileToUpload.append('languageIds',JSON.stringify(this.course.languageIds));
+    this.fileToUpload.append('description', this.course.description);
+    this.fileToUpload.append('price', this.course.price?.toString());
+
+    this.isStepCompleted = false;
     this.step += 1;
     this.nextPage = true;
+
+    this.createCourseForm3.patchValue({
+      courseUrl: 'byokul.com/schoolname/' + this.course.courseName.replace(" ",""),
+    });
+  }
+
+  forwardStep2(){
+    debugger
+    this.isStepCompleted = true;
+
+    this.fileToUpload.append('disciplineIds',JSON.stringify(this.disciplineIds));
+    this.fileToUpload.append('studentIds',JSON.stringify(this.studentIds));
+    this.fileToUpload.append('teacherIds',JSON.stringify(this.teacherIds));
+    this.isStepCompleted = false;
+    this.step += 1;
   }
 
   backStep() {
@@ -194,17 +284,53 @@ captureTeacherId(event: any) {
   }
 
   getFreeCourse(){
+    debugger
     this.isCoursePaid = false;
+    this.createCourseForm1.get('price')?.removeValidators(Validators.required);
+    this.createCourseForm1.patchValue({
+      price: null,
+    });
   }
 
   getPaidCourse(){
+    debugger
     this.isCoursePaid = true;
+    this.createCourseForm1.get('price')?.addValidators(Validators.required);
+    //this.createCourseForm1.setErrors({ priceRequired: true });
   }
 
   openSidebar(){
-    debugger;
     this.isOpenSidebar = true;
 
+  }
+
+  removeTeacher(event: any){
+    debugger
+    const teacherIndex = this.teacherInfo.findIndex((item) => item.teacherId === event.teacherId);
+    if (teacherIndex > -1) {
+      this.teacherInfo.splice(teacherIndex, 1);
+    }
+  }
+
+  removeStudent(event: any){
+    debugger
+    const studentIndex = this.studentInfo.findIndex((item) => item.studentId === event.studentId);
+    if (studentIndex > -1) {
+      this.studentInfo.splice(studentIndex, 1);
+    }
+  }
+
+  removeDiscipline(event: any){
+    debugger
+    const disciplineIndex = this.disciplineInfo.findIndex((item) => item.id === event.id);
+    if (disciplineIndex > -1) {
+      this.disciplineInfo.splice(disciplineIndex, 1);
+    }
+  }
+
+  openModal(link:any) {
+    // const modalRef = this.modalService.open(ModalComponent);
+    // modalRef.componentInstance.src = link;
   }
 
 }

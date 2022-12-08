@@ -1,13 +1,14 @@
 
   <section class="f-poppins">
     <side-bar [isOpenSidebar]="isOpenSidebar"></side-bar> 
+    <div *ngIf="isOpenModal"><create-post [isOpenModal]="isOpenModal"></create-post></div>
         <div class="main_content">
           <div class="create-post-header d-flex justify-content-between d-none d-xl-flex">
             <div class="search-header position-relative">
               <input type="search" class="form-control h_44" />
               <button type="button" class="btn search-icon"><img src="../../../../assets/images/school/search-gray.svg" /></button>
             </div>
-            <button type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44">{{'CreatePost'| translate }}</button>
+            <button (click)="createPost()" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44">{{'CreatePost'| translate }}</button>
           </div>
           <div class="live-header d-flex align-items-center justify-content-between">
             <button (click)="back()" type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
@@ -23,7 +24,8 @@
                 </div>     
                </div>
           
-          <form id="regForm" class="step-form mx-auto f-monteserrat" [formGroup]="createSchoolForm">
+          <!-- <form id="regForm" class="step-form mx-auto f-monteserrat" [formGroup]="createSchoolForm"> -->
+            <div id="regForm" class="step-form mx-auto f-monteserrat">
             <h3 id="create_school" class="font_24 text_dark fw-bold text-center">{{'CreateSchool'| translate }}</h3>
 
             <!-- One "tab" for each step in the form: -->
@@ -38,20 +40,32 @@
 		<div class="tab-content registerTabs">
             <div [ngClass]="step == 0 ? 'tab tab-pane active' : 'tab tab-pane'">
               <p class="text-center font_16 fw_600 step-desc">{{'Step1'| translate }}</p>
+              <form id="regForm" [formGroup]="createSchoolForm1">
               <div class="form-group">
                 <input placeholder="{{'SchoolName'| translate }}" formControlName="schoolName" name="schoolname" class="form-control w-100">
+                <small class="p-error" style="color: orange;"
+                *ngIf="(isStepCompleted && createSchoolForm1.controls.schoolName.errors)">School Name is required
+              </small>
               </div>
               <div class="form-group">
-                <select class="form-select rounded-8 w-100" formControlName="specializationId">
-                  <option *ngFor="let specialization of specializations; let i = index" [value]="specialization.id" [selected]="i">{{specialization.name}}</option>
+                <select class="form-select rounded-8 w-100" formControlName="specializationId" aria-label="Default select example">
+                  <option value="" disabled selected hidden>Specialization</option>
+                  <option *ngFor="let specialization of specializations;" [value]="specialization.id">{{specialization.name}}</option>
                </select>
+               <small class="p-error" style="color: orange;"
+               *ngIf="(isStepCompleted && createSchoolForm1.controls.specializationId.errors)">This Field is required
+             </small>
               </div>
 
               
               <div class="form-group">
-                <select class="form-select rounded-8 w-100" formControlName="countryId">
-                  <option *ngFor="let country of countries; let i = index" [value]="country.id" [selected]="i">{{country.name}}</option>
+                <select class="form-select rounded-8 w-100" formControlName="countryId" aria-label="Default select example">
+                  <option value="" disabled selected hidden>Location</option>
+                  <option *ngFor="let country of countries;" [value]="country.id">{{country.name}}</option>
                </select>
+               <small class="p-error" style="color: orange;"
+               *ngIf="(isStepCompleted && createSchoolForm1.controls.countryId.errors)">This Field is required
+             </small>
               </div>
 
               <div class="form-group">
@@ -59,6 +73,9 @@
                   <p-multiSelect  [defaultLabel]="'Select Languages'" [panelStyle]="{'width':'100%'}" [filter]="false" [showToggleAll]="false" [options]="languages" optionLabel="name" optionValue="id" name="languageSelect[]" class="form-control" multiple id="languageSelect" formControlName="selectedLanguages">
                     <option *ngFor="let language of languages; let i = index" [value]="language.id" [selected]="i">{{language.name}}</option>
                  </p-multiSelect>
+                 <small class="p-error" style="color: orange;"
+               *ngIf="(isStepCompleted && createSchoolForm1.controls.selectedLanguages.errors)">At least one language is required
+             </small>
               </div>
               </div>
               <div class="form-group">
@@ -68,10 +85,13 @@
 					<button (click)="forwardStep()" type="button"
                 class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 text-uppercase next-step">{{'Next'| translate }}</button>
 				</div>
+        </form>
+
             </div>
 
             <div [ngClass]="step == 1 ? 'tab tab-pane active' : 'tab tab-pane'">
               <p class="text-center font_16 fw_600 step-desc">{{'Step2'| translate }}</p>
+              <form id="regForm" [formGroup]="createSchoolForm2">
               <div class="form-group">
                 <div class="preview-zone hidden">
                   <div class="box box-solid">
@@ -111,24 +131,31 @@
                     </label>
                   </li>
                 </ul>
-
+                <small class="p-error" style="color: orange;margin-left: 180px;"
+                *ngIf="(isStepCompleted && this.logoUrl == undefined && this.avatarImage == undefined)">School Logo is required
+              </small>
               </div>
 			  <div class="steps_btns d-flex align-items-center justify-content-center">
 				<button (click)="backStep()"   type="button"
                 class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 text-uppercase prev-step-btn prev-step"
                 id="prevBtn">{{'Back'| translate }}</button>
 
-              <button (click)="forwardStep()" type="button" id="step2_btn"
+              <button (click)="forwardStep2()" type="button" id="step2_btn"
                 class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 text-uppercase next-step">{{'Continue'| translate }}</button>
 				</div>
+        </form>
             </div>
 
             <div [ngClass]="step == 2 ? 'tab tab-pane active final-multiple-step' : 'tab tab-pane final-multiple-step'">
               <h2 class="font_24 fw-bold text_dark text-center my_32 mt-1">{{'YouCreatedNewSchool'| translate }}</h2>
               <p class="font_16 text_dark fw_600 text-center mb-0">{{'LinkInfo'| translate }}</p>
+              <form id="regForm" [formGroup]="createSchoolForm3">
 			  <div class="school-link position-relative my_32">
 
-				<input type="text" formControlName = "schoolUrl" class="form-control" placeholder="byokul.com/schoolname1" #userinput/>
+				<input readonly type="text" formControlName = "schoolUrl" class="form-control" placeholder="byokul.com/schoolname1" #userinput/>
+        <small class="p-error" style="color: orange;"
+        *ngIf="(isSubmitted && createSchoolForm3.controls.schoolUrl.errors)">School Url is required
+      </small>
 
 				<button type="button" (click)="copyMessage(userinput)" class="border-0 bg-transparent shadow-none p-0 copy-link"><img src="../../../../assets/images/school/copy.svg" /></button>
 				<button type="button" class="border-0 bg-transparent shadow-none p-0 upload-link"><img src="../../../../assets/images/school/Upload-small.svg" /></button>
@@ -136,9 +163,11 @@
 				<div class="steps_btns">
 				  <input (click)="createSchool()" type="submit" id="nextBtn" class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 text-uppercase" value="Finish" />
 				</div>
+        </form>
             </div>
 		</div>
-          </form>
+    </div>
+          <!-- </form> -->
           <div class="d-flex justify-content-end mt-5 d-md-none" >
             <button type="button" class="step-edit-button btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase next-step"><img src="../../../../assets/images/Edit-light.svg" alt="edit"/></button>
          </div>

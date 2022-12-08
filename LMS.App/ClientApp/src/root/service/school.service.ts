@@ -26,9 +26,7 @@ export class SchoolService{
     }
 
     editSchool(credentials:any): Observable<any> {
-        for (var pair of credentials.entries()) {
-            console.log(pair[0]+ ', ' + pair[1]); 
-        }
+        debugger
         return this.http.post(`${this.apiUrl}/school/updateSchool`, credentials);
     }
 
@@ -58,6 +56,39 @@ export class SchoolService{
 
     getSchoolEditDetails(schoolId:string):Observable<any>{
         return this.http.get(`${this.apiUrl}/school/getSchoolEditDetails` + '?schoolId=' + schoolId);
+    }
+
+    getAccessibility():Observable<any>{
+        return this.http.get(`${this.apiUrl}/class/getAccessibility`);
+    }
+
+    saveSchoolLanguages(addLanguages:any):Observable<any>{
+        return this.http.post(`${this.apiUrl}/school/saveSchoolLanguages`,addLanguages);
+    }
+
+    deleteSchoolLanguage(deletelanguages:any):Observable<any>{
+        return this.http.post(`${this.apiUrl}/school/deleteSchoolLanguage`,deletelanguages);
+    }
+
+    getAllTeachers():Observable<any>{
+        return this.http.get(`${this.apiUrl}/teachers/getAllTeachers`);
+    }
+
+    saveSchoolTeachers(addTeachers:any):Observable<any>{
+        return this.http.post(`${this.apiUrl}/school/saveSchoolTeachers`,addTeachers);
+    }
+
+    deleteSchoolTeacher(deleteTeacher:any):Observable<any>{
+        return this.http.post(`${this.apiUrl}/school/deleteSchoolTeacher`,deleteTeacher);
+    }
+
+    saveSchoolCertificates(addCertificates:any):Observable<any>{
+        return this.http.post(`${this.apiUrl}/school/saveSchoolCertificates`,addCertificates);
+    }
+
+    
+    deleteSchoolCertificate(deleteCertificate:any):Observable<any>{
+        return this.http.post(`${this.apiUrl}/school/deleteSchoolCertificate`,deleteCertificate);
     }
 
 }

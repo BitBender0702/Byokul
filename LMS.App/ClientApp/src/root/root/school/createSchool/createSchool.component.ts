@@ -23,8 +23,12 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
   languages:any;
   school!:CreateSchoolModel;
   createSchoolForm!:FormGroup;
+  createSchoolForm1!:FormGroup;
+  createSchoolForm2!:FormGroup;
+  createSchoolForm3!:FormGroup;
   invalidMeetingName!: boolean;
   isSubmitted: boolean = false;
+  isStepCompleted: boolean = false;
   uploadImage!:any;
   uploadImageName!:string;
   fileToUpload= new FormData();
@@ -32,6 +36,10 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
   items!: MenuItem[];
   step: number = 0;
   isOpenSidebar:boolean = false;
+  isOpenModal:boolean = false;
+  avatarImage!:any;
+
+  initialSpecialization!:string;
 
   
   constructor(injector: Injector,private domSanitizer: DomSanitizer,private router: Router,private fb: FormBuilder,schoolService: SchoolService,private http: HttpClient) {
@@ -66,15 +74,29 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
     this.languages = response;
   });
 
+  // this.createSchoolForm = this.fb.group({
+  //   schoolName: this.fb.control('', [Validators.required]),
+  //   countryId: this.fb.control('', [Validators.required]),
+  //   specializationId: this.fb.control('', [Validators.required]),
+  //   description: this.fb.control(''),
+  //   schoolUrl: this.fb.control('',[Validators.required]),
+  //   defaultAvatar: this.fb.control(''),
+  //   selectedLanguages:this.fb.control('',[Validators.required])
+  // });
 
-  this.createSchoolForm = this.fb.group({
+  this.createSchoolForm1 = this.fb.group({
     schoolName: this.fb.control('', [Validators.required]),
     countryId: this.fb.control('', [Validators.required]),
     specializationId: this.fb.control('', [Validators.required]),
     description: this.fb.control(''),
-    schoolUrl: this.fb.control(''),
+    selectedLanguages:this.fb.control('',[Validators.required])
+  });
+
+  this.createSchoolForm3 = this.fb.group({
+    schoolUrl: this.fb.control('',[Validators.required]),
+  });
+  this.createSchoolForm2 = this.fb.group({
     defaultAvatar: this.fb.control(''),
-    selectedLanguages:this.fb.control('')
   });
 }
 
@@ -89,6 +111,7 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
   }
 
   handleImageInput(event: any) {
+    debugger
     this.fileToUpload.append("avatarImage", event.target.files[0], event.target.files[0].name);
     this.uploadImageName = event.target.files[0].name;
     const reader = new FileReader();
@@ -97,23 +120,28 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
         this.uploadImage = this.domSanitizer.bypassSecurityTrustUrl(this.uploadImage);
     }
     reader.readAsDataURL(event.target.files[0]); 
+    this.avatarImage = this.fileToUpload.get('avatarImage');
 
   }
 
   createSchool(){
+    debugger
     this.isSubmitted=true;
-    if (!this.createSchoolForm.valid) {
+    if (!this.createSchoolForm3.valid) {
       return;
     }
 
-    this.school=this.createSchoolForm.value;
-    this.fileToUpload.append('schoolName', this.school.schoolName);
-    this.fileToUpload.append('description', this.school.description);
-    this.fileToUpload.append('countryId',this.school.countryId);
-    this.fileToUpload.append('specializationId',this.school.specializationId);
-    this.fileToUpload.append('languageIds',JSON.stringify(this.school.selectedLanguages));
-    this.fileToUpload.append('schoolUrl',JSON.stringify(this.school.schoolUrl));
-    this.fileToUpload.append('avatar',this.logoUrl);
+    var form3Value = this.createSchoolForm3.value;
+    this.fileToUpload.append('schoolUrl',JSON.stringify(form3Value.schoolUrl));
+
+    // this.school=this.createSchoolForm.value;
+    // this.fileToUpload.append('schoolName', this.school.schoolName);
+    // this.fileToUpload.append('description', this.school.description);
+    // this.fileToUpload.append('countryId',this.school.countryId);
+    // this.fileToUpload.append('specializationId',this.school.specializationId);
+    // this.fileToUpload.append('languageIds',JSON.stringify(this.school.selectedLanguages));
+    // this.fileToUpload.append('schoolUrl',JSON.stringify(this.school.schoolUrl));
+    // this.fileToUpload.append('avatar',this.logoUrl);
 
     this._schoolService.createSchool(this.fileToUpload).subscribe((response:any) => {
          var schoolId =  response;
@@ -127,7 +155,48 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
   }
 
   forwardStep() {
+    debugger
+    this.isStepCompleted = true;
+    if (!this.createSchoolForm1.valid) {
+      return;
+    }
+
+    var form1Value =this.createSchoolForm1.value;
+    //this.school=this.createSchoolForm1.value;
+    this.fileToUpload.append('schoolName', form1Value.schoolName);
+    this.fileToUpload.append('description', form1Value.description);
+    this.fileToUpload.append('countryId',form1Value.countryId);
+    this.fileToUpload.append('specializationId',form1Value.specializationId);
+    this.fileToUpload.append('languageIds',JSON.stringify(form1Value.selectedLanguages));
     this.step += 1;
+    this.isStepCompleted = false;
+
+    this.createSchoolForm3.patchValue({
+      schoolUrl: 'byokul.com/' + form1Value.schoolName.replace(" ",""),
+    });
+
+    // this.fileToUpload.append('schoolName', this.school.schoolName);
+    // this.fileToUpload.append('description', this.school.description);
+    // this.fileToUpload.append('countryId',this.school.countryId);
+    // this.fileToUpload.append('specializationId',this.school.specializationId);
+    // this.fileToUpload.append('languageIds',JSON.stringify(this.school.selectedLanguages));
+
+
+  }
+
+  forwardStep2() {
+    debugger
+    this.isStepCompleted = true;
+    if(this.logoUrl == undefined && this.avatarImage == undefined){
+      return;
+    }
+    // if (!this.createSchoolForm2.valid) {
+    //   return;
+    // }
+    var form2Value =this.createSchoolForm2.value;
+    this.fileToUpload.append('avatar',this.logoUrl);
+    this.step += 1;
+    this.isStepCompleted = false;
   }
 
   backStep() {
@@ -136,6 +205,11 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
 
   openSidebar(){
     this.isOpenSidebar = true;
+  }
+
+  createPost(){
+    this.isOpenModal = false;
+
   }
   
 }

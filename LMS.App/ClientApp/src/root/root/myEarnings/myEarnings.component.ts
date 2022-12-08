@@ -41,7 +41,6 @@ export class MyEarningsComponent implements OnInit {
  
 
     openSidebar(){
-      debugger;
       this.isOpenSidebar = true;
   
     }

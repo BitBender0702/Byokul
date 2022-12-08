@@ -1,8 +1,8 @@
 export interface CreateClassModel{
     className:string;
     noOfStudents:string;
-    startDate:Date;
-    endDate:Date;
+    startDate:string;
+    endDate:string;
     schoolId:string;
     serviceTypeId:string;
     accessibilityId:string;

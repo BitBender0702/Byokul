@@ -33,6 +33,8 @@ export class RegisterComponent extends MultilingualComponent implements OnInit {
     selectedLanguage: any;
     loadingIcon:boolean = false;
 
+    isConfirmPasswordDirty = false;
+
     date = new Date();
     credentials: RegisterModel = {email:'', password:'',confirmPassword:'',firstName:'',lastName:'',gender:0,dob: ''};
     private _authService;
@@ -45,28 +47,59 @@ export class RegisterComponent extends MultilingualComponent implements OnInit {
       window.history.back();
   }
     ngOnInit(): void {
+
+      const passwordValidators = [
+        Validators.minLength(6),
+        Validators.required,
+      ];
+
       this.selectedLanguage = localStorage.getItem("selectedLanguage");
       this.registrationForm = this.fb.group({
         firstName: this.fb.control('', [Validators.required]),
         lastName: this.fb.control('', [Validators.required]),
         email: this.fb.control('',[Validators.required,Validators.pattern(this.EMAIL_PATTERN)]),
-        gender: this.fb.control(''),
-        dob: this.fb.control(''),
-        password: this.fb.control('', [Validators.required]),
-        confirmPassword: this.fb.control('', [Validators.required]),
+        gender: this.fb.control('',[Validators.required]),
+        dob: this.fb.control('',[Validators.required]),
+        password: this.fb.control('', [...passwordValidators]),
+        confirmPassword: this.fb.control('', [...passwordValidators]),
       });
     }
 
+    matchPassword(){
+
+      if(this.password?.value!=this.confirmPassword?.value){
+        return true;
+      }
+      else 
+      return false
+    
+    }
+
+   omit_special_char(event:any)
+   {   
+      var k;  
+      k = event.charCode;
+      return((k > 64 && k < 91) || (k > 96 && k < 123) || k == 8 || k == 32 || (k >= 48 && k <= 57)); 
+   }
+
+    get password() { return this.registrationForm.get('password'); }
+  get confirmPassword() { return this.registrationForm.get('confirmPassword'); }
+
     register(){
-      this.loadingIcon = true;
       this.isSubmitted = true;
       if (!this.registrationForm.valid) {
         return;}
-        var dob = this.registrationForm.get('dob')?.value;
-        const date = new Date(dob + 'UTC');
+
+        if(this.matchPassword()){
+          return;
+        }
+
+        this.loadingIcon = true;
+        // var dob = this.registrationForm.get('dob')?.value;
+        // const date = new Date(dob + 'UTC');
        
         this.user = this.registrationForm.value;
-        this.user.dob = date;
+        // this.user.dob = date;
         this._authService.registerUser(this.user).pipe(finalize(()=> this.loadingIcon = false)).subscribe({
                   next: (response: AuthenticatedResponse) => {
                     this.isSubmitted = false;

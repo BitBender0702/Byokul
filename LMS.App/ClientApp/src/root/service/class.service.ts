@@ -16,10 +16,6 @@ export class ClassService{
     }
     
     createClass(credentials:any): Observable<any> {
-        debugger;
-        for (var pair of credentials.entries()) {
-            console.log(pair[0]+ ', ' + pair[1]); 
-        }
         return this.http.post(`${this.apiUrl}/class/saveNewClass`, credentials);
     }
 
@@ -52,9 +48,36 @@ export class ClassService{
     }
 
     getClassEditDetails(classId:string):Observable<any>{
-        debugger;
         return this.http.get(`${this.apiUrl}/class/getClassEditDetails` + '?classId=' + classId);
 
+    }
+
+    saveClassLanguages(addLanguages:any):Observable<any>{
+        return this.http.post(`${this.apiUrl}/class/saveClassLanguages`,addLanguages);
+    }
+
+    deleteClassLanguage(deletelanguages:any):Observable<any>{
+        return this.http.post(`${this.apiUrl}/class/deleteClassLanguage`,deletelanguages);
+    }
+
+    saveClassTeachers(addTeachers:any):Observable<any>{
+        return this.http.post(`${this.apiUrl}/class/saveClassTeachers`,addTeachers);
+    }
+
+    deleteClassTeacher(deleteTeacher:any):Observable<any>{
+        return this.http.post(`${this.apiUrl}/class/deleteClassTeacher`,deleteTeacher);
+    }
+
+    deleteClassCertificate(deleteCertificate:any):Observable<any>{
+        return this.http.post(`${this.apiUrl}/class/deleteClassCertificate`,deleteCertificate);
+    }
+
+    saveClassCertificates(addCertificates:any):Observable<any>{
+        return this.http.post(`${this.apiUrl}/class/saveClassCertificates`,addCertificates);
+    }
+
+    editClass(credentials:any): Observable<any> {
+        return this.http.post(`${this.apiUrl}/class/updateClass`, credentials);
     }
 
 }
