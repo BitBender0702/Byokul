@@ -1,0 +1,1573 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>By Okul</title>
+  <link rel="icon" type="image/x-icon" href="images/favicon.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/custom.css" rel="stylesheet" />
+  <link href="css/responsive.css" rel="stylesheet" />
+</head>
+
+<body>
+  <section class="f-poppins">
+    <div class="sidemenu d-xl-block" id="side-bar">
+      <span class="closebtn d-xl-none" onclick="closeSidebar()" title="Close Side Menu">×</span>
+      <div class="text-center">
+        <a href="" class="main-logo"><img src="images/logo.svg" /></a>
+      </div>
+      <div class="d-flex text-center notification-box justify-content-center">
+        <ul class="list-unstyled d-flex ">
+          <li class="d-inline-block">
+            <div class="dropdown">
+              <button class="bg-transparent dropdown-toggle rounded-circle" type="button" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                <img src="images/user.png" />
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Action</a></li>
+                <li><a class="dropdown-item" href="#">Another action</a></li>
+              </ul>
+            </div>
+          </li>
+          <li class="d-inline-block"><button type="button "
+              class="notification-btn position-relative border-0 bg-transparent"><img src="images/chat-icon.svg" />
+              <span
+                class="badge rounded-circle d-inline-flex align-items-center justify-content-center fw_700 font_12">3</span></button>
+          </li>
+          <li class="d-inline-block"><button type="button "
+              class="notification-btn position-relative border-0 bg-transparent"><img src="images/Notification.svg" />
+              <span
+                class="badge rounded-circle d-inline-flex align-items-center justify-content-center fw_700 font_12">3</span></button>
+          </li>
+
+
+        </ul>
+      </div>
+      <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400">My Earnings $ </button>
+      <hr class="earning-hr" />
+      <div class="custom-tabs">
+        <ul class="nav nav-tabs mb-3 border-0" id="myTab" role="tablist">
+          <li class="nav-item ps-0 mb-0" role="presentation">
+            <button class="nav-link active" id="subscriptions-tab" data-bs-toggle="tab"
+              data-bs-target="#subscriptions-tab-pane" type="button" role="tab" aria-controls="subscriptions-tab-pane"
+              aria-selected="true">Subscriptions</button>
+          </li>
+          <li class="nav-item ps-0 mb-0" role="presentation">
+            <button class="nav-link" id="owned-tab" data-bs-toggle="tab" data-bs-target="#owned-tab-pane" type="button"
+              role="tab" aria-controls="owned-tab-pane" aria-selected="false">Owned</button>
+          </li>
+        </ul>
+        <div class="tab-content" id="pills-tabContent">
+          <div class="tab-pane fade show active" id="subscriptions-tab-pane" role="tabpanel"
+            aria-labelledby="subscriptions-tab" tabindex="0">
+            <div class="accordion" id="accordionPanelsStayOpenExample">
+              <div class="accordion-item border-0 bg-transparent">
+                <h2 class="accordion-header" id="headingOne">
+                  <button
+                    class="accordion-button  bg-transparent font_14 text_ltgray fw_400 d-flex align-items-center justify-content-between"
+                    type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true"
+                    aria-controls="collapseOne">
+                    <span>Schools </span>
+                  </button>
+                  <a href="#"
+                    class="add-btn d-inline-flex align-items-center justify-content-center rounded-circle"><img
+                      src="images/plus-light.svg" /></a>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                  data-bs-parent="#accordionExample">
+                  <div class="accordion-body p-0">
+                    <div class="school-name d-flex align-items-center font_16">
+                      <div class="school-img rounded-circle me-3">
+                        <img src="images/school-1.png" />
+                      </div>
+                      School Name
+                    </div>
+                    <div class="school-name d-flex align-items-center font_16">
+                      <div class="school-img rounded-circle me-3">
+                        <img src="images/school-2.png" />
+                      </div>
+                      School Name
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item border-0 bg-transparent">
+                <h2 class="accordion-header" id="headingTwo">
+                  <button
+                    class="accordion-button  bg-transparent font_14 text_ltgray fw_400 d-flex align-items-center justify-content-between"
+                    type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false"
+                    aria-controls="collapseTwo">
+                    <span>Classes </span>
+                  </button>
+                  <a href="#"
+                    class="add-btn d-inline-flex align-items-center justify-content-center rounded-circle"><img
+                      src="images/plus-light.svg" /></a>
+                </h2>
+                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+                  data-bs-parent="#accordionExample">
+                  <div class="accordion-body p-0">
+                    <div class="school-name d-flex align-items-center font_16">
+                      <div class="school-img rounded-circle me-3">
+                        <img src="images/school-3.png" />
+                      </div>
+                      Class Name
+                    </div>
+                    <div class="school-name d-flex align-items-center font_16">
+                      <div class="school-img rounded-circle me-3">
+                        <img src="images/school-4.png" />
+                      </div>
+                      Class Name
+                    </div>
+                    <div class="school-name d-flex align-items-center font_16">
+                      <div class="school-img rounded-circle me-3">
+                        <img src="images/school-5.png" />
+                      </div>
+                      Class Name
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item border-0 bg-transparent">
+                <h2 class="accordion-header" id="headingThree">
+                  <button
+                    class="accordion-button  bg-transparent font_14 text_ltgray fw_400 d-flex align-items-center justify-content-between"
+                    type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false"
+                    aria-controls="collapseThree">
+                    <span>Courses </span>
+                  </button>
+                  <a href="#"
+                    class="add-btn d-inline-flex align-items-center justify-content-center rounded-circle"><img
+                      src="images/plus-light.svg" /></a>
+                </h2>
+                <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
+                  data-bs-parent="#accordionExample">
+                  <div class="accordion-body p-0">
+                    <div class="school-name d-flex align-items-center font_16">
+                      <div class="school-img rounded-circle me-3">
+                        <img src="images/school-6.png" />
+                      </div>
+                      Course Name
+                    </div>
+                    <div class="school-name d-flex align-items-center font_16">
+                      <div class="school-img rounded-circle me-3">
+                        <img src="images/school-7.png" />
+                      </div>
+                      Course Name
+                    </div>
+                    <div class="school-name d-flex align-items-center font_16">
+                      <div class="school-img rounded-circle me-3">
+                        <img src="images/school-8.png" />
+                      </div>
+                      Course Name
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="owned-tab-pane" role="tabpanel" aria-labelledby="owned-tab" tabindex="0">
+            <div class="accordion" id="accordionPanelsStayOpenExample">
+              <div class="accordion-item border-0 bg-transparent">
+                <h2 class="accordion-header" id="headingOne">
+                  <button
+                    class="accordion-button  bg-transparent font_14 text_ltgray fw_400 d-flex align-items-center justify-content-between"
+                    type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true"
+                    aria-controls="collapseOne">
+                    <span>Schools </span>
+                  </button>
+                  <a href="#"
+                    class="add-btn d-inline-flex align-items-center justify-content-center rounded-circle"><img
+                      src="images/plus-light.svg" /></a>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                  data-bs-parent="#accordionExample">
+                  <div class="accordion-body p-0">
+                    <div class="school-name d-flex align-items-center font_16">
+                      <div class="school-img rounded-circle me-3">
+                        <img src="images/school-1.png" />
+                      </div>
+                      School Name
+                    </div>
+                    <div class="school-name d-flex align-items-center font_16">
+                      <div class="school-img rounded-circle me-3">
+                        <img src="images/school-2.png" />
+                      </div>
+                      School Name
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item border-0 bg-transparent">
+                <h2 class="accordion-header" id="headingTwo">
+                  <button
+                    class="accordion-button  bg-transparent font_14 text_ltgray fw_400 d-flex align-items-center justify-content-between"
+                    type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false"
+                    aria-controls="collapseTwo">
+                    <span>Classes </span>
+                  </button>
+                  <a href="#"
+                    class="add-btn d-inline-flex align-items-center justify-content-center rounded-circle"><img
+                      src="images/plus-light.svg" /></a>
+                </h2>
+                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+                  data-bs-parent="#accordionExample">
+                  <div class="accordion-body p-0">
+                    <div class="school-name d-flex align-items-center font_16">
+                      <div class="school-img rounded-circle me-3">
+                        <img src="images/school-3.png" />
+                      </div>
+                      Class Name
+                    </div>
+                    <div class="school-name d-flex align-items-center font_16">
+                      <div class="school-img rounded-circle me-3">
+                        <img src="images/school-4.png" />
+                      </div>
+                      Class Name
+                    </div>
+                    <div class="school-name d-flex align-items-center font_16">
+                      <div class="school-img rounded-circle me-3">
+                        <img src="images/school-5.png" />
+                      </div>
+                      Class Name
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item border-0 bg-transparent">
+                <h2 class="accordion-header" id="headingThree">
+                  <button
+                    class="accordion-button bg-transparent font_14 text_ltgray fw_400 d-flex align-items-center justify-content-between"
+                    type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false"
+                    aria-controls="collapseThree">
+                    <span>Courses </span>
+                  </button>
+                  <a href="#"
+                    class="add-btn d-inline-flex align-items-center justify-content-center rounded-circle"><img
+                      src="images/plus-light.svg" /></a>
+                </h2>
+                <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
+                  data-bs-parent="#accordionExample">
+                  <div class="accordion-body p-0">
+                    <div class="school-name d-flex align-items-center font_16">
+                      <div class="school-img rounded-circle me-3">
+                        <img src="images/school-6.png" />
+                      </div>
+                      Course Name
+                    </div>
+                    <div class="school-name d-flex align-items-center font_16">
+                      <div class="school-img rounded-circle me-3">
+                        <img src="images/school-7.png" />
+                      </div>
+                      Course Name
+                    </div>
+                    <div class="school-name d-flex align-items-center font_16">
+                      <div class="school-img rounded-circle me-3">
+                        <img src="images/school-8.png" />
+                      </div>
+                      Course Name
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="d-flex justify-content-between flex-wrap mt-4">
+          <div class="language-btn">
+            <input type="radio" class="btn-check" name="btnradio" id="lang1" autocomplete="off" checked>
+            <label class="btn btn-outline-primary font_12 rounded-8" for="lang1">English</label>
+          </div>
+          <div class="language-btn">
+            <input type="radio" class="btn-check" name="btnradio" id="lang2" autocomplete="off">
+            <label class="btn btn-outline-primary font_12 rounded-8" for="lang2">اللغة العربية</label>
+          </div>
+          <div class="language-btn">
+            <input type="radio" class="btn-check" name="btnradio" id="lang3" autocomplete="off">
+            <label class="btn btn-outline-primary font_12 rounded-8" for="lang3">Türkçe</label>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="main_content">
+
+      <div class="create-post-header d-flex justify-content-between d-none d-xl-flex">
+        <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
+            src="images/arrow-left.svg" /> Back</button>
+        <button type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44">Buy for $100</button>
+      </div>
+      <div class="live-header d-flex align-items-center justify-content-between">
+        <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark  d-xl-none"><img
+            src="images/arrow-left.svg" /> Back</button>
+        <span class="logo_mobile d-xl-none">
+          <img src="images/logo.svg" />
+        </span>
+        <div class="d-xl-none">
+          <button type="button" class="mobile-search border_btn" onclick="openSearch()"><img
+              src="images/search-lg.svg" /></button>
+          <button type="button" class="mobile-search border_btn" onclick="openSidebar()"><img
+              src="images/menu.svg" /></button>
+        </div>
+      </div>
+      <div class="School-prof-header">
+        <div class="d-flex align-items-center">
+          <div class="position-relative">
+            <div class="school-profile-icon rounded-circle class-course-image">
+              <img src="images/class-course.jpg" />
+            </div>
+            <img src="images/university-logo.jpg" class="univ-logo" />
+          </div>
+          <div class="school-profile-content edit-profilehover w-100">
+            <div class="d-flex">
+              <h2 class="font_24 fw_700 mb-2">Class Name </h2>
+            </div>
+
+            <div class="position-relative">
+              <div class="followers_name d-inline-block font_16 mr-_24"><img src="images/Star-solid-dark.svg" /> Rating:
+                <b class="fw_700">4.3</b></div>
+              <div class="followers_name d-inline-block font_16 mr-_24"><img src="images/students-icon.svg" /> Students:
+                <b class="fw_700">65</b>
+              </div>
+              <div class="followers_name d-inline-block font_16 mr-_24"><img src="images/Edit-dark.svg" /> Post: <b
+                  class="fw_700">267</b></div>
+              <button type="button"
+                class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn me-0 minw-142">Request
+                Message</button>
+              <button class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins" data-bs-toggle="modal"
+                data-bs-target="#editschool"><img src="images/Setting-solid-dark.svg" class="me-2" /> Edit
+                Profile</button>
+            </div>
+          </div>
+        </div>
+        <p class="font_16 mt-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+          incididunt ut labo et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+          laboris nisi ut aliquip ex. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+          aliquip ex quis nostrud exercitation.</p>
+      </div>
+      <div class="teacher-tags tag-box hover-tags">
+        <div class="teacher-tags tag-box mt-0  hover-tags">
+          <div class="teacher-content font_14 d-inline-block"><img src="images/dark-star.svg" /> Sertificates</div>
+          <span class="custom-tag">Sertificate 1 <button
+              class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                src="images/cross-sm-light.svg" /></button></span>
+          <span class="custom-tag">Sertificate 2 <button
+              class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                src="images/cross-sm-light.svg" /></button></span>
+          <span class="custom-tag">Sertificate 3 <button
+              class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                src="images/cross-sm-light.svg" /></button></span>
+          <span class="custom-tag">Sertificate 4 <button
+              class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                src="images/cross-sm-light.svg" /></button></span>
+          <span class="custom-tag">Sertificate 5 <button
+              class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                src="images/cross-sm-light.svg" /></button></span>
+          <span class="custom-tag">Sertificate 6 <button
+              class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                src="images/cross-sm-light.svg" /></button></span>
+          <span class="custom-tag">Sertificate 7 <button
+              class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                src="images/cross-sm-light.svg" /></button></span>
+        </div>
+        <div class="teacher-tags tag-box mt-0  hover-tags">
+          <div class="teacher-content font_14 d-inline-block"><img src="images/Volume-Down.svg" /> Languages</div>
+          <span class="custom-tag">English <button class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                src="images/cross-sm-light.svg" /></button></span>
+          <span class="custom-tag">Türkçe <button class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                src="images/cross-sm-light.svg" /></button></span>
+          <span class="custom-tag">اللغة العربية <button
+              class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                src="images/cross-sm-light.svg" /></button></span>
+          <span class="custom-tag">Français <button
+              class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                src="images/cross-sm-light.svg" /></button></span>
+          <span class="custom-tag">TEspañol <button
+              class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                src="images/cross-sm-light.svg" /></button></span>
+          <span class="custom-tag">Italiano <button
+              class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                src="images/cross-sm-light.svg" /></button></span>
+          <span class="custom-tag">Deutsch <button class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                src="images/cross-sm-light.svg" /></button></span>
+          <span class="custom-tag">Português <button
+              class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                src="images/cross-sm-light.svg" /></button></span>
+        </div>
+
+        <div class="teacher-content font_14 d-inline-block"><img src="images/bag-dark.svg" /> Teachers</div>
+        <span class="custom-tag">Teacher 1 <button class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+              src="images/cross-sm-light.svg" /></button></span>
+        <span class="custom-tag">Teacher 2 <button class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+              src="images/cross-sm-light.svg" /></button></span>
+        <span class="custom-tag">Teacher 3<button class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+              src="images/cross-sm-light.svg" /></button></span>
+        <span class="custom-tag">Teacher 4 <button class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+              src="images/cross-sm-light.svg" /></button></span>
+      </div>
+
+
+      <div class="teacher-tags tag-box mt-0">
+        <div class="teacher-content font_14 d-inline-block"><img src="images/Location-dark.svg" /> Location</div>
+        <span class="custom-tag d-inline-flex align-items-center">London <span class="vr-border"></span> United
+          Kingdom</span>
+      </div>
+      <hr class="hr-gray" />
+      <div class="school-profile-tabs d-flex align-content-center justify-content-end">
+        <div class="button-list-grid">
+          <button type="button" class="btn border-btn d-inline-flex align-items-center justify-content-center"
+            id="list-btn">
+            <img src="images/Filter.svg" />
+          </button>
+          <button type="button" class="btn border-btn active d-inline-flex align-items-center justify-content-center"
+            id="grid-btn">
+            <img src="images/Category.svg" />
+          </button>
+        </div>
+      </div>
+
+      <div class="tab-content" id="pills-tabContent">
+        <div class="tab-pane fade show active" id="school-feed-tab-pane" role="tabpanel"
+          aria-labelledby="school-feed-tab" tabindex="0">
+          <div class="feed-section">
+            <div class="feed-box position-relative">
+              <button type="button" class="bg-transparent border-0 next-feed"><img
+                  src="images/chevron-right-circle.svg" /></button>
+              <div class="feedbox-inner d-flex ">
+                <div class="feedimg-box position-relative text-light position-relative">
+                  <iframe width="100%" height="300" src="https://www.youtube.com/embed/hAP2QF--2Dg" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+                  <div class="pinned-view d-flex  justify-content-between align-items-start">
+                    <button type="button" class="view font_12 bg-transparent border-0 text-light">
+                      <img src="images/eye-light.svg" /> 954
+                    </button>
+                    <button type="button" class="pinned bg-transparent border-0">
+                      <img src="images/pinned-light.svg" />
+                    </button>
+                  </div>
+                  <div class="feed-name font_14 text_sec1">
+                    <img src="images/feed-school.jpg" /> Name
+                  </div>
+                  <div class="feed-title font_14 text_sec1 d-flex align-content-center fw_600">
+                    Python programming course
+                  </div>
+                </div>
+                <div class="feedimg-box position-relative text-light position-relative">
+                  <iframe width="100%" height="300" src="https://www.youtube.com/embed/hAP2QF--2Dg" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+                  <div class="pinned-view d-flex  justify-content-between align-items-start">
+                    <button type="button" class="view font_12 bg-transparent border-0 text-light">
+                      <img src="images/eye-light.svg" /> 954
+                    </button>
+                    <button type="button" class="pinned bg-transparent border-0">
+                      <img src="images/pinned-light.svg" />
+                    </button>
+                  </div>
+                  <div class="feed-name font_14 text_sec1">
+                    <img src="images/feed-school2.jpg" /> Name
+                  </div>
+                  <div class="feed-title font_14 text_sec1 d-flex align-content-center fw_600">
+                    Web Design course
+                  </div>
+                </div>
+                <div class="feedimg-box position-relative text-light position-relative">
+                  <iframe width="100%" height="300" src="https://www.youtube.com/embed/hAP2QF--2Dg" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+                  <div class="pinned-view d-flex  justify-content-between align-items-start">
+                    <button type="button" class="view font_12 bg-transparent border-0 text-light">
+                      <img src="images/eye-light.svg" /> 954
+                    </button>
+                    <button type="button" class="pinned bg-transparent border-0">
+                      <img src="images/pinned-light.svg" />
+                    </button>
+                  </div>
+                  <div class="feed-name font_14 text_sec1">
+                    <img src="images/feed-school3.jpg" /> Name
+                  </div>
+                  <div class="feed-title font_14 text_sec1 d-flex align-content-center fw_600">
+                    Web Design course
+                  </div>
+                </div>
+                <div class="feedimg-box position-relative text-light position-relative">
+                  <iframe width="100%" height="300" src="https://www.youtube.com/embed/hAP2QF--2Dg" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+                  <div class="pinned-view d-flex  justify-content-between align-items-start">
+                    <button type="button" class="view font_12 bg-transparent border-0 text-light">
+                      <img src="images/eye-light.svg" /> 954
+                    </button>
+                    <button type="button" class="pinned bg-transparent border-0">
+                      <img src="images/pinned-light.svg" />
+                    </button>
+                  </div>
+                  <div class="feed-name font_14 text_sec1">
+                    <img src="images/feed-school4.jpg" /> Name
+                  </div>
+                  <div class="feed-title font_14 text_sec1 d-flex align-content-center fw_600">
+                    Web Design course
+                  </div>
+                </div>
+                <div class="feedimg-box position-relative text-light position-relative">
+                  <iframe width="100%" height="300" src="https://www.youtube.com/embed/hAP2QF--2Dg" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+                  <div class="pinned-view d-flex  justify-content-between align-items-start">
+                    <button type="button" class="view font_12 bg-transparent border-0 text-light">
+                      <img src="images/eye-light.svg" /> 954
+                    </button>
+                    <button type="button" class="pinned bg-transparent border-0">
+                      <img src="images/pinned-light.svg" />
+                    </button>
+                  </div>
+                  <div class="feed-name font_14 text_sec1">
+                    <img src="images/feed-school5.jpg" /> Name
+                  </div>
+                  <div class="feed-title font_14 text_sec1 d-flex align-content-center fw_600">
+                    Python programming course
+                  </div>
+                </div>
+                <div class="feedimg-box position-relative text-light position-relative">
+                  <iframe width="100%" height="300" src="https://www.youtube.com/embed/hAP2QF--2Dg" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+                  <div class="pinned-view d-flex  justify-content-between align-items-start">
+                    <button type="button" class="view font_12 bg-transparent border-0 text-light">
+                      <img src="images/eye-light.svg" /> 954
+                    </button>
+                    <button type="button" class="pinned bg-transparent border-0">
+                      <img src="images/pinned-light.svg" />
+                    </button>
+                  </div>
+                  <div class="feed-name font_14 text_sec1">
+                    <img src="images/feed-school5.jpg" /> Name
+                  </div>
+                  <div class="feed-title font_14 text_sec1 d-flex align-content-center fw_600">
+                    Python programming course
+                  </div>
+                </div>
+                <div class="feedimg-box position-relative text-light position-relative">
+                  <iframe width="100%" height="300" src="https://www.youtube.com/embed/hAP2QF--2Dg" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+                  <div class="pinned-view d-flex  justify-content-between align-items-start">
+                    <button type="button" class="view font_12 bg-transparent border-0 text-light">
+                      <img src="images/eye-light.svg" /> 954
+                    </button>
+                    <button type="button" class="pinned bg-transparent border-0">
+                      <img src="images/pinned-light.svg" />
+                    </button>
+                  </div>
+                  <div class="feed-name font_14 text_sec1">
+                    <img src="images/feed-school5.jpg" /> Name
+                  </div>
+                  <div class="feed-title font_14 text_sec1 d-flex align-content-center fw_600">
+                    Python programming course
+                  </div>
+                </div>
+
+
+              </div>
+            </div>
+          </div>
+          <div class="school-grid-view grid-active" style="display: none;">
+            <div class="school-grid-box position-relative">
+              <div class="schoolgrid-header d-flex align-items-center position-relative">
+                <div class="school-gridprofile-icon">
+                  <img src="images/profile-grid-school-may.jpg" />
+                </div>
+                <h2 class="d-inline-block font_20 fw_600 text_sec1 mb-0">Python programming class</h2>
+                <p class="font_14 school-grid-date d-inline-block mb-0">September 28 <span class="fw_600 ">11:30 -
+                    13:50</span></p>
+                <button type="button" class="bg-transparent border-0 pinned-grid-chat"><img class="w-auto h-auto"
+                    src="images/pinned-gray.svg" /></button>
+              </div>
+              <div class="school-grid-body">
+                <p class="text_sec1 font_14">Lecture One - Introduction and basics in Python.Lecture One - Introduction
+                  and basics in PythonLecture One - Intro and basics in Python fole Lecture One. One - Introduction and
+                  basics in PythonLecture One - Introduction and basics in PythonLecture One Lecture. One - Intro
+                  duction and basics in PythonLecture One.</p>
+                <div class="teacher-tags tag-box hashtag_box">
+                  <span class="custom-tag">#Python</span>
+                  <span class="custom-tag">#Intermediate</span>
+                  <span class="custom-tag">#Free courses</span>
+                  <span class="custom-tag">#Free courses</span>
+                  <span class="custom-tag">#Free courses</span>
+                  <span class="custom-tag">#For beginners</span>
+                  <span class="custom-tag">#Free courses</span>
+                </div>
+                <div class="school-grid-thumbnail">
+                  <div class="row gx-1">
+                    <div class="col-md-8">
+                      <div class="school-large-thumbnail shadow-thumnail position-relative">
+                        <img class="w-100" src="images/school-large-thumnail-grid.jpg" />
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="h-100 medium_thumbox d-flex">
+                        <div class="medium-thumnail">
+                          <img class="w-100" src="images/thumbnail-more-image.jpg" />
+                        </div>
+                        <div class="medium-thumnail">
+                          <img class="w-100" src="images/thmbnail-medium2.jpg" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="school-grid-footer above-thumbnail">
+                <button type="button" class="bg-transparent border-0 function-btns text-light">
+                  <img src="images/eye-light.svg" class="d-block mx-auto" />
+                  954
+                </button>
+                <button type="button" class="bg-transparent border-0 function-btns text-light">
+                  <img src="images/Heart-light.svg" class="d-block mx-auto" />
+                  82
+                </button>
+                <button type="button" class="bg-transparent border-0 function-btns text-light">
+                  <img src="images/Chat-light.svg" class="d-block mx-auto" />
+                  34
+                </button>
+                <button type="button" class="bg-transparent border-0 function-btns text-light">
+                  <img src="images/Bookmark-light.svg" class="d-block mx-auto" />
+                  954
+                </button>
+                <button type="button" class="bg-transparent border-0 function-btns text-light">
+                  <img src="images/Upload-light.svg" class="d-block mx-auto" />
+                  954
+                </button>
+              </div>
+            </div>
+            <div class="school-grid-box">
+              <div class="schoolgrid-header d-flex align-items-center position-relative">
+                <div class="school-gridprofile-icon">
+                  <img src="images/profile-grid-school-may.jpg" />
+                </div>
+                <h2 class="d-inline-block font_20 fw_600 text_sec1 mb-0">Python programming class</h2>
+                <p class="font_14 school-grid-date d-inline-block mb-0">September 28 <span class="fw_600 ">11:30 -
+                    13:50</span></p>
+                <button type="button" class="bg-transparent border-0 pinned-grid-chat"><img class="w-auto h-auto"
+                    src="images/pinned-gray.svg" /></button>
+              </div>
+              <div class="school-grid-body">
+                <p class="text_sec1 font_14">Lecture One - Introduction and basics in Python.Lecture One - Introduction
+                  and basics in PythonLecture One - Intro and basics in Python fole Lecture One. One - Introduction and
+                  basics in PythonLecture One - Introduction and basics in PythonLecture One Lecture. One - Intro
+                  duction and basics in PythonLecture One.</p>
+                <div class="teacher-tags tag-box hashtag_box">
+                  <span class="custom-tag">#Python</span>
+                  <span class="custom-tag">#Intermediate</span>
+                  <span class="custom-tag">#Free courses</span>
+                  <span class="custom-tag">#Free courses</span>
+                  <span class="custom-tag">#Free courses</span>
+                  <span class="custom-tag">#For beginners</span>
+                  <span class="custom-tag">#Free courses</span>
+                </div>
+              </div>
+              <div class="school-grid-footer">
+                <button type="button" class="bg-transparent border-0 function-btns">
+                  <img src="images/eye.svg" class="d-block mx-auto" />
+                  954
+                </button>
+                <button type="button" class="bg-transparent border-0 function-btns">
+                  <img src="images/Heart-dark.svg" class="d-block mx-auto" />
+                  82
+                </button>
+                <button type="button" class="bg-transparent border-0 function-btns">
+                  <img src="images/Chat-dark.svg" class="d-block mx-auto" />
+                  34
+                </button>
+                <button type="button" class="bg-transparent border-0 function-btns">
+                  <img src="images/Bookmark-dark.svg" class="d-block mx-auto" />
+                  954
+                </button>
+                <button type="button" class="bg-transparent border-0 function-btns">
+                  <img src="images/Upload-dark.svg" class="d-block mx-auto" />
+                  954
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="list-schol-profile" style="display: none;">
+
+            <div class="row">
+              <div class="col-md-6 col-xl-4">
+                <div class="school-grid-box position-relative school-list-box h-100 mb-0">
+                  <div class="schoolgrid-header d-flex align-items-center position-relative">
+                    <div class="school-gridprofile-icon">
+                      <img src="images/profile-grid-school-may.jpg" />
+                    </div>
+                    <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">Python programming class</h2>
+                    <button type="button" class="bg-transparent border-0 pinned-grid-chat"><img class="w-auto h-auto"
+                        src="images/pinned-gray.svg" /></button>
+                  </div>
+                  <div class="school-grid-body">
+                    <div class="d-flex justify-content-between date-view-list">
+                      <p class="font_14 school-grid-date d-inline-block mb-0">September 28 <span
+                          class="fw_600 ms-3">11:30 - 13:50</span></p>
+                      <button type="button" class="view font_12 bg-transparent border-0 ">
+                        <img src="images/eye.svg" class="me-2" /> 954
+                      </button>
+                    </div>
+                    <div class="school-grid-thumbnail">
+                      <div class="row gx-1">
+                        <div class="col-md-12">
+                          <div class="school-large-thumbnail shadow-thumnail position-relative">
+                            <img class="w-100" src="images/school-large-thumnail-grid.jpg" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 col-xl-4">
+                <div class="school-grid-box position-relative school-list-box h-100 mb-0">
+                  <div class="schoolgrid-header d-flex align-items-center position-relative">
+                    <div class="school-gridprofile-icon">
+                      <img src="images/profile-grid-school-may.jpg" />
+                    </div>
+                    <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">Python programming class</h2>
+                    <button type="button" class="bg-transparent border-0 pinned-grid-chat"><img class="w-auto h-auto"
+                        src="images/pinned-gray.svg" /></button>
+                  </div>
+                  <div class="school-grid-body">
+                    <div class="d-flex justify-content-between date-view-list">
+                      <p class="font_14 school-grid-date d-inline-block mb-0">September 28 <span
+                          class="fw_600 ms-3">11:30 - 13:50</span></p>
+                      <button type="button" class="view font_12 bg-transparent border-0 ">
+                        <img src="images/eye.svg" class="me-2" /> 954
+                      </button>
+                    </div>
+                    <div class="school-grid-thumbnail">
+                      <div class="row gx-1">
+                        <div class="col-md-12">
+                          <div class="school-large-thumbnail shadow-thumnail position-relative">
+                            <img class="w-100" src="images/school-large-thumnail-grid.jpg" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 col-xl-4">
+                <div class="school-grid-box position-relative school-list-box h-100 mb-0">
+                  <div class="schoolgrid-header d-flex align-items-center position-relative">
+                    <div class="school-gridprofile-icon">
+                      <img src="images/profile-grid-school-may.jpg" />
+                    </div>
+                    <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">Python programming class</h2>
+                    <button type="button" class="bg-transparent border-0 pinned-grid-chat"><img class="w-auto h-auto"
+                        src="images/pinned-gray.svg" /></button>
+                  </div>
+                  <div class="school-grid-body">
+                    <div class="d-flex justify-content-between date-view-list">
+                      <p class="font_14 school-grid-date d-inline-block mb-0">September 28 <span
+                          class="fw_600 ms-3">11:30 - 13:50</span></p>
+                      <button type="button" class="view font_12 bg-transparent border-0 ">
+                        <img src="images/eye.svg" class="me-2" /> 954
+                      </button>
+                    </div>
+                    <div class="school-grid-thumbnail">
+                      <div class="row gx-1">
+                        <div class="col-md-12">
+                          <div class="school-large-thumbnail shadow-thumnail position-relative">
+                            <img class="w-100" src="images/school-large-thumnail-grid.jpg" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-xl-4">
+                <div class="school-grid-box position-relative school-list-box h-100 mb-0">
+                  <div class="schoolgrid-header d-flex align-items-center position-relative">
+                    <div class="school-gridprofile-icon">
+                      <img src="images/profile-grid-school-may.jpg" />
+                    </div>
+                    <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">Python programming class</h2>
+                    <button type="button" class="bg-transparent border-0 pinned-grid-chat"><img class="w-auto h-auto"
+                        src="images/pinned-gray.svg" /></button>
+                  </div>
+                  <div class="school-grid-body">
+                    <div class="d-flex justify-content-between date-view-list">
+                      <p class="font_14 school-grid-date d-inline-block mb-0">September 28 <span
+                          class="fw_600 ms-3">11:30 - 13:50</span></p>
+                      <button type="button" class="view font_12 bg-transparent border-0 ">
+                        <img src="images/eye.svg" class="me-2" /> 954
+                      </button>
+                    </div>
+                    <p class="text_sec1 font_14">Lecture One - Introduction and basics in Python.Lecture One -
+                      Introduction and basics in PythonLecture One - Intro and basics in Python fole Lecture One. One -
+                      Introduction and basics in PythonLecture One - Introduction and basics in PythonLecture One
+                      Lecture. One - Intro duction and basics in PythonLecture One.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 col-xl-4">
+                <div class="school-grid-box position-relative school-list-box h-100 mb-0">
+                  <div class="schoolgrid-header d-flex align-items-center position-relative">
+                    <div class="school-gridprofile-icon">
+                      <img src="images/profile-grid-school-may.jpg" />
+                    </div>
+                    <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">Python programming class</h2>
+                    <button type="button" class="bg-transparent border-0 pinned-grid-chat"><img class="w-auto h-auto"
+                        src="images/pinned-gray.svg" /></button>
+                  </div>
+                  <div class="school-grid-body">
+                    <div class="d-flex justify-content-between date-view-list">
+                      <p class="font_14 school-grid-date d-inline-block mb-0">September 28 <span
+                          class="fw_600 ms-3">11:30 - 13:50</span></p>
+                      <button type="button" class="view font_12 bg-transparent border-0 ">
+                        <img src="images/eye.svg" class="me-2" /> 954
+                      </button>
+                    </div>
+                    <div class="school-grid-thumbnail">
+                      <div class="row gx-1">
+                        <div class="col-md-12">
+                          <div class="school-large-thumbnail shadow-thumnail position-relative">
+                            <img class="w-100" src="images/school-large-thumnail-grid.jpg" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 col-xl-4">
+                <div class="school-grid-box position-relative school-list-box h-100 mb-0">
+                  <div class="schoolgrid-header d-flex align-items-center position-relative">
+                    <div class="school-gridprofile-icon">
+                      <img src="images/profile-grid-school-may.jpg" />
+                    </div>
+                    <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">Python programming class</h2>
+                    <button type="button" class="bg-transparent border-0 pinned-grid-chat"><img class="w-auto h-auto"
+                        src="images/pinned-gray.svg" /></button>
+                  </div>
+                  <div class="school-grid-body">
+                    <div class="d-flex justify-content-between date-view-list">
+                      <p class="font_14 school-grid-date d-inline-block mb-0">September 28 <span
+                          class="fw_600 ms-3">11:30 - 13:50</span></p>
+                      <button type="button" class="view font_12 bg-transparent border-0 ">
+                        <img src="images/eye.svg" class="me-2" /> 954
+                      </button>
+                    </div>
+                    <p class="text_sec1 font_14">Lecture One - Introduction and basics in Python.Lecture One -
+                      Introduction and basics in PythonLecture One - Intro and basics in Python fole Lecture One. One -
+                      Introduction and basics in PythonLecture One - Introduction and basics in PythonLecture One
+                      Lecture. One - Intro duction and basics in PythonLecture One.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 col-xl-4">
+                <div class="school-grid-box position-relative school-list-box h-100 mb-0">
+                  <div class="schoolgrid-header d-flex align-items-center position-relative">
+                    <div class="school-gridprofile-icon">
+                      <img src="images/profile-grid-school-may.jpg" />
+                    </div>
+                    <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">Python programming class</h2>
+                    <button type="button" class="bg-transparent border-0 pinned-grid-chat"><img class="w-auto h-auto"
+                        src="images/pinned-gray.svg" /></button>
+                  </div>
+                  <div class="school-grid-body">
+                    <div class="d-flex justify-content-between date-view-list">
+                      <p class="font_14 school-grid-date d-inline-block mb-0">September 28 <span
+                          class="fw_600 ms-3">11:30 - 13:50</span></p>
+                      <button type="button" class="view font_12 bg-transparent border-0 ">
+                        <img src="images/eye.svg" class="me-2" /> 954
+                      </button>
+                    </div>
+                    <div class="school-grid-thumbnail">
+                      <div class="row gx-1">
+                        <div class="col-md-12">
+                          <div class="school-large-thumbnail shadow-thumnail position-relative">
+                            <img class="w-100" src="images/school-large-thumnail-grid.jpg" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 col-xl-4">
+                <div class="school-grid-box position-relative school-list-box h-100 mb-0">
+                  <div class="schoolgrid-header d-flex align-items-center position-relative">
+                    <div class="school-gridprofile-icon">
+                      <img src="images/profile-grid-school-may.jpg" />
+                    </div>
+                    <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">Python programming class</h2>
+                    <button type="button" class="bg-transparent border-0 pinned-grid-chat"><img class="w-auto h-auto"
+                        src="images/pinned-gray.svg" /></button>
+                  </div>
+                  <div class="school-grid-body">
+                    <div class="d-flex justify-content-between date-view-list">
+                      <p class="font_14 school-grid-date d-inline-block mb-0">September 28 <span
+                          class="fw_600 ms-3">11:30 - 13:50</span></p>
+                      <button type="button" class="view font_12 bg-transparent border-0 ">
+                        <img src="images/eye.svg" class="me-2" /> 954
+                      </button>
+                    </div>
+                    <p class="text_sec1 font_14">Lecture One - Introduction and basics in Python.Lecture One -
+                      Introduction and basics in PythonLecture One - Intro and basics in Python fole Lecture One. One -
+                      Introduction and basics in PythonLecture One - Introduction and basics in PythonLecture One
+                      Lecture. One - Intro duction and basics in PythonLecture One.</p>
+                  </div>
+                </div>
+              </div>
+
+
+            </div>
+          </div>
+
+
+        </div>
+        <div class="tab-pane fade show " id="classes-tab-pane" role="tabpanel" aria-labelledby="school-feed-tab"
+          tabindex="0">
+          <div class="list-schol-profile">
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="school-grid-box position-relative school-list-box h-100 mb-0">
+                  <div class="schoolgrid-header pe-0">
+                    <div class="d-flex align-items-center position-relative">
+                      <div class="school-gridprofile-icon">
+                        <img src="images/profile-grid-school-may.jpg" />
+                      </div>
+                      <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">Python programming class</h2>
+                      <button type="button" class="bg-transparent border-0 pinned-grid-chat"><img class="w-auto h-auto"
+                          src="images/pinned-gray.svg" /></button>
+                    </div>
+
+                    <div class="d-flex justify-content-between date-view-list mt-3 align-items-center mb-0">
+                      <p class="font_12 school-grid-date d-inline-block mb-0 text_ltgray">Sept 28 - Jan 26 </p>
+                      <div class="profile-star d-flex align-items-center">
+                        <span class="font_14 fw_600 text_sec1 d-inline-flex align-items-center"><img
+                            src="images/Star-solid-dark.svg" class="me-1" />4.3</span>
+                        <span class="payment-profile font_12 text_ltgray ms-2"><strong
+                            class="cost_theme font_14">$300</strong> One Payment</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="school-grid-body">
+                    <p class="text_sec1 font_14">Lecture One - Introduction and basics in Python.Lecture One -
+                      Introduction and basics in PythonLecture One - Intro and basics in Python fole Lecture One. </p>
+                    <div class="teacher-tags tag-box hashtag_box">
+                      <span class="custom-tag">#Python</span>
+                      <span class="custom-tag">#Intermediate</span>
+                      <span class="custom-tag">#Program</span>
+                      <span class="custom-tag">#Free courses</span>
+                      <button type="button" class="custom-tag border-0">See more...</button>
+                    </div>
+                    <div class="school-grid-thumbnail shadow-thumnail position-relative classes-grid overflow-hidden">
+                      <div class="row gx-1">
+                        <div class="col-md-12">
+                          <div class="school-large-thumbnail position-relative ">
+                            <img class="w-100" src="images/python-programming.jpg" />
+                          </div>
+                        </div>
+                      </div>
+                      <div class="school-grid-footer above-thumbnail">
+                        <button type="button" class="bg-transparent border-0 function-btns text-light">
+                          <img src="images/eye-light.svg" class="d-block mx-auto">
+                          954
+                        </button>
+                        <button type="button" class="bg-transparent border-0 function-btns text-light">
+                          <img src="images/Heart-light.svg" class="d-block mx-auto">
+                          82
+                        </button>
+                        <button type="button" class="bg-transparent border-0 function-btns text-light">
+                          <img src="images/Chat-light.svg" class="d-block mx-auto">
+                          34
+                        </button>
+                        <button type="button" class="bg-transparent border-0 function-btns text-light">
+                          <img src="images/Bookmark-light.svg" class="d-block mx-auto">
+                          954
+                        </button>
+                        <button type="button" class="bg-transparent border-0 function-btns text-light">
+                          <img src="images/Upload-light.svg" class="d-block mx-auto">
+                          954
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="school-grid-box position-relative school-list-box h-100 mb-0">
+                  <div class="schoolgrid-header pe-0">
+                    <div class="d-flex align-items-center position-relative">
+                      <div class="school-gridprofile-icon">
+                        <img src="images/profile-grid-school-may.jpg" />
+                      </div>
+                      <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">Python programming class</h2>
+                      <button type="button" class="bg-transparent border-0 pinned-grid-chat"><img class="w-auto h-auto"
+                          src="images/pinned-gray.svg" /></button>
+                    </div>
+
+                    <div class="d-flex justify-content-between date-view-list mt-3 align-items-center mb-0">
+                      <p class="font_12 school-grid-date d-inline-block mb-0 text_ltgray"><span
+                          class="start-date ms-0 me-2 fw_600">Starts in 7d : 15h : 37m : 16s</span> Sept 28 - Jan 26
+                      </p>
+                      <div class="profile-star d-flex align-items-center">
+                        <span class="font_14 fw_600 text_sec1 d-inline-flex align-items-center"><img
+                            src="images/Star-solid-dark.svg" class="me-1" />4.3</span>
+                        <span class="payment-profile font_12 text_ltgray ms-2"><strong
+                            class="cost_theme font_14">$300</strong> One Payment</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="school-grid-body">
+                    <p class="text_sec1 font_14">Lecture One - Introduction and basics in Python.Lecture One -
+                      Introduction and basics in PythonLecture One - Intro and basics in Python fole Lecture One. </p>
+                    <div class="teacher-tags tag-box hashtag_box">
+                      <span class="custom-tag">#Python</span>
+                      <span class="custom-tag">#Intermediate</span>
+                      <span class="custom-tag">#Program</span>
+                    </div>
+                    <div class="school-grid-thumbnail shadow-thumnail position-relative classes-grid overflow-hidden">
+                      <div class="row gx-1">
+                        <div class="col-md-12">
+                          <div class="school-large-thumbnail position-relative ">
+                            <iframe width="100%" height="100%" src="https://www.youtube.com/embed/hAP2QF--2Dg"
+                              frameborder="0"
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                              allowfullscreen></iframe>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="school-grid-footer above-thumbnail">
+                        <button type="button" class="bg-transparent border-0 function-btns text-light">
+                          <img src="images/eye-light.svg" class="d-block mx-auto">
+                          954
+                        </button>
+                        <button type="button" class="bg-transparent border-0 function-btns text-light">
+                          <img src="images/Heart-light.svg" class="d-block mx-auto">
+                          82
+                        </button>
+                        <button type="button" class="bg-transparent border-0 function-btns text-light">
+                          <img src="images/Chat-light.svg" class="d-block mx-auto">
+                          34
+                        </button>
+                        <button type="button" class="bg-transparent border-0 function-btns text-light">
+                          <img src="images/Bookmark-light.svg" class="d-block mx-auto">
+                          954
+                        </button>
+                        <button type="button" class="bg-transparent border-0 function-btns text-light">
+                          <img src="images/Upload-light.svg" class="d-block mx-auto">
+                          954
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="school-grid-box position-relative school-list-box h-100 mb-0">
+                  <div class="schoolgrid-header pe-0">
+                    <div class="d-flex align-items-center position-relative">
+                      <div class="school-gridprofile-icon">
+                        <img src="images/profile-grid-school-may.jpg" />
+                      </div>
+                      <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">Python programming class</h2>
+                      <button type="button" class="bg-transparent border-0 pinned-grid-chat"><img class="w-auto h-auto"
+                          src="images/pinned-gray.svg" /></button>
+                    </div>
+
+                    <div class="d-flex justify-content-between date-view-list mt-3 align-items-center mb-0">
+                      <p class="font_12 school-grid-date d-inline-block mb-0 text_ltgray"><span
+                          class="start-date ms-0 me-2 fw_600">Starts in 7d : 15h : 37m : 16s</span> Sept 28 - Jan 26
+                      </p>
+                      <div class="profile-star d-flex align-items-center">
+                        <span class="font_14 fw_600 text_sec1 d-inline-flex align-items-center"><img
+                            src="images/Star-solid-dark.svg" class="me-1" />4.3</span>
+                        <span class="payment-profile font_12 text_ltgray ms-2"><strong
+                            class="cost_theme font_14">$300</strong> One Payment</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="school-grid-body">
+                    <p class="text_sec1 font_14">Lecture One - Introduction and basics in Python.Lecture One -
+                      Introduction and basics in PythonLecture One - Intro and basics in Python fole Lecture One. </p>
+                    <div class="teacher-tags tag-box hashtag_box">
+                      <span class="custom-tag">#Python</span>
+                      <span class="custom-tag">#Intermediate</span>
+                      <span class="custom-tag">#Program</span>
+                    </div>
+                    <div class="school-grid-thumbnail shadow-thumnail position-relative classes-grid overflow-hidden">
+                      <div class="row gx-1">
+                        <div class="col-md-12">
+                          <div class="school-large-thumbnail position-relative ">
+                            <iframe width="100%" height="100%" src="https://www.youtube.com/embed/hAP2QF--2Dg"
+                              frameborder="0"
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                              allowfullscreen></iframe>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="school-grid-footer above-thumbnail">
+                        <button type="button" class="bg-transparent border-0 function-btns text-light">
+                          <img src="images/eye-light.svg" class="d-block mx-auto">
+                          954
+                        </button>
+                        <button type="button" class="bg-transparent border-0 function-btns text-light">
+                          <img src="images/Heart-light.svg" class="d-block mx-auto">
+                          82
+                        </button>
+                        <button type="button" class="bg-transparent border-0 function-btns text-light">
+                          <img src="images/Chat-light.svg" class="d-block mx-auto">
+                          34
+                        </button>
+                        <button type="button" class="bg-transparent border-0 function-btns text-light">
+                          <img src="images/Bookmark-light.svg" class="d-block mx-auto">
+                          954
+                        </button>
+                        <button type="button" class="bg-transparent border-0 function-btns text-light">
+                          <img src="images/Upload-light.svg" class="d-block mx-auto">
+                          954
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="school-grid-box position-relative school-list-box h-100 mb-0">
+                  <div class="schoolgrid-header pe-0">
+                    <div class="d-flex align-items-center position-relative">
+                      <div class="school-gridprofile-icon">
+                        <img src="images/profile-grid-school-may.jpg" />
+                      </div>
+                      <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">Python programming class</h2>
+                      <button type="button" class="bg-transparent border-0 pinned-grid-chat"><img class="w-auto h-auto"
+                          src="images/pinned-gray.svg" /></button>
+                    </div>
+
+                    <div class="d-flex justify-content-between date-view-list mt-3 align-items-center mb-0">
+                      <p class="font_12 school-grid-date d-inline-block mb-0 text_ltgray">Sept 28 - Jan 26 </p>
+                      <div class="profile-star d-flex align-items-center">
+                        <span class="font_14 fw_600 text_sec1 d-inline-flex align-items-center"><img
+                            src="images/Star-solid-dark.svg" class="me-1" />4.3</span>
+                        <span class="payment-profile font_12 text_ltgray ms-2"><strong
+                            class="cost_theme font_14">$300</strong> One Payment</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="school-grid-body">
+                    <p class="text_sec1 font_14">Lecture One - Introduction and basics in Python.Lecture One -
+                      Introduction and basics in PythonLecture One - Intro and basics in Python fole Lecture One. </p>
+                    <div class="teacher-tags tag-box hashtag_box">
+                      <span class="custom-tag">#Python</span>
+                      <span class="custom-tag">#Intermediate</span>
+                      <span class="custom-tag">#Program</span>
+                      <span class="custom-tag">#Free courses</span>
+                      <button type="button" class="custom-tag border-0">See more...</button>
+                    </div>
+                    <div class="school-grid-thumbnail shadow-thumnail position-relative classes-grid overflow-hidden">
+                      <div class="row gx-1">
+                        <div class="col-md-12">
+                          <div class="school-large-thumbnail position-relative ">
+                            <img class="w-100" src="images/python-programming.jpg" />
+                          </div>
+                        </div>
+                      </div>
+                      <div class="school-grid-footer above-thumbnail">
+                        <button type="button" class="bg-transparent border-0 function-btns text-light">
+                          <img src="images/eye-light.svg" class="d-block mx-auto">
+                          954
+                        </button>
+                        <button type="button" class="bg-transparent border-0 function-btns text-light">
+                          <img src="images/Heart-light.svg" class="d-block mx-auto">
+                          82
+                        </button>
+                        <button type="button" class="bg-transparent border-0 function-btns text-light">
+                          <img src="images/Chat-light.svg" class="d-block mx-auto">
+                          34
+                        </button>
+                        <button type="button" class="bg-transparent border-0 function-btns text-light">
+                          <img src="images/Bookmark-light.svg" class="d-block mx-auto">
+                          954
+                        </button>
+                        <button type="button" class="bg-transparent border-0 function-btns text-light">
+                          <img src="images/Upload-light.svg" class="d-block mx-auto">
+                          954
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="school-grid-box position-relative school-list-box h-100 mb-0">
+                  <div class="schoolgrid-header pe-0">
+                    <div class="d-flex align-items-center position-relative">
+                      <div class="school-gridprofile-icon">
+                        <img src="images/profile-grid-school-may.jpg" />
+                      </div>
+                      <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">Python programming class</h2>
+                      <button type="button" class="bg-transparent border-0 pinned-grid-chat"><img class="w-auto h-auto"
+                          src="images/pinned-gray.svg" /></button>
+                    </div>
+
+                    <div class="d-flex justify-content-between date-view-list mt-3 align-items-center mb-0">
+                      <p class="font_12 school-grid-date d-inline-block mb-0 text_ltgray">Sept 28 - Jan 26 </p>
+                      <div class="profile-star d-flex align-items-center">
+                        <span class="font_14 fw_600 text_sec1 d-inline-flex align-items-center"><img
+                            src="images/Star-solid-dark.svg" class="me-1" />4.3</span>
+                        <span class="payment-profile font_12 text_ltgray ms-2"><strong
+                            class="cost_theme font_14">$300</strong> One Payment</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="school-grid-body">
+                    <p class="text_sec1 font_14">Lecture One - Introduction and basics in Python.Lecture One -
+                      Introduction and basics in PythonLecture One - Intro and basics in Python fole Lecture One. </p>
+                    <div class="teacher-tags tag-box hashtag_box">
+                      <span class="custom-tag">#Python</span>
+                      <span class="custom-tag">#Intermediate</span>
+                      <span class="custom-tag">#Program</span>
+                      <span class="custom-tag">#Free courses</span>
+                      <button type="button" class="custom-tag border-0">See more...</button>
+                    </div>
+                    <div class="school-grid-thumbnail shadow-thumnail position-relative classes-grid overflow-hidden">
+                      <div class="row gx-1">
+                        <div class="col-md-12">
+                          <div class="school-large-thumbnail position-relative ">
+                            <img class="w-100" src="images/python-programming.jpg" />
+                          </div>
+                        </div>
+                      </div>
+                      <div class="school-grid-footer above-thumbnail">
+                        <button type="button" class="bg-transparent border-0 function-btns text-light">
+                          <img src="images/eye-light.svg" class="d-block mx-auto">
+                          954
+                        </button>
+                        <button type="button" class="bg-transparent border-0 function-btns text-light">
+                          <img src="images/Heart-light.svg" class="d-block mx-auto">
+                          82
+                        </button>
+                        <button type="button" class="bg-transparent border-0 function-btns text-light">
+                          <img src="images/Chat-light.svg" class="d-block mx-auto">
+                          34
+                        </button>
+                        <button type="button" class="bg-transparent border-0 function-btns text-light">
+                          <img src="images/Bookmark-light.svg" class="d-block mx-auto">
+                          954
+                        </button>
+                        <button type="button" class="bg-transparent border-0 function-btns text-light">
+                          <img src="images/Upload-light.svg" class="d-block mx-auto">
+                          954
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="school-grid-box position-relative school-list-box h-100 mb-0">
+                  <div class="schoolgrid-header pe-0">
+                    <div class="d-flex align-items-center position-relative">
+                      <div class="school-gridprofile-icon">
+                        <img src="images/profile-grid-school-may.jpg" />
+                      </div>
+                      <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">Python programming class</h2>
+                      <button type="button" class="bg-transparent border-0 pinned-grid-chat"><img class="w-auto h-auto"
+                          src="images/pinned-gray.svg" /></button>
+                    </div>
+
+                    <div class="d-flex justify-content-between date-view-list mt-3 align-items-center mb-0">
+                      <p class="font_12 school-grid-date d-inline-block mb-0 text_ltgray"><span
+                          class="start-date ms-0 me-2 fw_600">Starts in 7d : 15h : 37m : 16s</span> Sept 28 - Jan 26
+                      </p>
+                      <div class="profile-star d-flex align-items-center">
+                        <span class="font_14 fw_600 text_sec1 d-inline-flex align-items-center"><img
+                            src="images/Star-solid-dark.svg" class="me-1" />4.3</span>
+                        <span class="payment-profile font_12 text_ltgray ms-2"><strong
+                            class="cost_theme font_14">$300</strong> One Payment</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="school-grid-body">
+                    <p class="text_sec1 font_14">Lecture One - Introduction and basics in Python.Lecture One -
+                      Introduction and basics in PythonLecture One - Intro and basics in Python fole Lecture One. </p>
+                    <div class="teacher-tags tag-box hashtag_box">
+                      <span class="custom-tag">#Python</span>
+                      <span class="custom-tag">#Intermediate</span>
+                      <span class="custom-tag">#Program</span>
+                    </div>
+                    <div class="school-grid-thumbnail shadow-thumnail position-relative classes-grid overflow-hidden">
+                      <div class="row gx-1">
+                        <div class="col-md-12">
+                          <div class="school-large-thumbnail position-relative ">
+                            <iframe width="100%" height="100%" src="https://www.youtube.com/embed/hAP2QF--2Dg"
+                              frameborder="0"
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                              allowfullscreen></iframe>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="school-grid-footer above-thumbnail">
+                        <button type="button" class="bg-transparent border-0 function-btns text-light">
+                          <img src="images/eye-light.svg" class="d-block mx-auto">
+                          954
+                        </button>
+                        <button type="button" class="bg-transparent border-0 function-btns text-light">
+                          <img src="images/Heart-light.svg" class="d-block mx-auto">
+                          82
+                        </button>
+                        <button type="button" class="bg-transparent border-0 function-btns text-light">
+                          <img src="images/Chat-light.svg" class="d-block mx-auto">
+                          34
+                        </button>
+                        <button type="button" class="bg-transparent border-0 function-btns text-light">
+                          <img src="images/Bookmark-light.svg" class="d-block mx-auto">
+                          954
+                        </button>
+                        <button type="button" class="bg-transparent border-0 function-btns text-light">
+                          <img src="images/Upload-light.svg" class="d-block mx-auto">
+                          954
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+            </div>
+          </div>
+
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- Modal -->
+  <div class="modal fade edit-school-modal" id="editschool" tabindex="-1" aria-labelledby="editschool"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header border-0 justify-content-center position-relative">
+          <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center" id="editschool">Edit Your Profile</h1>
+          <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"><img
+              src="images/cross.svg" /></button>
+        </div>
+        <div class="modal-body">
+          <div class="edit-profile-header text-center mb-4">
+            <div class="rounded-circle modal-school-icon text-center mb-2">
+              <img src="images/school-profile-image.jpg">
+            </div>
+            <button class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins position-static opacity-100"> Edit
+              Photo</button>
+          </div>
+          <div class="text-line-border position-relative text-center mb-4">
+            <span class="line-text font_12 text_ltgray fw_400 text-center">Personal Information</span>
+          </div>
+          <form>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <input type="text" value="John" name="fname" class="form-control w-100">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <input type="text" value="Smith" name="lname" class="form-control w-100">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <input type="text" value="10/10/2022" name="" class="form-control w-100">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <select class="form-select rounded-8 w-100">
+                    <option value="1">Male</option>
+                    <option value="2">Female</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <input type="text" value="Male" name="userail" class="form-control w-100">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <input type="password" value="Password" name="Password" class="form-control w-100">
+                </div>
+              </div>
+
+            </div>
+            <div class="text-line-border position-relative text-center mb-4">
+              <span class="line-text font_12 text_ltgray fw_400 text-center">User Bio</span>
+            </div>
+            <div class="form-group ">
+              <textarea class="form-control resize-none ht_96"
+                value="">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labo et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex.</textarea>
+            </div>
+          </form>
+
+        </div>
+        <div
+          class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4">
+          <button type="button"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+            data-bs-dismiss="modal">Discard Changes</button>
+          <button type="button"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step">Save</button>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://phpcoder.tech/multiselect/js/jquery.multiselect.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+
+
+
+  <script>
+    $(document).ready(function () {
+      $(".next-step").click(function (e) {
+        var activeTab = $(".registerTabs .tab-pane.active");
+        activeTab.next().addClass("active");
+        activeTab.removeClass("active");
+        $(".step-icon .step1").addClass('finish');
+      });
+
+      $(".prev-step").click(function (e) {
+        var activeTab = $(".registerTabs .tab-pane.active");
+        activeTab.prev().addClass("active");
+        activeTab.removeClass("active");
+
+      });
+      $("#step2_btn").click(function () {
+        $("#create_school, .step-icon").addClass('d-none');
+      });
+
+    });
+
+
+  </script>
+  <script>
+    function readFile(input) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+          var htmlPreview =
+            '<img width="200" src="' + e.target.result + '" />' +
+            '<p>' + input.files[0].name + '</p>';
+          var wrapperZone = $(input).parent();
+          var previewZone = $(input).parent().parent().find('.preview-zone');
+          var boxZone = $(input).parent().parent().find('.preview-zone').find('.box').find('.box-body');
+
+          wrapperZone.removeClass('dragover');
+          previewZone.removeClass('hidden');
+          boxZone.empty();
+          boxZone.append(htmlPreview);
+        };
+
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    function reset(e) {
+      e.wrap('<form>').closest('form').get(0).reset();
+      e.unwrap();
+    }
+
+    $(".dropzone").change(function () {
+      readFile(this);
+    });
+
+    $('.dropzone-wrapper').on('dragover', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      $(this).addClass('dragover');
+    });
+
+    $('.dropzone-wrapper').on('dragleave', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      $(this).removeClass('dragover');
+    });
+
+    $('.remove-preview').on('click', function () {
+      var boxZone = $(this).parents('.preview-zone').find('.box-body');
+      var previewZone = $(this).parents('.preview-zone');
+      var dropzone = $(this).parents('.form-group').find('.dropzone');
+      boxZone.empty();
+      previewZone.addClass('hidden');
+      reset(dropzone);
+    });
+
+
+
+  </script>
+  <script>
+    jQuery('#languageSelect').multiselect({
+      columns: 1,
+      placeholder: 'Select Languages',
+      search: true
+    });
+  </script>
+  <script>
+    function openSearch() {
+      document.getElementById("search-overlay").style.display = "block";
+    }
+    function closeSearch() {
+      document.getElementById("search-overlay").style.display = "none";
+    }
+    function closeSidebar() {
+      document.getElementById("side-bar").style.display = "none";
+    }
+    function openSidebar() {
+      document.getElementById("side-bar").style.display = "block";
+    }
+  </script>
+  <script>
+    $(document).ready(function () {
+      $("#grid-btn").click(function () {
+        $(".school-grid-view").addClass("grid-active");
+        $(".list-schol-profile").removeClass("list-active");
+        $("#grid-btn").addClass("active");
+        $("#list-btn").removeClass("active");
+
+      });
+      $("#list-btn").click(function () {
+        $(".school-grid-view").removeClass("grid-active");
+        $(".list-schol-profile").addClass("list-active");
+        $("#grid-btn").removeClass("active");
+        $("#list-btn").addClass("active");
+      });
+
+
+    });
+  </script>
+</body>
+
+</html>
