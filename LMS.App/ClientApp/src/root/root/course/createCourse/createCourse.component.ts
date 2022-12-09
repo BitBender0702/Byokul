@@ -6,6 +6,7 @@ import { MultilingualComponent } from '../../sharedModule/Multilingual/multiling
 import { FilterService } from "primeng/api";
 import { CreateCourseModel } from 'src/root/interfaces/course/createCourseModel';
 import { CourseService } from 'src/root/service/course.service';
+import { ActivatedRoute } from '@angular/router';
 
 // import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 // import { CreatePostComponent } from '../../createPost/createPost';
@@ -47,16 +48,30 @@ export class CreateCourseComponent extends MultilingualComponent implements OnIn
   teacherInfo:any[] = [];
   isOpenSidebar:boolean = false;
   isStepCompleted: boolean = false;
+  fromSchoolProfile!:string;
+  schools:any;
+  selectedSchool:any;
 
 
 
-  constructor(injector: Injector,private fb: FormBuilder,courseService: CourseService,private http: HttpClient) {
+  constructor(injector: Injector,private route: ActivatedRoute,private fb: FormBuilder,courseService: CourseService,private http: HttpClient) {
     super(injector);
     this._courseService = courseService;
   }
 
   ngOnInit(): void {
+
+    var id = this.route.snapshot.paramMap.get('id');
+    this.fromSchoolProfile = id ?? '';
     this.step = 0;
+
+    if(this.fromSchoolProfile == ''){
+      this.getSchoolsForDropdown();
+    }
+
+    if(this.fromSchoolProfile != ''){
+      this.getSelectedSchool(this.fromSchoolProfile);
+    }
 
     this.selectedLanguage = localStorage.getItem("selectedLanguage");
     this.translate.use(this.selectedLanguage);
@@ -108,7 +123,8 @@ export class CreateCourseComponent extends MultilingualComponent implements OnIn
   });
 
   this.createCourseForm1 = this.fb.group({
-    schoolId: this.fb.control('C65DDBF5-42F5-496D-CFF7-08DA9CA1C8A0', [Validators.required]),
+    schoolId: this.fb.control('', [Validators.required]),
+    schoolName: this.fb.control(''),
     courseName: this.fb.control('', [Validators.required]),
     serviceTypeId: this.fb.control('',[Validators.required]),
     accessibilityId: this.fb.control('',[Validators.required]),
@@ -130,17 +146,21 @@ export class CreateCourseComponent extends MultilingualComponent implements OnIn
   });
 }
 
-// addPriceValidation(serviceTypeId: string) {
-//   return (group: FormGroup): {[key: string]: any} => {
-//    let f = group.controls[serviceTypeId];
-//    if (f.value != '704FEDC6-834C-4921-A63B-7E53C5276B31') {
-//      return {
-//        price: `Price is required.`
-//      };
-//    }
-//    return {};
-//   }
-// }
+getSchoolsForDropdown(){
+  this._courseService.getAllSchools().subscribe((response) => {
+    this.schools = response;
+    this.createCourseForm1.controls['schoolId'].setValue(this.schools[0].schoolId, {onlySelf: true});
+  });  
+}
+
+getSelectedSchool(schoolId:string){
+  this._courseService.getSelectedSchool(schoolId).subscribe((response) => {
+    this.selectedSchool = response;
+    this.createCourseForm1.controls['schoolId'].setValue(this.selectedSchool.schoolId, {onlySelf: true});
+    this.createCourseForm1.controls['schoolName'].setValue(this.selectedSchool.schoolName, {onlySelf: true});
+  });  
+}
+
 
 captureStudentId(event: any) {
   var studentId = event.studentId;

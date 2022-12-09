@@ -3,6 +3,7 @@ using LMS.Common.ViewModels.Class;
 using LMS.Common.ViewModels.Course;
 using LMS.Common.ViewModels.Post;
 using LMS.Common.ViewModels.School;
+using LMS.Common.ViewModels.User;
 using LMS.Common.ViewModels.UserDashboard;
 using LMS.Data.Entity;
 using LMS.DataAccess.Repository;
@@ -26,7 +27,8 @@ namespace LMS.Services.UserDashboard
         private IGenericRepository<UserFollower> _userFollowerRepository;
         private IGenericRepository<ClassStudent> _classStudentRepository;
         private IGenericRepository<CourseStudent> _courseStudentRepository;
-        public UserDashboardService(IMapper mapper, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<SchoolFollower> schoolFollowerRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<UserFollower> userFollowerRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<CourseStudent> courseStudentRepository)
+        private IGenericRepository<User> _userRepository;
+        public UserDashboardService(IMapper mapper, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<SchoolFollower> schoolFollowerRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<UserFollower> userFollowerRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<User> userRepository)
         {
             _mapper = mapper;
             _schoolRepository = schoolRepository;
@@ -37,10 +39,15 @@ namespace LMS.Services.UserDashboard
             _userFollowerRepository = userFollowerRepository;
             _classStudentRepository = classStudentRepository;
             _courseStudentRepository = courseStudentRepository;
+            _userRepository = userRepository;
         }
         public async Task<UserDashboardViewModel> UserDashboard(string userId)
         {
             var model = new UserDashboardViewModel();
+
+            // user details
+            var user = _userRepository.GetById(userId);
+            model.User = _mapper.Map<UserUpdateViewModel>(user);
 
             // owned schools
             var schools = await _schoolRepository.GetAll().Where(x => x.CreatedById == userId).ToListAsync();

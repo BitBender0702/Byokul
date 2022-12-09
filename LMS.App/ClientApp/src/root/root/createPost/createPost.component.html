@@ -1,0 +1,445 @@
+
+  <!-- <section class="f-poppins">
+
+    <button #openModal class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins" data-bs-toggle="modal"
+    data-bs-target="#openModal"><img src="../../../../assets/images/Setting-solid-dark.svg" class="me-2" /> {{'EditProfile'| translate }}
+    </button>
+
+    <div class="main_content"> -->
+
+      <div class="modal fade edit-school-modal show d-block" id="openModal" tabindex="-1" role="dialog"
+        aria-labelledby="add-language" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header border-0 justify-content-center position-relative">
+              <div class="custom-language-select liv-postbtn">
+                <ul class="nav nav-tabs border-0" id="myTab" role="tablist">
+                  <li class="nav-item p-0">
+                    <button
+                      class="nav-link active post-attch-btn d-inline-flex justify-content-center align-items-center"
+                      id="live-tab" data-bs-toggle="tab" data-bs-target="#live-tab-pane" type="button" role="tab"
+                      aria-controls="live-tab-pane" aria-selected="true"><img src="../../../assets/images/Play-dark.svg"
+                        class="dark-attach" /><img src="../../../assets/images/Play-light.svg" class="light-attach" /> Live</button>
+                  </li>
+                  <li class="nav-item p-0">
+                    <button class="nav-link post-attch-btn d-inline-flex justify-content-center align-items-center"
+                      id="Post-tab" data-bs-toggle="tab" data-bs-target="#Post-tab-pane" type="button" role="tab"
+                      aria-controls="Post-tab-pane" aria-selected="false"><img src="../../../assets/images/Edit-grey.svg"
+                        class="dark-attach" /><img src="../../../assets/images/Edit-light.svg" class="light-attach" /> Post</button>
+                  </li>
+                  <li class="nav-item p-0">
+                    <button class="nav-link post-attch-btn d-inline-flex justify-content-center align-items-center"
+                      id="reels-tab" data-bs-toggle="tab" data-bs-target="#reels-tab-pane" type="button" role="tab"
+                      aria-controls="reels-tab-pane" aria-selected="false"><img src="../../../assets/images/category-grey.svg"
+                        class="dark-attach" /><img src="../../../assets/images/category-light.svg" class="light-attach" />
+                      Reels</button>
+                  </li>
+
+                </ul>
+              </div>
+              <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">{{'CreatePost'| translate }}</h1>
+              <div></div>
+              <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"><img
+                  src="../../../assets/images/cross.svg" /></button>
+            </div>
+            <div class="modal-body">
+              <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="live-tab-pane" role="tabpanel" aria-labelledby="live-tab"
+                  tabindex="0">
+                  <form class="createLiveForm"  [formGroup]="createLiveForm">
+                    <div class="form-group">
+                      <label class="font_10">School Name</label>
+                      <input hidden type="text" name="schoolId" class="form-control w-100">
+                      <input readonly type="text" [placeholder]="schoolDetails?.schoolName" name="schoolName" class="form-control w-100">
+                      <!-- <select class="form-select rounded-8 w-100">
+                        <option value="1">School Name 1</option>
+                        <option value="2">School Name 2</option>
+                        <option value="3">School Name 1 3</option>
+                      </select> -->
+                    </div>
+                    <div class="form-group">
+                      <label class="font_10">Title</label>
+                      <input formControlName="title" type="text" placeholder="Title" class="form-control w-100">
+                    </div>
+
+                    <div class="form-group">
+                      <label class="font_10">Body Text</label>
+                      <input formControlName="bodyText" type="text" class="form-control" placeholder="Body Text" />
+                    </div>
+                    <div class="form-group">
+                      <label class="font_10">Cover Letter before Stream start</label>
+                      <input formControlName="coverLetter" type="text" class="form-control" placeholder="Cover Letter before Stream start" />
+                    </div>
+                    <div class="form-group">
+                      <label class="font_10">Comment Throttling</label>
+                      <select class="form-select rounded-8 w-100">
+                        <option value="1">1 Comment per 1 Minute</option>
+                        <option value="2">1 Comment per 1 Minute</option>
+                        <option value="3">1 Comment per 1 Minute</option>
+                      </select>
+                    </div>
+                    <div class="text-line-border position-relative text-center my-4">
+                      <span class="line-text font_12 text_ltgray fw_400 text-center">Select Media Sources</span>
+                    </div>
+                    <div class="media-sourcebtn d-flex gap-2 f-monteserrat">
+                      <button type="button" class="post-attch-btn btn web-cmbtn font_12 text_dark m-0"><span
+                          class="text-center"><img src="../../../assets/images/webkam.svg" class=" mx-auto mb-2 dark-attach" /> <img
+                            src="../../../assets/images/webkam-light.svg" class="mx-auto mb-2 light-attach" />Webcam</span></button>
+                      <button type="button" class="post-attch-btn btn web-cmbtn font_12 text_dark m-0"><span
+                          class="text-center"><i class="fa-solid fa-gear d-block mx-auto mb-2 font_20"></i> Streaming
+                          Software</span></button>
+                      <button type="button" class="post-attch-btn btn web-cmbtn font_12 text_dark m-0"><span
+                          class="text-center"><i class="fa-solid fa-microphone d-block mx-auto mb-2 font_20"></i>
+                          Microphone</span></button>
+                      <button type="button" class="post-attch-btn btn web-cmbtn font_12 text_dark m-0">
+                        <span class="text-center"><img src="../../../assets/images/screen-share.svg"
+                            class=" mx-auto mb-2 dark-attach" /> <img src="../../../assets/images/screen-share-light.svg"
+                            class="mx-auto mb-2 light-attach" />Screen share</span></button>
+                    </div>
+
+                    <div
+                    class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 cr-postfooter pt-0">
+                    <div class="post-bot-left d-flex">
+                      <button type="button"
+                        class="post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center active"><img
+                          src="../../../assets/images/gallery-dark.svg" class="dark-attach" /><img src="../../../assets/images/gallery-light.svg"
+                          class="light-attach" /></button>
+                      <button type="button"
+                        class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"><img
+                          src="../../../assets/images/Video-dark.svg" class="dark-attach" /><img src="../../../assets/images/Video-light.svg"
+                          class="light-attach" /></button>
+                      <button type="button"
+                        class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"><img
+                          src="../../../assets/images/Paper-Plus-dark.svg" class="dark-attach" /><img src="../../../assets/images/Paper-Plus-light.svg"
+                          class="light-attach" /></button>
+                      <button type="button"
+                        class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"><img
+                          src="../../../assets/images/hashtag-dark.svg" class="dark-attach" /><img src="../../../assets/images/hashtag-light.svg"
+                          class="light-attach" /></button>
+                    </div>
+                    <div class="post-bot-right d-flex justify-content-end">
+                      <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 delay-btn"><i
+                          class="fa-solid fa-clock"></i></button>
+                      <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 lg_btn"><img
+                          src="../../../assets/images/Send-light.svg" class="me-2" /> Nov 15, 2022 at 14:30 </button>
+                    </div>
+      
+                  </div>
+                  </form>
+
+
+                </div>
+                <div class="tab-pane fade" id="Post-tab-pane" role="tabpanel" aria-labelledby="Post-tab" tabindex="0">
+                  <form [formGroup]="createPostForm">
+                    <div class="form-group">
+                      <label class="font_10">School Name</label>
+                      <input hidden type="text" name="schoolId" class="form-control w-100">
+                      <input readonly type="text" [placeholder]="schoolDetails?.schoolName" name="schoolName" class="form-control w-100">
+                      <!-- <select class="form-select rounded-8 w-100">
+                        <option value="1">School Name 1</option>
+                        <option value="2">School Name 2</option>
+                        <option value="3">School Name 1 3</option>
+                      </select> -->
+                    </div>
+                    <div class="form-group">
+                      <label class="font_10">Title</label>
+                      <input formControlName="title" type="text" placeholder="Title" class="form-control w-100">
+                      <small class="p-error" style="color: orange;"
+                      *ngIf="(isSubmitted && createPostForm.controls.title.errors)">Title is required
+                    </small>
+                    </div>
+
+                    <div class="form-group">
+                      <label class="font_10">Body Text</label>
+                      <input formControlName="bodyText" type="text" class="form-control" placeholder="Body Text" />
+                      <small class="p-error" style="color: orange;"
+                      *ngIf="(isSubmitted && createPostForm.controls.bodyText.errors)">Body text is required
+                    </small>
+                    </div>
+
+                  
+                  <div class="img-upl-result pt-4">
+                    <!-- <div *ngFor="let image of uploadImage"> -->
+                     <span *ngFor="let image of uploadImage" class="position-relative d-inline-block">
+                       <img [src]="image.imageUrl" style="height: 150px; max-width: 100%;">
+                       <button (click)="removeUploadImage(image)" type="button"
+                        class="btn dl-post-img d-flex align-items-center justify-content-center rounded-circle position-absolute"><i
+                          class="fa-solid fa-xmark"></i></button>
+                     </span>
+                    <!-- </div> -->
+                    <!-- <div *ngFor="let video of uploadVideo"> -->
+                    <span *ngFor="let video of uploadVideo" class="position-relative d-inline-block">
+                      <img [src]="video.videoUrl" style="height: 150px; max-width: 100%;"/>
+                      <button (click)="removeUploadVideo(video)" type="button"
+                        class="btn dl-post-img d-flex align-items-center justify-content-center rounded-circle position-absolute"><i
+                          class="fa-solid fa-xmark"></i></button>
+                    </span>
+                    </div>
+                  <!-- </div> -->
+                  <div class="teacher-tags tag-box hashtag_post mt-4 mb-2">
+                    <button type="button" class="custom-tag">#Tag 1</button>
+                    <button type="button" class="custom-tag">#Tag 2</button>
+                    <button type="button" class="custom-tag">#Tag 3</button>
+                    <button type="button" class="custom-tag">#Tag 4</button>
+                    <button type="button" class="custom-tag">#Tag 5</button>
+                    <button type="button" class="custom-tag">#Tag 6</button>
+                    <button type="button" class="custom-tag">#Tag 7</button>
+                  </div>
+                  <div class="teacher-tags hashtag_post tag-boxattachment-outer mt-1 mb-0">
+                      <button *ngFor="let attach of this.attachment" type="button" class="custom-tag"><img src="../../../assets/images/Paper-gray.svg" class="me-1" /> {{attach}}</button>
+                    <!-- <button type="button" class="custom-tag"><img src="../../../assets/images/Paper-gray.svg" class="me-1" /> Attachment
+                      1</button>
+                    <button type="button" class="custom-tag"><img src="../../../assets/images/Paper-gray.svg" class="me-1" /> Attachment
+                      2</button>
+                    <button type="button" class="custom-tag"><img src="../../../assets/images/Paper-gray.svg" class="me-1" /> Attachment
+                      3</button> -->
+                  </div>
+
+                  <div
+                  class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 cr-postfooter pt-0">
+                  <div class="post-bot-left d-flex">
+
+                    <label class="custom-file-upload post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center active">
+                      <input type="file" (change)="handleImageInput($event)" accept="image/*"/>
+                      <img
+                        src="../../../assets/images/gallery-dark.svg" class="dark-attach" /><img src="../../../assets/images/gallery-light.svg"
+                        class="light-attach" />
+                    </label>
+
+                    <!-- <button  type="button"
+                      class="post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center active"><img
+                        src="../../../assets/images/gallery-dark.svg" class="dark-attach" /><img src="../../../assets/images/gallery-light.svg"
+                        class="light-attach" /></button> -->
+
+
+                        <label class="custom-file-upload post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center">
+                          <input type="file" (change)="handleVideoInput($event)" accept="video/*"/>
+                          <img
+                          src="../../../assets/images/Video-dark.svg" class="dark-attach" /><img src="../../../assets/images/Video-light.svg"
+                          class="light-attach" />
+                        </label>
+
+                    <!-- <input type="file" [size]="60" (change)="handleVideoInput($event)" accept="video/*"> -->
+
+                    <!-- <button type="button"
+                      class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"><img
+                        src="../../../assets/images/Video-dark.svg" class="dark-attach" /><img src="../../../assets/images/Video-light.svg"
+                        class="light-attach" /></button> -->
+
+
+                    <label class="custom-file-upload post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center">
+                        <input type="file" (change)="handleAttachmentInput($event)" accept="pdf/*"/>
+                        <img
+                        src="../../../assets/images/Paper-Plus-dark.svg" class="dark-attach" /><img src="../../../assets/images/Paper-Plus-light.svg"
+                        class="light-attach" />
+                    </label>
+
+                    <!-- <input type="file" [size]="60" (change)="handleAttachmentInput($event)" accept="pdf/*"> -->
+
+                    <!-- <button type="button"
+                      class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"><img
+                        src="../../../assets/images/Paper-Plus-dark.svg" class="dark-attach" /><img src="../../../assets/images/Paper-Plus-light.svg"
+                        class="light-attach" /></button> -->
+
+                    <button type="button"
+                      class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"><img
+                        src="../../../assets/images/hashtag-dark.svg" class="dark-attach" /><img src="../../../assets/images/hashtag-light.svg"
+                        class="light-attach" /></button>
+                  </div>
+                  <div class="post-bot-right d-flex justify-content-end">
+                    <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 delay-btn"><i
+                        class="fa-solid fa-clock"></i></button>
+                    <button (click)="savePost()" type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 lg_btn"><img
+                        src="../../../assets/images/Send-light.svg" class="me-2" /> Nov 15, 2022 at 14:30 </button>
+                  </div>
+    
+                </div>
+                </form>
+
+                </div>
+                <div class="tab-pane fade" id="reels-tab-pane" role="tabpanel" aria-labelledby="reels-tab" tabindex="0">
+                  <form class="createReelForm"  [formGroup]="createReelForm">
+                    ...
+
+                    <div
+                  class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 cr-postfooter pt-0">
+                  <div class="post-bot-left d-flex">
+                    <button type="button"
+                      class="post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center active"><img
+                        src="../../../assets/images/gallery-dark.svg" class="dark-attach" /><img src="../../../assets/images/gallery-light.svg"
+                        class="light-attach" /></button>
+                    <button type="button"
+                      class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"><img
+                        src="../../../assets/images/Video-dark.svg" class="dark-attach" /><img src="../../../assets/images/Video-light.svg"
+                        class="light-attach" /></button>
+                    <button type="button"
+                      class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"><img
+                        src="../../../assets/images/Paper-Plus-dark.svg" class="dark-attach" /><img src="../../../assets/images/Paper-Plus-light.svg"
+                        class="light-attach" /></button>
+                    <button type="button"
+                      class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"><img
+                        src="../../../assets/images/hashtag-dark.svg" class="dark-attach" /><img src="../../../assets/images/hashtag-light.svg"
+                        class="light-attach" /></button>
+                  </div>
+                  <div class="post-bot-right d-flex justify-content-end">
+                    <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 delay-btn"><i
+                        class="fa-solid fa-clock"></i></button>
+                    <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 lg_btn"><img
+                        src="../../../assets/images/Send-light.svg" class="me-2" /> Nov 15, 2022 at 14:30 </button>
+                  </div>
+    
+                </div>
+
+                    
+
+                  </form>
+                </div>
+
+                  
+              </div>
+              <hr class="mb-0 sepearator mx-0 mt-3 opacity-100" />
+            </div>
+            <!-- <div
+              class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 cr-postfooter pt-0">
+              <div class="post-bot-left d-flex">
+                <button type="button"
+                  class="post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center active"><img
+                    src="../../../assets/images/gallery-dark.svg" class="dark-attach" /><img src="../../../assets/images/gallery-light.svg"
+                    class="light-attach" /></button>
+                <button type="button"
+                  class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"><img
+                    src="../../../assets/images/Video-dark.svg" class="dark-attach" /><img src="../../../assets/images/Video-light.svg"
+                    class="light-attach" /></button>
+                <button type="button"
+                  class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"><img
+                    src="../../../assets/images/Paper-Plus-dark.svg" class="dark-attach" /><img src="../../../assets/images/Paper-Plus-light.svg"
+                    class="light-attach" /></button>
+                <button type="button"
+                  class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"><img
+                    src="../../../assets/images/hashtag-dark.svg" class="dark-attach" /><img src="../../../assets/images/hashtag-light.svg"
+                    class="light-attach" /></button>
+              </div>
+              <div class="post-bot-right d-flex justify-content-end">
+                <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 delay-btn"><i
+                    class="fa-solid fa-clock"></i></button>
+                <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 lg_btn"><img
+                    src="../../../assets/images/Send-light.svg" class="me-2" /> Nov 15, 2022 at 14:30 </button>
+              </div>
+
+            </div> -->
+          </div>
+        </div>
+      </div>
+
+    <!-- </div>
+
+  </section> -->
+
+
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://phpcoder.tech/multiselect/js/jquery.multiselect.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+
+
+
+  <script>
+    $(document).ready(function () {
+      $(".next-step").click(function (e) {
+        var activeTab = $(".registerTabs .tab-pane.active");
+        activeTab.next().addClass("active");
+        activeTab.removeClass("active");
+        $(".step-icon .step1").addClass('finish');
+      });
+
+      $(".prev-step").click(function (e) {
+        var activeTab = $(".registerTabs .tab-pane.active");
+        activeTab.prev().addClass("active");
+        activeTab.removeClass("active");
+
+      });
+      $("#step2_btn").click(function () {
+        $("#create_school, .step-icon").addClass('d-none');
+      });
+
+    });
+
+
+  </script>
+  <script>
+    function readFile(input) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+          var htmlPreview =
+            '<img width="200" src="' + e.target.result + '" />' +
+            '<p>' + input.files[0].name + '</p>';
+          var wrapperZone = $(input).parent();
+          var previewZone = $(input).parent().parent().find('.preview-zone');
+          var boxZone = $(input).parent().parent().find('.preview-zone').find('.box').find('.box-body');
+
+          wrapperZone.removeClass('dragover');
+          previewZone.removeClass('hidden');
+          boxZone.empty();
+          boxZone.append(htmlPreview);
+        };
+
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    function reset(e) {
+      e.wrap('<form>').closest('form').get(0).reset();
+      e.unwrap();
+    }
+
+    $(".dropzone").change(function () {
+      readFile(this);
+    });
+
+    $('.dropzone-wrapper').on('dragover', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      $(this).addClass('dragover');
+    });
+
+    $('.dropzone-wrapper').on('dragleave', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      $(this).removeClass('dragover');
+    });
+
+    $('.remove-preview').on('click', function () {
+      var boxZone = $(this).parents('.preview-zone').find('.box-body');
+      var previewZone = $(this).parents('.preview-zone');
+      var dropzone = $(this).parents('.form-group').find('.dropzone');
+      boxZone.empty();
+      previewZone.addClass('hidden');
+      reset(dropzone);
+    });
+
+
+
+  </script>
+  <script>
+    jQuery('#languageSelect').multiselect({
+      columns: 1,
+      placeholder: 'Select Languages',
+      search: true
+    });
+  </script>
+  <script>
+    function openSearch() {
+      document.getElementById("search-overlay").style.display = "block";
+    }
+    function closeSearch() {
+      document.getElementById("search-overlay").style.display = "none";
+    }
+    function closeSidebar() {
+      document.getElementById("side-bar").style.display = "none";
+    }
+    function openSidebar() {
+      document.getElementById("side-bar").style.display = "block";
+    }
+  </script>

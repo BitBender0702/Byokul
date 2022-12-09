@@ -1129,7 +1129,7 @@
         </div>
         <div
           class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4">
-          <button #closeBtn id="closeBtn" type="button"
+          <button #closeEditModal id="closeBtn" type="button"
             class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
             data-bs-dismiss="modal">{{'DiscardChanges'| translate }}</button>
           <button (click)="updateUser()" type="button"
@@ -1153,18 +1153,21 @@
         <form [formGroup]="languageForm">
           <div class="form-group">
             <span class="p-fluid">
-            <p-autoComplete formControlName="languages" [forceSelection]="true" [size]="200" (onSelect)="captureLanguageId($event)" (onUnselect)="removeLanguage($event)" placeholder="{{'TypeLanguageToAdd'| translate }}" class="form-control w-100" 
+            <p-autoComplete formControlName="languages" [showEmptyMessage]="true" [emptyMessage]="'NoResultFound' | translate" [forceSelection]="true" [size]="200" (onSelect)="captureLanguageId($event)" (onUnselect)="removeLanguage($event)" placeholder="{{'TypeLanguageToAdd'| translate }}" class="form-control w-100" 
              [suggestions]="filteredLanguages" (completeMethod)="filterLanguages($event)" field="name" [multiple]="true">
             </p-autoComplete>
           </span>
           </div>
+          <small class="p-error" style="color: orange;margin-left: 200px;"
+          *ngIf="(isSubmitted && languageForm.controls.languages.errors)"> Please select atleast one language
+        </small>
           <div
           class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4">
-          <button type="button"
+          <button #closeLanguageModal type="button"
             class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
             data-bs-dismiss="modal">{{'DiscardChanges'| translate }}</button>
           <button (click)="saveUserLanguages()" type="button"
-            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step" data-bs-dismiss="modal">{{'Save'| translate }}</button>
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step">{{'Save'| translate }}</button>
         </div>
         </form>
       </div>

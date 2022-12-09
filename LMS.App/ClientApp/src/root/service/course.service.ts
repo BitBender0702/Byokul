@@ -16,10 +16,6 @@ export class CourseService{
     }
     
     createCourse(credentials:any): Observable<any> {
-        debugger;
-        for (var pair of credentials.entries()) {
-            console.log(pair[0]+ ', ' + pair[1]); 
-        }
         return this.http.post(`${this.apiUrl}/course/saveNewCourse`, credentials);
     }
 
@@ -45,6 +41,14 @@ export class CourseService{
 
     getAccessibility():Observable<any>{
         return this.http.get(`${this.apiUrl}/class/getAccessibility`);
+    }
+
+    getAllSchools(): Observable<any> {
+        return this.http.get(`${this.apiUrl}/school/getAllSchools`);
+    }
+
+    getSelectedSchool(schoolId:string): Observable<any> {
+        return this.http.get(`${this.apiUrl}/school/getBasicSchoolInfo` + '?schoolId=' + schoolId);
     }
 
 }

@@ -26,6 +26,9 @@ namespace LMS.Common.ViewModels.Post
         public IEnumerable<PostTagViewModel> PostTags { get; set; }
         public Guid ParentId { get; set; }
         public string? CoverLetter { get; set; }
+        public List<IFormFile> uploadImages { get; set; }
+        public List<IFormFile> uploadVideos { get; set; }
+        public List<IFormFile> uploadAttachments { get; set; }
 
     }
 }

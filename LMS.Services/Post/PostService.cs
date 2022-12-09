@@ -53,9 +53,25 @@ namespace LMS.Services
             _postRepository.Save();
             postViewModel.Id = post.Id;
 
-            if (postViewModel.PostAttachments.Count() != 0)
+            if (postViewModel.uploadImages.Count() != 0)
             {
-                await SavePostAttachments(postViewModel.PostAttachments, postViewModel.Id, createdById);
+                await SaveUploadImages(postViewModel.uploadImages, postViewModel.Id, createdById);
+
+                //await SavePostAttachments(postViewModel.PostAttachments, postViewModel.Id, createdById);
+            }
+
+            if (postViewModel.uploadVideos.Count() != 0)
+            {
+                await SaveUploadVideos(postViewModel.uploadVideos, postViewModel.Id, createdById);
+
+                //await SavePostAttachments(postViewModel.PostAttachments, postViewModel.Id, createdById);
+            }
+
+            if (postViewModel.uploadAttachments.Count() != 0)
+            {
+                await SaveUploadAttachments(postViewModel.uploadAttachments, postViewModel.Id, createdById);
+
+                //await SavePostAttachments(postViewModel.PostAttachments, postViewModel.Id, createdById);
             }
 
             if (postViewModel.PostTags.Count() != 0)
@@ -73,18 +89,19 @@ namespace LMS.Services
             return null;
         }
 
-        async Task SavePostAttachments(IEnumerable<IFormFile> postAttachments, Guid postId, string createdById)
+        async Task SaveUploadImages(IEnumerable<IFormFile> uploadImages, Guid postId, string createdById)
         {
-            string containerName = this._config.GetValue<string>("MyConfig:Container");
-            foreach (var attachment in postAttachments)
+            string containerName = "posts";
+            foreach (var image in uploadImages)
             {
                 var postAttachment = new PostAttachmentViewModel();
-                postAttachment.FileName = await _blobService.UploadFileAsync(attachment, containerName);
+                postAttachment.FileName = await _blobService.UploadFileAsync(image, containerName);
 
                 var postAttach = new PostAttachment
                 {
                     PostId = postId,
                     FileName = postAttachment.FileName,
+                    FileType = (int)FileTypeEnum.Image,
                     CreatedById = createdById,
                     CreatedOn = DateTime.UtcNow
                 };
@@ -93,6 +110,72 @@ namespace LMS.Services
                 _postAttachmentRepository.Save();
             }
         }
+
+        async Task SaveUploadVideos(IEnumerable<IFormFile> uploadVideos, Guid postId, string createdById)
+        {
+            string containerName = "posts";
+            foreach (var video in uploadVideos)
+            {
+                var postAttachment = new PostAttachmentViewModel();
+                postAttachment.FileName = await _blobService.UploadFileAsync(video, containerName);
+
+                var postAttach = new PostAttachment
+                {
+                    PostId = postId,
+                    FileName = postAttachment.FileName,
+                    FileType= (int)FileTypeEnum.Video,
+                    CreatedById = createdById,
+                    CreatedOn = DateTime.UtcNow
+                };
+
+                _postAttachmentRepository.Insert(postAttach);
+                _postAttachmentRepository.Save();
+            }
+        }
+
+        async Task SaveUploadAttachments(IEnumerable<IFormFile> uploadAttachments, Guid postId, string createdById)
+        {
+            string containerName = "posts";
+            foreach (var attachment in uploadAttachments)
+            {
+                var postAttachment = new PostAttachmentViewModel();
+                postAttachment.FileName = await _blobService.UploadFileAsync(attachment, containerName);
+
+                var postAttach = new PostAttachment
+                {
+                    PostId = postId,
+                    FileName = postAttachment.FileName,
+                    FileType = (int)FileTypeEnum.Attachment,
+                    CreatedById = createdById,
+                    CreatedOn = DateTime.UtcNow
+                };
+
+                _postAttachmentRepository.Insert(postAttach);
+                _postAttachmentRepository.Save();
+            }
+        }
+
+
+        //async Task SavePostAttachments(IEnumerable<IFormFile> postAttachments, Guid postId, string createdById)
+        //{
+        //    string containerName = 'posts';
+        //    foreach (var attachment in postAttachments)
+        //    {
+        //        var postAttachment = new PostAttachmentViewModel();
+        //        postAttachment.FileName = await _blobService.UploadFileAsync(attachment, containerName);
+
+        //        var postAttach = new PostAttachment
+        //        {
+        //            PostId = postId,
+        //            FileName = postAttachment.FileName,
+        //            CreatedById = createdById,
+        //            CreatedOn = DateTime.UtcNow
+        //        };
+
+        //        _postAttachmentRepository.Insert(postAttach);
+        //        _postAttachmentRepository.Save();
+        //    }
+        //}
 
         async Task SavePostTags(IEnumerable<PostTagViewModel> postTagViewModel, Guid postId)
         {

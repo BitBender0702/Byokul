@@ -80,4 +80,12 @@ export class ClassService{
         return this.http.post(`${this.apiUrl}/class/updateClass`, credentials);
     }
 
+    getAllSchools(): Observable<any> {
+        return this.http.get(`${this.apiUrl}/school/getAllSchools`);
+    }
+
+    getSelectedSchool(schoolId:string): Observable<any> {
+        return this.http.get(`${this.apiUrl}/school/getBasicSchoolInfo` + '?schoolId=' + schoolId);
+    }
+
 }

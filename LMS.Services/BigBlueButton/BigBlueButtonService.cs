@@ -63,7 +63,7 @@ namespace LMS.Services.BigBlueButton
                 string joinModeratorUrl = "join?fullName=" + fullName + "&meetingID=" + meetingId + "&password=" + moderatorPW + "&redirect=true" + "&checksum=" + joinchecksum;
 
                 string joinFinalUrl = baseUrl + joinModeratorUrl;
-                var res = await RegisterWebHook(meetingId);
+                //var res = await RegisterWebHook(meetingId);
 
                 return joinFinalUrl;
             }
@@ -92,7 +92,7 @@ namespace LMS.Services.BigBlueButton
 
         public async Task<bool> RegisterWebHook(string meetingID)
         {
-            string CallBackUrl = "http://localhost:44472/bigBlueButton/callBack";
+            string CallBackUrl = "https://203e-122-160-143-16.ngrok.io/bigBlueButton/callBack";
             CallBackUrl = await EncodeUrl(CallBackUrl);
 
             string baseUrl = this._config.GetValue<string>("BigBlueButtonAPISettings:ServerAPIUrl");
@@ -100,11 +100,11 @@ namespace LMS.Services.BigBlueButton
             string secretKey = this._config.GetValue<string>("BigBlueButtonAPISettings:SharedSecret");
 
 
-            string webHookChecksum = "hooks/createcallbackURL=" + CallBackUrl + "&meetingID=" + meetingID + "&eventID=rap-post-publish-ended" + "&getRaw=false" + secretKey;
+            string webHookChecksum = "hooks/createcallbackURL=" + CallBackUrl + "&meetingID=" + meetingID + "&eventID=rap-publish-ended" + "&getRaw=false" + secretKey;
 
             string webHookchecksum = Hash(webHookChecksum);
 
-            string webhookUrl = "hooks/create?callbackURL=" + CallBackUrl + "&meetingID=" + meetingID + "&eventID=rap-post-publish-ended" + "&getRaw=false" + "&checksum=" + webHookchecksum;
+            string webhookUrl = "hooks/create?callbackURL=" + CallBackUrl + "&meetingID=" + meetingID + "&eventID=rap-publish-ended" + "&getRaw=false" + "&checksum=" + webHookchecksum;
 
             var clients = new HttpClient();
             clients.BaseAddress = new Uri(baseUrl);
@@ -123,6 +123,7 @@ namespace LMS.Services.BigBlueButton
             string secretKey = this._config.GetValue<string>("BigBlueButtonAPISettings:SharedSecret");
             model.MeetingId = await EncodeUrl(model.MeetingId);
             model.Name = await EncodeUrl(model.Name);
+            //model.UserId
             string getMeetingInfoCheckSum = "getMeetingInfomeetingID=" + model.MeetingId + secretKey;
 
             string getInfoChecksum = Hash(getMeetingInfoCheckSum);

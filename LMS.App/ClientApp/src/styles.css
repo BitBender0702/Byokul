@@ -1,6 +1,7 @@
 html {
-    overflow-x: hidden;
+	overflow-x: hidden;
 }
+
 body {
 	font-family: 'Montserrat', sans-serif;
 	font-weight: 400;
@@ -56,7 +57,7 @@ img {
 }
 
 .text_dark {
-	color: #313131;
+	color: #313131 !important;
 }
 
 .text_secondary {
@@ -71,6 +72,10 @@ img {
 	color: #151718;
 }
 
+.danger_text {
+	color: #FF1C1C !important;
+}
+
 .fw_300 {
 	font-weight: 300 !important;
 }
@@ -79,12 +84,20 @@ img {
 	font-weight: 400 !important;
 }
 
+.fw_500 {
+	font-weight: 500 !important;
+}
+
 .fw_600 {
 	font-weight: 600 !important;
 }
 
 .fw_700 {
 	font-weight: 700 !important;
+}
+
+.font_10 {
+	font-size: 10px;
 }
 
 .font_12 {
@@ -126,9 +139,11 @@ img {
 a.text_dark:hover {
 	color: #ff991c;
 }
-.minw-auto{
+
+.minw-auto {
 	min-width: auto;
 }
+
 .form-control,
 select.form-select,
 .custom-language-select .ms-options-wrap>button {
@@ -145,7 +160,7 @@ select.form-select,
 }
 
 .custom-language-select .ms-options-wrap>button {
-	background-image: url(../../ClientApp/src/assets/images/school/chevron-down-1.svg);
+	background-image: url(../src/assets/images/school/chevron-down-1.svg);
 	background-repeat: no-repeat;
 	background-position: right 0.9rem center;
 	background-size: 11px;
@@ -259,6 +274,51 @@ ul li:before {
 	margin-bottom: 32px;
 }
 
+/* Hide Calendar Icon In Chrome */
+input[type="date"]::-webkit-inner-spin-button,
+input[type="date"]::-webkit-calendar-picker-indicator {
+	opacity: 0;
+	-webkit-appearance: none;
+}
+
+input[type=date] {
+	background-image: url(../src/assets/images/Calendar.svg);
+	background-repeat: no-repeat;
+	background-position: center right 16px;
+}
+
+/*--- CSS for scroll bar issue---*/
+:-webkit-scrollbar {
+	width: 7px;
+	height: 8px;
+}
+
+:-webkit-scrollbar-track {
+	background: transparent;
+}
+
+:-webkit-scrollbar-thumb {
+	background-color: #c7c7c7;
+	border-radius: 0;
+	border: 0px solid transparent;
+	background-color: #000;
+}
+
+::-webkit-scrollbar {
+	height: 8px;
+	border-radius: 0;
+	background-clip: padding-box;
+	border: 0px solid transparent;
+	width: 7px;
+	background-color: #E5E5E5;
+}
+
+::-webkit-scrollbar-thumb {
+	box-shadow: inset 0 0 0 10px #7C8DA7;
+}
+
+/*--- CSS for scroll bar issue---*/
+
 /*---- Regsiter page css ----*/
 .back-step {
 	margin-bottom: 70px;
@@ -268,7 +328,7 @@ ul li:before {
 .register-section {
 	border: 2px solid #FFFFFF;
 	padding: 32px 32px 100px;
-	background: url(../../ClientApp/src/assets/images/register-bg.svg) no-repeat;
+	background: url(../src/assets/images/register-bg.svg) no-repeat;
 	background-size: cover;
 	min-height: calC(100vh - 100px);
 }
@@ -403,7 +463,7 @@ h3.subhead-btn {
 
 .sidemenu .accordion-button::after {
 	position: absolute;
-	background: url(../../ClientApp/src/assets/images/school/chevron-down.svg) no-repeat;
+	background: url(../src/assets/images/school/chevron-down.svg) no-repeat;
 	transition: 0.3s all;
 	left: 0;
 	top: 50%;
@@ -418,7 +478,8 @@ h3.subhead-btn {
 	outline: none !important;
 }
 
-.accordion-button:not(.collapsed)::after {
+
+.accordion-button[aria-expanded="true"]::after {
 	transform: translateY(-50%) rotate(0deg);
 }
 
@@ -454,7 +515,7 @@ hr.earning-hr {
 
 .sidemenu .accordion-header {
 	position: relative;
-	padding: 13px 32px 13px 0;
+	padding: 0px 32px 0px 0;
 }
 
 .sidemenu .accordion-header .add-btn {
@@ -485,8 +546,10 @@ hr.earning-hr {
 }
 
 .live-image {
-	margin-bottom: 26px;
-	box-shadow: 0px 4px 20px rgb(0 0 0 / 5%);
+    box-shadow: 0px 4px 20px rgb(0 0 0 / 5%);
+    width: 100%;
+    max-width: 860px;
+    margin: 0 auto 26px;
 }
 
 button.live_chats {
@@ -495,12 +558,12 @@ button.live_chats {
 	background: #FFFFFF;
 	padding: 8px 12px;
 	position: absolute;
-	left: 24px;
-	top: 40px;
+	right: 25px;
+	top: 25px;
 }
 
 button.live_chats .chat-gray-icon {
-	margin-left: 13px;
+	margin-right: 13px;
 	margin-top: -5px;
 }
 
@@ -531,10 +594,10 @@ button.live_chats .live-chat-back {
 }
 
 .accordion-open {
-	min-width: 414px;
-	padding: 32px 36px;
-	border-right: 1px solid #F1F7FF;
-	margin-right: 16px;
+    min-width: 414px;
+    padding: 32px 36px;
+    border-left: 1px solid #F1F7FF;
+    margin-left: 16px;
 }
 
 .pinned-chat {
@@ -544,9 +607,9 @@ button.live_chats .live-chat-back {
 }
 
 .live-chat-box {
-	padding: 32px 32px 32px 50px;
-	background: #FCFCFC;
-	margin: 0 -36px -50px -52px;
+    padding: 32px 32px 32px 50px;
+    background: #FCFCFC;
+    margin: 0 -52px -50px -36px;
 }
 
 .live-message {
@@ -833,13 +896,15 @@ input[type=number]::-webkit-outer-spin-button {
 	left: 20px;
 }
 
-.student-input input {
-	padding-left: 100px;
-}
+
 
 .date-input input,
 .student-input select {
 	padding-left: 66px;
+}
+
+.student-input input {
+	padding-left: 100px;
 }
 
 .finish-date input {
@@ -997,6 +1062,8 @@ input[type=number]::-webkit-outer-spin-button {
 	border: 1px solid #FAFAFA;
 	background: #FAFAFA;
 	color: #7C8DA7;
+	transition: 0.2s all;
+	position: relative;
 }
 
 .vr-border {
@@ -1092,12 +1159,12 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .school-gridprofile-icon {
-    margin-right: 16px;
-    width: 40.59px;
-    height: 40.59px;
-    border-radius: 50%;
-    overflow: hidden;
-    min-width: 40.59px;
+	margin-right: 16px;
+	width: 40.59px;
+	height: 40.59px;
+	border-radius: 50%;
+	overflow: hidden;
+	min-width: 40.59px;
 }
 
 .schoolgrid-header h2 {
@@ -1193,7 +1260,7 @@ input[type=number]::-webkit-outer-spin-button {
 	margin-bottom: 16px;
 }
 
-.list-schol-profile .accordion>.row>div {
+.list-schol-profile>.row>div {
 	margin-bottom: 16px;
 }
 
@@ -1203,6 +1270,367 @@ input[type=number]::-webkit-outer-spin-button {
 
 .medium_thumbox {
 	flex-flow: column;
+}
+
+
+.school-grid-footer.preview-right-action {
+	display: flex;
+	flex-flow: column;
+	position: absolute;
+	right: 10px;
+	z-index: 9;
+	bottom: -18px;
+}
+
+.preview-right-action button {
+	padding: 0;
+	margin-bottom: 13px;
+}
+
+.preview-right-action .function-btns img {
+	max-height: 16px;
+}
+
+.preview-right-action button {
+	padding: 0;
+	margin-bottom: 13px;
+	font-size: 14px;
+}
+
+.class-preview-right {
+	padding-right: 60px;
+}
+
+.class-preview-right .hashtag_box {
+	margin-top: 20px;
+}
+
+
+.school-grid-footer.preview-right-action {
+	display: flex;
+	flex-flow: column;
+	position: absolute;
+	right: 10px;
+	z-index: 9;
+	bottom: -10px;
+}
+
+.close-preview {
+	position: absolute;
+	right: 16px;
+}
+
+.edit-sprofilebtn {
+	background: rgba(124, 141, 167, 0.05) !important;
+	border-radius: 32px;
+	padding: 8px 16px;
+	position: absolute;
+	right: 0;
+	top: 0;
+	transition: 0.4s all;
+	opacity: 0;
+}
+
+.edit-sprofilebtn:hover {
+	background: rgb(124 141 167 / 33%) !important;
+}
+
+.edit-profilehover:hover .edit-sprofilebtn {
+	opacity: 1;
+}
+
+/*---- Modal css start here  ---*/
+.modal-header .btn-close {
+	position: absolute;
+}
+
+.edit-school-modal .modal-dialog {
+	max-width: 700px;
+}
+
+.edit-school-modal .modal-content {
+	background: #FFFFFF;
+	border: 1px solid #F1F7FF;
+	box-shadow: 0px 4px 20px rgb(0 0 0 / 5%);
+	border-radius: 16px
+}
+
+.edit-school-modal .modal-header {
+	padding: 30px 20px 15px;
+}
+
+.modal-header .btn-close {
+	position: absolute;
+	background: none;
+	top: 60%;
+	right: 35px;
+	padding: 0;
+	opacity: 1;
+	transform: translateY(-50%);
+}
+
+.modal-school-icon {
+	border: 2px solid #DEE0E3;
+	width: 200px;
+	height: 200px;
+	margin: 0 auto;
+}
+
+.text-line-border:before {
+	content: "";
+	width: 100%;
+	height: 1px;
+	background: #F5F5F5;
+	position: absolute;
+	left: 0;
+	top: 56%;
+	transform: translateY(-50%);
+}
+
+.line-text {
+	background-color: #fff;
+	display: inline-block;
+	position: relative;
+	z-index: 999;
+	padding: 0 5px;
+}
+
+textarea.ht_96 {
+	height: 96px;
+}
+
+.resize-none {
+	resize: none;
+}
+
+.hover-tags .custom-tag:hover {
+	background: #7C8DA7;
+	color: #FAFAFA;
+	padding-right: 20px;
+	cursor: pointer;
+}
+
+.hover-tags .custom-tag .delete-tag {
+	display: nonw;
+}
+
+.hover-tags .custom-tag:hover .delete-tag {
+	display: block;
+	top: 3px;
+	right: 7px;
+}
+
+.owner-input select {
+	padding-left: 84px;
+}
+
+.edit-school-modal .modal-body,
+.edit-school-modal .modal-header,
+.edit-school-modal .modal-footer {
+	padding-left: 32px;
+	padding-right: 32px;
+}
+
+.grid-active,
+.list-active {
+	display: block !important;
+}
+
+.cost_theme {
+	color: #FF821C;
+	margin-right: 8px;
+}
+
+.payment-profile {
+	padding: 4px 16px;
+	background: #FAFAFA;
+	border-radius: 16px;
+}
+
+.classes-grid {
+	border-radius: 4px;
+}
+
+.classes-grid .school-large-thumbnail {
+	height: 28vh !important;
+}
+
+.classes-grid .school-grid-footer.above-thumbnail {
+	position: absolute;
+	bottom: 0px;
+	z-index: 9;
+}
+
+.classes-grid .function-btns {
+	padding: 16px 23px;
+}
+
+.start-date {
+	color: #FF1C1C;
+}
+
+.language-tag .custom-tag {
+	border: 1px solid #FAFAFA;
+}
+
+.School-prof-header .user-profile-header {
+	width: 102px;
+	height: 102px;
+	min-width: 102px;
+}
+
+.minw-142 {
+	min-width: 142px;
+}
+
+.School-prof-header .class-course-image {
+	width: 150px;
+	height: 150px;
+	min-width: 150px;
+}
+
+.univ-logo {
+	position: absolute;
+	right: 54px;
+	top: 0;
+}
+
+.class_request {
+	max-width: 750px;
+}
+
+.sepearator {
+	color: #F5F5F5;
+	margin: 0 24px;
+}
+
+.button-stroage {
+	padding: 8px 24px;
+	background: rgba(124, 141, 167, 0.05) !important;
+	border-radius: 32px;
+}
+
+.schoolgrid-header .live-soon {
+	margin: 0 46px;
+}
+
+.class-icon-profile {
+	width: 150px;
+	height: 150px;
+	overflow: hidden;
+}
+
+.latest-form label {
+	margin-left: 10px;
+	color: #464E5F;
+}
+
+.latest-form .form-group {
+	margin-bottom: 10px;
+}
+
+.post-attch-btn {
+	width: 40px;
+	height: 40px;
+	min-width: 40px;
+	border: 1px solid #fafafa;
+	background: #fff;
+	transition: 0.3s all;
+	margin-right: 16px;
+	font-size: 12px;
+}
+
+.media-sourcebtn button img {
+	display: block;
+}
+
+.post-attch-btn .light-attach {
+	display: none;
+}
+
+body .liv-postbtn .post-attch-btn {
+	margin-right: 0;
+}
+
+body .liv-postbtn .post-attch-btn:hover,
+body .liv-postbtn .post-attch-btn.active,
+.post-attch-btn.active,
+.post-attch-btn:hover {
+	background: #FF7E1C;
+	color: #fff !important;
+}
+
+.post-attch-btn:hover .light-attach,
+.post-attch-btn.active .light-attach {
+	display: block;
+}
+
+.post-attch-btn:hover .dark-attach,
+.post-attch-btn.active .dark-attach {
+	display: none;
+}
+
+.post-bot-right .lg_btn {
+	max-width: 302px;
+	position: relative;
+	width: 250px !important;
+}
+
+.post-bot-right .delay-btn {
+	width: 60px !important;
+	background: #FFF0E5;
+	color: #FF801C !important;
+	font-size: 20px;
+	position: relative;
+	right: -6px;
+	z-index: 0;
+	border-radius: 8px 0px 0px 8px;
+}
+
+.liv-postbtn .post-attch-btn {
+	padding: 8px 10px;
+	width: auto;
+	border-radius: 32px;
+	color: #7C8DA7;
+}
+
+.dl-post-img {
+	background: rgba(159, 159, 159, 0.6) !important;
+	width: 25px;
+	height: 25px;
+	color: #fff !important;
+	font-size: 13px;
+	right: 12px;
+	top: 12px;
+}
+
+.hashtag_post .custom-tag {
+	border: 1px solid #FAFAFA;
+	background: #fff;
+}
+
+.liv-postbtn .post-attch-btn img {
+	margin-right: 9px;
+}
+
+.liv-postbtn {
+	position: absolute;
+	left: 32px;
+}
+
+.web-cmbtn {
+	width: 100%;
+	border: 1px solid #fafafa;
+	border-radius: 8px;
+	height: 82px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex-wrap: wrap;
+}
+
+.web-cmbtn:hover {
+	border: 1px solid #fafafa;
 }
 
 @media screen and (min-width:1200px) {
@@ -1359,7 +1787,6 @@ input[type=number]::-webkit-outer-spin-button {
 	
 
 }
-
 
 
 /* For primeNg multiselect style*/

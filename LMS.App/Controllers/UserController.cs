@@ -20,10 +20,18 @@ namespace LMS.App.Controllers
         }
 
         [Route("getUser")]
-        [HttpPost]
-        public async Task<IActionResult> GetUser(string userId)
+        [HttpGet]
+        public async Task<IActionResult> GetUser(string? userId)
         {
             var response = await _userService.GetUserById(userId);
+            return Ok(response);
+        }
+
+        [Route("getUserEditDetails")]
+        [HttpGet]
+        public async Task<IActionResult> GetUserEditDetails(string userId)
+        {
+            var response = await _userService.GetUserEditDetails(userId);
             return Ok(response);
         }
 
@@ -32,34 +40,38 @@ namespace LMS.App.Controllers
         public async Task<IActionResult> SaveUserFollower(string userId)
         {
             var followerId = await GetUserIdAsync(this._userManager);
-            await _userService.SaveUserFollower(userId, followerId);
-            return Ok("success");
+            var response = await _userService.SaveUserFollower(userId, followerId);
+            if (response)
+            {
+                return Ok(new { result = "success" });
+            }
+            return Ok(new { result = "failed" });
         }
 
         [Route("saveUserLanguages")]
         [HttpPost]
         public async Task<IActionResult> SaveUserLanguages([FromBody] UserLanguageViewModel userLanguageViewModel)
         {
-            userLanguageViewModel.UserId = await GetUserIdAsync(this._userManager);
+            //userLanguageViewModel.UserId = await GetUserIdAsync(this._userManager);
             await _userService.SaveUserLanguages(userLanguageViewModel);
-            return Ok("success");
+            return Ok();
         }
 
         [Route("deleteUserLanguage")]
         [HttpPost]
         public async Task<IActionResult> DeleteUserLanguage([FromBody] UserLanguageDeleteViewModel model)
         {
-            model.UserId = await GetUserIdAsync(this._userManager);
+            //model.UserId = await GetUserIdAsync(this._userManager);
             await _userService.DeleteUserLanguage(model);
-            return Ok("success");
+            return Ok();
         }
 
         [Route("updateUser")]
         [HttpPost]
-        public async Task<IActionResult> UpdateUser([FromBody] UserUpdateViewModel userUpdateViewModel)
+        public async Task<IActionResult> UpdateUser(UserUpdateViewModel userUpdateViewModel)
         {
-            await _userService.UpdateUser(userUpdateViewModel);
-            return Ok("success");
+            string userId = await _userService.UpdateUser(userUpdateViewModel);
+            return Ok(new { userId = userId });
         }
 
         [Route("countryList")]
@@ -75,6 +87,28 @@ namespace LMS.App.Controllers
         {
             return Ok(await _userService.CityList(countryId));
         }
+
+        [Route("myFeed")]
+        [HttpGet]
+        public async Task<IActionResult> MyFeed()
+        {
+            var userId = await GetUserIdAsync(this._userManager);
+            return Ok(await _userService.GetMyFeed(userId));
+        }
+
+        [Route("userProfileFeed")]
+        [HttpGet]
+        public async Task<IActionResult> UserProfileFeed(string userId)
+        {
+            return Ok(await _userService.GetUserProfileFeed(userId));
+        }
+
+        //[Route("userFollowers")]
+        //[HttpGet]
+        //public async Task<IActionResult> UserFollowers(string userId)
+        //{
+        //    return Ok(await _userService.GetUserFollowers(userId));
+        //}
 
     }
 }

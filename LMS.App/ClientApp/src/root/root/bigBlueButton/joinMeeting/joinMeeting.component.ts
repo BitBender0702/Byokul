@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { JoinMeetingModel } from 'src/root/interfaces/bigBlueButton/joinMeeting';
-import { StudentsService } from 'src/root/school_StudentsModule/services/students.service';
+import { StudentsService } from 'src/root/userModule/services/students.service';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({

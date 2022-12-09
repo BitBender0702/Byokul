@@ -11,23 +11,32 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
 using System.Diagnostics;
+using Microsoft.AspNetCore.SignalR;
+using LMS.Common.ViewModels.HubConfig;
+using LMS.Services.Common;
 
 namespace LMS.App.Controllers
 {
     [Route("bigBlueButton")]
-    public class BigBlueButtonController : Controller
+    public class BigBlueButtonController : ControllerBase
     {
         private IConfiguration _config;
         private readonly IBigBlueButtonService _bigBlueButtonService;
         private readonly IBlobService _blobService;
         private const string JsonArrayNamespace = "http://james.newtonking.com/projects/json";
         private readonly IWebHostEnvironment _webHostEnvironment;
-        public BigBlueButtonController(IConfiguration config, IBigBlueButtonService bigBlueButtonService, IBlobService blobService, IWebHostEnvironment webHostEnvironment)
+        private readonly ICommonService _commonService;
+        private readonly IHubContext<ChartHub> _hub;
+        private readonly TimerManager _timer;
+        public BigBlueButtonController(IConfiguration config, IBigBlueButtonService bigBlueButtonService, IBlobService blobService, IWebHostEnvironment webHostEnvironment, ICommonService commonService, IHubContext<ChartHub> hub, TimerManager timer)
         {
             _config = config;
             _bigBlueButtonService = bigBlueButtonService;
             _blobService = blobService;
             _webHostEnvironment = webHostEnvironment;
+            _commonService = commonService;
+            _hub = hub;
+            _timer = timer;
         }
 
         [Route("create")]
@@ -56,9 +65,18 @@ namespace LMS.App.Controllers
 
             var obj = JsonConvert.DeserializeObject<List<MyArray>>(result);
 
-            if (obj.First().data.id == "rap-post-publish-ended")
+            if (obj.First().data.id == "rap-publish-ended")
             {
                 var meetingID = obj.First().data.attributes.meeting.InternalMeetingId;
+
+
+                if (!_timer.IsTimerStarted)
+                {
+                    _timer.PrepareTimer(() => _hub.Clients.All.SendAsync("TransferChartData", DataManager.GetData()));
+                    return Ok(new { Message = "Request Completed" });  
+                }
+                //var res = _hub.Clients.All.SendAsync("transferchartdata", DataManager.GetData());
+ 
                 string recordingUrl = string.Format(_config["RecordingUrl"], meetingID);
 
                 string fileName = meetingID + "File.mp4";
@@ -120,6 +138,32 @@ namespace LMS.App.Controllers
             }
 
             return Ok();
+        }
+
+        [Route("mergeVideo")]
+        [HttpPost]
+        public async Task<IActionResult> MergeVideo(string meetingID)
+        {
+            string recordingUrl = string.Format(_config["RecordingUrl"], meetingID);
+            string fileName = meetingID + "File";
+            byte[] videoData;
+            try
+            {
+                var wc = new System.Net.WebClient();
+                videoData = wc.DownloadData(recordingUrl);
+                var stream = new MemoryStream(videoData);
+
+                var compressedVideo = await _commonService.CompressVideo(meetingID,fileName, videoData);
+
+
+                string containerName = this._config.GetValue<string>("MyConfig:Container");
+                string videoUrl = await _blobService.UploadVideoAsync(compressedVideo, containerName, fileName, "mp4");
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
     }

@@ -2,11 +2,12 @@ import { Component, Injector, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { HttpClient, HttpEventType, HttpHeaders } from "@angular/common/http";
 import {MenuItem} from 'primeng/api';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MultilingualComponent } from '../../sharedModule/Multilingual/multilingual.component';
 import { CreateClassModel } from 'src/root/interfaces/class/createClassModel';
 import { ClassService } from 'src/root/service/class.service';
 import { FilterService } from "primeng/api";
+import { IfStmt } from '@angular/compiler';
 
 @Component({
   selector: 'students-Home',
@@ -50,16 +51,32 @@ export class CreateClassComponent extends MultilingualComponent implements OnIni
   loadingIcon:boolean = false;
   isStepCompleted: boolean = false;
   currentDate!:string;
+  fromSchoolProfile!:string;
+  schools:any;
+  selectedSchool:any;
 
 
-  constructor(injector: Injector,private router: Router,private fb: FormBuilder,classService: ClassService,private http: HttpClient) {
+  constructor(injector: Injector,private route: ActivatedRoute,private router: Router,private fb: FormBuilder,classService: ClassService,private http: HttpClient) {
     super(injector);
     this._classService = classService;
   }
 
   ngOnInit(): void {
+    
+    var id = this.route.snapshot.paramMap.get('id');
+    this.fromSchoolProfile = id ?? '';
+
+    if(this.fromSchoolProfile == ''){
+      this.getSchoolsForDropdown();
+    }
+
+    if(this.fromSchoolProfile != ''){
+      this.getSelectedSchool(this.fromSchoolProfile);
+    }
 
     this.loadingIcon = true;
+
+   
 
     this.selectedLanguage = localStorage.getItem("selectedLanguage");
     this.translate.use(this.selectedLanguage);
@@ -95,28 +112,11 @@ export class CreateClassComponent extends MultilingualComponent implements OnIni
     this.createClassForm1.controls['accessibilityId'].setValue(this.accessibility[0].id, {onlySelf: true});
   });
 
-  // this.createClassForm = this.fb.group({
-  //     schoolId: this.fb.control('C65DDBF5-42F5-496D-CFF7-08DA9CA1C8A0', [Validators.required]),
-  //     className: this.fb.control('', [Validators.required]),
-  //     description: this.fb.control(''),
-  //     noOfStudents: this.fb.control(''),
-  //     startDate: this.fb.control(''),
-  //     endDate: this.fb.control(''),
-  //     serviceTypeId: this.fb.control(''),
-  //     accessibilityId: this.fb.control(''),
-  //     languageIds:this.fb.control(''),
-  //     classUrl: this.fb.control(''),
-  //     disciplineIds:this.fb.control(''),
-  //     studentIds:this.fb.control(''),
-  //     teacherIds:this.fb.control(''),
-  //     price:this.fb.control('')
-
-  // });
-
   this.currentDate = this.getCurrentDate();
 
   this.createClassForm1 = this.fb.group({
-    schoolId: this.fb.control('C65DDBF5-42F5-496D-CFF7-08DA9CA1C8A0', [Validators.required]),
+    schoolId: this.fb.control('', [Validators.required]),
+    schoolName: this.fb.control(''),
     className: this.fb.control('', [Validators.required]),
     description: this.fb.control(''),
     noOfStudents: this.fb.control('',[Validators.required]),
@@ -139,6 +139,22 @@ this.createClassForm2 = this.fb.group({
 this.createClassForm3 = this.fb.group({
   classUrl: this.fb.control('',[Validators.required])
 });
+}
+
+getSchoolsForDropdown(){
+  this._classService.getAllSchools().subscribe((response) => {
+    this.schools = response;
+    this.createClassForm1.controls['schoolId'].setValue(this.schools[0].schoolId, {onlySelf: true});
+  });  
+}
+
+getSelectedSchool(schoolId:string){
+  this._classService.getSelectedSchool(schoolId).subscribe((response) => {
+    this.selectedSchool = response;
+    this.createClassForm1.controls['schoolId'].setValue(this.selectedSchool.schoolId, {onlySelf: true});
+    this.createClassForm1.controls['schoolName'].setValue(this.selectedSchool.schoolName, {onlySelf: true});
+
+  });  
 }
 
 
@@ -166,14 +182,12 @@ var today = new Date();
 
 
 captureStudentId(event: any) {
-  debugger
   var studentId = event.studentId;
   this.studentIds.push(studentId);
   this.studentInfo.push(event);
 }
 
 captureDisciplineId(event: any) {
-  debugger
   var disciplineId = event.id;
   this.disciplineIds.push(disciplineId);
   this.disciplineInfo.push(event);
@@ -197,7 +211,6 @@ captureTeacherId(event: any) {
   }
 
   createClass(){
-    debugger
     this.isSubmitted=true;
     if (!this.createClassForm3.valid) {
       return;
@@ -205,23 +218,6 @@ captureTeacherId(event: any) {
 
     var step3Value =this.createClassForm3.value;
     this.fileToUpload.append('classUrl',JSON.stringify(step3Value.classUrl));
-
-    
-    // this.fileToUpload.append('schoolId', this.class.schoolId);
-    // this.fileToUpload.append('className', this.class.className);
-    // this.fileToUpload.append('description', this.class.description);
-    // this.fileToUpload.append('noOfStudents',this.class.noOfStudents);
-    // this.fileToUpload.append('startDate',this.class.startDate);
-    // this.fileToUpload.append('endDate',this.class.endDate);
-    // this.fileToUpload.append('serviceTypeId',this.class.serviceTypeId);
-    // this.fileToUpload.append('accessibilityId',this.class.accessibilityId);
-    //  this.fileToUpload.append('classUrl',JSON.stringify(this.class.classUrl));
-    // this.fileToUpload.append('languageIds',JSON.stringify(this.class.languageIds));
-    // this.fileToUpload.append('disciplineIds',JSON.stringify(this.disciplineIds));
-    // this.fileToUpload.append('studentIds',JSON.stringify(this.studentIds));
-    // this.fileToUpload.append('teacherIds',JSON.stringify(this.teacherIds));
-    // this.fileToUpload.append('price',this.class.price.toString());
-
 
     this._classService.createClass(this.fileToUpload).subscribe((response:any) => {
       var classId =  response;
@@ -235,20 +231,10 @@ captureTeacherId(event: any) {
   }
 
   forwardStep() {
-    debugger
     this.isStepCompleted = true;
     if (!this.createClassForm1.valid || this.uploadImageName == undefined) {
       return;
     }
-
-    // const startDate = Date.parse(this.createClassForm1.get('startDate')?.value);
-    // const enddate = Date.parse(this.createClassForm1.get('endDate')?.value);
-
-    // if(startDate >= enddate){
-    //   this.createClassForm1.setErrors({ inValidDate: true });
-    //   return;
-
-    // }
 
     var schoolId = this.createClassForm1.get('schoolId')?.value;
     this.class=this.createClassForm1.value;
@@ -275,9 +261,7 @@ captureTeacherId(event: any) {
   }
 
   forwardStep2() {
-    debugger
     this.isStepCompleted = true;
-
     this.fileToUpload.append('disciplineIds',JSON.stringify(this.disciplineIds));
     this.fileToUpload.append('studentIds',JSON.stringify(this.studentIds));
     this.fileToUpload.append('teacherIds',JSON.stringify(this.teacherIds));
@@ -326,7 +310,6 @@ captureTeacherId(event: any) {
   }
 
   getFreeClass(){
-    debugger
     this.isClassPaid = false;
     this.createClassForm1.get('price')?.removeValidators(Validators.required);
     this.createClassForm1.patchValue({
@@ -353,7 +336,6 @@ captureTeacherId(event: any) {
   }
 
   removeTeacher(event: any){
-    debugger
     const teacherIndex = this.teacherInfo.findIndex((item) => item.teacherId === event.teacherId);
     if (teacherIndex > -1) {
       this.teacherInfo.splice(teacherIndex, 1);
@@ -367,7 +349,6 @@ captureTeacherId(event: any) {
   }
 
   removeStudent(event: any){
-    debugger
     const studentIndex = this.studentInfo.findIndex((item) => item.studentId === event.studentId);
     if (studentIndex > -1) {
       this.studentInfo.splice(studentIndex, 1);
@@ -380,7 +361,6 @@ captureTeacherId(event: any) {
   }
 
   removeDiscipline(event: any){
-    debugger
     const disciplineIndex = this.disciplineInfo.findIndex((item) => item.id === event.id);
     if (disciplineIndex > -1) {
       this.disciplineInfo.splice(disciplineIndex, 1);

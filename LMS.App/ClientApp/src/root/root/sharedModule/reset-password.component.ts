@@ -18,6 +18,7 @@ export class ResetPasswordComponent extends MultilingualComponent implements OnI
     resetPasswordForm!:FormGroup;
     isSubmitted: boolean = false;
     user: any;
+    loadingIcon:boolean = false;
     
   private _authService;
     constructor(injector: Injector,private fb: FormBuilder,private router: Router, authService:AuthService, private route:ActivatedRoute) { 
@@ -31,17 +32,39 @@ export class ResetPasswordComponent extends MultilingualComponent implements OnI
 
     ngOnInit(): void {
 
+      const passwordValidators = [
+        Validators.minLength(6),
+        Validators.required,
+      ];
+
       this.resetPasswordForm = this.fb.group({
-        newPassword: this.fb.control('', [Validators.required]),
-        confirmPassword: this.fb.control('', [Validators.required])
+        newPassword: this.fb.control('', [...passwordValidators]),
+        confirmPassword: this.fb.control('', [...passwordValidators])
       });
 
+    }
+
+    get newPassword() { return this.resetPasswordForm.get('newPassword'); }
+    get confirmPassword() { return this.resetPasswordForm.get('confirmPassword'); }
+
+    matchPassword(){
+      if(this.newPassword?.value!=this.confirmPassword?.value){
+        return true;
+      }
+      else 
+      return false
+    
     }
 
     resetPassword(){
       this.isSubmitted = true;
       if (!this.resetPasswordForm.valid) {
         return;}
+
+        if(this.matchPassword()){
+          return;
+        }
+      this.loadingIcon = true;
       this.user = this.resetPasswordForm.value;
       this.user.passwordResetToken = this.route.snapshot.paramMap.get('id');
       this._authService.resetPassword(this.user).subscribe({ 

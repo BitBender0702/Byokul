@@ -22,9 +22,10 @@ namespace LMS.App.Controllers
 
         [Route("savePost")]
         [HttpPost]
-        public async Task<IActionResult> SavePost([FromBody] PostViewModel postViewModel)
+        public async Task<IActionResult> SavePost(PostViewModel postViewModel)
         {
             var userId = await GetUserIdAsync(this._userManager);
+            postViewModel.OwnerId = new Guid(userId);
             string url = await _postService.SavePost(postViewModel, userId);
             if (url != null)
             {

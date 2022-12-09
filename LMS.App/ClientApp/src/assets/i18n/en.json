@@ -4,7 +4,7 @@
     "LoginAccount": "Login In By",
     "Okul": "Okul",
     "Name": "Name",
-    "SurName":"SurName",
+    "SurName":"Surname",
     "Gender":"Gender",
     "Email": "Email",
     "Password": "Password",
@@ -59,7 +59,110 @@
     "ChooseDefaultLogo":"Or choose default logo",
     "Continue":"Continue",
     "YouCreatedNewSchool":"You created new School!",
-    "LinkInfo":"Here is the link to your School, you can share it with Students or Teachers"
+    "LinkInfo":"Here is the link to your School, you can share it with Students or Teachers",
+    "SelectLanguages": "Select Languages",
+    "StartEarningCreateSchool":"To start earning you can create a School.",
+
+
+
+    "HereFromCreateClass": "Here From Create Class",
+    "CreateClass": "Create Class",
+    "CreateClassStep1":"Step 1: Information about your School",
+    "CreateClassStep2": "Step 2: Add Disciplines, Teachers and Students of your Class",
+    "ClassName": "Class Name",
+    "TellUsAboutClass":"Tell us about your Class",
+    "Students": "Students",
+    "Start": "Start",
+    "Finish": "Finish",
+    "Price": "Price",
+    "Free": "Free",
+    "Paid": "Paid",
+    "TypeDisciplineNameToAdd": "Type Discipline Name To Add",
+    "TypeTeacherNameToAdd": "Type Teacher Name To Add",
+    "TypeStudentNameToAdd": "Type Student Name To Add",
+    "AddLater": "Add Later",
+    "YouCreatedNewClass":"You created new Class!",
+    "ClassLinkInfo":"Here is the link to your class, you can share it with Students or Teachers",
+
+
+
+    "HereFromCreateCourse":"HereFromCreateCourse",
+    "CreateCourse": "Create Course",
+    "CreateCourseStep1":"Step 1: Information about your Course",
+    "CreateCourseStep2": "Step 2: Add Disciplines, Teachers and Students of your Course",
+    "CourseName": "Course Name",
+    "TellUsAboutCourse":"Tell us about your Course",
+    "YouCreatedNewCourse":"You created new Course!",
+    "CourseLinkInfo":"Here is the link to your course, you can share it with Students or Teachers",
+
+
+    "HereFromSchoolProfile": "HereFromSchoolProfile",
+    "Followers": "Followers",
+    "Post": "Post",
+    "Follow": "FOLLOW",
+    "MessageSchool": "MESSAGE SCHOOL",
+    "Teachers": "Teachers",
+    "Sertificates": "Certificates",
+    "Languages": "Languages",
+    "Location": "Location",
+
+
+    "EditSchoolProfile": "Edit School Profile",
+    "EditPicture": "Edit Picture",
+    "GeneralInformation": "General Information",
+    "Founded": "Founded",
+    "SchoolSlogan": "School Slogan",
+    "SchoolEmail": "School Email",
+    "Owner": "Owner",
+    "SchoolBio": "School Bio",
+    "DiscardChanges": "Discard Changes",
+    "Save": "Save",
+    "AddLanguage": "Add Language",
+    "TypeLanguageToAdd": "Type Language To Add",
+    "DeleteLanguage": "Delete Language",
+    "AddTeacher": "Add Teacher",
+    "TypeTeacherToAdd": "Type Teacher To Add",
+    "DeleteTeacher": "Delete Teacher",
+    "AddCertificates": "Add Certificates",
+    "DeleteCertificate": "Delete Certificate",
+    "EditProfile": "Edit Profile",
+
+    "EditClassProfile": "Edit Class Profile",
+    "NumberofStudents": "Number of Students",
+    "Visibility": "Visibility",
+    "Language": "Language",
+    "ClassBio": "Class Bio",
+
+
+    "HereFromUserProfile": "Here From User Profile",
+    "Message": "Message",
+    "Student": "Student",
+    "EditYourProfile": "Edit Your Profile",
+    "PersonalInformation": "Personal Information",
+    "Teacher": "Teacher",
+    "Followings": "Following",
+    "UserBio": "User Bio",
+    "Rating": "Rating",
+    "RequestMessage": "Request Message",
+    "Description": "Description",
+    "Yes": "Yes",
+    "No": "No",
+    "NoResultFound": "No Result Found"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

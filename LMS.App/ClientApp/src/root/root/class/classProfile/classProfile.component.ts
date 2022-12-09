@@ -35,6 +35,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     editClassForm!:FormGroup;
     languageForm!:FormGroup;
     teacherForm!:FormGroup;
+    certificateForm!:FormGroup;
     uploadImage!:any;
     updateClassDetails!:EditClassModel;
     accessibility:any;
@@ -51,7 +52,10 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     disabled:boolean = true;
     currentDate!:string;
 
-    @ViewChild('closeBtn') closeBtn!: ElementRef;
+    @ViewChild('closeEditModal') closeEditModal!: ElementRef;
+    @ViewChild('closeTeacherModal') closeTeacherModal!: ElementRef;
+    @ViewChild('closeLanguageModal') closeLanguageModal!: ElementRef;
+    @ViewChild('closeCertificateModal') closeCertificateModal!: ElementRef;
     @ViewChild('imageFile') imageFile!: ElementRef;
 
     // loadingIcon:boolean = false;
@@ -104,11 +108,15 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       });
 
       this.languageForm = this.fb.group({
-        languages:this.fb.control(''),
+        languages:this.fb.control('',[Validators.required]),
       });
 
       this.teacherForm = this.fb.group({
-        teachers:this.fb.control(''),
+        teachers:this.fb.control('',[Validators.required]),
+      });
+
+      this.certificateForm = this.fb.group({
+        certificates:this.fb.control('',[Validators.required]),
       });
 
       this.deleteLanguage = {
@@ -250,8 +258,14 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     }
 
     saveClassLanguages(){
+      this.isSubmitted = true;
+      if (!this.languageForm.valid) {
+        return;
+      }
+      this.closeLanguagesModal();
       this.classLanguage.classId = this.class.classId;
       this._classService.saveClassLanguages(this.classLanguage).subscribe((response:any) => {
+        this.isSubmitted = false;
         this.ngOnInit();
   
       });
@@ -289,8 +303,14 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
         }
 
         saveClassTeachers(){
+          this.isSubmitted = true;
+          if (!this.teacherForm.valid) {
+            return;
+          }
+          this.closeTeachersModal();
           this.classTeacher.classId = this.class.classId;
           this._classService.saveClassTeachers(this.classTeacher).subscribe((response:any) => {
+            this.isSubmitted = false;
             this.ngOnInit();
       
           });
@@ -330,15 +350,24 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
         }
 
         handleCertificates(event: any) {
-            this.classCertificate.certificates.push(event.target.files[0],);
+          debugger
+            this.classCertificate.certificates.push(event.target.files[0]);
         }
 
         saveClassCertificates(){
+          debugger
+          this.isSubmitted = true;
+          if (!this.certificateForm.valid) {
+            return;
+          }
+          this.closeCertificatesModal();
+
           for(var i=0; i<this.classCertificate.certificates.length; i++){
             this.certificateToUpload.append('certificates', this.classCertificate.certificates[i]);
          }
           this.certificateToUpload.append('classId', this.class.classId);
           this._classService.saveClassCertificates(this.certificateToUpload).subscribe((response:any) => {
+            this.isSubmitted = true;
             this.classCertificate.certificates = [];
             this.certificateToUpload.set('certificates','');
             this.ngOnInit();
@@ -352,15 +381,6 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
            if (!this.editClassForm.valid) {
            return;
           }
-
-          // const startDate = Date.parse(this.editClassForm.get('startDate')?.value);
-          // const enddate = Date.parse(this.editClassForm.get('endDate')?.value);
-      
-          // if(startDate >= enddate){
-          //   this.editClassForm.setErrors({ inValidDate: true });
-          //   return;
-      
-          // }
 
           this.closeModal();
       
@@ -381,6 +401,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
           this.fileToUpload.append('serviceTypeId',this.updateClassDetails.serviceTypeId);
         
           this._classService.editClass(this.fileToUpload).subscribe((response:any) => {
+            this.isSubmitted=true;
             this.fileToUpload = new FormData();
             this.ngOnInit();
           });
@@ -402,11 +423,23 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
         }
 
         private closeModal(): void {
-          debugger
-          this.closeBtn.nativeElement.click();
+          this.closeEditModal.nativeElement.click();
+      }
+
+      private closeTeachersModal(): void {
+        this.closeTeacherModal.nativeElement.click();
+      }
+
+      private closeLanguagesModal(): void {
+        this.closeLanguageModal.nativeElement.click();
+      }
+
+      private closeCertificatesModal(): void {
+        this.closeCertificateModal.nativeElement.click();
       }
 
       resetCertificateModal(){
+        this.isSubmitted = false;
         this.classCertificate.certificates = [];
       }
 
@@ -427,23 +460,20 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       }
 
       resetLanguageModal(){
-        debugger
-        var re = this.languageForm.get('languages')?.value;
+        this.isSubmitted=false;
         this.languageForm.setValue({
           languages: [],
         });
-        // this is unappro
-        //this.schoolTeacher.teacherIds = [];
+
       }
     
       resetTeacherModal(){
-        debugger
+        this.isSubmitted=false;
         var re = this.teacherForm.get('teachers')?.value;
         this.teacherForm.setValue({
           teachers: [],
         });
     
-        //this.schoolTeacher.teacherIds = [];
       }
 
     // followSchool(){

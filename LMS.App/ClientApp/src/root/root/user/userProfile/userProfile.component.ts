@@ -37,7 +37,8 @@ import { MultilingualComponent } from '../../sharedModule/Multilingual/multiling
     editUserForm!:FormGroup;
     languageForm!:FormGroup;
     updateUserDetails!:EditUserModel;
-    @ViewChild('closeBtn') closeBtn!: ElementRef;
+    @ViewChild('closeEditModal') closeEditModal!: ElementRef;
+    @ViewChild('closeLanguageModal') closeLanguageModal!: ElementRef;
     @ViewChild('imageFile') imageFile!: ElementRef;
 
     uploadImage!:any;
@@ -72,7 +73,7 @@ import { MultilingualComponent } from '../../sharedModule/Multilingual/multiling
        };
 
        this.languageForm = this.fb.group({
-        languages:this.fb.control(''),
+        languages:this.fb.control('',[Validators.required]),
       });
 
        this.deleteLanguage = {
@@ -117,6 +118,11 @@ import { MultilingualComponent } from '../../sharedModule/Multilingual/multiling
     }
 
     saveUserLanguages(){
+      this.isSubmitted = true;
+      if (!this.languageForm.valid) {
+        return;
+      }
+      this.closeLanguagesModal();
       this.userLanguage.userId = this.user.id;
       this._userService.saveUserLanguages(this.userLanguage).subscribe((response:any) => {
         this.ngOnInit();
@@ -205,6 +211,7 @@ import { MultilingualComponent } from '../../sharedModule/Multilingual/multiling
     this.fileToUpload.append('contactEmail',this.updateUserDetails.contactEmail);
 
     this._userService.editUser(this.fileToUpload).subscribe((response:any) => {
+      this.isSubmitted=true;
       this.fileToUpload = new FormData();
       this.ngOnInit();
     });
@@ -213,7 +220,12 @@ import { MultilingualComponent } from '../../sharedModule/Multilingual/multiling
   
   private closeModal(): void {
     debugger
-    this.closeBtn.nativeElement.click();
+    this.closeEditModal.nativeElement.click();
+  }
+
+  private closeLanguagesModal(): void {
+    debugger
+    this.closeLanguageModal.nativeElement.click();
   }
 
 omit_special_char(event:any)
@@ -232,8 +244,7 @@ removeLanguage(event: any){
 }
 
 resetLanguageModal(){
-  debugger
-  var re = this.languageForm.get('languages')?.value;
+  this.isSubmitted = false;
   this.languageForm.setValue({
     languages: [],
   });

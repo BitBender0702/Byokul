@@ -39,8 +39,15 @@
             <p class="text-center font_16 fw_600 step-desc">{{'CreateCourseStep1'| translate }}</p>
             <form id="regForm" [formGroup]="createCourseForm1">
             <div class="form-group">
+              <div *ngIf="fromSchoolProfile != ''">
                 <input formControlName="schoolId" hidden type="text" placeholder="School Name" name="schoolId" class="form-control w-100">
-                <input readonly type="text" placeholder="School Name" name="schoolId" class="form-control w-100">
+                <input formControlName="schoolName" readonly type="text" placeholder="School Name" name="schoolId" class="form-control w-100">
+              </div>
+              <div *ngIf="fromSchoolProfile == ''">
+                <select class="form-select rounded-8 w-100" formControlName="schoolId">
+                  <option *ngFor="let school of schools;" [value]="school.schoolId" [ngValue]="school.schoolId">{{school.schoolName}}</option>
+               </select>
+              </div>
             </div>
             <div class="form-group">
               <input formControlName="courseName" type="text" placeholder="{{'CourseName'| translate }}" name="coursename" class="form-control w-100">
