@@ -49,5 +49,6 @@ namespace LMS.Data
         public DbSet<UserFollower> UserFollowers { get; set; }
         public DbSet<UserLanguage> UserLanguages { get; set; }
         public DbSet<SchoolDefaultLogo> SchoolDefaultLogos { get; set; }
+        public DbSet<ClassCertificate> ClassCertificates { get; set; }
     }
 }

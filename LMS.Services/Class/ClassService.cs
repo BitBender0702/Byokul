@@ -30,10 +30,11 @@ namespace LMS.Services
         private IGenericRepository<ClassDiscipline> _classDisciplineRepository;
         private IGenericRepository<Post> _postRepository;
         private IGenericRepository<PostAttachment> _postAttachmentRepository;
+        private IGenericRepository<ClassCertificate> _classCertificateRepository;
         private readonly UserManager<User> _userManager;
         private readonly IBlobService _blobService;
 
-        public ClassService(IMapper mapper, IGenericRepository<Class> classRepository, IGenericRepository<ClassLanguage> classLanguageRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<ClassDiscipline> classDisciplineRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, UserManager<User> userManager, IBlobService blobService)
+        public ClassService(IMapper mapper, IGenericRepository<Class> classRepository, IGenericRepository<ClassLanguage> classLanguageRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<ClassDiscipline> classDisciplineRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<ClassCertificate> classCertificateRepository, UserManager<User> userManager, IBlobService blobService)
         {
             _mapper = mapper;
             _classRepository = classRepository;
@@ -43,6 +44,7 @@ namespace LMS.Services
             _classDisciplineRepository = classDisciplineRepository;
             _postRepository = postRepository;
             _postAttachmentRepository = postAttachmentRepository;
+            _classCertificateRepository = classCertificateRepository;
             _userManager = userManager;
             _blobService = blobService;
         }
@@ -120,7 +122,7 @@ namespace LMS.Services
 
         }
 
-        async Task SaveClassLanguages(IEnumerable<string> languageIds, Guid classId)
+        public async Task SaveClassLanguages(IEnumerable<string> languageIds, Guid classId)
         {
             foreach (var languageId in languageIds)
             {
@@ -189,16 +191,25 @@ namespace LMS.Services
                 .Include(x => x.CreatedBy)
                 .FirstOrDefaultAsync();
 
+
             var result = _mapper.Map<ClassUpdateViewModel>(classes);
+            result.Languages = await GetLanguages(result.ClassId);
             return result;
         }
 
-        public async Task UpdateClass(ClassUpdateViewModel classUpdateViewModel)
+        public async Task<Guid> UpdateClass(ClassUpdateViewModel classUpdateViewModel)
         {
+            var containerName = "classlogo";
+            if (classUpdateViewModel.AvatarImage != null)
+            {
+                classUpdateViewModel.Avatar = await _blobService.UploadFileAsync(classUpdateViewModel.AvatarImage, containerName);
+            }
+
+            classUpdateViewModel.LanguageIds = JsonConvert.DeserializeObject<string[]>(classUpdateViewModel.LanguageIds.First());
+
             Class classes = _classRepository.GetById(classUpdateViewModel.ClassId);
             classes.Avatar = classUpdateViewModel.Avatar;
             classes.ClassName = classUpdateViewModel.ClassName;
-            classes.SchoolId = classUpdateViewModel.SchoolId;
             classes.NoOfStudents = classUpdateViewModel.NoOfStudents;
             classes.StartDate = classUpdateViewModel.StartDate;
             classes.EndDate = classUpdateViewModel.EndDate;
@@ -209,6 +220,12 @@ namespace LMS.Services
 
             _classRepository.Update(classes);
             _classRepository.Save();
+
+            if (classUpdateViewModel.LanguageIds.Any())
+            {
+                await UpdateClassLanguages(classUpdateViewModel.LanguageIds, classUpdateViewModel.ClassId);
+            }
+            return classUpdateViewModel.ClassId;
 
         }
 
@@ -285,6 +302,7 @@ namespace LMS.Services
                 model.Students = await GetStudents(classes.ClassId);
                 model.Teachers = await GetTeachers(classes.ClassId);
                 model.Posts = await GetPostsByClassId(classes.ClassId);
+                model.ClassCertificates = await GetCertificateByClassId(classes.ClassId);
 
                 return model;
             }
@@ -388,12 +406,90 @@ namespace LMS.Services
             return result;
         }
 
+        async Task<IEnumerable<ClassCertificateViewModel>> GetCertificateByClassId(Guid classId)
+        {
+            var classCertificate = _classCertificateRepository.GetAll().Where(x => x.ClassId == classId).ToList();
+            var response = _mapper.Map<IEnumerable<ClassCertificateViewModel>>(classCertificate);
+            return response;
+        }
+
         public async Task<IEnumerable<PostAttachmentViewModel>> GetAttachmentsByPostId(Guid postId)
         {
             var attacchmentList = await _postAttachmentRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.PostId == postId).ToListAsync();
 
             var result = _mapper.Map<List<PostAttachmentViewModel>>(attacchmentList);
             return result;
+        }
+
+        public async Task DeleteClassLanguage(ClassLanguageViewModel model)
+        {
+            var classLanguage = await _classLanguageRepository.GetAll().Where(x => x.ClassId == model.ClassId && x.LanguageId == model.LanguageId).FirstOrDefaultAsync();
+
+            _classLanguageRepository.Delete(classLanguage.Id);
+            _classLanguageRepository.Save();
+
+        }
+
+        public async Task SaveClassTeachers(SaveClassTeacherViewModel model)
+        {
+            foreach (var teacherId in model.TeacherIds)
+            {
+                var classTeacher = new ClassTeacher
+                {
+                    ClassId = new Guid(model.ClassId),
+                    TeacherId = new Guid(teacherId)
+                };
+
+                _classTeacherRepository.Insert(classTeacher);
+                try
+                {
+                    _classTeacherRepository.Save();
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+        }
+
+        public async Task DeleteClassTeacher(ClassTeacherViewModel model)
+        {
+            var classTeacher = await _classTeacherRepository.GetAll().Where(x => x.ClassId == model.ClassId && x.TeacherId == model.TeacherId).FirstOrDefaultAsync();
+
+            _classTeacherRepository.Delete(classTeacher.Id);
+            _classTeacherRepository.Save();
+
+        }
+
+        public async Task SaveClassCertificates(SaveClassCertificateViewModel classCertificates)
+        {
+            string containerName = "classcertificates";
+
+            foreach (var certificate in classCertificates.Certificates)
+            {
+                string certificateUrl = await _blobService.UploadFileAsync(certificate, containerName);
+
+                string certificateName = certificate.FileName;
+
+                var classCertificate = new ClassCertificate
+                {
+                    CertificateUrl = certificateUrl,
+                    Name = certificateName,
+                    ClassId = classCertificates.ClassId
+                };
+                _classCertificateRepository.Insert(classCertificate);
+                _classCertificateRepository.Save();
+            }
+
+        }
+
+        public async Task DeleteClassCertificate(ClassCertificateViewModel model)
+        {
+            var classCertificate = await _classCertificateRepository.GetAll().Where(x => x.ClassId == model.ClassId && x.CertificateId == model.CertificateId).FirstOrDefaultAsync();
+
+            _classCertificateRepository.Delete(classCertificate.CertificateId);
+            _classCertificateRepository.Save();
+
         }
     }
 }

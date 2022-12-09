@@ -34,9 +34,10 @@ namespace LMS.Common.ViewModels.Class
         public int Students { get; set; }
         public IEnumerable<DisciplineViewModel> Disciplines { get; set; }
         public IEnumerable<PostDetailsViewModel> Posts { get; set; }
+        public IEnumerable<ClassCertificateViewModel> ClassCertificates { get; set; }
         public string? Description { get; set; }
         public long? Price { get; set; }
-        public long? Rating { get; set; }
+        public Double? Rating { get; set; }
         public string? Avatar { get; set; }
         public string? ThumbnailUrl { get; set; }
     }

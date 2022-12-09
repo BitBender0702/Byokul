@@ -29,7 +29,7 @@ namespace LMS.App.Controllers
             {
                 return Ok(new { token = result });
             }
-            return Unauthorized();
+            return Ok(new { token = ""});
         }
 
 
@@ -40,25 +40,33 @@ namespace LMS.App.Controllers
         {
             IActionResult response = Unauthorized();
 
-            var user = new User {
-                UserName = registerViewModel.Email,
-                Email = registerViewModel.Email,
-                FirstName = registerViewModel.FirstName,
-                LastName = registerViewModel.LastName,
-                Gender = registerViewModel.Gender,
-                CityId = registerViewModel.CityId,
-                DOB = registerViewModel.DOB,
-                CreatedOn = DateTime.UtcNow
-            };
-            var result = await _userManager.CreateAsync(user, registerViewModel.Password);
-
-            if (result.Succeeded)
+            try
             {
-                await _signInManager.SignInAsync(user, isPersistent: false);
-                var tokenString = await _authService.GenerateJSONWebToken(user);
-                response = Ok(new { token = tokenString });
+                var user = new User
+                {
+                    UserName = registerViewModel.Email,
+                    Email = registerViewModel.Email,
+                    FirstName = registerViewModel.FirstName,
+                    LastName = registerViewModel.LastName,
+                    Gender = registerViewModel.Gender,
+                    CityId = registerViewModel.CityId,
+                    DOB = registerViewModel.DOB,
+                    CreatedOn = DateTime.UtcNow
+                };
+                var result = await _userManager.CreateAsync(user, registerViewModel.Password);
+
+                if (result.Succeeded)
+                {
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    var tokenString = await _authService.GenerateJSONWebToken(user);
+                    response = Ok(new { token = tokenString });
+                }
+                return response;
             }
-            return response;
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
 
 
@@ -68,7 +76,13 @@ namespace LMS.App.Controllers
         public async Task<IActionResult> ForgetPassword([FromBody] ForgetPasswordViewModel forgetPasswordViewModel)
         {
             var response = await _authService.GeneratePasswordResetRequest(forgetPasswordViewModel);
-            return Ok();
+            if (response) {
+                return Ok(new { result = "success" });
+            }
+            else
+            {
+                return Ok(new { result = "" });
+            }
         }
 
 

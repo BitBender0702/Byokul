@@ -32,6 +32,7 @@ namespace LMS.Services
         private IGenericRepository<User> _userRepository;
         private IGenericRepository<Class> _classRepository;
         private IGenericRepository<Course> _courseRepository;
+        private IGenericRepository<SchoolTeacher> _schoolTeacherRepository;
         private IGenericRepository<ClassTeacher> _classTeacherRepository;
         private IGenericRepository<CourseTeacher> _courseTeacherRepository;
         private IGenericRepository<ClassStudent> _classStudentRepository;
@@ -41,7 +42,7 @@ namespace LMS.Services
         private IGenericRepository<SchoolDefaultLogo> _schoolDefaultLogoRepository;
         private readonly UserManager<User> _userManager;
         private readonly IBlobService _blobService;
-        public SchoolService(IMapper mapper, IGenericRepository<School> schoolRepository, IGenericRepository<SchoolCertificate> schoolCertificateRepository, IGenericRepository<SchoolTag> schoolTagRepository, IGenericRepository<Country> countryRepository, IGenericRepository<Specialization> specializationRepository, IGenericRepository<Language> languageRepository, IGenericRepository<SchoolUser> schoolUserRepository, IGenericRepository<SchoolFollower> schoolFollowerRepository, IGenericRepository<SchoolLanguage> schoolLanguageRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<CourseTeacher> courseTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<SchoolDefaultLogo> schoolDefaultLogoRepository, UserManager<User> userManager, IBlobService blobService)
+        public SchoolService(IMapper mapper, IGenericRepository<School> schoolRepository, IGenericRepository<SchoolCertificate> schoolCertificateRepository, IGenericRepository<SchoolTag> schoolTagRepository, IGenericRepository<Country> countryRepository, IGenericRepository<Specialization> specializationRepository, IGenericRepository<Language> languageRepository, IGenericRepository<SchoolUser> schoolUserRepository, IGenericRepository<SchoolFollower> schoolFollowerRepository, IGenericRepository<SchoolLanguage> schoolLanguageRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<SchoolTeacher> schoolTeacherRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<CourseTeacher> courseTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<SchoolDefaultLogo> schoolDefaultLogoRepository, UserManager<User> userManager, IBlobService blobService)
         {
             _mapper = mapper;
             _schoolRepository = schoolRepository;
@@ -55,6 +56,7 @@ namespace LMS.Services
             _schoolLanguageRepository = schoolLanguageRepository;
             _classRepository = classRepository;
             _courseRepository = courseRepository;
+            _schoolTeacherRepository = schoolTeacherRepository;
             _classTeacherRepository = classTeacherRepository;
             _courseTeacherRepository = courseTeacherRepository;
             _classStudentRepository = classStudentRepository;
@@ -103,7 +105,7 @@ namespace LMS.Services
             return schoolViewModel.SchoolId;
         }
 
-        async Task SaveSchoolLanguages(IEnumerable<string> languageIds, Guid schoolId)
+        public async Task SaveSchoolLanguages(IEnumerable<string> languageIds, Guid schoolId)
         {
             foreach (var language in languageIds)
             {
@@ -193,18 +195,34 @@ namespace LMS.Services
             }
         }
 
-        public async Task SaveSchoolCertificates(SchoolCertificateViewModel schoolCertificates)
+        public async Task SaveSchoolCertificates(SaveSchoolCertificateViewModel schoolCertificates)
         {
+            string containerName = "schoolcertificates";
+
             foreach (var certificate in schoolCertificates.Certificates)
             {
+                string certificateUrl = await _blobService.UploadFileAsync(certificate, containerName);
+
+                string certificateName = certificate.FileName;
+
                 var schoolCertificate = new SchoolCertificate
                 {
-                    CertificateUrl = certificate.Name,
+                    CertificateUrl = certificateUrl,
+                    Name = certificateName,
                     SchoolId = schoolCertificates.SchoolId
                 };
                 _schoolCertificateRepository.Insert(schoolCertificate);
                 _schoolCertificateRepository.Save();
             }
+
+        }
+
+        public async Task DeleteSchoolCertificate(SchoolCertificateViewModel model)
+        {
+            var schoolCertificate = await _schoolCertificateRepository.GetAll().Where(x => x.SchoolId == model.SchoolId && x.CertificateId == model.CertificateId).FirstOrDefaultAsync();
+
+            _schoolCertificateRepository.Delete(schoolCertificate.CertificateId);
+            _schoolCertificateRepository.Save();
 
         }
 
@@ -219,8 +237,13 @@ namespace LMS.Services
             return result;
         }
 
-        public async Task UpdateSchool(SchoolUpdateViewModel schoolUpdateViewModel)
+        public async Task<Guid> UpdateSchool(SchoolUpdateViewModel schoolUpdateViewModel)
         {
+            if (schoolUpdateViewModel.AvatarImage != null)
+            {
+                schoolUpdateViewModel.Avatar = await _blobService.UploadFileAsync(schoolUpdateViewModel.AvatarImage, containerName);
+            }
+
             School school = _schoolRepository.GetById(schoolUpdateViewModel.SchoolId);
             school.SchoolName = schoolUpdateViewModel.SchoolName;
             school.Avatar = schoolUpdateViewModel.Avatar;
@@ -228,13 +251,13 @@ namespace LMS.Services
             school.Founded = schoolUpdateViewModel.Founded;
             school.SchoolEmail = schoolUpdateViewModel.SchoolEmail;
             school.AccessibilityId = schoolUpdateViewModel.AccessibilityId;
-            school.CreatedById = schoolUpdateViewModel.OwnerId;
             school.Description = schoolUpdateViewModel.Description;
 
             _schoolRepository.Update(school);
             _schoolRepository.Save();
 
-            await AddRoleForUser(schoolUpdateViewModel.OwnerId, "School Owner");
+            //await AddRoleForUser(schoolUpdateViewModel.OwnerId, "School Owner");
+            return school.SchoolId;
         }
 
         async Task UpdateSchoolLanguages(IEnumerable<string> languageIds, Guid schoolId)
@@ -285,8 +308,13 @@ namespace LMS.Services
 
                 var classTeachers = await GetClassTeachersBySchoolId(schoolId);
                 var courseTeachers = await GetCourseTeachersBySchoolId(schoolId);
+                var schoolTeacher = await GetSchoolTeachersBySchoolId(schoolId);
 
-                var schoolTeachers = classTeachers.Union(courseTeachers).DistinctBy(x => x.TeacherId).ToList();
+                var classCourseTeachers = classTeachers.Union(courseTeachers).DistinctBy(x => x.TeacherId).ToList();
+
+                var schoolTeachers = classCourseTeachers.Union(schoolTeacher).DistinctBy(x => x.TeacherId).ToList();
+
+
 
                 var classStudents = await GetClassStudentsBySchoolId(schoolId);
                 var courseStudents = await GetCourseStudentsBySchoolId(schoolId);
@@ -320,13 +348,9 @@ namespace LMS.Services
             {
                 SchoolId = x.SchoolId,
                 SchoolName = x.SchoolName,
-                Avatar = x.Avatar,
-                CoveredPhoto = x.CoveredPhoto,
-                Description = x.Description
             });
 
-            var response = await GetAllCertificates(model.ToList());
-            return response;
+            return model;
         }
 
         public async Task<IEnumerable<SchoolViewModel>> GetAllCertificates(IEnumerable<SchoolViewModel> model)
@@ -362,13 +386,13 @@ namespace LMS.Services
             var result = _mapper.Map<IEnumerable<LanguageViewModel>>(languageList);
             return result;
         }
-        public async Task SaveSchoolFollower(Guid schoolId, string userId)
+        public async Task<bool> SaveSchoolFollower(Guid schoolId, string userId)
         {
             var schoolFollowers = await _schoolFollowerRepository.GetAll().ToListAsync();
 
             if (schoolFollowers.Any(x => x.UserId == userId && x.SchoolId == schoolId))
             {
-                return;
+                return false;
             }
 
             else
@@ -381,6 +405,7 @@ namespace LMS.Services
 
                 _schoolFollowerRepository.Insert(schoolFollower);
                 _schoolFollowerRepository.Save();
+                return true;
             }
         }
 
@@ -456,6 +481,25 @@ namespace LMS.Services
             }
 
             var result = _mapper.Map<List<TeacherViewModel>>(courseTeachers);
+            return result;
+
+        }
+
+        public async Task<IEnumerable<TeacherViewModel>> GetSchoolTeachersBySchoolId(Guid schoolId)
+        {
+            var schoolList = await _schoolRepository.GetAll().Where(x => x.SchoolId == schoolId).ToListAsync();
+
+            var schoolTeachersList = await _schoolTeacherRepository.GetAll().Include(x => x.Teacher).Distinct().ToListAsync();
+
+            var requiredSchoolList = schoolTeachersList.Where(x => schoolList.Any(y => y.SchoolId == x.SchoolId)).DistinctBy(x => x.TeacherId);
+
+            var schoolTeachers = new List<Teacher>();
+            foreach (var schoolTeacher in requiredSchoolList)
+            {
+                schoolTeachers.Add(schoolTeacher.Teacher);
+            }
+
+            var result = _mapper.Map<List<TeacherViewModel>>(schoolTeachers);
             return result;
 
         }
@@ -566,6 +610,84 @@ namespace LMS.Services
             var logoList = _schoolDefaultLogoRepository.GetAll();
             var result = _mapper.Map<IEnumerable<SchoolDefaultLogoViewmodel>>(logoList);
             return result;
+        }
+
+
+        public async Task DeleteSchoolLanguage(SchoolLanguageViewModel model)
+        {
+            var schoolLanguage = await _schoolLanguageRepository.GetAll().Where(x => x.SchoolId == model.SchoolId && x.LanguageId == model.LanguageId).FirstOrDefaultAsync();
+
+            _schoolLanguageRepository.Delete(schoolLanguage.Id);
+            _schoolLanguageRepository.Save();
+
+        }
+
+        public async Task SaveSchoolTeachers(SaveSchoolTeacherViewModel model)
+        {
+            foreach (var teacherId in model.TeacherIds)
+            {
+                var schoolTeacher = new SchoolTeacher
+                {
+                    SchoolId = new Guid(model.SchoolId),
+                    TeacherId = new Guid(teacherId)
+                };
+
+                _schoolTeacherRepository.Insert(schoolTeacher);
+                _schoolTeacherRepository.Save();
+            }
+        }
+
+        public async Task DeleteSchoolTeacher(SchoolTeacherViewModel model)
+        {
+            var classTeachers = new List<ClassTeacher>();
+            var schoolTeacher = await _schoolTeacherRepository.GetAll().Where(x => x.SchoolId == model.SchoolId && x.TeacherId == model.TeacherId).FirstOrDefaultAsync();
+
+            if (schoolTeacher != null)
+            {
+                _schoolTeacherRepository.Delete(schoolTeacher.Id);
+                _schoolTeacherRepository.Save();
+            }
+
+            var classes = await _classRepository.GetAll().Where(x => x.SchoolId == model.SchoolId).ToListAsync();
+
+            classTeachers = await _classTeacherRepository.GetAll().Include(x => x.Teacher).Where(x => x.TeacherId == model.TeacherId).ToListAsync();
+
+
+            var requiredClassTeacher = classTeachers.Where(x => classes.Any(y => y.ClassId == x.ClassId && x.TeacherId == model.TeacherId)).FirstOrDefault();
+
+            //var requiredTeacher = classTeachers.Where(x => x.TeacherId == model.TeacherId).FirstOrDefault();
+            if (requiredClassTeacher != null)
+            {
+                _classTeacherRepository.Delete(requiredClassTeacher.Id);
+                _classTeacherRepository.Save();
+            }
+
+
+
+
+            var courses = await _courseRepository.GetAll().Where(x => x.SchoolId == model.SchoolId).ToListAsync();
+
+            var courseTeachers = await _courseTeacherRepository.GetAll().Where(x => x.TeacherId == model.TeacherId).ToListAsync();
+
+            var requiredCourseTeacher = courseTeachers.Where(x => courses.Any(y => y.CourseId == x.CourseId && x.TeacherId == model.TeacherId)).FirstOrDefault();
+
+            if (requiredCourseTeacher != null)
+            {
+                _courseTeacherRepository.Delete(requiredCourseTeacher.Id);
+                _courseTeacherRepository.Save();
+            }
+
+
+
+        }
+
+        public async Task<SchoolViewModel> GetBasicSchoolInfo(Guid schoolId)
+        {
+            var school = await _schoolRepository.GetAll().Where(x => x.SchoolId == schoolId).FirstOrDefaultAsync();
+
+            var response = _mapper.Map<SchoolViewModel>(school);
+            return response;
+
         }
     }
 }

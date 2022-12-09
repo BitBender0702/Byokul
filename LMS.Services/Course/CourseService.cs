@@ -42,7 +42,7 @@ namespace LMS.Services
             _userManager = userManager;
         }
 
-        public async Task SaveNewCourse(CourseViewModel courseViewModel, string createdById)
+        public async Task<Guid> SaveNewCourse(CourseViewModel courseViewModel, string createdById)
         {
 
             var langList = JsonConvert.DeserializeObject<string[]>(courseViewModel.LanguageIds.First());
@@ -96,6 +96,8 @@ namespace LMS.Services
             {
                 await SaveCourseTeachers(courseViewModel.TeacherIds, course.CourseId);
             }
+
+            return courseViewModel.CourseId;
 
         }
 

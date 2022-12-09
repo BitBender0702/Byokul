@@ -11,9 +11,15 @@ namespace LMS.Services
     {
         Task<Guid> SaveNewClass(ClassViewModel classViewModel, string createdById);
         Task<ClassUpdateViewModel> GetClassEditDetails(Guid classId);
-        Task UpdateClass(ClassUpdateViewModel classUpdateViewModel);
+        Task<Guid> UpdateClass(ClassUpdateViewModel classUpdateViewModel);
         Task DeleteClassById(Guid classId, string deletedById);
         Task<ClassDetailsViewModel> GetClassById(Guid classId);
         Task<IEnumerable<ClassViewModel>> GetAllClasses();
+        Task SaveClassLanguages(IEnumerable<string> languageIds, Guid classId);
+        Task DeleteClassLanguage(ClassLanguageViewModel model);
+        Task SaveClassTeachers(SaveClassTeacherViewModel model);
+        Task DeleteClassTeacher(ClassTeacherViewModel model);
+        Task SaveClassCertificates(SaveClassCertificateViewModel model);
+        Task DeleteClassCertificate(ClassCertificateViewModel model);
     }
 }

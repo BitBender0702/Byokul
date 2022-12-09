@@ -1,4 +1,6 @@
 ﻿using LMS.Common.ViewModels.Common;
+using LMS.Common.ViewModels.Post;
+using LMS.Common.ViewModels.School;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,5 +21,10 @@ namespace LMS.Common.ViewModels.User
         public int Followers { get; set; }
         public int Followings { get; set; }
         public IEnumerable<LanguageViewModel> Languages { get; set; }
+        public IEnumerable<SchoolViewModel> SchoolsAsStudent { get; set; }
+        public IEnumerable<SchoolViewModel> SchoolsAsTeacher { get; set; }
+        public IEnumerable<PostDetailsViewModel> Posts { get; set; }
+        //public IEnumerable<SchoolCertificateViewModel> SchoolCertificates { get; set; }
+
     }
 }

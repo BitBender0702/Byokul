@@ -13,6 +13,8 @@ namespace LMS.Data.Entity
         public string LastName { get; set; }
         public string? Description { get; set; }
         public bool? IsActive { get; set; }
+        public string? UserId { get; set; }
+        public User User { get; set; }
 
     }
 }

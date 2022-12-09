@@ -40,10 +40,10 @@ namespace LMS.App.Controllers
 
         [Route("updateClass")]
         [HttpPost]
-        public async Task<IActionResult> UpdateClass([FromBody] ClassUpdateViewModel classUpdateViewModel)
+        public async Task<IActionResult> UpdateClass(ClassUpdateViewModel classUpdateViewModel)
         {
-            await _classService.UpdateClass(classUpdateViewModel);
-            return Ok("success");
+            var classId = await _classService.UpdateClass(classUpdateViewModel);
+            return Ok(new { classId = classId });
         }
 
         [Route("deleteClassById")]
@@ -56,7 +56,7 @@ namespace LMS.App.Controllers
         }
 
         [Route("getClassById")]
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> GetClassById(Guid classId)
         {
             var response = await _classService.GetClassById(classId);
@@ -98,6 +98,54 @@ namespace LMS.App.Controllers
         public async Task<IActionResult> GetAccessibility()
         {
             return Ok(await _commonService.GetAccessibility());
+        }
+
+        [Route("saveClassLanguages")]
+        [HttpPost]
+        public async Task<IActionResult> SaveClassLanguages([FromBody] SaveClassLanguageViewModel model)
+        {
+            await _classService.SaveClassLanguages(model.LanguageIds, new Guid(model.ClassId));
+            return Ok();
+        }
+
+        [Route("deleteClassLanguage")]
+        [HttpPost]
+        public async Task<IActionResult> DeleteClassLanguage([FromBody] ClassLanguageViewModel model)
+        {
+            await _classService.DeleteClassLanguage(model);
+            return Ok();
+        }
+
+        [Route("saveClassTeachers")]
+        [HttpPost]
+        public async Task<IActionResult> SaveClassTeachers([FromBody] SaveClassTeacherViewModel model)
+        {
+            await _classService.SaveClassTeachers(model);
+            return Ok();
+        }
+
+        [Route("deleteClassTeacher")]
+        [HttpPost]
+        public async Task<IActionResult> DeleteClassTeacher([FromBody] ClassTeacherViewModel model)
+        {
+            await _classService.DeleteClassTeacher(model);
+            return Ok();
+        }
+
+        [Route("saveClassCertificates")]
+        [HttpPost]
+        public async Task<IActionResult> SaveClassCertificates(SaveClassCertificateViewModel model)
+        {
+            await _classService.SaveClassCertificates(model);
+            return Ok();
+        }
+
+        [Route("deleteClassCertificate")]
+        [HttpPost]
+        public async Task<IActionResult> DeleteClassCertificate([FromBody] ClassCertificateViewModel model)
+        {
+            await _classService.DeleteClassCertificate(model);
+            return Ok();
         }
 
     }

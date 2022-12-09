@@ -3,6 +3,7 @@ using LMS.Common.ViewModels.Account;
 using LMS.Data;
 using LMS.Data.Entity;
 using LMS.DataAccess.Repository;
+using LMS.Services.Common;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -23,14 +24,16 @@ namespace LMS.Services.Account
         private readonly SignInManager<User> _signInManager;
         private readonly UserManager<User> _userManager;
         private readonly DataContext _context;
+        private readonly ICommonService _commonService;
 
-        public AuthService(IConfiguration config, IWebHostEnvironment webHostEnvironment, SignInManager<User> signInManager, UserManager<User> userManager, DataContext context)
+        public AuthService(IConfiguration config, IWebHostEnvironment webHostEnvironment, SignInManager<User> signInManager, UserManager<User> userManager, DataContext context, ICommonService commonService)
         {
             _config = config;
             _webHostEnvironment = webHostEnvironment;
             _signInManager = signInManager;
             _userManager = userManager;
             _context = context;
+            _commonService = commonService;
         }
 
         public async Task<string> AuthenticateUser(LoginViewModel loginViewModel)
@@ -84,7 +87,7 @@ namespace LMS.Services.Account
         {
             var user = await _userManager.FindByEmailAsync(forgetPasswordViewModel.Email);
             if (user == null)
-                throw new Exception("User not found");
+                return false;
 
             user.UniqueToken = String.Format("{0}-{1}", Guid.NewGuid(), Guid.NewGuid());
             user.TokenCreatedOn = DateTime.UtcNow;
@@ -92,12 +95,12 @@ namespace LMS.Services.Account
 
             var response = await _userManager.UpdateAsync(user);
             if (response.Succeeded)
-                return TriggerResetPasswordEmail(forgetPasswordViewModel.Email, user.UniqueToken);
+                return await TriggerResetPasswordEmail(forgetPasswordViewModel.Email, user.UniqueToken);
 
-            throw new Exception("Some error occured");
+            return false;
         }
 
-        private bool TriggerResetPasswordEmail(string email, string token)
+        private async Task<bool> TriggerResetPasswordEmail(string email, string token)
         {
             string callBackUrl = string.Format(_config["ForgotPasswordCallback"], token);
 
@@ -110,7 +113,8 @@ namespace LMS.Services.Account
             text = text.Replace("[ACTIVATIONLINK]", callBackUrl);
             text = text.Replace("*#FirstName#*", email);
 
-            SendEmail(new List<string> { email }, null, null, subject: "Forgot password", body: text);
+            await _commonService.SendEmail(new List<string> { email }, null, null, subject: "Forgot password", body: text);
+            //SendEmail(new List<string> { email }, null, null, subject: "Forgot password", body: text);
             return true;
         }
 

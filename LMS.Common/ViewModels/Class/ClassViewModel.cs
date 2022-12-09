@@ -26,7 +26,7 @@ namespace LMS.Common.ViewModels.Class
         public AccessibilityViewModel Accessibility { get; set; }
         public string? Description { get; set; }
         public long? Price { get; set; }
-        public long? Rating { get; set; }
+        public double? Rating { get; set; }
         public string? ThumbnailUrl { get; set; }
         public IFormFile Thumbnail { get; set; }
         public string ClassUrl { get; set; }

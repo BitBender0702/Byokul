@@ -17,7 +17,7 @@ import { SharedModule } from '../root/sharedModule/shared.module';
 import { LandingComponent } from './user-auth/component/landing/landing.component';
 
 @NgModule({
-  declarations: [UserAuthComponent,LandingComponent, LoginComponent,RegisterComponent, ChangePasswordComponent, ForgetPasswordComponent],
+  declarations: [UserAuthComponent, LoginComponent,RegisterComponent, ChangePasswordComponent, ForgetPasswordComponent],
   imports: [
     SharedModule,
     CommonModule,
@@ -38,13 +38,13 @@ import { LandingComponent } from './user-auth/component/landing/landing.componen
       children: [
         {
           path: '',
-          redirectTo: 'landing',
+          redirectTo: 'login',
           pathMatch: 'full',
         },
-         {
-          path: 'landing',
-          component: LandingComponent,
-        },
+        //  {
+        //   path: 'landing',
+        //   component: LandingComponent,
+        // },
 
         {
           path: 'login',

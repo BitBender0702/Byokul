@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace LMS.Common.ViewModels.School
 {
-    public class SchoolCertificateViewModel
+    public class SaveSchoolCertificateViewModel
     {
         public Guid SchoolId { get; set; }
-        public Guid CertificateId { get; set; }
-        public string? Name { get; set; }
+        //public string? Name { get; set; }
+        public List<IFormFile> Certificates { get; set; }
     }
 }

@@ -18,5 +18,6 @@ namespace LMS.Services.Account
         Task<IdentityResult> UpdatePassword(UpdatePasswordViewModel updatePasswordViewModel);
         Task Logout();
         Task<string> ResetPassword(ResetPasswordViewModel resetPasswordDto);
+        bool SendEmail(List<string> to, List<string> cc, List<string> bcc, string subject, string body);
     }
 }

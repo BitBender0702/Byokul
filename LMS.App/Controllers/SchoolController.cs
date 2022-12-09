@@ -53,10 +53,10 @@ namespace LMS.App.Controllers
 
         [Route("updateSchool")]
         [HttpPost]
-        public async Task<IActionResult> UpdateSchool([FromBody] SchoolUpdateViewModel schoolUpdateViewModel)
+        public async Task<IActionResult> UpdateSchool(SchoolUpdateViewModel schoolUpdateViewModel)
         {
-            await _schoolService.UpdateSchool(schoolUpdateViewModel);
-            return Ok("success");
+            var schoolId = await _schoolService.UpdateSchool(schoolUpdateViewModel);
+            return Ok(schoolId);
         }
 
         [Route("getSchoolById")]
@@ -69,7 +69,7 @@ namespace LMS.App.Controllers
         }
 
         [Route("getAllSchools")]
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> GetAllSchools()
         {
             var response = await _schoolService.GetAllSchools();
@@ -104,8 +104,12 @@ namespace LMS.App.Controllers
         public async Task<IActionResult> SaveSchoolFollower(Guid schoolId)
         {
             var userId = await GetUserIdAsync(this._userManager);
-            await _schoolService.SaveSchoolFollower(schoolId, userId);
-            return Ok("success");
+            var response = await _schoolService.SaveSchoolFollower(schoolId, userId);
+            if (response)
+            {
+                return Ok(new { result = "success" });
+            }
+            return Ok(new { result = "failed" });
         }
 
 
@@ -119,10 +123,18 @@ namespace LMS.App.Controllers
 
         [Route("saveSchoolCertificates")]
         [HttpPost]
-        public async Task<IActionResult> SaveSchoolCertificates(SchoolCertificateViewModel schoolCertificateViewModel)
+        public async Task<IActionResult> SaveSchoolCertificates(SaveSchoolCertificateViewModel model)
         {
-            await _schoolService.SaveSchoolCertificates(schoolCertificateViewModel);
-            return Ok("success");
+            await _schoolService.SaveSchoolCertificates(model);
+            return Ok();
+        }
+
+        [Route("deleteSchoolCertificate")]
+        [HttpPost]
+        public async Task<IActionResult> DeleteSchoolCertificate([FromBody] SchoolCertificateViewModel model)
+        {
+            await _schoolService.DeleteSchoolCertificate(model);
+            return Ok();
         }
 
         [Route("defaultLogoList")]
@@ -130,6 +142,48 @@ namespace LMS.App.Controllers
         public async Task<IActionResult> GetSchoolDefaultLogos()
         {
             return Ok(await _schoolService.GetSchoolDefaultLogos());
+        }
+
+
+        // if add languages from school profile
+        [Route("saveSchoolLanguages")]
+        [HttpPost]
+        public async Task<IActionResult> SaveSchoolLanguages([FromBody]SaveSchoolLanguageViewModel model)
+        {
+            await _schoolService.SaveSchoolLanguages(model.LanguageIds, new Guid(model.SchoolId));
+            return Ok();
+        }
+
+        [Route("deleteSchoolLanguage")]
+        [HttpPost]
+        public async Task<IActionResult> DeleteSchoolLanguage([FromBody]SchoolLanguageViewModel model)
+        {
+            await _schoolService.DeleteSchoolLanguage(model);
+            return Ok();
+        }
+
+        [Route("saveSchoolTeachers")]
+        [HttpPost]
+        public async Task<IActionResult> SaveSchoolTeachers([FromBody] SaveSchoolTeacherViewModel model)
+        {
+            await _schoolService.SaveSchoolTeachers(model);
+            return Ok();
+        }
+
+        [Route("deleteSchoolTeacher")]
+        [HttpPost]
+        public async Task<IActionResult> DeleteSchoolTeacher([FromBody] SchoolTeacherViewModel model)
+        {
+            await _schoolService.DeleteSchoolTeacher(model);
+            return Ok();
+        }
+
+        [Route("getBasicSchoolInfo")]
+        [HttpGet]
+        public async Task<IActionResult> GetBasicSchoolInfo(Guid schoolId)
+        {
+            var school = await _schoolService.GetBasicSchoolInfo(schoolId);
+            return Ok(school);
         }
     }
 }

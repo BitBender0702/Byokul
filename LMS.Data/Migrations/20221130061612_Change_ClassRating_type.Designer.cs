@@ -4,6 +4,7 @@ using LMS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LMS.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20221130061612_Change_ClassRating_type")]
+    partial class Change_ClassRating_type
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -133,29 +135,6 @@ namespace LMS.Data.Migrations
                     b.HasIndex("ServiceTypeId");
 
                     b.ToTable("Classes");
-                });
-
-            modelBuilder.Entity("LMS.Data.Entity.ClassCertificate", b =>
-                {
-                    b.Property<Guid>("CertificateId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("CertificateUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("ClassId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("CertificateId");
-
-                    b.HasIndex("ClassId");
-
-                    b.ToTable("ClassCertificates");
                 });
 
             modelBuilder.Entity("LMS.Data.Entity.ClassDiscipline", b =>
@@ -541,9 +520,6 @@ namespace LMS.Data.Migrations
                     b.Property<string>("FileName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("FileType")
-                        .HasColumnType("int");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -934,16 +910,11 @@ namespace LMS.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("TeacherId");
 
                     b.HasIndex("CreatedById");
 
                     b.HasIndex("DeletedById");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Teachers");
                 });
@@ -984,9 +955,6 @@ namespace LMS.Data.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ContactEmail")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedOn")
@@ -1293,17 +1261,6 @@ namespace LMS.Data.Migrations
                     b.Navigation("School");
 
                     b.Navigation("ServiceType");
-                });
-
-            modelBuilder.Entity("LMS.Data.Entity.ClassCertificate", b =>
-                {
-                    b.HasOne("LMS.Data.Entity.Class", "Class")
-                        .WithMany()
-                        .HasForeignKey("ClassId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Class");
                 });
 
             modelBuilder.Entity("LMS.Data.Entity.ClassDiscipline", b =>
@@ -1691,15 +1648,9 @@ namespace LMS.Data.Migrations
                         .WithMany()
                         .HasForeignKey("DeletedById");
 
-                    b.HasOne("LMS.Data.Entity.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
                     b.Navigation("CreatedBy");
 
                     b.Navigation("DeletedBy");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("LMS.Data.Entity.TeacherCertificate", b =>
