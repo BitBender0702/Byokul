@@ -1,5 +1,4 @@
 using BigBlueButtonAPI.Core;
-using LMS.Common.ViewModels.HubConfig;
 using LMS.Data;
 using LMS.Data.Entity;
 using LMS.DataAccess.Automapper;
@@ -39,7 +38,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("EnableCORS", builder =>
     {
-        builder.WithOrigins("*")
+        builder.WithOrigins("https://byokul.com")
         .AllowAnyHeader()
         .AllowAnyMethod();
     });
@@ -72,7 +71,6 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserDashboardService, UserDashboardService>();
 builder.Services.AddScoped<IStripeService, StripeService>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-builder.Services.AddScoped<TimerManager>();
 
 StripeConfiguration.ApiKey = configuration.GetSection("Stripe")["SecretKey"];
 
@@ -128,15 +126,15 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseCors("EnableCORS");
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+app.UseCors("EnableCORS");
+
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseSwagger();
 app.UseSwaggerUI();
-app.MapHub<ChartHub>("/bigBlueButton");
 
 
 app.MapControllerRoute(
