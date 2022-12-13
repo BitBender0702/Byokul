@@ -369,5 +369,14 @@ namespace LMS.Services
             return result;
         }
 
+        public async Task<CourseViewModel> GetBasicCourseInfo(Guid courseId)
+        {
+            var course = await _courseRepository.GetAll().Include(x => x.School).Where(x => x.CourseId == courseId).FirstOrDefaultAsync();
+
+            var response = _mapper.Map<CourseViewModel>(course);
+            return response;
+
+        }
+
     }
 }

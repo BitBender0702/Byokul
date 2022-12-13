@@ -1,4 +1,5 @@
-﻿using LMS.Common.ViewModels.Post;
+﻿using LMS.Common.Enums;
+using LMS.Common.ViewModels.Post;
 using LMS.Data.Entity;
 using LMS.Services;
 using LMS.Services.Blob;
@@ -25,7 +26,14 @@ namespace LMS.App.Controllers
         public async Task<IActionResult> SavePost(PostViewModel postViewModel)
         {
             var userId = await GetUserIdAsync(this._userManager);
-            postViewModel.OwnerId = new Guid(userId);
+            if (postViewModel.PostAuthorType == (int)PostAuthorTypeEnum.School) {
+                postViewModel.OwnerId = new Guid(userId);
+            }
+
+            if (postViewModel.PostAuthorType == (int)PostAuthorTypeEnum.Class)
+            {
+                postViewModel.AuthorId = new Guid(userId);
+            }
             string url = await _postService.SavePost(postViewModel, userId);
             if (url != null)
             {

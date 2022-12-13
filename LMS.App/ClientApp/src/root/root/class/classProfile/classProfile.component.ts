@@ -25,6 +25,8 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     class:any;
     isProfileGrid:boolean = true;
     isOpenSidebar:boolean = false;
+    isOpenModal:boolean = false;
+    classId!:string;
 
     classLanguage!:AddClassLanguage;
     classTeacher!:AddClassTeacher;
@@ -74,9 +76,9 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       this.translate.use(selectedLang?? '');
 
       var id = this.route.snapshot.paramMap.get('classId');
-      var classId = id ?? '';
+      this.classId = id ?? '';
 
-      this._classService.getClassById(classId).subscribe((response) => {
+      this._classService.getClassById(this.classId).subscribe((response) => {
         this.class = response;
         this.isDataLoaded = true;
       });
@@ -473,6 +475,11 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
         this.teacherForm.setValue({
           teachers: [],
         });
+    
+      }
+
+      createPost(){
+        this.isOpenModal = true;
     
       }
 

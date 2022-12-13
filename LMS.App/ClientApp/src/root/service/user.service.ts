@@ -8,6 +8,7 @@ import { environment } from "src/environments/environment";
 @Injectable({providedIn: 'root'})
 
 export class UserService{
+    token:string = localStorage.getItem("jwt")?? '';
     private headers!: HttpHeaders;
     get apiUrl(): string {
         return environment.apiUrl;
@@ -17,7 +18,7 @@ export class UserService{
     }
     
     getSidebarInfo():Observable<any>{
-        return this.http.get(`${this.apiUrl}/userDashboard/dashboardDetails`);
+        return this.http.get(`${this.apiUrl}/userdashboard/dashboardDetails`);
     }
 
     getUserById(userId:string):Observable<any>{

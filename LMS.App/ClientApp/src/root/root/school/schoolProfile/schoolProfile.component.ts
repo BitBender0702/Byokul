@@ -98,11 +98,11 @@ export class SchoolProfileComponent extends MultilingualComponent implements OnI
 
       var id = this.route.snapshot.paramMap.get('schoolId');
       this.schoolId = id ?? '';
-      // this.loadingIcon = true;
 
       this._schoolService.getSchoolById(this.schoolId).subscribe((response) => {
+        debugger
         this.school = response;
-        // this.loadingIcon = false;
+        this.loadingIcon = false;
         this.isDataLoaded = true;
       });
 
@@ -176,7 +176,7 @@ export class SchoolProfileComponent extends MultilingualComponent implements OnI
        }
 
 
-       this.loadingIcon = false;
+      //  this.loadingIcon = false;
     }
 
     followSchool(){
@@ -271,15 +271,14 @@ export class SchoolProfileComponent extends MultilingualComponent implements OnI
       return;
     }
 
-    this.closeModal();
+    this.loadingIcon = true;
+
+    // this.closeModal();
 
     if(!this.uploadImage){
       this.fileToUpload.append('avatar', this.editSchool.avatar);
 
     }
-
-    // var foundedDate = this.editSchoolForm.get('founded')?.value;
-    // foundedDate = new Date(foundedDate + 'UTC');
 
     this.updateSchoolDetails=this.editSchoolForm.value;
     this.fileToUpload.append('schoolId', this.school.schoolId);
@@ -293,8 +292,9 @@ export class SchoolProfileComponent extends MultilingualComponent implements OnI
     // here for the owner if needed
 
     this._schoolService.editSchool(this.fileToUpload).subscribe((response:any) => {
-      // var schoolId =  response;
-      // this.router.navigateByUrl(`user/schoolProfile/${schoolId}`)
+      debugger
+      // this.loadingIcon = false;
+      this.closeModal();
       this.isSubmitted=false;
       this.fileToUpload = new FormData();
       this.ngOnInit();

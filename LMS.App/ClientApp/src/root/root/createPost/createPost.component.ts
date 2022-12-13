@@ -8,6 +8,8 @@ import { PostService } from 'src/root/service/post.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { UploadImage } from 'src/root/interfaces/post/uploadImage';
 import { UploadVideo } from 'src/root/interfaces/post/uploadVideo';
+import { PostAuthorTypeEnum } from 'src/root/Enums/postAuthorTypeEnum';
+import { PostTypeEnum } from 'src/root/Enums/postTypeEnum';
 //import { ModalDirective } from 'ngx-bootstrap/modal';
 
 @Component({
@@ -21,15 +23,17 @@ export class CreatePostComponent implements OnInit {
   @Input() isOpenModal!:boolean;
   @Input() schoolId!:string;
 
+  @Input() classId!:string;
+  @Input() courseId!:string;
+  @Input() userId!:string;
+
+
   @ViewChild('openModal') openModal!: ElementRef;
 
   private _postService;
-  //createPostForm!:FormGroup;
   isSubmitted: boolean = false;
-  //fileToUpload= new FormData();
-  //items!: MenuItem[];
 
-  schoolDetails:any;
+  parentDetails:any;
   disabled:boolean = true;
 
   createPostForm!:FormGroup;
@@ -61,11 +65,39 @@ export class CreatePostComponent implements OnInit {
   ngOnInit(): void {
     debugger
 
+    if(this.schoolId != undefined){
     this._postService.getSchool(this.schoolId).subscribe((response) => {
-      this.schoolDetails = response;
-      // this.openModalPopup();
+      this.parentDetails = response;
      
     });
+   }
+
+   if(this.classId != undefined){
+    this._postService.getClass(this.classId).subscribe((response) => {
+      debugger
+      this.parentDetails = response;
+     
+    });
+
+   }
+
+   if(this.userId != undefined){
+    this._postService.getUser(this.userId).subscribe((response) => {
+      debugger
+      this.parentDetails = response;
+     
+    });
+
+   }
+
+   if(this.courseId != undefined){
+    this._postService.getCourse(this.courseId).subscribe((response) => {
+      debugger
+      this.parentDetails = response;
+     
+    });
+
+   }
 
     this.createPostForm = this.fb.group({
       title: this.fb.control('',[Validators.required]),
@@ -191,13 +223,24 @@ export class CreatePostComponent implements OnInit {
     }
 
     var post =this.createPostForm.value;
-    this.postToUpload.append('authorId', this.schoolId);
+    if(this.schoolId!= undefined){
+      this.appendData(this.schoolId,this.schoolId,'',PostAuthorTypeEnum.School.toString());
+    }
+    if(this.classId!= undefined){
+      this.appendData('',this.classId,this.parentDetails.school.schoolId,PostAuthorTypeEnum.Class.toString());
+    }
+
+    if(this.userId!= undefined){
+      this.appendData(this.userId,this.userId,this.userId,PostAuthorTypeEnum.User.toString());
+    }
+
+    if(this.courseId!= undefined){
+      this.appendData('',this.courseId,this.parentDetails.school.schoolId,PostAuthorTypeEnum.Course.toString());
+    }
+
     this.postToUpload.append('title', post.title);
     this.postToUpload.append('description', post.bodyText);
-    this.postToUpload.append('parentId', this.schoolId);
-    this.postToUpload.append('postAuthorType', "1");
-    this.postToUpload.append('postType', "1");
-
+    this.postToUpload.append('postType', PostTypeEnum.Post.toString());
 
 
     this._postService.createPost(this.postToUpload).subscribe((response:any) => {
@@ -205,6 +248,15 @@ export class CreatePostComponent implements OnInit {
       this.ngOnInit();
     });
 
+
+   }
+
+   appendData(authorId:string, parentId:string, ownerId:string, postAuthorType:string){
+    debugger
+      this.postToUpload.append('authorId', authorId);
+      this.postToUpload.append('parentId', parentId);
+      this.postToUpload.append('ownerId', ownerId);
+      this.postToUpload.append('postAuthorType', postAuthorType);
 
    }
 

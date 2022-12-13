@@ -148,5 +148,13 @@ namespace LMS.App.Controllers
             return Ok();
         }
 
+        [Route("getBasicClassInfo")]
+        [HttpGet]
+        public async Task<IActionResult> GetBasicClassInfo(Guid classId)
+        {
+            var response = await _classService.GetBasicClassInfo(classId);
+            return Ok(response);
+        }
+
     }
 }

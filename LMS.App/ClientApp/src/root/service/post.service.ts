@@ -20,6 +20,21 @@ export class PostService{
 
     }
 
+    getClass(classId:string):Observable<any>{
+        return this.http.get(`${this.apiUrl}/class/getBasicClassInfo` + '?classId=' + classId);
+
+    }
+
+    getUser(userId:string):Observable<any>{
+        return this.http.get(`${this.apiUrl}/users/getBasicUserInfo` + '?userId=' + userId);
+
+    }
+
+    getCourse(courseId:string):Observable<any>{
+        return this.http.get(`${this.apiUrl}/course/getBasicCourseInfo` + '?courseId=' + courseId);
+
+    }
+
     createPost(credentials:any): Observable<any> {
         debugger
         for(var pair of credentials.entries()) {

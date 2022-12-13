@@ -22,6 +22,9 @@ import { MultilingualComponent } from '../../sharedModule/Multilingual/multiling
     isOpenSidebar:boolean = false;
     isDataLoaded:boolean = false;
     isSubmitted: boolean = false;
+    isOpenModal:boolean = false;
+    loadingIcon:boolean = false;
+    userId!:string;
 
     private _userService;
     user:any;
@@ -51,15 +54,19 @@ import { MultilingualComponent } from '../../sharedModule/Multilingual/multiling
     }
   
     ngOnInit(): void {
+      debugger
 
+      this.loadingIcon = true;
       var selectedLang = localStorage.getItem("selectedLanguage");
       this.translate.use(selectedLang?? '');
       
       var id = this.route.snapshot.paramMap.get('userId');
-      var userId = id ?? '';
+      this.userId = id ?? '';
 
-      this._userService.getUserById(userId).subscribe((response) => {
+      this._userService.getUserById(this.userId).subscribe((response) => {
+        debugger
         this.user = response;
+        this.loadingIcon = false;
         this.isDataLoaded = true;
       });
 
@@ -193,6 +200,7 @@ import { MultilingualComponent } from '../../sharedModule/Multilingual/multiling
     if (!this.editUserForm.valid) {
       return;
     }
+    this.loadingIcon = true;
 
     this.closeModal();
 
@@ -250,5 +258,10 @@ resetLanguageModal(){
   });
   // this is unappro
   //this.schoolTeacher.teacherIds = [];
+}
+
+createPost(){
+  this.isOpenModal = true;
+
 }
 }

@@ -110,5 +110,13 @@ namespace LMS.App.Controllers
         //    return Ok(await _userService.GetUserFollowers(userId));
         //}
 
+        [Route("getBasicUserInfo")]
+        [HttpGet]
+        public async Task<IActionResult> GetBasicUserInfo(string userId)
+        {
+            var user = await _userService.GetBasicUserInfo(userId);
+            return Ok(user);
+        }
+
     }
 }

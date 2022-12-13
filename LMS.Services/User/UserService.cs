@@ -374,5 +374,14 @@ namespace LMS.Services
 
         }
 
+        public async Task<UserDetailsViewModel> GetBasicUserInfo(string userId)
+        {
+            var user = await _userRepository.GetAll().Where(x => x.Id == userId).FirstOrDefaultAsync();
+
+            var response = _mapper.Map<UserDetailsViewModel>(user);
+            return response;
+
+        }
+
     }
 }

@@ -38,7 +38,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("EnableCORS", builder =>
     {
-        builder.WithOrigins("https://byokul.com")
+        builder.AllowAnyOrigin()
         .AllowAnyHeader()
         .AllowAnyMethod();
     });
@@ -87,8 +87,8 @@ builder.Services.AddScoped<BigBlueButtonAPIClient>(provider =>
 
 // Add service for JWT.
 
-builder.Services.AddAuthentication(/*JwtBearerDefaults.AuthenticationScheme*/
-    CookieAuthenticationDefaults.AuthenticationScheme)
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme
+    /*CookieAuthenticationDefaults.AuthenticationScheme*/)
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
@@ -130,7 +130,6 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseCors("EnableCORS");
-
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseSwagger();

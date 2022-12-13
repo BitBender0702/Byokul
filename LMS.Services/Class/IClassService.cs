@@ -21,5 +21,6 @@ namespace LMS.Services
         Task DeleteClassTeacher(ClassTeacherViewModel model);
         Task SaveClassCertificates(SaveClassCertificateViewModel model);
         Task DeleteClassCertificate(ClassCertificateViewModel model);
+        Task<ClassViewModel> GetBasicClassInfo(Guid classId);
     }
 }

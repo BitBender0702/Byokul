@@ -14,5 +14,6 @@ namespace LMS.Services
         Task DeleteCourseById(Guid classId, string deletedById);
         Task<CourseDetailsViewModel> GetCourseById(Guid courseId);
         Task<IEnumerable<CourseViewModel>> GetAllCourses();
+        Task<CourseViewModel> GetBasicCourseInfo(Guid courseId);
     }
 }

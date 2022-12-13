@@ -1,11 +1,12 @@
 <div *ngIf="isDataLoaded">
   <section class="f-poppins">
     <side-bar [isOpenSidebar]="isOpenSidebar"></side-bar> 
+    <div *ngIf="isOpenModal"><create-post [isOpenModal]="isOpenModal" [classId]="classId"></create-post></div>
     <div class="main_content">
       <div class="create-post-header d-flex justify-content-between d-none d-xl-flex">
         <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
             src="../../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
-        <button type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44">{{'CreatePost'| translate }}</button>
+        <button (click)="createPost()" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44">{{'CreatePost'| translate }}</button>
       </div>
       <div class="live-header d-flex align-items-center justify-content-between">
         <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark  d-xl-none"><img

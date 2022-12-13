@@ -65,6 +65,7 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
           else{
 
             this.isSubmitted = false;
+            this.loadingIcon = false;
         const token = response.token;
         localStorage.setItem("jwt", token); 
         this.router.navigate(["../../myEarnings"],{ relativeTo: this.route });

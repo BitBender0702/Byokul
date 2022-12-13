@@ -16,6 +16,7 @@ namespace LMS.Services
         Task<IEnumerable<CityViewModel>> CityList(Guid countryId);
         Task<IEnumerable<PostAttachmentViewModel>> GetMyFeed(string userId);
         Task<IEnumerable<PostAttachmentViewModel>> GetUserProfileFeed(string userId);
+        Task<UserDetailsViewModel> GetBasicUserInfo(string userId);
 
     }
 }

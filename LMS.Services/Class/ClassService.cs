@@ -491,5 +491,14 @@ namespace LMS.Services
             _classCertificateRepository.Save();
 
         }
+
+        public async Task<ClassViewModel> GetBasicClassInfo(Guid classId)
+        {
+            var classes = await _classRepository.GetAll().Include(x => x.School).Where(x => x.ClassId == classId).FirstOrDefaultAsync();
+
+            var response = _mapper.Map<ClassViewModel>(classes);
+            return response;
+
+        }
     }
 }

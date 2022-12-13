@@ -12,7 +12,6 @@ using System.Text;
 using System.Xml;
 using System.Diagnostics;
 using Microsoft.AspNetCore.SignalR;
-using LMS.Common.ViewModels.HubConfig;
 using LMS.Services.Common;
 
 namespace LMS.App.Controllers
@@ -26,17 +25,13 @@ namespace LMS.App.Controllers
         private const string JsonArrayNamespace = "http://james.newtonking.com/projects/json";
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly ICommonService _commonService;
-        private readonly IHubContext<ChartHub> _hub;
-        private readonly TimerManager _timer;
-        public BigBlueButtonController(IConfiguration config, IBigBlueButtonService bigBlueButtonService, IBlobService blobService, IWebHostEnvironment webHostEnvironment, ICommonService commonService, IHubContext<ChartHub> hub, TimerManager timer)
+        public BigBlueButtonController(IConfiguration config, IBigBlueButtonService bigBlueButtonService, IBlobService blobService, IWebHostEnvironment webHostEnvironment, ICommonService commonService)
         {
             _config = config;
             _bigBlueButtonService = bigBlueButtonService;
             _blobService = blobService;
             _webHostEnvironment = webHostEnvironment;
             _commonService = commonService;
-            _hub = hub;
-            _timer = timer;
         }
 
         [Route("create")]
@@ -69,12 +64,6 @@ namespace LMS.App.Controllers
             {
                 var meetingID = obj.First().data.attributes.meeting.InternalMeetingId;
 
-
-                if (!_timer.IsTimerStarted)
-                {
-                    _timer.PrepareTimer(() => _hub.Clients.All.SendAsync("TransferChartData", DataManager.GetData()));
-                    return Ok(new { Message = "Request Completed" });  
-                }
                 //var res = _hub.Clients.All.SendAsync("transferchartdata", DataManager.GetData());
  
                 string recordingUrl = string.Format(_config["RecordingUrl"], meetingID);
