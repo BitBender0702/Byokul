@@ -75,6 +75,7 @@ img {
 .danger_text {
 	color: #FF1C1C !important;
 }
+
 .white_text {
 	color: #fff !important;
 }
@@ -549,10 +550,10 @@ hr.earning-hr {
 }
 
 .live-image {
-    box-shadow: 0px 4px 20px rgb(0 0 0 / 5%);
-    width: 100%;
-    /* max-width: 860px; */
-    margin: 0 auto 26px;
+	box-shadow: 0px 4px 20px rgb(0 0 0 / 5%);
+	width: 100%;
+	/* max-width: 860px; */
+	margin: 0 auto 26px;
 }
 
 button.live_chats {
@@ -598,10 +599,10 @@ button.live_chats .live-chat-back {
 }
 
 .accordion-open {
-    max-width: 480px;
-    padding: 32px 36px;
-    border-left: 1px solid #F1F7FF;
-    margin-left: 16px;
+	max-width: 480px;
+	padding: 32px 36px;
+	border-left: 1px solid #F1F7FF;
+	margin-left: 16px;
 }
 
 .pinned-chat {
@@ -611,19 +612,21 @@ button.live_chats .live-chat-back {
 }
 
 .live-chat-box {
-    padding: 32px 32px 32px 50px;
-    background: #FCFCFC;
-    margin: 0 -52px -50px -36px;
+	padding: 32px 32px 32px 50px;
+	background: #FCFCFC;
+	margin: 0 -52px -50px -36px;
 }
 
 .live-message {
-    margin-bottom: 32px;
-    padding-right: 40px;
+	margin-bottom: 32px;
+	padding-right: 40px;
 }
+
 .reel-like-chat {
-    position: absolute;
-    right: 0;
+	position: absolute;
+	right: 0;
 }
+
 button.comment-btn {
 	background: #FF821C;
 	box-shadow: -4px 4px 30px rgb(0 0 0 / 8%);
@@ -1414,7 +1417,7 @@ textarea.ht_96 {
 .hover-tags .custom-tag:hover {
 	background: #7C8DA7;
 	color: #FAFAFA;
-	padding-right: 20px;
+	padding-right: 25px;
 	cursor: pointer;
 }
 
@@ -1640,46 +1643,77 @@ body .liv-postbtn .post-attch-btn.active,
 .web-cmbtn:hover {
 	border: 1px solid #fafafa;
 }
+
 .live-chat-outer {
-    margin: -32px -32px 0 -50px;
-    padding: 32px 32px 30px 50px;
-    max-height: 550px;
-    overflow: auto;
-}
-.live-chat-outer  .live-message:last-child {
-    margin-bottom: 0;
+	margin: -32px -32px 0 -50px;
+	padding: 32px 32px 30px 50px;
+	max-height: 550px;
+	overflow: auto;
 }
 
-.full-widthreel{
+.live-chat-outer .live-message:last-child {
+	margin-bottom: 0;
+}
+
+.full-widthreel {
 	background-image: url(../images/reel-bg.png);
 	background-repeat: no-repeat;
-    background-size: cover;
-	padding: 0px;  
+	background-size: cover;
+	padding: 0px;
 }
-.full-widthreel .live-inner {   
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(25px);	
+
+.full-widthreel .live-inner {
+	background: rgba(0, 0, 0, 0.5);
+	backdrop-filter: blur(25px);
 	padding: 16px 16px 0;
 }
-.full-widthreel .live-image{
+
+.full-widthreel .live-image {
 	max-width: 860px;
 }
+
 .live-image {
-    box-shadow: 0px 4px 20px rgb(0 0 0 / 5%);   
-    margin: 0 auto 26px;
-    background: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(35px);
+	box-shadow: 0px 4px 20px rgb(0 0 0 / 5%);
+	margin: 0 auto 26px;
+	background: rgba(255, 255, 255, 0.8);
+	backdrop-filter: blur(35px);
 }
+
 .full-widthreel .live-inner .live-image {
-    margin-bottom: 0;
+	margin-bottom: 0;
 }
+
 .reel-username img {
-    width: 31px;
-    height: 31px;
-    border-radius: 50%;
+	width: 31px;
+	height: 31px;
+	border-radius: 50%;
 }
+
 .reel-username {
-    position: absolute;
-    top: 24px;
-    left: 24px;
+	position: absolute;
+	top: 24px;
+	left: 24px;
+}
+
+.hover-tags .custom-tag .light-svg {
+	display: none;
+}
+
+.hover-tags .custom-tag:hover .light-svg {
+	display: inline-block;
+}
+
+.hover-tags .custom-tag:hover .dark-svg {
+	display: none;
+}
+
+.reels-uploader-img {
+	height: 524px;
+	max-width: 524px;
+	margin: 0 auto;
+}
+
+.reels-uploader-img .dropzone-desc {
+	transform: translateY(-50%);
+	top: 50%;
 }
