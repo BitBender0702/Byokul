@@ -1717,3 +1717,72 @@ body .liv-postbtn .post-attch-btn.active,
 	transform: translateY(-50%);
 	top: 50%;
 }
+/*---- Followers page css start ----*/
+.followers_box {
+    max-height: calC(100vh - 190px);
+    overflow-y: auto;
+    padding-right: 6px;
+}
+.wht_newbox{
+	border: 1px solid #F5F5F5;
+filter: drop-shadow(0px 10px 20px rgba(0, 0, 0, 0.15));
+border-radius: 4px;
+}
+.followers_box ul li {
+    padding: 20px;
+	transition: 0.3s all;
+	border-bottom: 1px solid #F5F5F5;
+	background: #fff;
+}
+.followers_box ul li:hover{
+	background: #F2F4F7;
+}
+.followers_box ul li .followe_report{
+    display: none;
+}
+.followers_box ul li:hover .followe_report{
+    display: inline-block;
+}
+.notification-settingbox ul li:hover{
+	background: #fff;;
+}
+.new-notidot {
+    position: absolute;
+    font-size: 7px;
+    color: #FF821C;
+    top: 50%;
+    transform: translateY(-50%);
+	left: 20px;
+}
+.notification-settingbox ul li {
+    padding-left: 40px;
+	
+}
+div#notifi-settingpopup .form-group .form-check.form-check-inline {
+    position: absolute;
+    top: 11px;
+    right: 4px;
+    margin: 0;
+}
+.form-check-input:checked {
+    background-color:#FF821C;
+    border-color: #FF821C !important;
+}
+.form-check-input:focus {
+    box-shadow:none;
+}
+.form-check-input {
+    border-color: #FF821C !important;
+}
+div#notifi-settingpopup .modal-dialog {
+    max-width: 500px;
+}
+.notification-sett-btn{
+    background: transparent;
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+}
+.notification-sett-btn:hover{
+	background: rgba(124, 141, 167, 0.05);
+}

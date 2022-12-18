@@ -1,0 +1,995 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>By Okul</title>
+  <link rel="icon" type="image/x-icon" href="images/favicon.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+  <script src="https://kit.fontawesome.com/782679fe11.js" crossorigin="anonymous"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/custom.css" rel="stylesheet" />
+  <link href="css/responsive.css" rel="stylesheet" />
+</head>
+
+<body>
+  <section class="f-poppins">
+    <div class="sidemenu d-xl-block" id="side-bar">
+      <span class="closebtn d-xl-none" onclick="closeSidebar()" title="Close Side Menu">×</span>
+      <div class="text-center">
+        <a href="" class="main-logo"><img src="images/logo.svg" /></a>
+      </div>
+      <div class="d-flex text-center notification-box justify-content-center">
+        <ul class="list-unstyled d-flex ">
+          <li class="d-inline-block">
+            <div class="dropdown">
+              <button class="bg-transparent dropdown-toggle rounded-circle" type="button" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                <img src="images/user.png" />
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Action</a></li>
+                <li><a class="dropdown-item" href="#">Another action</a></li>
+              </ul>
+            </div>
+          </li>
+          <li class="d-inline-block"><button type="button "
+              class="notification-btn position-relative border-0 bg-transparent"><img src="images/chat-icon.svg" />
+              <span
+                class="badge rounded-circle d-inline-flex align-items-center justify-content-center fw_700 font_12">3</span></button>
+          </li>
+          <li class="d-inline-block"><button type="button "
+              class="notification-btn position-relative border-0 bg-transparent"><img src="images/Notification.svg" />
+              <span
+                class="badge rounded-circle d-inline-flex align-items-center justify-content-center fw_700 font_12">3</span></button>
+          </li>
+
+
+        </ul>
+      </div>
+      <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400">My Earnings $ </button>
+      <hr class="earning-hr" />
+      <div class="custom-tabs">
+        <ul class="nav nav-tabs mb-3 border-0" id="myTab" role="tablist">
+          <li class="nav-item ps-0 mb-0" role="presentation">
+            <button class="nav-link active" id="subscriptions-tab" data-bs-toggle="tab"
+              data-bs-target="#subscriptions-tab-pane" type="button" role="tab" aria-controls="subscriptions-tab-pane"
+              aria-selected="true">Subscriptions</button>
+          </li>
+          <li class="nav-item ps-0 mb-0" role="presentation">
+            <button class="nav-link" id="owned-tab" data-bs-toggle="tab" data-bs-target="#owned-tab-pane" type="button"
+              role="tab" aria-controls="owned-tab-pane" aria-selected="false">Owned</button>
+          </li>
+        </ul>
+        <div class="tab-content" id="pills-tabContent">
+          <div class="tab-pane fade show active" id="subscriptions-tab-pane" role="tabpanel"
+            aria-labelledby="subscriptions-tab" tabindex="0">
+            <div class="accordion" id="accordionPanelsStayOpenExample">
+              <div class="accordion-item border-0 bg-transparent">
+                <h2 class="accordion-header" id="headingOne">
+                  <button
+                    class="accordion-button  bg-transparent font_14 text_ltgray fw_400 d-flex align-items-center justify-content-between"
+                    type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true"
+                    aria-controls="collapseOne">
+                    <span>Schools </span>
+                  </button>
+                  <a href="#"
+                    class="add-btn d-inline-flex align-items-center justify-content-center rounded-circle"><img
+                      src="images/plus-light.svg" /></a>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                  data-bs-parent="#accordionExample">
+                  <div class="accordion-body p-0">
+                    <div class="school-name d-flex align-items-center font_16">
+                      <div class="school-img rounded-circle me-3">
+                        <img src="images/school-1.png" />
+                      </div>
+                      School Name
+                    </div>
+                    <div class="school-name d-flex align-items-center font_16">
+                      <div class="school-img rounded-circle me-3">
+                        <img src="images/school-2.png" />
+                      </div>
+                      School Name
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item border-0 bg-transparent">
+                <h2 class="accordion-header" id="headingTwo">
+                  <button
+                    class="accordion-button  bg-transparent font_14 text_ltgray fw_400 d-flex align-items-center justify-content-between"
+                    type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false"
+                    aria-controls="collapseTwo">
+                    <span>Classes </span>
+                  </button>
+                  <a href="#"
+                    class="add-btn d-inline-flex align-items-center justify-content-center rounded-circle"><img
+                      src="images/plus-light.svg" /></a>
+                </h2>
+                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+                  data-bs-parent="#accordionExample">
+                  <div class="accordion-body p-0">
+                    <div class="school-name d-flex align-items-center font_16">
+                      <div class="school-img rounded-circle me-3">
+                        <img src="images/school-3.png" />
+                      </div>
+                      Class Name
+                    </div>
+                    <div class="school-name d-flex align-items-center font_16">
+                      <div class="school-img rounded-circle me-3">
+                        <img src="images/school-4.png" />
+                      </div>
+                      Class Name
+                    </div>
+                    <div class="school-name d-flex align-items-center font_16">
+                      <div class="school-img rounded-circle me-3">
+                        <img src="images/school-5.png" />
+                      </div>
+                      Class Name
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item border-0 bg-transparent">
+                <h2 class="accordion-header" id="headingThree">
+                  <button
+                    class="accordion-button  bg-transparent font_14 text_ltgray fw_400 d-flex align-items-center justify-content-between"
+                    type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false"
+                    aria-controls="collapseThree">
+                    <span>Courses </span>
+                  </button>
+                  <a href="#"
+                    class="add-btn d-inline-flex align-items-center justify-content-center rounded-circle"><img
+                      src="images/plus-light.svg" /></a>
+                </h2>
+                <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
+                  data-bs-parent="#accordionExample">
+                  <div class="accordion-body p-0">
+                    <div class="school-name d-flex align-items-center font_16">
+                      <div class="school-img rounded-circle me-3">
+                        <img src="images/school-6.png" />
+                      </div>
+                      Course Name
+                    </div>
+                    <div class="school-name d-flex align-items-center font_16">
+                      <div class="school-img rounded-circle me-3">
+                        <img src="images/school-7.png" />
+                      </div>
+                      Course Name
+                    </div>
+                    <div class="school-name d-flex align-items-center font_16">
+                      <div class="school-img rounded-circle me-3">
+                        <img src="images/school-8.png" />
+                      </div>
+                      Course Name
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="owned-tab-pane" role="tabpanel" aria-labelledby="owned-tab" tabindex="0">
+            <div class="accordion" id="accordionPanelsStayOpenExample">
+              <div class="accordion-item border-0 bg-transparent">
+                <h2 class="accordion-header" id="headingOne">
+                  <button
+                    class="accordion-button  bg-transparent font_14 text_ltgray fw_400 d-flex align-items-center justify-content-between"
+                    type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true"
+                    aria-controls="collapseOne">
+                    <span>Schools </span>
+                  </button>
+                  <a href="#"
+                    class="add-btn d-inline-flex align-items-center justify-content-center rounded-circle"><img
+                      src="images/plus-light.svg" /></a>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                  data-bs-parent="#accordionExample">
+                  <div class="accordion-body p-0">
+                    <div class="school-name d-flex align-items-center font_16">
+                      <div class="school-img rounded-circle me-3">
+                        <img src="images/school-1.png" />
+                      </div>
+                      School Name
+                    </div>
+                    <div class="school-name d-flex align-items-center font_16">
+                      <div class="school-img rounded-circle me-3">
+                        <img src="images/school-2.png" />
+                      </div>
+                      School Name
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item border-0 bg-transparent">
+                <h2 class="accordion-header" id="headingTwo">
+                  <button
+                    class="accordion-button  bg-transparent font_14 text_ltgray fw_400 d-flex align-items-center justify-content-between"
+                    type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false"
+                    aria-controls="collapseTwo">
+                    <span>Classes </span>
+                  </button>
+                  <a href="#"
+                    class="add-btn d-inline-flex align-items-center justify-content-center rounded-circle"><img
+                      src="images/plus-light.svg" /></a>
+                </h2>
+                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+                  data-bs-parent="#accordionExample">
+                  <div class="accordion-body p-0">
+                    <div class="school-name d-flex align-items-center font_16">
+                      <div class="school-img rounded-circle me-3">
+                        <img src="images/school-3.png" />
+                      </div>
+                      Class Name
+                    </div>
+                    <div class="school-name d-flex align-items-center font_16">
+                      <div class="school-img rounded-circle me-3">
+                        <img src="images/school-4.png" />
+                      </div>
+                      Class Name
+                    </div>
+                    <div class="school-name d-flex align-items-center font_16">
+                      <div class="school-img rounded-circle me-3">
+                        <img src="images/school-5.png" />
+                      </div>
+                      Class Name
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item border-0 bg-transparent">
+                <h2 class="accordion-header" id="headingThree">
+                  <button
+                    class="accordion-button bg-transparent font_14 text_ltgray fw_400 d-flex align-items-center justify-content-between"
+                    type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false"
+                    aria-controls="collapseThree">
+                    <span>Courses </span>
+                  </button>
+                  <a href="#"
+                    class="add-btn d-inline-flex align-items-center justify-content-center rounded-circle"><img
+                      src="images/plus-light.svg" /></a>
+                </h2>
+                <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
+                  data-bs-parent="#accordionExample">
+                  <div class="accordion-body p-0">
+                    <div class="school-name d-flex align-items-center font_16">
+                      <div class="school-img rounded-circle me-3">
+                        <img src="images/school-6.png" />
+                      </div>
+                      Course Name
+                    </div>
+                    <div class="school-name d-flex align-items-center font_16">
+                      <div class="school-img rounded-circle me-3">
+                        <img src="images/school-7.png" />
+                      </div>
+                      Course Name
+                    </div>
+                    <div class="school-name d-flex align-items-center font_16">
+                      <div class="school-img rounded-circle me-3">
+                        <img src="images/school-8.png" />
+                      </div>
+                      Course Name
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="d-flex justify-content-between flex-wrap mt-4">
+          <div class="language-btn">
+            <input type="radio" class="btn-check" name="btnradio" id="lang1" autocomplete="off" checked>
+            <label class="btn btn-outline-primary font_12 rounded-8" for="lang1">English</label>
+          </div>
+          <div class="language-btn">
+            <input type="radio" class="btn-check" name="btnradio" id="lang2" autocomplete="off">
+            <label class="btn btn-outline-primary font_12 rounded-8" for="lang2">اللغة العربية</label>
+          </div>
+          <div class="language-btn">
+            <input type="radio" class="btn-check" name="btnradio" id="lang3" autocomplete="off">
+            <label class="btn btn-outline-primary font_12 rounded-8" for="lang3">Türkçe</label>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="main_content">
+
+      <div class="create-post-header d-flex justify-content-between d-none d-xl-flex align-items-center">
+        <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
+            src="images/arrow-left.svg" /> Back</button>
+            <h2 class="font_22 fw_700 f-monteserrat mb-md-0">Followers</h2>
+        <button type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44" data-bs-toggle="modal"
+          data-bs-target="#create-post">Create Post</button>
+      </div>
+      <div class="live-header d-flex align-items-center justify-content-between">
+        <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark  d-xl-none"><img
+            src="images/arrow-left.svg" /> Back</button>
+        <span class="logo_mobile d-xl-none">
+          <img src="images/logo.svg" />
+        </span>
+        <div class="d-xl-none">
+          <button type="button" class="mobile-search border_btn" onclick="openSearch()"><img
+              src="images/search-lg.svg" /></button>
+          <button type="button" class="mobile-search border_btn" onclick="openSidebar()"><img
+              src="images/menu.svg" /></button>
+        </div>
+      </div>
+
+      <!---- Followers list html start ------>
+      <div class="wht_newbox followers_box">
+        <ul class="list-unstyled before-none mb-0">
+          <li class="mb-0">
+            <div class="d-flex align-items-center justify-content-between"><span class="followers-name font_16 text_sec1 fw_600"><img src="images/user.jpg" class="rounded-circle me-2"/> User Name</span>
+            <span class="followe_report"><button type="button" class="border-0 bg-transparent font_14 text_dark fw_400 me-3">Report</button> <button type="button" class="border-0 bg-transparent font_14 text_dark fw_400 ">Ban</button></span>
+            </div>
+          </li>
+          <li class="mb-0">
+            <div class="d-flex align-items-center justify-content-between"><span class="followers-name font_16 text_sec1 fw_600"><img src="images/user.jpg" class="rounded-circle me-2"/> User Name</span>
+            <span class="followe_report"><button type="button" class="border-0 bg-transparent font_14 text_dark fw_400 me-3">Report</button> <button type="button" class="border-0 bg-transparent font_14 text_dark fw_400 ">Ban</button></span>
+            </div>
+          </li>
+          <li class="mb-0">
+            <div class="d-flex align-items-center justify-content-between"><span class="followers-name font_16 text_sec1 fw_600"><img src="images/user.jpg" class="rounded-circle me-2"/> User Name</span>
+            <span class="followe_report"><button type="button" class="border-0 bg-transparent font_14 text_dark fw_400 me-3">Report</button> <button type="button" class="border-0 bg-transparent font_14 text_dark fw_400 ">Ban</button></span>
+            </div>
+          </li>
+          <li class="mb-0">
+            <div class="d-flex align-items-center justify-content-between"><span class="followers-name font_16 text_sec1 fw_600"><img src="images/user.jpg" class="rounded-circle me-2"/> User Name</span>
+            <span class="followe_report"><button type="button" class="border-0 bg-transparent font_14 text_dark fw_400 me-3">Report</button> <button type="button" class="border-0 bg-transparent font_14 text_dark fw_400 ">Ban</button></span>
+            </div>
+          </li>
+          <li class="mb-0">
+            <div class="d-flex align-items-center justify-content-between"><span class="followers-name font_16 text_sec1 fw_600"><img src="images/user.jpg" class="rounded-circle me-2"/> User Name</span>
+            <span class="followe_report"><button type="button" class="border-0 bg-transparent font_14 text_dark fw_400 me-3">Report</button> <button type="button" class="border-0 bg-transparent font_14 text_dark fw_400 ">Ban</button></span>
+            </div>
+          </li>
+          <li class="mb-0">
+            <div class="d-flex align-items-center justify-content-between"><span class="followers-name font_16 text_sec1 fw_600"><img src="images/user.jpg" class="rounded-circle me-2"/> User Name</span>
+            <span class="followe_report"><button type="button" class="border-0 bg-transparent font_14 text_dark fw_400 me-3">Report</button> <button type="button" class="border-0 bg-transparent font_14 text_dark fw_400 ">Ban</button></span>
+            </div>
+          </li>
+          <li class="mb-0">
+            <div class="d-flex align-items-center justify-content-between"><span class="followers-name font_16 text_sec1 fw_600"><img src="images/user.jpg" class="rounded-circle me-2"/> User Name</span>
+            <span class="followe_report"><button type="button" class="border-0 bg-transparent font_14 text_dark fw_400 me-3">Report</button> <button type="button" class="border-0 bg-transparent font_14 text_dark fw_400 ">Ban</button></span>
+            </div>
+          </li>
+          <li class="mb-0">
+            <div class="d-flex align-items-center justify-content-between"><span class="followers-name font_16 text_sec1 fw_600"><img src="images/user.jpg" class="rounded-circle me-2"/> User Name</span>
+            <span class="followe_report"><button type="button" class="border-0 bg-transparent font_14 text_dark fw_400 me-3">Report</button> <button type="button" class="border-0 bg-transparent font_14 text_dark fw_400 ">Ban</button></span>
+            </div>
+          </li>
+          <li class="mb-0">
+            <div class="d-flex align-items-center justify-content-between"><span class="followers-name font_16 text_sec1 fw_600"><img src="images/user.jpg" class="rounded-circle me-2"/> User Name</span>
+            <span class="followe_report"><button type="button" class="border-0 bg-transparent font_14 text_dark fw_400 me-3">Report</button> <button type="button" class="border-0 bg-transparent font_14 text_dark fw_400 ">Ban</button></span>
+            </div>
+          </li>
+          <li class="mb-0">
+            <div class="d-flex align-items-center justify-content-between"><span class="followers-name font_16 text_sec1 fw_600"><img src="images/user.jpg" class="rounded-circle me-2"/> User Name</span>
+            <span class="followe_report"><button type="button" class="border-0 bg-transparent font_14 text_dark fw_400 me-3">Report</button> <button type="button" class="border-0 bg-transparent font_14 text_dark fw_400 ">Ban</button></span>
+            </div>
+          </li>
+          <li class="mb-0">
+            <div class="d-flex align-items-center justify-content-between"><span class="followers-name font_16 text_sec1 fw_600"><img src="images/user.jpg" class="rounded-circle me-2"/> User Name</span>
+            <span class="followe_report"><button type="button" class="border-0 bg-transparent font_14 text_dark fw_400 me-3">Report</button> <button type="button" class="border-0 bg-transparent font_14 text_dark fw_400 ">Ban</button></span>
+            </div>
+          </li>
+          <li class="mb-0">
+            <div class="d-flex align-items-center justify-content-between"><span class="followers-name font_16 text_sec1 fw_600"><img src="images/user.jpg" class="rounded-circle me-2"/> User Name</span>
+            <span class="followe_report"><button type="button" class="border-0 bg-transparent font_14 text_dark fw_400 me-3">Report</button> <button type="button" class="border-0 bg-transparent font_14 text_dark fw_400 ">Ban</button></span>
+            </div>
+          </li>
+        </ul>
+      </div>
+      
+      
+
+     
+
+      
+
+    </div>
+
+  </section>
+
+  <!-- Modal -->
+  <div class="modal fade edit-school-modal" id="editschool" tabindex="-1" aria-labelledby="editschool"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header border-0 justify-content-center position-relative">
+          <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center" id="editschool">Edit Your Profile</h1>
+          <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"><img
+              src="images/cross.svg" /></button>
+        </div>
+        <div class="modal-body">
+          <div class="edit-profile-header text-center mb-4">
+            <div class="rounded-circle modal-school-icon text-center mb-2">
+              <img src="images/school-profile-image.jpg">
+            </div>
+            <button class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins position-static opacity-100"> Edit
+              Photo</button>
+          </div>
+          <div class="text-line-border position-relative text-center mb-4">
+            <span class="line-text font_12 text_ltgray fw_400 text-center">Personal Information</span>
+          </div>
+          <form>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <input type="text" value="John" name="fname" class="form-control w-100">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <input type="text" value="Smith" name="lname" class="form-control w-100">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <input type="text" value="10/10/2022" name="" class="form-control w-100">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <select class="form-select rounded-8 w-100">
+                    <option value="1">Male</option>
+                    <option value="2">Female</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <input type="text" value="Male" name="userail" class="form-control w-100">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <input type="password" value="Password" name="Password" class="form-control w-100">
+                </div>
+              </div>
+
+            </div>
+            <div class="text-line-border position-relative text-center mb-4">
+              <span class="line-text font_12 text_ltgray fw_400 text-center">User Bio</span>
+            </div>
+            <div class="form-group ">
+              <textarea class="form-control resize-none ht_96"
+                value="">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labo et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex.</textarea>
+            </div>
+          </form>
+
+        </div>
+        <div
+          class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4">
+          <button type="button"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+            data-bs-dismiss="modal">Discard Changes</button>
+          <button type="button"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step">Save</button>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!------ Create post popup modal --->
+
+  <div class="modal fade edit-school-modal" id="create-post" tabindex="-1" aria-labelledby="create-post"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header border-0 justify-content-center position-relative">
+          <div class="custom-language-select liv-postbtn">
+            <ul class="nav nav-tabs border-0" id="myTab" role="tablist">
+              <li class="nav-item p-0">
+                <button class="nav-link active post-attch-btn d-inline-flex justify-content-center align-items-center"
+                  id="live-tab" data-bs-toggle="tab" data-bs-target="#live-tab-pane" type="button" role="tab"
+                  aria-controls="live-tab-pane" aria-selected="true"><img src="images/Play-dark.svg"
+                    class="dark-attach" /><img src="images/Play-light.svg" class="light-attach" /> Live</button>
+              </li>
+              <li class="nav-item p-0">
+                <button class="nav-link post-attch-btn d-inline-flex justify-content-center align-items-center"
+                  id="Post-tab" data-bs-toggle="tab" data-bs-target="#Post-tab-pane" type="button" role="tab"
+                  aria-controls="Post-tab-pane" aria-selected="false"><img src="images/Edit-grey.svg"
+                    class="dark-attach" /><img src="images/Edit-light.svg" class="light-attach" /> Post</button>
+              </li>
+              <li class="nav-item p-0">
+                <button class="nav-link post-attch-btn d-inline-flex justify-content-center align-items-center"
+                  id="reels-tab" data-bs-toggle="tab" data-bs-target="#reels-tab-pane" type="button" role="tab"
+                  aria-controls="reels-tab-pane" aria-selected="false"><img src="images/category-grey.svg"
+                    class="dark-attach" /><img src="images/category-light.svg" class="light-attach" />
+                  Reels</button>
+              </li>
+
+            </ul>
+          </div>
+          <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">Create Post</h1>
+          <div></div>
+          <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"><img
+              src="images/cross.svg" /></button>
+        </div>
+        <div class="modal-body">
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="live-tab-pane" role="tabpanel" aria-labelledby="live-tab"
+              tabindex="0">
+              <form class="latest-form">
+                <div class="form-group">
+                  <label class="font_10">School Name / Class Name</label>
+                  <select class="form-select rounded-8 w-100">
+                    <option value="1">School Name 1</option>
+                    <option value="2">School Name 2</option>
+                    <option value="3">School Name 1 3</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="font_10">Title</label>
+                  <input type="text" placeholder="Title" class="form-control w-100">
+                </div>
+
+                <div class="form-group">
+                  <label class="font_10">Body Text</label>
+                  <input type="text" class="form-control" placeholder="Body Text" />
+                </div>
+                <div class="form-group">
+                  <label class="font_10">Cover Letter before Stream start</label>
+                  <input type="text" class="form-control" placeholder="Cover Letter before Stream start" />
+                </div>
+                <div class="form-group">
+                  <label class="font_10">Comment Throttling</label>
+                  <select class="form-select rounded-8 w-100">
+                    <option value="1">1 Comment per 1 Minute</option>
+                    <option value="2">1 Comment per 1 Minute</option>
+                    <option value="3">1 Comment per 1 Minute</option>
+                  </select>
+                </div>
+                <div class="text-line-border position-relative text-center my-4">
+                  <span class="line-text font_12 text_ltgray fw_400 text-center">Select Media Sources</span>
+                </div>
+                <div class="media-sourcebtn d-flex gap-2 f-monteserrat">
+                  <button type="button" class="post-attch-btn btn web-cmbtn font_12 text_dark m-0"><span
+                      class="text-center"><img src="images/webkam.svg" class=" mx-auto mb-2 dark-attach" /> <img
+                        src="images/webkam-light.svg" class="mx-auto mb-2 light-attach" />Webcam</span></button>
+                  <button type="button" class="post-attch-btn btn web-cmbtn font_12 text_dark m-0"><span
+                      class="text-center"><i class="fa-solid fa-gear d-block mx-auto mb-2 font_20"></i> Streaming
+                      Software</span></button>
+                  <button type="button" class="post-attch-btn btn web-cmbtn font_12 text_dark m-0"><span
+                      class="text-center"><i class="fa-solid fa-microphone d-block mx-auto mb-2 font_20"></i>
+                      Microphone</span></button>
+                  <button type="button" class="post-attch-btn btn web-cmbtn font_12 text_dark m-0">
+                    <span class="text-center"><img src="images/screen-share.svg" class=" mx-auto mb-2 dark-attach" />
+                      <img src="images/screen-share-light.svg" class="mx-auto mb-2 light-attach" />Screen
+                      share</span></button>
+                </div>
+              </form>
+              <hr class="mb-0 sepearator mx-0 mt-3 opacity-100" />
+              <div
+                class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-0 cr-postfooter pt-0 mt-3 px-0">
+                <div class="post-bot-left d-flex">
+                  <button type="button"
+                    class="post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center active"><img
+                      src="images/gallery-dark.svg" class="dark-attach" /><img src="images/gallery-light.svg"
+                      class="light-attach" /></button>
+                  <button type="button"
+                    class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"><img
+                      src="images/Video-dark.svg" class="dark-attach" /><img src="images/Video-light.svg"
+                      class="light-attach" /></button>
+                  <button type="button"
+                    class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"
+                    data-bs-toggle="modal" data-bs-target="#add-attachment"><img src="images/Paper-Plus-dark.svg"
+                      class="dark-attach" /><img src="images/Paper-Plus-light.svg" class="light-attach" /></button>
+                  <button type="button"
+                    class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"
+                    data-bs-toggle="modal" data-bs-target="#add-tag"><img src="images/hashtag-dark.svg"
+                      class="dark-attach" /><img src="images/hashtag-light.svg" class="light-attach" /></button>
+                </div>
+                <div class="post-bot-right d-flex justify-content-end">
+                  <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 delay-btn"><i
+                      class="fa-solid fa-clock"></i></button>
+                  <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 lg_btn"><img
+                      src="images/Send-light.svg" class="me-2" /> Nov 15, 2022 at 14:30 </button>
+                </div>
+
+              </div>
+
+
+            </div>
+            <div class="tab-pane fade" id="Post-tab-pane" role="tabpanel" aria-labelledby="Post-tab" tabindex="0">
+              <form class="latest-form">
+                <div class="form-group">
+                  <label class="font_10">School Name / Class Name</label>
+                  <select class="form-select rounded-8 w-100">
+                    <option value="1">School Name 1</option>
+                    <option value="2">School Name 2</option>
+                    <option value="3">School Name 1 3</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="font_10">Title</label>
+                  <input type="text" placeholder="Title" class="form-control w-100">
+                </div>
+
+                <div class="form-group">
+                  <label class="font_10">Body Text</label>
+                  <input type="text" class="form-control" placeholder="Body Text" />
+                </div>
+
+              </form>
+              <div class="img-upl-result pt-4">
+                <span class="position-relative d-inline-block">
+                  <img src="images/post-upload-image.jpg" />
+                  <button type="button"
+                    class="btn dl-post-img d-flex align-items-center justify-content-center rounded-circle position-absolute"><i
+                      class="fa-solid fa-xmark"></i></button>
+                </span>
+                <span class="position-relative d-inline-block">
+                  <img src="images/post-upload-image.jpg" />
+                  <button type="button"
+                    class="btn dl-post-img d-flex align-items-center justify-content-center rounded-circle position-absolute"><i
+                      class="fa-solid fa-xmark"></i></button>
+                </span>
+              </div>
+              <div class="teacher-tags tag-box hashtag_post mt-4 mb-2 hover-tags">
+                <span class="custom-tag">#Tag 1 <button
+                    class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                      src="images/cross-sm-light.svg"></button></span>
+                <span class="custom-tag">#Tag 2 <button
+                    class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                      src="images/cross-sm-light.svg"></button></span>
+                <span class="custom-tag">#Tag 3 <button
+                    class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                      src="images/cross-sm-light.svg"></button></span>
+                <span class="custom-tag">#Tag 4 <button
+                    class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                      src="images/cross-sm-light.svg"></button></span>
+                <span class="custom-tag">#Tag 5 <button
+                    class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                      src="images/cross-sm-light.svg"></button></span>
+                <span class="custom-tag">#Tag 6 <button
+                    class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                      src="images/cross-sm-light.svg"></button></span>
+                <span class="custom-tag">#Tag 7 <button
+                    class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                      src="images/cross-sm-light.svg"></button></span>
+              </div>
+              <div class="teacher-tags hashtag_post tag-boxattachment-outer mt-1 mb-0 hover-tags">
+                <span class="custom-tag"><img src="images/Paper-gray.svg" class="me-1 dark-svg" /> <img
+                    src="images/Paper-light.svg" class="me-1 light-svg" /> Attachment
+                  1 <button class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                      src="images/cross-sm-light.svg"></button></span>
+                <span class="custom-tag"><img src="images/Paper-gray.svg" class="me-1 dark-svg" /> <img
+                    src="images/Paper-light.svg" class="me-1 light-svg" />Attachment
+                  2<button class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                      src="images/cross-sm-light.svg"></button></span>
+                <span class="custom-tag"><img src="images/Paper-gray.svg" class="me-1 dark-svg" /><img
+                    src="images/Paper-light.svg" class="me-1 light-svg" /> Attachment
+                  3<button class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                      src="images/cross-sm-light.svg"></button></span>
+              </div>
+              <hr class="mb-0 sepearator mx-0 mt-3 opacity-100" />
+              <div
+                class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-0 cr-postfooter pt-0 mt-3 px-0">
+                <div class="post-bot-left d-flex">
+                  <button type="button"
+                    class="post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center active"><img
+                      src="images/gallery-dark.svg" class="dark-attach" /><img src="images/gallery-light.svg"
+                      class="light-attach" /></button>
+                  <button type="button"
+                    class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"><img
+                      src="images/Video-dark.svg" class="dark-attach" /><img src="images/Video-light.svg"
+                      class="light-attach" /></button>
+                  <button type="button"
+                    class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"
+                    data-bs-toggle="modal" data-bs-target="#add-attachment"><img src="images/Paper-Plus-dark.svg"
+                      class="dark-attach" /><img src="images/Paper-Plus-light.svg" class="light-attach" /></button>
+                  <button type="button"
+                    class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"
+                    data-bs-toggle="modal" data-bs-target="#add-tag"><img src="images/hashtag-dark.svg"
+                      class="dark-attach" /><img src="images/hashtag-light.svg" class="light-attach" /></button>
+                </div>
+                <div class="post-bot-right d-flex justify-content-end">
+                  <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 delay-btn"><i
+                      class="fa-solid fa-clock"></i></button>
+                  <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 lg_btn"><img
+                      src="images/Send-light.svg" class="me-2" /> Nov 15, 2022 at 14:30 </button>
+                </div>
+
+              </div>
+
+            </div>
+            <div class="tab-pane fade" id="reels-tab-pane" role="tabpanel" aria-labelledby="reels-tab" tabindex="0">
+              <div class="form-group">
+                <label class="font_10">School Name / Class Name</label>
+                <select class="form-select rounded-8 w-100">
+                  <option value="1">School Name 1</option>
+                  <option value="2">School Name 2</option>
+                  <option value="3">School Name 1 3</option>
+                </select>
+              </div>
+              <div class="dropzone-wrapper mb-4 reels-uploader-img">
+                <div class="dropzone-desc">
+                  <i class="glyphicon glyphicon-download-alt"></i>
+                  <p class="text-center fw_400">Drop image or <b>Clock to Browse</b> </p>
+                </div>
+                <input type="file" name="img_logo" class="dropzone">
+              </div>
+              <hr class="mb-0 sepearator mx-0 mt-3 opacity-100" />
+              <div
+                class="modal-footer steps_btns d-flex align-items-center justify-content-center flex-sm-nowrap border-0 pb-0 cr-postfooter pt-0 mt-3 px-0">
+                <div class="post-bot-right d-flex justify-content-end">
+                  <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 delay-btn"><i
+                      class="fa-solid fa-clock"></i></button>
+                  <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 lg_btn">Post Reels
+                  </button>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!---- Add attachgment Modal-->
+  <div class="modal fade edit-school-modal" id="add-attachment" tabindex="-1" aria-labelledby="add-attachment"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header border-0 justify-content-center position-relative">
+          <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">Attach File</h1>
+          <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"><img
+              src="images/cross.svg" /></button>
+        </div>
+        <div class="modal-body">
+          <div class="dropzone-wrapper mb-4">
+            <div class="dropzone-desc">
+              <i class="glyphicon glyphicon-download-alt"></i>
+              <p class="text-center fw_400"><b>Clock to Browse</b></p>
+            </div>
+            <input type="file" name="img_logo" class="dropzone">
+          </div>
+          <p class="font_16 text_dark text-center my-4 fw_600">Or Find in File Storage</p>
+          <div class="form-group latest-form">
+            <label class="font_10">Files</label>
+            <input type="text" class="form-control" placeholder="Type to add">
+          </div>
+          <div class="teacher-tags hashtag_post tag-boxattachment-outer mt-1 mb-0 hover-tags">
+            <span class="custom-tag"><img src="images/Paper-gray.svg" class="me-1 dark-svg"> <img
+                src="images/Paper-light.svg" class="me-1 light-svg"> Attachment
+              1 <button class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                  src="images/cross-sm-light.svg"></button></span>
+            <button class="custom-tag"><img src="images/Paper-gray.svg" class="me-1 dark-svg"> <img
+                src="images/Paper-light.svg" class="me-1 light-svg">Attachment
+              2<span class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                  src="images/cross-sm-light.svg"></span></button>
+            <span class="custom-tag"><img src="images/Paper-gray.svg" class="me-1 dark-svg"><img
+                src="images/Paper-light.svg" class="me-1 light-svg"> Attachment
+              3<button class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                  src="images/cross-sm-light.svg"></button></span>
+          </div>
+        </div>
+        <div
+          class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4">
+          <button type="button"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+            data-bs-toggle="modal" data-bs-target="#create-post">Discard Changes</button>
+          <button type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step"
+            data-bs-toggle="modal" data-bs-target="#create-post">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!---- add tag Modal -->
+  <div class="modal fade edit-school-modal" id="add-tag" tabindex="-1" aria-labelledby="add-tag" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header border-0 justify-content-center position-relative">
+          <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">Add Tag</h1>
+          <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"><img
+              src="images/cross.svg" /></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group latest-form">
+            <label class="font_10">Files</label>
+            <input type="text" class="form-control" placeholder="Type to add">
+          </div>
+          <div class="teacher-tags tag-box hashtag_post mt-4 mb-2 hover-tags">
+            <span class="custom-tag">#Tag 1 <button
+                class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                  src="images/cross-sm-light.svg"></button></span>
+            <span class="custom-tag">#Tag 2 <button
+                class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                  src="images/cross-sm-light.svg"></button></span>
+            <span class="custom-tag">#Tag 3 <button
+                class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                  src="images/cross-sm-light.svg"></button></span>
+            <span class="custom-tag">#Tag 4 <button
+                class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                  src="images/cross-sm-light.svg"></button></span>
+            <span class="custom-tag">#Tag 5 <button
+                class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                  src="images/cross-sm-light.svg"></button></span>
+            <span class="custom-tag">#Tag 6 <button
+                class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                  src="images/cross-sm-light.svg"></button></span>
+            <span class="custom-tag">#Tag 7 <button
+                class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                  src="images/cross-sm-light.svg"></button></span>
+            <span class="custom-tag">#Tag 8 <button
+                class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                  src="images/cross-sm-light.svg"></button></span>
+            <span class="custom-tag">#Tag 9 <button
+                class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                  src="images/cross-sm-light.svg"></button></span>
+            <span class="custom-tag">#Tag 10 <button
+                class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                  src="images/cross-sm-light.svg"></button></span>
+            <span class="custom-tag">#Tag 11 <button
+                class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                  src="images/cross-sm-light.svg"></button></span>
+            <span class="custom-tag">#Tag 12 <button
+                class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                  src="images/cross-sm-light.svg"></button></span>
+            <span class="custom-tag">#Tag 13 <button
+                class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                  src="images/cross-sm-light.svg"></button></span>
+            <span class="custom-tag">#Tag 14 <button
+                class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                  src="images/cross-sm-light.svg"></button></span>
+          </div>
+
+        </div>
+        <div
+          class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4">
+          <button type="button"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+            data-bs-toggle="modal" data-bs-target="#create-post">Discard Changes</button>
+          <button type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step"
+            data-bs-toggle="modal" data-bs-target="#create-post">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://phpcoder.tech/multiselect/js/jquery.multiselect.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+
+
+
+  <script>
+    $(document).ready(function () {
+      $(".next-step").click(function (e) {
+        var activeTab = $(".registerTabs .tab-pane.active");
+        activeTab.next().addClass("active");
+        activeTab.removeClass("active");
+        $(".step-icon .step1").addClass('finish');
+      });
+
+      $(".prev-step").click(function (e) {
+        var activeTab = $(".registerTabs .tab-pane.active");
+        activeTab.prev().addClass("active");
+        activeTab.removeClass("active");
+
+      });
+      $("#step2_btn").click(function () {
+        $("#create_school, .step-icon").addClass('d-none');
+      });
+
+    });
+
+
+  </script>
+  <script>
+    function readFile(input) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+          var htmlPreview =
+            '<img width="200" src="' + e.target.result + '" />' +
+            '<p>' + input.files[0].name + '</p>';
+          var wrapperZone = $(input).parent();
+          var previewZone = $(input).parent().parent().find('.preview-zone');
+          var boxZone = $(input).parent().parent().find('.preview-zone').find('.box').find('.box-body');
+
+          wrapperZone.removeClass('dragover');
+          previewZone.removeClass('hidden');
+          boxZone.empty();
+          boxZone.append(htmlPreview);
+        };
+
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    function reset(e) {
+      e.wrap('<form>').closest('form').get(0).reset();
+      e.unwrap();
+    }
+
+    $(".dropzone").change(function () {
+      readFile(this);
+    });
+
+    $('.dropzone-wrapper').on('dragover', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      $(this).addClass('dragover');
+    });
+
+    $('.dropzone-wrapper').on('dragleave', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      $(this).removeClass('dragover');
+    });
+
+    $('.remove-preview').on('click', function () {
+      var boxZone = $(this).parents('.preview-zone').find('.box-body');
+      var previewZone = $(this).parents('.preview-zone');
+      var dropzone = $(this).parents('.form-group').find('.dropzone');
+      boxZone.empty();
+      previewZone.addClass('hidden');
+      reset(dropzone);
+    });
+
+
+
+  </script>
+  <script>
+    jQuery('#languageSelect').multiselect({
+      columns: 1,
+      placeholder: 'Select Languages',
+      search: true
+    });
+  </script>
+  <script>
+    function openSearch() {
+      document.getElementById("search-overlay").style.display = "block";
+    }
+    function closeSearch() {
+      document.getElementById("search-overlay").style.display = "none";
+    }
+    function closeSidebar() {
+      document.getElementById("side-bar").style.display = "none";
+    }
+    function openSidebar() {
+      document.getElementById("side-bar").style.display = "block";
+    }
+  </script>
+  <script>
+    $(document).ready(function () {
+      $("#grid-btn").click(function () {
+        $(".school-grid-view").addClass("grid-active");
+        $(".list-schol-profile").removeClass("list-active");
+        $("#grid-btn").addClass("active");
+        $("#list-btn").removeClass("active");
+
+      });
+      $("#list-btn").click(function () {
+        $(".school-grid-view").removeClass("grid-active");
+        $(".list-schol-profile").addClass("list-active");
+        $("#grid-btn").removeClass("active");
+        $("#list-btn").addClass("active");
+      });
+
+
+    });
+  </script>
+</body>
+
+</html>
