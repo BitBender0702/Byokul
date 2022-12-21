@@ -30,6 +30,7 @@ namespace LMS.Services
         Task SaveSchoolTeachers(SaveSchoolTeacherViewModel model);
         Task DeleteSchoolTeacher(SchoolTeacherViewModel model);
         Task<SchoolViewModel> GetBasicSchoolInfo(Guid schoolId);
+        Task<List<SchoolFollowerViewModel>> GetSchoolFollowers(Guid schoolId);
 
     }
 }

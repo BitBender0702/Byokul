@@ -60,19 +60,13 @@
           <div class="col-md-12">
             <div class="form-group">
               <input type="password" class="form-control rounded-8" formControlName="password" placeholder="{{'Password'| translate }}">
-              <!-- <small id='passMsg' style="color: rgb(190, 186, 186);">*Password must contain both numbers and letters</small> -->
-              <small class="p-error" style="color: orange;"
-    *ngIf="isSubmitted && registrationForm.controls.password.errors">Password is
-    required.</small>
-              <!-- <div class="invalid-feedback">
-                Password is required.
-              </div> -->
+              <small class="p-error" style="color: orange;" *ngIf="isSubmitted && registrationForm.controls.password.errors">
+                Password is required.</small>
             </div>
           </div>
           <div class="col-md-12">
             <div class="form-group">
               <input type="password" class="form-control rounded-8" formControlName="confirmPassword" placeholder="{{'RepeatPassword'| translate }}">
-              <!-- <small id='passMsg' style="color: rgb(190, 186, 186);">*Password must contain both numbers and letters</small> -->
               <small class="p-error" style="color: orange;"
               *ngIf="isSubmitted && registrationForm.controls.confirmPassword.errors">Confirm Password is
               required.</small>
@@ -81,9 +75,6 @@
               *ngIf=" isSubmitted && matchPassword() && registrationForm.controls.confirmPassword.touched && !registrationForm.controls.confirmPassword.errors">
               Password and Confirm password does not match!
               </small>
-              <!-- <div class="invalid-feedback">
-                Password is required.
-              </div> -->
             </div>
           </div>
           <div class="col-md-12">

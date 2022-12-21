@@ -13,5 +13,6 @@ namespace LMS.Data.Entity
         public School School { get; set; }
         public string? UserId { get; set; }
         public User User { get; set; }
+        public Boolean IsBan { get; set; }
     }
 }

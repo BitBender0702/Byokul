@@ -91,4 +91,8 @@ export class SchoolService{
         return this.http.post(`${this.apiUrl}/school/deleteSchoolCertificate`,deleteCertificate);
     }
 
+    getSchoolFollowers(schoolId:string):Observable<any>{
+        return this.http.get(`${this.apiUrl}/school/schoolFollowers` + '?schoolId=' + schoolId);
+    }
+
 }

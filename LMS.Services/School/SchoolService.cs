@@ -400,7 +400,8 @@ namespace LMS.Services
                 var schoolFollower = new SchoolFollower
                 {
                     SchoolId = schoolId,
-                    UserId = userId
+                    UserId = userId,
+                    IsBan = false
                 };
 
                 _schoolFollowerRepository.Insert(schoolFollower);
@@ -686,6 +687,15 @@ namespace LMS.Services
             var school = await _schoolRepository.GetAll().Where(x => x.SchoolId == schoolId).FirstOrDefaultAsync();
 
             var response = _mapper.Map<SchoolViewModel>(school);
+            return response;
+
+        }
+
+        public async Task<List<SchoolFollowerViewModel>> GetSchoolFollowers(Guid schoolId)
+        {
+            var followerList = await _schoolFollowerRepository.GetAll().Include(x => x.User).Where(x => x.SchoolId == schoolId).ToListAsync();
+
+            var response = _mapper.Map<List<SchoolFollowerViewModel>>(followerList);
             return response;
 
         }

@@ -40,6 +40,7 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
   avatarImage!:any;
 
   initialSpecialization!:string;
+  loadingIcon:boolean = false;
 
   
   constructor(injector: Injector,private domSanitizer: DomSanitizer,private router: Router,private fb: FormBuilder,schoolService: SchoolService,private http: HttpClient) {
@@ -121,9 +122,11 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
       return;
     }
 
+    this.loadingIcon = true;
     var form3Value = this.createSchoolForm3.value;
     this.fileToUpload.append('schoolUrl',JSON.stringify(form3Value.schoolUrl));
     this._schoolService.createSchool(this.fileToUpload).subscribe((response:any) => {
+         this.loadingIcon = false;
          var schoolId =  response;
          this.router.navigateByUrl(`user/schoolProfile/${schoolId}`)
 

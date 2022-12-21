@@ -12,6 +12,7 @@ namespace LMS.Data.Entity
         public Guid? PostId { get; set; }
         public Post Post { get; set; }
         public string FileName { get; set; }
+        public string FileUrl { get; set; }
         public int FileType { get; set; }
 
     }

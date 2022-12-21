@@ -1,15 +1,16 @@
+<block-ui>
 <div *ngIf="isDataLoaded">
   <section class="f-poppins">
     <side-bar [isOpenSidebar]="isOpenSidebar"></side-bar> 
     <div *ngIf="isOpenModal"><create-post [isOpenModal]="isOpenModal" [userId]="userId"></create-post></div>
     <div class="main_content">
       <div class="create-post-header d-flex justify-content-between d-none d-xl-flex">
-        <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
+        <button (click)="back()" type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
             src="../../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
-        <button (click)="createPost()" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44">{{'CreatePost'| translate }}</button>
+        <button (click)="openPostModal()" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44">{{'CreatePost'| translate }}</button>
       </div>
       <div class="live-header d-flex align-items-center justify-content-between">
-        <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark  d-xl-none"><img
+        <button (click)="back()" type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark  d-xl-none"><img
             src="../../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
         <span class="logo_mobile d-xl-none">
           <img src="../../../../assets/images/logo.svg" />
@@ -31,7 +32,7 @@
                 src="../../../../assets/images/green-verified.svg" /></span></h2>
           <div class="position-relative">
             <div class="followers_name d-inline-block font_16 mr-_24"><img src="../../../../assets/images/followers.svg" /> {{'Followers'| translate }}: <b
-                class="fw_700">{{user.followers}}</b></div>
+                class="fw_700"><a style="text-decoration: none;cursor: pointer;color: black;" [routerLink]="['/user/userFollowers', user.id]">{{user.followers}}</a></b></div>
             <div class="followers_name d-inline-block font_16 mr-_24"><img src="../../../../assets/images/students-icon.svg" /> {{'Followings'| translate }}:
               <b class="fw_700">{{user.followings}}</b>
             </div>
@@ -55,24 +56,6 @@
           <span class="custom-tag">Sertificate 1 <button
               class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
                 src="../../../../assets/images/cross-sm-light.svg" /></button></span>
-          <!-- <span class="custom-tag">Sertificate 2 <button
-              class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
-                src="images/cross-sm-light.svg" /></button></span>
-          <span class="custom-tag">Sertificate 3 <button
-              class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
-                src="images/cross-sm-light.svg" /></button></span>
-          <span class="custom-tag">Sertificate 4 <button
-              class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
-                src="images/cross-sm-light.svg" /></button></span>
-          <span class="custom-tag">Sertificate 5 <button
-              class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
-                src="images/cross-sm-light.svg" /></button></span>
-          <span class="custom-tag">Sertificate 6 <button
-              class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
-                src="images/cross-sm-light.svg" /></button></span>
-          <span class="custom-tag">Sertificate 7 <button
-              class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
-                src="images/cross-sm-light.svg" /></button></span> -->
         </div>
         <div class="teacher-tags tag-box mt-0  hover-tags">
           <div class="teacher-content font_14 d-inline-block"><img src="../../../../assets/images/Volume-Down.svg" /> {{'Languages'| translate }}</div>
@@ -107,15 +90,15 @@
           Kingdom</span>
       </div>
       <hr class="hr-gray" />
-      <!-- <div class="school-profile-tabs d-flex align-content-center justify-content-end">
+      <div class="school-profile-tabs d-flex align-content-center justify-content-end">
         <div class="button-list-grid">
-          <button type="button" class="btn border-btn d-inline-flex align-items-center justify-content-center"
+          <button [ngClass]="isProfileGrid ? 'btn border-btn active d-inline-flex align-items-center justify-content-center' : 'btn border-btn d-inline-flex align-items-center justify-content-center'" (click)="profileGrid()" type="button"
             id="list-btn">
-            <img src="images/Filter.svg" />
+            <img src="../../../../assets/images/Filter.svg" />
           </button>
-          <button type="button" class="btn border-btn active d-inline-flex align-items-center justify-content-center"
+          <button [ngClass]="!isProfileGrid ? 'btn border-btn active d-inline-flex align-items-center justify-content-center' : 'btn border-btn d-inline-flex align-items-center justify-content-center'" (click)="profileList()" type="button" type="button"
             id="grid-btn">
-            <img src="images/Category.svg" />
+            <img src="../../../../assets/images/Category.svg" />
           </button>
         </div>
       </div>
@@ -125,148 +108,51 @@
           aria-labelledby="school-feed-tab" tabindex="0">
           <div class="feed-section">
             <div class="feed-box position-relative">
-              <button type="button" class="bg-transparent border-0 next-feed"><img
-                  src="images/chevron-right-circle.svg" /></button>
-              <div class="feedbox-inner d-flex ">
-                <div class="feedimg-box position-relative text-light position-relative">
-                  <iframe width="100%" height="300" src="https://www.youtube.com/embed/hAP2QF--2Dg" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen></iframe>
-                  <div class="pinned-view d-flex  justify-content-between align-items-start">
-                    <button type="button" class="view font_12 bg-transparent border-0 text-light">
-                      <img src="images/eye-light.svg" /> 954
-                    </button>
-                    <button type="button" class="pinned bg-transparent border-0">
-                      <img src="images/pinned-light.svg" />
-                    </button>
-                  </div>
-                  <div class="feed-name font_14 text_sec1">
-                    <img src="images/feed-school.jpg" /> Name
-                  </div>
-                  <div class="feed-title font_14 text_sec1 d-flex align-content-center fw_600">
-                    Python programming course
-                  </div>
-                </div>
-                <div class="feedimg-box position-relative text-light position-relative">
-                  <iframe width="100%" height="300" src="https://www.youtube.com/embed/hAP2QF--2Dg" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen></iframe>
-                  <div class="pinned-view d-flex  justify-content-between align-items-start">
-                    <button type="button" class="view font_12 bg-transparent border-0 text-light">
-                      <img src="images/eye-light.svg" /> 954
-                    </button>
-                    <button type="button" class="pinned bg-transparent border-0">
-                      <img src="images/pinned-light.svg" />
-                    </button>
-                  </div>
-                  <div class="feed-name font_14 text_sec1">
-                    <img src="images/feed-school2.jpg" /> Name
-                  </div>
-                  <div class="feed-title font_14 text_sec1 d-flex align-content-center fw_600">
-                    Web Design course
-                  </div>
-                </div>
-                <div class="feedimg-box position-relative text-light position-relative">
-                  <iframe width="100%" height="300" src="https://www.youtube.com/embed/hAP2QF--2Dg" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen></iframe>
-                  <div class="pinned-view d-flex  justify-content-between align-items-start">
-                    <button type="button" class="view font_12 bg-transparent border-0 text-light">
-                      <img src="images/eye-light.svg" /> 954
-                    </button>
-                    <button type="button" class="pinned bg-transparent border-0">
-                      <img src="images/pinned-light.svg" />
-                    </button>
-                  </div>
-                  <div class="feed-name font_14 text_sec1">
-                    <img src="images/feed-school3.jpg" /> Name
-                  </div>
-                  <div class="feed-title font_14 text_sec1 d-flex align-content-center fw_600">
-                    Web Design course
+                <button type="button" class="bg-transparent border-0 next-feed">
+                    <img src="../../../../assets/images/chevron-right-circle.svg" />
+                </button>
+                <div class="feedbox-inner d-flex ">
+    
+                  <div *ngFor="let postAttach of user.postAttachment">
+                    <div *ngIf="postAttach.fileType == 2">
+                        <div class="feedimg-box position-relative text-light position-relative">
+                          <a [routerLink]="['/user/reels', postAttach.id]">
+                            <div class="videofile">
+                              <video preload="metadata" style="height: 300px;">
+                                <source [src]="postAttach.fileUrl" type="video/mp4"/>
+                              </video>
+                            </div>
+                          </a>
+                            <!-- <img src="../../../../assets/images/feed1.jpg" /> -->
+                            <div class="pinned-view d-flex  justify-content-between align-items-start">
+                                <button type="button" class="view font_12 bg-transparent border-0 text-light">
+                                    <img src="../../../../assets/images/eye-light.svg" /> 954
+                                </button>
+                                <button type="button" class="pinned bg-transparent border-0">
+                                    <img src="../../../../assets/images/pinned-light.svg" />
+                                </button>
+                            </div>
+                            <div class="feed-name font_14 text_sec1">
+                              <div *ngIf="postAttach.post.postAuthorType == 1">
+                                <img [src]="postAttach.school.avatar"/> {{postAttach.school.schoolName}}
+                              </div>
+                              <div *ngIf="postAttach.post.postAuthorType == 2">
+                                <img [src]="postAttach.class.avatar"/> {{postAttach.class.className}}
+                              </div>
+                              <div *ngIf="postAttach.post.postAuthorType == 4">
+                                <img [src]="postAttach.user.avatar"/> {{postAttach.user.firstName}}
+                              </div>
+                            </div>
+                            <div class="feed-title font_14 text_sec1 d-flex align-content-center fw_600">
+                                {{postAttach.post.title}}
+                            </div>
+                        </div>
+                      </div>
                   </div>
                 </div>
-                <div class="feedimg-box position-relative text-light position-relative">
-                  <iframe width="100%" height="300" src="https://www.youtube.com/embed/hAP2QF--2Dg" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen></iframe>
-                  <div class="pinned-view d-flex  justify-content-between align-items-start">
-                    <button type="button" class="view font_12 bg-transparent border-0 text-light">
-                      <img src="images/eye-light.svg" /> 954
-                    </button>
-                    <button type="button" class="pinned bg-transparent border-0">
-                      <img src="images/pinned-light.svg" />
-                    </button>
-                  </div>
-                  <div class="feed-name font_14 text_sec1">
-                    <img src="images/feed-school4.jpg" /> Name
-                  </div>
-                  <div class="feed-title font_14 text_sec1 d-flex align-content-center fw_600">
-                    Web Design course
-                  </div>
-                </div>
-                <div class="feedimg-box position-relative text-light position-relative">
-                  <iframe width="100%" height="300" src="https://www.youtube.com/embed/hAP2QF--2Dg" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen></iframe>
-                  <div class="pinned-view d-flex  justify-content-between align-items-start">
-                    <button type="button" class="view font_12 bg-transparent border-0 text-light">
-                      <img src="images/eye-light.svg" /> 954
-                    </button>
-                    <button type="button" class="pinned bg-transparent border-0">
-                      <img src="images/pinned-light.svg" />
-                    </button>
-                  </div>
-                  <div class="feed-name font_14 text_sec1">
-                    <img src="images/feed-school5.jpg" /> Name
-                  </div>
-                  <div class="feed-title font_14 text_sec1 d-flex align-content-center fw_600">
-                    Python programming course
-                  </div>
-                </div>
-                <div class="feedimg-box position-relative text-light position-relative">
-                  <iframe width="100%" height="300" src="https://www.youtube.com/embed/hAP2QF--2Dg" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen></iframe>
-                  <div class="pinned-view d-flex  justify-content-between align-items-start">
-                    <button type="button" class="view font_12 bg-transparent border-0 text-light">
-                      <img src="images/eye-light.svg" /> 954
-                    </button>
-                    <button type="button" class="pinned bg-transparent border-0">
-                      <img src="images/pinned-light.svg" />
-                    </button>
-                  </div>
-                  <div class="feed-name font_14 text_sec1">
-                    <img src="images/feed-school5.jpg" /> Name
-                  </div>
-                  <div class="feed-title font_14 text_sec1 d-flex align-content-center fw_600">
-                    Python programming course
-                  </div>
-                </div>
-                <div class="feedimg-box position-relative text-light position-relative">
-                  <iframe width="100%" height="300" src="https://www.youtube.com/embed/hAP2QF--2Dg" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen></iframe>
-                  <div class="pinned-view d-flex  justify-content-between align-items-start">
-                    <button type="button" class="view font_12 bg-transparent border-0 text-light">
-                      <img src="images/eye-light.svg" /> 954
-                    </button>
-                    <button type="button" class="pinned bg-transparent border-0">
-                      <img src="images/pinned-light.svg" />
-                    </button>
-                  </div>
-                  <div class="feed-name font_14 text_sec1">
-                    <img src="images/feed-school5.jpg" /> Name
-                  </div>
-                  <div class="feed-title font_14 text_sec1 d-flex align-content-center fw_600">
-                    Python programming course
-                  </div>
-                </div>
-
-
-              </div>
             </div>
-          </div>
-          <div class="school-grid-view grid-active" style="display: none;">
+        </div>
+          <!-- <div class="school-grid-view grid-active" *ngIf="isProfileGrid">
             <div class="school-grid-box position-relative">
               <div class="schoolgrid-header d-flex align-items-center position-relative">
                 <div class="school-gridprofile-icon">
@@ -387,7 +273,7 @@
 
           </div>
 
-          <div class="list-schol-profile" style="display: none;">
+          <div class="list-schol-profile" *ngIf="!isProfileGrid">
 
             <div class="row">
               <div class="col-md-6 col-xl-4">
@@ -619,7 +505,7 @@
 
 
             </div>
-          </div>
+          </div> -->
 
 
         </div>
@@ -1207,4 +1093,5 @@ aria-labelledby="delete-language" aria-hidden="true">
 
 </div>
 <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
+</block-ui>
 

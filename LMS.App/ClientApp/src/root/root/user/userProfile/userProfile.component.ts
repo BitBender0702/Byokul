@@ -10,20 +10,28 @@ import { EditUserModel } from 'src/root/interfaces/user/editUserModel';
 import { UserService } from 'src/root/service/user.service';
 import { MultilingualComponent } from '../../sharedModule/Multilingual/multilingual.component';
 
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { CreatePostComponent } from '../../createPost/createPost.component';
+
 
 @Component({
-    selector: 'schoolProfile-root',
+    selector: 'userProfile-root',
     templateUrl: './userProfile.component.html',
     styleUrls: ['./userProfile.component.css']
   })
 
   export class UserProfileComponent extends MultilingualComponent implements OnInit {
 
+    @BlockUI() blockUi!: NgBlockUI;
+
     isOpenSidebar:boolean = false;
     isDataLoaded:boolean = false;
     isSubmitted: boolean = false;
     isOpenModal:boolean = false;
     loadingIcon:boolean = false;
+    blockedDocument: boolean = false;
+    isProfileGrid:boolean = true;
     userId!:string;
 
     private _userService;
@@ -34,8 +42,6 @@ import { MultilingualComponent } from '../../sharedModule/Multilingual/multiling
     filteredLanguages!: any[];
     languages:any;
     EMAIL_PATTERN = '^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$';
-
-    // from here edit user
     editUser:any;
     editUserForm!:FormGroup;
     languageForm!:FormGroup;
@@ -44,19 +50,22 @@ import { MultilingualComponent } from '../../sharedModule/Multilingual/multiling
     @ViewChild('closeLanguageModal') closeLanguageModal!: ElementRef;
     @ViewChild('imageFile') imageFile!: ElementRef;
 
+    @ViewChild('createPostModal', { static: true }) createPostModal!: CreatePostComponent;
+
+
     uploadImage!:any;
     fileToUpload= new FormData();
     translate!: TranslateService;
     
-    constructor(injector: Injector,userService: UserService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
+    constructor(injector: Injector,private bsModalService: BsModalService,userService: UserService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
       super(injector);
         this._userService = userService;
     }
   
     ngOnInit(): void {
-      debugger
 
       this.loadingIcon = true;
+      // this.blockUI();
       var selectedLang = localStorage.getItem("selectedLanguage");
       this.translate.use(selectedLang?? '');
       
@@ -67,6 +76,7 @@ import { MultilingualComponent } from '../../sharedModule/Multilingual/multiling
         debugger
         this.user = response;
         this.loadingIcon = false;
+        // this.unblockUI();
         this.isDataLoaded = true;
       });
 
@@ -80,7 +90,7 @@ import { MultilingualComponent } from '../../sharedModule/Multilingual/multiling
        };
 
        this.languageForm = this.fb.group({
-        languages:this.fb.control('',[Validators.required]),
+        languages:this.fb.control([],[Validators.required]),
       });
 
        this.deleteLanguage = {
@@ -95,22 +105,18 @@ import { MultilingualComponent } from '../../sharedModule/Multilingual/multiling
         gender: this.fb.control(''),
         description: this.fb.control(''),
         contactEmail: this.fb.control('')
-        // avatar: this.fb.control('')
       });
-
     }
 
     captureLanguageId(event: any) {
       var languageId = event.id;
       this.userLanguage.languageIds.push(languageId);
-      // this.languageIds.push(languageId);
     }
 
     filterLanguages(event:any) {
-  
+
       var userLanguages: any[] = this.user.languages;
       var languages: any[] = this.languages;
-  
       this.languages = languages.filter(x => !userLanguages.find(y => y.id == x.id));
       
       let filtered: any[] = [];
@@ -129,21 +135,22 @@ import { MultilingualComponent } from '../../sharedModule/Multilingual/multiling
       if (!this.languageForm.valid) {
         return;
       }
-      this.closeLanguagesModal();
+      this.loadingIcon = true;
       this.userLanguage.userId = this.user.id;
       this._userService.saveUserLanguages(this.userLanguage).subscribe((response:any) => {
+        this.closeLanguagesModal();
+        this.isSubmitted = true;
         this.ngOnInit();
   
       });
     }
 
     deleteUserLanguage(){
+      this.loadingIcon = true;
       this.deleteLanguage.userId = this.user.id;
       this._userService.deleteUserLanguage(this.deleteLanguage).subscribe((response:any) => {
         this.ngOnInit();
-  
       });
-  
     }
 
     getDeletedLanguage(deletedLanguage:string){
@@ -195,14 +202,12 @@ import { MultilingualComponent } from '../../sharedModule/Multilingual/multiling
   }
 
   updateUser(){
-    debugger
     this.isSubmitted=true;
     if (!this.editUserForm.valid) {
       return;
     }
     this.loadingIcon = true;
-
-    this.closeModal();
+    // this.blockUI();
 
     if(!this.uploadImage){
       this.fileToUpload.append('avatar', this.editUser.avatar);
@@ -219,6 +224,8 @@ import { MultilingualComponent } from '../../sharedModule/Multilingual/multiling
     this.fileToUpload.append('contactEmail',this.updateUserDetails.contactEmail);
 
     this._userService.editUser(this.fileToUpload).subscribe((response:any) => {
+      this.closeModal();
+      // this.unblockUI();
       this.isSubmitted=true;
       this.fileToUpload = new FormData();
       this.ngOnInit();
@@ -227,12 +234,10 @@ import { MultilingualComponent } from '../../sharedModule/Multilingual/multiling
   }
   
   private closeModal(): void {
-    debugger
     this.closeEditModal.nativeElement.click();
   }
 
   private closeLanguagesModal(): void {
-    debugger
     this.closeLanguageModal.nativeElement.click();
   }
 
@@ -244,7 +249,6 @@ omit_special_char(event:any)
 }
 
 removeLanguage(event: any){
-  debugger
   const languageIndex = this.userLanguage.languageIds.findIndex((item) => item === event.id);
   if (languageIndex > -1) {
     this.userLanguage.languageIds.splice(languageIndex, 1);
@@ -256,12 +260,44 @@ resetLanguageModal(){
   this.languageForm.setValue({
     languages: [],
   });
-  // this is unappro
-  //this.schoolTeacher.teacherIds = [];
 }
 
 createPost(){
   this.isOpenModal = true;
 
 }
+
+blockUI() {
+  debugger
+  this.blockUi.start("Loading");
+}
+
+unblockUI(){
+  debugger
+  this.blockUi.stop();
+}
+
+profileGrid(){
+  this.isProfileGrid = true;
+
+}
+
+profileList(){
+  this.isProfileGrid = false;
+
+}
+
+back(): void {
+  window.history.back();
+}
+
+openPostModal(): void {
+  debugger
+  const initialState = {
+    userId: this.user.id,
+    from: "user"
+  };
+    this.bsModalService.show(CreatePostComponent,{initialState});
+}
+
 }

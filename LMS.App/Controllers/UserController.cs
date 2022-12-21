@@ -103,12 +103,12 @@ namespace LMS.App.Controllers
             return Ok(await _userService.GetUserProfileFeed(userId));
         }
 
-        //[Route("userFollowers")]
-        //[HttpGet]
-        //public async Task<IActionResult> UserFollowers(string userId)
-        //{
-        //    return Ok(await _userService.GetUserFollowers(userId));
-        //}
+        [Route("userFollowers")]
+        [HttpGet]
+        public async Task<IActionResult> UserFollowers(string userId)
+        {
+            return Ok(await _userService.GetUserFollowers(userId));
+        }
 
         [Route("getBasicUserInfo")]
         [HttpGet]
@@ -116,6 +116,14 @@ namespace LMS.App.Controllers
         {
             var user = await _userService.GetBasicUserInfo(userId);
             return Ok(user);
+        }
+
+        [Route("banFollower")]
+        [HttpPost]
+        public async Task<IActionResult> BanFollower(string followerId)
+        {
+            var reponse = await _userService.BanFollower(followerId);
+            return Ok(reponse);
         }
 
     }

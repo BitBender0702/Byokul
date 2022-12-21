@@ -1,12 +1,12 @@
 <div *ngIf="isDataLoaded">
   <section class="f-poppins">
     <side-bar [isOpenSidebar]="isOpenSidebar"></side-bar> 
-    <div *ngIf="isOpenModal"><create-post [isOpenModal]="isOpenModal" [schoolId]="schoolId"></create-post></div>
+    <!-- <div *ngIf="isOpenModal"><create-post [isOpenModal]="isOpenModal" [schoolId]="schoolId"></create-post></div> -->
     <div class="main_content">
       <div class="create-post-header d-flex justify-content-between d-none d-xl-flex">
-        <button (click)="back()"  type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
+        <button (click)="back()" mat-mini-fab type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
             src="../../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
-        <button (click)="createPost()" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44">{{'CreatePost'| translate }}</button>
+        <button (click)="openPostModal()" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44">{{'CreatePost'| translate }}</button>
       </div>
       <div class="live-header d-flex align-items-center justify-content-between">
         <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark  d-xl-none"><img
@@ -31,7 +31,7 @@
           <div class="position-relative">
 
           <div class="followers_name d-inline-block font_16 mr-_24"><img src="../../../../assets/images/followers.svg" /> {{'Followers'| translate }}: <b
-              class="fw_700">{{school.schoolFollowers}}</b></div>
+              class="fw_700"><a style="text-decoration: none;cursor: pointer;color: black;" [routerLink]="['/user/schoolFollowers', school.schoolId]">{{school.schoolFollowers}}</a></b></div>
           <div class="followers_name d-inline-block font_16 mr-_24"><img src="../../../../assets/images/students-icon.svg" /> {{'Students'| translate }}: <b
               class="fw_700">{{school.students}}</b></div>
           <div class="followers_name d-inline-block font_16 mr-_24"><img src="../../../../assets/images/Edit-dark.svg" /> {{'Post'| translate }}: <b
@@ -143,130 +143,38 @@
                 <img src="../../../../assets/images/chevron-right-circle.svg" />
             </button>
             <div class="feedbox-inner d-flex ">
-
-                <div class="feedimg-box position-relative text-light position-relative">
-                    <img src="../../../../assets/images/feed1.jpg" />
-                    <div class="pinned-view d-flex  justify-content-between align-items-start">
-                        <button type="button" class="view font_12 bg-transparent border-0 text-light">
-                            <img src="../../../../assets/images/eye-light.svg" /> 954
-                        </button>
-                        <button type="button" class="pinned bg-transparent border-0">
-                            <img src="../../../../assets/images/pinned-light.svg" />
-                        </button>
+              <div *ngFor="let post of school.posts">
+                <div *ngIf="post.postType == 3 && post.postAuthorType == 1">
+                <div *ngFor="let postAttachment of post.postAttachments">
+                  <div *ngIf="postAttachment.fileType == 2">
+                    <div class="feedimg-box position-relative text-light position-relative">
+                      <a [routerLink]="['/user/reels', postAttachment.id]">
+                        <div class="videofile">
+                          <video preload="metadata" style="height: 300px;">
+                            <source [src]="postAttachment.fileUrl" type="video/mp4"/>
+                          </video>
+                        </div>
+                      </a>
+                        <!-- <img src="../../../../assets/images/feed1.jpg" /> -->
+                        <div class="pinned-view d-flex  justify-content-between align-items-start">
+                            <button type="button" class="view font_12 bg-transparent border-0 text-light">
+                                <img src="../../../../assets/images/eye-light.svg" /> 954
+                            </button>
+                            <button type="button" class="pinned bg-transparent border-0">
+                                <img src="../../../../assets/images/pinned-light.svg" />
+                            </button>
+                        </div>
+                        <div class="feed-name font_14 text_sec1">
+                            <img [src]="school.avatar"/> {{school.schoolName}}
+                        </div>
+                        <div class="feed-title font_14 text_sec1 d-flex align-content-center fw_600">
+                            {{post.title}}
+                        </div>
                     </div>
-                    <div class="feed-name font_14 text_sec1">
-                        <img src="../../../../assets/images/feed-school.jpg" /> Name
-                    </div>
-                    <div class="feed-title font_14 text_sec1 d-flex align-content-center fw_600">
-                        Python programming course
-                    </div>
-                </div>
-
-                <div class="feedimg-box position-relative text-light position-relative">
-                    <img src="../../../../assets/images/feed2.jpg" />
-                    <div class="pinned-view d-flex  justify-content-between align-items-start">
-                        <button type="button" class="view font_12 bg-transparent border-0 text-light">
-                            <img src="../../../../assets/images/eye-light.svg" /> 954
-                        </button>
-                        <button type="button" class="pinned bg-transparent border-0">
-                            <img src="../../../../assets/images/pinned-light.svg" />
-                        </button>
-                    </div>
-                    <div class="feed-name font_14 text_sec1">
-                        <img src="../../../../assets/images/feed-school.jpg" /> Name
-                    </div>
-                    <div class="feed-title font_14 text_sec1 d-flex align-content-center fw_600">
-                        Web Design course
-                    </div>
-                </div>
-
-                <div class="feedimg-box position-relative text-light position-relative">
-                    <img src="../../../../assets/images/feed3.jpg" />
-                    <div class="pinned-view d-flex  justify-content-between align-items-start">
-                        <button type="button" class="view font_12 bg-transparent border-0 text-light">
-                            <img src="../../../../assets/images/eye-light.svg" /> 954
-                        </button>
-                        <button type="button" class="pinned bg-transparent border-0">
-                            <img src="../../../../assets/images/pinned-light.svg" />
-                        </button>
-                    </div>
-                    <div class="feed-name font_14 text_sec1">
-                        <img src="../../../../assets/images/feed-school.jpg" /> Name
-                    </div>
-                    <div class="feed-title font_14 text_sec1 d-flex align-content-center fw_600">
-                        Web Design course
-                    </div>
-                </div>
-                <!-- <div class="feedimg-box position-relative text-light position-relative">
-                  <img src="images/feed4.jpg" />
-                  <div class="pinned-view d-flex  justify-content-between align-items-start">
-                    <button type="button" class="view font_12 bg-transparent border-0 text-light">
-                      <img src="images/eye-light.svg" /> 954
-                    </button>
-                    <button type="button" class="pinned bg-transparent border-0">
-                      <img src="images/pinned-light.svg" />
-                    </button>
-                  </div>
-                  <div class="feed-name font_14 text_sec1">
-                    <img src="images/feed-school4.jpg" /> Name
-                  </div>
-                  <div class="feed-title font_14 text_sec1 d-flex align-content-center fw_600">
-                    Web Design course
                   </div>
                 </div>
-                <div class="feedimg-box position-relative text-light position-relative">
-                  <img src="images/feed5.jpg" />
-                  <div class="pinned-view d-flex  justify-content-between align-items-start">
-                    <button type="button" class="view font_12 bg-transparent border-0 text-light">
-                      <img src="images/eye-light.svg" /> 954
-                    </button>
-                    <button type="button" class="pinned bg-transparent border-0">
-                      <img src="images/pinned-light.svg" />
-                    </button>
-                  </div>
-                  <div class="feed-name font_14 text_sec1">
-                    <img src="images/feed-school5.jpg" /> Name
-                  </div>
-                  <div class="feed-title font_14 text_sec1 d-flex align-content-center fw_600">
-                    Python programming course
-                  </div>
                 </div>
-                <div class="feedimg-box position-relative text-light position-relative">
-                  <img src="images/feed5.jpg" />
-                  <div class="pinned-view d-flex  justify-content-between align-items-start">
-                    <button type="button" class="view font_12 bg-transparent border-0 text-light">
-                      <img src="images/eye-light.svg" /> 954
-                    </button>
-                    <button type="button" class="pinned bg-transparent border-0">
-                      <img src="images/pinned-light.svg" />
-                    </button>
-                  </div>
-                  <div class="feed-name font_14 text_sec1">
-                    <img src="images/feed-school5.jpg" /> Name
-                  </div>
-                  <div class="feed-title font_14 text_sec1 d-flex align-content-center fw_600">
-                    Python programming course
-                  </div>
-                </div> -->
-                <!-- <div class="feedimg-box position-relative text-light position-relative">
-                  <img src="images/feed5.jpg" />
-                  <div class="pinned-view d-flex  justify-content-between align-items-start">
-                    <button type="button" class="view font_12 bg-transparent border-0 text-light">
-                      <img src="images/eye-light.svg" /> 954
-                    </button>
-                    <button type="button" class="pinned bg-transparent border-0">
-                      <img src="images/pinned-light.svg" />
-                    </button>
-                  </div>
-                  <div class="feed-name font_14 text_sec1">
-                    <img src="images/feed-school5.jpg" /> Name
-                  </div>
-                  <div class="feed-title font_14 text_sec1 d-flex align-content-center fw_600">
-                    Python programming course
-                  </div>
-                </div> -->
-
-
+              </div>
             </div>
         </div>
     </div>
@@ -663,10 +571,6 @@
                   *ngIf="(isSubmitted && editSchoolForm.controls.accessibilityId.errors)">This Field is required
                 </small>
                  </select>
-                  <!-- <select class="form-select rounded-8 w-100">
-                    <option value="1">Private</option>
-                    <option value="2">Public</option>
-                  </select> -->
                 </div>
               </div>
               <div class="col-md-6">
@@ -678,14 +582,9 @@
                 <div class="form-group position-relative student-input date-input owner-input">
                   <label>{{'Owner'| translate }}:</label>
                   <input readonly formControlName="owner" type="text" name="schoolOwner" class="form-control w-100">
-                  <!-- <select class="form-select rounded-8 w-100">
-                    <option value="1">User 1</option>
-                    <option value="2">User 2</option>
-                  </select> -->
                 </div>
               </div>
             </div>
-            <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
 
             <div class="text-line-border position-relative text-center mb-4">
               <span class="line-text font_12 text_ltgray fw_400 text-center">{{'SchoolBio'| translate }}</span>
@@ -828,39 +727,6 @@
 
         </div>
       </div>
-
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header border-0 justify-content-center position-relative">
-            <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">{{'AddLanguage'| translate }}</h1>
-            <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"><img
-                src="../../../../assets/images/cross.svg" /></button>
-          </div>
-          <div class="modal-body">
-            <form [formGroup]="languageForm">
-
-              <div class="form-group">
-                <span class="p-fluid">
-                <p-autoComplete formControlName="languages" [forceSelection]=true [size]="200" (onSelect)="captureLanguageId($event)" (onUnselect)="removeLanguage($event)" placeholder="{{'TypeLanguageToAdd'| translate }}" class="form-control w-100" 
-                 [suggestions]="filteredLanguages" (completeMethod)="filterLanguages($event)" field="name" [multiple]="true">
-                </p-autoComplete>
-              </span>
-              </div>
-
-              <div
-              class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4">
-              <button type="button"
-                class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
-                data-bs-dismiss="modal">{{'DiscardChanges'| translate }}</button>
-              <button (click)="saveSchoolLanguages()" type="button"
-                class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step" data-bs-dismiss="modal">{{'Save'| translate }}</button>
-
-            </div>
-            </form>
-
-          </div>
-        </div>
-      </div>
     </div>
 
     <div class="modal fade edit-school-modal" id="delete-schoolTeacher" tabindex="-1"
@@ -873,8 +739,6 @@
               src="../../../../assets/images/cross.svg" /></button>
         </div>
         <div class="modal-body">
-          <!-- <form [formGroup]="languageForm"> -->
-
             <div class="form-group">
               <h2 class="text-center">Do You Really Want To Delete This ?</h2>
             </div>
@@ -886,9 +750,7 @@
             <button (click)="deleteSchoolTeacher()" type="button"
               class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step" data-bs-dismiss="modal">{{'Yes'| translate }}</button>
 
-          </div>
-          <!-- </form> -->
-      
+          </div>      
         </div>
       </div>
     </div>
@@ -967,17 +829,8 @@ aria-labelledby="delete-certificate" aria-hidden="true">
   </div>
 </div>
 </div>
-
     </div>
-
   </section>
-
-
-<!-- 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <script src="https://phpcoder.tech/multiselect/js/jquery.multiselect.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script> -->
-
-
 </div>
 <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
+<!-- <div *ngIf="isOpenModal"><create-post [isOpenModal]="isOpenModal" [schoolId]="schoolId"></create-post></div> -->

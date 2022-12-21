@@ -51,6 +51,7 @@ export class CreateCourseComponent extends MultilingualComponent implements OnIn
   fromSchoolProfile!:string;
   schools:any;
   selectedSchool:any;
+  loadingIcon:boolean = false;
 
 
 
@@ -199,22 +200,12 @@ captureTeacherId(event: any) {
       return;
     }
 
+    this.loadingIcon = true;
     var step3Value=this.createCourseForm3.value;
     this.fileToUpload.append('courseUrl',JSON.stringify(step3Value.courseUrl));
 
-    // this.fileToUpload.append('schoolId', this.course.schoolId);
-    // this.fileToUpload.append('courseName', this.course.courseName);
-    // this.fileToUpload.append('description', this.course.description);
-    // this.fileToUpload.append('serviceTypeId',this.course.serviceTypeId);
-    // this.fileToUpload.append('accessibilityId',this.course.accessibilityId);
-    //  this.fileToUpload.append('courseUrl',JSON.stringify(this.course.courseUrl));
-    // this.fileToUpload.append('languageIds',JSON.stringify(this.course.languageIds));
-    // this.fileToUpload.append('disciplineIds',JSON.stringify(this.disciplineIds));
-    // this.fileToUpload.append('studentIds',JSON.stringify(this.studentIds));
-    // this.fileToUpload.append('teacherIds',JSON.stringify(this.teacherIds));
-    // this.fileToUpload.append('price',this.course.price.toString());
-
     this._courseService.createCourse(this.fileToUpload).subscribe((response:any) => {
+      this.loadingIcon = true;
       console.log(response);
 
     });

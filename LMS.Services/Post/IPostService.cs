@@ -10,5 +10,6 @@ namespace LMS.Services
     public interface IPostService
     {
         Task<string> SavePost(PostViewModel postViewModel, string createdById);
+        Task<PostAttachmentViewModel> GetReelById(Guid id);
     }
 }

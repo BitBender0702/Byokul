@@ -14,7 +14,7 @@ namespace LMS.App.Controllers
         private readonly UserManager<User> _userManager;
         private readonly IPostService _postService;
 
-        public PostController(UserManager<User> userManager, 
+        public PostController(UserManager<User> userManager,
             IPostService postService)
         {
             _userManager = userManager;
@@ -26,7 +26,8 @@ namespace LMS.App.Controllers
         public async Task<IActionResult> SavePost(PostViewModel postViewModel)
         {
             var userId = await GetUserIdAsync(this._userManager);
-            if (postViewModel.PostAuthorType == (int)PostAuthorTypeEnum.School) {
+            if (postViewModel.PostAuthorType == (int)PostAuthorTypeEnum.School)
+            {
                 postViewModel.OwnerId = new Guid(userId);
             }
 
@@ -40,6 +41,14 @@ namespace LMS.App.Controllers
                 return Ok(new { url = url });
             }
             return Ok();
+        }
+
+        [Route("getReelById")]
+        [HttpGet]
+        public async Task<IActionResult> GetReelById(Guid id)
+        {
+            var response = await _postService.GetReelById(id);
+            return Ok(response);
         }
 
     }

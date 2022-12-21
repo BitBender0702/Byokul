@@ -40,7 +40,8 @@ namespace LMS.DataAccess.Automapper
             CreateMap<User, AuthorViewModel>()
                 .ForMember(x => x.AuthorName, opt => opt.MapFrom(o => o.UserName));
             CreateMap<PostAttachment, PostAttachmentViewModel>()
-                .ForMember(x => x.CreatedBy, opt => opt.MapFrom(o => o.CreatedBy.Email));
+                .ForMember(x => x.CreatedBy, opt => opt.MapFrom(o => o.CreatedBy.Email))
+                .ForMember(x => x.User, opt => opt.MapFrom(o => o.CreatedBy));
 
             CreateMap<SchoolDefaultLogo, SchoolDefaultLogoViewmodel>();
 

@@ -1,0 +1,147 @@
+<div *ngIf="isDataLoaded">
+  <section class="f-poppins">
+    <side-bar [isOpenSidebar]="isOpenSidebar"></side-bar> 
+    <div class="main_content">
+      <div class="live-header d-flex align-items-center justify-content-between">
+        <button (click)="back()" type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
+            src="../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
+        <h1 class="font_22 text_dark fw-bold text-center mb-md-0">{{'LiveStream'| translate }}</h1>
+        <button (click)="back()" type="button" class="back-button bg-transparent border-0 "><img src="../../../assets/images/cross.svg" /></button>
+      </div>
+      <div [ngClass]="showCommentsField? 'live-content' : 'live-content full-widthreel'"  class="live-content" id="reel_content">
+        <div class="live-inner w-100">
+          <div class="live-image overflow-hidden position-relative">
+            <video width="100%" height="700" controls>
+                <source [src]="reels.fileUrl" type="video/mp4"/>
+              </video>
+            <!-- <iframe width="100%" height="700" [src]="reels.fileName" title="Reels video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> -->
+            <div class="live-bottom-text p-3">
+              <h5 class="font_14 mb-0 fw_600 text_sec1">{{reels.post.title}} 
+                <!-- <span class="font_14 fw_400  ms-3">Lecture One - Introduction and basics in Python</span> -->
+              </h5>
+            </div>
+            <button (click)="showComments()" type="button" id="live-chat" class="live_chats">
+              <img class="chat-gray-icon " src="../../../assets/images/chat-gray-icon.svg" />
+              <img *ngIf="showCommentsField" src="../../../assets/images/cross.svg" class="live-chat-back live-chat-close" />
+               <img *ngIf="!showCommentsField" src="../../../assets/images/chevron-right-light.svg" class="live-chat-back " />
+            </button>
+            <div class="reel-username font_16 white_text">
+                <div *ngIf="reels.school != null">
+                  <img [src]="reels.school.avatar" class="me-2"/> {{reels.school.schoolName}}
+                </div>
+                <div *ngIf="reels.class != null">
+                    <img [src]="reels.class.avatar" class="me-2"/> {{reels.class.className}}
+                </div>
+            </div>
+          </div>
+         
+        </div>
+        <div>
+          <div [ngClass]="showCommentsField? 'accordion-open d-block' : 'accordion-open d-none'" id="live-chat-open" style="display:none;">
+        <!-- <div class="accordion-open" id="live-chat-open" style="display:none;"> -->
+          <div class="live-action-buttons d-flex justify-content-between">
+            <button type="button" class="btn bg-transparent text_ltgray font_12 active"><img src="../../../assets/images/chat-icon.svg"
+                class="d-block" /> 34</button>
+            <button type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/eye.svg"
+                class="d-block" /> 954</button>
+            <button type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Heart-dark.svg"
+                class="d-block" /> 82</button>
+            <button type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Bookmark.svg"
+                class="d-block" /> 34</button>
+            <button type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Upload.svg"
+                class="d-block" /> 34</button>
+          </div>
+          <div class="live-chat-box text-center">
+            <div class="chat-enabled d-inline-flex align-items-center"><img src="../../../assets/images/Unlock.svg" />{{'ChatEnabled'| translate }}
+            </div>
+            <div class="live-chat-outer">
+            <div class="live-message d-flex position-relative align-items-start">
+              <img src="images/user.jpg" class="comment-user">
+              <p class="text_sec1 font_12 fw_400 text-start mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing
+                elit. Id odio congue suscipit sodales nec vitae hac ac senectus. Varius sed id.</p>
+              <button type="button" class="btn bg-transparent text_ltgray font_12 p-0 border-0 reel-like-chat"><img
+                  src="../../../assets/images/Heart-dark.svg" class="d-block" /> 34</button>
+              <button type="button" class="border-0 bg-transparent pinned-chat"><img src="../../../assets/images/pinned.svg" /></button>
+            </div>
+            <div class="live-message d-flex position-relative align-items-start">
+              <img src="images/user.jpg" class="comment-user">
+              <p class="text_sec1 font_12 fw_400 text-start mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing
+                elit. Tristique dolor senectus facilisi urna. Dictum vitae morbi turpis sed. In.</p>
+              <button type="button" class="btn bg-transparent text_ltgray font_12 p-0 border-0 reel-like-chat"><img
+                  src="images/Heart-dark.svg" class="d-block" /> 34</button>
+            </div>
+            <div class="live-message d-flex position-relative align-items-start">
+              <img src="images/user.jpg" class="comment-user">
+              <p class="text_sec1 font_12 fw_400 text-start mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing
+                elit. Lorem diam nunc mollis in. Dictum vitae morbi turpis sed. In. Sed feugiat iaculis gravida
+                ultricies blandit justo sit.</p>
+              <button type="button" class="btn bg-transparent text_ltgray font_12 p-0 border-0 reel-like-chat"><img
+                  src="images/Heart-dark.svg" class="d-block" /> 34</button>
+            </div>
+            <div class="live-message d-flex position-relative align-items-start">
+              <img src="images/user.jpg" class="comment-user">
+              <p class="text_sec1 font_12 fw_400 text-start mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing
+                elit. </p>
+              <button type="button" class="btn bg-transparent text_ltgray font_12 p-0 border-0 reel-like-chat"><img
+                  src="images/Heart-dark.svg" class="d-block" /> 34</button>
+            </div>
+            <div class="live-message d-flex position-relative align-items-start">
+              <img src="images/user.jpg" class="comment-user">
+              <p class="text_sec1 font_12 fw_400 text-start mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing
+                elit. Id odio congue suscipit sodales nec vitae hac.</p>
+              <button type="button" class="btn bg-transparent text_ltgray font_12 p-0 border-0 reel-like-chat"><img
+                  src="images/Heart-dark.svg" class="d-block" /> 34</button>
+            </div>
+            <div class="live-message d-flex position-relative align-items-start">
+              <img src="images/user.jpg" class="comment-user">
+              <p class="text_sec1 font_12 fw_400 text-start mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing
+                elit. Id odio congue suscipit sodales nec vitae hac ac senectus. Varius sed id.</p>
+              <button type="button" class="btn bg-transparent text_ltgray font_12 p-0 border-0 reel-like-chat"><img
+                  src="images/Heart-dark.svg" class="d-block" /> 34</button>
+            </div>
+          </div>
+            <div class="add-comment d-flex align-items-center justify-content-between">
+              <span class="bg-transparent rounded-circle comment-post-user rounded-circle"><img [src]="reels.user.avatar" style="max-height: 100%;"/>
+              </span>
+              <input type="text" class="form-control rounded-8 font_14 fw_400" placeholder="{{'YourMessage'| translate }}">
+              <button type="button" class="comment-btn border-0"><img src="../../../assets/images/arrowup.svg" /></button>
+            </div>
+          </div>
+
+        </div>
+        </div>
+        
+
+      </div>
+    </div>
+  </section>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+
+
+
+  <script>
+
+    $(document).ready(function () {
+      $("#reel_content").addClass("full-widthreel");   
+      $.fn.size = function () {
+        return this.length;
+      }
+
+      $("#live-chat").click(function () {
+        $("#live-chat-open").toggle();
+        if ($('#live-chat-open:visible').size() != 0) {
+
+          $(this).addClass('cl-livechat');
+          $("#reel_content").removeClass("full-widthreel");   
+        }
+        else {
+          $(this).removeClass('cl-livechat');
+          $("#reel_content").addClass("full-widthreel");   
+        }
+      });
+    });
+  </script>
+
+</div>

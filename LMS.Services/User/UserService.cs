@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using LMS.Common.Enums;
 using LMS.Common.ViewModels.Account;
 using LMS.Common.ViewModels.Class;
 using LMS.Common.ViewModels.Common;
@@ -33,10 +34,12 @@ namespace LMS.Services
         private IGenericRepository<SchoolTeacher> _schoolTeacherRepository;
         private IGenericRepository<Student> _studentRepository;
         private IGenericRepository<Teacher> _teacherRepository;
+        private IGenericRepository<School> _schoolRepository;
+        private IGenericRepository<Class> _classRepository;
         private readonly UserManager<User> _userManager;
         private readonly IBlobService _blobService;
         public UserService(IMapper mapper, IGenericRepository<User> userRepository, IGenericRepository<UserFollower> userFollowerRepository, IGenericRepository<UserLanguage> userLanguageRepository, IGenericRepository<City> cityRepository, IGenericRepository<Country> countryRepository, IGenericRepository<SchoolFollower> schoolFollowerRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<CourseTeacher> courseTeacherRepository,
-          IGenericRepository<SchoolTeacher> schoolteacherRepository, IGenericRepository<Student> studentRepository, IGenericRepository<Teacher> teacherRepository, UserManager<User> userManager, IBlobService blobService)
+          IGenericRepository<SchoolTeacher> schoolteacherRepository, IGenericRepository<Student> studentRepository, IGenericRepository<Teacher> teacherRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, UserManager<User> userManager, IBlobService blobService)
         {
             _mapper = mapper;
             _userRepository = userRepository;
@@ -53,6 +56,8 @@ namespace LMS.Services
             _schoolTeacherRepository = schoolteacherRepository;
             _studentRepository = studentRepository;
             _teacherRepository = teacherRepository;
+            _schoolRepository = schoolRepository;
+            _classRepository = classRepository;
             _userManager = userManager;
             _blobService = blobService;
         }
@@ -63,6 +68,7 @@ namespace LMS.Services
             result.Followers = await GetFollowers(userId);
             result.Languages = await GetLanguages(userId);
             result.Followings = await GetFollowings(userId);
+            result.PostAttachment = await GetPostsByUserId(userId);
             var classStudents = await GetClassStudents(userId);
             var courseStudents = await GetCourseStudents(userId);
 
@@ -103,7 +109,8 @@ namespace LMS.Services
                 var userFollower = new UserFollower
                 {
                     UserId = userId,
-                    FollowerId = followerId
+                    FollowerId = followerId,
+                    IsBan = false
                 };
 
                 _userFollowerRepository.Insert(userFollower);
@@ -382,6 +389,75 @@ namespace LMS.Services
             return response;
 
         }
+
+        public async Task<IEnumerable<PostAttachmentViewModel>> GetPostsByUserId(string userId)
+        {
+            var posts = await _postAttachmentRepository.GetAll()
+                .Include(x => x.Post)
+                .Where(x => x.CreatedById == userId).ToListAsync();
+
+            var response = _mapper.Map<List<PostAttachmentViewModel>>(posts);
+
+            foreach (var item in response)
+            {
+                if (item.Post.PostAuthorType == (int)PostAuthorTypeEnum.School)
+                {
+                    var school = _schoolRepository.GetById(item.Post.ParentId);
+                    item.School = _mapper.Map<SchoolViewModel>(school);
+                }
+
+                if (item.Post.PostAuthorType == (int)PostAuthorTypeEnum.Class)
+                {
+                    var classes = _classRepository.GetById(item.Post.ParentId);
+                    item.Class = _mapper.Map<ClassViewModel>(classes);
+                }
+
+                if (item.Post.PostAuthorType == (int)PostAuthorTypeEnum.User)
+                {
+                    try
+                    {
+                        var user = _userRepository.GetById(item.Post.ParentId.ToString());
+                        item.User = _mapper.Map<UserDetailsViewModel>(user);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ex;
+                    }
+                }
+            }
+
+
+            return response;
+        }
+
+        public async Task<List<UserFollowerViewModel>> GetUserFollowers(string userId)
+        {
+            var followerList = await _userFollowerRepository.GetAll().Include(x => x.Follower).Where(x => x.UserId == userId && !x.IsBan).ToListAsync();
+
+            var response = _mapper.Map<List<UserFollowerViewModel>>(followerList);
+            return response;
+
+        }
+
+        public async Task<bool> BanFollower(string followerId)
+       {
+            var follower = await _userFollowerRepository.GetAll().Where(x => x.FollowerId == followerId).FirstOrDefaultAsync();
+
+            if (follower != null)
+            {
+                follower.IsBan = true;
+                _userFollowerRepository.Update(follower);
+                _userFollowerRepository.Save();
+                return true;
+            }
+
+            return false;
+
+            
+
+        }
+
+
 
     }
 }

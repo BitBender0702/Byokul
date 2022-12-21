@@ -15,6 +15,12 @@ import { DeleteSchoolCertificate } from 'src/root/interfaces/school/deleteSchool
 import { MultilingualComponent } from '../../sharedModule/Multilingual/multilingual.component';
 import { CreatePostComponent } from '../../createPost/createPost.component';
 
+import { MatDialogRef, MatDialog } from '@angular/material/dialog';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { BsModalService } from 'ngx-bootstrap/modal';
+
+// import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+
 @Component({
     selector: 'schoolProfile-root',
     templateUrl: './schoolProfile.component.html',
@@ -77,22 +83,23 @@ export class SchoolProfileComponent extends MultilingualComponent implements OnI
 
 
     @ViewChild('createPostModal', { static: true }) createPostModal!: CreatePostComponent;
+
     // deletedLanguageId!:string;
 
     // For SchoolCertificate
     Certificates!: string[];
 
     // isSchoolFollowed!:boolean;
-    constructor(injector: Injector,private route: ActivatedRoute,private domSanitizer: DomSanitizer,schoolService: SchoolService,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
+    constructor(injector: Injector,private bsModalService: BsModalService,private matDialog: MatDialog,public modalService: NgbModal,private route: ActivatedRoute,private domSanitizer: DomSanitizer,schoolService: SchoolService,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
       super(injector);
         this._schoolService = schoolService;
 
+        // public modalService: NgbModal  in constructor
     }
   
     ngOnInit(): void {
-      debugger
+
       this.loadingIcon = true;
-      
       var selectedLang = localStorage.getItem("selectedLanguage");
       this.translate.use(selectedLang?? '');
 
@@ -133,15 +140,15 @@ export class SchoolProfileComponent extends MultilingualComponent implements OnI
       });
 
       this.languageForm = this.fb.group({
-        languages:this.fb.control('',[Validators.required]),
+        languages:this.fb.control([],[Validators.required]),
       });
 
       this.teacherForm = this.fb.group({
-        teachers:this.fb.control('',[Validators.required]),
+        teachers:this.fb.control([],[Validators.required]),
       });
 
       this.certificateForm = this.fb.group({
-        certificates:this.fb.control('',[Validators.required]),
+        certificates:this.fb.control([],[Validators.required]),
       });
 
       this.schoolLanguage = {
@@ -265,7 +272,6 @@ export class SchoolProfileComponent extends MultilingualComponent implements OnI
     
   }
   updateSchool(){
-    debugger
     this.isSubmitted=true;
     if (!this.editSchoolForm.valid) {
       return;
@@ -289,11 +295,8 @@ export class SchoolProfileComponent extends MultilingualComponent implements OnI
     this.fileToUpload.append('schoolEmail',this.updateSchoolDetails.schoolEmail);
     this.fileToUpload.append('description',this.updateSchoolDetails.description);
 
-    // here for the owner if needed
 
     this._schoolService.editSchool(this.fileToUpload).subscribe((response:any) => {
-      debugger
-      // this.loadingIcon = false;
       this.closeModal();
       this.isSubmitted=false;
       this.fileToUpload = new FormData();
@@ -304,22 +307,18 @@ export class SchoolProfileComponent extends MultilingualComponent implements OnI
   }
 
   private closeModal(): void {
-    debugger
     this.closeEditModal.nativeElement.click();
 }
 
 private closeCertificatesModal(): void {
-  debugger
   this.closeCertificateModal.nativeElement.click();
 }
 
 private closeTeachersModal(): void {
-  debugger
   this.closeTeacherModal.nativeElement.click();
 }
 
 private closeLanguagesModal(): void {
-  debugger
   this.closeLanguageModal.nativeElement.click();
 }
 
@@ -353,21 +352,12 @@ private closeLanguagesModal(): void {
       }
     }
 
-
-    // here compare 2 list 
-
-    // filtered = filtered.filter(function(val) {
-    //   return schoolLanguages.indexOf(val) == -1;
-    // });
-
     this.filteredLanguages = filtered;
   }
 
   captureLanguageId(event: any) {
-    debugger
     var languageId = event.id;
     this.schoolLanguage.languageIds.push(languageId);
-    // this.languageIds.push(languageId);
   }
 
   saveSchoolLanguages(){
@@ -375,12 +365,12 @@ private closeLanguagesModal(): void {
     if (!this.languageForm.valid) {
       return;
     }
-    this.closeLanguagesModal();
+    this.loadingIcon = true;
     this.schoolLanguage.schoolId = this.school.schoolId;
     this._schoolService.saveSchoolLanguages(this.schoolLanguage).subscribe((response:any) => {
+      this.closeLanguagesModal();
       this.isSubmitted = false;
       this.ngOnInit();
-      console.log(response);
 
     });
   }
@@ -390,10 +380,10 @@ private closeLanguagesModal(): void {
   }
 
   deleteSchoolLanguage(){
+    this.loadingIcon = true;
     this.deleteLanguage.schoolId = this.school.schoolId;
     this._schoolService.deleteSchoolLanguage(this.deleteLanguage).subscribe((response:any) => {
       this.ngOnInit();
-      console.log(response);
 
     });
 
@@ -417,7 +407,6 @@ private closeLanguagesModal(): void {
   }
 
   captureTeacherId(event: any) {
-    debugger
     var teacherId = event.teacherId;
     this.schoolTeacher.teacherIds.push(teacherId);
     this.teacherInfo.push(event);
@@ -428,44 +417,44 @@ private closeLanguagesModal(): void {
     if (!this.teacherForm.valid) {
       return;
     }
-    this.closeTeachersModal();
+
+    this.loadingIcon = true;
     this.schoolTeacher.schoolId = this.school.schoolId;
     this._schoolService.saveSchoolTeachers(this.schoolTeacher).subscribe((response:any) => {
+      this.teachers = [];
+      this.closeTeachersModal();
       this.isSubmitted = false;
       this.ngOnInit();
-      console.log(response);
 
     });
   }
-
 
   getDeletedTeacher(deletedTeacher:string){
     this.deleteTeacher.teacherId = deletedTeacher;
   }
 
   deleteSchoolTeacher(){
+    this.loadingIcon = true;
     this.deleteTeacher.schoolId = this.school.schoolId;
     this._schoolService.deleteSchoolTeacher(this.deleteTeacher).subscribe((response:any) => {
       this.ngOnInit();
-      console.log(response);
 
     });
 
   }
 
   saveSchoolCertificates(){
-    debugger
     this.isSubmitted = true;
     if (!this.certificateForm.valid) {
       return;
     }
-    this.closeCertificatesModal();
-
+    this.loadingIcon = true;
     for(var i=0; i<this.schoolCertificate.certificates.length; i++){
       this.certificateToUpload.append('certificates', this.schoolCertificate.certificates[i]);
    }
     this.certificateToUpload.append('schoolId', this.school.schoolId);
     this._schoolService.saveSchoolCertificates(this.certificateToUpload).subscribe((response:any) => {
+      this.closeCertificatesModal();
       this.isSubmitted = false;
       this.schoolCertificate.certificates = [];
       this.certificateToUpload.set('certificates','');
@@ -480,6 +469,7 @@ private closeLanguagesModal(): void {
   }
 
   deleteSchoolCertificate(){
+    this.loadingIcon = true;
     this.deleteCertificate.schoolId = this.school.schoolId;
     this._schoolService.deleteSchoolCertificate(this.deleteCertificate).subscribe((response:any) => {
       this.ngOnInit();
@@ -489,7 +479,6 @@ private closeLanguagesModal(): void {
   }
 
   resetCertificateModal(){
-    debugger
     this.isSubmitted = false;
     this.schoolCertificate.certificates = [];
   }
@@ -499,8 +488,6 @@ private closeLanguagesModal(): void {
     this.languageForm.setValue({
       languages: [],
     });
-    // this is unappro
-    //this.schoolTeacher.teacherIds = [];
   }
 
   resetTeacherModal(){
@@ -508,12 +495,9 @@ private closeLanguagesModal(): void {
     this.teacherForm.setValue({
       teachers: [],
     });
-
-    //this.schoolTeacher.teacherIds = [];
   }
 
   removeTeacher(event: any){
-    debugger
     const teacherIndex = this.schoolTeacher.teacherIds.findIndex((item) => item === event.teacherId);
     if (teacherIndex > -1) {
       this.schoolTeacher.teacherIds.splice(teacherIndex, 1);
@@ -521,7 +505,6 @@ private closeLanguagesModal(): void {
   }
 
   removeLanguage(event: any){
-    debugger
     const languageIndex = this.schoolLanguage.languageIds.findIndex((item) => item === event.id);
     if (languageIndex > -1) {
       this.schoolLanguage.languageIds.splice(languageIndex, 1);
@@ -529,12 +512,17 @@ private closeLanguagesModal(): void {
   }
 
   createPost(){
-    this.isOpenModal = true;
-
-  }
-
-  openPostModal() {
     debugger
-    this.createPostModal.show();
-  }
+    this.isOpenModal = true;
+    }
+
+  openPostModal(): void {
+    debugger
+    const initialState = {
+      schoolId: this.school.schoolId,
+      from: "school"
+    };
+    //var initialState = this.school.schoolId;
+    this.bsModalService.show(CreatePostComponent,{initialState});
+}
 }

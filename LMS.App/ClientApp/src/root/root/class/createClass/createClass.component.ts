@@ -74,10 +74,6 @@ export class CreateClassComponent extends MultilingualComponent implements OnIni
       this.getSelectedSchool(this.fromSchoolProfile);
     }
 
-    this.loadingIcon = true;
-
-   
-
     this.selectedLanguage = localStorage.getItem("selectedLanguage");
     this.translate.use(this.selectedLanguage);
 
@@ -216,10 +212,12 @@ captureTeacherId(event: any) {
       return;
     }
 
+    this.loadingIcon = true;
     var step3Value =this.createClassForm3.value;
     this.fileToUpload.append('classUrl',JSON.stringify(step3Value.classUrl));
 
     this._classService.createClass(this.fileToUpload).subscribe((response:any) => {
+      this.loadingIcon = false;
       var classId =  response;
       this.router.navigateByUrl(`user/classProfile/${classId}`)
 

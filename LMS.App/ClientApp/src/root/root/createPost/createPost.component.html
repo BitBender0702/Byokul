@@ -7,8 +7,11 @@
 
     <div class="main_content"> -->
 
-      <div class="modal fade edit-school-modal show d-block" id="openModal" tabindex="-1" role="dialog"
-        aria-labelledby="add-language" aria-hidden="true">
+      <button hidden #openAttachmentModal type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44" data-bs-toggle="modal"
+      data-bs-target="#add-attachment">Create Post</button>
+      <!-- <div *ngIf="isDataLoaded"> -->
+      <div appBsModal  bsModal #createPostModal="bs-modal" class="modal fade edit-school-modal show d-block" id="create-post" tabindex="-1"
+        aria-labelledby="create-post" aria-hidden="true" area-modal="true" [config]="{backdrop: 'static'}">
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
             <div class="modal-header border-0 justify-content-center position-relative">
@@ -39,23 +42,19 @@
               </div>
               <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">{{'CreatePost'| translate }}</h1>
               <div></div>
-              <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"><img
+              <button (click)="close()" type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"><img
                   src="../../../assets/images/cross.svg" /></button>
             </div>
             <div class="modal-body">
               <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="live-tab-pane" role="tabpanel" aria-labelledby="live-tab"
                   tabindex="0">
-                  <form class="createLiveForm"  [formGroup]="createLiveForm">
+                  <!-- <form class="createLiveForm"  [formGroup]="createLiveForm">
                     <div class="form-group">
                       <label class="font_10">School Name</label>
                       <input hidden type="text" name="schoolId" class="form-control w-100">
                       <input readonly type="text" [placeholder]="parentDetails?.schoolName" name="schoolName" class="form-control w-100">
-                      <!-- <select class="form-select rounded-8 w-100">
-                        <option value="1">School Name 1</option>
-                        <option value="2">School Name 2</option>
-                        <option value="3">School Name 1 3</option>
-                      </select> -->
+
                     </div>
                     <div class="form-group">
                       <label class="font_10">Title</label>
@@ -125,7 +124,7 @@
                     </div>
       
                   </div>
-                  </form>
+                  </form> -->
 
 
                 </div>
@@ -177,24 +176,25 @@
                     <!-- </div> -->
                     <!-- <div *ngFor="let video of uploadVideo"> -->
                     <span *ngFor="let video of uploadVideo" class="position-relative d-inline-block">
-                      <img [src]="video.videoUrl" style="height: 150px; max-width: 100%;"/>
+                      <div class="videofile">
+                        <video preload="metadata" style="height: 300px;">
+                          <source [src]="video.videoUrl" type="video/mp4"/>
+                        </video>
+                      </div>
+                      <!-- <img [src]="video.videoUrl" style="height: 150px; max-width: 100%;"/> -->
                       <button (click)="removeUploadVideo(video)" type="button"
                         class="btn dl-post-img d-flex align-items-center justify-content-center rounded-circle position-absolute"><i
                           class="fa-solid fa-xmark"></i></button>
                     </span>
                     </div>
                   <!-- </div> -->
-                  <div class="teacher-tags tag-box hashtag_post mt-4 mb-2">
-                    <button type="button" class="custom-tag">#Tag 1</button>
-                    <button type="button" class="custom-tag">#Tag 2</button>
-                    <button type="button" class="custom-tag">#Tag 3</button>
-                    <button type="button" class="custom-tag">#Tag 4</button>
-                    <button type="button" class="custom-tag">#Tag 5</button>
-                    <button type="button" class="custom-tag">#Tag 6</button>
-                    <button type="button" class="custom-tag">#Tag 7</button>
+                  <div class="teacher-tags tag-box hashtag_post mt-4 mb-2 hover-tags">
+                    <span *ngFor="let tag of tagLists" class="custom-tag">{{tag}}
+                      <button (click)="removeTags(tag)" class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                        src="../../../assets/images/cross-sm-light.svg"></button></span>
                   </div>
-                  <div class="teacher-tags hashtag_post tag-boxattachment-outer mt-1 mb-0">
-                      <button *ngFor="let attach of this.attachment" type="button" class="custom-tag"><img src="../../../assets/images/Paper-gray.svg" class="me-1" /> {{attach}}</button>
+                  <div class="teacher-tags hashtag_post tag-boxattachment-outer mt-1 mb-0 hover-tags">
+                      <button *ngFor="let item of this.attachment" type="button" class="custom-tag"><img src="../../../assets/images/Paper-gray.svg" class="me-1" /> {{item.name}}</button>
                     <!-- <button type="button" class="custom-tag"><img src="../../../assets/images/Paper-gray.svg" class="me-1" /> Attachment
                       1</button>
                     <button type="button" class="custom-tag"><img src="../../../assets/images/Paper-gray.svg" class="me-1" /> Attachment
@@ -208,7 +208,7 @@
                   <div class="post-bot-left d-flex">
 
                     <label class="custom-file-upload post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center active">
-                      <input type="file" (change)="handleImageInput($event)" accept="image/*"/>
+                      <input id="hideFileType" type="file" (change)="handleImageInput($event)" accept="image/*"/>
                       <img
                         src="../../../assets/images/gallery-dark.svg" class="dark-attach" /><img src="../../../assets/images/gallery-light.svg"
                         class="light-attach" />
@@ -221,7 +221,7 @@
 
 
                         <label class="custom-file-upload post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center">
-                          <input type="file" (change)="handleVideoInput($event)" accept="video/*"/>
+                          <input id="hideFileType" type="file" (change)="handleVideoInput($event)" accept="video/*"/>
                           <img
                           src="../../../assets/images/Video-dark.svg" class="dark-attach" /><img src="../../../assets/images/Video-light.svg"
                           class="light-attach" />
@@ -235,12 +235,17 @@
                         class="light-attach" /></button> -->
 
 
-                    <label class="custom-file-upload post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center">
+                    <!-- <label class="custom-file-upload post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center">
                         <input type="file" (change)="handleAttachmentInput($event)" accept="pdf/*"/>
                         <img
                         src="../../../assets/images/Paper-Plus-dark.svg" class="dark-attach" /><img src="../../../assets/images/Paper-Plus-light.svg"
                         class="light-attach" />
-                    </label>
+                    </label> -->
+
+                    <button (click)="AttachmentModalOpen(attachmentTemplate)" type="button"     
+                    class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"
+                    ><img src="../../../assets/images/Paper-Plus-dark.svg"
+                      class="dark-attach" /><img src="../../../assets/images/Paper-Plus-light.svg" class="light-attach" /></button>
 
                     <!-- <input type="file" [size]="60" (change)="handleAttachmentInput($event)" accept="pdf/*"> -->
 
@@ -249,57 +254,112 @@
                         src="../../../assets/images/Paper-Plus-dark.svg" class="dark-attach" /><img src="../../../assets/images/Paper-Plus-light.svg"
                         class="light-attach" /></button> -->
 
-                    <button type="button"
+                    <button (click)="openTagModal(tagTemplate)" type="button"
                       class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"><img
                         src="../../../assets/images/hashtag-dark.svg" class="dark-attach" /><img src="../../../assets/images/hashtag-light.svg"
                         class="light-attach" /></button>
                   </div>
                   <div class="post-bot-right d-flex justify-content-end">
                     <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 delay-btn"><i
-                        class="fa-solid fa-clock"></i></button>
-                    <button (click)="savePost()" type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 lg_btn"><img
-                        src="../../../assets/images/Send-light.svg" class="me-2" /> Nov 15, 2022 at 14:30 </button>
+                        class="fa-solid fa-clock"></i>
+                        <p-calendar formControlName="scheduleTime" [(ngModel)]="scheduleTime" [showTime]="true"></p-calendar>
+                      </button>
+                      
+                      
+                    <button *ngIf="scheduleTime != undefined" (click)="savePost()" type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 lg_btn"><img
+                        src="../../../assets/images/Send-light.svg" class="me-2" />{{scheduleTime | date : "MMMM d, y"}} at {{scheduleTime | date : "H:mm"}}</button>
+                    <button *ngIf="scheduleTime == undefined" (click)="savePost()" type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 lg_btn"><img
+                        src="../../../assets/images/Send-light.svg" class="me-2" />Save</button>
+
                   </div>
     
                 </div>
+                <small class="p-error" style="color: orange;margin-left: 350px;" *ngIf="createPostForm.errors?.unauthenticated">
+                  Please select valid date!
+                </small>
                 </form>
-
                 </div>
+
                 <div class="tab-pane fade" id="reels-tab-pane" role="tabpanel" aria-labelledby="reels-tab" tabindex="0">
-                  <form class="createReelForm"  [formGroup]="createReelForm">
-                    ...
+                  <form [formGroup]="createReelForm">
+                  <div *ngIf="this.schoolId != undefined" class="form-group">
+                    <label class="font_10">School Name</label>
+                    <input hidden type="text" name="schoolId" class="form-control w-100">
+                    <input readonly type="text" [placeholder]="parentDetails?.schoolName" name="className" class="form-control w-100">
+                  </div>
 
-                    <div
-                  class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 cr-postfooter pt-0">
-                  <div class="post-bot-left d-flex">
-                    <button type="button"
-                      class="post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center active"><img
-                        src="../../../assets/images/gallery-dark.svg" class="dark-attach" /><img src="../../../assets/images/gallery-light.svg"
-                        class="light-attach" /></button>
-                    <button type="button"
-                      class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"><img
-                        src="../../../assets/images/Video-dark.svg" class="dark-attach" /><img src="../../../assets/images/Video-light.svg"
-                        class="light-attach" /></button>
-                    <button type="button"
-                      class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"><img
-                        src="../../../assets/images/Paper-Plus-dark.svg" class="dark-attach" /><img src="../../../assets/images/Paper-Plus-light.svg"
-                        class="light-attach" /></button>
-                    <button type="button"
-                      class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"><img
-                        src="../../../assets/images/hashtag-dark.svg" class="dark-attach" /><img src="../../../assets/images/hashtag-light.svg"
-                        class="light-attach" /></button>
+                  <div *ngIf="this.classId != undefined" class="form-group">
+                    <label class="font_10">Class Name</label>
+                    <input hidden type="text" name="classId" class="form-control w-100">
+                    <input readonly type="text" [placeholder]="parentDetails?.className" name="schoolName" class="form-control w-100">
                   </div>
-                  <div class="post-bot-right d-flex justify-content-end">
-                    <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 delay-btn"><i
-                        class="fa-solid fa-clock"></i></button>
-                    <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 lg_btn"><img
-                        src="../../../assets/images/Send-light.svg" class="me-2" /> Nov 15, 2022 at 14:30 </button>
+
+                  <div *ngIf="this.userId != undefined" class="form-group">
+                    <label class="font_10">User Name</label>
+                    <input hidden type="text" name="userId" class="form-control w-100">
+                    <input readonly type="text" [placeholder]="parentDetails?.firstName + ' ' + parentDetails?.lastName" name="userName" class="form-control w-100">
                   </div>
+
+                  <div class="preview-zone hidden">
+                    <div class="box box-solid">
+                      <div class="box-header with-border">
+                      </div>
+                      <div class="box-body">
+                        <div *ngIf ="uploadReel!= null">
+                        <span class="position-relative d-inline-block">
+                          <div class="videofile">
+                            <video preload="metadata">
+                              <source [src]="uploadReel" type="video/mp4"/>
+                            </video>
+                          </div>
+                          <button (click)="removeUploadReel(uploadReel)" type="button"
+                            class="btn dl-post-img d-flex align-items-center justify-content-center rounded-circle position-absolute"><i
+                              class="fa-solid fa-xmark"></i></button>
+                        </span>
+                      </div>
+                        
+                        <!-- <div class="videofile">
+                          <video preload="metadata">
+                            <source [src]="uploadReel" type="video/mp4"/>
+                          </video>
+                        </div> -->
+
+                        <!-- <img style="width: 200px;" class="mb-3" [src]="uploadReel"> -->
+                      </div>
+                    </div>
+                  </div>
+
+                  <div *ngIf ="uploadReel == null">
+                  <div class="dropzone-wrapper mb-4 reels-uploader-img">
+                    <div class="dropzone-desc">
+                      <i class="glyphicon glyphicon-download-alt"></i>
+                      <p class="text-center fw_400">Drop image or <b>Clock to Browse</b> </p>
+                    </div>
+                    <input formControlName="reelsVideo" type="file" name="img_logo" (change)="handleReels($event)" class="dropzone" accept="video/*">
+                  </div>
+                  <small class="p-error" style="color: orange;margin-left: 200px;"
+                  *ngIf="(isSubmitted && createReelForm.controls.reelsVideo.errors)"> Please select atleast one video
+                </small>
+                  </div>
+                  <hr class="mb-0 sepearator mx-0 mt-3 opacity-100" />
+                  <div
+                    class="modal-footer steps_btns d-flex align-items-center justify-content-center flex-sm-nowrap border-0 pb-0 cr-postfooter pt-0 mt-3 px-0">
+                    <div class="post-bot-right d-flex justify-content-end">
+                      <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 delay-btn"><i
+                          class="fa-solid fa-clock"></i>
+                          <p-calendar formControlName="scheduleTime" [(ngModel)]="scheduleTime" [showTime]="true"></p-calendar>
+                        </button>
+                      <button *ngIf="scheduleTime != undefined" (click)="saveReels()" type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 lg_btn">
+                        {{scheduleTime | date : "MMMM d, y"}} at {{scheduleTime | date : "H:mm"}}
+                      </button>
+                      <button *ngIf="scheduleTime == undefined" (click)="saveReels()" type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 lg_btn">Post Reels
+                      </button>
+                    </div>
     
-                </div>
-
-                    
-
+                  </div>
+                  <small class="p-error" style="color: orange;margin-left: 223px;" *ngIf="createReelForm.errors?.unauthenticated">
+                    Please select valid date!
+                  </small>
                   </form>
                 </div>
 
@@ -345,109 +405,175 @@
 
 
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <script src="https://phpcoder.tech/multiselect/js/jquery.multiselect.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+  <!---- add tag Modal -->
+  <div class="modal fade edit-school-modal" id="add-tag" tabindex="-1" aria-labelledby="add-tag" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header border-0 justify-content-center position-relative">
+          <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">{{'AddTag'| translate }}</h1>
+          <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"><img
+              src="../../../assets/images/cross.svg" /></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group latest-form">
+            <label class="font_10">{{'Tags'| translate }}</label>
+            <!-- <p-chips class="form-control" placeholder="{{'TypeToAdd'| translate }}" [(ngModel)]="tagValues" separator=","></p-chips> -->
+            <input [(ngModel)]="tags" (keyup.enter)="onEnter(tags)" type="text" class="form-control" placeholder="{{'TypeToAdd'| translate }}">
+          </div>
+          <div class="teacher-tags tag-box hashtag_post mt-4 mb-2 hover-tags">
+            <span *ngFor="let tag of tagLists" class="custom-tag">{{'#' + tag}} 
+              <button (click) = "removeTags(tag)" class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                  src="../../../assets/images/cross-sm-light.svg"></button>
+            </span>
+
+        </div>
+        <small class="p-error" style="color: orange;margin-left: 200px;"
+           *ngIf="(!isTagsValid)"> Please select atleast one tag
+        </small>
+        <div
+          class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4">
+          <button #closeTagModal type="button"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+            data-bs-toggle="modal" data-bs-target="#create-post">Discard Changes</button>
+          <button (click)="isValidTags()" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step"
+            data-bs-toggle="modal">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+
+   <!---- Add attachgment Modal-->
+   <div class="modal fade edit-school-modal" id="add-attachment" tabindex="-1" aria-labelledby="add-attachment"
+   aria-hidden="true">
+   <div class="modal-dialog modal-dialog-centered">
+     <div class="modal-content">
+       <div class="modal-header border-0 justify-content-center position-relative">
+         <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">{{'AttachFile'| translate }}</h1>
+         <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"><img
+             src="../../../assets/images/cross.svg" /></button>     
+       </div>
+       <div class="modal-body">
+         <div class="dropzone-wrapper mb-4">
+          <div class="dropzone-desc">
+            <i class="glyphicon glyphicon-download-alt"></i>
+            <p class="text-center fw_400"><b>Clock to Browse</b></p>
+          </div>
+          <input type="file" name="img_logo" class="dropzone" (change)="handleAttachmentInput($event)" accept="pdf/*">
+         </div>
+         <p class="font_16 text_dark text-center my-4 fw_600">{{'FindInFileStorage'| translate }}</p>
+         <div class="form-group latest-form">
+           <label class="font_10">{{'Files'| translate }}</label>
+           <input type="text" class="form-control" placeholder="{{'TypeToAdd'| translate }}">
+         </div>
+         <div class="teacher-tags hashtag_post tag-boxattachment-outer mt-1 mb-0 hover-tags">
+                 <span *ngFor="let item of this.attachment" class="custom-tag"><img src="../../../assets/images/Paper-gray.svg" class="me-1 dark-svg"> <img
+                  src="../../../assets/images/Paper-light.svg" class="me-1 light-svg"> {{item.name}}
+                 <button (click)="removeAttachment(item)" class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                    src="../../../assets/images/cross-sm-light.svg">
+                 </button>
+               </span>
+         </div>
+       </div>
+       <div
+         class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4">
+         <button type="button"
+           class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+           data-bs-toggle="modal" data-bs-target="#create-post">Discard Changes</button>
+         <button type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step"
+           data-bs-toggle="modal" data-bs-target="#create-post">Save</button>
+       </div>
+     </div>
+   </div>
+   </div>
+
+  <ng-template #attachmentTemplate style="max-width: 700px;">
+   <div>
+     <div class="modal-content">
+       <div class="modal-header border-0 justify-content-center position-relative">
+         <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">{{'AttachFile'| translate }}</h1>
+         <button (click)="closeAttachmentModal()" type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"><img
+             src="../../../assets/images/cross.svg" /></button>     
+       </div>
+       <div class="modal-body">
+         <div class="dropzone-wrapper mb-4">
+          <div class="dropzone-desc">
+            <i class="glyphicon glyphicon-download-alt"></i>
+            <p class="text-center fw_400"><b>Clock to Browse</b></p>
+          </div>
+          <input type="file" name="img_logo" class="dropzone" (change)="handleAttachmentInput($event)" accept="pdf/*">
+         </div>
+         <p class="font_16 text_dark text-center my-4 fw_600">{{'FindInFileStorage'| translate }}</p>
+         <div class="form-group latest-form">
+           <label class="font_10">{{'Files'| translate }}</label>
+           <input type="text" class="form-control" placeholder="{{'TypeToAdd'| translate }}">
+         </div>
+         <div class="teacher-tags hashtag_post tag-boxattachment-outer mt-1 mb-0 hover-tags">
+                 <span *ngFor="let item of this.attachment" class="custom-tag"><img src="../../../assets/images/Paper-gray.svg" class="me-1 dark-svg"> <img
+                  src="../../../assets/images/Paper-light.svg" class="me-1 light-svg"> {{item.name}}
+                 <button (click)="removeAttachment(item)" class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                    src="../../../assets/images/cross-sm-light.svg">
+                 </button>
+               </span>
+         </div>
+       </div>
+       <small class="p-error" style="color: orange;margin-left: 200px;"
+         *ngIf="(!isAttachmentsValid)"> Please select atleast one attachment
+      </small>
+       <div
+         class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4">
+         <button (click)="closeAttachmentModal()" type="button"
+           class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+           data-bs-toggle="modal" data-bs-target="#create-post">Discard Changes</button>
+         <button (click)="isValidAttachments()" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step"
+           data-bs-toggle="modal" data-bs-target="#create-post">Save</button>
+       </div>
+     </div>
+   </div>
+</ng-template>
 
 
 
-  <script>
-    $(document).ready(function () {
-      $(".next-step").click(function (e) {
-        var activeTab = $(".registerTabs .tab-pane.active");
-        activeTab.next().addClass("active");
-        activeTab.removeClass("active");
-        $(".step-icon .step1").addClass('finish');
-      });
+<ng-template #tagTemplate>
+    <div class="modal-content">
+      <div class="modal-header border-0 justify-content-center position-relative">
+        <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">{{'AddTag'| translate }}</h1>
+        <button (click)="closeTagsModal()" type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"><img
+            src="../../../assets/images/cross.svg" /></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group latest-form">
+          <label class="font_10">{{'Tags'| translate }}</label>
+          <input [(ngModel)]="tags" (keyup.enter)="onEnter(tags)" type="text" class="form-control" placeholder="{{'TypeToAdd'| translate }}">
+        </div>
+        <div class="teacher-tags tag-box hashtag_post mt-4 mb-2 hover-tags">
+          <span *ngFor="let tag of tagLists" class="custom-tag">{{'#' + tag}} 
+            <button (click) = "removeTags(tag)" class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                src="../../../assets/images/cross-sm-light.svg"></button>
+          </span>
 
-      $(".prev-step").click(function (e) {
-        var activeTab = $(".registerTabs .tab-pane.active");
-        activeTab.prev().addClass("active");
-        activeTab.removeClass("active");
-
-      });
-      $("#step2_btn").click(function () {
-        $("#create_school, .step-icon").addClass('d-none');
-      });
-
-    });
-
-
-  </script>
-  <script>
-    function readFile(input) {
-      if (input.files && input.files[0]) {
-        var reader = new FileReader();
-
-        reader.onload = function (e) {
-          var htmlPreview =
-            '<img width="200" src="' + e.target.result + '" />' +
-            '<p>' + input.files[0].name + '</p>';
-          var wrapperZone = $(input).parent();
-          var previewZone = $(input).parent().parent().find('.preview-zone');
-          var boxZone = $(input).parent().parent().find('.preview-zone').find('.box').find('.box-body');
-
-          wrapperZone.removeClass('dragover');
-          previewZone.removeClass('hidden');
-          boxZone.empty();
-          boxZone.append(htmlPreview);
-        };
-
-        reader.readAsDataURL(input.files[0]);
-      }
-    }
-
-    function reset(e) {
-      e.wrap('<form>').closest('form').get(0).reset();
-      e.unwrap();
-    }
-
-    $(".dropzone").change(function () {
-      readFile(this);
-    });
-
-    $('.dropzone-wrapper').on('dragover', function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-      $(this).addClass('dragover');
-    });
-
-    $('.dropzone-wrapper').on('dragleave', function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-      $(this).removeClass('dragover');
-    });
-
-    $('.remove-preview').on('click', function () {
-      var boxZone = $(this).parents('.preview-zone').find('.box-body');
-      var previewZone = $(this).parents('.preview-zone');
-      var dropzone = $(this).parents('.form-group').find('.dropzone');
-      boxZone.empty();
-      previewZone.addClass('hidden');
-      reset(dropzone);
-    });
+      </div>
+      <small class="p-error" style="color: orange;margin-left: 200px;"
+         *ngIf="(!isTagsValid)"> Please select atleast one tag
+      </small>
+      <div
+        class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4">
+        <button (click)="closeTagsModal()" type="button"
+          class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+          data-bs-toggle="modal" data-bs-target="#create-post">Discard Changes</button>
+        <button (click)="isValidTags()" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step"
+          data-bs-toggle="modal">Save</button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+ <!-- </div>
 
 
 
-  </script>
-  <script>
-    jQuery('#languageSelect').multiselect({
-      columns: 1,
-      placeholder: 'Select Languages',
-      search: true
-    });
-  </script>
-  <script>
-    function openSearch() {
-      document.getElementById("search-overlay").style.display = "block";
-    }
-    function closeSearch() {
-      document.getElementById("search-overlay").style.display = "none";
-    }
-    function closeSidebar() {
-      document.getElementById("side-bar").style.display = "none";
-    }
-    function openSidebar() {
-      document.getElementById("side-bar").style.display = "block";
-    }
-  </script>
+
+ for tags
+<div class="col-md-6">
+  <p-chips [(ngModel)]="values1" separator=","></p-chips>
+</div> -->

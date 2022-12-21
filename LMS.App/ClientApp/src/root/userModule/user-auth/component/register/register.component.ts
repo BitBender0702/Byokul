@@ -82,7 +82,7 @@ export class RegisterComponent extends MultilingualComponent implements OnInit {
       return((k > 64 && k < 91) || (k > 96 && k < 123) || k == 8 || k == 32 || (k >= 48 && k <= 57)); 
    }
 
-    get password() { return this.registrationForm.get('password'); }
+  get password() { return this.registrationForm.get('password'); }
   get confirmPassword() { return this.registrationForm.get('confirmPassword'); }
 
     register(){

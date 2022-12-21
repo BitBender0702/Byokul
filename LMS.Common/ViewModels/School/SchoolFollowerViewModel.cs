@@ -11,8 +11,9 @@ namespace LMS.Common.ViewModels.School
     {
         public Guid Id { get; set; }
         public Guid? SchoolId { get; set; }
-        public SchoolViewModel School { get; set; }
+        public SchoolViewModel School { get; set; }  
         public string? UserId { get; set; }
-        public UserViewModel User { get; set; }
+        public UserDetailsViewModel User { get; set; }
+        public Boolean IsBan { get; set; }
     }
 }

@@ -17,6 +17,8 @@ namespace LMS.Services
         Task<IEnumerable<PostAttachmentViewModel>> GetMyFeed(string userId);
         Task<IEnumerable<PostAttachmentViewModel>> GetUserProfileFeed(string userId);
         Task<UserDetailsViewModel> GetBasicUserInfo(string userId);
+        Task<List<UserFollowerViewModel>> GetUserFollowers(string userId);
+        Task<bool> BanFollower(string followerId);
 
     }
 }

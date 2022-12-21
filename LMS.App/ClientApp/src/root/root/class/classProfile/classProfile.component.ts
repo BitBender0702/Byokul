@@ -3,6 +3,7 @@ import { Component, ElementRef, Injector, OnInit, ViewChild } from '@angular/cor
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
+import { BsModalService } from 'ngx-bootstrap/modal';
 import { AddClassCertificate } from 'src/root/interfaces/class/addClassCertificate';
 import { AddClassLanguage } from 'src/root/interfaces/class/addClassLanguage';
 import { AddClassTeacher } from 'src/root/interfaces/class/addClassTeacher';
@@ -11,10 +12,11 @@ import { DeleteClassLanguage } from 'src/root/interfaces/class/deleteClassLangua
 import { DeleteClassTeacher } from 'src/root/interfaces/class/deleteClassTeacher';
 import { EditClassModel } from 'src/root/interfaces/class/editClassModel';
 import { ClassService } from 'src/root/service/class.service';
+import { CreatePostComponent } from '../../createPost/createPost.component';
 import { MultilingualComponent } from '../../sharedModule/Multilingual/multilingual.component';
 
 @Component({
-    selector: 'schoolProfile-root',
+    selector: 'classProfile-root',
     templateUrl: './classProfile.component.html',
     styleUrls: []
   })
@@ -26,6 +28,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     isProfileGrid:boolean = true;
     isOpenSidebar:boolean = false;
     isOpenModal:boolean = false;
+    loadingIcon:boolean = false;
     classId!:string;
 
     classLanguage!:AddClassLanguage;
@@ -60,11 +63,14 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     @ViewChild('closeCertificateModal') closeCertificateModal!: ElementRef;
     @ViewChild('imageFile') imageFile!: ElementRef;
 
+    @ViewChild('createPostModal', { static: true }) createPostModal!: CreatePostComponent;
+
+
     // loadingIcon:boolean = false;
 
     isDataLoaded:boolean = false;
     // isSchoolFollowed!:boolean;
-    constructor(injector: Injector,classService: ClassService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
+    constructor(injector: Injector,private bsModalService: BsModalService,classService: ClassService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
       super(injector);
         this._classService = classService;
 
@@ -72,6 +78,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   
     ngOnInit(): void {
 
+      this.loadingIcon = true;
       var selectedLang = localStorage.getItem("selectedLanguage");
       this.translate.use(selectedLang?? '');
 
@@ -80,6 +87,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
 
       this._classService.getClassById(this.classId).subscribe((response) => {
         this.class = response;
+        this.loadingIcon = false;
         this.isDataLoaded = true;
       });
 
@@ -110,15 +118,15 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       });
 
       this.languageForm = this.fb.group({
-        languages:this.fb.control('',[Validators.required]),
+        languages:this.fb.control([],[Validators.required]),
       });
 
       this.teacherForm = this.fb.group({
-        teachers:this.fb.control('',[Validators.required]),
+        teachers:this.fb.control([],[Validators.required]),
       });
 
       this.certificateForm = this.fb.group({
-        certificates:this.fb.control('',[Validators.required]),
+        certificates:this.fb.control([],[Validators.required]),
       });
 
       this.deleteLanguage = {
@@ -264,9 +272,10 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       if (!this.languageForm.valid) {
         return;
       }
-      this.closeLanguagesModal();
+      this.loadingIcon = true;
       this.classLanguage.classId = this.class.classId;
       this._classService.saveClassLanguages(this.classLanguage).subscribe((response:any) => {
+        this.closeLanguagesModal();
         this.isSubmitted = false;
         this.ngOnInit();
   
@@ -274,6 +283,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     }
 
     deleteClassLanguage(){
+      this.loadingIcon = true;
       this.deleteLanguage.classId = this.class.classId;
       this._classService.deleteClassLanguage(this.deleteLanguage).subscribe((response:any) => {
         this.ngOnInit();
@@ -309,9 +319,10 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
           if (!this.teacherForm.valid) {
             return;
           }
-          this.closeTeachersModal();
+          this.loadingIcon = true;
           this.classTeacher.classId = this.class.classId;
           this._classService.saveClassTeachers(this.classTeacher).subscribe((response:any) => {
+            this.closeTeachersModal();
             this.isSubmitted = false;
             this.ngOnInit();
       
@@ -319,6 +330,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
         }
 
         deleteClassTeacher(){
+          this.loadingIcon = true;
           this.deleteTeacher.classId = this.class.classId;
           this._classService.deleteClassTeacher(this.deleteTeacher).subscribe((response:any) => {
             this.ngOnInit();
@@ -332,6 +344,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
         }
 
         deleteClassCertificate(){
+          this.loadingIcon = true;
           this.deleteCertificate.classId = this.class.classId;
           this._classService.deleteClassCertificate(this.deleteCertificate).subscribe((response:any) => {
             this.ngOnInit();
@@ -352,24 +365,22 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
         }
 
         handleCertificates(event: any) {
-          debugger
             this.classCertificate.certificates.push(event.target.files[0]);
         }
 
         saveClassCertificates(){
-          debugger
           this.isSubmitted = true;
           if (!this.certificateForm.valid) {
             return;
           }
-          this.closeCertificatesModal();
-
+          this.loadingIcon = true;
           for(var i=0; i<this.classCertificate.certificates.length; i++){
             this.certificateToUpload.append('certificates', this.classCertificate.certificates[i]);
          }
           this.certificateToUpload.append('classId', this.class.classId);
           this._classService.saveClassCertificates(this.certificateToUpload).subscribe((response:any) => {
-            this.isSubmitted = true;
+            this.closeCertificatesModal();
+            this.isSubmitted = false;
             this.classCertificate.certificates = [];
             this.certificateToUpload.set('certificates','');
             this.ngOnInit();
@@ -378,13 +389,12 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
         }
 
         updateClass(){
-          debugger
            this.isSubmitted=true;
            if (!this.editClassForm.valid) {
            return;
           }
 
-          this.closeModal();
+          this.loadingIcon = true;
       
           if(!this.uploadImage){
             this.fileToUpload.append('avatar', this.editClass.avatar);
@@ -403,6 +413,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
           this.fileToUpload.append('serviceTypeId',this.updateClassDetails.serviceTypeId);
         
           this._classService.editClass(this.fileToUpload).subscribe((response:any) => {
+            this.closeModal();
             this.isSubmitted=true;
             this.fileToUpload = new FormData();
             this.ngOnInit();
@@ -446,7 +457,6 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       }
 
       removeTeacher(event: any){
-        debugger
         const teacherIndex = this.classTeacher.teacherIds.findIndex((item) => item === event.teacherId);
         if (teacherIndex > -1) {
           this.classTeacher.teacherIds.splice(teacherIndex, 1);
@@ -454,7 +464,6 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       }
     
       removeLanguage(event: any){
-        debugger
         const languageIndex = this.classLanguage.languageIds.findIndex((item) => item === event.id);
         if (languageIndex > -1) {
           this.classLanguage.languageIds.splice(languageIndex, 1);
@@ -483,31 +492,23 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     
       }
 
-    // followSchool(){
-    //   this._schoolService.saveSchoolFollower(this.school.schoolId).subscribe((response) => {
-    //     console.log(response);
-    //     // here return if not work simply
-    //     // this.school = response;
-    //   });
-    // }
-
-    // back(): void {
-    //   window.history.back();
-    // }
+      profileGrid(){
+        this.isProfileGrid = true;
   
-    // profileGrid(){
-    //   this.isProfileGrid = true;
-
-    // }
-
-    // profileList(){
-    //   this.isProfileGrid = false;
-
-    // }
-
-    // openSidebar(){
-    //   this.isOpenSidebar = true;
+      }
   
-    // }
+      profileList(){
+        this.isProfileGrid = false;
+  
+      }
+
+      openPostModal(): void {
+        debugger
+        const initialState = {
+          classId: this.class.classId,
+          from: "class"
+        };
+        this.bsModalService.show(CreatePostComponent,{initialState});
+    }
   
 }

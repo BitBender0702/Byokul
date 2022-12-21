@@ -12,6 +12,7 @@ namespace LMS.Common.ViewModels.User
         public string? UserId { get; set; }
         public UserViewModel User { get; set; }
         public string? FollowerId { get; set; }
-        public UserViewModel Follower { get; set; }
+        public UserDetailsViewModel Follower { get; set; }
+        public Boolean IsBan { get; set; }
     }
 }

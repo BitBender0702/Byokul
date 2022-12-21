@@ -1,7 +1,11 @@
-input[type="file"] {
+input[id="hideFileType"] {
     display: none;
 }
 .custom-file-upload {
     display: inline-block;
     cursor: pointer;
+} 
+
+.modal-dialog {
+	max-width: 700px;
 }

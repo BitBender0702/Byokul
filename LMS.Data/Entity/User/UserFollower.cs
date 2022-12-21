@@ -13,5 +13,6 @@ namespace LMS.Data.Entity
         public User User { get; set; }
         public string? FollowerId { get; set; }
         public User Follower { get; set; }
+        public Boolean IsBan { get; set; }
     }
 }

@@ -11,7 +11,7 @@ namespace LMS.Common.ViewModels.Post
     public class PostDetailsViewModel
     {
         public Guid Id { get; set; }
-        public string Title { get; set; }
+        public string? Title { get; set; }
         public int? Status { get; set; }
         public Guid OwnerId { get; set; }
         public Guid AuthorId { get; set; }

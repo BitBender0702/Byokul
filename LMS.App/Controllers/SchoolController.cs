@@ -185,5 +185,12 @@ namespace LMS.App.Controllers
             var school = await _schoolService.GetBasicSchoolInfo(schoolId);
             return Ok(school);
         }
+
+        [Route("schoolFollowers")]
+        [HttpGet]
+        public async Task<IActionResult> SchoolFollowers(Guid schoolId)
+        {
+            return Ok(await _schoolService.GetSchoolFollowers(schoolId));
+        }
     }
 }

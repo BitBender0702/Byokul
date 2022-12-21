@@ -15,7 +15,7 @@ export class PostService{
         this.headers = new HttpHeaders({'Content-Type': 'application/json; charset=utf-8'});
     }
     
-    getSchool(schoolId:string):Observable<any>{
+    getSchool(schoolId:any):Observable<any>{
         return this.http.get(`${this.apiUrl}/school/getBasicSchoolInfo` + '?schoolId=' + schoolId);
 
     }

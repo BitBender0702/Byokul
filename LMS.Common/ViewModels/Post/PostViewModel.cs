@@ -11,7 +11,7 @@ namespace LMS.Common.ViewModels.Post
     public class PostViewModel
     {
         public Guid Id { get; set; }
-        public string Title { get; set; }
+        public string? Title { get; set; }
         public int? Status { get; set; }
         public Guid OwnerId { get; set; }
         public Guid AuthorId { get; set; }
@@ -23,12 +23,14 @@ namespace LMS.Common.ViewModels.Post
         public string CreatedBy { get; set; }
         public bool IsDeleted { get; set; }
         public IEnumerable<IFormFile> PostAttachments { get; set; }
-        public IEnumerable<PostTagViewModel> PostTags { get; set; }
+        //public IEnumerable<PostTagViewModel> PostTags { get; set; }
+        public IEnumerable<string> PostTags { get; set; }
         public Guid ParentId { get; set; }
         public string? CoverLetter { get; set; }
-        public List<IFormFile> uploadImages { get; set; }
-        public List<IFormFile> uploadVideos { get; set; }
-        public List<IFormFile> uploadAttachments { get; set; }
+        public List<IFormFile> UploadImages { get; set; }
+        public List<IFormFile> UploadVideos { get; set; }
+        public List<IFormFile> UploadAttachments { get; set; }
+        public IFormFile UploadReels { get; set; }
 
     }
 }

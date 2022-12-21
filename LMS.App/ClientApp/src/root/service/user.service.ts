@@ -46,11 +46,15 @@ export class UserService{
     }
 
     editUser(credentials:any): Observable<any> {
-        debugger
-        for(var pair of credentials.entries()) {
-            console.log(pair[0]+ ', '+ pair[1]);
-         }
         return this.http.post(`${this.apiUrl}/users/updateUser`, credentials);
+    }
+
+    getUserFollowers(userId:string):Observable<any>{
+        return this.http.get(`${this.apiUrl}/users/userFollowers` + '?userId=' + userId);
+    }
+
+    banFollower(followerId:any): Observable<any> {
+        return this.http.post(`${this.apiUrl}/users/banFollower` + '?followerId=' + followerId,'');
     }
 
 
