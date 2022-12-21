@@ -453,6 +453,9 @@
     </div>
 
   </section>
+
+  <!------ Create post popup modal --->
+
   <div class="modal fade edit-school-modal" id="create-post" tabindex="-1" aria-labelledby="create-post"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -540,6 +543,35 @@
                       share</span></button>
                 </div>
               </form>
+              <hr class="mb-0 sepearator mx-0 mt-3 opacity-100" />
+              <div
+                class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-0 cr-postfooter pt-0 mt-3 px-0">
+                <div class="post-bot-left d-flex">
+                  <button type="button"
+                    class="post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center active"><img
+                      src="images/gallery-dark.svg" class="dark-attach" /><img src="images/gallery-light.svg"
+                      class="light-attach" /></button>
+                  <button type="button"
+                    class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"><img
+                      src="images/Video-dark.svg" class="dark-attach" /><img src="images/Video-light.svg"
+                      class="light-attach" /></button>
+                  <button type="button"
+                    class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"
+                    data-bs-toggle="modal" data-bs-target="#add-attachment"><img src="images/Paper-Plus-dark.svg"
+                      class="dark-attach" /><img src="images/Paper-Plus-light.svg" class="light-attach" /></button>
+                  <button type="button"
+                    class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"
+                    data-bs-toggle="modal" data-bs-target="#add-tag"><img src="images/hashtag-dark.svg"
+                      class="dark-attach" /><img src="images/hashtag-light.svg" class="light-attach" /></button>
+                </div>
+                <div class="post-bot-right d-flex justify-content-end">
+                  <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 delay-btn"><i
+                      class="fa-solid fa-clock"></i></button>
+                  <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 lg_btn"><img
+                      src="images/Send-light.svg" class="me-2" /> Nov 15, 2022 at 14:30 </button>
+                </div>
+
+              </div>
 
 
             </div>
@@ -578,57 +610,229 @@
                       class="fa-solid fa-xmark"></i></button>
                 </span>
               </div>
-              <div class="teacher-tags tag-box hashtag_post mt-4 mb-2">
-                <button type="button" class="custom-tag">#Tag 1</button>
-                <button type="button" class="custom-tag">#Tag 2</button>
-                <button type="button" class="custom-tag">#Tag 3</button>
-                <button type="button" class="custom-tag">#Tag 4</button>
-                <button type="button" class="custom-tag">#Tag 5</button>
-                <button type="button" class="custom-tag">#Tag 6</button>
-                <button type="button" class="custom-tag">#Tag 7</button>
+              <div class="teacher-tags tag-box hashtag_post mt-4 mb-2 hover-tags">
+                <span class="custom-tag">#Tag 1 <button
+                    class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                      src="images/cross-sm-light.svg"></button></span>
+                <span class="custom-tag">#Tag 2 <button
+                    class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                      src="images/cross-sm-light.svg"></button></span>
+                <span class="custom-tag">#Tag 3 <button
+                    class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                      src="images/cross-sm-light.svg"></button></span>
+                <span class="custom-tag">#Tag 4 <button
+                    class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                      src="images/cross-sm-light.svg"></button></span>
+                <span class="custom-tag">#Tag 5 <button
+                    class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                      src="images/cross-sm-light.svg"></button></span>
+                <span class="custom-tag">#Tag 6 <button
+                    class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                      src="images/cross-sm-light.svg"></button></span>
+                <span class="custom-tag">#Tag 7 <button
+                    class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                      src="images/cross-sm-light.svg"></button></span>
               </div>
-              <div class="teacher-tags hashtag_post tag-boxattachment-outer mt-1 mb-0">
-                <button type="button" class="custom-tag"><img src="images/Paper-gray.svg" class="me-1" /> Attachment
-                  1</button>
-                <button type="button" class="custom-tag"><img src="images/Paper-gray.svg" class="me-1" /> Attachment
-                  2</button>
-                <button type="button" class="custom-tag"><img src="images/Paper-gray.svg" class="me-1" /> Attachment
-                  3</button>
+              <div class="teacher-tags hashtag_post tag-boxattachment-outer mt-1 mb-0 hover-tags">
+                <span class="custom-tag"><img src="images/Paper-gray.svg" class="me-1 dark-svg" /> <img
+                    src="images/Paper-light.svg" class="me-1 light-svg" /> Attachment
+                  1 <button class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                      src="images/cross-sm-light.svg"></button></span>
+                <span class="custom-tag"><img src="images/Paper-gray.svg" class="me-1 dark-svg" /> <img
+                    src="images/Paper-light.svg" class="me-1 light-svg" />Attachment
+                  2<button class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                      src="images/cross-sm-light.svg"></button></span>
+                <span class="custom-tag"><img src="images/Paper-gray.svg" class="me-1 dark-svg" /><img
+                    src="images/Paper-light.svg" class="me-1 light-svg" /> Attachment
+                  3<button class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                      src="images/cross-sm-light.svg"></button></span>
+              </div>
+              <hr class="mb-0 sepearator mx-0 mt-3 opacity-100" />
+              <div
+                class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-0 cr-postfooter pt-0 mt-3 px-0">
+                <div class="post-bot-left d-flex">
+                  <button type="button"
+                    class="post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center active"><img
+                      src="images/gallery-dark.svg" class="dark-attach" /><img src="images/gallery-light.svg"
+                      class="light-attach" /></button>
+                  <button type="button"
+                    class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"><img
+                      src="images/Video-dark.svg" class="dark-attach" /><img src="images/Video-light.svg"
+                      class="light-attach" /></button>
+                  <button type="button"
+                    class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"
+                    data-bs-toggle="modal" data-bs-target="#add-attachment"><img src="images/Paper-Plus-dark.svg"
+                      class="dark-attach" /><img src="images/Paper-Plus-light.svg" class="light-attach" /></button>
+                  <button type="button"
+                    class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"
+                    data-bs-toggle="modal" data-bs-target="#add-tag"><img src="images/hashtag-dark.svg"
+                      class="dark-attach" /><img src="images/hashtag-light.svg" class="light-attach" /></button>
+                </div>
+                <div class="post-bot-right d-flex justify-content-end">
+                  <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 delay-btn"><i
+                      class="fa-solid fa-clock"></i></button>
+                  <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 lg_btn"><img
+                      src="images/Send-light.svg" class="me-2" /> Nov 15, 2022 at 14:30 </button>
+                </div>
+
               </div>
 
             </div>
             <div class="tab-pane fade" id="reels-tab-pane" role="tabpanel" aria-labelledby="reels-tab" tabindex="0">
-              ...</div>
-          </div>
-          <hr class="mb-0 sepearator mx-0 mt-3 opacity-100" />
-        </div>
-        <div
-          class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 cr-postfooter pt-0">
-          <div class="post-bot-left d-flex">
-            <button type="button"
-              class="post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center active"><img
-                src="images/gallery-dark.svg" class="dark-attach" /><img src="images/gallery-light.svg"
-                class="light-attach" /></button>
-            <button type="button"
-              class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"><img
-                src="images/Video-dark.svg" class="dark-attach" /><img src="images/Video-light.svg"
-                class="light-attach" /></button>
-            <button type="button"
-              class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"><img
-                src="images/Paper-Plus-dark.svg" class="dark-attach" /><img src="images/Paper-Plus-light.svg"
-                class="light-attach" /></button>
-            <button type="button"
-              class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"><img
-                src="images/hashtag-dark.svg" class="dark-attach" /><img src="images/hashtag-light.svg"
-                class="light-attach" /></button>
-          </div>
-          <div class="post-bot-right d-flex justify-content-end">
-            <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 delay-btn"><i
-                class="fa-solid fa-clock"></i></button>
-            <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 lg_btn"><img
-                src="images/Send-light.svg" class="me-2" /> Nov 15, 2022 at 14:30 </button>
+              <div class="form-group">
+                <label class="font_10">School Name / Class Name</label>
+                <select class="form-select rounded-8 w-100">
+                  <option value="1">School Name 1</option>
+                  <option value="2">School Name 2</option>
+                  <option value="3">School Name 1 3</option>
+                </select>
+              </div>
+              <div class="dropzone-wrapper mb-4 reels-uploader-img">
+                <div class="dropzone-desc">
+                  <i class="glyphicon glyphicon-download-alt"></i>
+                  <p class="text-center fw_400">Drop image or <b>Clock to Browse</b> </p>
+                </div>
+                <input type="file" name="img_logo" class="dropzone">
+              </div>
+              <hr class="mb-0 sepearator mx-0 mt-3 opacity-100" />
+              <div
+                class="modal-footer steps_btns d-flex align-items-center justify-content-center flex-sm-nowrap border-0 pb-0 cr-postfooter pt-0 mt-3 px-0">
+                <div class="post-bot-right d-flex justify-content-end">
+                  <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 delay-btn"><i
+                      class="fa-solid fa-clock"></i></button>
+                  <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 lg_btn">Post Reels
+                  </button>
+                </div>
+
+              </div>
+
+            </div>
+
           </div>
 
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!---- Add attachgment Modal-->
+  <div class="modal fade edit-school-modal" id="add-attachment" tabindex="-1" aria-labelledby="add-attachment"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header border-0 justify-content-center position-relative">
+          <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">Attach File</h1>
+          <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"><img
+              src="images/cross.svg" /></button>
+        </div>
+        <div class="modal-body">
+          <div class="dropzone-wrapper mb-4">
+            <div class="dropzone-desc">
+              <i class="glyphicon glyphicon-download-alt"></i>
+              <p class="text-center fw_400"><b>Clock to Browse</b></p>
+            </div>
+            <input type="file" name="img_logo" class="dropzone">
+          </div>
+          <p class="font_16 text_dark text-center my-4 fw_600">Or Find in File Storage</p>
+          <div class="form-group latest-form">
+            <label class="font_10">Files</label>
+            <input type="text" class="form-control" placeholder="Type to add">
+          </div>
+          <div class="teacher-tags hashtag_post tag-boxattachment-outer mt-1 mb-0 hover-tags">
+            <span class="custom-tag"><img src="images/Paper-gray.svg" class="me-1 dark-svg"> <img
+                src="images/Paper-light.svg" class="me-1 light-svg"> Attachment
+              1 <button class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                  src="images/cross-sm-light.svg"></button></span>
+            <button class="custom-tag"><img src="images/Paper-gray.svg" class="me-1 dark-svg"> <img
+                src="images/Paper-light.svg" class="me-1 light-svg">Attachment
+              2<span class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                  src="images/cross-sm-light.svg"></span></button>
+            <span class="custom-tag"><img src="images/Paper-gray.svg" class="me-1 dark-svg"><img
+                src="images/Paper-light.svg" class="me-1 light-svg"> Attachment
+              3<button class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                  src="images/cross-sm-light.svg"></button></span>
+          </div>
+        </div>
+        <div
+          class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4">
+          <button type="button"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+            data-bs-toggle="modal" data-bs-target="#create-post">Discard Changes</button>
+          <button type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step"
+            data-bs-toggle="modal" data-bs-target="#create-post">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!---- add tag Modal -->
+  <div class="modal fade edit-school-modal" id="add-tag" tabindex="-1" aria-labelledby="add-tag" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header border-0 justify-content-center position-relative">
+          <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">Add Tag</h1>
+          <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"><img
+              src="images/cross.svg" /></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group latest-form">
+            <label class="font_10">Files</label>
+            <input type="text" class="form-control" placeholder="Type to add">
+          </div>
+          <div class="teacher-tags tag-box hashtag_post mt-4 mb-2 hover-tags">
+            <span class="custom-tag">#Tag 1 <button
+                class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                  src="images/cross-sm-light.svg"></button></span>
+            <span class="custom-tag">#Tag 2 <button
+                class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                  src="images/cross-sm-light.svg"></button></span>
+            <span class="custom-tag">#Tag 3 <button
+                class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                  src="images/cross-sm-light.svg"></button></span>
+            <span class="custom-tag">#Tag 4 <button
+                class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                  src="images/cross-sm-light.svg"></button></span>
+            <span class="custom-tag">#Tag 5 <button
+                class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                  src="images/cross-sm-light.svg"></button></span>
+            <span class="custom-tag">#Tag 6 <button
+                class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                  src="images/cross-sm-light.svg"></button></span>
+            <span class="custom-tag">#Tag 7 <button
+                class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                  src="images/cross-sm-light.svg"></button></span>
+            <span class="custom-tag">#Tag 8 <button
+                class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                  src="images/cross-sm-light.svg"></button></span>
+            <span class="custom-tag">#Tag 9 <button
+                class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                  src="images/cross-sm-light.svg"></button></span>
+            <span class="custom-tag">#Tag 10 <button
+                class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                  src="images/cross-sm-light.svg"></button></span>
+            <span class="custom-tag">#Tag 11 <button
+                class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                  src="images/cross-sm-light.svg"></button></span>
+            <span class="custom-tag">#Tag 12 <button
+                class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                  src="images/cross-sm-light.svg"></button></span>
+            <span class="custom-tag">#Tag 13 <button
+                class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                  src="images/cross-sm-light.svg"></button></span>
+            <span class="custom-tag">#Tag 14 <button
+                class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                  src="images/cross-sm-light.svg"></button></span>
+          </div>
+
+        </div>
+        <div
+          class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4">
+          <button type="button"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+            data-bs-toggle="modal" data-bs-target="#create-post">Discard Changes</button>
+          <button type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step"
+            data-bs-toggle="modal" data-bs-target="#create-post">Save</button>
         </div>
       </div>
     </div>

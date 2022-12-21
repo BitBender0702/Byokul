@@ -76,6 +76,10 @@ img {
 	color: #FF1C1C !important;
 }
 
+.white_text {
+	color: #fff !important;
+}
+
 .fw_300 {
 	font-weight: 300 !important;
 }
@@ -546,10 +550,10 @@ hr.earning-hr {
 }
 
 .live-image {
-    box-shadow: 0px 4px 20px rgb(0 0 0 / 5%);
-    width: 100%;
-    max-width: 860px;
-    margin: 0 auto 26px;
+	box-shadow: 0px 4px 20px rgb(0 0 0 / 5%);
+	width: 100%;
+	/* max-width: 860px; */
+	margin: 0 auto 26px;
 }
 
 button.live_chats {
@@ -587,6 +591,7 @@ button.live_chats .live-chat-back {
 	height: 32px;
 	border-radius: 50%;
 	margin-right: 22px;
+	min-width: 32px;
 }
 
 .live-message button {
@@ -594,10 +599,10 @@ button.live_chats .live-chat-back {
 }
 
 .accordion-open {
-    min-width: 414px;
-    padding: 32px 36px;
-    border-left: 1px solid #F1F7FF;
-    margin-left: 16px;
+	max-width: 480px;
+	padding: 32px 36px;
+	border-left: 1px solid #F1F7FF;
+	margin-left: 16px;
 }
 
 .pinned-chat {
@@ -607,13 +612,19 @@ button.live_chats .live-chat-back {
 }
 
 .live-chat-box {
-    padding: 32px 32px 32px 50px;
-    background: #FCFCFC;
-    margin: 0 -52px -50px -36px;
+	padding: 32px 32px 32px 50px;
+	background: #FCFCFC;
+	margin: 0 -52px -50px -36px;
 }
 
 .live-message {
 	margin-bottom: 32px;
+	padding-right: 40px;
+}
+
+.reel-like-chat {
+	position: absolute;
+	right: 0;
 }
 
 button.comment-btn {
@@ -1406,7 +1417,7 @@ textarea.ht_96 {
 .hover-tags .custom-tag:hover {
 	background: #7C8DA7;
 	color: #FAFAFA;
-	padding-right: 20px;
+	padding-right: 25px;
 	cursor: pointer;
 }
 
@@ -1631,4 +1642,147 @@ body .liv-postbtn .post-attch-btn.active,
 
 .web-cmbtn:hover {
 	border: 1px solid #fafafa;
+}
+
+.live-chat-outer {
+	margin: -32px -32px 0 -50px;
+	padding: 32px 32px 30px 50px;
+	max-height: 550px;
+	overflow: auto;
+}
+
+.live-chat-outer .live-message:last-child {
+	margin-bottom: 0;
+}
+
+.full-widthreel {
+	background-image: url(../images/reel-bg.png);
+	background-repeat: no-repeat;
+	background-size: cover;
+	padding: 0px;
+}
+
+.full-widthreel .live-inner {
+	background: rgba(0, 0, 0, 0.5);
+	backdrop-filter: blur(25px);
+	padding: 16px 16px 0;
+}
+
+.full-widthreel .live-image {
+	max-width: 860px;
+}
+
+.live-image {
+	box-shadow: 0px 4px 20px rgb(0 0 0 / 5%);
+	margin: 0 auto 26px;
+	background: rgba(255, 255, 255, 0.8);
+	backdrop-filter: blur(35px);
+}
+
+.full-widthreel .live-inner .live-image {
+	margin-bottom: 0;
+}
+
+.reel-username img {
+	width: 31px;
+	height: 31px;
+	border-radius: 50%;
+}
+
+.reel-username {
+	position: absolute;
+	top: 24px;
+	left: 24px;
+}
+
+.hover-tags .custom-tag .light-svg {
+	display: none;
+}
+
+.hover-tags .custom-tag:hover .light-svg {
+	display: inline-block;
+}
+
+.hover-tags .custom-tag:hover .dark-svg {
+	display: none;
+}
+
+.reels-uploader-img {
+	height: 524px;
+	max-width: 524px;
+	margin: 0 auto;
+}
+
+.reels-uploader-img .dropzone-desc {
+	transform: translateY(-50%);
+	top: 50%;
+}
+/*---- Followers page css start ----*/
+.followers_box {
+    max-height: calC(100vh - 190px);
+    overflow-y: auto;
+    padding-right: 6px;
+}
+.wht_newbox{
+	border: 1px solid #F5F5F5;
+filter: drop-shadow(0px 10px 20px rgba(0, 0, 0, 0.15));
+border-radius: 4px;
+}
+.followers_box ul li {
+    padding: 20px;
+	transition: 0.3s all;
+	border-bottom: 1px solid #F5F5F5;
+	background: #fff;
+}
+.followers_box ul li:hover{
+	background: #F2F4F7;
+}
+.followers_box ul li .followe_report{
+    display: none;
+}
+.followers_box ul li:hover .followe_report{
+    display: inline-block;
+}
+.notification-settingbox ul li:hover{
+	background: #fff;;
+}
+.new-notidot {
+    position: absolute;
+    font-size: 7px;
+    color: #FF821C;
+    top: 50%;
+    transform: translateY(-50%);
+	left: 20px;
+}
+.notification-settingbox ul li {
+    padding-left: 40px;
+	
+}
+div#notifi-settingpopup .form-group .form-check.form-check-inline {
+    position: absolute;
+    top: 11px;
+    right: 4px;
+    margin: 0;
+}
+.form-check-input:checked {
+    background-color:#FF821C;
+    border-color: #FF821C !important;
+}
+.form-check-input:focus {
+    box-shadow:none;
+}
+.form-check-input {
+    border-color: #FF821C !important;
+}
+div#notifi-settingpopup .modal-dialog {
+    max-width: 500px;
+}
+.notification-sett-btn{
+    background: transparent;
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+}
+.notification-sett-btn:hover{
+	background: rgba(124, 141, 167, 0.05);
 }
