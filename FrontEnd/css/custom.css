@@ -1208,6 +1208,11 @@ input[type=number]::-webkit-outer-spin-button {
 .school-grid-body p {
 	margin-bottom: 24px;
 }
+.button-list-grid {
+    position: absolute;
+    top: -76px;
+    right: 0;
+}
 
 .function-btns {
 	padding: 16px 32px;
@@ -1785,4 +1790,81 @@ div#notifi-settingpopup .modal-dialog {
 }
 .notification-sett-btn:hover{
 	background: rgba(124, 141, 167, 0.05);
+}
+.profile-custom-tabs{
+	margin-bottom: 32px;
+}
+.dropdown-filter .form-check-input {
+    width: 20px;
+    height: 20px;
+    margin-right: 16px;
+    margin-top: 1px;
+    border-radius: 7px;
+	min-width: 20px;
+}
+.dropdown-filter .dropdown-menu {
+    width: 300px;
+    max-width: 300px;
+    box-shadow: 0px 4px 20px rgb(0 0 0 / 10%);
+    border-radius: 8px;
+    border: none;
+    top: -50px !important;
+    background: #fff;
+}
+.dropdown-filter .custom-btn {
+    height: 33px !important;
+    padding: 4px 16px;
+}
+.dropdown-filter .form-group {
+    margin-bottom: 16px;
+}
+.after-none:after{
+	display: none;
+}
+.btn-filter {
+    background: #FF821C;
+    border-radius: 32px;
+    display: inline-flex;
+    padding: 8px 15px;
+    position: absolute;
+    top: -76px;
+    right: 0;
+}
+.btn-filter .divider {
+    color: #FFBB84;
+    margin: 0 10px;
+}
+
+.dropdown-filter .dropdown-toggle{
+    color: #fff !important;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 0 4px;
+    background: transparent !important;
+}
+.dropdown-filter .dropdown-toggle:hover, .dropdown-filter .dropdown-toggle.show {
+    background: #EA6900 !important;
+    color: #fff;
+    border-radius: 60px;
+}
+.dropdown-filter .filter-badge {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: -13px;
+    background: #FF1C1C;
+}
+.filter-menu-btn button {
+    pointer-events: none;
+}
+.filter-menu-btn .filter-badge {
+    top: 0;
+    right: -9px !important;
+    left: auto !important;
+}
+
+.filter-menu-btn {
+    top: 0;
 }
