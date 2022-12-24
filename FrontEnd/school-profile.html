@@ -419,10 +419,9 @@
           Kingdom</span>
       </div>
       <hr class="hr-gray" />
-      <div class="school-profile-tabs d-flex align-content-center justify-content-between">
-        <div></div>
-        <div class="custom-tabs">
-          <ul class="nav nav-tabs mb-3 border-0 before-none" id="myTab" role="tablist">
+      <div class="school-profile-tabs d-flex align-content-center justify-content-center">
+        <div class="custom-tabs profile-custom-tabs">
+          <ul class="nav nav-tabs border-0 before-none" id="myTab" role="tablist">
             <li class="nav-item ps-0 mb-0" role="presentation">
               <button class="nav-link active" id="school-tab" data-bs-toggle="tab"
                 data-bs-target="#school-feed-tab-pane" type="button" role="tab" aria-controls="school-feed-tab-pane"
@@ -435,22 +434,23 @@
             </li>
           </ul>
         </div>
-        <div class="button-list-grid">
-          <button type="button" class="btn border-btn d-inline-flex align-items-center justify-content-center"
-            id="list-btn">
-            <img src="images/Filter.svg" />
-          </button>
-          <button type="button" class="btn border-btn active d-inline-flex align-items-center justify-content-center"
-            id="grid-btn">
-            <img src="images/Category.svg" />
-          </button>
-        </div>
+        
       </div>
 
-      <div class="tab-content" id="pills-tabContent">
+      <div class="tab-content position-relative" id="pills-tabContent">
         <div class="tab-pane fade show active" id="school-feed-tab-pane" role="tabpanel"
           aria-labelledby="school-feed-tab" tabindex="0">
-          <div class="feed-section">
+          <div class="button-list-grid">
+            <button type="button" class="btn border-btn d-inline-flex align-items-center justify-content-center"
+              id="list-btn">
+              <img src="images/Filter.svg" />
+            </button>
+            <button type="button" class="btn border-btn active d-inline-flex align-items-center justify-content-center"
+              id="grid-btn">
+              <img src="images/Category.svg" />
+            </button>
+          </div>
+          <div class="feed-section mt-0">
             <div class="feed-box position-relative">
               <button type="button" class="bg-transparent border-0 next-feed"><img
                   src="images/chevron-right-circle.svg" /></button>
@@ -950,8 +950,202 @@
 
 
         </div>
-        <div class="tab-pane fade show " id="classes-tab-pane" role="tabpanel" aria-labelledby="school-feed-tab"
+        <div class="tab-pane fade show" id="classes-tab-pane" role="tabpanel" aria-labelledby="school-feed-tab"
           tabindex="0">
+          <div class="btn-filter align-items-center">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" class="me-2">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M5.19424 13.6654L8.37844 12.1666V8.23893L13.3716 3.17507C13.5597 2.98533 13.6654 2.72492 13.6654 2.45221V1.34373C13.6654 0.78449 13.2265 0.332031 12.685 0.332031H1.31236C0.770872 0.332031 0.332031 0.78449 0.332031 1.34373V2.47756C0.332031 2.7349 0.426494 2.98226 0.596824 3.1697L5.19424 8.23893V13.6654Z" fill="white"/>
+              </svg>
+              
+          <div class=" btn-group dropdown-filter">
+            <button type="button" class="btn btn-default dropdown-toggle after-none border-0 py-0 h-auto" data-bs-toggle="dropdown" aria-haspopup="true"
+              aria-expanded="false">Classes  <span class="position-absolute start-100 translate-middle border border-light rounded-circle filter-badge">
+                5
+              </span></button>
+            <div class="dropdown-menu px-4 py-3">
+              <div class="d-flex align-items-center justify-content-between mb-3">
+              <div class="btn-filter align-items-center dropdown-filter filter-menu-btn position-relative">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" class="me-1">
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M5.19424 13.6654L8.37844 12.1666V8.23893L13.3716 3.17507C13.5597 2.98533 13.6654 2.72492 13.6654 2.45221V1.34373C13.6654 0.78449 13.2265 0.332031 12.685 0.332031H1.31236C0.770872 0.332031 0.332031 0.78449 0.332031 1.34373V2.47756C0.332031 2.7349 0.426494 2.98226 0.596824 3.1697L5.19424 8.23893V13.6654Z" fill="white"/>
+                  </svg>
+                  <button type="button" class="btn btn-default dropdown-toggle after-none border-0 py-0 h-auto" data-bs-toggle="dropdown" aria-haspopup="true"
+              aria-expanded="false">Classes  <span class="position-absolute start-100 translate-middle border border-light rounded-circle filter-badge">
+                5
+              </span></button>
+              </div>
+              <button type="button" class="close border-0 bg-transparent"><svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4.27344 12.7266L12.7587 4.24128" stroke="#151718" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M4.27344 4.24219L12.7587 12.7275" stroke="#151718" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+                </button>
+            </div>
+
+              <div class="text-line-border position-relative text-center mb-2">
+                <span class="line-text font_12 text_ltgray fw_400 text-center">Time</span>
+              </div>   
+              <div class="form-group position-relative">
+                <div class="form-check form-check-inline font_14 fw_500 d-flex align-items-center">
+                  <input class="form-check-input" checked="" type="checkbox" id="inlineCheckbox1" value="option1">
+                  Live
+                </div>
+              </div> 
+              <div class="form-group position-relative">
+                <div class="form-check form-check-inline font_14 fw_500 d-flex align-items-center">
+                  <input class="form-check-input" checked="" type="checkbox" id="inlineCheckbox1" value="option1">
+                  Scheduled
+                </div>
+              </div> 
+              <div class="text-line-border position-relative text-center mb-2">
+                <span class="line-text font_12 text_ltgray fw_400 text-center">Pricing</span>
+              </div>   
+              <div class="form-group position-relative">
+                <div class="form-check form-check-inline font_14 fw_500 d-flex align-items-center">
+                  <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+                  Free
+                </div>
+              </div> 
+              <div class="form-group position-relative">
+                <div class="form-check form-check-inline font_14 fw_500 d-flex align-items-center">
+                  <input class="form-check-input" checked="" type="checkbox" id="inlineCheckbox1" value="option1">
+                  Paid
+                </div>
+              </div> 
+              <div class="text-line-border position-relative text-center mb-2">
+                <span class="line-text font_12 text_ltgray fw_400 text-center">Sorting</span>
+              </div>   
+              <div class="form-group position-relative">
+                <div class="form-check form-check-inline font_14 fw_500 d-flex align-items-center">
+                  <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+                  Name A-Z
+                </div>
+              </div> 
+              <div class="form-group position-relative">
+                <div class="form-check form-check-inline font_14 fw_500 d-flex align-items-center">
+                  <input class="form-check-input" checked="" type="checkbox" id="inlineCheckbox1" value="option1">
+                  For Beginners
+                </div>
+              </div>   
+              <div class="form-group position-relative">
+                <div class="form-check form-check-inline font_14 fw_500 d-flex align-items-center">
+                  <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+                  Most Students
+                </div>
+              </div>  
+              <div class="form-group position-relative">
+                <div class="form-check form-check-inline font_14 fw_500 d-flex align-items-center">
+                  <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+                  Most Viewed
+                </div>
+              </div>  
+              <div class="form-group position-relative">
+                <div class="form-check form-check-inline font_14 fw_500 d-flex align-items-center">
+                  <input class="form-check-input" checked="" type="checkbox" id="inlineCheckbox1" value="option1">
+                  Top Rated
+                </div>
+              </div> 
+              <div class=" d-flex align-items-center justify-content-between flex-sm-nowrap border-0">
+                <button type="button" class="btn custom-btn primary_btn earning-btn fw_500 h_44 w-100 font_14 prev-step-btn prev-step me-2" data-bs-dismiss="modal">Clear All</button>
+                <button type="button" class="btn custom-btn primary_btn earning-btn fw_500 h_44 w-100 font_14  next-step m-0">Apply</button>
+      
+              </div>       
+            </div>
+           
+          </div>
+          <span class="divider">|</span>
+          <div class="btn-group dropdown-filter">
+            <button type="button" class="btn btn-default dropdown-toggle after-none border-0 py-0 h-auto" data-bs-toggle="dropdown" aria-haspopup="true"
+              aria-expanded="false">Courses <span class="position-absolute start-100 translate-middle border border-light rounded-circle filter-badge">
+                3
+              </span></button>
+            <div class="dropdown-menu px-4 py-3">
+              <div class="d-flex align-items-center justify-content-between mb-3">
+                <div class="btn-filter align-items-center dropdown-filter filter-menu-btn position-relative">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" class="me-1">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M5.19424 13.6654L8.37844 12.1666V8.23893L13.3716 3.17507C13.5597 2.98533 13.6654 2.72492 13.6654 2.45221V1.34373C13.6654 0.78449 13.2265 0.332031 12.685 0.332031H1.31236C0.770872 0.332031 0.332031 0.78449 0.332031 1.34373V2.47756C0.332031 2.7349 0.426494 2.98226 0.596824 3.1697L5.19424 8.23893V13.6654Z" fill="white"/>
+                    </svg>
+                    <button type="button" class="btn btn-default dropdown-toggle after-none border-0 py-0 h-auto" data-bs-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="false">Courses  <span class="position-absolute start-100 translate-middle border border-light rounded-circle filter-badge">
+                  3
+                </span></button>
+                </div>
+                <button type="button" class="close border-0 bg-transparent"><svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M4.27344 12.7266L12.7587 4.24128" stroke="#151718" stroke-width="1.5" stroke-linecap="round"/>
+                  <path d="M4.27344 4.24219L12.7587 12.7275" stroke="#151718" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                  </button>
+              </div>
+              <div class="text-line-border position-relative text-center mb-2">
+                <span class="line-text font_12 text_ltgray fw_400 text-center">Time</span>
+              </div>   
+              <div class="form-group position-relative">
+                <div class="form-check form-check-inline font_14 fw_500 d-flex align-items-center">
+                  <input class="form-check-input" checked="" type="checkbox" id="inlineCheckbox1" value="option1">
+                  Live
+                </div>
+              </div> 
+              <div class="form-group position-relative">
+                <div class="form-check form-check-inline font_14 fw_500 d-flex align-items-center">
+                  <input class="form-check-input" checked="" type="checkbox" id="inlineCheckbox1" value="option1">
+                  Scheduled
+                </div>
+              </div> 
+              <div class="text-line-border position-relative text-center mb-2">
+                <span class="line-text font_12 text_ltgray fw_400 text-center">Pricing</span>
+              </div>   
+              <div class="form-group position-relative">
+                <div class="form-check form-check-inline font_14 fw_500 d-flex align-items-center">
+                  <input class="form-check-input" checked="" type="checkbox" id="inlineCheckbox1" value="option1">
+                  Free
+                </div>
+              </div> 
+              <div class="form-group position-relative">
+                <div class="form-check form-check-inline font_14 fw_500 d-flex align-items-center">
+                  <input class="form-check-input" checked="" type="checkbox" id="inlineCheckbox1" value="option1">
+                  Paid
+                </div>
+              </div> 
+              <div class="text-line-border position-relative text-center mb-2">
+                <span class="line-text font_12 text_ltgray fw_400 text-center">Sorting</span>
+              </div>   
+              <div class="form-group position-relative">
+                <div class="form-check form-check-inline font_14 fw_500 d-flex align-items-center">
+                  <input class="form-check-input" checked="" type="checkbox" id="inlineCheckbox1" value="option1">
+                  Name A-Z
+                </div>
+              </div> 
+              <div class="form-group position-relative">
+                <div class="form-check form-check-inline font_14 fw_500 d-flex align-items-center">
+                  <input class="form-check-input" checked="" type="checkbox" id="inlineCheckbox1" value="option1">
+                  For Beginners
+                </div>
+              </div>   
+              <div class="form-group position-relative">
+                <div class="form-check form-check-inline font_14 fw_500 d-flex align-items-center">
+                  <input class="form-check-input" checked="" type="checkbox" id="inlineCheckbox1" value="option1">
+                  Most Students
+                </div>
+              </div>  
+              <div class="form-group position-relative">
+                <div class="form-check form-check-inline font_14 fw_500 d-flex align-items-center">
+                  <input class="form-check-input" checked="" type="checkbox" id="inlineCheckbox1" value="option1">
+                  Most Viewed
+                </div>
+              </div>  
+              <div class="form-group position-relative">
+                <div class="form-check form-check-inline font_14 fw_500 d-flex align-items-center">
+                  <input class="form-check-input" checked="" type="checkbox" id="inlineCheckbox1" value="option1">
+                  Top Rated
+                </div>
+              </div> 
+              <div class=" d-flex align-items-center justify-content-between flex-sm-nowrap border-0">
+                <button type="button" class="btn custom-btn primary_btn earning-btn fw_500 h_44 w-100 font_14 prev-step-btn prev-step me-2" data-bs-dismiss="modal">Clear All</button>
+                <button type="button" class="btn custom-btn primary_btn earning-btn fw_500 h_44 w-100 font_14  next-step m-0">Apply</button>
+      
+              </div>       
+            </div>
+           
+          </div>
+        </div>
           <div class="list-schol-profile">
 
             <div class="row">
@@ -1970,6 +2164,8 @@
 
 
     });
+
+    
   </script>
 </body>
 
