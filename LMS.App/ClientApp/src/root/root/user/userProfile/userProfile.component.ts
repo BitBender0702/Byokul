@@ -73,7 +73,6 @@ import { CreatePostComponent } from '../../createPost/createPost.component';
       this.userId = id ?? '';
 
       this._userService.getUserById(this.userId).subscribe((response) => {
-        debugger
         this.user = response;
         this.loadingIcon = false;
         // this.unblockUI();
@@ -268,12 +267,10 @@ createPost(){
 }
 
 blockUI() {
-  debugger
   this.blockUi.start("Loading");
 }
 
 unblockUI(){
-  debugger
   this.blockUi.stop();
 }
 
@@ -292,7 +289,6 @@ back(): void {
 }
 
 openPostModal(): void {
-  debugger
   const initialState = {
     userId: this.user.id,
     from: "user"

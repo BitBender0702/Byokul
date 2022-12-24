@@ -19,5 +19,6 @@ namespace LMS.Data.Entity
         public Accessibility Accessibility { get; set; }
         public long Price { get; set; }
         public string CourseUrl { get; set; }
+        public bool IsEnable { get; set; }
     }
 }

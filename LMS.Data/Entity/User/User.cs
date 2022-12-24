@@ -18,5 +18,8 @@ namespace LMS.Data.Entity
         public string? Avatar { get; set; }
         public string? Description { get; set; }
         public string? ContactEmail { get; set; }
+        public bool IsBan { get; set; }
+        public bool IsVarified { get; set; }
+
     }
 }

@@ -27,7 +27,6 @@ import { ReelsService } from 'src/root/service/reels.service';
         this.reelId = this.route.snapshot.paramMap.get('id') ?? '';
 
         this._reelsService.getReelById(this.reelId).subscribe((response) => {
-            debugger
             this.reels = response;
             this.isDataLoaded = true;
             // this.loadingIcon = false;

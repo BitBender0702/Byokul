@@ -63,17 +63,31 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
             this.loginForm.setErrors({ unauthenticated: true });
           }
           else{
-
             this.isSubmitted = false;
             this.loadingIcon = false;
         const token = response.token;
         localStorage.setItem("jwt", token); 
+        var roles = this.getUserRoles(token);
+        if(roles?.indexOf(RolesEnum.SchoolAdmin) > -1){
+          this.router.navigateByUrl(`admin/adminHome`)
+
+        }
+        else{
+
         this.router.navigate(["../../myEarnings"],{ relativeTo: this.route });
+        }
           }
         
         },
       error: (err: HttpErrorResponse) => this.invalidLogin = true
       })
+    }
+
+    getUserRoles(token:string): any{
+      let jwtData = token.split('.')[1]
+      let decodedJwtJsonData = window.atob(jwtData)
+      let decodedJwtData = JSON.parse(decodedJwtJsonData)
+      return decodedJwtData.role;
     }
     
   }

@@ -1,0 +1,110 @@
+
+<div *ngIf="isDataLoaded">
+    <section class="f-poppins">
+        <adminSide-bar></adminSide-bar> 
+        <div class="main_content">
+          <div class="create-post-header d-flex justify-content-between d-none d-xl-flex align-items-center">
+            <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
+                src="../../../../assets/images/arrow-left.svg" />{{'Back'| translate }}</button>
+                <h2 class="font_22 fw_700 f-monteserrat mb-md-0">{{'CourseList'| translate }}</h2>
+            <button type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 invisible" data-bs-toggle="modal"
+              data-bs-target="#create-post">{{'CreatePost'| translate }}</button>
+          </div>
+          <div class="live-header d-flex align-items-center justify-content-between">
+            <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark  d-xl-none"><img
+                src="../../../../assets/images/arrow-left.svg" />{{'Back'| translate }}</button>
+            <span class="logo_mobile d-xl-none">
+              <img src="../../../../assets/images/logo.svg" />
+            </span>
+            <div class="d-xl-none">
+              <button type="button" class="mobile-search border_btn"><img
+                  src="../../../../assets/images/search-lg.svg" /></button>
+              <button type="button" class="mobile-search border_btn"><img
+                  src="../../../../assets/images/menu.svg" /></button>
+            </div>
+          </div>
+      
+   <div class="card">
+     <p-table #dt [value]="registeredCourses" [rows]="10" [paginator]="true" [globalFilterFields]="['courseName']"
+         [(selection)]="selectedCourses" [rowHover]="true" dataKey="id"
+         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
+         <ng-template pTemplate="caption">
+             <div class="p-d-flex p-ai-center p-jc-between">
+                 <h5 class="p-m-0">{{'ManageCourses'| translate }}</h5>
+             </div>
+         </ng-template>
+         <ng-template pTemplate="header">
+             <tr>
+                 <th pSortableColumn="courseName">{{'CourseName'| translate }} <p-sortIcon field="courseName"></p-sortIcon></th>
+                 <th pSortableColumn="school?.schoolName">{{'ScholName'| translate }} <p-sortIcon field="school?.schoolName"></p-sortIcon></th>
+                 <th pSortableColumn="serviceType?.type">{{'ServiceType'| translate }} <p-sortIcon field="serviceType?.type"></p-sortIcon></th>
+                 <th pSortableColumn="accessibility?.name">{{'Accessibility'| translate }} <p-sortIcon field="accessibility?.name"></p-sortIcon></th>
+                 <th pSortableColumn="price">{{'Price'| translate }} <p-sortIcon field="price"></p-sortIcon></th>
+                 <th pSortableColumn="courseUrl">{{'CourseUrl'| translate }} <p-sortIcon field="courseUrl"></p-sortIcon></th>
+                 <th pSortableColumn="createdOn">{{'CreatedOn'| translate }} <p-sortIcon field="createdOn"></p-sortIcon></th>
+                 <th pSortableColumn="createdBy">{{'Owner'| translate }} <p-sortIcon field="createdBy"></p-sortIcon></th>
+                 <th>{{'IsEnable'| translate }}</th>
+                 <th></th>
+             </tr>
+         </ng-template>
+         <ng-template pTemplate="body" let-course>
+             <tr>
+                 <td (click)="viewCourseProfile(course.courseId)">{{course.courseName}}</td>
+                 <td>{{course.school?.schoolName}}</td>
+                 <td>{{course.serviceType?.type}}</td>
+                 <td>{{course.accessibility?.name}}</td>
+                 <td>{{course.price}}</td>
+                 <td>{{course.courseUrl}}</td>
+                 <td>{{course.createdOn | date : "MMMM d, y"}} at {{course.createdOn | date : "H:mm"}}</td>
+                 <td>{{course.createdBy}}</td>
+                
+                 <td>
+                   <button *ngIf="!course.isEnable" (click)="getDisableCourseDetails(course.courseId,'Enable')" data-bs-toggle="modal" data-bs-target="#disable-course" pButton pRipple icon="pi pi-pencil" class="btn custom-btn primary_btn earning-btn fw_400 h_44 pe-5 ps-5 mt-2 mb-2">{{'Disable'| translate }}</button>
+                   <button *ngIf="course.isEnable" (click)="getDisableCourseDetails(course.courseId,'Disable')" data-bs-toggle="modal" data-bs-target="#disable-course" pButton pRipple icon="pi pi-pencil" class="btn custom-btn primary_btn earning-btn fw_400 h_44 pe-5 ps-5 mt-2 mb-2">{{'Enable'| translate }}</button>
+                 </td>
+             </tr>
+         </ng-template>
+         <ng-template pTemplate="summary">
+             <div class="p-d-flex p-ai-center p-jc-between">
+                {{'InTotalThereAre'| translate }} {{registeredCourses ? registeredCourses.length : 0 }} {{'Classes'| translate }}.
+             </div>
+         </ng-template>
+     </p-table>
+   </div>
+        </div>
+      </section>
+      </div>
+      <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
+
+
+<div class="modal fade edit-school-modal" id="disable-course" tabindex="-1"
+aria-labelledby="disable-course" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered">
+<div class="modal-content">
+  <div class="modal-header border-0 justify-content-center position-relative">
+    <h1 *ngIf="enableDisableCourse.isDisable" class="modal-title font_22 text_dark fw_700 border-0 text-center">{{'DisableCourse'| translate }}</h1>
+    <h1 *ngIf="!enableDisableCourse.isDisable" class="modal-title font_22 text_dark fw_700 border-0 text-center">{{'EnableCourse'| translate }}</h1>
+
+    <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"><img
+        src="../../../assets/images/cross.svg" /></button>
+  </div>
+  <div class="modal-body">
+      <div class="form-group">
+        <h2 *ngIf="enableDisableCourse.isDisable" class="text-center">{{'DoYouWantToDisableCourse'| translate }} ?</h2>
+        <h2 *ngIf="!enableDisableCourse.isDisable" class="text-center">{{'DoYouWantToEnableCourse'| translate }} ?</h2>
+      </div>
+      <div
+      class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4">
+      <button type="button"
+        class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+        data-bs-dismiss="modal">{{'No'| translate }}</button>
+      <button (click)="disableCourse()" type="button"
+        class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step" data-bs-dismiss="modal">{{'Yes'| translate }}</button>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+
+    
+   

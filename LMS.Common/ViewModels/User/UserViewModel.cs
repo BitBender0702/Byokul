@@ -17,5 +17,6 @@ namespace LMS.Common.ViewModels.User
         public List<string> UserRoles { get; set; }
         public Guid? CityId { get; set; }
         public CityViewModel City { get; set; }
+        public bool? IsBan { get; set; }
     }
 }

@@ -28,5 +28,9 @@ namespace LMS.Common.ViewModels.Course
         public IEnumerable<string> TeacherIds { get; set; }
         public IEnumerable<string> StudentIds { get; set; }
         public IEnumerable<string> DisciplineIds { get; set; }
+        public DateTime CreatedOn { get; set; }
+        public string CreatedBy { get; set; }
+        public bool IsEnable { get; set; }
+
     }
 }

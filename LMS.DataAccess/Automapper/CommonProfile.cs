@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using LMS.Common.ViewModels.Admin;
 using LMS.Common.ViewModels.Common;
 using LMS.Common.ViewModels.User;
 using LMS.Data.Entity;
@@ -19,6 +20,8 @@ namespace LMS.DataAccess.Automapper
             CreateMap<UserFollower, UserFollowerViewModel>();
             CreateMap<User, UserUpdateViewModel>();
             CreateMap<Discipline, DisciplineViewModel>();
+            CreateMap<User, RegisteredUsersViewModel>();
+
         }
     }
 }

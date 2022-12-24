@@ -29,6 +29,8 @@ namespace LMS.Common.ViewModels.School
         public IEnumerable<string> LanguageIds { get; set; }
         public string SchoolUrl { get; set; }
         public bool IsVarified { get; set; }
+        public bool IsBan { get; set; }
         public int? Status { get; set; }
+        public DateTime? Founded { get; set; }
     }
 }

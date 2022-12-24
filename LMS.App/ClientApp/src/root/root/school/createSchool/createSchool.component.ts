@@ -102,7 +102,6 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
   }
 
   handleImageInput(event: any) {
-    debugger
     this.fileToUpload.append("avatarImage", event.target.files[0], event.target.files[0].name);
     this.uploadImageName = event.target.files[0].name;
     const reader = new FileReader();
@@ -116,7 +115,6 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
   }
 
   createSchool(){
-    debugger
     this.isSubmitted=true;
     if (!this.createSchoolForm3.valid) {
       return;
@@ -138,7 +136,6 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
   }
 
   forwardStep() {
-    debugger
     this.isStepCompleted = true;
     if (!this.createSchoolForm1.valid) {
       return;
@@ -159,7 +156,6 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
   }
 
   forwardStep2() {
-    debugger
     this.isStepCompleted = true;
     if(this.logoUrl == undefined && this.avatarImage == undefined){
       return;

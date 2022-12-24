@@ -29,7 +29,6 @@ export class UserFollowersComponent{
       this.userId = this.route.snapshot.paramMap.get('userId') ?? '';
 
       this._userService.getUserFollowers(this.userId).subscribe((response) => {
-        debugger
         this.userFollowers = response;
         this.loadingIcon = false;
         this.isDataLoaded = true;
@@ -48,11 +47,7 @@ export class UserFollowersComponent{
     banFollower(userId:string){
       this.loadingIcon = true;
       this._userService.banFollower(userId).subscribe((response) => {
-        debugger
         this.ngOnInit();
-        // this.userFollowers = response;
-        // this.loadingIcon = false;
-        // this.isDataLoaded = true;
       });
 
     }

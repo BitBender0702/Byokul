@@ -56,7 +56,6 @@ export class ChangePasswordComponent extends MultilingualComponent implements On
     get confirmPassword() { return this.changePasswordForm.get('confirmPassword'); }
 
     changePassword(){
-      debugger
       this.isSubmitted = true;
       if (!this.changePasswordForm.valid) {
         return;}
@@ -70,8 +69,6 @@ export class ChangePasswordComponent extends MultilingualComponent implements On
       this.user.passwordResetToken = this.route.snapshot.paramMap.get('id');
       this._authService.changePassword(this.user).pipe(finalize(()=> this.loadingIcon = false)).subscribe({
                 next: (response:any) => {
-                  debugger
-
                   if(response.result == ""){
                     this.changePasswordForm.setErrors({ unauthenticated: true });
                   }

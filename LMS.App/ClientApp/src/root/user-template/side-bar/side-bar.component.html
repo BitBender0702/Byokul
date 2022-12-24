@@ -14,7 +14,7 @@
           </button>
           <ul class="dropdown-menu">
             <li><a *ngIf="sidebarInfo !== undefined && sidebarInfo.user!== undefined" (click)="getUserDetails(sidebarInfo.user.id)" class="dropdown-item" style="cursor:pointer;">My Profile</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><a class="dropdown-item" [routerLink]="['/user/auth/change-password']">{{'ChangePassword'| translate }}</a></li>
           </ul>
         </div>
       </li>

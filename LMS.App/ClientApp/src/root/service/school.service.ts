@@ -26,7 +26,6 @@ export class SchoolService{
     }
 
     editSchool(credentials:any): Observable<any> {
-        debugger
         return this.http.post(`${this.apiUrl}/school/updateSchool`, credentials);
     }
 

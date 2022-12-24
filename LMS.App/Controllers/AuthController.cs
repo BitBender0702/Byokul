@@ -3,6 +3,8 @@ using LMS.Data.Entity;
 using LMS.Services.Account;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.Configuration;
 
 namespace LMS.App.Controllers
 {
@@ -97,16 +99,17 @@ namespace LMS.App.Controllers
                 Email = updatePasswordViewModel.Email,
                 Password = updatePasswordViewModel.CurrentPassword
             });
-
-            if (response != null)
+            var okResult = response as OkObjectResult;
+            var isValid = okResult.Value.GetType().GetProperty("token");
+            if (isValid != null)
             {
                 var result = await _authService.UpdatePassword(updatePasswordViewModel);
                 if (result.Succeeded)
                 {
-                    return Ok();
+                    return Ok(new { result = "Success" });
                 }
             }
-            return Unauthorized();
+            return Ok(new { result = "" });
         }
 
         [Route("resetPassword")]

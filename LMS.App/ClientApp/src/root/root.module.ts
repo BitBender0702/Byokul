@@ -14,7 +14,6 @@ import { ClassProfileComponent } from './root/class/classProfile/classProfile.co
 import { UserProfileComponent } from './root/user/userProfile/userProfile.component';
 
 
-
 import {MultiSelectModule} from 'primeng/multiselect';
 import { ButtonModule } from 'primeng/button';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -39,21 +38,41 @@ import { SharedModule } from './root/sharedModule/shared.module';
 import { PreloadAllModules } from '@angular/router'; 
 import { CommonModule } from '@angular/common';
 import { MyEarningsComponent } from './root/myEarnings/myEarnings.component';
+import { ReelsViewComponent } from './root/reels/reelsView.component';
+import { BlockUIModule } from 'ng-block-ui';
+import { ChipsModule } from 'primeng/chips';
+
+import { MatDialogModule } from '@angular/material/dialog';
+import { UserFollowersComponent } from './root/user/userFollowers/userFollowers.component';
+import { SchoolFollowersComponent } from './root/school/schoolFollowers/schoolFollowers.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { ModalDirective } from 'ngx-bootstrap/modal';
+import { CalendarModule } from 'primeng/calendar';
+
+import { ChatComponent } from './root/chat/chat.component';
+import { AdminModule } from './admin/admin.module';
+//import { AdminModule } from './admin/admin.module';
 
 
 const routes: Routes = [
 
   {
-    path: 'user',
-    loadChildren: () => import('./userModule/user.module')
-      .then(m => m.UserModule),
-      data: { preload: true }
-  },
-  {
     path: '',
     redirectTo: 'user',
     pathMatch: 'full',
   },
+  {
+    path: 'user',data: { preload: true },
+    loadChildren: () => import('./userModule/user.module')
+      .then(m => m.UserModule)
+  },
+  {
+    path: 'admin',data: { preload: true },
+    loadChildren: () => import('./admin/admin.module')
+      .then(m => m.AdminModule)
+  }
 
 ];
 
@@ -73,7 +92,12 @@ const routes: Routes = [
     VideoPlayerComponent,
     MyEarningsComponent,
     ClassProfileComponent,
-    UserProfileComponent
+    UserProfileComponent,
+    ReelsViewComponent,
+    UserFollowersComponent,
+    SchoolFollowersComponent,
+    ChatComponent
+
   ],
   imports: [
     CommonModule,
@@ -88,6 +112,12 @@ const routes: Routes = [
     StepsModule,
     ToastModule,
     AutoCompleteModule,
+    BlockUIModule.forRoot(),
+    ButtonModule,
+    ChipsModule,
+    MatDialogModule,
+    ModalModule.forRoot(),
+    CalendarModule,
     TranslateModule.forRoot({
       loader:{
         provide:TranslateLoader,
@@ -98,11 +128,12 @@ const routes: Routes = [
 
     [RouterModule.forRoot(routes, {
       preloadingStrategy: PreloadAllModules
-    })],
+    })
+  ],
     
   ],
 
-  exports: [RouterModule,SharedModule],
+  exports: [RouterModule,SharedModule,ModalModule],
   providers: [],
   bootstrap: [RootComponent]
 })

@@ -30,7 +30,6 @@ export class SchoolFollowersComponent{
       this.schoolId = this.route.snapshot.paramMap.get('schoolId') ?? '';
 
       this._schoolService.getSchoolFollowers(this.schoolId).subscribe((response) => {
-        debugger
         this.schoolFollowers = response;
         this.loadingIcon = false;
         this.isDataLoaded = true;

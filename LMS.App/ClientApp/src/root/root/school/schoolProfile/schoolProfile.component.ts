@@ -107,7 +107,6 @@ export class SchoolProfileComponent extends MultilingualComponent implements OnI
       this.schoolId = id ?? '';
 
       this._schoolService.getSchoolById(this.schoolId).subscribe((response) => {
-        debugger
         this.school = response;
         this.loadingIcon = false;
         this.isDataLoaded = true;
@@ -512,12 +511,10 @@ private closeLanguagesModal(): void {
   }
 
   createPost(){
-    debugger
     this.isOpenModal = true;
     }
 
   openPostModal(): void {
-    debugger
     const initialState = {
       schoolId: this.school.schoolId,
       from: "school"

@@ -20,6 +20,7 @@ namespace LMS.Common.ViewModels.User
         public CityViewModel City { get; set; }
         public int Followers { get; set; }
         public int Followings { get; set; }
+        public bool? IsBan { get; set; }
         public IEnumerable<LanguageViewModel> Languages { get; set; }
         public IEnumerable<SchoolViewModel> SchoolsAsStudent { get; set; }
         public IEnumerable<SchoolViewModel> SchoolsAsTeacher { get; set; }

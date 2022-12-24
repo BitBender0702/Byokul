@@ -4,6 +4,8 @@ using LMS.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using Public_Chat.ReqDto;
 
 namespace LMS.App.Controllers
 {
@@ -13,11 +15,13 @@ namespace LMS.App.Controllers
         private readonly UserManager<User> _userManager;
         private readonly IUserService _userService;
 
+
         public UserController(UserManager<User> userManager, IUserService userService)
         {
             _userManager = userManager;
             _userService = userService;
         }
+    
 
         [Route("getUser")]
         [HttpGet]

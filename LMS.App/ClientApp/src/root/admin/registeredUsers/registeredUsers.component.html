@@ -1,0 +1,132 @@
+<div *ngIf="isDataLoaded">
+  <section class="f-poppins">
+     <adminSide-bar></adminSide-bar> 
+     <div class="main_content">
+       <div class="create-post-header d-flex justify-content-between d-none d-xl-flex align-items-center">
+         <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
+             src="../../../../assets/images/arrow-left.svg" />{{'Back'| translate }}</button>
+             <h2 class="font_22 fw_700 f-monteserrat mb-md-0">{{'UserList'| translate }}</h2>
+         <button type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 invisible" data-bs-toggle="modal"
+           data-bs-target="#create-post">{{'CreatePost'| translate }}</button>
+       </div>
+       <div class="live-header d-flex align-items-center justify-content-between">
+         <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark  d-xl-none"><img
+             src="../../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
+         <span class="logo_mobile d-xl-none">
+           <img src="../../../../assets/images/logo.svg" />
+         </span>
+         <div class="d-xl-none">
+           <button type="button" class="mobile-search border_btn"><img
+               src="../../../../assets/images/search-lg.svg" /></button>
+           <button type="button" class="mobile-search border_btn"><img
+               src="../../../../assets/images/menu.svg" /></button>
+         </div>
+       </div>
+
+<div class="card">
+  <p-table #dt [value]="registeredUsers" [rows]="10" [paginator]="true" [globalFilterFields]="['firstName']"
+      [(selection)]="selectedUsers" [rowHover]="true" dataKey="id"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
+      <ng-template pTemplate="caption">
+          <div class="p-d-flex p-ai-center p-jc-between">
+              <h5 class="p-m-0">{{'ManageUsers'| translate }}</h5>
+          </div>
+      </ng-template>
+      <ng-template pTemplate="header">
+          <tr>
+              <th pSortableColumn="firstName">{{'FirstName'| translate }} <p-sortIcon field="firstName"></p-sortIcon></th>
+              <th pSortableColumn="lastName">{{'LastName'| translate }} <p-sortIcon field="lastName"></p-sortIcon></th>
+              <th pSortableColumn="email">{{'Email'| translate }} <p-sortIcon field="email"></p-sortIcon></th>
+              <th pSortableColumn="contactEmail">{{'ContactEmail'| translate }} <p-sortIcon field="contactEmail"></p-sortIcon></th>
+              <th>{{'RegisteredOn'| translate }}</th>
+              <th>{{'IsBan'| translate }}</th>
+              <th>{{'IsVerify'| translate }}</th>
+              <th></th>
+          </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-user>
+          <tr>
+              <td (click)="viewUserProfile(user.id)">{{user.firstName}}</td>
+              <td>{{user.lastName}}</td>
+              <td>{{user.email}}</td>
+              <td>{{user.contactEmail}}</td>
+              <td>{{user.createdOn | date : "MMMM d, y"}} {{'at'| translate }}  {{user.createdOn | date : "H:mm"}}</td>
+              <td>
+                <button *ngIf="!user.isBan" (click)="getBanUserDetails(user.id,'Ban')" data-bs-toggle="modal" data-bs-target="#ban-user" pButton pRipple icon="pi pi-pencil" class="btn custom-btn primary_btn earning-btn fw_400 h_44 pe-5 ps-5 mt-2 mb-2">{{'Ban'| translate }}</button>
+                <button *ngIf="user.isBan" (click)="getBanUserDetails(user.id,'UnBan')" data-bs-toggle="modal" data-bs-target="#ban-user" pButton pRipple icon="pi pi-pencil" class="btn custom-btn primary_btn earning-btn fw_400 h_44 pe-5 ps-5 mt-2 mb-2">{{'UnBan'| translate }}</button>
+              </td>
+              <td>
+                <button *ngIf="!user.isVarified" (click)="getVarifyUserDetails(user.id,'Verify')" data-bs-toggle="modal" data-bs-target="#verify-user" pButton pRipple icon="pi pi-pencil" class="btn custom-btn primary_btn earning-btn fw_400 h_44 pe-5 ps-5 mt-2 mb-2">{{'Verify'| translate }}</button>
+                <button *ngIf="user.isVarified" (click)="getVarifyUserDetails(user.id,'UnVerify')" data-bs-toggle="modal" data-bs-target="#verify-user" pButton pRipple icon="pi pi-pencil" class="btn custom-btn primary_btn earning-btn fw_400 h_44 pe-5 ps-5 mt-2 mb-2">{{'UnVerify'| translate }}</button>
+              </td>
+          </tr>
+      </ng-template>
+      <ng-template pTemplate="summary">
+          <div class="p-d-flex p-ai-center p-jc-between">
+            {{'InTotalThereAre'| translate }} {{registeredUsers ? registeredUsers.length : 0 }}{{'Users'| translate }}.
+          </div>
+      </ng-template>
+  </p-table>
+</div>
+
+     </div>
+   </section>
+   </div>
+   <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
+ 
+
+<div class="modal fade edit-school-modal" id="ban-user" tabindex="-1"
+aria-labelledby="ban-user" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered">
+<div class="modal-content">
+  <div class="modal-header border-0 justify-content-center position-relative">
+    <h1 *ngIf="this.banUnbanUser.isBan" class="modal-title font_22 text_dark fw_700 border-0 text-center">{{'Ban'| translate }} {{'User'| translate }}</h1>
+    <h1 *ngIf="!this.banUnbanUser.isBan" class="modal-title font_22 text_dark fw_700 border-0 text-center">{{'UnBan'| translate }} {{'User'| translate }}</h1>
+    <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"><img
+        src="../../../assets/images/cross.svg" /></button>
+  </div>
+  <div class="modal-body">
+      <div class="form-group">
+        <h2 *ngIf="this.banUnbanUser.isBan" class="text-center">{{'DoYouWantToBanUser'| translate }} ?</h2>
+        <h2 *ngIf="!this.banUnbanUser.isBan" class="text-center">{{'DoYouWantToUnBanUser'| translate }}?</h2>
+      </div>
+      <div
+      class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4">
+      <button type="button"
+        class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+        data-bs-dismiss="modal">{{'No'| translate }}</button>
+      <button (click)="banUser()" type="button"
+        class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step" data-bs-dismiss="modal">{{'Yes'| translate }}</button>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+
+<div class="modal fade edit-school-modal" id="verify-user" tabindex="-1"
+aria-labelledby="verify-user" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered">
+<div class="modal-content">
+  <div class="modal-header border-0 justify-content-center position-relative">
+    <h1 *ngIf="this.verifyUser.isVerify" class="modal-title font_22 text_dark fw_700 border-0 text-center">{{'Verify'| translate }} {{'User'| translate }}</h1>
+    <h1 *ngIf="!this.verifyUser.isVerify" class="modal-title font_22 text_dark fw_700 border-0 text-center">{{'UnVerify'| translate }} {{'User'| translate }}</h1>
+    <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"><img
+        src="../../../assets/images/cross.svg" /></button>
+  </div>
+  <div class="modal-body">
+      <div class="form-group">
+        <h2 *ngIf="this.verifyUser.isVerify" class="text-center">{{'DoYouWantToVerifyUser'| translate }} ?</h2>
+        <h2 *ngIf="!this.verifyUser.isVerify" class="text-center">{{'DoYouWantToUnVerifyUser'| translate }}?</h2>
+      </div>
+      <div
+      class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4">
+      <button type="button"
+        class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+        data-bs-dismiss="modal">{{'No'| translate }}</button>
+      <button (click)="varifyUser()" type="button"
+        class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step" data-bs-dismiss="modal">{{'Yes'| translate }}</button>
+    </div>
+  </div>
+</div>
+</div>
+</div>

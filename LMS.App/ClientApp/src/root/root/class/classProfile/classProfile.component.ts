@@ -503,7 +503,6 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       }
 
       openPostModal(): void {
-        debugger
         const initialState = {
           classId: this.class.classId,
           from: "class"

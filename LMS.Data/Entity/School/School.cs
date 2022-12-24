@@ -26,5 +26,6 @@ namespace LMS.Data.Entity
         public string? SchoolEmail { get; set; }
         public Guid? AccessibilityId { get; set; }
         public Accessibility Accessibility { get; set; }
+        public bool IsBan { get; set; }
     }
 }

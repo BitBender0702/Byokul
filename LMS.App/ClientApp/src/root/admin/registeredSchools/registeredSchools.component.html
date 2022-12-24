@@ -1,0 +1,140 @@
+<div *ngIf="isDataLoaded">
+    <section class="f-poppins">
+        <adminSide-bar></adminSide-bar> 
+        <div class="main_content">
+          <div class="create-post-header d-flex justify-content-between d-none d-xl-flex align-items-center">
+            <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
+                src="../../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
+                <h2 class="font_22 fw_700 f-monteserrat mb-md-0">{{'SchoolList'| translate }}</h2>
+            <button type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 invisible" data-bs-toggle="modal"
+              data-bs-target="#create-post">{{'CreatePost'| translate }}</button>
+          </div>
+          <div class="live-header d-flex align-items-center justify-content-between">
+            <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark  d-xl-none"><img
+                src="../../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
+            <span class="logo_mobile d-xl-none">
+              <img src="../../../../assets/images/logo.svg" />
+            </span>
+            <div class="d-xl-none">
+              <button type="button" class="mobile-search border_btn"><img
+                  src="../../../../assets/images/search-lg.svg" /></button>
+              <button type="button" class="mobile-search border_btn"><img
+                  src="../../../../assets/images/menu.svg" /></button>
+            </div>
+          </div>
+      
+   <div class="card">
+     <p-table #dt [value]="registeredSchools" [rows]="10" [paginator]="true" [globalFilterFields]="['firstName']"
+         [(selection)]="selectedSchools" [rowHover]="true" dataKey="id"
+         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
+         <ng-template pTemplate="caption">
+             <div class="p-d-flex p-ai-center p-jc-between">
+                 <h5 class="p-m-0">{{'ManageSchools'| translate }}</h5>
+             </div>
+         </ng-template>
+         <ng-template pTemplate="header">
+             <tr>
+                 <th pSortableColumn="schoolName">{{'SchoolName'| translate }} <p-sortIcon field="schoolName"></p-sortIcon></th>
+                 <th pSortableColumn="founded">{{'Founded'| translate }} <p-sortIcon field="founded"></p-sortIcon></th>
+                 <th pSortableColumn="specialization?.name">{{'Specialization'| translate }} <p-sortIcon field="specialization?.name"></p-sortIcon></th>
+                 <th pSortableColumn="schoolUrl">{{'SchoolUrl'| translate }} <p-sortIcon field="schoolUrl"></p-sortIcon></th>
+                 <th pSortableColumn="country?.name">{{'Country'| translate }} <p-sortIcon field="country?.name"></p-sortIcon></th>
+                 <th pSortableColumn="createdOn">{{'CreatedOn'| translate }} <p-sortIcon field="createdOn"></p-sortIcon></th>
+                 <th pSortableColumn="createdBy">{{'Owner'| translate }} <p-sortIcon field="createdBy"></p-sortIcon></th>
+                 <th>{{'IsBan'| translate }}</th>
+                 <th>{{'IsVerify'| translate }}</th>
+                 <th></th>
+             </tr>
+         </ng-template>
+         <ng-template pTemplate="body" let-school>
+             <tr>
+                 <td (click)="viewSchoolProfile(school.schoolId)">{{school.schoolName}}</td>
+                 <td>{{school.founded | date : "MMMM d, y"}}</td>
+                 <td>{{school.specialization?.name}}</td>
+                 <td>{{school.schoolUrl}}</td>
+                 <td>{{school.country?.name}}</td>
+                 <td>{{school.createdOn | date : "MMMM d, y"}} at {{school.createdOn | date : "H:mm"}}</td>
+                 <td>{{school.createdBy}}</td>
+                 <td>
+                   <button *ngIf="!school.isBan" (click)="getBanSchoolDetails(school.schoolId,'Ban')" data-bs-toggle="modal" data-bs-target="#ban-school" pButton pRipple icon="pi pi-pencil" class="btn custom-btn primary_btn earning-btn fw_400 h_44 pe-5 ps-5 mt-2 mb-2">{{'Ban'| translate }}</button>
+                   <button *ngIf="school.isBan" (click)="getBanSchoolDetails(school.schoolId,'UnBan')" data-bs-toggle="modal" data-bs-target="#ban-school" pButton pRipple icon="pi pi-pencil" class="btn custom-btn primary_btn earning-btn fw_400 h_44 pe-5 ps-5 mt-2 mb-2">{{'UnBan'| translate }}</button>
+                 </td>
+                 <td>
+                   <button *ngIf="!school.isVarified" (click)="getVarifySchoolDetails(school.schoolId,'Verify')" data-bs-toggle="modal" data-bs-target="#verify-school" pButton pRipple icon="pi pi-pencil" class="btn custom-btn primary_btn earning-btn fw_400 h_44 pe-5 ps-5 mt-2 mb-2">{{'Verify'| translate }}</button>
+                   <button *ngIf="school.isVarified" (click)="getVarifySchoolDetails(school.schoolId,'UnVerify')" data-bs-toggle="modal" data-bs-target="#verify-school" pButton pRipple icon="pi pi-pencil" class="btn custom-btn primary_btn earning-btn fw_400 h_44 pe-5 ps-5 mt-2 mb-2">{{'UnVerify'| translate }}</button>
+   
+                 </td>
+             </tr>
+         </ng-template>
+         <ng-template pTemplate="summary">
+             <div class="p-d-flex p-ai-center p-jc-between">
+              {{'InTotalThereAre'| translate }} {{registeredSchools ? registeredSchools.length : 0 }} {{'Schools'| translate }}.
+             </div>
+         </ng-template>
+     </p-table>
+   </div>
+        </div>
+      </section>
+      </div>
+      <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
+
+
+<div class="modal fade edit-school-modal" id="ban-school" tabindex="-1"
+aria-labelledby="ban-school" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered">
+<div class="modal-content">
+  <div class="modal-header border-0 justify-content-center position-relative">
+    <h1 *ngIf="banUnbanSchool.isBan" class="modal-title font_22 text_dark fw_700 border-0 text-center"> {{'BanSchool'| translate }} </h1>
+    <h1 *ngIf="!banUnbanSchool.isBan" class="modal-title font_22 text_dark fw_700 border-0 text-center"> {{'UnBanSchool'| translate }} </h1>
+
+    <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"><img
+        src="../../../assets/images/cross.svg" /></button>
+  </div>
+  <div class="modal-body">
+      <div class="form-group">
+        <h2 *ngIf="banUnbanSchool.isBan" class="text-center">{{'DoYouWantToBanSchool'| translate }} ?</h2>
+        <h2 *ngIf="!banUnbanSchool.isBan" class="text-center">{{'DoYouWantToUnbanSchool'| translate }} ?</h2>
+      </div>
+      <div
+      class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4">
+      <button type="button"
+        class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+        data-bs-dismiss="modal">{{'No'| translate }}</button>
+      <button (click)="banSchool()" type="button"
+        class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step" data-bs-dismiss="modal">{{'Yes'| translate }}</button>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+
+<div class="modal fade edit-school-modal" id="verify-school" tabindex="-1"
+aria-labelledby="verify-school" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered">
+<div class="modal-content">
+  <div class="modal-header border-0 justify-content-center position-relative">
+    <h1 *ngIf="verifySchool.isVerify" class="modal-title font_22 text_dark fw_700 border-0 text-center">{{'Verify'| translate }} {{'School'| translate }}</h1>
+    <h1 *ngIf="!verifySchool.isVerify" class="modal-title font_22 text_dark fw_700 border-0 text-center">{{'Unverify'| translate }} {{'School'| translate }}</h1>
+
+    <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"><img
+        src="../../../assets/images/cross.svg" /></button>
+  </div>
+  <div class="modal-body">
+      <div class="form-group">
+        <h2 *ngIf="verifySchool.isVerify" class="text-center">{{'DoYouWantToVerifySchool'| translate }} ?</h2>
+        <h2 *ngIf="!verifySchool.isVerify" class="text-center">{{'DoYouWantToUnverifySchool'| translate }} ?</h2>
+      </div>
+      <div
+      class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4">
+      <button type="button"
+        class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+        data-bs-dismiss="modal">{{'No'| translate }}</button>
+      <button (click)="verifySchools()" type="button"
+        class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step" data-bs-dismiss="modal">{{'Yes'| translate }}</button>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+    
+   

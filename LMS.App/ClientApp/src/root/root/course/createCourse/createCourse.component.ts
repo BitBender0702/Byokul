@@ -176,7 +176,6 @@ captureDisciplineId(event: any) {
 }
 
 captureTeacherId(event: any) {
-  debugger
   var teacherId = event.teacherId;
   this.teacherIds.push(teacherId);
   this.teacherInfo.push(event);
@@ -194,7 +193,6 @@ captureTeacherId(event: any) {
   }
 
   createCourse(){
-    debugger
     this.isSubmitted=true;
     if (!this.createCourseForm3.valid) {
       return;
@@ -216,7 +214,6 @@ captureTeacherId(event: any) {
   }
 
   forwardStep() {
-    debugger
     this.isStepCompleted = true;
     if (!this.createCourseForm1.valid) {
       return;
@@ -244,7 +241,6 @@ captureTeacherId(event: any) {
   }
 
   forwardStep2(){
-    debugger
     this.isStepCompleted = true;
 
     this.fileToUpload.append('disciplineIds',JSON.stringify(this.disciplineIds));
@@ -295,7 +291,6 @@ captureTeacherId(event: any) {
   }
 
   getFreeCourse(){
-    debugger
     this.isCoursePaid = false;
     this.createCourseForm1.get('price')?.removeValidators(Validators.required);
     this.createCourseForm1.patchValue({
@@ -304,7 +299,6 @@ captureTeacherId(event: any) {
   }
 
   getPaidCourse(){
-    debugger
     this.isCoursePaid = true;
     this.createCourseForm1.get('price')?.addValidators(Validators.required);
     //this.createCourseForm1.setErrors({ priceRequired: true });
@@ -316,7 +310,6 @@ captureTeacherId(event: any) {
   }
 
   removeTeacher(event: any){
-    debugger
     const teacherIndex = this.teacherInfo.findIndex((item) => item.teacherId === event.teacherId);
     if (teacherIndex > -1) {
       this.teacherInfo.splice(teacherIndex, 1);
@@ -324,7 +317,6 @@ captureTeacherId(event: any) {
   }
 
   removeStudent(event: any){
-    debugger
     const studentIndex = this.studentInfo.findIndex((item) => item.studentId === event.studentId);
     if (studentIndex > -1) {
       this.studentInfo.splice(studentIndex, 1);
@@ -332,7 +324,6 @@ captureTeacherId(event: any) {
   }
 
   removeDiscipline(event: any){
-    debugger
     const disciplineIndex = this.disciplineInfo.findIndex((item) => item.id === event.id);
     if (disciplineIndex > -1) {
       this.disciplineInfo.splice(disciplineIndex, 1);

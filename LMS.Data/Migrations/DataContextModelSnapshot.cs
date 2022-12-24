@@ -99,6 +99,9 @@ namespace LMS.Data.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsEnable")
+                        .HasColumnType("bit");
+
                     b.Property<int>("NoOfStudents")
                         .HasColumnType("int");
 
@@ -294,6 +297,9 @@ namespace LMS.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsEnable")
                         .HasColumnType("bit");
 
                     b.Property<long>("Price")
@@ -621,6 +627,9 @@ namespace LMS.Data.Migrations
 
                     b.Property<DateTime?>("Founded")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsBan")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -1019,6 +1028,12 @@ namespace LMS.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool?>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsBan")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsVarified")
                         .HasColumnType("bit");
 
                     b.Property<string>("LastName")

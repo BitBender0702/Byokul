@@ -17,6 +17,11 @@ import { MyEarningsComponent } from '../root/myEarnings/myEarnings.component';
 import { LandingComponent } from './user-auth/component/landing/landing.component';
 import { UserProfileComponent } from '../root/user/userProfile/userProfile.component';
 import { ClassProfileComponent } from '../root/class/classProfile/classProfile.component';
+import { UserFollowersComponent } from '../root/user/userFollowers/userFollowers.component';
+import { SchoolFollowersComponent } from '../root/school/schoolFollowers/schoolFollowers.component';
+import { ReelsViewComponent } from '../root/reels/reelsView.component';
+
+import { ChatComponent } from '../root/chat/chat.component';
 
 
 const routes: Routes = [
@@ -48,8 +53,15 @@ const routes: Routes = [
     path: 'createSchool',component:CreateSchoolComponent
   },
   {
+    path: 'chat',component:ChatComponent
+  },
+
+  {
     path: 'schoolProfile/:schoolId',component:SchoolProfileComponent
   },
+  // {
+  //   path: 'schoolProfile/:schoolId',component:SchoolProfileComponent,resolve:{schoolProfile : SchoolResolverService}
+  // },
 
   {
     path: 'classProfile/:classId',component:ClassProfileComponent
@@ -61,6 +73,12 @@ const routes: Routes = [
 
   {
     path: 'userProfile/:userId',component:UserProfileComponent
+  },
+  {
+    path: 'userFollowers/:userId',component:UserFollowersComponent
+  },
+  {
+    path: 'schoolFollowers/:schoolId',component:SchoolFollowersComponent
   },
   {
     path: 'createClass/:id',component:CreateClassComponent
@@ -80,6 +98,9 @@ const routes: Routes = [
   {
     path: 'videoPlayer',component:VideoPlayerComponent
   },
+  {
+    path: 'reels/:id',component:ReelsViewComponent
+  },
 ];
 
 
@@ -98,4 +119,4 @@ const routes: Routes = [
   
   
 })
-export class UserModule { }
+export class UserModule {}
