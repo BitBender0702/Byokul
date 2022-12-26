@@ -348,30 +348,34 @@
           laboris nisi ut aliquip ex. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
           aliquip ex quis nostrud exercitation.</p>
       </div>
-      <div class="teacher-tags tag-box hover-tags">
-        <div class="teacher-tags tag-box mt-0  hover-tags">
-          <div class="teacher-content font_14 d-inline-block"><img src="images/dark-star.svg" /> Sertificates</div>
-          <span class="custom-tag">Sertificate 1 <button
+      <div class="teacher-tags tag-box hover-tags ">
+        <div class="teacher-tags tag-box mt-0  hover-tags hover-add-certificate">
+          <div class="teacher-content font_14 d-inline-block"><img src="images/dark-star.svg" /> Certificates</div>
+          <span class="custom-tag">Certificate 1 <button
               class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
                 src="images/cross-sm-light.svg" /></button></span>
-          <span class="custom-tag">Sertificate 2 <button
+          <span class="custom-tag">Certificate 2 <button
               class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
                 src="images/cross-sm-light.svg" /></button></span>
-          <span class="custom-tag">Sertificate 3 <button
+          <span class="custom-tag">Certificate 3 <button
               class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
                 src="images/cross-sm-light.svg" /></button></span>
-          <span class="custom-tag">Sertificate 4 <button
+          <span class="custom-tag">Certificate 4 <button
               class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
                 src="images/cross-sm-light.svg" /></button></span>
-          <span class="custom-tag">Sertificate 5 <button
+          <span class="custom-tag">Certificate 5 <button
               class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
                 src="images/cross-sm-light.svg" /></button></span>
-          <span class="custom-tag">Sertificate 6 <button
+          <span class="custom-tag">Certificate 6 <button
               class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
                 src="images/cross-sm-light.svg" /></button></span>
-          <span class="custom-tag">Sertificate 7 <button
+          <span class="custom-tag">Certificate 7 <button
               class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
                 src="images/cross-sm-light.svg" /></button></span>
+                <button type="button" class="btn border-0 add-certificate-btn rounded-circle p-0 align-items-center justify-content-center" title="Add Certificate" data-bs-target="#add-sertificate" data-bs-toggle="modal"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.5 5.01172H8.5" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+                  <path d="M4.78516 1.5L4.78516 8.5" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </button>
         </div>
         <div class="teacher-tags tag-box mt-0  hover-tags">
           <div class="teacher-content font_14 d-inline-block"><img src="images/Volume-Down.svg" /> Languages</div>
@@ -1544,19 +1548,19 @@
               <div
                 class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-0 cr-postfooter pt-0 mt-3 px-0">
                 <div class="post-bot-left d-flex">
-                  <button type="button"
+                  <button type="button" title="Add Gallery"
                     class="post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center active"><img
                       src="images/gallery-dark.svg" class="dark-attach" /><img src="images/gallery-light.svg"
                       class="light-attach" /></button>
-                  <button type="button"
+                  <button type="button" title="Add Video"
                     class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"><img
                       src="images/Video-dark.svg" class="dark-attach" /><img src="images/Video-light.svg"
                       class="light-attach" /></button>
-                  <button type="button"
+                  <button type="button" title="Add Attachment"
                     class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"
                     data-bs-toggle="modal" data-bs-target="#add-attachment"><img src="images/Paper-Plus-dark.svg"
                       class="dark-attach" /><img src="images/Paper-Plus-light.svg" class="light-attach" /></button>
-                  <button type="button"
+                  <button type="button" title="Add Hashtag"
                     class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"
                     data-bs-toggle="modal" data-bs-target="#add-tag"><img src="images/hashtag-dark.svg"
                       class="dark-attach" /><img src="images/hashtag-light.svg" class="light-attach" /></button>
@@ -1834,6 +1838,54 @@
       </div>
     </div>
   </div>
+
+
+   <!---- Add Certificate Modal-->
+   <div class="modal fade edit-school-modal" id="add-sertificate" tabindex="-1" aria-labelledby="add-sertificate"
+   aria-hidden="true">
+   <div class="modal-dialog modal-dialog-centered">
+     <div class="modal-content">
+       <div class="modal-header border-0 justify-content-center position-relative">
+         <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">Add Certificates</h1>
+         <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"><img
+             src="images/cross.svg" /></button>
+       </div>
+       <div class="modal-body">
+         <div class="dropzone-wrapper mb-4">
+           <div class="dropzone-desc">
+             <i class="glyphicon glyphicon-download-alt"></i>
+             <p class="text-center fw_400">Drop Sertificate image or <b>Clock to Browse</b></p>
+           </div>
+           <input type="file" name="img_logo" class="dropzone">
+         </div>
+         
+        
+         <div class="teacher-tags hashtag_post tag-boxattachment-outer mt-1 mb-0 hover-tags">
+           <span class="custom-tag">Sertificate 1<button class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                 src="images/cross-sm-light.svg"></button></span>
+           <button class="custom-tag">Sertificate 2<span class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                 src="images/cross-sm-light.svg"></span></button>
+           <span class="custom-tag">Sertificate 3<button class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                 src="images/cross-sm-light.svg"></button></span>
+                 <span class="custom-tag">Sertificate 4<button class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                    src="images/cross-sm-light.svg"></button></span>
+                    <span class="custom-tag">Sertificate 5<button class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                        src="images/cross-sm-light.svg"></button></span>
+                        <span class="custom-tag">Sertificate 6<button class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                            src="images/cross-sm-light.svg"></button></span>
+         </div>
+       </div>
+       <div
+         class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4">
+         <button type="button"
+           class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+           data-bs-dismiss="modal" >Discard Changes</button>
+         <button type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step"
+          >Save</button>
+       </div>
+     </div>
+   </div>
+ </div>
 
 
 
