@@ -2105,3 +2105,58 @@ div#add-sertificate .dropzone-wrapper .dropzone-desc {
     top: 50%;
     transform: translateY(-50%);
 }
+
+
+/*------- My earning school owned css start here ----*/
+.gap_8{
+	margin-right: 8px;
+	margin-left: 8px;
+}
+.gap_8 > div{
+	padding-right: 8px;
+	padding-left: 8px;
+}
+.earning-balance-box {
+    background: #FDFDFD;
+    border: 1px solid #F0F0F0;
+    box-shadow: 0px 4px 20px rgb(0 0 0 / 5%);
+    border-radius: 8px;
+    height: 160px;
+    font-size: 35px;
+    padding: 30px;
+}
+.wallet {
+    position: absolute;
+    right: 18px;
+    top: 19px;
+}
+.earning-balance-title-row{
+	margin-right: 0;
+	margin-left: 0;
+}
+.earning-balance-title-row > div{
+	padding-right: 0;
+	padding-left: 0;
+}
+.earning-transactions ul li .followe_report {
+    display: block;
+}
+.earning-transactions {
+    filter: none;
+}
+.earnings-tabs ul .nav-item button {
+    padding: 9.5px 34px;
+}
+.earning-search{
+	margin-right: 50px;
+}
+
+.earning-search input {
+    border: 1px solid #F5F5F5 !important;
+	border-left: 2px solid #FF821C !important;
+    box-shadow: none !important;
+}
+input[type="search"] {
+    padding-left: 38px !important;
+}
+
