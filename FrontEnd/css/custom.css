@@ -1868,3 +1868,295 @@ div#notifi-settingpopup .modal-dialog {
 .filter-menu-btn {
     top: 0;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.message-box {
+    border: 1px solid #F5F5F5;
+    border-radius: 4px;
+}
+.chat-userleft{
+	width: calC(100% - 60px);
+} 
+.chat-aside li{
+	border-right: 1px solid transparent;
+	margin-bottom: 0;
+}  
+.chat-aside li:hover, .chat-aside li.active {
+    background-color: #EAEAEA;
+    border-color: #FF821C;
+}
+.chat-aside {
+    width: 380px;
+    background-color: #fcfcfc;
+    display: inline-block;
+    font-size: 15px;
+    vertical-align: top;
+}
+main {
+    width: calC(100% - 390px);
+    height: calC(100vh - 160px);
+    display: inline-block;
+    font-size: 15px;
+    vertical-align: top;
+}  
+ 
+  .chat-aside input::placeholder{
+	color:#fff;
+  }
+  .chat-aside ul {
+    padding-left: 0;
+    margin: 0;
+    list-style-type: none;
+    overflow-y: auto;
+    height: calC(100vh - 160px);
+    border-right: 1px solid #F5F5F5;
+}
+  .chat-aside li {
+    padding:16px;
+}
+  .chat-aside li img {
+    border-radius: 50%;
+    margin-right: 10px;
+    width: 32px;
+    height: 32px;
+}
+.chat-aside li div {
+    display: inline-block;
+}
+  .chat-aside li h2 {
+    font-size: 16px;
+    color: #151718;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+  .chat-aside li h3{
+	font-size:12px;
+	color:#7e818a;
+	font-weight:normal;
+  }
+  
+  #chat {
+    padding-left: 0;
+    margin: 0;
+    list-style-type: none;
+    overflow-y: scroll;
+    height: calC(100vh - 267px);
+    border-top: 2px solid #fff;
+    border-bottom: 2px solid #fff;
+}
+  #chat li {
+    padding: 28px 30px;
+	margin-bottom: 0;
+}
+  #chat h2,#chat h3{
+	display:inline-block;
+	font-size:13px;
+	font-weight:normal;
+  }
+  #chat h3{
+	color:#bbb;
+  }
+
+  #chat .message {
+    max-width: 45%;
+    display: inline-block;
+    text-align: left;
+    font-size: 12px;
+    color: #151718;
+    line-height: 18px;
+}
+#chat .me .chat-username, .gallery-attch {
+    margin: 0 0 0 auto;
+    max-width: 45%;
+}
+#chat .me .gallery-attch{
+	text-align: left;
+}
+  #chat .me{
+	text-align:right;
+  }
+  .forward-reply {
+    position: absolute;
+    right: 28px;
+    top: 30px;
+	display: none;
+}
+#chat li:hover .forward-reply{
+	display: block;
+}
+#chat li.me:hover .forward-reply {
+    right: auto;
+}
+  .forward-btn {
+    border: 1px solid #F5F5F5;
+    border-radius: 4px;
+    background: #fff;
+    color: #7C8DA7;
+    padding: 11px 16.5px;
+    font-size: 12px;
+    min-width: 112px;
+    margin-bottom: 8px;
+}
+.img-attach {
+    max-width: 218px;
+    overflow: hidden;
+    border-radius: 4px;
+    height: 115px;
+}
+.chat-footer {
+    padding: 28px 32px 0;
+    border-top: 1px solid #f5f5f5;
+}
+  
+.chat-footer .add-comment input {
+    height: 48px;
+}
+
+.message-box ::-webkit-scrollbar {
+    width: 2px !important;
+    height: 8px;
+}
+.message-box::after {
+	background: transparent;
+}
+
+.message-box::-webkit-scrollbar-thumb {
+	background-color: #c7c7c7;
+	border-radius: 0;
+	border: 0px solid transparent;
+	background-color: #000;
+}
+
+.message-box::-webkit-scrollbar {
+	height: 8px;
+	border-radius: 0;
+	background-clip: padding-box;
+	border: 0px solid transparent;
+	width: 7px;
+	background-color: #E5E5E5;
+}
+
+.message-box::-webkit-scrollbar-thumb {
+	box-shadow: inset 0 0 0 10px #7C8DA7;
+}
+.cursor-pointer{
+	cursor: pointer;
+}
+.chat-channel-button {
+    border: 2px solid transparent;
+    border-radius: 8px;
+    padding: 11.5px 30px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #313131;
+}
+.active.chat-channel-button, .chat-channel-button:hover, .chat-channel-button:focus {
+	border-color: #FF821C !important;
+}
+.add-certificate-btn{
+    background: #7C8DA7 !important;
+    border: 1px solid #FFFFFF;
+    width: 26px;
+    height: 26px;
+	display: none;
+}
+.hover-add-certificate:hover .add-certificate-btn{
+	display: inline-flex;
+}
+div#add-sertificate .dropzone-wrapper {
+    height: 100px;
+}
+div#add-sertificate .dropzone-wrapper .dropzone-desc p {
+    margin-bottom: 0;
+}
+div#add-sertificate .dropzone-wrapper .dropzone-desc {
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+
+/*------- My earning school owned css start here ----*/
+.gap_8{
+	margin-right: 8px;
+	margin-left: 8px;
+}
+.gap_8 > div{
+	padding-right: 8px;
+	padding-left: 8px;
+}
+.earning-balance-box {
+    background: #FDFDFD;
+    border: 1px solid #F0F0F0;
+    box-shadow: 0px 4px 20px rgb(0 0 0 / 5%);
+    border-radius: 8px;
+    height: 160px;
+    font-size: 35px;
+    padding: 30px;
+}
+.wallet {
+    position: absolute;
+    right: 18px;
+    top: 19px;
+}
+.earning-balance-title-row{
+	margin-right: 0;
+	margin-left: 0;
+}
+.earning-balance-title-row > div{
+	padding-right: 0;
+	padding-left: 0;
+}
+.earning-transactions ul li .followe_report {
+    display: block;
+}
+.earning-transactions {
+    filter: none;
+}
+.earnings-tabs ul .nav-item button {
+    padding: 9.5px 34px;
+}
+.earning-search{
+	margin-right: 50px;
+}
+
+.earning-search input {
+    border: 1px solid #F5F5F5 !important;
+	border-left: 2px solid #FF821C !important;
+    box-shadow: none !important;
+}
+input[type="search"] {
+    padding-left: 38px !important;
+}
+
