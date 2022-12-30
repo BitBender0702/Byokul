@@ -13,6 +13,9 @@ import { MultilingualComponent } from '../../sharedModule/Multilingual/multiling
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { CreatePostComponent } from '../../createPost/createPost.component';
+import { FollowUnFollowEnum } from 'src/root/Enums/FollowUnFollowEnum';
+import { FollowUnfollow } from 'src/root/interfaces/FollowUnfollow';
+import { PostService } from 'src/root/service/post.service';
 
 
 @Component({
@@ -33,8 +36,10 @@ import { CreatePostComponent } from '../../createPost/createPost.component';
     blockedDocument: boolean = false;
     isProfileGrid:boolean = true;
     userId!:string;
+    isFollowed!:boolean;
 
     private _userService;
+    private _postService;
     user:any;
 
     userLanguage!:AddUserLanguage;
@@ -46,6 +51,9 @@ import { CreatePostComponent } from '../../createPost/createPost.component';
     editUserForm!:FormGroup;
     languageForm!:FormGroup;
     updateUserDetails!:EditUserModel;
+    isOwner!:boolean;
+    followUnfollowUser!: FollowUnfollow;
+    followersLength!:number;
     @ViewChild('closeEditModal') closeEditModal!: ElementRef;
     @ViewChild('closeLanguageModal') closeLanguageModal!: ElementRef;
     @ViewChild('imageFile') imageFile!: ElementRef;
@@ -57,13 +65,13 @@ import { CreatePostComponent } from '../../createPost/createPost.component';
     fileToUpload= new FormData();
     translate!: TranslateService;
     
-    constructor(injector: Injector,private bsModalService: BsModalService,userService: UserService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
+    constructor(injector: Injector,private bsModalService: BsModalService,userService: UserService,postService: PostService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
       super(injector);
         this._userService = userService;
+        this._postService = postService;
     }
   
     ngOnInit(): void {
-
       this.loadingIcon = true;
       // this.blockUI();
       var selectedLang = localStorage.getItem("selectedLanguage");
@@ -72,8 +80,12 @@ import { CreatePostComponent } from '../../createPost/createPost.component';
       var id = this.route.snapshot.paramMap.get('userId');
       this.userId = id ?? '';
 
+      
+
       this._userService.getUserById(this.userId).subscribe((response) => {
         this.user = response;
+        this.followersLength = this.user.followers.length;
+        this.isOwnerOrNot();
         this.loadingIcon = false;
         // this.unblockUI();
         this.isDataLoaded = true;
@@ -105,7 +117,55 @@ import { CreatePostComponent } from '../../createPost/createPost.component';
         description: this.fb.control(''),
         contactEmail: this.fb.control('')
       });
+
+      this.InitializeFollowUnfollowUser();
+
     }
+
+    InitializeFollowUnfollowUser(){
+      this.followUnfollowUser = {
+        id: '',
+        isFollowed: false
+       };
+    }
+
+    isOwnerOrNot(){
+      var validToken = localStorage.getItem("jwt");
+        if (validToken != null) {
+          let jwtData = validToken.split('.')[1]
+          let decodedJwtJsonData = window.atob(jwtData)
+          let decodedJwtData = JSON.parse(decodedJwtJsonData);
+          if(decodedJwtData.sub == this.user.email){
+            this.isOwner = true;
+          }
+          else{
+            this.isOwner = false;
+            this.isFollowedOwnerOrNot(decodedJwtData.jti);
+          }
+
+        }
+        
+    }
+
+    isFollowedOwnerOrNot(userId:string){
+      var followers: any[] = this.user.followers;
+      var isFollowed = followers.filter(x => x.followerId == userId);
+      if(isFollowed.length != 0){
+        this.isFollowed = true;
+      }
+      else{
+        this.isFollowed = false;
+      }
+    //   const isFound = this.user.followers.some(element => {
+    //     if (element.followerId === 1) {
+    //       this.isFollowed = true;
+    //     }
+    //     else{
+    //     this.isFollowed = false;
+    //     }
+
+    // }
+  }
 
     captureLanguageId(event: any) {
       var languageId = event.id;
@@ -139,7 +199,7 @@ import { CreatePostComponent } from '../../createPost/createPost.component';
       this._userService.saveUserLanguages(this.userLanguage).subscribe((response:any) => {
         this.closeLanguagesModal();
         this.isSubmitted = true;
-        this.ngOnInit();
+        this.ngOnInit();     
   
       });
     }
@@ -156,9 +216,20 @@ import { CreatePostComponent } from '../../createPost/createPost.component';
       this.deleteLanguage.languageId = deletedLanguage;
     }
 
-    followUser(){
-      this._userService.saveUserFollower(this.user.id).subscribe((response) => {
-        console.log(response);
+    followUser(userId:string,from:string){
+      this.followUnfollowUser.id = userId;
+      if(from == FollowUnFollowEnum.Follow){
+        this.followersLength += 1;
+        this.isFollowed = true;
+        this.followUnfollowUser.isFollowed = true;
+      }
+      else{
+        this.followersLength -= 1; 
+        this.isFollowed = false;
+        this.followUnfollowUser.isFollowed = false;
+      }
+      this._userService.saveUserFollower(this.followUnfollowUser).subscribe((response) => {
+        this.InitializeFollowUnfollowUser();
       });
     }
 
@@ -296,4 +367,15 @@ openPostModal(): void {
     this.bsModalService.show(CreatePostComponent,{initialState});
 }
 
+pinUnpinPost(attachmentId:string,isPinned:boolean){
+  debugger
+  this._postService.pinUnpinPost(attachmentId,isPinned).subscribe((response) => {
+    this.ngOnInit();
+    console.log(response);
+  });
+
 }
+
+}
+
+

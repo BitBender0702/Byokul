@@ -18,6 +18,9 @@ import { CreatePostComponent } from '../../createPost/createPost.component';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BsModalService } from 'ngx-bootstrap/modal';
+import { FollowUnfollow } from 'src/root/interfaces/FollowUnfollow';
+import { FollowUnFollowEnum } from 'src/root/Enums/FollowUnFollowEnum';
+import { PostService } from 'src/root/service/post.service';
 
 // import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -30,6 +33,7 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 export class SchoolProfileComponent extends MultilingualComponent implements OnInit {
 
     private _schoolService;
+    private _postService;
     school:any;
     isProfileGrid:boolean = true;
     isOpenSidebar:boolean = false;
@@ -68,13 +72,13 @@ export class SchoolProfileComponent extends MultilingualComponent implements OnI
     deleteCertificate!: DeleteSchoolCertificate;
     EMAIL_PATTERN = '^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$';
     selectedCertificates:any;
-
+    isOwner!:boolean;
     teacherInfo:any[] = [];
-
-
-    // add/delete Teachers
     teachers:any;
     filteredTeachers!: any[];
+    followUnfollowSchool!: FollowUnfollow;
+    isFollowed!:boolean;
+    followersLength!:number;
     @ViewChild('closeEditModal') closeEditModal!: ElementRef;
     @ViewChild('closeTeacherModal') closeTeacherModal!: ElementRef;
     @ViewChild('closeLanguageModal') closeLanguageModal!: ElementRef;
@@ -83,22 +87,16 @@ export class SchoolProfileComponent extends MultilingualComponent implements OnI
 
 
     @ViewChild('createPostModal', { static: true }) createPostModal!: CreatePostComponent;
-
-    // deletedLanguageId!:string;
-
-    // For SchoolCertificate
     Certificates!: string[];
 
-    // isSchoolFollowed!:boolean;
-    constructor(injector: Injector,private bsModalService: BsModalService,private matDialog: MatDialog,public modalService: NgbModal,private route: ActivatedRoute,private domSanitizer: DomSanitizer,schoolService: SchoolService,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
+    constructor(injector: Injector,postService:PostService,private bsModalService: BsModalService,private matDialog: MatDialog,public modalService: NgbModal,private route: ActivatedRoute,private domSanitizer: DomSanitizer,schoolService: SchoolService,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
       super(injector);
         this._schoolService = schoolService;
-
-        // public modalService: NgbModal  in constructor
+        this._postService = postService;
     }
   
     ngOnInit(): void {
-
+      debugger
       this.loadingIcon = true;
       var selectedLang = localStorage.getItem("selectedLanguage");
       this.translate.use(selectedLang?? '');
@@ -106,11 +104,31 @@ export class SchoolProfileComponent extends MultilingualComponent implements OnI
       var id = this.route.snapshot.paramMap.get('schoolId');
       this.schoolId = id ?? '';
 
+      var schoolName = this.route.snapshot.paramMap.get('schoolName');
+
+      if(this.schoolId == ''){
+        this._schoolService.getSchoolByName(schoolName).subscribe((response) => {
+          this.schoolId = response.schoolId;
+          this._schoolService.getSchoolById(this.schoolId).subscribe((response) => {
+            this.school = response;
+            this.followersLength = this.school.schoolFollowers.length;
+            this.isOwnerOrNot();
+            this.loadingIcon = false;
+            this.isDataLoaded = true;
+          });
+        });
+      }
+      
+      else{
       this._schoolService.getSchoolById(this.schoolId).subscribe((response) => {
+        debugger
         this.school = response;
+        this.followersLength = this.school.schoolFollowers.length;
+        this.isOwnerOrNot();
         this.loadingIcon = false;
         this.isDataLoaded = true;
       });
+    }
 
       this._schoolService.getAccessibility().subscribe((response) => {
         this.accessibility = response;
@@ -181,18 +199,61 @@ export class SchoolProfileComponent extends MultilingualComponent implements OnI
         certificateId:''
        }
 
+      
+        this.followUnfollowSchool = {
+          id: '',
+          isFollowed: false
+         };
+  
 
-      //  this.loadingIcon = false;
     }
 
-    followSchool(){
-      this._schoolService.saveSchoolFollower(this.school.schoolId).subscribe((response) => {
+    isOwnerOrNot(){
+      var validToken = localStorage.getItem("jwt");
+        if (validToken != null) {
+          let jwtData = validToken.split('.')[1]
+          let decodedJwtJsonData = window.atob(jwtData)
+          let decodedJwtData = JSON.parse(decodedJwtJsonData);
+          if(decodedJwtData.sub == this.school.createdBy){
+            this.isOwner = true;
+          }
+          else{
+            this.isOwner = false;
+            this.isFollowedOwnerOrNot(decodedJwtData.jti);
+          }
+  
+        }
+        
+    }
+
+    isFollowedOwnerOrNot(userId:string){
+      var followers: any[] = this.school.schoolFollowers;
+      var isFollowed = followers.filter(x => x.userId == userId);
+      if(isFollowed.length != 0){
+        this.isFollowed = true;
+      }
+      else{
+        this.isFollowed = false;
+      }
+    }
+
+    followSchool(schoolId:string,from:string){
+      this.followUnfollowSchool.id = schoolId;
+      if(from == FollowUnFollowEnum.Follow){
+        this.followersLength += 1;
+        this.isFollowed = true;
+        this.followUnfollowSchool.isFollowed = true;
+      }
+      else{
+        this.followersLength -= 1; 
+        this.isFollowed = false;
+        this.followUnfollowSchool.isFollowed = false;
+      }
+      this._schoolService.saveSchoolFollower(this.followUnfollowSchool).subscribe((response) => {
         console.log(response);
         if(response.result == "success"){
           this.isSchoolFollowed = true;
         }
-        // here return if not work simply
-        // this.school = response;
       });
     }
 
@@ -521,5 +582,14 @@ private closeLanguagesModal(): void {
     };
     //var initialState = this.school.schoolId;
     this.bsModalService.show(CreatePostComponent,{initialState});
+}
+
+pinUnpinPost(attachmentId:string,isPinned:boolean){
+  debugger
+  this._postService.pinUnpinPost(attachmentId,isPinned).subscribe((response) => {
+    this.ngOnInit();
+    console.log(response);
+  });
+
 }
 }

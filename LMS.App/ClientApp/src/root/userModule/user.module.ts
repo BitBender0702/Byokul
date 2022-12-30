@@ -55,18 +55,19 @@ const routes: Routes = [
   {
     path: 'chat',component:ChatComponent
   },
+  {
+    path: 'chat/:userId',component:ChatComponent
+  },
 
   {
     path: 'schoolProfile/:schoolId',component:SchoolProfileComponent
   },
-  // {
-  //   path: 'schoolProfile/:schoolId',component:SchoolProfileComponent,resolve:{schoolProfile : SchoolResolverService}
-  // },
-
   {
     path: 'classProfile/:classId',component:ClassProfileComponent
   },
-
+  {
+    path: 'school/:schoolName/:className',component:ClassProfileComponent
+  },
   {
     path: 'myEarnings',component:MyEarningsComponent
   },

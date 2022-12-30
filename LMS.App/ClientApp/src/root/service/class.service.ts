@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core"; 
 import { Router } from "@angular/router";
 import { Observable } from "rxjs";
@@ -86,6 +86,16 @@ export class ClassService{
 
     getSelectedSchool(schoolId:string): Observable<any> {
         return this.http.get(`${this.apiUrl}/school/getBasicSchoolInfo` + '?schoolId=' + schoolId);
+    }
+
+    getClassByName(className:any,schoolName:any):Observable<any>{
+        let queryParams = new HttpParams().append("className",className).append("schoolName",schoolName);
+        return this.http.get(`${this.apiUrl}/class/getClassByName`, {params:queryParams});
+    }
+
+    isClassNameExist(className:string){
+        debugger
+        return this.http.get(`${this.apiUrl}/class/isClassNameExist` + '?className=' + className);
     }
 
 }

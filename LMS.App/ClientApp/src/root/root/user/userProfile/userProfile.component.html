@@ -7,7 +7,7 @@
       <div class="create-post-header d-flex justify-content-between d-none d-xl-flex">
         <button (click)="back()" type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
             src="../../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
-        <button (click)="openPostModal()" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44">{{'CreatePost'| translate }}</button>
+        <button *ngIf="isOwner" (click)="openPostModal()" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44">{{'CreatePost'| translate }}</button>
       </div>
       <div class="live-header d-flex align-items-center justify-content-between">
         <button (click)="back()" type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark  d-xl-none"><img
@@ -32,17 +32,19 @@
                 src="../../../../assets/images/green-verified.svg" /></span></h2>
           <div class="position-relative">
             <div class="followers_name d-inline-block font_16 mr-_24"><img src="../../../../assets/images/followers.svg" /> {{'Followers'| translate }}: <b
-                class="fw_700"><a style="text-decoration: none;cursor: pointer;color: black;" [routerLink]="['/user/userFollowers', user.id]">{{user.followers}}</a></b></div>
+                class="fw_700"><a style="text-decoration: none;cursor: pointer;color: black;" [routerLink]="['/user/userFollowers', user.id]">{{followersLength}}</a></b></div>
             <div class="followers_name d-inline-block font_16 mr-_24"><img src="../../../../assets/images/students-icon.svg" /> {{'Followings'| translate }}:
               <b class="fw_700">{{user.followings}}</b>
             </div>
             <div class="followers_name d-inline-block font_16 mr-_24"><img src="../../../../assets/images/Edit-dark.svg" /> {{'Post'| translate }}: <b
                 class="fw_700"></b></div>
-            <button (click)="followUser()" type="button"
+            <button *ngIf="!isOwner && !isFollowed" (click)="followUser(user.id,'Follow')" type="button"
               class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn follow-btn">{{'Follow'| translate }}</button>
-            <button type="button"
+              <button *ngIf="!isOwner && isFollowed" (click)="followUser(user.id,'UnFollow')" type="button"
+              class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn follow-btn">{{'UnFollow'| translate }}</button>
+            <button  *ngIf="!isOwner" type="button" [routerLink]="['/user/chat', user.id]"
               class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn me-0 minw-142">{{'Message'| translate }}</button>
-            <button (click)="getUserDetails(user.id)" class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins" data-bs-toggle="modal"
+            <button *ngIf="isOwner" (click)="getUserDetails(user.id)" class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins" data-bs-toggle="modal"
               data-bs-target="#editUser"><img src="../../../../assets/images/Setting-solid-dark.svg" class="me-2" /> {{'EditProfile'| translate }}
               </button>
           </div>
@@ -53,33 +55,33 @@
       <div class="teacher-tags tag-box hover-tags">
         <div class="teacher-tags tag-box mt-0  hover-tags">
           <div class="teacher-content font_14 d-inline-block"><img src="../../../../assets/images/dark-star.svg" /> {{'Sertificates'| translate }}</div>
-          <span class="custom-tag">Sertificate 1 <button
+          <span class="custom-tag">Sertificate 1 <button *ngIf="isOwner"
               class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
                 src="../../../../assets/images/cross-sm-light.svg" /></button></span>
         </div>
         <div class="teacher-tags tag-box mt-0  hover-tags">
           <div class="teacher-content font_14 d-inline-block"><img src="../../../../assets/images/Volume-Down.svg" /> {{'Languages'| translate }}</div>
 
-          <span *ngFor="let item of user.languages;" class="custom-tag">{{item.name}}<button (click)="getDeletedLanguage(item.id)" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#delete-userLanguage"><img
-            src="../../../../assets/images/cross-sm-light.svg" /></button></span>
+          <span *ngFor="let item of user.languages;" class="custom-tag">{{item.name}}<button (click)="getDeletedLanguage(item.id)" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#delete-userLanguage">
+            <img *ngIf="isOwner" src="../../../../assets/images/cross-sm-light.svg" /></button></span>
   
-          <span class="custom-tag">Add Languages <button (click)="resetLanguageModal()" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#add-language"><img
-            src="../../../../assets/images/school/plus-light.svg" /></button>
+          <span *ngIf="isOwner" class="custom-tag">Add Languages <button (click)="resetLanguageModal()" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#add-language">
+            <img *ngIf="isOwner" src="../../../../assets/images/school/plus-light.svg" /></button>
           </span>
           
         </div>
         <div class="teacher-tags tag-box mt-0  hover-tags">
           <div class="teacher-content font_14 d-inline-block"><img src="../../../../assets/images/book.svg" /> {{'Student'| translate }}</div>
 
-          <span *ngFor="let item of user.schoolsAsStudent;" class="custom-tag">{{item.schoolName}}<button class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#delete-classStudent"><img
-            src="../../../../assets/images/cross-sm-light.svg" /></button></span>
+          <span *ngFor="let item of user.schoolsAsStudent;" class="custom-tag">{{item.schoolName}}<button class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#delete-classStudent">
+            <img *ngIf="isOwner" src="../../../../assets/images/cross-sm-light.svg" /></button></span>
 
         </div>
 
         <div class="teacher-content font_14 d-inline-block"><img src="../../../../assets/images/bag-dark.svg" /> {{'Teacher'| translate }}</div>
 
-        <span *ngFor="let item of user.schoolsAsTeacher;" class="custom-tag">{{item.schoolName}}<button class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#delete-classTeacher"><img
-          src="../../../../assets/images/cross-sm-light.svg" /></button></span>
+        <span *ngFor="let item of user.schoolsAsTeacher;" class="custom-tag">{{item.schoolName}}<button class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#delete-classTeacher">
+          <img *ngIf="isOwner" src="../../../../assets/images/cross-sm-light.svg" /></button></span>
 
       </div>
       
@@ -91,7 +93,7 @@
       </div>
       <hr class="hr-gray" />
       <div class="school-profile-tabs d-flex align-content-center justify-content-end">
-        <div class="button-list-grid">
+        <div>
           <button [ngClass]="isProfileGrid ? 'btn border-btn active d-inline-flex align-items-center justify-content-center' : 'btn border-btn d-inline-flex align-items-center justify-content-center'" (click)="profileGrid()" type="button"
             id="list-btn">
             <img src="../../../../assets/images/Filter.svg" />
@@ -128,9 +130,16 @@
                                 <button type="button" class="view font_12 bg-transparent border-0 text-light">
                                     <img src="../../../../assets/images/eye-light.svg" /> 954
                                 </button>
-                                <button type="button" class="pinned bg-transparent border-0">
+                                <!-- here is pinned for -->
+                                  <button *ngIf="postAttach.isPinned" (click)="pinUnpinPost(postAttach.id,false)" type="button" class="pinned bg-transparent border-0">
                                     <img src="../../../../assets/images/pinned-light.svg" />
                                 </button>
+                                <button *ngIf="!postAttach.isPinned" (click)="pinUnpinPost(postAttach.id,true)" type="button" class="pinned bg-transparent border-0">
+                                  <img src="../../../../assets/images/pinned-gray.svg" />
+                              </button>
+                                <!-- <button (click)="pinUnpinPost(postAttach.id)" type="button" class="pinned bg-transparent border-0">
+                                    <img src="../../../../assets/images/pinned-light.svg" />
+                                </button> -->
                             </div>
                             <div class="feed-name font_14 text_sec1">
                               <div *ngIf="postAttach.post.postAuthorType == 1">

@@ -23,47 +23,47 @@ export class AdminService{
     }
 
     getRegUsers():Observable<any>{
-        return this.http.get(`${this.apiUrl}/admin/getRegisteredUsers`);
+        return this.http.get(`${this.apiUrl}/admins/getRegisteredUsers`);
     }
 
     banUnbanUser(banUser:BanUnbanUsers):Observable<any>{
-        return this.http.post(`${this.apiUrl}/admin/banUser`,banUser);
+        return this.http.post(`${this.apiUrl}/admins/banUser`,banUser);
     }
 
     varifyUser(verifyUser:VarifyUsers):Observable<any>{
-        return this.http.post(`${this.apiUrl}/admin/varifyUser`,verifyUser);
+        return this.http.post(`${this.apiUrl}/admins/varifyUser`,verifyUser);
     }
 
     getRegSchools():Observable<any>{
-        return this.http.get(`${this.apiUrl}/admin/getRegisteredSchools`);
+        return this.http.get(`${this.apiUrl}/admins/getRegisteredSchools`);
     }
 
     banUnbanSchool(banSchool:BanUnbanSchools):Observable<any>{
-        return this.http.post(`${this.apiUrl}/admin/banSchool`,banSchool);
+        return this.http.post(`${this.apiUrl}/admins/banSchool`,banSchool);
     }
 
     varifySchool(verifySchool:VerifySchools):Observable<any>{
-        return this.http.post(`${this.apiUrl}/admin/varifySchool`, verifySchool);
+        return this.http.post(`${this.apiUrl}/admins/varifySchool`, verifySchool);
     }
 
     getRegClasses():Observable<any>{
-        return this.http.get(`${this.apiUrl}/admin/getRegisteredClasses`);
+        return this.http.get(`${this.apiUrl}/admins/getRegisteredClasses`);
     }
 
     enableDisableClass(enableClass:EnableDisableClassCourse):Observable<any>{
-        return this.http.post(`${this.apiUrl}/admin/disableClass`,enableClass);
+        return this.http.post(`${this.apiUrl}/admins/disableClass`,enableClass);
     }
 
     getRegCourses():Observable<any>{
-        return this.http.get(`${this.apiUrl}/admin/getRegisteredCourses`);
+        return this.http.get(`${this.apiUrl}/admins/getRegisteredCourses`);
     }
 
     enableDisableCourse(enableCourse:EnableDisableClassCourse):Observable<any>{
-        return this.http.post(`${this.apiUrl}/admin/disableCourse`,enableCourse);
+        return this.http.post(`${this.apiUrl}/admins/disableCourse`,enableCourse);
     }
 
     getDashboardDetails():Observable<any>{
-        return this.http.get(`${this.apiUrl}/admin/getDashboardDetails`);
+        return this.http.get(`${this.apiUrl}/admins/getDashboardDetails`);
     }
 
 

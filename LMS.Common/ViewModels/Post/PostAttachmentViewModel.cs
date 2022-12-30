@@ -24,6 +24,7 @@ namespace LMS.Common.ViewModels.Post
         public SchoolViewModel School { get; set; }
         public ClassViewModel Class { get; set; }
         public UserDetailsViewModel User { get; set; }
+        public bool IsPinned { get; set; }
 
     }
 }

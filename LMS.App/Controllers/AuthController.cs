@@ -11,6 +11,7 @@ namespace LMS.App.Controllers
     [Route("auth")]
     public class AuthController : BaseController
     {
+        private string Token;
         private readonly SignInManager<User> _signInManager;
         private readonly UserManager<User> _userManager;
         private readonly IAuthService _authService;
@@ -29,6 +30,7 @@ namespace LMS.App.Controllers
             var result = await _authService.AuthenticateUser(loginViewModel);
             if (result != null)
             {
+                Token = result;
                 return Ok(new { token = result });
             }
             return Ok(new { token = ""});
@@ -99,9 +101,8 @@ namespace LMS.App.Controllers
                 Email = updatePasswordViewModel.Email,
                 Password = updatePasswordViewModel.CurrentPassword
             });
-            var okResult = response as OkObjectResult;
-            var isValid = okResult.Value.GetType().GetProperty("token");
-            if (isValid != null)
+            var token = Token;
+            if (token != null)
             {
                 var result = await _authService.UpdatePassword(updatePasswordViewModel);
                 if (result.Succeeded)

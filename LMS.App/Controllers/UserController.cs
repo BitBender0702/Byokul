@@ -1,4 +1,5 @@
-﻿using LMS.Common.ViewModels.User;
+﻿using LMS.Common.ViewModels.Common;
+using LMS.Common.ViewModels.User;
 using LMS.Data.Entity;
 using LMS.Services;
 using Microsoft.AspNetCore.Http;
@@ -39,17 +40,13 @@ namespace LMS.App.Controllers
             return Ok(response);
         }
 
-        [Route("saveUserFollower")]
+        [Route("followUnfollowUser")]
         [HttpPost]
-        public async Task<IActionResult> SaveUserFollower(string userId)
+        public async Task<IActionResult> FollowUnFollowUser([FromBody] FollowUnFollowViewModel model)
         {
             var followerId = await GetUserIdAsync(this._userManager);
-            var response = await _userService.SaveUserFollower(userId, followerId);
-            if (response)
-            {
-                return Ok(new { result = "success" });
-            }
-            return Ok(new { result = "failed" });
+            var response = await _userService.FollowUnFollowUser(model, followerId);
+            return Ok(response);
         }
 
         [Route("saveUserLanguages")]

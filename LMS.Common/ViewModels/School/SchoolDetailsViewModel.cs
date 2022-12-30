@@ -33,7 +33,7 @@ namespace LMS.Common.ViewModels.School
         public bool IsVarified { get; set; }
         public StatusEnum Status { get; set; }
         public IEnumerable<SchoolCertificateViewModel> SchoolCertificates { get; set; }
-        public int SchoolFollowers { get; set; }
+        public IEnumerable<SchoolFollowerViewModel> SchoolFollowers { get; set; }
         public IEnumerable<UserViewModel> Users { get; set; }
         public int Students { get; set; }
         public IEnumerable<TeacherViewModel> Teachers { get; set; }

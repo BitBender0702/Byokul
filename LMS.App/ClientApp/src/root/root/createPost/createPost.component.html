@@ -11,7 +11,7 @@
       data-bs-target="#add-attachment">Create Post</button>
       <!-- <div *ngIf="isDataLoaded"> -->
       <div appBsModal  bsModal #createPostModal="bs-modal" class="modal fade edit-school-modal show d-block" id="create-post" tabindex="-1"
-        aria-labelledby="create-post" aria-hidden="true" area-modal="true" [config]="{backdrop: 'static'}">
+        aria-labelledby="create-post" aria-hidden="true" area-modal="true">
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
             <div class="modal-header border-0 justify-content-center position-relative">
@@ -193,14 +193,14 @@
                       <button (click)="removeTags(tag)" class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
                         src="../../../assets/images/cross-sm-light.svg"></button></span>
                   </div>
+
                   <div class="teacher-tags hashtag_post tag-boxattachment-outer mt-1 mb-0 hover-tags">
-                      <button *ngFor="let item of this.attachment" type="button" class="custom-tag"><img src="../../../assets/images/Paper-gray.svg" class="me-1" /> {{item.name}}</button>
-                    <!-- <button type="button" class="custom-tag"><img src="../../../assets/images/Paper-gray.svg" class="me-1" /> Attachment
-                      1</button>
-                    <button type="button" class="custom-tag"><img src="../../../assets/images/Paper-gray.svg" class="me-1" /> Attachment
-                      2</button>
-                    <button type="button" class="custom-tag"><img src="../../../assets/images/Paper-gray.svg" class="me-1" /> Attachment
-                      3</button> -->
+                    <span *ngFor="let item of this.attachment" class="custom-tag"><img src="../../../assets/images/Paper-gray.svg" class="me-1 dark-svg"> <img
+                     src="../../../assets/images/Paper-light.svg" class="me-1 light-svg"> {{item.name}}
+                    <button (click)="removeAttachment(item)" class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                       src="../../../assets/images/cross-sm-light.svg">
+                    </button>
+                  </span>
                   </div>
 
                   <div
@@ -333,7 +333,7 @@
                   <div class="dropzone-wrapper mb-4 reels-uploader-img">
                     <div class="dropzone-desc">
                       <i class="glyphicon glyphicon-download-alt"></i>
-                      <p class="text-center fw_400">Drop image or <b>Clock to Browse</b> </p>
+                      <p class="text-center fw_400">Drop image or <b>Click to Browse</b> </p>
                     </div>
                     <input formControlName="reelsVideo" type="file" name="img_logo" (change)="handleReels($event)" class="dropzone" accept="video/*">
                   </div>
@@ -427,7 +427,7 @@
             </span>
 
         </div>
-        <small class="p-error" style="color: orange;margin-left: 200px;"
+        <small class="p-error" style="color: orange;margin-left: 135px;"
            *ngIf="(!isTagsValid)"> Please select atleast one tag
         </small>
         <div
@@ -458,7 +458,7 @@
          <div class="dropzone-wrapper mb-4">
           <div class="dropzone-desc">
             <i class="glyphicon glyphicon-download-alt"></i>
-            <p class="text-center fw_400"><b>Clock to Browse</b></p>
+            <p class="text-center fw_400"><b>Click to Browse</b></p>
           </div>
           <input type="file" name="img_logo" class="dropzone" (change)="handleAttachmentInput($event)" accept="pdf/*">
          </div>
@@ -468,7 +468,7 @@
            <input type="text" class="form-control" placeholder="{{'TypeToAdd'| translate }}">
          </div>
          <div class="teacher-tags hashtag_post tag-boxattachment-outer mt-1 mb-0 hover-tags">
-                 <span *ngFor="let item of this.attachment" class="custom-tag"><img src="../../../assets/images/Paper-gray.svg" class="me-1 dark-svg"> <img
+                 <span *ngFor="let item of this.initialAttachment" class="custom-tag"><img src="../../../assets/images/Paper-gray.svg" class="me-1 dark-svg"> <img
                   src="../../../assets/images/Paper-light.svg" class="me-1 light-svg"> {{item.name}}
                  <button (click)="removeAttachment(item)" class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
                     src="../../../assets/images/cross-sm-light.svg">
@@ -510,7 +510,7 @@
            <input type="text" class="form-control" placeholder="{{'TypeToAdd'| translate }}">
          </div>
          <div class="teacher-tags hashtag_post tag-boxattachment-outer mt-1 mb-0 hover-tags">
-                 <span *ngFor="let item of this.attachment" class="custom-tag"><img src="../../../assets/images/Paper-gray.svg" class="me-1 dark-svg"> <img
+                 <span *ngFor="let item of this.initialAttachment" class="custom-tag"><img src="../../../assets/images/Paper-gray.svg" class="me-1 dark-svg"> <img
                   src="../../../assets/images/Paper-light.svg" class="me-1 light-svg"> {{item.name}}
                  <button (click)="removeAttachment(item)" class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
                     src="../../../assets/images/cross-sm-light.svg">
@@ -548,7 +548,7 @@
           <input [(ngModel)]="tags" (keyup.enter)="onEnter(tags)" type="text" class="form-control" placeholder="{{'TypeToAdd'| translate }}">
         </div>
         <div class="teacher-tags tag-box hashtag_post mt-4 mb-2 hover-tags">
-          <span *ngFor="let tag of tagLists" class="custom-tag">{{'#' + tag}} 
+          <span *ngFor="let tag of initialTagList" class="custom-tag">{{'#' + tag}} 
             <button (click) = "removeTags(tag)" class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
                 src="../../../assets/images/cross-sm-light.svg"></button>
           </span>
@@ -568,6 +568,9 @@
     </div>
   </div>
 </ng-template>
+
+<loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
+
  <!-- </div>
 
 

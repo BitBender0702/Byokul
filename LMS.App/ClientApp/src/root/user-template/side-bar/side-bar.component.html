@@ -18,7 +18,7 @@
           </ul>
         </div>
       </li>
-      <li class="d-inline-block"><button type="button "
+      <li class="d-inline-block"><button type="button"
           class="notification-btn position-relative border-0 bg-transparent"><img src="../../../assets/images/school/chat-icon.svg" />
           <span
             class="badge rounded-circle d-inline-flex align-items-center justify-content-center fw_700 font_12">3</span></button>
@@ -68,7 +68,7 @@
 
                 <div *ngIf="sidebarInfo !== undefined && sidebarInfo.followedSchools && sidebarInfo.followedSchools?.length > 0">
                  <div  *ngFor="let item of sidebarInfo.followedSchools;">
-                   <div class="school-name d-flex align-items-center font_16">
+                   <div *ngIf="!item.isBan" class="school-name d-flex align-items-center font_16">
                      <div class="school-img rounded-circle me-3">
                       <img [src]="item.avatar" />
                      </div>
@@ -98,7 +98,7 @@
 
                 <div *ngIf="sidebarInfo !== undefined && sidebarInfo.followedClasses && sidebarInfo.followedClasses?.length">
                 <div  *ngFor="let item of sidebarInfo.followedClasses;">
-                  <div class="school-name d-flex align-items-center font_16">
+                  <div *ngIf="!item.isEnable" class="school-name d-flex align-items-center font_16">
                     <div class="school-img rounded-circle me-3">
                       <img [src]="item.avatar" />
                     </div>
@@ -127,7 +127,7 @@
 
                 <div *ngIf="sidebarInfo !== undefined && sidebarInfo.followedCourses && sidebarInfo.followedCourses?.length">
                 <div *ngFor="let item of sidebarInfo.followedCourses;">
-                  <div class="school-name d-flex align-items-center font_16">
+                  <div *ngIf="!item.isEnable" class="school-name d-flex align-items-center font_16">
                     <div class="school-img rounded-circle me-3">
                       <img src="../../../assets/images/school/school-1.png" />
                     </div>
@@ -160,7 +160,7 @@
                
                 <div *ngIf="sidebarInfo !== undefined && sidebarInfo.ownedSchools && sidebarInfo.ownedSchools?.length">
                 <div  *ngFor="let item of sidebarInfo.ownedSchools;">
-                  <div class="school-name d-flex align-items-center font_16">
+                  <div *ngIf="!item.isBan" class="school-name d-flex align-items-center font_16">
                     <div class="school-img rounded-circle me-3">
                       <img [src]="item.avatar" />
                     </div>
@@ -190,7 +190,7 @@
                 
                 <div *ngIf="sidebarInfo !== undefined && sidebarInfo.ownedClasses && sidebarInfo.ownedClasses?.length">
                 <div  *ngFor="let item of sidebarInfo.ownedClasses;">
-                  <div class="school-name d-flex align-items-center font_16">
+                  <div *ngIf="!item.isEnable" class="school-name d-flex align-items-center font_16">
                     <div class="school-img rounded-circle me-3">
                       <img [src]="item.avatar" />
                     </div>
@@ -219,7 +219,7 @@
                 
                 <div *ngIf="sidebarInfo !== undefined && sidebarInfo != undefined && sidebarInfo.ownedCourses?.length">
                 <div  *ngFor="let item of sidebarInfo.ownedCourses;">
-                  <div class="school-name d-flex align-items-center font_16">
+                  <div *ngIf="!item.isEnable" class="school-name d-flex align-items-center font_16">
                     <div class="school-img rounded-circle me-3">
                       <img src="../../../assets/images/school/school-4.png" />
                     </div>

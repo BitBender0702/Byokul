@@ -156,5 +156,20 @@ namespace LMS.App.Controllers
             return Ok(response);
         }
 
+        [Route("isClassNameExist")]
+        [HttpGet]
+        public async Task<IActionResult> IsClassNameExist(string className)
+        {
+            return Ok(await _classService.IsClassNameExist(className));
+        }
+
+        [Route("getClassByName")]
+        [HttpGet]
+        public async Task<IActionResult> GetClassByName(string className,string schoolName)
+        {
+            var response = await _classService.GetClassByName(className,schoolName);
+            return Ok(response);
+        }
+
     }
 }

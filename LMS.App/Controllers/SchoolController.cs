@@ -1,4 +1,5 @@
-﻿using LMS.Common.ViewModels.Post;
+﻿using LMS.Common.ViewModels.Common;
+using LMS.Common.ViewModels.Post;
 using LMS.Common.ViewModels.School;
 using LMS.Data.Entity;
 using LMS.Services;
@@ -62,6 +63,8 @@ namespace LMS.App.Controllers
         [Route("getSchoolById")]
         [HttpGet]
         public async Task<IActionResult> GetSchoolById(Guid schoolId)
+        
+        
         {
             var userId = await GetUserIdAsync(this._userManager);
             var response = await _schoolService.GetSchoolById(schoolId, userId);    
@@ -99,17 +102,13 @@ namespace LMS.App.Controllers
             return Ok(await _schoolService.LanguageList());
         }
 
-        [Route("saveSchoolFollower")]
+        [Route("followUnfollowSchool")]
         [HttpPost]
-        public async Task<IActionResult> SaveSchoolFollower(Guid schoolId)
+        public async Task<IActionResult> FollowUnfollowSchool([FromBody] FollowUnFollowViewModel model)
         {
-            var userId = await GetUserIdAsync(this._userManager);
-            var response = await _schoolService.SaveSchoolFollower(schoolId, userId);
-            if (response)
-            {
-                return Ok(new { result = "success" });
-            }
-            return Ok(new { result = "failed" });
+            var followerId = await GetUserIdAsync(this._userManager);
+            var response = await _schoolService.FollowUnFollowSchool(model, followerId);
+            return Ok(response);
         }
 
 
@@ -191,6 +190,21 @@ namespace LMS.App.Controllers
         public async Task<IActionResult> SchoolFollowers(Guid schoolId)
         {
             return Ok(await _schoolService.GetSchoolFollowers(schoolId));
+        }
+
+        [Route("isSchoolNameExist")]
+        [HttpGet]
+        public async Task<IActionResult> IsSchoolNameExist(string schoolName)
+        {
+            return Ok(await _schoolService.IsSchoolNameExist(schoolName));
+        }
+
+        [Route("getSchoolByName")]
+        [HttpGet]
+        public async Task<IActionResult> GetSchoolByName(string schoolName)
+        {
+            var response = await _schoolService.GetSchoolByName(schoolName);
+            return Ok(response);
         }
     }
 }

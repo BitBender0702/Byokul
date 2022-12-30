@@ -51,5 +51,14 @@ namespace LMS.App.Controllers
             return Ok(response);
         }
 
+        [Route("pinUnpinPost")]
+        [HttpPost]
+        public async Task<IActionResult> PinUnpinPost(Guid attachmentId, bool isPinned)
+        {
+            var response = await _postService.PinUnpinPost(attachmentId, isPinned);
+            return Ok(response);
+        }
+
+
     }
 }

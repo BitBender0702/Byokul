@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core"; 
 import { Router } from "@angular/router";
 import { Observable } from "rxjs";
@@ -36,10 +36,14 @@ export class PostService{
     }
 
     createPost(credentials:any): Observable<any> {
-        debugger
         for(var pair of credentials.entries()) {
             console.log(pair[0]+ ', '+ pair[1]);
          }
         return this.http.post(`${this.apiUrl}/posts/savePost`, credentials);
+    }
+
+    pinUnpinPost(attachmentId:any,isPinned:boolean): Observable<any> {
+        let queryParams = new HttpParams().append("attachmentId",attachmentId).append("isPinned",isPinned);
+        return this.http.post(`${this.apiUrl}/posts/pinUnpinPost`,null, {params:queryParams});
     }
 }

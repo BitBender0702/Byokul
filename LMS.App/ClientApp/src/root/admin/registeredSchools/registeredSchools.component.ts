@@ -22,6 +22,7 @@ export class RegisteredSchoolsComponent implements OnInit {
   verifySchool!: VerifySchools;
   loadingIcon:boolean = false;
   isDataLoaded:boolean = false;
+  myPaginationString!:string;
 
 
   

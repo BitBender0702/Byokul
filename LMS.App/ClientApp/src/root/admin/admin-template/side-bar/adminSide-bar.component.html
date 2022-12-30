@@ -4,9 +4,9 @@
         <div class="text-center">
           <a href="" class="main-logo"><img src="../../../assets/images/logo.svg" /></a>
         </div>
-        <div class="d-flex text-center notification-box justify-content-center">
-          <ul class="list-unstyled d-flex ">
-            <li class="d-inline-block">
+        <!-- <div class="d-flex text-center notification-box justify-content-center">
+          <ul class="list-unstyled d-flex "> -->
+            <!-- <li class="d-inline-block">
               <div class="dropdown">
                 <button class="bg-transparent dropdown-toggle rounded-circle" type="button" data-bs-toggle="dropdown"
                   aria-expanded="false">
@@ -27,26 +27,39 @@
                 class="notification-btn position-relative border-0 bg-transparent"><img src="../../../assets/images/school/Notification.svg" />
                 <span
                   class="badge rounded-circle d-inline-flex align-items-center justify-content-center fw_700 font_12">3</span></button>
-            </li>
+            </li> -->
       
       
-          </ul>
-        </div>
-        <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400">{{'MyEarnings'| translate }} $ </button>
+          <!-- </ul>
+        </div> -->
+        <!-- <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400">{{'MyEarnings'| translate }} $ </button> -->
         <hr class="earning-hr" />
 
-        <div style="margin-left: 60px;">
+        <div style="margin-left: 10px;">
+          <div class="school-name d-flex align-items-center font_16">
+            <span class="bg-transparent rounded-circle comment-post-user rounded-circle image"><img src="../../../../assets/images/dashboardLogo.png" style="max-height: 100%;"/>
+            </span>
+            <a [routerLink]="['/administration/adminHome']" class="routeLink">{{'Dashboard'| translate }}</a>
+          </div>
         <div class="school-name d-flex align-items-center font_16">
-          <a [routerLink]="['/admin/registeredUsers']" class="routeLink">{{'RegisteredUsers'| translate }}</a>
+          <span class="bg-transparent rounded-circle comment-post-user rounded-circle image"><img src="../../../../assets/images/userLogo2.png" style="max-height: 100%;"/>
+          </span>
+          <a [routerLink]="['/administration/registeredUsers']" class="routeLink">{{'RegisteredUsers'| translate }}</a>
         </div>
         <div class="school-name d-flex align-items-center font_16">
-          <a [routerLink]="['/admin/registeredSchools']" class="routeLink">{{'SchoolList'| translate }}</a>
+          <span class="bg-transparent rounded-circle comment-post-user rounded-circle image"><img src="../../../../assets/images/schoolLogo2.png" style="max-height: 100%;"/>
+          </span>
+          <a [routerLink]="['/administration/registeredSchools']" class="routeLink">{{'SchoolList'| translate }}</a>
         </div>
         <div class="school-name d-flex align-items-center font_16">
-          <a [routerLink]="['/admin/registeredClasses']" class="routeLink">{{'ClassList'| translate }}</a>
+          <span class="bg-transparent rounded-circle comment-post-user rounded-circle image"><img src="../../../../assets/images/classLogo.png" style="max-height: 96%;"/>
+          </span>
+          <a [routerLink]="['/administration/registeredClasses']" class="routeLink">{{'ClassList'| translate }}</a>
         </div>
         <div class="school-name d-flex align-items-center font_16">
-          <a [routerLink]="['/admin/registeredCourses']" class="routeLink">{{'CourseList'| translate }}</a>
+          <span class="bg-transparent rounded-circle comment-post-user rounded-circle image"><img src="../../../../assets/images/classLogo.png" style="max-height: 96%;"/>
+          </span>
+          <a [routerLink]="['/administration/registeredCourses']" class="routeLink">{{'CourseList'| translate }}</a>
         </div>
       </div>
 

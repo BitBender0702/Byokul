@@ -4,14 +4,14 @@
         <adminSide-bar></adminSide-bar> 
         <div class="main_content">
           <div class="create-post-header d-flex justify-content-between d-none d-xl-flex align-items-center">
-            <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
+            <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark invisible"><img
                 src="../../../../assets/images/arrow-left.svg" />{{'Back'| translate }}</button>
                 <h2 class="font_22 fw_700 f-monteserrat mb-md-0">{{'CourseList'| translate }}</h2>
-            <button type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 invisible" data-bs-toggle="modal"
-              data-bs-target="#create-post">{{'CreatePost'| translate }}</button>
+            <button [routerLink]="['/user/auth/logout']" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44" data-bs-toggle="modal"
+              data-bs-target="#create-post">{{'Logout'| translate }}</button>
           </div>
           <div class="live-header d-flex align-items-center justify-content-between">
-            <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark  d-xl-none"><img
+            <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark  d-xl-none invisible"><img
                 src="../../../../assets/images/arrow-left.svg" />{{'Back'| translate }}</button>
             <span class="logo_mobile d-xl-none">
               <img src="../../../../assets/images/logo.svg" />
@@ -24,19 +24,19 @@
             </div>
           </div>
       
-   <div class="card">
-     <p-table #dt [value]="registeredCourses" [rows]="10" [paginator]="true" [globalFilterFields]="['courseName']"
+   <div class="card table">
+     <p-table #dt [value]="registeredCourses" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]" [globalFilterFields]="['courseName']"
          [(selection)]="selectedCourses" [rowHover]="true" dataKey="id"
          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
-         <ng-template pTemplate="caption">
+         <!-- <ng-template pTemplate="caption">
              <div class="p-d-flex p-ai-center p-jc-between">
                  <h5 class="p-m-0">{{'ManageCourses'| translate }}</h5>
              </div>
-         </ng-template>
+         </ng-template> -->
          <ng-template pTemplate="header">
              <tr>
                  <th pSortableColumn="courseName">{{'CourseName'| translate }} <p-sortIcon field="courseName"></p-sortIcon></th>
-                 <th pSortableColumn="school?.schoolName">{{'ScholName'| translate }} <p-sortIcon field="school?.schoolName"></p-sortIcon></th>
+                 <th pSortableColumn="school?.schoolName">{{'SchoolName'| translate }} <p-sortIcon field="school?.schoolName"></p-sortIcon></th>
                  <th pSortableColumn="serviceType?.type">{{'ServiceType'| translate }} <p-sortIcon field="serviceType?.type"></p-sortIcon></th>
                  <th pSortableColumn="accessibility?.name">{{'Accessibility'| translate }} <p-sortIcon field="accessibility?.name"></p-sortIcon></th>
                  <th pSortableColumn="price">{{'Price'| translate }} <p-sortIcon field="price"></p-sortIcon></th>
@@ -49,8 +49,11 @@
          </ng-template>
          <ng-template pTemplate="body" let-course>
              <tr>
-                 <td (click)="viewCourseProfile(course.courseId)">{{course.courseName}}</td>
-                 <td>{{course.school?.schoolName}}</td>
+                 <td>
+                  <img *ngIf="course.avatar != null" class="school-profile-icon rounded-circle user-profile-header image" [src]="course.avatar"/>
+                  <img *ngIf="course.avatar == null" class="school-profile-icon rounded-circle user-profile-header image" src="../../../assets/images/classLogo.png"/>{{course.courseName}}</td>
+                 <td>
+                  {{course.school?.schoolName}}</td>
                  <td>{{course.serviceType?.type}}</td>
                  <td>{{course.accessibility?.name}}</td>
                  <td>{{course.price}}</td>
@@ -59,8 +62,8 @@
                  <td>{{course.createdBy}}</td>
                 
                  <td>
-                   <button *ngIf="!course.isEnable" (click)="getDisableCourseDetails(course.courseId,'Enable')" data-bs-toggle="modal" data-bs-target="#disable-course" pButton pRipple icon="pi pi-pencil" class="btn custom-btn primary_btn earning-btn fw_400 h_44 pe-5 ps-5 mt-2 mb-2">{{'Disable'| translate }}</button>
-                   <button *ngIf="course.isEnable" (click)="getDisableCourseDetails(course.courseId,'Disable')" data-bs-toggle="modal" data-bs-target="#disable-course" pButton pRipple icon="pi pi-pencil" class="btn custom-btn primary_btn earning-btn fw_400 h_44 pe-5 ps-5 mt-2 mb-2">{{'Enable'| translate }}</button>
+                   <button *ngIf="!course.isEnable" (click)="getDisableCourseDetails(course.courseId,'Enable')" data-bs-toggle="modal" data-bs-target="#disable-course" pButton pRipple icon="pi pi-pencil" class="btn custom-btn primary_btn earning-btn fw_400 h_44 pe-4 ps-4 mt-2 mb-2">{{'Disable'| translate }}</button>
+                   <button *ngIf="course.isEnable" (click)="getDisableCourseDetails(course.courseId,'Disable')" data-bs-toggle="modal" data-bs-target="#disable-course" pButton pRipple icon="pi pi-pencil" class="btn custom-btn primary_btn earning-btn fw_400 h_44 pe-4 ps-4 mt-2 mb-2">{{'Enable'| translate }}</button>
                  </td>
              </tr>
          </ng-template>

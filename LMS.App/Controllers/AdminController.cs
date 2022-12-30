@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LMS.App.Controllers
 {
-    [Route("admin")]
+    [Route("admins")]
     public class AdminController : ControllerBase
     {
         private readonly IAdminService _adminService;

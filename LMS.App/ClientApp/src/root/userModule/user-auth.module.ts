@@ -15,6 +15,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient,HttpClientModule } from '@angular/common/http';
 import { SharedModule } from '../root/sharedModule/shared.module';
 import { LandingComponent } from './user-auth/component/landing/landing.component';
+import { LogoutComponent } from './user-auth/component/logout/logout.component';
 
 @NgModule({
   declarations: [UserAuthComponent, LoginComponent,RegisterComponent, ChangePasswordComponent, ForgetPasswordComponent],
@@ -65,7 +66,11 @@ import { LandingComponent } from './user-auth/component/landing/landing.componen
         {
           path: 'reset-password/:id',
           component:ResetPasswordComponent
-      }
+      },
+      {
+        path: 'logout',
+        component:LogoutComponent
+    }
 
   ]}])],
   

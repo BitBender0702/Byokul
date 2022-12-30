@@ -33,7 +33,7 @@ export class RegisteredCoursesComponent implements OnInit {
           this.isDataLoaded = true;
         });  
 
-        this.InitializeEnableDisableCourse();
+        this.InitializeEnableDisableCourse();    
       }
 
       InitializeEnableDisableCourse(){
@@ -63,10 +63,10 @@ export class RegisteredCoursesComponent implements OnInit {
 
       }
 
-      viewCourseProfile(courseId:string){
-        window.location.href=`user/courseProfile/${courseId}`;
+      // viewCourseProfile(courseId:string){
+      //   window.location.href=`user/courseProfile/${courseId}`;
 
-      }
+      // }
     }
     
   

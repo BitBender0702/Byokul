@@ -1,8 +1,9 @@
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core"; 
 import { Router } from "@angular/router";
 import { Observable } from "rxjs";
 import { environment } from "src/environments/environment";
+import { FollowUnfollow } from "../interfaces/FollowUnfollow";
 
 
 @Injectable({providedIn: 'root'})
@@ -37,8 +38,8 @@ export class UserService{
         return this.http.post(`${this.apiUrl}/users/deleteUserLanguage`,deletelanguages);
     }
 
-    saveUserFollower(userId:string):Observable<any>{
-        return this.http.post(`${this.apiUrl}/users/saveUserFollower` + '?userId=' + userId,'');
+    saveUserFollower(followUnfollowUser:FollowUnfollow):Observable<any>{
+        return this.http.post(`${this.apiUrl}/users/followUnfollowUser`,followUnfollowUser);
     }
 
     getUserEditDetails(userId:string):Observable<any>{
@@ -57,7 +58,10 @@ export class UserService{
         return this.http.post(`${this.apiUrl}/users/banFollower` + '?followerId=' + followerId,'');
     }
 
+    getUser(userId:string):Observable<any>{
+        return this.http.get(`${this.apiUrl}/users/getBasicUserInfo` + '?userId=' + userId);
 
-
+    }
+    
 
 }

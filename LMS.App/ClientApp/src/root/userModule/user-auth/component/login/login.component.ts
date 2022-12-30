@@ -67,14 +67,19 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
             this.loadingIcon = false;
         const token = response.token;
         localStorage.setItem("jwt", token); 
-        var roles = this.getUserRoles(token);
-        if(roles?.indexOf(RolesEnum.SchoolAdmin) > -1){
-          this.router.navigateByUrl(`admin/adminHome`)
+        var decodeData = this.getUserRoles(token);
+        if(decodeData.role?.indexOf(RolesEnum.SchoolAdmin) > -1){
+          this.router.navigateByUrl(`administration/adminHome`)
 
         }
         else{
+          if(decodeData.isBan == 'True'){
+            this.loginForm.setErrors({ banUserMessage: true });
+          }
 
-        this.router.navigate(["../../myEarnings"],{ relativeTo: this.route });
+          else{
+            this.router.navigate(["../../myEarnings"],{ relativeTo: this.route });
+          }
         }
           }
         
@@ -87,7 +92,7 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
       let jwtData = token.split('.')[1]
       let decodedJwtJsonData = window.atob(jwtData)
       let decodedJwtData = JSON.parse(decodedJwtJsonData)
-      return decodedJwtData.role;
+      return decodedJwtData;
     }
     
   }

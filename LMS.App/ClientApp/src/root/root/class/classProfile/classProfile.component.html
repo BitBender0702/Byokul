@@ -6,7 +6,7 @@
       <div class="create-post-header d-flex justify-content-between d-none d-xl-flex">
         <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
             src="../../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
-        <button (click)="openPostModal()" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44">{{'CreatePost'| translate }}</button>
+        <button *ngIf="isOwner" (click)="openPostModal()" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44">{{'CreatePost'| translate }}</button>
       </div>
       <div class="live-header d-flex align-items-center justify-content-between">
         <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark  d-xl-none"><img
@@ -50,10 +50,10 @@
             <div class="followers_name d-inline-block font_16 mr-_24"><img src="../../../../assets/images/Edit-dark.svg" /> {{'Post'| translate }}: <b
                 class="fw_700">{{class.posts.length}}</b></div>
               </div>
-            <button type="button"
+            <button *ngIf="!isOwner" type="button"
               class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn me-0 minw-142 class-request-msg">{{'RequestMessage'| translate }}</button>
             </div>
-            <button (click)="getClassDetails(class.classId)" class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins" data-bs-toggle="modal"
+            <button *ngIf="isOwner" (click)="getClassDetails(class.classId)" class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins" data-bs-toggle="modal"
               data-bs-target="#editClass"><img src="../../../../assets/images/Setting-solid-dark.svg" class="me-2" /> {{'EditProfile'| translate }}
               </button>
           </div>
@@ -65,10 +65,10 @@
         <div class="teacher-tags tag-box mt-0  hover-tags">
           <div class="teacher-content font_14 d-inline-block"><img src="../../../../assets/images/dark-star.svg" /> {{'Sertificates'| translate }}</div>
 
-          <span *ngFor="let item of class.classCertificates;" class="custom-tag">{{item.name}}<button (click)="getDeletedCertificate(item.certificateId)" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#delete-classCertificate"><img
-            src="../../../../assets/images/cross-sm-light.svg" /></button></span>
+          <span *ngFor="let item of class.classCertificates;" class="custom-tag">{{item.name}}<button (click)="getDeletedCertificate(item.certificateId)" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#delete-classCertificate">
+            <img *ngIf="isOwner" src="../../../../assets/images/cross-sm-light.svg" /></button></span>
 
-            <span class="custom-tag">Add Certificates<button (click)="resetCertificateModal()" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#add-certificate"><img
+            <span *ngIf="isOwner" class="custom-tag">Add Certificates<button (click)="resetCertificateModal()" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#add-certificate"><img
               src="../../../../assets/images/school/plus-light.svg" /></button>
             </span>
         </div>
@@ -76,10 +76,10 @@
         <div class="teacher-tags tag-box mt-0  hover-tags">
           <div class="teacher-content font_14 d-inline-block"><img src="../../../../assets/images/Volume-Down.svg" /> {{'Languages'| translate }}</div>
 
-          <span *ngFor="let item of class.languages;" class="custom-tag">{{item.name}}<button (click)="getDeletedLanguage(item.id)" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#delete-classLanguage"><img
-            src="../../../../assets/images/cross-sm-light.svg" /></button></span>
+          <span *ngFor="let item of class.languages;" class="custom-tag">{{item.name}}<button (click)="getDeletedLanguage(item.id)" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#delete-classLanguage">
+            <img *ngIf="isOwner" src="../../../../assets/images/cross-sm-light.svg" /></button></span>
   
-          <span class="custom-tag">Add Languages<button (click)="resetLanguageModal()" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#add-language"><img
+          <span *ngIf="isOwner" class="custom-tag">Add Languages<button (click)="resetLanguageModal()" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#add-language"><img
             src="../../../../assets/images/school/plus-light.svg" /></button>
           </span>
           
@@ -89,10 +89,10 @@
         <div class="teacher-tags tag-box mt-0  hover-tags">
           <div class="teacher-content font_14 d-inline-block"><img src="../../../../assets/images/Profile-dark.svg" /> {{'Teachers'| translate }}</div>
 
-          <span *ngFor="let item of class.teachers;" class="custom-tag">{{item.firstName + ' ' + item.lastName}}<button (click)="getDeletedTeacher(item.teacherId)" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#delete-classTeacher"><img
-            src="../../../../assets/images/cross-sm-light.svg" /></button></span>
+          <span *ngFor="let item of class.teachers;" class="custom-tag">{{item.firstName + ' ' + item.lastName}}<button (click)="getDeletedTeacher(item.teacherId)" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#delete-classTeacher">
+            <img *ngIf="isOwner" src="../../../../assets/images/cross-sm-light.svg" /></button></span>
   
-          <span class="custom-tag">Add Teacher<button (click)="resetTeacherModal()" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#add-classTeacher"><img
+          <span *ngIf="isOwner" class="custom-tag">Add Teacher<button (click)="resetTeacherModal()" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#add-classTeacher"><img
             src="../../../../assets/images/school/plus-light.svg" /></button>
           </span>
 
@@ -147,9 +147,12 @@
                                 <button type="button" class="view font_12 bg-transparent border-0 text-light">
                                     <img src="../../../../assets/images/eye-light.svg" /> 954
                                 </button>
-                                <button type="button" class="pinned bg-transparent border-0">
+                                <button *ngIf="postAttachment.isPinned" (click)="pinUnpinPost(postAttachment.id,false)" type="button" class="pinned bg-transparent border-0">
                                     <img src="../../../../assets/images/pinned-light.svg" />
                                 </button>
+                                <button *ngIf="!postAttachment.isPinned" (click)="pinUnpinPost(postAttachment.id,true)" type="button" class="pinned bg-transparent border-0">
+                                  <img src="../../../../assets/images/pinned-gray.svg" />
+                              </button>
                             </div>
                             <div class="feed-name font_14 text_sec1">
                                 <img [src]="class.avatar"/> {{class.className}}

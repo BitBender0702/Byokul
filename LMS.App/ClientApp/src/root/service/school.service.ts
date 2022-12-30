@@ -3,6 +3,7 @@ import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { Observable } from "rxjs";
 import { environment } from "src/environments/environment";
+import { FollowUnfollow } from "../interfaces/FollowUnfollow";
 import { CreateSchoolModel } from "../interfaces/school/createSchoolModel";
 
 
@@ -49,8 +50,8 @@ export class SchoolService{
         return this.http.get(`${this.apiUrl}/school/getSchoolById` + '?schoolId=' + schoolId);
     }
 
-    saveSchoolFollower(schoolId:string):Observable<any>{
-        return this.http.post(`${this.apiUrl}/school/saveSchoolFollower` + '?schoolId=' + schoolId,'');
+    saveSchoolFollower(followUnfollowUser:FollowUnfollow):Observable<any>{
+        return this.http.post(`${this.apiUrl}/school/followUnfollowSchool`,followUnfollowUser);
     }
 
     getSchoolEditDetails(schoolId:string):Observable<any>{
@@ -92,6 +93,14 @@ export class SchoolService{
 
     getSchoolFollowers(schoolId:string):Observable<any>{
         return this.http.get(`${this.apiUrl}/school/schoolFollowers` + '?schoolId=' + schoolId);
+    }
+
+    isSchoolNameExist(schoolName:string){
+        return this.http.get(`${this.apiUrl}/school/isSchoolNameExist` + '?schoolName=' + schoolName);
+    }
+
+    getSchoolByName(schoolName:any):Observable<any>{
+        return this.http.get(`${this.apiUrl}/school/getSchoolByName` + '?schoolName=' + schoolName);
     }
 
 }

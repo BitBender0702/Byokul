@@ -8,4 +8,9 @@ input[id="hideFileType"] {
 
 .modal-dialog {
 	max-width: 700px;
+    margin-top: 70px;
+}
+
+div[role="document"] {
+    display: none;
 }

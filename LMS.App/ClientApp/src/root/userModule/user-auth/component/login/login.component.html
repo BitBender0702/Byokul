@@ -39,6 +39,10 @@
                     Email or Password incorrect!
                   </small>
 
+                  <small class="p-error" style="color: orange;margin-left: 102px;" *ngIf="loginForm.errors?.banUserMessage">
+                    This account is banned by the admin!
+                  </small>
+
               <button type="submit" (click)="login()" class="btn primary_btn w-100 rounded-8 text-uppercase">{{'Login'| translate }}</button>
 
               <p class="font_14 fw_300 text-center al-account">{{'DontHaveAccount'| translate }} <a [routerLink]="['/user/auth/register']"

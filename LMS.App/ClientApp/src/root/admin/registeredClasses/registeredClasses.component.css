@@ -1,0 +1,12 @@
+.table{
+    margin-top: -45px;
+}
+
+.cursorPointer{
+    cursor: pointer;
+}
+
+.image{
+    max-width: 25%;
+    margin-right: 25px;
+}

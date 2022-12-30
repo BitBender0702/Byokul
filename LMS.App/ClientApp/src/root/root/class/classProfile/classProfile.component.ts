@@ -12,6 +12,7 @@ import { DeleteClassLanguage } from 'src/root/interfaces/class/deleteClassLangua
 import { DeleteClassTeacher } from 'src/root/interfaces/class/deleteClassTeacher';
 import { EditClassModel } from 'src/root/interfaces/class/editClassModel';
 import { ClassService } from 'src/root/service/class.service';
+import { PostService } from 'src/root/service/post.service';
 import { CreatePostComponent } from '../../createPost/createPost.component';
 import { MultilingualComponent } from '../../sharedModule/Multilingual/multilingual.component';
 
@@ -24,6 +25,7 @@ import { MultilingualComponent } from '../../sharedModule/Multilingual/multiling
 export class ClassProfileComponent extends MultilingualComponent implements OnInit {
 
     private _classService;
+    private _postService;
     class:any;
     isProfileGrid:boolean = true;
     isOpenSidebar:boolean = false;
@@ -56,6 +58,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     isClassPaid!:boolean;
     disabled:boolean = true;
     currentDate!:string;
+    isOwner!:boolean;
 
     @ViewChild('closeEditModal') closeEditModal!: ElementRef;
     @ViewChild('closeTeacherModal') closeTeacherModal!: ElementRef;
@@ -65,19 +68,14 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
 
     @ViewChild('createPostModal', { static: true }) createPostModal!: CreatePostComponent;
 
-
-    // loadingIcon:boolean = false;
-
     isDataLoaded:boolean = false;
-    // isSchoolFollowed!:boolean;
-    constructor(injector: Injector,private bsModalService: BsModalService,classService: ClassService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
+    constructor(injector: Injector,postService:PostService,private bsModalService: BsModalService,classService: ClassService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
       super(injector);
         this._classService = classService;
-
+        this._postService = postService;
     }
   
     ngOnInit(): void {
-
       this.loadingIcon = true;
       var selectedLang = localStorage.getItem("selectedLanguage");
       this.translate.use(selectedLang?? '');
@@ -85,11 +83,29 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       var id = this.route.snapshot.paramMap.get('classId');
       this.classId = id ?? '';
 
+      var className = this.route.snapshot.paramMap.get('className');
+      var schoolName = this.route.snapshot.paramMap.get('schoolName');
+
+      if(this.classId == ''){
+        this._classService.getClassByName(className,schoolName).subscribe((response) => {
+          this.classId = response.classId;
+          this._classService.getClassById(this.classId).subscribe((response) => {
+            this.class = response;
+            this.isOwnerOrNot();
+            this.loadingIcon = false;
+            this.isDataLoaded = true;
+          });
+        })
+
+      }
+      else{
       this._classService.getClassById(this.classId).subscribe((response) => {
         this.class = response;
+        this.isOwnerOrNot();
         this.loadingIcon = false;
         this.isDataLoaded = true;
       });
+    }
 
       this.editClassForm = this.fb.group({
         schoolName: this.fb.control(''),
@@ -169,6 +185,24 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     })
     
   }
+
+  isOwnerOrNot(){
+    var validToken = localStorage.getItem("jwt");
+      if (validToken != null) {
+        let jwtData = validToken.split('.')[1]
+        let decodedJwtJsonData = window.atob(jwtData)
+        let decodedJwtData = JSON.parse(decodedJwtJsonData);
+        if(decodedJwtData.sub == this.class.createdBy){
+          this.isOwner = true;
+        }
+        else{
+          this.isOwner = false;
+        }
+
+      }
+      
+  }
+  
 
     initializeEditFormControls(){
       this.uploadImage = '';
@@ -508,6 +542,15 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
           from: "class"
         };
         this.bsModalService.show(CreatePostComponent,{initialState});
+    }
+
+    pinUnpinPost(attachmentId:string,isPinned:boolean){
+      debugger
+      this._postService.pinUnpinPost(attachmentId,isPinned).subscribe((response) => {
+        this.ngOnInit();
+        console.log(response);
+      });
+    
     }
   
 }

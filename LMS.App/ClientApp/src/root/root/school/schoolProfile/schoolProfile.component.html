@@ -1,12 +1,12 @@
 <div *ngIf="isDataLoaded">
   <section class="f-poppins">
-    <side-bar [isOpenSidebar]="isOpenSidebar"></side-bar> 
+    <side-bar [isOpenSidebar]="isOpenSidebar"></side-bar>
     <!-- <div *ngIf="isOpenModal"><create-post [isOpenModal]="isOpenModal" [schoolId]="schoolId"></create-post></div> -->
     <div class="main_content">
       <div class="create-post-header d-flex justify-content-between d-none d-xl-flex">
         <button (click)="back()" mat-mini-fab type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
             src="../../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
-        <button (click)="openPostModal()" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44">{{'CreatePost'| translate }}</button>
+        <button *ngIf="isOwner" (click)="openPostModal()" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44">{{'CreatePost'| translate }}</button>
       </div>
       <div class="live-header d-flex align-items-center justify-content-between">
         <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark  d-xl-none"><img
@@ -31,18 +31,20 @@
           <div class="position-relative">
 
           <div class="followers_name d-inline-block font_16 mr-_24"><img src="../../../../assets/images/followers.svg" /> {{'Followers'| translate }}: <b
-              class="fw_700"><a style="text-decoration: none;cursor: pointer;color: black;" [routerLink]="['/user/schoolFollowers', school.schoolId]">{{school.schoolFollowers}}</a></b></div>
+              class="fw_700"><a style="text-decoration: none;cursor: pointer;color: black;" [routerLink]="['/user/schoolFollowers', school.schoolId]">{{followersLength}}</a></b></div>
           <div class="followers_name d-inline-block font_16 mr-_24"><img src="../../../../assets/images/students-icon.svg" /> {{'Students'| translate }}: <b
               class="fw_700">{{school.students}}</b></div>
           <div class="followers_name d-inline-block font_16 mr-_24"><img src="../../../../assets/images/Edit-dark.svg" /> {{'Post'| translate }}: <b
               class="fw_700">{{school.posts.length}}</b></div>
-          <button (click)="followSchool()" type="button"
+          <button *ngIf="!isOwner && !isFollowed" (click)="followSchool(school.schoolId,'Follow')" type="button"
             class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn follow-btn">{{'Follow'| translate }}</button>
-          <button type="button"
+          <button *ngIf="!isOwner && isFollowed" (click)="followSchool(school.schoolId,'UnFollow')" type="button"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn follow-btn">{{'UnFollow'| translate }}</button>
+          <button *ngIf="!isOwner" type="button"
             class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn me-0">{{'MessageSchool'| translate }}
             </button>
           <p class="font_16 mt-4">{{school.description}}</p>
-          <button (click)="getSchoolDetails(school.schoolId)" class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins" data-bs-toggle="modal"
+          <button *ngIf="isOwner" (click)="getSchoolDetails(school.schoolId)" class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins" data-bs-toggle="modal"
               data-bs-target="#editschool"><img src="../../../../assets/images/Setting-solid-dark.svg" class="me-2" /> {{'EditProfile'| translate }}
               </button>
         </div>
@@ -51,25 +53,21 @@
       <div class="teacher-tags tag-box hover-tags">
         <div class="teacher-content font_14 d-inline-block"><img src="../../../../assets/images/Profile-dark.svg" />{{'Teachers'| translate }}</div>
 
-        <!-- <div *ngFor="let item of school.teachers;"> -->
-          <span *ngFor="let item of school.teachers;" class="custom-tag">{{item.firstName + ' ' + item.lastName}}<button (click)="getDeletedTeacher(item.teacherId)" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#delete-schoolTeacher"><img
-            src="../../../../assets/images/cross-sm-light.svg" /></button></span>
+          <span *ngFor="let item of school.teachers;" class="custom-tag">{{item.firstName + ' ' + item.lastName}}<button (click)="getDeletedTeacher(item.teacherId)" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#delete-schoolTeacher">
+            <img *ngIf="isOwner" src="../../../../assets/images/cross-sm-light.svg" /></button></span>
 
-            <span class="custom-tag">Add Teachers<button (click)="resetTeacherModal()" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#add-schoolTeacher"><img
+            <span *ngIf="isOwner" class="custom-tag">Add Teachers<button (click)="resetTeacherModal()" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#add-schoolTeacher"><img
               src="../../../../assets/images/school/plus-light.svg" /></button>
             </span>
-        <!-- </div> -->
-
-        <!-- <button type="button" class="custom-tag">See more...</button> -->
 
       </div>
       <div class="teacher-tags tag-box mt-0 hover-tags">
         <div class="teacher-content font_14 d-inline-block"><img src="../../../../assets/images/dark-star.svg" /> {{'Sertificates'| translate }}</div>
 
-        <span *ngFor="let item of school.schoolCertificates;" class="custom-tag">{{item.name}}<button (click)="getDeletedCertificate(item.certificateId)" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#delete-schoolCertificate"><img
-            src="../../../../assets/images/cross-sm-light.svg" /></button></span>
+        <span *ngFor="let item of school.schoolCertificates;" class="custom-tag">{{item.name}}<button (click)="getDeletedCertificate(item.certificateId)" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#delete-schoolCertificate">
+          <img *ngIf="isOwner" src="../../../../assets/images/cross-sm-light.svg" /></button></span>
 
-            <span class="custom-tag">Add Certificates<button (click)="resetCertificateModal()" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#add-certificate"><img
+            <span *ngIf="isOwner" class="custom-tag">Add Certificates<button (click)="resetCertificateModal()" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#add-certificate"><img
               src="../../../../assets/images/school/plus-light.svg" /></button>
             </span>    
 
@@ -77,17 +75,12 @@
       <div class="teacher-tags tag-box mt-0 hover-tags">
         <div class="teacher-content font_14 d-inline-block"><img src="../../../../assets/images/Volume-Down.svg" /> {{'Languages'| translate }}</div>
 
-        <span *ngFor="let item of school.languages;" class="custom-tag">{{item.name}}<button (click)="getDeletedLanguage(item.id)" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#delete-schoolLanguage"><img
-          src="../../../../assets/images/cross-sm-light.svg" /></button></span>
+        <span *ngFor="let item of school.languages;" class="custom-tag">{{item.name}}<button (click)="getDeletedLanguage(item.id)" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#delete-schoolLanguage">
+          <img *ngIf="isOwner" src="../../../../assets/images/cross-sm-light.svg" /></button></span>
 
-        <span class="custom-tag">Add Languages<button (click)="resetLanguageModal()" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#add-language"><img
+        <span *ngIf="isOwner" class="custom-tag">Add Languages<button (click)="resetLanguageModal()" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#add-language"><img
           src="../../../../assets/images/school/plus-light.svg" /></button>
         </span>
-
-          <!-- <button class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal"
-          data-bs-target="#add-language"><img src="../../../../assets/images/school/plus-light.svg" class="me-2" /> Add
-          Language</button> -->
-         
 
       </div>
       <div class="teacher-tags tag-box mt-0">
@@ -109,23 +102,11 @@
                 type="button" role="tab" aria-controls="classes-tab-pane" aria-selected="false" tabindex="-1">Classes &
                 Courses</button>
             </li>
-
-            <!-- <li class="nav-item ps-0 mb-0" role="presentation">
-              <button type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44">Create Class</button>
-
-              <button [routerLink]="['/user/createClass', school.schoolId]" class="nav-link" id="classes-tab" data-bs-toggle="tab" data-bs-target="#classes-tab-pane"
-                type="button" role="tab" aria-controls="classes-tab-pane" aria-selected="false" tabindex="-1">Create Class</button>
-            </li>
-
-            <li class="nav-item ps-0 mb-0" role="presentation">
-              <button class="nav-link" id="classes-tab" data-bs-toggle="tab" data-bs-target="#classes-tab-pane"
-                type="button" role="tab" aria-controls="classes-tab-pane" aria-selected="false" tabindex="-1">Create Course</button>
-            </li> -->
           </ul>
         </div>
-        <div class="button-list-grid">
-          <button [routerLink]="['/user/createClass', school.schoolId]" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 me-4">Create Class</button>
-          <button [routerLink]="['/user/createCourse', school.schoolId]" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 me-4">Create Course</button>
+        <div>
+          <button *ngIf="isOwner" [routerLink]="['/user/createClass', school.schoolId]" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 me-4">Create Class</button>
+          <button *ngIf="isOwner" [routerLink]="['/user/createCourse', school.schoolId]" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 me-4">Create Course</button>
 
 
           <button [ngClass]="isProfileGrid ? 'btn border-btn active d-inline-flex align-items-center justify-content-center' : 'btn border-btn d-inline-flex align-items-center justify-content-center'" (click)="profileGrid()" type="button" >
@@ -160,9 +141,12 @@
                             <button type="button" class="view font_12 bg-transparent border-0 text-light">
                                 <img src="../../../../assets/images/eye-light.svg" /> 954
                             </button>
-                            <button type="button" class="pinned bg-transparent border-0">
+                            <button *ngIf="postAttachment.isPinned" (click)="pinUnpinPost(postAttachment.id,false)" type="button" class="pinned bg-transparent border-0">
                                 <img src="../../../../assets/images/pinned-light.svg" />
                             </button>
+                            <button *ngIf="!postAttachment.isPinned" (click)="pinUnpinPost(postAttachment.id,true)" type="button" class="pinned bg-transparent border-0">
+                              <img src="../../../../assets/images/pinned-gray.svg" />
+                          </button>
                         </div>
                         <div class="feed-name font_14 text_sec1">
                             <img [src]="school.avatar"/> {{school.schoolName}}
@@ -183,17 +167,15 @@
         <div class="tab-pane fade show active" id="school-feed-tab-pane" role="tabpanel"
              aria-labelledby="school-feed-tab" tabindex="0">
             <div class="accordion" id="accordionPanelsStayOpenExample">
-                <div class="school-grid-box position-relative">
+                <div *ngFor="let post of school.posts" class="school-grid-box position-relative">
+                  <div *ngIf="post.postType == 1 && post.postAuthorType == 1">
                     <div class="schoolgrid-header d-flex align-items-center position-relative">
                         <div class="school-gridprofile-icon">
-                            <img src="../../../../assets/images/feed-school.jpg" />
+                            <img [src]="school.avatar" />
                         </div>
-                        <h2 class="d-inline-block font_20 fw_600 text_sec1 mb-0">Python programming class</h2>
+                        <h2 class="d-inline-block font_20 fw_600 text_sec1 mb-0">{{post.title}}</h2>
                         <p class="font_14 school-grid-date d-inline-block mb-0">
-                            September 28 <span class="fw_600 ">
-                                11:30 -
-                                13:50
-                            </span>
+                            {{post.dateTime | date : "MMMM d"}} - {{post.dateTime | date : "hh mm"}}
                         </p>
                         <button type="button" class="bg-transparent border-0 pinned-grid-chat">
                             <img class="w-auto h-auto"
@@ -202,19 +184,16 @@
                     </div>
                     <div class="school-grid-body">
                         <p class="text_sec1 font_14">
-                            Lecture One - Introduction and basics in Python.Lecture One - Introduction
-                            and basics in PythonLecture One - Intro and basics in Python fole Lecture One. One - Introduction and
-                            basics in PythonLecture One - Introduction and basics in PythonLecture One Lecture. One - Intro
-                            duction and basics in PythonLecture One.
+                            {{post.description}}
                         </p>
                         <div class="teacher-tags tag-box hashtag_box">
-                            <span class="custom-tag">#Python</span>
-                            <span class="custom-tag">#Intermediate</span>
+                            <span *ngFor="let tag of post.postTags" class="custom-tag">#{{tag.postTagValue}}</span>
+                            <!-- <span class="custom-tag">#Intermediate</span>
                             <span class="custom-tag">#Free courses</span>
                             <span class="custom-tag">#Free courses</span>
                             <span class="custom-tag">#Free courses</span>
                             <span class="custom-tag">#For beginners</span>
-                            <span class="custom-tag">#Free courses</span>
+                            <span class="custom-tag">#Free courses</span> -->
                         </div>
                         <div class="school-grid-thumbnail">
                             <div class="row gx-1">
@@ -259,64 +238,65 @@
                         </button>
                     </div>
                 </div>
-                <div class="school-grid-box">
-                    <div class="schoolgrid-header d-flex align-items-center position-relative">
-                        <div class="school-gridprofile-icon">
-                            <img src="../../../../assets/images/school-large-thumnail-grid.jpg" />
-                        </div>
-                        <h2 class="d-inline-block font_20 fw_600 text_sec1 mb-0">Python programming class</h2>
-                        <p class="font_14 school-grid-date d-inline-block mb-0">
-                            September 28 <span class="fw_600 ">
-                                11:30 -
-                                13:50
-                            </span>
-                        </p>
-                        <button type="button" class="bg-transparent border-0 pinned-grid-chat">
-                            <img class="w-auto h-auto"
-                                 src="../../../../assets/images/pinned-gray.svg" />
-                        </button>
+
+               </div>
+               <div class="school-grid-box">
+                <div class="schoolgrid-header d-flex align-items-center position-relative">
+                    <div class="school-gridprofile-icon">
+                        <img src="../../../../assets/images/school-large-thumnail-grid.jpg" />
                     </div>
-                    <div class="school-grid-body">
-                        <p class="text_sec1 font_14">
-                            Lecture One - Introduction and basics in Python.Lecture One - Introduction
-                            and basics in PythonLecture One - Intro and basics in Python fole Lecture One. One - Introduction and
-                            basics in PythonLecture One - Introduction and basics in PythonLecture One Lecture. One - Intro
-                            duction and basics in PythonLecture One.
-                        </p>
-                        <div class="teacher-tags tag-box hashtag_box">
-                            <span class="custom-tag">#Python</span>
-                            <span class="custom-tag">#Intermediate</span>
-                            <span class="custom-tag">#Free courses</span>
-                            <span class="custom-tag">#Free courses</span>
-                            <span class="custom-tag">#Free courses</span>
-                            <span class="custom-tag">#For beginners</span>
-                            <span class="custom-tag">#Free courses</span>
-                        </div>
-                    </div>
-                    <div class="school-grid-footer">
-                        <button type="button" class="bg-transparent border-0 function-btns">
-                            <img src="../../../../assets/images/eye.svg" class="d-block mx-auto" />
-                            954
-                        </button>
-                        <button type="button" class="bg-transparent border-0 function-btns">
-                            <img src="../../../../assets/images/Heart-dark.svg" class="d-block mx-auto" />
-                            82
-                        </button>
-                        <button type="button" class="bg-transparent border-0 function-btns">
-                            <img src="../../../../assets/images/Chat-dark.svg" class="d-block mx-auto" />
-                            34
-                        </button>
-                        <button type="button" class="bg-transparent border-0 function-btns">
-                            <img src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto" />
-                            954
-                        </button>
-                        <button type="button" class="bg-transparent border-0 function-btns">
-                            <img src="../../../../assets/images/Upload-dark.svg" class="d-block mx-auto" />
-                            954
-                        </button>
+                    <h2 class="d-inline-block font_20 fw_600 text_sec1 mb-0">Python programming class</h2>
+                    <p class="font_14 school-grid-date d-inline-block mb-0">
+                        September 28 <span class="fw_600 ">
+                            11:30 -
+                            13:50
+                        </span>
+                    </p>
+                    <button type="button" class="bg-transparent border-0 pinned-grid-chat">
+                        <img class="w-auto h-auto"
+                             src="../../../../assets/images/pinned-gray.svg" />
+                    </button>
+                </div>
+                <div class="school-grid-body">
+                    <p class="text_sec1 font_14">
+                        Lecture One - Introduction and basics in Python.Lecture One - Introduction
+                        and basics in PythonLecture One - Intro and basics in Python fole Lecture One. One - Introduction and
+                        basics in PythonLecture One - Introduction and basics in PythonLecture One Lecture. One - Intro
+                        duction and basics in PythonLecture One.
+                    </p>
+                    <div class="teacher-tags tag-box hashtag_box">
+                        <span class="custom-tag">#Python</span>
+                        <span class="custom-tag">#Intermediate</span>
+                        <span class="custom-tag">#Free courses</span>
+                        <span class="custom-tag">#Free courses</span>
+                        <span class="custom-tag">#Free courses</span>
+                        <span class="custom-tag">#For beginners</span>
+                        <span class="custom-tag">#Free courses</span>
                     </div>
                 </div>
-
+                <div class="school-grid-footer">
+                    <button type="button" class="bg-transparent border-0 function-btns">
+                        <img src="../../../../assets/images/eye.svg" class="d-block mx-auto" />
+                        954
+                    </button>
+                    <button type="button" class="bg-transparent border-0 function-btns">
+                        <img src="../../../../assets/images/Heart-dark.svg" class="d-block mx-auto" />
+                        82
+                    </button>
+                    <button type="button" class="bg-transparent border-0 function-btns">
+                        <img src="../../../../assets/images/Chat-dark.svg" class="d-block mx-auto" />
+                        34
+                    </button>
+                    <button type="button" class="bg-transparent border-0 function-btns">
+                        <img src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto" />
+                        954
+                    </button>
+                    <button type="button" class="bg-transparent border-0 function-btns">
+                        <img src="../../../../assets/images/Upload-dark.svg" class="d-block mx-auto" />
+                        954
+                    </button>
+                </div>
+            </div>
             </div>
 
 
@@ -330,6 +310,50 @@
              aria-labelledby="school-feed-tab" tabindex="0">
             <div class="accordion" id="accordionPanelsStayOpenExample">
                 <div class="row">
+                  <div *ngFor="let post of school.posts">
+                    <div *ngIf="post.postType == 1 && post.postAuthorType == 1">
+                        <div class="col-md-6 col-xl-4">
+                          <div class="school-grid-box position-relative school-list-box h-100 mb-0">
+                              <div class="schoolgrid-header d-flex align-items-center position-relative">
+                                  <div class="school-gridprofile-icon">
+                                      <img [src]="school.avatar" />
+                                  </div>
+                                  <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">{{post.title}}</h2>
+                                  <button type="button" class="bg-transparent border-0 pinned-grid-chat">
+                                      <img class="w-auto h-auto"
+                                           src="../../../../assets/images/pinned-gray.svg" />
+                                  </button>
+                              </div>
+                              <div class="school-grid-body">
+                                  <div class="d-flex justify-content-between date-view-list">
+                                      <p *ngIf="post.dateTime != null" class="font_14 school-grid-date d-inline-block mb-0">
+                                        {{post.dateTime | date : "MMMM d"}} - {{post.dateTime | date : "hh mm"}}
+                                          <!-- September 28 <span class="fw_600 ms-3">11:30 - 13:50</span> -->
+                                      </p>
+                                      <button type="button" class="view font_12 bg-transparent border-0 ">
+                                          <img src="../../../../assets/images/eye.svg" class="me-2" /> 954
+                                      </button>
+                                  </div>
+                                  <div *ngFor="let postAttachment of post.postAttachments" class="school-grid-thumbnail">
+                                      <div class="row gx-1">
+                                          <div class="col-md-12">
+                                            <p *ngIf="postAttachment.length == 0">{{post.description}}</p>
+                                              <div class="school-large-thumbnail shadow-thumnail position-relative">
+                                                <div *ngIf="postAttachment.fileType==2" class="videofile">
+                                                  <video preload="metadata" style="height: 300px;">
+                                                    <source [src]="postAttachment.fileUrl" type="video/mp4"/>
+                                                  </video>
+                                                </div>
+                                                  <img *ngIf="postAttachment.fileType==1" class="w-100" [src]="postAttachment.fileUrl" />
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                    </div>
+                  </div>
                     <div class="col-md-6 col-xl-4">
                         <div class="school-grid-box position-relative school-list-box h-100 mb-0">
                             <div class="schoolgrid-header d-flex align-items-center position-relative">

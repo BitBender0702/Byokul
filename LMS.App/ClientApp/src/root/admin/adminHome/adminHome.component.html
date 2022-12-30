@@ -53,11 +53,11 @@
        <adminSide-bar></adminSide-bar> 
        <div class="main_content">
          <div class="create-post-header d-flex justify-content-between d-none d-xl-flex align-items-center">
-           <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
+           <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark invisible"><img
                src="../../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
                <h2 class="font_22 fw_700 f-monteserrat mb-md-0">{{'Dashboard'| translate }}</h2>
-           <button type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 invisible" data-bs-toggle="modal"
-             data-bs-target="#create-post">{{'CreatePost'| translate }}</button>
+           <button [routerLink]="['/user/auth/logout']" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44" data-bs-toggle="modal"
+             data-bs-target="#create-post">{{'Logout'| translate }}</button>
          </div>
          <div class="live-header d-flex align-items-center justify-content-between">
            <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark  d-xl-none"><img

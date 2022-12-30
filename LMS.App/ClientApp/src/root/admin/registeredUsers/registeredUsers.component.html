@@ -3,14 +3,14 @@
      <adminSide-bar></adminSide-bar> 
      <div class="main_content">
        <div class="create-post-header d-flex justify-content-between d-none d-xl-flex align-items-center">
-         <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
+         <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark invisible"><img
              src="../../../../assets/images/arrow-left.svg" />{{'Back'| translate }}</button>
              <h2 class="font_22 fw_700 f-monteserrat mb-md-0">{{'UserList'| translate }}</h2>
-         <button type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 invisible" data-bs-toggle="modal"
-           data-bs-target="#create-post">{{'CreatePost'| translate }}</button>
+         <button [routerLink]="['/user/auth/logout']" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44" data-bs-toggle="modal"
+           data-bs-target="#create-post">{{'Logout'| translate }}</button>
        </div>
        <div class="live-header d-flex align-items-center justify-content-between">
-         <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark  d-xl-none"><img
+         <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark  d-xl-none invisible"><img
              src="../../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
          <span class="logo_mobile d-xl-none">
            <img src="../../../../assets/images/logo.svg" />
@@ -23,15 +23,15 @@
          </div>
        </div>
 
-<div class="card">
-  <p-table #dt [value]="registeredUsers" [rows]="10" [paginator]="true" [globalFilterFields]="['firstName']"
+<div class="card table">
+  <p-table #dt [value]="registeredUsers" [resizableColumns]="true" columnResizeMode="expand" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]" [globalFilterFields]="['firstName']"
       [(selection)]="selectedUsers" [rowHover]="true" dataKey="id"
       currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
-      <ng-template pTemplate="caption">
+      <!-- <ng-template pTemplate="caption">
           <div class="p-d-flex p-ai-center p-jc-between">
               <h5 class="p-m-0">{{'ManageUsers'| translate }}</h5>
           </div>
-      </ng-template>
+      </ng-template> -->
       <ng-template pTemplate="header">
           <tr>
               <th pSortableColumn="firstName">{{'FirstName'| translate }} <p-sortIcon field="firstName"></p-sortIcon></th>
@@ -46,24 +46,27 @@
       </ng-template>
       <ng-template pTemplate="body" let-user>
           <tr>
-              <td (click)="viewUserProfile(user.id)">{{user.firstName}}</td>
+              <td>
+                <img *ngIf="user.avatar != null" class="school-profile-icon rounded-circle user-profile-header image" [src]="user.avatar"/>
+                <img *ngIf="user.avatar == null" class="school-profile-icon rounded-circle user-profile-header image" src="../../../assets/images/userLogo2.png"/>
+                {{user.firstName}}</td>
               <td>{{user.lastName}}</td>
               <td>{{user.email}}</td>
               <td>{{user.contactEmail}}</td>
               <td>{{user.createdOn | date : "MMMM d, y"}} {{'at'| translate }}  {{user.createdOn | date : "H:mm"}}</td>
               <td>
-                <button *ngIf="!user.isBan" (click)="getBanUserDetails(user.id,'Ban')" data-bs-toggle="modal" data-bs-target="#ban-user" pButton pRipple icon="pi pi-pencil" class="btn custom-btn primary_btn earning-btn fw_400 h_44 pe-5 ps-5 mt-2 mb-2">{{'Ban'| translate }}</button>
-                <button *ngIf="user.isBan" (click)="getBanUserDetails(user.id,'UnBan')" data-bs-toggle="modal" data-bs-target="#ban-user" pButton pRipple icon="pi pi-pencil" class="btn custom-btn primary_btn earning-btn fw_400 h_44 pe-5 ps-5 mt-2 mb-2">{{'UnBan'| translate }}</button>
+                <button *ngIf="!user.isBan" (click)="getBanUserDetails(user.id,'Ban')" data-bs-toggle="modal" data-bs-target="#ban-user" pButton pRipple icon="pi pi-pencil" class="btn custom-btn primary_btn earning-btn fw_400 h_44 pe-4 ps-4 mt-2 mb-2">{{'Ban'| translate }}</button>
+                <button *ngIf="user.isBan" (click)="getBanUserDetails(user.id,'UnBan')" data-bs-toggle="modal" data-bs-target="#ban-user" pButton pRipple icon="pi pi-pencil" class="btn custom-btn primary_btn earning-btn fw_400 h_44 pe-4 ps-4 mt-2 mb-2">{{'UnBan'| translate }}</button>
               </td>
               <td>
-                <button *ngIf="!user.isVarified" (click)="getVarifyUserDetails(user.id,'Verify')" data-bs-toggle="modal" data-bs-target="#verify-user" pButton pRipple icon="pi pi-pencil" class="btn custom-btn primary_btn earning-btn fw_400 h_44 pe-5 ps-5 mt-2 mb-2">{{'Verify'| translate }}</button>
-                <button *ngIf="user.isVarified" (click)="getVarifyUserDetails(user.id,'UnVerify')" data-bs-toggle="modal" data-bs-target="#verify-user" pButton pRipple icon="pi pi-pencil" class="btn custom-btn primary_btn earning-btn fw_400 h_44 pe-5 ps-5 mt-2 mb-2">{{'UnVerify'| translate }}</button>
+                <button *ngIf="!user.isVarified" (click)="getVarifyUserDetails(user.id,'Verify')" data-bs-toggle="modal" data-bs-target="#verify-user" pButton pRipple icon="pi pi-pencil" class="btn custom-btn primary_btn earning-btn fw_400 h_44 pe-4 ps-4 mt-2 mb-2">{{'Verify'| translate }}</button>
+                <button *ngIf="user.isVarified" (click)="getVarifyUserDetails(user.id,'UnVerify')" data-bs-toggle="modal" data-bs-target="#verify-user" pButton pRipple icon="pi pi-pencil" class="btn custom-btn primary_btn earning-btn fw_400 h_44 pe-4 ps-4 mt-2 mb-2">{{'UnVerify'| translate }}</button>
               </td>
           </tr>
       </ng-template>
       <ng-template pTemplate="summary">
           <div class="p-d-flex p-ai-center p-jc-between">
-            {{'InTotalThereAre'| translate }} {{registeredUsers ? registeredUsers.length : 0 }}{{'Users'| translate }}.
+            {{'InTotalThereAre'| translate }} {{registeredUsers ? registeredUsers.length : 0 }} {{'Users'| translate }}.
           </div>
       </ng-template>
   </p-table>

@@ -18,9 +18,11 @@ namespace LMS.Common.ViewModels.User
         public string? Description { get; set; }
         public Guid? CityId { get; set; }
         public CityViewModel City { get; set; }
-        public int Followers { get; set; }
+        public IEnumerable<UserFollowerViewModel> Followers { get; set; }
         public int Followings { get; set; }
         public bool? IsBan { get; set; }
+        public string Email { get; set; }
+        public bool IsVarified { get; set; }
         public IEnumerable<LanguageViewModel> Languages { get; set; }
         public IEnumerable<SchoolViewModel> SchoolsAsStudent { get; set; }
         public IEnumerable<SchoolViewModel> SchoolsAsTeacher { get; set; }

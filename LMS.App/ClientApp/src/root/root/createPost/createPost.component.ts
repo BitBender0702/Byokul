@@ -65,6 +65,7 @@ export class CreatePostComponent implements OnInit {
 
   tags!:string;
   tagLists!: string[];
+  initialTagList!: string[];
 
   parentDetails:any;
   disabled:boolean = true;
@@ -86,6 +87,7 @@ export class CreatePostComponent implements OnInit {
 
   attachmentToUpload= new FormData();
   attachment:any[] = [];
+  initialAttachment:any[] = [];
   reel:any;
   uploadReel!:any;
   isDataLoaded:boolean = false;
@@ -112,22 +114,12 @@ export class CreatePostComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    debugger
-    // this.bsModalService.show(this.templatefirst);
-    this.loadingIcon = true;
-    //this.schoolId = this.options.schoolId;
     var initialValue = this.options.initialState;
-    // public activeModal: NgbActiveModal in constructor
-
-
-
 
     if(initialValue?.from == "school"){
     this.schoolId = initialValue.schoolId;
     this._postService.getSchool(this.schoolId).subscribe((response) => {
-      debugger
       this.parentDetails = response;
-      this.loadingIcon = false;
       this.isDataLoaded = true;
     });
    }
@@ -135,7 +127,6 @@ export class CreatePostComponent implements OnInit {
    if(initialValue?.from == "class"){
     this.classId = initialValue.classId;
     this._postService.getClass(this.classId).subscribe((response) => {
-      debugger
       this.parentDetails = response;
      
     });
@@ -145,7 +136,6 @@ export class CreatePostComponent implements OnInit {
    if(initialValue?.from == "user"){
     this.userId = initialValue.userId;
     this._postService.getUser(this.userId).subscribe((response) => {
-      debugger
       this.parentDetails = response;
      
     });
@@ -154,7 +144,6 @@ export class CreatePostComponent implements OnInit {
 
    if(this.courseId != undefined){
     this._postService.getCourse(this.courseId).subscribe((response) => {
-      debugger
       this.parentDetails = response;
      
     });
@@ -180,21 +169,13 @@ export class CreatePostComponent implements OnInit {
     })
 
     this.tagLists = [];
+    this.initialTagList = [];
 
     this.initializeImageObject();
     this.initializeVideoObject();
 
 
    }
-
-  //  openModalPopup(){
-  //   if(this.isOpenModal){
-  //     debugger
-  //     //this.CreatePostModal.nativeElement.click();
-  //     this.openFirstModal();
-        
-  //    }
-  //  }
 
    initializeImageObject(){
     this.imageObject = {
@@ -214,11 +195,9 @@ export class CreatePostComponent implements OnInit {
 
 
    handleImageInput(event: any) {
-    debugger
       this.images.push(event.target.files[0]);
       const reader = new FileReader();
       reader.onload = (_event) => { 
-        debugger
         this.imageObject.imageUrl = _event.target?.result;
         this.imageObject.name = event.target.files[0].name;
           this.uploadImage.push(this.imageObject); 
@@ -228,7 +207,6 @@ export class CreatePostComponent implements OnInit {
    }
 
    removeUploadImage(image:any){
-    debugger
     const index = this.images.findIndex((item:any) => item.name === image.name);
         if (index > -1) {
           this.images.splice(index, 1);
@@ -245,7 +223,6 @@ export class CreatePostComponent implements OnInit {
     this.videos.push(event.target.files[0]);
     const reader = new FileReader();
     reader.onload = (_event) => { 
-      debugger
       this.videoObject.videoUrl = _event.target?.result;
       this.videoObject.name = event.target.files[0].name;
         this.uploadVideo.push(this.videoObject); 
@@ -255,7 +232,6 @@ export class CreatePostComponent implements OnInit {
  }
 
  removeUploadVideo(video:any){
-  debugger
   const index = this.videos.findIndex((item:any) => item.name === video.name);
       if (index > -1) {
         this.videos.splice(index, 1);
@@ -269,13 +245,10 @@ export class CreatePostComponent implements OnInit {
  }
 
  handleAttachmentInput(event: any) {
-  debugger
-    this.attachment.push(event.target.files[0]);
-    console.log(this.attachment);
+    this.initialAttachment.push(event.target.files[0]);
  }
 
  removeAttachment(attachment:any){
-  debugger
   const attachmentIndex = this.attachment.findIndex((item) => item.name ===attachment.name);
   if (attachmentIndex > -1) {
     this.attachment.splice(attachmentIndex, 1);
@@ -285,14 +258,10 @@ export class CreatePostComponent implements OnInit {
  }
 
  handleReels(event:any){
-  debugger
   this.postToUpload.append('uploadVideos', event.target.files[0]);
   this.reel = event.target.files[0];
-  //this.postToUpload.append("uploadReels", event.target.files[0], event.target.files[0].name);
-
   const reader = new FileReader();
     reader.onload = (_event) => { 
-      debugger
         this.uploadReel = _event.target?.result; 
         this.uploadReel = this.domSanitizer.bypassSecurityTrustUrl(this.uploadReel);
     }
@@ -300,7 +269,6 @@ export class CreatePostComponent implements OnInit {
  }
 
  removeUploadReel(uploadReel:any){
-  debugger
   this.postToUpload.set('uploadVideos','');
   this.uploadReel = null; 
 
@@ -315,12 +283,13 @@ export class CreatePostComponent implements OnInit {
 
     if(this.scheduleTime != undefined){
      if(this.scheduleTime < new Date()){
-       debugger
        this.createPostForm.setErrors({ unauthenticated: true });
        return;
 
     }
   }
+
+  this.loadingIcon = true;
     // for images
     for(var i=0; i<this.images.length; i++){
       this.postToUpload.append('uploadImages', this.images[i]);
@@ -343,12 +312,17 @@ export class CreatePostComponent implements OnInit {
     this.postToUpload.append('title', post.title);
     this.postToUpload.append('description', post.bodyText);
     this.postToUpload.append('postType', PostTypeEnum.Post.toString());
-    this.postToUpload.append('dateTime',post.scheduleTime.toISOString());
+    if(post.scheduleTime != undefined){
+      this.postToUpload.append('dateTime',post.scheduleTime.toISOString());
+    }
+
 
 
     this._postService.createPost(this.postToUpload).subscribe((response:any) => {
       this.isSubmitted=false;
+      this.loadingIcon = false;
       this.postToUpload = new FormData();
+      this.close();
       this.ngOnInit();
     });
 
@@ -356,7 +330,6 @@ export class CreatePostComponent implements OnInit {
    }
 
    postFrom(){
-    debugger
     if(this.schoolId!= undefined){
       this.appendData(this.schoolId,this.schoolId,'',PostAuthorTypeEnum.School.toString());
     }
@@ -374,7 +347,6 @@ export class CreatePostComponent implements OnInit {
    }
 
    appendData(authorId:string, parentId:string, ownerId:string, postAuthorType:string){
-    debugger
       this.postToUpload.append('authorId', authorId);
       this.postToUpload.append('parentId', parentId);
       this.postToUpload.append('ownerId', ownerId);
@@ -384,7 +356,6 @@ export class CreatePostComponent implements OnInit {
    }
 
    saveReels(){
-    debugger
     this.isSubmitted = true;
     if (!this.createReelForm.valid) {
       return;
@@ -392,7 +363,6 @@ export class CreatePostComponent implements OnInit {
 
     if(this.scheduleTime != undefined){
       if(this.scheduleTime < new Date()){
-        debugger
         this.createReelForm.setErrors({ unauthenticated: true });
         return;
      }
@@ -402,13 +372,15 @@ export class CreatePostComponent implements OnInit {
     var reel =this.createReelForm.value;
     this.postFrom();
     this.postToUpload.append('postType', PostTypeEnum.Reel.toString());
+    if(reel.scheduleTime != undefined){
     this.postToUpload.append('dateTime', reel.scheduleTime.toISOString());
-
-    // this.postToUpload.append('dateTime', reel.scheduleTime == undefined ? null | reel.scheduleTime.toISOString());
+    }
 
     this._postService.createPost(this.postToUpload).subscribe((response:any) => {
       this.isSubmitted=false;
+      this.loadingIcon = false;
       this.postToUpload = new FormData();
+      this.close();
       this.ngOnInit();
     });
 
@@ -418,7 +390,6 @@ export class CreatePostComponent implements OnInit {
 
 
    removeTags(tag:any){
-    debugger
     const tagIndex = this.tagLists.findIndex((item) => item ===tag);
     if (tagIndex > -1) {
       this.tagLists.splice(tagIndex, 1);
@@ -426,135 +397,80 @@ export class CreatePostComponent implements OnInit {
    }
 
    isValidTags(){
-    debugger
-    var re = this.tagLists;
-    if(this.tagLists == undefined || this.tagLists.length == 0){
+    if(this.initialTagList == undefined || this.initialTagList.length == 0){
       this.isTagsValid = false;
       return;
     }
-
+    this.tagLists = [ ...this.tagLists, ...this.initialTagList];
     this.isTagsValid = true;
     this.closeTagsModal();
-    //this.openCreatePostModal();
 
    }
 
-  //  private closeTagModal(): void {
-  //   this.TagModal.nativeElement.click();
-  // }
-
-  private openCreatePostModal(): void {
-    debugger
-    //this.CreatePostModal.nativeElement.click();
-  }
-
 
   private openFirstModal(): void {
-    debugger
     this.openFirst.nativeElement.click();
   }
 
   onEnter(tags:any) {
-    debugger
-    this.tagLists.push(tags);
+    this.initialTagList.push(tags);
     this.tags = '';
   }
 
-
-  closeCreatePostModal(){
-    debugger
-   // this.activeModal.dismiss('Close click');
-
-  }
-
   openAttachmentModal(){
-    debugger
-   // this.activeModal.dismiss('Close click');
     this.addAttachmentModal.nativeElement.click();
-    
-
-
   }
 
   close(): void {
-    debugger
     this.bsModalService.hide();
-    this.addAttachmentModal.nativeElement.click();
-    //this.createPostModal.hide();
+    //this.addAttachmentModal.nativeElement.click();
   }
-
-
-
-
 
   // for ngx
   show() {
-    debugger
     this.bsModalService.show(this.templatefirst);
     this.createPostModal.show();
    }
 
    hide() {
-    debugger
     this.addAttachmentModal.nativeElement.click();
-    //this.createPostModal.hide();
    }
 
    openAttachment(){
-    debugger
     this.bsModalService.hide();
     this.addAttachmentModal.nativeElement.click();
 
    }
 
    AttachmentModalOpen(template: TemplateRef<any>) {
-    debugger
-    // this.bsModalService.hide();
+    this.initialAttachment = [];
     this.attachmentModalRef = this.bsModalService.show(template);
-    
-    //this.openAttachmentModals.nativeElement.click();
-    // this.closePostM.nativeElement.click();
-    // //this.bsModalService.hide();
-    // this.modalRef2 = this.bsModalService.show(template, { class: 'second' });
   }
 
   closeAttachmentModal(){
-    debugger
     this.attachmentModalRef.hide();
-
   }
 
   closeTagsModal(){
-    debugger
     this.tagModalRef.hide();
-
   }
 
   openTagModal(template: TemplateRef<any>) {
-    debugger
-    // this.bsModalService.hide();
+    this.initialTagList = [];
     this.tagModalRef = this.bsModalService.show(template);
-    
-    //this.openAttachmentModals.nativeElement.click();
-    // this.closePostM.nativeElement.click();
-    // //this.bsModalService.hide();
-    // this.modalRef2 = this.bsModalService.show(template, { class: 'second' });
   }
 
   isValidAttachments(){
-    debugger
-   if(this.attachment == undefined || this.attachment.length == 0){
+   if(this.initialAttachment == undefined || this.initialAttachment.length == 0){
     this.isAttachmentsValid = false;
       return;
    }
 
+   this.attachment = [ ...this.attachment, ...this.initialAttachment];
    this.isAttachmentsValid = true;
     this.closeAttachmentModal();
    }
 
-   
-  
-    
 }
 
    
