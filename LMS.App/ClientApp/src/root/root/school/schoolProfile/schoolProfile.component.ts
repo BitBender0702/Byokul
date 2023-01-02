@@ -21,6 +21,7 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { FollowUnfollow } from 'src/root/interfaces/FollowUnfollow';
 import { FollowUnFollowEnum } from 'src/root/Enums/FollowUnFollowEnum';
 import { PostService } from 'src/root/service/post.service';
+import { PostViewComponent } from '../../postView/postView.component';
 
 // import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -589,4 +590,13 @@ pinUnpinPost(attachmentId:string,isPinned:boolean){
   });
 
 }
+
+openPostsViewModal(posts:string): void {
+  const initialState = {
+    posts: posts
+  };
+  //var initialState = this.school.schoolId;
+  this.bsModalService.show(PostViewComponent,{initialState});
+}
+
 }

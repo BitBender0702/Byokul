@@ -1,7 +1,8 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, Injector, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { BsModalService, ModalDirective, ModalOptions } from 'ngx-bootstrap/modal';
 import { SchoolService } from 'src/root/service/school.service';
 
 @Component({
@@ -12,37 +13,30 @@ import { SchoolService } from 'src/root/service/school.service';
 
 export class PostViewComponent implements OnInit {
 
-    // isOpenSidebar:boolean = false;
+    posts:any;
+    @ViewChild('createPostModal', { static: true }) createPostModal!: ModalDirective;
 
-    // isOpenSearch:boolean = false;
-
-    constructor(private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
+    constructor(private bsModalService: BsModalService,public options: ModalOptions,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
 
     }
   
     ngOnInit(): void {
+      this.posts = this.options.initialState;
+
+
      
 
 
     }
 
-    back(): void {
-      window.history.back();
+    show() {
+      //this.bsModalService.show(this.templatefirst);
+      this.createPostModal.show();
+     }
+
+     close(): void {
+      this.bsModalService.hide();
+      //this.addAttachmentModal.nativeElement.click();
     }
-  
-
-    // openSearch(){
-    //     this.isOpenSearch = true;
-    // }
-
-    // closeSearch(){
-    //     this.isOpenSearch = false;
-    // }
- 
-
-    // openSidebar(){
-    //   this.isOpenSidebar = true;
-  
-    // }
   
 }

@@ -199,7 +199,12 @@
                             <div class="row gx-1">
                                 <div class="col-md-8">
                                     <div class="school-large-thumbnail shadow-thumnail position-relative">
-                                        <img class="w-100" src="../../../../assets/images/school-large-thumnail-grid.jpg" />
+                                        <!-- <div *ngIf="post.postAttachments[0]?.fileType==2"> -->
+                                              <video *ngIf="post.postAttachments[0]?.fileType==2" (click)="openPostsViewModal(post.postAttachments)" preload="metadata" class="w-100" style="cursor: pointer;">
+                                                <source [src]="post.postAttachments[0]?.fileUrl" type="video/mp4"/>
+                                              </video>
+                                        <!-- </div> -->
+                                      <img *ngIf="post.postAttachments[0]?.fileType==1" class="w-100" [src]="post.postAttachments[0]?.fileUrl" />
                                     </div>
                                 </div>
                                 <div class="col-md-4">
