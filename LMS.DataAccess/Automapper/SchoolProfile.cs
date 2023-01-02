@@ -14,7 +14,7 @@ namespace LMS.DataAccess.Automapper
         public SchoolProfile()
         {
             CreateMap<School, SchoolViewModel>()
-                 .ForMember(x => x.CreatedBy, opt => opt.MapFrom(o => o.CreatedBy.Email));
+                 .ForMember(x => x.CreatedBy, opt => opt.MapFrom(o => o.CreatedBy.FirstName + " " + o.CreatedBy.LastName));
             CreateMap<School, SchoolUpdateViewModel>()
                 .ForMember(x => x.User, opt => opt.MapFrom(o => o.CreatedBy));
             CreateMap<SchoolCertificate, SchoolCertificateViewModel>();

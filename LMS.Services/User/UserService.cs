@@ -36,10 +36,12 @@ namespace LMS.Services
         private IGenericRepository<Teacher> _teacherRepository;
         private IGenericRepository<School> _schoolRepository;
         private IGenericRepository<Class> _classRepository;
+        private IGenericRepository<Post> _postRepository;
+        private IGenericRepository<PostTag> _postTagRepository;
         private readonly UserManager<User> _userManager;
         private readonly IBlobService _blobService;
         public UserService(IMapper mapper, IGenericRepository<User> userRepository, IGenericRepository<UserFollower> userFollowerRepository, IGenericRepository<UserLanguage> userLanguageRepository, IGenericRepository<City> cityRepository, IGenericRepository<Country> countryRepository, IGenericRepository<SchoolFollower> schoolFollowerRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<CourseTeacher> courseTeacherRepository,
-          IGenericRepository<SchoolTeacher> schoolteacherRepository, IGenericRepository<Student> studentRepository, IGenericRepository<Teacher> teacherRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, UserManager<User> userManager, IBlobService blobService)
+          IGenericRepository<SchoolTeacher> schoolteacherRepository, IGenericRepository<Student> studentRepository, IGenericRepository<Teacher> teacherRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostTag> postTagRepository, UserManager<User> userManager, IBlobService blobService)
         {
             _mapper = mapper;
             _userRepository = userRepository;
@@ -58,6 +60,8 @@ namespace LMS.Services
             _teacherRepository = teacherRepository;
             _schoolRepository = schoolRepository;
             _classRepository = classRepository;
+            _postRepository = postRepository;
+            _postTagRepository = postTagRepository;
             _userManager = userManager;
             _blobService = blobService;
         }
@@ -68,7 +72,7 @@ namespace LMS.Services
             result.Followers = await GetFollowers(userId);
             result.Languages = await GetLanguages(userId);
             result.Followings = await GetFollowings(userId);
-            result.PostAttachment = await GetPostsByUserId(userId);
+            result.Posts = await GetPostsByUserId(userId);
             var classStudents = await GetClassStudents(userId);
             var courseStudents = await GetCourseStudents(userId);
 
@@ -95,20 +99,22 @@ namespace LMS.Services
             return result;
         }
 
-        public async Task<bool> SaveUserFollower(string userId, string followerId)
+        public async Task<bool> FollowUnFollowUser(FollowUnFollowViewModel model, string followerId)
         {
-            var userFollowers = await _userFollowerRepository.GetAll().ToListAsync();
+            var userFollowers = new List<UserFollower>();
+            userFollowers = await _userFollowerRepository.GetAll().Where(x => x.UserId == model.Id && x.FollowerId == followerId).ToListAsync();
 
-            if (userFollowers.Any(x => x.UserId == userId && x.FollowerId == followerId))
+            if (userFollowers.Any(x => x.UserId == model.Id && x.FollowerId == followerId))
             {
-                return false;
+                _userFollowerRepository.DeleteAll(userFollowers);
+                _userFollowerRepository.Save();
             }
 
             else
             {
                 var userFollower = new UserFollower
                 {
-                    UserId = userId,
+                    UserId = model.Id,
                     FollowerId = followerId,
                     IsBan = false
                 };
@@ -117,12 +123,40 @@ namespace LMS.Services
                 _userFollowerRepository.Save();
                 return true;
             }
+            return false;
+
+            //if (!model.IsFollowed)
+            //{
+            //    var userFollower = await _userFollowerRepository.GetAll().Where(x => x.UserId == model.Id && x.FollowerId == followerId).FirstOrDefaultAsync();
+
+            //    if (userFollower != null)
+            //    {
+            //        _userFollowerRepository.Delete(userFollower.Id);
+            //        _userFollowerRepository.Save();
+            //        return false;
+            //    }
+            //}
+
+            //else
+            //{
+            //    var userFollower = new UserFollower
+            //    {
+            //        UserId = model.Id,
+            //        FollowerId = followerId,
+            //        IsBan = false
+            //    };
+
+            //    _userFollowerRepository.Insert(userFollower);
+            //    _userFollowerRepository.Save();
+            //    return true;
+            //}
+            //return false;
         }
 
-        public async Task<int> GetFollowers(string userId)
+        public async Task<IEnumerable<UserFollowerViewModel>> GetFollowers(string userId)
         {
             var followerList = await _userFollowerRepository.GetAll().Where(x => x.UserId == userId).ToListAsync();
-            return followerList.Count();
+            return _mapper.Map<IEnumerable<UserFollowerViewModel>>(followerList);
         }
 
         public async Task<int> GetFollowings(string userId)
@@ -390,44 +424,60 @@ namespace LMS.Services
 
         }
 
-        public async Task<IEnumerable<PostAttachmentViewModel>> GetPostsByUserId(string userId)
+        public async Task<IEnumerable<PostDetailsViewModel>> GetPostsByUserId(string userId)
         {
-            var posts = await _postAttachmentRepository.GetAll()
-                .Include(x => x.Post)
-                .Where(x => x.CreatedById == userId).ToListAsync();
+            var courseList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == new Guid (userId)).OrderByDescending(x => x.IsPinned).ToListAsync();
 
-            var response = _mapper.Map<List<PostAttachmentViewModel>>(posts);
+            var result = _mapper.Map<List<PostDetailsViewModel>>(courseList);
 
-            foreach (var item in response)
+            foreach (var post in result)
             {
-                if (item.Post.PostAuthorType == (int)PostAuthorTypeEnum.School)
-                {
-                    var school = _schoolRepository.GetById(item.Post.ParentId);
-                    item.School = _mapper.Map<SchoolViewModel>(school);
-                }
-
-                if (item.Post.PostAuthorType == (int)PostAuthorTypeEnum.Class)
-                {
-                    var classes = _classRepository.GetById(item.Post.ParentId);
-                    item.Class = _mapper.Map<ClassViewModel>(classes);
-                }
-
-                if (item.Post.PostAuthorType == (int)PostAuthorTypeEnum.User)
-                {
-                    try
-                    {
-                        var user = _userRepository.GetById(item.Post.ParentId.ToString());
-                        item.User = _mapper.Map<UserDetailsViewModel>(user);
-                    }
-                    catch (Exception ex)
-                    {
-                        throw ex;
-                    }
-                }
+                var attachment = await GetAttachmentsByPostId(post.Id);
+                post.PostAttachments = attachment;
             }
 
+            foreach (var post in result)
+            {
+                var tags = await GetTagsByPostId(post.Id);
+                post.PostTags = tags;
+            }
+            return result;
+            //var posts = await _postAttachmentRepository.GetAll()
+            //    .Include(x => x.Post)
+            //    .Where(x => x.CreatedById == userId).OrderByDescending(x => x.Post.IsPinned).ToListAsync();
 
-            return response;
+            //var response = _mapper.Map<List<PostAttachmentViewModel>>(posts);
+
+            //foreach (var item in response)
+            //{
+            //    if (item.Post.PostAuthorType == (int)PostAuthorTypeEnum.School)
+            //    {
+            //        var school = _schoolRepository.GetById(item.Post.ParentId);
+            //        item.School = _mapper.Map<SchoolViewModel>(school);
+            //    }
+
+            //    if (item.Post.PostAuthorType == (int)PostAuthorTypeEnum.Class)
+            //    {
+            //        var classes = _classRepository.GetById(item.Post.ParentId);
+            //        item.Class = _mapper.Map<ClassViewModel>(classes);
+            //    }
+
+            //    if (item.Post.PostAuthorType == (int)PostAuthorTypeEnum.User)
+            //    {
+            //        try
+            //        {
+            //            var user = _userRepository.GetById(item.Post.ParentId.ToString());
+            //            item.User = _mapper.Map<UserDetailsViewModel>(user);
+            //        }
+            //        catch (Exception ex)
+            //        {
+            //            throw ex;
+            //        }
+            //    }
+            //}
+
+
+            //return response;
         }
 
         public async Task<List<UserFollowerViewModel>> GetUserFollowers(string userId)
@@ -455,6 +505,22 @@ namespace LMS.Services
 
             
 
+        }
+
+        public async Task<IEnumerable<PostAttachmentViewModel>> GetAttachmentsByPostId(Guid postId)
+        {
+            var attacchmentList = await _postAttachmentRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.PostId == postId).OrderByDescending(x => x.IsPinned).ToListAsync();
+
+            var result = _mapper.Map<List<PostAttachmentViewModel>>(attacchmentList);
+            return result;
+        }
+
+        public async Task<IEnumerable<PostTagViewModel>> GetTagsByPostId(Guid postId)
+        {
+            var tagList = await _postTagRepository.GetAll().Where(x => x.PostId == postId).ToListAsync();
+
+            var result = _mapper.Map<List<PostTagViewModel>>(tagList);
+            return result;
         }
 
 

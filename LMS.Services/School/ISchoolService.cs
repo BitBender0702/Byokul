@@ -19,7 +19,7 @@ namespace LMS.Services
         Task<IEnumerable<SpecializationViewModel>> SpecializationList();
         Task<IEnumerable<LanguageViewModel>> LanguageList();
         //Task<IEnumerable<SchoolFollowerViewModel>> FollowerList(Guid schoolId);
-        Task<bool> SaveSchoolFollower(Guid schoolId, string userId);
+        Task<bool> FollowUnFollowSchool(FollowUnFollowViewModel model, string userId);
         Task SaveSchoolUser(SchoolUserViewModel schoolUserViewModel);
         Task SaveSchoolCertificates(SaveSchoolCertificateViewModel model);
         Task DeleteSchoolCertificate(SchoolCertificateViewModel model);
@@ -31,6 +31,9 @@ namespace LMS.Services
         Task DeleteSchoolTeacher(SchoolTeacherViewModel model);
         Task<SchoolViewModel> GetBasicSchoolInfo(Guid schoolId);
         Task<List<SchoolFollowerViewModel>> GetSchoolFollowers(Guid schoolId);
+        Task<bool> IsSchoolNameExist(string schoolName);
+        Task<SchoolViewModel> GetSchoolByName(string schoolName);
+
 
     }
 }

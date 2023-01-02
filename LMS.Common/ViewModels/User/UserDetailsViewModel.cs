@@ -26,7 +26,8 @@ namespace LMS.Common.ViewModels.User
         public IEnumerable<LanguageViewModel> Languages { get; set; }
         public IEnumerable<SchoolViewModel> SchoolsAsStudent { get; set; }
         public IEnumerable<SchoolViewModel> SchoolsAsTeacher { get; set; }
-        public IEnumerable<PostAttachmentViewModel> PostAttachment { get; set; }
+        //public IEnumerable<PostAttachmentViewModel> PostAttachment { get; set; }
+        public IEnumerable<PostDetailsViewModel> Posts { get; set; }
         //public IEnumerable<SchoolCertificateViewModel> SchoolCertificates { get; set; }
 
     }

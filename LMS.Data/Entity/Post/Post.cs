@@ -19,5 +19,6 @@ namespace LMS.Data.Entity
         public int PostAuthorType { get; set; }
         public Guid ParentId { get;set; }
         public string? CoverLetter { get; set; }
+        public bool IsPinned { get; set; }
     }
 }

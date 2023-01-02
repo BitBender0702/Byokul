@@ -137,7 +137,7 @@ namespace LMS.Services
                 var postAttach = new PostAttachment
                 {
                     PostId = postId,
-                    FileName= video.FileName,
+                    FileName = video.FileName,
                     FileUrl = postAttachment.FileUrl,
                     FileType = (int)FileTypeEnum.Video,
                     CreatedById = createdById,
@@ -216,6 +216,23 @@ namespace LMS.Services
             //}
 
             return result;
+        }
+
+        public async Task<bool> PinUnpinPost(Guid attachmentId, bool isPinned)
+        {
+            var post = await _postRepository.GetAll().Where(x => x.Id ==  attachmentId).FirstOrDefaultAsync();
+
+            if (post != null)
+            {
+                post.IsPinned = isPinned;
+                _postRepository.Update(post);
+                _postRepository.Save();
+                return true;
+            }
+
+            return false;
+
+
         }
     }
 }

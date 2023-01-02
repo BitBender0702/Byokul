@@ -39,10 +39,11 @@ namespace LMS.Services
         private IGenericRepository<CourseStudent> _courseStudentRepository;
         private IGenericRepository<Post> _postRepository;
         private IGenericRepository<PostAttachment> _postAttachmentRepository;
+        private IGenericRepository<PostTag> _postTagRepository;
         private IGenericRepository<SchoolDefaultLogo> _schoolDefaultLogoRepository;
         private readonly UserManager<User> _userManager;
         private readonly IBlobService _blobService;
-        public SchoolService(IMapper mapper, IGenericRepository<School> schoolRepository, IGenericRepository<SchoolCertificate> schoolCertificateRepository, IGenericRepository<SchoolTag> schoolTagRepository, IGenericRepository<Country> countryRepository, IGenericRepository<Specialization> specializationRepository, IGenericRepository<Language> languageRepository, IGenericRepository<SchoolUser> schoolUserRepository, IGenericRepository<SchoolFollower> schoolFollowerRepository, IGenericRepository<SchoolLanguage> schoolLanguageRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<SchoolTeacher> schoolTeacherRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<CourseTeacher> courseTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<SchoolDefaultLogo> schoolDefaultLogoRepository, UserManager<User> userManager, IBlobService blobService)
+        public SchoolService(IMapper mapper, IGenericRepository<School> schoolRepository, IGenericRepository<SchoolCertificate> schoolCertificateRepository, IGenericRepository<SchoolTag> schoolTagRepository, IGenericRepository<Country> countryRepository, IGenericRepository<Specialization> specializationRepository, IGenericRepository<Language> languageRepository, IGenericRepository<SchoolUser> schoolUserRepository, IGenericRepository<SchoolFollower> schoolFollowerRepository, IGenericRepository<SchoolLanguage> schoolLanguageRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<SchoolTeacher> schoolTeacherRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<CourseTeacher> courseTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository,IGenericRepository<SchoolDefaultLogo> schoolDefaultLogoRepository, UserManager<User> userManager, IBlobService blobService)
         {
             _mapper = mapper;
             _schoolRepository = schoolRepository;
@@ -63,6 +64,7 @@ namespace LMS.Services
             _courseStudentRepository = courseStudentRepository;
             _postRepository = postRepository;
             _postAttachmentRepository = postAttachmentRepository;
+            _postTagRepository = postTagRepository;
             _schoolDefaultLogoRepository = schoolDefaultLogoRepository;
             _userManager = userManager;
             _blobService = blobService;
@@ -386,21 +388,30 @@ namespace LMS.Services
             var result = _mapper.Map<IEnumerable<LanguageViewModel>>(languageList);
             return result;
         }
-        public async Task<bool> SaveSchoolFollower(Guid schoolId, string userId)
+
+        public async Task<bool> FollowUnFollowSchool(FollowUnFollowViewModel model, string followerId)
         {
-            var schoolFollowers = await _schoolFollowerRepository.GetAll().ToListAsync();
+                var schoolFollowers = new List<SchoolFollower>();
+                schoolFollowers = await _schoolFollowerRepository.GetAll().Where(x => x.SchoolId == new Guid(model.Id) && x.UserId == followerId).ToListAsync();
 
-            if (schoolFollowers.Any(x => x.UserId == userId && x.SchoolId == schoolId))
-            {
-                return false;
+                if (schoolFollowers.Any(x => x.UserId == followerId && x.SchoolId ==new Guid(model.Id)))
+                {
+                        _schoolFollowerRepository.DeleteAll(schoolFollowers);
+                        _schoolFollowerRepository.Save();
             }
+            //if (schoolFollowers.Count() != null)
+            //{
+            //    _schoolFollowerRepository.Delete(schoolFollowers.First().Id);
+            //    _schoolFollowerRepository.Save(); 
+            //    return false;
+            //}
 
-            else
-            {
+
+            else {
                 var schoolFollower = new SchoolFollower
                 {
-                    SchoolId = schoolId,
-                    UserId = userId,
+                    SchoolId = new Guid(model.Id),
+                    UserId = followerId,
                     IsBan = false
                 };
 
@@ -408,12 +419,14 @@ namespace LMS.Services
                 _schoolFollowerRepository.Save();
                 return true;
             }
+            return false;
         }
 
-        public async Task<int> FollowerList(Guid schoolId)
+        public async Task<IEnumerable<SchoolFollowerViewModel>> FollowerList(Guid schoolId)
         {
             var followerList = await _schoolFollowerRepository.GetAll().Where(x => x.SchoolId == schoolId).ToListAsync();
-            return followerList.Count();
+            return _mapper.Map<IEnumerable<SchoolFollowerViewModel>>(followerList);
+            
         }
 
         public async Task SaveSchoolUser(SchoolUserViewModel schoolUserViewModel)
@@ -433,7 +446,7 @@ namespace LMS.Services
 
         public async Task<IEnumerable<ClassViewModel>> GetClassesBySchoolId(Guid schoolId)
         {
-            var classList = await _classRepository.GetAll().Where(x => x.SchoolId == schoolId).ToListAsync();
+            var classList = await _classRepository.GetAll().Where(x => x.SchoolId == schoolId && !x.IsEnable).ToListAsync();
 
             var result = _mapper.Map<List<ClassViewModel>>(classList);
             return result;
@@ -442,7 +455,7 @@ namespace LMS.Services
 
         public async Task<IEnumerable<CourseViewModel>> GetCoursesBySchoolId(Guid schoolId)
         {
-            var courseList = await _courseRepository.GetAll().Where(x => x.SchoolId == schoolId).ToListAsync();
+            var courseList = await _courseRepository.GetAll().Where(x => x.SchoolId == schoolId && !x.IsEnable).ToListAsync();
 
             var result = _mapper.Map<List<CourseViewModel>>(courseList);
             return result;
@@ -545,7 +558,7 @@ namespace LMS.Services
 
         public async Task<IEnumerable<PostDetailsViewModel>> GetPostsBySchool(Guid schoolId, string loginUserId)
         {
-            var courseList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == schoolId).ToListAsync();
+            var courseList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == schoolId).OrderByDescending(x => x.IsPinned).ToListAsync();
 
             var result = _mapper.Map<List<PostDetailsViewModel>>(courseList);
 
@@ -555,43 +568,57 @@ namespace LMS.Services
                 post.PostAttachments = attachment;
             }
 
-            var user = await _userManager.Users.Where(x => x.Id == loginUserId).FirstOrDefaultAsync();
-            var role = await _userManager.GetRolesAsync(user);
-
-            if (role.Any(x => x.Contains("School Owner")))
-            {
-                foreach (var post in result)
-                {
-                    var postDetail = await _postRepository.GetAll().Where(x => x.CreatedById == post.CreatedBy).FirstOrDefaultAsync();
-
-                    post.Author = _mapper.Map<AuthorViewModel>(postDetail.CreatedBy);
-                }
-            }
-
-            else
-            {
-                foreach (var post in result)
-                {
-                    var author = await _schoolRepository.GetAll().Where(x => x.SchoolId == post.AuthorId).FirstOrDefaultAsync();
-
-                    post.Author = _mapper.Map<AuthorViewModel>(author);
-                }
-            }
-
             foreach (var post in result)
             {
-                var owner = await _userManager.Users.Where(x => x.Id == post.CreatedBy).FirstOrDefaultAsync();
-                post.Owner = _mapper.Map<OwnerViewModel>(owner);
+                var tags = await GetTagsByPostId(post.Id);
+                post.PostTags = tags;
             }
+
+            //var user = await _userManager.Users.Where(x => x.Id == loginUserId).FirstOrDefaultAsync();
+            //var role = await _userManager.GetRolesAsync(user);
+
+            //if (role.Any(x => x.Contains("School Owner")))
+            //{
+            //    foreach (var post in result)
+            //    {
+            //        var postDetail = await _postRepository.GetAll().Where(x => x.CreatedById == post.CreatedBy).FirstOrDefaultAsync();
+
+            //        post.Author = _mapper.Map<AuthorViewModel>(postDetail.CreatedBy);
+            //    }
+            //}
+
+            //else
+            //{
+            //    foreach (var post in result)
+            //    {
+            //        var author = await _schoolRepository.GetAll().Where(x => x.SchoolId == post.AuthorId).FirstOrDefaultAsync();
+
+            //        post.Author = _mapper.Map<AuthorViewModel>(author);
+            //    }
+            //}
+
+            //foreach (var post in result)
+            //{
+            //    var owner = await _userManager.Users.Where(x => x.Id == post.CreatedBy).FirstOrDefaultAsync();
+            //    post.Owner = _mapper.Map<OwnerViewModel>(owner);
+            //}
 
             return result;
         }
 
         public async Task<IEnumerable<PostAttachmentViewModel>> GetAttachmentsByPostId(Guid postId)
         {
-            var attacchmentList = await _postAttachmentRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.PostId == postId).ToListAsync();
+            var attacchmentList = await _postAttachmentRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.PostId == postId).OrderByDescending(x => x.IsPinned).ToListAsync();
 
             var result = _mapper.Map<List<PostAttachmentViewModel>>(attacchmentList);
+            return result;
+        }
+
+        public async Task<IEnumerable<PostTagViewModel>> GetTagsByPostId(Guid postId)
+        {
+            var tagList = await _postTagRepository.GetAll().Where(x => x.PostId == postId).ToListAsync();
+
+            var result = _mapper.Map<List<PostTagViewModel>>(tagList);
             return result;
         }
 
@@ -698,6 +725,26 @@ namespace LMS.Services
             var response = _mapper.Map<List<SchoolFollowerViewModel>>(followerList);
             return response;
 
+        }
+
+        public async Task<bool> IsSchoolNameExist(string schoolName)
+        {
+            var result = await _schoolRepository.GetAll().Where(x => x.SchoolName == schoolName).FirstOrDefaultAsync();
+            if (result != null)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public async Task<SchoolViewModel> GetSchoolByName(string schoolName)
+        {
+            var school = await _schoolRepository.GetAll().Where(x => x.SchoolName.Replace(" ", "").ToLower() == schoolName).FirstOrDefaultAsync();
+            if (school != null)
+            {
+                return _mapper.Map<SchoolViewModel>(school);
+            }
+            return null;
         }
     }
 }

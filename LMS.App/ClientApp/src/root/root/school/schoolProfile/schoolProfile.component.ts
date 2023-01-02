@@ -96,7 +96,6 @@ export class SchoolProfileComponent extends MultilingualComponent implements OnI
     }
   
     ngOnInit(): void {
-      debugger
       this.loadingIcon = true;
       var selectedLang = localStorage.getItem("selectedLanguage");
       this.translate.use(selectedLang?? '');
@@ -121,7 +120,6 @@ export class SchoolProfileComponent extends MultilingualComponent implements OnI
       
       else{
       this._schoolService.getSchoolById(this.schoolId).subscribe((response) => {
-        debugger
         this.school = response;
         this.followersLength = this.school.schoolFollowers.length;
         this.isOwnerOrNot();
@@ -585,7 +583,6 @@ private closeLanguagesModal(): void {
 }
 
 pinUnpinPost(attachmentId:string,isPinned:boolean){
-  debugger
   this._postService.pinUnpinPost(attachmentId,isPinned).subscribe((response) => {
     this.ngOnInit();
     console.log(response);

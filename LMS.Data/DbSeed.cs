@@ -39,15 +39,15 @@ namespace LMS.Data
         }
         public async Task SeedUsers()
         {
-            var user = await _userManager.FindByEmailAsync("shivams.aspirefox@gmail.com");
+            var user = await _userManager.FindByEmailAsync("admin@gmail.com");
             if (user == null)
             {
                 user = new User
                 {
-                    Email = "dharmendra.aspirefox@gmail.com",
-                    UserName = "dharmendra.aspirefox@gmail.com",
-                    FirstName = "Dharmendra",
-                    LastName = "Sinsinwar",
+                    Email = "admin@gmail.com",
+                    UserName = "admin@gmail.com",
+                    FirstName = "Vepa",
+                    LastName = "Durdiyev",
 
                     EmailConfirmed = true,
                     CreatedOn = DateTime.UtcNow

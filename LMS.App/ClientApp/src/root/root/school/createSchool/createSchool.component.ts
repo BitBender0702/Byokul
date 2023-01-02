@@ -141,17 +141,31 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
       return;
     }
 
+    var schoolName = this.createSchoolForm1.get('schoolName')?.value;
+
+    var isSchoolnameExist;
+   
+
     var form1Value =this.createSchoolForm1.value;
     this.fileToUpload.append('schoolName', form1Value.schoolName);
     this.fileToUpload.append('description', form1Value.description);
     this.fileToUpload.append('countryId',form1Value.countryId);
-    this.fileToUpload.append('specializationId',form1Value.specializationId);
+    this.fileToUpload.append('specializationId',form1Value.specializationId); 
     this.fileToUpload.append('languageIds',JSON.stringify(form1Value.selectedLanguages));
-    this.step += 1;
-    this.isStepCompleted = false;
+    this._schoolService.isSchoolNameExist(schoolName).subscribe((response) => {
+      if(!response){
+        this.createSchoolForm1.setErrors({ unauthenticated: true });
+        return;
+      }
+      else{
+        this.step += 1;
+        this.isStepCompleted = false;
+      }
+    });
+    
 
     this.createSchoolForm3.patchValue({
-      schoolUrl: 'byokul.com/' + form1Value.schoolName.replace(" ",""),
+      schoolUrl: 'byokul.com/profile' + form1Value.schoolName.replace(" ",""),
     });
   }
 

@@ -147,10 +147,10 @@
                                 <button type="button" class="view font_12 bg-transparent border-0 text-light">
                                     <img src="../../../../assets/images/eye-light.svg" /> 954
                                 </button>
-                                <button *ngIf="postAttachment.isPinned" (click)="pinUnpinPost(postAttachment.id,false)" type="button" class="pinned bg-transparent border-0">
+                                <button *ngIf="postAttachment.post.isPinned" (click)="pinUnpinPost(postAttachment.post.id,false)" type="button" class="pinned bg-transparent border-0">
                                     <img src="../../../../assets/images/pinned-light.svg" />
                                 </button>
-                                <button *ngIf="!postAttachment.isPinned" (click)="pinUnpinPost(postAttachment.id,true)" type="button" class="pinned bg-transparent border-0">
+                                <button *ngIf="!postAttachment.post.isPinned" (click)="pinUnpinPost(postAttachment.post.id,true)" type="button" class="pinned bg-transparent border-0">
                                   <img src="../../../../assets/images/pinned-gray.svg" />
                               </button>
                             </div>

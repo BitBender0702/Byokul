@@ -83,6 +83,7 @@ import { PostService } from 'src/root/service/post.service';
       
 
       this._userService.getUserById(this.userId).subscribe((response) => {
+        debugger
         this.user = response;
         this.followersLength = this.user.followers.length;
         this.isOwnerOrNot();

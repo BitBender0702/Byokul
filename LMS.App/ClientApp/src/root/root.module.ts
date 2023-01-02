@@ -69,10 +69,21 @@ const routes: Routes = [
       .then(m => m.UserModule)
   },
   {
-    path: 'admin',data: { preload: true },
+    path: 'administration',data: { preload: true },
     loadChildren: () => import('./admin/admin.module')
       .then(m => m.AdminModule)
+  },
+  {
+    path: 'profile',data: { preload: true },
+    loadChildren: () => import('./root/urlRoutes.module')
+      .then(m => m.UrlRoutesModule)
   }
+
+  // {
+  //   path: 'school',data: { preload: true },
+  //   loadChildren: () => import('./root/urlRouting.module')
+  //     .then(m => m.UrlRoutingModule)
+  // }
 
 ];
 

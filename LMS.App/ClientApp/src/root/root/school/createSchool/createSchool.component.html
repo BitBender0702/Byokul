@@ -81,6 +81,9 @@
               <div class="form-group">
                 <textarea formControlName="description" class="form-control resize-none" placeholder="{{'TellUsAboutSchool'| translate }}"></textarea>
               </div>
+              <small class="p-error" style="color: orange;margin-left: 148px;" *ngIf="createSchoolForm1.errors?.unauthenticated">
+                School name is already exists!
+              </small>
 				<div class="steps_btns d-flex align-items-center justify-content-center">
 					<button (click)="forwardStep()" type="button"
                 class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 text-uppercase next-step">{{'Next'| translate }}</button>

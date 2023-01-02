@@ -1,10 +1,13 @@
+using Abp.AspNetCore.SignalR.Hubs;
 using BigBlueButtonAPI.Core;
+using LMS.App.HubConfig;
 using LMS.Data;
 using LMS.Data.Entity;
 using LMS.DataAccess.Automapper;
 using LMS.DataAccess.Repository;
 using LMS.Services;
 using LMS.Services.Account;
+using LMS.Services.Admin;
 using LMS.Services.BigBlueButton;
 using LMS.Services.Blob;
 using LMS.Services.Common;
@@ -15,6 +18,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.CookiePolicy;
+using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
@@ -70,6 +74,7 @@ builder.Services.AddScoped<ICommonService, CommonService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserDashboardService, UserDashboardService>();
 builder.Services.AddScoped<IStripeService, StripeService>();
+builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
 StripeConfiguration.ApiKey = configuration.GetSection("Stripe")["SecretKey"];
@@ -115,7 +120,10 @@ builder.Services.AddAutoMapper(config =>
 });
 
 builder.Services.AddSwaggerGen();
-builder.Services.AddSignalR();
+builder.Services.AddSignalR(options =>
+{
+    options.EnableDetailedErrors = true;
+});
 
 var app = builder.Build();
 var temp = new Seeder(app);
@@ -141,6 +149,45 @@ app.MapControllerRoute(
     pattern: "{controller}/{action=Index}/{id?}");
 
 app.MapFallbackToFile("index.html");
+
+//app.MapHub<ChartHub>("/chatHub", options =>
+//{
+//    options.Transports =
+//            HttpTransportType.WebSockets |
+//            HttpTransportType.LongPolling;
+//});
+
+//app.UseSignalR(routes =>
+//{
+//    routes.MapHub<NotifyHub>("/notify", options =>
+//    {
+//        options.Transports =
+//            HttpTransportType.WebSockets |
+//            HttpTransportType.LongPolling;
+//    });
+//});
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapHub<ChatHub>("/chatHub", options =>
+    {
+        options.Transports =
+            HttpTransportType.WebSockets |
+            HttpTransportType.LongPolling;
+    });
+});
+
+
+//app.UseEndpoints(endpoints =>
+//{
+//    endpoints.MapHub<MyHub>("/notify");
+//});
+
+//app.UseEndpoints(endpoints =>
+//{
+//    endpoints.MapHub<MyHub>("/notify");
+//});
+
 
 app.Run();
 

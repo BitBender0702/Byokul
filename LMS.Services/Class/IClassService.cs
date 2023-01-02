@@ -22,5 +22,7 @@ namespace LMS.Services
         Task SaveClassCertificates(SaveClassCertificateViewModel model);
         Task DeleteClassCertificate(ClassCertificateViewModel model);
         Task<ClassViewModel> GetBasicClassInfo(Guid classId);
+        Task<ClassViewModel> GetClassByName(string className, string schoolName);
+        Task<bool> IsClassNameExist(string className);
     }
 }

@@ -28,5 +28,6 @@ namespace LMS.Common.ViewModels.Post
         public AuthorViewModel Author { get; set; }
         public string? CoverLetter { get; set; }
         public IEnumerable<PostAttachmentViewModel> PostAttachments { get; set; }
+        public bool IsPinned { get; set; }
     }
 }

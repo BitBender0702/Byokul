@@ -154,6 +154,9 @@
               *ngIf="(isStepCompleted && this.uploadImageName == undefined)">Image/Video thumbnail is required
             </small>
             </div>
+            <small class="p-error" style="color: orange;margin-left: 148px;" *ngIf="createClassForm1.errors?.unauthenticated">
+              Class name is already exists!
+            </small>
             <div class="steps_btns d-flex align-items-center justify-content-center">
               <button (click)="forwardStep()" type="button"
                 class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 text-uppercase next-step">{{'Next'| translate }}</button>

@@ -54,6 +54,7 @@ export class CreateClassComponent extends MultilingualComponent implements OnIni
   fromSchoolProfile!:string;
   schools:any;
   selectedSchool:any;
+  selectedSchoolName!:string;
 
 
   constructor(injector: Injector,private route: ActivatedRoute,private router: Router,private fb: FormBuilder,classService: ClassService,private http: HttpClient) {
@@ -248,14 +249,42 @@ captureTeacherId(event: any) {
     this.fileToUpload.append('accessibilityId',this.class.accessibilityId);
     this.fileToUpload.append('languageIds',JSON.stringify(this.class.languageIds));
     this.fileToUpload.append('price',this.class.price?.toString());
-    
-    this.step += 1;
-    this.isStepCompleted = false;
-    this.nextPage = true;
 
-    this.createClassForm3.patchValue({
-      classUrl: 'byokul.com/schoolname/' + this.class.className.replace(" ",""),
+    this._classService.isClassNameExist(this.class.className).subscribe((response) => {
+      if(!response){
+        this.createClassForm1.setErrors({ unauthenticated: true });
+        return;
+      }
+      else{
+        this.step += 1;
+        this.isStepCompleted = false;
+        this.nextPage = true;
+    
+        if(this.fromSchoolProfile != ''){
+        this.createClassForm3.patchValue({
+          classUrl: 'byokul.com/profile/' + this.selectedSchool.schoolName.replace(" ","") + "/" +  this.class.className.replace(" ",""),
+          });
+        }
+       else{
+        var schoolId = this.createClassForm1.controls['schoolId'].value;
+        this._classService.getSelectedSchool(schoolId).subscribe((response) => {
+          this.selectedSchool = response;
+          this.createClassForm3.patchValue({
+            classUrl: 'byokul.com/profile/' + this.selectedSchool.schoolName.replace(" ","") + "/" +  this.class.className.replace(" ",""),
+          });
+        });  
+      
+        }
+      }
     });
+   
+    
+
+  }
+
+  getSchoolName(schoolName:string){
+    debugger
+    this.selectedSchoolName = schoolName;
   }
 
   forwardStep2() {

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using LMS.Common.ViewModels.Admin;
 using LMS.Common.ViewModels.Common;
+using LMS.Common.ViewModels.Post;
 using LMS.Common.ViewModels.User;
 using LMS.Data.Entity;
 using System;
@@ -21,6 +22,7 @@ namespace LMS.DataAccess.Automapper
             CreateMap<User, UserUpdateViewModel>();
             CreateMap<Discipline, DisciplineViewModel>();
             CreateMap<User, RegisteredUsersViewModel>();
+            CreateMap<PostTag, PostTagViewModel>();
 
         }
     }

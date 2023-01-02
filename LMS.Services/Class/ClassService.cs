@@ -381,7 +381,7 @@ namespace LMS.Services
 
         public async Task<IEnumerable<PostDetailsViewModel>> GetPostsByClassId(Guid classId)
         {
-            var courseList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == classId).ToListAsync();
+            var courseList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == classId).OrderByDescending(x => x.IsPinned).ToListAsync();
             var result = _mapper.Map<List<PostDetailsViewModel>>(courseList);
 
             foreach (var post in result)
@@ -499,6 +499,26 @@ namespace LMS.Services
             var response = _mapper.Map<ClassViewModel>(classes);
             return response;
 
+        }
+
+        public async Task<ClassViewModel> GetClassByName(string className, string schoolName)
+        {
+            var classes = await _classRepository.GetAll().Include(x => x.School).Where(x => x.ClassName.Replace(" ", "").ToLower() == className && x.School.SchoolName.Replace(" ", "").ToLower() == schoolName).FirstOrDefaultAsync();
+            if (classes != null)
+            {
+                return _mapper.Map<ClassViewModel>(classes);
+            }
+            return null;
+        }
+
+        public async Task<bool> IsClassNameExist(string className)  
+        {
+            var result = await _classRepository.GetAll().Where(x => x.ClassName == className).FirstOrDefaultAsync();
+            if (result != null)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

@@ -17,7 +17,10 @@ const PROXY_CONFIG = [
       "/posts",
       "/users",
       "/userdashboard",
-      "/stripe"
+      "/stripe",
+      "/chats",
+      "/admins",
+      "/chart"
    ],
     target: target,
     secure: false,

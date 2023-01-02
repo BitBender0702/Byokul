@@ -31,6 +31,7 @@ namespace LMS.Common.ViewModels.Post
         public List<IFormFile> UploadVideos { get; set; }
         public List<IFormFile> UploadAttachments { get; set; }
         public IFormFile UploadReels { get; set; }
+        public bool IsPinned { get; set; }
 
     }
 }

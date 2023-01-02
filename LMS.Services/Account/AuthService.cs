@@ -67,6 +67,8 @@ namespace LMS.Services.Account
                 claims.Add(new Claim("role", role));
             }
 
+            claims.Add(new Claim("isBan",userInfo.IsBan.ToString()));
+
             var identity = new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
 
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
