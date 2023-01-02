@@ -514,7 +514,8 @@ hr.earning-hr {
 }
 
 .sidemenu .language-btn label {
-	padding: 5px 12px !important;
+	padding: 5px 16px !important;
+	margin-bottom: 8px;
 }
 
 .sidemenu .accordion-header {
@@ -2288,4 +2289,52 @@ color: #ffffff;
 
 .ui-steps-number { 
 overflow: hidden
+}
+.p-steps-item::before{
+	display: none !important;
+}
+.p-steps .p-steps-item .p-menuitem-link span.p-steps-number {
+    background: #F2F7FF;
+    font-size: 0;
+    width: 10px;
+    height: 10px;
+    min-width: 10px;
+    border: none;
+}
+ul .p-steps-item {
+    flex: 0 0 auto;
+}
+.p-steps ul{
+	justify-content: center;
+}
+.p-steps .p-steps-item .p-menuitem-link {
+    box-shadow: none !important;
+}
+ul .p-steps-item {
+    flex: 0;
+    padding: 0 8px;
+}
+.p-steps-item.p-steps-current span.p-steps-number {
+    background: #FF811C !important;
+}
+.custom-language-select .p-multiselect.p-component {
+    border: none;
+    border-radius: 0;
+    box-shadow: none !important;
+    outline: none !important;
+}
+.custom-language-select .p-multiselect-label {
+    padding-top: 5px !important;
+}
+.p-multiselect-panel .p-multiselect-items .p-multiselect-item.p-highlight, .p-multiselect-panel .p-multiselect-items .p-multiselect-item:not(.p-highlight):not(.p-disabled):hover {
+	background: #fff !important;
+    box-shadow: none !important;
+}
+.p-checkbox .p-checkbox-box.p-highlight {
+    border-color: #ff9f1c !important;
+    background: #ff9f1c !important;
+}
+.custom-language-select ul {
+    padding-left: 0 !important;
+    padding: 0 !important;
 }
