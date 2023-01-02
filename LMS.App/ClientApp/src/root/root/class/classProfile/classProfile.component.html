@@ -24,10 +24,12 @@
       <div class="School-prof-header">
         <div class="d-flex align-items-center">
           <div class="position-relative">
-               <div class="school-profile-icon rounded-circle class-course-image">
-                  <img [src]="class.avatar" style="scale: 1.8;margin-top: 50px;"/>
+               <div class="school-profile-icon rounded-circle class-course-image ">
+                  <img [src]="class.avatar"/>
               </div>
-              <img [src]="class.school.avatar" class="univ-logo" />
+              <div class="univ-logo">
+              <img [src]="class.school.avatar"  />
+            </div>
             </div>
         <div class="school-profile-content edit-profilehover w-100">
           <div class="d-flex justify-content-between flex-wrap class_request align-items-center mb-4">

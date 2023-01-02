@@ -65,7 +65,7 @@
           <span *ngFor="let item of user.languages;" class="custom-tag">{{item.name}}<button (click)="getDeletedLanguage(item.id)" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#delete-userLanguage">
             <img *ngIf="isOwner" src="../../../../assets/images/cross-sm-light.svg" /></button></span>
   
-          <span *ngIf="isOwner" class="custom-tag">Add Languages <button (click)="resetLanguageModal()" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#add-language">
+          <span *ngIf="isOwner" class="custom-tag add-language-tag">Add Languages <button (click)="resetLanguageModal()" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#add-language">
             <img *ngIf="isOwner" src="../../../../assets/images/school/plus-light.svg" /></button>
           </span>
           
@@ -771,9 +771,9 @@
       </div>
       <div class="modal-body">
         <div class="edit-profile-header text-center mb-4">
-          <div class="rounded-circle modal-school-icon text-center mb-2">
+          <div class="rounded-circle modal-school-icon text-center mb-2 overflow-hidden new-upload-img">
             <div *ngIf="uploadImage!= ''">
-              <img [src]="uploadImage" style="margin-top: 50px;">
+              <img [src]="uploadImage">
             </div>
             <div *ngIf="uploadImage == ''">
               <img src={{editUser?.avatar}}>
@@ -782,13 +782,14 @@
           <input #imageFile class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins position-static opacity-100" type="file" name="Edit Picture" id="avatar" (change)="handleImageInput($event)"/>
           <!-- <button class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins position-static opacity-100">{{'EditPicture'| translate }}</button> -->
         </div>
-        <div class="text-line-border position-relative text-center mb-4">
+        <div class="text-line-border position-relative text-center mb-2">
           <span class="line-text font_12 text_ltgray fw_400 text-center">{{'PersonalInformation'| translate }}</span>
         </div>
-        <form [formGroup]="editUserForm">
+        <form [formGroup]="editUserForm" class="latest-form">
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
+                <label class="font_10">Name</label>
                 <input (keypress)="omit_special_char($event)" formControlName="firstName" type="text" name="firstName" class="form-control w-100">
                 <small class="p-error" style="color: orange;"
                 *ngIf="(isSubmitted && editUserForm.controls.firstName.errors)">First Name is required
@@ -797,6 +798,7 @@
             </div>
             <div class="col-md-6">
               <div class="form-group">
+                <label class="font_10">Surname</label>
                 <input (keypress)="omit_special_char($event)" formControlName="lastName" type="text" name="lastName"  class="form-control w-100">
                 <small class="p-error" style="color: orange;"
                 *ngIf="(isSubmitted && editUserForm.controls.lastName.errors)">Last Name is required
@@ -805,6 +807,7 @@
             </div>
             <div class="col-md-6">
               <div class="form-group">
+                <label class="font_10">Date of Birth</label>
                 <input formControlName="dob" type="date" name="dob" class="form-control w-100">
                 <small class="p-error" style="color: orange;"
                 *ngIf="(isSubmitted && editUserForm.controls.dob.errors)">Last Name is required
@@ -813,6 +816,7 @@
             </div>
             <div class="col-md-6">
               <div class="form-group">
+                <label class="font_10">Gender</label>
                 <select formControlName="gender" class="form-select rounded-8 w-100">
                   <option value=1>Male</option>
                   <option value=2>Female</option>
@@ -823,7 +827,8 @@
               </div>
             </div>
             <div class="col-md-6">
-              <div class="form-group">
+              <div class="form-group">                
+                <label class="font_10">Contact Email</label>
                 <input formControlName="contactEmail" placeholder="Contact Email" type="email" name="contactEmail" class="form-control w-100">
                 <small class="p-error" style="color: orange;"
                 *ngIf="(isSubmitted && editUserForm.controls.contactEmail.errors)">Last Name is required
@@ -831,10 +836,11 @@
               </div>
             </div>
           </div>
-          <div class="text-line-border position-relative text-center mb-4">
+          <!-- <div class="text-line-border position-relative text-center mb-4">
             <span class="line-text font_12 text_ltgray fw_400 text-center">{{'UserBio'| translate }}</span>
-          </div>
+          </div> -->
           <div class="form-group ">
+            <label class="font_10">User Bio</label>
             <textarea formControlName="description" class="form-control resize-none ht_96"></textarea>
           </div>
         </form>
