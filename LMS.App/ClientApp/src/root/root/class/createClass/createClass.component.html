@@ -32,7 +32,7 @@
           <span class="step step2"></span>
         </div> -->
         <p-steps *ngIf="step<2" [model]="items" [(activeIndex)]="step" [readonly]="true">
-        </p-steps><br>
+        </p-steps>
         <div class="tab-content registerTabs">
           <div [ngClass]="step == 0 ? 'tab tab-pane active' : 'tab tab-pane'">
             <p class="text-center font_16 fw_600 step-desc">{{'CreateClassStep1'| translate }}</p>

@@ -591,13 +591,13 @@
                 src="../../../../assets/images/cross.svg" /></button>
           </div>
           <div class="edit-profile-header text-center mb-4">
-            <div class="rounded-circle modal-school-icon text-center mb-2">
-              <div class="school-profile-icon rounded-circle overflow-hidden">
+            <div class="rounded-circle text-center mb-2">
+              <div class="school-profile-icon rounded-circle overflow-hidden new-upload-img modal-school-icon">
               <div *ngIf="uploadImage!= ''">
                 <img [src]="uploadImage">
               </div>
               <div *ngIf="uploadImage == ''">
-                <img src={{editSchool?.avatar}} style="scale: 1.8;margin-top: 64px;">
+                <img src={{editSchool?.avatar}} style="scale: 1.8;">
               </div>
               </div>
             </div>
@@ -610,10 +610,11 @@
           <div class="text-line-border position-relative text-center mb-4">
             <span class="line-text font_12 text_ltgray fw_400 text-center">{{'GeneralInformation'| translate }}</span>
           </div>
-          <form [formGroup]="editSchoolForm">
+          <form [formGroup]="editSchoolForm" class="latest-form">
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group">
+                  <label class="font_10">School Name</label>
                   <input type="text" formControlName="schoolName" name="schoolName" class="form-control w-100" placeholder="{{'SchoolName'| translate }}">
                   <small class="p-error" style="color: orange;"
                   *ngIf="(isSubmitted && editSchoolForm.controls.schoolName.errors)">School Name is required
@@ -622,13 +623,14 @@
               </div>
               <div class="col-md-6">
                 <div class="form-group">
+                  <label class="font_10">School Slogan</label>
                   <input type="text" formControlName="schoolSlogan" placeholder="" name="schoolslogan"
                     class="form-control w-100" placeholder="{{'SchoolSlogan'| translate }}">
                 </div>
               </div>
               <div class="col-md-6">
-                <div class="form-group position-relative student-input date-input">
-                  <label>Founded:</label>
+                <div class="form-group">
+                  <label class="font_10">Founded</label>
                   <input type="date" formControlName="founded" placeholder="10/10/2022" name="Founded" class="form-control w-100">
                   <small class="p-error" style="color: orange;"
                   *ngIf="(isSubmitted && editSchoolForm.controls.founded.errors)">Founded Year is required
@@ -640,6 +642,7 @@
               </div>
               <div class="col-md-6">
                 <div class="form-group">
+                  <label class="font_10">Visibility</label>
                   <select class="form-select rounded-8 w-100" formControlName="accessibilityId">
                     <option *ngFor="let item of accessibility; let i = index" [value]="item.id" [selected]="i">{{item.name}}</option>
                     <small class="p-error" style="color: orange;"
@@ -648,27 +651,27 @@
                  </select>
                 </div>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-12">
+              <div class="form-group ">
+                <label class="font_10">School Bio</label>
+                <input  type="text" formControlName="description" class="form-control resize-none ht_96" />
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="font_10">{{'Owner'| translate }}:</label>
+                <input readonly formControlName="owner" type="text" name="schoolOwner" class="form-control w-100">
+              </div>
+            </div>
+              <div class="col-md-12">
                 <div class="form-group">
+                  <label class="font_10">Contact Email</label>                  
                   <input formControlName="schoolEmail" type="text" name="schoolmail" class="form-control w-100" placeholder="{{'SchoolEmail'| translate }}">
                 </div>
               </div>
-              <div class="col-md-6">
-                <div class="form-group position-relative student-input date-input owner-input">
-                  <label>{{'Owner'| translate }}:</label>
-                  <input readonly formControlName="owner" type="text" name="schoolOwner" class="form-control w-100">
-                </div>
-              </div>
-            </div>
-
-            <div class="text-line-border position-relative text-center mb-4">
-              <span class="line-text font_12 text_ltgray fw_400 text-center">{{'SchoolBio'| translate }}</span>
-            </div>
-            <div class="form-group ">
-              <textarea formControlName="description" class="form-control resize-none ht_96"
-              ></textarea>
-            </div>
-            <div class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4">
+              
+            </div>           
+            <div class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 mt-4">
               <button #closeEditModal id="closeBtn" type="button"
                 class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
                 data-bs-dismiss="modal">{{'DiscardChanges'| translate }}</button>
