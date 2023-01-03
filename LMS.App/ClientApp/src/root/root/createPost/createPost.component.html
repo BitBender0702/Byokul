@@ -11,7 +11,7 @@
       data-bs-target="#add-attachment">Create Post</button>
       <!-- <div *ngIf="isDataLoaded"> -->
       <div appBsModal  bsModal #createPostModal="bs-modal" class="modal fade edit-school-modal show d-block" id="create-post" tabindex="-1"
-        aria-labelledby="create-post" aria-hidden="true" area-modal="true">
+        aria-labelledby="create-post" aria-hidden="true" [config]="{backdrop: 'static'}" area-modal="true">
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
             <div class="modal-header border-0 justify-content-center position-relative">

@@ -143,7 +143,26 @@
     "RequestMessage": "Mensaje de solicitud",
     "Description": "Descripción",
     "Yes": "Sí",
-    "No": "No"
+    "No": "No",
+    "NoResultFound": "No se han encontrado resultados",
+
+    "LiveStream": "Transmisión en vivo",
+    "ChatEnabled": "Chat habilitado",
+    "YourMessage": "Tu mensaje",
+    "FileStorage": "File Storage",
+    "Tags": "Tags",
+    "AddTag" : "Add Tag",
+    "TypeToAdd": "Type to add",
+    "AttachhFile": "Attach File",
+    "ClickToBrowse": "Click to Browse",
+    "FindInFileStorage": "Or Find in File Storage",
+    "Files": "Files",
+    "Logout": "Logout",
+    "ChangePassword": "Change Password",
+    "CurrentPassword": "Current Password",
+    "NewPassword": "New Password",
+    "Ban": "Ban",
+    "Report": "Report"
 
 
 }

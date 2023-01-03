@@ -142,6 +142,25 @@
     "RequestMessage": "طلب رسالة",
     "Description": "وصف",
     "Yes": "نعم",
-    "No": "رقم"
+    "No": "رقم",
+    "NoResultFound": "لم يتم العثور على نتائج",
+
+    "LiveStream": "البث المباشر",
+    "ChatEnabled": "تمكين الدردشة",
+    "YourMessage": "رسالتك",
+    "FileStorage": "File Storage",
+    "Tags": "Tags",
+    "AddTag" : "Add Tag",
+    "TypeToAdd": "Type to add",
+    "AttachhFile": "Attach File",
+    "ClickToBrowse": "Click to Browse",
+    "FindInFileStorage": "Or Find in File Storage",
+    "Files": "Files",
+    "Logout": "Logout",
+    "ChangePassword": "Change Password",
+    "CurrentPassword": "Current Password",
+    "NewPassword": "New Password",
+    "Ban": "Ban",
+    "Report": "Report"
 
 }

@@ -142,6 +142,25 @@
     "RequestMessage": "Mesaj İste",
     "Description": "Tanım",
     "Yes": "Evet",
-    "No": "Numara"
+    "No": "Numara",
+    "NoResultFound": "Sonuç bulunamadı",
+
+    "LiveStream": "Canlı yayın",
+    "ChatEnabled": "Sohbet Etkin",
+    "YourMessage": "Mesajın",
+    "FileStorage": "File Storage",
+    "Tags": "Tags",
+    "AddTag" : "Add Tag",
+    "TypeToAdd": "Type to add",
+    "AttachhFile": "Attach File",
+    "ClickToBrowse": "Click to Browse",
+    "FindInFileStorage": "Or Find in File Storage",
+    "Files": "Files",
+    "Logout": "Logout",
+    "ChangePassword": "Change Password",
+    "CurrentPassword": "Current Password",
+    "NewPassword": "New Password",
+    "Ban": "Ban",
+    "Report": "Report"
 
   }
