@@ -1,6 +1,5 @@
 using Abp.AspNetCore.SignalR.Hubs;
 using BigBlueButtonAPI.Core;
-using LMS.App.HubConfig;
 using LMS.Data;
 using LMS.Data.Entity;
 using LMS.DataAccess.Automapper;
