@@ -4,6 +4,7 @@ using LMS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LMS.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230103083802_Add_Avatar_and_Rating_In_Course")]
+    partial class Add_Avatar_and_Rating_In_Course
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -330,29 +332,6 @@ namespace LMS.Data.Migrations
                     b.HasIndex("ServiceTypeId");
 
                     b.ToTable("Courses");
-                });
-
-            modelBuilder.Entity("LMS.Data.Entity.CourseCertificate", b =>
-                {
-                    b.Property<Guid>("CertificateId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("CertificateUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("CourseId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("CertificateId");
-
-                    b.HasIndex("CourseId");
-
-                    b.ToTable("CourseCertificates");
                 });
 
             modelBuilder.Entity("LMS.Data.Entity.CourseDiscipline", b =>
@@ -1458,17 +1437,6 @@ namespace LMS.Data.Migrations
                     b.Navigation("School");
 
                     b.Navigation("ServiceType");
-                });
-
-            modelBuilder.Entity("LMS.Data.Entity.CourseCertificate", b =>
-                {
-                    b.HasOne("LMS.Data.Entity.Course", "Course")
-                        .WithMany()
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Course");
                 });
 
             modelBuilder.Entity("LMS.Data.Entity.CourseDiscipline", b =>

@@ -142,7 +142,7 @@ export class CreatePostComponent implements OnInit {
 
    }
 
-   if(this.courseId != undefined){
+   if(initialValue?.from == "course"){
     this._postService.getCourse(this.courseId).subscribe((response) => {
       this.parentDetails = response;
      
@@ -330,6 +330,7 @@ export class CreatePostComponent implements OnInit {
    }
 
    postFrom(){
+    debugger
     if(this.schoolId!= undefined){
       this.appendData(this.schoolId,this.schoolId,'',PostAuthorTypeEnum.School.toString());
     }

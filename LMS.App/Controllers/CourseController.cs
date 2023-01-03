@@ -48,7 +48,7 @@ namespace LMS.App.Controllers
         }
 
         [Route("getCourseById")]
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> GetCourseById(Guid courseId)
         {
             var response = await _courseService.GetCourseById(courseId);
@@ -84,6 +84,55 @@ namespace LMS.App.Controllers
         {
             var response = await _courseService.GetBasicCourseInfo(courseId);
             return Ok(response);
+        }
+
+
+        [Route("saveCourseLanguages")]  
+        [HttpPost]
+        public async Task<IActionResult> SaveCourseLanguages([FromBody] SaveCourseLanguageViewModel model)
+        {
+            await _courseService.SaveCourseLanguages(model.LanguageIds, new Guid(model.CourseId));
+            return Ok();
+        }
+
+        [Route("deleteCourseLanguage")]
+        [HttpPost]
+        public async Task<IActionResult> DeleteCourseLanguage([FromBody] CourseLanguageViewModel model)
+        {
+            await _courseService.DeleteCourseLanguage(model);
+            return Ok();
+        }
+
+        [Route("saveCourseTeachers")]
+        [HttpPost]
+        public async Task<IActionResult> SaveCourseTeachers([FromBody] SaveCourseTeacherViewModel model)
+        {
+            await _courseService.SaveCourseTeachers(model.TeacherIds,new Guid(model.CourseId));
+            return Ok();
+        }
+
+        [Route("deleteCourseTeacher")]
+        [HttpPost]
+        public async Task<IActionResult> DeleteCourseTeacher([FromBody] CourseTeacherViewModel model)
+        {
+            await _courseService.DeleteCourseTeacher(model);
+            return Ok();
+        }
+
+        [Route("saveCourseCertificates")]
+        [HttpPost]
+        public async Task<IActionResult> SaveCourseCertificates(SaveCourseCertificateViewModel model)
+        {
+            await _courseService.SaveCourseCertificates(model);
+            return Ok();
+        }
+
+        [Route("deleteCourseCertificate")]
+        [HttpPost]
+        public async Task<IActionResult> DeleteCourseCertificate([FromBody] CourseCertificateViewModel model)
+        {
+            await _courseService.DeleteCourseCertificate(model);
+            return Ok();
         }
 
     }

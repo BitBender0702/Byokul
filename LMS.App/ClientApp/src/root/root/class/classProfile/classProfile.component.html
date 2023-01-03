@@ -55,6 +55,8 @@
             <button *ngIf="!isOwner" type="button"
               class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn me-0 minw-142 class-request-msg">{{'RequestMessage'| translate }}</button>
             </div>
+            <button *ngIf="isOwner" type="button" class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins" style="margin-right: 130px;">{{'Convert To Course'| translate }}</button>
+
             <button *ngIf="isOwner" (click)="getClassDetails(class.classId)" class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins" data-bs-toggle="modal"
               data-bs-target="#editClass"><img src="../../../../assets/images/Setting-solid-dark.svg" class="me-2" /> {{'EditProfile'| translate }}
               </button>
@@ -108,7 +110,7 @@
           Kingdom</span>
       </div>
       <hr class="hr-gray" />
-      <div class="school-profile-tabs d-flex align-content-center justify-content-between">
+      <div class="school-profile-tabs d-flex align-content-center justify-content-center">
         <div></div>
         <button type="button" class="btn button-stroage font_16 fw_600 text_dark d-inline-flex align-items-center justify-content-center"><img src="../../../../assets/images/Folder.svg" class="me-2" />{{' FileStorage'| translate }}</button>
         <div class="button-list-grid">

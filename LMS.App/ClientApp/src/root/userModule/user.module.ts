@@ -22,6 +22,7 @@ import { SchoolFollowersComponent } from '../root/school/schoolFollowers/schoolF
 import { ReelsViewComponent } from '../root/reels/reelsView.component';
 
 import { ChatComponent } from '../root/chat/chat.component';
+import { CourseProfileComponent } from '../root/course/courseProfile/courseProfile.component';
 
 
 const routes: Routes = [
@@ -67,6 +68,9 @@ const routes: Routes = [
   },
   {
     path: 'school/:schoolName/:className',component:ClassProfileComponent
+  },
+  {
+    path: 'courseProfile/:courseId',component:CourseProfileComponent
   },
   {
     path: 'myEarnings',component:MyEarningsComponent

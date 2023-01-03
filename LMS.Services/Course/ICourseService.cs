@@ -15,5 +15,11 @@ namespace LMS.Services
         Task<CourseDetailsViewModel> GetCourseById(Guid courseId);
         Task<IEnumerable<CourseViewModel>> GetAllCourses();
         Task<CourseViewModel> GetBasicCourseInfo(Guid courseId);
+        Task SaveCourseLanguages(IEnumerable<string> languageIds, Guid courseId);
+        Task DeleteCourseLanguage(CourseLanguageViewModel model);
+        Task SaveCourseTeachers(IEnumerable<string> teacherIds, Guid courseId);
+        Task DeleteCourseTeacher(CourseTeacherViewModel model);
+        Task SaveCourseCertificates(SaveCourseCertificateViewModel model);
+        Task DeleteCourseCertificate(CourseCertificateViewModel model);
     }
 }

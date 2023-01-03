@@ -6,6 +6,7 @@ using LMS.Common.ViewModels.Student;
 using LMS.Common.ViewModels.Teacher;
 using LMS.Data.Entity;
 using LMS.DataAccess.Repository;
+using LMS.Services.Blob;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -27,10 +28,13 @@ namespace LMS.Services
         private IGenericRepository<CourseStudent> _courseStudentRepository;
         private IGenericRepository<CourseTeacher> _courseTeacherRepository;
         private IGenericRepository<Post> _postRepository;
+        private IGenericRepository<PostAttachment> _postAttachmentRepository;
+        private IGenericRepository<CourseCertificate> _courseCertificateRepository;
         private readonly UserManager<User> _userManager;
+        private readonly IBlobService _blobService;
 
 
-        public CourseService(IMapper mapper, IGenericRepository<Course> courseRepository, IGenericRepository<CourseLanguage> courseLanguageRepository, IGenericRepository<CourseDiscipline> courseDisciplineRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<CourseTeacher> courseTeacherRepository, IGenericRepository<Post> postRepository,UserManager<User> userManager)
+        public CourseService(IMapper mapper, IGenericRepository<Course> courseRepository, IGenericRepository<CourseLanguage> courseLanguageRepository, IGenericRepository<CourseDiscipline> courseDisciplineRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<CourseTeacher> courseTeacherRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<CourseCertificate> courseCertificateRepository, UserManager<User> userManager, IBlobService blobService)
         {
             _mapper = mapper;
             _courseRepository = courseRepository;
@@ -39,7 +43,10 @@ namespace LMS.Services
             _courseStudentRepository = courseStudentRepository;
             _courseTeacherRepository = courseTeacherRepository;
             _postRepository = postRepository;
+            _postAttachmentRepository = postAttachmentRepository;
+            _courseCertificateRepository = courseCertificateRepository;
             _userManager = userManager;
+            _blobService = blobService;
         }
 
         public async Task<Guid> SaveNewCourse(CourseViewModel courseViewModel, string createdById)
@@ -101,7 +108,7 @@ namespace LMS.Services
 
         }
 
-        async Task SaveCourseLanguages(IEnumerable<string> languageIds, Guid courseId)
+        public async Task SaveCourseLanguages(IEnumerable<string> languageIds, Guid courseId)
         {
             foreach (var languageId in languageIds)
             {
@@ -147,7 +154,7 @@ namespace LMS.Services
             }
         }
 
-        async Task SaveCourseTeachers(IEnumerable<string> teacherIds, Guid courseId)
+       public async Task SaveCourseTeachers(IEnumerable<string> teacherIds, Guid courseId)
         {
             foreach (var teacherId in teacherIds)
             {
@@ -268,6 +275,8 @@ namespace LMS.Services
                 model.Students = await GetStudents(course.CourseId);
                 model.Teachers = await GetTeachers(course.CourseId);
                 model.Posts = await GetPostsByCourseId(course.CourseId);
+                model.CourseCertificates = await GetCertificateByCourseId(course.CourseId);
+
 
                 return model;
             }
@@ -354,19 +363,32 @@ namespace LMS.Services
 
             foreach (var post in result)
             {
-                var author = await _courseRepository.GetAll().Include(x => x.School).Where(x => x.CourseId == post.ParentId).FirstOrDefaultAsync();
-
-                post.Owner = _mapper.Map<OwnerViewModel>(author.School);
+                var attachment = await GetAttachmentsByPostId(post.Id);
+                post.PostAttachments = attachment;
             }
 
-            foreach (var post in result)
-            {
-                var author = await _userManager.Users.Where(x => x.Id == post.CreatedBy).FirstOrDefaultAsync();
+            //foreach (var post in result)
+            //{
+            //    var author = await _courseRepository.GetAll().Include(x => x.School).Where(x => x.CourseId == post.ParentId).FirstOrDefaultAsync();
 
-                post.Author = _mapper.Map<AuthorViewModel>(author);
-            }
+            //    post.Owner = _mapper.Map<OwnerViewModel>(author.School);
+            //}
+
+            //foreach (var post in result)
+            //{
+            //    var author = await _userManager.Users.Where(x => x.Id == post.CreatedBy).FirstOrDefaultAsync();
+
+            //    post.Author = _mapper.Map<AuthorViewModel>(author);
+            //}
 
             return result;
+        }
+
+        async Task<IEnumerable<CourseCertificateViewModel>> GetCertificateByCourseId(Guid courseId)
+        {
+            var courseCertificate = _courseCertificateRepository.GetAll().Where(x => x.CourseId == courseId).ToList();
+            var response = _mapper.Map<IEnumerable<CourseCertificateViewModel>>(courseCertificate);
+            return response;
         }
 
         public async Task<CourseViewModel> GetBasicCourseInfo(Guid courseId)
@@ -375,6 +397,63 @@ namespace LMS.Services
 
             var response = _mapper.Map<CourseViewModel>(course);
             return response;
+
+        }
+
+        public async Task DeleteCourseLanguage(CourseLanguageViewModel model)
+        {
+            var courseLanguage = await _courseLanguageRepository.GetAll().Where(x => x.CourseId == model.CourseId && x.LanguageId == model.LanguageId).FirstOrDefaultAsync();
+
+            _courseLanguageRepository.Delete(courseLanguage.Id);
+            _courseLanguageRepository.Save();
+
+        }
+
+        public async Task DeleteCourseTeacher(CourseTeacherViewModel model)
+        {
+            var courseTeacher = await _courseTeacherRepository.GetAll().Where(x => x.CourseId == model.CourseId && x.TeacherId == model.TeacherId).FirstOrDefaultAsync();
+
+            _courseTeacherRepository.Delete(courseTeacher.Id);
+            _courseTeacherRepository.Save();
+
+        }
+
+        public async Task<IEnumerable<PostAttachmentViewModel>> GetAttachmentsByPostId(Guid postId)
+        {
+            var attacchmentList = await _postAttachmentRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.PostId == postId).ToListAsync();
+
+            var result = _mapper.Map<List<PostAttachmentViewModel>>(attacchmentList);
+            return result;
+        }
+
+        public async Task SaveCourseCertificates(SaveCourseCertificateViewModel courseCertificates)
+        {
+            string containerName = "coursecertificates";
+
+            foreach (var certificate in courseCertificates.Certificates)
+            {
+                string certificateUrl = await _blobService.UploadFileAsync(certificate, containerName);
+
+                string certificateName = certificate.FileName;
+
+                var classCertificate = new CourseCertificate
+                {
+                    CertificateUrl = certificateUrl,
+                    Name = certificateName,
+                    CourseId = courseCertificates.CourseId
+                };
+                _courseCertificateRepository.Insert(classCertificate);
+                _courseCertificateRepository.Save();
+            }
+
+        }
+
+        public async Task DeleteCourseCertificate(CourseCertificateViewModel model)
+        {
+            var courseCertificate = await _courseCertificateRepository.GetAll().Where(x => x.CourseId == model.CourseId && x.CertificateId == model.CertificateId).FirstOrDefaultAsync();
+
+            _courseCertificateRepository.Delete(courseCertificate.CertificateId);
+            _courseCertificateRepository.Save();
 
         }
 

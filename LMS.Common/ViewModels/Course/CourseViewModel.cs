@@ -23,6 +23,8 @@ namespace LMS.Common.ViewModels.Course
         public long Price { get; set; }
         public Guid? AccessibilityId { get; set; }
         public string CourseUrl { get; set; }
+        public string? Avatar { get; set; }
+        public double? Rating { get; set; }
         public AccessibilityViewModel Accessibility { get; set; }
         public IEnumerable<string> LanguageIds { get; set; }
         public IEnumerable<string> TeacherIds { get; set; }

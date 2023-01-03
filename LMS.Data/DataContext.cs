@@ -50,5 +50,6 @@ namespace LMS.Data
         public DbSet<UserLanguage> UserLanguages { get; set; }
         public DbSet<SchoolDefaultLogo> SchoolDefaultLogos { get; set; }
         public DbSet<ClassCertificate> ClassCertificates { get; set; }
+        public DbSet<CourseCertificate> CourseCertificates { get; set; }
     }
 }

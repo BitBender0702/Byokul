@@ -42,6 +42,10 @@ export class SideBarComponent extends MultilingualComponent implements OnInit {
     window.location.href=`user/classProfile/${classId}`;
   }
 
+  getSelectedCourse(courseId:any){
+    window.location.href=`user/courseProfile/${courseId}`;
+  }
+
   getUserDetails(userId:string){
     window.location.href=`user/userProfile/${userId}`;
   }

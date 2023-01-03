@@ -21,6 +21,7 @@ import { ReelsViewComponent } from '../root/reels/reelsView.component';
 
 import { ChatComponent } from '../root/chat/chat.component';
 import { UrlRoutesComponent } from './urlRoutes.component';
+import { CourseProfileComponent } from './course/courseProfile/courseProfile.component';
 
 
 // const routes: Routes = [
@@ -55,6 +56,9 @@ import { UrlRoutesComponent } from './urlRoutes.component';
          {
           path: ':schoolName/:className',component:ClassProfileComponent
        },
+       {
+        path: ':schoolName/:courseName',component:CourseProfileComponent
+     },
 
 
 

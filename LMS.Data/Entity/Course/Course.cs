@@ -20,5 +20,7 @@ namespace LMS.Data.Entity
         public long Price { get; set; }
         public string CourseUrl { get; set; }
         public bool IsEnable { get; set; }
+        public string? Avatar { get; set; }
+        public double? Rating { get; set; }
     }
 }

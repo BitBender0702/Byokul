@@ -51,4 +51,34 @@ export class CourseService{
         return this.http.get(`${this.apiUrl}/school/getBasicSchoolInfo` + '?schoolId=' + schoolId);
     }
 
+    getCourseById(courseId:string):Observable<any>{
+        debugger
+        return this.http.get(`${this.apiUrl}/course/getCourseById` + '?courseId=' + courseId);
+    }
+
+    saveCourseLanguages(addLanguages:any):Observable<any>{
+        return this.http.post(`${this.apiUrl}/course/saveCourseLanguages`,addLanguages);
+    }
+
+    saveCourseTeachers(addTeachers:any):Observable<any>{
+        return this.http.post(`${this.apiUrl}/course/saveCourseTeachers`,addTeachers);
+    }
+
+    deleteCourseLanguage(deletelanguages:any):Observable<any>{
+        return this.http.post(`${this.apiUrl}/course/deleteCourseLanguage`,deletelanguages);
+    }
+
+    deleteCourseTeacher(deleteTeacher:any):Observable<any>{
+        return this.http.post(`${this.apiUrl}/course/deleteCourseTeacher`,deleteTeacher);
+    }
+
+    deleteCourseCertificate(deleteCertificate:any):Observable<any>{
+        return this.http.post(`${this.apiUrl}/course/deleteCourseCertificate`,deleteCertificate);
+    }
+
+    saveCourseCertificates(addCertificates:any):Observable<any>{
+        debugger
+        return this.http.post(`${this.apiUrl}/course/saveCourseCertificates`,addCertificates);
+    }
+
 }

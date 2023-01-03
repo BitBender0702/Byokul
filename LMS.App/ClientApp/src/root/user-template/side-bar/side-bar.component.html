@@ -129,7 +129,7 @@
                 <div *ngFor="let item of sidebarInfo.followedCourses;">
                   <div *ngIf="!item.isEnable" class="school-name d-flex align-items-center font_16">
                     <div class="school-img rounded-circle me-3">
-                      <img src="../../../assets/images/school/school-1.png" />
+                      <img [src]="item.avatar" />
                     </div>
                     <a style="cursor:pointer;">{{item.courseName}}</a>
                   </div>
@@ -221,9 +221,9 @@
                 <div  *ngFor="let item of sidebarInfo.ownedCourses;">
                   <div *ngIf="!item.isEnable" class="school-name d-flex align-items-center font_16">
                     <div class="school-img rounded-circle me-3">
-                      <img src="../../../assets/images/school/school-4.png" />
+                      <img [src]="item.avatar" />
                     </div>
-                    <a style="cursor:pointer;">{{item.courseName}}</a>
+                    <a style="cursor:pointer;" (click)="getSelectedCourse(item.courseId)">{{item.courseName}}</a>
                   </div>
                 </div>
               </div>

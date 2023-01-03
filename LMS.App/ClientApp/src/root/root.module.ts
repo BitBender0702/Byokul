@@ -54,6 +54,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { ChatComponent } from './root/chat/chat.component';
 import { AdminModule } from './admin/admin.module';
 import { PostViewComponent } from './root/postView/postView.component';
+import { CourseProfileComponent } from './root/course/courseProfile/courseProfile.component';
 //import { AdminModule } from './admin/admin.module';
 
 
@@ -104,6 +105,7 @@ const routes: Routes = [
     VideoPlayerComponent,
     MyEarningsComponent,
     ClassProfileComponent,
+    CourseProfileComponent,
     UserProfileComponent,
     ReelsViewComponent,
     UserFollowersComponent,
