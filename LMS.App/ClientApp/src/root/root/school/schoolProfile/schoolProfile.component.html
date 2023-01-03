@@ -105,16 +105,18 @@
           </ul>
         </div>
         <div>
+          <div class="btn-filter1 align-items-center">
           <button *ngIf="isOwner" [routerLink]="['/user/createClass', school.schoolId]" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 me-4">Create Class</button>
           <button *ngIf="isOwner" [routerLink]="['/user/createCourse', school.schoolId]" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 me-4">Create Course</button>
-
-
+        </div>
+<div class="button-list-grid1">
           <button [ngClass]="isProfileGrid ? 'btn border-btn active d-inline-flex align-items-center justify-content-center' : 'btn border-btn d-inline-flex align-items-center justify-content-center'" (click)="profileGrid()" type="button" >
             <img src="../../../../assets/images/Filter.svg" />
           </button>
           <button [ngClass]="!isProfileGrid ? 'btn border-btn active d-inline-flex align-items-center justify-content-center' : 'btn border-btn d-inline-flex align-items-center justify-content-center'" (click)="profileList()" type="button" class="btn border-btn d-inline-flex align-items-center justify-content-center">
             <img src="../../../../assets/images/Category.svg" />
           </button>
+</div>
         </div>
       </div>
 
@@ -189,10 +191,10 @@
                         <div class="teacher-tags tag-box hashtag_box">
                             <span *ngFor="let tag of post.postTags" class="custom-tag">#{{tag.postTagValue}}</span>
                         </div>
-                        <div class="school-grid-thumbnail">
-                            <div class="row gx-1">
+                        <div class="school-grid-thumbnail new-school-grid-thumbnail">
+                            <div class="row gx-1 h-100">
                               
-                                <div *ngIf="post.postAttachments.length == 1"  class="col-md-12">
+                                <div *ngIf="post.postAttachments.length == 1"  class="col-md-12 h-100">
                                     <div class="school-large-thumbnail shadow-thumnail position-relative">
                                        <video *ngIf="post.postAttachments.length == 1 && post.postAttachments[0]?.fileType==2" (click)="openPostsViewModal(post.postAttachments)" preload="metadata" class="w-100" style="cursor: pointer;">
                                           <source [src]="post.postAttachments[0]?.fileUrl" type="video/mp4"/>
@@ -201,7 +203,7 @@
                                     </div>
                                 </div>
 
-                                <div *ngIf="post.postAttachments.length == 2"  class="col-md-12">
+                                <div *ngIf="post.postAttachments.length == 2"  class="col-md-12 h-100">
                                   <div class="school-large-thumbnail shadow-thumnail position-relative">
                                     <ng-container *ngFor="let attachment of post.postAttachments">
                                      <video *ngIf="attachment?.fileType==2" (click)="openPostsViewModal(post.postAttachments)" preload="metadata" class="w-100" style="cursor: pointer;">
@@ -212,7 +214,7 @@
                                   </div>
                                 </div>
 
-                                <div *ngIf="post.postAttachments.length == 3" class="col-md-8">
+                                <div *ngIf="post.postAttachments.length == 3" class="col-md-8 h-100">
                                   <div class="school-large-thumbnail shadow-thumnail position-relative">
                                         <video *ngIf="post.postAttachments[0]?.fileType==2" (click)="openPostsViewModal(post.postAttachments)" preload="metadata" class="w-100" style="cursor: pointer;margin-top:-700px;">
                                           <source [src]="post.postAttachments[0]?.fileUrl" type="video/mp4"/>
@@ -221,7 +223,7 @@
                                   </div>
                                </div>
 
-                                <div *ngIf="post.postAttachments.length == 3" class="col-md-4">
+                                <div *ngIf="post.postAttachments.length == 3" class="col-md-4 h-100">
                                     <div class="h-100 medium_thumbox d-flex">
                                         <div class="medium-thumnail">
                                           <video *ngIf="post.postAttachments[1]?.fileType==2" (click)="openPostsViewModal(post.postAttachments)" preload="metadata" class="w-100" style="cursor: pointer;">
@@ -236,7 +238,7 @@
                                     </div>
                                 </div>
 
-                                <div *ngIf="post.postAttachments.length > 3" class="col-md-8">
+                                <div *ngIf="post.postAttachments.length > 3" class="col-md-8 h-100">
                                   <div class="school-large-thumbnail shadow-thumnail position-relative">
                                           <video *ngIf="post.postAttachments[0]?.fileType==2" (click)="openPostsViewModal(post.postAttachments)" preload="metadata" class="w-100" style="cursor: pointer;">
                                             <source [src]="post.postAttachments[0]?.fileUrl" type="video/mp4"/>
@@ -245,7 +247,7 @@
                                   </div>
                                </div>
 
-                               <div *ngIf="post.postAttachments.length > 3" class="col-md-4">
+                               <div *ngIf="post.postAttachments.length > 3" class="col-md-4 h-100">
                                 <div class="h-100 medium_thumbox d-flex">
                                     <div class="medium-thumnail">
                                         <img class="w-100 position-relative" (click)="openPostsViewModal(post.postAttachments)" src="../../../../assets/images/blurImage.jfif" style="cursor: pointer;" />   
@@ -353,9 +355,9 @@
 
 
     <div class="tab-content" id="pills-tabContent" *ngIf="!isProfileGrid">
-        <div class="tab-pane fade show active list-schol-profile" id="school-feed-tab-pane" role="tabpanel"
+        <div class="tab-pane fade show active " id="school-feed-tab-pane" role="tabpanel"
              aria-labelledby="school-feed-tab" tabindex="0">
-            <div class="accordion" id="accordionPanelsStayOpenExample">
+            <div class="accordion list-schol-profile" id="accordionPanelsStayOpenExample">
                 <div class="row">
             
                     <ng-container *ngFor="let post of school.posts">
@@ -720,7 +722,7 @@
                 *ngIf="(isSubmitted && languageForm.controls.languages.errors)"> Please select atleast one language
               </small>
                 <div
-                class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4">
+                class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4">
                 <button #closeLanguageModal type="button"
                   class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
                   data-bs-dismiss="modal">{{'DiscardChanges'| translate }}</button>
@@ -754,7 +756,7 @@
                   <input type="text" placeholder="{{'TypeLanguageToAdd'| translate }}" name="schoolname" class="form-control w-100">
                 </div> -->
                 <div
-                class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4">
+                class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4">
                 <button type="button"
                   class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
                   data-bs-dismiss="modal">{{'No'| translate }}</button>
@@ -792,7 +794,7 @@
               *ngIf="(isSubmitted && teacherForm.controls.teachers.errors)"> Please select atleast one teacher
             </small>
               <div
-              class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4">
+              class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4">
               <button #closeTeacherModal type="button"
                 class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
                 data-bs-dismiss="modal">{{'DiscardChanges'| translate }}</button>
@@ -821,7 +823,7 @@
               <h2 class="text-center">Do You Really Want To Delete This ?</h2>
             </div>
             <div
-            class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4">
+            class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4">
             <button type="button"
               class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
               data-bs-dismiss="modal">{{'No'| translate }}</button>
@@ -863,7 +865,7 @@
           *ngIf="(isSubmitted && certificateForm.controls.certificates.errors)"> Please select atleast one certificate
         </small>
           <div
-          class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4">
+          class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4">
           <button #closeCertificateModal type="button"
             class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
             data-bs-dismiss="modal">{{'DiscardChanges'| translate }}</button>
@@ -893,7 +895,7 @@ aria-labelledby="delete-certificate" aria-hidden="true">
           <h2 class="text-center">Do You Really Want To Delete This ?</h2>
         </div>
         <div
-        class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4">
+        class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4">
         <button type="button"
           class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
           data-bs-dismiss="modal">{{'No'| translate }}</button>

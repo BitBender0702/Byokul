@@ -210,7 +210,7 @@
                   </div>
 
                   <div
-                  class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 cr-postfooter pt-0">
+                  class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 cr-postfooter pt-0">
                   <div class="post-bot-left d-flex">
 
                     <label class="custom-file-upload post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center active">
@@ -266,8 +266,8 @@
                         class="light-attach" /></button>
                   </div>
                   <div class="post-bot-right d-flex justify-content-end">
-                    <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 delay-btn"><i
-                        class="fa-solid fa-clock"></i>
+                    <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 delay-btn post-delay-btn position-relative"> 
+                      <img src="../../../assets/images/clock-orange.svg" />                     
                         <p-calendar formControlName="scheduleTime" [(ngModel)]="scheduleTime" [showTime]="true"></p-calendar>
                       </button>
                       
@@ -351,8 +351,8 @@
                   <div
                     class="modal-footer steps_btns d-flex align-items-center justify-content-center flex-sm-nowrap border-0 pb-0 cr-postfooter pt-0 mt-3 px-0">
                     <div class="post-bot-right d-flex justify-content-end">
-                      <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 delay-btn"><i
-                          class="fa-solid fa-clock"></i>
+                      <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 delay-btn post-delay-btn position-relative"> 
+                        <img src="../../../assets/images/clock-orange.svg" />                     
                           <p-calendar formControlName="scheduleTime" [(ngModel)]="scheduleTime" [showTime]="true"></p-calendar>
                         </button>
                       <button *ngIf="scheduleTime != undefined" (click)="saveReels()" type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 lg_btn">
@@ -371,7 +371,6 @@
 
                   
               </div>
-              <hr class="mb-0 sepearator mx-0 mt-3 opacity-100" />
             </div>
             <!-- <div
               class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 cr-postfooter pt-0">
