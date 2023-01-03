@@ -37,8 +37,9 @@
         <div class="tab-content registerTabs">
           <div [ngClass]="step == 0 ? 'tab tab-pane active' : 'tab tab-pane'">
             <p class="text-center font_16 fw_600 step-desc">{{'CreateCourseStep1'| translate }}</p>
-            <form id="regForm" [formGroup]="createCourseForm1">
+            <form id="regForm" [formGroup]="createCourseForm1" class="latest-form">
             <div class="form-group">
+              <label class="font_10">School Name</label>
               <div *ngIf="fromSchoolProfile != ''">
                 <input formControlName="schoolId" hidden type="text" placeholder="School Name" name="schoolId" class="form-control w-100">
                 <input formControlName="schoolName" readonly type="text" placeholder="School Name" name="schoolId" class="form-control w-100">
@@ -50,6 +51,7 @@
               </div>
             </div>
             <div class="form-group">
+              <label class="font_10">{{'CourseName'| translate }}</label>
               <input formControlName="courseName" type="text" placeholder="{{'CourseName'| translate }}" name="coursename" class="form-control w-100">
               <small class="p-error" style="color: orange;"
               *ngIf="(isStepCompleted && createCourseForm1.controls.courseName.errors)">Course Name is required
@@ -58,12 +60,12 @@
             <div class="row">
               <div class="col-md-6">
                 <div class="row">
-                  <div class="col">
+                  <div class="col mt-2 mb-2">
                     <input (click)="getFreeCourse()" formControlName="serviceTypeId" type="radio" id="forFree" name="serviceTypeId" value="704FEDC6-834C-4921-A63B-7E53C5276B31">
                     <label for="forFree"> {{'Free'| translate }} </label>
                   </div>
 
-                  <div class="col">
+                  <div class="col mt-2 mb-2">
                     <input (click)="getPaidCourse()" formControlName="serviceTypeId" type="radio" id="forPaid" name="serviceTypeId" value="0D846894-CAA4-42F3-8E8A-9DBA6467672B">
                     <label for="forPaid"> {{'Paid'| translate }} </label>
                   </div>
@@ -74,6 +76,7 @@
               </div>
 
               <div *ngIf="isCoursePaid" class="col-md-6">
+                <label class="font_10">{{'Price'| translate }}</label>
                 <input formControlName="price" type="number" min="1" placeholder="{{'Price'| translate }}" name="price" class="form-control w-100">
                 <small class="p-error" style="color: orange;" *ngIf="isStepCompleted && createCourseForm1.controls.price.errors">
                   Price is required
@@ -82,7 +85,8 @@
               </div>
               <div class="row">
               <div class="col-md-12">
-                <div class="form-group"><br>
+                <div class="form-group">
+                  <label class="font_10">Visibility</label>
                   <select class="form-select rounded-8 w-100" formControlName="accessibilityId">
                     <option *ngFor="let accessibility of accessibility;" [value]="accessibility.id" [ngValue]="accessibility.id">{{accessibility.name}}</option>
                  </select>
@@ -93,6 +97,7 @@
               </div>
             </div>
             <div class="form-group">
+              <label class="font_10">{{'Language'| translate }}</label>
               <div class="custom-language-select">
                 <p-multiSelect  [defaultLabel]="'Select Languages'" [panelStyle]="{'width':'100%'}" [filter]="false" [showToggleAll]="false" [options]="languages" optionLabel="name" optionValue="id" name="languageSelect[]" class="form-control" multiple id="languageSelect" formControlName="languageIds">
                     <option *ngFor="let language of languages; let i = index" [value]="language.id" [selected]="i">{{language.name}}</option>
@@ -103,9 +108,10 @@
               </div>
             </div>
             <div class="form-group">
+              <label class="font_10">{{'Course Bio'| translate }}</label>
               <textarea formControlName="description" class="form-control resize-none" placeholder="{{'TellUsAboutCourse'| translate }}"></textarea>
             </div>
-            <div class="steps_btns d-flex align-items-center justify-content-center">
+            <div class="steps_btns d-flex align-items-center justify-content-center mt-4">
               <button (click)="forwardStep()" type="button"
                 class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 text-uppercase next-step">{{'Continue'| translate }}</button>
             </div>
@@ -113,8 +119,9 @@
           </div>
           <div [ngClass]="step == 1 ? 'tab tab-pane active' : 'tab tab-pane'">
             <p class="text-center font_16 fw_600 step-desc">{{'CreateCourseStep2'| translate }}</p>
-            <form id="regForm" [formGroup]="createCourseForm2">
+            <form id="regForm" [formGroup]="createCourseForm2" class="latest-form">
             <div class="tag-form-group">
+              <label class="font_10">{{'TypeDisciplineNameToAdd'| translate }}</label>
               <span class="p-fluid">
                 <p-autoComplete (onSelect)="captureDisciplineId($event)" (onUnselect)="removeDiscipline($event)" placeholder="{{'TypeDisciplineNameToAdd'| translate }}" class="form-control w-100" formControlName="disciplineIds" [suggestions]="filteredDisciplines" (completeMethod)="filterDisciplines($event)" field="name" [multiple]="true">
                 </p-autoComplete>
@@ -124,6 +131,7 @@
               </div>
             </div>
             <div class="tag-form-group">
+              <label class="font_10">{{'TypeTeacherNameToAdd'| translate }}</label>
               <span class="p-fluid">
                 <p-autoComplete (onSelect)="captureTeacherId($event)" (onUnselect)="removeTeacher($event)" placeholder="{{'TypeTeacherNameToAdd'| translate }}" class="form-control w-100" formControlName="teacherIds" [suggestions]="filteredTeachers" (completeMethod)="filterTeachers($event)" field="firstName" [multiple]="true">
                 </p-autoComplete>
@@ -133,6 +141,7 @@
               </div>
             </div>
             <div class="tag-form-group">
+              <label class="font_10">{{'TypeStudentNameToAdd'| translate }}</label>
               <span class="p-fluid">
                 <p-autoComplete (onSelect)="captureStudentId($event)" (onUnselect)="removeStudent($event)" placeholder="{{'TypeStudentNameToAdd'| translate }}" class="form-control w-100" formControlName="studentIds" dataKey="studentId" [suggestions]="filteredStudents" (completeMethod)="filterStudents($event)" field="studentName" [multiple]="true">
                 </p-autoComplete>
@@ -157,16 +166,20 @@
           <div [ngClass]="step == 2 ? 'tab tab-pane active final-multiple-step' : 'tab tab-pane final-multiple-step'">
             <h2 class="font_24 fw-bold text_dark text-center my_32 mt-1">{{'YouCreatedNewCourse'| translate }}</h2>
             <p class="font_16 text_dark fw_600 text-center mb-0">{{'CourseLinkInfo'| translate }}</p>
-            <form id="regForm" [formGroup]="createCourseForm3">
-            <div class="school-link position-relative my_32">
-              <input readonly formControlName = "courseUrl" type="text" class="form-control" placeholder="byokul.com/" #userinput/>
-              <small class="p-error" style="color: orange;"
-              *ngIf="(isSubmitted && createCourseForm3.controls.courseUrl.errors)">Course Url is required
-            </small>
-              <button (click)="copyMessage(userinput)" type="button" class="border-0 bg-transparent shadow-none p-0 copy-link"><img
-                  src="../../../../assets/images/school/copy.svg" /></button>
-              <button type="button" class="border-0 bg-transparent shadow-none p-0 upload-link"><img
-                  src="../../../../assets/images/school/Upload-small.svg" /></button>
+            <form id="regForm" [formGroup]="createCourseForm3" class="latest-form">
+            <div class="school-link my_32">
+              <label class="font_10">Link to your School</label>
+              <div class="position-relative ">
+                <input readonly formControlName = "courseUrl" type="text" class="form-control" placeholder="byokul.com/" #userinput/>
+                <small class="p-error" style="color: orange;"
+                *ngIf="(isSubmitted && createCourseForm3.controls.courseUrl.errors)">Course Url is required
+              </small>
+                <button (click)="copyMessage(userinput)" type="button" class="border-0 bg-transparent shadow-none p-0 copy-link"><img
+                    src="../../../../assets/images/school/copy.svg" /></button>
+                <button type="button" class="border-0 bg-transparent shadow-none p-0 upload-link"><img
+                    src="../../../../assets/images/school/Upload-small.svg" /></button>
+              </div>
+           
             </div>
             <div class="steps_btns">
               <input (click)="createCourse()" type="submit" id="nextBtn"

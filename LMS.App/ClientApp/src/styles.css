@@ -217,7 +217,7 @@ select.form-select,
 }
 
 .form-group {
-	margin-bottom: 24px;
+	margin-bottom: 14px;
 }
 
 .primary_btn {
@@ -489,7 +489,7 @@ h3.subhead-btn {
 
 .earning-btn {
 	height: 44px;
-	border-radius: 8px;
+	border-radius: 8px !important;
 	font-size: 14px;
 }
 
@@ -924,7 +924,7 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .tag-form-group {
-	margin-bottom: 32px;
+	margin-bottom: 25px;
 }
 
 .tag-box {
@@ -1177,6 +1177,7 @@ input[type=number]::-webkit-outer-spin-button {
 	border-radius: 50%;
 	overflow: hidden;
 	min-width: 40.59px;
+	display: flex;
 }
 
 .schoolgrid-header h2 {
@@ -1187,7 +1188,7 @@ input[type=number]::-webkit-outer-spin-button {
 	margin-left: 16px;
 }
 
-.school-grid-box {
+.school-grid-box{
 	background: #FFFFFF;
 	border: 1px solid #F1F7FF;
 	box-shadow: 0px 4px 20px rgb(0 0 0 / 5%);
@@ -1236,7 +1237,7 @@ input[type=number]::-webkit-outer-spin-button {
 
 .school-grid-thumbnail .medium-thumnail {
 	display: flex;
-	height: 50%;
+	height: 180px;
 	overflow: hidden;
 }
 
@@ -1281,12 +1282,13 @@ input[type=number]::-webkit-outer-spin-button {
 	margin-bottom: 16px;
 }
 
-.school-grid-thumbnail img {
+.school-grid-thumbnail img, .school-grid-thumbnail video {
 	object-fit: cover;
 }
 
 .medium_thumbox {
 	flex-flow: column;
+	justify-content: space-between;
 }
 
 
@@ -1548,6 +1550,7 @@ textarea.ht_96 {
 	color: #464E5F;
 	font-family: 'Montserrat', sans-serif;
 	font-weight: 400;
+	margin-bottom: 4.5px;
 }
 
 .latest-form .form-group {
@@ -1576,6 +1579,9 @@ textarea.ht_96 {
 body .liv-postbtn .post-attch-btn {
 	margin-right: 0;
 }
+
+
+
 
 body .liv-postbtn .post-attch-btn:hover,
 body .liv-postbtn .post-attch-btn.active,
@@ -1877,40 +1883,7 @@ div#notifi-settingpopup .modal-dialog {
 .filter-menu-btn {
     top: 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/*---- chat screen css start ---*/
 .message-box {
     border: 1px solid #F5F5F5;
     border-radius: 4px;
@@ -2115,6 +2088,264 @@ div#add-sertificate .dropzone-wrapper .dropzone-desc {
     transform: translateY(-50%);
 }
 
+/*------- My earning school owned css start here ----*/
+.gap_8{
+	margin-right: 8px;
+	margin-left: 8px;
+}
+.gap_8 > div{
+	padding-right: 8px;
+	padding-left: 8px;
+}
+.earning-balance-box {
+    background: #FDFDFD;
+    border: 1px solid #F0F0F0;
+    box-shadow: 0px 4px 20px rgb(0 0 0 / 5%);
+    border-radius: 8px;
+    height: 160px;
+    font-size: 35px;
+    padding: 30px;
+}
+.wallet {
+    position: absolute;
+    right: 18px;
+    top: 19px;
+}
+.earning-balance-title-row{
+	margin-right: 0;
+	margin-left: 0;
+}
+.earning-balance-title-row > div{
+	padding-right: 0;
+	padding-left: 0;
+}
+.earning-transactions ul li .followe_report {
+    display: block;
+}
+.earning-transactions {
+    filter: none;
+}
+.earnings-tabs ul .nav-item button {
+    padding: 9.5px 34px;
+}
+.earning-search{
+	margin-right: 50px;
+}
+
+.earning-search input {
+    border: 1px solid #F5F5F5 !important;
+	border-left: 2px solid #FF821C !important;
+    box-shadow: none !important;
+}
+input[type="search"] {
+    padding-left: 38px !important;
+}
+.maxw-600 .modal-dialog{
+	max-width: 600px;
+}
+.wh_150{
+	width: 150px;
+	height: 150px;
+}
+
+/*---- folder page css ---*/
+.folder-box {
+    background: #FFFFFF;
+    border-left: 1px solid #FF801C;
+    box-shadow: 0px 4px 20px rgb(0 0 0 / 15%);
+    border-radius: 8px;
+	margin-bottom: 32px;
+	width: 100%;
+}
+.foldername {
+    border-bottom: 1px solid rgba(124, 141, 167, 0.08);
+}
+.foldericon, .foldername{
+	padding: 12px 16px;
+}
+.file-action{
+	opacity: 0;
+	transition: 0.3s all;
+}
+.folder-box:hover .file-action{
+	opacity:1;
+}
+.file-action .btn{
+	padding: 0 10px;
+}
+.files-sec {
+    margin: 0 -16px;
+}
+.files-sec >div {
+    margin: 0 16px 32px;
+    width: calC(20% - 32px);
+}
+.files-sec .folder-box {
+    border: 1px solid rgba(124, 141, 167, 0.5);
+}
+.files-sec .folder-box:hover{
+	background: linear-gradient(0deg, rgba(124, 141, 167, 0.04), rgba(124, 141, 167, 0.04)), #FFFFFF;
+	border: 1px solid rgba(124, 141, 167, 0.5);
+}
+
+
+/* For primeNg multiselect style*/
+
+ .p-multiselect {
+	width: 526px;
+	margin-left: -12px;
+	border: none;
+}
+
+ .p-multiselect-panel .p-multiselect-header{
+display: none;
+}
+
+
+/* For primeNg stepper style */
+
+ .ui-steps .ui-steps-number {
+display: none;
+}
+
+.p-steps .p-steps-item.p-highlight .p-steps-number {
+background: orange;
+color: #ffffff;
+}
+
+.ui-steps-number { 
+overflow: hidden
+}
+.p-steps-item::before{
+	display: none !important;
+}
+.p-steps .p-steps-item .p-menuitem-link span.p-steps-number {
+    background: #F2F7FF;
+    font-size: 0;
+    width: 10px;
+    height: 10px;
+    min-width: 10px;
+    border: none;
+}
+ul .p-steps-item {
+    flex: 0 0 auto;
+}
+.p-steps ul{
+	justify-content: center;
+}
+.p-steps .p-steps-item .p-menuitem-link {
+    box-shadow: none !important;
+}
+ul .p-steps-item {
+    flex: 0;
+    padding: 0 6px;
+    margin: 16px 0;
+}
+.p-steps-item.p-steps-current span.p-steps-number {
+    background: #FF811C !important;
+}
+.custom-language-select .p-multiselect.p-component {
+    border: none;
+    border-radius: 0;
+    box-shadow: none !important;
+    outline: none !important;
+}
+.custom-language-select .p-multiselect-label {
+    padding-top: 5px !important;
+}
+.p-multiselect-panel .p-multiselect-items .p-multiselect-item.p-highlight, .p-multiselect-panel .p-multiselect-items .p-multiselect-item:not(.p-highlight):not(.p-disabled):hover {
+	background: #fff !important;
+    box-shadow: none !important;
+}
+.p-checkbox .p-checkbox-box.p-highlight {
+    border-color: #ff9f1c !important;
+    background: #ff9f1c !important;
+}
+.custom-language-select ul {
+    padding-left: 0 !important;
+    padding: 0 !important;
+}
+.modal .edit-sprofilebtn {
+    width: 92px;
+    height: 34px;
+    border: none !important;
+    color: transparent;
+    font-size: 0;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    position: relative !important;
+    overflow: hidden;
+}
+.modal .edit-sprofilebtn:before {
+    content: "Edit Photo";
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 18px;
+    color: #313131;
+    background: #f8f9fb;
+    width: 100%;
+    height: 100%;
+    z-index: 99;
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 8px 16px;
+}
+.modal .edit-sprofilebtn:hover:before {
+    background: rgb(196 202 211) !important;
+}
+.new-upload-img{
+	display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.edit-profilehover {
+    width: 100%;
+}
+.add-language-tag button img {
+    max-width: 10px;
+}
+button.delete-tag img {
+    max-width: 10px;
+}
+.new-school-grid-thumbnail{
+    height: 360px;
+}
+.p-autocomplete-multiple-container.p-component {
+    border: 0;
+    background: transparent;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.p-autocomplete-multiple-container.p-component li::before, p-autocomplete li:before{
+	display: none !important;
+}
+.p-autocomplete-multiple-container.p-component li.p-autocomplete-input-token {
+	width: 100%;
+    line-height: normal;
+    height: auto;
+    margin-bottom: 0;
+}
+.p-autocomplete.p-component.p-autocomplete-multiple {
+    display: flex;
+    height: auto !important;
+}
+.post-delay-btn p-calendar input {
+    background: transparent !important;
+    border: none !important;
+    color: transparent !important;
+    box-shadow: none !important;
+	cursor: pointer;
+}
+.post-delay-btn > img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
 @media screen and (min-width:1200px) {
 	.main_content{
 		padding-left: 310px !important;
@@ -2266,125 +2497,5 @@ div#add-sertificate .dropzone-wrapper .dropzone-desc {
 		flex-wrap: wrap;
 	}
 	
-	
 
-}
-
-
-/* For primeNg multiselect style*/
-
- .p-multiselect {
-	width: 526px;
-	margin-left: -12px;
-	border: none;
-}
-
- .p-multiselect-panel .p-multiselect-header{
-display: none;
-}
-
-
-/* For primeNg stepper style */
-
- .ui-steps .ui-steps-number {
-display: none;
-}
-
-.p-steps .p-steps-item.p-highlight .p-steps-number {
-background: orange;
-color: #ffffff;
-}
-
-.ui-steps-number { 
-overflow: hidden
-}
-.p-steps-item::before{
-	display: none !important;
-}
-.p-steps .p-steps-item .p-menuitem-link span.p-steps-number {
-    background: #F2F7FF;
-    font-size: 0;
-    width: 10px;
-    height: 10px;
-    min-width: 10px;
-    border: none;
-}
-ul .p-steps-item {
-    flex: 0 0 auto;
-}
-.p-steps ul{
-	justify-content: center;
-}
-.p-steps .p-steps-item .p-menuitem-link {
-    box-shadow: none !important;
-}
-ul .p-steps-item {
-    flex: 0;
-    padding: 0 6px;
-    margin: 16px 0;
-}
-.p-steps-item.p-steps-current span.p-steps-number {
-    background: #FF811C !important;
-}
-.custom-language-select .p-multiselect.p-component {
-    border: none;
-    border-radius: 0;
-    box-shadow: none !important;
-    outline: none !important;
-}
-.custom-language-select .p-multiselect-label {
-    padding-top: 5px !important;
-}
-.p-multiselect-panel .p-multiselect-items .p-multiselect-item.p-highlight, .p-multiselect-panel .p-multiselect-items .p-multiselect-item:not(.p-highlight):not(.p-disabled):hover {
-	background: #fff !important;
-    box-shadow: none !important;
-}
-.p-checkbox .p-checkbox-box.p-highlight {
-    border-color: #ff9f1c !important;
-    background: #ff9f1c !important;
-}
-.custom-language-select ul {
-    padding-left: 0 !important;
-    padding: 0 !important;
-}
-.modal .edit-sprofilebtn {
-    width: 92px;
-    height: 34px;
-    border: none !important;
-    color: transparent;
-    font-size: 0;
-    border: none !important;
-    box-shadow: none !important;
-    outline: none !important;
-    position: relative !important;
-    overflow: hidden;
-}
-.modal .edit-sprofilebtn:before {
-    content: "Edit Photo";
-    font-weight: 400;
-    font-size: 12px;
-    line-height: 18px;
-    color: #313131;
-    background: #f8f9fb;
-    width: 100%;
-    height: 100%;
-    z-index: 99;
-    position: absolute;
-    top: 0;
-    left: 0;
-    padding: 8px 16px;
-}
-.modal .edit-sprofilebtn:hover:before {
-    background: rgb(196 202 211) !important;
-}
-.new-upload-img{
-	display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.edit-profilehover {
-    width: 100%;
-}
-.add-language-tag button img {
-    max-width: 10px;
 }
