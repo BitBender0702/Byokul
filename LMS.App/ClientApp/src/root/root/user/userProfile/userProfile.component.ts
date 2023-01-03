@@ -16,6 +16,7 @@ import { CreatePostComponent } from '../../createPost/createPost.component';
 import { FollowUnFollowEnum } from 'src/root/Enums/FollowUnFollowEnum';
 import { FollowUnfollow } from 'src/root/interfaces/FollowUnfollow';
 import { PostService } from 'src/root/service/post.service';
+import { PostViewComponent } from '../../postView/postView.component';
 
 
 @Component({
@@ -83,7 +84,6 @@ import { PostService } from 'src/root/service/post.service';
       
 
       this._userService.getUserById(this.userId).subscribe((response) => {
-        debugger
         this.user = response;
         this.followersLength = this.user.followers.length;
         this.isOwnerOrNot();
@@ -375,6 +375,13 @@ pinUnpinPost(attachmentId:string,isPinned:boolean){
     console.log(response);
   });
 
+}
+
+openPostsViewModal(posts:string): void {
+  const initialState = {
+    posts: posts
+  };
+  this.bsModalService.show(PostViewComponent,{initialState});
 }
 
 }

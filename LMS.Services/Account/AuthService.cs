@@ -41,7 +41,7 @@ namespace LMS.Services.Account
             var user = await _userManager.FindByNameAsync(loginViewModel.Email);
             if (user != null)
             {
-                var result = await _signInManager.PasswordSignInAsync(loginViewModel.Email, loginViewModel.Password, loginViewModel.RememberMe, false);
+                var result = await _signInManager.PasswordSignInAsync(loginViewModel.Email, loginViewModel.Password, false, false);
                 if (result.Succeeded)
                 {
                     var token = await GenerateJSONWebToken(user);

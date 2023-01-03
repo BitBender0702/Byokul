@@ -44,7 +44,7 @@ namespace LMS.Services
         }
         public async Task<string> SavePost(PostViewModel postViewModel, string createdById)
         {
-            //postViewModel.PostTags = JsonConvert.DeserializeObject<string[]>(postViewModel.PostTags.First());
+            postViewModel.PostTags = JsonConvert.DeserializeObject<string[]>(postViewModel.PostTags.First());
 
             var post = new Post
             {

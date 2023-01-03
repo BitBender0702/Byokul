@@ -37,8 +37,7 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
       this.selectedLanguage = localStorage.getItem("selectedLanguage");
       this.loginForm = this.fb.group({
         email: this.fb.control('', [Validators.required,Validators.pattern(this.EMAIL_PATTERN)]),
-        password: this.fb.control('', [Validators.required]),
-        rememberMe: this.fb.control(false),
+        password: this.fb.control('', [Validators.required])
       });
 
       try {
