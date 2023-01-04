@@ -430,11 +430,14 @@ ul.before-none li:before {
 }
 
 .school-img {
-	background: #D9D9D9;
-	width: 31px;
-	height: 31px;
-	border: 1px solid #BFBFBF;
-	overflow: hidden;
+    background: #7C8DA7;
+    width: 31px;
+    height: 31px;
+    border: 1px solid #BFBFBF;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 h3.subhead-btn {
@@ -1046,11 +1049,15 @@ input[type=number]::-webkit-outer-spin-button {
 
 .School-prof-header .school-profile-icon {
 	border: 5px solid #DEE0E3;
-	width: 250px;
-	height: 250px;
-	min-width: 250px;
-	margin-right: 40px;
-	overflow: hidden;
+    width: 250px;
+    height: 250px;
+    min-width: 250px;
+    margin-right: 40px;
+    overflow: hidden;
+    background: #7C8DA7;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .school-profile-content h2 {
@@ -1394,6 +1401,7 @@ input[type=number]::-webkit-outer-spin-button {
 	width: 200px;
 	height: 200px;
 	margin: 0 auto;
+	background: #7C8DA7;
 }
 
 .text-line-border:before {
@@ -1543,6 +1551,9 @@ textarea.ht_96 {
 	width: 150px;
 	height: 150px;
 	overflow: hidden;
+	display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .latest-form label {
@@ -2344,6 +2355,113 @@ button.delete-tag img {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+.add-tag-step .p-fluid ul.p-component li.p-autocomplete-token {
+    margin-bottom: 3px !important;
+    margin-top: 3px;
+    padding: 5px 9px;
+    border-radius: 32px;
+    font-size: 13px;
+    color: #151718;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+}
+.add-tag-step .p-fluid ul.p-component li.p-autocomplete-input-token {
+    width: auto;
+}
+
+/*---- loading css start here ---*/
+.loader-main {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    background: rgb(255 255 255 / 91%);
+    width: 100%;
+    height: 100%;
+}
+.lds-ring {
+	display: inline-block;
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 999;
+
+  }
+  .lds-ring div {
+	box-sizing: border-box;
+    display: block;
+    position: absolute;
+    width: 64px;
+    height: 64px;
+    margin: 8px;
+    border: 8px solid #fff;
+    border-radius: 50%;
+    animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    border-color: #ababab transparent transparent transparent;
+  }
+  .lds-ring div:nth-child(1) {
+	animation-delay: -0.45s;
+  }
+  .lds-ring div:nth-child(2) {
+	animation-delay: -0.3s;
+  }
+  .lds-ring div:nth-child(3) {
+	animation-delay: -0.15s;
+  }
+  .teacher-tags .teacher-content img {
+    max-height: 17px;
+    min-width: 18px;
+}
+.teacher-tags .teacher-content {
+    min-width: 100px;
+}
+.hover-double-button {
+    position: absolute;
+    right: 0;
+}
+.hover-double-button> .edit-sprofilebtn{
+	position: static;
+}
+
+  @keyframes lds-ring {
+	0% {
+	  transform: rotate(0deg);
+	}
+	100% {
+	  transform: rotate(360deg);
+	}
+  }
+ /*---- Loader css end ---*/ 
+
+.delete-modal .modal-dialog {
+    max-width: 450px;
+}
+.delete-modal h2 {
+    margin-bottom: 36px;
+	font-weight: 500;
+}
+.lang-w100 .custom-language-select .p-multiselect.p-component div {
+    padding: 0 !important;
+}
+
+.lang-w100 .custom-language-select .p-multiselect.p-component {
+    width: 100%;
+    margin-left: 0;
+    padding: 6px 0;
+}
+.lang-w100 .custom-language-select .p-multiselect.p-component .p-multiselect-trigger {
+    width: auto;
+    color: #313131;
+}
+.lang-w100 .custom-language-select .p-multiselect.p-component .p-multiselect-trigger .pi {
+    font-size: 13px;
+}
+.add-tag-step .form-control {
+    height: auto;
 }
 
 @media screen and (min-width:1200px) {

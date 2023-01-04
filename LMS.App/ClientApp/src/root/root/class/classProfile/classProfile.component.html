@@ -44,12 +44,12 @@
           <div class="position-relative">
             <div class="d-flex justify-content-between flex-wrap class_request align-items-center">
               <div>
-            <div class="followers_name d-inline-block font_16 mr-_24"><img src="../../../../assets/images/Star-solid-dark.svg" /> {{'Rating'| translate }}: <b
+            <div class="followers_name d-inline-block font_16 mr-_24"><img src="../../../../assets/images/Star-solid-dark.svg" />{{'Rating'| translate }}: <b
                 class="fw_700">{{class.rating}}</b></div>
-            <div class="followers_name d-inline-block font_16 mr-_24"><img src="../../../../assets/images/students-icon.svg" /> {{'Students'| translate }}:
+            <div class="followers_name d-inline-block font_16 mr-_24"><img src="../../../../assets/images/students-icon.svg" />{{'Students'| translate }}:
               <b class="fw_700">{{class.students}}</b>
             </div>
-            <div class="followers_name d-inline-block font_16 mr-_24"><img src="../../../../assets/images/Edit-dark.svg" /> {{'Post'| translate }}: <b
+            <div class="followers_name d-inline-block font_16 mr-_24"><img src="../../../../assets/images/Edit-dark.svg" />{{'Post'| translate }}: <b
                 class="fw_700">{{class.posts.length}}</b></div>
               </div>
             <button *ngIf="!isOwner" type="button"
@@ -67,7 +67,7 @@
       </div>
       <div class="teacher-tags tag-box hover-tags">
         <div class="teacher-tags tag-box mt-0  hover-tags">
-          <div class="teacher-content font_14 d-inline-block"><img src="../../../../assets/images/dark-star.svg" /> {{'Sertificates'| translate }}</div>
+          <div class="teacher-content font_14 d-inline-block"><img src="../../../../assets/images/dark-star.svg" />{{'Sertificates'| translate }}</div>
 
           <span *ngFor="let item of class.classCertificates;" class="custom-tag">{{item.name}}<button (click)="getDeletedCertificate(item.certificateId)" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#delete-classCertificate">
             <img *ngIf="isOwner" src="../../../../assets/images/cross-sm-light.svg" /></button></span>
@@ -78,7 +78,7 @@
         </div>
     </div>
         <div class="teacher-tags tag-box mt-0  hover-tags">
-          <div class="teacher-content font_14 d-inline-block"><img src="../../../../assets/images/Volume-Down.svg" /> {{'Languages'| translate }}</div>
+          <div class="teacher-content font_14 d-inline-block"><img src="../../../../assets/images/Volume-Down.svg" />{{'Languages'| translate }}</div>
 
           <span *ngFor="let item of class.languages;" class="custom-tag">{{item.name}}<button (click)="getDeletedLanguage(item.id)" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#delete-classLanguage">
             <img *ngIf="isOwner" src="../../../../assets/images/cross-sm-light.svg" /></button></span>
@@ -91,7 +91,7 @@
 
       <div class="teacher-tags tag-box hover-tags">
         <div class="teacher-tags tag-box mt-0  hover-tags">
-          <div class="teacher-content font_14 d-inline-block"><img src="../../../../assets/images/Profile-dark.svg" /> {{'Teachers'| translate }}</div>
+          <div class="teacher-content font_14 d-inline-block"><img src="../../../../assets/images/Profile-dark.svg" />{{'Teachers'| translate }}</div>
 
           <span *ngFor="let item of class.teachers;" class="custom-tag">{{item.firstName + ' ' + item.lastName}}<button (click)="getDeletedTeacher(item.teacherId)" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#delete-classTeacher">
             <img *ngIf="isOwner" src="../../../../assets/images/cross-sm-light.svg" /></button></span>
@@ -980,7 +980,7 @@
         <div class="text-line-border position-relative text-center mb-4">
           <span class="line-text font_12 text_ltgray fw_400 text-center">{{'GeneralInformation'| translate }}</span>
         </div>
-        <form [formGroup]="editClassForm">
+        <form [formGroup]="editClassForm" class="latest-form">
           <div class="row">
             <div class="col-md-4">
               <div class="form-group">
@@ -1031,12 +1031,12 @@
 
             <div class="col-md-6">
               <div class="row">
-                  <div class="col">
+                  <div class="col mt-3 mb-2">
                     <input (click)="getFreeClass()" formControlName="serviceTypeId" type="radio" id="forFree" name="serviceTypeId" value="704fedc6-834c-4921-a63b-7e53c5276b31">
                     <label for="forFree"> {{'Free'| translate }} </label>
                   </div>
 
-                  <div class="col">
+                  <div class="col mt-3 mb-2">
                     <input (click)="getPaidClass()" formControlName="serviceTypeId" type="radio" id="forPaid" name="serviceTypeId" value="0d846894-caa4-42f3-8e8a-9dba6467672b">
                     <label for="forPaid"> {{'Paid'| translate }} </label>
                   </div>
@@ -1065,7 +1065,7 @@
               </div>
             </div>
             <div class="col-md-12">
-              <div class="form-group">
+              <div class="form-group lang-w100">
                 <label class="font_10">{{'Language'| translate }}</label>
                   <div class="custom-language-select">
                       <p-multiSelect  [defaultLabel]="'Select Languages'" [panelStyle]="{'width':'100%'}" [filter]="false" [showToggleAll]="false" [options]="languages" optionLabel="name" optionValue="id" name="languageSelect[]" class="form-control" multiple id="languageSelect" formControlName="languageIds">
@@ -1090,7 +1090,7 @@
 
       </div>
       <div
-        class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4">
+        class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 mt-2">
         <button #closeEditModal id="closeBtn" type="button"
           class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
           data-bs-dismiss="modal">{{'DiscardChanges'| translate }}</button>
@@ -1112,9 +1112,10 @@ aria-labelledby="add-language" aria-hidden="true">
           src="../../../../assets/images/cross.svg" /></button>
     </div>
     <div class="modal-body">
-      <form [formGroup]="languageForm">
+      <form [formGroup]="languageForm" class="latest-form add-tag-step">
 
         <div class="form-group">
+          <label class="font_10">{{'Language'| translate }}</label>
           <span class="p-fluid">
           <p-autoComplete formControlName="languages" [showEmptyMessage]="true" [emptyMessage]="'NoResultFound' | translate" [forceSelection]="true" [size]="200" (onSelect)="captureLanguageId($event)" (onUnselect)="removeLanguage($event)" placeholder="{{'TypeLanguageToAdd'| translate }}" class="form-control w-100" 
            [suggestions]="filteredLanguages" (completeMethod)="filterLanguages($event)" field="name" [multiple]="true">
@@ -1126,7 +1127,7 @@ aria-labelledby="add-language" aria-hidden="true">
         *ngIf="(isSubmitted && languageForm.controls.languages.errors)"> Please select atleast one language
       </small>
         <div
-        class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4">
+        class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 mt-4">
         <button #closeLanguageModal type="button"
           class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
           data-bs-dismiss="modal">{{'DiscardChanges'| translate }}</button>
@@ -1162,7 +1163,7 @@ aria-labelledby="add-language" aria-hidden="true">
 </div>
 </div>
 
-<div class="modal fade edit-school-modal" id="delete-classLanguage" tabindex="-1"
+<div class="modal fade edit-school-modal delete-modal" id="delete-classLanguage" tabindex="-1"
 aria-labelledby="delete-language" aria-hidden="true">
 <div class="modal-dialog modal-dialog-centered">
 <div class="modal-content">
@@ -1175,14 +1176,14 @@ aria-labelledby="delete-language" aria-hidden="true">
     <!-- <form [formGroup]="languageForm"> -->
 
       <div class="form-group">
-        <h2 class="text-center">Do You Really Want To Delete This ?</h2>
+        <h2 class="text-center font_16 f-poppins ">Do you really want to delete this?</h2>
       </div>
 
       <!-- <div class="form-group">
         <input type="text" placeholder="{{'TypeLanguageToAdd'| translate }}" name="schoolname" class="form-control w-100">
       </div> -->
       <div
-      class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4">
+      class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-2 mt-4">
       <button type="button"
         class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
         data-bs-dismiss="modal">{{'No'| translate }}</button>
@@ -1208,9 +1209,10 @@ aria-labelledby="delete-language" aria-hidden="true">
               src="../../../../assets/images/cross.svg" /></button>
         </div>
         <div class="modal-body">
-          <form [formGroup]="teacherForm">
+          <form [formGroup]="teacherForm"  class="latest-form add-tag-step">
 
             <div class="form-group">
+              <label class="font_10">{{'Teacher'| translate }}</label>
               <span class="p-fluid">
               <p-autoComplete formControlName="teachers" [showEmptyMessage]="true" [emptyMessage]="'NoResultFound' | translate" [forceSelection]="true" [size]="200" (onSelect)="captureTeacherId($event)" (onUnselect)="removeTeacher($event)" placeholder="{{'TypeTeacherToAdd'| translate }}" class="form-control w-100" 
                [suggestions]="filteredTeachers" (completeMethod)="filterTeachers($event)" field="firstName" [multiple]="true">
@@ -1222,7 +1224,7 @@ aria-labelledby="delete-language" aria-hidden="true">
             *ngIf="(isSubmitted && teacherForm.controls.teachers.errors)"> Please select atleast one teacher
           </small>
             <div
-            class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4">
+            class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 mt-4">
             <button #closeTeacherModal type="button"
               class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
               data-bs-dismiss="modal">{{'DiscardChanges'| translate }}</button>
@@ -1237,7 +1239,7 @@ aria-labelledby="delete-language" aria-hidden="true">
     </div>
 </div>
 
-<div class="modal fade edit-school-modal" id="delete-classTeacher" tabindex="-1"
+<div class="modal fade edit-school-modal delete-modal" id="delete-classTeacher" tabindex="-1"
 aria-labelledby="delete-teacher" aria-hidden="true">
 <div class="modal-dialog modal-dialog-centered">
   <div class="modal-content">
@@ -1250,10 +1252,10 @@ aria-labelledby="delete-teacher" aria-hidden="true">
       <!-- <form [formGroup]="languageForm"> -->
 
         <div class="form-group">
-          <h2 class="text-center">Do You Really Want To Delete This ?</h2>
+          <h2 class="text-center font_16 f-poppins ">Do you really want to delete this?</h2>
         </div>
         <div
-        class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4">
+        class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-2 mt-4">
         <button type="button"
           class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
           data-bs-dismiss="modal">{{'No'| translate }}</button>
@@ -1299,7 +1301,7 @@ aria-labelledby="add-certificate" aria-hidden="true">
     </small>
 
       <div
-      class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4">
+      class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 mt-4">
       <button #closeCertificateModal type="button"
         class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
         data-bs-dismiss="modal">{{'DiscardChanges'| translate }}</button>
@@ -1314,7 +1316,7 @@ aria-labelledby="add-certificate" aria-hidden="true">
 </div>
 </div>
 
-<div class="modal fade edit-school-modal" id="delete-classCertificate" tabindex="-1"
+<div class="modal fade edit-school-modal delete-modal" id="delete-classCertificate" tabindex="-1"
 aria-labelledby="delete-certificate" aria-hidden="true">
 <div class="modal-dialog modal-dialog-centered">
 <div class="modal-content">
@@ -1327,10 +1329,10 @@ aria-labelledby="delete-certificate" aria-hidden="true">
     <!-- <form [formGroup]="languageForm"> -->
 
       <div class="form-group">
-        <h2 class="text-center">Do You Really Want To Delete This ?</h2>
+        <h2 class="text-center font_16 f-poppins">Do you really want to delete this?</h2>
       </div>
       <div
-      class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4">
+      class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-2 mt-4">
       <button type="button"
         class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
         data-bs-dismiss="modal">{{'No'| translate }}</button>
