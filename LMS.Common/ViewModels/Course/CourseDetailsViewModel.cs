@@ -36,5 +36,6 @@ namespace LMS.Common.ViewModels.Course
         public IEnumerable<DisciplineViewModel> Disciplines { get; set; }
         public IEnumerable<PostDetailsViewModel> Posts { get; set; }
         public IEnumerable<CourseCertificateViewModel> CourseCertificates { get; set; }
+        public bool IsConvertable { get; set; }
     }
 }

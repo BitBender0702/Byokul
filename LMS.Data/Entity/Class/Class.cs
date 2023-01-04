@@ -26,5 +26,6 @@ namespace LMS.Data.Entity
         public string? ThumbnailUrl { get; set; }
         public string ClassUrl { get; set; }
         public bool IsEnable { get; set; }
+        public bool IsCourse { get; set; }
     }
 }

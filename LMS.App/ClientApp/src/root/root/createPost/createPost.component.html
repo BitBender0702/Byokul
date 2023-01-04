@@ -306,6 +306,12 @@
                     <input readonly type="text" [placeholder]="parentDetails?.firstName + ' ' + parentDetails?.lastName" name="userName" class="form-control w-100">
                   </div>
 
+                  <div *ngIf="this.courseId != undefined" class="form-group">
+                    <label class="font_10">Course Name</label>
+                    <input hidden type="text" name="courseId" class="form-control w-100">
+                    <input readonly type="text" [placeholder]="parentDetails?.courseName" name="courseName" class="form-control w-100">
+                  </div>
+
                   <div class="preview-zone hidden">
                     <div class="box box-solid">
                       <div class="box-header with-border">

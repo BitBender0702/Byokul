@@ -31,7 +31,7 @@ namespace LMS.App.Controllers
                 postViewModel.OwnerId = new Guid(userId);
             }
 
-            if (postViewModel.PostAuthorType == (int)PostAuthorTypeEnum.Class)
+            if (postViewModel.PostAuthorType == (int)PostAuthorTypeEnum.Class || postViewModel.PostAuthorType == (int)PostAuthorTypeEnum.Course)
             {
                 postViewModel.AuthorId = new Guid(userId);
             }

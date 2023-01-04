@@ -34,6 +34,7 @@
          </ng-template> -->
          <ng-template pTemplate="header">
              <tr>
+                 <th>{{'Avatar'| translate }}</th>
                  <th pSortableColumn="schoolName">{{'SchoolName'| translate }} <p-sortIcon field="schoolName"></p-sortIcon></th>
                  <th pSortableColumn="founded">{{'Founded'| translate }} <p-sortIcon field="founded"></p-sortIcon></th>
                  <th pSortableColumn="specialization?.name">{{'Specialization'| translate }} <p-sortIcon field="specialization?.name"></p-sortIcon></th>
@@ -51,7 +52,8 @@
                  <td>
                   <img *ngIf="school.avatar != null" class="school-profile-icon rounded-circle user-profile-header image" [src]="school.avatar"/>
                   <img *ngIf="school.avatar == null" class="school-profile-icon rounded-circle user-profile-header image" src="../../../assets/images/schoolLogo2.png"/>
-                  {{school.schoolName}}</td>
+                 </td>
+                 <td>{{school.schoolName}}</td>
                  <td>{{school.founded | date : "MMMM d, y"}}</td>
                  <td>{{school.specialization?.name}}</td>
                  <td>{{school.schoolUrl}}</td>

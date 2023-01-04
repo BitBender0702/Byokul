@@ -21,5 +21,6 @@ namespace LMS.Services
         Task DeleteCourseTeacher(CourseTeacherViewModel model);
         Task SaveCourseCertificates(SaveCourseCertificateViewModel model);
         Task DeleteCourseCertificate(CourseCertificateViewModel model);
+        Task<bool> ConvertToClass(Guid courseId);
     }
 }

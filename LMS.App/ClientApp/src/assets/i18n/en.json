@@ -224,7 +224,10 @@
     "DoYouWantToVerifyUser": "Do You Really Want To Verify This User",
     "DoYouWantToUnVerifyUser": "Do You Really Want To UnVerify This Use",
     "UserLogo": "User Logo",
-    "UnFollow": "UnFollow"
+    "UnFollow": "UnFollow",
+    "ConvertToCourse": "Convert To Course",
+    "ConvertToClass": "Convert To Class",
+    "Avatar": "Avatar"
 
     
 

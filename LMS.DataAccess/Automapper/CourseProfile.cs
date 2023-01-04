@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using LMS.Common.ViewModels.Class;
 using LMS.Common.ViewModels.Course;
 using LMS.Data.Entity;
 using System;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace LMS.DataAccess.Automapper
 {
-    public class CourseProfile:Profile
+    public class CourseProfile : Profile
     {
         public CourseProfile()
         {
@@ -18,6 +19,15 @@ namespace LMS.DataAccess.Automapper
             CreateMap<Course, CourseDetailsViewModel>()
                 .ForMember(x => x.CreatedBy, opt => opt.MapFrom(o => o.CreatedBy.Email));
             CreateMap<CourseCertificate, CourseCertificateViewModel>();
+            CreateMap<ClassCertificateViewModel, CourseCertificateViewModel>();
+            CreateMap<CourseLanguageViewModel, ClassLanguageViewModel>()
+               .ForMember(x => x.ClassId, opt => opt.MapFrom(o => o.CourseId));
+            CreateMap<CourseTeacherViewModel, ClassTeacherViewModel>()
+              .ForMember(x => x.ClassId, opt => opt.MapFrom(o => o.CourseId));
+            CreateMap<SaveCourseCertificateViewModel, SaveClassCertificateViewModel>()
+              .ForMember(x => x.ClassId, opt => opt.MapFrom(o => o.CourseId));
+            CreateMap<CourseCertificateViewModel, ClassCertificateViewModel>()
+              .ForMember(x => x.ClassId, opt => opt.MapFrom(o => o.CourseId));
         }
     }
 }

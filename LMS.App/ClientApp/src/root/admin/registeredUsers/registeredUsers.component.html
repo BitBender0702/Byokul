@@ -34,6 +34,7 @@
       </ng-template> -->
       <ng-template pTemplate="header">
           <tr>
+              <th>{{'Avatar'| translate }}</th>
               <th pSortableColumn="firstName">{{'FirstName'| translate }} <p-sortIcon field="firstName"></p-sortIcon></th>
               <th pSortableColumn="lastName">{{'LastName'| translate }} <p-sortIcon field="lastName"></p-sortIcon></th>
               <th pSortableColumn="email">{{'Email'| translate }} <p-sortIcon field="email"></p-sortIcon></th>
@@ -47,9 +48,10 @@
       <ng-template pTemplate="body" let-user>
           <tr>
               <td>
-                <img *ngIf="user.avatar != null" class="school-profile-icon rounded-circle user-profile-header image" [src]="user.avatar"/>
-                <img *ngIf="user.avatar == null" class="school-profile-icon rounded-circle user-profile-header image" src="../../../assets/images/userLogo2.png"/>
-                {{user.firstName}}</td>
+              <img *ngIf="user.avatar != null" class="school-profile-icon rounded-circle user-profile-header image" [src]="user.avatar"/>
+              <img *ngIf="user.avatar == null" class="school-profile-icon rounded-circle user-profile-header image" src="../../../assets/images/userLogo2.png"/>
+              </td>
+              <td>{{user.firstName}}</td>
               <td>{{user.lastName}}</td>
               <td>{{user.email}}</td>
               <td>{{user.contactEmail}}</td>

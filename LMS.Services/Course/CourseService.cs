@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using LMS.Common.ViewModels.Class;
 using LMS.Common.ViewModels.Common;
 using LMS.Common.ViewModels.Course;
 using LMS.Common.ViewModels.Post;
+using LMS.Common.ViewModels.School;
 using LMS.Common.ViewModels.Student;
 using LMS.Common.ViewModels.Teacher;
 using LMS.Data.Entity;
@@ -28,13 +30,15 @@ namespace LMS.Services
         private IGenericRepository<CourseStudent> _courseStudentRepository;
         private IGenericRepository<CourseTeacher> _courseTeacherRepository;
         private IGenericRepository<Post> _postRepository;
+        private IGenericRepository<Class> _classRepository;
         private IGenericRepository<PostAttachment> _postAttachmentRepository;
         private IGenericRepository<CourseCertificate> _courseCertificateRepository;
         private readonly UserManager<User> _userManager;
         private readonly IBlobService _blobService;
+        private readonly IClassService _classService;
 
 
-        public CourseService(IMapper mapper, IGenericRepository<Course> courseRepository, IGenericRepository<CourseLanguage> courseLanguageRepository, IGenericRepository<CourseDiscipline> courseDisciplineRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<CourseTeacher> courseTeacherRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<CourseCertificate> courseCertificateRepository, UserManager<User> userManager, IBlobService blobService)
+        public CourseService(IMapper mapper, IGenericRepository<Course> courseRepository, IGenericRepository<CourseLanguage> courseLanguageRepository, IGenericRepository<CourseDiscipline> courseDisciplineRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<CourseTeacher> courseTeacherRepository, IGenericRepository<Post> postRepository, IGenericRepository<Class> classRepository,IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<CourseCertificate> courseCertificateRepository, UserManager<User> userManager, IBlobService blobService, IClassService classService)
         {
             _mapper = mapper;
             _courseRepository = courseRepository;
@@ -43,10 +47,12 @@ namespace LMS.Services
             _courseStudentRepository = courseStudentRepository;
             _courseTeacherRepository = courseTeacherRepository;
             _postRepository = postRepository;
+            _classRepository = classRepository;
             _postAttachmentRepository = postAttachmentRepository;
             _courseCertificateRepository = courseCertificateRepository;
             _userManager = userManager;
             _blobService = blobService;
+            _classService = classService;
         }
 
         public async Task<Guid> SaveNewCourse(CourseViewModel courseViewModel, string createdById)
@@ -110,16 +116,27 @@ namespace LMS.Services
 
         public async Task SaveCourseLanguages(IEnumerable<string> languageIds, Guid courseId)
         {
-            foreach (var languageId in languageIds)
+            var courses = await GetAllCourses();
+            var isCourseExist = courses.Where(x => x.CourseId == courseId).FirstOrDefault();
+            if (isCourseExist == null)
             {
-                var courseLanguage = new CourseLanguage
+                await _classService.SaveClassLanguages(languageIds, courseId);
+            }
+            else
+            {
+                foreach (var languageId in languageIds)
                 {
-                    CourseId = courseId,
-                    LanguageId = new Guid(languageId)
-                };
 
-                _courseLanguageRepository.Insert(courseLanguage);
-                _courseLanguageRepository.Save();
+                    var courseLanguage = new CourseLanguage
+                    {
+                        CourseId = courseId,
+                        LanguageId = new Guid(languageId)
+                    };
+
+                    _courseLanguageRepository.Insert(courseLanguage);
+                    _courseLanguageRepository.Save();
+
+                }
             }
         }
 
@@ -154,17 +171,26 @@ namespace LMS.Services
             }
         }
 
-       public async Task SaveCourseTeachers(IEnumerable<string> teacherIds, Guid courseId)
+        public async Task SaveCourseTeachers(IEnumerable<string> teacherIds, Guid courseId)
         {
-            foreach (var teacherId in teacherIds)
+            var courses = await GetAllCourses();
+            var isCourseExist = courses.Where(x => x.CourseId == courseId).FirstOrDefault();
+            if (isCourseExist == null)
             {
-                var courseTeacher = new CourseTeacher
+                await _classService.SaveClassTeachers(teacherIds, courseId);
+            }
+            else
+            {
+                foreach (var teacherId in teacherIds)
                 {
-                    CourseId = courseId,
-                    TeacherId = new Guid(teacherId)
-                };
-                _courseTeacherRepository.Insert(courseTeacher);
-                _courseTeacherRepository.Save();
+                    var courseTeacher = new CourseTeacher
+                    {
+                        CourseId = courseId,
+                        TeacherId = new Guid(teacherId)
+                    };
+                    _courseTeacherRepository.Insert(courseTeacher);
+                    _courseTeacherRepository.Save();
+                }
             }
         }
 
@@ -181,7 +207,8 @@ namespace LMS.Services
             _courseRepository.Update(course);
             _courseRepository.Save();
 
-            if (courseViewModel.LanguageIds != null) {
+            if (courseViewModel.LanguageIds != null)
+            {
                 await UpdateCourseLanguages(courseViewModel.LanguageIds, courseViewModel.CourseId);
             }
 
@@ -261,14 +288,38 @@ namespace LMS.Services
                     .Include(x => x.Accessibility)
                     .Include(x => x.CreatedBy)
                     .Where(x => x.CourseId == courseId).FirstOrDefaultAsync();
-                try
+
+                if (course == null)
                 {
-                    model = _mapper.Map<CourseDetailsViewModel>(course);
+                    var classDetails = await _classService.GetClassById(courseId);
+
+                    var courses = new CourseDetailsViewModel();
+                    courses.CourseId = classDetails.ClassId;
+                    courses.CourseName = classDetails.ClassName;
+                    courses.School = classDetails.School;
+                    courses.ServiceType = classDetails.ServiceType;
+                    courses.Accessibility = classDetails.Accessibility;
+                    courses.School.Country = classDetails.School.Country;
+                    courses.School.Specialization = classDetails.School.Specialization;
+                    courses.CreatedBy = classDetails.CreatedBy;
+                    courses.Avatar = classDetails.Avatar;
+                    courses.CourseUrl = classDetails.ClassUrl;
+                    courses.Languages = classDetails.Languages;
+                    courses.Disciplines = classDetails.Disciplines;
+                    courses.Students = classDetails.Students;
+                    courses.Teachers = classDetails.Teachers;
+                    courses.Posts = classDetails.Posts;
+                    courses.IsConvertable = true;
+
+
+                    courses.CourseCertificates = _mapper.Map<IEnumerable<CourseCertificateViewModel>>(classDetails.ClassCertificates);
+
+                    return courses;
+
+
+
                 }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
+                model = _mapper.Map<CourseDetailsViewModel>(course);
 
                 model.Languages = await GetLanguages(course.CourseId);
                 model.Disciplines = await GetDisciplines(course.CourseId);
@@ -395,6 +446,17 @@ namespace LMS.Services
         {
             var course = await _courseRepository.GetAll().Include(x => x.School).Where(x => x.CourseId == courseId).FirstOrDefaultAsync();
 
+            if (course == null)
+            {
+                var classDetails = await _classRepository.GetAll().Include(x => x.School).Where(x => x.ClassId == courseId).FirstOrDefaultAsync();
+                var courses = new CourseViewModel();
+                courses.CourseId = classDetails.ClassId;
+                courses.CourseName = classDetails.ClassName;
+                courses.IsConvertable = true;
+                courses.School = _mapper.Map<SchoolViewModel>(classDetails.School);
+                return courses;
+            }
+
             var response = _mapper.Map<CourseViewModel>(course);
             return response;
 
@@ -404,17 +466,30 @@ namespace LMS.Services
         {
             var courseLanguage = await _courseLanguageRepository.GetAll().Where(x => x.CourseId == model.CourseId && x.LanguageId == model.LanguageId).FirstOrDefaultAsync();
 
-            _courseLanguageRepository.Delete(courseLanguage.Id);
-            _courseLanguageRepository.Save();
-
+            if (courseLanguage == null)
+            {
+                await _classService.DeleteClassLanguage(_mapper.Map<ClassLanguageViewModel>(model));
+            }
+            else
+            {
+                _courseLanguageRepository.Delete(courseLanguage.Id);
+                _courseLanguageRepository.Save();
+            }
         }
 
         public async Task DeleteCourseTeacher(CourseTeacherViewModel model)
         {
             var courseTeacher = await _courseTeacherRepository.GetAll().Where(x => x.CourseId == model.CourseId && x.TeacherId == model.TeacherId).FirstOrDefaultAsync();
 
-            _courseTeacherRepository.Delete(courseTeacher.Id);
-            _courseTeacherRepository.Save();
+            if (courseTeacher == null)
+            {
+                await _classService.DeleteClassTeacher(_mapper.Map<ClassTeacherViewModel>(model));
+            }
+            else
+            {
+                _courseTeacherRepository.Delete(courseTeacher.Id);
+                _courseTeacherRepository.Save();
+            }
 
         }
 
@@ -430,20 +505,29 @@ namespace LMS.Services
         {
             string containerName = "coursecertificates";
 
-            foreach (var certificate in courseCertificates.Certificates)
+            var courses = await GetAllCourses();
+            var isCourseExist = courses.Where(x => x.CourseId == courseCertificates.CourseId).FirstOrDefault();
+            if (isCourseExist == null)
             {
-                string certificateUrl = await _blobService.UploadFileAsync(certificate, containerName);
-
-                string certificateName = certificate.FileName;
-
-                var classCertificate = new CourseCertificate
+                await _classService.SaveClassCertificates(_mapper.Map<SaveClassCertificateViewModel>(courseCertificates));    
+            }
+            else
+            {
+                foreach (var certificate in courseCertificates.Certificates)
                 {
-                    CertificateUrl = certificateUrl,
-                    Name = certificateName,
-                    CourseId = courseCertificates.CourseId
-                };
-                _courseCertificateRepository.Insert(classCertificate);
-                _courseCertificateRepository.Save();
+                    string certificateUrl = await _blobService.UploadFileAsync(certificate, containerName);
+
+                    string certificateName = certificate.FileName;
+
+                    var classCertificate = new CourseCertificate
+                    {
+                        CertificateUrl = certificateUrl,
+                        Name = certificateName,
+                        CourseId = courseCertificates.CourseId
+                    };
+                    _courseCertificateRepository.Insert(classCertificate);
+                    _courseCertificateRepository.Save();
+                }
             }
 
         }
@@ -452,9 +536,29 @@ namespace LMS.Services
         {
             var courseCertificate = await _courseCertificateRepository.GetAll().Where(x => x.CourseId == model.CourseId && x.CertificateId == model.CertificateId).FirstOrDefaultAsync();
 
-            _courseCertificateRepository.Delete(courseCertificate.CertificateId);
-            _courseCertificateRepository.Save();
+            if (courseCertificate == null)
+            {
+                await _classService.DeleteClassCertificate(_mapper.Map<ClassCertificateViewModel>(model));
+            }
+            else
+            {
+                _courseCertificateRepository.Delete(courseCertificate.CertificateId);
+                _courseCertificateRepository.Save();
+            }
 
+        }
+
+        public async Task<bool> ConvertToClass(Guid courseId)
+        {
+            Class classes = _classRepository.GetById(courseId);
+            if (classes != null)
+            {
+                classes.IsCourse = false;
+                _classRepository.Update(classes);
+                _classRepository.Save();
+                return true;
+            }
+            return false;
         }
 
     }

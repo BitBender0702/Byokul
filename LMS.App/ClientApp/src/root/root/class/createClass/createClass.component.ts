@@ -283,7 +283,6 @@ captureTeacherId(event: any) {
   }
 
   getSchoolName(schoolName:string){
-    debugger
     this.selectedSchoolName = schoolName;
   }
 

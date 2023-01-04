@@ -55,7 +55,7 @@
             <button *ngIf="!isOwner" type="button"
               class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn me-0 minw-142 class-request-msg">{{'RequestMessage'| translate }}</button>
             </div>
-            <button *ngIf="isOwner" type="button" class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins" style="margin-right: 130px;">{{'Convert To Course'| translate }}</button>
+            <button *ngIf="isOwner" (click)="convertToCourse(class.classId)" type="button" class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins" style="margin-right: 130px;">{{'ConvertToCourse'| translate }}</button>
 
             <button *ngIf="isOwner" (click)="getClassDetails(class.classId)" class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins" data-bs-toggle="modal"
               data-bs-target="#editClass"><img src="../../../../assets/images/Setting-solid-dark.svg" class="me-2" /> {{'EditProfile'| translate }}
@@ -173,18 +173,22 @@
             </div>
         </div>
           <!-- <div class="school-grid-view grid-active" *ngIf="isProfileGrid">
-            <div class="school-grid-box position-relative">
+            <div *ngFor="let post of class.posts" class="school-grid-box position-relative">
+              <div *ngIf="post.postType == 1 && post.postAuthorType == 2">
               <div class="schoolgrid-header d-flex align-items-center position-relative">
                 <div class="school-gridprofile-icon">
-                  <img src="images/profile-grid-school-may.jpg" />
+                  <img [src]="class.avatar" />
                 </div>
-                <h2 class="d-inline-block font_20 fw_600 text_sec1 mb-0">Python programming class</h2>
+                <h2 class="d-inline-block font_20 fw_600 text_sec1 mb-0">{{post.title}}</h2>
                 <span class="prog-count font_14 fw_500 text_ltgray">15/15</span>
                 <span class="live-soon font_20 text_ltgray fw_600">Soon</span>
-                <p class="font_14 school-grid-date d-inline-block mb-0">September 28 <span class="fw_600 ">11:30 -
-                    13:50</span></p>
+                <p class="font_14 school-grid-date d-inline-block mb-0">
+                  {{post.dateTime | date : "MMMM d"}} - {{post.dateTime | date : "hh mm"}}
+                  <span class="fw_600 ">11:30 -13:50</span>
+                </p>
                 <button type="button" class="bg-transparent border-0 pinned-grid-chat"><img class="w-auto h-auto"
-                    src="images/pinned-gray.svg" /></button>
+                    src="../../../../assets/images/pinned-gray.svg" /></button>
+              </div>
               </div>
               <div class="school-grid-body">
                 <p class="text_sec1 font_14">Lecture One - Introduction and basics in Python.Lecture One - Introduction

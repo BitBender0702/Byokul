@@ -545,12 +545,17 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     }
 
     pinUnpinPost(attachmentId:string,isPinned:boolean){
-      debugger
       this._postService.pinUnpinPost(attachmentId,isPinned).subscribe((response) => {
         this.ngOnInit();
         console.log(response);
       });
     
+    }
+
+    convertToCourse(classId:string){
+      this._classService.convertToCourse(classId).subscribe((response) => {
+        window.location.href=`user/courseProfile/${classId}`;
+      });
     }
   
 }

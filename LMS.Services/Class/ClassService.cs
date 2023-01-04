@@ -167,7 +167,7 @@ namespace LMS.Services
             }
         }
 
-        async Task SaveClassTeachers(IEnumerable<string> teacherIds, Guid classId)
+        public async Task SaveClassTeachers(IEnumerable<string> teacherIds, Guid classId)
         {
             foreach (var teacherId in teacherIds)
             {
@@ -519,6 +519,19 @@ namespace LMS.Services
                 return false;
             }
             return true;
+        }
+
+        public async Task<bool> ConvertToCourse(Guid classId)
+        {
+            Class classes = _classRepository.GetById(classId);
+            if (classes != null)
+            {
+                classes.IsCourse = true;
+                _classRepository.Update(classes);
+                _classRepository.Save();
+                return true;
+            }
+            return false;
         }
     }
 }

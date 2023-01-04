@@ -55,10 +55,10 @@
               <button *ngIf="!isOwner" type="button"
                 class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn me-0 minw-142 class-request-msg">{{'RequestMessage'| translate }}</button>
               </div>
-              <button *ngIf="isOwner" type="button" class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins" style="margin-right: 130px;">{{'Convert To Course'| translate }}</button>
+              <button *ngIf="isOwner && course.isConvertable" (click)="convertToClass(course.courseId)" type="button" class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins" style="margin-right: 130px;">{{'ConvertToClass'| translate }}</button>
   
               <button *ngIf="isOwner" class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins" data-bs-toggle="modal"
-                data-bs-target="#editClass"><img src="../../../../assets/images/Setting-solid-dark.svg" class="me-2" /> {{'EditProfile'| translate }}
+                data-bs-target="#editCourse"><img src="../../../../assets/images/Setting-solid-dark.svg" class="me-2" /> {{'EditProfile'| translate }}
                 </button>
             </div>
           </div>
@@ -136,7 +136,7 @@
                   <div class="feedbox-inner d-flex ">
       
                     <div *ngFor="let post of course.posts">
-                      <div *ngIf="post.postType == 3 && post.postAuthorType == 4">
+                      <div *ngIf="post.postType == 3">
                       <div *ngFor="let postAttachment of post.postAttachments">
                         <div *ngIf="postAttachment.fileType == 2">
                           <div class="feedimg-box position-relative text-light position-relative">
@@ -953,7 +953,7 @@
   
         </div>
           <!-- Modal -->
-    <!-- <div class="modal fade edit-school-modal" id="editClass" tabindex="-1" aria-labelledby="editClass"
+    <!-- <div class="modal fade edit-school-modal" id="editCourse" tabindex="-1" aria-labelledby="editCourse"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">

@@ -369,7 +369,6 @@ openPostModal(): void {
 }
 
 pinUnpinPost(attachmentId:string,isPinned:boolean){
-  debugger
   this._postService.pinUnpinPost(attachmentId,isPinned).subscribe((response) => {
     this.ngOnInit();
     console.log(response);

@@ -135,5 +135,13 @@ namespace LMS.App.Controllers
             return Ok();
         }
 
+        [Route("convertToClass")]
+        [HttpPost]
+        public async Task<IActionResult> ConvertToClass(Guid courseId)
+        {
+            await _courseService.ConvertToClass(courseId);
+            return Ok();
+        }
+
     }
 }

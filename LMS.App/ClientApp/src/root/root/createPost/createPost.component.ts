@@ -275,7 +275,6 @@ export class CreatePostComponent implements OnInit {
  }
 
    savePost(){
-    debugger
     this.isSubmitted=true;
     if (!this.createPostForm.valid) {
       return;
@@ -330,7 +329,6 @@ export class CreatePostComponent implements OnInit {
    }
 
    postFrom(){
-    debugger
     if(this.schoolId!= undefined){
       this.appendData(this.schoolId,this.schoolId,'',PostAuthorTypeEnum.School.toString());
     }
@@ -343,7 +341,13 @@ export class CreatePostComponent implements OnInit {
     }
 
     if(this.courseId!= undefined){
+      // condition
+      if(this.parentDetails?.isConvertable){
+        this.appendData('',this.courseId,this.parentDetails.school.schoolId,PostAuthorTypeEnum.Class.toString());
+      }
+      else{
       this.appendData('',this.courseId,this.parentDetails.school.schoolId,PostAuthorTypeEnum.Course.toString());
+      }
     }
    }
 

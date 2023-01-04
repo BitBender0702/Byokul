@@ -94,8 +94,11 @@ export class ClassService{
     }
 
     isClassNameExist(className:string){
-        debugger
         return this.http.get(`${this.apiUrl}/class/isClassNameExist` + '?className=' + className);
+    }
+
+    convertToCourse(classId:any): Observable<any> {
+        return this.http.post(`${this.apiUrl}/class/convertToCourse` + '?classId=' + classId,'');
     }
 
 }

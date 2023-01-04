@@ -17,12 +17,13 @@ namespace LMS.Services
         Task<IEnumerable<ClassViewModel>> GetAllClasses();
         Task SaveClassLanguages(IEnumerable<string> languageIds, Guid classId);
         Task DeleteClassLanguage(ClassLanguageViewModel model);
-        Task SaveClassTeachers(SaveClassTeacherViewModel model);
+        Task SaveClassTeachers(IEnumerable<string> teacherIds, Guid courseId);
         Task DeleteClassTeacher(ClassTeacherViewModel model);
         Task SaveClassCertificates(SaveClassCertificateViewModel model);
         Task DeleteClassCertificate(ClassCertificateViewModel model);
         Task<ClassViewModel> GetBasicClassInfo(Guid classId);
         Task<ClassViewModel> GetClassByName(string className, string schoolName);
         Task<bool> IsClassNameExist(string className);
+        Task<bool> ConvertToCourse(Guid classId);
     }
 }

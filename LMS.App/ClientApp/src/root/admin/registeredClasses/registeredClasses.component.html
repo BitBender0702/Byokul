@@ -33,6 +33,7 @@
          </ng-template> -->
          <ng-template pTemplate="header">
              <tr>
+                 <th>{{'Avatar'| translate }}</th>
                  <th pSortableColumn="className">{{'ClassName'| translate }} <p-sortIcon field="className"></p-sortIcon></th>
                  <th pSortableColumn="startDate">{{'StartDate'| translate }} <p-sortIcon field="startDate"></p-sortIcon></th>
                  <th pSortableColumn="endDate">{{'EndDate'| translate }} <p-sortIcon field="endDate"></p-sortIcon></th>
@@ -51,9 +52,10 @@
          <ng-template pTemplate="body" let-class>
              <tr>
                  <td>
-                  <img *ngIf="class.avatar != null" class="school-profile-icon rounded-circle user-profile-header image" [src]="class.avatar"/>
-                  <img *ngIf="class.avatar == null" class="school-profile-icon rounded-circle user-profile-header image" src="../../../assets/images/classLogo.png"/>
-                  {{class.className}}</td>
+                  <img *ngIf="class.avatar != null" class="school-profile-icon rounded-circle user-profile-header" [src]="class.avatar"/>
+                  <img *ngIf="class.avatar == null" class="school-profile-icon rounded-circle user-profile-header" src="../../../assets/images/classLogo.png"/>
+                 </td>
+                 <td>{{class.className}}</td>
                  <td>{{class.startDate | date : "MMMM d, y"}}</td>
                  <td>{{class.endDate | date : "MMMM d, y"}}</td>
                  <td>{{class.noOfStudents}}</td>

@@ -35,6 +35,7 @@
          </ng-template> -->
          <ng-template pTemplate="header">
              <tr>
+                 <th>{{'Avatar'| translate }}</th>
                  <th pSortableColumn="courseName">{{'CourseName'| translate }} <p-sortIcon field="courseName"></p-sortIcon></th>
                  <th pSortableColumn="school?.schoolName">{{'SchoolName'| translate }} <p-sortIcon field="school?.schoolName"></p-sortIcon></th>
                  <th pSortableColumn="serviceType?.type">{{'ServiceType'| translate }} <p-sortIcon field="serviceType?.type"></p-sortIcon></th>
@@ -49,9 +50,12 @@
          </ng-template>
          <ng-template pTemplate="body" let-course>
              <tr>
+                  <td>
+                    <img *ngIf="course.avatar != null" class="school-profile-icon rounded-circle user-profile-header image" [src]="course.avatar"/>
+                    <img *ngIf="course.avatar == null" class="school-profile-icon rounded-circle user-profile-header image" src="../../../assets/images/classLogo.png"/>
+                 </td>
                  <td>
-                  <img *ngIf="course.avatar != null" class="school-profile-icon rounded-circle user-profile-header image" [src]="course.avatar"/>
-                  <img *ngIf="course.avatar == null" class="school-profile-icon rounded-circle user-profile-header image" src="../../../assets/images/classLogo.png"/>{{course.courseName}}</td>
+                  {{course.courseName}}</td>
                  <td>
                   {{course.school?.schoolName}}</td>
                  <td>{{course.serviceType?.type}}</td>

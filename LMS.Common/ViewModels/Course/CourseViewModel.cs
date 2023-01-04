@@ -33,6 +33,7 @@ namespace LMS.Common.ViewModels.Course
         public DateTime CreatedOn { get; set; }
         public string CreatedBy { get; set; }
         public bool IsEnable { get; set; }
+        public bool IsConvertable { get; set; }
 
     }
 }

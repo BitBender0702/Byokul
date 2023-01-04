@@ -39,12 +39,12 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     courseTeacher!:AddCourseTeacher;
     deleteLanguage!: DeleteCourseLanguage;
     deleteTeacher!: DeleteCourseTeacher;
-    // editClass:any;
-    // editClassForm!:FormGroup;
+    //editCourse:any;
+    editCourseForm!:FormGroup;
     languageForm!:FormGroup;
     teacherForm!:FormGroup;
     certificateForm!:FormGroup;
-    // uploadImage!:any;
+    uploadImage!:any;
     // updateClassDetails!:EditClassModel;
     // accessibility:any;
     filteredLanguages!: any[];
@@ -54,8 +54,8 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     deleteCertificate!: DeleteCourseCertificate;
     courseCertificate!:AddCourseCertificate;
     certificateToUpload = new FormData();
-    // fileToUpload= new FormData();
-    // isClassPaid!:boolean;
+    fileToUpload= new FormData();
+    isClassPaid!:boolean;
     // disabled:boolean = true;
     // currentDate!:string;
 
@@ -76,7 +76,6 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     }
   
     ngOnInit(): void {
-        debugger
       this.loadingIcon = true;
       var selectedLang = localStorage.getItem("selectedLanguage");
       this.translate.use(selectedLang?? '');
@@ -101,7 +100,6 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     //   }
     //   else{
       this._courseService.getCourseById(this.courseId).subscribe((response) => {
-        debugger
         this.course = response;
         this.isOwnerOrNot();
         this.loadingIcon = false;
@@ -109,19 +107,16 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       });
     // }
 
-    //   this.editClassForm = this.fb.group({
-    //     schoolName: this.fb.control(''),
-    //     className: this.fb.control(''),
-    //     noOfStudents: this.fb.control(''),
-    //     startDate: this.fb.control(''),
-    //     endDate: this.fb.control(''),
-    //     accessibilityId: this.fb.control(''),
-    //     price: this.fb.control(''),
-    //     description: this.fb.control(''),
-    //     languageIds:this.fb.control(''),
-    //     serviceTypeId:this.fb.control('')
+      this.editCourseForm = this.fb.group({
+        schoolName: this.fb.control(''),
+        courseName: this.fb.control(''),
+        serviceTypeId:this.fb.control(''),
+        accessibilityId: this.fb.control(''),
+        description: this.fb.control(''),
+        price: this.fb.control(''),
+        languageIds:this.fb.control(''),
 
-    //   });
+      });
 
 //        this._classService.getAccessibility().subscribe((response) => {
 //         this.accessibility = response;
@@ -207,46 +202,34 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
   }
   
 
-    // initializeEditFormControls(){
-    //   this.uploadImage = '';
-    //   this.imageFile.nativeElement.value = "";
-    //   this.fileToUpload.set('avatarImage','');
+    initializeEditFormControls(){
+      this.uploadImage = '';
+      this.imageFile.nativeElement.value = "";
+      this.fileToUpload.set('avatarImage','');
 
-    //   var startDate = this.editClass.startDate;
-    //   startDate = startDate.substring(0, startDate.indexOf('T'));
+      var selectedLanguages:string[] = [];
 
-    //   var endDate = this.editClass.endDate;
-    //   endDate = endDate.substring(0, endDate.indexOf('T'));
+      this.course.languages.forEach((item: { id: string; }) => {
+        selectedLanguages.push(item.id)
+      });
 
-    //   var selectedLanguages:string[] = [];
+      this.editCourseForm = this.fb.group({
+        schoolName: this.fb.control(this.course.school.schoolName),
+        courseName: this.fb.control(this.course.courseName,[Validators.required]),
+        accessibilityId: this.fb.control(this.course.accessibilityId,[Validators.required]),
+        price: this.fb.control(this.course.price),
+        description: this.fb.control(this.course.description),
+        languageIds:this.fb.control(selectedLanguages,[Validators.required]),
+        serviceTypeId:this.fb.control(this.course.serviceTypeId,[Validators.required])
 
-    //   this.editClass.languages.forEach((item: { id: string; }) => {
-    //     selectedLanguages.push(item.id)
-    //   });
+      });
 
-    //   this.currentDate = this.getCurrentDate();
+      if(this.course.serviceTypeId == '0d846894-caa4-42f3-8e8a-9dba6467672b'){
+        this.getPaidClass();
 
-
-    //   this.editClassForm = this.fb.group({
-    //     schoolName: this.fb.control(this.editClass.school.schoolName),
-    //     className: this.fb.control(this.editClass.className,[Validators.required]),
-    //     noOfStudents: this.fb.control(this.editClass.noOfStudents,[Validators.required]),
-    //     startDate: this.fb.control(startDate,[Validators.required]),
-    //     endDate: this.fb.control(endDate,[Validators.required]),
-    //     accessibilityId: this.fb.control(this.editClass.accessibilityId,[Validators.required]),
-    //     price: this.fb.control(this.editClass.price),
-    //     description: this.fb.control(this.editClass.description),
-    //     languageIds:this.fb.control(selectedLanguages,[Validators.required]),
-    //     serviceTypeId:this.fb.control(this.editClass.serviceTypeId,[Validators.required])
-
-    //   }, {validator: this.dateLessThan('startDate', 'endDate',this.currentDate)});
-
-    //   if(this.editClass.serviceTypeId == '0d846894-caa4-42f3-8e8a-9dba6467672b'){
-    //     this.getPaidClass();
-
-    //   }
-    //   this.editClassForm.updateValueAndValidity();
-    // }
+      }
+      this.editCourseForm.updateValueAndValidity();
+    }
 
     // dateLessThan(from: string, to: string, currentDate:string) {
     //   return (group: FormGroup): {[key: string]: any} => {
@@ -402,7 +385,6 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     //     }
 
         handleCertificates(event: any) {
-            debugger
             this.courseCertificate.certificates.push(event.target.files[0]);
         }
 
@@ -468,10 +450,10 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     //       });
     //     }
       
-    //     getPaidClass(){
-    //       this.isClassPaid = true;
-    //       this.editClassForm.get('price')?.addValidators(Validators.required);
-    //     }
+        getPaidClass(){
+          this.isClassPaid = true;
+          this.editCourseForm.get('price')?.addValidators(Validators.required);
+        }
 
     //     private closeModal(): void {
     //       this.closeEditModal.nativeElement.click();
@@ -541,7 +523,6 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       }
 
       openPostModal(): void {
-        debugger
         const initialState = {
           courseId: this.course.courseId,
           from: "course"
@@ -550,12 +531,17 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     }
 
     pinUnpinPost(attachmentId:string,isPinned:boolean){
-      debugger
       this._postService.pinUnpinPost(attachmentId,isPinned).subscribe((response) => {
         this.ngOnInit();
         console.log(response);
       });
     
+    }
+
+    convertToClass(courseId:string){
+      this._courseService.convertToClass(courseId).subscribe((response) => {
+        window.location.href=`user/classProfile/${courseId}`;
+      });
     }
   
 }

@@ -52,7 +52,6 @@ export class CourseService{
     }
 
     getCourseById(courseId:string):Observable<any>{
-        debugger
         return this.http.get(`${this.apiUrl}/course/getCourseById` + '?courseId=' + courseId);
     }
 
@@ -77,8 +76,11 @@ export class CourseService{
     }
 
     saveCourseCertificates(addCertificates:any):Observable<any>{
-        debugger
         return this.http.post(`${this.apiUrl}/course/saveCourseCertificates`,addCertificates);
+    }
+
+    convertToClass(courseId:any): Observable<any> {
+        return this.http.post(`${this.apiUrl}/course/convertToClass` + '?courseId=' + courseId,'');
     }
 
 }

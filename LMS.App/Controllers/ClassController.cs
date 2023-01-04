@@ -120,7 +120,7 @@ namespace LMS.App.Controllers
         [HttpPost]
         public async Task<IActionResult> SaveClassTeachers([FromBody] SaveClassTeacherViewModel model)
         {
-            await _classService.SaveClassTeachers(model);
+            await _classService.SaveClassTeachers(model.TeacherIds, new Guid(model.ClassId));
             return Ok();
         }
 
@@ -169,6 +169,14 @@ namespace LMS.App.Controllers
         {
             var response = await _classService.GetClassByName(className,schoolName);
             return Ok(response);
+        }
+
+        [Route("convertToCourse")]
+        [HttpPost]
+        public async Task<IActionResult> ConvertToCourse(Guid classId)
+        {
+            await _classService.ConvertToCourse(classId);
+            return Ok();
         }
 
     }
