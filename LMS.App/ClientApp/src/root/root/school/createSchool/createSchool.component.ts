@@ -165,7 +165,7 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
     
 
     this.createSchoolForm3.patchValue({
-      schoolUrl: 'byokul.com/profile' + form1Value.schoolName.replace(" ",""),
+      schoolUrl: 'byokul.com/profile/' + form1Value.schoolName.replace(" ",""),
     });
   }
 

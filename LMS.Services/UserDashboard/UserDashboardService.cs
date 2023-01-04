@@ -62,7 +62,7 @@ namespace LMS.Services.UserDashboard
             // owned courses
             var courses = await _courseRepository.GetAll().Where(x => x.CreatedById == userId).ToListAsync();
 
-            var classAsCourse = await _classRepository.GetAll().Where(x => x.IsCourse).ToListAsync();
+            var classAsCourse = await _classRepository.GetAll().Where(x => x.IsCourse && x.CreatedById == userId).ToListAsync();
 
             foreach (var classInfo in classAsCourse)
             {
