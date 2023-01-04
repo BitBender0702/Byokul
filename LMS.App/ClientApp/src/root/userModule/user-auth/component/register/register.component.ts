@@ -102,11 +102,17 @@ export class RegisterComponent extends MultilingualComponent implements OnInit {
         // this.user.dob = date;
         this._authService.registerUser(this.user).pipe(finalize(()=> this.loadingIcon = false)).subscribe({
                   next: (response: AuthenticatedResponse) => {
+
+                    if(response.token == ""){
+                      this.registrationForm.setErrors({ unauthenticated: true });
+                    }
+                    else{
                     this.isSubmitted = false;
                     const token = response.token;
                     localStorage.setItem("jwt", token); 
                     this.invalidRegister = false; 
                     this.router.navigateByUrl("user/auth/login");
+                  }
                   },
                   error: (err: HttpErrorResponse) => this.invalidRegister = true
                 })

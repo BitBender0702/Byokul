@@ -77,6 +77,11 @@
               </small>
             </div>
           </div>
+
+          <small class="p-error" style="color: orange;margin-left: 127px;" *ngIf="registrationForm.errors?.unauthenticated">
+            Email is already taken!
+          </small>
+
           <div class="col-md-12">
             <button type="submit" (click)="register()" class="btn primary_btn w-100 rounded-8 text-uppercase">{{'Register'| translate }}</button>
           </div>
