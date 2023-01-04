@@ -55,12 +55,10 @@
               <button *ngIf="!isOwner" type="button"
                 class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn me-0 minw-142 class-request-msg">{{'RequestMessage'| translate }}</button>
               </div>
-              <div class="hover-double-button">
-              <button *ngIf="isOwner" type="button" class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins me-2">{{'Convert To Course'| translate }}</button>
-              <button *ngIf="isOwner && course.isConvertable" (click)="convertToClass(course.courseId)" type="button" class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins" style="margin-right: 130px;">{{'ConvertToClass'| translate }}</button>
+              <div class="hover-double-button">              
+              <button *ngIf="isOwner && course.isConvertable" (click)="convertToClass(course.courseId)" type="button" class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins me-2" style="margin-right: 130px;">{{'ConvertToClass'| translate }}</button>
   
-              <button *ngIf="isOwner" class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins" data-bs-toggle="modal"
-                data-bs-target="#editClass"><img src="../../../../assets/images/Setting-solid-dark.svg" class="me-2" />{{'EditProfile'| translate }}
+              <button *ngIf="isOwner" class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins" data-bs-toggle="modal"               
                 data-bs-target="#editCourse"><img src="../../../../assets/images/Setting-solid-dark.svg" class="me-2" /> {{'EditProfile'| translate }}
                 </button>
               </div>
