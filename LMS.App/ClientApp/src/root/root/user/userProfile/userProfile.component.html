@@ -166,8 +166,8 @@
             </div>
         </div>
           <div class="school-grid-view grid-active" *ngIf="isProfileGrid">
-            <div *ngFor="let post of user.posts" class="school-grid-box position-relative">
-              <div *ngIf="post.postType == 1 && post.postAuthorType == 4">
+            <ng-container *ngFor="let post of user.posts">
+              <div *ngIf="post.postType == 1 && post.postAuthorType == 4" class="school-grid-box position-relative">
               <div class="schoolgrid-header d-flex align-items-center position-relative">
                 <div class="school-gridprofile-icon">
                   <img [src]="user.avatar" />
@@ -177,10 +177,14 @@
                   {{post.dateTime | date : "MMMM d"}} - {{post.dateTime | date : "hh mm"}}
                    <!-- <span class="fw_600 ">11:30 - 13:50</span> -->
                   </p>
-                <button type="button" class="bg-transparent border-0 pinned-grid-chat"><img class="w-auto h-auto"
-                    src="../../../../assets/images/pinned-gray.svg" /></button>
+                    <button *ngIf="post.isPinned" (click)="pinUnpinPost(post.id,false)" type="button" class="bg-transparent border-0 pinned-grid-chat">
+                      <img class="w-auto h-auto" src="../../../../assets/images/pinned-light.svg" />
+                    </button>
+                    <button *ngIf="!post.isPinned" (click)="pinUnpinPost(post.id,true)" type="button" class="bg-transparent border-0 pinned-grid-chat">
+                     <img class="w-auto h-auto" src="../../../../assets/images/pinned-gray.svg" />
+                    </button>   
               </div>
-              </div>
+              
               <div class="school-grid-body">
                 <p class="text_sec1 font_14">{{post.description}}</p>
                 <div class="teacher-tags tag-box hashtag_box">
@@ -284,7 +288,8 @@
                   954
                 </button>
               </div>
-            </div>
+              </div>
+          </ng-container>
           </div>
 
           <div class="list-schol-profile" *ngIf="!isProfileGrid">
@@ -298,8 +303,6 @@
                       <img [src]="user.avatar" />
                     </div>
                     <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">{{post.title}}</h2>
-                    <!-- <button type="button" class="bg-transparent border-0 pinned-grid-chat"><img class="w-auto h-auto"
-                        src="../../../../assets/images/pinned-gray.svg" /></button> -->
                     <button *ngIf="post.isPinned" (click)="pinUnpinPost(post.id,false)" type="button" class="bg-transparent border-0 pinned-grid-chat">
                           <img src="../../../../assets/images/pinned-light.svg" />
                     </button>
@@ -930,5 +933,6 @@ aria-labelledby="delete-language" aria-hidden="true">
 
 </div>
 <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
+<p-toast></p-toast>
 </block-ui>
 

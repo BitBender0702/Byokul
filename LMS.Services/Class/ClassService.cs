@@ -30,11 +30,12 @@ namespace LMS.Services
         private IGenericRepository<ClassDiscipline> _classDisciplineRepository;
         private IGenericRepository<Post> _postRepository;
         private IGenericRepository<PostAttachment> _postAttachmentRepository;
+        private IGenericRepository<PostTag> _postTagRepository;
         private IGenericRepository<ClassCertificate> _classCertificateRepository;
         private readonly UserManager<User> _userManager;
         private readonly IBlobService _blobService;
 
-        public ClassService(IMapper mapper, IGenericRepository<Class> classRepository, IGenericRepository<ClassLanguage> classLanguageRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<ClassDiscipline> classDisciplineRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<ClassCertificate> classCertificateRepository, UserManager<User> userManager, IBlobService blobService)
+        public ClassService(IMapper mapper, IGenericRepository<Class> classRepository, IGenericRepository<ClassLanguage> classLanguageRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<ClassDiscipline> classDisciplineRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<ClassCertificate> classCertificateRepository, UserManager<User> userManager, IBlobService blobService)
         {
             _mapper = mapper;
             _classRepository = classRepository;
@@ -44,6 +45,7 @@ namespace LMS.Services
             _classDisciplineRepository = classDisciplineRepository;
             _postRepository = postRepository;
             _postAttachmentRepository = postAttachmentRepository;
+            _postTagRepository = postTagRepository;
             _classCertificateRepository = classCertificateRepository;
             _userManager = userManager;
             _blobService = blobService;
@@ -390,18 +392,24 @@ namespace LMS.Services
                 post.PostAttachments = attachment;
             }
 
-
             foreach (var post in result)
             {
-                var author = await _classRepository.GetAll().Include(x => x.School).Where(x => x.ClassId == post.ParentId).FirstOrDefaultAsync();
-                post.Owner = _mapper.Map<OwnerViewModel>(author.School);
+                var tags = await GetTagsByPostId(post.Id);
+                post.PostTags = tags;
             }
 
-            foreach (var post in result)
-            {
-                var author = await _userManager.Users.Where(x => x.Id == post.CreatedBy).FirstOrDefaultAsync();
-                post.Author = _mapper.Map<AuthorViewModel>(author);
-            }
+
+            //foreach (var post in result)
+            //{
+            //    var author = await _classRepository.GetAll().Include(x => x.School).Where(x => x.ClassId == post.ParentId).FirstOrDefaultAsync();
+            //    post.Owner = _mapper.Map<OwnerViewModel>(author.School);
+            //}
+
+            //foreach (var post in result)
+            //{
+            //    var author = await _userManager.Users.Where(x => x.Id == post.CreatedBy).FirstOrDefaultAsync();
+            //    post.Author = _mapper.Map<AuthorViewModel>(author);
+            //}
 
             return result;
         }
@@ -418,6 +426,14 @@ namespace LMS.Services
             var attacchmentList = await _postAttachmentRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.PostId == postId).ToListAsync();
 
             var result = _mapper.Map<List<PostAttachmentViewModel>>(attacchmentList);
+            return result;
+        }
+
+        public async Task<IEnumerable<PostTagViewModel>> GetTagsByPostId(Guid postId)
+        {
+            var tagList = await _postTagRepository.GetAll().Where(x => x.PostId == postId).ToListAsync();
+
+            var result = _mapper.Map<List<PostTagViewModel>>(tagList);
             return result;
         }
 

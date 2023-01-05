@@ -56,6 +56,10 @@ export class CreateClassComponent extends MultilingualComponent implements OnIni
   selectedSchool:any;
   selectedSchoolName!:string;
 
+  classUrl!:string;
+  classId!:string;
+  className!:string;
+
 
   constructor(injector: Injector,private route: ActivatedRoute,private router: Router,private fb: FormBuilder,classService: ClassService,private http: HttpClient) {
     super(injector);
@@ -63,16 +67,20 @@ export class CreateClassComponent extends MultilingualComponent implements OnIni
   }
 
   ngOnInit(): void {
-    
+    this.loadingIcon = true;
     var id = this.route.snapshot.paramMap.get('id');
     this.fromSchoolProfile = id ?? '';
 
     if(this.fromSchoolProfile == ''){
       this.getSchoolsForDropdown();
+      this.loadingIcon = false;
+
     }
 
     if(this.fromSchoolProfile != ''){
       this.getSelectedSchool(this.fromSchoolProfile);
+      this.loadingIcon = false;
+
     }
 
     this.selectedLanguage = localStorage.getItem("selectedLanguage");
@@ -214,15 +222,14 @@ captureTeacherId(event: any) {
     }
 
     this.loadingIcon = true;
-    var step3Value =this.createClassForm3.value;
-    this.fileToUpload.append('classUrl',JSON.stringify(step3Value.classUrl));
+    this.router.navigateByUrl(`user/classProfile/${this.classId}`)
 
-    this._classService.createClass(this.fileToUpload).subscribe((response:any) => {
-      this.loadingIcon = false;
-      var classId =  response;
-      this.router.navigateByUrl(`user/classProfile/${classId}`)
+    // this._classService.createClass(this.fileToUpload).subscribe((response:any) => {
+    //   this.loadingIcon = false;
+    //   var classId =  response;
+    //   this.router.navigateByUrl(`user/classProfile/${classId}`)
 
-    });
+    // });
   }
 
   back(): void {
@@ -249,7 +256,8 @@ captureTeacherId(event: any) {
     this.fileToUpload.append('accessibilityId',this.class.accessibilityId);
     this.fileToUpload.append('languageIds',JSON.stringify(this.class.languageIds));
     this.fileToUpload.append('price',this.class.price?.toString());
-
+    this.className = this.class.className.split(' ').join('');
+    // this.schoolName = this.class.schoolId.schoolName.split(' ').join('');
     this._classService.isClassNameExist(this.class.className).subscribe((response) => {
       if(!response){
         this.createClassForm1.setErrors({ unauthenticated: true });
@@ -262,7 +270,7 @@ captureTeacherId(event: any) {
     
         if(this.fromSchoolProfile != ''){
         this.createClassForm3.patchValue({
-          classUrl: 'byokul.com/profile/' + this.selectedSchool.schoolName.replace(" ","") + "/" +  this.class.className.replace(" ",""),
+          classUrl: 'byokul.com/profile/class/' + this.selectedSchool.schoolName.split(' ').join('') + "/" +  this.class.className.split(' ').join(''),
           });
         }
        else{
@@ -270,7 +278,7 @@ captureTeacherId(event: any) {
         this._classService.getSelectedSchool(schoolId).subscribe((response) => {
           this.selectedSchool = response;
           this.createClassForm3.patchValue({
-            classUrl: 'byokul.com/profile/' + this.selectedSchool.schoolName.replace(" ","") + "/" +  this.class.className.replace(" ",""),
+            classUrl: 'byokul.com/profile/class/' + this.selectedSchool.schoolName.split(' ').join('') + "/" +  this.class.className.split(' ').join(''),
           });
         });  
       
@@ -287,13 +295,20 @@ captureTeacherId(event: any) {
   }
 
   forwardStep2() {
+    this.loadingIcon = true;
     this.isStepCompleted = true;
     this.fileToUpload.append('disciplineIds',JSON.stringify(this.disciplineIds));
     this.fileToUpload.append('studentIds',JSON.stringify(this.studentIds));
     this.fileToUpload.append('teacherIds',JSON.stringify(this.teacherIds));
-    this.isStepCompleted = false;
-    this.step += 1;
-
+    this.classUrl = 'byokul.com/profile/class/' + this.selectedSchool.schoolName.split(' ').join('') + "/" +  this.className.split(' ').join('');
+    this.fileToUpload.append('classUrl',JSON.stringify(this.classUrl));
+    this._classService.createClass(this.fileToUpload).subscribe((response:any) => {
+         var classId =  response;
+         this.classId = classId;
+         this.loadingIcon = false;
+         this.step += 1;
+         this.isStepCompleted = false;
+    });
   }
   backStep() {
     this.step -= 1;
@@ -396,5 +411,9 @@ captureTeacherId(event: any) {
     if (index > -1) {
       this.disciplineIds.splice(index, 1);
     }
+  }
+
+  classProfile(){
+    window.location.href=`profile/class/${this.selectedSchool.schoolName}/${this.className}`;
   }
 }

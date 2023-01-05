@@ -227,7 +227,9 @@
     "UnFollow": "UnFollow",
     "ConvertToCourse": "Convert To Course",
     "ConvertToClass": "Convert To Class",
-    "Avatar": "Avatar"
+    "Avatar": "Avatar",
+    "EditCourseProfile": "Edit Course Profile",
+    "CourseBio": "Course Bio"
 
     
 

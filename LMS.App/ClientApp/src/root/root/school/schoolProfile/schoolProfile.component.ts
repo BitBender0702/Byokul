@@ -595,7 +595,6 @@ openPostsViewModal(posts:string): void {
   const initialState = {
     posts: posts
   };
-  //var initialState = this.school.schoolId;
   this.bsModalService.show(PostViewComponent,{initialState});
 }
 

@@ -17,12 +17,14 @@ import { FollowUnFollowEnum } from 'src/root/Enums/FollowUnFollowEnum';
 import { FollowUnfollow } from 'src/root/interfaces/FollowUnfollow';
 import { PostService } from 'src/root/service/post.service';
 import { PostViewComponent } from '../../postView/postView.component';
+import { MessageService } from 'primeng/api';
 
 
 @Component({
     selector: 'userProfile-root',
     templateUrl: './userProfile.component.html',
-    styleUrls: ['./userProfile.component.css']
+    styleUrls: ['./userProfile.component.css'],
+    providers: [MessageService]
   })
 
   export class UserProfileComponent extends MultilingualComponent implements OnInit {
@@ -66,7 +68,7 @@ import { PostViewComponent } from '../../postView/postView.component';
     fileToUpload= new FormData();
     translate!: TranslateService;
     
-    constructor(injector: Injector,private bsModalService: BsModalService,userService: UserService,postService: PostService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
+    constructor(injector: Injector,public messageService:MessageService, private bsModalService: BsModalService,userService: UserService,postService: PostService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
       super(injector);
         this._userService = userService;
         this._postService = postService;
@@ -296,9 +298,9 @@ import { PostViewComponent } from '../../postView/postView.component';
 
     this._userService.editUser(this.fileToUpload).subscribe((response:any) => {
       this.closeModal();
-      // this.unblockUI();
       this.isSubmitted=true;
       this.fileToUpload = new FormData();
+      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Profile updated successfully'});
       this.ngOnInit();
     });
 

@@ -76,6 +76,15 @@ builder.Services.AddScoped<IStripeService, StripeService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    options.Password.RequireDigit = false;
+    options.Password.RequiredLength = 5;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
+});
+
 StripeConfiguration.ApiKey = configuration.GetSection("Stripe")["SecretKey"];
 
 

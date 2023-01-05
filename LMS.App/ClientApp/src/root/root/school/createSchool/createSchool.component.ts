@@ -41,6 +41,9 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
 
   initialSpecialization!:string;
   loadingIcon:boolean = false;
+  schoolUrl!:string;
+  schoolId!:string;
+  schoolName!:string;
 
   
   constructor(injector: Injector,private domSanitizer: DomSanitizer,private router: Router,private fb: FormBuilder,schoolService: SchoolService,private http: HttpClient) {
@@ -121,14 +124,7 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
     }
 
     this.loadingIcon = true;
-    var form3Value = this.createSchoolForm3.value;
-    this.fileToUpload.append('schoolUrl',JSON.stringify(form3Value.schoolUrl));
-    this._schoolService.createSchool(this.fileToUpload).subscribe((response:any) => {
-         this.loadingIcon = false;
-         var schoolId =  response;
-         this.router.navigateByUrl(`user/schoolProfile/${schoolId}`)
-
-    });
+    this.router.navigateByUrl(`user/schoolProfile/${this.schoolId}`)
   }
 
   back(): void {
@@ -152,6 +148,8 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
     this.fileToUpload.append('countryId',form1Value.countryId);
     this.fileToUpload.append('specializationId',form1Value.specializationId); 
     this.fileToUpload.append('languageIds',JSON.stringify(form1Value.selectedLanguages));
+    this.schoolUrl = 'byokul.com/profile/school/' + form1Value.schoolName.replace(" ","");
+    this.schoolName = form1Value.schoolName.split(' ').join('');
     this._schoolService.isSchoolNameExist(schoolName).subscribe((response) => {
       if(!response){
         this.createSchoolForm1.setErrors({ unauthenticated: true });
@@ -165,19 +163,29 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
     
 
     this.createSchoolForm3.patchValue({
-      schoolUrl: 'byokul.com/profile/' + form1Value.schoolName.replace(" ",""),
+      schoolUrl: 'byokul.com/profile/school/' + form1Value.schoolName.split(' ').join(''),
     });
   }
 
   forwardStep2() {
+    this.loadingIcon = true;
     this.isStepCompleted = true;
     if(this.logoUrl == undefined && this.avatarImage == undefined){
       return;
     }
     var form2Value =this.createSchoolForm2.value;
     this.fileToUpload.append('avatar',this.logoUrl);
-    this.step += 1;
-    this.isStepCompleted = false;
+
+    this.fileToUpload.append('schoolUrl',JSON.stringify(this.schoolUrl));
+    this._schoolService.createSchool(this.fileToUpload).subscribe((response:any) => {
+         var schoolId =  response;
+         this.schoolId = schoolId;
+         this.loadingIcon = true;
+         this.step += 1;
+         this.isStepCompleted = false;
+    });
+
+    
   }
 
   backStep() {
@@ -191,6 +199,10 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
   createPost(){
     this.isOpenModal = false;
 
+  }
+
+  schoolProfile(){
+    window.location.href=`profile/school/${this.schoolName}`;
   }
   
 }

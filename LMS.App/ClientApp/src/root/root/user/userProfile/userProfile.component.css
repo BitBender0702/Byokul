@@ -1,0 +1,4 @@
+:host ::ng-deep .custom-toast .ui-toast {
+    position: absolute;
+    z-index: 100000;
+  }

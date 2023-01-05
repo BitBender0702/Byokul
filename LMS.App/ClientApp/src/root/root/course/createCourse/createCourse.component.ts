@@ -6,7 +6,7 @@ import { MultilingualComponent } from '../../sharedModule/Multilingual/multiling
 import { FilterService } from "primeng/api";
 import { CreateCourseModel } from 'src/root/interfaces/course/createCourseModel';
 import { CourseService } from 'src/root/service/course.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 // import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 // import { CreatePostComponent } from '../../createPost/createPost';
@@ -52,10 +52,13 @@ export class CreateCourseComponent extends MultilingualComponent implements OnIn
   schools:any;
   selectedSchool:any;
   loadingIcon:boolean = false;
+  courseUrl!:string;
+  courseId!:string;
+  courseName!:string;
 
 
 
-  constructor(injector: Injector,private route: ActivatedRoute,private fb: FormBuilder,courseService: CourseService,private http: HttpClient) {
+  constructor(injector: Injector,private router: Router,private route: ActivatedRoute,private fb: FormBuilder,courseService: CourseService,private http: HttpClient) {
     super(injector);
     this._courseService = courseService;
   }
@@ -199,14 +202,8 @@ captureTeacherId(event: any) {
     }
 
     this.loadingIcon = true;
-    var step3Value=this.createCourseForm3.value;
-    this.fileToUpload.append('courseUrl',JSON.stringify(step3Value.courseUrl));
+    this.router.navigateByUrl(`user/courseProfile/${this.courseId}`)
 
-    this._courseService.createCourse(this.fileToUpload).subscribe((response:any) => {
-      this.loadingIcon = true;
-      console.log(response);
-
-    });
   }
 
   back(): void {
@@ -230,24 +227,59 @@ captureTeacherId(event: any) {
     this.fileToUpload.append('languageIds',JSON.stringify(this.course.languageIds));
     this.fileToUpload.append('description', this.course.description);
     this.fileToUpload.append('price', this.course.price?.toString());
-
-    this.isStepCompleted = false;
-    this.step += 1;
-    this.nextPage = true;
-
-    this.createCourseForm3.patchValue({
-      courseUrl: 'byokul.com/schoolname/' + this.course.courseName.replace(" ",""),
+    this.courseName = this.course.courseName.split(' ').join('');
+    this._courseService.isCourseNameExist(this.course.courseName).subscribe((response) => {
+      if(!response){
+        this.createCourseForm1.setErrors({ unauthenticated: true });
+        return;
+      }
+      else{
+        this.step += 1;
+        this.isStepCompleted = false;
+        this.nextPage = true;
+    
+        if(this.fromSchoolProfile != ''){
+        this.createCourseForm3.patchValue({
+          courseUrl: 'byokul.com/profile/course/' + this.selectedSchool.schoolName.split(' ').join('') + "/" +  this.course.courseName.split(' ').join(''),
+          });
+        }
+       else{
+        var schoolId = this.createCourseForm1.controls['schoolId'].value;
+        this._courseService.getSelectedSchool(schoolId).subscribe((response) => {
+          this.selectedSchool = response;
+          this.createCourseForm3.patchValue({
+            courseUrl: 'byokul.com/profile/course/' + this.selectedSchool.schoolName.split(' ').join('') + "/" +  this.course.courseName.split(' ').join(''),
+          });
+        });  
+      
+        }
+      }
     });
+    // this.isStepCompleted = false;
+    // this.step += 1;
+    // this.nextPage = true;
+
+    // this.createCourseForm3.patchValue({
+    //   courseUrl: 'byokul.com/schoolname/' + this.course.courseName.split(' ').join(''),
+    // });
   }
 
   forwardStep2(){
+    this.loadingIcon = true;
     this.isStepCompleted = true;
 
     this.fileToUpload.append('disciplineIds',JSON.stringify(this.disciplineIds));
     this.fileToUpload.append('studentIds',JSON.stringify(this.studentIds));
     this.fileToUpload.append('teacherIds',JSON.stringify(this.teacherIds));
-    this.isStepCompleted = false;
-    this.step += 1;
+
+    this.courseUrl = 'byokul.com/profile/course/' + this.selectedSchool.schoolName.split(' ').join('') + "/" +  this.courseName.split(' ').join('');
+    this.fileToUpload.append('courseUrl',JSON.stringify(this.courseUrl));
+    this._courseService.createCourse(this.fileToUpload).subscribe((response:any) => {
+      this.courseId = response;
+      this.loadingIcon = false;
+      this.step += 1;
+      this.isStepCompleted = false;
+    });
   }
 
   backStep() {
@@ -333,6 +365,10 @@ captureTeacherId(event: any) {
   openModal(link:any) {
     // const modalRef = this.modalService.open(ModalComponent);
     // modalRef.componentInstance.src = link;
+  }
+
+  courseProfile(){
+    window.location.href=`profile/course/${this.selectedSchool.schoolName}/${this.courseName}`;
   }
 
 }

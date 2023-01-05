@@ -60,6 +60,8 @@
           <div class="col-md-12">
             <div class="form-group">
               <input type="password" class="form-control rounded-8" formControlName="password" placeholder="{{'Password'| translate }}">
+              <small style="color: rgb(17, 17, 17);">*Password length must be greater than 5 characters </small>
+              <br>
               <small class="p-error" style="color: orange;" *ngIf="isSubmitted && registrationForm.controls.password.errors">
                 Password is required.</small>
             </div>

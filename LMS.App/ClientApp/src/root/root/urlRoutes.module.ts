@@ -45,28 +45,20 @@ import { CourseProfileComponent } from './course/courseProfile/courseProfile.com
     RouterModule.forChild([{
         path: '',
         component: UrlRoutesComponent,
-        children: [
-          // {
-          //   path: '',
-          //   redirectTo:'school/:schoolName'
-          // },   
+        children: [  
           {
-            path: ':schoolName',component:SchoolProfileComponent
-         },
-         {
-          path: ':schoolName/:className',component:ClassProfileComponent
-       },
-       {
-        path: ':schoolName/:courseName',component:CourseProfileComponent
-     },
-
-
-
-  
+            path: 'school/:schoolName',component:SchoolProfileComponent
+          },
+          {
+            path: 'class/:schoolName/:className',component:ClassProfileComponent
+          },
+          {
+            path: 'course/:schoolName/:courseName',component:CourseProfileComponent
+          },
     ]}]),
     FormsModule,
     ReactiveFormsModule,
-  ],
+  ],     
   providers: [],
   exports:[RouterModule]
  

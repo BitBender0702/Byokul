@@ -143,5 +143,20 @@ namespace LMS.App.Controllers
             return Ok();
         }
 
+        [Route("getCourseByName")]
+        [HttpGet]
+        public async Task<IActionResult> GetCourseByName(string courseName, string schoolName)
+        {
+            var response = await _courseService.GetCourseByName(courseName, schoolName);
+            return Ok(response);
+        }
+
+        [Route("isCourseNameExist")]
+        [HttpGet]
+        public async Task<IActionResult> IsCourseNameExist(string courseName)
+        {
+            return Ok(await _courseService.IsCourseNameExist(courseName));
+        }
+
     }
 }

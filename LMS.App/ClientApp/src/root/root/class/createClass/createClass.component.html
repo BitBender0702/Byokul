@@ -25,7 +25,7 @@
 
       <!-- <form id="regForm" class="step-form mx-auto f-monteserrat" [formGroup]="createClassForm"> -->
         <div id="regForm" class="step-form mx-auto f-monteserrat">
-        <h3 id="create_school" class="font_24 text_dark fw-bold text-center">{{'CreateClass'| translate }}</h3>
+        <h3 *ngIf="step!=2" id="create_school" class="font_24 text_dark fw-bold text-center">{{'CreateClass'| translate }}</h3>
         <!-- One "tab" for each step in the form: -->
         <!-- <div class="step-icon text-center">
           <span class="step step1"></span>
@@ -230,7 +230,7 @@
       </small>
               <button (click)="copyMessage(userinput)" type="button" class="border-0 bg-transparent shadow-none p-0 copy-link"><img
                   src="../../../../assets/images/school/copy.svg" /></button>
-              <button type="button" class="border-0 bg-transparent shadow-none p-0 upload-link"><img
+              <button (click)="classProfile()" type="button" class="border-0 bg-transparent shadow-none p-0 upload-link"><img
                   src="../../../../assets/images/school/Upload-small.svg" /></button>
             </div>
           </div>

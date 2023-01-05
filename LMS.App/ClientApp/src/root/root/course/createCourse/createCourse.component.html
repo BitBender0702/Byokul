@@ -26,7 +26,7 @@
 
       <!-- <form id="regForm" class="step-form mx-auto f-monteserrat" [formGroup]="createCourseForm"> -->
         <div id="regForm" class="step-form mx-auto f-monteserrat">
-        <h3 id="create_school" class="font_24 text_dark fw-bold text-center">{{'CreateCourse'| translate }}</h3>
+        <h3 *ngIf="step!=2" id="create_school" class="font_24 text_dark fw-bold text-center">{{'CreateCourse'| translate }}</h3>
         <!-- One "tab" for each step in the form: -->
         <!-- <div class="step-icon text-center">
           <span class="step step1"></span>
@@ -111,6 +111,9 @@
               <label class="font_10">{{'Course Bio'| translate }}</label>
               <textarea formControlName="description" class="form-control resize-none" placeholder="{{'TellUsAboutCourse'| translate }}"></textarea>
             </div>
+            <small class="p-error" style="color: orange;margin-left: 148px;" *ngIf="createCourseForm1.errors?.unauthenticated">
+              Course name is already exists!
+            </small>
             <div class="steps_btns d-flex align-items-center justify-content-center mt-4">
               <button (click)="forwardStep()" type="button"
                 class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 text-uppercase next-step">{{'Continue'| translate }}</button>
@@ -176,7 +179,7 @@
               </small>
                 <button (click)="copyMessage(userinput)" type="button" class="border-0 bg-transparent shadow-none p-0 copy-link"><img
                     src="../../../../assets/images/school/copy.svg" /></button>
-                <button type="button" class="border-0 bg-transparent shadow-none p-0 upload-link"><img
+                <button (click)="courseProfile()" type="button" class="border-0 bg-transparent shadow-none p-0 upload-link"><img
                     src="../../../../assets/images/school/Upload-small.svg" /></button>
               </div>
            

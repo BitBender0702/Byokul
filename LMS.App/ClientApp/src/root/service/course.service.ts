@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core"; 
 import { Router } from "@angular/router";
 import { Observable } from "rxjs";
@@ -81,6 +81,19 @@ export class CourseService{
 
     convertToClass(courseId:any): Observable<any> {
         return this.http.post(`${this.apiUrl}/course/convertToClass` + '?courseId=' + courseId,'');
+    }
+
+    getCourseByName(courseName:any,schoolName:any):Observable<any>{
+        let queryParams = new HttpParams().append("courseName",courseName).append("schoolName",schoolName);
+        return this.http.get(`${this.apiUrl}/course/getCourseByName`, {params:queryParams});
+    }
+
+    isCourseNameExist(courseName:string){
+        return this.http.get(`${this.apiUrl}/course/isCourseNameExist` + '?courseName=' + courseName);
+    }
+
+    editCourse(credentials:any): Observable<any> {
+        return this.http.post(`${this.apiUrl}/course/updateCourse`, credentials);
     }
 
 }

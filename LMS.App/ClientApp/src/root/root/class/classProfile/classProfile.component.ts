@@ -15,11 +15,12 @@ import { ClassService } from 'src/root/service/class.service';
 import { PostService } from 'src/root/service/post.service';
 import { CreatePostComponent } from '../../createPost/createPost.component';
 import { MultilingualComponent } from '../../sharedModule/Multilingual/multilingual.component';
+import { PostViewComponent } from '../../postView/postView.component';
 
 @Component({
     selector: 'classProfile-root',
     templateUrl: './classProfile.component.html',
-    styleUrls: []
+    styleUrls: ['./classProfile.component.css']
   })
 
 export class ClassProfileComponent extends MultilingualComponent implements OnInit {
@@ -556,6 +557,13 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       this._classService.convertToCourse(classId).subscribe((response) => {
         window.location.href=`user/courseProfile/${classId}`;
       });
+    }
+
+    openPostsViewModal(posts:string): void {
+      const initialState = {
+        posts: posts
+      };
+      this.bsModalService.show(PostViewComponent,{initialState});
     }
   
 }

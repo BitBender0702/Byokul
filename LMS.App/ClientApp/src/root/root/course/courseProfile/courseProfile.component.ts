@@ -13,12 +13,13 @@ import { DeleteCourseTeacher } from 'src/root/interfaces/course/deleteCourseTeac
 import { CourseService } from 'src/root/service/course.service';
 import { PostService } from 'src/root/service/post.service';
 import { CreatePostComponent } from '../../createPost/createPost.component';
+import { PostViewComponent } from '../../postView/postView.component';
 import { MultilingualComponent } from '../../sharedModule/Multilingual/multilingual.component';
 
 @Component({
     selector: 'courseProfile-root',
     templateUrl: './courseProfile.component.html',
-    styleUrls: []
+    styleUrls: ['./courseProfile.component.css']
   })
 
 export class CourseProfileComponent extends MultilingualComponent implements OnInit {
@@ -45,8 +46,8 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     teacherForm!:FormGroup;
     certificateForm!:FormGroup;
     uploadImage!:any;
-    // updateClassDetails!:EditClassModel;
-    // accessibility:any;
+    updateCourseDetails!:any;
+    accessibility:any;
     filteredLanguages!: any[];
     languages:any;
     filteredTeachers!: any[];
@@ -55,8 +56,8 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     courseCertificate!:AddCourseCertificate;
     certificateToUpload = new FormData();
     fileToUpload= new FormData();
-    isClassPaid!:boolean;
-    // disabled:boolean = true;
+    isCoursePaid!:boolean;
+    disabled:boolean = true;
     // currentDate!:string;
 
 
@@ -83,29 +84,29 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       var id = this.route.snapshot.paramMap.get('courseId');
       this.courseId = id ?? '';
 
-    //   var className = this.route.snapshot.paramMap.get('className');
-    //   var schoolName = this.route.snapshot.paramMap.get('schoolName');
+      var courseName = this.route.snapshot.paramMap.get('courseName');
+      var schoolName = this.route.snapshot.paramMap.get('schoolName');
 
-    //   if(this.courseId == ''){
-    //     this._classService.getClassByName(className,schoolName).subscribe((response) => {
-    //       this.classId = response.classId;
-    //       this._classService.getClassById(this.classId).subscribe((response) => {
-    //         this.class = response;
-    //         this.isOwnerOrNot();
-    //         this.loadingIcon = false;
-    //         this.isDataLoaded = true;
-    //       });
-    //     })
+      if(this.courseId == ''){
+        this._courseService.getCourseByName(courseName,schoolName).subscribe((response) => {
+          this.courseId = response.courseId;
+          this._courseService.getCourseById(this.courseId).subscribe((response) => {
+            this.course = response;
+            this.isOwnerOrNot();
+            this.loadingIcon = false;
+            this.isDataLoaded = true;
+          });
+        })
 
-    //   }
-    //   else{
+      }
+      else{
       this._courseService.getCourseById(this.courseId).subscribe((response) => {
         this.course = response;
         this.isOwnerOrNot();
         this.loadingIcon = false;
         this.isDataLoaded = true;
       });
-    // }
+    }
 
       this.editCourseForm = this.fb.group({
         schoolName: this.fb.control(''),
@@ -118,9 +119,9 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
 
       });
 
-//        this._classService.getAccessibility().subscribe((response) => {
-//         this.accessibility = response;
-//       });
+       this._courseService.getAccessibility().subscribe((response) => {
+        this.accessibility = response;
+      });
   
       this._courseService.getLanguageList().subscribe((response) => {
         this.languages = response;
@@ -225,7 +226,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       });
 
       if(this.course.serviceTypeId == '0d846894-caa4-42f3-8e8a-9dba6467672b'){
-        this.getPaidClass();
+        this.getPaidCourse();
 
       }
       this.editCourseForm.updateValueAndValidity();
@@ -373,16 +374,16 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       
         }
 
-    //     handleImageInput(event: any) {
-    //       this.fileToUpload.append("avatarImage", event.target.files[0], event.target.files[0].name);
-    //       const reader = new FileReader();
-    //       reader.onload = (_event) => { 
-    //           this.uploadImage = _event.target?.result; 
-    //           this.uploadImage = this.domSanitizer.bypassSecurityTrustUrl(this.uploadImage);
-    //       }
-    //       reader.readAsDataURL(event.target.files[0]); 
+        handleImageInput(event: any) {
+          this.fileToUpload.append("avatarImage", event.target.files[0], event.target.files[0].name);
+          const reader = new FileReader();
+          reader.onload = (_event) => { 
+              this.uploadImage = _event.target?.result; 
+              this.uploadImage = this.domSanitizer.bypassSecurityTrustUrl(this.uploadImage);
+          }
+          reader.readAsDataURL(event.target.files[0]); 
       
-    //     }
+        }
 
         handleCertificates(event: any) {
             this.courseCertificate.certificates.push(event.target.files[0]);
@@ -408,56 +409,52 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
           });
         }
 
-    //     updateClass(){
-    //        this.isSubmitted=true;
-    //        if (!this.editClassForm.valid) {
-    //        return;
-    //       }
-
-    //       this.loadingIcon = true;
+       updateCourse(){
+           this.isSubmitted=true;
+           if (!this.editCourseForm.valid) {
+           return;
+          }
+          this.loadingIcon = true;
       
-    //       if(!this.uploadImage){
-    //         this.fileToUpload.append('avatar', this.editClass.avatar);
-    //       }
+          if(!this.uploadImage){
+            this.fileToUpload.append('avatar', this.course.avatar);
+          }
       
-    //       this.updateClassDetails=this.editClassForm.value;
-    //       this.fileToUpload.append('classId', this.class.classId);
-    //       this.fileToUpload.append('className', this.updateClassDetails.className);
-    //       this.fileToUpload.append('noOfStudents', this.updateClassDetails.noOfStudents.toString());
-    //       this.fileToUpload.append('startDate', this.updateClassDetails.startDate);
-    //       this.fileToUpload.append('endDate', this.updateClassDetails.endDate);
-    //       this.fileToUpload.append('price', this.updateClassDetails.price?.toString());
-    //       this.fileToUpload.append('accessibilityId',this.updateClassDetails.accessibilityId);
-    //       this.fileToUpload.append('languageIds',JSON.stringify(this.updateClassDetails.languageIds));
-    //       this.fileToUpload.append('description',this.updateClassDetails.description);
-    //       this.fileToUpload.append('serviceTypeId',this.updateClassDetails.serviceTypeId);
+           this.updateCourseDetails=this.editCourseForm.value;
+           this.fileToUpload.append('courseId', this.updateCourseDetails.courseId);
+           this.fileToUpload.append('courseName', this.updateCourseDetails.className);
+           this.fileToUpload.append('price', this.updateCourseDetails.price?.toString());
+           this.fileToUpload.append('accessibilityId',this.updateCourseDetails.accessibilityId);
+           this.fileToUpload.append('languageIds',JSON.stringify(this.updateCourseDetails.languageIds));
+           this.fileToUpload.append('description',this.updateCourseDetails.description);
+           this.fileToUpload.append('serviceTypeId',this.updateCourseDetails.serviceTypeId);
         
-    //       this._classService.editClass(this.fileToUpload).subscribe((response:any) => {
-    //         this.closeModal();
-    //         this.isSubmitted=true;
-    //         this.fileToUpload = new FormData();
-    //         this.ngOnInit();
-    //       });
-      
-          
-    //     }
+          this._courseService.editCourse(this.fileToUpload).subscribe((response:any) => {
+            this.closeModal();
+            this.isSubmitted=true;
+            this.fileToUpload = new FormData();
+            this.ngOnInit();
+          });
+        }
 
-    //     getFreeClass(){
-    //       this.isClassPaid = false;
-    //       this.editClassForm.get('price')?.removeValidators(Validators.required);
-    //       this.editClassForm.patchValue({
-    //         price: null,
-    //       });
-    //     }
+    
       
-        getPaidClass(){
-          this.isClassPaid = true;
+    getFreeCourse(){
+      this.isCoursePaid = false;
+      this.editCourseForm.get('price')?.removeValidators(Validators.required);
+      this.editCourseForm.patchValue({
+        price: null,
+      });
+    }
+
+       getPaidCourse(){
+          this.isCoursePaid = true;
           this.editCourseForm.get('price')?.addValidators(Validators.required);
         }
 
-    //     private closeModal(): void {
-    //       this.closeEditModal.nativeElement.click();
-    //   }
+        private closeModal(): void {
+          this.closeEditModal.nativeElement.click();
+      }
 
       private closeTeachersModal(): void {
         this.closeTeacherModal.nativeElement.click();
@@ -542,6 +539,14 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       this._courseService.convertToClass(courseId).subscribe((response) => {
         window.location.href=`user/classProfile/${courseId}`;
       });
+    }
+
+    
+    openPostsViewModal(posts:string): void {
+      const initialState = {
+        posts: posts
+      };
+      this.bsModalService.show(PostViewComponent,{initialState});
     }
   
 }

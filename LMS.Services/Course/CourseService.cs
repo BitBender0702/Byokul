@@ -32,13 +32,14 @@ namespace LMS.Services
         private IGenericRepository<Post> _postRepository;
         private IGenericRepository<Class> _classRepository;
         private IGenericRepository<PostAttachment> _postAttachmentRepository;
+        private IGenericRepository<PostTag> _postTagRepository;
         private IGenericRepository<CourseCertificate> _courseCertificateRepository;
         private readonly UserManager<User> _userManager;
         private readonly IBlobService _blobService;
         private readonly IClassService _classService;
 
 
-        public CourseService(IMapper mapper, IGenericRepository<Course> courseRepository, IGenericRepository<CourseLanguage> courseLanguageRepository, IGenericRepository<CourseDiscipline> courseDisciplineRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<CourseTeacher> courseTeacherRepository, IGenericRepository<Post> postRepository, IGenericRepository<Class> classRepository,IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<CourseCertificate> courseCertificateRepository, UserManager<User> userManager, IBlobService blobService, IClassService classService)
+        public CourseService(IMapper mapper, IGenericRepository<Course> courseRepository, IGenericRepository<CourseLanguage> courseLanguageRepository, IGenericRepository<CourseDiscipline> courseDisciplineRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<CourseTeacher> courseTeacherRepository, IGenericRepository<Post> postRepository, IGenericRepository<Class> classRepository,IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<CourseCertificate> courseCertificateRepository, UserManager<User> userManager, IBlobService blobService, IClassService classService)
         {
             _mapper = mapper;
             _courseRepository = courseRepository;
@@ -49,6 +50,7 @@ namespace LMS.Services
             _postRepository = postRepository;
             _classRepository = classRepository;
             _postAttachmentRepository = postAttachmentRepository;
+            _postTagRepository = postTagRepository;
             _courseCertificateRepository = courseCertificateRepository;
             _userManager = userManager;
             _blobService = blobService;
@@ -409,13 +411,19 @@ namespace LMS.Services
 
         public async Task<IEnumerable<PostDetailsViewModel>> GetPostsByCourseId(Guid courseId)
         {
-            var courseList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == courseId).ToListAsync();
+            var courseList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == courseId).OrderByDescending(x => x.IsPinned).ToListAsync();
             var result = _mapper.Map<List<PostDetailsViewModel>>(courseList);
 
             foreach (var post in result)
             {
                 var attachment = await GetAttachmentsByPostId(post.Id);
                 post.PostAttachments = attachment;
+            }
+
+            foreach (var post in result)
+            {
+                var tags = await GetTagsByPostId(post.Id);
+                post.PostTags = tags;
             }
 
             //foreach (var post in result)
@@ -501,6 +509,13 @@ namespace LMS.Services
             return result;
         }
 
+        public async Task<IEnumerable<PostTagViewModel>> GetTagsByPostId(Guid postId)
+        {
+            var tagList = await _postTagRepository.GetAll().Where(x => x.PostId == postId).ToListAsync();
+
+            var result = _mapper.Map<List<PostTagViewModel>>(tagList);
+            return result;
+        }
         public async Task SaveCourseCertificates(SaveCourseCertificateViewModel courseCertificates)
         {
             string containerName = "coursecertificates";
@@ -560,6 +575,27 @@ namespace LMS.Services
             }
             return false;
         }
+
+        public async Task<CourseViewModel> GetCourseByName(string courseName, string schoolName)
+        {
+            var course = await _courseRepository.GetAll().Include(x => x.School).Where(x => x.CourseName.Replace(" ", "").ToLower() == courseName && x.School.SchoolName.Replace(" ", "").ToLower() == schoolName).FirstOrDefaultAsync();
+            if (course != null)
+            {
+                return _mapper.Map<CourseViewModel>(course);
+            }
+            return null;
+        }
+
+        public async Task<bool> IsCourseNameExist(string courseName)
+        {
+            var result = await _courseRepository.GetAll().Where(x => x.CourseName == courseName).FirstOrDefaultAsync();
+            if (result != null)
+            {
+                return false;
+            }
+            return true;
+        }
+
 
     }
 }
