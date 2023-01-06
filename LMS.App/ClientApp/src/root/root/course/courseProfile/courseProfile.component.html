@@ -773,11 +773,11 @@
                     <img [src]="uploadImage">
                   </div>
                   <div *ngIf="uploadImage == ''">
-                    <img src={{this.course?.avatar}} style="scale: 1.8;margin-top: 64px;">
+                    <img src={{course?.avatar}} style="scale: 1.8;margin-top: 64px;">
                   </div>
             </div>
   
-            <input #imageFile class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins position-static opacity-100" type="file" name="Edit Picture" id="avatar" (change)="handleImageInput($event)"/>
+            <input #imageFile class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins position-static opacity-100" type="file" name="Edit Picture" id="avatar" (change)="handleImageInput($event)" accept="image/*"/>
             </div>
           <div class="text-line-border position-relative text-center mb-4">
             <span class="line-text font_12 text_ltgray fw_400 text-center">{{'GeneralInformation'| translate }}</span>
@@ -795,7 +795,7 @@
                   <label class="font_10">{{'CourseName'| translate }}</label>
                   <input formControlName="courseName" type="text" placeholder="Course Name" name="coursename" class="form-control w-100">
                   <small class="p-error" style="color: orange;"
-                  *ngIf="(isSubmitted && editCourseForm.controls.className.errors)">Course Name is required
+                  *ngIf="(isSubmitted && editCourseForm.controls.courseName.errors)">Course Name is required
                 </small>
                 </div>
               </div>

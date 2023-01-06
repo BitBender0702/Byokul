@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using LMS.Common.Enums;
 using LMS.Common.ViewModels;
 using LMS.Common.ViewModels.Class;
 using LMS.Common.ViewModels.Common;
@@ -43,7 +44,7 @@ namespace LMS.Services
         private IGenericRepository<SchoolDefaultLogo> _schoolDefaultLogoRepository;
         private readonly UserManager<User> _userManager;
         private readonly IBlobService _blobService;
-        public SchoolService(IMapper mapper, IGenericRepository<School> schoolRepository, IGenericRepository<SchoolCertificate> schoolCertificateRepository, IGenericRepository<SchoolTag> schoolTagRepository, IGenericRepository<Country> countryRepository, IGenericRepository<Specialization> specializationRepository, IGenericRepository<Language> languageRepository, IGenericRepository<SchoolUser> schoolUserRepository, IGenericRepository<SchoolFollower> schoolFollowerRepository, IGenericRepository<SchoolLanguage> schoolLanguageRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<SchoolTeacher> schoolTeacherRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<CourseTeacher> courseTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository,IGenericRepository<SchoolDefaultLogo> schoolDefaultLogoRepository, UserManager<User> userManager, IBlobService blobService)
+        public SchoolService(IMapper mapper, IGenericRepository<School> schoolRepository, IGenericRepository<SchoolCertificate> schoolCertificateRepository, IGenericRepository<SchoolTag> schoolTagRepository, IGenericRepository<Country> countryRepository, IGenericRepository<Specialization> specializationRepository, IGenericRepository<Language> languageRepository, IGenericRepository<SchoolUser> schoolUserRepository, IGenericRepository<SchoolFollower> schoolFollowerRepository, IGenericRepository<SchoolLanguage> schoolLanguageRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<SchoolTeacher> schoolTeacherRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<CourseTeacher> courseTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<SchoolDefaultLogo> schoolDefaultLogoRepository, UserManager<User> userManager, IBlobService blobService)
         {
             _mapper = mapper;
             _schoolRepository = schoolRepository;
@@ -391,13 +392,13 @@ namespace LMS.Services
 
         public async Task<bool> FollowUnFollowSchool(FollowUnFollowViewModel model, string followerId)
         {
-                var schoolFollowers = new List<SchoolFollower>();
-                schoolFollowers = await _schoolFollowerRepository.GetAll().Where(x => x.SchoolId == new Guid(model.Id) && x.UserId == followerId).ToListAsync();
+            var schoolFollowers = new List<SchoolFollower>();
+            schoolFollowers = await _schoolFollowerRepository.GetAll().Where(x => x.SchoolId == new Guid(model.Id) && x.UserId == followerId).ToListAsync();
 
-                if (schoolFollowers.Any(x => x.UserId == followerId && x.SchoolId ==new Guid(model.Id)))
-                {
-                        _schoolFollowerRepository.DeleteAll(schoolFollowers);
-                        _schoolFollowerRepository.Save();
+            if (schoolFollowers.Any(x => x.UserId == followerId && x.SchoolId == new Guid(model.Id)))
+            {
+                _schoolFollowerRepository.DeleteAll(schoolFollowers);
+                _schoolFollowerRepository.Save();
             }
             //if (schoolFollowers.Count() != null)
             //{
@@ -407,7 +408,8 @@ namespace LMS.Services
             //}
 
 
-            else {
+            else
+            {
                 var schoolFollower = new SchoolFollower
                 {
                     SchoolId = new Guid(model.Id),
@@ -426,7 +428,7 @@ namespace LMS.Services
         {
             var followerList = await _schoolFollowerRepository.GetAll().Where(x => x.SchoolId == schoolId).ToListAsync();
             return _mapper.Map<IEnumerable<SchoolFollowerViewModel>>(followerList);
-            
+
         }
 
         public async Task SaveSchoolUser(SchoolUserViewModel schoolUserViewModel)
@@ -446,7 +448,7 @@ namespace LMS.Services
 
         public async Task<IEnumerable<ClassViewModel>> GetClassesBySchoolId(Guid schoolId)
         {
-            var classList = await _classRepository.GetAll().Where(x => x.SchoolId == schoolId && !x.IsEnable).ToListAsync();
+            var classList = await _classRepository.GetAll().Include(x => x.Accessibility).Include(x => x.ServiceType).Where(x => x.SchoolId == schoolId && !x.IsEnable).ToListAsync();
 
             var result = _mapper.Map<List<ClassViewModel>>(classList);
             return result;
@@ -745,6 +747,87 @@ namespace LMS.Services
                 return _mapper.Map<SchoolViewModel>(school);
             }
             return null;
+        }
+
+        public async Task<IOrderedEnumerable<CombineClassCourseViewModel>> GetSchoolClassCourse(Guid schoolId)
+        {
+            var classes = await GetClassesBySchoolId(schoolId);
+            var courses = await GetCoursesBySchoolId(schoolId);
+
+            var model = new List<CombineClassCourseViewModel>();
+
+            foreach (var classDetails in classes)
+            {
+                var item = new CombineClassCourseViewModel();
+                item.Id = classDetails.ClassId;
+                item.Avatar = classDetails.Avatar;
+                item.Accessibility = classDetails.Accessibility;
+                item.ServiceType = classDetails.ServiceType;
+                item.Description = classDetails.Description;
+                item.Name = classDetails.ClassName;
+                item.Price = classDetails.Price;
+                item.Rating = classDetails.Rating;
+                item.CreatedOn = classDetails.CreatedOn;
+                item.Type = ClassCourseEnum.Class;
+                item.IsPinned = classDetails.IsPinned;
+                item.StartDate = classDetails.StartDate;
+                item.EndDate = classDetails.EndDate;
+                item.ThumbnailUrl = classDetails.ThumbnailUrl;
+
+                model.Add(item);
+            }
+
+            foreach (var courseDetails in courses)
+            {
+                var item = new CombineClassCourseViewModel();
+                item.Id = courseDetails.CourseId;
+                item.Avatar = courseDetails.Avatar;
+                item.Accessibility = courseDetails.Accessibility;
+                item.ServiceType = courseDetails.ServiceType;
+                item.Description = courseDetails.Description;
+                item.Name = courseDetails.CourseName;
+                item.Price = courseDetails.Price;
+                item.Rating = courseDetails.Rating;
+                item.CreatedOn = courseDetails.CreatedOn;
+                item.Type = ClassCourseEnum.Course;
+                item.IsPinned = courseDetails.IsPinned;
+
+                model.Add(item);
+            }
+
+            var response = model.OrderByDescending(x => x.IsPinned);
+            return response;
+
+        }
+
+        public async Task<bool> PinUnpinClassCourse(Guid id, ClassCourseEnum type, bool isPinned)
+        {
+            if (type == ClassCourseEnum.Class)
+            {
+                var classDetail = await _classRepository.GetAll().Where(x => x.ClassId == id).FirstOrDefaultAsync();
+
+                if (classDetail != null)
+                {
+                    classDetail.IsPinned = isPinned;
+                    _classRepository.Update(classDetail);
+                    _classRepository.Save();
+                    return true;
+                }
+            }
+            if (type == ClassCourseEnum.Course)
+            {
+                var courseDetail = await _courseRepository.GetAll().Where(x => x.CourseId == id).FirstOrDefaultAsync();
+
+                if (courseDetail != null)
+                {
+                    courseDetail.IsPinned = isPinned;
+                    _courseRepository.Update(courseDetail);
+                    _courseRepository.Save();
+                    return true;
+                }
+
+            }
+            return false;
         }
     }
 }

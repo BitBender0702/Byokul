@@ -1,4 +1,5 @@
-﻿using LMS.Common.ViewModels.Common;
+﻿using LMS.Common.Enums;
+using LMS.Common.ViewModels.Common;
 using LMS.Common.ViewModels.Post;
 using LMS.Common.ViewModels.School;
 using LMS.Data.Entity;
@@ -206,5 +207,22 @@ namespace LMS.App.Controllers
             var response = await _schoolService.GetSchoolByName(schoolName);
             return Ok(response);
         }
+
+        [Route("getSchoolClassCourse")]
+        [HttpGet]
+        public async Task<IActionResult> GetSchoolClassCourse(Guid schoolId)
+        {
+            var response = await _schoolService.GetSchoolClassCourse(schoolId);
+            return Ok(response);
+        }
+
+        [Route("pinUnpinClassCourse")]
+        [HttpPost]
+        public async Task<IActionResult> PinUnpinClassCourse(Guid id, ClassCourseEnum type, bool isPinned)
+        {
+            var response = await _schoolService.PinUnpinClassCourse(id, type, isPinned);
+            return Ok(response);
+        }
+
     }
 }

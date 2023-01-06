@@ -27,5 +27,6 @@ namespace LMS.Data.Entity
         public string ClassUrl { get; set; }
         public bool IsEnable { get; set; }
         public bool IsCourse { get; set; }
+        public bool IsPinned { get; set; }
     }
 }

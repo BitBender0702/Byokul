@@ -10,7 +10,7 @@ namespace LMS.Services
     public interface ICourseService
     {
         Task<Guid> SaveNewCourse(CourseViewModel courseViewModel, string createdById);
-        Task UpdateCourse(CourseViewModel courseViewModel);
+        Task<Guid> UpdateCourse(CourseViewModel courseViewModel);
         Task DeleteCourseById(Guid classId, string deletedById);
         Task<CourseDetailsViewModel> GetCourseById(Guid courseId);
         Task<IEnumerable<CourseViewModel>> GetAllCourses();

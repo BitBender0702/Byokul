@@ -38,6 +38,8 @@ namespace LMS.Common.ViewModels.Class
         public DateTime CreatedOn { get; set; }
         public string CreatedBy { get; set; }
         public bool IsEnable { get; set; }
+        public bool IsPinned { get; set; }
+
 
     }
 }

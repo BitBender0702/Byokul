@@ -32,10 +32,10 @@ namespace LMS.App.Controllers
 
         [Route("updateCourse")]
         [HttpPost]
-        public async Task<IActionResult> UpdateCourse([FromBody] CourseViewModel courseViewModel)
+        public async Task<IActionResult> UpdateCourse(CourseViewModel courseViewModel)
         {
-            await _courseService.UpdateCourse(courseViewModel);
-            return Ok("success");
+            var courseId = await _courseService.UpdateCourse(courseViewModel);
+            return Ok(new { courseId = courseId });
         }
 
         [Route("deleteCourseById")]

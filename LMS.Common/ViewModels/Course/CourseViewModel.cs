@@ -3,6 +3,7 @@ using LMS.Common.ViewModels.Class;
 using LMS.Common.ViewModels.School;
 using LMS.Common.ViewModels.ServiceType;
 using LMS.Common.ViewModels.Teacher;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,6 +35,8 @@ namespace LMS.Common.ViewModels.Course
         public string CreatedBy { get; set; }
         public bool IsEnable { get; set; }
         public bool IsConvertable { get; set; }
+        public IFormFile AvatarImage { get; set; }
+        public bool IsPinned { get; set; }
 
     }
 }

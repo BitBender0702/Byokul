@@ -1,4 +1,5 @@
-﻿using LMS.Common.ViewModels.Common;
+﻿using LMS.Common.Enums;
+using LMS.Common.ViewModels.Common;
 using LMS.Common.ViewModels.School;
 using System;
 using System.Collections.Generic;
@@ -33,6 +34,8 @@ namespace LMS.Services
         Task<List<SchoolFollowerViewModel>> GetSchoolFollowers(Guid schoolId);
         Task<bool> IsSchoolNameExist(string schoolName);
         Task<SchoolViewModel> GetSchoolByName(string schoolName);
+        Task<IOrderedEnumerable<CombineClassCourseViewModel>> GetSchoolClassCourse(Guid schoolId);
+        Task<bool> PinUnpinClassCourse(Guid id, ClassCourseEnum type, bool isPinned);
 
 
     }

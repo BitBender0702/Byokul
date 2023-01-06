@@ -1853,8 +1853,8 @@ div#notifi-settingpopup .modal-dialog {
     display: inline-flex;
     padding: 8px 15px;
     position: absolute;
-    top: -76px;
-    right: 0;
+    /* top: -76px;
+    right: 0; */
 }
 .btn-filter .divider {
     color: #FFBB84;

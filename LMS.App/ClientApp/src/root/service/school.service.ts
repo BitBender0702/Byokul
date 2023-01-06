@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core"; 
 import { Router } from "@angular/router";
 import { Observable } from "rxjs";
@@ -101,6 +101,15 @@ export class SchoolService{
 
     getSchoolByName(schoolName:any):Observable<any>{
         return this.http.get(`${this.apiUrl}/school/getSchoolByName` + '?schoolName=' + schoolName);
+    }
+
+    getSchoolClassCourseList(schoolId:any):Observable<any>{
+        return this.http.get(`${this.apiUrl}/school/getSchoolClassCourse` + '?schoolId=' + schoolId);
+    }
+
+    pinUnpinClassCourse(id:string,type:string,isPinned:boolean): Observable<any> {
+        let queryParams = new HttpParams().append("id",id).append("type",type).append("isPinned",isPinned);
+        return this.http.post(`${this.apiUrl}/school/pinUnpinClassCourse`,null, {params:queryParams});
     }
 
 }

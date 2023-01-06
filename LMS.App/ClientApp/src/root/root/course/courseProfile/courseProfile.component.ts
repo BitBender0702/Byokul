@@ -421,8 +421,8 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
           }
       
            this.updateCourseDetails=this.editCourseForm.value;
-           this.fileToUpload.append('courseId', this.updateCourseDetails.courseId);
-           this.fileToUpload.append('courseName', this.updateCourseDetails.className);
+           this.fileToUpload.append('courseId', this.course.courseId);
+           this.fileToUpload.append('courseName', this.updateCourseDetails.courseName);
            this.fileToUpload.append('price', this.updateCourseDetails.price?.toString());
            this.fileToUpload.append('accessibilityId',this.updateCourseDetails.accessibilityId);
            this.fileToUpload.append('languageIds',JSON.stringify(this.updateCourseDetails.languageIds));

@@ -22,5 +22,6 @@ namespace LMS.Data.Entity
         public bool IsEnable { get; set; }
         public string? Avatar { get; set; }
         public double? Rating { get; set; }
+        public bool IsPinned { get; set; }
     }
 }

@@ -38,6 +38,7 @@ export class SchoolProfileComponent extends MultilingualComponent implements OnI
     school:any;
     isProfileGrid:boolean = true;
     isOpenSidebar:boolean = false;
+    hideFeedFilters:boolean = true;
 
 
     loadingIcon:boolean = false;
@@ -80,6 +81,7 @@ export class SchoolProfileComponent extends MultilingualComponent implements OnI
     followUnfollowSchool!: FollowUnfollow;
     isFollowed!:boolean;
     followersLength!:number;
+    classCourseList:any;
     @ViewChild('closeEditModal') closeEditModal!: ElementRef;
     @ViewChild('closeTeacherModal') closeTeacherModal!: ElementRef;
     @ViewChild('closeLanguageModal') closeLanguageModal!: ElementRef;
@@ -598,4 +600,27 @@ openPostsViewModal(posts:string): void {
   this.bsModalService.show(PostViewComponent,{initialState});
 }
 
+hideUnhideFeedFilters(hideUnhide:boolean){
+  if(hideUnhide){
+    this.hideFeedFilters = true;
+  }
+else{
+    this.hideFeedFilters = false;
+  }
+
+
+}
+
+GetSchoolClassCourseList(schoolId:string){
+  this.hideFeedFilters = false;
+    this._schoolService.getSchoolClassCourseList(schoolId).subscribe((response) => {
+      this.classCourseList = response;
+  })
+}
+
+pinUnpinClassCourse(id:string,type:string,isPinned:boolean){
+  this._schoolService.pinUnpinClassCourse(id,type,isPinned).subscribe((response) => {
+    this.ngOnInit();
+  });
+}
 }

@@ -196,11 +196,19 @@ namespace LMS.Services
             }
         }
 
-        public async Task UpdateCourse(CourseViewModel courseViewModel)
+        public async Task<Guid> UpdateCourse(CourseViewModel courseViewModel)
         {
+            var containerName = "courselogo";
+            if (courseViewModel.AvatarImage != null)
+            {
+                courseViewModel.Avatar = await _blobService.UploadFileAsync(courseViewModel.AvatarImage, containerName);
+            }
+
+            courseViewModel.LanguageIds = JsonConvert.DeserializeObject<string[]>(courseViewModel.LanguageIds.First());
+
             Course course = _courseRepository.GetById(courseViewModel.CourseId);
+            course.Avatar = courseViewModel.Avatar;
             course.CourseName = courseViewModel.CourseName;
-            course.SchoolId = courseViewModel.SchoolId;
             course.ServiceTypeId = courseViewModel.ServiceTypeId;
             course.AccessibilityId = courseViewModel.AccessibilityId;
             course.Description = courseViewModel.Description;
@@ -214,20 +222,22 @@ namespace LMS.Services
                 await UpdateCourseLanguages(courseViewModel.LanguageIds, courseViewModel.CourseId);
             }
 
-            if (courseViewModel.DisciplineIds != null)
-            {
-                await UpdateCourseDisciplines(courseViewModel.DisciplineIds, courseViewModel.CourseId);
-            }
+            return courseViewModel.CourseId;
 
-            if (courseViewModel.StudentIds != null)
-            {
-                await UpdateCourseStudents(courseViewModel.StudentIds, courseViewModel.CourseId);
-            }
+            //if (courseViewModel.DisciplineIds != null)
+            //{
+            //    await UpdateCourseDisciplines(courseViewModel.DisciplineIds, courseViewModel.CourseId);
+            //}
 
-            if (courseViewModel.TeacherIds != null)
-            {
-                await UpdateCourseTeachers(courseViewModel.TeacherIds, courseViewModel.CourseId);
-            }
+            //if (courseViewModel.StudentIds != null)
+            //{
+            //    await UpdateCourseStudents(courseViewModel.StudentIds, courseViewModel.CourseId);
+            //}
+
+            //if (courseViewModel.TeacherIds != null)
+            //{
+            //    await UpdateCourseTeachers(courseViewModel.TeacherIds, courseViewModel.CourseId);
+            //}
 
         }
 
