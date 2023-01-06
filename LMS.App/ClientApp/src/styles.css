@@ -334,7 +334,7 @@ input[type=date] {
 	padding: 32px 32px 100px;
 	background: url(../src/assets/images/register-bg.svg) no-repeat;
 	background-size: cover;
-	min-height: calC(100vh - 100px);
+	min-height: calC(100vh - 120px);
 }
 
 .register-form {
@@ -351,7 +351,7 @@ input[type=date] {
 
 /*---- landing page css start here ---*/
 .landing-section {
-	padding: 98px 69px;
+    padding: 85px 65px;
 }
 
 .landing-left .form-group {
@@ -2463,6 +2463,24 @@ button.delete-tag img {
 .add-tag-step .form-control {
     height: auto;
 }
+.dropdown .dropdown-menu {
+    padding: 0;
+	overflow: hidden;
+}
+.dropdown-menu li {
+    margin: 0 !important;
+}
+.dropdown-menu li .dropdown-item {
+    padding: 9px 12px;
+    font-size: 15px;
+    line-height: 16px;
+	border-radius: 0;
+}
+.dropdown-menu li .dropdown-item:hover{
+	background-color: #FF7B1C;
+    background: linear-gradient(90.02deg, #FF7B1C 0.02%, #FFA41C 99.98%);
+	color: #fff;
+}
 
 @media screen and (min-width:1200px) {
 	.main_content{
@@ -2474,7 +2492,7 @@ button.delete-tag img {
 		font-size: 36px;
 	}
 	.landing-section {
-		padding: 80px 50px;
+		padding: 75px 35px;
 	}
 	.sidemenu {
 		left: auto;
@@ -2484,6 +2502,12 @@ button.delete-tag img {
 		min-width: 320px;
 		box-shadow: 0px 0px 16px #00000026;
 		transition: 0.5s all;
+	}
+	.language-btn .btn-outline-primary, .language-btn .btn-outline-primary:hover {
+		padding: 5px 20px;
+	}
+	.language-btn .font_16 {
+		font-size: 15px !important;
 	}
 
 }
@@ -2517,7 +2541,7 @@ button.delete-tag img {
 	}
 
 	.register-section {
-		padding: 20px 20px 100px;
+		padding: 20px 15px 60px;
 	}
 
 	.font_34 {
@@ -2551,11 +2575,16 @@ button.delete-tag img {
 	}
 
 	.language-btn label {
-		min-width: 112px;
+		min-width: 95px;
 	}
-
+	.language-btn .font_16 {
+		font-size: 14px !important;
+	}
+	.language-btn .btn-outline-primary, .language-btn .btn-outline-primary:hover {
+		padding: 5px 16px;
+	}
 	.language-btn {
-		margin-bottom: 10px;
+		margin-bottom: 8px;
 	}
 
 	.register-section {
@@ -2588,6 +2617,9 @@ button.delete-tag img {
 		padding: 0;
 		box-shadow: none;
 		border: none;
+	}
+	.step-form, .wht_box {
+		padding: 25px 20px;
 	}
 
 }
