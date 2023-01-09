@@ -1852,7 +1852,7 @@ div#notifi-settingpopup .modal-dialog {
     border-radius: 32px;
     display: inline-flex;
     padding: 8px 15px;
-    position: absolute;
+    position: relative;
     /* top: -76px;
     right: 0; */
 }
@@ -2480,6 +2480,26 @@ button.delete-tag img {
 	background-color: #FF7B1C;
     background: linear-gradient(90.02deg, #FF7B1C 0.02%, #FFA41C 99.98%);
 	color: #fff;
+}
+.filter-main {
+    position: absolute;
+    right: 15px;
+}
+.img-upl-result > span {
+    margin: 0 5px 5px 0;
+    max-width: 304px;
+    overflow: hidden;
+    max-height: 150px;
+}
+.rel-post .box-body .videofile video {
+    overflow: hidden;
+    width: 100%;
+}
+.postview-image {
+    max-height: 300px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
 }
 
 @media screen and (min-width:1200px) {

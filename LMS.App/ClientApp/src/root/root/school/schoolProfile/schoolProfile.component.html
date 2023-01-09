@@ -88,8 +88,7 @@
         <span class="custom-tag d-inline-flex align-items-center"><span class="vr-border"></span>{{school.country.name}}</span>
       </div>
       <hr class="hr-gray" />
-      <div class="school-profile-tabs d-flex align-content-center justify-content-between">
-        <div></div>
+      <div class="school-profile-tabs d-flex align-content-center justify-content-center">
         <div class="custom-tabs">
           <ul class="nav nav-tabs mb-3 border-0 before-none" id="myTab" role="tablist">
             <li class="nav-item ps-0 mb-0" role="presentation">
@@ -104,10 +103,10 @@
             </li>
           </ul>
         </div>
-        <div>
+        <div class="filter-main d-flex">
           <div class="btn-filter1 align-items-center">
-          <button *ngIf="isOwner" [routerLink]="['/user/createClass', school.schoolId]" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 me-4">Create Class</button>
-          <button *ngIf="isOwner" [routerLink]="['/user/createCourse', school.schoolId]" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 me-4">Create Course</button>
+          <button *ngIf="isOwner" [routerLink]="['/user/createClass', school.schoolId]" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 me-2">Create Class</button>
+          <button *ngIf="isOwner" [routerLink]="['/user/createCourse', school.schoolId]" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 me-2">Create Course</button>
 
           <button *ngIf="hideFeedFilters" [ngClass]="isProfileGrid ? 'btn border-btn active d-inline-flex align-items-center justify-content-center' : 'btn border-btn d-inline-flex align-items-center justify-content-center'" (click)="profileGrid()" type="button" >
             <img src="../../../../assets/images/Filter.svg" />
@@ -116,6 +115,7 @@
             <img src="../../../../assets/images/Category.svg" />
           </button>
         </div>
+
           <div *ngIf="!hideFeedFilters" class="btn-filter align-items-center">
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" class="me-2">
               <path fill-rule="evenodd" clip-rule="evenodd" d="M5.19424 13.6654L8.37844 12.1666V8.23893L13.3716 3.17507C13.5597 2.98533 13.6654 2.72492 13.6654 2.45221V1.34373C13.6654 0.78449 13.2265 0.332031 12.685 0.332031H1.31236C0.770872 0.332031 0.332031 0.78449 0.332031 1.34373V2.47756C0.332031 2.7349 0.426494 2.98226 0.596824 3.1697L5.19424 8.23893V13.6654Z" fill="white"/>
@@ -345,7 +345,7 @@
                                 <img src="../../../../assets/images/eye-light.svg" /> 954
                             </button>
                             <button *ngIf="post.isPinned" (click)="pinUnpinPost(post.id,false)" type="button" class="pinned bg-transparent border-0">
-                                <img src="../../../../assets/images/pinned-light.svg" />
+                                <img src="../../../../assets/images/pinned-orange.svg" />
                             </button>
                             <button *ngIf="!post.isPinned" (click)="pinUnpinPost(post.id,true)" type="button" class="pinned bg-transparent border-0">
                               <img src="../../../../assets/images/pinned-gray.svg" />
@@ -381,7 +381,7 @@
                             {{post.dateTime | date : "MMMM d"}} - {{post.dateTime | date : "hh mm"}}
                         </p>
                         <button *ngIf="post.isPinned" (click)="pinUnpinPost(post.id,false)" type="button" class="bg-transparent border-0 pinned-grid-chat">
-                          <img class="w-auto h-auto" src="../../../../assets/images/pinned-light.svg" />
+                          <img class="w-auto h-auto" src="../../../../assets/images/pinned-orange.svg" />
                         </button>
                         <button *ngIf="!post.isPinned" (click)="pinUnpinPost(post.id,true)" type="button" class="bg-transparent border-0 pinned-grid-chat">
                          <img class="w-auto h-auto" src="../../../../assets/images/pinned-gray.svg" />
@@ -514,7 +514,7 @@
                                 </div>
                                 <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">{{post.title}}</h2>
                                 <button *ngIf="post.isPinned" (click)="pinUnpinPost(post.id,false)" type="button" class="bg-transparent border-0 pinned-grid-chat">
-                                  <img src="../../../../assets/images/pinned-light.svg" />
+                                  <img src="../../../../assets/images/pinned-orange.svg" />
                               </button>
                               <button *ngIf="!post.isPinned" (click)="pinUnpinPost(post.id,true)" type="button" class="bg-transparent border-0 pinned-grid-chat">
                                 <img src="../../../../assets/images/pinned-gray.svg" />
@@ -740,7 +740,7 @@
                         </div>
                         <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">{{item.name}}</h2>
                             <button *ngIf="item.isPinned" (click)="pinUnpinClassCourse(item.id,item.type,false)" type="button" class="bg-transparent border-0 pinned-grid-chat">
-                              <img class="w-auto h-auto" src="../../../../assets/images/pinned-light.svg" />
+                              <img class="w-auto h-auto" src="../../../../assets/images/pinned-orange.svg" />
                             </button>
                             <button *ngIf="!item.isPinned" (click)="pinUnpinClassCourse(item.id,item.type,true)" type="button" class="bg-transparent border-0 pinned-grid-chat">
                              <img class="w-auto h-auto" src="../../../../assets/images/pinned-gray.svg" />

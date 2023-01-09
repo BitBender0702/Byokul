@@ -22,13 +22,15 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
       
   <section class="f-poppins">
     <div>
-      <div class="live-content" id="reel_content">
+      <div class="live-content p-0 border-0" id="reel_content">
         <div class="live-inner w-100">
           <div *ngFor="let postAttachment of posts.posts" class="live-image overflow-hidden position-relative">
-            <video *ngIf="postAttachment.fileType==2" width="100%" height="700" controls>
+            <video *ngIf="postAttachment.fileType==2" width="100%" height="300" controls>
                 <source [src]="postAttachment.fileUrl" type="video/mp4"/>
             </video>
+            <div class="postview-image">
               <img *ngIf="postAttachment.fileType==1" class="w-100" [src]="postAttachment.fileUrl" />
+            </div>
              <div class="live-bottom-text p-3">
               <h5 class="font_14 mb-0 fw_600 text_sec1">{{postAttachment.post.title}} 
                 <!-- <span class="font_14 fw_400  ms-3">Lecture One - Introduction and basics in Python</span> -->
@@ -126,9 +128,7 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
 
   </section>
 
-  
-          
-      <hr class="mb-0 sepearator mx-0 mt-3 opacity-100" />
+
     </div>
   </div>
 </div>
