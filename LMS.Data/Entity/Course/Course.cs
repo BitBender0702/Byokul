@@ -23,5 +23,6 @@ namespace LMS.Data.Entity
         public string? Avatar { get; set; }
         public double? Rating { get; set; }
         public bool IsPinned { get; set; }
+        public string? ThumbnailUrl { get; set; }
     }
 }

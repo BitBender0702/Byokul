@@ -1,6 +1,7 @@
 ﻿using LMS.Common.ViewModels.Common;
 using LMS.Common.ViewModels.Post;
 using LMS.Common.ViewModels.User;
+using LMS.Data.Entity;
 
 namespace LMS.Services
 {
@@ -14,11 +15,13 @@ namespace LMS.Services
         Task<string> UpdateUser(UserUpdateViewModel userUpdateViewModel);
         Task<IEnumerable<CountryViewModel>> CountryList();
         Task<IEnumerable<CityViewModel>> CityList(Guid countryId);
-        Task<IEnumerable<PostAttachmentViewModel>> GetMyFeed(string userId);
+        Task<IEnumerable<PostDetailsViewModel>> GetMyFeed(string userId);
         Task<IEnumerable<PostAttachmentViewModel>> GetUserProfileFeed(string userId);
         Task<UserDetailsViewModel> GetBasicUserInfo(string userId);
         Task<List<UserFollowerViewModel>> GetUserFollowers(string userId);
         Task<bool> BanFollower(string followerId);
+        Task<IEnumerable<GlobalFeedViewModel>> GetGlobalFeed(string userId);
+        Task<Guid> SaveUserPreference(string userId,string preferenceString);
 
     }
 }

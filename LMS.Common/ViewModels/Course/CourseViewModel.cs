@@ -37,6 +37,9 @@ namespace LMS.Common.ViewModels.Course
         public bool IsConvertable { get; set; }
         public IFormFile AvatarImage { get; set; }
         public bool IsPinned { get; set; }
+        public IFormFile Thumbnail { get; set; }
+        public string? ThumbnailUrl { get; set; }
+        public IEnumerable<string> CourseTags { get; set; }
 
     }
 }

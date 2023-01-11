@@ -448,7 +448,7 @@ namespace LMS.Services
 
         public async Task<IEnumerable<ClassViewModel>> GetClassesBySchoolId(Guid schoolId)
         {
-            var classList = await _classRepository.GetAll().Include(x => x.Accessibility).Include(x => x.ServiceType).Where(x => x.SchoolId == schoolId && !x.IsEnable).ToListAsync();
+            var classList = await _classRepository.GetAll().Include(x => x.Accessibility).Include(x => x.ServiceType).Where(x => x.SchoolId == schoolId && !x.IsEnable && !x.IsDeleted).ToListAsync();
 
             var result = _mapper.Map<List<ClassViewModel>>(classList);
             return result;
@@ -457,7 +457,7 @@ namespace LMS.Services
 
         public async Task<IEnumerable<CourseViewModel>> GetCoursesBySchoolId(Guid schoolId)
         {
-            var courseList = await _courseRepository.GetAll().Where(x => x.SchoolId == schoolId && !x.IsEnable).ToListAsync();
+            var courseList = await _courseRepository.GetAll().Where(x => x.SchoolId == schoolId && !x.IsEnable && !x.IsDeleted).ToListAsync();
 
             var result = _mapper.Map<List<CourseViewModel>>(courseList);
             return result;
@@ -791,6 +791,7 @@ namespace LMS.Services
                 item.CreatedOn = courseDetails.CreatedOn;
                 item.Type = ClassCourseEnum.Course;
                 item.IsPinned = courseDetails.IsPinned;
+                item.ThumbnailUrl = courseDetails.ThumbnailUrl;
 
                 model.Add(item);
             }

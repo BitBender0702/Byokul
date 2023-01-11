@@ -229,7 +229,12 @@
     "ConvertToClass": "Convert To Class",
     "Avatar": "Avatar",
     "EditCourseProfile": "Edit Course Profile",
-    "CourseBio": "Course Bio"
+    "CourseBio": "Course Bio",
+    "SchoolFeed": "School Feed",
+    "Delete": "Delete",
+    "DeleteClass": "Delete Class",
+    "MyFeed": "My Feed",
+    "GlobalFeed": "GlobalFeed"
 
     
 

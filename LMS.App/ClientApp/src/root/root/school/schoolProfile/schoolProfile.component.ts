@@ -47,6 +47,7 @@ export class SchoolProfileComponent extends MultilingualComponent implements OnI
 
     isDataLoaded:boolean = false;
     isSchoolFollowed:boolean = false;
+    validToken!:string;
 
 
     // eidt Schools
@@ -99,6 +100,7 @@ export class SchoolProfileComponent extends MultilingualComponent implements OnI
     }
   
     ngOnInit(): void {
+      this.validToken = localStorage.getItem("jwt")?? '';
       this.loadingIcon = true;
       var selectedLang = localStorage.getItem("selectedLanguage");
       this.translate.use(selectedLang?? '');
@@ -205,8 +207,8 @@ export class SchoolProfileComponent extends MultilingualComponent implements OnI
           id: '',
           isFollowed: false
          };
-  
 
+         this.GetSchoolClassCourseList(this.school.schoolId);
     }
 
     isOwnerOrNot(){
@@ -239,6 +241,10 @@ export class SchoolProfileComponent extends MultilingualComponent implements OnI
     }
 
     followSchool(schoolId:string,from:string){
+      if(this.validToken == ''){
+        window.open('user/auth/login', '_blank');
+      }
+      else{
       this.followUnfollowSchool.id = schoolId;
       if(from == FollowUnFollowEnum.Follow){
         this.followersLength += 1;
@@ -256,6 +262,7 @@ export class SchoolProfileComponent extends MultilingualComponent implements OnI
           this.isSchoolFollowed = true;
         }
       });
+    }
     }
 
     back(): void {
@@ -622,5 +629,35 @@ pinUnpinClassCourse(id:string,type:string,isPinned:boolean){
   this._schoolService.pinUnpinClassCourse(id,type,isPinned).subscribe((response) => {
     this.ngOnInit();
   });
+}
+
+schoolChat(){
+  if(this.validToken == ''){
+    window.open('user/auth/login', '_blank');
+  }
+  else{
+    window.location.href=`user/chat`;
+  }   
+}
+
+getDeletedId(id:string,type:any){
+  debugger
+  if(type == 1){
+    this._schoolService.deleteClass(id).subscribe((response) => {
+      this.ngOnInit();
+    });
+  }
+  if(type == 2){
+    this._schoolService.deleteCourse(id).subscribe((response) => {
+      this.ngOnInit();
+    });
+
+  }
+
+
+}
+
+deleteClassCourse(){
+
 }
 }

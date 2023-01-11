@@ -126,5 +126,24 @@ namespace LMS.App.Controllers
             return Ok(reponse);
         }
 
+        [Route("globalFeed")]
+        [HttpGet]
+        public async Task<IActionResult> GlobalFeed()
+        {
+            var userId = await GetUserIdAsync(this._userManager);
+            return Ok(await _userService.GetGlobalFeed(userId));
+        }
+
+        [Route("saveUserPreference")]
+        [HttpPost]
+        public async Task<IActionResult> SaveUserPreference(string preferenceString)
+        {
+            var userId = await GetUserIdAsync(this._userManager);
+            var reponse = await _userService.SaveUserPreference(userId,preferenceString);
+            return Ok(reponse);
+        }
+
+
+
     }
 }

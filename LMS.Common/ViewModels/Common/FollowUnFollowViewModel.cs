@@ -9,6 +9,6 @@ namespace LMS.Common.ViewModels.Common
     public class FollowUnFollowViewModel
     {
         public string Id { get; set; }
-        public Boolean IsFollowed { get; set; }
+        public Boolean IsFollowed { get; set; }      
     }
 }

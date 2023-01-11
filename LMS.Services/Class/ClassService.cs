@@ -31,11 +31,12 @@ namespace LMS.Services
         private IGenericRepository<Post> _postRepository;
         private IGenericRepository<PostAttachment> _postAttachmentRepository;
         private IGenericRepository<PostTag> _postTagRepository;
+        private IGenericRepository<ClassTag> _classTagRepository;
         private IGenericRepository<ClassCertificate> _classCertificateRepository;
         private readonly UserManager<User> _userManager;
         private readonly IBlobService _blobService;
 
-        public ClassService(IMapper mapper, IGenericRepository<Class> classRepository, IGenericRepository<ClassLanguage> classLanguageRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<ClassDiscipline> classDisciplineRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<ClassCertificate> classCertificateRepository, UserManager<User> userManager, IBlobService blobService)
+        public ClassService(IMapper mapper, IGenericRepository<Class> classRepository, IGenericRepository<ClassLanguage> classLanguageRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<ClassDiscipline> classDisciplineRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<ClassTag> classTagRepository, IGenericRepository<ClassCertificate> classCertificateRepository, UserManager<User> userManager, IBlobService blobService)
         {
             _mapper = mapper;
             _classRepository = classRepository;
@@ -47,6 +48,7 @@ namespace LMS.Services
             _postAttachmentRepository = postAttachmentRepository;
             _postTagRepository = postTagRepository;
             _classCertificateRepository = classCertificateRepository;
+            _classTagRepository = classTagRepository;
             _userManager = userManager;
             _blobService = blobService;
         }
@@ -66,6 +68,8 @@ namespace LMS.Services
             classViewModel.DisciplineIds = disciplineIds;
 
             classViewModel.ClassUrl = JsonConvert.DeserializeObject<string>(classViewModel.ClassUrl);
+
+            classViewModel.ClassTags = JsonConvert.DeserializeObject<string[]>(classViewModel.ClassTags.First());
 
             if (classViewModel.Thumbnail != null)
             {
@@ -118,6 +122,11 @@ namespace LMS.Services
             if (classViewModel.TeacherIds.Any())
             {
                 await SaveClassTeachers(classViewModel.TeacherIds, classes.ClassId);
+            }
+
+            if (classViewModel.ClassTags != null)
+            {
+                await SaveClassTags(classViewModel.ClassTags, classViewModel.ClassId);
             }
 
             return classViewModel.ClassId;
@@ -548,6 +557,22 @@ namespace LMS.Services
                 return true;
             }
             return false;
+        }
+
+        async Task SaveClassTags(IEnumerable<string> classTags, Guid classId)
+        {
+            foreach (var tagValue in classTags)
+            {
+                var classTag = new ClassTag
+                {
+                    ClassId = classId,
+                    ClassTagValue = tagValue
+                };
+
+                _classTagRepository.Insert(classTag);
+                _classTagRepository.Save();
+
+            }
         }
     }
 }

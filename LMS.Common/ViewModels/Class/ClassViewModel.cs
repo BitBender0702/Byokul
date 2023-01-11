@@ -39,6 +39,7 @@ namespace LMS.Common.ViewModels.Class
         public string CreatedBy { get; set; }
         public bool IsEnable { get; set; }
         public bool IsPinned { get; set; }
+        public IEnumerable<string> ClassTags { get; set; }
 
 
     }

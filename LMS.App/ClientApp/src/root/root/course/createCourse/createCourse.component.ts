@@ -55,6 +55,9 @@ export class CreateCourseComponent extends MultilingualComponent implements OnIn
   courseUrl!:string;
   courseId!:string;
   courseName!:string;
+  uploadImageName!:string;
+  tagList!: string[];
+  isTagsValid: boolean = true;
 
 
 
@@ -134,7 +137,8 @@ export class CreateCourseComponent extends MultilingualComponent implements OnIn
     accessibilityId: this.fb.control('',[Validators.required]),
     languageIds:this.fb.control('',[Validators.required]),
     description: this.fb.control(''),
-    price:this.fb.control('')
+    price:this.fb.control(''),
+    tags:this.fb.control('',[Validators.required])
 
   });
 
@@ -148,6 +152,8 @@ export class CreateCourseComponent extends MultilingualComponent implements OnIn
   this.createCourseForm3 = this.fb.group({
     courseUrl: this.fb.control('',[Validators.required])
   });
+
+  this.tagList = [];
 }
 
 getSchoolsForDropdown(){
@@ -192,7 +198,7 @@ captureTeacherId(event: any) {
 
   handleImageInput(event: any) {
     this.fileToUpload.append("thumbnail", event.target.files[0], event.target.files[0].name);
-
+    this.uploadImageName = event.target.files[0].name;
   }
 
   createCourse(){
@@ -216,6 +222,11 @@ captureTeacherId(event: any) {
       return;
     }
 
+    if(this.tagList == undefined || this.tagList.length == 0){
+      this.isTagsValid = false;
+      return;
+    }
+
     // var schoolId = this.createCourseForm1.get('schoolId')?.value;
     this.course=this.createCourseForm1.value;
     // this.course.schoolId = schoolId;
@@ -228,6 +239,7 @@ captureTeacherId(event: any) {
     this.fileToUpload.append('description', this.course.description);
     this.fileToUpload.append('price', this.course.price?.toString());
     this.courseName = this.course.courseName.split(' ').join('');
+    this.fileToUpload.append('courseTags', JSON.stringify(this.tagList))
     this._courseService.isCourseNameExist(this.course.courseName).subscribe((response) => {
       if(!response){
         this.createCourseForm1.setErrors({ unauthenticated: true });
@@ -370,5 +382,26 @@ captureTeacherId(event: any) {
   courseProfile(){
     window.location.href=`profile/course/${this.selectedSchool.schoolName}/${this.courseName}`;
   }
+
+  onEnter(event:any) {
+    debugger
+    if(event.target.value.indexOf('#') > -1){
+      this.tagList.push(event.target.value);
+    }
+    else{
+      event.target.value = '#' + event.target.value;
+      this.tagList.push(event.target.value);
+    }
+    
+    event.target.value = '';
+  }
+
+    removeTag(tag:any){
+    debugger
+    const tagIndex = this.tagList.findIndex((item) => item ===tag);
+    if (tagIndex > -1) {
+      this.tagList.splice(tagIndex, 1);
+    }
+   }
 
 }

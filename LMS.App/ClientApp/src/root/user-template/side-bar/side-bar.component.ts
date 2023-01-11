@@ -13,6 +13,7 @@ export class SideBarComponent extends MultilingualComponent implements OnInit {
   items!: MenuItem[];
   private _userService;
   sidebarInfo:any;
+  validUser!:Boolean;
 
   @Input() isOpenSidebar!:boolean;
 
@@ -23,6 +24,14 @@ export class SideBarComponent extends MultilingualComponent implements OnInit {
 
   ngOnInit(): void {
 
+      var validToken = localStorage.getItem("jwt");
+        if (validToken != null) {
+          this.validUser = true;
+        }
+        else{
+        this.validUser = false;
+        }
+        
     this.selectedLanguage = localStorage.getItem("selectedLanguage");
     this._userService.getSidebarInfo().subscribe((response) => {
       this.sidebarInfo = response;
@@ -49,5 +58,4 @@ export class SideBarComponent extends MultilingualComponent implements OnInit {
   getUserDetails(userId:string){
     window.location.href=`user/userProfile/${userId}`;
   }
-
 }

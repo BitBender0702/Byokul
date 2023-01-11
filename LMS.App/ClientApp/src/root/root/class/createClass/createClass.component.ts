@@ -59,6 +59,9 @@ export class CreateClassComponent extends MultilingualComponent implements OnIni
   classUrl!:string;
   classId!:string;
   className!:string;
+  tags!:string;
+  tagList!: string[];
+  isTagsValid: boolean = true;
 
 
   constructor(injector: Injector,private route: ActivatedRoute,private router: Router,private fb: FormBuilder,classService: ClassService,private http: HttpClient) {
@@ -130,7 +133,8 @@ export class CreateClassComponent extends MultilingualComponent implements OnIni
     serviceTypeId: this.fb.control('',[Validators.required]),
     accessibilityId: this.fb.control('',[Validators.required]),
     languageIds:this.fb.control('',[Validators.required]),
-    price:this.fb.control('')
+    price:this.fb.control(''),
+    tags:this.fb.control('',[Validators.required]),
 
 }, {validator: this.dateLessThan('startDate', 'endDate',this.currentDate)});
 
@@ -144,6 +148,8 @@ this.createClassForm2 = this.fb.group({
 this.createClassForm3 = this.fb.group({
   classUrl: this.fb.control('',[Validators.required])
 });
+
+this.tagList = [];
 }
 
 getSchoolsForDropdown(){
@@ -237,8 +243,14 @@ captureTeacherId(event: any) {
   }
 
   forwardStep() {
+    debugger
     this.isStepCompleted = true;
     if (!this.createClassForm1.valid || this.uploadImageName == undefined) {
+      return;
+    }
+
+    if(this.tagList == undefined || this.tagList.length == 0){
+      this.isTagsValid = false;
       return;
     }
 
@@ -257,6 +269,7 @@ captureTeacherId(event: any) {
     this.fileToUpload.append('languageIds',JSON.stringify(this.class.languageIds));
     this.fileToUpload.append('price',this.class.price?.toString());
     this.className = this.class.className.split(' ').join('');
+    this.fileToUpload.append('classTags', JSON.stringify(this.tagList))
     // this.schoolName = this.class.schoolId.schoolName.split(' ').join('');
     this._classService.isClassNameExist(this.class.className).subscribe((response) => {
       if(!response){
@@ -413,7 +426,31 @@ captureTeacherId(event: any) {
     }
   }
 
+
+
   classProfile(){
     window.location.href=`profile/class/${this.selectedSchool.schoolName}/${this.className}`;
   }
+
+  onEnter(event:any) {
+    debugger
+    if(event.target.value.indexOf('#') > -1){
+      this.tagList.push(event.target.value);
+    }
+    else{
+      event.target.value = '#' + event.target.value;
+      this.tagList.push(event.target.value);
+    }
+    event.target.value = '';
+  }
+
+  removeTag(tag:any){
+    debugger
+    const tagIndex = this.tagList.findIndex((item) => item ===tag);
+    if (tagIndex > -1) {
+      this.tagList.splice(tagIndex, 1);
+    }
+   }
+
+
 }

@@ -25,11 +25,13 @@ namespace LMS.Services
         private IGenericRepository<School> _schoolRepository;
         private IGenericRepository<Class> _classRepository;
         private IGenericRepository<User> _userRepository;
+        private IGenericRepository<Like> _likeRepository;
+        private IGenericRepository<View> _viewRepository;
         private readonly IBlobService _blobService;
         private readonly IBigBlueButtonService _bigBlueButtonService;
         private IConfiguration _config;
 
-        public PostService(IMapper mapper, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<User> userRepository, IBlobService blobService, IBigBlueButtonService bigBlueButtonService, IConfiguration config)
+        public PostService(IMapper mapper, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<User> userRepository, IGenericRepository<Like> likeRpository, IGenericRepository<View> viewRepository, IBlobService blobService, IBigBlueButtonService bigBlueButtonService, IConfiguration config)
         {
             _mapper = mapper;
             _postRepository = postRepository;
@@ -38,6 +40,8 @@ namespace LMS.Services
             _schoolRepository = schoolRepository;
             _classRepository = classRepository;
             _userRepository = userRepository;
+            _likeRepository = likeRpository;
+            _viewRepository = viewRepository;
             _blobService = blobService;
             _bigBlueButtonService = bigBlueButtonService;
             _config = config;
@@ -220,7 +224,7 @@ namespace LMS.Services
 
         public async Task<bool> PinUnpinPost(Guid attachmentId, bool isPinned)
         {
-            var post = await _postRepository.GetAll().Where(x => x.Id ==  attachmentId).FirstOrDefaultAsync();
+            var post = await _postRepository.GetAll().Where(x => x.Id == attachmentId).FirstOrDefaultAsync();
 
             if (post != null)
             {
@@ -233,6 +237,46 @@ namespace LMS.Services
             return false;
 
 
+        }
+
+        public async Task<bool> LikeUnlikePost(LikeUnlikeViewModel model)
+        {
+
+            var userLike = await _likeRepository.GetAll().Where(x => x.UserId == model.UserId && x.PostId == model.PostId).FirstOrDefaultAsync();
+
+            if (userLike != null)
+            {
+                _likeRepository.Delete(userLike.Id);
+                _likeRepository.Save();
+            }
+
+            else
+            {
+                var like = new Like
+                {
+                    UserId = model.UserId,
+                    PostId = model.PostId,
+                    DateTime = DateTime.UtcNow
+                };
+
+                _likeRepository.Insert(like);
+                _likeRepository.Save();
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<bool> PostView(PostViewsViewModel model)
+        {
+            var view = new View
+            {
+                UserId = model.UserId,
+                PostId = model.PostId,
+            };
+
+            _viewRepository.Insert(view);
+            _viewRepository.Save();
+            return true;
         }
     }
 }

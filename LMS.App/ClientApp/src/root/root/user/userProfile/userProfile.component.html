@@ -42,7 +42,7 @@
               class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn follow-btn">{{'Follow'| translate }}</button>
               <button *ngIf="!isOwner && isFollowed" (click)="followUser(user.id,'UnFollow')" type="button"
               class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn follow-btn">{{'UnFollow'| translate }}</button>
-            <button  *ngIf="!isOwner" type="button" [routerLink]="['/user/chat', user.id]"
+            <button  *ngIf="!isOwner" type="button" (click)="userChat()"
               class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn me-0 minw-142">{{'Message'| translate }}</button>
             <button *ngIf="isOwner" (click)="getUserDetails(user.id)" class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins" data-bs-toggle="modal"
               data-bs-target="#editUser"><img src="../../../../assets/images/Setting-solid-dark.svg" class="me-2" /> {{'EditProfile'| translate }}
@@ -88,8 +88,7 @@
       
       <div class="teacher-tags tag-box mt-0">
         <div class="teacher-content font_14 d-inline-block"><img src="../../../../assets/images/Location-dark.svg" /> {{'Location'| translate }}</div>
-        <span class="custom-tag d-inline-flex align-items-center">London <span class="vr-border"></span> United
-          Kingdom</span>
+        <span class="custom-tag d-inline-flex align-items-center">London <span class="vr-border"></span> </span>
       </div>
       <hr class="hr-gray" />
       <div class="school-profile-tabs d-flex align-content-center justify-content-end">
@@ -133,10 +132,10 @@
                                     <img src="../../../../assets/images/eye-light.svg" /> 954
                                 </button>
                                 <!-- here is pinned for -->
-                                  <button *ngIf="post.isPinned" (click)="pinUnpinPost(post.id,false)" type="button" class="pinned bg-transparent border-0">
+                                  <button *ngIf="post.isPinned && isOwner" (click)="pinUnpinPost(post.id,false)" type="button" class="pinned bg-transparent border-0">
                                     <img src="../../../../assets/images/pinned-light.svg" />
                                 </button>
-                                <button *ngIf="!post.isPinned" (click)="pinUnpinPost(post.id,true)" type="button" class="pinned bg-transparent border-0">
+                                <button *ngIf="!post.isPinned && isOwner" (click)="pinUnpinPost(post.id,true)" type="button" class="pinned bg-transparent border-0">
                                   <img src="../../../../assets/images/pinned-gray.svg" />
                               </button>
                                 <!-- <button (click)="pinUnpinPost(postAttach.id)" type="button" class="pinned bg-transparent border-0">
@@ -177,10 +176,10 @@
                   {{post.dateTime | date : "MMMM d"}} - {{post.dateTime | date : "hh mm"}}
                    <!-- <span class="fw_600 ">11:30 - 13:50</span> -->
                   </p>
-                    <button *ngIf="post.isPinned" (click)="pinUnpinPost(post.id,false)" type="button" class="bg-transparent border-0 pinned-grid-chat">
+                    <button *ngIf="post.isPinned && isOwner" (click)="pinUnpinPost(post.id,false)" type="button" class="bg-transparent border-0 pinned-grid-chat">
                       <img class="w-auto h-auto" src="../../../../assets/images/pinned-light.svg" />
                     </button>
-                    <button *ngIf="!post.isPinned" (click)="pinUnpinPost(post.id,true)" type="button" class="bg-transparent border-0 pinned-grid-chat">
+                    <button *ngIf="!post.isPinned && isOwner" (click)="pinUnpinPost(post.id,true)" type="button" class="bg-transparent border-0 pinned-grid-chat">
                      <img class="w-auto h-auto" src="../../../../assets/images/pinned-gray.svg" />
                     </button>   
               </div>
@@ -303,10 +302,10 @@
                       <img [src]="user.avatar" />
                     </div>
                     <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">{{post.title}}</h2>
-                    <button *ngIf="post.isPinned" (click)="pinUnpinPost(post.id,false)" type="button" class="bg-transparent border-0 pinned-grid-chat">
+                    <button *ngIf="post.isPinned && isOwner" (click)="pinUnpinPost(post.id,false)" type="button" class="bg-transparent border-0 pinned-grid-chat">
                           <img src="../../../../assets/images/pinned-light.svg" />
                     </button>
-                    <button *ngIf="!post.isPinned" (click)="pinUnpinPost(post.id,true)" type="button" class="bg-transparent border-0 pinned-grid-chat">
+                    <button *ngIf="!post.isPinned && isOwner" (click)="pinUnpinPost(post.id,true)" type="button" class="bg-transparent border-0 pinned-grid-chat">
                         <img src="../../../../assets/images/pinned-gray.svg" />
                     </button>   
                   </div>

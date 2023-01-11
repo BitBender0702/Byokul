@@ -40,7 +40,6 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     courseTeacher!:AddCourseTeacher;
     deleteLanguage!: DeleteCourseLanguage;
     deleteTeacher!: DeleteCourseTeacher;
-    //editCourse:any;
     editCourseForm!:FormGroup;
     languageForm!:FormGroup;
     teacherForm!:FormGroup;
@@ -58,8 +57,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     fileToUpload= new FormData();
     isCoursePaid!:boolean;
     disabled:boolean = true;
-    // currentDate!:string;
-
+    validToken!:string;
 
     @ViewChild('closeEditModal') closeEditModal!: ElementRef;
     @ViewChild('closeTeacherModal') closeTeacherModal!: ElementRef;
@@ -77,6 +75,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     }
   
     ngOnInit(): void {
+      this.validToken = localStorage.getItem("jwt")?? '';
       this.loadingIcon = true;
       var selectedLang = localStorage.getItem("selectedLanguage");
       this.translate.use(selectedLang?? '');
@@ -547,6 +546,12 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
         posts: posts
       };
       this.bsModalService.show(PostViewComponent,{initialState});
+    }
+
+    requestMessage(){
+      if(this.validToken == ''){
+        window.open('user/auth/login', '_blank');
+      }
     }
   
 }

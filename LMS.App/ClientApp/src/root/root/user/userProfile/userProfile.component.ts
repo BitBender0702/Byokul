@@ -44,6 +44,7 @@ import { MessageService } from 'primeng/api';
     private _userService;
     private _postService;
     user:any;
+    validToken!:string;
 
     userLanguage!:AddUserLanguage;
     deleteLanguage!: DeleteUserLanguage;
@@ -75,6 +76,7 @@ import { MessageService } from 'primeng/api';
     }
   
     ngOnInit(): void {
+      this.validToken = localStorage.getItem("jwt")?? '';
       this.loadingIcon = true;
       // this.blockUI();
       var selectedLang = localStorage.getItem("selectedLanguage");
@@ -86,6 +88,7 @@ import { MessageService } from 'primeng/api';
       
 
       this._userService.getUserById(this.userId).subscribe((response) => {
+        debugger
         this.user = response;
         this.followersLength = this.user.followers.length;
         this.isOwnerOrNot();
@@ -133,6 +136,7 @@ import { MessageService } from 'primeng/api';
     }
 
     isOwnerOrNot(){
+      debugger
       var validToken = localStorage.getItem("jwt");
         if (validToken != null) {
           let jwtData = validToken.split('.')[1]
@@ -220,6 +224,10 @@ import { MessageService } from 'primeng/api';
     }
 
     followUser(userId:string,from:string){
+      if(this.validToken == ''){
+        window.open('user/auth/login', '_blank');
+      }
+      else{
       this.followUnfollowUser.id = userId;
       if(from == FollowUnFollowEnum.Follow){
         this.followersLength += 1;
@@ -234,6 +242,7 @@ import { MessageService } from 'primeng/api';
       this._userService.saveUserFollower(this.followUnfollowUser).subscribe((response) => {
         this.InitializeFollowUnfollowUser();
       });
+    }
     }
 
     getUserDetails(userId:string){
@@ -383,6 +392,15 @@ openPostsViewModal(posts:string): void {
     posts: posts
   };
   this.bsModalService.show(PostViewComponent,{initialState});
+}
+
+userChat(){
+  if(this.validToken == ''){
+    window.open('user/auth/login', '_blank');
+  }
+  else{
+    window.location.href=`user/chat`;
+  }   
 }
 
 }

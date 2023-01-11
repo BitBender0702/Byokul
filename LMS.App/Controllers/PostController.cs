@@ -60,5 +60,28 @@ namespace LMS.App.Controllers
         }
 
 
+        [Route("likeUnlikePost")]
+        [HttpPost]
+        public async Task<IActionResult> LikeUnlikePost([FromBody] LikeUnlikeViewModel model)
+        {
+            var userId = await GetUserIdAsync(this._userManager);
+            model.UserId = userId;
+            var response = await _postService.LikeUnlikePost(model);
+            return Ok(response);
+        }
+
+        [Route("postView")]
+        [HttpPost]
+        public async Task<IActionResult> PostView([FromBody] PostViewsViewModel model)
+        {
+            var userId = await GetUserIdAsync(this._userManager);
+            model.UserId = userId;
+            var response = await _postService.PostView(model);
+            return Ok(response);
+        }
+
+
+
+
     }
 }

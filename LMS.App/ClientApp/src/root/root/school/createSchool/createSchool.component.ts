@@ -180,7 +180,7 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
     this._schoolService.createSchool(this.fileToUpload).subscribe((response:any) => {
          var schoolId =  response;
          this.schoolId = schoolId;
-         this.loadingIcon = true;
+         this.loadingIcon = false;
          this.step += 1;
          this.isStepCompleted = false;
     });

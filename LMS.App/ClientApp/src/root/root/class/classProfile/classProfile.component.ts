@@ -33,6 +33,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     isOpenModal:boolean = false;
     loadingIcon:boolean = false;
     classId!:string;
+    validToken!:string;
 
     classLanguage!:AddClassLanguage;
     classTeacher!:AddClassTeacher;
@@ -77,6 +78,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     }
   
     ngOnInit(): void {
+      this.validToken = localStorage.getItem("jwt")?? '';
       this.loadingIcon = true;
       var selectedLang = localStorage.getItem("selectedLanguage");
       this.translate.use(selectedLang?? '');
@@ -564,6 +566,12 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
         posts: posts
       };
       this.bsModalService.show(PostViewComponent,{initialState});
+    }
+
+    requestMessage(){
+      if(this.validToken == ''){
+        window.open('user/auth/login', '_blank');
+      }
     }
   
 }

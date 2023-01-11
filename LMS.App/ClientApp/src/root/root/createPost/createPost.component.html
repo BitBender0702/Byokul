@@ -275,7 +275,7 @@
                     <button *ngIf="scheduleTime != undefined" (click)="savePost()" type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 lg_btn"><img
                         src="../../../assets/images/Send-light.svg" class="me-2" />{{scheduleTime | date : "MMMM d, y"}} at {{scheduleTime | date : "H:mm"}}</button>
                     <button *ngIf="scheduleTime == undefined" (click)="savePost()" type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 lg_btn"><img
-                        src="../../../assets/images/Send-light.svg" class="me-2" />Save</button>
+                        src="../../../assets/images/Send-light.svg" class="me-2" />Post</button>
 
                   </div>
     
@@ -433,7 +433,7 @@
           </div>
           <div class="teacher-tags tag-box hashtag_post mt-4 mb-2 hover-tags">
             <span *ngFor="let tag of tagLists" class="custom-tag">{{'#' + tag}} 
-              <button (click) = "removeTags(tag)" class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+              <button (click)="removeInitialTags(tag)" class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
                   src="../../../assets/images/cross-sm-light.svg"></button>
             </span>
 
@@ -560,12 +560,11 @@
         </div>
         <div class="teacher-tags tag-box hashtag_post mt-4 mb-2 hover-tags">
           <span *ngFor="let tag of initialTagList" class="custom-tag">{{'#' + tag}} 
-            <button (click) = "removeTags(tag)" class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+            <button (click)="removeInitialTags(tag)" class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
                 src="../../../assets/images/cross-sm-light.svg"></button>
           </span>
-
       </div>
-      <small class="p-error" style="color: orange;margin-left: 200px;"
+      <small class="p-error" style="color: orange;margin-left: 145px;"
          *ngIf="(!isTagsValid)"> Please select atleast one tag
       </small>
       <div

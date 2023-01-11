@@ -112,4 +112,12 @@ export class SchoolService{
         return this.http.post(`${this.apiUrl}/school/pinUnpinClassCourse`,null, {params:queryParams});
     }
 
+    deleteClass(classId:any): Observable<any> {
+        return this.http.post(`${this.apiUrl}/class/deleteClassById` + '?classId=' + classId,'');
+    }
+
+    deleteCourse(courseId:any): Observable<any> {
+        return this.http.post(`${this.apiUrl}/course/deleteCourseById` + '?courseId=' + courseId,'');
+    }
+
 }
