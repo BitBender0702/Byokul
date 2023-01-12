@@ -55,7 +55,7 @@ import { ChatComponent } from './root/chat/chat.component';
 import { AdminModule } from './admin/admin.module';
 import { PostViewComponent } from './root/postView/postView.component';
 import { CourseProfileComponent } from './root/course/courseProfile/courseProfile.component';
-import {CarouselModule} from 'primeng/carousel';
+import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { UserFeedComponent } from './root/userFeed/userFeed.component';
 //import { AdminModule } from './admin/admin.module';
 

@@ -1,4 +1,4 @@
-
+<div *ngIf="isDataLoaded">
   <section class="f-poppins">
     <side-bar [isOpenSidebar]="isOpenSidebar"></side-bar>
     <div class="main_content">
@@ -8,8 +8,7 @@
           <input type="search" class="form-control h_44">
           <button type="button" class="btn search-icon"><img src="../../../assets/images/school/search-gray.svg"></button>
         </div>
-        <button type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44" data-bs-toggle="modal"
-          data-bs-target="#create-post">{{'CreatePost'| translate }}</button>
+        <button (click)="openPostModal()" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44">{{'CreatePost'| translate }}</button>
       </div>
       <div class="live-header d-flex align-items-center justify-content-between">
         <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark  d-xl-none"><img
@@ -29,12 +28,12 @@
         <div class="custom-tabs profile-custom-tabs">
           <ul class="nav nav-tabs border-0 before-none" id="myTab" role="tablist">
             <li class="nav-item ps-0 mb-0" role="presentation">
-              <button class="nav-link " id="school-tab" data-bs-toggle="tab"
+              <button class="nav-link active" id="school-tab" data-bs-toggle="tab"
                 data-bs-target="#school-feed-tab-pane" type="button" role="tab" aria-controls="school-feed-tab-pane"
                 aria-selected="true">{{'MyFeed'| translate }}</button>
             </li>
             <li class="nav-item ps-0 mb-0" role="presentation">
-              <button class="nav-link active" id="classes-tab" data-bs-toggle="tab" data-bs-target="#classes-tab-pane"
+              <button (click)="getGlobalFeeds()" class="nav-link" id="classes-tab" data-bs-toggle="tab" data-bs-target="#classes-tab-pane"
                 type="button" role="tab" aria-controls="classes-tab-pane" aria-selected="false" tabindex="-1">{{'GlobalFeed'| translate }}</button>
             </li>
           </ul>
@@ -42,8 +41,8 @@
         
       </div>
 
-      <div class="tab-content position-relative" id="pills-tabContent">
-        <div class="tab-pane fade show" id="school-feed-tab-pane" role="tabpanel"
+      <div class="tab-content position-relative active" id="pills-tabContent">
+        <div class="tab-pane fade show active" id="school-feed-tab-pane" role="tabpanel"
           aria-labelledby="school-feed-tab" tabindex="0">
           <div class="button-list-grid">
             <button [ngClass]="isProfileGrid ? 'btn border-btn active d-inline-flex align-items-center justify-content-center' : 'btn border-btn d-inline-flex align-items-center justify-content-center'" (click)="profileGrid()" type="button" >
@@ -102,21 +101,19 @@
               <div *ngIf="post.postType == 1" class="school-grid-box position-relative">
               <div class="schoolgrid-header d-flex align-items-center position-relative">
                 <div class="school-gridprofile-icon">
-                  <img [src]="post.parentImageUrl" />
+                  <img [src]="post.parentImageUrl"/>
                 </div>
                 <h2 class="d-inline-block font_20 fw_600 text_sec1 mb-0">{{post.title}}</h2>
-                <!-- <span class="prog-count font_14 fw_500 text_ltgray">15/15</span>
-                <span class="live-soon font_20 text_ltgray fw_600">Soon</span> -->
                 <p *ngIf="post.dateTime != null" class="font_14 school-grid-date d-inline-block mb-0">
                   {{post.dateTime | date : "MMMM d"}} - {{post.dateTime | date : "hh mm"}}
-                  <!-- <span class="fw_600 ">11:30 -13:50</span> -->
-                </p>
-                <!-- <button *ngIf="post.isPinned && isOwner" (click)="pinUnpinPost(post.id,false)" type="button" class="bg-transparent border-0 pinned-grid-chat">
-                  <img src="../../../../assets/images/pinned-light.svg" />
-               </button>
-               <button *ngIf="!post.isPinned && isOwner" (click)="pinUnpinPost(post.id,true)" type="button" class="bg-transparent border-0 pinned-grid-chat">
-                 <img src="../../../../assets/images/pinned-gray.svg" />
-               </button>  -->
+                   <!-- <span class="fw_600 ">11:30 - 13:50</span> -->
+                  </p>
+                    <!-- <button *ngIf="post.isPinned && isOwner" (click)="pinUnpinPost(post.id,false)" type="button" class="bg-transparent border-0 pinned-grid-chat">
+                      <img class="w-auto h-auto" src="../../../../assets/images/pinned-orange.svg" />
+                    </button>
+                    <button *ngIf="!post.isPinned && isOwner" (click)="pinUnpinPost(post.id,true)" type="button" class="bg-transparent border-0 pinned-grid-chat">
+                     <img class="w-auto h-auto" src="../../../../assets/images/pinned-gray.svg" />
+                    </button>    -->
               </div>
               
               <div class="school-grid-body">
@@ -124,87 +121,93 @@
                 <div class="teacher-tags tag-box hashtag_box">
                   <span *ngFor="let tag of post.postTags" class="custom-tag">#{{tag.postTagValue}}</span>
                 </div>
-                <div class="school-grid-thumbnail">
+                <div *ngIf="post.postAttachments.length" class="school-grid-thumbnail new-school-grid-thumbnail">
                   <div class="row gx-1 h-100">
 
-                    <div *ngIf="post.postAttachments.length == 1" class="col-md-12 h-100">
+                    <div *ngIf="post.postAttachments.length == 1"  class="col-md-12 h-100">
                       <div class="school-large-thumbnail shadow-thumnail position-relative">
-                        <video *ngIf="post.postAttachments.length == 1 && post.postAttachments[0]?.fileType==2" (click)="openPostsViewModal(post.postAttachments)" preload="metadata" class="w-100" style="cursor: pointer;">
-                          <source [src]="post.postAttachments[0]?.fileUrl" type="video/mp4"/>
-                        </video>
-                        <img *ngIf="post.postAttachments[0]?.fileType==1" (click)="openPostsViewModal(post.postAttachments)" class="w-100" [src]="post.postAttachments[0]?.fileUrl" />
-                      </div>
-                    </div>
 
-                    <div *ngIf="post.postAttachments.length == 2"  class="col-md-12 h-100">
-                      <div class="school-large-thumbnail shadow-thumnail position-relative">
+                              <video *ngIf="post.postAttachments.length == 1 && post.postAttachments[0]?.fileType==2" (click)="openPostsViewModal(post.postAttachments)" preload="metadata" class="w-100" style="cursor: pointer;">
+                                <source [src]="post.postAttachments[0]?.fileUrl" type="video/mp4"/>
+                              </video>
+                                <img *ngIf="post.postAttachments[0]?.fileType==1" style="cursor: pointer;" (click)="openPostsViewModal(post.postAttachments)" class="w-100" [src]="post.postAttachments[0]?.fileUrl" />
+                      </div>
+                  </div>
+
+                  <div *ngIf="post.postAttachments.length == 2"  class="col-md-12 h-100">
+                    <div class="school-large-thumbnail shadow-thumnail position-relative">
                         <ng-container *ngFor="let attachment of post.postAttachments">
-                         <video *ngIf="attachment?.fileType==2" (click)="openPostsViewModal(post.postAttachments)" preload="metadata" class="w-100" style="cursor: pointer;">
-                          <source [src]="attachment?.fileUrl" type="video/mp4"/>
-                         </video>
-                          <img style="height: 598px;" *ngIf="attachment?.fileType==1" (click)="openPostsViewModal(post.postAttachments)" class="w-100" [src]="attachment?.fileUrl" />
-                        </ng-container>
-                      </div>
-                    </div>
+                      <video *ngIf="attachment?.fileType==2" (click)="openPostsViewModal(post.postAttachments)" preload="metadata" class="w-100" style="cursor: pointer;">
+                        <source [src]="attachment?.fileUrl" type="video/mp4"/>
+                      </video>
+                      <img style="height: 598px;cursor: pointer;" *ngIf="attachment?.fileType==1" (click)="openPostsViewModal(post.postAttachments)" class="w-100" [src]="attachment?.fileUrl" />
+                       </ng-container>
 
-                    <div *ngIf="post.postAttachments.length == 3" class="col-md-8 h-100">
-                      <div class="school-large-thumbnail shadow-thumnail position-relative">
+                    </div>
+                  </div>
+
+                  <div *ngIf="post.postAttachments.length == 3" class="col-md-8 h-100">
+                    <div class="school-large-thumbnail shadow-thumnail position-relative">
                             <video *ngIf="post.postAttachments[0]?.fileType==2" (click)="openPostsViewModal(post.postAttachments)" preload="metadata" class="w-100" style="cursor: pointer;margin-top:-700px;">
                               <source [src]="post.postAttachments[0]?.fileUrl" type="video/mp4"/>
                             </video>
-                            <img *ngIf="post.postAttachments[0]?.fileType==1" class="w-100" (click)="openPostsViewModal(post.postAttachments)" [src]="post.postAttachments[0]?.fileUrl" />
+                              <img *ngIf="post.postAttachments[0]?.fileType==1" style="cursor: pointer" class="w-100" (click)="openPostsViewModal(post.postAttachments)" [src]="post.postAttachments[0]?.fileUrl" />
+                    </div>
+                 </div>
+
+
+                  <div *ngIf="post.postAttachments.length == 3" class="col-md-4 h-100">
+                      <div class="h-100 medium_thumbox d-flex">
+                          <div class="medium-thumnail">
+                            <video *ngIf="post.postAttachments[1]?.fileType==2" (click)="openPostsViewModal(post.postAttachments)" preload="metadata" class="w-100" style="cursor: pointer;">
+                              <source [src]="post.postAttachments[1]?.fileUrl" type="video/mp4"/>
+                            </video>
+                              <img *ngIf="post.postAttachments[1]?.fileType==1" class="w-100" (click)="openPostsViewModal(post.postAttachments)" [src]="post.postAttachments[1]?.fileUrl" style="cursor: pointer;" />                                        </div>
+                          <div class="medium-thumnail">
+                            <video *ngIf="post.postAttachments[2]?.fileType==2" (click)="openPostsViewModal(post.postAttachments)" preload="metadata" class="w-100" style="cursor: pointer;">
+                              <source [src]="post.postAttachments[2]?.fileUrl" type="video/mp4"/>
+                            </video>
+                              <img *ngIf="post.postAttachments[2]?.fileType==1" class="w-100" (click)="openPostsViewModal(post.postAttachments)" [src]="post.postAttachments[2]?.fileUrl" style="cursor: pointer;"/>                                        </div>
                       </div>
-                   </div>
-
-                   <div *ngIf="post.postAttachments.length == 3" class="col-md-4 h-100">
-                    <div class="h-100 medium_thumbox d-flex">
-                        <div class="medium-thumnail">
-                          <video *ngIf="post.postAttachments[1]?.fileType==2" (click)="openPostsViewModal(post.postAttachments)" preload="metadata" class="w-100" style="cursor: pointer;">
-                            <source [src]="post.postAttachments[1]?.fileUrl" type="video/mp4"/>
-                          </video>
-                            <img *ngIf="post.postAttachments[1]?.fileType==1" class="w-100" (click)="openPostsViewModal(post.postAttachments)" [src]="post.postAttachments[1]?.fileUrl" style="cursor: pointer;" />                                        </div>
-                        <div class="medium-thumnail">
-                          <video *ngIf="post.postAttachments[2]?.fileType==2" (click)="openPostsViewModal(post.postAttachments)" preload="metadata" class="w-100" style="cursor: pointer;">
-                            <source [src]="post.postAttachments[2]?.fileUrl" type="video/mp4"/>
-                          </video>
-                            <img *ngIf="post.postAttachments[2]?.fileType==1" class="w-100" (click)="openPostsViewModal(post.postAttachments)" [src]="post.postAttachments[2]?.fileUrl" style="cursor: pointer;"/>                                        </div>
-                    </div>
-                </div>
-
-                <div *ngIf="post.postAttachments.length > 3" class="col-md-8 h-100">
-                  <div class="school-large-thumbnail shadow-thumnail position-relative">
-                          <video *ngIf="post.postAttachments[0]?.fileType==2" (click)="openPostsViewModal(post.postAttachments)" preload="metadata" class="w-100" style="cursor: pointer;">
-                            <source [src]="post.postAttachments[0]?.fileUrl" type="video/mp4"/>
-                          </video>
-                          <img *ngIf="post.postAttachments[0]?.fileType==1" class="w-100" (click)="openPostsViewModal(post.postAttachments)" [src]="post.postAttachments[0]?.fileUrl" />
                   </div>
-               </div>
 
-               <div *ngIf="post.postAttachments.length > 3" class="col-md-4 h-100">
-                <div class="h-100 medium_thumbox d-flex">
-                    <div class="medium-thumnail">
-                        <img class="w-100 position-relative" (click)="openPostsViewModal(post.postAttachments)" src="../../../../assets/images/blurImage.jfif" style="cursor: pointer;" />   
-                        <div class="position-absolute" style="margin-top: 55px;margin-left: 200px;font-size: 52px;font-weight: 600;">
-                          +{{post.postAttachments.length - 3}}</div>                                    
-                       </div>
-                    <div class="medium-thumnail">
-                      <video *ngIf="post.postAttachments[1]?.fileType==2" (click)="openPostsViewModal(post.postAttachments)" preload="metadata" class="w-100" style="cursor: pointer;">
-                        <source [src]="post.postAttachments[1]?.fileUrl" type="video/mp4"/>
-                      </video>
-                      <img *ngIf="post.postAttachments[1]?.fileType==1" class="w-100" (click)="openPostsViewModal(post.postAttachments)" [src]="post.postAttachments[2]?.fileUrl" style="cursor: pointer;"/>                                        </div>
-                </div>
+                  <div *ngIf="post.postAttachments.length > 3" class="col-md-8 h-100">
+                    <div class="school-large-thumbnail shadow-thumnail position-relative">
+                            <video *ngIf="post.postAttachments[0]?.fileType==2" (click)="openPostsViewModal(post.postAttachments)" preload="metadata" class="w-100" style="cursor: pointer;">
+                              <source [src]="post.postAttachments[0]?.fileUrl" type="video/mp4"/>
+                            </video>
+                              <img *ngIf="post.postAttachments[0]?.fileType==1" class="w-100" (click)="openPostsViewModal(post.postAttachments)" [src]="post.postAttachments[0]?.fileUrl" style="cursor: pointer;"/>
                     </div>
+                 </div>
+
+                 <div *ngIf="post.postAttachments.length > 3" class="col-md-4 h-100">
+                  <div class="h-100 medium_thumbox d-flex">
+                      <div class="medium-thumnail">
+                          <img class="w-100 position-relative" (click)="openPostsViewModal(post.postAttachments)" src="../../../../assets/images/blurImage.jfif" style="cursor: pointer;" />   
+                          <div class="position-absolute" style="margin-top: 55px; margin-left: 200px; font-size: 52px; font-weight: 600;">
+                            +{{post.postAttachments.length - 3}}</div>                                    
+                         </div>
+                      <div class="medium-thumnail">
+                        <video *ngIf="post.postAttachments[1]?.fileType==2" (click)="openPostsViewModal(post.postAttachments)" preload="metadata" class="w-100" style="cursor: pointer;">
+                          <source [src]="post.postAttachments[1]?.fileUrl" type="video/mp4"/>
+                        </video>
+                          <img *ngIf="post.postAttachments[1]?.fileType==1" class="w-100" (click)="openPostsViewModal(post.postAttachments)" [src]="post.postAttachments[1]?.fileUrl" style="cursor: pointer;"/>                                        </div>
+                  </div>
+              </div>
                   </div>
                 </div>
               </div>
-              <div class="school-grid-footer above-thumbnail">
+              <div *ngIf="post.postAttachments.length" class="school-grid-footer above-thumbnail">
                 <button type="button" class="bg-transparent border-0 function-btns text-light">
                   <img src="../../../../assets/images/eye-light.svg" class="d-block mx-auto" />
                   954
                 </button>
-                <button type="button" class="bg-transparent border-0 function-btns text-light">
-                  <img src="../../../../assets/images/Heart-light.svg" class="d-block mx-auto" />
-                  82
+                <button (click)="likeUnlikePosts(post.id,true)" type="button" class="bg-transparent border-0 function-btns text-light">
+                  <img *ngIf="post.isPostLikedByCurrentUser" src="../../../assets/images/heart-red.svg" class="d-block mx-auto" />
+                  <img *ngIf="!post.isPostLikedByCurrentUser" src="../../../../assets/images/Heart-light.svg" class="d-block mx-auto" />
+
+                  <span *ngIf="likesLength != undefined && currentLikedPostId== post.id">{{likesLength}}</span>
+                  <span *ngIf="currentLikedPostId!= post.id">{{post.likes.length}}</span>
                 </button>
                 <button type="button" class="bg-transparent border-0 function-btns text-light">
                   <img src="../../../../assets/images/Chat-light.svg" class="d-block mx-auto" />
@@ -219,257 +222,95 @@
                   954
                 </button>
               </div>
-            </div>
+
+              <div *ngIf="post.postAttachments.length == 0" class="school-grid-footer above-thumbnail">
+                <button type="button" class="bg-transparent border-0 function-btns text-light">
+                  <img src="../../../../assets/images/eye.svg" class="d-block mx-auto" />
+                  <span class="textBlack">{{post.views.length}}</span>
+                </button>
+                <button (click)="likeUnlikePosts(post.id,true)" type="button" class="bg-transparent border-0 function-btns text-light">
+                  <img *ngIf="post.isPostLikedByCurrentUser" src="../../../assets/images/heart-red.svg" class="d-block mx-auto" />
+                  <img *ngIf="!post.isPostLikedByCurrentUser" src="../../../../assets/images/Heart-dark.svg" class="d-block mx-auto" />
+
+                  <span class="textBlack" *ngIf="likesLength != undefined && currentLikedPostId== post.id">{{likesLength}}</span>
+                  <span class="textBlack" *ngIf="currentLikedPostId!= post.id">{{post.likes.length}}</span>
+                </button>
+                <button type="button" class="bg-transparent border-0 function-btns text-light">
+                  <img src="../../../../assets/images/Chat-dark.svg" class="d-block mx-auto" />
+                  <span class="textBlack">34</span>
+                </button>
+                <button type="button" class="bg-transparent border-0 function-btns text-light">
+                  <img src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto" />
+                  <span class="textBlack">954</span>
+                </button>
+                <button type="button" class="bg-transparent border-0 function-btns text-light">
+                  <img src="../../../../assets/images/Upload-dark.svg" class="d-block mx-auto" />
+                  <span class="textBlack">954</span>
+                </button>
+              </div>
+              </div>
           </ng-container>
 
           </div>
 
           <div class="list-schol-profile" *ngIf="!isProfileGrid">
-
             <div class="row">
-              <div class="col-md-6 col-xl-4">
-                <div class="school-grid-box position-relative school-list-box h-100 mb-0">
-                  <div class="schoolgrid-header d-flex align-items-center position-relative">
-                    <div class="school-gridprofile-icon">
-                      <img src="images/profile-grid-school-may.jpg" />
-                    </div>
-                    <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">Python programming class</h2>
-                    <button type="button" class="bg-transparent border-0 pinned-grid-chat"><img class="w-auto h-auto"
-                        src="images/pinned-gray.svg" /></button>
-                  </div>
-                  <div class="school-grid-body">
-                    <div class="d-flex justify-content-between date-view-list">
-                      <p class="font_14 school-grid-date d-inline-block mb-0">September 28 <span
-                          class="fw_600 ms-3">11:30 - 13:50</span></p>
-                      <button type="button" class="view font_12 bg-transparent border-0 ">
-                        <img src="images/eye.svg" class="me-2" /> 954
+              <ng-container *ngFor="let post of myFeeds">
+                <div *ngIf="post.postType == 1" class="col-md-6 col-xl-4">
+                  <div class="school-grid-box position-relative school-list-box h-100 mb-0">
+                    <div class="schoolgrid-header d-flex align-items-center position-relative">
+                      <div class="school-gridprofile-icon">
+                        <img [src]="post.parentImageUrl" />
+                      </div>
+                      <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">{{post.title}}</h2>
+                      <!-- <button *ngIf="post.isPinned && isOwner" (click)="pinUnpinPost(post.id,false)" type="button" class="bg-transparent border-0 pinned-grid-chat">
+                            <img src="../../../../assets/images/pinned-orange.svg" />
                       </button>
+                      <button *ngIf="!post.isPinned && isOwner" (click)="pinUnpinPost(post.id,true)" type="button" class="bg-transparent border-0 pinned-grid-chat">
+                          <img src="../../../../assets/images/pinned-gray.svg" />
+                      </button>    -->
                     </div>
-                    <div class="school-grid-thumbnail">
-                      <div class="row gx-1">
-                        <div class="col-md-12">
-                          <div class="school-large-thumbnail shadow-thumnail position-relative">
-                            <img class="w-100" src="images/school-large-thumnail-grid.jpg" />
+                    <div class="school-grid-body">
+                      <div class="d-flex justify-content-between date-view-list">
+                        <p *ngIf="post.dateTime != null" class="font_14 school-grid-date d-inline-block mb-0">
+                          {{post.dateTime | date : "MMMM d"}} - {{post.dateTime | date : "hh mm"}}
+                        </p>
+                        <button type="button" class="view font_12 bg-transparent border-0 ">
+                          <img src="../../../../assets/images/eye.svg" class="me-2" /> 954
+                        </button>
+                      </div>
+                      <div class="school-grid-thumbnail">
+                        <div class="row gx-1">
+                          <div class="col-md-12">
+                            <div class="school-large-thumbnail shadow-thumnail position-relative">
+                              <div *ngIf="post.postAttachments[0]?.fileUrl == null">{{post.description}}</div>
+                              <div *ngIf="post.postAttachments[0]?.fileUrl?.fileType==2" class="videofile">
+                                <video preload="metadata" style="height: 300px;">
+                                  <source [src]="post.postAttachments[0]?.fileUrl" type="video/mp4"/>
+                                </video>
+                              </div>
+                              <img *ngIf="post.postAttachments[0]?.fileType==1" class="w-100" [src]="post.postAttachments[0].fileUrl" />
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div class="col-md-6 col-xl-4">
-                <div class="school-grid-box position-relative school-list-box h-100 mb-0">
-                  <div class="schoolgrid-header d-flex align-items-center position-relative">
-                    <div class="school-gridprofile-icon">
-                      <img src="images/profile-grid-school-may.jpg" />
-                    </div>
-                    <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">Python programming class</h2>
-                    <button type="button" class="bg-transparent border-0 pinned-grid-chat"><img class="w-auto h-auto"
-                        src="images/pinned-gray.svg" /></button>
-                  </div>
-                  <div class="school-grid-body">
-                    <div class="d-flex justify-content-between date-view-list">
-                      <p class="font_14 school-grid-date d-inline-block mb-0">September 28 <span
-                          class="fw_600 ms-3">11:30 - 13:50</span></p>
-                      <button type="button" class="view font_12 bg-transparent border-0 ">
-                        <img src="images/eye.svg" class="me-2" /> 954
-                      </button>
-                    </div>
-                    <div class="school-grid-thumbnail">
-                      <div class="row gx-1">
-                        <div class="col-md-12">
-                          <div class="school-large-thumbnail shadow-thumnail position-relative">
-                            <img class="w-100" src="images/school-large-thumnail-grid.jpg" />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6 col-xl-4">
-                <div class="school-grid-box position-relative school-list-box h-100 mb-0">
-                  <div class="schoolgrid-header d-flex align-items-center position-relative">
-                    <div class="school-gridprofile-icon">
-                      <img src="images/profile-grid-school-may.jpg" />
-                    </div>
-                    <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">Python programming class</h2>
-                    <button type="button" class="bg-transparent border-0 pinned-grid-chat"><img class="w-auto h-auto"
-                        src="images/pinned-gray.svg" /></button>
-                  </div>
-                  <div class="school-grid-body">
-                    <div class="d-flex justify-content-between date-view-list">
-                      <p class="font_14 school-grid-date d-inline-block mb-0">September 28 <span
-                          class="fw_600 ms-3">11:30 - 13:50</span></p>
-                      <button type="button" class="view font_12 bg-transparent border-0 ">
-                        <img src="images/eye.svg" class="me-2" /> 954
-                      </button>
-                    </div>
-                    <div class="school-grid-thumbnail">
-                      <div class="row gx-1">
-                        <div class="col-md-12">
-                          <div class="school-large-thumbnail shadow-thumnail position-relative">
-                            <img class="w-100" src="images/school-large-thumnail-grid.jpg" />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-6 col-xl-4">
-                <div class="school-grid-box position-relative school-list-box h-100 mb-0">
-                  <div class="schoolgrid-header d-flex align-items-center position-relative">
-                    <div class="school-gridprofile-icon">
-                      <img src="images/profile-grid-school-may.jpg" />
-                    </div>
-                    <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">Python programming class</h2>
-                    <button type="button" class="bg-transparent border-0 pinned-grid-chat"><img class="w-auto h-auto"
-                        src="images/pinned-gray.svg" /></button>
-                  </div>
-                  <div class="school-grid-body">
-                    <div class="d-flex justify-content-between date-view-list">
-                      <p class="font_14 school-grid-date d-inline-block mb-0">September 28 <span
-                          class="fw_600 ms-3">11:30 - 13:50</span></p>
-                      <button type="button" class="view font_12 bg-transparent border-0 ">
-                        <img src="images/eye.svg" class="me-2" /> 954
-                      </button>
-                    </div>
-                    <p class="text_sec1 font_14">Lecture One - Introduction and basics in Python.Lecture One -
-                      Introduction and basics in PythonLecture One - Intro and basics in Python fole Lecture One. One -
-                      Introduction and basics in PythonLecture One - Introduction and basics in PythonLecture One
-                      Lecture. One - Intro duction and basics in PythonLecture One.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6 col-xl-4">
-                <div class="school-grid-box position-relative school-list-box h-100 mb-0">
-                  <div class="schoolgrid-header d-flex align-items-center position-relative">
-                    <div class="school-gridprofile-icon">
-                      <img src="images/profile-grid-school-may.jpg" />
-                    </div>
-                    <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">Python programming class</h2>
-                    <button type="button" class="bg-transparent border-0 pinned-grid-chat"><img class="w-auto h-auto"
-                        src="images/pinned-gray.svg" /></button>
-                  </div>
-                  <div class="school-grid-body">
-                    <div class="d-flex justify-content-between date-view-list">
-                      <p class="font_14 school-grid-date d-inline-block mb-0">September 28 <span
-                          class="fw_600 ms-3">11:30 - 13:50</span></p>
-                      <button type="button" class="view font_12 bg-transparent border-0 ">
-                        <img src="images/eye.svg" class="me-2" /> 954
-                      </button>
-                    </div>
-                    <div class="school-grid-thumbnail">
-                      <div class="row gx-1">
-                        <div class="col-md-12">
-                          <div class="school-large-thumbnail shadow-thumnail position-relative">
-                            <img class="w-100" src="images/school-large-thumnail-grid.jpg" />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6 col-xl-4">
-                <div class="school-grid-box position-relative school-list-box h-100 mb-0">
-                  <div class="schoolgrid-header d-flex align-items-center position-relative">
-                    <div class="school-gridprofile-icon">
-                      <img src="images/profile-grid-school-may.jpg" />
-                    </div>
-                    <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">Python programming class</h2>
-                    <button type="button" class="bg-transparent border-0 pinned-grid-chat"><img class="w-auto h-auto"
-                        src="images/pinned-gray.svg" /></button>
-                  </div>
-                  <div class="school-grid-body">
-                    <div class="d-flex justify-content-between date-view-list">
-                      <p class="font_14 school-grid-date d-inline-block mb-0">September 28 <span
-                          class="fw_600 ms-3">11:30 - 13:50</span></p>
-                      <button type="button" class="view font_12 bg-transparent border-0 ">
-                        <img src="images/eye.svg" class="me-2" /> 954
-                      </button>
-                    </div>
-                    <p class="text_sec1 font_14">Lecture One - Introduction and basics in Python.Lecture One -
-                      Introduction and basics in PythonLecture One - Intro and basics in Python fole Lecture One. One -
-                      Introduction and basics in PythonLecture One - Introduction and basics in PythonLecture One
-                      Lecture. One - Intro duction and basics in PythonLecture One.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6 col-xl-4">
-                <div class="school-grid-box position-relative school-list-box h-100 mb-0">
-                  <div class="schoolgrid-header d-flex align-items-center position-relative">
-                    <div class="school-gridprofile-icon">
-                      <img src="images/profile-grid-school-may.jpg" />
-                    </div>
-                    <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">Python programming class</h2>
-                    <button type="button" class="bg-transparent border-0 pinned-grid-chat"><img class="w-auto h-auto"
-                        src="images/pinned-gray.svg" /></button>
-                  </div>
-                  <div class="school-grid-body">
-                    <div class="d-flex justify-content-between date-view-list">
-                      <p class="font_14 school-grid-date d-inline-block mb-0">September 28 <span
-                          class="fw_600 ms-3">11:30 - 13:50</span></p>
-                      <button type="button" class="view font_12 bg-transparent border-0 ">
-                        <img src="images/eye.svg" class="me-2" /> 954
-                      </button>
-                    </div>
-                    <div class="school-grid-thumbnail">
-                      <div class="row gx-1">
-                        <div class="col-md-12">
-                          <div class="school-large-thumbnail shadow-thumnail position-relative">
-                            <img class="w-100" src="images/school-large-thumnail-grid.jpg" />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6 col-xl-4">
-                <div class="school-grid-box position-relative school-list-box h-100 mb-0">
-                  <div class="schoolgrid-header d-flex align-items-center position-relative">
-                    <div class="school-gridprofile-icon">
-                      <img src="images/profile-grid-school-may.jpg" />
-                    </div>
-                    <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">Python programming class</h2>
-                    <button type="button" class="bg-transparent border-0 pinned-grid-chat"><img class="w-auto h-auto"
-                        src="images/pinned-gray.svg" /></button>
-                  </div>
-                  <div class="school-grid-body">
-                    <div class="d-flex justify-content-between date-view-list">
-                      <p class="font_14 school-grid-date d-inline-block mb-0">September 28 <span
-                          class="fw_600 ms-3">11:30 - 13:50</span></p>
-                      <button type="button" class="view font_12 bg-transparent border-0 ">
-                        <img src="images/eye.svg" class="me-2" /> 954
-                      </button>
-                    </div>
-                    <p class="text_sec1 font_14">Lecture One - Introduction and basics in Python.Lecture One -
-                      Introduction and basics in PythonLecture One - Intro and basics in Python fole Lecture One. One -
-                      Introduction and basics in PythonLecture One - Introduction and basics in PythonLecture One
-                      Lecture. One - Intro duction and basics in PythonLecture One.</p>
-                  </div>
-                </div>
-              </div>
-
-
+              </ng-container>
             </div>
           </div>
 
 
         </div>
-        <div class="tab-pane fade show active" id="classes-tab-pane" role="tabpanel" aria-labelledby="school-feed-tab"
+        <div class="tab-pane fade show" id="classes-tab-pane" role="tabpanel" aria-labelledby="school-feed-tab"
           tabindex="0">
           <div class="button-list-grid">
-            <button type="button" class="btn border-btn d-inline-flex align-items-center justify-content-center"
-              id="list-btn">
-              <img src="images/Filter.svg" />
+            <button [ngClass]="isProfileGrid ? 'btn border-btn active d-inline-flex align-items-center justify-content-center' : 'btn border-btn d-inline-flex align-items-center justify-content-center'" (click)="profileGrid()" type="button" >
+              <img src="../../../../assets/images/Filter.svg" />
             </button>
-            <button type="button" class="btn border-btn active d-inline-flex align-items-center justify-content-center"
-              id="grid-btn">
-              <img src="images/Category.svg" />
+            <button [ngClass]="!isProfileGrid ? 'btn border-btn active d-inline-flex align-items-center justify-content-center' : 'btn border-btn d-inline-flex align-items-center justify-content-center'" (click)="profileList()" type="button" class="btn border-btn d-inline-flex align-items-center justify-content-center">
+              <img src="../../../../assets/images/Category.svg" />
             </button>
           </div>
           <div class="feed-section mt-0">
@@ -477,494 +318,250 @@
               <button type="button" class="bg-transparent border-0 next-feed"><img
                   src="images/chevron-right-circle.svg" /></button>
               <div class="feedbox-inner d-flex ">
+                <div *ngFor="let post of globalFeeds">
+                  <div *ngIf="post.postType == 3">
+                  <div *ngFor="let postAttachment of post.postAttachments">
+                    <div *ngIf="postAttachment.fileType == 2">
                 <div class="feedimg-box position-relative text-light position-relative">
-                  <iframe width="100%" height="300" src="https://www.youtube.com/embed/hAP2QF--2Dg" frameborder="0"
+                  <a [routerLink]="['/user/reels', postAttachment.id]">
+                    <div class="videofile">
+                      <video preload="metadata" style="height: 300px;">
+                        <source [src]="postAttachment.fileUrl" type="video/mp4"/>
+                      </video>
+                    </div>
+                  </a>
+                  <!-- <iframe width="100%" height="300" src="https://www.youtube.com/embed/hAP2QF--2Dg" frameborder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen></iframe>
+                    allowfullscreen></iframe> -->
                   <div class="pinned-view d-flex  justify-content-between align-items-start">
                     <button type="button" class="view font_12 bg-transparent border-0 text-light">
-                      <img src="images/eye-light.svg" /> 954
+                      <img src="../../../assets/images/eye-light.svg" /> 954
                     </button>
-                    <button type="button" class="pinned bg-transparent border-0">
-                      <img src="images/pinned-light.svg" />
-                    </button>
+                    <!-- <button type="button" class="pinned bg-transparent border-0">
+                      <img src="../../../assets/images/pinned-light.svg" />
+                    </button> -->
                   </div>
                   <div class="feed-name font_14 text_sec1">
-                    <img src="images/feed-school.jpg" /> Name
+                      <img [src]="post.parentImageUrl"/> {{post.parentName}}
+                    <!-- <img [src]="school.avatar"/> {{school.schoolName}} -->
                   </div>
                   <div class="feed-title font_14 text_sec1 d-flex align-content-center fw_600">
-                    Python programming course
+                    {{post.title}}
                   </div>
                 </div>
-                <div class="feedimg-box position-relative text-light position-relative">
-                  <iframe width="100%" height="300" src="https://www.youtube.com/embed/hAP2QF--2Dg" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen></iframe>
-                  <div class="pinned-view d-flex  justify-content-between align-items-start">
-                    <button type="button" class="view font_12 bg-transparent border-0 text-light">
-                      <img src="images/eye-light.svg" /> 954
-                    </button>
-                    <button type="button" class="pinned bg-transparent border-0">
-                      <img src="images/pinned-light.svg" />
-                    </button>
-                  </div>
-                  <div class="feed-name font_14 text_sec1">
-                    <img src="images/feed-school2.jpg" /> Name
-                  </div>
-                  <div class="feed-title font_14 text_sec1 d-flex align-content-center fw_600">
-                    Web Design course
-                  </div>
                 </div>
-                <div class="feedimg-box position-relative text-light position-relative">
-                  <iframe width="100%" height="300" src="https://www.youtube.com/embed/hAP2QF--2Dg" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen></iframe>
-                  <div class="pinned-view d-flex  justify-content-between align-items-start">
-                    <button type="button" class="view font_12 bg-transparent border-0 text-light">
-                      <img src="images/eye-light.svg" /> 954
-                    </button>
-                    <button type="button" class="pinned bg-transparent border-0">
-                      <img src="images/pinned-light.svg" />
-                    </button>
-                  </div>
-                  <div class="feed-name font_14 text_sec1">
-                    <img src="images/feed-school3.jpg" /> Name
-                  </div>
-                  <div class="feed-title font_14 text_sec1 d-flex align-content-center fw_600">
-                    Web Design course
-                  </div>
                 </div>
-                <div class="feedimg-box position-relative text-light position-relative">
-                  <iframe width="100%" height="300" src="https://www.youtube.com/embed/hAP2QF--2Dg" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen></iframe>
-                  <div class="pinned-view d-flex  justify-content-between align-items-start">
-                    <button type="button" class="view font_12 bg-transparent border-0 text-light">
-                      <img src="images/eye-light.svg" /> 954
-                    </button>
-                    <button type="button" class="pinned bg-transparent border-0">
-                      <img src="images/pinned-light.svg" />
-                    </button>
-                  </div>
-                  <div class="feed-name font_14 text_sec1">
-                    <img src="images/feed-school4.jpg" /> Name
-                  </div>
-                  <div class="feed-title font_14 text_sec1 d-flex align-content-center fw_600">
-                    Web Design course
-                  </div>
                 </div>
-                <div class="feedimg-box position-relative text-light position-relative">
-                  <iframe width="100%" height="300" src="https://www.youtube.com/embed/hAP2QF--2Dg" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen></iframe>
-                  <div class="pinned-view d-flex  justify-content-between align-items-start">
-                    <button type="button" class="view font_12 bg-transparent border-0 text-light">
-                      <img src="images/eye-light.svg" /> 954
-                    </button>
-                    <button type="button" class="pinned bg-transparent border-0">
-                      <img src="images/pinned-light.svg" />
-                    </button>
-                  </div>
-                  <div class="feed-name font_14 text_sec1">
-                    <img src="images/feed-school5.jpg" /> Name
-                  </div>
-                  <div class="feed-title font_14 text_sec1 d-flex align-content-center fw_600">
-                    Python programming course
-                  </div>
                 </div>
-                <div class="feedimg-box position-relative text-light position-relative">
-                  <iframe width="100%" height="300" src="https://www.youtube.com/embed/hAP2QF--2Dg" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen></iframe>
-                  <div class="pinned-view d-flex  justify-content-between align-items-start">
-                    <button type="button" class="view font_12 bg-transparent border-0 text-light">
-                      <img src="images/eye-light.svg" /> 954
-                    </button>
-                    <button type="button" class="pinned bg-transparent border-0">
-                      <img src="images/pinned-light.svg" />
-                    </button>
-                  </div>
-                  <div class="feed-name font_14 text_sec1">
-                    <img src="images/feed-school5.jpg" /> Name
-                  </div>
-                  <div class="feed-title font_14 text_sec1 d-flex align-content-center fw_600">
-                    Python programming course
-                  </div>
-                </div>
-                <div class="feedimg-box position-relative text-light position-relative">
-                  <iframe width="100%" height="300" src="https://www.youtube.com/embed/hAP2QF--2Dg" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen></iframe>
-                  <div class="pinned-view d-flex  justify-content-between align-items-start">
-                    <button type="button" class="view font_12 bg-transparent border-0 text-light">
-                      <img src="images/eye-light.svg" /> 954
-                    </button>
-                    <button type="button" class="pinned bg-transparent border-0">
-                      <img src="images/pinned-light.svg" />
-                    </button>
-                  </div>
-                  <div class="feed-name font_14 text_sec1">
-                    <img src="images/feed-school5.jpg" /> Name
-                  </div>
-                  <div class="feed-title font_14 text_sec1 d-flex align-content-center fw_600">
-                    Python programming course
-                  </div>
-                </div>
+               
 
 
               </div>
             </div>
           </div>
-          <div class="school-grid-view grid-active" style="display: none;">
-            <div class="school-grid-box position-relative">
+          <div class="school-grid-view grid-active" *ngIf="isProfileGrid">
+            <ng-container *ngFor="let post of globalFeeds">
+              <div *ngIf="post.postType == 1" class="school-grid-box position-relative">
               <div class="schoolgrid-header d-flex align-items-center position-relative">
                 <div class="school-gridprofile-icon">
-                  <img src="images/profile-grid-school-may.jpg" />
+                  <img [src]="post.parentImageUrl"/>
                 </div>
-                <h2 class="d-inline-block font_20 fw_600 text_sec1 mb-0">Python programming class</h2>
-                <p class="font_14 school-grid-date d-inline-block mb-0">September 28 <span class="fw_600 ">11:30 -
-                    13:50</span></p>
-                <button type="button" class="bg-transparent border-0 pinned-grid-chat"><img class="w-auto h-auto"
-                    src="images/pinned-gray.svg" /></button>
+                <h2 class="d-inline-block font_20 fw_600 text_sec1 mb-0">{{post.title}}</h2>
+                <p *ngIf="post.dateTime != null" class="font_14 school-grid-date d-inline-block mb-0">
+                  {{post.dateTime | date : "MMMM d"}} - {{post.dateTime | date : "hh mm"}}
+                   <!-- <span class="fw_600 ">11:30 - 13:50</span> -->
+                  </p>
+                    <!-- <button *ngIf="post.isPinned && isOwner" (click)="pinUnpinPost(post.id,false)" type="button" class="bg-transparent border-0 pinned-grid-chat">
+                      <img class="w-auto h-auto" src="../../../../assets/images/pinned-orange.svg" />
+                    </button>
+                    <button *ngIf="!post.isPinned && isOwner" (click)="pinUnpinPost(post.id,true)" type="button" class="bg-transparent border-0 pinned-grid-chat">
+                     <img class="w-auto h-auto" src="../../../../assets/images/pinned-gray.svg" />
+                    </button>    -->
               </div>
+              
               <div class="school-grid-body">
-                <p class="text_sec1 font_14">Lecture One - Introduction and basics in Python.Lecture One - Introduction
-                  and basics in PythonLecture One - Intro and basics in Python fole Lecture One. One - Introduction and
-                  basics in PythonLecture One - Introduction and basics in PythonLecture One Lecture. One - Intro
-                  duction and basics in PythonLecture One.</p>
+                <p class="text_sec1 font_14">{{post.description}}</p>
                 <div class="teacher-tags tag-box hashtag_box">
-                  <span class="custom-tag">#Python</span>
-                  <span class="custom-tag">#Intermediate</span>
-                  <span class="custom-tag">#Free courses</span>
-                  <span class="custom-tag">#Free courses</span>
-                  <span class="custom-tag">#Free courses</span>
-                  <span class="custom-tag">#For beginners</span>
-                  <span class="custom-tag">#Free courses</span>
+                  <span *ngFor="let tag of post.postTags" class="custom-tag">#{{tag.postTagValue}}</span>
                 </div>
-                <div class="school-grid-thumbnail">
-                  <div class="row gx-1">
-                    <div class="col-md-8">
+                <div *ngIf="post.postAttachments.length" class="school-grid-thumbnail new-school-grid-thumbnail">
+                  <div class="row gx-1 h-100">
+
+                    <div *ngIf="post.postAttachments.length == 1"  class="col-md-12 h-100">
                       <div class="school-large-thumbnail shadow-thumnail position-relative">
-                        <img class="w-100" src="images/school-large-thumnail-grid.jpg" />
+
+                              <video *ngIf="post.postAttachments.length == 1 && post.postAttachments[0]?.fileType==2" (click)="openPostsViewModal(post.postAttachments)" preload="metadata" class="w-100" style="cursor: pointer;">
+                                <source [src]="post.postAttachments[0]?.fileUrl" type="video/mp4"/>
+                              </video>
+                                <img *ngIf="post.postAttachments[0]?.fileType==1" style="cursor: pointer;" (click)="openPostsViewModal(post.postAttachments)" class="w-100" [src]="post.postAttachments[0]?.fileUrl" />
                       </div>
+                  </div>
+
+                  <div *ngIf="post.postAttachments.length == 2"  class="col-md-12 h-100">
+                    <div class="school-large-thumbnail shadow-thumnail position-relative">
+                        <ng-container *ngFor="let attachment of post.postAttachments">
+                      <video *ngIf="attachment?.fileType==2" (click)="openPostsViewModal(post.postAttachments)" preload="metadata" class="w-100" style="cursor: pointer;">
+                        <source [src]="attachment?.fileUrl" type="video/mp4"/>
+                      </video>
+                      <img style="height: 598px;cursor: pointer;" *ngIf="attachment?.fileType==1" (click)="openPostsViewModal(post.postAttachments)" class="w-100" [src]="attachment?.fileUrl" />
+                       </ng-container>
+
                     </div>
-                    <div class="col-md-4">
+                  </div>
+
+                  <div *ngIf="post.postAttachments.length == 3" class="col-md-8 h-100">
+                    <div class="school-large-thumbnail shadow-thumnail position-relative">
+                            <video *ngIf="post.postAttachments[0]?.fileType==2" (click)="openPostsViewModal(post.postAttachments)" preload="metadata" class="w-100" style="cursor: pointer;margin-top:-700px;">
+                              <source [src]="post.postAttachments[0]?.fileUrl" type="video/mp4"/>
+                            </video>
+                              <img *ngIf="post.postAttachments[0]?.fileType==1" style="cursor: pointer" class="w-100" (click)="openPostsViewModal(post.postAttachments)" [src]="post.postAttachments[0]?.fileUrl" />
+                    </div>
+                 </div>
+
+
+                  <div *ngIf="post.postAttachments.length == 3" class="col-md-4 h-100">
                       <div class="h-100 medium_thumbox d-flex">
-                        <div class="medium-thumnail">
-                          <img class="w-100" src="images/thumbnail-more-image.jpg" />
-                        </div>
-                        <div class="medium-thumnail">
-                          <img class="w-100" src="images/thmbnail-medium2.jpg" />
-                        </div>
+                          <div class="medium-thumnail">
+                            <video *ngIf="post.postAttachments[1]?.fileType==2" (click)="openPostsViewModal(post.postAttachments)" preload="metadata" class="w-100" style="cursor: pointer;">
+                              <source [src]="post.postAttachments[1]?.fileUrl" type="video/mp4"/>
+                            </video>
+                              <img *ngIf="post.postAttachments[1]?.fileType==1" class="w-100" (click)="openPostsViewModal(post.postAttachments)" [src]="post.postAttachments[1]?.fileUrl" style="cursor: pointer;" />                                        </div>
+                          <div class="medium-thumnail">
+                            <video *ngIf="post.postAttachments[2]?.fileType==2" (click)="openPostsViewModal(post.postAttachments)" preload="metadata" class="w-100" style="cursor: pointer;">
+                              <source [src]="post.postAttachments[2]?.fileUrl" type="video/mp4"/>
+                            </video>
+                              <img *ngIf="post.postAttachments[2]?.fileType==1" class="w-100" (click)="openPostsViewModal(post.postAttachments)" [src]="post.postAttachments[2]?.fileUrl" style="cursor: pointer;"/>                                        </div>
                       </div>
+                  </div>
+
+                  <div *ngIf="post.postAttachments.length > 3" class="col-md-8 h-100">
+                    <div class="school-large-thumbnail shadow-thumnail position-relative">
+                            <video *ngIf="post.postAttachments[0]?.fileType==2" (click)="openPostsViewModal(post.postAttachments)" preload="metadata" class="w-100" style="cursor: pointer;">
+                              <source [src]="post.postAttachments[0]?.fileUrl" type="video/mp4"/>
+                            </video>
+                              <img *ngIf="post.postAttachments[0]?.fileType==1" class="w-100" (click)="openPostsViewModal(post.postAttachments)" [src]="post.postAttachments[0]?.fileUrl" style="cursor: pointer;"/>
                     </div>
+                 </div>
+
+                 <div *ngIf="post.postAttachments.length > 3" class="col-md-4 h-100">
+                  <div class="h-100 medium_thumbox d-flex">
+                      <div class="medium-thumnail">
+                          <img class="w-100 position-relative" (click)="openPostsViewModal(post.postAttachments)" src="../../../../assets/images/blurImage.jfif" style="cursor: pointer;" />   
+                          <div class="position-absolute" style="margin-top: 55px; margin-left: 200px; font-size: 52px; font-weight: 600;">
+                            +{{post.postAttachments.length - 3}}</div>                                    
+                         </div>
+                      <div class="medium-thumnail">
+                        <video *ngIf="post.postAttachments[1]?.fileType==2" (click)="openPostsViewModal(post.postAttachments)" preload="metadata" class="w-100" style="cursor: pointer;">
+                          <source [src]="post.postAttachments[1]?.fileUrl" type="video/mp4"/>
+                        </video>
+                          <img *ngIf="post.postAttachments[1]?.fileType==1" class="w-100" (click)="openPostsViewModal(post.postAttachments)" [src]="post.postAttachments[1]?.fileUrl" style="cursor: pointer;"/>                                        </div>
+                  </div>
+              </div>
                   </div>
                 </div>
               </div>
-              <div class="school-grid-footer above-thumbnail">
+              <div *ngIf="post.postAttachments.length" class="school-grid-footer above-thumbnail">
                 <button type="button" class="bg-transparent border-0 function-btns text-light">
-                  <img src="images/eye-light.svg" class="d-block mx-auto" />
+                  <img src="../../../../assets/images/eye-light.svg" class="d-block mx-auto" />
                   954
                 </button>
-                <button type="button" class="bg-transparent border-0 function-btns text-light">
-                  <img src="images/Heart-light.svg" class="d-block mx-auto" />
-                  82
+                <button (click)="likeUnlikeGlobalPosts(post.postId,true)" type="button" class="bg-transparent border-0 function-btns text-light">
+                  <img *ngIf="post.isPostLikedByCurrentUser" src="../../../assets/images/heart-red.svg" class="d-block mx-auto" />
+                  <img *ngIf="!post.isPostLikedByCurrentUser" src="../../../../assets/images/Heart-light.svg" class="d-block mx-auto" />
+
+                  <span *ngIf="likesLength != undefined && currentLikedPostId== post.postId">{{likesLength}}</span>
+                  <span *ngIf="currentLikedPostId!= post.postId">{{post.likes.length}}</span>
                 </button>
                 <button type="button" class="bg-transparent border-0 function-btns text-light">
-                  <img src="images/Chat-light.svg" class="d-block mx-auto" />
+                  <img src="../../../../assets/images/Chat-light.svg" class="d-block mx-auto" />
                   34
                 </button>
                 <button type="button" class="bg-transparent border-0 function-btns text-light">
-                  <img src="images/Bookmark-light.svg" class="d-block mx-auto" />
+                  <img src="../../../../assets/images/Bookmark-light.svg" class="d-block mx-auto" />
                   954
                 </button>
                 <button type="button" class="bg-transparent border-0 function-btns text-light">
-                  <img src="images/Upload-light.svg" class="d-block mx-auto" />
+                  <img src="../../../../assets/images/Upload-light.svg" class="d-block mx-auto" />
                   954
                 </button>
               </div>
-            </div>
-            <div class="school-grid-box">
-              <div class="schoolgrid-header d-flex align-items-center position-relative">
-                <div class="school-gridprofile-icon">
-                  <img src="images/profile-grid-school-may.jpg" />
-                </div>
-                <h2 class="d-inline-block font_20 fw_600 text_sec1 mb-0">Python programming class</h2>
-                <p class="font_14 school-grid-date d-inline-block mb-0">September 28 <span class="fw_600 ">11:30 -
-                    13:50</span></p>
-                <button type="button" class="bg-transparent border-0 pinned-grid-chat"><img class="w-auto h-auto"
-                    src="images/pinned-gray.svg" /></button>
-              </div>
-              <div class="school-grid-body">
-                <p class="text_sec1 font_14">Lecture One - Introduction and basics in Python.Lecture One - Introduction
-                  and basics in PythonLecture One - Intro and basics in Python fole Lecture One. One - Introduction and
-                  basics in PythonLecture One - Introduction and basics in PythonLecture One Lecture. One - Intro
-                  duction and basics in PythonLecture One.</p>
-                <div class="teacher-tags tag-box hashtag_box">
-                  <span class="custom-tag">#Python</span>
-                  <span class="custom-tag">#Intermediate</span>
-                  <span class="custom-tag">#Free courses</span>
-                  <span class="custom-tag">#Free courses</span>
-                  <span class="custom-tag">#Free courses</span>
-                  <span class="custom-tag">#For beginners</span>
-                  <span class="custom-tag">#Free courses</span>
-                </div>
-              </div>
-              <div class="school-grid-footer">
-                <button type="button" class="bg-transparent border-0 function-btns">
-                  <img src="images/eye.svg" class="d-block mx-auto" />
-                  954
+
+              <div *ngIf="post.postAttachments.length == 0" class="school-grid-footer above-thumbnail">
+                <button type="button" class="bg-transparent border-0 function-btns text-light">
+                  <img src="../../../../assets/images/eye.svg" class="d-block mx-auto" />
+                  <span class="textBlack">{{post.views.length}}</span>
                 </button>
-                <button type="button" class="bg-transparent border-0 function-btns">
-                  <img src="images/Heart-dark.svg" class="d-block mx-auto" />
-                  82
+                <button (click)="likeUnlikePosts(post.id,true)" type="button" class="bg-transparent border-0 function-btns text-light">
+                  <img *ngIf="post.isPostLikedByCurrentUser" src="../../../assets/images/heart-red.svg" class="d-block mx-auto" />
+                  <img *ngIf="!post.isPostLikedByCurrentUser" src="../../../../assets/images/Heart-dark.svg" class="d-block mx-auto" />
+
+                  <span class="textBlack" *ngIf="likesLength != undefined && currentLikedPostId== post.id">{{likesLength}}</span>
+                  <span class="textBlack" *ngIf="currentLikedPostId!= post.id">{{post.likes.length}}</span>
                 </button>
-                <button type="button" class="bg-transparent border-0 function-btns">
-                  <img src="images/Chat-dark.svg" class="d-block mx-auto" />
-                  34
+                <button type="button" class="bg-transparent border-0 function-btns text-light">
+                  <img src="../../../../assets/images/Chat-dark.svg" class="d-block mx-auto" />
+                  <span class="textBlack">34</span>
                 </button>
-                <button type="button" class="bg-transparent border-0 function-btns">
-                  <img src="images/Bookmark-dark.svg" class="d-block mx-auto" />
-                  954
+                <button type="button" class="bg-transparent border-0 function-btns text-light">
+                  <img src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto" />
+                  <span class="textBlack">954</span>
                 </button>
-                <button type="button" class="bg-transparent border-0 function-btns">
-                  <img src="images/Upload-dark.svg" class="d-block mx-auto" />
-                  954
+                <button type="button" class="bg-transparent border-0 function-btns text-light">
+                  <img src="../../../../assets/images/Upload-dark.svg" class="d-block mx-auto" />
+                  <span class="textBlack">954</span>
                 </button>
               </div>
-            </div>
+              </div>
+          </ng-container>
 
           </div>
 
-          <div class="list-schol-profile" style="display: none;">
+          <div class="list-schol-profile" *ngIf="!isProfileGrid">
 
             <div class="row">
-              <div class="col-md-6 col-xl-4">
-                <div class="school-grid-box position-relative school-list-box h-100 mb-0">
-                  <div class="schoolgrid-header d-flex align-items-center position-relative">
-                    <div class="school-gridprofile-icon">
-                      <img src="images/profile-grid-school-may.jpg" />
-                    </div>
-                    <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">Python programming class</h2>
-                    <button type="button" class="bg-transparent border-0 pinned-grid-chat"><img class="w-auto h-auto"
-                        src="images/pinned-gray.svg" /></button>
-                  </div>
-                  <div class="school-grid-body">
-                    <div class="d-flex justify-content-between date-view-list">
-                      <p class="font_14 school-grid-date d-inline-block mb-0">September 28 <span
-                          class="fw_600 ms-3">11:30 - 13:50</span></p>
-                      <button type="button" class="view font_12 bg-transparent border-0 ">
-                        <img src="images/eye.svg" class="me-2" /> 954
+              <ng-container *ngFor="let post of globalFeeds">
+                <div *ngIf="post.postType == 1" class="col-md-6 col-xl-4">
+                  <div class="school-grid-box position-relative school-list-box h-100 mb-0">
+                    <div class="schoolgrid-header d-flex align-items-center position-relative">
+                      <div class="school-gridprofile-icon">
+                        <img [src]="post.parentImageUrl" />
+                      </div>
+                      <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">{{post.title}}</h2>
+                      <!-- <button *ngIf="post.isPinned && isOwner" (click)="pinUnpinPost(post.id,false)" type="button" class="bg-transparent border-0 pinned-grid-chat">
+                            <img src="../../../../assets/images/pinned-orange.svg" />
                       </button>
+                      <button *ngIf="!post.isPinned && isOwner" (click)="pinUnpinPost(post.id,true)" type="button" class="bg-transparent border-0 pinned-grid-chat">
+                          <img src="../../../../assets/images/pinned-gray.svg" />
+                      </button>    -->
                     </div>
-                    <div class="school-grid-thumbnail">
-                      <div class="row gx-1">
-                        <div class="col-md-12">
-                          <div class="school-large-thumbnail shadow-thumnail position-relative">
-                            <img class="w-100" src="images/school-large-thumnail-grid.jpg" />
+                    <div class="school-grid-body">
+                      <div class="d-flex justify-content-between date-view-list">
+                        <p *ngIf="post.dateTime != null" class="font_14 school-grid-date d-inline-block mb-0">
+                          {{post.dateTime | date : "MMMM d"}} - {{post.dateTime | date : "hh mm"}}
+                        </p>
+                        <button type="button" class="view font_12 bg-transparent border-0 ">
+                          <img src="../../../../assets/images/eye.svg" class="me-2" /> 954
+                        </button>
+                      </div>
+                      <div class="school-grid-thumbnail">
+                        <div class="row gx-1">
+                          <div class="col-md-12">
+                            <div class="school-large-thumbnail shadow-thumnail position-relative">
+                              <div *ngIf="post.postAttachments[0]?.fileUrl == null">{{post.description}}</div>
+                              <div *ngIf="post.postAttachments[0]?.fileUrl?.fileType==2" class="videofile">
+                                <video preload="metadata" style="height: 300px;">
+                                  <source [src]="post.postAttachments[0]?.fileUrl" type="video/mp4"/>
+                                </video>
+                              </div>
+                              <img *ngIf="post.postAttachments[0]?.fileType==1" class="w-100" [src]="post.postAttachments[0].fileUrl" />
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div class="col-md-6 col-xl-4">
-                <div class="school-grid-box position-relative school-list-box h-100 mb-0">
-                  <div class="schoolgrid-header d-flex align-items-center position-relative">
-                    <div class="school-gridprofile-icon">
-                      <img src="images/profile-grid-school-may.jpg" />
-                    </div>
-                    <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">Python programming class</h2>
-                    <button type="button" class="bg-transparent border-0 pinned-grid-chat"><img class="w-auto h-auto"
-                        src="images/pinned-gray.svg" /></button>
-                  </div>
-                  <div class="school-grid-body">
-                    <div class="d-flex justify-content-between date-view-list">
-                      <p class="font_14 school-grid-date d-inline-block mb-0">September 28 <span
-                          class="fw_600 ms-3">11:30 - 13:50</span></p>
-                      <button type="button" class="view font_12 bg-transparent border-0 ">
-                        <img src="images/eye.svg" class="me-2" /> 954
-                      </button>
-                    </div>
-                    <div class="school-grid-thumbnail">
-                      <div class="row gx-1">
-                        <div class="col-md-12">
-                          <div class="school-large-thumbnail shadow-thumnail position-relative">
-                            <img class="w-100" src="images/school-large-thumnail-grid.jpg" />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6 col-xl-4">
-                <div class="school-grid-box position-relative school-list-box h-100 mb-0">
-                  <div class="schoolgrid-header d-flex align-items-center position-relative">
-                    <div class="school-gridprofile-icon">
-                      <img src="images/profile-grid-school-may.jpg" />
-                    </div>
-                    <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">Python programming class</h2>
-                    <button type="button" class="bg-transparent border-0 pinned-grid-chat"><img class="w-auto h-auto"
-                        src="images/pinned-gray.svg" /></button>
-                  </div>
-                  <div class="school-grid-body">
-                    <div class="d-flex justify-content-between date-view-list">
-                      <p class="font_14 school-grid-date d-inline-block mb-0">September 28 <span
-                          class="fw_600 ms-3">11:30 - 13:50</span></p>
-                      <button type="button" class="view font_12 bg-transparent border-0 ">
-                        <img src="images/eye.svg" class="me-2" /> 954
-                      </button>
-                    </div>
-                    <div class="school-grid-thumbnail">
-                      <div class="row gx-1">
-                        <div class="col-md-12">
-                          <div class="school-large-thumbnail shadow-thumnail position-relative">
-                            <img class="w-100" src="images/school-large-thumnail-grid.jpg" />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-6 col-xl-4">
-                <div class="school-grid-box position-relative school-list-box h-100 mb-0">
-                  <div class="schoolgrid-header d-flex align-items-center position-relative">
-                    <div class="school-gridprofile-icon">
-                      <img src="images/profile-grid-school-may.jpg" />
-                    </div>
-                    <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">Python programming class</h2>
-                    <button type="button" class="bg-transparent border-0 pinned-grid-chat"><img class="w-auto h-auto"
-                        src="images/pinned-gray.svg" /></button>
-                  </div>
-                  <div class="school-grid-body">
-                    <div class="d-flex justify-content-between date-view-list">
-                      <p class="font_14 school-grid-date d-inline-block mb-0">September 28 <span
-                          class="fw_600 ms-3">11:30 - 13:50</span></p>
-                      <button type="button" class="view font_12 bg-transparent border-0 ">
-                        <img src="images/eye.svg" class="me-2" /> 954
-                      </button>
-                    </div>
-                    <p class="text_sec1 font_14">Lecture One - Introduction and basics in Python.Lecture One -
-                      Introduction and basics in PythonLecture One - Intro and basics in Python fole Lecture One. One -
-                      Introduction and basics in PythonLecture One - Introduction and basics in PythonLecture One
-                      Lecture. One - Intro duction and basics in PythonLecture One.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6 col-xl-4">
-                <div class="school-grid-box position-relative school-list-box h-100 mb-0">
-                  <div class="schoolgrid-header d-flex align-items-center position-relative">
-                    <div class="school-gridprofile-icon">
-                      <img src="images/profile-grid-school-may.jpg" />
-                    </div>
-                    <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">Python programming class</h2>
-                    <button type="button" class="bg-transparent border-0 pinned-grid-chat"><img class="w-auto h-auto"
-                        src="images/pinned-gray.svg" /></button>
-                  </div>
-                  <div class="school-grid-body">
-                    <div class="d-flex justify-content-between date-view-list">
-                      <p class="font_14 school-grid-date d-inline-block mb-0">September 28 <span
-                          class="fw_600 ms-3">11:30 - 13:50</span></p>
-                      <button type="button" class="view font_12 bg-transparent border-0 ">
-                        <img src="images/eye.svg" class="me-2" /> 954
-                      </button>
-                    </div>
-                    <div class="school-grid-thumbnail">
-                      <div class="row gx-1">
-                        <div class="col-md-12">
-                          <div class="school-large-thumbnail shadow-thumnail position-relative">
-                            <img class="w-100" src="images/school-large-thumnail-grid.jpg" />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6 col-xl-4">
-                <div class="school-grid-box position-relative school-list-box h-100 mb-0">
-                  <div class="schoolgrid-header d-flex align-items-center position-relative">
-                    <div class="school-gridprofile-icon">
-                      <img src="images/profile-grid-school-may.jpg" />
-                    </div>
-                    <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">Python programming class</h2>
-                    <button type="button" class="bg-transparent border-0 pinned-grid-chat"><img class="w-auto h-auto"
-                        src="images/pinned-gray.svg" /></button>
-                  </div>
-                  <div class="school-grid-body">
-                    <div class="d-flex justify-content-between date-view-list">
-                      <p class="font_14 school-grid-date d-inline-block mb-0">September 28 <span
-                          class="fw_600 ms-3">11:30 - 13:50</span></p>
-                      <button type="button" class="view font_12 bg-transparent border-0 ">
-                        <img src="images/eye.svg" class="me-2" /> 954
-                      </button>
-                    </div>
-                    <p class="text_sec1 font_14">Lecture One - Introduction and basics in Python.Lecture One -
-                      Introduction and basics in PythonLecture One - Intro and basics in Python fole Lecture One. One -
-                      Introduction and basics in PythonLecture One - Introduction and basics in PythonLecture One
-                      Lecture. One - Intro duction and basics in PythonLecture One.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6 col-xl-4">
-                <div class="school-grid-box position-relative school-list-box h-100 mb-0">
-                  <div class="schoolgrid-header d-flex align-items-center position-relative">
-                    <div class="school-gridprofile-icon">
-                      <img src="images/profile-grid-school-may.jpg" />
-                    </div>
-                    <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">Python programming class</h2>
-                    <button type="button" class="bg-transparent border-0 pinned-grid-chat"><img class="w-auto h-auto"
-                        src="images/pinned-gray.svg" /></button>
-                  </div>
-                  <div class="school-grid-body">
-                    <div class="d-flex justify-content-between date-view-list">
-                      <p class="font_14 school-grid-date d-inline-block mb-0">September 28 <span
-                          class="fw_600 ms-3">11:30 - 13:50</span></p>
-                      <button type="button" class="view font_12 bg-transparent border-0 ">
-                        <img src="images/eye.svg" class="me-2" /> 954
-                      </button>
-                    </div>
-                    <div class="school-grid-thumbnail">
-                      <div class="row gx-1">
-                        <div class="col-md-12">
-                          <div class="school-large-thumbnail shadow-thumnail position-relative">
-                            <img class="w-100" src="images/school-large-thumnail-grid.jpg" />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6 col-xl-4">
-                <div class="school-grid-box position-relative school-list-box h-100 mb-0">
-                  <div class="schoolgrid-header d-flex align-items-center position-relative">
-                    <div class="school-gridprofile-icon">
-                      <img src="images/profile-grid-school-may.jpg" />
-                    </div>
-                    <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">Python programming class</h2>
-                    <button type="button" class="bg-transparent border-0 pinned-grid-chat"><img class="w-auto h-auto"
-                        src="images/pinned-gray.svg" /></button>
-                  </div>
-                  <div class="school-grid-body">
-                    <div class="d-flex justify-content-between date-view-list">
-                      <p class="font_14 school-grid-date d-inline-block mb-0">September 28 <span
-                          class="fw_600 ms-3">11:30 - 13:50</span></p>
-                      <button type="button" class="view font_12 bg-transparent border-0 ">
-                        <img src="images/eye.svg" class="me-2" /> 954
-                      </button>
-                    </div>
-                    <p class="text_sec1 font_14">Lecture One - Introduction and basics in Python.Lecture One -
-                      Introduction and basics in PythonLecture One - Intro and basics in Python fole Lecture One. One -
-                      Introduction and basics in PythonLecture One - Introduction and basics in PythonLecture One
-                      Lecture. One - Intro duction and basics in PythonLecture One.</p>
-                  </div>
-                </div>
-              </div>
+              </ng-container>
 
 
             </div>
@@ -1580,3 +1177,5 @@
 
     
   </script>
+  </div>
+  <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>

@@ -47,7 +47,8 @@ namespace LMS.App.Controllers
         [HttpGet]
         public async Task<IActionResult> GetReelById(Guid id)
         {
-            var response = await _postService.GetReelById(id);
+            var userId = await GetUserIdAsync(this._userManager);
+            var response = await _postService.GetReelById(id, userId);
             return Ok(response);
         }
 

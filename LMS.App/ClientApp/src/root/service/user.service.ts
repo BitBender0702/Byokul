@@ -74,9 +74,7 @@ export class UserService{
     }
 
     saveUserPreference(preferenceString:string): Observable<any> {
-        debugger
         return this.http.post(`${this.apiUrl}/users/saveUserPreference` + '?preferenceString=' + preferenceString,'');
-
     }
     
 

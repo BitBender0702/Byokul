@@ -28,10 +28,11 @@ namespace LMS.Services
         private IGenericRepository<Like> _likeRepository;
         private IGenericRepository<View> _viewRepository;
         private readonly IBlobService _blobService;
+        private readonly IUserService _userService;
         private readonly IBigBlueButtonService _bigBlueButtonService;
         private IConfiguration _config;
 
-        public PostService(IMapper mapper, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<User> userRepository, IGenericRepository<Like> likeRpository, IGenericRepository<View> viewRepository, IBlobService blobService, IBigBlueButtonService bigBlueButtonService, IConfiguration config)
+        public PostService(IMapper mapper, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<User> userRepository, IGenericRepository<Like> likeRpository, IGenericRepository<View> viewRepository, IBlobService blobService, IUserService userService, IBigBlueButtonService bigBlueButtonService, IConfiguration config)
         {
             _mapper = mapper;
             _postRepository = postRepository;
@@ -43,6 +44,7 @@ namespace LMS.Services
             _likeRepository = likeRpository;
             _viewRepository = viewRepository;
             _blobService = blobService;
+            _userService = userService;
             _bigBlueButtonService = bigBlueButtonService;
             _config = config;
         }
@@ -192,7 +194,7 @@ namespace LMS.Services
             }
         }
 
-        public async Task<PostAttachmentViewModel> GetReelById(Guid id)
+        public async Task<PostAttachmentViewModel> GetReelById(Guid id,string userId)
         {
             var postAttachment = await _postAttachmentRepository.GetAll()
                 .Include(x => x.Post)
@@ -200,6 +202,17 @@ namespace LMS.Services
                 .Where(x => x.Id == id).FirstOrDefaultAsync();
 
             var result = _mapper.Map<PostAttachmentViewModel>(postAttachment);
+            result.Post.Likes = await _userService.GetLikesOnPost(postAttachment.Post.Id);
+            result.Post.Views = await _userService.GetViewsOnPost(postAttachment.Post.Id);
+
+            if (result.Post.Likes.Any(x => x.UserId == userId && x.PostId == postAttachment.Post.Id))
+            {
+                result.Post.IsPostLikedByCurrentUser = true;
+            }
+            else
+            {
+                result.Post.IsPostLikedByCurrentUser = false;
+            }
 
             if (result.Post.PostAuthorType == (int)PostAuthorTypeEnum.School)
             {
@@ -239,7 +252,7 @@ namespace LMS.Services
 
         }
 
-        public async Task<bool> LikeUnlikePost(LikeUnlikeViewModel model)
+        public async Task<List<LikeViewModel>> LikeUnlikePost(LikeUnlikeViewModel model)
         {
 
             var userLike = await _likeRepository.GetAll().Where(x => x.UserId == model.UserId && x.PostId == model.PostId).FirstOrDefaultAsync();
@@ -248,6 +261,8 @@ namespace LMS.Services
             {
                 _likeRepository.Delete(userLike.Id);
                 _likeRepository.Save();
+                var totalLikes = await _likeRepository.GetAll().Where(x => x.PostId == model.PostId).ToListAsync();
+                return _mapper.Map<List<LikeViewModel>>(totalLikes);
             }
 
             else
@@ -256,14 +271,17 @@ namespace LMS.Services
                 {
                     UserId = model.UserId,
                     PostId = model.PostId,
-                    DateTime = DateTime.UtcNow
+                    DateTime = DateTime.UtcNow,
+                    CommentId = model.CommentId == Guid.Empty ? null : model.CommentId,
+                    
                 };
 
                 _likeRepository.Insert(like);
                 _likeRepository.Save();
-                return true;
+                var totalLikes = await _likeRepository.GetAll().Where(x => x.PostId == model.PostId).ToListAsync();
+                return _mapper.Map<List<LikeViewModel>>(totalLikes);
             }
-            return false;
+            return null;
         }
 
         public async Task<bool> PostView(PostViewsViewModel model)

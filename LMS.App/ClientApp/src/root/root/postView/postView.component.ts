@@ -26,31 +26,50 @@ export class PostViewComponent implements OnInit {
     private _postService;
     likeUnlikePost!: LikeUnlikePost;
     postView!:PostView;
+    currentLikedPostId!:string;
+    likesLength!:number;
+    isLiked!:boolean;
+    userId!:string;
 
     constructor(private bsModalService: BsModalService,public postService:PostService, public options: ModalOptions,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
          this._postService = postService;
     }
   
     ngOnInit(): void {
-      debugger
+      this.getLoginUserId();
       this.posts = this.options.initialState;
-      this.likeUnlikePost = {
-        postId: '',
-        userId: '',
-        isLike:false,
-        commentId:''
-       };
-
        this.postView ={
         postId:'',
         userId:''
        }
 
       // here we count ++ for view
-      this.postView.postId = this.posts.posts[0].post.id;
+      this.postView.postId = this.posts.posts.id;
       this._postService.postView(this.postView).subscribe((response) => {
-        debugger
      });
+
+     this.InitializeLikeUnlikePost();
+
+
+    }
+
+    getLoginUserId(){
+      var validToken = localStorage.getItem("jwt");
+      if (validToken != null) {
+        let jwtData = validToken.split('.')[1]
+        let decodedJwtJsonData = window.atob(jwtData)
+        let decodedJwtData = JSON.parse(decodedJwtJsonData);
+        this.userId = decodedJwtData.jti;
+      }
+    }
+
+    InitializeLikeUnlikePost(){
+      this.likeUnlikePost = {
+        postId: '',
+        userId: '',
+        isLike:false,
+        commentId:''
+       };
 
     }
 
@@ -65,6 +84,7 @@ export class PostViewComponent implements OnInit {
     }
   
     showComments(){
+      debugger
       if(this.showCommentsField){
           this.showCommentsField = false;
       }
@@ -74,16 +94,45 @@ export class PostViewComponent implements OnInit {
   }
 
   // here from like post
-  likeUnlikePosts(postId:string,isLike:boolean){
-    debugger
+  // likeUnlikePosts(postId:string,isLike:boolean){
+  //   this.likeUnlikePost.postId = postId;
+  //   this.likeUnlikePost.isLike = isLike;
+  //   this.likeUnlikePost.commentId = '00000000-0000-0000-0000-000000000000'
+  //   this._postService.likeUnlikePost(this.likeUnlikePost).subscribe((response) => {
+  //      console.log("succes");
+  //   });
+
+
+  // }
+
+  likeUnlikePosts(postId:string, isLike:boolean){
+    this.currentLikedPostId = postId;
+    // this.user.posts.filter((p : any) => p.id == postId).forEach( (item : any) => {
+      var likes: any[] = this.posts.posts.likes;
+      var isLiked = likes.filter(x => x.userId == this.userId && x.postId == postId);
+    if(isLiked.length != 0){
+      this.isLiked = false;
+      this.likesLength = this.posts.posts.likes.length - 1;
+      this.posts.posts.isPostLikedByCurrentUser = false;
+    }
+    else{
+      this.isLiked = true;
+      this.likesLength = this.posts.posts.likes.length + 1;
+      this.posts.posts.isPostLikedByCurrentUser = true;
+  
+    }
+
+    
+   
     this.likeUnlikePost.postId = postId;
     this.likeUnlikePost.isLike = isLike;
     this.likeUnlikePost.commentId = '00000000-0000-0000-0000-000000000000'
     this._postService.likeUnlikePost(this.likeUnlikePost).subscribe((response) => {
-       debugger
+      this.posts.posts.likes = response;
+       this.InitializeLikeUnlikePost();
        console.log("succes");
     });
-
-
+  
+  
   }
 }

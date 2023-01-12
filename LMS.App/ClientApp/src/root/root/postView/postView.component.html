@@ -22,13 +22,15 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
       
   <!-- <section class="f-poppins">
     <div>
-      <div class="live-content" id="reel_content">
+      <div class="live-content p-0 border-0" id="reel_content">
         <div class="live-inner w-100">
           <div *ngFor="let postAttachment of posts.posts" class="live-image overflow-hidden position-relative">
-            <video *ngIf="postAttachment.fileType==2" width="100%" height="700" controls>
+            <video *ngIf="postAttachment.fileType==2" width="100%" height="300" controls>
                 <source [src]="postAttachment.fileUrl" type="video/mp4"/>
             </video>
+            <div class="postview-image">
               <img *ngIf="postAttachment.fileType==1" class="w-100" [src]="postAttachment.fileUrl" />
+            </div>
              <div class="live-bottom-text p-3">
               <h5 class="font_14 mb-0 fw_600 text_sec1">{{postAttachment.post.title}} 
             </h5>
@@ -120,23 +122,73 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
   <section class="f-poppins">
     <div>
       <div class="live-header d-flex align-items-center justify-content-between">
-        <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
-            src="../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
+        <!-- <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
+            src="../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button> -->
         <h1 class="font_22 text_dark fw-bold text-center mb-md-0">{{'LiveStream'| translate }}</h1>
-        <button type="button" class="back-button bg-transparent border-0 "><img src="../../../assets/images/cross.svg" /></button>
+        <button (click)="showComments()" type="button" id="live-chat" class="live_chats">
+          <img class="chat-gray-icon " src="../../../assets/images/chat-gray-icon.svg" />
+          <img *ngIf="showCommentsField" src="../../../assets/images/cross.svg" class="live-chat-back live-chat-close" />
+           <img *ngIf="!showCommentsField" src="../../../assets/images/chevron-right-light.svg" class="live-chat-back " />
+        </button>
+        <!-- <button type="button" class="back-button bg-transparent border-0 "><img src="../../../assets/images/cross.svg" /></button> -->
       </div>
       <div [ngClass]="showCommentsField? 'live-content' : 'live-content full-widthreel'"  class="live-content" id="reel_content">
         <div class="live-inner w-100">
 
-          <div *ngFor="let postAttachment of posts.posts" class="live-image overflow-hidden position-relative">
+          <carousel>
+            <div *ngFor="let postAttachment of posts.posts.postAttachments" class="live-image overflow-hidden position-relative">
+              <slide *ngIf="postAttachment.fileType==2">
+                <video *ngIf="postAttachment.fileType==2" width="100%" height="700" controls>
+                  <source [src]="postAttachment.fileUrl" type="video/mp4"/>
+                </video>
+                <div class="live-bottom-text p-3">
+                  <h5 class="font_14 mb-0 fw_600 text_sec1">{{postAttachment.post.title}} 
+                    <!-- <span class="font_14 fw_400  ms-3">Lecture One - Introduction and basics in Python</span> -->
+                  </h5>
+                </div>
+                <div class="reel-username font_16 white_text">
+                    <div *ngIf="postAttachment.post.school != null">
+                      <img [src]="postAttachment.post.school.avatar" class="me-2"/> {{postAttachment.post.school.schoolName}}
+                    </div>
+                    <div *ngIf="postAttachment.post.class != null">
+                        <img [src]="postAttachment.post.class.avatar" class="me-2"/> {{postAttachment.post.class.className}}
+                    </div>
+                </div>
+              </slide>
+              <slide *ngIf="postAttachment.fileType==1">
+               <img *ngIf="postAttachment.fileType==1" class="w-100" [src]="postAttachment.fileUrl" />
+                <div class="live-bottom-text p-3">
+              <h5 class="font_14 mb-0 fw_600 text_sec1">{{postAttachment.post.title}} 
+                <!-- <span class="font_14 fw_400  ms-3">Lecture One - Introduction and basics in Python</span> -->
+              </h5>
+            </div>
+            <div class="reel-username font_16 white_text">
+                <div *ngIf="postAttachment.post.school != null">
+                  <img [src]="postAttachment.post.school.avatar" class="me-2"/> {{postAttachment.post.school.schoolName}}
+                </div>
+                <div *ngIf="postAttachment.post.class != null">
+                    <img [src]="postAttachment.post.class.avatar" class="me-2"/> {{postAttachment.post.class.className}}
+                </div>
+            </div>
+          </slide>
+
+            </div>
+           
+        </carousel>
+
+
+        <!-- <carousel>
+          <div *ngFor="let postAttachment of posts.posts.postAttachments" class="live-image overflow-hidden position-relative">
+            <slide>
             <video *ngIf="postAttachment.fileType==2" width="100%" height="700" controls>
               <source [src]="postAttachment.fileUrl" type="video/mp4"/>
           </video>
+          </slide>
+          <slide>
             <img *ngIf="postAttachment.fileType==1" class="w-100" [src]="postAttachment.fileUrl" />
-            <!-- <iframe width="100%" height="700" [src]="reels.fileName" title="Reels video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> -->
+          </slide>
             <div class="live-bottom-text p-3">
               <h5 class="font_14 mb-0 fw_600 text_sec1">{{postAttachment.post.title}} 
-                <!-- <span class="font_14 fw_400  ms-3">Lecture One - Introduction and basics in Python</span> -->
               </h5>
             </div>
             <button (click)="showComments()" type="button" id="live-chat" class="live_chats">
@@ -154,6 +206,7 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
             </div>
        
       </div>
+    </carousel> -->
          
     </div>
 
@@ -165,10 +218,13 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
             class="d-block" /> 34</button>
         <button type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/eye.svg"
             class="d-block" /> 954</button>
-        <button (click)="likeUnlikePosts(this.posts.posts[0].post.id,true)" type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Heart-dark.svg"
-            class="d-block" /> 82</button>
-            <button (click)="likeUnlikePosts(this.posts.posts[0].post.id,false)" type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Heart-light.svg"
-              class="d-block" /> 82</button>
+            <button (click)="likeUnlikePosts(posts.posts.id,true)" type="button" class="btn bg-transparent text_ltgray font_12">
+              <img *ngIf="posts.posts.isPostLikedByCurrentUser" src="../../../assets/images/heart-red.svg" class="d-block" />
+              <img *ngIf="!posts.posts.isPostLikedByCurrentUser" src="../../../assets/images/Heart-dark.svg" class="d-block" />
+
+              <span *ngIf="likesLength != undefined && currentLikedPostId== posts.posts.id">{{likesLength}}</span>
+              <span *ngIf="currentLikedPostId!= posts.posts.id">{{posts.posts.likes.length}}</span>
+            </button>
         <button type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Bookmark.svg"
             class="d-block" /> 34</button>
         <button type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Upload.svg"
@@ -239,9 +295,7 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
     </div>
   </section>
 
-  
-          
-      <hr class="mb-0 sepearator mx-0 mt-3 opacity-100" />
+
     </div>
   </div>
 </div>

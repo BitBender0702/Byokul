@@ -23,6 +23,9 @@ namespace LMS.DataAccess.Automapper
             CreateMap<Discipline, DisciplineViewModel>();
             CreateMap<User, RegisteredUsersViewModel>();
             CreateMap<PostTag, PostTagViewModel>();
+            CreateMap<Like, LikeViewModel>();
+            CreateMap<View, ViewsViewModel>();
+            CreateMap<Comment, CommentViewModel>();
 
         }
     }

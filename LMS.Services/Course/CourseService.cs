@@ -38,9 +38,10 @@ namespace LMS.Services
         private readonly UserManager<User> _userManager;
         private readonly IBlobService _blobService;
         private readonly IClassService _classService;
+        private readonly IUserService _userService;
 
 
-        public CourseService(IMapper mapper, IGenericRepository<Course> courseRepository, IGenericRepository<CourseLanguage> courseLanguageRepository, IGenericRepository<CourseDiscipline> courseDisciplineRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<CourseTeacher> courseTeacherRepository, IGenericRepository<Post> postRepository, IGenericRepository<Class> classRepository,IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<CourseCertificate> courseCertificateRepository, IGenericRepository<CourseTag> courseTagRepository, UserManager<User> userManager, IBlobService blobService, IClassService classService)
+        public CourseService(IMapper mapper, IGenericRepository<Course> courseRepository, IGenericRepository<CourseLanguage> courseLanguageRepository, IGenericRepository<CourseDiscipline> courseDisciplineRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<CourseTeacher> courseTeacherRepository, IGenericRepository<Post> postRepository, IGenericRepository<Class> classRepository,IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<CourseCertificate> courseCertificateRepository, IGenericRepository<CourseTag> courseTagRepository, UserManager<User> userManager, IBlobService blobService, IClassService classService, IUserService userService)
         {
             _mapper = mapper;
             _courseRepository = courseRepository;
@@ -57,6 +58,7 @@ namespace LMS.Services
             _userManager = userManager;
             _blobService = blobService;
             _classService = classService;
+            _userService = userService;
         }
 
         public async Task<Guid> SaveNewCourse(CourseViewModel courseViewModel, string createdById)
@@ -299,7 +301,7 @@ namespace LMS.Services
             await SaveCourseTeachers(teacherIds, courseId);
         }
 
-        public async Task<CourseDetailsViewModel> GetCourseById(Guid courseId)
+        public async Task<CourseDetailsViewModel> GetCourseById(Guid courseId,string loginUserid)
         {
             CourseDetailsViewModel model = new CourseDetailsViewModel();
 
@@ -317,7 +319,8 @@ namespace LMS.Services
 
                 if (course == null)
                 {
-                    var classDetails = await _classService.GetClassById(courseId);
+                    
+                    var classDetails = await _classService.GetClassById(courseId, loginUserid);
 
                     var courses = new CourseDetailsViewModel();
                     courses.CourseId = classDetails.ClassId;
@@ -351,7 +354,7 @@ namespace LMS.Services
                 model.Disciplines = await GetDisciplines(course.CourseId);
                 model.Students = await GetStudents(course.CourseId);
                 model.Teachers = await GetTeachers(course.CourseId);
-                model.Posts = await GetPostsByCourseId(course.CourseId);
+                model.Posts = await GetPostsByCourseId(course.CourseId, loginUserid);
                 model.CourseCertificates = await GetCertificateByCourseId(course.CourseId);
 
 
@@ -433,15 +436,24 @@ namespace LMS.Services
             return model;
         }
 
-        public async Task<IEnumerable<PostDetailsViewModel>> GetPostsByCourseId(Guid courseId)
+        public async Task<IEnumerable<PostDetailsViewModel>> GetPostsByCourseId(Guid courseId,string loginUserId)
         {
             var courseList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == courseId).OrderByDescending(x => x.IsPinned).ToListAsync();
             var result = _mapper.Map<List<PostDetailsViewModel>>(courseList);
 
             foreach (var post in result)
             {
-                var attachment = await GetAttachmentsByPostId(post.Id);
-                post.PostAttachments = attachment;
+                post.PostAttachments = await GetAttachmentsByPostId(post.Id);
+                post.Likes = await _userService.GetLikesOnPost(post.Id);
+                post.Views = await _userService.GetViewsOnPost(post.Id);
+                if (post.Likes.Any(x => x.UserId == loginUserId && x.PostId == post.Id))
+                {
+                    post.IsPostLikedByCurrentUser = true;
+                }
+                else
+                {
+                    post.IsPostLikedByCurrentUser = false;
+                }
             }
 
             foreach (var post in result)

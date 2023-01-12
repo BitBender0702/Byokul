@@ -395,7 +395,6 @@ export class CreatePostComponent implements OnInit {
 
 
    removeTags(tag:any){
-    debugger
     const tagIndex = this.tagLists.findIndex((item) => item ===tag);
     if (tagIndex > -1) {
       this.tagLists.splice(tagIndex, 1);
@@ -403,7 +402,6 @@ export class CreatePostComponent implements OnInit {
    }
 
    removeInitialTags(tag:any){
-    debugger
     const tagIndex = this.initialTagList.findIndex((item) => item ===tag);
     if (tagIndex > -1) {
       this.initialTagList.splice(tagIndex, 1);

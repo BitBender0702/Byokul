@@ -88,8 +88,7 @@
         <span class="custom-tag d-inline-flex align-items-center"><span class="vr-border"></span>{{school.country.name}}</span>
       </div>
       <hr class="hr-gray" />
-      <div class="school-profile-tabs d-flex align-content-center justify-content-between">
-        <div></div>
+      <div class="school-profile-tabs d-flex align-content-center justify-content-center">
         <div class="custom-tabs">
           <ul class="nav nav-tabs mb-3 border-0 before-none" id="myTab" role="tablist">
             <li class="nav-item ps-0 mb-0" role="presentation">
@@ -104,10 +103,10 @@
             </li>
           </ul>
         </div>
-        <div>
+        <div class="filter-main d-flex">
           <div class="btn-filter1 align-items-center">
-          <button *ngIf="isOwner" [routerLink]="['/user/createClass', school.schoolId]" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 me-4">Create Class</button>
-          <button *ngIf="isOwner" [routerLink]="['/user/createCourse', school.schoolId]" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 me-4">Create Course</button>
+          <button *ngIf="isOwner" [routerLink]="['/user/createClass', school.schoolId]" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 me-2">Create Class</button>
+          <button *ngIf="isOwner" [routerLink]="['/user/createCourse', school.schoolId]" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 me-2">Create Course</button>
 
           <button *ngIf="hideFeedFilters" [ngClass]="isProfileGrid ? 'btn border-btn active d-inline-flex align-items-center justify-content-center' : 'btn border-btn d-inline-flex align-items-center justify-content-center'" (click)="profileGrid()" type="button" >
             <img src="../../../../assets/images/Filter.svg" />
@@ -116,6 +115,7 @@
             <img src="../../../../assets/images/Category.svg" />
           </button>
         </div>
+
           <div *ngIf="!hideFeedFilters" class="btn-filter align-items-center">
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" class="me-2">
               <path fill-rule="evenodd" clip-rule="evenodd" d="M5.19424 13.6654L8.37844 12.1666V8.23893L13.3716 3.17507C13.5597 2.98533 13.6654 2.72492 13.6654 2.45221V1.34373C13.6654 0.78449 13.2265 0.332031 12.685 0.332031H1.31236C0.770872 0.332031 0.332031 0.78449 0.332031 1.34373V2.47756C0.332031 2.7349 0.426494 2.98226 0.596824 3.1697L5.19424 8.23893V13.6654Z" fill="white"/>
@@ -345,7 +345,7 @@
                                 <img src="../../../../assets/images/eye-light.svg" /> 954
                             </button>
                             <button *ngIf="post.isPinned && isOwner" (click)="pinUnpinPost(post.id,false)" type="button" class="pinned bg-transparent border-0">
-                                <img src="../../../../assets/images/pinned-light.svg" />
+                                <img src="../../../../assets/images/pinned-orange.svg" />
                             </button>
                             <button *ngIf="!post.isPinned && isOwner" (click)="pinUnpinPost(post.id,true)" type="button" class="pinned bg-transparent border-0">
                               <img src="../../../../assets/images/pinned-gray.svg" />
@@ -377,11 +377,11 @@
                             <img [src]="school.avatar" />
                         </div>
                         <h2 class="d-inline-block font_20 fw_600 text_sec1 mb-0">{{post.title}}</h2>
-                        <p class="font_14 school-grid-date d-inline-block mb-0">
+                        <p *ngIf="post.dateTime != null" class="font_14 school-grid-date d-inline-block mb-0">
                             {{post.dateTime | date : "MMMM d"}} - {{post.dateTime | date : "hh mm"}}
                         </p>
                         <button *ngIf="post.isPinned && isOwner" (click)="pinUnpinPost(post.id,false)" type="button" class="bg-transparent border-0 pinned-grid-chat">
-                          <img class="w-auto h-auto" src="../../../../assets/images/pinned-light.svg" />
+                          <img class="w-auto h-auto" src="../../../../assets/images/pinned-orange.svg" />
                         </button>
                         <button *ngIf="!post.isPinned && isOwner" (click)="pinUnpinPost(post.id,true)" type="button" class="bg-transparent border-0 pinned-grid-chat">
                          <img class="w-auto h-auto" src="../../../../assets/images/pinned-gray.svg" />
@@ -394,92 +394,92 @@
                         <div class="teacher-tags tag-box hashtag_box">
                             <span *ngFor="let tag of post.postTags" class="custom-tag">#{{tag.postTagValue}}</span>
                         </div>
-                        <div class="school-grid-thumbnail new-school-grid-thumbnail">
-                            <div class="row gx-1 h-100">
+                        <div *ngIf="post.postAttachments.length" class="school-grid-thumbnail new-school-grid-thumbnail">
+                            <div  class="row gx-1 h-100">
                               
                                 <div *ngIf="post.postAttachments.length == 1"  class="col-md-12 h-100">
                                     <div class="school-large-thumbnail shadow-thumnail position-relative">
-                                       <video *ngIf="post.postAttachments.length == 1 && post.postAttachments[0]?.fileType==2" (click)="openPostsViewModal(post.postAttachments)" preload="metadata" class="w-100" style="cursor: pointer;">
+                                       <video *ngIf="post.postAttachments.length == 1 && post.postAttachments[0]?.fileType==2" (click)="openPostsViewModal(post)" preload="metadata" class="w-100" style="cursor: pointer;">
                                           <source [src]="post.postAttachments[0]?.fileUrl" type="video/mp4"/>
                                         </video>
-                                        <img *ngIf="post.postAttachments[0]?.fileType==1" (click)="openPostsViewModal(post.postAttachments)" class="w-100" [src]="post.postAttachments[0]?.fileUrl" />
+                                        <img *ngIf="post.postAttachments[0]?.fileType==1" (click)="openPostsViewModal(post)" class="w-100" [src]="post.postAttachments[0]?.fileUrl" />
                                     </div>
                                 </div>
 
                                 <div *ngIf="post.postAttachments.length == 2"  class="col-md-12 h-100">
                                   <div class="school-large-thumbnail shadow-thumnail position-relative">
                                     <ng-container *ngFor="let attachment of post.postAttachments">
-                                     <video *ngIf="attachment?.fileType==2" (click)="openPostsViewModal(post.postAttachments)" preload="metadata" class="w-100" style="cursor: pointer;">
+                                     <video *ngIf="attachment?.fileType==2" (click)="openPostsViewModal(post)" preload="metadata" class="w-100" style="cursor: pointer;">
                                       <source [src]="attachment?.fileUrl" type="video/mp4"/>
                                      </video>
-                                      <img style="height: 598px;" *ngIf="attachment?.fileType==1" (click)="openPostsViewModal(post.postAttachments)" class="w-100" [src]="attachment?.fileUrl" />
+                                      <img style="height: 598px;" *ngIf="attachment?.fileType==1" (click)="openPostsViewModal(post)" class="w-100" [src]="attachment?.fileUrl" />
                                     </ng-container>
                                   </div>
                                 </div>
 
                                 <div *ngIf="post.postAttachments.length == 3" class="col-md-8 h-100">
                                   <div class="school-large-thumbnail shadow-thumnail position-relative">
-                                        <video *ngIf="post.postAttachments[0]?.fileType==2" (click)="openPostsViewModal(post.postAttachments)" preload="metadata" class="w-100" style="cursor: pointer;margin-top:-700px;">
+                                        <video *ngIf="post.postAttachments[0]?.fileType==2" (click)="openPostsViewModal(post)" preload="metadata" class="w-100" style="cursor: pointer;margin-top:-700px;">
                                           <source [src]="post.postAttachments[0]?.fileUrl" type="video/mp4"/>
                                         </video>
-                                        <img *ngIf="post.postAttachments[0]?.fileType==1" class="w-100" (click)="openPostsViewModal(post.postAttachments)" [src]="post.postAttachments[0]?.fileUrl" />
+                                        <img *ngIf="post.postAttachments[0]?.fileType==1" class="w-100" (click)="openPostsViewModal(post)" [src]="post.postAttachments[0]?.fileUrl" />
                                   </div>
                                </div>
 
                                 <div *ngIf="post.postAttachments.length == 3" class="col-md-4 h-100">
                                     <div class="h-100 medium_thumbox d-flex">
                                         <div class="medium-thumnail">
-                                          <video *ngIf="post.postAttachments[1]?.fileType==2" (click)="openPostsViewModal(post.postAttachments)" preload="metadata" class="w-100" style="cursor: pointer;">
+                                          <video *ngIf="post.postAttachments[1]?.fileType==2" (click)="openPostsViewModal(post)" preload="metadata" class="w-100" style="cursor: pointer;">
                                             <source [src]="post.postAttachments[1]?.fileUrl" type="video/mp4"/>
                                           </video>
-                                            <img *ngIf="post.postAttachments[1]?.fileType==1" class="w-100" (click)="openPostsViewModal(post.postAttachments)" [src]="post.postAttachments[1]?.fileUrl" style="cursor: pointer;" />                                        </div>
+                                            <img *ngIf="post.postAttachments[1]?.fileType==1" class="w-100" (click)="openPostsViewModal(post)" [src]="post.postAttachments[1]?.fileUrl" style="cursor: pointer;" />                                        </div>
                                         <div class="medium-thumnail">
-                                          <video *ngIf="post.postAttachments[2]?.fileType==2" (click)="openPostsViewModal(post.postAttachments)" preload="metadata" class="w-100" style="cursor: pointer;">
+                                          <video *ngIf="post.postAttachments[2]?.fileType==2" (click)="openPostsViewModal(post)" preload="metadata" class="w-100" style="cursor: pointer;">
                                             <source [src]="post.postAttachments[2]?.fileUrl" type="video/mp4"/>
                                           </video>
-                                            <img *ngIf="post.postAttachments[2]?.fileType==1" class="w-100" (click)="openPostsViewModal(post.postAttachments)" [src]="post.postAttachments[2]?.fileUrl" style="cursor: pointer;"/>                                        </div>
+                                            <img *ngIf="post.postAttachments[2]?.fileType==1" class="w-100" (click)="openPostsViewModal(post)" [src]="post.postAttachments[2]?.fileUrl" style="cursor: pointer;"/>                                        </div>
                                     </div>
                                 </div>
 
                                 <div *ngIf="post.postAttachments.length > 3" class="col-md-8 h-100">
                                   <div class="school-large-thumbnail shadow-thumnail position-relative">
-                                          <video *ngIf="post.postAttachments[0]?.fileType==2" (click)="openPostsViewModal(post.postAttachments)" preload="metadata" class="w-100" style="cursor: pointer;">
+                                          <video *ngIf="post.postAttachments[0]?.fileType==2" (click)="openPostsViewModal(post)" preload="metadata" class="w-100" style="cursor: pointer;">
                                             <source [src]="post.postAttachments[0]?.fileUrl" type="video/mp4"/>
                                           </video>
-                                          <img *ngIf="post.postAttachments[0]?.fileType==1" class="w-100" (click)="openPostsViewModal(post.postAttachments)" [src]="post.postAttachments[0]?.fileUrl" />
+                                          <img *ngIf="post.postAttachments[0]?.fileType==1" class="w-100" (click)="openPostsViewModal(post)" [src]="post.postAttachments[0]?.fileUrl" />
                                   </div>
                                </div>
 
                                <div *ngIf="post.postAttachments.length > 3" class="col-md-4 h-100">
                                 <div class="h-100 medium_thumbox d-flex">
                                     <div class="medium-thumnail">
-                                        <img class="w-100 position-relative" (click)="openPostsViewModal(post.postAttachments)" src="../../../../assets/images/blurImage.jfif" style="cursor: pointer;" />   
+                                        <img class="w-100 position-relative" (click)="openPostsViewModal(post)" src="../../../../assets/images/blurImage.jfif" style="cursor: pointer;" />   
                                         <div class="position-absolute" style="margin-top: 55px;margin-left: 200px;font-size: 52px;font-weight: 600;">
                                           +{{post.postAttachments.length - 3}}</div>                                    
                                        </div>
                                     <div class="medium-thumnail">
-                                      <video *ngIf="post.postAttachments[1]?.fileType==2" (click)="openPostsViewModal(post.postAttachments)" preload="metadata" class="w-100" style="cursor: pointer;">
+                                      <video *ngIf="post.postAttachments[1]?.fileType==2" (click)="openPostsViewModal(post)" preload="metadata" class="w-100" style="cursor: pointer;">
                                         <source [src]="post.postAttachments[1]?.fileUrl" type="video/mp4"/>
                                       </video>
-                                      <img *ngIf="post.postAttachments[1]?.fileType==1" class="w-100" (click)="openPostsViewModal(post.postAttachments)" [src]="post.postAttachments[2]?.fileUrl" style="cursor: pointer;"/>                                        </div>
+                                      <img *ngIf="post.postAttachments[1]?.fileType==1" class="w-100" (click)="openPostsViewModal(post)" [src]="post.postAttachments[2]?.fileUrl" style="cursor: pointer;"/>                                        </div>
                                 </div>
                             </div>
                             </div>
                         </div>
                     </div>
-                    <div class="school-grid-footer above-thumbnail">
+                    <div *ngIf="post.postAttachments.length" class="school-grid-footer above-thumbnail">
                         <button type="button" class="bg-transparent border-0 function-btns text-light">
                             <img src="../../../../assets/images/eye-light.svg" class="d-block mx-auto" />
                             954
                         </button>
-                        <button type="button" class="bg-transparent border-0 function-btns text-light">
-                            <img src="../../../../assets/images/Heart-light.svg" class="d-block mx-auto" />
-                            82
+                        <button (click)="likeUnlikePosts(post.id,true)" type="button" class="bg-transparent border-0 function-btns text-light">
+                          <img *ngIf="post.isPostLikedByCurrentUser" src="../../../assets/images/heart-red.svg" class="d-block mx-auto" />
+                          <img *ngIf="!post.isPostLikedByCurrentUser" src="../../../../assets/images/Heart-light.svg" class="d-block mx-auto" />
+        
+                          <span *ngIf="likesLength != undefined && currentLikedPostId== post.id">{{likesLength}}</span>
+                          <span *ngIf="currentLikedPostId!= post.id">{{post.likes.length}}</span>
                         </button>
-                        <button type="button" class="bg-transparent border-0 function-btns text-light">
-                            <img src="../../../../assets/images/Chat-light.svg" class="d-block mx-auto" />
-                            34
-                        </button>
+                       
                         <button type="button" class="bg-transparent border-0 function-btns text-light">
                             <img src="../../../../assets/images/Bookmark-light.svg" class="d-block mx-auto" />
                             954
@@ -488,6 +488,32 @@
                             <img src="../../../../assets/images/Upload-light.svg" class="d-block mx-auto" />
                             954
                         </button>
+                    </div>
+
+                    <div *ngIf="post.postAttachments.length == 0" class="school-grid-footer above-thumbnail">
+                      <button type="button" class="bg-transparent border-0 function-btns text-light">
+                        <img src="../../../../assets/images/eye.svg" class="d-block mx-auto" />
+                        <span class="textBlack">{{post.views.length}}</span>
+                      </button>
+                      <button (click)="likeUnlikePosts(post.id,true)" type="button" class="bg-transparent border-0 function-btns text-light">
+                        <img *ngIf="post.isPostLikedByCurrentUser" src="../../../assets/images/heart-red.svg" class="d-block mx-auto" />
+                        <img *ngIf="!post.isPostLikedByCurrentUser" src="../../../../assets/images/Heart-dark.svg" class="d-block mx-auto" />
+      
+                        <span class="textBlack" *ngIf="likesLength != undefined && currentLikedPostId== post.id">{{likesLength}}</span>
+                        <span class="textBlack" *ngIf="currentLikedPostId!= post.id">{{post.likes.length}}</span>
+                      </button>
+                      <button type="button" class="bg-transparent border-0 function-btns text-light">
+                        <img src="../../../../assets/images/Chat-dark.svg" class="d-block mx-auto" />
+                        <span class="textBlack">34</span>
+                      </button>
+                      <button type="button" class="bg-transparent border-0 function-btns text-light">
+                        <img src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto" />
+                        <span class="textBlack">954</span>
+                      </button>
+                      <button type="button" class="bg-transparent border-0 function-btns text-light">
+                        <img src="../../../../assets/images/Upload-dark.svg" class="d-block mx-auto" />
+                        <span class="textBlack">954</span>
+                      </button>
                     </div>
                 </div>
               </ng-container>
@@ -513,7 +539,7 @@
                                 </div>
                                 <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">{{post.title}}</h2>
                                 <button *ngIf="post.isPinned && isOwner" (click)="pinUnpinPost(post.id,false)" type="button" class="bg-transparent border-0 pinned-grid-chat">
-                                  <img src="../../../../assets/images/pinned-light.svg" />
+                                  <img src="../../../../assets/images/pinned-orange.svg" />
                               </button>
                               <button *ngIf="!post.isPinned && isOwner" (click)="pinUnpinPost(post.id,true)" type="button" class="bg-transparent border-0 pinned-grid-chat">
                                 <img src="../../../../assets/images/pinned-gray.svg" />
@@ -739,7 +765,7 @@
                         </div>
                         <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">{{item.name}}</h2>
                             <button *ngIf="item.isPinned && isOwner" (click)="pinUnpinClassCourse(item.id,item.type,false)" type="button" class="bg-transparent border-0 pinned-grid-chat">
-                              <img class="w-auto h-auto" src="../../../../assets/images/pinned-light.svg" />
+                              <img class="w-auto h-auto" src="../../../../assets/images/pinned-orange.svg" />
                             </button>
                             <button *ngIf="!item.isPinned && isOwner" (click)="pinUnpinClassCourse(item.id,item.type,true)" type="button" class="bg-transparent border-0 pinned-grid-chat">
                              <img class="w-auto h-auto" src="../../../../assets/images/pinned-gray.svg" />

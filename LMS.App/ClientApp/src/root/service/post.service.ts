@@ -49,12 +49,10 @@ export class PostService{
     }
 
     likeUnlikePost(likeUnlikePost:any):Observable<any>{
-        debugger
         return this.http.post(`${this.apiUrl}/posts/likeUnlikePost`, likeUnlikePost);
     }
 
     postView(postView:any):Observable<any>{
-        debugger
         return this.http.post(`${this.apiUrl}/posts/postView`, postView);
 
     }

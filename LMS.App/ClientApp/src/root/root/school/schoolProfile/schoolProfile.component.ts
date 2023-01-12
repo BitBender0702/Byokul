@@ -22,6 +22,7 @@ import { FollowUnfollow } from 'src/root/interfaces/FollowUnfollow';
 import { FollowUnFollowEnum } from 'src/root/Enums/FollowUnFollowEnum';
 import { PostService } from 'src/root/service/post.service';
 import { PostViewComponent } from '../../postView/postView.component';
+import { LikeUnlikePost } from 'src/root/interfaces/post/likeUnlikePost';
 
 // import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -83,6 +84,11 @@ export class SchoolProfileComponent extends MultilingualComponent implements OnI
     isFollowed!:boolean;
     followersLength!:number;
     classCourseList:any;
+    likesLength!:number;
+    isLiked!:boolean;
+    likeUnlikePost!: LikeUnlikePost;
+    userId!:string;
+    currentLikedPostId!:string;
     @ViewChild('closeEditModal') closeEditModal!: ElementRef;
     @ViewChild('closeTeacherModal') closeTeacherModal!: ElementRef;
     @ViewChild('closeLanguageModal') closeLanguageModal!: ElementRef;
@@ -202,6 +208,8 @@ export class SchoolProfileComponent extends MultilingualComponent implements OnI
         certificateId:''
        }
 
+       this.InitializeLikeUnlikePost();
+
       
         this.followUnfollowSchool = {
           id: '',
@@ -211,12 +219,23 @@ export class SchoolProfileComponent extends MultilingualComponent implements OnI
          this.GetSchoolClassCourseList(this.school.schoolId);
     }
 
+    InitializeLikeUnlikePost(){
+      this.likeUnlikePost = {
+        postId: '',
+        userId: '',
+        isLike:false,
+        commentId:''
+       };
+
+    }
+
     isOwnerOrNot(){
       var validToken = localStorage.getItem("jwt");
         if (validToken != null) {
           let jwtData = validToken.split('.')[1]
           let decodedJwtJsonData = window.atob(jwtData)
           let decodedJwtData = JSON.parse(decodedJwtJsonData);
+          this.userId = decodedJwtData.jti;
           if(decodedJwtData.sub == this.school.createdBy){
             this.isOwner = true;
           }
@@ -641,7 +660,6 @@ schoolChat(){
 }
 
 getDeletedId(id:string,type:any){
-  debugger
   if(type == 1){
     this._schoolService.deleteClass(id).subscribe((response) => {
       this.ngOnInit();
@@ -658,6 +676,49 @@ getDeletedId(id:string,type:any){
 }
 
 deleteClassCourse(){
+
+}
+
+likeUnlikePosts(postId:string, isLike:boolean){
+  this.currentLikedPostId = postId;
+  this.school.posts.filter((p : any) => p.id == postId).forEach( (item : any) => {
+
+    // here item.likes is null
+    var likes: any[] = item.likes;
+
+    var isLiked = likes.filter(x => x.userId == this.userId && x.postId == postId);
+    if(isLiked.length != 0){
+      this.isLiked = false;
+      this.likesLength = item.likes.length - 1;
+      item.isPostLikedByCurrentUser = false;
+    }
+    else{
+      this.isLiked = true;
+      this.likesLength = item.likes.length + 1;
+      item.isPostLikedByCurrentUser = true;
+  
+    }
+  }); 
+  
+ 
+  this.likeUnlikePost.postId = postId;
+  this.likeUnlikePost.isLike = isLike;
+  this.likeUnlikePost.commentId = '00000000-0000-0000-0000-000000000000'
+  this._postService.likeUnlikePost(this.likeUnlikePost).subscribe((response) => {
+
+
+     this.school.posts.filter((p : any) => p.id == postId).forEach( (item : any) => {
+      var itemss = item.likes;
+      item.likes = response;
+    }); 
+
+
+
+
+     this.InitializeLikeUnlikePost();
+     console.log("succes");
+  });
+
 
 }
 }

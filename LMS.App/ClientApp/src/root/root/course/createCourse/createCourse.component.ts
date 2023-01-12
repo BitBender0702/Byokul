@@ -384,7 +384,6 @@ captureTeacherId(event: any) {
   }
 
   onEnter(event:any) {
-    debugger
     if(event.target.value.indexOf('#') > -1){
       this.tagList.push(event.target.value);
     }
@@ -397,7 +396,6 @@ captureTeacherId(event: any) {
   }
 
     removeTag(tag:any){
-    debugger
     const tagIndex = this.tagList.findIndex((item) => item ===tag);
     if (tagIndex > -1) {
       this.tagList.splice(tagIndex, 1);

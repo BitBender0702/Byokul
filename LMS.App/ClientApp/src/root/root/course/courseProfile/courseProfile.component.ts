@@ -10,6 +10,7 @@ import { AddCourseTeacher } from 'src/root/interfaces/course/addCourseTeacher';
 import { DeleteCourseCertificate } from 'src/root/interfaces/course/deleteCourseCertificate';
 import { DeleteCourseLanguage } from 'src/root/interfaces/course/deleteCourseLanguage';
 import { DeleteCourseTeacher } from 'src/root/interfaces/course/deleteCourseTeacher';
+import { LikeUnlikePost } from 'src/root/interfaces/post/likeUnlikePost';
 import { CourseService } from 'src/root/service/course.service';
 import { PostService } from 'src/root/service/post.service';
 import { CreatePostComponent } from '../../createPost/createPost.component';
@@ -58,6 +59,11 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     isCoursePaid!:boolean;
     disabled:boolean = true;
     validToken!:string;
+    currentLikedPostId!:string;
+    userId!:string;
+    likesLength!:number;
+    isLiked!:boolean;
+    likeUnlikePost!: LikeUnlikePost;
 
     @ViewChild('closeEditModal') closeEditModal!: ElementRef;
     @ViewChild('closeTeacherModal') closeTeacherModal!: ElementRef;
@@ -172,6 +178,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
         courseId:'',
         certificates:[]
        }
+       this.InitializeLikeUnlikePost();
 
 //     }
 
@@ -184,12 +191,23 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
 //   }
     }
 
+    InitializeLikeUnlikePost(){
+      this.likeUnlikePost = {
+        postId: '',
+        userId: '',
+        isLike:false,
+        commentId:''
+       };
+
+    }
+
   isOwnerOrNot(){
     var validToken = localStorage.getItem("jwt");
       if (validToken != null) {
         let jwtData = validToken.split('.')[1]
         let decodedJwtJsonData = window.atob(jwtData)
         let decodedJwtData = JSON.parse(decodedJwtJsonData);
+        this.userId = decodedJwtData.jti;
         if(decodedJwtData.sub == this.course.createdBy){
           this.isOwner = true;
         }
@@ -552,6 +570,46 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       if(this.validToken == ''){
         window.open('user/auth/login', '_blank');
       }
+    }
+
+    likeUnlikePosts(postId:string, isLike:boolean){
+      this.currentLikedPostId = postId;
+      this.course.posts.filter((p : any) => p.id == postId).forEach( (item : any) => {
+        var likes: any[] = item.likes;
+        var isLiked = likes.filter(x => x.userId == this.userId && x.postId == postId);
+      if(isLiked.length != 0){
+        this.isLiked = false;
+        this.likesLength = item.likes.length - 1;
+        item.isPostLikedByCurrentUser = false;
+      }
+      else{
+        this.isLiked = true;
+        this.likesLength = item.likes.length + 1;
+        item.isPostLikedByCurrentUser = true;
+    
+      }
+      }); 
+      
+     
+      this.likeUnlikePost.postId = postId;
+      this.likeUnlikePost.isLike = isLike;
+      this.likeUnlikePost.commentId = '00000000-0000-0000-0000-000000000000'
+      this._postService.likeUnlikePost(this.likeUnlikePost).subscribe((response) => {
+    
+    
+         this.course.posts.filter((p : any) => p.id == postId).forEach( (item : any) => {
+          var itemss = item.likes;
+          item.likes = response;
+        }); 
+    
+    
+    
+    
+         this.InitializeLikeUnlikePost();
+         console.log("succes");
+      });
+    
+    
     }
   
 }

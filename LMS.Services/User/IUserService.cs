@@ -22,6 +22,8 @@ namespace LMS.Services
         Task<bool> BanFollower(string followerId);
         Task<IEnumerable<GlobalFeedViewModel>> GetGlobalFeed(string userId);
         Task<Guid> SaveUserPreference(string userId,string preferenceString);
+        Task<List<LikeViewModel>> GetLikesOnPost(Guid postId);
+        Task<List<ViewsViewModel>> GetViewsOnPost(Guid postId);
 
     }
 }

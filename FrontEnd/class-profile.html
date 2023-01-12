@@ -300,7 +300,7 @@
       <div class="create-post-header d-flex justify-content-between d-none d-xl-flex">
         <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
             src="images/arrow-left.svg" /> Back</button>
-        <button type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44">Buy for $100</button>
+        <button type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44" data-bs-toggle="modal" data-bs-target="#checkput-popup">Buy for $100</button>
       </div>
       <div class="live-header d-flex align-items-center justify-content-between">
         <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark  d-xl-none"><img
@@ -1434,6 +1434,90 @@
           <button type="button"
             class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step">Save</button>
 
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- Modal -->
+  <div class="modal fade edit-school-modal maxw-600" id="checkput-popup" tabindex="-1" aria-labelledby="checkput-popup"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header border-0 justify-content-center position-relative">
+          <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center" id="checkput-popup">Buy Class</h1>
+          <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"><img
+              src="images/cross.svg" /></button>
+        </div>
+        <div class="modal-body">
+          <div class="edit-profile-header text-center mb-4">
+            <div class="rounded-circle modal-school-icon text-center mb-2 wh_150 overflow-hidden">
+              <img src="images/class-course.jpg">
+            </div>
+            <h3 class="font_20 fw_700 text_dark text-center">Class Name</h3>
+          </div>
+          <div class="text-line-border position-relative text-center mb-2">
+            <span class="line-text font_12 text_ltgray fw_400 text-center">Payment Information</span>
+          </div>
+          <form class="latest-form">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label class="font_10">Payment Method</label>
+                  <select class="form-select rounded-8 w-100 font_14">
+                    <option value="1">Credit / Debit Card</option>
+                    <option value="2">Online Payment</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label class="font_10">Card Number</label>
+                  <input type="text" name="cardnumber" class="form-control w-100" placeholder="XXXX-XXXX-XXXX-XXXX"
+                    required>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="font_10">Expires On</label>
+                  <input type="text" name="expire" class="form-control w-100" placeholder="XX-XX" required>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="font_10">Security Code</label>
+                  <input type="text" value="" name="security-code" placeholder="XXX" class="form-control w-100" required>
+                </div>
+              </div>
+  
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="font_10">First Name</label>
+                  <input type="text" name="cardfname" class="form-control w-100" placeholder="Name" required>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="font_10">Last Name</label>
+                  <input type="text" name="cardlname" class="form-control w-100" placeholder="Name">
+                </div>
+              </div>
+  
+            </div>
+  
+          </form>
+  
+        </div>
+        <div
+          class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4">
+          <button type="button"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+            data-bs-dismiss="modal">Discard Changes</button>
+          <button type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 ">buy for
+            $100</button>
+  
         </div>
       </div>
     </div>

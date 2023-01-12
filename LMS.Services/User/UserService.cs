@@ -36,6 +36,7 @@ namespace LMS.Services
         private IGenericRepository<Teacher> _teacherRepository;
         private IGenericRepository<School> _schoolRepository;
         private IGenericRepository<Class> _classRepository;
+        private IGenericRepository<Course> _courseRepository;
         private IGenericRepository<Post> _postRepository;
         private IGenericRepository<PostTag> _postTagRepository;
         private IGenericRepository<UserPreference> _userPreferenceRepository;
@@ -44,7 +45,7 @@ namespace LMS.Services
         private readonly UserManager<User> _userManager;
         private readonly IBlobService _blobService;
         public UserService(IMapper mapper, IGenericRepository<User> userRepository, IGenericRepository<UserFollower> userFollowerRepository, IGenericRepository<UserLanguage> userLanguageRepository, IGenericRepository<City> cityRepository, IGenericRepository<Country> countryRepository, IGenericRepository<SchoolFollower> schoolFollowerRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<CourseTeacher> courseTeacherRepository,
-          IGenericRepository<SchoolTeacher> schoolteacherRepository, IGenericRepository<Student> studentRepository, IGenericRepository<Teacher> teacherRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<UserPreference> userPreferenceRepository, IGenericRepository<Like> likeRepository, IGenericRepository<View> viewRepository, UserManager<User> userManager, IBlobService blobService)
+          IGenericRepository<SchoolTeacher> schoolteacherRepository, IGenericRepository<Student> studentRepository, IGenericRepository<Teacher> teacherRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<UserPreference> userPreferenceRepository, IGenericRepository<Like> likeRepository, IGenericRepository<View> viewRepository, UserManager<User> userManager, IBlobService blobService)
         {
             _mapper = mapper;
             _userRepository = userRepository;
@@ -63,6 +64,7 @@ namespace LMS.Services
             _teacherRepository = teacherRepository;
             _schoolRepository = schoolRepository;
             _classRepository = classRepository;
+            _courseRepository = courseRepository;
             _postRepository = postRepository;
             _postTagRepository = postTagRepository;
             _userPreferenceRepository = userPreferenceRepository;
@@ -375,6 +377,16 @@ namespace LMS.Services
                     post.PostAttachments = attachment;
                     post.ParentImageUrl = schoolFollower.School.Avatar;
                     post.ParentName = schoolFollower.School.SchoolName;
+                    post.Likes = await GetLikesOnPost(post.Id);
+                    post.Views = await GetViewsOnPost(post.Id);
+                    if (post.Likes.Any(x => x.UserId == userId && x.PostId == post.Id))
+                    {
+                        post.IsPostLikedByCurrentUser = true;
+                    }
+                    else
+                    {
+                        post.IsPostLikedByCurrentUser = false;
+                    }
                 }
 
                 foreach (var post in result)
@@ -405,6 +417,16 @@ namespace LMS.Services
                     post.PostAttachments = attachment;
                     post.ParentImageUrl = userFollower.User.Avatar;
                     post.ParentName = userFollower.User.FirstName + ' ' + userFollower.User.LastName;
+                    post.Likes = await GetLikesOnPost(post.Id);
+                    post.Views = await GetViewsOnPost(post.Id);
+                    if (post.Likes.Any(x => x.UserId == userId && x.PostId == post.Id))
+                    {
+                        post.IsPostLikedByCurrentUser = true;
+                    }
+                    else
+                    {
+                        post.IsPostLikedByCurrentUser = false;
+                    }
 
                 }
 
@@ -446,6 +468,16 @@ namespace LMS.Services
                     post.PostAttachments = attachment;
                     post.ParentImageUrl = classStudent.Class.Avatar;
                     post.ParentName = classStudent.Class.ClassName;
+                    post.Likes = await GetLikesOnPost(post.Id);
+                    post.Views = await GetViewsOnPost(post.Id);
+                    if (post.Likes.Any(x => x.UserId == userId && x.PostId == post.Id))
+                    {
+                        post.IsPostLikedByCurrentUser = true;
+                    }
+                    else
+                    {
+                        post.IsPostLikedByCurrentUser = false;
+                    }
 
                 }
 
@@ -488,6 +520,16 @@ namespace LMS.Services
                     post.PostAttachments = attachment;
                     post.ParentImageUrl = courseStudent.Course.Avatar;
                     post.ParentName = courseStudent.Course.CourseName;
+                    post.Likes = await GetLikesOnPost(post.Id);
+                    post.Views = await GetViewsOnPost(post.Id);
+                    if (post.Likes.Any(x => x.UserId == userId && x.PostId == post.Id))
+                    {
+                        post.IsPostLikedByCurrentUser = true;
+                    }
+                    else
+                    {
+                        post.IsPostLikedByCurrentUser = false;
+                    }
 
                 }
 
@@ -539,14 +581,22 @@ namespace LMS.Services
 
             foreach (var post in result)
             {
-                var attachment = await GetAttachmentsByPostId(post.Id);
-                post.PostAttachments = attachment;
+                post.PostAttachments = await GetAttachmentsByPostId(post.Id);
+                post.Likes = await GetLikesOnPost(post.Id);
+                post.Views = await GetViewsOnPost(post.Id);
+                if(post.Likes.Any(x => x.UserId == userId && x.PostId == post.Id)){
+                    post.IsPostLikedByCurrentUser = true;
+                }
+                else
+                {
+                    post.IsPostLikedByCurrentUser = false;
+                }
+                
             }
 
             foreach (var post in result)
             {
-                var tags = await GetTagsByPostId(post.Id);
-                post.PostTags = tags;
+                post.PostTags = await GetTagsByPostId(post.Id);
             }
             return result;
             //var posts = await _postAttachmentRepository.GetAll()
@@ -622,6 +672,18 @@ namespace LMS.Services
             return result;
         }
 
+        public async Task<List<LikeViewModel>> GetLikesOnPost(Guid postId)
+        {
+            var likes = await _likeRepository.GetAll().Where(x => x.PostId == postId).ToListAsync();
+            return _mapper.Map<List<LikeViewModel>>(likes);
+        }
+        public async Task<List<ViewsViewModel>> GetViewsOnPost(Guid postId)
+        {
+            var views = await _viewRepository.GetAll().Where(x => x.PostId == postId).ToListAsync();
+            return _mapper.Map<List<ViewsViewModel>>(views);
+
+        }
+
         public async Task<IEnumerable<PostTagViewModel>> GetTagsByPostId(Guid postId)
         {
             var tagList = await _postTagRepository.GetAll().Where(x => x.PostId == postId).ToListAsync();
@@ -649,11 +711,11 @@ namespace LMS.Services
             if (tokenList.Count() != 0)
             {
                 var PostGUIDScore = await GenericCompareAlgo(String.Join(" ", tokenList));
-                return await GetFeedResult(PostGUIDScore);
+                return await GetFeedResult(PostGUIDScore, userId);
             }
             else
             {
-                return await GetDefaultFeeds();
+                return await GetDefaultFeeds(userId);
             }
 
         }
@@ -818,29 +880,74 @@ namespace LMS.Services
 
         }
 
-        async Task<List<GlobalFeedViewModel>> GetFeedResult(Dictionary<Guid, int> postGUIDScore)
+        async Task<List<GlobalFeedViewModel>> GetFeedResult(Dictionary<Guid, int> postGUIDScore,string loginUserId)
         {
+            bool IsPostLikedByCurrentUser;
             var response = new List<GlobalFeedViewModel>();
             var postList = await _postRepository.GetAll().ToListAsync();
             var likeList = await _likeRepository.GetAll().ToListAsync();
             var viewList = await _viewRepository.GetAll().ToListAsync();
             var postAttachmentList = await _postAttachmentRepository.GetAll().ToListAsync();
+            var likesList = await _likeRepository.GetAll().ToListAsync();
 
             foreach (var item in postGUIDScore)
             {
                 var post = postList.Where(x => x.Id == item.Key).First();
                 var postAttachment = postAttachmentList.Where(x => x.PostId == item.Key).ToList();
-                var likeCount = likeList.Where(x => x.PostId == item.Key).Count();
-                var viewCount = viewList.Where(x => x.PostId == item.Key).Count();
+                var Likes = await GetLikesOnPost(item.Key);
+                var Views = await GetViewsOnPost(item.Key);
 
+                var isLiked = likesList.Any(x => x.UserId == loginUserId && x.PostId == item.Key);
 
+                if (isLiked)
+                {
+                    IsPostLikedByCurrentUser = true;
+                }
+                else
+                {
+                    IsPostLikedByCurrentUser = false;
+                }
+
+                //var likeCount = likeList.Where(x => x.PostId == item.Key).Count();
+                //var viewCount = viewList.Where(x => x.PostId == item.Key).Count();
+                string parentName = "";
+                string parentImageUrl = "";
+                if (post.PostAuthorType == (int)PostAuthorTypeEnum.School)
+                {
+                    var school = _schoolRepository.GetById(post.ParentId);
+                    parentName = school.SchoolName;
+                    parentImageUrl = school.Avatar;
+                }
+                if (post.PostAuthorType == (int)PostAuthorTypeEnum.Class)
+                {
+                    var classes = _classRepository.GetById(post.ParentId);
+                    parentName = classes.ClassName;
+                    parentImageUrl = classes.Avatar;
+                }
+                if (post.PostAuthorType == (int)PostAuthorTypeEnum.Course)
+                {
+                    var course = _courseRepository.GetById(post.ParentId);
+                    parentName = course.CourseName;
+                    parentImageUrl = course.Avatar;
+                }
+                if (post.PostAuthorType == (int)PostAuthorTypeEnum.User)
+                {
+                    var user = _userRepository.GetById(post.ParentId.ToString());
+                    parentName = user.FirstName + " " + user.LastName;
+                    parentImageUrl = user.Avatar;
+                }
                 var result = new GlobalFeedViewModel()
                 {
                     PostId = post.Id,
                     Title = post.Title,
                     Description = post.Description,
-                    LikeCount = likeCount,
-                    ViewCount = viewCount,
+                    Likes = Likes,
+                    Views = Views,
+                    IsPostLikedByCurrentUser = IsPostLikedByCurrentUser,
+                    PostType = post.PostType,
+                    ParentName = parentName,
+                    ParentImageUrl = parentImageUrl,
+                    
                     PostAttachments = _mapper.Map<List<PostAttachmentViewModel>>(postAttachment)
 
                 };
@@ -852,20 +959,35 @@ namespace LMS.Services
             return response;
         }
 
-        async Task<List<GlobalFeedViewModel>> GetDefaultFeeds()
+        async Task<List<GlobalFeedViewModel>> GetDefaultFeeds(string loginUserId)
         {
+            bool IsPostLikedByCurrentUser;
             var response = new List<GlobalFeedViewModel>();
             var postList = await _postRepository.GetAll().ToListAsync();
             var likeList = await _likeRepository.GetAll().ToListAsync();
             var viewList = await _viewRepository.GetAll().ToListAsync();
             var postAttachmentList = await _postAttachmentRepository.GetAll().ToListAsync();
+            var likesList = await _likeRepository.GetAll().ToListAsync();
 
             foreach (var item in postList)
             {
                 var post = postList.Where(x => x.Id == item.Id).First();
                 var postAttachment = postAttachmentList.Where(x => x.PostId == item.Id).ToList();
-                var likeCount = likeList.Where(x => x.PostId == item.Id).Count();
-                var viewCount = viewList.Where(x => x.PostId == item.Id).Count();
+                var Likes = await GetLikesOnPost(post.Id);
+                var Views = await GetViewsOnPost(post.Id);
+
+                var isLiked = likesList.Any(x => x.UserId == loginUserId && x.PostId == post.Id);
+
+                if (isLiked)
+                {
+                    IsPostLikedByCurrentUser = true;
+                }
+                else
+                {
+                    IsPostLikedByCurrentUser = false;
+                }
+                //var likeCount = likeList.Where(x => x.PostId == item.Id).Count();
+                //var viewCount = viewList.Where(x => x.PostId == item.Id).Count();
 
 
                 var result = new GlobalFeedViewModel()
@@ -873,8 +995,9 @@ namespace LMS.Services
                     PostId = post.Id,
                     Title = post.Title,
                     Description = post.Description,
-                    LikeCount = likeCount,
-                    ViewCount = viewCount,
+                    Likes = Likes,
+                    Views = Views,
+                    IsPostLikedByCurrentUser = IsPostLikedByCurrentUser,
                     PostAttachments = _mapper.Map<List<PostAttachmentViewModel>>(postAttachment)
 
                 };
@@ -883,7 +1006,7 @@ namespace LMS.Services
 
 
             }
-            return response.OrderByDescending(x => x.ViewCount).OrderByDescending(x => x.LikeCount).ToList();
+            return response.OrderByDescending(x => x.Views.Count()).OrderByDescending(x => x.Likes.Count()).ToList();
         }
 
         public async Task<Guid> SaveUserPreference(string userId, string preferenceString)

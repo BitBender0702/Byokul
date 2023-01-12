@@ -578,7 +578,7 @@ namespace LMS.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("CommentId")
+                    b.Property<Guid?>("CommentId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("DateTime")
@@ -1735,9 +1735,7 @@ namespace LMS.Data.Migrations
                 {
                     b.HasOne("LMS.Data.Entity.Comment", "Comment")
                         .WithMany()
-                        .HasForeignKey("CommentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CommentId");
 
                     b.HasOne("LMS.Data.Entity.Post", "Post")
                         .WithMany()
