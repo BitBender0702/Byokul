@@ -52,8 +52,10 @@
          <ng-template pTemplate="body" let-class>
              <tr>
                  <td>
-                  <img *ngIf="class.avatar != null" class="school-profile-icon rounded-circle user-profile-header" [src]="class.avatar"/>
-                  <img *ngIf="class.avatar == null" class="school-profile-icon rounded-circle user-profile-header" src="../../../assets/images/classLogo.png"/>
+                  <div class="admin-class-icon">
+                  <img *ngIf="class.avatar != null" class="school-profile-icon  user-profile-header" [src]="class.avatar"/>
+                  <img *ngIf="class.avatar == null" class="school-profile-icon user-profile-header" src="../../../assets/images/classLogo.png"/>
+                </div>
                  </td>
                  <td>{{class.className}}</td>
                  <td>{{class.startDate | date : "MMMM d, y"}}</td>
