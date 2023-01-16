@@ -12,7 +12,7 @@ namespace LMS.Services
         Task<Guid> SaveNewCourse(CourseViewModel courseViewModel, string createdById);
         Task<Guid> UpdateCourse(CourseViewModel courseViewModel);
         Task DeleteCourseById(Guid classId, string deletedById);
-        Task<CourseDetailsViewModel> GetCourseById(Guid courseId,string loginUserid);
+        Task<CourseDetailsViewModel> GetCourseById(string courseName,string loginUserid);
         Task<IEnumerable<CourseViewModel>> GetAllCourses();
         Task<CourseViewModel> GetBasicCourseInfo(Guid courseId);
         Task SaveCourseLanguages(IEnumerable<string> languageIds, Guid courseId);

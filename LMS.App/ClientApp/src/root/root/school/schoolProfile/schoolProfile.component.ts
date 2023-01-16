@@ -89,6 +89,7 @@ export class SchoolProfileComponent extends MultilingualComponent implements OnI
     likeUnlikePost!: LikeUnlikePost;
     userId!:string;
     currentLikedPostId!:string;
+    schoolName!:string;
     @ViewChild('closeEditModal') closeEditModal!: ElementRef;
     @ViewChild('closeTeacherModal') closeTeacherModal!: ElementRef;
     @ViewChild('closeLanguageModal') closeLanguageModal!: ElementRef;
@@ -111,33 +112,33 @@ export class SchoolProfileComponent extends MultilingualComponent implements OnI
       var selectedLang = localStorage.getItem("selectedLanguage");
       this.translate.use(selectedLang?? '');
 
-      var id = this.route.snapshot.paramMap.get('schoolId');
-      this.schoolId = id ?? '';
+      // var id = this.route.snapshot.paramMap.get('schoolId');
+      // this.schoolId = id ?? '';
 
-      var schoolName = this.route.snapshot.paramMap.get('schoolName');
+      this.schoolName = this.route.snapshot.paramMap.get('schoolName')??'';
 
-      if(this.schoolId == ''){
-        this._schoolService.getSchoolByName(schoolName).subscribe((response) => {
-          this.schoolId = response.schoolId;
-          this._schoolService.getSchoolById(this.schoolId).subscribe((response) => {
-            this.school = response;
-            this.followersLength = this.school.schoolFollowers.length;
-            this.isOwnerOrNot();
-            this.loadingIcon = false;
-            this.isDataLoaded = true;
-          });
-        });
-      }
+      // if(this.schoolId == ''){
+      //   this._schoolService.getSchoolByName(this.schoolName).subscribe((response) => {
+      //     this.schoolId = response.schoolId;
+      //     this._schoolService.getSchoolById(this.schoolName).subscribe((response) => {
+      //       this.school = response;
+      //       this.followersLength = this.school.schoolFollowers.length;
+      //       this.isOwnerOrNot();
+      //       this.loadingIcon = false;
+      //       this.isDataLoaded = true;
+      //     });
+      //   });
+      // }
       
-      else{
-      this._schoolService.getSchoolById(this.schoolId).subscribe((response) => {
+      // else{
+      this._schoolService.getSchoolById(this.schoolName.replace(" ","").toLowerCase()).subscribe((response) => {
         this.school = response;
         this.followersLength = this.school.schoolFollowers.length;
         this.isOwnerOrNot();
         this.loadingIcon = false;
         this.isDataLoaded = true;
       });
-    }
+    // }
 
       this._schoolService.getAccessibility().subscribe((response) => {
         this.accessibility = response;
@@ -639,9 +640,12 @@ else{
 
 GetSchoolClassCourseList(schoolId:string){
   this.hideFeedFilters = false;
+  if(this.classCourseList == undefined){
     this._schoolService.getSchoolClassCourseList(schoolId).subscribe((response) => {
+      debugger
       this.classCourseList = response;
   })
+}
 }
 
 pinUnpinClassCourse(id:string,type:string,isPinned:boolean){

@@ -41,11 +41,12 @@ namespace LMS.Services
         private IGenericRepository<Post> _postRepository;
         private IGenericRepository<PostAttachment> _postAttachmentRepository;
         private IGenericRepository<PostTag> _postTagRepository;
+        private IGenericRepository<ClassTag> _classTagRepository;
         private IGenericRepository<SchoolDefaultLogo> _schoolDefaultLogoRepository;
         private readonly UserManager<User> _userManager;
         private readonly IBlobService _blobService;
         private readonly IUserService _userService;
-        public SchoolService(IMapper mapper, IGenericRepository<School> schoolRepository, IGenericRepository<SchoolCertificate> schoolCertificateRepository, IGenericRepository<SchoolTag> schoolTagRepository, IGenericRepository<Country> countryRepository, IGenericRepository<Specialization> specializationRepository, IGenericRepository<Language> languageRepository, IGenericRepository<SchoolUser> schoolUserRepository, IGenericRepository<SchoolFollower> schoolFollowerRepository, IGenericRepository<SchoolLanguage> schoolLanguageRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<SchoolTeacher> schoolTeacherRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<CourseTeacher> courseTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<SchoolDefaultLogo> schoolDefaultLogoRepository, UserManager<User> userManager, IBlobService blobService, IUserService userService)
+        public SchoolService(IMapper mapper, IGenericRepository<School> schoolRepository, IGenericRepository<SchoolCertificate> schoolCertificateRepository, IGenericRepository<SchoolTag> schoolTagRepository, IGenericRepository<Country> countryRepository, IGenericRepository<Specialization> specializationRepository, IGenericRepository<Language> languageRepository, IGenericRepository<SchoolUser> schoolUserRepository, IGenericRepository<SchoolFollower> schoolFollowerRepository, IGenericRepository<SchoolLanguage> schoolLanguageRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<SchoolTeacher> schoolTeacherRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<CourseTeacher> courseTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<SchoolDefaultLogo> schoolDefaultLogoRepository, UserManager<User> userManager, IBlobService blobService, IUserService userService, IGenericRepository<ClassTag> classTagRepository)
         {
             _mapper = mapper;
             _schoolRepository = schoolRepository;
@@ -71,6 +72,7 @@ namespace LMS.Services
             _userManager = userManager;
             _blobService = blobService;
             _userService = userService;
+            _classTagRepository = classTagRepository;
         }
 
         public async Task<Guid> SaveNewSchool(SchoolViewModel schoolViewModel, string createdById)
@@ -279,11 +281,11 @@ namespace LMS.Services
 
 
 
-        public async Task<SchoolDetailsViewModel> GetSchoolById(Guid schoolId, string loginUserId)
+        public async Task<SchoolDetailsViewModel> GetSchoolById(string schoolName, string loginUserId)
         {
             SchoolDetailsViewModel model = new SchoolDetailsViewModel();
 
-            if (schoolId != null)
+            if (schoolName != null)
             {
                 var schoolLanguages = _schoolLanguageRepository.GetAll()
                     .Include(x => x.Language)
@@ -293,7 +295,7 @@ namespace LMS.Services
                     .ThenInclude(x => x.Specialization)
                     .Include(x => x.School)
                     .ThenInclude(x => x.CreatedBy)
-                    .Where(x => x.SchoolId == schoolId).ToList();
+                    .Where(x => x.School.SchoolName.Replace(" ", "").ToLower() == schoolName).ToList();
 
                 var response = _mapper.Map<SchoolDetailsViewModel>(schoolLanguages.First().School);
 
@@ -305,15 +307,15 @@ namespace LMS.Services
                 }
 
                 response.Languages = languageViewModel;
-                response.SchoolCertificates = await GetCertificateBySchoolId(schoolId);
-                response.SchoolFollowers = await FollowerList(schoolId);
-                response.Classes = await GetClassesBySchoolId(schoolId);
-                response.Courses = await GetCoursesBySchoolId(schoolId);
-                response.Posts = await GetPostsBySchool(schoolId, loginUserId);
+                response.SchoolCertificates = await GetCertificateBySchoolId(response.SchoolId);
+                response.SchoolFollowers = await FollowerList(response.SchoolId);
+                response.Classes = await GetClassesBySchoolId(response.SchoolId);
+                response.Courses = await GetCoursesBySchoolId(response.SchoolId);
+                response.Posts = await GetPostsBySchool(response.SchoolId, loginUserId);
 
-                var classTeachers = await GetClassTeachersBySchoolId(schoolId);
-                var courseTeachers = await GetCourseTeachersBySchoolId(schoolId);
-                var schoolTeacher = await GetSchoolTeachersBySchoolId(schoolId);
+                var classTeachers = await GetClassTeachersBySchoolId(response.SchoolId);
+                var courseTeachers = await GetCourseTeachersBySchoolId(response.SchoolId);
+                var schoolTeacher = await GetSchoolTeachersBySchoolId(response.SchoolId);
 
                 var classCourseTeachers = classTeachers.Union(courseTeachers).DistinctBy(x => x.TeacherId).ToList();
 
@@ -321,8 +323,8 @@ namespace LMS.Services
 
 
 
-                var classStudents = await GetClassStudentsBySchoolId(schoolId);
-                var courseStudents = await GetCourseStudentsBySchoolId(schoolId);
+                var classStudents = await GetClassStudentsBySchoolId(response.SchoolId);
+                var courseStudents = await GetCourseStudentsBySchoolId(response.SchoolId);
 
                 var schoolStudents = classStudents.Union(courseStudents).DistinctBy(x => x.StudentId).ToList();
 
@@ -453,6 +455,11 @@ namespace LMS.Services
             var classList = await _classRepository.GetAll().Include(x => x.Accessibility).Include(x => x.ServiceType).Where(x => x.SchoolId == schoolId && !x.IsEnable && !x.IsDeleted).ToListAsync();
 
             var result = _mapper.Map<List<ClassViewModel>>(classList);
+            var tagList = await _classTagRepository.GetAll().ToListAsync();
+            foreach (var item in result)
+            {
+                item.ClassTags = tagList.Where(x => x.ClassId == item.ClassId).Select(x => x.ClassTagValue).ToList();
+            }
             return result;
 
         }
@@ -462,6 +469,11 @@ namespace LMS.Services
             var courseList = await _courseRepository.GetAll().Where(x => x.SchoolId == schoolId && !x.IsEnable && !x.IsDeleted).ToListAsync();
 
             var result = _mapper.Map<List<CourseViewModel>>(courseList);
+            var tagList = await _classTagRepository.GetAll().ToListAsync();
+            foreach (var item in result)
+            {
+                item.CourseTags = tagList.Where(x => x.ClassId == item.CourseId).Select(x => x.ClassTagValue).ToList();
+            }
             return result;
 
         }
@@ -754,7 +766,7 @@ namespace LMS.Services
 
         public async Task<SchoolViewModel> GetSchoolByName(string schoolName)
         {
-            var school = await _schoolRepository.GetAll().Where(x => x.SchoolName.Replace(" ", "").ToLower() == schoolName).FirstOrDefaultAsync();
+            var school = await _schoolRepository.GetAll().Where(x => x.SchoolName.Replace(" ", "").ToLower() == schoolName.Replace(" ", "").ToLower()).FirstOrDefaultAsync();
             if (school != null)
             {
                 return _mapper.Map<SchoolViewModel>(school);
@@ -786,6 +798,7 @@ namespace LMS.Services
                 item.StartDate = classDetails.StartDate;
                 item.EndDate = classDetails.EndDate;
                 item.ThumbnailUrl = classDetails.ThumbnailUrl;
+                item.Tags = classDetails.ClassTags;
 
                 model.Add(item);
             }
@@ -805,6 +818,7 @@ namespace LMS.Services
                 item.Type = ClassCourseEnum.Course;
                 item.IsPinned = courseDetails.IsPinned;
                 item.ThumbnailUrl = courseDetails.ThumbnailUrl;
+                item.Tags = courseDetails.CourseTags;
 
                 model.Add(item);
             }

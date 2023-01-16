@@ -46,8 +46,8 @@ export class SchoolService{
         return this.http.get(`${this.apiUrl}/school/languageList`);
     }
 
-    getSchoolById(schoolId:string):Observable<any>{
-        return this.http.get(`${this.apiUrl}/school/getSchoolById` + '?schoolId=' + schoolId);
+    getSchoolById(schoolName:string):Observable<any>{
+        return this.http.get(`${this.apiUrl}/school/getSchoolById` + '?schoolName=' + schoolName);
     }
 
     saveSchoolFollower(followUnfollowUser:FollowUnfollow):Observable<any>{

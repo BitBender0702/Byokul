@@ -36,6 +36,7 @@ export class PostViewComponent implements OnInit {
     }
   
     ngOnInit(): void {
+      debugger
       this.getLoginUserId();
       this.posts = this.options.initialState;
        this.postView ={
@@ -44,9 +45,15 @@ export class PostViewComponent implements OnInit {
        }
 
       // here we count ++ for view
-      this.postView.postId = this.posts.posts.id;
-      this._postService.postView(this.postView).subscribe((response) => {
-     });
+      if(this.posts.posts.postId != null){
+        this.addPostView(this.posts.posts.postId);
+      }
+      else{
+      this.addPostView(this.posts.posts.id);
+      }
+    //   this.postView.postId = this.posts.posts.id;
+    //   this._postService.postView(this.postView).subscribe((response) => {
+    //  });
 
      this.InitializeLikeUnlikePost();
 
@@ -133,6 +140,23 @@ export class PostViewComponent implements OnInit {
        console.log("succes");
     });
   
+  
+  }
+
+  
+  addPostView(postId:string){
+    debugger
+    if(this.userId != undefined){
+    this.postView.postId = postId;
+    this._postService.postView(this.postView).subscribe((response) => {
+      debugger
+      console.log('success');
+      this.posts.posts.views.length = response;
+      // this.user.posts.filter((p : any) => p.id == postId).forEach( (item : any) => {
+      //  var itemss = item.likes;
+      //  item.likes = response;
+     }); 
+    }
   
   }
 }

@@ -1,6 +1,7 @@
 import { Component, ElementRef, Injector, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { LikeUnlikePost } from 'src/root/interfaces/post/likeUnlikePost';
+import { PostView } from 'src/root/interfaces/post/postView';
 import { PostService } from 'src/root/service/post.service';
 import { ReelsService } from 'src/root/service/reels.service';
 import { signalRResponse, SignalrService } from 'src/root/service/signalr.service';
@@ -32,6 +33,7 @@ import { UserService } from 'src/root/service/user.service';
     likesLength!:number;
     isLiked!:boolean;
     likeUnlikePost!: LikeUnlikePost;
+    postView!:PostView;
     loginUserId!:string;
 
     @ViewChild('groupChatList') groupChatList!: ElementRef;
@@ -50,7 +52,9 @@ import { UserService } from 'src/root/service/user.service';
         this.getLoginUserId();
         this.reelId = this.route.snapshot.paramMap.get('id') ?? '';
         this._reelsService.getReelById(this.reelId).subscribe((response) => {
+          debugger
             this.reels = response;
+            this.addPostView(this.reels.post.id);
             this.isDataLoaded = true;
             // this.loadingIcon = false;
           });
@@ -65,7 +69,8 @@ import { UserService } from 'src/root/service/user.service';
         this._userService.getUser(this.senderId).subscribe((response) => {
           this.sender = response;
         });
-        
+
+             
       }
 
           this.signalRService.startConnection();
@@ -83,6 +88,7 @@ import { UserService } from 'src/root/service/user.service';
 
 
           this.InitializeLikeUnlikePost();
+          this.InitializePostView();
 
 
 
@@ -150,6 +156,14 @@ import { UserService } from 'src/root/service/user.service';
 
     }
 
+    InitializePostView(){
+      this.postView = {
+        postId: '',
+        userId: ''
+       };
+
+    }
+
     back(): void {
         window.history.back();
       }
@@ -187,6 +201,22 @@ import { UserService } from 'src/root/service/user.service';
            console.log("succes");
         });
       
+      
+      }
+
+      addPostView(postId:string){
+        debugger
+        if(this.loginUserId != undefined){
+        this.postView.postId = postId;
+        this._postService.postView(this.postView).subscribe((response) => {
+          debugger
+          console.log('success');
+          this.reels.post.views.length = response;
+          // this.user.posts.filter((p : any) => p.id == postId).forEach( (item : any) => {
+          //  var itemss = item.likes;
+          //  item.likes = response;
+         }); 
+        }
       
       }
 

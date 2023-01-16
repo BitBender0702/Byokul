@@ -14,7 +14,7 @@ namespace LMS.Services
         Task<Guid> SaveNewSchool(SchoolViewModel leadViewModel, string createdById);
         Task<SchoolUpdateViewModel> GetSchoolEditDetails(Guid schoolId);
         Task<Guid> UpdateSchool(SchoolUpdateViewModel schoolUpdateViewModel);
-        Task<SchoolDetailsViewModel> GetSchoolById(Guid schoolId,string loginUserId);
+        Task<SchoolDetailsViewModel> GetSchoolById(string schoolName,string loginUserId);
         Task<IEnumerable<SchoolViewModel>> GetAllSchools();
         Task DeleteSchoolById(Guid schoolId, string deletedById);
         Task<IEnumerable<SpecializationViewModel>> SpecializationList();

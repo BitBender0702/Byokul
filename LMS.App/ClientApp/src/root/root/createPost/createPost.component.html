@@ -19,13 +19,13 @@
                 <ul class="nav nav-tabs border-0" id="myTab" role="tablist">
                   <li class="nav-item p-0">
                     <button
-                      class="nav-link active post-attch-btn d-inline-flex justify-content-center align-items-center"
+                      class="nav-link post-attch-btn d-inline-flex justify-content-center align-items-center"
                       id="live-tab" data-bs-toggle="tab" data-bs-target="#live-tab-pane" type="button" role="tab"
                       aria-controls="live-tab-pane" aria-selected="true"><img src="../../../assets/images/Play-dark.svg"
                         class="dark-attach" /><img src="../../../assets/images/Play-light.svg" class="light-attach" /> Live</button>
                   </li>
                   <li class="nav-item p-0">
-                    <button class="nav-link post-attch-btn d-inline-flex justify-content-center align-items-center"
+                    <button class="nav-link active post-attch-btn d-inline-flex justify-content-center align-items-center"
                       id="Post-tab" data-bs-toggle="tab" data-bs-target="#Post-tab-pane" type="button" role="tab"
                       aria-controls="Post-tab-pane" aria-selected="false"><img src="../../../assets/images/Edit-grey.svg"
                         class="dark-attach" /><img src="../../../assets/images/Edit-light.svg" class="light-attach" /> Post</button>
@@ -47,7 +47,7 @@
             </div>
             <div class="modal-body">
               <div class="tab-content" id="myTabContent">
-                <div class="tab-pane fade show active" id="live-tab-pane" role="tabpanel" aria-labelledby="live-tab"
+                <div class="tab-pane fade" id="live-tab-pane" role="tabpanel" aria-labelledby="live-tab"
                   tabindex="0">
                   <!-- <form class="createLiveForm"  [formGroup]="createLiveForm">
                     <div class="form-group">
@@ -128,7 +128,7 @@
 
 
                 </div>
-                <div class="tab-pane fade" id="Post-tab-pane" role="tabpanel" aria-labelledby="Post-tab" tabindex="0">
+                <div class="tab-pane fade show active" id="Post-tab-pane" role="tabpanel" aria-labelledby="Post-tab" tabindex="0">
                   <form [formGroup]="createPostForm">
                     <div *ngIf="this.schoolId != undefined" class="form-group">
                       <label class="font_10">School Name</label>

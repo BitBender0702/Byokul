@@ -51,8 +51,8 @@ export class CourseService{
         return this.http.get(`${this.apiUrl}/school/getBasicSchoolInfo` + '?schoolId=' + schoolId);
     }
 
-    getCourseById(courseId:string):Observable<any>{
-        return this.http.get(`${this.apiUrl}/course/getCourseById` + '?courseId=' + courseId);
+    getCourseById(courseName:string):Observable<any>{
+        return this.http.get(`${this.apiUrl}/course/getCourseById` + '?courseName=' + courseName);
     }
 
     saveCourseLanguages(addLanguages:any):Observable<any>{

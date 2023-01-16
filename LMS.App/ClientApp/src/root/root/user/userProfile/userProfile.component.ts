@@ -19,6 +19,7 @@ import { PostService } from 'src/root/service/post.service';
 import { PostViewComponent } from '../../postView/postView.component';
 import { MessageService } from 'primeng/api';
 import { LikeUnlikePost } from 'src/root/interfaces/post/likeUnlikePost';
+import { PostView } from 'src/root/interfaces/post/postView';
 
 
 @Component({
@@ -63,6 +64,8 @@ import { LikeUnlikePost } from 'src/root/interfaces/post/likeUnlikePost';
     followersLength!:number;
     likeUnlikePost!: LikeUnlikePost;
     currentLikedPostId!:string;
+    postView!:PostView;
+    loginUserId!:string;
 
     @ViewChild('closeEditModal') closeEditModal!: ElementRef;
     @ViewChild('closeLanguageModal') closeLanguageModal!: ElementRef;
@@ -131,6 +134,8 @@ import { LikeUnlikePost } from 'src/root/interfaces/post/likeUnlikePost';
 
       this.InitializeFollowUnfollowUser();
       this.InitializeLikeUnlikePost();
+      this.InitializePostView();
+
 
     }
 
@@ -138,6 +143,13 @@ import { LikeUnlikePost } from 'src/root/interfaces/post/likeUnlikePost';
       this.followUnfollowUser = {
         id: '',
         isFollowed: false
+       };
+    }
+
+    InitializePostView(){
+      this.postView = {
+        postId: '',
+        userId: ''
        };
     }
 
@@ -157,6 +169,7 @@ import { LikeUnlikePost } from 'src/root/interfaces/post/likeUnlikePost';
           let jwtData = validToken.split('.')[1]
           let decodedJwtJsonData = window.atob(jwtData)
           let decodedJwtData = JSON.parse(decodedJwtJsonData);
+          this.loginUserId = decodedJwtData.jti;
           if(decodedJwtData.sub == this.user.email){
             this.isOwner = true;
           }
@@ -457,6 +470,21 @@ likeUnlikePosts(postId:string, isLike:boolean){
 
 
 }
+
+// addPostView(postId:string){
+//   debugger
+//   if(this.loginUserId != undefined){
+//   this.postView.postId = postId;
+//   this._postService.postView(this.postView).subscribe((response) => {
+//     debugger
+//     console.log('success');
+//     // this.user.posts.filter((p : any) => p.id == postId).forEach( (item : any) => {
+//     //  var itemss = item.likes;
+//     //  item.likes = response;
+//    }); 
+//   }
+
+// }
 
 }
 

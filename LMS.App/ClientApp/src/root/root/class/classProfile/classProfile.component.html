@@ -274,7 +274,7 @@
               <div *ngIf="post.postAttachments.length" class="school-grid-footer above-thumbnail">
                 <button type="button" class="bg-transparent border-0 function-btns text-light">
                   <img src="../../../../assets/images/eye-light.svg" class="d-block mx-auto" />
-                  954
+                  {{post.views.length}}
                 </button>
                 <button (click)="likeUnlikePosts(post.id,true)" type="button" class="bg-transparent border-0 function-btns text-light">
                   <img *ngIf="post.isPostLikedByCurrentUser" src="../../../assets/images/heart-red.svg" class="d-block mx-auto" />
@@ -298,7 +298,7 @@
                 </button>
               </div>
 
-              <div *ngIf="post.postAttachments.length == 0" class="school-grid-footer above-thumbnail">
+              <div *ngIf="post.postAttachments.length == 0" class="school-grid-footer">
                 <button type="button" class="bg-transparent border-0 function-btns text-light">
                   <img src="../../../../assets/images/eye.svg" class="d-block mx-auto" />
                   <span class="textBlack">{{post.views.length}}</span>

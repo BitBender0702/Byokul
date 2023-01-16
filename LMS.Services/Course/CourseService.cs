@@ -301,11 +301,11 @@ namespace LMS.Services
             await SaveCourseTeachers(teacherIds, courseId);
         }
 
-        public async Task<CourseDetailsViewModel> GetCourseById(Guid courseId,string loginUserid)
+        public async Task<CourseDetailsViewModel> GetCourseById(string courseName,string loginUserid)
         {
             CourseDetailsViewModel model = new CourseDetailsViewModel();
 
-            if (courseId != null)
+            if (courseName != null)
             {
                 var course = await _courseRepository.GetAll()
                     .Include(x => x.ServiceType)
@@ -315,12 +315,12 @@ namespace LMS.Services
                     .ThenInclude(x => x.Specialization)
                     .Include(x => x.Accessibility)
                     .Include(x => x.CreatedBy)
-                    .Where(x => x.CourseId == courseId).FirstOrDefaultAsync();
+                    .Where(x => x.CourseName.Replace(" ", "").ToLower() == courseName).FirstOrDefaultAsync();
 
                 if (course == null)
                 {
-                    
-                    var classDetails = await _classService.GetClassById(courseId, loginUserid);
+
+                    var classDetails = await _classService.GetClassById(courseName, loginUserid);
 
                     var courses = new CourseDetailsViewModel();
                     courses.CourseId = classDetails.ClassId;
@@ -614,7 +614,7 @@ namespace LMS.Services
 
         public async Task<CourseViewModel> GetCourseByName(string courseName, string schoolName)
         {
-            var course = await _courseRepository.GetAll().Include(x => x.School).Where(x => x.CourseName.Replace(" ", "").ToLower() == courseName && x.School.SchoolName.Replace(" ", "").ToLower() == schoolName).FirstOrDefaultAsync();
+            var course = await _courseRepository.GetAll().Include(x => x.School).Where(x => x.CourseName.Replace(" ", "").ToLower() == courseName.Replace(" ", "").ToLower() && x.School.SchoolName.Replace(" ", "").ToLower() == schoolName.Replace(" ", "").ToLower()).FirstOrDefaultAsync();
             if (course != null)
             {
                 return _mapper.Map<CourseViewModel>(course);

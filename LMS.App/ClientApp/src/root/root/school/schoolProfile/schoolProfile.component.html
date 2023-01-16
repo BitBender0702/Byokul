@@ -357,7 +357,7 @@
                         <div class="feed-title font_14 text_sec1 d-flex align-content-center fw_600">
                             {{post.title}}
                         </div>
-                    </div>
+                    </div>*ngFor
                   </div>
                 </div>
                 </div>
@@ -470,7 +470,7 @@
                     <div *ngIf="post.postAttachments.length" class="school-grid-footer above-thumbnail">
                         <button type="button" class="bg-transparent border-0 function-btns text-light">
                             <img src="../../../../assets/images/eye-light.svg" class="d-block mx-auto" />
-                            954
+                            {{post.views.length}}
                         </button>
                         <button (click)="likeUnlikePosts(post.id,true)" type="button" class="bg-transparent border-0 function-btns text-light">
                           <img *ngIf="post.isPostLikedByCurrentUser" src="../../../assets/images/heart-red.svg" class="d-block mx-auto" />
@@ -490,7 +490,7 @@
                         </button>
                     </div>
 
-                    <div *ngIf="post.postAttachments.length == 0" class="school-grid-footer above-thumbnail">
+                    <div *ngIf="post.postAttachments.length == 0" class="school-grid-footer">
                       <button type="button" class="bg-transparent border-0 function-btns text-light">
                         <img src="../../../../assets/images/eye.svg" class="d-block mx-auto" />
                         <span class="textBlack">{{post.views.length}}</span>
@@ -526,6 +526,71 @@
 
 
     <div class="tab-content" id="pills-tabContent" *ngIf="!isProfileGrid">
+      <!-- here is for view -->
+      <div class="school-grid-box position-relative school-list-box h-100">
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="school-grid-thumbnail">
+              <iframe width="100%" height="300" src="https://www.youtube.com/embed/hAP2QF--2Dg"
+                title="Product Explainer Video | UpSend |  Best SaaS Explainer Video" frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="class-preview-right position-relative h-100">
+              <button type="button" class="bg-transparent border-0 close-preview"><img
+                  src="images/cross.svg" /></button>
+              <div class="schoolgrid-header">
+                <div class="d-flex align-items-center position-relative">
+                  <div class="school-gridprofile-icon">
+                    <img src="images/profile-grid-school-may.jpg">
+                  </div>
+                  <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">Python programming class</h2>
+                </div>
+
+                <p class="font_14 school-grid-date d-inline-block mb-0">September 28 <span class="fw_500 ms-3">11:30 -
+                    13:50</span></p>
+              </div>
+              <p class="text_sec1 font_14 pt-3">Lecture One - Introduction and basics in Python.Lecture One -
+                Introduction and basics in PythonLecture One - Intro and basics in Python fole Lecture One. One -
+                Introduction and basics in PythonLecture One - Introduction and basics in PythonLecture One
+                Lecture. One - Intro duction and basics in PythonLecture One.</p>
+              <div class="teacher-tags tag-box hashtag_box">
+                <span class="custom-tag">#Python</span>
+                <span class="custom-tag">#Intermediate</span>
+                <span class="custom-tag">#Free courses</span>
+                <span class="custom-tag">#Free courses</span>
+                <span class="custom-tag">#Free courses</span>
+                <span class="custom-tag">#For beginners</span>
+                <span class="custom-tag">#Free courses</span>
+              </div>
+              <div class="school-grid-footer preview-right-action">
+                <button type="button" class="bg-transparent border-0 function-btns">
+                  <img src="images/eye.svg" class="d-block mx-auto">
+                  954
+                </button>
+                <button type="button" class="bg-transparent border-0 function-btns">
+                  <img src="images/Heart-dark.svg" class="d-block mx-auto">
+                  82
+                </button>
+                <button type="button" class="bg-transparent border-0 function-btns">
+                  <img src="images/Chat-dark.svg" class="d-block mx-auto">
+                  34
+                </button>
+                <button type="button" class="bg-transparent border-0 function-btns">
+                  <img src="images/Bookmark-dark.svg" class="d-block mx-auto">
+                  954
+                </button>
+                <button type="button" class="bg-transparent border-0 function-btns">
+                  <img src="images/Upload-dark.svg" class="d-block mx-auto">
+                  954
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
         <div class="tab-pane fade show active " id="school-feed-tab-pane" role="tabpanel"
              aria-labelledby="school-feed-tab" tabindex="0">
             <div class="accordion list-schol-profile" id="accordionPanelsStayOpenExample">
@@ -554,7 +619,7 @@
                                         <img src="../../../../assets/images/eye.svg" class="me-2" /> 954
                                     </button>
                                 </div>
-                                <div class="school-grid-thumbnail">
+                                <div class="school-grid-thumbnail" (click)="showPostDiv">
                                     <div class="row gx-1">
                                         <div class="col-md-12">
                                             <div class="school-large-thumbnail shadow-thumnail position-relative">
@@ -802,11 +867,8 @@
                     <div class="school-grid-body">
                       <p class="text_sec1 font_14">{{item.description}} </p>
                       <div class="teacher-tags tag-box hashtag_box">
-                        <span class="custom-tag">#Python</span>
-                        <span class="custom-tag">#Intermediate</span>
-                        <span class="custom-tag">#Program</span>
-                        <span class="custom-tag">#Free courses</span>
-                        <button type="button" class="custom-tag border-0">See more...</button>
+                        <span *ngFor="let tag of item.tags" class="custom-tag">{{tag}}</span>
+                        <!-- <button type="button" class="custom-tag border-0">See more...</button> -->
                       </div>
                       <div class="school-grid-thumbnail shadow-thumnail position-relative classes-grid overflow-hidden">
                         <div class="row gx-1">

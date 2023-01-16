@@ -286,10 +286,10 @@ namespace LMS.Services
             await SaveClassTeachers(teacherIds, classId);
         }
 
-        public async Task<ClassDetailsViewModel> GetClassById(Guid classId,string loginUserId)
+        public async Task<ClassDetailsViewModel> GetClassById(string className,string loginUserId)
         {
             ClassDetailsViewModel model = new ClassDetailsViewModel();
-            if (classId != null)
+            if (className != null)
             {
                 var classes = await _classRepository.GetAll()
                     .Include(x => x.ServiceType)
@@ -299,7 +299,7 @@ namespace LMS.Services
                     .ThenInclude(x => x.Specialization)
                     .Include(x => x.Accessibility)
                     .Include(x => x.CreatedBy)
-                    .Where(x => x.ClassId == classId).FirstOrDefaultAsync();
+                    .Where(x => x.ClassName.Replace(" ", "").ToLower() == className).FirstOrDefaultAsync();
 
                 try
                 {
@@ -540,7 +540,7 @@ namespace LMS.Services
 
         public async Task<ClassViewModel> GetClassByName(string className, string schoolName)
         {
-            var classes = await _classRepository.GetAll().Include(x => x.School).Where(x => x.ClassName.Replace(" ", "").ToLower() == className && x.School.SchoolName.Replace(" ", "").ToLower() == schoolName).FirstOrDefaultAsync();
+            var classes = await _classRepository.GetAll().Include(x => x.School).Where(x => x.ClassName.Replace(" ", "").ToLower() == className.Replace(" ", "").ToLower() && x.School.SchoolName.Replace(" ", "").ToLower() == schoolName.Replace(" ", "").ToLower()).FirstOrDefaultAsync();
             if (classes != null)
             {
                 return _mapper.Map<ClassViewModel>(classes);

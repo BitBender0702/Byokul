@@ -67,6 +67,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     isLiked!:boolean;
     likeUnlikePost!: LikeUnlikePost;
     currentLikedPostId!:string;
+    className!:string;
 
     @ViewChild('closeEditModal') closeEditModal!: ElementRef;
     @ViewChild('closeTeacherModal') closeTeacherModal!: ElementRef;
@@ -84,37 +85,39 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     }
   
     ngOnInit(): void {
+      debugger
       this.validToken = localStorage.getItem("jwt")?? '';
       this.loadingIcon = true;
       var selectedLang = localStorage.getItem("selectedLanguage");
       this.translate.use(selectedLang?? '');
 
-      var id = this.route.snapshot.paramMap.get('classId');
-      this.classId = id ?? '';
+      // var id = this.route.snapshot.paramMap.get('classId');
+      // this.classId = id ?? '';
 
-      var className = this.route.snapshot.paramMap.get('className');
+      this.className = this.route.snapshot.paramMap.get('className')??'';
       var schoolName = this.route.snapshot.paramMap.get('schoolName');
 
-      if(this.classId == ''){
-        this._classService.getClassByName(className,schoolName).subscribe((response) => {
-          this.classId = response.classId;
-          this._classService.getClassById(this.classId).subscribe((response) => {
-            this.class = response;
-            this.isOwnerOrNot();
-            this.loadingIcon = false;
-            this.isDataLoaded = true;
-          });
-        })
+      // if(this.classId == ''){
+      //   this._classService.getClassByName(this.className,schoolName).subscribe((response) => {
+      //     debugger
+      //     this.classId = response.classId;
+      //     this._classService.getClassById(this.classId).subscribe((response) => {
+      //       this.class = response;
+      //       this.isOwnerOrNot();
+      //       this.loadingIcon = false;
+      //       this.isDataLoaded = true;
+      //     });
+      //   })
 
-      }
-      else{
-      this._classService.getClassById(this.classId).subscribe((response) => {
+      // }
+      // else{
+      this._classService.getClassById(this.className.replace(" ","").toLowerCase()).subscribe((response) => {
         this.class = response;
         this.isOwnerOrNot();
         this.loadingIcon = false;
         this.isDataLoaded = true;
       });
-    }
+    // }
 
       this.editClassForm = this.fb.group({
         schoolName: this.fb.control(''),

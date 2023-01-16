@@ -194,7 +194,7 @@ namespace LMS.Services
             }
         }
 
-        public async Task<PostAttachmentViewModel> GetReelById(Guid id,string userId)
+        public async Task<PostAttachmentViewModel> GetReelById(Guid id, string userId)
         {
             var postAttachment = await _postAttachmentRepository.GetAll()
                 .Include(x => x.Post)
@@ -225,12 +225,6 @@ namespace LMS.Services
                 var classes = _classRepository.GetById(result.Post.ParentId);
                 result.Class = _mapper.Map<ClassViewModel>(classes);
             }
-
-            //if (result.Post.PostAuthorType == (int)PostAuthorTypeEnum.User)
-            //{
-            //    var user = _userRepository.GetById(result.Post.ParentId);
-            //    result.User = _mapper.Map<UserViewModel>(user);
-            //}
 
             return result;
         }
@@ -273,7 +267,7 @@ namespace LMS.Services
                     PostId = model.PostId,
                     DateTime = DateTime.UtcNow,
                     CommentId = model.CommentId == Guid.Empty ? null : model.CommentId,
-                    
+
                 };
 
                 _likeRepository.Insert(like);
@@ -284,17 +278,22 @@ namespace LMS.Services
             return null;
         }
 
-        public async Task<bool> PostView(PostViewsViewModel model)
+        public async Task<int> PostView(PostViewsViewModel model)
         {
-            var view = new View
+            var isUserViewExist = await _viewRepository.GetAll().Where(x => x.UserId == model.UserId && x.PostId == model.PostId).FirstOrDefaultAsync();
+            if (isUserViewExist == null)
             {
-                UserId = model.UserId,
-                PostId = model.PostId,
-            };
+                var view = new View
+                {
+                    UserId = model.UserId,
+                    PostId = model.PostId,
+                };
 
-            _viewRepository.Insert(view);
-            _viewRepository.Save();
-            return true;
+                _viewRepository.Insert(view);
+                _viewRepository.Save();
+                return  _viewRepository.GetAll().Where(x => x.PostId == model.PostId).Count();
+            }
+            return _viewRepository.GetAll().Where(x => x.PostId == model.PostId).Count();
         }
     }
 }

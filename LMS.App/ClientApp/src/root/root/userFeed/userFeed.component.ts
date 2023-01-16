@@ -146,6 +146,7 @@ export class UserFeedComponent implements OnInit {
       }
 
       likeUnlikePosts(postId:string, isLike:boolean){
+        debugger
         this.currentLikedPostId = postId;
 
         this.myFeeds.filter((p : any) => p.id == postId).forEach( (item : any) => {

@@ -64,6 +64,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     likesLength!:number;
     isLiked!:boolean;
     likeUnlikePost!: LikeUnlikePost;
+    courseName!:string;
 
     @ViewChild('closeEditModal') closeEditModal!: ElementRef;
     @ViewChild('closeTeacherModal') closeTeacherModal!: ElementRef;
@@ -86,32 +87,32 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       var selectedLang = localStorage.getItem("selectedLanguage");
       this.translate.use(selectedLang?? '');
 
-      var id = this.route.snapshot.paramMap.get('courseId');
-      this.courseId = id ?? '';
+      // var id = this.route.snapshot.paramMap.get('courseId');
+      // this.courseId = id ?? '';
 
-      var courseName = this.route.snapshot.paramMap.get('courseName');
+      this.courseName = this.route.snapshot.paramMap.get('courseName')??'';
       var schoolName = this.route.snapshot.paramMap.get('schoolName');
 
-      if(this.courseId == ''){
-        this._courseService.getCourseByName(courseName,schoolName).subscribe((response) => {
-          this.courseId = response.courseId;
-          this._courseService.getCourseById(this.courseId).subscribe((response) => {
-            this.course = response;
-            this.isOwnerOrNot();
-            this.loadingIcon = false;
-            this.isDataLoaded = true;
-          });
-        })
+      // if(this.courseId == ''){
+      //   this._courseService.getCourseByName(this.courseName,schoolName).subscribe((response) => {
+      //     this.courseId = response.courseId;
+      //     this._courseService.getCourseById(this.courseId).subscribe((response) => {
+      //       this.course = response;
+      //       this.isOwnerOrNot();
+      //       this.loadingIcon = false;
+      //       this.isDataLoaded = true;
+      //     });
+      //   })
 
-      }
-      else{
-      this._courseService.getCourseById(this.courseId).subscribe((response) => {
+      // }
+      // else{
+      this._courseService.getCourseById(this.courseName.replace(" ","").toLowerCase()).subscribe((response) => {
         this.course = response;
         this.isOwnerOrNot();
         this.loadingIcon = false;
         this.isDataLoaded = true;
       });
-    }
+    // }
 
       this.editCourseForm = this.fb.group({
         schoolName: this.fb.control(''),

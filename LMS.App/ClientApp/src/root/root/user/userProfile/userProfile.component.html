@@ -37,7 +37,7 @@
               <b class="fw_700">{{user.followings}}</b>
             </div>
             <div class="followers_name d-inline-block font_16 mr-_24"><img src="../../../../assets/images/Edit-dark.svg" /> {{'Post'| translate }}: <b
-                class="fw_700"></b></div>
+                class="fw_700">{{user.posts.length}}</b></div>
             <button *ngIf="!isOwner && !isFollowed" (click)="followUser(user.id,'Follow')" type="button"
               class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn follow-btn">{{'Follow'| translate }}</button>
               <button *ngIf="!isOwner && isFollowed" (click)="followUser(user.id,'UnFollow')" type="button"
@@ -291,7 +291,7 @@
                 </button>
               </div>
 
-              <div *ngIf="post.postAttachments.length == 0" class="school-grid-footer above-thumbnail">
+              <div *ngIf="post.postAttachments.length == 0" class="school-grid-footer">
                 <button type="button" class="bg-transparent border-0 function-btns text-light">
                   <img src="../../../../assets/images/eye.svg" class="d-block mx-auto" />
                   <span class="textBlack">{{post.views.length}}</span>

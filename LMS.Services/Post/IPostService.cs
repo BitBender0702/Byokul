@@ -13,7 +13,7 @@ namespace LMS.Services
         Task<PostAttachmentViewModel> GetReelById(Guid id,string userId);
         Task<bool> PinUnpinPost(Guid attachmentId, bool isPinned);
         Task<List<LikeViewModel>> LikeUnlikePost(LikeUnlikeViewModel model);
-        Task<bool> PostView(PostViewsViewModel model);
+        Task<int> PostView(PostViewsViewModel model);
 
     }
 }

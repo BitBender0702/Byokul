@@ -13,7 +13,7 @@ namespace LMS.Services
         Task<ClassUpdateViewModel> GetClassEditDetails(Guid classId);
         Task<Guid> UpdateClass(ClassUpdateViewModel classUpdateViewModel);
         Task DeleteClassById(Guid classId, string deletedById);
-        Task<ClassDetailsViewModel> GetClassById(Guid classId,string loginUserId);
+        Task<ClassDetailsViewModel> GetClassById(string className,string loginUserId);
         Task<IEnumerable<ClassViewModel>> GetAllClasses();
         Task SaveClassLanguages(IEnumerable<string> languageIds, Guid classId);
         Task DeleteClassLanguage(ClassLanguageViewModel model);

@@ -208,8 +208,7 @@ captureTeacherId(event: any) {
     }
 
     this.loadingIcon = true;
-    this.router.navigateByUrl(`user/courseProfile/${this.courseId}`)
-
+    this.router.navigateByUrl(`profile/course/${this.selectedSchool.schoolName.replace(" ","").toLowerCase()}/${this.courseName.replace(" ","").toLowerCase()}`);
   }
 
   back(): void {
@@ -229,15 +228,6 @@ captureTeacherId(event: any) {
 
     // var schoolId = this.createCourseForm1.get('schoolId')?.value;
     this.course=this.createCourseForm1.value;
-    // this.course.schoolId = schoolId;
-
-    this.fileToUpload.append('schoolId', this.course.schoolId);
-    this.fileToUpload.append('courseName', this.course.courseName);
-    this.fileToUpload.append('serviceTypeId',this.course.serviceTypeId);
-    this.fileToUpload.append('accessibilityId',this.course.accessibilityId);
-    this.fileToUpload.append('languageIds',JSON.stringify(this.course.languageIds));
-    this.fileToUpload.append('description', this.course.description);
-    this.fileToUpload.append('price', this.course.price?.toString());
     this.courseName = this.course.courseName.split(' ').join('');
     this.fileToUpload.append('courseTags', JSON.stringify(this.tagList))
     this._courseService.isCourseNameExist(this.course.courseName).subscribe((response) => {
@@ -246,13 +236,20 @@ captureTeacherId(event: any) {
         return;
       }
       else{
+        this.fileToUpload.append('schoolId', this.course.schoolId);
+        this.fileToUpload.append('courseName', this.course.courseName);
+        this.fileToUpload.append('serviceTypeId',this.course.serviceTypeId);
+        this.fileToUpload.append('accessibilityId',this.course.accessibilityId);
+        this.fileToUpload.append('languageIds',JSON.stringify(this.course.languageIds));
+        this.fileToUpload.append('description', this.course.description);
+        this.fileToUpload.append('price', this.course.price?.toString());
         this.step += 1;
         this.isStepCompleted = false;
         this.nextPage = true;
     
         if(this.fromSchoolProfile != ''){
         this.createCourseForm3.patchValue({
-          courseUrl: 'byokul.com/profile/course/' + this.selectedSchool.schoolName.split(' ').join('') + "/" +  this.course.courseName.split(' ').join(''),
+          courseUrl: 'byokul.com/profile/course/' + this.selectedSchool.schoolName.split(' ').join('').replace(" ","").toLowerCase() + "/" +  this.course.courseName.split(' ').join('').replace(" ","").toLowerCase(),
           });
         }
        else{
@@ -260,13 +257,51 @@ captureTeacherId(event: any) {
         this._courseService.getSelectedSchool(schoolId).subscribe((response) => {
           this.selectedSchool = response;
           this.createCourseForm3.patchValue({
-            courseUrl: 'byokul.com/profile/course/' + this.selectedSchool.schoolName.split(' ').join('') + "/" +  this.course.courseName.split(' ').join(''),
+            courseUrl: 'byokul.com/profile/course/' + this.selectedSchool.schoolName.split(' ').join('').replace(" ","").toLowerCase() + "/" +  this.course.courseName.split(' ').join('').replace(" ","").toLowerCase(),
           });
         });  
       
         }
       }
     });
+    // this.course.schoolId = schoolId;
+
+    // this.fileToUpload.append('schoolId', this.course.schoolId);
+    // this.fileToUpload.append('courseName', this.course.courseName);
+    // this.fileToUpload.append('serviceTypeId',this.course.serviceTypeId);
+    // this.fileToUpload.append('accessibilityId',this.course.accessibilityId);
+    // this.fileToUpload.append('languageIds',JSON.stringify(this.course.languageIds));
+    // this.fileToUpload.append('description', this.course.description);
+    // this.fileToUpload.append('price', this.course.price?.toString());
+    // this.courseName = this.course.courseName.split(' ').join('');
+    // this.fileToUpload.append('courseTags', JSON.stringify(this.tagList))
+    // this._courseService.isCourseNameExist(this.course.courseName).subscribe((response) => {
+    //   if(!response){
+    //     this.createCourseForm1.setErrors({ unauthenticated: true });
+    //     return;
+    //   }
+    //   else{
+    //     this.step += 1;
+    //     this.isStepCompleted = false;
+    //     this.nextPage = true;
+    
+    //     if(this.fromSchoolProfile != ''){
+    //     this.createCourseForm3.patchValue({
+    //       courseUrl: 'byokul.com/profile/course/' + this.selectedSchool.schoolName.split(' ').join('') + "/" +  this.course.courseName.split(' ').join(''),
+    //       });
+    //     }
+    //    else{
+    //     var schoolId = this.createCourseForm1.controls['schoolId'].value;
+    //     this._courseService.getSelectedSchool(schoolId).subscribe((response) => {
+    //       this.selectedSchool = response;
+    //       this.createCourseForm3.patchValue({
+    //         courseUrl: 'byokul.com/profile/course/' + this.selectedSchool.schoolName.split(' ').join('') + "/" +  this.course.courseName.split(' ').join(''),
+    //       });
+    //     });  
+      
+    //     }
+    //   }
+    // });
     // this.isStepCompleted = false;
     // this.step += 1;
     // this.nextPage = true;
@@ -284,7 +319,7 @@ captureTeacherId(event: any) {
     this.fileToUpload.append('studentIds',JSON.stringify(this.studentIds));
     this.fileToUpload.append('teacherIds',JSON.stringify(this.teacherIds));
 
-    this.courseUrl = 'byokul.com/profile/course/' + this.selectedSchool.schoolName.split(' ').join('') + "/" +  this.courseName.split(' ').join('');
+    this.courseUrl = 'byokul.com/profile/course/' + this.selectedSchool.schoolName.split(' ').join('').replace(" ","").toLowerCase() + "/" +  this.courseName.split(' ').join('').replace(" ","").toLowerCase();
     this.fileToUpload.append('courseUrl',JSON.stringify(this.courseUrl));
     this._courseService.createCourse(this.fileToUpload).subscribe((response:any) => {
       this.courseId = response;
@@ -380,7 +415,8 @@ captureTeacherId(event: any) {
   }
 
   courseProfile(){
-    window.location.href=`profile/course/${this.selectedSchool.schoolName}/${this.courseName}`;
+    window.open(`profile/course/${this.selectedSchool.schoolName.replace(" ","").toLowerCase()}/${this.courseName.replace(" ","").toLowerCase()}`, '_blank');
+    // window.location.href=`profile/course/${this.selectedSchool.schoolName}/${this.courseName}`;
   }
 
   onEnter(event:any) {
