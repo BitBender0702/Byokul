@@ -43,9 +43,14 @@
             <button type="button" class="btn bg-transparent text_ltgray font_12 active"><img src="../../../assets/images/chat-icon.svg"
                 class="d-block" /> 34</button>
             <button type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/eye.svg"
-                class="d-block" /> 954</button>
-            <button type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Heart-dark.svg"
-                class="d-block" /> 82</button>
+                class="d-block" /> {{reels.post.views.length}}</button>
+                <button (click)="likeUnlikePosts(reels.post.id,true)" type="button" class="btn bg-transparent text_ltgray font_12">
+                  <img *ngIf="reels.post.isPostLikedByCurrentUser" src="../../../assets/images/heart-red.svg" class="d-block" />
+                  <img *ngIf="!reels.post.isPostLikedByCurrentUser" src="../../../assets/images/Heart-dark.svg" class="d-block" />
+
+                  <span *ngIf="likesLength != undefined && currentLikedPostId== reels.post.id">{{likesLength}}</span>
+                  <span *ngIf="currentLikedPostId!= reels.post.id">{{reels.post.likes.length}}</span>
+                </button>
             <button type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Bookmark.svg"
                 class="d-block" /> 34</button>
             <button type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Upload.svg"

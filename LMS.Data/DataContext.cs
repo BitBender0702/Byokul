@@ -51,5 +51,11 @@ namespace LMS.Data
         public DbSet<SchoolDefaultLogo> SchoolDefaultLogos { get; set; }
         public DbSet<ClassCertificate> ClassCertificates { get; set; }
         public DbSet<CourseCertificate> CourseCertificates { get; set; }
+        public DbSet<ClassTag> ClassTags { get; set; }
+        public DbSet<CourseTag> CourseTags { get; set; }
+        public DbSet<Like> Likes { get; set; }
+        public DbSet<View> Views { get; set; }
+        public DbSet<Comment> Comments { get; set; }
+        public DbSet<UserPreference> UserPreferences { get; set; }
     }
 }

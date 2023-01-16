@@ -63,12 +63,12 @@ namespace LMS.App.Controllers
 
         [Route("getSchoolById")]
         [HttpGet]
-        public async Task<IActionResult> GetSchoolById(Guid schoolId)
+        public async Task<IActionResult> GetSchoolById(string schoolName)
         
         
         {
             var userId = await GetUserIdAsync(this._userManager);
-            var response = await _schoolService.GetSchoolById(schoolId, userId);    
+            var response = await _schoolService.GetSchoolById(schoolName, userId);    
             return Ok(response);
         }
 

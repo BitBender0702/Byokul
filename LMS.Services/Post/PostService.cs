@@ -25,11 +25,14 @@ namespace LMS.Services
         private IGenericRepository<School> _schoolRepository;
         private IGenericRepository<Class> _classRepository;
         private IGenericRepository<User> _userRepository;
+        private IGenericRepository<Like> _likeRepository;
+        private IGenericRepository<View> _viewRepository;
         private readonly IBlobService _blobService;
+        private readonly IUserService _userService;
         private readonly IBigBlueButtonService _bigBlueButtonService;
         private IConfiguration _config;
 
-        public PostService(IMapper mapper, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<User> userRepository, IBlobService blobService, IBigBlueButtonService bigBlueButtonService, IConfiguration config)
+        public PostService(IMapper mapper, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<User> userRepository, IGenericRepository<Like> likeRpository, IGenericRepository<View> viewRepository, IBlobService blobService, IUserService userService, IBigBlueButtonService bigBlueButtonService, IConfiguration config)
         {
             _mapper = mapper;
             _postRepository = postRepository;
@@ -38,7 +41,10 @@ namespace LMS.Services
             _schoolRepository = schoolRepository;
             _classRepository = classRepository;
             _userRepository = userRepository;
+            _likeRepository = likeRpository;
+            _viewRepository = viewRepository;
             _blobService = blobService;
+            _userService = userService;
             _bigBlueButtonService = bigBlueButtonService;
             _config = config;
         }
@@ -188,7 +194,7 @@ namespace LMS.Services
             }
         }
 
-        public async Task<PostAttachmentViewModel> GetReelById(Guid id)
+        public async Task<PostAttachmentViewModel> GetReelById(Guid id, string userId)
         {
             var postAttachment = await _postAttachmentRepository.GetAll()
                 .Include(x => x.Post)
@@ -196,6 +202,17 @@ namespace LMS.Services
                 .Where(x => x.Id == id).FirstOrDefaultAsync();
 
             var result = _mapper.Map<PostAttachmentViewModel>(postAttachment);
+            result.Post.Likes = await _userService.GetLikesOnPost(postAttachment.Post.Id);
+            result.Post.Views = await _userService.GetViewsOnPost(postAttachment.Post.Id);
+
+            if (result.Post.Likes.Any(x => x.UserId == userId && x.PostId == postAttachment.Post.Id))
+            {
+                result.Post.IsPostLikedByCurrentUser = true;
+            }
+            else
+            {
+                result.Post.IsPostLikedByCurrentUser = false;
+            }
 
             if (result.Post.PostAuthorType == (int)PostAuthorTypeEnum.School)
             {
@@ -209,18 +226,12 @@ namespace LMS.Services
                 result.Class = _mapper.Map<ClassViewModel>(classes);
             }
 
-            //if (result.Post.PostAuthorType == (int)PostAuthorTypeEnum.User)
-            //{
-            //    var user = _userRepository.GetById(result.Post.ParentId);
-            //    result.User = _mapper.Map<UserViewModel>(user);
-            //}
-
             return result;
         }
 
         public async Task<bool> PinUnpinPost(Guid attachmentId, bool isPinned)
         {
-            var post = await _postRepository.GetAll().Where(x => x.Id ==  attachmentId).FirstOrDefaultAsync();
+            var post = await _postRepository.GetAll().Where(x => x.Id == attachmentId).FirstOrDefaultAsync();
 
             if (post != null)
             {
@@ -233,6 +244,56 @@ namespace LMS.Services
             return false;
 
 
+        }
+
+        public async Task<List<LikeViewModel>> LikeUnlikePost(LikeUnlikeViewModel model)
+        {
+
+            var userLike = await _likeRepository.GetAll().Where(x => x.UserId == model.UserId && x.PostId == model.PostId).FirstOrDefaultAsync();
+
+            if (userLike != null)
+            {
+                _likeRepository.Delete(userLike.Id);
+                _likeRepository.Save();
+                var totalLikes = await _likeRepository.GetAll().Where(x => x.PostId == model.PostId).ToListAsync();
+                return _mapper.Map<List<LikeViewModel>>(totalLikes);
+            }
+
+            else
+            {
+                var like = new Like
+                {
+                    UserId = model.UserId,
+                    PostId = model.PostId,
+                    DateTime = DateTime.UtcNow,
+                    CommentId = model.CommentId == Guid.Empty ? null : model.CommentId,
+
+                };
+
+                _likeRepository.Insert(like);
+                _likeRepository.Save();
+                var totalLikes = await _likeRepository.GetAll().Where(x => x.PostId == model.PostId).ToListAsync();
+                return _mapper.Map<List<LikeViewModel>>(totalLikes);
+            }
+            return null;
+        }
+
+        public async Task<int> PostView(PostViewsViewModel model)
+        {
+            var isUserViewExist = await _viewRepository.GetAll().Where(x => x.UserId == model.UserId && x.PostId == model.PostId).FirstOrDefaultAsync();
+            if (isUserViewExist == null)
+            {
+                var view = new View
+                {
+                    UserId = model.UserId,
+                    PostId = model.PostId,
+                };
+
+                _viewRepository.Insert(view);
+                _viewRepository.Save();
+                return  _viewRepository.GetAll().Where(x => x.PostId == model.PostId).Count();
+            }
+            return _viewRepository.GetAll().Where(x => x.PostId == model.PostId).Count();
         }
     }
 }

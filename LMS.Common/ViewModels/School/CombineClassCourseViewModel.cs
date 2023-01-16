@@ -27,6 +27,7 @@ namespace LMS.Common.ViewModels.School
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public string? ThumbnailUrl { get; set; }
+        public IEnumerable<string> Tags { get; set; }
 
     }
 

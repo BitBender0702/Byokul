@@ -7,7 +7,7 @@ body {
 	font-weight: 400;
 	margin: 0;
 	padding: 0;
-	overflow-X: hidden;
+	overflow-x: hidden;
 	color: #313131;
 }
 
@@ -829,7 +829,7 @@ button.comment-btn {
 	background-color: transparent;
 	border-radius: 50%;
 	border: 3px solid #F7F7F7;
-	Padding-top: 4px;
+	padding-top: 4px;
 }
 
 /* When the radio button is checked, add a blue background */
@@ -2641,6 +2641,7 @@ button.delete-tag img {
 	.step-form, .wht_box {
 		padding: 25px 20px;
 	}
+	
 
 }
 @media (max-width:575px) {
@@ -2668,4 +2669,8 @@ button.delete-tag img {
 	}
 	
 
+}
+
+.textBlack{
+	color: black;
 }

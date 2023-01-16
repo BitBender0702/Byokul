@@ -16,6 +16,7 @@ import { PostService } from 'src/root/service/post.service';
 import { CreatePostComponent } from '../../createPost/createPost.component';
 import { MultilingualComponent } from '../../sharedModule/Multilingual/multilingual.component';
 import { PostViewComponent } from '../../postView/postView.component';
+import { LikeUnlikePost } from 'src/root/interfaces/post/likeUnlikePost';
 
 @Component({
     selector: 'classProfile-root',
@@ -33,6 +34,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     isOpenModal:boolean = false;
     loadingIcon:boolean = false;
     classId!:string;
+    validToken!:string;
 
     classLanguage!:AddClassLanguage;
     classTeacher!:AddClassTeacher;
@@ -60,6 +62,12 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     disabled:boolean = true;
     currentDate!:string;
     isOwner!:boolean;
+    userId!:string;
+    likesLength!:number;
+    isLiked!:boolean;
+    likeUnlikePost!: LikeUnlikePost;
+    currentLikedPostId!:string;
+    className!:string;
 
     @ViewChild('closeEditModal') closeEditModal!: ElementRef;
     @ViewChild('closeTeacherModal') closeTeacherModal!: ElementRef;
@@ -77,36 +85,39 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     }
   
     ngOnInit(): void {
+      debugger
+      this.validToken = localStorage.getItem("jwt")?? '';
       this.loadingIcon = true;
       var selectedLang = localStorage.getItem("selectedLanguage");
       this.translate.use(selectedLang?? '');
 
-      var id = this.route.snapshot.paramMap.get('classId');
-      this.classId = id ?? '';
+      // var id = this.route.snapshot.paramMap.get('classId');
+      // this.classId = id ?? '';
 
-      var className = this.route.snapshot.paramMap.get('className');
+      this.className = this.route.snapshot.paramMap.get('className')??'';
       var schoolName = this.route.snapshot.paramMap.get('schoolName');
 
-      if(this.classId == ''){
-        this._classService.getClassByName(className,schoolName).subscribe((response) => {
-          this.classId = response.classId;
-          this._classService.getClassById(this.classId).subscribe((response) => {
-            this.class = response;
-            this.isOwnerOrNot();
-            this.loadingIcon = false;
-            this.isDataLoaded = true;
-          });
-        })
+      // if(this.classId == ''){
+      //   this._classService.getClassByName(this.className,schoolName).subscribe((response) => {
+      //     debugger
+      //     this.classId = response.classId;
+      //     this._classService.getClassById(this.classId).subscribe((response) => {
+      //       this.class = response;
+      //       this.isOwnerOrNot();
+      //       this.loadingIcon = false;
+      //       this.isDataLoaded = true;
+      //     });
+      //   })
 
-      }
-      else{
-      this._classService.getClassById(this.classId).subscribe((response) => {
+      // }
+      // else{
+      this._classService.getClassById(this.className.replace(" ","").toLowerCase()).subscribe((response) => {
         this.class = response;
         this.isOwnerOrNot();
         this.loadingIcon = false;
         this.isDataLoaded = true;
       });
-    }
+    // }
 
       this.editClassForm = this.fb.group({
         schoolName: this.fb.control(''),
@@ -177,6 +188,8 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
         certificates:[]
        }
 
+       this.InitializeLikeUnlikePost();
+
     }
 
     getClassDetails(classId:string){
@@ -187,12 +200,23 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     
   }
 
+  InitializeLikeUnlikePost(){
+    this.likeUnlikePost = {
+      postId: '',
+      userId: '',
+      isLike:false,
+      commentId:''
+     };
+
+  }
+
   isOwnerOrNot(){
     var validToken = localStorage.getItem("jwt");
       if (validToken != null) {
         let jwtData = validToken.split('.')[1]
         let decodedJwtJsonData = window.atob(jwtData)
         let decodedJwtData = JSON.parse(decodedJwtJsonData);
+        this.userId = decodedJwtData.jti;
         if(decodedJwtData.sub == this.class.createdBy){
           this.isOwner = true;
         }
@@ -564,6 +588,49 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
         posts: posts
       };
       this.bsModalService.show(PostViewComponent,{initialState});
+    }
+
+    requestMessage(){
+      if(this.validToken == ''){
+        window.open('user/auth/login', '_blank');
+      }
+    }
+
+    likeUnlikePosts(postId:string, isLike:boolean){
+      this.currentLikedPostId = postId;
+      this.class.posts.filter((p : any) => p.id == postId).forEach( (item : any) => {
+        var likes: any[] = item.likes;
+        var isLiked = likes.filter(x => x.userId == this.userId && x.postId == postId);
+        if(isLiked.length != 0){
+          this.isLiked = false;
+          this.likesLength = item.likes.length - 1;
+          item.isPostLikedByCurrentUser = false;
+        }
+        else{
+          this.isLiked = true;
+          this.likesLength = item.likes.length + 1;
+          item.isPostLikedByCurrentUser = true;
+      
+        }
+      }); 
+      
+     
+      this.likeUnlikePost.postId = postId;
+      this.likeUnlikePost.isLike = isLike;
+      this.likeUnlikePost.commentId = '00000000-0000-0000-0000-000000000000'
+      this._postService.likeUnlikePost(this.likeUnlikePost).subscribe((response) => {
+    
+    
+         this.class.posts.filter((p : any) => p.id == postId).forEach( (item : any) => {
+          var itemss = item.likes;
+          item.likes = response;
+        }); 
+  
+         this.InitializeLikeUnlikePost();
+         console.log("succes");
+      });
+    
+    
     }
   
 }

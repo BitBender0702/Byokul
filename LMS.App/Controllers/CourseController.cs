@@ -49,9 +49,10 @@ namespace LMS.App.Controllers
 
         [Route("getCourseById")]
         [HttpGet]
-        public async Task<IActionResult> GetCourseById(Guid courseId)
+        public async Task<IActionResult> GetCourseById(string courseName)
         {
-            var response = await _courseService.GetCourseById(courseId);
+            var userId = await GetUserIdAsync(this._userManager);
+            var response = await _courseService.GetCourseById(courseName, userId);
             return Ok(response);
         }
 

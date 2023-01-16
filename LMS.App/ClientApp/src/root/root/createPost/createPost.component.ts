@@ -401,6 +401,13 @@ export class CreatePostComponent implements OnInit {
     }
    }
 
+   removeInitialTags(tag:any){
+    const tagIndex = this.initialTagList.findIndex((item) => item ===tag);
+    if (tagIndex > -1) {
+      this.initialTagList.splice(tagIndex, 1);
+    }
+   }
+
    isValidTags(){
     if(this.initialTagList == undefined || this.initialTagList.length == 0){
       this.isTagsValid = false;

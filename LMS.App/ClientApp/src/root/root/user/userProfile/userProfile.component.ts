@@ -18,6 +18,8 @@ import { FollowUnfollow } from 'src/root/interfaces/FollowUnfollow';
 import { PostService } from 'src/root/service/post.service';
 import { PostViewComponent } from '../../postView/postView.component';
 import { MessageService } from 'primeng/api';
+import { LikeUnlikePost } from 'src/root/interfaces/post/likeUnlikePost';
+import { PostView } from 'src/root/interfaces/post/postView';
 
 
 @Component({
@@ -40,10 +42,13 @@ import { MessageService } from 'primeng/api';
     isProfileGrid:boolean = true;
     userId!:string;
     isFollowed!:boolean;
+    likesLength!:number;
+    isLiked!:boolean;
 
     private _userService;
     private _postService;
     user:any;
+    validToken!:string;
 
     userLanguage!:AddUserLanguage;
     deleteLanguage!: DeleteUserLanguage;
@@ -57,6 +62,11 @@ import { MessageService } from 'primeng/api';
     isOwner!:boolean;
     followUnfollowUser!: FollowUnfollow;
     followersLength!:number;
+    likeUnlikePost!: LikeUnlikePost;
+    currentLikedPostId!:string;
+    postView!:PostView;
+    loginUserId!:string;
+
     @ViewChild('closeEditModal') closeEditModal!: ElementRef;
     @ViewChild('closeLanguageModal') closeLanguageModal!: ElementRef;
     @ViewChild('imageFile') imageFile!: ElementRef;
@@ -75,6 +85,7 @@ import { MessageService } from 'primeng/api';
     }
   
     ngOnInit(): void {
+      this.validToken = localStorage.getItem("jwt")?? '';
       this.loadingIcon = true;
       // this.blockUI();
       var selectedLang = localStorage.getItem("selectedLanguage");
@@ -122,6 +133,9 @@ import { MessageService } from 'primeng/api';
       });
 
       this.InitializeFollowUnfollowUser();
+      this.InitializeLikeUnlikePost();
+      this.InitializePostView();
+
 
     }
 
@@ -132,12 +146,30 @@ import { MessageService } from 'primeng/api';
        };
     }
 
+    InitializePostView(){
+      this.postView = {
+        postId: '',
+        userId: ''
+       };
+    }
+
+    InitializeLikeUnlikePost(){
+      this.likeUnlikePost = {
+        postId: '',
+        userId: '',
+        isLike:false,
+        commentId:''
+       };
+
+    }
+
     isOwnerOrNot(){
       var validToken = localStorage.getItem("jwt");
         if (validToken != null) {
           let jwtData = validToken.split('.')[1]
           let decodedJwtJsonData = window.atob(jwtData)
           let decodedJwtData = JSON.parse(decodedJwtJsonData);
+          this.loginUserId = decodedJwtData.jti;
           if(decodedJwtData.sub == this.user.email){
             this.isOwner = true;
           }
@@ -220,6 +252,10 @@ import { MessageService } from 'primeng/api';
     }
 
     followUser(userId:string,from:string){
+      if(this.validToken == ''){
+        window.open('user/auth/login', '_blank');
+      }
+      else{
       this.followUnfollowUser.id = userId;
       if(from == FollowUnFollowEnum.Follow){
         this.followersLength += 1;
@@ -234,6 +270,7 @@ import { MessageService } from 'primeng/api';
       this._userService.saveUserFollower(this.followUnfollowUser).subscribe((response) => {
         this.InitializeFollowUnfollowUser();
       });
+    }
     }
 
     getUserDetails(userId:string){
@@ -384,6 +421,70 @@ openPostsViewModal(posts:string): void {
   };
   this.bsModalService.show(PostViewComponent,{initialState});
 }
+
+userChat(){
+  if(this.validToken == ''){
+    window.open('user/auth/login', '_blank');
+  }
+  else{
+    window.location.href=`user/chat`;
+  }   
+}
+
+likeUnlikePosts(postId:string, isLike:boolean){
+  this.currentLikedPostId = postId;
+  this.user.posts.filter((p : any) => p.id == postId).forEach( (item : any) => {
+    var likes: any[] = item.likes;
+    var isLiked = likes.filter(x => x.userId == this.user.id && x.postId == postId);
+  if(isLiked.length != 0){
+    this.isLiked = false;
+    this.likesLength = item.likes.length - 1;
+    item.isPostLikedByCurrentUser = false;
+  }
+  else{
+    this.isLiked = true;
+    this.likesLength = item.likes.length + 1;
+    item.isPostLikedByCurrentUser = true;
+
+  }
+  }); 
+  
+ 
+  this.likeUnlikePost.postId = postId;
+  this.likeUnlikePost.isLike = isLike;
+  this.likeUnlikePost.commentId = '00000000-0000-0000-0000-000000000000'
+  this._postService.likeUnlikePost(this.likeUnlikePost).subscribe((response) => {
+
+
+     this.user.posts.filter((p : any) => p.id == postId).forEach( (item : any) => {
+      var itemss = item.likes;
+      item.likes = response;
+    }); 
+
+
+
+
+     this.InitializeLikeUnlikePost();
+     console.log("succes");
+  });
+
+
+}
+
+// addPostView(postId:string){
+//   debugger
+//   if(this.loginUserId != undefined){
+//   this.postView.postId = postId;
+//   this._postService.postView(this.postView).subscribe((response) => {
+//     debugger
+//     console.log('success');
+//     // this.user.posts.filter((p : any) => p.id == postId).forEach( (item : any) => {
+//     //  var itemss = item.likes;
+//     //  item.likes = response;
+//    }); 
+//   }
+
+// }
 
 }
 
