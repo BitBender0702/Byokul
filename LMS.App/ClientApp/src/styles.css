@@ -378,7 +378,7 @@ input[type=date] {
 
 .sidemenu ul li:before,
 .notification-box .dropdown .dropdown-toggle:after,
-ul.before-none li:before {
+ul.before-none li:before, .after-none:after {
 	display: none;
 }
 
@@ -2510,6 +2510,10 @@ button.delete-tag img {
     align-items: center;
     justify-content: center;
     overflow: hidden;
+}
+.post-right-action {
+    position: absolute;
+    right: 0;
 }
 
 @media screen and (min-width:1200px) {
