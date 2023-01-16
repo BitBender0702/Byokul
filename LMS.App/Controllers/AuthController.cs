@@ -1,4 +1,6 @@
-﻿using LMS.Common.ViewModels.Account;
+﻿using Abp.Net.Mail;
+using LMS.Common.ViewModels.Account;
+using LMS.Common.ViewModels.Chat;
 using LMS.Data.Entity;
 using LMS.Services.Account;
 using Microsoft.AspNetCore.Identity;
@@ -57,13 +59,26 @@ namespace LMS.App.Controllers
 
             if (result.Succeeded)
             {
-                await _signInManager.SignInAsync(user, isPersistent: false);
-                var tokenString = await _authService.GenerateJSONWebToken(user);
-                return Ok(new { token = tokenString });
+                var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                var confirmationLink = Url.Action("confirm-email", "auth", new { token, email = user.Email }, "http");
+                _authService.SendEmail(new List<string> { user.Email}, null, null, "Confirmation email link", confirmationLink);
+
+                return Ok(new { result = "success" });
             }
             return Ok(new { token = "" });
         }
 
+        //Confirm Email
+        [HttpGet]
+        [Route("confirm-email")]
+        public async Task<IActionResult> ConfirmEmail(string token, string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user is null) return BadRequest($"User not found for email: {email}");
+
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+            return (result.Succeeded  ? Ok( new { result = "success" } ) : BadRequest("Invalid token"));
+        }
 
         // Forget Password
         [Route("forgetPassword")]
@@ -126,5 +141,7 @@ namespace LMS.App.Controllers
             await _authService.Logout();
             return Ok();
         }
+
+        
     }
 }
