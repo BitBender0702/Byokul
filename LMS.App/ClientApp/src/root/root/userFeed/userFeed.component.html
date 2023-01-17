@@ -74,7 +74,7 @@
                     allowfullscreen></iframe> -->
                   <div class="pinned-view d-flex  justify-content-between align-items-start">
                     <button type="button" class="view font_12 bg-transparent border-0 text-light">
-                      <img src="../../../assets/images/eye-light.svg" /> 954
+                      <img src="../../../assets/images/eye-light.svg" /> {{post.views.length}}
                     </button>
                     <button type="button" class="pinned bg-transparent border-0">
                       <img src="../../../assets/images/pinned-orange.svg" />
@@ -275,7 +275,7 @@
                 </div>
                 <div [ngClass]="gridItemInfo.postAttachments.length>0 ? 'col-lg-6':'col-lg-12 heightForText'">
                   <div class="class-preview-right position-relative h-100">
-                    <button (click)="hideGridItemInfo()" type="button" class="bg-transparent border-0 close-preview"><img
+                    <button (click)="hideGridItemInfo('FromMyFeeds')" type="button" class="bg-transparent border-0 close-preview"><img
                         src="../../../../assets/images/cross.svg" /></button>
                     <div class="schoolgrid-header">
                       <div class="d-flex align-items-center position-relative">
@@ -387,9 +387,14 @@
               <button type="button" class="bg-transparent border-0 next-feed"><img
                   src="../../../assets/images/chevron-right-circle.svg" /></button>
               <div class="feedbox-inner d-flex ">
+                <carousel
+                [itemsPerSlide]="itemsPerSlide"
+                [singleSlideOffset]="singleSlideOffset"
+                [interval]="0"
+                [noWrap]="noWrap">
                 <div *ngFor="let post of globalFeeds">
                   <div *ngIf="post.postType == 3">
-                  <div *ngFor="let postAttachment of post.postAttachments">
+                  <slide *ngFor="let postAttachment of post.postAttachments">
                     <div *ngIf="postAttachment.fileType == 2">
                 <div class="feedimg-box position-relative text-light position-relative">
                   <a [routerLink]="['/user/reels', postAttachment.id]">
@@ -404,7 +409,7 @@
                     allowfullscreen></iframe> -->
                   <div class="pinned-view d-flex  justify-content-between align-items-start">
                     <button type="button" class="view font_12 bg-transparent border-0 text-light">
-                      <img src="../../../assets/images/eye-light.svg" /> 954
+                      <img src="../../../assets/images/eye-light.svg" /> {{post.views.length}}
                     </button>
                     <!-- <button type="button" class="pinned bg-transparent border-0">
                       <img src="../../../assets/images/pinned-light.svg" />
@@ -418,12 +423,15 @@
                     {{post.title}}
                   </div>
                 </div>
+              
+   
+              
                 </div>
+                </slide>
+             
+           </div>
                 </div>
-                </div>
-                </div>
-               
-
+      </carousel>
 
               </div>
             </div>
@@ -451,7 +459,7 @@
               <div class="school-grid-body" (click)="openPostsViewModal(post)">
                 <p class="text_sec1 font_14" style="cursor: pointer;">{{post.description}}</p>
                 <div class="teacher-tags tag-box hashtag_box">
-                  <span *ngFor="let tag of post.postTags" class="custom-tag">#{{tag.postTagValue}}</span>
+                  <span *ngFor="let tag of post.postTags" class="custom-tag">{{tag.postTagValue}}</span>
                 </div>
                 <div *ngIf="post.postAttachments.length" class="school-grid-thumbnail new-school-grid-thumbnail" style="cursor: pointer;">
                   <div class="row gx-1 h-100">
@@ -586,11 +594,11 @@
           </div>
 
           <div class="list-schol-profile" *ngIf="!isProfileGrid">
-            <div [ngClass]="isGridItemInfo ? 'd-block school-grid-box position-relative school-list-box h-100':'d-none school-grid-box position-relative school-list-box h-100'" *ngIf="gridItemInfo!=undefined">
+            <div [ngClass]="isGridItemInfoForGlobal ? 'd-block school-grid-box position-relative school-list-box h-100':'d-none school-grid-box position-relative school-list-box h-100'" *ngIf="gridItemInfoForGlobal!=undefined">
               <div class="row">
-                <div [ngClass]="gridItemInfo.postAttachments.length>0 ? 'd-block col-lg-6':'d-none'">
+                <div [ngClass]="gridItemInfoForGlobal.postAttachments.length>0 ? 'd-block col-lg-6':'d-none'">
                   <carousel>
-                  <div *ngFor="let postAttachment of gridItemInfo.postAttachments" class="school-grid-thumbnail">
+                  <div *ngFor="let postAttachment of gridItemInfoForGlobal.postAttachments" class="school-grid-thumbnail">
                     <slide *ngIf="postAttachment.fileType==2">
                     <div *ngIf="postAttachment?.fileType==2" class="videofile">
                       <video style="height: 300px;" controls>
@@ -604,39 +612,39 @@
                   </div>
                   </carousel>
                 </div>
-                <div [ngClass]="gridItemInfo.postAttachments.length>0 ? 'col-lg-6':'col-lg-12 heightForText'">
+                <div [ngClass]="gridItemInfoForGlobal.postAttachments.length>0 ? 'col-lg-6':'col-lg-12 heightForText'">
                   <div class="class-preview-right position-relative h-100">
-                    <button (click)="hideGridItemInfo()" type="button" class="bg-transparent border-0 close-preview"><img
+                    <button (click)="hideGridItemInfo('FromGlobalFeeds')" type="button" class="bg-transparent border-0 close-preview"><img
                         src="../../../../assets/images/cross.svg" /></button>
                     <div class="schoolgrid-header">
                       <div class="d-flex align-items-center position-relative">
                         <div class="school-gridprofile-icon">
-                          <img [src]="gridItemInfo.parentImageUrl">
+                          <img [src]="gridItemInfoForGlobal.parentImageUrl">
                         </div>
-                        <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">{{gridItemInfo.title}}</h2>
+                        <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">{{gridItemInfoForGlobal.title}}</h2>
                       </div>
       
-                      <!-- <p class="font_14 school-grid-date d-inline-block mb-0">
-                        {{gridItemInfo.dateTime | date : "MMMM d"}} - {{gridItemInfo.dateTime | date : "hh mm"}}  
-                      </p> -->
+                      <p class="font_14 school-grid-date d-inline-block mb-0">
+                        {{gridItemInfoForGlobal.dateTime | date : "MMMM d"}} - {{gridItemInfoForGlobal.dateTime | date : "hh mm"}}  
+                      </p>
                     </div>
-                    <p class="text_sec1 font_14 pt-3">{{gridItemInfo.description}}</p>
-                    <!-- <div *ngIf="gridItemInfo.postTags.length != 0" class="teacher-tags tag-box hashtag_box">
-                      <span *ngFor="let tag of gridItemInfo.postTags" class="custom-tag">{{tag.postTagValue}}</span>
-                    </div> -->
+                    <p class="text_sec1 font_14 pt-3">{{gridItemInfoForGlobal.description}}</p>
+                    <div *ngIf="gridItemInfoForGlobal.postTags.length != 0" class="teacher-tags tag-box hashtag_box">
+                      <span *ngFor="let tag of gridItemInfoForGlobal.postTags" class="custom-tag">{{tag.postTagValue}}</span>
+                    </div>
                     <div class="school-grid-footer preview-right-action">
                       <button type="button" class="bg-transparent border-0 function-btns">
                         <img src="../../../../assets/images/eye.svg" class="d-block mx-auto">
-                        <span class="textBlack">{{gridItemInfo.views.length}}</span>
+                        <span class="textBlack">{{gridItemInfoForGlobal.views.length}}</span>
                       </button>
-                      <button (click)="likeUnlikeGlobalPosts(gridItemInfo.id,true)" type="button" class="bg-transparent border-0 function-btns text-light">
-                        <img *ngIf="gridItemInfo.isPostLikedByCurrentUser" src="../../../assets/images/heart-red.svg" class="d-block mx-auto" />
-                        <img *ngIf="!gridItemInfo.isPostLikedByCurrentUser" src="../../../../assets/images/Heart-dark.svg" class="d-block mx-auto" />
+                      <button (click)="likeUnlikeGlobalPosts(gridItemInfoForGlobal.id,true)" type="button" class="bg-transparent border-0 function-btns text-light">
+                        <img *ngIf="gridItemInfoForGlobal.isPostLikedByCurrentUser" src="../../../assets/images/heart-red.svg" class="d-block mx-auto" />
+                        <img *ngIf="!gridItemInfoForGlobal.isPostLikedByCurrentUser" src="../../../../assets/images/Heart-dark.svg" class="d-block mx-auto" />
       
-                        <span class="textBlack" *ngIf="likesLength != undefined && currentLikedPostId== gridItemInfo.id">{{likesLength}}</span>
-                        <span class="textBlack" *ngIf="currentLikedPostId!= gridItemInfo.id">{{gridItemInfo.likes.length}}</span>
+                        <span class="textBlack" *ngIf="likesLength != undefined && currentLikedPostId== gridItemInfoForGlobal.id">{{likesLength}}</span>
+                        <span class="textBlack" *ngIf="currentLikedPostId!= gridItemInfoForGlobal.id">{{gridItemInfoForGlobal.likes.length}}</span>
                       </button>
-                      <button (click)="openPostsViewModal(gridItemInfo)" type="button" class="bg-transparent border-0 function-btns">
+                      <button (click)="openPostsViewModal(gridItemInfoForGlobal)" type="button" class="bg-transparent border-0 function-btns">
                         <img src="../../../../assets/images/Chat-dark.svg" class="d-block mx-auto">
                         34
                       </button>

@@ -46,7 +46,9 @@ namespace LMS.Services
         private readonly UserManager<User> _userManager;
         private readonly IBlobService _blobService;
         private readonly IUserService _userService;
-        public SchoolService(IMapper mapper, IGenericRepository<School> schoolRepository, IGenericRepository<SchoolCertificate> schoolCertificateRepository, IGenericRepository<SchoolTag> schoolTagRepository, IGenericRepository<Country> countryRepository, IGenericRepository<Specialization> specializationRepository, IGenericRepository<Language> languageRepository, IGenericRepository<SchoolUser> schoolUserRepository, IGenericRepository<SchoolFollower> schoolFollowerRepository, IGenericRepository<SchoolLanguage> schoolLanguageRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<SchoolTeacher> schoolTeacherRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<CourseTeacher> courseTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<SchoolDefaultLogo> schoolDefaultLogoRepository, UserManager<User> userManager, IBlobService blobService, IUserService userService, IGenericRepository<ClassTag> classTagRepository)
+        private readonly IClassService _classService;
+        private readonly ICourseService _courseService;
+        public SchoolService(IMapper mapper, IGenericRepository<School> schoolRepository, IGenericRepository<SchoolCertificate> schoolCertificateRepository, IGenericRepository<SchoolTag> schoolTagRepository, IGenericRepository<Country> countryRepository, IGenericRepository<Specialization> specializationRepository, IGenericRepository<Language> languageRepository, IGenericRepository<SchoolUser> schoolUserRepository, IGenericRepository<SchoolFollower> schoolFollowerRepository, IGenericRepository<SchoolLanguage> schoolLanguageRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<SchoolTeacher> schoolTeacherRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<CourseTeacher> courseTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<SchoolDefaultLogo> schoolDefaultLogoRepository, UserManager<User> userManager, IBlobService blobService, IUserService userService, IGenericRepository<ClassTag> classTagRepository, IClassService classService, ICourseService courseService)
         {
             _mapper = mapper;
             _schoolRepository = schoolRepository;
@@ -73,6 +75,8 @@ namespace LMS.Services
             _blobService = blobService;
             _userService = userService;
             _classTagRepository = classTagRepository;
+            _classService = classService;
+            _courseService = courseService;
         }
 
         public async Task<Guid> SaveNewSchool(SchoolViewModel schoolViewModel, string createdById)
@@ -309,8 +313,8 @@ namespace LMS.Services
                 response.Languages = languageViewModel;
                 response.SchoolCertificates = await GetCertificateBySchoolId(response.SchoolId);
                 response.SchoolFollowers = await FollowerList(response.SchoolId);
-                response.Classes = await GetClassesBySchoolId(response.SchoolId);
-                response.Courses = await GetCoursesBySchoolId(response.SchoolId);
+                response.Classes = await GetClassesBySchoolId(response.SchoolId,loginUserId);
+                response.Courses = await GetCoursesBySchoolId(response.SchoolId,loginUserId);
                 response.Posts = await GetPostsBySchool(response.SchoolId, loginUserId);
 
                 var classTeachers = await GetClassTeachersBySchoolId(response.SchoolId);
@@ -450,7 +454,7 @@ namespace LMS.Services
             await AddRoleForUser(schoolUser.UserId, "Teacher");
         }
 
-        public async Task<IEnumerable<ClassViewModel>> GetClassesBySchoolId(Guid schoolId)
+        public async Task<IEnumerable<ClassViewModel>> GetClassesBySchoolId(Guid schoolId,string loginUserId)
         {
             var classList = await _classRepository.GetAll().Include(x => x.Accessibility).Include(x => x.ServiceType).Where(x => x.SchoolId == schoolId && !x.IsEnable && !x.IsDeleted).ToListAsync();
 
@@ -459,12 +463,26 @@ namespace LMS.Services
             foreach (var item in result)
             {
                 item.ClassTags = tagList.Where(x => x.ClassId == item.ClassId).Select(x => x.ClassTagValue).ToList();
+
+                item.ClassLike = await _classService.GetLikesOnClass(item.ClassId);
+                item.ClassViews = await _classService.GetViewsOnClass(item.ClassId);
+
+                if (item.ClassLike.Any(x => x.UserId == loginUserId && x.ClassId == item.ClassId))
+                {
+                    item.IsClassLikedByCurrentUser = true;
+                }
+                else
+                {
+                    item.IsClassLikedByCurrentUser = false;
+                }
             }
+
+           
             return result;
 
         }
 
-        public async Task<IEnumerable<CourseViewModel>> GetCoursesBySchoolId(Guid schoolId)
+        public async Task<IEnumerable<CourseViewModel>> GetCoursesBySchoolId(Guid schoolId,string loginUserId)
         {
             var courseList = await _courseRepository.GetAll().Where(x => x.SchoolId == schoolId && !x.IsEnable && !x.IsDeleted).ToListAsync();
 
@@ -473,6 +491,18 @@ namespace LMS.Services
             foreach (var item in result)
             {
                 item.CourseTags = tagList.Where(x => x.ClassId == item.CourseId).Select(x => x.ClassTagValue).ToList();
+
+                item.CourseLike = await _courseService.GetLikesOnCourse(item.CourseId);
+                item.CourseViews = await _courseService.GetViewsOnCourse(item.CourseId);
+
+                if (item.CourseLike.Any(x => x.UserId == loginUserId && x.CourseId == item.CourseId))
+                {
+                    item.IsCourseLikedByCurrentUser = true;
+                }
+                else
+                {
+                    item.IsCourseLikedByCurrentUser = false;
+                }
             }
             return result;
 
@@ -774,10 +804,10 @@ namespace LMS.Services
             return null;
         }
 
-        public async Task<IOrderedEnumerable<CombineClassCourseViewModel>> GetSchoolClassCourse(Guid schoolId)
+        public async Task<IOrderedEnumerable<CombineClassCourseViewModel>> GetSchoolClassCourse(Guid schoolId,string userId)
         {
-            var classes = await GetClassesBySchoolId(schoolId);
-            var courses = await GetCoursesBySchoolId(schoolId);
+            var classes = await GetClassesBySchoolId(schoolId, userId);
+            var courses = await GetCoursesBySchoolId(schoolId, userId);
 
             var model = new List<CombineClassCourseViewModel>();
 
@@ -799,6 +829,9 @@ namespace LMS.Services
                 item.EndDate = classDetails.EndDate;
                 item.ThumbnailUrl = classDetails.ThumbnailUrl;
                 item.Tags = classDetails.ClassTags;
+                item.IsLikedByCurrentUser = classDetails.IsClassLikedByCurrentUser;
+                item.ClassLikes = classDetails.ClassLike;
+                item.ClassViews = classDetails.ClassViews;
 
                 model.Add(item);
             }
@@ -819,6 +852,9 @@ namespace LMS.Services
                 item.IsPinned = courseDetails.IsPinned;
                 item.ThumbnailUrl = courseDetails.ThumbnailUrl;
                 item.Tags = courseDetails.CourseTags;
+                item.IsLikedByCurrentUser = courseDetails.IsCourseLikedByCurrentUser;
+                item.CourseLikes = courseDetails.CourseLike;
+                item.CourseViews = courseDetails.CourseViews;
 
                 model.Add(item);
             }

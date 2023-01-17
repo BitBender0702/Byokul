@@ -41,7 +41,13 @@ export class UserFeedComponent implements OnInit {
     isLiked!:boolean;
     gridItemInfo:any;
     isGridItemInfo: boolean = false;
+    gridItemInfoForGlobal:any;
+    isGridItemInfoForGlobal: boolean = false;
     private _postService;
+
+    itemsPerSlide = 7;
+    singleSlideOffset = true;
+    noWrap = true;
 
     constructor(private bsModalService: BsModalService,postService: PostService,public userService:UserService, public options: ModalOptions,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
          this._userService = userService;
@@ -241,27 +247,29 @@ export class UserFeedComponent implements OnInit {
           this.isGridItemInfo = true;
         
           // here we also add a view for this post
-          this.addPostView(this.gridItemInfo.id);
+          this.addPostView(this.gridItemInfo.id,From);
         }
         else{
           var posts: any[] = this.globalFeeds;
-          this.gridItemInfo = posts.find(x => x.id == postId);
-          this.isGridItemInfo = true;
-          this.addPostView(this.gridItemInfo.id);
+          this.gridItemInfoForGlobal = posts.find(x => x.id == postId);
+          this.isGridItemInfoForGlobal = true;
+          this.addPostView(this.gridItemInfoForGlobal.id,From);
         }
       }
       
-      addPostView(postId:string){
+      addPostView(postId:string,From:string){
         debugger
         if(this.userId != undefined){
          this.initializePostView();
         this.postView.postId = postId;
         this._postService.postView(this.postView).subscribe((response) => {
           debugger
-          this.gridItemInfo.views.length = response;
-          // this.user.posts.filter((p : any) => p.id == postId).forEach( (item : any) => {
-          //  var itemss = item.likes;
-          //  item.likes = response;
+          if(From == 'FromMyFeeds'){
+            this.gridItemInfo.views.length = response;
+          }
+          else{
+            this.gridItemInfoForGlobal.views.length = response;
+          }
          }); 
         }
       
@@ -276,8 +284,13 @@ export class UserFeedComponent implements OnInit {
          }
       }
       
-      hideGridItemInfo(){
+      hideGridItemInfo(From:string){
+        if(From == 'FromMyFeeds'){
         this.isGridItemInfo = this.isGridItemInfo ? false : true;
+        }
+        else{
+          this.isGridItemInfoForGlobal = this.isGridItemInfoForGlobal ? false : true;
+        }
       
       }
 

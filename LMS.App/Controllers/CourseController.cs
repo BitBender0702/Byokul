@@ -159,5 +159,15 @@ namespace LMS.App.Controllers
             return Ok(await _courseService.IsCourseNameExist(courseName));
         }
 
+        [Route("courseView")]
+        [HttpPost]
+        public async Task<IActionResult> CourseView([FromBody] CourseViewsViewModel model)
+        {
+            var userId = await GetUserIdAsync(this._userManager);
+            model.UserId = userId;
+            var response = await _courseService.CourseView(model);
+            return Ok(response);
+        }
+
     }
 }

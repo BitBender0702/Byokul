@@ -2,7 +2,7 @@
   <div  [ngClass]="isOpenSidebar ? 'sidemenu d-xl-block d-block ' : 'sidemenu d-xl-block d-none'" id="side-bar">
   <span class="closebtn d-xl-none" (click)="closeSidebar()" title="Close Side Menu">×</span>
   <div class="text-center">
-    <a href="" class="main-logo"><img src="../../../assets/images/logo.svg" /></a>
+    <a [routerLink]="['/user/userFeed']" class="main-logo"><img src="../../../assets/images/logo.svg" /></a>
   </div>
   <div *ngIf="!validUser" style="margin-top:40px;">
     <button [routerLink]="['/user/auth/register']" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 me-2" style="width:100px;">Register</button>
@@ -42,7 +42,7 @@
 
     </ul>
   </div>
-  <button [routerLink]="['/user/userFeed']" type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400">{{'Feeds'| translate }} </button>
+  <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400">{{'MyEarnings'| translate }}$ </button>
   <hr class="earning-hr" />
   <div class="custom-tabs">
     <ul class="nav nav-tabs mb-3 border-0" id="myTab" role="tablist">

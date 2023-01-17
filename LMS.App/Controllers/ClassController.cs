@@ -180,5 +180,15 @@ namespace LMS.App.Controllers
             return Ok();
         }
 
+        [Route("classView")]
+        [HttpPost]
+        public async Task<IActionResult> ClassView([FromBody] ClassViewsViewModel model)
+        {
+            var userId = await GetUserIdAsync(this._userManager);
+            model.UserId = userId;
+            var response = await _classService.ClassView(model);
+            return Ok(response);
+        }
+
     }
 }

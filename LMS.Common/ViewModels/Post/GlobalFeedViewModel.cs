@@ -14,6 +14,8 @@ namespace LMS.Common.ViewModels.Post
         public string ParentName { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
+        public DateTime? DateTime { get; set; }
+        public IEnumerable<PostTagViewModel> PostTags { get; set; }
         public List<LikeViewModel> Likes { get; set; }
         public List<ViewsViewModel> Views { get; set; }
         public List<PostAttachmentViewModel> PostAttachments { get; set; }

@@ -2,6 +2,7 @@
 using LMS.Common.ViewModels.Class;
 using LMS.Common.ViewModels.Common;
 using LMS.Common.ViewModels.Post;
+using LMS.Common.ViewModels.School;
 using LMS.Common.ViewModels.Student;
 using LMS.Common.ViewModels.Teacher;
 using LMS.Data.Entity;
@@ -34,10 +35,12 @@ namespace LMS.Services
         private IGenericRepository<ClassTag> _classTagRepository;
         private IGenericRepository<ClassCertificate> _classCertificateRepository;
         private readonly UserManager<User> _userManager;
+        private IGenericRepository<ClassLike> _classLikeRepository;
+        private IGenericRepository<ClassViews> _classViewsRepository;
         private readonly IBlobService _blobService;
         private readonly IUserService _userService;
 
-        public ClassService(IMapper mapper, IGenericRepository<Class> classRepository, IGenericRepository<ClassLanguage> classLanguageRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<ClassDiscipline> classDisciplineRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<ClassTag> classTagRepository, IGenericRepository<ClassCertificate> classCertificateRepository, UserManager<User> userManager, IBlobService blobService, IUserService userService)
+        public ClassService(IMapper mapper, IGenericRepository<Class> classRepository, IGenericRepository<ClassLanguage> classLanguageRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<ClassDiscipline> classDisciplineRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<ClassTag> classTagRepository, IGenericRepository<ClassCertificate> classCertificateRepository, UserManager<User> userManager, IBlobService blobService, IUserService userService, IGenericRepository<ClassLike> classLikeRepository, IGenericRepository<ClassViews> classViewsRepository)
         {
             _mapper = mapper;
             _classRepository = classRepository;
@@ -53,6 +56,8 @@ namespace LMS.Services
             _userManager = userManager;
             _blobService = blobService;
             _userService = userService;
+            _classLikeRepository = classLikeRepository;
+            _classViewsRepository = classViewsRepository;
         }
         public async Task<Guid> SaveNewClass(ClassViewModel classViewModel, string createdById)
         {
@@ -585,6 +590,66 @@ namespace LMS.Services
                 _classTagRepository.Save();
 
             }
+        }
+
+        public async Task<List<ClassLikeViewModel>> GetLikesOnClass(Guid classId)
+        {
+            var likes = await _classLikeRepository.GetAll().Where(x => x.ClassId == classId).ToListAsync();
+            return _mapper.Map<List<ClassLikeViewModel>>(likes);
+        }
+        public async Task<List<ClassViewsViewModel>> GetViewsOnClass(Guid classId)
+        {
+            var views = await _classViewsRepository.GetAll().Where(x => x.ClassId == classId).ToListAsync();
+            return _mapper.Map<List<ClassViewsViewModel>>(views);
+
+        }
+
+        public async Task<List<ClassLikeViewModel>> LikeUnlikeClass(LikeUnlikeClassCourse model)
+        {
+
+            var userLike = await _classLikeRepository.GetAll().Where(x => x.UserId == model.UserId && x.ClassId == model.Id).FirstOrDefaultAsync();
+
+            if (userLike != null)
+            {
+                _classLikeRepository.Delete(userLike.Id);
+                _classLikeRepository.Save();
+                var totalLikes = await _classLikeRepository.GetAll().Where(x => x.ClassId == model.Id).ToListAsync();
+                return _mapper.Map<List<ClassLikeViewModel>>(totalLikes);
+            }
+
+            else
+            {
+                var like = new ClassLike
+                {
+                    UserId = model.UserId,
+                    ClassId = model.Id,
+                    DateTime = DateTime.UtcNow
+                };
+
+                _classLikeRepository.Insert(like);
+                _classLikeRepository.Save();
+                var totalLikes = await _classLikeRepository.GetAll().Where(x => x.ClassId == model.Id).ToListAsync();
+                return _mapper.Map<List<ClassLikeViewModel>>(totalLikes);
+            }
+            return null;
+        }
+
+        public async Task<int> ClassView(ClassViewsViewModel model)
+        {
+            var isUserViewExist = await _classViewsRepository.GetAll().Where(x => x.UserId == model.UserId && x.ClassId == model.ClassId).FirstOrDefaultAsync();
+            if (isUserViewExist == null)
+            {
+                var view = new ClassViews
+                {
+                    UserId = model.UserId,
+                    ClassId = model.ClassId,
+                };
+
+                _classViewsRepository.Insert(view);
+                _classViewsRepository.Save();
+                return _classViewsRepository.GetAll().Where(x => x.ClassId == model.ClassId).Count();
+            }
+            return _classViewsRepository.GetAll().Where(x => x.ClassId == model.ClassId).Count();
         }
     }
 }

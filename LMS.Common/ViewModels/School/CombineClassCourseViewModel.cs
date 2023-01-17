@@ -1,5 +1,7 @@
 ﻿using LMS.Common.Enums;
 using LMS.Common.ViewModels.Accessibility;
+using LMS.Common.ViewModels.Class;
+using LMS.Common.ViewModels.Course;
 using LMS.Common.ViewModels.ServiceType;
 using System;
 using System.Collections.Generic;
@@ -28,6 +30,11 @@ namespace LMS.Common.ViewModels.School
         public DateTime EndDate { get; set; }
         public string? ThumbnailUrl { get; set; }
         public IEnumerable<string> Tags { get; set; }
+        public List<ClassLikeViewModel> ClassLikes { get; set; }
+        public List<ClassViewsViewModel> ClassViews { get; set; }
+        public bool IsLikedByCurrentUser { get; set; }
+        public List<CourseLikeViewModel> CourseLikes { get; set; }
+        public List<CourseViewsViewModel> CourseViews { get; set; }
 
     }
 

@@ -120,4 +120,8 @@ export class SchoolService{
         return this.http.post(`${this.apiUrl}/course/deleteCourseById` + '?courseId=' + courseId,'');
     }
 
+    likeUnlikeClassCourse(likeUnlikeClassCourse:any):Observable<any>{
+        return this.http.post(`${this.apiUrl}/school/likeUnlikeClassCourse`, likeUnlikeClassCourse);
+    }
+
 }

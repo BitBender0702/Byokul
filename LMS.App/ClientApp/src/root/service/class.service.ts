@@ -101,4 +101,8 @@ export class ClassService{
         return this.http.post(`${this.apiUrl}/class/convertToCourse` + '?className=' + className,'');
     }
 
+    classView(classView:any):Observable<any>{
+        return this.http.post(`${this.apiUrl}/class/classView`, classView);
+    }
+
 }

@@ -4,9 +4,11 @@ import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BsModalService } from 'ngx-bootstrap/modal';
+import { MessageService } from 'primeng/api';
 import { AddCourseCertificate } from 'src/root/interfaces/course/addCourseCertificate';
 import { AddCourseLanguage } from 'src/root/interfaces/course/addCourseLanguage';
 import { AddCourseTeacher } from 'src/root/interfaces/course/addCourseTeacher';
+import { CourseView } from 'src/root/interfaces/course/courseView';
 import { DeleteCourseCertificate } from 'src/root/interfaces/course/deleteCourseCertificate';
 import { DeleteCourseLanguage } from 'src/root/interfaces/course/deleteCourseLanguage';
 import { DeleteCourseTeacher } from 'src/root/interfaces/course/deleteCourseTeacher';
@@ -21,7 +23,8 @@ import { MultilingualComponent } from '../../sharedModule/Multilingual/multiling
 @Component({
     selector: 'courseProfile-root',
     templateUrl: './courseProfile.component.html',
-    styleUrls: ['./courseProfile.component.css']
+    styleUrls: ['./courseProfile.component.css'],
+    providers: [MessageService]
   })
 
 export class CourseProfileComponent extends MultilingualComponent implements OnInit {
@@ -69,6 +72,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     gridItemInfo:any;
     isGridItemInfo: boolean = false;
     postView!:PostView;
+    courseView!:CourseView;
 
     @ViewChild('closeEditModal') closeEditModal!: ElementRef;
     @ViewChild('closeTeacherModal') closeTeacherModal!: ElementRef;
@@ -79,7 +83,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     @ViewChild('createPostModal', { static: true }) createPostModal!: CreatePostComponent;
 
     isDataLoaded:boolean = false;
-    constructor(injector: Injector,postService:PostService,private bsModalService: BsModalService,courseService: CourseService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
+    constructor(injector: Injector,public messageService:MessageService,postService:PostService,private bsModalService: BsModalService,courseService: CourseService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
       super(injector);
         this._courseService = courseService;
          this._postService = postService;
@@ -116,6 +120,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
         this.isOwnerOrNot();
         this.loadingIcon = false;
         this.isDataLoaded = true;
+        this.addCourseView(this.course.courseId);
       });
     // }
 
@@ -321,6 +326,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       this._courseService.saveCourseLanguages(this.courseLanguage).subscribe((response:any) => {
         this.closeLanguagesModal();
         this.isSubmitted = false;
+        this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Language added successfully'});
         this.ngOnInit();
   
       });
@@ -330,6 +336,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       this.loadingIcon = true;
       this.deleteLanguage.courseId = this.course.courseId;
       this._courseService.deleteCourseLanguage(this.deleteLanguage).subscribe((respteachersonse:any) => {
+        this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Language deleted successfully'});
         this.ngOnInit();
   
       });
@@ -368,6 +375,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
           this._courseService.saveCourseTeachers(this.courseTeacher).subscribe((response:any) => {
             this.closeTeachersModal();
             this.isSubmitted = false;
+            this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Teacher added successfully'});
             this.ngOnInit();
       
           });
@@ -377,8 +385,8 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
           this.loadingIcon = true;
           this.deleteTeacher.courseId = this.course.courseId;
           this._courseService.deleteCourseTeacher(this.deleteTeacher).subscribe((response:any) => {
+            this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Teacher deleted successfully'});
             this.ngOnInit();
-      
           });
       
         }
@@ -391,8 +399,8 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
           this.loadingIcon = true;
           this.deleteCertificate.courseId = this.course.courseId;
           this._courseService.deleteCourseCertificate(this.deleteCertificate).subscribe((response:any) => {
+            this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Certificate deleted successfully'});
             this.ngOnInit();
-      
           });
       
         }
@@ -427,6 +435,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
             this.isSubmitted = false;
             this.courseCertificate.certificates = [];
             this.certificateToUpload.set('certificates','');
+            this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Certificate added successfully'});
             this.ngOnInit();
       
           });
@@ -456,6 +465,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
             this.closeModal();
             this.isSubmitted=true;
             this.fileToUpload = new FormData();
+            this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Course updated successfully'});
             this.ngOnInit();
           });
         }
@@ -651,6 +661,26 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     hideGridItemInfo(){
       this.isGridItemInfo = this.isGridItemInfo ? false : true;
     
+    }
+
+    addCourseView(courseId:string){
+      debugger
+      if(this.userId != undefined){
+        this.initializeCourseView();
+      this.courseView.courseId = courseId;
+      this._courseService.courseView(this.courseView).subscribe((response) => {
+        debugger
+        console.log('success');
+        //this.posts.posts.views.length = response;
+       }); 
+      }
+    
+    }
+    initializeCourseView(){
+      this.courseView = {
+        courseId:'',
+        userId:''
+      }
     }
   
 }

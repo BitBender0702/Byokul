@@ -24,13 +24,16 @@ import { PostService } from 'src/root/service/post.service';
 import { PostViewComponent } from '../../postView/postView.component';
 import { LikeUnlikePost } from 'src/root/interfaces/post/likeUnlikePost';
 import { PostView } from 'src/root/interfaces/post/postView';
+import { LikeUnlikeClassCourse } from 'src/root/interfaces/school/likeUnlikeClassCourse';
+import { MessageService } from 'primeng/api';
 
 // import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'schoolProfile-root',
     templateUrl: './schoolProfile.component.html',
-    styleUrls: ['./schoolProfile.component.css']
+    styleUrls: ['./schoolProfile.component.css'],
+    providers: [MessageService]
   })
 
 export class SchoolProfileComponent extends MultilingualComponent implements OnInit {
@@ -88,12 +91,16 @@ export class SchoolProfileComponent extends MultilingualComponent implements OnI
     likesLength!:number;
     isLiked!:boolean;
     likeUnlikePost!: LikeUnlikePost;
+    likeUnlikeClassCourses!: LikeUnlikeClassCourse;
     userId!:string;
     currentLikedPostId!:string;
+    currentLikedClassCourseId!:string;
     schoolName!:string;
     gridItemInfo:any;
     isGridItemInfo: boolean = false;
     postView!:PostView;
+    likesClassCourseLength!:number;
+    isClassCourseLiked!:boolean;
     @ViewChild('closeEditModal') closeEditModal!: ElementRef;
     @ViewChild('closeTeacherModal') closeTeacherModal!: ElementRef;
     @ViewChild('closeLanguageModal') closeLanguageModal!: ElementRef;
@@ -104,7 +111,7 @@ export class SchoolProfileComponent extends MultilingualComponent implements OnI
     @ViewChild('createPostModal', { static: true }) createPostModal!: CreatePostComponent;
     Certificates!: string[];
 
-    constructor(injector: Injector,postService:PostService,private bsModalService: BsModalService,private matDialog: MatDialog,public modalService: NgbModal,private route: ActivatedRoute,private domSanitizer: DomSanitizer,schoolService: SchoolService,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
+    constructor(injector: Injector,public messageService:MessageService,postService:PostService,private bsModalService: BsModalService,private matDialog: MatDialog,public modalService: NgbModal,private route: ActivatedRoute,private domSanitizer: DomSanitizer,schoolService: SchoolService,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
       super(injector);
         this._schoolService = schoolService;
         this._postService = postService;
@@ -221,7 +228,7 @@ export class SchoolProfileComponent extends MultilingualComponent implements OnI
           isFollowed: false
          };
 
-         this.GetSchoolClassCourseList(this.school.schoolId);
+         //this.GetSchoolClassCourseList(this.school.schoolId);
     }
 
     InitializeLikeUnlikePost(){
@@ -392,6 +399,7 @@ export class SchoolProfileComponent extends MultilingualComponent implements OnI
       this.closeModal();
       this.isSubmitted=false;
       this.fileToUpload = new FormData();
+      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'School updated successfully'});
       this.ngOnInit();
     });
 
@@ -462,6 +470,7 @@ private closeLanguagesModal(): void {
     this._schoolService.saveSchoolLanguages(this.schoolLanguage).subscribe((response:any) => {
       this.closeLanguagesModal();
       this.isSubmitted = false;
+      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Language added successfully'});
       this.ngOnInit();
 
     });
@@ -475,8 +484,8 @@ private closeLanguagesModal(): void {
     this.loadingIcon = true;
     this.deleteLanguage.schoolId = this.school.schoolId;
     this._schoolService.deleteSchoolLanguage(this.deleteLanguage).subscribe((response:any) => {
+      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Language deleted successfully'});
       this.ngOnInit();
-
     });
 
   }
@@ -516,6 +525,7 @@ private closeLanguagesModal(): void {
       this.teachers = [];
       this.closeTeachersModal();
       this.isSubmitted = false;
+      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Teacher added successfully'});
       this.ngOnInit();
 
     });
@@ -529,8 +539,8 @@ private closeLanguagesModal(): void {
     this.loadingIcon = true;
     this.deleteTeacher.schoolId = this.school.schoolId;
     this._schoolService.deleteSchoolTeacher(this.deleteTeacher).subscribe((response:any) => {
+      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Teacher deleted successfully'});
       this.ngOnInit();
-
     });
 
   }
@@ -550,6 +560,7 @@ private closeLanguagesModal(): void {
       this.isSubmitted = false;
       this.schoolCertificate.certificates = [];
       this.certificateToUpload.set('certificates','');
+      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Certificate added successfully'});
       this.ngOnInit();
       console.log(response);
 
@@ -564,8 +575,8 @@ private closeLanguagesModal(): void {
     this.loadingIcon = true;
     this.deleteCertificate.schoolId = this.school.schoolId;
     this._schoolService.deleteSchoolCertificate(this.deleteCertificate).subscribe((response:any) => {
+      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Certificate deleted successfully'});
       this.ngOnInit();
-
     });
 
   }
@@ -643,11 +654,14 @@ else{
 }
 
 GetSchoolClassCourseList(schoolId:string){
+  this.loadingIcon = true;
   this.hideFeedFilters = false;
   if(this.classCourseList == undefined){
     this._schoolService.getSchoolClassCourseList(schoolId).subscribe((response) => {
       debugger
       this.classCourseList = response;
+      this.loadingIcon = false;
+
   })
 }
 }
@@ -770,5 +784,89 @@ initializePostView(){
 hideGridItemInfo(){
   this.isGridItemInfo = this.isGridItemInfo ? false : true;
 
+}
+
+likeUnlikeClassCourse(Id:string, isLike:boolean,type:number){
+  debugger
+   this.currentLikedClassCourseId = Id;
+   this.classCourseList.filter((p : any) => p.id == Id).forEach( (item : any) => {
+    debugger
+
+  //   // here item.likes is null
+  if(item.type == 1){
+    var likes: any[] = item.classLikes;
+    var isLiked = likes.filter(x => x.userId == this.userId && x.classId == Id);
+
+  }
+  else{
+    var likes: any[] = item.courseLikes;
+    var isLiked = likes.filter(x => x.userId == this.userId && x.courseId == Id);
+
+  }
+    // var likes: any[] = item.likes;
+
+    
+    if(isLiked.length != 0){
+      this.isClassCourseLiked = false;
+      if(item.type == 1){
+        this.likesClassCourseLength = item.classLikes.length - 1;
+      }
+      else{
+        this.likesClassCourseLength = item.courseLikes.length - 1;
+      }
+      item.isLikedByCurrentUser = false;
+    }
+    else{
+      this.isClassCourseLiked = true;
+      if(item.type == 1){
+        this.likesClassCourseLength = item.classLikes.length + 1;
+      }
+      else{
+        this.likesClassCourseLength = item.courseLikes.length + 1;
+      }
+      
+      item.isLikedByCurrentUser = true;
+  
+    }
+  }); 
+  
+  this.InitializeLikeUnlikeClassCourse();
+  this.likeUnlikeClassCourses.Id = Id;
+  this.likeUnlikeClassCourses.isLike = isLike;
+  this.likeUnlikeClassCourses.type = type;
+  
+  this._schoolService.likeUnlikeClassCourse(this.likeUnlikeClassCourses).subscribe((response) => {
+    debugger
+
+     if(type == 1){
+       this.classCourseList.filter((p : any) => p.id == Id).forEach( (item : any) => {
+       item.classLikes = response;
+    }); 
+
+     }
+     else{
+         this.classCourseList.filter((p : any) => p.id == Id).forEach( (item : any) => {
+         item.courseLikes = response;
+    }); 
+
+     }
+
+
+
+     this.InitializeLikeUnlikeClassCourse();
+     console.log("succes");
+  });
+
+
+}
+
+InitializeLikeUnlikeClassCourse(){
+  this.likeUnlikeClassCourses ={
+    isLike:false,
+    userId:'',
+    Id:'',
+    type:0
+   }
+  
 }
 }

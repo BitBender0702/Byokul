@@ -4,7 +4,7 @@ import { CreateSchoolModel } from 'src/root/interfaces/school/createSchoolModel'
 import { SchoolService } from 'src/root/service/school.service';
 import { HttpClient, HttpEventType, HttpHeaders } from "@angular/common/http";
 import {StepsModule} from 'primeng/steps';
-import {MenuItem} from 'primeng/api';
+import {MenuItem, MessageService} from 'primeng/api';
 import { Router } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MultilingualComponent } from '../../sharedModule/Multilingual/multilingual.component';
@@ -13,6 +13,7 @@ import { MultilingualComponent } from '../../sharedModule/Multilingual/multiling
   selector: 'students-Home',
   templateUrl: './createSchool.component.html',
   styleUrls: ['./createSchool.component.css'],
+  providers: [MessageService]
 })
 
 export class CreateSchoolComponent extends MultilingualComponent implements OnInit {
@@ -46,7 +47,7 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
   schoolName!:string;
 
   
-  constructor(injector: Injector,private domSanitizer: DomSanitizer,private router: Router,private fb: FormBuilder,schoolService: SchoolService,private http: HttpClient) {
+  constructor(injector: Injector,public messageService:MessageService,private domSanitizer: DomSanitizer,private router: Router,private fb: FormBuilder,schoolService: SchoolService,private http: HttpClient) {
     super(injector);
     this._schoolService = schoolService;
   }
@@ -203,6 +204,7 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
          this.loadingIcon = false;
          this.step += 1;
          this.isStepCompleted = false;
+         this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'School created successfully'});
     });
 
     
@@ -223,7 +225,6 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
 
   schoolProfile(){
     window.open(`profile/school/${this.schoolName.replace(" ","").toLowerCase()}`, '_blank');
-    // window.location.href=`profile/school/${this.schoolName}`;
   }
   
 }

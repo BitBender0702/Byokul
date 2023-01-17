@@ -57,5 +57,9 @@ namespace LMS.Data
         public DbSet<View> Views { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<UserPreference> UserPreferences { get; set; }
+        public DbSet<ClassLike> ClassLikes { get; set; }
+        public DbSet<CourseLike> CourseLikes { get; set; }
+        public DbSet<ClassViews> ClassViews { get; set; }
+        public DbSet<CourseViews> CourseViews { get; set; }
     }
 }

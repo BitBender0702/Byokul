@@ -18,11 +18,14 @@ import { MultilingualComponent } from '../../sharedModule/Multilingual/multiling
 import { PostViewComponent } from '../../postView/postView.component';
 import { LikeUnlikePost } from 'src/root/interfaces/post/likeUnlikePost';
 import { PostView } from 'src/root/interfaces/post/postView';
+import { ClassView } from 'src/root/interfaces/class/classView';
+import { MessageService } from 'primeng/api';
 
 @Component({
     selector: 'classProfile-root',
     templateUrl: './classProfile.component.html',
-    styleUrls: ['./classProfile.component.css']
+    styleUrls: ['./classProfile.component.css'],
+    providers: [MessageService]
   })
 
 export class ClassProfileComponent extends MultilingualComponent implements OnInit {
@@ -72,6 +75,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     gridItemInfo:any;
     isGridItemInfo: boolean = false;
     postView!:PostView;
+    classView!:ClassView;
     bsModalRef!: BsModalRef;
 
     public event: EventEmitter<any> = new EventEmitter();
@@ -85,7 +89,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     @ViewChild('createPostModal', { static: true }) createPostModal!: CreatePostComponent;
 
     isDataLoaded:boolean = false;
-    constructor(injector: Injector,postService:PostService,private bsModalService: BsModalService,classService: ClassService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
+    constructor(injector: Injector,public messageService:MessageService,postService:PostService,private bsModalService: BsModalService,classService: ClassService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
       super(injector);
         this._classService = classService;
         this._postService = postService;
@@ -98,34 +102,17 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       var selectedLang = localStorage.getItem("selectedLanguage");
       this.translate.use(selectedLang?? '');
 
-      // var id = this.route.snapshot.paramMap.get('classId');
-      // this.classId = id ?? '';
-
       this.className = this.route.snapshot.paramMap.get('className')??'';
       var schoolName = this.route.snapshot.paramMap.get('schoolName');
 
-      // if(this.classId == ''){
-      //   this._classService.getClassByName(this.className,schoolName).subscribe((response) => {
-      //     debugger
-      //     this.classId = response.classId;
-      //     this._classService.getClassById(this.classId).subscribe((response) => {
-      //       this.class = response;
-      //       this.isOwnerOrNot();
-      //       this.loadingIcon = false;
-      //       this.isDataLoaded = true;
-      //     });
-      //   })
-
-      // }
-      // else{
       this._classService.getClassById(this.className.replace(" ","").toLowerCase()).subscribe((response) => {
         debugger
         this.class = response;
         this.isOwnerOrNot();
         this.loadingIcon = false;
         this.isDataLoaded = true;
+        this.addClassView(this.class.classId);
       });
-    // }
 
       this.editClassForm = this.fb.group({
         schoolName: this.fb.control(''),
@@ -344,6 +331,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       this._classService.saveClassLanguages(this.classLanguage).subscribe((response:any) => {
         this.closeLanguagesModal();
         this.isSubmitted = false;
+        this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Language added successfully'});
         this.ngOnInit();
   
       });
@@ -353,8 +341,8 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       this.loadingIcon = true;
       this.deleteLanguage.classId = this.class.classId;
       this._classService.deleteClassLanguage(this.deleteLanguage).subscribe((response:any) => {
+        this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Language deleted successfully'});
         this.ngOnInit();
-  
       });
   
     }
@@ -391,6 +379,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
           this._classService.saveClassTeachers(this.classTeacher).subscribe((response:any) => {
             this.closeTeachersModal();
             this.isSubmitted = false;
+            this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Teacher added successfully'});
             this.ngOnInit();
       
           });
@@ -400,6 +389,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
           this.loadingIcon = true;
           this.deleteTeacher.classId = this.class.classId;
           this._classService.deleteClassTeacher(this.deleteTeacher).subscribe((response:any) => {
+            this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Teacher deleted successfully'});
             this.ngOnInit();
       
           });
@@ -414,8 +404,8 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
           this.loadingIcon = true;
           this.deleteCertificate.classId = this.class.classId;
           this._classService.deleteClassCertificate(this.deleteCertificate).subscribe((response:any) => {
+            this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Certificate added successfully'});
             this.ngOnInit();
-      
           });
       
         }
@@ -450,8 +440,8 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
             this.isSubmitted = false;
             this.classCertificate.certificates = [];
             this.certificateToUpload.set('certificates','');
+            this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Certificate deleted successfully'});
             this.ngOnInit();
-      
           });
         }
 
@@ -483,6 +473,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
             this.closeModal();
             this.isSubmitted=true;
             this.fileToUpload = new FormData();
+            this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Class updated successfully'});
             this.ngOnInit();
           });
       
@@ -688,6 +679,26 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     hideGridItemInfo(){
       this.isGridItemInfo = this.isGridItemInfo ? false : true;
     
+    }
+
+    addClassView(classId:string){
+      debugger
+      if(this.userId != undefined){
+        this.initializeClassView();
+      this.classView.classId = classId;
+      this._classService.classView(this.classView).subscribe((response) => {
+        debugger
+        console.log('success');
+        //this.posts.posts.views.length = response;
+       }); 
+      }
+    
+    }
+    initializeClassView(){
+      this.classView = {
+        classId:'',
+        userId:''
+      }
     }
   
 }

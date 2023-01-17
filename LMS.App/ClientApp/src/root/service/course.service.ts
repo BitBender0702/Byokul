@@ -96,4 +96,8 @@ export class CourseService{
         return this.http.post(`${this.apiUrl}/course/updateCourse`, credentials);
     }
 
+    courseView(courseView:any):Observable<any>{
+        return this.http.post(`${this.apiUrl}/course/courseView`, courseView);
+    }
+
 }

@@ -888,12 +888,14 @@ namespace LMS.Services
             var likeList = await _likeRepository.GetAll().ToListAsync();
             var viewList = await _viewRepository.GetAll().ToListAsync();
             var postAttachmentList = await _postAttachmentRepository.GetAll().ToListAsync();
+            var postTagsList = await _postTagRepository.GetAll().ToListAsync();
             var likesList = await _likeRepository.GetAll().ToListAsync();
 
             foreach (var item in postGUIDScore)
             {
                 var post = postList.Where(x => x.Id == item.Key).First();
                 var postAttachment = postAttachmentList.Where(x => x.PostId == item.Key).ToList();
+                var postTag = postTagsList.Where(x => x.PostId == item.Key).ToList();
                 var Likes = await GetLikesOnPost(item.Key);
                 var Views = await GetViewsOnPost(item.Key);
 
@@ -947,8 +949,9 @@ namespace LMS.Services
                     PostType = post.PostType,
                     ParentName = parentName,
                     ParentImageUrl = parentImageUrl,
-                    
-                    PostAttachments = _mapper.Map<List<PostAttachmentViewModel>>(postAttachment)
+                    DateTime = post.DateTime,
+                    PostAttachments = _mapper.Map<List<PostAttachmentViewModel>>(postAttachment),
+                    PostTags = _mapper.Map<List<PostTagViewModel>>(postTag)
 
                 };
 
@@ -967,12 +970,14 @@ namespace LMS.Services
             var likeList = await _likeRepository.GetAll().ToListAsync();
             var viewList = await _viewRepository.GetAll().ToListAsync();
             var postAttachmentList = await _postAttachmentRepository.GetAll().ToListAsync();
+            var postTagsList = await _postTagRepository.GetAll().ToListAsync();
             var likesList = await _likeRepository.GetAll().ToListAsync();
 
             foreach (var item in postList)
             {
                 var post = postList.Where(x => x.Id == item.Id).First();
                 var postAttachment = postAttachmentList.Where(x => x.PostId == item.Id).ToList();
+                var postTag = postTagsList.Where(x => x.PostId == item.Id).ToList();
                 var Likes = await GetLikesOnPost(post.Id);
                 var Views = await GetViewsOnPost(post.Id);
 
@@ -1027,7 +1032,9 @@ namespace LMS.Services
                     PostType = post.PostType,
                     ParentName = parentName,
                     ParentImageUrl = parentImageUrl,
-                    PostAttachments = _mapper.Map<List<PostAttachmentViewModel>>(postAttachment)
+                    DateTime = post.DateTime,
+                    PostAttachments = _mapper.Map<List<PostAttachmentViewModel>>(postAttachment),
+                    PostTags = _mapper.Map<List<PostTagViewModel>>(postTag)
 
                 };
 

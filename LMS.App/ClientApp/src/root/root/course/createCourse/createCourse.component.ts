@@ -1,7 +1,7 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { HttpClient, HttpEventType, HttpHeaders } from "@angular/common/http";
-import {MenuItem} from 'primeng/api';
+import {MenuItem, MessageService} from 'primeng/api';
 import { MultilingualComponent } from '../../sharedModule/Multilingual/multilingual.component';
 import { FilterService } from "primeng/api";
 import { CreateCourseModel } from 'src/root/interfaces/course/createCourseModel';
@@ -15,7 +15,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   selector: 'students-Home',
   templateUrl: './createCourse.component.html',
   styleUrls: ['./createCourse.component.css'],
-  providers: [FilterService]
+  providers: [FilterService,MessageService]
 })
 
 export class CreateCourseComponent extends MultilingualComponent implements OnInit {
@@ -61,7 +61,7 @@ export class CreateCourseComponent extends MultilingualComponent implements OnIn
 
 
 
-  constructor(injector: Injector,private router: Router,private route: ActivatedRoute,private fb: FormBuilder,courseService: CourseService,private http: HttpClient) {
+  constructor(injector: Injector,public messageService:MessageService,private router: Router,private route: ActivatedRoute,private fb: FormBuilder,courseService: CourseService,private http: HttpClient) {
     super(injector);
     this._courseService = courseService;
   }
@@ -326,6 +326,7 @@ captureTeacherId(event: any) {
       this.loadingIcon = false;
       this.step += 1;
       this.isStepCompleted = false;
+      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Course created successfully'});
     });
   }
 

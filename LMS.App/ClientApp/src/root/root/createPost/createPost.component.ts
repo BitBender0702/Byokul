@@ -11,6 +11,7 @@ import { UploadVideo } from 'src/root/interfaces/post/uploadVideo';
 import { PostAuthorTypeEnum } from 'src/root/Enums/postAuthorTypeEnum';
 import { PostTypeEnum } from 'src/root/Enums/postTypeEnum';
 import { BsModalRef, BsModalService, ModalDirective, ModalOptions } from 'ngx-bootstrap/modal';
+import { MessageService } from 'primeng/api';
 
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -20,6 +21,7 @@ import { Calendar } from 'primeng/calendar';
   selector: 'create-post',
   templateUrl: 'createPost.component.html',
   styleUrls: ['createPost.component.css'],
+  providers: [MessageService]
 })
 
 export class CreatePostComponent implements OnInit {
@@ -111,7 +113,7 @@ export class CreatePostComponent implements OnInit {
 
 
   
-  constructor(private domSanitizer: DomSanitizer,private bsModalService: BsModalService,public options: ModalOptions,private fb: FormBuilder,postService: PostService,private http: HttpClient) {
+  constructor(private domSanitizer: DomSanitizer,public messageService:MessageService,private bsModalService: BsModalService,public options: ModalOptions,private fb: FormBuilder,postService: PostService,private http: HttpClient) {
     this._postService = postService;
   }
 
@@ -325,6 +327,7 @@ export class CreatePostComponent implements OnInit {
       this.postToUpload = new FormData();
       this.triggerEvent(this.postToUpload.toString());
       this.close();
+      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post created successfully'});
       this.ngOnInit();
     });
 
@@ -393,15 +396,11 @@ export class CreatePostComponent implements OnInit {
       this.loadingIcon = false;
       this.postToUpload = new FormData();
       this.close();
+      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Reel created successfully'});
       this.ngOnInit();
     });
 
-
    }
-
-
-
-
 
    removeTags(tag:any){
     const tagIndex = this.tagLists.findIndex((item) => item ===tag);
@@ -425,9 +424,7 @@ export class CreatePostComponent implements OnInit {
     this.tagLists = [ ...this.tagLists, ...this.initialTagList];
     this.isTagsValid = true;
     this.closeTagsModal();
-
    }
-
 
   private openFirstModal(): void {
     this.openFirst.nativeElement.click();

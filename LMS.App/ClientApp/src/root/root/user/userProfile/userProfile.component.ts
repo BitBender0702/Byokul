@@ -234,6 +234,7 @@ import { PostView } from 'src/root/interfaces/post/postView';
       this._userService.saveUserLanguages(this.userLanguage).subscribe((response:any) => {
         this.closeLanguagesModal();
         this.isSubmitted = true;
+        this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Language added successfully'});
         this.ngOnInit();     
   
       });
@@ -243,6 +244,7 @@ import { PostView } from 'src/root/interfaces/post/postView';
       this.loadingIcon = true;
       this.deleteLanguage.userId = this.user.id;
       this._userService.deleteUserLanguage(this.deleteLanguage).subscribe((response:any) => {
+        this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Language deleted successfully'});
         this.ngOnInit();
       });
     }

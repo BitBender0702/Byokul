@@ -1,4 +1,5 @@
 ﻿using LMS.Common.ViewModels.Class;
+using LMS.Common.ViewModels.School;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,5 +26,9 @@ namespace LMS.Services
         Task<ClassViewModel> GetClassByName(string className, string schoolName);
         Task<bool> IsClassNameExist(string className);
         Task<bool> ConvertToCourse(string className);
+        Task<List<ClassLikeViewModel>> GetLikesOnClass(Guid classId);
+        Task<List<ClassViewsViewModel>> GetViewsOnClass(Guid classid);
+        Task<List<ClassLikeViewModel>> LikeUnlikeClass(LikeUnlikeClassCourse model);
+        Task<int> ClassView(ClassViewsViewModel model);
     }
 }

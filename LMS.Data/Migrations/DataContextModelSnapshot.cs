@@ -209,6 +209,30 @@ namespace LMS.Data.Migrations
                     b.ToTable("ClassLanguages");
                 });
 
+            modelBuilder.Entity("LMS.Data.Entity.ClassLike", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("ClassId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClassId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ClassLikes");
+                });
+
             modelBuilder.Entity("LMS.Data.Entity.ClassStudent", b =>
                 {
                     b.Property<Guid>("Id")
@@ -269,6 +293,27 @@ namespace LMS.Data.Migrations
                     b.HasIndex("TeacherId");
 
                     b.ToTable("ClassTeachers");
+                });
+
+            modelBuilder.Entity("LMS.Data.Entity.ClassViews", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ClassId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClassId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ClassViews");
                 });
 
             modelBuilder.Entity("LMS.Data.Entity.Comment", b =>
@@ -457,6 +502,30 @@ namespace LMS.Data.Migrations
                     b.ToTable("CourseLanguages");
                 });
 
+            modelBuilder.Entity("LMS.Data.Entity.CourseLike", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CourseId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourseId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("CourseLikes");
+                });
+
             modelBuilder.Entity("LMS.Data.Entity.CourseStudent", b =>
                 {
                     b.Property<Guid>("Id")
@@ -517,6 +586,27 @@ namespace LMS.Data.Migrations
                     b.HasIndex("TeacherId");
 
                     b.ToTable("CourseTeachers");
+                });
+
+            modelBuilder.Entity("LMS.Data.Entity.CourseViews", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CourseId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourseId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("CourseViews");
                 });
 
             modelBuilder.Entity("LMS.Data.Entity.Discipline", b =>
@@ -1545,6 +1635,21 @@ namespace LMS.Data.Migrations
                     b.Navigation("Language");
                 });
 
+            modelBuilder.Entity("LMS.Data.Entity.ClassLike", b =>
+                {
+                    b.HasOne("LMS.Data.Entity.Class", "Class")
+                        .WithMany()
+                        .HasForeignKey("ClassId");
+
+                    b.HasOne("LMS.Data.Entity.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Class");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("LMS.Data.Entity.ClassStudent", b =>
                 {
                     b.HasOne("LMS.Data.Entity.Class", "Class")
@@ -1582,6 +1687,23 @@ namespace LMS.Data.Migrations
                     b.Navigation("Class");
 
                     b.Navigation("Teacher");
+                });
+
+            modelBuilder.Entity("LMS.Data.Entity.ClassViews", b =>
+                {
+                    b.HasOne("LMS.Data.Entity.Class", "Class")
+                        .WithMany()
+                        .HasForeignKey("ClassId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LMS.Data.Entity.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Class");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("LMS.Data.Entity.Comment", b =>
@@ -1675,6 +1797,21 @@ namespace LMS.Data.Migrations
                     b.Navigation("Language");
                 });
 
+            modelBuilder.Entity("LMS.Data.Entity.CourseLike", b =>
+                {
+                    b.HasOne("LMS.Data.Entity.Course", "Course")
+                        .WithMany()
+                        .HasForeignKey("CourseId");
+
+                    b.HasOne("LMS.Data.Entity.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Course");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("LMS.Data.Entity.CourseStudent", b =>
                 {
                     b.HasOne("LMS.Data.Entity.Course", "Course")
@@ -1712,6 +1849,23 @@ namespace LMS.Data.Migrations
                     b.Navigation("Course");
 
                     b.Navigation("Teacher");
+                });
+
+            modelBuilder.Entity("LMS.Data.Entity.CourseViews", b =>
+                {
+                    b.HasOne("LMS.Data.Entity.Course", "Course")
+                        .WithMany()
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LMS.Data.Entity.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Course");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("LMS.Data.Entity.Discipline", b =>
