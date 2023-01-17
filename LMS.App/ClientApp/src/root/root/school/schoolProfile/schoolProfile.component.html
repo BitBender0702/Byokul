@@ -828,33 +828,38 @@
                   <div class="school-grid-box position-relative school-list-box h-100 mb-0">
                     <div class="schoolgrid-header pe-0">
                       <div class="d-flex align-items-center position-relative">
-                        <div class="school-gridprofile-icon">
+                        <div class="school-gridprofile-icon ">
                           <img [src]="item.avatar" />
                         </div>
                         <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">{{item.name}}</h2>
-                            <button *ngIf="item.isPinned && isOwner" (click)="pinUnpinClassCourse(item.id,item.type,false)" type="button" class="bg-transparent border-0 pinned-grid-chat">
-                              <img class="w-auto h-auto" src="../../../../assets/images/pinned-orange.svg" />
-                            </button>
-                            <button *ngIf="!item.isPinned && isOwner" (click)="pinUnpinClassCourse(item.id,item.type,true)" type="button" class="bg-transparent border-0 pinned-grid-chat">
-                             <img class="w-auto h-auto" src="../../../../assets/images/pinned-gray.svg" />
-                            </button>   
+                        <div class="d-flex align-items-center post-right-action">
+                          <ul class="list-unstyled d-flex more-action-btn before-none pe-2 me-1 mb-0">
+                            <li class="d-inline-block ps-0 mb-0">
+                              <div class="dropdown">
+                                <button class="bg-transparent dropdown-toggle border-0 action-more-btn after-none pt-1" type="button" data-bs-toggle="dropdown"
+                                  aria-expanded="false">
+                                  <i class="fa-solid fa-ellipsis"></i>
+                                </button>
+                                <ul class="dropdown-menu">
+                                  <li><a style="cursor: pointer;" class="dropdown-item"
+                                    (click)="getDeletedId(item.id,item.type)" data-bs-toggle="modal" data-bs-target="#delete-Class">{{'Delete'| translate }}
+                                  </a>
+                                  </li>
+                                </ul>
+                              </div>
+                            </li>
+                          </ul>   
+                          <button *ngIf="item.isPinned && isOwner" (click)="pinUnpinClassCourse(item.id,item.type,false)" type="button" class="bg-transparent border-0 pinned-grid-chat position-static">
+                            <img class="w-auto h-auto" src="../../../../assets/images/pinned-orange.svg" />
+                          </button>
+                          <button *ngIf="!item.isPinned && isOwner" (click)="pinUnpinClassCourse(item.id,item.type,true)" type="button" class="bg-transparent border-0 pinned-grid-chat position-static">
+                           <img class="w-auto h-auto" src="../../../../assets/images/pinned-gray.svg" />
+                          </button>
+                         
+                        </div>
+                            
 
-                            <ul class="list-unstyled d-flex ">
-                              <li class="d-inline-block">
-                                <div class="dropdown">
-                                  <button class="bg-transparent dropdown-toggle rounded-circle" type="button" data-bs-toggle="dropdown"
-                                    aria-expanded="false">
-                                    <h2>...</h2>
-                                  </button>
-                                  <ul class="dropdown-menu">
-                                    <li><a style="cursor: pointer;" class="dropdown-item"
-                                      (click)="getDeletedId(item.id,item.type)" data-bs-toggle="modal" data-bs-target="#delete-Class">{{'Delete'| translate }}
-                                    </a>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </li>
-                            </ul>
+                            
                       </div>
   
                       <div class="d-flex justify-content-between date-view-list mt-3 align-items-center mb-0">

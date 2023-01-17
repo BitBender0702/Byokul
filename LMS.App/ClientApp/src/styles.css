@@ -378,7 +378,7 @@ input[type=date] {
 
 .sidemenu ul li:before,
 .notification-box .dropdown .dropdown-toggle:after,
-ul.before-none li:before {
+ul.before-none li:before, .after-none:after {
 	display: none;
 }
 
@@ -2500,6 +2500,20 @@ button.delete-tag img {
     overflow: hidden;
     display: flex;
     align-items: center;
+}
+.admin-class-icon {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    background: #7C8DA7;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+.post-right-action {
+    position: absolute;
+    right: 0;
 }
 
 @media screen and (min-width:1200px) {

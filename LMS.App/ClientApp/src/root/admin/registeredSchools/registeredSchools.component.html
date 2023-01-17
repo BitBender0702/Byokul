@@ -50,9 +50,11 @@
          <ng-template pTemplate="body" let-school>
              <tr>
                  <td>
-                  <img *ngIf="school.avatar != null" class="school-profile-icon rounded-circle user-profile-header image" [src]="school.avatar"/>
-                  <img *ngIf="school.avatar == null" class="school-profile-icon rounded-circle user-profile-header image" src="../../../assets/images/schoolLogo2.png"/>
-                 </td>
+                  <div class="admin-class-icon">
+                  <img *ngIf="school.avatar != null" class="school-profile-icon user-profile-header image" [src]="school.avatar"/>
+                  <img *ngIf="school.avatar == null" class="school-profile-icon user-profile-header image" src="../../../assets/images/schoolLogo2.png"/>
+                </div>
+                </td>
                  <td>{{school.schoolName}}</td>
                  <td>{{school.founded | date : "MMMM d, y"}}</td>
                  <td>{{school.specialization?.name}}</td>

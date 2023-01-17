@@ -48,8 +48,10 @@
       <ng-template pTemplate="body" let-user>
           <tr>
               <td>
-              <img *ngIf="user.avatar != null" class="school-profile-icon rounded-circle user-profile-header image" [src]="user.avatar"/>
-              <img *ngIf="user.avatar == null" class="school-profile-icon rounded-circle user-profile-header image" src="../../../assets/images/userLogo2.png"/>
+                <div class="admin-class-icon">
+              <img *ngIf="user.avatar != null" class="school-profile-icon user-profile-header image" [src]="user.avatar"/>
+              <img *ngIf="user.avatar == null" class="school-profile-icon user-profile-header image" src="../../../assets/images/userLogo2.png"/>
+            </div>
               </td>
               <td>{{user.firstName}}</td>
               <td>{{user.lastName}}</td>
