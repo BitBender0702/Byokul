@@ -79,8 +79,8 @@ export class CourseService{
         return this.http.post(`${this.apiUrl}/course/saveCourseCertificates`,addCertificates);
     }
 
-    convertToClass(courseId:any): Observable<any> {
-        return this.http.post(`${this.apiUrl}/course/convertToClass` + '?courseId=' + courseId,'');
+    convertToClass(courseName:any): Observable<any> {
+        return this.http.post(`${this.apiUrl}/course/convertToClass` + '?courseName=' + courseName,'');
     }
 
     getCourseByName(courseName:any,schoolName:any):Observable<any>{

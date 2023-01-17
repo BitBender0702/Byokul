@@ -11,6 +11,7 @@ import { DeleteCourseCertificate } from 'src/root/interfaces/course/deleteCourse
 import { DeleteCourseLanguage } from 'src/root/interfaces/course/deleteCourseLanguage';
 import { DeleteCourseTeacher } from 'src/root/interfaces/course/deleteCourseTeacher';
 import { LikeUnlikePost } from 'src/root/interfaces/post/likeUnlikePost';
+import { PostView } from 'src/root/interfaces/post/postView';
 import { CourseService } from 'src/root/service/course.service';
 import { PostService } from 'src/root/service/post.service';
 import { CreatePostComponent } from '../../createPost/createPost.component';
@@ -65,6 +66,9 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     isLiked!:boolean;
     likeUnlikePost!: LikeUnlikePost;
     courseName!:string;
+    gridItemInfo:any;
+    isGridItemInfo: boolean = false;
+    postView!:PostView;
 
     @ViewChild('closeEditModal') closeEditModal!: ElementRef;
     @ViewChild('closeTeacherModal') closeTeacherModal!: ElementRef;
@@ -82,6 +86,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     }
   
     ngOnInit(): void {
+      debugger
       this.validToken = localStorage.getItem("jwt")?? '';
       this.loadingIcon = true;
       var selectedLang = localStorage.getItem("selectedLanguage");
@@ -553,9 +558,12 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     
     }
 
-    convertToClass(courseId:string){
-      this._courseService.convertToClass(courseId).subscribe((response) => {
-        window.location.href=`user/classProfile/${courseId}`;
+    convertToClass(courseName:string,schoolName:string){
+      debugger
+      this._courseService.convertToClass(courseName.replace(" ","").toLowerCase()).subscribe((response) => {
+        // window.location.href=`user/classProfile/${courseId}`;
+        window.location.href = `profile/class/${schoolName.replace(" ","").toLowerCase()}/${courseName.replace(" ","").toLowerCase()}`;
+
       });
     }
 
@@ -610,6 +618,38 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
          console.log("succes");
       });
     
+    
+    }
+
+    showPostDiv(postId:string){
+      debugger
+      var posts: any[] = this.course.posts;
+      this.gridItemInfo = posts.find(x => x.id == postId);
+      this.isGridItemInfo = true;
+      this.addPostView(this.gridItemInfo.id);
+    }
+    
+    addPostView(postId:string){
+      debugger
+      if(this.userId != undefined){
+       this.initializePostView();
+      this.postView.postId = postId;
+      this._postService.postView(this.postView).subscribe((response) => {
+        debugger
+        this.gridItemInfo.views.length = response;
+       }); 
+      }
+    }
+    
+    initializePostView(){
+      this.postView ={
+        postId:'',
+        userId:''
+       }
+    }
+    
+    hideGridItemInfo(){
+      this.isGridItemInfo = this.isGridItemInfo ? false : true;
     
     }
   

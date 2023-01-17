@@ -24,6 +24,6 @@ namespace LMS.Services
         Task<ClassViewModel> GetBasicClassInfo(Guid classId);
         Task<ClassViewModel> GetClassByName(string className, string schoolName);
         Task<bool> IsClassNameExist(string className);
-        Task<bool> ConvertToCourse(Guid classId);
+        Task<bool> ConvertToCourse(string className);
     }
 }

@@ -77,7 +77,7 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
           }
 
           else{
-            this.router.navigate(["../../myEarnings"],{ relativeTo: this.route });
+            this.router.navigate(["../../userFeed"],{ relativeTo: this.route });
           }
         }
           }

@@ -362,7 +362,7 @@ namespace LMS.Data.Migrations
                     b.Property<bool>("IsPinned")
                         .HasColumnType("bit");
 
-                    b.Property<long>("Price")
+                    b.Property<long?>("Price")
                         .HasColumnType("bigint");
 
                     b.Property<double?>("Rating")

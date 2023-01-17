@@ -9,6 +9,9 @@
 
       <!-- <a (click)="back()" class="back-step text-decoration-none font_16 text_dark"><img src="../../../../../assets/images/arrow-left.svg"
           alt="arrow" /> {{'Back'| translate }}</a> -->
+      <div *ngIf="isRegister" class="alert alert-info text-center register-form mx-auto ng-dirty ng-touched ng-valid ng-submitted" role="alert">
+       An Email is sent to you.Please confirm the email to login!
+      </div>
       <form class="register-form mx-auto" [formGroup]="registrationForm">
         <h2 class="font_34 fw_700 text-center">{{'NewAccount'| translate }} <span class="text_secondary">{{'Okul'| translate }}</span></h2>
         <div class="row">

@@ -2,3 +2,7 @@
     position: absolute;
     right: 0;
 }
+
+.heightForText{
+    height: 300px;
+  }

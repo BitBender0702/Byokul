@@ -23,6 +23,7 @@ import { FollowUnFollowEnum } from 'src/root/Enums/FollowUnFollowEnum';
 import { PostService } from 'src/root/service/post.service';
 import { PostViewComponent } from '../../postView/postView.component';
 import { LikeUnlikePost } from 'src/root/interfaces/post/likeUnlikePost';
+import { PostView } from 'src/root/interfaces/post/postView';
 
 // import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -90,6 +91,9 @@ export class SchoolProfileComponent extends MultilingualComponent implements OnI
     userId!:string;
     currentLikedPostId!:string;
     schoolName!:string;
+    gridItemInfo:any;
+    isGridItemInfo: boolean = false;
+    postView!:PostView;
     @ViewChild('closeEditModal') closeEditModal!: ElementRef;
     @ViewChild('closeTeacherModal') closeTeacherModal!: ElementRef;
     @ViewChild('closeLanguageModal') closeLanguageModal!: ElementRef;
@@ -723,6 +727,48 @@ likeUnlikePosts(postId:string, isLike:boolean){
      console.log("succes");
   });
 
+
+}
+
+showPostDiv(postId:string){
+  debugger
+  var posts: any[] = this.school.posts;
+  this.gridItemInfo = posts.find(x => x.id == postId);
+  this.isGridItemInfo = true;
+
+  // here we also add a view for this post
+  this.addPostView(this.gridItemInfo.id);
+  
+
+}
+
+addPostView(postId:string){
+  debugger
+  if(this.userId != undefined){
+   this.initializePostView();
+  this.postView.postId = postId;
+  this._postService.postView(this.postView).subscribe((response) => {
+    debugger
+    this.gridItemInfo.views.length = response;
+    // this.user.posts.filter((p : any) => p.id == postId).forEach( (item : any) => {
+    //  var itemss = item.likes;
+    //  item.likes = response;
+   }); 
+  }
+
+ 
+
+}
+
+initializePostView(){
+  this.postView ={
+    postId:'',
+    userId:''
+   }
+}
+
+hideGridItemInfo(){
+  this.isGridItemInfo = this.isGridItemInfo ? false : true;
 
 }
 }

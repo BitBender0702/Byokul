@@ -938,7 +938,7 @@ namespace LMS.Services
                 }
                 var result = new GlobalFeedViewModel()
                 {
-                    PostId = post.Id,
+                    Id = post.Id,
                     Title = post.Title,
                     Description = post.Description,
                     Likes = Likes,
@@ -986,18 +986,47 @@ namespace LMS.Services
                 {
                     IsPostLikedByCurrentUser = false;
                 }
+                string parentName = "";
+                string parentImageUrl = "";
+                if (post.PostAuthorType == (int)PostAuthorTypeEnum.School)
+                {
+                    var school = _schoolRepository.GetById(post.ParentId);
+                    parentName = school.SchoolName;
+                    parentImageUrl = school.Avatar;
+                }
+                if (post.PostAuthorType == (int)PostAuthorTypeEnum.Class)
+                {
+                    var classes = _classRepository.GetById(post.ParentId);
+                    parentName = classes.ClassName;
+                    parentImageUrl = classes.Avatar;
+                }
+                if (post.PostAuthorType == (int)PostAuthorTypeEnum.Course)
+                {
+                    var course = _courseRepository.GetById(post.ParentId);
+                    parentName = course.CourseName;
+                    parentImageUrl = course.Avatar;
+                }
+                if (post.PostAuthorType == (int)PostAuthorTypeEnum.User)
+                {
+                    var user = _userRepository.GetById(post.ParentId.ToString());
+                    parentName = user.FirstName + " " + user.LastName;
+                    parentImageUrl = user.Avatar;
+                }
                 //var likeCount = likeList.Where(x => x.PostId == item.Id).Count();
                 //var viewCount = viewList.Where(x => x.PostId == item.Id).Count();
 
 
                 var result = new GlobalFeedViewModel()
                 {
-                    PostId = post.Id,
+                    Id = post.Id,
                     Title = post.Title,
                     Description = post.Description,
                     Likes = Likes,
                     Views = Views,
                     IsPostLikedByCurrentUser = IsPostLikedByCurrentUser,
+                    PostType = post.PostType,
+                    ParentName = parentName,
+                    ParentImageUrl = parentImageUrl,
                     PostAttachments = _mapper.Map<List<PostAttachmentViewModel>>(postAttachment)
 
                 };

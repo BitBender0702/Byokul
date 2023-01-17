@@ -21,7 +21,7 @@ export class PostViewComponent implements OnInit {
 
     //
 
-    showCommentsField:boolean = false;
+    showCommentsField:boolean = true;
     messageToGroup!:string;
     private _postService;
     likeUnlikePost!: LikeUnlikePost;

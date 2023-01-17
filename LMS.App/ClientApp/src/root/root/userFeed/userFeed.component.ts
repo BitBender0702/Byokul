@@ -39,6 +39,8 @@ export class UserFeedComponent implements OnInit {
     currentLikedPostId!:string;
     likesLength!:number;
     isLiked!:boolean;
+    gridItemInfo:any;
+    isGridItemInfo: boolean = false;
     private _postService;
 
     constructor(private bsModalService: BsModalService,postService: PostService,public userService:UserService, public options: ModalOptions,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
@@ -51,6 +53,7 @@ export class UserFeedComponent implements OnInit {
       this.isOwnerOrNot();
         // for global feed
         this._userService.getMyFeed().subscribe((response) => {
+          debugger
             this.myFeeds = response;
             this.loadingIcon = false;
             this.isDataLoaded = true;
@@ -114,10 +117,12 @@ export class UserFeedComponent implements OnInit {
       }
 
       getGlobalFeeds(){
+        debugger
        if(this.globalFeeds == undefined){
 
         this.loadingIcon = true;
         this._userService.getGlobalFeed().subscribe((response) => {
+          debugger
             this.globalFeeds = response;
             this.loadingIcon = false;
             console.log(this.globalFeeds);
@@ -190,7 +195,7 @@ export class UserFeedComponent implements OnInit {
       likeUnlikeGlobalPosts(postId:string, isLike:boolean){
         this.currentLikedPostId = postId;
 
-        this.globalFeeds.filter((p : any) => p.postId == postId).forEach( (item : any) => {
+        this.globalFeeds.filter((p : any) => p.id == postId).forEach( (item : any) => {
           var likes: any[] = item.likes;
           var isLiked = likes.filter(x => x.userId == this.userId && x.postId == postId);
         if(isLiked.length != 0){
@@ -213,7 +218,7 @@ export class UserFeedComponent implements OnInit {
         this._postService.likeUnlikePost(this.likeUnlikePost).subscribe((response) => {
       
       
-           this.globalFeeds.filter((p : any) => p.postId == postId).forEach( (item : any) => {
+           this.globalFeeds.filter((p : any) => p.id == postId).forEach( (item : any) => {
             var itemss = item.likes;
             item.likes = response;
           }); 
@@ -225,6 +230,54 @@ export class UserFeedComponent implements OnInit {
            console.log("succes");
         });
       
+      
+      }
+
+      showPostDiv(postId:string,From:string){
+        debugger
+        if(From == 'FromMyFeeds'){
+          var posts: any[] = this.myFeeds;
+          this.gridItemInfo = posts.find(x => x.id == postId);
+          this.isGridItemInfo = true;
+        
+          // here we also add a view for this post
+          this.addPostView(this.gridItemInfo.id);
+        }
+        else{
+          var posts: any[] = this.globalFeeds;
+          this.gridItemInfo = posts.find(x => x.id == postId);
+          this.isGridItemInfo = true;
+          this.addPostView(this.gridItemInfo.id);
+        }
+      }
+      
+      addPostView(postId:string){
+        debugger
+        if(this.userId != undefined){
+         this.initializePostView();
+        this.postView.postId = postId;
+        this._postService.postView(this.postView).subscribe((response) => {
+          debugger
+          this.gridItemInfo.views.length = response;
+          // this.user.posts.filter((p : any) => p.id == postId).forEach( (item : any) => {
+          //  var itemss = item.likes;
+          //  item.likes = response;
+         }); 
+        }
+      
+       
+      
+      }
+      
+      initializePostView(){
+        this.postView ={
+          postId:'',
+          userId:''
+         }
+      }
+      
+      hideGridItemInfo(){
+        this.isGridItemInfo = this.isGridItemInfo ? false : true;
       
       }
 

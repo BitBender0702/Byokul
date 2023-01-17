@@ -15,11 +15,15 @@ namespace LMS.App.Controllers
         private readonly SignInManager<User> _signInManager;
         private readonly UserManager<User> _userManager;
         private readonly IAuthService _authService;
-        public AuthController(SignInManager<User> signInManager, UserManager<User> userManager, IAuthService authService)
+        private IConfiguration _config;
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        public AuthController(SignInManager<User> signInManager, UserManager<User> userManager, IAuthService authService, IConfiguration config, IWebHostEnvironment webHostEnvironment)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _authService = authService;
+            _config = config;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         // Login Method
@@ -57,11 +61,37 @@ namespace LMS.App.Controllers
 
             if (result.Succeeded)
             {
-                await _signInManager.SignInAsync(user, isPersistent: false);
-                var tokenString = await _authService.GenerateJSONWebToken(user);
-                return Ok(new { token = tokenString });
+                var path = _webHostEnvironment.ContentRootPath;
+                var filePath = Path.Combine(path, "Email/confirm-email.html");
+                var imagePath = Path.Combine(path, "Email/images/logo.svg");
+                var text = System.IO.File.ReadAllText(filePath);
+                text = text.Replace("[ImageSrc]", imagePath);
+                var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                string callBackUrl = $"{_config["AppUrl"]}/user/auth/emailConfirm?token={token}&email={user.Email}";
+                //var confirmationLink = Url.Action("confirm-email", "auth", new { token, email = user.Email }, "http");
+                text = text.Replace("[URL]", callBackUrl);
+
+                
+              
+                _authService.SendEmail(new List<string> { user.Email }, null, null, "Confirmation email link", body: text);
+
+                return Ok(new { result = "success" });
             }
             return Ok(new { token = "" });
+        }
+
+        //Confirm Email
+        [HttpGet]
+        [Route("confirmEmail")]
+        public async Task<IActionResult> ConfirmEmail(string token, string email)
+       {
+            token = token.Replace(" ","+");
+            var user = await _userManager.FindByEmailAsync(email)
+;
+            if (user is null) return BadRequest($"User not found for email: {email}");
+
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+            return (result.Succeeded ? Ok(new { result = "success" }) : BadRequest("Invalid token"));
         }
 
 

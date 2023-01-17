@@ -1,3 +1,7 @@
 .videofile:hover::after {
     cursor: pointer;
   }
+
+  .heightForText{
+    height: 300px;
+  }

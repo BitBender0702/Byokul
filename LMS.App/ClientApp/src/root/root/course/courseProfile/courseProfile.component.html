@@ -7,6 +7,7 @@
           <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
               src="../../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
           <button *ngIf="isOwner" (click)="openPostModal()" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44">{{'CreatePost'| translate }}</button>
+          <button *ngIf="!isOwner && course.price != null && course.price != 0" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44">{{'Buyfor'| translate }} ${{course.price}}</button>
         </div>
         <div class="live-header d-flex align-items-center justify-content-between">
           <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark  d-xl-none"><img
@@ -56,7 +57,7 @@
                 class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn me-0 minw-142 class-request-msg">{{'RequestMessage'| translate }}</button>
               </div>
               <div class="hover-double-button">              
-              <button *ngIf="isOwner && course.isConvertable" (click)="convertToClass(course.courseId)" type="button" class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins me-2" style="margin-right: 130px;">{{'ConvertToClass'| translate }}</button>
+              <button *ngIf="isOwner && course.isConvertable" (click)="convertToClass(course.courseName,course.school.schoolName)" type="button" class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins me-2" style="margin-right: 130px;">{{'ConvertToClass'| translate }}</button>
   
               <button *ngIf="isOwner" (click)="initializeEditFormControls()" class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins" data-bs-toggle="modal"               
                 data-bs-target="#editCourse"><img src="../../../../assets/images/Setting-solid-dark.svg" class="me-2" /> {{'EditProfile'| translate }}
@@ -196,12 +197,12 @@
                   </button>   
                 </div>
                 
-                <div class="school-grid-body">
-                  <p class="text_sec1 font_14">{{post.description}}</p>
+                <div class="school-grid-body" (click)="openPostsViewModal(post)">
+                  <p class="text_sec1 font_14" style="cursor: pointer;">{{post.description}}</p>
                   <div class="teacher-tags tag-box hashtag_box">
                     <span *ngFor="let tag of post.postTags" class="custom-tag">#{{tag.postTagValue}}</span>
                   </div>
-                  <div *ngIf="post.postAttachments.length" class="school-grid-thumbnail">
+                  <div *ngIf="post.postAttachments.length" class="school-grid-thumbnail" style="cursor: pointer;">
                     <div class="row gx-1 h-100">
 
                       <div *ngIf="post.postAttachments.length == 1" class="col-md-12 h-100">
@@ -318,6 +319,73 @@
             </div>
   
             <div class="list-schol-profile" *ngIf="!isProfileGrid">
+              <div [ngClass]="isGridItemInfo ? 'd-block school-grid-box position-relative school-list-box h-100':'d-none school-grid-box position-relative school-list-box h-100'" *ngIf="gridItemInfo!=undefined">
+                <div class="row">
+                  <div [ngClass]="gridItemInfo.postAttachments.length>0 ? 'd-block col-lg-6':'d-none'">
+                    <carousel>
+                    <div *ngFor="let postAttachment of gridItemInfo.postAttachments" class="school-grid-thumbnail">
+                      <slide *ngIf="postAttachment.fileType==2">
+                      <div *ngIf="postAttachment?.fileType==2" class="videofile">
+                        <video style="height: 300px;" controls>
+                          <source [src]="postAttachment?.fileUrl" type="video/mp4"/>
+                        </video>
+                      </div>
+                      </slide>
+                      <slide *ngIf="postAttachment?.fileType==1">
+                        <img *ngIf="postAttachment?.fileType==1" class="w-100" [src]="postAttachment?.fileUrl" />
+                      </slide>
+                    </div>
+                    </carousel>
+                  </div>
+                  <div [ngClass]="gridItemInfo.postAttachments.length>0 ? 'col-lg-6':'col-lg-12 heightForText'">
+                    <div class="class-preview-right position-relative h-100">
+                      <button (click)="hideGridItemInfo()" type="button" class="bg-transparent border-0 close-preview"><img
+                          src="../../../../assets/images/cross.svg" /></button>
+                      <div class="schoolgrid-header">
+                        <div class="d-flex align-items-center position-relative">
+                          <div class="school-gridprofile-icon">
+                            <img [src]="course.avatar">
+                          </div>
+                          <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">{{gridItemInfo.title}}</h2>
+                        </div>
+        
+                        <p class="font_14 school-grid-date d-inline-block mb-0">
+                          {{gridItemInfo.dateTime | date : "MMMM d"}} - {{gridItemInfo.dateTime | date : "hh mm"}}  
+                        </p>
+                      </div>
+                      <p class="text_sec1 font_14 pt-3">{{gridItemInfo.description}}</p>
+                      <div *ngIf="gridItemInfo.postTags.length != 0" class="teacher-tags tag-box hashtag_box">
+                        <span *ngFor="let tag of gridItemInfo.postTags" class="custom-tag">{{tag.postTagValue}}</span>
+                      </div>
+                      <div class="school-grid-footer preview-right-action">
+                        <button type="button" class="bg-transparent border-0 function-btns">
+                          <img src="../../../../assets/images/eye.svg" class="d-block mx-auto">
+                          <span class="textBlack">{{gridItemInfo.views.length}}</span>
+                        </button>
+                        <button (click)="likeUnlikePosts(gridItemInfo.id,true)" type="button" class="bg-transparent border-0 function-btns text-light">
+                          <img *ngIf="gridItemInfo.isPostLikedByCurrentUser" src="../../../assets/images/heart-red.svg" class="d-block mx-auto" />
+                          <img *ngIf="!gridItemInfo.isPostLikedByCurrentUser" src="../../../../assets/images/Heart-dark.svg" class="d-block mx-auto" />
+        
+                          <span class="textBlack" *ngIf="likesLength != undefined && currentLikedPostId== gridItemInfo.id">{{likesLength}}</span>
+                          <span class="textBlack" *ngIf="currentLikedPostId!= gridItemInfo.id">{{gridItemInfo.likes.length}}</span>
+                        </button>
+                        <button (click)="openPostsViewModal(gridItemInfo)" type="button" class="bg-transparent border-0 function-btns">
+                          <img src="../../../../assets/images/Chat-dark.svg" class="d-block mx-auto">
+                          34
+                        </button>
+                        <button type="button" class="bg-transparent border-0 function-btns">
+                          <img src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto">
+                          954
+                        </button>
+                        <button type="button" class="bg-transparent border-0 function-btns">
+                          <img src="../../../../assets/images/Upload-dark.svg" class="d-block mx-auto">
+                          954
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div> 
               <div class="row">
                 <ng-container *ngFor="let post of course.posts">
                   <div *ngIf="post.postType == 1 && (post.postAuthorType == 3 || post.postAuthorType == 2)" class="col-md-6 col-xl-4">
@@ -343,7 +411,7 @@
                                     <img src="../../../../assets/images/eye.svg" class="me-2" /> 954
                                 </button>
                             </div>
-                            <div class="school-grid-thumbnail">
+                            <div class="school-grid-thumbnail" style="cursor: pointer;" (click)="showPostDiv(post.id)">
                                 <div class="row gx-1">
                                     <div class="col-md-12">
                                         <div class="school-large-thumbnail shadow-thumnail position-relative">

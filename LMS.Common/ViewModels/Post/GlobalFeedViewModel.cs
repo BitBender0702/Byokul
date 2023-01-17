@@ -8,7 +8,7 @@ namespace LMS.Common.ViewModels.Post
 {
     public class GlobalFeedViewModel
     {
-        public Guid PostId { get; set; }
+        public Guid Id { get; set; }
         public int PostType { get; set; }
         public string ParentImageUrl { get; set; }
         public string ParentName { get; set; }

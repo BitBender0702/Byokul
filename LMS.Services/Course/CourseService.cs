@@ -599,9 +599,9 @@ namespace LMS.Services
 
         }
 
-        public async Task<bool> ConvertToClass(Guid courseId)
+        public async Task<bool> ConvertToClass(string courseName)
         {
-            Class classes = _classRepository.GetById(courseId);
+            Class classes = await _classRepository.GetAll().Where(x => x.ClassName.Replace(" ","").ToLower() == courseName).FirstOrDefaultAsync();
             if (classes != null)
             {
                 classes.IsCourse = false;

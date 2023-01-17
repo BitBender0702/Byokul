@@ -1,9 +1,9 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Component, ElementRef, Injector, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Injector, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { AddClassCertificate } from 'src/root/interfaces/class/addClassCertificate';
 import { AddClassLanguage } from 'src/root/interfaces/class/addClassLanguage';
 import { AddClassTeacher } from 'src/root/interfaces/class/addClassTeacher';
@@ -17,6 +17,7 @@ import { CreatePostComponent } from '../../createPost/createPost.component';
 import { MultilingualComponent } from '../../sharedModule/Multilingual/multilingual.component';
 import { PostViewComponent } from '../../postView/postView.component';
 import { LikeUnlikePost } from 'src/root/interfaces/post/likeUnlikePost';
+import { PostView } from 'src/root/interfaces/post/postView';
 
 @Component({
     selector: 'classProfile-root',
@@ -68,6 +69,12 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     likeUnlikePost!: LikeUnlikePost;
     currentLikedPostId!:string;
     className!:string;
+    gridItemInfo:any;
+    isGridItemInfo: boolean = false;
+    postView!:PostView;
+    bsModalRef!: BsModalRef;
+
+    public event: EventEmitter<any> = new EventEmitter();
 
     @ViewChild('closeEditModal') closeEditModal!: ElementRef;
     @ViewChild('closeTeacherModal') closeTeacherModal!: ElementRef;
@@ -112,6 +119,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       // }
       // else{
       this._classService.getClassById(this.className.replace(" ","").toLowerCase()).subscribe((response) => {
+        debugger
         this.class = response;
         this.isOwnerOrNot();
         this.loadingIcon = false;
@@ -577,9 +585,12 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     
     }
 
-    convertToCourse(classId:string){
-      this._classService.convertToCourse(classId).subscribe((response) => {
-        window.location.href=`user/courseProfile/${classId}`;
+    convertToCourse(className:string,schoolName:string){
+      debugger
+      this._classService.convertToCourse(className.replace(" ","").toLowerCase()).subscribe((response) => {
+        debugger
+        window.location.href = `profile/course/${schoolName.replace(" ","").toLowerCase()}/${className.replace(" ","").toLowerCase()}`;
+        // window.location.href=`user/courseProfile/${classId}`;
       });
     }
 
@@ -587,8 +598,17 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       const initialState = {
         posts: posts
       };
-      this.bsModalService.show(PostViewComponent,{initialState});
+     this.bsModalRef= this.bsModalService.show(PostViewComponent,{initialState});
+
+     this.bsModalRef.content.event.subscribe((res: { data: any; }) => {
+      debugger
+      var a = res.data;
+      //this.itemList.push(res.data);
+    });
     }
+
+
+    
 
     requestMessage(){
       if(this.validToken == ''){
@@ -629,7 +649,44 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
          this.InitializeLikeUnlikePost();
          console.log("succes");
       });
+
+
     
+    
+    }
+
+    showPostDiv(postId:string){
+      debugger
+      var posts: any[] = this.class.posts;
+      this.gridItemInfo = posts.find(x => x.id == postId);
+      this.isGridItemInfo = true;
+      this.addPostView(this.gridItemInfo.id);
+    }
+
+    addPostView(postId:string){
+      debugger
+      if(this.userId != undefined){
+       this.initializePostView();
+      this.postView.postId = postId;
+      this._postService.postView(this.postView).subscribe((response) => {
+        debugger
+        this.gridItemInfo.views.length = response;
+       }); 
+      }
+    
+     
+    
+    }
+
+    initializePostView(){
+      this.postView ={
+        postId:'',
+        userId:''
+       }
+    }
+    
+    hideGridItemInfo(){
+      this.isGridItemInfo = this.isGridItemInfo ? false : true;
     
     }
   

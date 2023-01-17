@@ -59,6 +59,7 @@ export class SideBarComponent extends MultilingualComponent implements OnInit {
   }
 
   getSelectedCourse(courseName:string,schoolName:string){
+    debugger
     // window.location.href=`user/courseProfile/${courseId}`;
     window.location.href=`profile/course/${schoolName.replace(" ","").toLowerCase()}/${courseName.replace(" ","").toLowerCase()}`;
 

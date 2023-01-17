@@ -34,6 +34,7 @@ export class RegisterComponent extends MultilingualComponent implements OnInit {
     loadingIcon:boolean = false;
 
     isConfirmPasswordDirty = false;
+    isRegister!:boolean;
 
     date = new Date();
     credentials: RegisterModel = {email:'', password:'',confirmPassword:'',firstName:'',lastName:'',gender:0,dob: ''};
@@ -111,7 +112,9 @@ export class RegisterComponent extends MultilingualComponent implements OnInit {
                     const token = response.token;
                     localStorage.setItem("jwt", token); 
                     this.invalidRegister = false; 
-                    this.router.navigateByUrl("user/auth/login");
+                    this.isRegister = true;
+                    //this.router.navigateByUrl("user/auth/confirmEmail");
+                    //this.router.navigateByUrl("user/auth/login");
                   }
                   },
                   error: (err: HttpErrorResponse) => this.invalidRegister = true

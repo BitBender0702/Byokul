@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, ViewChild, inject, Inject, TemplateRef } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild, inject, Inject, TemplateRef, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { HttpClient, HttpEventType, HttpHeaders } from "@angular/common/http";
 import {MenuItem} from 'primeng/api';
@@ -97,6 +97,8 @@ export class CreatePostComponent implements OnInit {
 
   initialState:any;
   schoolId:any;
+
+  public event: EventEmitter<any> = new EventEmitter();
 
   @ViewChild("calendar", { static: false }) private calendar!: Calendar;
 
@@ -321,12 +323,17 @@ export class CreatePostComponent implements OnInit {
       this.isSubmitted=false;
       this.loadingIcon = false;
       this.postToUpload = new FormData();
+      this.triggerEvent(this.postToUpload.toString());
       this.close();
       this.ngOnInit();
     });
 
 
    }
+
+   triggerEvent(item: string) {
+    this.event.emit({ data: item , res:200 });
+  }
 
    postFrom(){
     if(this.schoolId!= undefined){
@@ -391,6 +398,8 @@ export class CreatePostComponent implements OnInit {
 
 
    }
+
+
 
 
 

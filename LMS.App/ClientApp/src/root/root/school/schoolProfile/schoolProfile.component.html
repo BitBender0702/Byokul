@@ -387,14 +387,14 @@
                          <img class="w-auto h-auto" src="../../../../assets/images/pinned-gray.svg" />
                         </button>   
                     </div>
-                    <div class="school-grid-body">
-                        <p class="text_sec1 font_14">
+                    <div class="school-grid-body" (click)="openPostsViewModal(post)">
+                        <p class="text_sec1 font_14" style="cursor: pointer;">
                             {{post.description}}
                         </p>
                         <div class="teacher-tags tag-box hashtag_box">
                             <span *ngFor="let tag of post.postTags" class="custom-tag">#{{tag.postTagValue}}</span>
                         </div>
-                        <div *ngIf="post.postAttachments.length" class="school-grid-thumbnail new-school-grid-thumbnail">
+                        <div *ngIf="post.postAttachments.length" class="school-grid-thumbnail new-school-grid-thumbnail" style="cursor: pointer;">
                             <div  class="row gx-1 h-100">
                               
                                 <div *ngIf="post.postAttachments.length == 1"  class="col-md-12 h-100">
@@ -527,70 +527,73 @@
 
     <div class="tab-content" id="pills-tabContent" *ngIf="!isProfileGrid">
       <!-- here is for view -->
-      <div class="school-grid-box position-relative school-list-box h-100">
+       <div [ngClass]="isGridItemInfo ? 'd-block school-grid-box position-relative school-list-box h-100':'d-none school-grid-box position-relative school-list-box h-100'" *ngIf="gridItemInfo!=undefined">
         <div class="row">
-          <div class="col-lg-6">
-            <div class="school-grid-thumbnail">
-              <iframe width="100%" height="300" src="https://www.youtube.com/embed/hAP2QF--2Dg"
-                title="Product Explainer Video | UpSend |  Best SaaS Explainer Video" frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen></iframe>
+          <div [ngClass]="gridItemInfo.postAttachments.length>0 ? 'd-block col-lg-6':'d-none'">
+            <carousel>
+            <div *ngFor="let postAttachment of gridItemInfo.postAttachments" class="school-grid-thumbnail">
+              <slide *ngIf="postAttachment.fileType==2">
+              <div *ngIf="postAttachment?.fileType==2" class="videofile">
+                <video style="height: 300px;" controls>
+                  <source [src]="postAttachment?.fileUrl" type="video/mp4"/>
+                </video>
+              </div>
+              </slide>
+              <slide *ngIf="postAttachment?.fileType==1">
+                <img *ngIf="postAttachment?.fileType==1" class="w-100" [src]="postAttachment?.fileUrl" />
+              </slide>
             </div>
+            </carousel>
           </div>
-          <div class="col-lg-6">
+          <div [ngClass]="gridItemInfo.postAttachments.length>0 ? 'col-lg-6':'col-lg-12 heightForText'">
             <div class="class-preview-right position-relative h-100">
-              <button type="button" class="bg-transparent border-0 close-preview"><img
-                  src="images/cross.svg" /></button>
+              <button (click)="hideGridItemInfo()" type="button" class="bg-transparent border-0 close-preview"><img
+                  src="../../../../assets/images/cross.svg" /></button>
               <div class="schoolgrid-header">
                 <div class="d-flex align-items-center position-relative">
                   <div class="school-gridprofile-icon">
-                    <img src="images/profile-grid-school-may.jpg">
+                    <img [src]="school.avatar">
                   </div>
-                  <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">Python programming class</h2>
+                  <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">{{gridItemInfo.title}}</h2>
                 </div>
 
-                <p class="font_14 school-grid-date d-inline-block mb-0">September 28 <span class="fw_500 ms-3">11:30 -
-                    13:50</span></p>
+                <p class="font_14 school-grid-date d-inline-block mb-0">
+                  {{gridItemInfo.dateTime | date : "MMMM d"}} - {{gridItemInfo.dateTime | date : "hh mm"}}  
+                </p>
               </div>
-              <p class="text_sec1 font_14 pt-3">Lecture One - Introduction and basics in Python.Lecture One -
-                Introduction and basics in PythonLecture One - Intro and basics in Python fole Lecture One. One -
-                Introduction and basics in PythonLecture One - Introduction and basics in PythonLecture One
-                Lecture. One - Intro duction and basics in PythonLecture One.</p>
-              <div class="teacher-tags tag-box hashtag_box">
-                <span class="custom-tag">#Python</span>
-                <span class="custom-tag">#Intermediate</span>
-                <span class="custom-tag">#Free courses</span>
-                <span class="custom-tag">#Free courses</span>
-                <span class="custom-tag">#Free courses</span>
-                <span class="custom-tag">#For beginners</span>
-                <span class="custom-tag">#Free courses</span>
+              <p class="text_sec1 font_14 pt-3">{{gridItemInfo.description}}</p>
+              <div *ngIf="gridItemInfo.postTags.length != 0" class="teacher-tags tag-box hashtag_box">
+                <span *ngFor="let tag of gridItemInfo.postTags" class="custom-tag">{{tag.postTagValue}}</span>
               </div>
               <div class="school-grid-footer preview-right-action">
                 <button type="button" class="bg-transparent border-0 function-btns">
-                  <img src="images/eye.svg" class="d-block mx-auto">
-                  954
+                  <img src="../../../../assets/images/eye.svg" class="d-block mx-auto">
+                  <span class="textBlack">{{gridItemInfo.views.length}}</span>
                 </button>
-                <button type="button" class="bg-transparent border-0 function-btns">
-                  <img src="images/Heart-dark.svg" class="d-block mx-auto">
-                  82
+                <button (click)="likeUnlikePosts(gridItemInfo.id,true)" type="button" class="bg-transparent border-0 function-btns text-light">
+                  <img *ngIf="gridItemInfo.isPostLikedByCurrentUser" src="../../../assets/images/heart-red.svg" class="d-block mx-auto" />
+                  <img *ngIf="!gridItemInfo.isPostLikedByCurrentUser" src="../../../../assets/images/Heart-dark.svg" class="d-block mx-auto" />
+
+                  <span class="textBlack" *ngIf="likesLength != undefined && currentLikedPostId== gridItemInfo.id">{{likesLength}}</span>
+                  <span class="textBlack" *ngIf="currentLikedPostId!= gridItemInfo.id">{{gridItemInfo.likes.length}}</span>
                 </button>
-                <button type="button" class="bg-transparent border-0 function-btns">
-                  <img src="images/Chat-dark.svg" class="d-block mx-auto">
+                <button (click)="openPostsViewModal(gridItemInfo)" type="button" class="bg-transparent border-0 function-btns">
+                  <img src="../../../../assets/images/Chat-dark.svg" class="d-block mx-auto">
                   34
                 </button>
                 <button type="button" class="bg-transparent border-0 function-btns">
-                  <img src="images/Bookmark-dark.svg" class="d-block mx-auto">
+                  <img src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto">
                   954
                 </button>
                 <button type="button" class="bg-transparent border-0 function-btns">
-                  <img src="images/Upload-dark.svg" class="d-block mx-auto">
+                  <img src="../../../../assets/images/Upload-dark.svg" class="d-block mx-auto">
                   954
                 </button>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </div> 
         <div class="tab-pane fade show active " id="school-feed-tab-pane" role="tabpanel"
              aria-labelledby="school-feed-tab" tabindex="0">
             <div class="accordion list-schol-profile" id="accordionPanelsStayOpenExample">
@@ -619,7 +622,7 @@
                                         <img src="../../../../assets/images/eye.svg" class="me-2" /> 954
                                     </button>
                                 </div>
-                                <div class="school-grid-thumbnail" (click)="showPostDiv">
+                                <div class="school-grid-thumbnail" style="cursor: pointer;" (click)="showPostDiv(post.id)">
                                     <div class="row gx-1">
                                         <div class="col-md-12">
                                             <div class="school-large-thumbnail shadow-thumnail position-relative">

@@ -97,8 +97,8 @@ export class ClassService{
         return this.http.get(`${this.apiUrl}/class/isClassNameExist` + '?className=' + className);
     }
 
-    convertToCourse(classId:any): Observable<any> {
-        return this.http.post(`${this.apiUrl}/class/convertToCourse` + '?classId=' + classId,'');
+    convertToCourse(className:any): Observable<any> {
+        return this.http.post(`${this.apiUrl}/class/convertToCourse` + '?className=' + className,'');
     }
 
 }
