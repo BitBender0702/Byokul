@@ -21,12 +21,17 @@
               src="../../../../assets/images/menu.svg" /></button>
         </div>
       </div>
-      <div class="School-prof-header d-flex">
+      <div class="School-prof-header d-flex school-profile-mobile">
+        <div class="d-flex align-items-center mb-3 mb-md-0">
         <div class="school-profile-icon rounded-circle">
           <img [src]="school.avatar" style="scale: 1.2;" />
         </div>
-        <div class="school-profile-content edit-profilehover">
-          <h2 class="font_24 fw_700">{{school.schoolName}} <span *ngIf="school.isVarified" class="verified-badge"><img
+        <h2 class="font_24 fw_700 d-md-none mb-0">{{school.schoolName}} <span *ngIf="school.isVarified" class="verified-badge"><img
+          src="../../../../assets/images/verified-badge.svg" /></span></h2>
+      </div>
+        
+        <div class="school-profile-content edit-profilehover ">
+          <h2 class="font_24 fw_700 d-none d-md-block">{{school.schoolName}} <span *ngIf="school.isVarified" class="verified-badge"><img
                 src="../../../../assets/images/verified-badge.svg" /></span></h2>
           <div class="position-relative">
 
@@ -452,9 +457,9 @@
 
                                <div *ngIf="post.postAttachments.length > 3" class="col-md-4 h-100">
                                 <div class="h-100 medium_thumbox d-flex">
-                                    <div class="medium-thumnail">
+                                    <div class="medium-thumnail position-relative">
                                         <img class="w-100 position-relative" (click)="openPostsViewModal(post)" src="../../../../assets/images/blurImage.jfif" style="cursor: pointer;" />   
-                                        <div class="position-absolute" style="margin-top: 55px;margin-left: 200px;font-size: 52px;font-weight: 600;">
+                                        <div class="position-absolute" style="top:50%; left: 50%; transform: translate(-50%, -50%); font-size: 52px;font-weight: 600;">
                                           +{{post.postAttachments.length - 3}}</div>                                    
                                        </div>
                                     <div class="medium-thumnail">

@@ -141,7 +141,7 @@
                       <video *ngIf="attachment?.fileType==2" (click)="openPostsViewModal(post)" preload="metadata" class="w-100" style="cursor: pointer;">
                         <source [src]="attachment?.fileUrl" type="video/mp4"/>
                       </video>
-                      <img style="height: 598px;cursor: pointer;" *ngIf="attachment?.fileType==1" (click)="openPostsViewModal(post)" class="w-100" [src]="attachment?.fileUrl" />
+                      <img style="cursor: pointer;" *ngIf="attachment?.fileType==1" (click)="openPostsViewModal(post)" class="w-100" [src]="attachment?.fileUrl" />
                        </ng-container>
 
                     </div>
@@ -256,7 +256,7 @@
 
           <div class="list-schol-profile" *ngIf="!isProfileGrid">
             <div [ngClass]="isGridItemInfo ? 'd-block school-grid-box position-relative school-list-box h-100':'d-none school-grid-box position-relative school-list-box h-100'" *ngIf="gridItemInfo!=undefined">
-              <div class="row">
+              <div class="row post-list-preview-sec">
                 <div [ngClass]="gridItemInfo.postAttachments.length>0 ? 'd-block col-lg-6':'d-none'">
                   <carousel>
                   <div *ngFor="let postAttachment of gridItemInfo.postAttachments" class="school-grid-thumbnail">
@@ -341,9 +341,11 @@
                     </div>
                     <div class="school-grid-body">
                       <div class="d-flex justify-content-between date-view-list">
+                        <div>
                         <p *ngIf="post.dateTime != null" class="font_14 school-grid-date d-inline-block mb-0">
                           {{post.dateTime | date : "MMMM d"}} - {{post.dateTime | date : "hh mm"}}
                         </p>
+                      </div>
                         <button type="button" class="view font_12 bg-transparent border-0 ">
                           <img src="../../../../assets/images/eye.svg" class="me-2" /> 954
                         </button>
@@ -472,7 +474,7 @@
                       <video *ngIf="attachment?.fileType==2" (click)="openPostsViewModal(post)" preload="metadata" class="w-100" style="cursor: pointer;">
                         <source [src]="attachment?.fileUrl" type="video/mp4"/>
                       </video>
-                      <img style="height: 598px;cursor: pointer;" *ngIf="attachment?.fileType==1" (click)="openPostsViewModal(post)" class="w-100" [src]="attachment?.fileUrl" />
+                      <img style="cursor: pointer;" *ngIf="attachment?.fileType==1" (click)="openPostsViewModal(post)" class="w-100" [src]="attachment?.fileUrl" />
                        </ng-container>
 
                     </div>
@@ -514,9 +516,9 @@
 
                  <div *ngIf="post.postAttachments.length > 3" class="col-md-4 h-100">
                   <div class="h-100 medium_thumbox d-flex">
-                      <div class="medium-thumnail">
+                      <div class="medium-thumnail position-relative">
                           <img class="w-100 position-relative" (click)="openPostsViewModal(post)" src="../../../../assets/images/blurImage.jfif" style="cursor: pointer;" />   
-                          <div class="position-absolute" style="margin-top: 55px; margin-left: 200px; font-size: 52px; font-weight: 600;">
+                          <div class="position-absolute" style="top: 50%;left:50%; transform: translate(-50%, -50%)";>
                             +{{post.postAttachments.length - 3}}</div>                                    
                          </div>
                       <div class="medium-thumnail">
@@ -587,13 +589,13 @@
 
           <div class="list-schol-profile" *ngIf="!isProfileGrid">
             <div [ngClass]="isGridItemInfo ? 'd-block school-grid-box position-relative school-list-box h-100':'d-none school-grid-box position-relative school-list-box h-100'" *ngIf="gridItemInfo!=undefined">
-              <div class="row">
+              <div class="row post-list-preview-sec">
                 <div [ngClass]="gridItemInfo.postAttachments.length>0 ? 'd-block col-lg-6':'d-none'">
                   <carousel>
                   <div *ngFor="let postAttachment of gridItemInfo.postAttachments" class="school-grid-thumbnail">
                     <slide *ngIf="postAttachment.fileType==2">
                     <div *ngIf="postAttachment?.fileType==2" class="videofile">
-                      <video style="height: 300px;" controls>
+                      <video style="height: 320px;" controls>
                         <source [src]="postAttachment?.fileUrl" type="video/mp4"/>
                       </video>
                     </div>
@@ -672,9 +674,11 @@
                     </div>
                     <div class="school-grid-body">
                       <div class="d-flex justify-content-between date-view-list">
+                         <div>
                         <p *ngIf="post.dateTime != null" class="font_14 school-grid-date d-inline-block mb-0">
                           {{post.dateTime | date : "MMMM d"}} - {{post.dateTime | date : "hh mm"}}
                         </p>
+                      </div>
                         <button type="button" class="view font_12 bg-transparent border-0 ">
                           <img src="../../../../assets/images/eye.svg" class="me-2" /> 954
                         </button>
