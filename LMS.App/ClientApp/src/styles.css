@@ -1185,6 +1185,7 @@ input[type=number]::-webkit-outer-spin-button {
 	overflow: hidden;
 	min-width: 40.59px;
 	display: flex;
+	background: #7C8DA7;
 }
 
 .schoolgrid-header h2 {
@@ -2515,6 +2516,29 @@ button.delete-tag img {
     position: absolute;
     right: 0;
 }
+.post-list-preview-sec carousel .carousel-inner .school-grid-thumbnail .item {
+    height: 320px;
+}
+.post-list-preview-sec carousel .carousel-inner .school-grid-thumbnail .item video{
+    width:100%;
+}
+.post-list-preview-sec carousel .carousel-indicators{
+	display: none;
+}
+.class-preview-right p {
+    max-height: 200px;
+    overflow-y: auto;
+}
+.class-preview-right p::-webkit-scrollbar {
+    height: 2px;
+    width: 1px;
+}
+.post-view-large .modal-dialog {
+    max-width: 1240px;
+}
+.post-view-large .item {
+    max-height: 750px;
+}
 
 @media screen and (min-width:1200px) {
 	.main_content{
@@ -2655,7 +2679,106 @@ button.delete-tag img {
 	.step-form, .wht_box {
 		padding: 25px 20px;
 	}
-	
+	.function-btns {
+		padding: 4px 13px;
+		font-size: 13px;
+	}
+	.function-btns img {
+		max-width: 18px;
+	}
+	.school-grid-footer {
+		display: flex;
+		justify-content: start;
+	}
+	.button-list-grid {
+		display: none;
+	}
+	.font_20 {
+		font-size: 16px;
+	}
+	.new-school-grid-thumbnail {
+		height: 300px;
+	}
+	div#create-post .modal-header {
+		padding-bottom: 50px;
+	}
+	.liv-postbtn {
+		position: absolute;
+		left: auto;
+		right: auto;
+		top: 70px;
+	}
+	div#create-post .modal-header .btn-close {
+		top: 50px;
+	}
+	.edit-school-modal .modal-body, .edit-school-modal .modal-header, .edit-school-modal .modal-footer {
+		padding-left: 15px;
+		padding-right: 15px;
+	}
+	.post-bot-right .lg_btn {
+		width: 175px !important;
+	}
+	.school-list-box .school-large-thumbnail {
+		height: auto;
+	}
+	.school-profile-mobile .school-profile-icon {
+		width: 50px;
+		height: 50px;
+		min-width: 50px;
+		border-width: 2px;
+		margin-right: 16px;
+	}
+	.font_22 {
+		font-size: 18px;
+	}
+	.font_24 {
+		font-size: 18px;
+	}
+	span.verified-badge {
+		max-width: 16px;
+		display: inline-flex;
+	}
+	.font_16 {
+		font-size: 14px !important;
+	}
+	.mr-_24 {
+		margin-right: 16px;
+	}
+
+	.filter-main {
+		position: static;
+	}
+	.school-profile-mobile, .school-profile-tabs {
+		flex-wrap: wrap;
+	}
+	.edit-profile-header {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	.edit-profile-header .modal-school-icon {
+		width: 75px;
+		height: 75px;
+		margin-right: 10px !important;
+		margin-left: 0;
+	}
+	button.edit-sprofilebtn {
+		opacity: 1;
+		position: static;
+	}
+	.edit-school-modal .modal-header {
+		padding: 20px 10px 15px;
+	}
+	.hover-double-button {
+		position: static;
+		margin-top: 10px;
+	}
+	.univ-logo {
+		right: 5px;
+		top: -6px;
+		width: 25px;
+		height: 25px;		
+	}
 
 }
 @media (max-width:575px) {

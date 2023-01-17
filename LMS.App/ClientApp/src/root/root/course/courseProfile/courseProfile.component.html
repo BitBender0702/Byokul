@@ -22,8 +22,9 @@
                 src="../../../../assets/images/menu.svg" /></button>
           </div>
         </div>
-        <div class="School-prof-header">
-          <div class="d-flex align-items-center">
+        <div class="School-prof-header school-profile-mobile">
+          <div class="d-flex align-items-center flex-wrap flex-md-nowrap">
+            <div class="d-flex align-items-center mb-3 mb-md-0">
             <div class="position-relative">
                  <div class="school-profile-icon rounded-circle class-course-image ">
                     <img [src]="course.avatar"/>
@@ -31,10 +32,12 @@
                 <div class="univ-logo">
                 <img [src]="course.school.avatar"  />
               </div>
-              </div>
+          </div>
+          <h2 class="font_24 fw_700 mb-0 d-md-none">{{course.courseName}} </h2>
+        </div>
           <div class="school-profile-content edit-profilehover w-100">
             <div class="d-flex justify-content-between flex-wrap class_request align-items-center mb-4">
-                <h2 class="font_24 fw_700 mb-0">{{course.courseName}} </h2>
+                <h2 class="font_24 fw_700 mb-0 d-none d-md-block">{{course.courseName}} </h2>
                 <div class="d-flex flex-wrap course-date-head">
                 <!-- <span class="date-class text_ltgray font_14">{{class.startDate | date : "MMMM d, y"}} - {{class.endDate | date : "MMMM d, y"}}</span> -->
                 <span class="sepearator mx-4">|</span>
@@ -202,7 +205,7 @@
                   <div class="teacher-tags tag-box hashtag_box">
                     <span *ngFor="let tag of post.postTags" class="custom-tag">#{{tag.postTagValue}}</span>
                   </div>
-                  <div *ngIf="post.postAttachments.length" class="school-grid-thumbnail" style="cursor: pointer;">
+                  <div *ngIf="post.postAttachments.length" class="school-grid-thumbnail new-school-grid-thumbnail" style="cursor: pointer;">
                     <div class="row gx-1 h-100">
 
                       <div *ngIf="post.postAttachments.length == 1" class="col-md-12 h-100">
@@ -245,9 +248,9 @@
 
                    <div *ngIf="post.postAttachments.length > 3" class="col-md-4 h-100">
                     <div class="h-100 medium_thumbox d-flex">
-                        <div class="medium-thumnail">
+                        <div class="medium-thumnail position-relative">
                             <img class="w-100 position-relative" (click)="openPostsViewModal(post)" src="../../../../assets/images/blurImage.jfif" style="cursor: pointer;" />   
-                            <div class="position-absolute" style="margin-top: 55px;margin-left: 200px;font-size: 52px;font-weight: 600;">
+                            <div class="position-absolute"  style="top:50%; left: 50%; transform: translate(-50%, -50%); font-size: 52px;font-weight: 600;">
                               +{{post.postAttachments.length - 3}}</div>                                    
                            </div>
                         <div class="medium-thumnail">
@@ -320,7 +323,7 @@
   
             <div class="list-schol-profile" *ngIf="!isProfileGrid">
               <div [ngClass]="isGridItemInfo ? 'd-block school-grid-box position-relative school-list-box h-100':'d-none school-grid-box position-relative school-list-box h-100'" *ngIf="gridItemInfo!=undefined">
-                <div class="row">
+                <div class="row post-list-preview-sec">
                   <div [ngClass]="gridItemInfo.postAttachments.length>0 ? 'd-block col-lg-6':'d-none'">
                     <carousel>
                     <div *ngFor="let postAttachment of gridItemInfo.postAttachments" class="school-grid-thumbnail">
@@ -411,7 +414,7 @@
                                     <img src="../../../../assets/images/eye.svg" class="me-2" /> 954
                                 </button>
                             </div>
-                            <div class="school-grid-thumbnail" style="cursor: pointer;" (click)="showPostDiv(post.id)">
+                            <div class="school-grid-thumbnail " style="cursor: pointer;" (click)="showPostDiv(post.id)">
                                 <div class="row gx-1">
                                     <div class="col-md-12">
                                         <div class="school-large-thumbnail shadow-thumnail position-relative">
@@ -871,7 +874,7 @@
                     <img [src]="uploadImage">
                   </div>
                   <div *ngIf="uploadImage == ''">
-                    <img src={{course?.avatar}} style="scale: 1.8;margin-top: 64px;">
+                    <img src={{course?.avatar}} style="scale: 1.8;">
                   </div>
             </div>
   
@@ -880,7 +883,7 @@
           <div class="text-line-border position-relative text-center mb-4">
             <span class="line-text font_12 text_ltgray fw_400 text-center">{{'GeneralInformation'| translate }}</span>
           </div>
-          <form [formGroup]="editCourseForm">
+          <form [formGroup]="editCourseForm" class="latest-form">
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group">
@@ -965,7 +968,7 @@
                 </div>
               </div>
               <div class="col-md-12">
-                <div class="form-group">
+                <div class="form-group lang-w100">
                   <label class="font_10">{{'Language'| translate }}</label>
                     <div class="custom-language-select">
                         <p-multiSelect  [defaultLabel]="'Select Languages'" [panelStyle]="{'width':'100%'}" [filter]="false" [showToggleAll]="false" [options]="languages" optionLabel="name" optionValue="id" name="languageSelect[]" class="form-control" multiple id="languageSelect" formControlName="languageIds">
