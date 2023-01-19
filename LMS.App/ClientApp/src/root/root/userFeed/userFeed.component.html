@@ -28,12 +28,12 @@
         <div class="custom-tabs profile-custom-tabs">
           <ul class="nav nav-tabs border-0 before-none" id="myTab" role="tablist">
             <li class="nav-item ps-0 mb-0" role="presentation">
-              <button class="nav-link active" id="school-tab" data-bs-toggle="tab"
+              <button [ngClass]="myFeeds.length > 0 ? 'nav-link active':'nav-link'" id="school-tab" data-bs-toggle="tab"
                 data-bs-target="#school-feed-tab-pane" type="button" role="tab" aria-controls="school-feed-tab-pane"
                 aria-selected="true">{{'MyFeed'| translate }}</button>
             </li>
             <li class="nav-item ps-0 mb-0" role="presentation">
-              <button (click)="getGlobalFeeds()" class="nav-link" id="classes-tab" data-bs-toggle="tab" data-bs-target="#classes-tab-pane"
+              <button (click)="getGlobalFeeds()" [ngClass]="myFeeds.length == 0 ? 'nav-link active':'nav-link'" class="nav-link" id="classes-tab" data-bs-toggle="tab" data-bs-target="#classes-tab-pane"
                 type="button" role="tab" aria-controls="classes-tab-pane" aria-selected="false" tabindex="-1">{{'GlobalFeed'| translate }}</button>
             </li>
           </ul>
@@ -42,7 +42,7 @@
       </div>
 
       <div class="tab-content position-relative active" id="pills-tabContent">
-        <div class="tab-pane fade show active" id="school-feed-tab-pane" role="tabpanel"
+        <div [ngClass]="myFeeds.length > 0 ? 'tab-pane fade show active':'tab-pane fade show'" id="school-feed-tab-pane" role="tabpanel"
           aria-labelledby="school-feed-tab" tabindex="0">
           <div class="button-list-grid">
             <button [ngClass]="isProfileGrid ? 'btn border-btn active d-inline-flex align-items-center justify-content-center' : 'btn border-btn d-inline-flex align-items-center justify-content-center'" (click)="profileGrid()" type="button" >
@@ -54,15 +54,20 @@
           </div>
           <div class="feed-section mt-0">
             <div class="feed-box position-relative">
-              <button type="button" class="bg-transparent border-0 next-feed"><img
-                  src="../../../assets/images/chevron-right-circle.svg" /></button>
+              <!-- <button type="button" class="bg-transparent border-0 next-feed"><img
+                  src="../../../assets/images/chevron-right-circle.svg" /></button> -->
               <div class="feedbox-inner d-flex ">
+                <carousel
+                [itemsPerSlide]="itemsPerSlide"
+                [singleSlideOffset]="singleSlideOffset"
+                [interval]="0"
+                [noWrap]="noWrap">
                 <div *ngFor="let post of myFeeds">
                   <div *ngIf="post.postType == 3">
-                  <div *ngFor="let postAttachment of post.postAttachments">
+                  <slide *ngFor="let postAttachment of post.postAttachments">
                     <div *ngIf="postAttachment.fileType == 2">
                 <div class="feedimg-box position-relative text-light position-relative">
-                  <a [routerLink]="['/user/reels', postAttachment.id]">
+                  <a (click)="openReelsViewModal(postAttachment.id)" style="cursor: pointer;">
                     <div class="videofile">
                       <video preload="metadata" style="height: 300px;">
                         <source [src]="postAttachment.fileUrl" type="video/mp4"/>
@@ -81,7 +86,18 @@
                     </button>
                   </div>
                   <div class="feed-name font_14 text_sec1">
-                      <img [src]="post.parentImageUrl"/> {{post.parentName}}
+                      <a *ngIf="post.postAuthorType == 1" (click)="getSelectedSchool(post.parentName)" class="routeLink">
+                        <img [src]="post.parentImageUrl"/> {{post.parentName}}
+                      </a>
+                      <a *ngIf="post.postAuthorType == 2" (click)="getSelectedClass(post.parentName,post.schoolName)" [routerLink]="['/profile/class', post.parentName]" class="routeLink">
+                        <img [src]="post.parentImageUrl"/> {{post.parentName}}
+                      </a>
+                      <a *ngIf="post.postAuthorType == 3" (click)="getSelectedCourse(post.parentName,post.schoolName)" class="routeLink">
+                        <img [src]="post.parentImageUrl"/> {{post.parentName}}
+                      </a>
+                      <a *ngIf="post.postAuthorType == 4" (click)="getUserDetails(post.parentId)" class="routeLink">
+                        <img [src]="post.parentImageUrl"/> {{post.parentName}}
+                      </a>
                     <!-- <img [src]="school.avatar"/> {{school.schoolName}} -->
                   </div>
                   <div class="feed-title font_14 text_sec1 d-flex align-content-center fw_600">
@@ -89,22 +105,49 @@
                   </div>
                 </div>
                 </div>
+                </slide>
                 </div>
                 </div>
-                </div>
+              </carousel>
 
               </div>
             </div>
           </div>
           <div class="school-grid-view grid-active" *ngIf="isProfileGrid">
-            <div *ngIf="myFeeds.length == 0" style="font-weight: 500;color: orange; margin-top: 40px;font-size: 40px" class="text-center font-34">You have not uploaded any post yet!</div>
+            <div *ngIf="myFeeds.length == 0" style="font-weight: 500;color: orange; margin-top: 40px;font-size: 40px" class="text-center font-34">Posts from your friends and schools you follow will appear here</div>
             <ng-container *ngFor="let post of myFeeds">
               <div *ngIf="post.postType == 1" class="school-grid-box position-relative">
               <div class="schoolgrid-header d-flex align-items-center position-relative">
                 <div class="school-gridprofile-icon">
-                  <img [src]="post.parentImageUrl"/>
+                  <!-- <img [src]="post.parentImageUrl"/> -->
+                  <a *ngIf="post.postAuthorType == 1" (click)="getSelectedSchool(post.parentName)" class="routeLink">
+                    <img [src]="post.parentImageUrl"/>
+                  </a>
+                  <a *ngIf="post.postAuthorType == 2" (click)="getSelectedClass(post.parentName,post.schoolName)"  class="routeLink">
+                    <img [src]="post.parentImageUrl"/>
+                  </a>
+                  <a *ngIf="post.postAuthorType == 3" (click)="getSelectedCourse(post.parentName,post.schoolName)" class="routeLink">
+                    <img [src]="post.parentImageUrl"/>
+                  </a>
+                  <a *ngIf="post.postAuthorType == 4" (click)="getUserDetails(post.parentId)" class="routeLink">
+                    <img [src]="post.parentImageUrl"/>
+                  </a>
                 </div>
-                <h2 class="d-inline-block font_20 fw_600 text_sec1 mb-0">{{post.title}}</h2>
+                <h2 class="d-inline-block font_20 fw_600 text_sec1 mb-0">
+                  <!-- {{post.title}} -->
+                  <a *ngIf="post.postAuthorType == 1" (click)="getSelectedSchool(post.parentName)" class="routeLink">
+                    {{post.title}}
+                  </a>
+                  <a *ngIf="post.postAuthorType == 2" (click)="getSelectedClass(post.parentName,post.schoolName)" class="routeLink">
+                    {{post.title}}
+                  </a>
+                  <a *ngIf="post.postAuthorType == 3" (click)="getSelectedCourse(post.parentName,post.schoolName)" class="routeLink">
+                    {{post.title}}
+                  </a>
+                  <a *ngIf="post.postAuthorType == 4" (click)="getUserDetails(post.parentId)" class="routeLink">
+                    {{post.title}}
+                  </a>
+                </h2>
                 <p *ngIf="post.dateTime != null" class="font_14 school-grid-date d-inline-block mb-0">
                   {{post.dateTime | date : "MMMM d"}} - {{post.dateTime | date : "hh mm"}}
                    <!-- <span class="fw_600 ">11:30 - 13:50</span> -->
@@ -280,9 +323,33 @@
                     <div class="schoolgrid-header">
                       <div class="d-flex align-items-center position-relative">
                         <div class="school-gridprofile-icon">
-                          <img [src]="gridItemInfo.parentImageUrl">
+                          <a *ngIf="gridItemInfo.postAuthorType == 1" (click)="getSelectedSchool(gridItemInfo.parentName)" class="routeLink">
+                            <img [src]="gridItemInfo.parentImageUrl">
+                          </a>
+                          <a *ngIf="gridItemInfo.postAuthorType == 2" (click)="getSelectedClass(gridItemInfo.parentName,gridItemInfo.schoolName)" class="routeLink">
+                            <img [src]="gridItemInfo.parentImageUrl">
+                          </a>
+                          <a *ngIf="gridItemInfo.postAuthorType == 3" (click)="getSelectedCourse(gridItemInfo.parentName,gridItemInfo.schoolName)" class="routeLink">
+                            <img [src]="gridItemInfo.parentImageUrl">
+                          </a>
+                          <a *ngIf="gridItemInfo.postAuthorType == 4" (click)="getUserDetails(gridItemInfo.parentId)" class="routeLink">
+                            <img [src]="gridItemInfo.parentImageUrl">
+                          </a>
                         </div>
-                        <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">{{gridItemInfo.title}}</h2>
+                        <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">
+                          <a *ngIf="gridItemInfo.postAuthorType == 1" (click)="getSelectedSchool(gridItemInfo.parentName)" class="routeLink">
+                            {{gridItemInfo.title}}
+                          </a>
+                          <a *ngIf="gridItemInfo.postAuthorType == 2" (click)="getSelectedClass(gridItemInfo.parentName,gridItemInfo.schoolName)" class="routeLink">
+                            {{gridItemInfo.title}}
+                          </a>
+                          <a *ngIf="gridItemInfo.postAuthorType == 3" (click)="getSelectedCourse(gridItemInfo.parentName,gridItemInfo.schoolName)" class="routeLink">
+                            {{gridItemInfo.title}}
+                          </a>
+                          <a *ngIf="gridItemInfo.postAuthorType == 4" (click)="getUserDetails(gridItemInfo.parentId)" class="routeLink">
+                            {{gridItemInfo.title}}
+                          </a>
+                        </h2>
                       </div>
       
                       <!-- <p class="font_14 school-grid-date d-inline-block mb-0">
@@ -322,16 +389,40 @@
                 </div>
               </div>
             </div> 
-            <div *ngIf="myFeeds.length == 0" style="font-weight: 500;color: orange; margin-top: 40px; font-size: 40px;" class="text-center font-34">You have not uploaded any post yet!</div>
+            <div *ngIf="myFeeds.length == 0" style="font-weight: 500;color: orange; margin-top: 40px;font-size: 40px" class="text-center font-34">Posts from your friends and schools you follow will appear here</div>
             <div class="row">
               <ng-container *ngFor="let post of myFeeds">
                 <div *ngIf="post.postType == 1" class="col-md-6 col-xl-4">
                   <div class="school-grid-box position-relative school-list-box h-100 mb-0">
                     <div class="schoolgrid-header d-flex align-items-center position-relative">
                       <div class="school-gridprofile-icon">
-                        <img [src]="post.parentImageUrl" />
+                        <a *ngIf="post.postAuthorType == 1" (click)="getSelectedSchool(post.parentName)" class="routeLink">
+                          <img [src]="post.parentImageUrl" />
+                        </a>
+                        <a *ngIf="post.postAuthorType == 2" (click)="getSelectedClass(post.parentName,post.schoolName)" class="routeLink">
+                          <img [src]="post.parentImageUrl" />
+                        </a>
+                        <a *ngIf="post.postAuthorType == 3" (click)="getSelectedCourse(post.parentName,post.schoolName)" class="routeLink">
+                          <img [src]="post.parentImageUrl" />
+                        </a>
+                        <a *ngIf="post.postAuthorType == 4" (click)="getUserDetails(post.parentId)" class="routeLink">
+                          <img [src]="post.parentImageUrl" />
+                        </a>
                       </div>
-                      <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">{{post.title}}</h2>
+                      <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">
+                        <a *ngIf="post.postAuthorType == 1" (click)="getSelectedSchool(post.parentName)" class="routeLink">
+                          {{post.title}}
+                        </a>
+                        <a *ngIf="post.postAuthorType == 2" (click)="getSelectedClass(post.parentName,post.schoolName)" class="routeLink">
+                          {{post.title}}
+                        </a>
+                        <a *ngIf="post.postAuthorType == 3" (click)="getSelectedCourse(post.parentName,post.schoolName)" class="routeLink">
+                          {{post.title}}
+                        </a>
+                        <a *ngIf="post.postAuthorType == 4" (click)="getUserDetails(post.parentId)" class="routeLink">
+                          {{post.title}}
+                        </a>
+                      </h2>
                       <!-- <button *ngIf="post.isPinned && isOwner" (click)="pinUnpinPost(post.id,false)" type="button" class="bg-transparent border-0 pinned-grid-chat">
                             <img src="../../../../assets/images/pinned-orange.svg" />
                       </button>
@@ -347,7 +438,7 @@
                         </p>
                       </div>
                         <button type="button" class="view font_12 bg-transparent border-0 ">
-                          <img src="../../../../assets/images/eye.svg" class="me-2" /> 954
+                          <img src="../../../../assets/images/eye.svg" class="me-2" /> {{post.views.length}}
                         </button>
                       </div>
                       <div class="school-grid-thumbnail" style="cursor: pointer;" (click)="showPostDiv(post.id,'FromMyFeeds')">
@@ -374,7 +465,7 @@
 
 
         </div>
-        <div class="tab-pane fade show" id="classes-tab-pane" role="tabpanel" aria-labelledby="school-feed-tab"
+        <div [ngClass]="myFeeds.length == 0 ? 'tab-pane fade show active':'tab-pane fade show'" class="tab-pane fade show" id="classes-tab-pane" role="tabpanel" aria-labelledby="school-feed-tab"
           tabindex="0">
           <div class="button-list-grid">
             <button [ngClass]="isProfileGrid ? 'btn border-btn active d-inline-flex align-items-center justify-content-center' : 'btn border-btn d-inline-flex align-items-center justify-content-center'" (click)="profileGrid()" type="button" >
@@ -386,8 +477,8 @@
           </div>
           <div class="feed-section mt-0">
             <div class="feed-box position-relative">
-              <button type="button" class="bg-transparent border-0 next-feed"><img
-                  src="../../../assets/images/chevron-right-circle.svg" /></button>
+              <!-- <button type="button" class="bg-transparent border-0 next-feed"><img
+                  src="../../../assets/images/chevron-right-circle.svg" /></button> -->
               <div class="feedbox-inner d-flex ">
                 <carousel
                 [itemsPerSlide]="itemsPerSlide"
@@ -399,7 +490,7 @@
                   <slide *ngFor="let postAttachment of post.postAttachments">
                     <div *ngIf="postAttachment.fileType == 2">
                 <div class="feedimg-box position-relative text-light position-relative">
-                  <a [routerLink]="['/user/reels', postAttachment.id]">
+                  <a (click)="openReelsViewModal(postAttachment.id)" style="cursor: pointer;">
                     <div class="videofile">
                       <video preload="metadata" style="height: 300px;">
                         <source [src]="postAttachment.fileUrl" type="video/mp4"/>
@@ -418,7 +509,18 @@
                     </button> -->
                   </div>
                   <div class="feed-name font_14 text_sec1">
-                      <img [src]="post.parentImageUrl"/> {{post.parentName}}
+                      <a *ngIf="post.postAuthorType == 1" (click)="getSelectedSchool(post.parentName)" class="routeLink">
+                        <img [src]="post.parentImageUrl"/> {{post.parentName}}
+                      </a>
+                      <a *ngIf="post.postAuthorType == 2" (click)="getSelectedClass(post.parentName,post.schoolName)" class="routeLink">
+                        <img [src]="post.parentImageUrl"/> {{post.parentName}}
+                      </a>
+                      <a *ngIf="post.postAuthorType == 3" (click)="getSelectedCourse(post.parentName,post.schoolName)" class="routeLink">
+                        <img [src]="post.parentImageUrl"/> {{post.parentName}}
+                      </a>
+                      <a *ngIf="post.postAuthorType == 4" (click)="getUserDetails(post.parentId)" class="routeLink">
+                        <img [src]="post.parentImageUrl"/> {{post.parentName}}
+                      </a>
                     <!-- <img [src]="school.avatar"/> {{school.schoolName}} -->
                   </div>
                   <div class="feed-title font_14 text_sec1 d-flex align-content-center fw_600">
@@ -430,7 +532,6 @@
               
                 </div>
                 </slide>
-             
            </div>
                 </div>
       </carousel>
@@ -443,9 +544,33 @@
               <div *ngIf="post.postType == 1" class="school-grid-box position-relative">
               <div class="schoolgrid-header d-flex align-items-center position-relative">
                 <div class="school-gridprofile-icon">
-                  <img [src]="post.parentImageUrl"/>
+                  <a *ngIf="post.postAuthorType == 1" (click)="getSelectedSchool(post.parentName)" class="routeLink">
+                    <img [src]="post.parentImageUrl"/>
+                  </a>
+                  <a *ngIf="post.postAuthorType == 2" (click)="getSelectedClass(post.parentName,post.schoolName)" class="routeLink">
+                    <img [src]="post.parentImageUrl"/>
+                  </a>
+                  <a *ngIf="post.postAuthorType == 3" (click)="getSelectedCourse(post.parentName,post.schoolName)" class="routeLink">
+                    <img [src]="post.parentImageUrl"/> 
+                  </a>
+                  <a *ngIf="post.postAuthorType == 4" (click)="getUserDetails(post.parentId)" class="routeLink">
+                    <img [src]="post.parentImageUrl"/>
+                  </a>
                 </div>
-                <h2 class="d-inline-block font_20 fw_600 text_sec1 mb-0">{{post.title}}</h2>
+                <h2 class="d-inline-block font_20 fw_600 text_sec1 mb-0">
+                  <a *ngIf="post.postAuthorType == 1" (click)="getSelectedSchool(post.parentName)" class="routeLink">
+                    {{post.title}}
+                  </a>
+                  <a *ngIf="post.postAuthorType == 2" (click)="getSelectedClass(post.parentName,post.schoolName)" class="routeLink">
+                    {{post.title}}
+                  </a>
+                  <a *ngIf="post.postAuthorType == 3" (click)="getSelectedCourse(post.parentName,post.schoolName)" class="routeLink">
+                    {{post.title}}
+                  </a>
+                  <a *ngIf="post.postAuthorType == 4" (click)="getUserDetails(post.parentId)" class="routeLink">
+                    {{post.title}}
+                  </a>
+                </h2>
                 <p *ngIf="post.dateTime != null" class="font_14 school-grid-date d-inline-block mb-0">
                   {{post.dateTime | date : "MMMM d"}} - {{post.dateTime | date : "hh mm"}}
                    <!-- <span class="fw_600 ">11:30 - 13:50</span> -->
@@ -526,7 +651,7 @@
                   <div class="h-100 medium_thumbox d-flex">
                       <div class="medium-thumnail position-relative">
                           <img class="w-100 position-relative" (click)="openPostsViewModal(post)" src="../../../../assets/images/blurImage.jfif" style="cursor: pointer;" />   
-                          <div class="position-absolute" style="top: 50%;left:50%; transform: translate(-50%, -50%)";>
+                          <div class="position-absolute" style="top: 50%;left:50%;transform:translate(-50%, -50%);">
                             +{{post.postAttachments.length - 3}}</div>                                    
                          </div>
                       <div class="medium-thumnail">
@@ -621,9 +746,33 @@
                     <div class="schoolgrid-header">
                       <div class="d-flex align-items-center position-relative">
                         <div class="school-gridprofile-icon">
-                          <img [src]="gridItemInfoForGlobal.parentImageUrl">
+                          <a *ngIf="gridItemInfoForGlobal.postAuthorType == 1" (click)="getSelectedSchool(gridItemInfoForGlobal.parentName)" class="routeLink">
+                            <img [src]="gridItemInfoForGlobal.parentImageUrl">
+                          </a>
+                          <a *ngIf="gridItemInfoForGlobal.postAuthorType == 2" (click)="getSelectedClass(gridItemInfoForGlobal.parentName,gridItemInfoForGlobal.schoolName)" class="routeLink">
+                            <img [src]="gridItemInfoForGlobal.parentImageUrl">
+                          </a>
+                          <a *ngIf="gridItemInfoForGlobal.postAuthorType == 3" (click)="getSelectedCourse(gridItemInfoForGlobal.parentName,gridItemInfoForGlobal.schoolName)" class="routeLink">
+                            <img [src]="gridItemInfoForGlobal.parentImageUrl">
+                          </a>
+                          <a *ngIf="gridItemInfoForGlobal.postAuthorType == 4" (click)="getUserDetails(gridItemInfoForGlobal.parentId)" class="routeLink">
+                            <img [src]="gridItemInfoForGlobal.parentImageUrl">
+                          </a>
                         </div>
-                        <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">{{gridItemInfoForGlobal.title}}</h2>
+                        <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">
+                          <a *ngIf="gridItemInfoForGlobal.postAuthorType == 1" (click)="getSelectedSchool(gridItemInfoForGlobal.parentName)" class="routeLink">
+                            {{gridItemInfoForGlobal.title}}
+                          </a>
+                          <a *ngIf="gridItemInfoForGlobal.postAuthorType == 2" (click)="getSelectedClass(gridItemInfoForGlobal.parentName,gridItemInfoForGlobal.schoolName)" class="routeLink">
+                            {{gridItemInfoForGlobal.title}}
+                          </a>
+                          <a *ngIf="gridItemInfoForGlobal.postAuthorType == 3" (click)="getSelectedCourse(gridItemInfoForGlobal.parentName,gridItemInfoForGlobal.schoolName)" class="routeLink">
+                            {{gridItemInfoForGlobal.title}}
+                          </a>
+                          <a *ngIf="gridItemInfoForGlobal.postAuthorType == 4" (click)="getUserDetails(gridItemInfoForGlobal.parentId)" class="routeLink">
+                            {{gridItemInfoForGlobal.title}}
+                          </a>
+                        </h2>
                       </div>
       
                       <p class="font_14 school-grid-date d-inline-block mb-0">
@@ -670,9 +819,34 @@
                   <div class="school-grid-box position-relative school-list-box h-100 mb-0">
                     <div class="schoolgrid-header d-flex align-items-center position-relative">
                       <div class="school-gridprofile-icon">
-                        <img [src]="post.parentImageUrl" />
+                        <a *ngIf="post.postAuthorType == 1" (click)="getSelectedSchool(post.parentName)" class="routeLink">
+                          <img [src]="post.parentImageUrl" />
+                        </a>
+                        <a *ngIf="post.postAuthorType == 2" (click)="getSelectedClass(post.parentName,post.schoolName)" class="routeLink">
+                          <img [src]="post.parentImageUrl" />
+                        </a>
+                        <a *ngIf="post.postAuthorType == 3" (click)="getSelectedCourse(post.parentName,post.schoolName)" class="routeLink">
+                          <img [src]="post.parentImageUrl" />
+                        </a>
+                        <a *ngIf="post.postAuthorType == 4" (click)="getUserDetails(post.parentId)" class="routeLink">
+                          <img [src]="post.parentImageUrl" />
+                        </a>
                       </div>
-                      <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">{{post.title}}</h2>
+                      <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">
+                        {{post.title}}
+                        <a *ngIf="post.postAuthorType == 1" (click)="getSelectedSchool(post.parentName)" class="routeLink">
+                          {{post.title}}
+                        </a>
+                        <a *ngIf="post.postAuthorType == 2" (click)="getSelectedClass(post.parentName,post.schoolName)" class="routeLink">
+                          {{post.title}}
+                        </a>
+                        <a *ngIf="post.postAuthorType == 3" (click)="getSelectedCourse(post.parentName,post.schoolName)" class="routeLink">
+                          {{post.title}}
+                        </a>
+                        <a *ngIf="post.postAuthorType == 4" (click)="getUserDetails(post.parentId)" class="routeLink">
+                          {{post.title}}
+                        </a>
+                      </h2>
                       <!-- <button *ngIf="post.isPinned && isOwner" (click)="pinUnpinPost(post.id,false)" type="button" class="bg-transparent border-0 pinned-grid-chat">
                             <img src="../../../../assets/images/pinned-orange.svg" />
                       </button>
@@ -682,13 +856,13 @@
                     </div>
                     <div class="school-grid-body">
                       <div class="d-flex justify-content-between date-view-list">
-                         <div>
+                        <div>
                         <p *ngIf="post.dateTime != null" class="font_14 school-grid-date d-inline-block mb-0">
                           {{post.dateTime | date : "MMMM d"}} - {{post.dateTime | date : "hh mm"}}
                         </p>
                       </div>
                         <button type="button" class="view font_12 bg-transparent border-0 ">
-                          <img src="../../../../assets/images/eye.svg" class="me-2" /> 954
+                          <img src="../../../../assets/images/eye.svg" class="me-2" /> {{post.views.length}}
                         </button>
                       </div>
                       <div class="school-grid-thumbnail" style="cursor: pointer;" (click)="showPostDiv(post.id,'FromGlobalFeeds')">

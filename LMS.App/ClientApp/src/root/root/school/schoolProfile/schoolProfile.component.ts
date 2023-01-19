@@ -13,7 +13,7 @@ import { DeleteSchoolTeacher } from 'src/root/interfaces/school/deleteSchoolTeac
 import { AddSchoolCertificate } from 'src/root/interfaces/school/addSchoolCertificate';
 import { DeleteSchoolCertificate } from 'src/root/interfaces/school/deleteSchoolCertificate';
 import { MultilingualComponent } from '../../sharedModule/Multilingual/multilingual.component';
-import { CreatePostComponent } from '../../createPost/createPost.component';
+import { addPostResponse, CreatePostComponent } from '../../createPost/createPost.component';
 
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -26,6 +26,7 @@ import { LikeUnlikePost } from 'src/root/interfaces/post/likeUnlikePost';
 import { PostView } from 'src/root/interfaces/post/postView';
 import { LikeUnlikeClassCourse } from 'src/root/interfaces/school/likeUnlikeClassCourse';
 import { MessageService } from 'primeng/api';
+import { ReelsViewComponent } from '../../reels/reelsView.component';
 
 // import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -101,6 +102,10 @@ export class SchoolProfileComponent extends MultilingualComponent implements OnI
     postView!:PostView;
     likesClassCourseLength!:number;
     isClassCourseLiked!:boolean;
+    itemsPerSlide = 7;
+    singleSlideOffset = true;
+    noWrap = true;
+    isFeedHide:boolean = false;
     @ViewChild('closeEditModal') closeEditModal!: ElementRef;
     @ViewChild('closeTeacherModal') closeTeacherModal!: ElementRef;
     @ViewChild('closeLanguageModal') closeLanguageModal!: ElementRef;
@@ -143,6 +148,7 @@ export class SchoolProfileComponent extends MultilingualComponent implements OnI
       
       // else{
       this._schoolService.getSchoolById(this.schoolName.replace(" ","").toLowerCase()).subscribe((response) => {
+        debugger
         this.school = response;
         this.followersLength = this.school.schoolFollowers.length;
         this.isOwnerOrNot();
@@ -227,6 +233,19 @@ export class SchoolProfileComponent extends MultilingualComponent implements OnI
           id: '',
           isFollowed: false
          };
+
+         addPostResponse.subscribe(response => {
+          this.loadingIcon = true;
+          this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post created successfully'});
+          this._schoolService.getSchoolById(this.schoolName.replace(" ","").toLowerCase()).subscribe((response) => {
+            this.school = response;
+            this.loadingIcon = false;
+            this.followersLength = this.school.schoolFollowers.length;
+            this.isOwnerOrNot();
+            this.loadingIcon = false;
+            this.isDataLoaded = true;
+          });
+        });
 
          //this.GetSchoolClassCourseList(this.school.schoolId);
     }
@@ -346,8 +365,8 @@ export class SchoolProfileComponent extends MultilingualComponent implements OnI
       schoolSlogan: this.fb.control(this.editSchool.schoolSlogan?? ''),
       founded: this.fb.control(founded,[Validators.required]),
       accessibilityId: this.fb.control(this.editSchool.accessibilityId,[Validators.required]),
-      schoolEmail: this.fb.control(this.editSchool.schoolEmail,[Validators.required,Validators.pattern(this.EMAIL_PATTERN)]),
-      description: this.fb.control(this.editSchool.description),
+      schoolEmail: this.fb.control(this.editSchool.schoolEmail??'',[Validators.pattern(this.EMAIL_PATTERN)]),
+      description: this.fb.control(this.editSchool.description??''),
       owner: this.fb.control(this.editSchool.user.email),
       // avatar: this.fb.control(this.editSchool.avatar)
     }, {validator: this.dateLessThan('founded',currentDate)});
@@ -643,6 +662,7 @@ openPostsViewModal(posts:string): void {
 }
 
 hideUnhideFeedFilters(hideUnhide:boolean){
+  this.isFeedHide = false;
   if(hideUnhide){
     this.hideFeedFilters = true;
   }
@@ -654,9 +674,11 @@ else{
 }
 
 GetSchoolClassCourseList(schoolId:string){
-  this.loadingIcon = true;
-  this.hideFeedFilters = false;
+  this.isFeedHide = true;
+  debugger
   if(this.classCourseList == undefined){
+    this.loadingIcon = true;
+    this.hideFeedFilters = false;
     this._schoolService.getSchoolClassCourseList(schoolId).subscribe((response) => {
       debugger
       this.classCourseList = response;
@@ -868,5 +890,13 @@ InitializeLikeUnlikeClassCourse(){
     type:0
    }
   
+}
+
+openReelsViewModal(postAttachmentId:string): void {
+  debugger
+  const initialState = {
+    postAttachmentId: postAttachmentId
+  };
+  this.bsModalService.show(ReelsViewComponent,{initialState});
 }
 }

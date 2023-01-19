@@ -11,6 +11,7 @@ import { SchoolService } from 'src/root/service/school.service';
 import { UserService } from 'src/root/service/user.service';
 import { CreatePostComponent } from '../createPost/createPost.component';
 import { PostViewComponent } from '../postView/postView.component';
+import { ReelsViewComponent } from '../reels/reelsView.component';
 
 @Component({
     selector: 'post-view',
@@ -61,8 +62,13 @@ export class UserFeedComponent implements OnInit {
         this._userService.getMyFeed().subscribe((response) => {
           debugger
             this.myFeeds = response;
+            if(this.myFeeds.length==0){
+              this.getGlobalFeeds();
+            }
+            else{
             this.loadingIcon = false;
             this.isDataLoaded = true;
+            }
           });
 
           // this._userService.getGlobalFeed().subscribe((response) => {
@@ -131,6 +137,7 @@ export class UserFeedComponent implements OnInit {
           debugger
             this.globalFeeds = response;
             this.loadingIcon = false;
+            this.isDataLoaded = true;
             console.log(this.globalFeeds);
           });
         }
@@ -292,6 +299,36 @@ export class UserFeedComponent implements OnInit {
           this.isGridItemInfoForGlobal = this.isGridItemInfoForGlobal ? false : true;
         }
       
+      }
+
+      getSelectedSchool(schoolName:string){
+        // window.location.href=`user/schoolProfile/${schoolId}`;
+        window.location.href=`profile/school/${schoolName.replace(" ","").toLowerCase()}`;
+    
+      }
+    
+      getSelectedClass(className:string,schoolName:string){
+        debugger
+        window.location.href=`profile/class/${schoolName.replace(" ","").toLowerCase()}/${className.replace(" ","").toLowerCase()}`;
+      }
+    
+      getSelectedCourse(courseName:string,schoolName:string){
+        debugger
+        // window.location.href=`user/courseProfile/${courseId}`;
+        window.location.href=`profile/course/${schoolName.replace(" ","").toLowerCase()}/${courseName.replace(" ","").toLowerCase()}`;
+    
+      }
+    
+      getUserDetails(userId:string){
+        window.location.href=`user/userProfile/${userId}`;
+      }
+
+      openReelsViewModal(postAttachmentId:string): void {
+        debugger
+        const initialState = {
+          postAttachmentId: postAttachmentId
+        };
+        this.bsModalService.show(ReelsViewComponent,{initialState});
       }
 
 }

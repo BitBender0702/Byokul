@@ -1,17 +1,38 @@
-<div *ngIf="isDataLoaded">
+<!-- <div *ngIf="isDataLoaded"> -->
+  <div appBsModal bsModal class="modal fade edit-school-modal show d-block post-view-large" id="create-post" tabindex="-1"
+aria-labelledby="create-post" aria-hidden="true" area-modal="true">
+<div class="modal-dialog modal-dialog-centered">
+  <div class="modal-content">
+    <div class="modal-header border-0 justify-content-center position-relative">
+      <div class="custom-language-select liv-postbtn">
+        <!-- <ul class="nav nav-tabs border-0" id="myTab" role="tablist">
+          <li class="nav-item p-0">
+            <button
+              class="nav-link active post-attch-btn d-inline-flex justify-content-center align-items-center"
+              id="live-tab" data-bs-toggle="tab" data-bs-target="#live-tab-pane" type="button" role="tab"
+              aria-controls="live-tab-pane" aria-selected="true"><img src="../../../assets/images/Play-dark.svg"
+                class="dark-attach" /><img src="../../../assets/images/Play-light.svg" class="light-attach" /> Live</button>
+          </li>
+        </ul> -->
+      </div>
+      <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center"></h1>
+      <button (click)="close()" type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"><img
+          src="../../../assets/images/cross.svg" /></button>
+    </div>
+    <div class="modal-body">
   <section class="f-poppins">
-    <side-bar [isOpenSidebar]="isOpenSidebar"></side-bar> 
-    <div class="main_content">
+    <!-- <side-bar [isOpenSidebar]="isOpenSidebar"></side-bar>  -->
+    <div>
       <div class="live-header d-flex align-items-center justify-content-between">
-        <button (click)="back()" type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
+        <button (click)="back()" type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark invisible"><img
             src="../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
         <h1 class="font_22 text_dark fw-bold text-center mb-md-0">{{'LiveStream'| translate }}</h1>
-        <button (click)="back()" type="button" class="back-button bg-transparent border-0 "><img src="../../../assets/images/cross.svg" /></button>
+        <button (click)="back()" type="button" class="back-button bg-transparent border-0 invisible"><img src="../../../assets/images/cross.svg" /></button>
       </div>
       <div [ngClass]="showCommentsField? 'live-content' : 'live-content full-widthreel'"  class="live-content" id="reel_content">
         <div class="live-inner w-100">
           <div class="live-image overflow-hidden position-relative">
-            <video width="100%" height="700" controls>
+            <video *ngIf="reels != undefined" width="100%" height="700" controls>
                 <source [src]="reels.fileUrl" type="video/mp4"/>
               </video>
             <!-- <iframe width="100%" height="700" [src]="reels.fileName" title="Reels video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> -->
@@ -20,11 +41,11 @@
                 <!-- <span class="font_14 fw_400  ms-3">Lecture One - Introduction and basics in Python</span> -->
               </h5>
             </div>
-            <button (click)="showComments()" type="button" id="live-chat" class="live_chats">
+            <!-- <button (click)="showComments()" type="button" id="live-chat" class="live_chats">
               <img class="chat-gray-icon " src="../../../assets/images/chat-gray-icon.svg" />
               <img *ngIf="showCommentsField" src="../../../assets/images/cross.svg" class="live-chat-back live-chat-close" />
                <img *ngIf="!showCommentsField" src="../../../assets/images/chevron-right-light.svg" class="live-chat-back " />
-            </button>
+            </button> -->
             <div class="reel-username font_16 white_text">
                 <div *ngIf="reels.school != null">
                   <img [src]="reels.school.avatar" class="me-2"/> {{reels.school.schoolName}}
@@ -32,6 +53,12 @@
                 <div *ngIf="reels.class != null">
                     <img [src]="reels.class.avatar" class="me-2"/> {{reels.class.className}}
                 </div>
+                <!-- <div *ngIf="reels.course != null">
+                  <img [src]="reels.course.avatar" class="me-2"/> {{reels.course.courseName}}
+                </div> -->
+                <!-- <div *ngIf="reels.user != null">
+                    <img [src]="reels.user.avatar" class="me-2"/> {{reels.user.className}}
+                </div> -->
             </div>
           </div>
          
@@ -61,7 +88,7 @@
             </div>
             <div #groupChatList id="groupChat" class="live-chat-outer">
             <div class="live-message d-flex position-relative align-items-start">
-              <img src="images/user.jpg" class="comment-user">
+              <img src="../../../assets/images/school/user.jpg" class="comment-user">
               <p class="text_sec1 font_12 fw_400 text-start mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing
                 elit. Id odio congue suscipit sodales nec vitae hac ac senectus. Varius sed id.</p>
               <button type="button" class="btn bg-transparent text_ltgray font_12 p-0 border-0 reel-like-chat"><img
@@ -69,40 +96,40 @@
               <button type="button" class="border-0 bg-transparent pinned-chat"><img src="../../../assets/images/pinned.svg" /></button>
             </div>
             <div class="live-message d-flex position-relative align-items-start">
-              <img src="images/user.jpg" class="comment-user">
+              <img src="../../../assets/images/school/user.jpg" class="comment-user">
               <p class="text_sec1 font_12 fw_400 text-start mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing
                 elit. Tristique dolor senectus facilisi urna. Dictum vitae morbi turpis sed. In.</p>
               <button type="button" class="btn bg-transparent text_ltgray font_12 p-0 border-0 reel-like-chat"><img
-                  src="images/Heart-dark.svg" class="d-block" /> 34</button>
+                  src="../../../assets/images/Heart-dark.svg" class="d-block" /> 34</button>
             </div>
             <div class="live-message d-flex position-relative align-items-start">
-              <img src="images/user.jpg" class="comment-user">
+              <img src="../../../assets/images/school/user.jpg" class="comment-user">
               <p class="text_sec1 font_12 fw_400 text-start mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing
                 elit. Lorem diam nunc mollis in. Dictum vitae morbi turpis sed. In. Sed feugiat iaculis gravida
                 ultricies blandit justo sit.</p>
               <button type="button" class="btn bg-transparent text_ltgray font_12 p-0 border-0 reel-like-chat"><img
-                  src="images/Heart-dark.svg" class="d-block" /> 34</button>
+                  src="../../../assets/images/Heart-dark.svg" class="d-block" /> 34</button>
             </div>
             <div class="live-message d-flex position-relative align-items-start">
-              <img src="images/user.jpg" class="comment-user">
+              <img src="../../../assets/images/school/user.jpg" class="comment-user">
               <p class="text_sec1 font_12 fw_400 text-start mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing
                 elit. </p>
               <button type="button" class="btn bg-transparent text_ltgray font_12 p-0 border-0 reel-like-chat"><img
-                  src="images/Heart-dark.svg" class="d-block" /> 34</button>
+                  src="../../../assets/images/Heart-dark.svg" class="d-block" /> 34</button>
             </div>
             <div class="live-message d-flex position-relative align-items-start">
-              <img src="images/user.jpg" class="comment-user">
+              <img src="../../../assets/images/school/user.jpg" class="comment-user">
               <p class="text_sec1 font_12 fw_400 text-start mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing
                 elit. Id odio congue suscipit sodales nec vitae hac.</p>
               <button type="button" class="btn bg-transparent text_ltgray font_12 p-0 border-0 reel-like-chat"><img
-                  src="images/Heart-dark.svg" class="d-block" /> 34</button>
+                  src="../../../assets/images/Heart-dark.svg" class="d-block" /> 34</button>
             </div>
             <div class="live-message d-flex position-relative align-items-start">
-              <img src="images/user.jpg" class="comment-user">
+              <img src="../../../assets/images/school/user.jpg" class="comment-user">
               <p class="text_sec1 font_12 fw_400 text-start mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing
                 elit. Id odio congue suscipit sodales nec vitae hac ac senectus. Varius sed id.</p>
               <button type="button" class="btn bg-transparent text_ltgray font_12 p-0 border-0 reel-like-chat"><img
-                  src="images/Heart-dark.svg" class="d-block" /> 34</button>
+                  src="../../../assets/images/Heart-dark.svg" class="d-block" /> 34</button>
             </div>
           </div>
             <div class="add-comment d-flex align-items-center justify-content-between">
@@ -149,4 +176,9 @@
     });
   </script>
 
+<!-- </div> -->
 </div>
+</div>
+</div>
+</div>
+

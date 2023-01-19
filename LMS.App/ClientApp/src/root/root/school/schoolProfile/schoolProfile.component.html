@@ -326,18 +326,23 @@
         </div>
       </div>
 
-      <div class="feed-section">
+      <div class="feed-section" *ngIf="!isFeedHide">
         <div class="feed-box position-relative">
-            <button type="button" class="bg-transparent border-0 next-feed">
+            <!-- <button type="button" class="bg-transparent border-0 next-feed">
                 <img src="../../../../assets/images/chevron-right-circle.svg" />
-            </button>
+            </button> -->
             <div class="feedbox-inner d-flex ">
+              <carousel
+                [itemsPerSlide]="itemsPerSlide"
+                [singleSlideOffset]="singleSlideOffset"
+                [interval]="0"
+                [noWrap]="noWrap">
               <div *ngFor="let post of school.posts">
                 <div *ngIf="post.postType == 3 && post.postAuthorType == 1">
-                <div *ngFor="let postAttachment of post.postAttachments">
+                <slide *ngFor="let postAttachment of post.postAttachments">
                   <div *ngIf="postAttachment.fileType == 2">
                     <div class="feedimg-box position-relative text-light position-relative">
-                      <a [routerLink]="['/user/reels', postAttachment.id]">
+                      <a (click)="openReelsViewModal(postAttachment.id)" style="cursor: pointer;">
                         <div class="videofile">
                           <video preload="metadata" style="height: 300px;">
                             <source [src]="postAttachment.fileUrl" type="video/mp4"/>
@@ -364,9 +369,10 @@
                         </div>
                     </div>
                   </div>
-                </div>
+                </slide>
                 </div>
               </div>
+              </carousel>
             </div>
         </div>
     </div>
@@ -624,7 +630,7 @@
                                       {{post.dateTime | date : "MMMM d"}} - {{post.dateTime | date : "hh mm"}}
                                     </p>
                                     <button type="button" class="view font_12 bg-transparent border-0 ">
-                                        <img src="../../../../assets/images/eye.svg" class="me-2" /> 954
+                                        <img src="../../../../assets/images/eye.svg" class="me-2" /> {{post.views.length}}
                                     </button>
                                 </div>
                                 <div class="school-grid-thumbnail" style="cursor: pointer;" (click)="showPostDiv(post.id)">
@@ -826,6 +832,7 @@
 
      <div class="tab-pane fade show " id="classes-tab-pane" role="tabpanel" aria-labelledby="school-feed-tab"
             tabindex="0">
+            <div *ngIf="classCourseList != undefined && classCourseList.length == 0" style="font-weight: 500;color: orange; margin-top: 40px;font-size: 40px" class="text-center font-34">Classes or courses not exists</div>
             <div class="list-schol-profile">
               <div class="row">
                 <ng-container *ngFor="let item of classCourseList">
@@ -967,7 +974,7 @@
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group">
-                  <label class="font_10">{{'SchoolName'| translate }}</label>
+                  <label class="font_10">{{'SchoolName'| translate }}*</label>
                   <input type="text" formControlName="schoolName" name="schoolName" class="form-control w-100" placeholder="{{'SchoolName'| translate }}">
                   <small class="p-error" style="color: orange;"
                   *ngIf="(isSubmitted && editSchoolForm.controls.schoolName.errors)">School Name is required
@@ -983,7 +990,7 @@
               </div>
               <div class="col-md-6">
                 <div class="form-group">
-                  <label class="font_10">Founded</label>
+                  <label class="font_10">Founded*</label>
                   <input type="date" formControlName="founded" placeholder="10/10/2022" name="Founded" class="form-control w-100">
                   <small class="p-error" style="color: orange;"
                   *ngIf="(isSubmitted && editSchoolForm.controls.founded.errors)">Founded Year is required
@@ -995,7 +1002,7 @@
               </div>
               <div class="col-md-6">
                 <div class="form-group">
-                  <label class="font_10">Visibility</label>
+                  <label class="font_10">Visibility*</label>
                   <select class="form-select rounded-8 w-100" formControlName="accessibilityId">
                     <option *ngFor="let item of accessibility; let i = index" [value]="item.id" [selected]="i">{{item.name}}</option>
                     <small class="p-error" style="color: orange;"

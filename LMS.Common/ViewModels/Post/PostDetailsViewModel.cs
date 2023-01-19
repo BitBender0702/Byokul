@@ -34,5 +34,6 @@ namespace LMS.Common.ViewModels.Post
         public List<LikeViewModel> Likes { get; set; }
         public List<ViewsViewModel> Views { get; set; }
         public bool IsPostLikedByCurrentUser { get; set; }
+        public string SchoolName { get; set; }
     }
 }

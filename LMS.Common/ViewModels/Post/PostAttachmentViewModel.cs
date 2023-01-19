@@ -23,6 +23,7 @@ namespace LMS.Common.ViewModels.Post
         public bool IsDeleted { get; set; }
         public SchoolViewModel School { get; set; }
         public ClassViewModel Class { get; set; }
+        public CourseViewModel Course { get; set; }
         public UserDetailsViewModel User { get; set; }
         public bool IsPinned { get; set; }
 

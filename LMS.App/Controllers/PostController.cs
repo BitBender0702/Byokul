@@ -35,12 +35,8 @@ namespace LMS.App.Controllers
             {
                 postViewModel.AuthorId = new Guid(userId);
             }
-            string url = await _postService.SavePost(postViewModel, userId);
-            if (url != null)
-            {
-                return Ok(new { url = url });
-            }
-            return Ok();
+            var response = await _postService.SavePost(postViewModel, userId);
+            return Ok(response);
         }
 
         [Route("getReelById")]

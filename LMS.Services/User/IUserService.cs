@@ -12,7 +12,7 @@ namespace LMS.Services
         Task<UserUpdateViewModel> GetUserEditDetails(string userId);
         Task SaveUserLanguages(UserLanguageViewModel userLanguageViewModel);
         Task DeleteUserLanguage(UserLanguageDeleteViewModel model);
-        Task<string> UpdateUser(UserUpdateViewModel userUpdateViewModel);
+        Task<UserUpdateViewModel> UpdateUser(UserUpdateViewModel userUpdateViewModel);
         Task<IEnumerable<CountryViewModel>> CountryList();
         Task<IEnumerable<CityViewModel>> CityList(Guid countryId);
         Task<IEnumerable<PostDetailsViewModel>> GetMyFeed(string userId);

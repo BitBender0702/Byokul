@@ -1,5 +1,6 @@
 import { Component, ElementRef, Injector, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { LikeUnlikePost } from 'src/root/interfaces/post/likeUnlikePost';
 import { PostView } from 'src/root/interfaces/post/postView';
 import { PostService } from 'src/root/service/post.service';
@@ -17,11 +18,11 @@ import { UserService } from 'src/root/service/user.service';
 
     private _reelsService;
     private _postService;
-    reelId!:string;
+    //reelId!:string;
     reels:any;
     isOpenSidebar:boolean = false;
     isDataLoaded:boolean = false;
-    showCommentsField:boolean = false;
+    showCommentsField:boolean = true;
     senderId!:string;
     sender:any;
     messageToGroup!:string;
@@ -36,9 +37,11 @@ import { UserService } from 'src/root/service/user.service';
     postView!:PostView;
     loginUserId!:string;
 
+    postAttachmentId:any;
+
     @ViewChild('groupChatList') groupChatList!: ElementRef;
 
-    constructor(private renderer: Renderer2,private userService: UserService,postService: PostService,public signalRService: SignalrService,private route: ActivatedRoute,reelsService: ReelsService,private activatedRoute: ActivatedRoute) { 
+    constructor(private bsModalService: BsModalService,private renderer: Renderer2,public options: ModalOptions,private userService: UserService,postService: PostService,public signalRService: SignalrService,private route: ActivatedRoute,reelsService: ReelsService,private activatedRoute: ActivatedRoute) { 
         // super(injector);
           this._reelsService = reelsService;
           this._signalRService = signalRService;
@@ -48,10 +51,12 @@ import { UserService } from 'src/root/service/user.service';
       }
 
     ngOnInit(): void {
+      debugger
 
         this.getLoginUserId();
-        this.reelId = this.route.snapshot.paramMap.get('id') ?? '';
-        this._reelsService.getReelById(this.reelId).subscribe((response) => {
+        //this.reelId = this.route.snapshot.paramMap.get('id') ?? '';
+        this.postAttachmentId = this.options.initialState;
+        this._reelsService.getReelById(this.postAttachmentId.postAttachmentId).subscribe((response) => {
           debugger
             this.reels = response;
             this.addPostView(this.reels.post.id);
@@ -218,6 +223,11 @@ import { UserService } from 'src/root/service/user.service';
          }); 
         }
       
+      }
+
+      close(): void {
+        this.bsModalService.hide();
+        //this.addAttachmentModal.nativeElement.click();
       }
 
   }

@@ -20,6 +20,9 @@ namespace LMS.Common.ViewModels.Post
         public List<ViewsViewModel> Views { get; set; }
         public List<PostAttachmentViewModel> PostAttachments { get; set; }
         public bool IsPostLikedByCurrentUser { get; set; }
+        public int PostAuthorType { get; set; }
+        public string SchoolName { get; set; }
+        public string ParentId { get; set; }
 
     }
 }

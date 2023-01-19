@@ -13,6 +13,7 @@ using LMS.Common.ViewModels.School;
 using LMS.Common.ViewModels.Class;
 using LMS.Common.ViewModels.User;
 using Newtonsoft.Json;
+using LMS.Common.ViewModels.Course;
 
 namespace LMS.Services
 {
@@ -24,6 +25,7 @@ namespace LMS.Services
         private IGenericRepository<PostTag> _postTagRepository;
         private IGenericRepository<School> _schoolRepository;
         private IGenericRepository<Class> _classRepository;
+        private IGenericRepository<Course> _courseRepository;
         private IGenericRepository<User> _userRepository;
         private IGenericRepository<Like> _likeRepository;
         private IGenericRepository<View> _viewRepository;
@@ -32,7 +34,7 @@ namespace LMS.Services
         private readonly IBigBlueButtonService _bigBlueButtonService;
         private IConfiguration _config;
 
-        public PostService(IMapper mapper, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<User> userRepository, IGenericRepository<Like> likeRpository, IGenericRepository<View> viewRepository, IBlobService blobService, IUserService userService, IBigBlueButtonService bigBlueButtonService, IConfiguration config)
+        public PostService(IMapper mapper, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<User> userRepository, IGenericRepository<Like> likeRpository, IGenericRepository<View> viewRepository, IBlobService blobService, IUserService userService, IBigBlueButtonService bigBlueButtonService, IConfiguration config)
         {
             _mapper = mapper;
             _postRepository = postRepository;
@@ -40,6 +42,7 @@ namespace LMS.Services
             _postTagRepository = postTagRepository;
             _schoolRepository = schoolRepository;
             _classRepository = classRepository;
+            _courseRepository = courseRepository;
             _userRepository = userRepository;
             _likeRepository = likeRpository;
             _viewRepository = viewRepository;
@@ -48,7 +51,7 @@ namespace LMS.Services
             _bigBlueButtonService = bigBlueButtonService;
             _config = config;
         }
-        public async Task<string> SavePost(PostViewModel postViewModel, string createdById)
+        public async Task<PostViewModel> SavePost(PostViewModel postViewModel, string createdById)
         {
             postViewModel.PostTags = JsonConvert.DeserializeObject<string[]>(postViewModel.PostTags.First());
 
@@ -104,9 +107,11 @@ namespace LMS.Services
                 var model = new NewMeetingViewModel();
                 model.meetingName = postViewModel.Title;
                 var url = await _bigBlueButtonService.Create(model);
-                return url;
+                //return url;
             }
-            return null;
+            postViewModel.Id = post.Id;
+            return postViewModel;
+            //return _mapper.Map<PostViewModel>(post);
         }
 
         async Task SaveUploadImages(IEnumerable<IFormFile> uploadImages, Guid postId, string createdById)
@@ -225,6 +230,17 @@ namespace LMS.Services
                 var classes = _classRepository.GetById(result.Post.ParentId);
                 result.Class = _mapper.Map<ClassViewModel>(classes);
             }
+            //if (result.Post.PostAuthorType == (int)PostAuthorTypeEnum.Course)
+            //{
+            //    var course = _courseRepository.GetById(result.Post.ParentId);
+            //    result.Course = _mapper.Map<CourseViewModel>(course);
+            //}
+
+            //if (result.Post.PostAuthorType == (int)PostAuthorTypeEnum.User)
+            //{
+            //    var user = _userRepository.GetById(result.Post.ParentId);
+            //    result.User = _mapper.Map<UserDetailsViewModel>(user);
+            //}
 
             return result;
         }

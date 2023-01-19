@@ -9,7 +9,7 @@ namespace LMS.Services
 {
     public interface IPostService
     {
-        Task<string> SavePost(PostViewModel postViewModel, string createdById);
+        Task<PostViewModel> SavePost(PostViewModel postViewModel, string createdById);
         Task<PostAttachmentViewModel> GetReelById(Guid id,string userId);
         Task<bool> PinUnpinPost(Guid attachmentId, bool isPinned);
         Task<List<LikeViewModel>> LikeUnlikePost(LikeUnlikeViewModel model);

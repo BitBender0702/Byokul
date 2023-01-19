@@ -12,7 +12,7 @@ import { MultilingualComponent } from '../../sharedModule/Multilingual/multiling
 
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { BsModalService } from 'ngx-bootstrap/modal';
-import { CreatePostComponent } from '../../createPost/createPost.component';
+import { addPostResponse, CreatePostComponent } from '../../createPost/createPost.component';
 import { FollowUnFollowEnum } from 'src/root/Enums/FollowUnFollowEnum';
 import { FollowUnfollow } from 'src/root/interfaces/FollowUnfollow';
 import { PostService } from 'src/root/service/post.service';
@@ -20,6 +20,11 @@ import { PostViewComponent } from '../../postView/postView.component';
 import { MessageService } from 'primeng/api';
 import { LikeUnlikePost } from 'src/root/interfaces/post/likeUnlikePost';
 import { PostView } from 'src/root/interfaces/post/postView';
+import { Subject } from 'rxjs';
+import { ReelsViewComponent } from '../../reels/reelsView.component';
+
+export const userImageResponse =new Subject<{userAvatar : string}>();  
+
 
 
 @Component({
@@ -66,6 +71,8 @@ import { PostView } from 'src/root/interfaces/post/postView';
     currentLikedPostId!:string;
     postView!:PostView;
     loginUserId!:string;
+    gridItemInfo:any;
+    isGridItemInfo: boolean = false;
 
     @ViewChild('closeEditModal') closeEditModal!: ElementRef;
     @ViewChild('closeLanguageModal') closeLanguageModal!: ElementRef;
@@ -97,6 +104,7 @@ import { PostView } from 'src/root/interfaces/post/postView';
       
 
       this._userService.getUserById(this.userId).subscribe((response) => {
+        debugger
         this.user = response;
         this.followersLength = this.user.followers.length;
         this.isOwnerOrNot();
@@ -135,6 +143,26 @@ import { PostView } from 'src/root/interfaces/post/postView';
       this.InitializeFollowUnfollowUser();
       this.InitializeLikeUnlikePost();
       this.InitializePostView();
+
+      userImageResponse.subscribe(response => {
+        debugger
+        this.user.avatar = response.userAvatar;
+        // this.ngOnInit();
+      });
+
+      addPostResponse.subscribe(response => {
+        this.loadingIcon = true;
+        this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post created successfully'});
+        this._userService.getUserById(this.userId).subscribe((response) => {
+          debugger
+          this.user = response;
+          this.followersLength = this.user.followers.length;
+          this.isOwnerOrNot();
+          this.loadingIcon = false;
+          // this.unblockUI();
+          this.isDataLoaded = true;
+        });
+      });
 
 
     }
@@ -225,6 +253,7 @@ import { PostView } from 'src/root/interfaces/post/postView';
     }
 
     saveUserLanguages(){
+      debugger
       this.isSubmitted = true;
       if (!this.languageForm.valid) {
         return;
@@ -232,9 +261,10 @@ import { PostView } from 'src/root/interfaces/post/postView';
       this.loadingIcon = true;
       this.userLanguage.userId = this.user.id;
       this._userService.saveUserLanguages(this.userLanguage).subscribe((response:any) => {
+        debugger
+        this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Language added successfully'});
         this.closeLanguagesModal();
         this.isSubmitted = true;
-        this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Language added successfully'});
         this.ngOnInit();     
   
       });
@@ -297,8 +327,8 @@ import { PostView } from 'src/root/interfaces/post/postView';
       lastName: this.fb.control(this.editUser.lastName,[Validators.required]),
       dob: this.fb.control(dob,[Validators.required]),
       gender: this.fb.control(this.editUser.gender,[Validators.required]),
-      description: this.fb.control(this.editUser.description),
-      contactEmail: this.fb.control(this.editUser.contactEmail,[Validators.required,Validators.pattern(this.EMAIL_PATTERN)])
+      description: this.fb.control(this.editUser.description??''),
+      contactEmail: this.fb.control(this.editUser.contactEmail??'',[Validators.pattern(this.EMAIL_PATTERN)])
     });
     this.editUserForm.updateValueAndValidity();
   }
@@ -314,6 +344,7 @@ import { PostView } from 'src/root/interfaces/post/postView';
   }
 
   updateUser(){
+    debugger
     this.isSubmitted=true;
     if (!this.editUserForm.valid) {
       return;
@@ -338,6 +369,7 @@ import { PostView } from 'src/root/interfaces/post/postView';
     this._userService.editUser(this.fileToUpload).subscribe((response:any) => {
       this.closeModal();
       this.isSubmitted=true;
+      userImageResponse.next({userAvatar: response.avatar}); 
       this.fileToUpload = new FormData();
       this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Profile updated successfully'});
       this.ngOnInit();
@@ -424,6 +456,14 @@ openPostsViewModal(posts:string): void {
   this.bsModalService.show(PostViewComponent,{initialState});
 }
 
+openReelsViewModal(postAttachmentId:string): void {
+  debugger
+  const initialState = {
+    postAttachmentId: postAttachmentId
+  };
+  this.bsModalService.show(ReelsViewComponent,{initialState});
+}
+
 userChat(){
   if(this.validToken == ''){
     window.open('user/auth/login', '_blank');
@@ -470,6 +510,48 @@ likeUnlikePosts(postId:string, isLike:boolean){
      console.log("succes");
   });
 
+
+}
+
+showPostDiv(postId:string){
+  debugger
+  var posts: any[] = this.user.posts;
+  this.gridItemInfo = posts.find(x => x.id == postId);
+  this.isGridItemInfo = true;
+
+  // here we also add a view for this post
+  this.addPostView(this.gridItemInfo.id);
+  
+
+}
+
+addPostView(postId:string){
+  debugger
+  if(this.loginUserId != undefined){
+   this.initializePostView();
+  this.postView.postId = postId;
+  this._postService.postView(this.postView).subscribe((response) => {
+    debugger
+    this.gridItemInfo.views.length = response;
+    // this.user.posts.filter((p : any) => p.id == postId).forEach( (item : any) => {
+    //  var itemss = item.likes;
+    //  item.likes = response;
+   }); 
+  }
+
+ 
+
+}
+
+initializePostView(){
+  this.postView ={
+    postId:'',
+    userId:''
+   }
+}
+
+hideGridItemInfo(){
+  this.isGridItemInfo = this.isGridItemInfo ? false : true;
 
 }
 

@@ -13,13 +13,14 @@ import { DeleteClassTeacher } from 'src/root/interfaces/class/deleteClassTeacher
 import { EditClassModel } from 'src/root/interfaces/class/editClassModel';
 import { ClassService } from 'src/root/service/class.service';
 import { PostService } from 'src/root/service/post.service';
-import { CreatePostComponent } from '../../createPost/createPost.component';
+import { addPostResponse, CreatePostComponent } from '../../createPost/createPost.component';
 import { MultilingualComponent } from '../../sharedModule/Multilingual/multilingual.component';
 import { PostViewComponent } from '../../postView/postView.component';
 import { LikeUnlikePost } from 'src/root/interfaces/post/likeUnlikePost';
 import { PostView } from 'src/root/interfaces/post/postView';
 import { ClassView } from 'src/root/interfaces/class/classView';
 import { MessageService } from 'primeng/api';
+import { ReelsViewComponent } from '../../reels/reelsView.component';
 
 @Component({
     selector: 'classProfile-root',
@@ -77,6 +78,10 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     postView!:PostView;
     classView!:ClassView;
     bsModalRef!: BsModalRef;
+
+    itemsPerSlide = 7;
+    singleSlideOffset = true;
+    noWrap = true;
 
     public event: EventEmitter<any> = new EventEmitter();
 
@@ -185,6 +190,21 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
 
        this.InitializeLikeUnlikePost();
 
+      //  addPostResponse.subscribe(response => {
+      //   this.ngOnInit();
+      // });
+
+      addPostResponse.subscribe(response => {
+        this.loadingIcon = true;
+        this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post created successfully'});
+        this._classService.getClassById(this.className.replace(" ","").toLowerCase()).subscribe((response) => {
+          this.class = response;
+          this.isOwnerOrNot();
+          this.loadingIcon = false;
+          this.isDataLoaded = true;
+          this.addClassView(this.class.classId);
+        });
+      });
     }
 
     getClassDetails(classId:string){
@@ -699,6 +719,14 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
         classId:'',
         userId:''
       }
+    }
+
+    openReelsViewModal(postAttachmentId:string): void {
+      debugger
+      const initialState = {
+        postAttachmentId: postAttachmentId
+      };
+      this.bsModalService.show(ReelsViewComponent,{initialState});
     }
   
 }

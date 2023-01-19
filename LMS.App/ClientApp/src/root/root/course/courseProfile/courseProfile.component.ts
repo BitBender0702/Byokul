@@ -16,8 +16,9 @@ import { LikeUnlikePost } from 'src/root/interfaces/post/likeUnlikePost';
 import { PostView } from 'src/root/interfaces/post/postView';
 import { CourseService } from 'src/root/service/course.service';
 import { PostService } from 'src/root/service/post.service';
-import { CreatePostComponent } from '../../createPost/createPost.component';
+import { addPostResponse, CreatePostComponent } from '../../createPost/createPost.component';
 import { PostViewComponent } from '../../postView/postView.component';
+import { ReelsViewComponent } from '../../reels/reelsView.component';
 import { MultilingualComponent } from '../../sharedModule/Multilingual/multilingual.component';
 
 @Component({
@@ -73,6 +74,9 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     isGridItemInfo: boolean = false;
     postView!:PostView;
     courseView!:CourseView;
+    itemsPerSlide = 7;
+    singleSlideOffset = true;
+    noWrap = true;
 
     @ViewChild('closeEditModal') closeEditModal!: ElementRef;
     @ViewChild('closeTeacherModal') closeTeacherModal!: ElementRef;
@@ -190,6 +194,22 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
         certificates:[]
        }
        this.InitializeLikeUnlikePost();
+
+      //  addPostResponse.subscribe(response => {
+      //   this.ngOnInit();
+      // });
+
+      addPostResponse.subscribe(response => {
+        this.loadingIcon = true;
+        this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post created successfully'});
+        this._courseService.getCourseById(this.courseName.replace(" ","").toLowerCase()).subscribe((response) => {
+          this.course = response;
+          this.isOwnerOrNot();
+          this.loadingIcon = false;
+          this.isDataLoaded = true;
+          this.addCourseView(this.course.courseId);
+        });
+      });
 
 //     }
 
@@ -681,6 +701,14 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
         courseId:'',
         userId:''
       }
+    }
+
+    openReelsViewModal(postAttachmentId:string): void {
+      debugger
+      const initialState = {
+        postAttachmentId: postAttachmentId
+      };
+      this.bsModalService.show(ReelsViewComponent,{initialState});
     }
   
 }

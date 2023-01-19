@@ -299,7 +299,7 @@ namespace LMS.Services
                     .ThenInclude(x => x.Specialization)
                     .Include(x => x.School)
                     .ThenInclude(x => x.CreatedBy)
-                    .Where(x => x.School.SchoolName.Replace(" ", "").ToLower() == schoolName).ToList();
+                    .Where(x => x.School.SchoolName.Replace(" ", "").ToLower() == schoolName.Replace(" ", "").ToLower()).ToList();
 
                 var response = _mapper.Map<SchoolDetailsViewModel>(schoolLanguages.First().School);
 

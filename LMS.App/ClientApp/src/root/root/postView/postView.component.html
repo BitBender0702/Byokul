@@ -30,7 +30,9 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
            <img *ngIf="!showCommentsField" src="../../../assets/images/chevron-right-light.svg" class="live-chat-back " />
         </button>
       </div> -->
-      <div [ngClass]="showCommentsField? 'live-content' : 'live-content full-widthreel'"  class="live-content" id="reel_content">
+      <div [ngClass]="showCommentsField? '' : 'full-widthreel'" id="reel_content">
+        <div class="row">
+        <div class="col-md-8">
         <div class="live-inner w-100" *ngIf="posts.posts.postAttachments.length>0">
           <carousel>
             <div *ngFor="let postAttachment of posts.posts.postAttachments" class="live-image overflow-hidden position-relative">
@@ -44,12 +46,12 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
                   </h5>
                 </div>
                 <div class="reel-username font_16 white_text">
-                    <div *ngIf="postAttachment.post.school != null">
-                      <img [src]="postAttachment.post.school.avatar" class="me-2"/> {{postAttachment.post.school.schoolName}}
-                    </div>
-                    <div *ngIf="postAttachment.post.class != null">
+                    <!-- <div *ngIf="postAttachment.post.school != null"> -->
+                      <img [src]="posts.posts.parentImageUrl" class="me-2"/> {{posts.posts.parentName}}
+                    <!-- </div> -->
+                    <!-- <div *ngIf="postAttachment.post.class != null">
                         <img [src]="postAttachment.post.class.avatar" class="me-2"/> {{postAttachment.post.class.className}}
-                    </div>
+                    </div> -->
                 </div>
               </slide>
               <slide *ngIf="postAttachment.fileType==1">
@@ -60,12 +62,12 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
               </h5>
             </div>
             <div class="reel-username font_16 white_text">
-                <div *ngIf="postAttachment.post.school != null">
+                <!-- <div *ngIf="postAttachment.post.school != null">
                   <img [src]="postAttachment.post.school.avatar" class="me-2"/> {{postAttachment.post.school.schoolName}}
                 </div>
-                <div *ngIf="postAttachment.post.class != null">
-                    <img [src]="postAttachment.post.class.avatar" class="me-2"/> {{postAttachment.post.class.className}}
-                </div>
+                <div *ngIf="postAttachment.post.class != null"> -->
+                  <img [src]="posts.posts.parentImageUrl" class="me-2"/> {{posts.posts.parentName}}
+                <!-- </div> -->
             </div>
           </slide>
 
@@ -111,7 +113,8 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
       <br>
       <p>{{posts.posts.description}}</p>
     </div>
-
+    </div>
+<div class="col-md-4">
     <div>
       <div [ngClass]="showCommentsField? 'accordion-open d-block' : 'accordion-open d-none'" id="live-chat-open" style="display:none;">
     <!-- <div class="accordion-open" id="live-chat-open" style="display:none;"> -->
@@ -137,7 +140,7 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
         </div>
         <div #groupChatList id="groupChat" class="live-chat-outer">
         <div class="live-message d-flex position-relative align-items-start">
-          <img src="images/user.jpg" class="comment-user">
+          <img src="../../../assets/images/school/user.jpg" class="comment-user">
           <p class="text_sec1 font_12 fw_400 text-start mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing
             elit. Id odio congue suscipit sodales nec vitae hac ac senectus. Varius sed id.</p>
           <button type="button" class="btn bg-transparent text_ltgray font_12 p-0 border-0 reel-like-chat"><img
@@ -145,40 +148,40 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
           <button type="button" class="border-0 bg-transparent pinned-chat"><img src="../../../assets/images/pinned.svg" /></button>
         </div>
         <div class="live-message d-flex position-relative align-items-start">
-          <img src="images/user.jpg" class="comment-user">
+          <img src="../../../assets/images/school/user.jpg" class="comment-user">
           <p class="text_sec1 font_12 fw_400 text-start mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing
             elit. Tristique dolor senectus facilisi urna. Dictum vitae morbi turpis sed. In.</p>
           <button type="button" class="btn bg-transparent text_ltgray font_12 p-0 border-0 reel-like-chat"><img
-              src="images/Heart-dark.svg" class="d-block" /> 34</button>
+              src="../../../assets/images/Heart-dark.svg" class="d-block" /> 34</button>
         </div>
         <div class="live-message d-flex position-relative align-items-start">
-          <img src="images/user.jpg" class="comment-user">
+          <img src="../../../assets/images/school/user.jpg" class="comment-user">
           <p class="text_sec1 font_12 fw_400 text-start mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing
             elit. Lorem diam nunc mollis in. Dictum vitae morbi turpis sed. In. Sed feugiat iaculis gravida
             ultricies blandit justo sit.</p>
           <button type="button" class="btn bg-transparent text_ltgray font_12 p-0 border-0 reel-like-chat"><img
-              src="images/Heart-dark.svg" class="d-block" /> 34</button>
+              src="../../../assets/images/Heart-dark.svg" class="d-block" /> 34</button>
         </div>
         <div class="live-message d-flex position-relative align-items-start">
-          <img src="images/user.jpg" class="comment-user">
+          <img src="../../../assets/images/school/user.jpg" class="comment-user">
           <p class="text_sec1 font_12 fw_400 text-start mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing
             elit. </p>
           <button type="button" class="btn bg-transparent text_ltgray font_12 p-0 border-0 reel-like-chat"><img
-              src="images/Heart-dark.svg" class="d-block" /> 34</button>
+              src="../../../assets/images/Heart-dark.svg" class="d-block" /> 34</button>
         </div>
         <div class="live-message d-flex position-relative align-items-start">
-          <img src="images/user.jpg" class="comment-user">
+          <img src="../../../assets/images/school/user.jpg" class="comment-user">
           <p class="text_sec1 font_12 fw_400 text-start mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing
             elit. Id odio congue suscipit sodales nec vitae hac.</p>
           <button type="button" class="btn bg-transparent text_ltgray font_12 p-0 border-0 reel-like-chat"><img
-              src="images/Heart-dark.svg" class="d-block" /> 34</button>
+              src="../../../assets/images/Heart-dark.svg" class="d-block" /> 34</button>
         </div>
         <div class="live-message d-flex position-relative align-items-start">
-          <img src="images/user.jpg" class="comment-user">
+          <img src="../../../assets/images/school/user.jpg" class="comment-user">
           <p class="text_sec1 font_12 fw_400 text-start mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing
             elit. Id odio congue suscipit sodales nec vitae hac ac senectus. Varius sed id.</p>
           <button type="button" class="btn bg-transparent text_ltgray font_12 p-0 border-0 reel-like-chat"><img
-              src="images/Heart-dark.svg" class="d-block" /> 34</button>
+              src="../../../assets/images/Heart-dark.svg" class="d-block" /> 34</button>
         </div>
       </div>
         <div class="add-comment d-flex align-items-center justify-content-between">
@@ -191,6 +194,8 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
 
     </div>
     </div>
+  </div>
+</div>
         
 
       </div>

@@ -135,17 +135,21 @@
             aria-labelledby="school-feed-tab" tabindex="0">
             <div class="feed-section">
               <div class="feed-box position-relative">
-                  <button type="button" class="bg-transparent border-0 next-feed">
+                  <!-- <button type="button" class="bg-transparent border-0 next-feed">
                       <img src="../../../../assets/images/chevron-right-circle.svg" />
-                  </button>
+                  </button> -->
                   <div class="feedbox-inner d-flex ">
-      
+                    <carousel
+                    [itemsPerSlide]="itemsPerSlide"
+                    [singleSlideOffset]="singleSlideOffset"
+                    [interval]="0"
+                    [noWrap]="noWrap">
                     <div *ngFor="let post of course.posts">
                       <div *ngIf="post.postType == 3">
-                      <div *ngFor="let postAttachment of post.postAttachments">
+                      <slide *ngFor="let postAttachment of post.postAttachments">
                         <div *ngIf="postAttachment.fileType == 2">
                           <div class="feedimg-box position-relative text-light position-relative">
-                            <a [routerLink]="['/user/reels', postAttachment.id]">
+                            <a (click)="openReelsViewModal(postAttachment.id)" style="cursor: pointer;">
                               <div class="videofile">
                                 <video preload="metadata" style="height: 300px;">
                                   <source [src]="postAttachment.fileUrl" type="video/mp4"/>
@@ -171,9 +175,10 @@
                               </div>
                           </div>
                         </div>
-                      </div>
+                      </slide>
                       </div>
                     </div>
+                    </carousel>
                   </div>
               </div>
           </div>

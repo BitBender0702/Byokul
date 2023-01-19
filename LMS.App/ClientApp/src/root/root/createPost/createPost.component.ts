@@ -16,6 +16,10 @@ import { MessageService } from 'primeng/api';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Calendar } from 'primeng/calendar';
+import { Subject } from 'rxjs';
+
+export const addPostResponse =new Subject<{}>();  
+
 
 @Component({
   selector: 'create-post',
@@ -321,22 +325,17 @@ export class CreatePostComponent implements OnInit {
 
 
 
-    this._postService.createPost(this.postToUpload).subscribe((response:any) => {
+    this._postService.createPost(this.postToUpload).subscribe((response:any) => {  
+      debugger
       this.isSubmitted=false;
       this.loadingIcon = false;
-      this.postToUpload = new FormData();
-      this.triggerEvent(this.postToUpload.toString());
-      this.close();
       this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post created successfully'});
+      addPostResponse.next({response}); 
+      this.postToUpload = new FormData();
+      this.close();
       this.ngOnInit();
     });
-
-
    }
-
-   triggerEvent(item: string) {
-    this.event.emit({ data: item , res:200 });
-  }
 
    postFrom(){
     if(this.schoolId!= undefined){
@@ -392,11 +391,13 @@ export class CreatePostComponent implements OnInit {
     }
 
     this._postService.createPost(this.postToUpload).subscribe((response:any) => {
+      debugger
       this.isSubmitted=false;
       this.loadingIcon = false;
+      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Reel created successfully'});
+      addPostResponse.next({response}); 
       this.postToUpload = new FormData();
       this.close();
-      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Reel created successfully'});
       this.ngOnInit();
     });
 

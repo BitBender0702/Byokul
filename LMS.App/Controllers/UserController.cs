@@ -70,8 +70,8 @@ namespace LMS.App.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateUser(UserUpdateViewModel userUpdateViewModel)
         {
-            string userId = await _userService.UpdateUser(userUpdateViewModel);
-            return Ok(new { userId = userId });
+            var response = await _userService.UpdateUser(userUpdateViewModel);
+            return Ok(response);
         }
 
         [Route("countryList")]

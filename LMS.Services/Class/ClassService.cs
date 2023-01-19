@@ -304,7 +304,7 @@ namespace LMS.Services
                     .ThenInclude(x => x.Specialization)
                     .Include(x => x.Accessibility)
                     .Include(x => x.CreatedBy)
-                    .Where(x => x.ClassName.Replace(" ", "").ToLower() == className).FirstOrDefaultAsync();
+                    .Where(x => x.ClassName.Replace(" ", "").ToLower() == className.Replace(" ", "").ToLower()).FirstOrDefaultAsync();
 
                 try
                 {

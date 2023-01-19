@@ -1,4 +1,3 @@
-<block-ui>
 <div *ngIf="isDataLoaded">
   <section class="f-poppins">
     <side-bar [isOpenSidebar]="isOpenSidebar"></side-bar> 
@@ -55,9 +54,9 @@
       <div class="teacher-tags tag-box hover-tags">
         <div class="teacher-tags tag-box mt-0  hover-tags">
           <div class="teacher-content font_14 d-inline-block"><img src="../../../../assets/images/dark-star.svg" /> {{'Sertificates'| translate }}</div>
-          <span class="custom-tag">Sertificate 1 <button *ngIf="isOwner"
+          <!-- <span class="custom-tag">Sertificate 1 <button *ngIf="isOwner"
               class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
-                src="../../../../assets/images/cross-sm-light.svg" /></button></span>
+                src="../../../../assets/images/cross-sm-light.svg" /></button></span> -->
         </div>
         <div class="teacher-tags tag-box mt-0  hover-tags">
           <div class="teacher-content font_14 d-inline-block"><img src="../../../../assets/images/Volume-Down.svg" /> {{'Languages'| translate }}</div>
@@ -88,7 +87,7 @@
       
       <div class="teacher-tags tag-box mt-0">
         <div class="teacher-content font_14 d-inline-block"><img src="../../../../assets/images/Location-dark.svg" /> {{'Location'| translate }}</div>
-        <span class="custom-tag d-inline-flex align-items-center">London <span class="vr-border"></span> </span>
+        <span class="custom-tag d-inline-flex align-items-center"> <span class="vr-border"></span> </span>
       </div>
       <hr class="hr-gray" />
       <div class="school-profile-tabs d-flex align-content-center justify-content-end">
@@ -119,7 +118,7 @@
                     <div *ngFor="let postAttachment of post.postAttachments">
                       <div *ngIf="postAttachment.fileType == 2">
                         <div class="feedimg-box position-relative text-light position-relative">
-                          <a [routerLink]="['/user/reels', postAttachment.id]">
+                          <a (click)="openReelsViewModal(postAttachment.id)" style="cursor: pointer;">
                             <div class="videofile">
                               <video preload="metadata" style="height: 300px;">
                                 <source [src]="postAttachment.fileUrl" type="video/mp4"/>
@@ -184,12 +183,13 @@
                     </button>   
               </div>
               
-              <div class="school-grid-body">
-                <p class="text_sec1 font_14">{{post.description}}</p>
+              <div class="school-grid-body" (click)="openPostsViewModal(post)">
+                <p class="text_sec1 font_14" style="cursor: pointer;">
+                  {{post.description}}</p>
                 <div class="teacher-tags tag-box hashtag_box">
                   <span *ngFor="let tag of post.postTags" class="custom-tag">#{{tag.postTagValue}}</span>
                 </div>
-                <div *ngIf="post.postAttachments.length" class="school-grid-thumbnail new-school-grid-thumbnail">
+                <div *ngIf="post.postAttachments.length" class="school-grid-thumbnail new-school-grid-thumbnail" style="cursor: pointer;">
                   <div class="row gx-1 h-100">
 
                     <div *ngIf="post.postAttachments.length == 1"  class="col-md-12 h-100">
@@ -322,6 +322,73 @@
           </div>
 
           <div class="list-schol-profile" *ngIf="!isProfileGrid">
+            <div [ngClass]="isGridItemInfo ? 'd-block school-grid-box position-relative school-list-box h-100':'d-none school-grid-box position-relative school-list-box h-100'" *ngIf="gridItemInfo!=undefined">
+              <div class="row">
+                <div [ngClass]="gridItemInfo.postAttachments.length>0 ? 'd-block col-lg-6':'d-none'">
+                  <carousel>
+                  <div *ngFor="let postAttachment of gridItemInfo.postAttachments" class="school-grid-thumbnail">
+                    <slide *ngIf="postAttachment.fileType==2">
+                    <div *ngIf="postAttachment?.fileType==2" class="videofile">
+                      <video style="height: 300px;" controls>
+                        <source [src]="postAttachment?.fileUrl" type="video/mp4"/>
+                      </video>
+                    </div>
+                    </slide>
+                    <slide *ngIf="postAttachment?.fileType==1">
+                      <img *ngIf="postAttachment?.fileType==1" class="w-100" [src]="postAttachment?.fileUrl" />
+                    </slide>
+                  </div>
+                  </carousel>
+                </div>
+                <div [ngClass]="gridItemInfo.postAttachments.length>0 ? 'col-lg-6':'col-lg-12 heightForText'">
+                  <div class="class-preview-right position-relative h-100">
+                    <button (click)="hideGridItemInfo()" type="button" class="bg-transparent border-0 close-preview"><img
+                        src="../../../../assets/images/cross.svg" /></button>
+                    <div class="schoolgrid-header">
+                      <div class="d-flex align-items-center position-relative">
+                        <div class="school-gridprofile-icon">
+                          <img [src]="user.avatar">
+                        </div>
+                        <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">{{gridItemInfo.title}}</h2>
+                      </div>
+      
+                      <p class="font_14 school-grid-date d-inline-block mb-0">
+                        {{gridItemInfo.dateTime | date : "MMMM d"}} - {{gridItemInfo.dateTime | date : "hh mm"}}  
+                      </p>
+                    </div>
+                    <p class="text_sec1 font_14 pt-3">{{gridItemInfo.description}}</p>
+                    <div *ngIf="gridItemInfo.postTags.length != 0" class="teacher-tags tag-box hashtag_box">
+                      <span *ngFor="let tag of gridItemInfo.postTags" class="custom-tag">{{tag.postTagValue}}</span>
+                    </div>
+                    <div class="school-grid-footer preview-right-action">
+                      <button type="button" class="bg-transparent border-0 function-btns">
+                        <img src="../../../../assets/images/eye.svg" class="d-block mx-auto">
+                        <span class="textBlack">{{gridItemInfo.views.length}}</span>
+                      </button>
+                      <button (click)="likeUnlikePosts(gridItemInfo.id,true)" type="button" class="bg-transparent border-0 function-btns text-light">
+                        <img *ngIf="gridItemInfo.isPostLikedByCurrentUser" src="../../../assets/images/heart-red.svg" class="d-block mx-auto" />
+                        <img *ngIf="!gridItemInfo.isPostLikedByCurrentUser" src="../../../../assets/images/Heart-dark.svg" class="d-block mx-auto" />
+      
+                        <span class="textBlack" *ngIf="likesLength != undefined && currentLikedPostId== gridItemInfo.id">{{likesLength}}</span>
+                        <span class="textBlack" *ngIf="currentLikedPostId!= gridItemInfo.id">{{gridItemInfo.likes.length}}</span>
+                      </button>
+                      <button (click)="openPostsViewModal(gridItemInfo)" type="button" class="bg-transparent border-0 function-btns">
+                        <img src="../../../../assets/images/Chat-dark.svg" class="d-block mx-auto">
+                        34
+                      </button>
+                      <button type="button" class="bg-transparent border-0 function-btns">
+                        <img src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto">
+                        954
+                      </button>
+                      <button type="button" class="bg-transparent border-0 function-btns">
+                        <img src="../../../../assets/images/Upload-dark.svg" class="d-block mx-auto">
+                        954
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div> 
 
             <div class="row">
               <ng-container *ngFor="let post of user.posts">
@@ -345,10 +412,10 @@
                         {{post.dateTime | date : "MMMM d"}} - {{post.dateTime | date : "hh mm"}}
                       </p>
                       <button type="button" class="view font_12 bg-transparent border-0 ">
-                        <img src="../../../../assets/images/eye.svg" class="me-2" /> 954
+                        <img src="../../../../assets/images/eye.svg" class="me-2" /> {{post.views.length}}
                       </button>
                     </div>
-                    <div class="school-grid-thumbnail">
+                    <div class="school-grid-thumbnail" style="cursor: pointer;" (click)="showPostDiv(post.id)">
                       <div class="row gx-1">
                         <div class="col-md-12">
                           <div class="school-large-thumbnail shadow-thumnail position-relative">
@@ -822,7 +889,7 @@
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
-                <label class="font_10">Name</label>
+                <label class="font_10">Name*</label>
                 <input (keypress)="omit_special_char($event)" formControlName="firstName" type="text" name="firstName" class="form-control w-100">
                 <small class="p-error" style="color: orange;"
                 *ngIf="(isSubmitted && editUserForm.controls.firstName.errors)">First Name is required
@@ -831,7 +898,7 @@
             </div>
             <div class="col-md-6">
               <div class="form-group">
-                <label class="font_10">Surname</label>
+                <label class="font_10">Surname*</label>
                 <input (keypress)="omit_special_char($event)" formControlName="lastName" type="text" name="lastName"  class="form-control w-100">
                 <small class="p-error" style="color: orange;"
                 *ngIf="(isSubmitted && editUserForm.controls.lastName.errors)">Last Name is required
@@ -840,7 +907,7 @@
             </div>
             <div class="col-md-6">
               <div class="form-group">
-                <label class="font_10">Date of Birth</label>
+                <label class="font_10">Date of Birth*</label>
                 <input formControlName="dob" type="date" name="dob" class="form-control w-100">
                 <small class="p-error" style="color: orange;"
                 *ngIf="(isSubmitted && editUserForm.controls.dob.errors)">Last Name is required
@@ -849,7 +916,7 @@
             </div>
             <div class="col-md-6">
               <div class="form-group">
-                <label class="font_10">Gender</label>
+                <label class="font_10">Gender*</label>
                 <select formControlName="gender" class="form-select rounded-8 w-100">
                   <option value=1>Male</option>
                   <option value=2>Female</option>
@@ -864,7 +931,7 @@
                 <label class="font_10">Contact Email</label>
                 <input formControlName="contactEmail" placeholder="Contact Email" type="email" name="contactEmail" class="form-control w-100">
                 <small class="p-error" style="color: orange;"
-                *ngIf="(isSubmitted && editUserForm.controls.contactEmail.errors)">Last Name is required
+                *ngIf="(isSubmitted && editUserForm.controls.contactEmail.errors)">Contact Email is invalid
               </small>
               </div>
             </div>
@@ -963,5 +1030,5 @@ aria-labelledby="delete-language" aria-hidden="true">
 </div>
 <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
 <p-toast></p-toast>
-</block-ui>
+
 

@@ -2,6 +2,7 @@ import { Component, Injector, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { MultilingualComponent } from 'src/root/root/sharedModule/Multilingual/multilingual.component';
+import { userImageResponse } from 'src/root/root/user/userProfile/userProfile.component';
 import { UserService } from 'src/root/service/user.service';
 
 @Component({
@@ -39,6 +40,12 @@ export class SideBarComponent extends MultilingualComponent implements OnInit {
       this.sidebarInfo = response;
       this.loadingIcon = false;
       this.isDataLoaded = true;
+    });
+
+    userImageResponse.subscribe(response => {
+      debugger
+      this.sidebarInfo.user.avatar = response.userAvatar;
+      // this.ngOnInit();
     });
 
   }

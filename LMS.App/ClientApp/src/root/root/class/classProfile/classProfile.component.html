@@ -137,17 +137,21 @@
           aria-labelledby="school-feed-tab" tabindex="0">
           <div class="feed-section">
             <div class="feed-box position-relative">
-                <button type="button" class="bg-transparent border-0 next-feed">
+                <!-- <button type="button" class="bg-transparent border-0 next-feed">
                     <img src="../../../../assets/images/chevron-right-circle.svg" />
-                </button>
+                </button> -->
                 <div class="feedbox-inner d-flex ">
-    
+                  <carousel
+                  [itemsPerSlide]="itemsPerSlide"
+                  [singleSlideOffset]="singleSlideOffset"
+                  [interval]="0"
+                  [noWrap]="noWrap">
                   <div *ngFor="let post of class.posts">
                     <div *ngIf="post.postType == 3 && post.postAuthorType == 2">
-                    <div *ngFor="let postAttachment of post.postAttachments">
+                    <slide *ngFor="let postAttachment of post.postAttachments">
                       <div *ngIf="postAttachment.fileType == 2">
                         <div class="feedimg-box position-relative text-light position-relative">
-                          <a [routerLink]="['/user/reels', postAttachment.id]">
+                          <a (click)="openReelsViewModal(postAttachment.id)" style="cursor: pointer;">
                             <div class="videofile">
                               <video preload="metadata" style="height: 300px;">
                                 <source [src]="postAttachment.fileUrl" type="video/mp4"/>
@@ -173,9 +177,10 @@
                             </div>
                         </div>
                       </div>
-                    </div>
+                    </slide>
                     </div>
                   </div>
+                  </carousel>
                 </div>
             </div>
         </div>
@@ -425,7 +430,7 @@
                                 {{post.dateTime | date : "MMMM d"}} - {{post.dateTime | date : "hh mm"}}
                               </p>
                               <button type="button" class="view font_12 bg-transparent border-0 ">
-                                  <img src="../../../../assets/images/eye.svg" class="me-2" /> 954
+                                  <img src="../../../../assets/images/eye.svg" class="me-2" /> {{post.views.length}}
                               </button>
                           </div>
                           <div class="school-grid-thumbnail" style="cursor: pointer;" (click)="showPostDiv(post.id)">
@@ -544,7 +549,7 @@
             </div>
             <div class="col-md-4">
               <div class="form-group">
-                <label class="font_10">{{'ClassName'| translate }}</label>
+                <label class="font_10">{{'ClassName'| translate }}*</label>
                 <input formControlName="className" type="text" placeholder="Class Name" name="classname" class="form-control w-100">
                 <small class="p-error" style="color: orange;"
                 *ngIf="(isSubmitted && editClassForm.controls.className.errors)">Class Name is required
@@ -553,7 +558,7 @@
             </div>
             <div class="col-md-4">
               <div class="form-group">
-                <label class="font_10">{{'NumberofStudents'| translate }}</label>
+                <label class="font_10">{{'NumberofStudents'| translate }}*</label>
                 <input formControlName="noOfStudents" type="number" placeholder="" name="noOfStudents" min="1" max="999" class="form-control w-100">
                 <small class="p-error" style="color: orange;"
                 *ngIf="(isSubmitted && editClassForm.controls.noOfStudents.errors)">No. of students is required
@@ -562,7 +567,7 @@
             </div>
             <div class="col-md-6">
               <div class="form-group">
-                <label class="font_10">{{'Start'| translate }}</label>
+                <label class="font_10">{{'Start'| translate }}*</label>
                 <input formControlName="startDate" type="date" max="9999-12-31" name="start" class="form-control w-100">
                 <small class="p-error" style="color: orange;"
                 *ngIf="(isSubmitted && editClassForm.controls.startDate.errors)">Start date is required
@@ -574,7 +579,7 @@
             </div>
             <div class="col-md-6">
               <div class="form-group">
-                <label class="font_10">{{'Finish'| translate }}</label>
+                <label class="font_10">{{'Finish'| translate }}*</label>
                 <input formControlName="endDate" type="date" max="9999-12-31" name="start" class="form-control w-100">
                 <small class="p-error" style="color: orange;"
                 *ngIf="(isSubmitted && editClassForm.controls.endDate.errors)">End date is required
@@ -600,7 +605,7 @@
 
             <div *ngIf="isClassPaid" class="col-md-6">
               <div class="form-group">
-                <label class="font_10">Price</label>
+                <label class="font_10">Price*</label>
                 <input formControlName="price" type="number" min="1" placeholder="{{'Price'| translate }}" name="price" class="form-control w-100">
                 <small class="p-error" style="color: orange;" *ngIf="isSubmitted && editClassForm.controls.price.errors">
                   Price is required
@@ -609,7 +614,7 @@
             </div>
             <div class="col-md-12">
               <div class="form-group">
-                <label class="font_10">{{'Visibility'| translate }}</label>
+                <label class="font_10">{{'Visibility'| translate }}*</label>
                 <select class="form-select rounded-8 w-100" formControlName="accessibilityId">
                   <option *ngFor="let item of accessibility; let i = index" [value]="item.id" [selected]="i">{{item.name}}</option>
                </select>
@@ -620,7 +625,7 @@
             </div>
             <div class="col-md-12">
               <div class="form-group lang-w100">
-                <label class="font_10">{{'Language'| translate }}</label>
+                <label class="font_10">{{'Language'| translate }}*</label>
                   <div class="custom-language-select">
                       <p-multiSelect  [defaultLabel]="'Select Languages'" [panelStyle]="{'width':'100%'}" [filter]="false" [showToggleAll]="false" [options]="languages" optionLabel="name" optionValue="id" name="languageSelect[]" class="form-control" multiple id="languageSelect" formControlName="languageIds">
                           <option *ngFor="let language of languages; let i = index" [value]="language.id" [selected]="i">{{language.name}}</option>

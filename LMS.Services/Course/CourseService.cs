@@ -319,7 +319,7 @@ namespace LMS.Services
                     .ThenInclude(x => x.Specialization)
                     .Include(x => x.Accessibility)
                     .Include(x => x.CreatedBy)
-                    .Where(x => x.CourseName.Replace(" ", "").ToLower() == courseName).FirstOrDefaultAsync();
+                    .Where(x => x.CourseName.Replace(" ", "").ToLower() == courseName.Replace(" ", "").ToLower()).FirstOrDefaultAsync();
 
                 if (course == null)
                 {
