@@ -17,6 +17,7 @@ import { SharedModule } from '../root/sharedModule/shared.module';
 import { LandingComponent } from './user-auth/component/landing/landing.component';
 import { LogoutComponent } from './user-auth/component/logout/logout.component';
 import { ConfirmEmailComponent } from './user-auth/component/confirmEmail/confirmEmail.component';
+import { ToastModule } from 'primeng/toast';
 
 @NgModule({
   declarations: [UserAuthComponent, LoginComponent,ConfirmEmailComponent,RegisterComponent, ChangePasswordComponent, ForgetPasswordComponent],
@@ -24,6 +25,7 @@ import { ConfirmEmailComponent } from './user-auth/component/confirmEmail/confir
     SharedModule,
     CommonModule,
     FormsModule,
+    ToastModule,
     HttpClientModule,
     TranslateModule.forRoot({
       loader:{

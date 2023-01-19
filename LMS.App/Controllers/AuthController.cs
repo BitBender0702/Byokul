@@ -1,10 +1,12 @@
 ﻿using LMS.Common.ViewModels.Account;
 using LMS.Data.Entity;
 using LMS.Services.Account;
+using LMS.Services.Common;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Configuration;
+using LMS.Common.ViewModels.Post;
 
 namespace LMS.App.Controllers
 {
@@ -15,15 +17,17 @@ namespace LMS.App.Controllers
         private readonly SignInManager<User> _signInManager;
         private readonly UserManager<User> _userManager;
         private readonly IAuthService _authService;
+        private readonly ICommonService _commonService;
         private IConfiguration _config;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        public AuthController(SignInManager<User> signInManager, UserManager<User> userManager, IAuthService authService, IConfiguration config, IWebHostEnvironment webHostEnvironment)
+        public AuthController(SignInManager<User> signInManager, UserManager<User> userManager, IAuthService authService, IConfiguration config, IWebHostEnvironment webHostEnvironment, ICommonService commonService)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _authService = authService;
             _config = config;
             _webHostEnvironment = webHostEnvironment;
+            _commonService = commonService;
         }
 
         // Login Method
@@ -32,12 +36,20 @@ namespace LMS.App.Controllers
         public async Task<IActionResult> Login([FromBody] LoginViewModel loginViewModel)
         {
             var result = await _authService.AuthenticateUser(loginViewModel);
-            if (result != null)
+            if (result != Constants.EmailNotConfirmed || result!= Constants.UserNotFound)
             {
                 Token = result;
                 return Ok(new { token = result });
             }
-            return Ok(new { token = "" });
+            if (result == Constants.EmailNotConfirmed)
+            {
+                return Ok(new { token = Constants.EmailNotConfirmed });
+            }
+            if (result == Constants.UserNotFound)
+            {
+                return Ok(new { token = Constants.UserNotFound });
+            }
+            return Ok();
         }
 
 
@@ -46,38 +58,41 @@ namespace LMS.App.Controllers
         [HttpPost]
         public async Task<IActionResult> Register([FromBody] RegisterViewModel registerViewModel)
         {
-            var user = new User
+            try
             {
-                UserName = registerViewModel.Email,
-                Email = registerViewModel.Email,
-                FirstName = registerViewModel.FirstName,
-                LastName = registerViewModel.LastName,
-                Gender = registerViewModel.Gender,
-                CityId = registerViewModel.CityId,
-                DOB = registerViewModel.DOB,
-                CreatedOn = DateTime.UtcNow
-            };
-            var result = await _userManager.CreateAsync(user, registerViewModel.Password);
+                var user = new User
+                {
+                    UserName = registerViewModel.Email,
+                    Email = registerViewModel.Email,
+                    FirstName = registerViewModel.FirstName,
+                    LastName = registerViewModel.LastName,
+                    Gender = registerViewModel.Gender,
+                    CityId = registerViewModel.CityId,
+                    DOB = registerViewModel.DOB,
+                    CreatedOn = DateTime.UtcNow
+                };
+                var result = await _userManager.CreateAsync(user, registerViewModel.Password);
 
-            if (result.Succeeded)
-            {
-                var path = _webHostEnvironment.ContentRootPath;
-                var filePath = Path.Combine(path, "Email/confirm-email.html");
-                var imagePath = Path.Combine(path, "Email/images/logo.svg");
-                var text = System.IO.File.ReadAllText(filePath);
-                text = text.Replace("[ImageSrc]", imagePath);
-                var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                string callBackUrl = $"{_config["AppUrl"]}/user/auth/emailConfirm?token={token}&email={user.Email}";
-                //var confirmationLink = Url.Action("confirm-email", "auth", new { token, email = user.Email }, "http");
-                text = text.Replace("[URL]", callBackUrl);
+                if (result.Succeeded)
+                {
+                    var path = _webHostEnvironment.ContentRootPath;
+                    var filePath = Path.Combine(path, "Email/confirm-email.html");
+                    var imagePath = Path.Combine(path, "Email/images/logo.svg");
+                    var text = System.IO.File.ReadAllText(filePath);
+                    text = text.Replace("[Recipient]", user.FirstName + " " + user.LastName);
+                    var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    string callBackUrl = $"{_config["AppUrl"]}/user/auth/emailConfirm?token={token}&email={user.Email}";
+                    text = text.Replace("[URL]", callBackUrl);
+                    _commonService.SendEmail(new List<string> { user.Email }, null, null, "Verify Your Email Address", body: text);
 
-                
-              
-                _authService.SendEmail(new List<string> { user.Email }, null, null, "Confirmation email link", body: text);
-
-                return Ok(new { result = "success" });
+                    return Ok(new { result = "success" });
+                }
+                return Ok(new { token = "" });
             }
-            return Ok(new { token = "" });
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         //Confirm Email
@@ -86,6 +101,7 @@ namespace LMS.App.Controllers
         public async Task<IActionResult> ConfirmEmail(string token, string email)
        {
             token = token.Replace(" ","+");
+
             var user = await _userManager.FindByEmailAsync(email)
 ;
             if (user is null) return BadRequest($"User not found for email: {email}");

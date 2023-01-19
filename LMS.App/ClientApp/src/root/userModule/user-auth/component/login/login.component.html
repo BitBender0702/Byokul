@@ -35,12 +35,15 @@
               <p class="font_14 fw_300 text-center al-account mt-0"><a [routerLink]="['/user/auth/request-password']"
                   class="text_dark text-decoration-none">{{'ForgotPassword'| translate }}</a></p>
 
-                  <small class="p-error" style="color: orange;margin-left: 102px;" *ngIf="loginForm.errors?.unauthenticated">
+                  <small class="p-error" style="color: orange;margin-left: 123px;" *ngIf="loginForm.errors?.unauthenticated">
                     Email or Password incorrect!
                   </small>
 
                   <small class="p-error" style="color: orange;margin-left: 102px;" *ngIf="loginForm.errors?.banUserMessage">
                     This account is banned by the admin!
+                  </small>
+                  <small class="p-error" style="color: orange;margin-left: 138px;" *ngIf="loginForm.errors?.emailNotConfirmed">
+                    Please confirm your email!
                   </small>
 
               <button type="submit" (click)="login()" class="btn primary_btn w-100 rounded-8 text-uppercase">{{'Login'| translate }}</button>
@@ -57,4 +60,5 @@
   </section>
 
 <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
+<!-- <p-toast></p-toast> -->
 

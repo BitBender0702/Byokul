@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using SendGrid;
+using SendGrid.Helpers.Mail;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -17,6 +20,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
+using MimeKit;
 
 namespace LMS.Services.Common
 {
@@ -28,8 +32,9 @@ namespace LMS.Services.Common
         private IGenericRepository<Discipline> _disciplineRepository;
         private IGenericRepository<ServiceType> _serviceTypeRepository;
         private IGenericRepository<Accessibility> _accessibilityRepository;
+        private IConfiguration _config;
 
-        public CommonService(IMapper mapper,IWebHostEnvironment webHostEnvironment, IGenericRepository<Language> languageRepository, IGenericRepository<Discipline> disciplineRepository, IGenericRepository<ServiceType> serviceTypeRepository, IGenericRepository<Accessibility> accessibilityRepository)
+        public CommonService(IMapper mapper,IWebHostEnvironment webHostEnvironment, IGenericRepository<Language> languageRepository, IGenericRepository<Discipline> disciplineRepository, IGenericRepository<ServiceType> serviceTypeRepository, IGenericRepository<Accessibility> accessibilityRepository, IConfiguration config)
         {
             _mapper = mapper;
             _webHostEnvironment = webHostEnvironment;
@@ -37,6 +42,7 @@ namespace LMS.Services.Common
             _disciplineRepository = disciplineRepository;
             _serviceTypeRepository = serviceTypeRepository;
             _accessibilityRepository = accessibilityRepository;
+            _config = config;
         }
 
         public async Task<MemoryStream> CompressVideo(string meetingID,string fileName, byte[] videoData)
@@ -84,34 +90,11 @@ namespace LMS.Services.Common
 
         public async Task<bool> SendEmail(List<string> to, List<string> cc, List<string> bcc, string subject, string body)
         {
-            using (var smtpClient = new SmtpClient())
-            {
-                try
-                {
-                    MailMessage message = new MailMessage();
-                    message.From = new MailAddress("shivamsharma5883@gmail.com");
-                    foreach (var i in to)
-                        message.To.Add(i);
-
-                    message.Subject = subject;
-                    message.IsBodyHtml = true;
-                    message.Body = body;
-                    message.BodyEncoding = Encoding.UTF8;
-                    message.IsBodyHtml = true;
-                    smtpClient.Port = Convert.ToInt32("587");
-                    smtpClient.Host = "smtp.gmail.com";
-                    smtpClient.EnableSsl = true;
-                    smtpClient.UseDefaultCredentials = false;
-                    smtpClient.Credentials = new NetworkCredential("shivamsharma5883@gmail.com", "bwzbhbvmveizytyq");
-                    smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
-                    smtpClient.Send(message);
-                }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
-
-            }
+            var emailMessage = new MimeMessage();
+            emailMessage.To.AddRange(to.Select(x => new MailboxAddress("email", x)));
+            emailMessage.Subject = subject;
+            emailMessage.Body = new TextPart("html") { Text = body };
+            await SendSGMail(emailMessage, true);
             return true;
         }
 
@@ -152,7 +135,29 @@ namespace LMS.Services.Common
 
         }
 
+        private async Task SendSGMail(MimeMessage emailMessage, bool isHtml)
+        {
+            try
+            {
+                var apiKey = _config["SENDGRID_KEY"];
+                var client = new SendGridClient(apiKey);
+                var from = new EmailAddress("noreply@devcsharp.com", "ByOkul");
+                var subject = emailMessage.Subject;
+                var to = emailMessage.GetRecipients().FirstOrDefault()?.Address ?? String.Empty;
+                if (!String.IsNullOrEmpty(to))
+                {
+                    var toAddress = new EmailAddress(to);
+                    var htmlContent = isHtml ? emailMessage.HtmlBody.ToString() : emailMessage.Body.ToString();
+                    var msg = MailHelper.CreateSingleEmail(from, toAddress, subject, "", htmlContent);
+                    var response = await client.SendEmailAsync(msg);
+                }
+            }
+            catch (Exception ex)
+            {
 
+                throw;
+            }
+        }
     }
 
 }

@@ -10,11 +10,14 @@ import { LoginModel } from 'src/root/interfaces/login';
 import { RolesEnum } from 'src/root/RolesEnum/rolesEnum';
 import { MultilingualComponent } from 'src/root/root/sharedModule/Multilingual/multilingual.component';
 import { finalize } from 'rxjs';
+import { confirmEmailResponse } from '../confirmEmail/confirmEmail.component';
+import { MessageService } from 'primeng/api';
 
 @Component({
     selector: 'login-root',
     templateUrl: './login.component.html',
-    styleUrls: ['./login.component.css']
+    styleUrls: ['./login.component.css'],
+    providers: [MessageService]
   })
 
 export class LoginComponent extends MultilingualComponent implements OnInit {
@@ -28,7 +31,7 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
 
     //credentials: LoginModel = {email:'', password:'',rememberMe:false};
     private _authService;
-    constructor(injector: Injector,private fb: FormBuilder,private router: Router, private http: HttpClient,authService:AuthService,private route: ActivatedRoute) { 
+    constructor(injector: Injector,public messageService:MessageService,private fb: FormBuilder,private router: Router, private http: HttpClient,authService:AuthService,private route: ActivatedRoute) { 
       super(injector);
       this._authService = authService;
     }
@@ -46,6 +49,25 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
       } catch (error) {
          console.log(error);   
       }
+
+    // confirmEmailResponse.subscribe(response => {
+    //   debugger
+    //   this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Email confirm successfully'});
+    //   this.selectedLanguage = localStorage.getItem("selectedLanguage");
+    //   this.loginForm = this.fb.group({
+    //     email: this.fb.control('', [Validators.required,Validators.pattern(this.EMAIL_PATTERN)]),
+    //     password: this.fb.control('', [Validators.required])
+    //   });
+
+    //   try {
+    //     var result = this._authService.getBigBlueButton();
+    //     console.log(result);
+    //   } catch (error) {
+    //      console.log(error);   
+    //   }
+
+        
+    //   });
     }
   
     login(): void {
@@ -57,11 +79,15 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
       this.user = this.loginForm.value;
       this._authService.loginUser(this.user).pipe(finalize(()=> this.loadingIcon= false)).subscribe({
         next: (response: AuthenticatedResponse) => {
-          if(response.token == ""){
+          if(response.token == "user not found"){
 
             this.loginForm.setErrors({ unauthenticated: true });
           }
-          else{
+          if(response.token == "email not confirm"){
+
+            this.loginForm.setErrors({ emailNotConfirmed: true });
+          }
+          if(response.token != "user not found" && response.token != "email not confirm"){
             this.isSubmitted = false;
             this.loadingIcon = false;
         const token = response.token;

@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subject } from 'rxjs';
 import { AuthService } from 'src/root/service/auth.service';
+
+export const confirmEmailResponse =new Subject<{confirmEmail : string}>();  
+
 
 @Component({
   selector: 'logout',
@@ -35,6 +39,7 @@ loadingIcon:boolean = false;
     this._authService.confirmEmail(this.token,this.email).subscribe((response) => {
         debugger
        if(response.result == "success"){
+        // confirmEmailResponse.next({confirmEmail: "confirm"});
         this.router.navigate(['../login'], { relativeTo: this.route });
        }
        else{ 
