@@ -337,7 +337,7 @@
 
           <div class="list-schol-profile" *ngIf="!isProfileGrid">
         <div [ngClass]="isGridItemInfo ? 'd-block school-grid-box position-relative school-list-box h-100':'d-none school-grid-box position-relative school-list-box h-100'" *ngIf="gridItemInfo!=undefined">
-        <div class="row">
+        <div class="row post-list-preview-sec">
           <div [ngClass]="gridItemInfo.postAttachments.length>0 ? 'd-block col-lg-6':'d-none'">
             <carousel>
             <div *ngFor="let postAttachment of gridItemInfo.postAttachments" class="school-grid-thumbnail">
