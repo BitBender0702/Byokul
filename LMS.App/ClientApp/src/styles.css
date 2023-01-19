@@ -437,6 +437,7 @@ ul.before-none li:before, .after-none:after {
     overflow: hidden;
     display: inline-flex;
     align-items: center;
+	min-width: 31px;
     justify-content: center;
 }
 
@@ -1697,7 +1698,7 @@ body .liv-postbtn .post-attch-btn.active,
 .full-widthreel .live-inner {
 	background: rgba(0, 0, 0, 0.5);
 	backdrop-filter: blur(25px);
-	padding: 16px 16px 0;
+	padding: 0px 16px;
 }
 
 .full-widthreel .live-image {
