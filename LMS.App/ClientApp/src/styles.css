@@ -2705,6 +2705,11 @@ button.delete-tag img {
 .feed-section .carousel-control-next span.icon-next.carousel-control-next-icon {
     transform: rotate(-180deg);
 }
+.post-view-large .col-md-8 p {
+    max-height: 690px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
 
 
 @media screen and (min-width:1200px) {
@@ -2948,6 +2953,11 @@ button.delete-tag img {
 		top: -6px;
 		width: 25px;
 		height: 25px;		
+	}
+	.school-grid-box .school-grid-body p.text_sec1 {
+		overflow-y: auto;
+		max-height: 230px;
+		padding-right: 5px;
 	}
 
 }

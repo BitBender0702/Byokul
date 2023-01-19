@@ -542,7 +542,7 @@
           <div class="school-grid-view grid-active" *ngIf="isProfileGrid">
             <ng-container *ngFor="let post of globalFeeds">
               <div *ngIf="post.postType == 1" class="school-grid-box position-relative">
-              <div class="schoolgrid-header d-flex align-items-center position-relative">
+              <div class="schoolgrid-header d-flex align-items-center position-relative flex-nowrap">
                 <div class="school-gridprofile-icon">
                   <a *ngIf="post.postAuthorType == 1" (click)="getSelectedSchool(post.parentName)" class="routeLink">
                     <img [src]="post.parentImageUrl"/>
