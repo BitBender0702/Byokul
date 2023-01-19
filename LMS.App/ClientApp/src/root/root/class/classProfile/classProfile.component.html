@@ -211,7 +211,7 @@
                 <div class="teacher-tags tag-box hashtag_box">
                   <span *ngFor="let tag of post.postTags" class="custom-tag">#{{tag.postTagValue}}</span>
                 </div>
-                <div *ngIf="post.postAttachments.length" class="school-grid-thumbnail" style="cursor: pointer;">
+                <div *ngIf="post.postAttachments.length" class="school-grid-thumbnail new-school-grid-thumbnail" style="cursor: pointer;">
                   <div class="row gx-1 h-100">
 
                     <div *ngIf="post.postAttachments.length == 1" class="col-md-12 h-100">
@@ -342,10 +342,10 @@
 
           <div class="list-schol-profile" *ngIf="!isProfileGrid">
         <div [ngClass]="isGridItemInfo ? 'd-block school-grid-box position-relative school-list-box h-100':'d-none school-grid-box position-relative school-list-box h-100'" *ngIf="gridItemInfo!=undefined">
-        <div class="row">
+        <div class="row post-list-preview-sec">
           <div [ngClass]="gridItemInfo.postAttachments.length>0 ? 'd-block col-lg-6':'d-none'">
             <carousel>
-            <div *ngFor="let postAttachment of gridItemInfo.postAttachments" class="school-grid-thumbnail">
+            <div *ngFor="let postAttachment of gridItemInfo.postAttachments" class="school-grid-thumbnail ">
               <slide *ngIf="postAttachment.fileType==2">
               <div *ngIf="postAttachment?.fileType==2" class="videofile">
                 <video style="height: 300px;" controls>
@@ -433,7 +433,7 @@
                                   <img src="../../../../assets/images/eye.svg" class="me-2" /> {{post.views.length}}
                               </button>
                           </div>
-                          <div class="school-grid-thumbnail" style="cursor: pointer;" (click)="showPostDiv(post.id)">
+                          <div class="school-grid-thumbnail new-school-grid-thumbnail" style="cursor: pointer;" (click)="showPostDiv(post.id)">
                               <div class="row gx-1">
                                   <div class="col-md-12">
                                       <div class="school-large-thumbnail shadow-thumnail position-relative">
