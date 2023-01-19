@@ -147,6 +147,27 @@
              </small>
               </div>
             </div>
+            <div >
+              <div class="form-group latest-form">
+                <label class="font_10">{{'Tags'| translate }}</label>
+                <!-- <p-chips class="form-control" placeholder="{{'TypeToAdd'| translate }}" [(ngModel)]="tagValues" separator=","></p-chips> -->
+                <input formControlName="tags" (keyup.enter)="onEnter($event)" type="text" class="form-control" placeholder="{{'TypeToAdd'| translate }}">
+                <small class="p-error" style="color: orange;"
+                *ngIf="(isStepCompleted && createClassForm1.controls.tags.errors)">Please select atleast one tag
+              </small>
+              </div>
+              <div class="teacher-tags tag-box hashtag_post mt-4 mb-2 hover-tags">
+                <span *ngFor="let tag of tagList" class="custom-tag">{{tag}} 
+                  <span (click)="removeTag(tag)" class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                      src="../../../assets/images/cross-sm-light.svg"></span>
+                </span>
+    
+            </div>
+
+            <!-- <small class="p-error" style="color: orange;margin-left: 135px;"
+               *ngIf="(!isTagsValid)"> Please select atleast one tag
+            </small> -->
+            </div>
             <div class="dropzone-wrapper my-4">
               <div class="dropzone-desc">
                 <i class="glyphicon glyphicon-download-alt"></i>
@@ -253,4 +274,5 @@
   </section>
 
   <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
+  <p-toast></p-toast>
 

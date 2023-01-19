@@ -43,8 +43,8 @@ export class ClassService{
         return this.http.get(`${this.apiUrl}/class/getAccessibility`);
     }
 
-    getClassById(classId:string):Observable<any>{
-        return this.http.get(`${this.apiUrl}/class/getClassById` + '?classId=' + classId);
+    getClassById(className:string):Observable<any>{
+        return this.http.get(`${this.apiUrl}/class/getClassById` + '?className=' + className);
     }
 
     getClassEditDetails(classId:string):Observable<any>{
@@ -97,8 +97,12 @@ export class ClassService{
         return this.http.get(`${this.apiUrl}/class/isClassNameExist` + '?className=' + className);
     }
 
-    convertToCourse(classId:any): Observable<any> {
-        return this.http.post(`${this.apiUrl}/class/convertToCourse` + '?classId=' + classId,'');
+    convertToCourse(className:any): Observable<any> {
+        return this.http.post(`${this.apiUrl}/class/convertToCourse` + '?className=' + className,'');
+    }
+
+    classView(classView:any):Observable<any>{
+        return this.http.post(`${this.apiUrl}/class/classView`, classView);
     }
 
 }

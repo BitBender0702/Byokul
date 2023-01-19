@@ -111,6 +111,34 @@
               <label class="font_10">{{'Course Bio'| translate }}</label>
               <textarea formControlName="description" class="form-control resize-none" placeholder="{{'TellUsAboutCourse'| translate }}"></textarea>
             </div>
+
+            <div class="form-group latest-form">
+              <label class="font_10">{{'Tags'| translate }}</label>
+              <input formControlName="tags" (keyup.enter)="onEnter($event)" type="text" class="form-control" placeholder="{{'TypeToAdd'| translate }}">
+              <small class="p-error" style="color: orange;"
+              *ngIf="(isStepCompleted && createCourseForm1.controls.tags.errors)">Please select atleast one tag
+            </small>
+            </div>
+            <div class="teacher-tags tag-box hashtag_post mt-4 mb-2 hover-tags">
+              <span *ngFor="let tag of tagList" class="custom-tag">{{tag}} 
+                <span (click)="removeTag(tag)" class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                    src="../../../assets/images/cross-sm-light.svg"></span>
+              </span>     
+  
+          </div>
+            <div class="dropzone-wrapper my-4">
+              <div class="dropzone-desc">
+                <i class="glyphicon glyphicon-download-alt"></i>
+                <p class="text-center fw_400">{{'ChooseImageFile'| translate }} <b>{{'DragItHere'| translate }}</b></p>
+              </div>
+              <input type="file" name="img_logo" (change)="handleImageInput($event)"  class="dropzone" accept="image/*, video/*">
+            </div>
+            <div>
+              <p class="text-center">{{uploadImageName}}</p>
+              <small class="p-error" style="color: orange;margin-left: 144px;"
+              *ngIf="(isStepCompleted && this.uploadImageName == undefined)">Image/Video thumbnail is required
+            </small>
+            </div>
             <small class="p-error" style="color: orange;margin-left: 148px;" *ngIf="createCourseForm1.errors?.unauthenticated">
               Course name is already exists!
             </small>
@@ -202,5 +230,6 @@
   </section>
 
   <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
+  <p-toast></p-toast>
 
 

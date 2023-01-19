@@ -62,6 +62,20 @@ export class UserService{
         return this.http.get(`${this.apiUrl}/users/getBasicUserInfo` + '?userId=' + userId);
 
     }
+
+    getMyFeed():Observable<any>{
+        return this.http.get(`${this.apiUrl}/users/myFeed`);
+
+    }
+
+    getGlobalFeed():Observable<any>{
+        return this.http.get(`${this.apiUrl}/users/globalFeed`);
+
+    }
+
+    saveUserPreference(preferenceString:string): Observable<any> {
+        return this.http.post(`${this.apiUrl}/users/saveUserPreference` + '?preferenceString=' + preferenceString,'');
+    }
     
 
 }

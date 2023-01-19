@@ -19,13 +19,13 @@
                 <ul class="nav nav-tabs border-0" id="myTab" role="tablist">
                   <li class="nav-item p-0">
                     <button
-                      class="nav-link active post-attch-btn d-inline-flex justify-content-center align-items-center"
+                      class="nav-link post-attch-btn d-inline-flex justify-content-center align-items-center"
                       id="live-tab" data-bs-toggle="tab" data-bs-target="#live-tab-pane" type="button" role="tab"
                       aria-controls="live-tab-pane" aria-selected="true"><img src="../../../assets/images/Play-dark.svg"
                         class="dark-attach" /><img src="../../../assets/images/Play-light.svg" class="light-attach" /> Live</button>
                   </li>
                   <li class="nav-item p-0">
-                    <button class="nav-link post-attch-btn d-inline-flex justify-content-center align-items-center"
+                    <button class="nav-link active post-attch-btn d-inline-flex justify-content-center align-items-center"
                       id="Post-tab" data-bs-toggle="tab" data-bs-target="#Post-tab-pane" type="button" role="tab"
                       aria-controls="Post-tab-pane" aria-selected="false"><img src="../../../assets/images/Edit-grey.svg"
                         class="dark-attach" /><img src="../../../assets/images/Edit-light.svg" class="light-attach" /> Post</button>
@@ -47,7 +47,7 @@
             </div>
             <div class="modal-body">
               <div class="tab-content" id="myTabContent">
-                <div class="tab-pane fade show active" id="live-tab-pane" role="tabpanel" aria-labelledby="live-tab"
+                <div class="tab-pane fade" id="live-tab-pane" role="tabpanel" aria-labelledby="live-tab"
                   tabindex="0">
                   <!-- <form class="createLiveForm"  [formGroup]="createLiveForm">
                     <div class="form-group">
@@ -128,7 +128,7 @@
 
 
                 </div>
-                <div class="tab-pane fade" id="Post-tab-pane" role="tabpanel" aria-labelledby="Post-tab" tabindex="0">
+                <div class="tab-pane fade show active" id="Post-tab-pane" role="tabpanel" aria-labelledby="Post-tab" tabindex="0">
                   <form [formGroup]="createPostForm">
                     <div *ngIf="this.schoolId != undefined" class="form-group">
                       <label class="font_10">School Name</label>
@@ -275,7 +275,7 @@
                     <button *ngIf="scheduleTime != undefined" (click)="savePost()" type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 lg_btn"><img
                         src="../../../assets/images/Send-light.svg" class="me-2" />{{scheduleTime | date : "MMMM d, y"}} at {{scheduleTime | date : "H:mm"}}</button>
                     <button *ngIf="scheduleTime == undefined" (click)="savePost()" type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 lg_btn"><img
-                        src="../../../assets/images/Send-light.svg" class="me-2" />Save</button>
+                        src="../../../assets/images/Send-light.svg" class="me-2" />Post</button>
 
                   </div>
     
@@ -312,7 +312,7 @@
                     <input readonly type="text" [placeholder]="parentDetails?.courseName" name="courseName" class="form-control w-100">
                   </div>
 
-                  <div class="preview-zone hidden">
+                  <div class="preview-zone hidden rel-post">
                     <div class="box box-solid">
                       <div class="box-header with-border">
                       </div>
@@ -433,7 +433,7 @@
           </div>
           <div class="teacher-tags tag-box hashtag_post mt-4 mb-2 hover-tags">
             <span *ngFor="let tag of tagLists" class="custom-tag">{{'#' + tag}} 
-              <button (click) = "removeTags(tag)" class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+              <button (click)="removeInitialTags(tag)" class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
                   src="../../../assets/images/cross-sm-light.svg"></button>
             </span>
 
@@ -560,12 +560,11 @@
         </div>
         <div class="teacher-tags tag-box hashtag_post mt-4 mb-2 hover-tags">
           <span *ngFor="let tag of initialTagList" class="custom-tag">{{'#' + tag}} 
-            <button (click) = "removeTags(tag)" class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+            <button (click)="removeInitialTags(tag)" class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
                 src="../../../assets/images/cross-sm-light.svg"></button>
           </span>
-
       </div>
-      <small class="p-error" style="color: orange;margin-left: 200px;"
+      <small class="p-error" style="color: orange;margin-left: 145px;"
          *ngIf="(!isTagsValid)"> Please select atleast one tag
       </small>
       <div
@@ -581,13 +580,4 @@
 </ng-template>
 
 <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
-
- <!-- </div>
-
-
-
-
- for tags
-<div class="col-md-6">
-  <p-chips [(ngModel)]="values1" separator=","></p-chips>
-</div> -->
+<p-toast></p-toast>

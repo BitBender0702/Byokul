@@ -51,8 +51,8 @@ export class CourseService{
         return this.http.get(`${this.apiUrl}/school/getBasicSchoolInfo` + '?schoolId=' + schoolId);
     }
 
-    getCourseById(courseId:string):Observable<any>{
-        return this.http.get(`${this.apiUrl}/course/getCourseById` + '?courseId=' + courseId);
+    getCourseById(courseName:string):Observable<any>{
+        return this.http.get(`${this.apiUrl}/course/getCourseById` + '?courseName=' + courseName);
     }
 
     saveCourseLanguages(addLanguages:any):Observable<any>{
@@ -79,8 +79,8 @@ export class CourseService{
         return this.http.post(`${this.apiUrl}/course/saveCourseCertificates`,addCertificates);
     }
 
-    convertToClass(courseId:any): Observable<any> {
-        return this.http.post(`${this.apiUrl}/course/convertToClass` + '?courseId=' + courseId,'');
+    convertToClass(courseName:any): Observable<any> {
+        return this.http.post(`${this.apiUrl}/course/convertToClass` + '?courseName=' + courseName,'');
     }
 
     getCourseByName(courseName:any,schoolName:any):Observable<any>{
@@ -94,6 +94,10 @@ export class CourseService{
 
     editCourse(credentials:any): Observable<any> {
         return this.http.post(`${this.apiUrl}/course/updateCourse`, credentials);
+    }
+
+    courseView(courseView:any):Observable<any>{
+        return this.http.post(`${this.apiUrl}/course/courseView`, courseView);
     }
 
 }

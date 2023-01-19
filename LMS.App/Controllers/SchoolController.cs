@@ -22,12 +22,16 @@ namespace LMS.App.Controllers
         private readonly ISchoolService _schoolService;
         private readonly IBlobService _blobService;
         private readonly ICommonService _commonService;
+        private readonly IClassService _classService;
+        private readonly ICourseService _courseService;
 
-        public SchoolController(UserManager<User> userManager, ISchoolService schoolService,  IBlobService blobService)
+        public SchoolController(UserManager<User> userManager, ISchoolService schoolService,  IBlobService blobService, IClassService classService, ICourseService courseService)
         {
             _userManager = userManager;
             _schoolService = schoolService;
             _blobService = blobService;
+            _classService = classService;
+            _courseService = courseService;
         }
 
         [Route("saveNewSchool")]
@@ -63,12 +67,12 @@ namespace LMS.App.Controllers
 
         [Route("getSchoolById")]
         [HttpGet]
-        public async Task<IActionResult> GetSchoolById(Guid schoolId)
+        public async Task<IActionResult> GetSchoolById(string schoolName)
         
         
         {
             var userId = await GetUserIdAsync(this._userManager);
-            var response = await _schoolService.GetSchoolById(schoolId, userId);    
+            var response = await _schoolService.GetSchoolById(schoolName, userId);    
             return Ok(response);
         }
 
@@ -212,7 +216,8 @@ namespace LMS.App.Controllers
         [HttpGet]
         public async Task<IActionResult> GetSchoolClassCourse(Guid schoolId)
         {
-            var response = await _schoolService.GetSchoolClassCourse(schoolId);
+            var userId = await GetUserIdAsync(this._userManager);
+            var response = await _schoolService.GetSchoolClassCourse(schoolId, userId);
             return Ok(response);
         }
 
@@ -222,6 +227,25 @@ namespace LMS.App.Controllers
         {
             var response = await _schoolService.PinUnpinClassCourse(id, type, isPinned);
             return Ok(response);
+        }
+
+        [Route("likeUnlikeClassCourse")]
+        [HttpPost]
+        public async Task<IActionResult> LikeUnlikeClassCourse([FromBody] LikeUnlikeClassCourse model)
+        {
+            var userId = await GetUserIdAsync(this._userManager);
+            model.UserId = userId;
+            if (model.Type == ClassCourseEnum.Class)
+            {
+                var response = await _classService.LikeUnlikeClass(model);
+                return Ok(response);
+            }
+            if (model.Type == ClassCourseEnum.Course)
+            {
+                var response = await _courseService.LikeUnlikeCourse(model);
+                return Ok(response);
+            }
+            return Ok();
         }
 
     }

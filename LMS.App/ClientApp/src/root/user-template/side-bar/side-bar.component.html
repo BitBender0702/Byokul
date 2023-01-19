@@ -1,9 +1,16 @@
- <!-- <div  [ngClass]="{'sidemenu d-xl-block d-block':isOpenSidebar === true,'sidemenu d-xl-block d-none':isOpenSidebar === false}" id="side-bar"> -->
+<!-- <div  [ngClass]="{'sidemenu d-xl-block d-block':isOpenSidebar === true,'sidemenu d-xl-block d-none':isOpenSidebar === false}" id="side-bar"> -->
   <div  [ngClass]="isOpenSidebar ? 'sidemenu d-xl-block d-block ' : 'sidemenu d-xl-block d-none'" id="side-bar">
   <span class="closebtn d-xl-none" (click)="closeSidebar()" title="Close Side Menu">×</span>
   <div class="text-center">
-    <a href="" class="main-logo"><img src="../../../assets/images/logo.svg" /></a>
+    <a [routerLink]="['/user/userFeed']" class="main-logo"><img src="../../../assets/images/logo.svg" /></a>
   </div>
+  <div *ngIf="!validUser" style="margin-top:40px;">
+    <button [routerLink]="['/user/auth/register']" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 me-2" style="width:100px;">Register</button>
+    <button [routerLink]="['/user/auth/login']" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 me-2" style="width:100px;">Login</button>
+
+
+  </div>
+  <div *ngIf="validUser">
   <div class="d-flex text-center notification-box justify-content-center">
     <ul class="list-unstyled d-flex ">
       <li class="d-inline-block">
@@ -35,7 +42,7 @@
 
     </ul>
   </div>
-  <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400">{{'MyEarnings'| translate }} $ </button>
+  <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400">{{'MyEarnings'| translate }}$ </button>
   <hr class="earning-hr" />
   <div class="custom-tabs">
     <ul class="nav nav-tabs mb-3 border-0" id="myTab" role="tablist">
@@ -167,7 +174,7 @@
                     <div class="school-img rounded-circle me-3">
                       <img [src]="item.avatar" />
                     </div>
-                    <a style="cursor:pointer;" (click)="getSelectedSchool(item.schoolId)">{{item.schoolName}}</a>
+                    <a style="cursor:pointer;" (click)="getSelectedSchool(item.schoolName)">{{item.schoolName}}</a>
                   </div>
                 </div>
               </div>
@@ -197,7 +204,7 @@
                     <div class="school-img rounded-circle me-3">
                       <img [src]="item.avatar" />
                     </div>
-                    <a style="cursor:pointer;" (click)="getSelectedClass(item.classId)">{{item.className}}</a>
+                    <a style="cursor:pointer;" (click)="getSelectedClass(item.className,item.school.schoolName)">{{item.className}}</a>
                   </div>
                 </div>
                 </div>
@@ -226,7 +233,7 @@
                     <div class="school-img rounded-circle me-3">
                       <img [src]="item.avatar" />
                     </div>
-                    <a style="cursor:pointer;" (click)="getSelectedCourse(item.courseId)">{{item.courseName}}</a>
+                    <a style="cursor:pointer;" (click)="getSelectedCourse(item.courseName,item.school.schoolName)">{{item.courseName}}</a>
                   </div>
                 </div>
               </div>
@@ -256,5 +263,8 @@
       </div>
     </div>
   </div>
+  </div>
 
 </div>
+<loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
+

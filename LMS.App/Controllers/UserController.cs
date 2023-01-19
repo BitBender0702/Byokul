@@ -70,8 +70,8 @@ namespace LMS.App.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateUser(UserUpdateViewModel userUpdateViewModel)
         {
-            string userId = await _userService.UpdateUser(userUpdateViewModel);
-            return Ok(new { userId = userId });
+            var response = await _userService.UpdateUser(userUpdateViewModel);
+            return Ok(response);
         }
 
         [Route("countryList")]
@@ -125,6 +125,25 @@ namespace LMS.App.Controllers
             var reponse = await _userService.BanFollower(followerId);
             return Ok(reponse);
         }
+
+        [Route("globalFeed")]
+        [HttpGet]
+        public async Task<IActionResult> GlobalFeed()
+        {
+            var userId = await GetUserIdAsync(this._userManager);
+            return Ok(await _userService.GetGlobalFeed(userId));
+        }
+
+        [Route("saveUserPreference")]
+        [HttpPost]
+        public async Task<IActionResult> SaveUserPreference(string preferenceString)
+        {
+            var userId = await GetUserIdAsync(this._userManager);
+            var reponse = await _userService.SaveUserPreference(userId,preferenceString);
+            return Ok(reponse);
+        }
+
+
 
     }
 }

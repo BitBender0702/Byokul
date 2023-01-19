@@ -39,6 +39,10 @@ namespace LMS.Common.ViewModels.Class
         public string CreatedBy { get; set; }
         public bool IsEnable { get; set; }
         public bool IsPinned { get; set; }
+        public IEnumerable<string> ClassTags { get; set; }
+        public List<ClassLikeViewModel> ClassLike { get; set; }
+        public List<ClassViewsViewModel> ClassViews { get; set; }
+        public bool IsClassLikedByCurrentUser { get; set; }
 
 
     }

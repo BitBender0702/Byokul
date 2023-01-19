@@ -46,8 +46,8 @@ export class SchoolService{
         return this.http.get(`${this.apiUrl}/school/languageList`);
     }
 
-    getSchoolById(schoolId:string):Observable<any>{
-        return this.http.get(`${this.apiUrl}/school/getSchoolById` + '?schoolId=' + schoolId);
+    getSchoolById(schoolName:string):Observable<any>{
+        return this.http.get(`${this.apiUrl}/school/getSchoolById` + '?schoolName=' + schoolName);
     }
 
     saveSchoolFollower(followUnfollowUser:FollowUnfollow):Observable<any>{
@@ -110,6 +110,18 @@ export class SchoolService{
     pinUnpinClassCourse(id:string,type:string,isPinned:boolean): Observable<any> {
         let queryParams = new HttpParams().append("id",id).append("type",type).append("isPinned",isPinned);
         return this.http.post(`${this.apiUrl}/school/pinUnpinClassCourse`,null, {params:queryParams});
+    }
+
+    deleteClass(classId:any): Observable<any> {
+        return this.http.post(`${this.apiUrl}/class/deleteClassById` + '?classId=' + classId,'');
+    }
+
+    deleteCourse(courseId:any): Observable<any> {
+        return this.http.post(`${this.apiUrl}/course/deleteCourseById` + '?courseId=' + courseId,'');
+    }
+
+    likeUnlikeClassCourse(likeUnlikeClassCourse:any):Observable<any>{
+        return this.http.post(`${this.apiUrl}/school/likeUnlikeClassCourse`, likeUnlikeClassCourse);
     }
 
 }

@@ -4,7 +4,7 @@ import { CreateSchoolModel } from 'src/root/interfaces/school/createSchoolModel'
 import { SchoolService } from 'src/root/service/school.service';
 import { HttpClient, HttpEventType, HttpHeaders } from "@angular/common/http";
 import {StepsModule} from 'primeng/steps';
-import {MenuItem} from 'primeng/api';
+import {MenuItem, MessageService} from 'primeng/api';
 import { Router } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MultilingualComponent } from '../../sharedModule/Multilingual/multilingual.component';
@@ -13,6 +13,7 @@ import { MultilingualComponent } from '../../sharedModule/Multilingual/multiling
   selector: 'students-Home',
   templateUrl: './createSchool.component.html',
   styleUrls: ['./createSchool.component.css'],
+  providers: [MessageService]
 })
 
 export class CreateSchoolComponent extends MultilingualComponent implements OnInit {
@@ -46,7 +47,7 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
   schoolName!:string;
 
   
-  constructor(injector: Injector,private domSanitizer: DomSanitizer,private router: Router,private fb: FormBuilder,schoolService: SchoolService,private http: HttpClient) {
+  constructor(injector: Injector,public messageService:MessageService,private domSanitizer: DomSanitizer,private router: Router,private fb: FormBuilder,schoolService: SchoolService,private http: HttpClient) {
     super(injector);
     this._schoolService = schoolService;
   }
@@ -124,7 +125,7 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
     }
 
     this.loadingIcon = true;
-    this.router.navigateByUrl(`user/schoolProfile/${this.schoolId}`)
+    this.router.navigateByUrl(`profile/school/${this.schoolName.replace(" ","").toLowerCase()}`)
   }
 
   back(): void {
@@ -132,6 +133,7 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
   }
 
   forwardStep() {
+    debugger
     this.isStepCompleted = true;
     if (!this.createSchoolForm1.valid) {
       return;
@@ -143,12 +145,6 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
    
 
     var form1Value =this.createSchoolForm1.value;
-    this.fileToUpload.append('schoolName', form1Value.schoolName);
-    this.fileToUpload.append('description', form1Value.description);
-    this.fileToUpload.append('countryId',form1Value.countryId);
-    this.fileToUpload.append('specializationId',form1Value.specializationId); 
-    this.fileToUpload.append('languageIds',JSON.stringify(form1Value.selectedLanguages));
-    this.schoolUrl = 'byokul.com/profile/school/' + form1Value.schoolName.replace(" ","");
     this.schoolName = form1Value.schoolName.split(' ').join('');
     this._schoolService.isSchoolNameExist(schoolName).subscribe((response) => {
       if(!response){
@@ -156,14 +152,39 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
         return;
       }
       else{
+        this.fileToUpload.append('schoolName', form1Value.schoolName);
+    this.fileToUpload.append('description', form1Value.description);
+    this.fileToUpload.append('countryId',form1Value.countryId);
+    this.fileToUpload.append('specializationId',form1Value.specializationId); 
+    this.fileToUpload.append('languageIds',JSON.stringify(form1Value.selectedLanguages));
+    this.schoolUrl = 'byokul.com/profile/school/' + form1Value.schoolName.replace(" ","").toLowerCase();
+    
         this.step += 1;
         this.isStepCompleted = false;
       }
     });
+
+    // this.fileToUpload.append('schoolName', form1Value.schoolName);
+    // this.fileToUpload.append('description', form1Value.description);
+    // this.fileToUpload.append('countryId',form1Value.countryId);
+    // this.fileToUpload.append('specializationId',form1Value.specializationId); 
+    // this.fileToUpload.append('languageIds',JSON.stringify(form1Value.selectedLanguages));
+    // this.schoolUrl = 'byokul.com/profile/school/' + form1Value.schoolName.replace(" ","");
+    // this.schoolName = form1Value.schoolName.split(' ').join('');
+    // this._schoolService.isSchoolNameExist(schoolName).subscribe((response) => {
+    //   if(!response){
+    //     this.createSchoolForm1.setErrors({ unauthenticated: true });
+    //     return;
+    //   }
+    //   else{
+    //     this.step += 1;
+    //     this.isStepCompleted = false;
+    //   }
+    // });
     
 
     this.createSchoolForm3.patchValue({
-      schoolUrl: 'byokul.com/profile/school/' + form1Value.schoolName.split(' ').join(''),
+      schoolUrl: 'byokul.com/profile/school/' + form1Value.schoolName.split(' ').join('').toLowerCase(),
     });
   }
 
@@ -180,9 +201,10 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
     this._schoolService.createSchool(this.fileToUpload).subscribe((response:any) => {
          var schoolId =  response;
          this.schoolId = schoolId;
-         this.loadingIcon = true;
+         this.loadingIcon = false;
          this.step += 1;
          this.isStepCompleted = false;
+         this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'School created successfully'});
     });
 
     
@@ -202,7 +224,7 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
   }
 
   schoolProfile(){
-    window.location.href=`profile/school/${this.schoolName}`;
+    window.open(`profile/school/${this.schoolName.replace(" ","").toLowerCase()}`, '_blank');
   }
   
 }

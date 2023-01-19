@@ -17,11 +17,12 @@ namespace LMS.Data.Entity
         public string? Description { get; set; }
         public Guid? AccessibilityId { get; set; }
         public Accessibility Accessibility { get; set; }
-        public long Price { get; set; }
+        public long? Price { get; set; }
         public string CourseUrl { get; set; }
         public bool IsEnable { get; set; }
         public string? Avatar { get; set; }
         public double? Rating { get; set; }
         public bool IsPinned { get; set; }
+        public string? ThumbnailUrl { get; set; }
     }
 }

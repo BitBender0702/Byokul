@@ -12,12 +12,19 @@ import { MultilingualComponent } from '../../sharedModule/Multilingual/multiling
 
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { BsModalService } from 'ngx-bootstrap/modal';
-import { CreatePostComponent } from '../../createPost/createPost.component';
+import { addPostResponse, CreatePostComponent } from '../../createPost/createPost.component';
 import { FollowUnFollowEnum } from 'src/root/Enums/FollowUnFollowEnum';
 import { FollowUnfollow } from 'src/root/interfaces/FollowUnfollow';
 import { PostService } from 'src/root/service/post.service';
 import { PostViewComponent } from '../../postView/postView.component';
 import { MessageService } from 'primeng/api';
+import { LikeUnlikePost } from 'src/root/interfaces/post/likeUnlikePost';
+import { PostView } from 'src/root/interfaces/post/postView';
+import { Subject } from 'rxjs';
+import { ReelsViewComponent } from '../../reels/reelsView.component';
+
+export const userImageResponse =new Subject<{userAvatar : string}>();  
+
 
 
 @Component({
@@ -40,10 +47,13 @@ import { MessageService } from 'primeng/api';
     isProfileGrid:boolean = true;
     userId!:string;
     isFollowed!:boolean;
+    likesLength!:number;
+    isLiked!:boolean;
 
     private _userService;
     private _postService;
     user:any;
+    validToken!:string;
 
     userLanguage!:AddUserLanguage;
     deleteLanguage!: DeleteUserLanguage;
@@ -57,6 +67,13 @@ import { MessageService } from 'primeng/api';
     isOwner!:boolean;
     followUnfollowUser!: FollowUnfollow;
     followersLength!:number;
+    likeUnlikePost!: LikeUnlikePost;
+    currentLikedPostId!:string;
+    postView!:PostView;
+    loginUserId!:string;
+    gridItemInfo:any;
+    isGridItemInfo: boolean = false;
+
     @ViewChild('closeEditModal') closeEditModal!: ElementRef;
     @ViewChild('closeLanguageModal') closeLanguageModal!: ElementRef;
     @ViewChild('imageFile') imageFile!: ElementRef;
@@ -75,6 +92,7 @@ import { MessageService } from 'primeng/api';
     }
   
     ngOnInit(): void {
+      this.validToken = localStorage.getItem("jwt")?? '';
       this.loadingIcon = true;
       // this.blockUI();
       var selectedLang = localStorage.getItem("selectedLanguage");
@@ -86,6 +104,7 @@ import { MessageService } from 'primeng/api';
       
 
       this._userService.getUserById(this.userId).subscribe((response) => {
+        debugger
         this.user = response;
         this.followersLength = this.user.followers.length;
         this.isOwnerOrNot();
@@ -122,6 +141,29 @@ import { MessageService } from 'primeng/api';
       });
 
       this.InitializeFollowUnfollowUser();
+      this.InitializeLikeUnlikePost();
+      this.InitializePostView();
+
+      userImageResponse.subscribe(response => {
+        debugger
+        this.user.avatar = response.userAvatar;
+        // this.ngOnInit();
+      });
+
+      addPostResponse.subscribe(response => {
+        this.loadingIcon = true;
+        this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post created successfully'});
+        this._userService.getUserById(this.userId).subscribe((response) => {
+          debugger
+          this.user = response;
+          this.followersLength = this.user.followers.length;
+          this.isOwnerOrNot();
+          this.loadingIcon = false;
+          // this.unblockUI();
+          this.isDataLoaded = true;
+        });
+      });
+
 
     }
 
@@ -132,12 +174,30 @@ import { MessageService } from 'primeng/api';
        };
     }
 
+    InitializePostView(){
+      this.postView = {
+        postId: '',
+        userId: ''
+       };
+    }
+
+    InitializeLikeUnlikePost(){
+      this.likeUnlikePost = {
+        postId: '',
+        userId: '',
+        isLike:false,
+        commentId:''
+       };
+
+    }
+
     isOwnerOrNot(){
       var validToken = localStorage.getItem("jwt");
         if (validToken != null) {
           let jwtData = validToken.split('.')[1]
           let decodedJwtJsonData = window.atob(jwtData)
           let decodedJwtData = JSON.parse(decodedJwtJsonData);
+          this.loginUserId = decodedJwtData.jti;
           if(decodedJwtData.sub == this.user.email){
             this.isOwner = true;
           }
@@ -193,6 +253,7 @@ import { MessageService } from 'primeng/api';
     }
 
     saveUserLanguages(){
+      debugger
       this.isSubmitted = true;
       if (!this.languageForm.valid) {
         return;
@@ -200,6 +261,8 @@ import { MessageService } from 'primeng/api';
       this.loadingIcon = true;
       this.userLanguage.userId = this.user.id;
       this._userService.saveUserLanguages(this.userLanguage).subscribe((response:any) => {
+        debugger
+        this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Language added successfully'});
         this.closeLanguagesModal();
         this.isSubmitted = true;
         this.ngOnInit();     
@@ -211,6 +274,7 @@ import { MessageService } from 'primeng/api';
       this.loadingIcon = true;
       this.deleteLanguage.userId = this.user.id;
       this._userService.deleteUserLanguage(this.deleteLanguage).subscribe((response:any) => {
+        this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Language deleted successfully'});
         this.ngOnInit();
       });
     }
@@ -220,6 +284,10 @@ import { MessageService } from 'primeng/api';
     }
 
     followUser(userId:string,from:string){
+      if(this.validToken == ''){
+        window.open('user/auth/login', '_blank');
+      }
+      else{
       this.followUnfollowUser.id = userId;
       if(from == FollowUnFollowEnum.Follow){
         this.followersLength += 1;
@@ -234,6 +302,7 @@ import { MessageService } from 'primeng/api';
       this._userService.saveUserFollower(this.followUnfollowUser).subscribe((response) => {
         this.InitializeFollowUnfollowUser();
       });
+    }
     }
 
     getUserDetails(userId:string){
@@ -258,8 +327,8 @@ import { MessageService } from 'primeng/api';
       lastName: this.fb.control(this.editUser.lastName,[Validators.required]),
       dob: this.fb.control(dob,[Validators.required]),
       gender: this.fb.control(this.editUser.gender,[Validators.required]),
-      description: this.fb.control(this.editUser.description),
-      contactEmail: this.fb.control(this.editUser.contactEmail,[Validators.required,Validators.pattern(this.EMAIL_PATTERN)])
+      description: this.fb.control(this.editUser.description??''),
+      contactEmail: this.fb.control(this.editUser.contactEmail??'',[Validators.pattern(this.EMAIL_PATTERN)])
     });
     this.editUserForm.updateValueAndValidity();
   }
@@ -275,6 +344,7 @@ import { MessageService } from 'primeng/api';
   }
 
   updateUser(){
+    debugger
     this.isSubmitted=true;
     if (!this.editUserForm.valid) {
       return;
@@ -299,6 +369,7 @@ import { MessageService } from 'primeng/api';
     this._userService.editUser(this.fileToUpload).subscribe((response:any) => {
       this.closeModal();
       this.isSubmitted=true;
+      userImageResponse.next({userAvatar: response.avatar}); 
       this.fileToUpload = new FormData();
       this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Profile updated successfully'});
       this.ngOnInit();
@@ -384,6 +455,120 @@ openPostsViewModal(posts:string): void {
   };
   this.bsModalService.show(PostViewComponent,{initialState});
 }
+
+openReelsViewModal(postAttachmentId:string): void {
+  debugger
+  const initialState = {
+    postAttachmentId: postAttachmentId
+  };
+  this.bsModalService.show(ReelsViewComponent,{initialState});
+}
+
+userChat(){
+  if(this.validToken == ''){
+    window.open('user/auth/login', '_blank');
+  }
+  else{
+    window.location.href=`user/chat`;
+  }   
+}
+
+likeUnlikePosts(postId:string, isLike:boolean){
+  this.currentLikedPostId = postId;
+  this.user.posts.filter((p : any) => p.id == postId).forEach( (item : any) => {
+    var likes: any[] = item.likes;
+    var isLiked = likes.filter(x => x.userId == this.user.id && x.postId == postId);
+  if(isLiked.length != 0){
+    this.isLiked = false;
+    this.likesLength = item.likes.length - 1;
+    item.isPostLikedByCurrentUser = false;
+  }
+  else{
+    this.isLiked = true;
+    this.likesLength = item.likes.length + 1;
+    item.isPostLikedByCurrentUser = true;
+
+  }
+  }); 
+  
+ 
+  this.likeUnlikePost.postId = postId;
+  this.likeUnlikePost.isLike = isLike;
+  this.likeUnlikePost.commentId = '00000000-0000-0000-0000-000000000000'
+  this._postService.likeUnlikePost(this.likeUnlikePost).subscribe((response) => {
+
+
+     this.user.posts.filter((p : any) => p.id == postId).forEach( (item : any) => {
+      var itemss = item.likes;
+      item.likes = response;
+    }); 
+
+
+
+
+     this.InitializeLikeUnlikePost();
+     console.log("succes");
+  });
+
+
+}
+
+showPostDiv(postId:string){
+  debugger
+  var posts: any[] = this.user.posts;
+  this.gridItemInfo = posts.find(x => x.id == postId);
+  this.isGridItemInfo = true;
+
+  // here we also add a view for this post
+  this.addPostView(this.gridItemInfo.id);
+  
+
+}
+
+addPostView(postId:string){
+  debugger
+  if(this.loginUserId != undefined){
+   this.initializePostView();
+  this.postView.postId = postId;
+  this._postService.postView(this.postView).subscribe((response) => {
+    debugger
+    this.gridItemInfo.views.length = response;
+    // this.user.posts.filter((p : any) => p.id == postId).forEach( (item : any) => {
+    //  var itemss = item.likes;
+    //  item.likes = response;
+   }); 
+  }
+
+ 
+
+}
+
+initializePostView(){
+  this.postView ={
+    postId:'',
+    userId:''
+   }
+}
+
+hideGridItemInfo(){
+  this.isGridItemInfo = this.isGridItemInfo ? false : true;
+
+}
+
+// addPostView(postId:string){
+//   debugger
+//   if(this.loginUserId != undefined){
+//   this.postView.postId = postId;
+//   this._postService.postView(this.postView).subscribe((response) => {
+//     debugger
+//     console.log('success');
+//     // this.user.posts.filter((p : any) => p.id == postId).forEach( (item : any) => {
+//     //  var itemss = item.likes;
+//     //  item.likes = response;
+//    }); 
+//   }
+
+// }
 
 }
 

@@ -49,9 +49,10 @@ namespace LMS.App.Controllers
 
         [Route("getCourseById")]
         [HttpGet]
-        public async Task<IActionResult> GetCourseById(Guid courseId)
+        public async Task<IActionResult> GetCourseById(string courseName)
         {
-            var response = await _courseService.GetCourseById(courseId);
+            var userId = await GetUserIdAsync(this._userManager);
+            var response = await _courseService.GetCourseById(courseName, userId);
             return Ok(response);
         }
 
@@ -137,9 +138,9 @@ namespace LMS.App.Controllers
 
         [Route("convertToClass")]
         [HttpPost]
-        public async Task<IActionResult> ConvertToClass(Guid courseId)
+        public async Task<IActionResult> ConvertToClass(string courseName)
         {
-            await _courseService.ConvertToClass(courseId);
+            await _courseService.ConvertToClass(courseName);
             return Ok();
         }
 
@@ -156,6 +157,16 @@ namespace LMS.App.Controllers
         public async Task<IActionResult> IsCourseNameExist(string courseName)
         {
             return Ok(await _courseService.IsCourseNameExist(courseName));
+        }
+
+        [Route("courseView")]
+        [HttpPost]
+        public async Task<IActionResult> CourseView([FromBody] CourseViewsViewModel model)
+        {
+            var userId = await GetUserIdAsync(this._userManager);
+            model.UserId = userId;
+            var response = await _courseService.CourseView(model);
+            return Ok(response);
         }
 
     }

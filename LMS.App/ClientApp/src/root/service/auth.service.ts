@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core"; 
 import { Router } from "@angular/router";
 import { JwtHelperService } from "@auth0/angular-jwt";
@@ -101,5 +101,11 @@ export class AuthService{
         return check;
     
       }
+
+    confirmEmail(token:string,email:string):Observable<any>{
+      debugger
+      let queryParams = new HttpParams().append("token",token).append("email",email);
+      return this.http.get(`${this.apiUrl}/auth/confirmEmail`, {params:queryParams});
+    }
 
 }

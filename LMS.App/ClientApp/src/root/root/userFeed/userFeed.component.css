@@ -1,0 +1,9 @@
+.heightForText{
+    height: 300px;
+  }
+
+  .routeLink{
+    cursor: pointer;
+    color: inherit;
+    text-decoration: none;
+}

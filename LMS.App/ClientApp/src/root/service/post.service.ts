@@ -3,6 +3,7 @@ import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { Observable } from "rxjs";
 import { environment } from "src/environments/environment";
+import { LikeUnlikePost } from "../interfaces/post/likeUnlikePost";
 
 @Injectable({providedIn: 'root'})
 
@@ -45,5 +46,14 @@ export class PostService{
     pinUnpinPost(attachmentId:any,isPinned:boolean): Observable<any> {
         let queryParams = new HttpParams().append("attachmentId",attachmentId).append("isPinned",isPinned);
         return this.http.post(`${this.apiUrl}/posts/pinUnpinPost`,null, {params:queryParams});
+    }
+
+    likeUnlikePost(likeUnlikePost:any):Observable<any>{
+        return this.http.post(`${this.apiUrl}/posts/likeUnlikePost`, likeUnlikePost);
+    }
+
+    postView(postView:any):Observable<any>{
+        return this.http.post(`${this.apiUrl}/posts/postView`, postView);
+
     }
 }

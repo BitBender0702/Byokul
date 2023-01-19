@@ -14,7 +14,7 @@ namespace LMS.Services
         Task<Guid> SaveNewSchool(SchoolViewModel leadViewModel, string createdById);
         Task<SchoolUpdateViewModel> GetSchoolEditDetails(Guid schoolId);
         Task<Guid> UpdateSchool(SchoolUpdateViewModel schoolUpdateViewModel);
-        Task<SchoolDetailsViewModel> GetSchoolById(Guid schoolId,string loginUserId);
+        Task<SchoolDetailsViewModel> GetSchoolById(string schoolName,string loginUserId);
         Task<IEnumerable<SchoolViewModel>> GetAllSchools();
         Task DeleteSchoolById(Guid schoolId, string deletedById);
         Task<IEnumerable<SpecializationViewModel>> SpecializationList();
@@ -34,7 +34,7 @@ namespace LMS.Services
         Task<List<SchoolFollowerViewModel>> GetSchoolFollowers(Guid schoolId);
         Task<bool> IsSchoolNameExist(string schoolName);
         Task<SchoolViewModel> GetSchoolByName(string schoolName);
-        Task<IOrderedEnumerable<CombineClassCourseViewModel>> GetSchoolClassCourse(Guid schoolId);
+        Task<IOrderedEnumerable<CombineClassCourseViewModel>> GetSchoolClassCourse(Guid schoolId,string userId);
         Task<bool> PinUnpinClassCourse(Guid id, ClassCourseEnum type, bool isPinned);
 
 

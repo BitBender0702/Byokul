@@ -35,19 +35,16 @@ namespace LMS.App.Controllers
             {
                 postViewModel.AuthorId = new Guid(userId);
             }
-            string url = await _postService.SavePost(postViewModel, userId);
-            if (url != null)
-            {
-                return Ok(new { url = url });
-            }
-            return Ok();
+            var response = await _postService.SavePost(postViewModel, userId);
+            return Ok(response);
         }
 
         [Route("getReelById")]
         [HttpGet]
         public async Task<IActionResult> GetReelById(Guid id)
         {
-            var response = await _postService.GetReelById(id);
+            var userId = await GetUserIdAsync(this._userManager);
+            var response = await _postService.GetReelById(id, userId);
             return Ok(response);
         }
 
@@ -58,6 +55,29 @@ namespace LMS.App.Controllers
             var response = await _postService.PinUnpinPost(attachmentId, isPinned);
             return Ok(response);
         }
+
+
+        [Route("likeUnlikePost")]
+        [HttpPost]
+        public async Task<IActionResult> LikeUnlikePost([FromBody] LikeUnlikeViewModel model)
+        {
+            var userId = await GetUserIdAsync(this._userManager);
+            model.UserId = userId;
+            var response = await _postService.LikeUnlikePost(model);
+            return Ok(response);
+        }
+
+        [Route("postView")]
+        [HttpPost]
+        public async Task<IActionResult> PostView([FromBody] PostViewsViewModel model)
+        {
+            var userId = await GetUserIdAsync(this._userManager);
+            model.UserId = userId;
+            var response = await _postService.PostView(model);
+            return Ok(response);
+        }
+
+
 
 
     }

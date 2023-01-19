@@ -1,0 +1,12 @@
+img {
+    margin-top: 150px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  h1{
+    font-weight: 500;
+    color: orange;
+    margin-top: 40px;
+  }

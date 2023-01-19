@@ -13,6 +13,7 @@ using LMS.Common.ViewModels.School;
 using LMS.Common.ViewModels.Class;
 using LMS.Common.ViewModels.User;
 using Newtonsoft.Json;
+using LMS.Common.ViewModels.Course;
 
 namespace LMS.Services
 {
@@ -24,12 +25,16 @@ namespace LMS.Services
         private IGenericRepository<PostTag> _postTagRepository;
         private IGenericRepository<School> _schoolRepository;
         private IGenericRepository<Class> _classRepository;
+        private IGenericRepository<Course> _courseRepository;
         private IGenericRepository<User> _userRepository;
+        private IGenericRepository<Like> _likeRepository;
+        private IGenericRepository<View> _viewRepository;
         private readonly IBlobService _blobService;
+        private readonly IUserService _userService;
         private readonly IBigBlueButtonService _bigBlueButtonService;
         private IConfiguration _config;
 
-        public PostService(IMapper mapper, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<User> userRepository, IBlobService blobService, IBigBlueButtonService bigBlueButtonService, IConfiguration config)
+        public PostService(IMapper mapper, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<User> userRepository, IGenericRepository<Like> likeRpository, IGenericRepository<View> viewRepository, IBlobService blobService, IUserService userService, IBigBlueButtonService bigBlueButtonService, IConfiguration config)
         {
             _mapper = mapper;
             _postRepository = postRepository;
@@ -37,12 +42,16 @@ namespace LMS.Services
             _postTagRepository = postTagRepository;
             _schoolRepository = schoolRepository;
             _classRepository = classRepository;
+            _courseRepository = courseRepository;
             _userRepository = userRepository;
+            _likeRepository = likeRpository;
+            _viewRepository = viewRepository;
             _blobService = blobService;
+            _userService = userService;
             _bigBlueButtonService = bigBlueButtonService;
             _config = config;
         }
-        public async Task<string> SavePost(PostViewModel postViewModel, string createdById)
+        public async Task<PostViewModel> SavePost(PostViewModel postViewModel, string createdById)
         {
             postViewModel.PostTags = JsonConvert.DeserializeObject<string[]>(postViewModel.PostTags.First());
 
@@ -98,9 +107,11 @@ namespace LMS.Services
                 var model = new NewMeetingViewModel();
                 model.meetingName = postViewModel.Title;
                 var url = await _bigBlueButtonService.Create(model);
-                return url;
+                //return url;
             }
-            return null;
+            postViewModel.Id = post.Id;
+            return postViewModel;
+            //return _mapper.Map<PostViewModel>(post);
         }
 
         async Task SaveUploadImages(IEnumerable<IFormFile> uploadImages, Guid postId, string createdById)
@@ -188,7 +199,7 @@ namespace LMS.Services
             }
         }
 
-        public async Task<PostAttachmentViewModel> GetReelById(Guid id)
+        public async Task<PostAttachmentViewModel> GetReelById(Guid id, string userId)
         {
             var postAttachment = await _postAttachmentRepository.GetAll()
                 .Include(x => x.Post)
@@ -196,6 +207,17 @@ namespace LMS.Services
                 .Where(x => x.Id == id).FirstOrDefaultAsync();
 
             var result = _mapper.Map<PostAttachmentViewModel>(postAttachment);
+            result.Post.Likes = await _userService.GetLikesOnPost(postAttachment.Post.Id);
+            result.Post.Views = await _userService.GetViewsOnPost(postAttachment.Post.Id);
+
+            if (result.Post.Likes.Any(x => x.UserId == userId && x.PostId == postAttachment.Post.Id))
+            {
+                result.Post.IsPostLikedByCurrentUser = true;
+            }
+            else
+            {
+                result.Post.IsPostLikedByCurrentUser = false;
+            }
 
             if (result.Post.PostAuthorType == (int)PostAuthorTypeEnum.School)
             {
@@ -208,11 +230,16 @@ namespace LMS.Services
                 var classes = _classRepository.GetById(result.Post.ParentId);
                 result.Class = _mapper.Map<ClassViewModel>(classes);
             }
+            //if (result.Post.PostAuthorType == (int)PostAuthorTypeEnum.Course)
+            //{
+            //    var course = _courseRepository.GetById(result.Post.ParentId);
+            //    result.Course = _mapper.Map<CourseViewModel>(course);
+            //}
 
             //if (result.Post.PostAuthorType == (int)PostAuthorTypeEnum.User)
             //{
             //    var user = _userRepository.GetById(result.Post.ParentId);
-            //    result.User = _mapper.Map<UserViewModel>(user);
+            //    result.User = _mapper.Map<UserDetailsViewModel>(user);
             //}
 
             return result;
@@ -220,7 +247,7 @@ namespace LMS.Services
 
         public async Task<bool> PinUnpinPost(Guid attachmentId, bool isPinned)
         {
-            var post = await _postRepository.GetAll().Where(x => x.Id ==  attachmentId).FirstOrDefaultAsync();
+            var post = await _postRepository.GetAll().Where(x => x.Id == attachmentId).FirstOrDefaultAsync();
 
             if (post != null)
             {
@@ -233,6 +260,56 @@ namespace LMS.Services
             return false;
 
 
+        }
+
+        public async Task<List<LikeViewModel>> LikeUnlikePost(LikeUnlikeViewModel model)
+        {
+
+            var userLike = await _likeRepository.GetAll().Where(x => x.UserId == model.UserId && x.PostId == model.PostId).FirstOrDefaultAsync();
+
+            if (userLike != null)
+            {
+                _likeRepository.Delete(userLike.Id);
+                _likeRepository.Save();
+                var totalLikes = await _likeRepository.GetAll().Where(x => x.PostId == model.PostId).ToListAsync();
+                return _mapper.Map<List<LikeViewModel>>(totalLikes);
+            }
+
+            else
+            {
+                var like = new Like
+                {
+                    UserId = model.UserId,
+                    PostId = model.PostId,
+                    DateTime = DateTime.UtcNow,
+                    CommentId = model.CommentId == Guid.Empty ? null : model.CommentId,
+
+                };
+
+                _likeRepository.Insert(like);
+                _likeRepository.Save();
+                var totalLikes = await _likeRepository.GetAll().Where(x => x.PostId == model.PostId).ToListAsync();
+                return _mapper.Map<List<LikeViewModel>>(totalLikes);
+            }
+            return null;
+        }
+
+        public async Task<int> PostView(PostViewsViewModel model)
+        {
+            var isUserViewExist = await _viewRepository.GetAll().Where(x => x.UserId == model.UserId && x.PostId == model.PostId).FirstOrDefaultAsync();
+            if (isUserViewExist == null)
+            {
+                var view = new View
+                {
+                    UserId = model.UserId,
+                    PostId = model.PostId,
+                };
+
+                _viewRepository.Insert(view);
+                _viewRepository.Save();
+                return  _viewRepository.GetAll().Where(x => x.PostId == model.PostId).Count();
+            }
+            return _viewRepository.GetAll().Where(x => x.PostId == model.PostId).Count();
         }
     }
 }

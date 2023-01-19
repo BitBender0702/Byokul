@@ -1,0 +1,1503 @@
+<div *ngIf="isDataLoaded">
+  <section class="f-poppins">
+    <side-bar [isOpenSidebar]="isOpenSidebar"></side-bar>
+    <div class="main_content">
+
+      <div class="create-post-header d-flex justify-content-between d-none d-xl-flex">
+        <div class="search-header position-relative">
+          <input type="search" class="form-control h_44">
+          <button type="button" class="btn search-icon"><img src="../../../assets/images/school/search-gray.svg"></button>
+        </div>
+        <button (click)="openPostModal()" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44">{{'CreatePost'| translate }}</button>
+      </div>
+      <div class="live-header d-flex align-items-center justify-content-between">
+        <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark  d-xl-none"><img
+            src="images/arrow-left.svg" /> {{'Back'| translate }}</button>
+        <span class="logo_mobile d-xl-none">
+          <img src="../../../assets/images/logo.svg" />
+        </span>
+        <div class="d-xl-none">
+          <button type="button" class="mobile-search border_btn" onclick="openSearch()"><img
+              src="../../../assets/images/search-lg.svg" /></button>
+          <button type="button" class="mobile-search border_btn" onclick="openSidebar()"><img
+              src="../../../assets/images/menu.svg" /></button>
+        </div>
+      </div>
+      
+      <div class="school-profile-tabs d-flex align-content-center justify-content-center">
+        <div class="custom-tabs profile-custom-tabs">
+          <ul class="nav nav-tabs border-0 before-none" id="myTab" role="tablist">
+            <li class="nav-item ps-0 mb-0" role="presentation">
+              <button [ngClass]="myFeeds.length > 0 ? 'nav-link active':'nav-link'" id="school-tab" data-bs-toggle="tab"
+                data-bs-target="#school-feed-tab-pane" type="button" role="tab" aria-controls="school-feed-tab-pane"
+                aria-selected="true">{{'MyFeed'| translate }}</button>
+            </li>
+            <li class="nav-item ps-0 mb-0" role="presentation">
+              <button (click)="getGlobalFeeds()" [ngClass]="myFeeds.length == 0 ? 'nav-link active':'nav-link'" class="nav-link" id="classes-tab" data-bs-toggle="tab" data-bs-target="#classes-tab-pane"
+                type="button" role="tab" aria-controls="classes-tab-pane" aria-selected="false" tabindex="-1">{{'GlobalFeed'| translate }}</button>
+            </li>
+          </ul>
+        </div>
+        
+      </div>
+
+      <div class="tab-content position-relative active" id="pills-tabContent">
+        <div [ngClass]="myFeeds.length > 0 ? 'tab-pane fade show active':'tab-pane fade show'" id="school-feed-tab-pane" role="tabpanel"
+          aria-labelledby="school-feed-tab" tabindex="0">
+          <div class="button-list-grid">
+            <button [ngClass]="isProfileGrid ? 'btn border-btn active d-inline-flex align-items-center justify-content-center' : 'btn border-btn d-inline-flex align-items-center justify-content-center'" (click)="profileGrid()" type="button" >
+              <img src="../../../../assets/images/Filter.svg" />
+            </button>
+            <button [ngClass]="!isProfileGrid ? 'btn border-btn active d-inline-flex align-items-center justify-content-center' : 'btn border-btn d-inline-flex align-items-center justify-content-center'" (click)="profileList()" type="button" class="btn border-btn d-inline-flex align-items-center justify-content-center">
+              <img src="../../../../assets/images/Category.svg" />
+            </button>
+          </div>
+          <div class="feed-section mt-0">
+            <div class="feed-box position-relative">
+              <!-- <button type="button" class="bg-transparent border-0 next-feed"><img
+                  src="../../../assets/images/chevron-right-circle.svg" /></button> -->
+              <div class="feedbox-inner d-flex ">
+                <carousel
+                [itemsPerSlide]="itemsPerSlide"
+                [singleSlideOffset]="singleSlideOffset"
+                [interval]="0"
+                [noWrap]="noWrap">
+                <div *ngFor="let post of myFeeds">
+                  <div *ngIf="post.postType == 3">
+                  <slide *ngFor="let postAttachment of post.postAttachments">
+                    <div *ngIf="postAttachment.fileType == 2">
+                <div class="feedimg-box position-relative text-light position-relative">
+                  <a (click)="openReelsViewModal(postAttachment.id)" style="cursor: pointer;">
+                    <div class="videofile">
+                      <video preload="metadata" style="height: 300px;">
+                        <source [src]="postAttachment.fileUrl" type="video/mp4"/>
+                      </video>
+                    </div>
+                  </a>
+                  <!-- <iframe width="100%" height="300" src="https://www.youtube.com/embed/hAP2QF--2Dg" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe> -->
+                  <div class="pinned-view d-flex  justify-content-between align-items-start">
+                    <button type="button" class="view font_12 bg-transparent border-0 text-light">
+                      <img src="../../../assets/images/eye-light.svg" /> {{post.views.length}}
+                    </button>
+                    <button type="button" class="pinned bg-transparent border-0">
+                      <img src="../../../assets/images/pinned-orange.svg" />
+                    </button>
+                  </div>
+                  <div class="feed-name font_14 text_sec1">
+                      <a *ngIf="post.postAuthorType == 1" (click)="getSelectedSchool(post.parentName)" class="routeLink">
+                        <img [src]="post.parentImageUrl"/> {{post.parentName}}
+                      </a>
+                      <a *ngIf="post.postAuthorType == 2" (click)="getSelectedClass(post.parentName,post.schoolName)" [routerLink]="['/profile/class', post.parentName]" class="routeLink">
+                        <img [src]="post.parentImageUrl"/> {{post.parentName}}
+                      </a>
+                      <a *ngIf="post.postAuthorType == 3" (click)="getSelectedCourse(post.parentName,post.schoolName)" class="routeLink">
+                        <img [src]="post.parentImageUrl"/> {{post.parentName}}
+                      </a>
+                      <a *ngIf="post.postAuthorType == 4" (click)="getUserDetails(post.parentId)" class="routeLink">
+                        <img [src]="post.parentImageUrl"/> {{post.parentName}}
+                      </a>
+                    <!-- <img [src]="school.avatar"/> {{school.schoolName}} -->
+                  </div>
+                  <div class="feed-title font_14 text_sec1 d-flex align-content-center fw_600">
+                    {{post.title}}
+                  </div>
+                </div>
+                </div>
+                </slide>
+                </div>
+                </div>
+              </carousel>
+
+              </div>
+            </div>
+          </div>
+          <div class="school-grid-view grid-active" *ngIf="isProfileGrid">
+            <div *ngIf="myFeeds.length == 0" style="font-weight: 500;color: orange; margin-top: 40px;font-size: 40px" class="text-center font-34">Posts from your friends and schools you follow will appear here</div>
+            <ng-container *ngFor="let post of myFeeds">
+              <div *ngIf="post.postType == 1" class="school-grid-box position-relative">
+              <div class="schoolgrid-header d-flex align-items-center position-relative">
+                <div class="school-gridprofile-icon">
+                  <!-- <img [src]="post.parentImageUrl"/> -->
+                  <a *ngIf="post.postAuthorType == 1" (click)="getSelectedSchool(post.parentName)" class="routeLink">
+                    <img [src]="post.parentImageUrl"/>
+                  </a>
+                  <a *ngIf="post.postAuthorType == 2" (click)="getSelectedClass(post.parentName,post.schoolName)"  class="routeLink">
+                    <img [src]="post.parentImageUrl"/>
+                  </a>
+                  <a *ngIf="post.postAuthorType == 3" (click)="getSelectedCourse(post.parentName,post.schoolName)" class="routeLink">
+                    <img [src]="post.parentImageUrl"/>
+                  </a>
+                  <a *ngIf="post.postAuthorType == 4" (click)="getUserDetails(post.parentId)" class="routeLink">
+                    <img [src]="post.parentImageUrl"/>
+                  </a>
+                </div>
+                <h2 class="d-inline-block font_20 fw_600 text_sec1 mb-0">
+                  <!-- {{post.title}} -->
+                  <a *ngIf="post.postAuthorType == 1" (click)="getSelectedSchool(post.parentName)" class="routeLink">
+                    {{post.title}}
+                  </a>
+                  <a *ngIf="post.postAuthorType == 2" (click)="getSelectedClass(post.parentName,post.schoolName)" class="routeLink">
+                    {{post.title}}
+                  </a>
+                  <a *ngIf="post.postAuthorType == 3" (click)="getSelectedCourse(post.parentName,post.schoolName)" class="routeLink">
+                    {{post.title}}
+                  </a>
+                  <a *ngIf="post.postAuthorType == 4" (click)="getUserDetails(post.parentId)" class="routeLink">
+                    {{post.title}}
+                  </a>
+                </h2>
+                <p *ngIf="post.dateTime != null" class="font_14 school-grid-date d-inline-block mb-0">
+                  {{post.dateTime | date : "MMMM d"}} - {{post.dateTime | date : "hh mm"}}
+                   <!-- <span class="fw_600 ">11:30 - 13:50</span> -->
+                  </p>
+                    <!-- <button *ngIf="post.isPinned && isOwner" (click)="pinUnpinPost(post.id,false)" type="button" class="bg-transparent border-0 pinned-grid-chat">
+                      <img class="w-auto h-auto" src="../../../../assets/images/pinned-orange.svg" />
+                    </button>
+                    <button *ngIf="!post.isPinned && isOwner" (click)="pinUnpinPost(post.id,true)" type="button" class="bg-transparent border-0 pinned-grid-chat">
+                     <img class="w-auto h-auto" src="../../../../assets/images/pinned-gray.svg" />
+                    </button>    -->
+              </div>
+              
+              <div class="school-grid-body" (click)="openPostsViewModal(post)">
+                <p class="text_sec1 font_14" style="cursor: pointer;">{{post.description}}</p>
+                <div class="teacher-tags tag-box hashtag_box">
+                  <span *ngFor="let tag of post.postTags" class="custom-tag">#{{tag.postTagValue}}</span>
+                </div>
+                <div *ngIf="post.postAttachments.length" class="school-grid-thumbnail new-school-grid-thumbnail" style="cursor: pointer;">
+                  <div class="row gx-1 h-100">
+
+                    <div *ngIf="post.postAttachments.length == 1"  class="col-md-12 h-100">
+                      <div class="school-large-thumbnail shadow-thumnail position-relative">
+
+                              <video *ngIf="post.postAttachments.length == 1 && post.postAttachments[0]?.fileType==2" (click)="openPostsViewModal(post)" preload="metadata" class="w-100" style="cursor: pointer;">
+                                <source [src]="post.postAttachments[0]?.fileUrl" type="video/mp4"/>
+                              </video>
+                                <img *ngIf="post.postAttachments[0]?.fileType==1" style="cursor: pointer;" (click)="openPostsViewModal(post)" class="w-100" [src]="post.postAttachments[0]?.fileUrl" />
+                      </div>
+                  </div>
+
+                  <div *ngIf="post.postAttachments.length == 2"  class="col-md-12 h-100">
+                    <div class="school-large-thumbnail shadow-thumnail position-relative">
+                        <ng-container *ngFor="let attachment of post.postAttachments">
+                      <video *ngIf="attachment?.fileType==2" (click)="openPostsViewModal(post)" preload="metadata" class="w-100" style="cursor: pointer;">
+                        <source [src]="attachment?.fileUrl" type="video/mp4"/>
+                      </video>
+                      <img style="cursor: pointer;" *ngIf="attachment?.fileType==1" (click)="openPostsViewModal(post)" class="w-100" [src]="attachment?.fileUrl" />
+                       </ng-container>
+
+                    </div>
+                  </div>
+
+                  <div *ngIf="post.postAttachments.length == 3" class="col-md-8 h-100">
+                    <div class="school-large-thumbnail shadow-thumnail position-relative">
+                            <video *ngIf="post.postAttachments[0]?.fileType==2" (click)="openPostsViewModal(post)" preload="metadata" class="w-100" style="cursor: pointer;margin-top:-700px;">
+                              <source [src]="post.postAttachments[0]?.fileUrl" type="video/mp4"/>
+                            </video>
+                              <img *ngIf="post.postAttachments[0]?.fileType==1" style="cursor: pointer" class="w-100" (click)="openPostsViewModal(post)" [src]="post.postAttachments[0]?.fileUrl" />
+                    </div>
+                 </div>
+
+
+                  <div *ngIf="post.postAttachments.length == 3" class="col-md-4 h-100">
+                      <div class="h-100 medium_thumbox d-flex">
+                          <div class="medium-thumnail">
+                            <video *ngIf="post.postAttachments[1]?.fileType==2" (click)="openPostsViewModal(post)" preload="metadata" class="w-100" style="cursor: pointer;">
+                              <source [src]="post.postAttachments[1]?.fileUrl" type="video/mp4"/>
+                            </video>
+                              <img *ngIf="post.postAttachments[1]?.fileType==1" class="w-100" (click)="openPostsViewModal(post)" [src]="post.postAttachments[1]?.fileUrl" style="cursor: pointer;" />                                        </div>
+                          <div class="medium-thumnail">
+                            <video *ngIf="post.postAttachments[2]?.fileType==2" (click)="openPostsViewModal(post)" preload="metadata" class="w-100" style="cursor: pointer;">
+                              <source [src]="post.postAttachments[2]?.fileUrl" type="video/mp4"/>
+                            </video>
+                              <img *ngIf="post.postAttachments[2]?.fileType==1" class="w-100" (click)="openPostsViewModal(post)" [src]="post.postAttachments[2]?.fileUrl" style="cursor: pointer;"/>                                        </div>
+                      </div>
+                  </div>
+
+                  <div *ngIf="post.postAttachments.length > 3" class="col-md-8 h-100">
+                    <div class="school-large-thumbnail shadow-thumnail position-relative">
+                            <video *ngIf="post.postAttachments[0]?.fileType==2" (click)="openPostsViewModal(post)" preload="metadata" class="w-100" style="cursor: pointer;">
+                              <source [src]="post.postAttachments[0]?.fileUrl" type="video/mp4"/>
+                            </video>
+                              <img *ngIf="post.postAttachments[0]?.fileType==1" class="w-100" (click)="openPostsViewModal(post)" [src]="post.postAttachments[0]?.fileUrl" style="cursor: pointer;"/>
+                    </div>
+                 </div>
+
+                 <div *ngIf="post.postAttachments.length > 3" class="col-md-4 h-100">
+                  <div class="h-100 medium_thumbox d-flex">
+                      <div class="medium-thumnail">
+                          <img class="w-100 position-relative" (click)="openPostsViewModal(post)" src="../../../../assets/images/blurImage.jfif" style="cursor: pointer;" />   
+                          <div class="position-absolute" style="margin-top: 55px; margin-left: 200px; font-size: 52px; font-weight: 600;">
+                            +{{post.postAttachments.length - 3}}</div>                                    
+                         </div>
+                      <div class="medium-thumnail">
+                        <video *ngIf="post.postAttachments[1]?.fileType==2" (click)="openPostsViewModal(post)" preload="metadata" class="w-100" style="cursor: pointer;">
+                          <source [src]="post.postAttachments[1]?.fileUrl" type="video/mp4"/>
+                        </video>
+                          <img *ngIf="post.postAttachments[1]?.fileType==1" class="w-100" (click)="openPostsViewModal(post)" [src]="post.postAttachments[1]?.fileUrl" style="cursor: pointer;"/>                                        </div>
+                  </div>
+              </div>
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="post.postAttachments.length" class="school-grid-footer above-thumbnail">
+                <button type="button" class="bg-transparent border-0 function-btns text-light">
+                  <img src="../../../../assets/images/eye-light.svg" class="d-block mx-auto" />
+                  {{post.views.length}}
+                </button>
+                <button (click)="likeUnlikePosts(post.id,true)" type="button" class="bg-transparent border-0 function-btns text-light">
+                  <img *ngIf="post.isPostLikedByCurrentUser" src="../../../assets/images/heart-red.svg" class="d-block mx-auto" />
+                  <img *ngIf="!post.isPostLikedByCurrentUser" src="../../../../assets/images/Heart-light.svg" class="d-block mx-auto" />
+
+                  <span *ngIf="likesLength != undefined && currentLikedPostId== post.id">{{likesLength}}</span>
+                  <span *ngIf="currentLikedPostId!= post.id">{{post.likes.length}}</span>
+                </button>
+                <button type="button" class="bg-transparent border-0 function-btns text-light">
+                  <img src="../../../../assets/images/Chat-light.svg" class="d-block mx-auto" />
+                  34
+                </button>
+                <button type="button" class="bg-transparent border-0 function-btns text-light">
+                  <img src="../../../../assets/images/Bookmark-light.svg" class="d-block mx-auto" />
+                  954
+                </button>
+                <button type="button" class="bg-transparent border-0 function-btns text-light">
+                  <img src="../../../../assets/images/Upload-light.svg" class="d-block mx-auto" />
+                  954
+                </button>
+              </div>
+
+              <div *ngIf="post.postAttachments.length == 0" class="school-grid-footer">
+                <button type="button" class="bg-transparent border-0 function-btns text-light">
+                  <img src="../../../../assets/images/eye.svg" class="d-block mx-auto" />
+                  <span class="textBlack">{{post.views.length}}</span>
+                </button>
+                <button (click)="likeUnlikePosts(post.id,true)" type="button" class="bg-transparent border-0 function-btns text-light">
+                  <img *ngIf="post.isPostLikedByCurrentUser" src="../../../assets/images/heart-red.svg" class="d-block mx-auto" />
+                  <img *ngIf="!post.isPostLikedByCurrentUser" src="../../../../assets/images/Heart-dark.svg" class="d-block mx-auto" />
+
+                  <span class="textBlack" *ngIf="likesLength != undefined && currentLikedPostId== post.id">{{likesLength}}</span>
+                  <span class="textBlack" *ngIf="currentLikedPostId!= post.id">{{post.likes.length}}</span>
+                </button>
+                <button type="button" class="bg-transparent border-0 function-btns text-light">
+                  <img src="../../../../assets/images/Chat-dark.svg" class="d-block mx-auto" />
+                  <span class="textBlack">34</span>
+                </button>
+                <button type="button" class="bg-transparent border-0 function-btns text-light">
+                  <img src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto" />
+                  <span class="textBlack">954</span>
+                </button>
+                <button type="button" class="bg-transparent border-0 function-btns text-light">
+                  <img src="../../../../assets/images/Upload-dark.svg" class="d-block mx-auto" />
+                  <span class="textBlack">954</span>
+                </button>
+              </div>
+              </div>
+          </ng-container>
+
+          </div>
+
+          <div class="list-schol-profile" *ngIf="!isProfileGrid">
+            <div [ngClass]="isGridItemInfo ? 'd-block school-grid-box position-relative school-list-box h-100':'d-none school-grid-box position-relative school-list-box h-100'" *ngIf="gridItemInfo!=undefined">
+              <div class="row post-list-preview-sec">
+                <div [ngClass]="gridItemInfo.postAttachments.length>0 ? 'd-block col-lg-6':'d-none'">
+                  <carousel>
+                  <div *ngFor="let postAttachment of gridItemInfo.postAttachments" class="school-grid-thumbnail">
+                    <slide *ngIf="postAttachment.fileType==2">
+                    <div *ngIf="postAttachment?.fileType==2" class="videofile">
+                      <video style="height: 300px;" controls>
+                        <source [src]="postAttachment?.fileUrl" type="video/mp4"/>
+                      </video>
+                    </div>
+                    </slide>
+                    <slide *ngIf="postAttachment?.fileType==1">
+                      <img *ngIf="postAttachment?.fileType==1" class="w-100" [src]="postAttachment?.fileUrl" />
+                    </slide>
+                  </div>
+                  </carousel>
+                </div>
+                <div [ngClass]="gridItemInfo.postAttachments.length>0 ? 'col-lg-6':'col-lg-12 heightForText'">
+                  <div class="class-preview-right position-relative h-100">
+                    <button (click)="hideGridItemInfo('FromMyFeeds')" type="button" class="bg-transparent border-0 close-preview"><img
+                        src="../../../../assets/images/cross.svg" /></button>
+                    <div class="schoolgrid-header">
+                      <div class="d-flex align-items-center position-relative">
+                        <div class="school-gridprofile-icon">
+                          <a *ngIf="gridItemInfo.postAuthorType == 1" (click)="getSelectedSchool(gridItemInfo.parentName)" class="routeLink">
+                            <img [src]="gridItemInfo.parentImageUrl">
+                          </a>
+                          <a *ngIf="gridItemInfo.postAuthorType == 2" (click)="getSelectedClass(gridItemInfo.parentName,gridItemInfo.schoolName)" class="routeLink">
+                            <img [src]="gridItemInfo.parentImageUrl">
+                          </a>
+                          <a *ngIf="gridItemInfo.postAuthorType == 3" (click)="getSelectedCourse(gridItemInfo.parentName,gridItemInfo.schoolName)" class="routeLink">
+                            <img [src]="gridItemInfo.parentImageUrl">
+                          </a>
+                          <a *ngIf="gridItemInfo.postAuthorType == 4" (click)="getUserDetails(gridItemInfo.parentId)" class="routeLink">
+                            <img [src]="gridItemInfo.parentImageUrl">
+                          </a>
+                        </div>
+                        <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">
+                          <a *ngIf="gridItemInfo.postAuthorType == 1" (click)="getSelectedSchool(gridItemInfo.parentName)" class="routeLink">
+                            {{gridItemInfo.title}}
+                          </a>
+                          <a *ngIf="gridItemInfo.postAuthorType == 2" (click)="getSelectedClass(gridItemInfo.parentName,gridItemInfo.schoolName)" class="routeLink">
+                            {{gridItemInfo.title}}
+                          </a>
+                          <a *ngIf="gridItemInfo.postAuthorType == 3" (click)="getSelectedCourse(gridItemInfo.parentName,gridItemInfo.schoolName)" class="routeLink">
+                            {{gridItemInfo.title}}
+                          </a>
+                          <a *ngIf="gridItemInfo.postAuthorType == 4" (click)="getUserDetails(gridItemInfo.parentId)" class="routeLink">
+                            {{gridItemInfo.title}}
+                          </a>
+                        </h2>
+                      </div>
+      
+                      <!-- <p class="font_14 school-grid-date d-inline-block mb-0">
+                        {{gridItemInfo.dateTime | date : "MMMM d"}} - {{gridItemInfo.dateTime | date : "hh mm"}}  
+                      </p> -->
+                    </div>
+                    <!-- <p class="text_sec1 font_14 pt-3">{{gridItemInfo.description}}</p> -->
+                    <!-- <div *ngIf="gridItemInfo.postTags.length != 0" class="teacher-tags tag-box hashtag_box">
+                      <span *ngFor="let tag of gridItemInfo.postTags" class="custom-tag">{{tag.postTagValue}}</span>
+                    </div> -->
+                    <div class="school-grid-footer preview-right-action">
+                      <button type="button" class="bg-transparent border-0 function-btns">
+                        <img src="../../../../assets/images/eye.svg" class="d-block mx-auto">
+                        <span class="textBlack">{{gridItemInfo.views.length}}</span>
+                      </button>
+                      <button (click)="likeUnlikePosts(gridItemInfo.id,true)" type="button" class="bg-transparent border-0 function-btns text-light">
+                        <img *ngIf="gridItemInfo.isPostLikedByCurrentUser" src="../../../assets/images/heart-red.svg" class="d-block mx-auto" />
+                        <img *ngIf="!gridItemInfo.isPostLikedByCurrentUser" src="../../../../assets/images/Heart-dark.svg" class="d-block mx-auto" />
+      
+                        <span class="textBlack" *ngIf="likesLength != undefined && currentLikedPostId== gridItemInfo.id">{{likesLength}}</span>
+                        <span class="textBlack" *ngIf="currentLikedPostId!= gridItemInfo.id">{{gridItemInfo.likes.length}}</span>
+                      </button>
+                      <button (click)="openPostsViewModal(gridItemInfo)" type="button" class="bg-transparent border-0 function-btns">
+                        <img src="../../../../assets/images/Chat-dark.svg" class="d-block mx-auto">
+                        34
+                      </button>
+                      <button type="button" class="bg-transparent border-0 function-btns">
+                        <img src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto">
+                        954
+                      </button>
+                      <button type="button" class="bg-transparent border-0 function-btns">
+                        <img src="../../../../assets/images/Upload-dark.svg" class="d-block mx-auto">
+                        954
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div> 
+            <div *ngIf="myFeeds.length == 0" style="font-weight: 500;color: orange; margin-top: 40px;font-size: 40px" class="text-center font-34">Posts from your friends and schools you follow will appear here</div>
+            <div class="row">
+              <ng-container *ngFor="let post of myFeeds">
+                <div *ngIf="post.postType == 1" class="col-md-6 col-xl-4">
+                  <div class="school-grid-box position-relative school-list-box h-100 mb-0">
+                    <div class="schoolgrid-header d-flex align-items-center position-relative">
+                      <div class="school-gridprofile-icon">
+                        <a *ngIf="post.postAuthorType == 1" (click)="getSelectedSchool(post.parentName)" class="routeLink">
+                          <img [src]="post.parentImageUrl" />
+                        </a>
+                        <a *ngIf="post.postAuthorType == 2" (click)="getSelectedClass(post.parentName,post.schoolName)" class="routeLink">
+                          <img [src]="post.parentImageUrl" />
+                        </a>
+                        <a *ngIf="post.postAuthorType == 3" (click)="getSelectedCourse(post.parentName,post.schoolName)" class="routeLink">
+                          <img [src]="post.parentImageUrl" />
+                        </a>
+                        <a *ngIf="post.postAuthorType == 4" (click)="getUserDetails(post.parentId)" class="routeLink">
+                          <img [src]="post.parentImageUrl" />
+                        </a>
+                      </div>
+                      <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">
+                        <a *ngIf="post.postAuthorType == 1" (click)="getSelectedSchool(post.parentName)" class="routeLink">
+                          {{post.title}}
+                        </a>
+                        <a *ngIf="post.postAuthorType == 2" (click)="getSelectedClass(post.parentName,post.schoolName)" class="routeLink">
+                          {{post.title}}
+                        </a>
+                        <a *ngIf="post.postAuthorType == 3" (click)="getSelectedCourse(post.parentName,post.schoolName)" class="routeLink">
+                          {{post.title}}
+                        </a>
+                        <a *ngIf="post.postAuthorType == 4" (click)="getUserDetails(post.parentId)" class="routeLink">
+                          {{post.title}}
+                        </a>
+                      </h2>
+                      <!-- <button *ngIf="post.isPinned && isOwner" (click)="pinUnpinPost(post.id,false)" type="button" class="bg-transparent border-0 pinned-grid-chat">
+                            <img src="../../../../assets/images/pinned-orange.svg" />
+                      </button>
+                      <button *ngIf="!post.isPinned && isOwner" (click)="pinUnpinPost(post.id,true)" type="button" class="bg-transparent border-0 pinned-grid-chat">
+                          <img src="../../../../assets/images/pinned-gray.svg" />
+                      </button>    -->
+                    </div>
+                    <div class="school-grid-body">
+                      <div class="d-flex justify-content-between date-view-list">
+                        <div>
+                        <p *ngIf="post.dateTime != null" class="font_14 school-grid-date d-inline-block mb-0">
+                          {{post.dateTime | date : "MMMM d"}} - {{post.dateTime | date : "hh mm"}}
+                        </p>
+                      </div>
+                        <button type="button" class="view font_12 bg-transparent border-0 ">
+                          <img src="../../../../assets/images/eye.svg" class="me-2" /> {{post.views.length}}
+                        </button>
+                      </div>
+                      <div class="school-grid-thumbnail" style="cursor: pointer;" (click)="showPostDiv(post.id,'FromMyFeeds')">
+                        <div class="row gx-1">
+                          <div class="col-md-12">
+                            <div class="school-large-thumbnail shadow-thumnail position-relative">
+                              <div *ngIf="post.postAttachments[0]?.fileUrl == null">{{post.description}}</div>
+                              <div *ngIf="post.postAttachments[0]?.fileUrl?.fileType==2" class="videofile">
+                                <video preload="metadata" style="height: 300px;">
+                                  <source [src]="post.postAttachments[0]?.fileUrl" type="video/mp4"/>
+                                </video>
+                              </div>
+                              <img *ngIf="post.postAttachments[0]?.fileType==1" class="w-100" [src]="post.postAttachments[0].fileUrl" />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+
+
+        </div>
+        <div [ngClass]="myFeeds.length == 0 ? 'tab-pane fade show active':'tab-pane fade show'" class="tab-pane fade show" id="classes-tab-pane" role="tabpanel" aria-labelledby="school-feed-tab"
+          tabindex="0">
+          <div class="button-list-grid">
+            <button [ngClass]="isProfileGrid ? 'btn border-btn active d-inline-flex align-items-center justify-content-center' : 'btn border-btn d-inline-flex align-items-center justify-content-center'" (click)="profileGrid()" type="button" >
+              <img src="../../../../assets/images/Filter.svg" />
+            </button>
+            <button [ngClass]="!isProfileGrid ? 'btn border-btn active d-inline-flex align-items-center justify-content-center' : 'btn border-btn d-inline-flex align-items-center justify-content-center'" (click)="profileList()" type="button" class="btn border-btn d-inline-flex align-items-center justify-content-center">
+              <img src="../../../../assets/images/Category.svg" />
+            </button>
+          </div>
+          <div class="feed-section mt-0">
+            <div class="feed-box position-relative">
+              <!-- <button type="button" class="bg-transparent border-0 next-feed"><img
+                  src="../../../assets/images/chevron-right-circle.svg" /></button> -->
+              <div class="feedbox-inner d-flex ">
+                <carousel
+                [itemsPerSlide]="itemsPerSlide"
+                [singleSlideOffset]="singleSlideOffset"
+                [interval]="0"
+                [noWrap]="noWrap">
+                <div *ngFor="let post of globalFeeds">
+                  <div *ngIf="post.postType == 3">
+                  <slide *ngFor="let postAttachment of post.postAttachments">
+                    <div *ngIf="postAttachment.fileType == 2">
+                <div class="feedimg-box position-relative text-light position-relative">
+                  <a (click)="openReelsViewModal(postAttachment.id)" style="cursor: pointer;">
+                    <div class="videofile">
+                      <video preload="metadata" style="height: 300px;">
+                        <source [src]="postAttachment.fileUrl" type="video/mp4"/>
+                      </video>
+                    </div>
+                  </a>
+                  <!-- <iframe width="100%" height="300" src="https://www.youtube.com/embed/hAP2QF--2Dg" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe> -->
+                  <div class="pinned-view d-flex  justify-content-between align-items-start">
+                    <button type="button" class="view font_12 bg-transparent border-0 text-light">
+                      <img src="../../../assets/images/eye-light.svg" /> {{post.views.length}}
+                    </button>
+                    <!-- <button type="button" class="pinned bg-transparent border-0">
+                      <img src="../../../assets/images/pinned-light.svg" />
+                    </button> -->
+                  </div>
+                  <div class="feed-name font_14 text_sec1">
+                      <a *ngIf="post.postAuthorType == 1" (click)="getSelectedSchool(post.parentName)" class="routeLink">
+                        <img [src]="post.parentImageUrl"/> {{post.parentName}}
+                      </a>
+                      <a *ngIf="post.postAuthorType == 2" (click)="getSelectedClass(post.parentName,post.schoolName)" class="routeLink">
+                        <img [src]="post.parentImageUrl"/> {{post.parentName}}
+                      </a>
+                      <a *ngIf="post.postAuthorType == 3" (click)="getSelectedCourse(post.parentName,post.schoolName)" class="routeLink">
+                        <img [src]="post.parentImageUrl"/> {{post.parentName}}
+                      </a>
+                      <a *ngIf="post.postAuthorType == 4" (click)="getUserDetails(post.parentId)" class="routeLink">
+                        <img [src]="post.parentImageUrl"/> {{post.parentName}}
+                      </a>
+                    <!-- <img [src]="school.avatar"/> {{school.schoolName}} -->
+                  </div>
+                  <div class="feed-title font_14 text_sec1 d-flex align-content-center fw_600">
+                    {{post.title}}
+                  </div>
+                </div>
+              
+   
+              
+                </div>
+                </slide>
+           </div>
+                </div>
+      </carousel>
+
+              </div>
+            </div>
+          </div>
+          <div class="school-grid-view grid-active" *ngIf="isProfileGrid">
+            <ng-container *ngFor="let post of globalFeeds">
+              <div *ngIf="post.postType == 1" class="school-grid-box position-relative">
+              <div class="schoolgrid-header d-flex align-items-center position-relative">
+                <div class="school-gridprofile-icon">
+                  <a *ngIf="post.postAuthorType == 1" (click)="getSelectedSchool(post.parentName)" class="routeLink">
+                    <img [src]="post.parentImageUrl"/>
+                  </a>
+                  <a *ngIf="post.postAuthorType == 2" (click)="getSelectedClass(post.parentName,post.schoolName)" class="routeLink">
+                    <img [src]="post.parentImageUrl"/>
+                  </a>
+                  <a *ngIf="post.postAuthorType == 3" (click)="getSelectedCourse(post.parentName,post.schoolName)" class="routeLink">
+                    <img [src]="post.parentImageUrl"/> 
+                  </a>
+                  <a *ngIf="post.postAuthorType == 4" (click)="getUserDetails(post.parentId)" class="routeLink">
+                    <img [src]="post.parentImageUrl"/>
+                  </a>
+                </div>
+                <h2 class="d-inline-block font_20 fw_600 text_sec1 mb-0">
+                  <a *ngIf="post.postAuthorType == 1" (click)="getSelectedSchool(post.parentName)" class="routeLink">
+                    {{post.title}}
+                  </a>
+                  <a *ngIf="post.postAuthorType == 2" (click)="getSelectedClass(post.parentName,post.schoolName)" class="routeLink">
+                    {{post.title}}
+                  </a>
+                  <a *ngIf="post.postAuthorType == 3" (click)="getSelectedCourse(post.parentName,post.schoolName)" class="routeLink">
+                    {{post.title}}
+                  </a>
+                  <a *ngIf="post.postAuthorType == 4" (click)="getUserDetails(post.parentId)" class="routeLink">
+                    {{post.title}}
+                  </a>
+                </h2>
+                <p *ngIf="post.dateTime != null" class="font_14 school-grid-date d-inline-block mb-0">
+                  {{post.dateTime | date : "MMMM d"}} - {{post.dateTime | date : "hh mm"}}
+                   <!-- <span class="fw_600 ">11:30 - 13:50</span> -->
+                  </p>
+                    <!-- <button *ngIf="post.isPinned && isOwner" (click)="pinUnpinPost(post.id,false)" type="button" class="bg-transparent border-0 pinned-grid-chat">
+                      <img class="w-auto h-auto" src="../../../../assets/images/pinned-orange.svg" />
+                    </button>
+                    <button *ngIf="!post.isPinned && isOwner" (click)="pinUnpinPost(post.id,true)" type="button" class="bg-transparent border-0 pinned-grid-chat">
+                     <img class="w-auto h-auto" src="../../../../assets/images/pinned-gray.svg" />
+                    </button>    -->
+              </div>
+              
+              <div class="school-grid-body" (click)="openPostsViewModal(post)">
+                <p class="text_sec1 font_14" style="cursor: pointer;">{{post.description}}</p>
+                <div class="teacher-tags tag-box hashtag_box">
+                  <span *ngFor="let tag of post.postTags" class="custom-tag">{{tag.postTagValue}}</span>
+                </div>
+                <div *ngIf="post.postAttachments.length" class="school-grid-thumbnail new-school-grid-thumbnail" style="cursor: pointer;">
+                  <div class="row gx-1 h-100">
+
+                    <div *ngIf="post.postAttachments.length == 1"  class="col-md-12 h-100">
+                      <div class="school-large-thumbnail shadow-thumnail position-relative">
+
+                              <video *ngIf="post.postAttachments.length == 1 && post.postAttachments[0]?.fileType==2" (click)="openPostsViewModal(post)" preload="metadata" class="w-100" style="cursor: pointer;">
+                                <source [src]="post.postAttachments[0]?.fileUrl" type="video/mp4"/>
+                              </video>
+                                <img *ngIf="post.postAttachments[0]?.fileType==1" style="cursor: pointer;" (click)="openPostsViewModal(post)" class="w-100" [src]="post.postAttachments[0]?.fileUrl" />
+                      </div>
+                  </div>
+
+                  <div *ngIf="post.postAttachments.length == 2"  class="col-md-12 h-100">
+                    <div class="school-large-thumbnail shadow-thumnail position-relative">
+                        <ng-container *ngFor="let attachment of post.postAttachments">
+                      <video *ngIf="attachment?.fileType==2" (click)="openPostsViewModal(post)" preload="metadata" class="w-100" style="cursor: pointer;">
+                        <source [src]="attachment?.fileUrl" type="video/mp4"/>
+                      </video>
+                      <img style="cursor: pointer;" *ngIf="attachment?.fileType==1" (click)="openPostsViewModal(post)" class="w-100" [src]="attachment?.fileUrl" />
+                       </ng-container>
+
+                    </div>
+                  </div>
+
+                  <div *ngIf="post.postAttachments.length == 3" class="col-md-8 h-100">
+                    <div class="school-large-thumbnail shadow-thumnail position-relative">
+                            <video *ngIf="post.postAttachments[0]?.fileType==2" (click)="openPostsViewModal(post)" preload="metadata" class="w-100" style="cursor: pointer;margin-top:-700px;">
+                              <source [src]="post.postAttachments[0]?.fileUrl" type="video/mp4"/>
+                            </video>
+                              <img *ngIf="post.postAttachments[0]?.fileType==1" style="cursor: pointer" class="w-100" (click)="openPostsViewModal(post)" [src]="post.postAttachments[0]?.fileUrl" />
+                    </div>
+                 </div>
+
+
+                  <div *ngIf="post.postAttachments.length == 3" class="col-md-4 h-100">
+                      <div class="h-100 medium_thumbox d-flex">
+                          <div class="medium-thumnail">
+                            <video *ngIf="post.postAttachments[1]?.fileType==2" (click)="openPostsViewModal(post)" preload="metadata" class="w-100" style="cursor: pointer;">
+                              <source [src]="post.postAttachments[1]?.fileUrl" type="video/mp4"/>
+                            </video>
+                              <img *ngIf="post.postAttachments[1]?.fileType==1" class="w-100" (click)="openPostsViewModal(post)" [src]="post.postAttachments[1]?.fileUrl" style="cursor: pointer;" />                                        </div>
+                          <div class="medium-thumnail">
+                            <video *ngIf="post.postAttachments[2]?.fileType==2" (click)="openPostsViewModal(post)" preload="metadata" class="w-100" style="cursor: pointer;">
+                              <source [src]="post.postAttachments[2]?.fileUrl" type="video/mp4"/>
+                            </video>
+                              <img *ngIf="post.postAttachments[2]?.fileType==1" class="w-100" (click)="openPostsViewModal(post)" [src]="post.postAttachments[2]?.fileUrl" style="cursor: pointer;"/>                                        </div>
+                      </div>
+                  </div>
+
+                  <div *ngIf="post.postAttachments.length > 3" class="col-md-8 h-100">
+                    <div class="school-large-thumbnail shadow-thumnail position-relative">
+                            <video *ngIf="post.postAttachments[0]?.fileType==2" (click)="openPostsViewModal(post)" preload="metadata" class="w-100" style="cursor: pointer;">
+                              <source [src]="post.postAttachments[0]?.fileUrl" type="video/mp4"/>
+                            </video>
+                              <img *ngIf="post.postAttachments[0]?.fileType==1" class="w-100" (click)="openPostsViewModal(post)" [src]="post.postAttachments[0]?.fileUrl" style="cursor: pointer;"/>
+                    </div>
+                 </div>
+
+                 <div *ngIf="post.postAttachments.length > 3" class="col-md-4 h-100">
+                  <div class="h-100 medium_thumbox d-flex">
+                      <div class="medium-thumnail position-relative">
+                          <img class="w-100 position-relative" (click)="openPostsViewModal(post)" src="../../../../assets/images/blurImage.jfif" style="cursor: pointer;" />   
+                          <div class="position-absolute" style="top: 50%;left:50%;transform:translate(-50%, -50%);">
+                            +{{post.postAttachments.length - 3}}</div>                                    
+                         </div>
+                      <div class="medium-thumnail">
+                        <video *ngIf="post.postAttachments[1]?.fileType==2" (click)="openPostsViewModal(post)" preload="metadata" class="w-100" style="cursor: pointer;">
+                          <source [src]="post.postAttachments[1]?.fileUrl" type="video/mp4"/>
+                        </video>
+                          <img *ngIf="post.postAttachments[1]?.fileType==1" class="w-100" (click)="openPostsViewModal(post)" [src]="post.postAttachments[1]?.fileUrl" style="cursor: pointer;"/>                                        </div>
+                  </div>
+              </div>
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="post.postAttachments.length" class="school-grid-footer above-thumbnail">
+                <button type="button" class="bg-transparent border-0 function-btns text-light">
+                  <img src="../../../../assets/images/eye-light.svg" class="d-block mx-auto" />
+                  {{post.views.length}}
+                </button>
+                <button (click)="likeUnlikeGlobalPosts(post.id,true)" type="button" class="bg-transparent border-0 function-btns text-light">
+                  <img *ngIf="post.isPostLikedByCurrentUser" src="../../../assets/images/heart-red.svg" class="d-block mx-auto" />
+                  <img *ngIf="!post.isPostLikedByCurrentUser" src="../../../../assets/images/Heart-light.svg" class="d-block mx-auto" />
+
+                  <span *ngIf="likesLength != undefined && currentLikedPostId== post.id">{{likesLength}}</span>
+                  <span *ngIf="currentLikedPostId!= post.id">{{post.likes.length}}</span>
+                </button>
+                <button type="button" class="bg-transparent border-0 function-btns text-light">
+                  <img src="../../../../assets/images/Chat-light.svg" class="d-block mx-auto" />
+                  34
+                </button>
+                <button type="button" class="bg-transparent border-0 function-btns text-light">
+                  <img src="../../../../assets/images/Bookmark-light.svg" class="d-block mx-auto" />
+                  954
+                </button>
+                <button type="button" class="bg-transparent border-0 function-btns text-light">
+                  <img src="../../../../assets/images/Upload-light.svg" class="d-block mx-auto" />
+                  954
+                </button>
+              </div>
+
+              <div *ngIf="post.postAttachments.length == 0" class="school-grid-footer">
+                <button type="button" class="bg-transparent border-0 function-btns text-light">
+                  <img src="../../../../assets/images/eye.svg" class="d-block mx-auto" />
+                  <span class="textBlack">{{post.views.length}}</span>
+                </button>
+                <button (click)="likeUnlikeGlobalPosts(post.id,true)" type="button" class="bg-transparent border-0 function-btns text-light">
+                  <img *ngIf="post.isPostLikedByCurrentUser" src="../../../assets/images/heart-red.svg" class="d-block mx-auto" />
+                  <img *ngIf="!post.isPostLikedByCurrentUser" src="../../../../assets/images/Heart-dark.svg" class="d-block mx-auto" />
+
+                  <span class="textBlack" *ngIf="likesLength != undefined && currentLikedPostId== post.id">{{likesLength}}</span>
+                  <span class="textBlack" *ngIf="currentLikedPostId!= post.id">{{post.likes.length}}</span>
+                </button>
+                <button type="button" class="bg-transparent border-0 function-btns text-light">
+                  <img src="../../../../assets/images/Chat-dark.svg" class="d-block mx-auto" />
+                  <span class="textBlack">34</span>
+                </button>
+                <button type="button" class="bg-transparent border-0 function-btns text-light">
+                  <img src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto" />
+                  <span class="textBlack">954</span>
+                </button>
+                <button type="button" class="bg-transparent border-0 function-btns text-light">
+                  <img src="../../../../assets/images/Upload-dark.svg" class="d-block mx-auto" />
+                  <span class="textBlack">954</span>
+                </button>
+              </div>
+              </div>
+          </ng-container>
+
+          </div>
+
+          <div class="list-schol-profile" *ngIf="!isProfileGrid">
+            <div [ngClass]="isGridItemInfoForGlobal ? 'd-block school-grid-box position-relative school-list-box h-100':'d-none school-grid-box position-relative school-list-box h-100'" *ngIf="gridItemInfoForGlobal!=undefined">
+              <div class="row post-list-preview-sec">
+                <div [ngClass]="gridItemInfoForGlobal.postAttachments.length>0 ? 'd-block col-lg-6':'d-none'">
+                  <carousel>
+                  <div *ngFor="let postAttachment of gridItemInfoForGlobal.postAttachments" class="school-grid-thumbnail">
+                    <slide *ngIf="postAttachment.fileType==2">
+                    <div *ngIf="postAttachment?.fileType==2" class="videofile">
+                      <video style="height: 320px;" controls>
+                        <source [src]="postAttachment?.fileUrl" type="video/mp4"/>
+                      </video>
+                    </div>
+                    </slide>
+                    <slide *ngIf="postAttachment?.fileType==1">
+                      <img *ngIf="postAttachment?.fileType==1" class="w-100" [src]="postAttachment?.fileUrl" />
+                    </slide>
+                  </div>
+                  </carousel>
+                </div>
+                <div [ngClass]="gridItemInfoForGlobal.postAttachments.length>0 ? 'col-lg-6':'col-lg-12 heightForText'">
+                  <div class="class-preview-right position-relative h-100">
+                    <button (click)="hideGridItemInfo('FromGlobalFeeds')" type="button" class="bg-transparent border-0 close-preview"><img
+                        src="../../../../assets/images/cross.svg" /></button>
+                    <div class="schoolgrid-header">
+                      <div class="d-flex align-items-center position-relative">
+                        <div class="school-gridprofile-icon">
+                          <a *ngIf="gridItemInfoForGlobal.postAuthorType == 1" (click)="getSelectedSchool(gridItemInfoForGlobal.parentName)" class="routeLink">
+                            <img [src]="gridItemInfoForGlobal.parentImageUrl">
+                          </a>
+                          <a *ngIf="gridItemInfoForGlobal.postAuthorType == 2" (click)="getSelectedClass(gridItemInfoForGlobal.parentName,gridItemInfoForGlobal.schoolName)" class="routeLink">
+                            <img [src]="gridItemInfoForGlobal.parentImageUrl">
+                          </a>
+                          <a *ngIf="gridItemInfoForGlobal.postAuthorType == 3" (click)="getSelectedCourse(gridItemInfoForGlobal.parentName,gridItemInfoForGlobal.schoolName)" class="routeLink">
+                            <img [src]="gridItemInfoForGlobal.parentImageUrl">
+                          </a>
+                          <a *ngIf="gridItemInfoForGlobal.postAuthorType == 4" (click)="getUserDetails(gridItemInfoForGlobal.parentId)" class="routeLink">
+                            <img [src]="gridItemInfoForGlobal.parentImageUrl">
+                          </a>
+                        </div>
+                        <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">
+                          <a *ngIf="gridItemInfoForGlobal.postAuthorType == 1" (click)="getSelectedSchool(gridItemInfoForGlobal.parentName)" class="routeLink">
+                            {{gridItemInfoForGlobal.title}}
+                          </a>
+                          <a *ngIf="gridItemInfoForGlobal.postAuthorType == 2" (click)="getSelectedClass(gridItemInfoForGlobal.parentName,gridItemInfoForGlobal.schoolName)" class="routeLink">
+                            {{gridItemInfoForGlobal.title}}
+                          </a>
+                          <a *ngIf="gridItemInfoForGlobal.postAuthorType == 3" (click)="getSelectedCourse(gridItemInfoForGlobal.parentName,gridItemInfoForGlobal.schoolName)" class="routeLink">
+                            {{gridItemInfoForGlobal.title}}
+                          </a>
+                          <a *ngIf="gridItemInfoForGlobal.postAuthorType == 4" (click)="getUserDetails(gridItemInfoForGlobal.parentId)" class="routeLink">
+                            {{gridItemInfoForGlobal.title}}
+                          </a>
+                        </h2>
+                      </div>
+      
+                      <p class="font_14 school-grid-date d-inline-block mb-0">
+                        {{gridItemInfoForGlobal.dateTime | date : "MMMM d"}} - {{gridItemInfoForGlobal.dateTime | date : "hh mm"}}  
+                      </p>
+                    </div>
+                    <p class="text_sec1 font_14 pt-3">{{gridItemInfoForGlobal.description}}</p>
+                    <div *ngIf="gridItemInfoForGlobal.postTags.length != 0" class="teacher-tags tag-box hashtag_box">
+                      <span *ngFor="let tag of gridItemInfoForGlobal.postTags" class="custom-tag">{{tag.postTagValue}}</span>
+                    </div>
+                    <div class="school-grid-footer preview-right-action">
+                      <button type="button" class="bg-transparent border-0 function-btns">
+                        <img src="../../../../assets/images/eye.svg" class="d-block mx-auto">
+                        <span class="textBlack">{{gridItemInfoForGlobal.views.length}}</span>
+                      </button>
+                      <button (click)="likeUnlikeGlobalPosts(gridItemInfoForGlobal.id,true)" type="button" class="bg-transparent border-0 function-btns text-light">
+                        <img *ngIf="gridItemInfoForGlobal.isPostLikedByCurrentUser" src="../../../assets/images/heart-red.svg" class="d-block mx-auto" />
+                        <img *ngIf="!gridItemInfoForGlobal.isPostLikedByCurrentUser" src="../../../../assets/images/Heart-dark.svg" class="d-block mx-auto" />
+      
+                        <span class="textBlack" *ngIf="likesLength != undefined && currentLikedPostId== gridItemInfoForGlobal.id">{{likesLength}}</span>
+                        <span class="textBlack" *ngIf="currentLikedPostId!= gridItemInfoForGlobal.id">{{gridItemInfoForGlobal.likes.length}}</span>
+                      </button>
+                      <button (click)="openPostsViewModal(gridItemInfoForGlobal)" type="button" class="bg-transparent border-0 function-btns">
+                        <img src="../../../../assets/images/Chat-dark.svg" class="d-block mx-auto">
+                        34
+                      </button>
+                      <button type="button" class="bg-transparent border-0 function-btns">
+                        <img src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto">
+                        954
+                      </button>
+                      <button type="button" class="bg-transparent border-0 function-btns">
+                        <img src="../../../../assets/images/Upload-dark.svg" class="d-block mx-auto">
+                        954
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div> 
+
+            <div class="row">
+              <ng-container *ngFor="let post of globalFeeds">
+                <div *ngIf="post.postType == 1" class="col-md-6 col-xl-4">
+                  <div class="school-grid-box position-relative school-list-box h-100 mb-0">
+                    <div class="schoolgrid-header d-flex align-items-center position-relative">
+                      <div class="school-gridprofile-icon">
+                        <a *ngIf="post.postAuthorType == 1" (click)="getSelectedSchool(post.parentName)" class="routeLink">
+                          <img [src]="post.parentImageUrl" />
+                        </a>
+                        <a *ngIf="post.postAuthorType == 2" (click)="getSelectedClass(post.parentName,post.schoolName)" class="routeLink">
+                          <img [src]="post.parentImageUrl" />
+                        </a>
+                        <a *ngIf="post.postAuthorType == 3" (click)="getSelectedCourse(post.parentName,post.schoolName)" class="routeLink">
+                          <img [src]="post.parentImageUrl" />
+                        </a>
+                        <a *ngIf="post.postAuthorType == 4" (click)="getUserDetails(post.parentId)" class="routeLink">
+                          <img [src]="post.parentImageUrl" />
+                        </a>
+                      </div>
+                      <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">
+                        {{post.title}}
+                        <a *ngIf="post.postAuthorType == 1" (click)="getSelectedSchool(post.parentName)" class="routeLink">
+                          {{post.title}}
+                        </a>
+                        <a *ngIf="post.postAuthorType == 2" (click)="getSelectedClass(post.parentName,post.schoolName)" class="routeLink">
+                          {{post.title}}
+                        </a>
+                        <a *ngIf="post.postAuthorType == 3" (click)="getSelectedCourse(post.parentName,post.schoolName)" class="routeLink">
+                          {{post.title}}
+                        </a>
+                        <a *ngIf="post.postAuthorType == 4" (click)="getUserDetails(post.parentId)" class="routeLink">
+                          {{post.title}}
+                        </a>
+                      </h2>
+                      <!-- <button *ngIf="post.isPinned && isOwner" (click)="pinUnpinPost(post.id,false)" type="button" class="bg-transparent border-0 pinned-grid-chat">
+                            <img src="../../../../assets/images/pinned-orange.svg" />
+                      </button>
+                      <button *ngIf="!post.isPinned && isOwner" (click)="pinUnpinPost(post.id,true)" type="button" class="bg-transparent border-0 pinned-grid-chat">
+                          <img src="../../../../assets/images/pinned-gray.svg" />
+                      </button>    -->
+                    </div>
+                    <div class="school-grid-body">
+                      <div class="d-flex justify-content-between date-view-list">
+                        <div>
+                        <p *ngIf="post.dateTime != null" class="font_14 school-grid-date d-inline-block mb-0">
+                          {{post.dateTime | date : "MMMM d"}} - {{post.dateTime | date : "hh mm"}}
+                        </p>
+                      </div>
+                        <button type="button" class="view font_12 bg-transparent border-0 ">
+                          <img src="../../../../assets/images/eye.svg" class="me-2" /> {{post.views.length}}
+                        </button>
+                      </div>
+                      <div class="school-grid-thumbnail" style="cursor: pointer;" (click)="showPostDiv(post.id,'FromGlobalFeeds')">
+                        <div class="row gx-1">
+                          <div class="col-md-12">
+                            <div class="school-large-thumbnail shadow-thumnail position-relative">
+                              <div *ngIf="post.postAttachments[0]?.fileUrl == null">{{post.description}}</div>
+                              <div *ngIf="post.postAttachments[0]?.fileUrl?.fileType==2" class="videofile">
+                                <video preload="metadata" style="height: 300px;">
+                                  <source [src]="post.postAttachments[0]?.fileUrl" type="video/mp4"/>
+                                </video>
+                              </div>
+                              <img *ngIf="post.postAttachments[0]?.fileType==1" class="w-100" [src]="post.postAttachments[0].fileUrl" />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+
+
+            </div>
+          </div>
+          
+          </div>
+
+
+        </div>
+
+      </div>
+
+
+
+  </section>
+
+  <!-- Modal -->
+  <div class="modal fade edit-school-modal" id="editschool" tabindex="-1" aria-labelledby="editschool"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header border-0 justify-content-center position-relative">
+          <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center" id="editschool">Edit School Profile</h1>
+          <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"><img
+              src="images/cross.svg" /></button>
+        </div>
+        <div class="modal-body">
+          <div class="edit-profile-header text-center mb-4">
+            <div class="rounded-circle modal-school-icon text-center mb-2">
+              <img src="images/school-profile-image.jpg">
+            </div>
+            <button class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins position-static opacity-100"> Edit
+              Picture</button>
+          </div>
+          <div class="text-line-border position-relative text-center mb-4">
+            <span class="line-text font_12 text_ltgray fw_400 text-center">General Information</span>
+          </div>
+          <form>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <input type="text" value="School Name" name="schoolname" class="form-control w-100">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <input type="text" placeholder="" value="School Slogan" name="schoolslogan"
+                    class="form-control w-100">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group position-relative student-input date-input">
+                  <label>Founded:</label>
+                  <input type="text" placeholder="10/10/2022" name="Founded" class="form-control w-100">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <select class="form-select rounded-8 w-100">
+                    <option value="1">Private</option>
+                    <option value="2">Public</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <input type="text" value="school@email.com" name="schoolmail" class="form-control w-100">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group position-relative student-input date-input owner-input">
+                  <label>Owner:</label>
+                  <select class="form-select rounded-8 w-100">
+                    <option value="1">User 1</option>
+                    <option value="2">User 2</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="text-line-border position-relative text-center mb-4">
+              <span class="line-text font_12 text_ltgray fw_400 text-center">School Bio</span>
+            </div>
+            <div class="form-group ">
+              <textarea class="form-control resize-none ht_96"
+                value="">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labo et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex.</textarea>
+            </div>
+          </form>
+
+        </div>
+        <div
+          class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4">
+          <button type="button"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+            data-bs-dismiss="modal">Discard Changes</button>
+          <button type="button"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step">Save</button>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!------ Create post popup modal --->
+
+  <div class="modal fade edit-school-modal" id="create-post" tabindex="-1" aria-labelledby="create-post"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header border-0 justify-content-center position-relative">
+          <div class="custom-language-select liv-postbtn">
+            <ul class="nav nav-tabs border-0" id="myTab" role="tablist">
+              <li class="nav-item p-0">
+                <button class="nav-link active post-attch-btn d-inline-flex justify-content-center align-items-center"
+                  id="live-tab" data-bs-toggle="tab" data-bs-target="#live-tab-pane" type="button" role="tab"
+                  aria-controls="live-tab-pane" aria-selected="true"><img src="images/Play-dark.svg"
+                    class="dark-attach" /><img src="images/Play-light.svg" class="light-attach" /> Live</button>
+              </li>
+              <li class="nav-item p-0">
+                <button class="nav-link post-attch-btn d-inline-flex justify-content-center align-items-center"
+                  id="Post-tab" data-bs-toggle="tab" data-bs-target="#Post-tab-pane" type="button" role="tab"
+                  aria-controls="Post-tab-pane" aria-selected="false"><img src="images/Edit-grey.svg"
+                    class="dark-attach" /><img src="images/Edit-light.svg" class="light-attach" /> Post</button>
+              </li>
+              <li class="nav-item p-0">
+                <button class="nav-link post-attch-btn d-inline-flex justify-content-center align-items-center"
+                  id="reels-tab" data-bs-toggle="tab" data-bs-target="#reels-tab-pane" type="button" role="tab"
+                  aria-controls="reels-tab-pane" aria-selected="false"><img src="images/category-grey.svg"
+                    class="dark-attach" /><img src="images/category-light.svg" class="light-attach" />
+                  Reels</button>
+              </li>
+
+            </ul>
+          </div>
+          <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">Create Post</h1>
+          <div></div>
+          <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"><img
+              src="images/cross.svg" /></button>
+        </div>
+        <div class="modal-body">
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="live-tab-pane" role="tabpanel" aria-labelledby="live-tab"
+              tabindex="0">
+              <form class="latest-form">
+                <div class="form-group">
+                  <label class="font_10">School Name / Class Name</label>
+                  <select class="form-select rounded-8 w-100">
+                    <option value="1">School Name 1</option>
+                    <option value="2">School Name 2</option>
+                    <option value="3">School Name 1 3</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="font_10">Title</label>
+                  <input type="text" placeholder="Title" class="form-control w-100">
+                </div>
+
+                <div class="form-group">
+                  <label class="font_10">Body Text</label>
+                  <input type="text" class="form-control" placeholder="Body Text" />
+                </div>
+                <div class="form-group">
+                  <label class="font_10">Cover Letter before Stream start</label>
+                  <input type="text" class="form-control" placeholder="Cover Letter before Stream start" />
+                </div>
+                <div class="form-group">
+                  <label class="font_10">Comment Throttling</label>
+                  <select class="form-select rounded-8 w-100">
+                    <option value="1">1 Comment per 1 Minute</option>
+                    <option value="2">1 Comment per 1 Minute</option>
+                    <option value="3">1 Comment per 1 Minute</option>
+                  </select>
+                </div>
+                <div class="text-line-border position-relative text-center my-4">
+                  <span class="line-text font_12 text_ltgray fw_400 text-center">Select Media Sources</span>
+                </div>
+                <div class="media-sourcebtn d-flex gap-2 f-monteserrat">
+                  <button type="button" class="post-attch-btn btn web-cmbtn font_12 text_dark m-0"><span
+                      class="text-center"><img src="images/webkam.svg" class=" mx-auto mb-2 dark-attach" /> <img
+                        src="images/webkam-light.svg" class="mx-auto mb-2 light-attach" />Webcam</span></button>
+                  <button type="button" class="post-attch-btn btn web-cmbtn font_12 text_dark m-0"><span
+                      class="text-center"><i class="fa-solid fa-gear d-block mx-auto mb-2 font_20"></i> Streaming
+                      Software</span></button>
+                  <button type="button" class="post-attch-btn btn web-cmbtn font_12 text_dark m-0"><span
+                      class="text-center"><i class="fa-solid fa-microphone d-block mx-auto mb-2 font_20"></i>
+                      Microphone</span></button>
+                  <button type="button" class="post-attch-btn btn web-cmbtn font_12 text_dark m-0">
+                    <span class="text-center"><img src="images/screen-share.svg" class=" mx-auto mb-2 dark-attach" />
+                      <img src="images/screen-share-light.svg" class="mx-auto mb-2 light-attach" />Screen
+                      share</span></button>
+                </div>
+              </form>
+              <hr class="mb-0 sepearator mx-0 mt-3 opacity-100" />
+              <div
+                class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-0 cr-postfooter pt-0 mt-3 px-0">
+                <div class="post-bot-left d-flex">
+                  <button type="button"
+                    class="post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center active"><img
+                      src="images/gallery-dark.svg" class="dark-attach" /><img src="images/gallery-light.svg"
+                      class="light-attach" /></button>
+                  <button type="button"
+                    class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"><img
+                      src="images/Video-dark.svg" class="dark-attach" /><img src="images/Video-light.svg"
+                      class="light-attach" /></button>
+                  <button type="button"
+                    class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"
+                    data-bs-toggle="modal" data-bs-target="#add-attachment"><img src="images/Paper-Plus-dark.svg"
+                      class="dark-attach" /><img src="images/Paper-Plus-light.svg" class="light-attach" /></button>
+                  <button type="button"
+                    class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"
+                    data-bs-toggle="modal" data-bs-target="#add-tag"><img src="images/hashtag-dark.svg"
+                      class="dark-attach" /><img src="images/hashtag-light.svg" class="light-attach" /></button>
+                </div>
+                <div class="post-bot-right d-flex justify-content-end">
+                  <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 delay-btn"><i
+                      class="fa-solid fa-clock"></i></button>
+                  <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 lg_btn"><img
+                      src="images/Send-light.svg" class="me-2" /> Nov 15, 2022 at 14:30 </button>
+                </div>
+
+              </div>
+
+
+            </div>
+            <div class="tab-pane fade" id="Post-tab-pane" role="tabpanel" aria-labelledby="Post-tab" tabindex="0">
+              <form class="latest-form">
+                <div class="form-group">
+                  <label class="font_10">School Name / Class Name</label>
+                  <select class="form-select rounded-8 w-100">
+                    <option value="1">School Name 1</option>
+                    <option value="2">School Name 2</option>
+                    <option value="3">School Name 1 3</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="font_10">Title</label>
+                  <input type="text" placeholder="Title" class="form-control w-100">
+                </div>
+
+                <div class="form-group">
+                  <label class="font_10">Body Text</label>
+                  <input type="text" class="form-control" placeholder="Body Text" />
+                </div>
+
+              </form>
+              <div class="img-upl-result pt-4">
+                <span class="position-relative d-inline-block">
+                  <img src="images/post-upload-image.jpg" />
+                  <button type="button"
+                    class="btn dl-post-img d-flex align-items-center justify-content-center rounded-circle position-absolute"><i
+                      class="fa-solid fa-xmark"></i></button>
+                </span>
+                <span class="position-relative d-inline-block">
+                  <img src="images/post-upload-image.jpg" />
+                  <button type="button"
+                    class="btn dl-post-img d-flex align-items-center justify-content-center rounded-circle position-absolute"><i
+                      class="fa-solid fa-xmark"></i></button>
+                </span>
+              </div>
+              <div class="teacher-tags tag-box hashtag_post mt-4 mb-2 hover-tags">
+                <span class="custom-tag">#Tag 1 <button
+                    class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                      src="images/cross-sm-light.svg"></button></span>
+                <span class="custom-tag">#Tag 2 <button
+                    class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                      src="images/cross-sm-light.svg"></button></span>
+                <span class="custom-tag">#Tag 3 <button
+                    class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                      src="images/cross-sm-light.svg"></button></span>
+                <span class="custom-tag">#Tag 4 <button
+                    class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                      src="images/cross-sm-light.svg"></button></span>
+                <span class="custom-tag">#Tag 5 <button
+                    class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                      src="images/cross-sm-light.svg"></button></span>
+                <span class="custom-tag">#Tag 6 <button
+                    class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                      src="images/cross-sm-light.svg"></button></span>
+                <span class="custom-tag">#Tag 7 <button
+                    class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                      src="images/cross-sm-light.svg"></button></span>
+              </div>
+              <div class="teacher-tags hashtag_post tag-boxattachment-outer mt-1 mb-0 hover-tags">
+                <span class="custom-tag"><img src="images/Paper-gray.svg" class="me-1 dark-svg" /> <img
+                    src="images/Paper-light.svg" class="me-1 light-svg" /> Attachment
+                  1 <button class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                      src="images/cross-sm-light.svg"></button></span>
+                <span class="custom-tag"><img src="images/Paper-gray.svg" class="me-1 dark-svg" /> <img
+                    src="images/Paper-light.svg" class="me-1 light-svg" />Attachment
+                  2<button class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                      src="images/cross-sm-light.svg"></button></span>
+                <span class="custom-tag"><img src="images/Paper-gray.svg" class="me-1 dark-svg" /><img
+                    src="images/Paper-light.svg" class="me-1 light-svg" /> Attachment
+                  3<button class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                      src="images/cross-sm-light.svg"></button></span>
+              </div>
+              <hr class="mb-0 sepearator mx-0 mt-3 opacity-100" />
+              <div
+                class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-0 cr-postfooter pt-0 mt-3 px-0">
+                <div class="post-bot-left d-flex">
+                  <button type="button"
+                    class="post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center active"><img
+                      src="images/gallery-dark.svg" class="dark-attach" /><img src="images/gallery-light.svg"
+                      class="light-attach" /></button>
+                  <button type="button"
+                    class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"><img
+                      src="images/Video-dark.svg" class="dark-attach" /><img src="images/Video-light.svg"
+                      class="light-attach" /></button>
+                  <button type="button"
+                    class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"
+                    data-bs-toggle="modal" data-bs-target="#add-attachment"><img src="images/Paper-Plus-dark.svg"
+                      class="dark-attach" /><img src="images/Paper-Plus-light.svg" class="light-attach" /></button>
+                  <button type="button"
+                    class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"
+                    data-bs-toggle="modal" data-bs-target="#add-tag"><img src="images/hashtag-dark.svg"
+                      class="dark-attach" /><img src="images/hashtag-light.svg" class="light-attach" /></button>
+                </div>
+                <div class="post-bot-right d-flex justify-content-end">
+                  <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 delay-btn"><i
+                      class="fa-solid fa-clock"></i></button>
+                  <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 lg_btn"><img
+                      src="images/Send-light.svg" class="me-2" /> Nov 15, 2022 at 14:30 </button>
+                </div>
+
+              </div>
+
+            </div>
+            <div class="tab-pane fade" id="reels-tab-pane" role="tabpanel" aria-labelledby="reels-tab" tabindex="0">
+              <div class="form-group">
+                <label class="font_10">School Name / Class Name</label>
+                <select class="form-select rounded-8 w-100">
+                  <option value="1">School Name 1</option>
+                  <option value="2">School Name 2</option>
+                  <option value="3">School Name 1 3</option>
+                </select>
+              </div>
+              <div class="dropzone-wrapper mb-4 reels-uploader-img">
+                <div class="dropzone-desc">
+                  <i class="glyphicon glyphicon-download-alt"></i>
+                  <p class="text-center fw_400">Drop image or <b>Clock to Browse</b> </p>
+                </div>
+                <input type="file" name="img_logo" class="dropzone">
+              </div>
+              <hr class="mb-0 sepearator mx-0 mt-3 opacity-100" />
+              <div
+                class="modal-footer steps_btns d-flex align-items-center justify-content-center flex-sm-nowrap border-0 pb-0 cr-postfooter pt-0 mt-3 px-0">
+                <div class="post-bot-right d-flex justify-content-end">
+                  <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 delay-btn"><i
+                      class="fa-solid fa-clock"></i></button>
+                  <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 lg_btn">Post Reels
+                  </button>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!---- Add attachgment Modal-->
+  <div class="modal fade edit-school-modal" id="add-attachment" tabindex="-1" aria-labelledby="add-attachment"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header border-0 justify-content-center position-relative">
+          <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">Attach File</h1>
+          <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"><img
+              src="images/cross.svg" /></button>
+        </div>
+        <div class="modal-body">
+          <div class="dropzone-wrapper mb-4">
+            <div class="dropzone-desc">
+              <i class="glyphicon glyphicon-download-alt"></i>
+              <p class="text-center fw_400"><b>Clock to Browse</b></p>
+            </div>
+            <input type="file" name="img_logo" class="dropzone">
+          </div>
+          <p class="font_16 text_dark text-center my-4 fw_600">Or Find in File Storage</p>
+          <div class="form-group latest-form">
+            <label class="font_10">Files</label>
+            <input type="text" class="form-control" placeholder="Type to add">
+          </div>
+          <div class="teacher-tags hashtag_post tag-boxattachment-outer mt-1 mb-0 hover-tags">
+            <span class="custom-tag"><img src="images/Paper-gray.svg" class="me-1 dark-svg"> <img
+                src="images/Paper-light.svg" class="me-1 light-svg"> Attachment
+              1 <button class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                  src="images/cross-sm-light.svg"></button></span>
+            <button class="custom-tag"><img src="images/Paper-gray.svg" class="me-1 dark-svg"> <img
+                src="images/Paper-light.svg" class="me-1 light-svg">Attachment
+              2<span class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                  src="images/cross-sm-light.svg"></span></button>
+            <span class="custom-tag"><img src="images/Paper-gray.svg" class="me-1 dark-svg"><img
+                src="images/Paper-light.svg" class="me-1 light-svg"> Attachment
+              3<button class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                  src="images/cross-sm-light.svg"></button></span>
+          </div>
+        </div>
+        <div
+          class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4">
+          <button type="button"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+            data-bs-toggle="modal" data-bs-target="#create-post">Discard Changes</button>
+          <button type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step"
+            data-bs-toggle="modal" data-bs-target="#create-post">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!---- add tag Modal -->
+  <div class="modal fade edit-school-modal" id="add-tag" tabindex="-1" aria-labelledby="add-tag" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header border-0 justify-content-center position-relative">
+          <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">Add Tag</h1>
+          <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"><img
+              src="images/cross.svg" /></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group latest-form">
+            <label class="font_10">Files</label>
+            <input type="text" class="form-control" placeholder="Type to add">
+          </div>
+          <div class="teacher-tags tag-box hashtag_post mt-4 mb-2 hover-tags">
+            <span class="custom-tag">#Tag 1 <button
+                class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                  src="images/cross-sm-light.svg"></button></span>
+            <span class="custom-tag">#Tag 2 <button
+                class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                  src="images/cross-sm-light.svg"></button></span>
+            <span class="custom-tag">#Tag 3 <button
+                class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                  src="images/cross-sm-light.svg"></button></span>
+            <span class="custom-tag">#Tag 4 <button
+                class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                  src="images/cross-sm-light.svg"></button></span>
+            <span class="custom-tag">#Tag 5 <button
+                class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                  src="images/cross-sm-light.svg"></button></span>
+            <span class="custom-tag">#Tag 6 <button
+                class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                  src="images/cross-sm-light.svg"></button></span>
+            <span class="custom-tag">#Tag 7 <button
+                class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                  src="images/cross-sm-light.svg"></button></span>
+            <span class="custom-tag">#Tag 8 <button
+                class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                  src="images/cross-sm-light.svg"></button></span>
+            <span class="custom-tag">#Tag 9 <button
+                class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                  src="images/cross-sm-light.svg"></button></span>
+            <span class="custom-tag">#Tag 10 <button
+                class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                  src="images/cross-sm-light.svg"></button></span>
+            <span class="custom-tag">#Tag 11 <button
+                class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                  src="images/cross-sm-light.svg"></button></span>
+            <span class="custom-tag">#Tag 12 <button
+                class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                  src="images/cross-sm-light.svg"></button></span>
+            <span class="custom-tag">#Tag 13 <button
+                class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                  src="images/cross-sm-light.svg"></button></span>
+            <span class="custom-tag">#Tag 14 <button
+                class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                  src="images/cross-sm-light.svg"></button></span>
+          </div>
+
+        </div>
+        <div
+          class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4">
+          <button type="button"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+            data-bs-toggle="modal" data-bs-target="#create-post">Discard Changes</button>
+          <button type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step"
+            data-bs-toggle="modal" data-bs-target="#create-post">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://phpcoder.tech/multiselect/js/jquery.multiselect.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+
+
+
+  <script>
+    $(document).ready(function () {
+      $(".next-step").click(function (e) {
+        var activeTab = $(".registerTabs .tab-pane.active");
+        activeTab.next().addClass("active");
+        activeTab.removeClass("active");
+        $(".step-icon .step1").addClass('finish');
+      });
+
+      $(".prev-step").click(function (e) {
+        var activeTab = $(".registerTabs .tab-pane.active");
+        activeTab.prev().addClass("active");
+        activeTab.removeClass("active");
+
+      });
+      $("#step2_btn").click(function () {
+        $("#create_school, .step-icon").addClass('d-none');
+      });
+
+    });
+
+
+  </script>
+  <script>
+    function readFile(input) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+          var htmlPreview =
+            '<img width="200" src="' + e.target.result + '" />' +
+            '<p>' + input.files[0].name + '</p>';
+          var wrapperZone = $(input).parent();
+          var previewZone = $(input).parent().parent().find('.preview-zone');
+          var boxZone = $(input).parent().parent().find('.preview-zone').find('.box').find('.box-body');
+
+          wrapperZone.removeClass('dragover');
+          previewZone.removeClass('hidden');
+          boxZone.empty();
+          boxZone.append(htmlPreview);
+        };
+
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    function reset(e) {
+      e.wrap('<form>').closest('form').get(0).reset();
+      e.unwrap();
+    }
+
+    $(".dropzone").change(function () {
+      readFile(this);
+    });
+
+    $('.dropzone-wrapper').on('dragover', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      $(this).addClass('dragover');
+    });
+
+    $('.dropzone-wrapper').on('dragleave', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      $(this).removeClass('dragover');
+    });
+
+    $('.remove-preview').on('click', function () {
+      var boxZone = $(this).parents('.preview-zone').find('.box-body');
+      var previewZone = $(this).parents('.preview-zone');
+      var dropzone = $(this).parents('.form-group').find('.dropzone');
+      boxZone.empty();
+      previewZone.addClass('hidden');
+      reset(dropzone);
+    });
+
+
+
+  </script>
+  <script>
+    jQuery('#languageSelect').multiselect({
+      columns: 1,
+      placeholder: 'Select Languages',
+      search: true
+    });
+  </script>
+  <script>
+    function openSearch() {
+      document.getElementById("search-overlay").style.display = "block";
+    }
+    function closeSearch() {
+      document.getElementById("search-overlay").style.display = "none";
+    }
+    function closeSidebar() {
+      document.getElementById("side-bar").style.display = "none";
+    }
+    function openSidebar() {
+      document.getElementById("side-bar").style.display = "block";
+    }
+  </script>
+  <script>
+    $(document).ready(function () {
+      $("#grid-btn").click(function () {
+        $(".school-grid-view").addClass("grid-active");
+        $(".list-schol-profile").removeClass("list-active");
+        $("#grid-btn").addClass("active");
+        $("#list-btn").removeClass("active");
+
+      });
+      $("#list-btn").click(function () {
+        $(".school-grid-view").removeClass("grid-active");
+        $(".list-schol-profile").addClass("list-active");
+        $("#grid-btn").removeClass("active");
+        $("#list-btn").addClass("active");
+      });
+
+
+    });
+
+    
+  </script>
+  </div>
+  <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>

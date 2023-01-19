@@ -23,6 +23,7 @@ import { ReelsViewComponent } from '../root/reels/reelsView.component';
 
 import { ChatComponent } from '../root/chat/chat.component';
 import { CourseProfileComponent } from '../root/course/courseProfile/courseProfile.component';
+import { UserFeedComponent } from '../root/userFeed/userFeed.component';
 
 
 const routes: Routes = [
@@ -78,6 +79,9 @@ const routes: Routes = [
 
   {
     path: 'userProfile/:userId',component:UserProfileComponent
+  },
+  {
+    path: 'userFeed',component:UserFeedComponent
   },
   {
     path: 'userFollowers/:userId',component:UserFollowersComponent

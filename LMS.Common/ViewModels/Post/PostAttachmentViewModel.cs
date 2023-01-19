@@ -14,7 +14,7 @@ namespace LMS.Common.ViewModels.Post
     {
         public Guid Id { get; set; }
         public Guid? PostId { get; set; }
-        public PostViewModel Post { get; set; }
+        public PostDetailsViewModel Post { get; set; }
         public string FileName { get; set; }
         public string FileUrl { get; set; }
         public int FileType { get; set; }
@@ -23,6 +23,7 @@ namespace LMS.Common.ViewModels.Post
         public bool IsDeleted { get; set; }
         public SchoolViewModel School { get; set; }
         public ClassViewModel Class { get; set; }
+        public CourseViewModel Course { get; set; }
         public UserDetailsViewModel User { get; set; }
         public bool IsPinned { get; set; }
 

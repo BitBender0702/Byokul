@@ -1,9 +1,9 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Component, ElementRef, Injector, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Injector, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { AddClassCertificate } from 'src/root/interfaces/class/addClassCertificate';
 import { AddClassLanguage } from 'src/root/interfaces/class/addClassLanguage';
 import { AddClassTeacher } from 'src/root/interfaces/class/addClassTeacher';
@@ -13,14 +13,20 @@ import { DeleteClassTeacher } from 'src/root/interfaces/class/deleteClassTeacher
 import { EditClassModel } from 'src/root/interfaces/class/editClassModel';
 import { ClassService } from 'src/root/service/class.service';
 import { PostService } from 'src/root/service/post.service';
-import { CreatePostComponent } from '../../createPost/createPost.component';
+import { addPostResponse, CreatePostComponent } from '../../createPost/createPost.component';
 import { MultilingualComponent } from '../../sharedModule/Multilingual/multilingual.component';
 import { PostViewComponent } from '../../postView/postView.component';
+import { LikeUnlikePost } from 'src/root/interfaces/post/likeUnlikePost';
+import { PostView } from 'src/root/interfaces/post/postView';
+import { ClassView } from 'src/root/interfaces/class/classView';
+import { MessageService } from 'primeng/api';
+import { ReelsViewComponent } from '../../reels/reelsView.component';
 
 @Component({
     selector: 'classProfile-root',
     templateUrl: './classProfile.component.html',
-    styleUrls: ['./classProfile.component.css']
+    styleUrls: ['./classProfile.component.css'],
+    providers: [MessageService]
   })
 
 export class ClassProfileComponent extends MultilingualComponent implements OnInit {
@@ -33,6 +39,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     isOpenModal:boolean = false;
     loadingIcon:boolean = false;
     classId!:string;
+    validToken!:string;
 
     classLanguage!:AddClassLanguage;
     classTeacher!:AddClassTeacher;
@@ -60,6 +67,23 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     disabled:boolean = true;
     currentDate!:string;
     isOwner!:boolean;
+    userId!:string;
+    likesLength!:number;
+    isLiked!:boolean;
+    likeUnlikePost!: LikeUnlikePost;
+    currentLikedPostId!:string;
+    className!:string;
+    gridItemInfo:any;
+    isGridItemInfo: boolean = false;
+    postView!:PostView;
+    classView!:ClassView;
+    bsModalRef!: BsModalRef;
+
+    itemsPerSlide = 7;
+    singleSlideOffset = true;
+    noWrap = true;
+
+    public event: EventEmitter<any> = new EventEmitter();
 
     @ViewChild('closeEditModal') closeEditModal!: ElementRef;
     @ViewChild('closeTeacherModal') closeTeacherModal!: ElementRef;
@@ -70,43 +94,30 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     @ViewChild('createPostModal', { static: true }) createPostModal!: CreatePostComponent;
 
     isDataLoaded:boolean = false;
-    constructor(injector: Injector,postService:PostService,private bsModalService: BsModalService,classService: ClassService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
+    constructor(injector: Injector,public messageService:MessageService,postService:PostService,private bsModalService: BsModalService,classService: ClassService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
       super(injector);
         this._classService = classService;
         this._postService = postService;
     }
   
     ngOnInit(): void {
+      debugger
+      this.validToken = localStorage.getItem("jwt")?? '';
       this.loadingIcon = true;
       var selectedLang = localStorage.getItem("selectedLanguage");
       this.translate.use(selectedLang?? '');
 
-      var id = this.route.snapshot.paramMap.get('classId');
-      this.classId = id ?? '';
-
-      var className = this.route.snapshot.paramMap.get('className');
+      this.className = this.route.snapshot.paramMap.get('className')??'';
       var schoolName = this.route.snapshot.paramMap.get('schoolName');
 
-      if(this.classId == ''){
-        this._classService.getClassByName(className,schoolName).subscribe((response) => {
-          this.classId = response.classId;
-          this._classService.getClassById(this.classId).subscribe((response) => {
-            this.class = response;
-            this.isOwnerOrNot();
-            this.loadingIcon = false;
-            this.isDataLoaded = true;
-          });
-        })
-
-      }
-      else{
-      this._classService.getClassById(this.classId).subscribe((response) => {
+      this._classService.getClassById(this.className.replace(" ","").toLowerCase()).subscribe((response) => {
+        debugger
         this.class = response;
         this.isOwnerOrNot();
         this.loadingIcon = false;
         this.isDataLoaded = true;
+        this.addClassView(this.class.classId);
       });
-    }
 
       this.editClassForm = this.fb.group({
         schoolName: this.fb.control(''),
@@ -177,6 +188,23 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
         certificates:[]
        }
 
+       this.InitializeLikeUnlikePost();
+
+      //  addPostResponse.subscribe(response => {
+      //   this.ngOnInit();
+      // });
+
+      addPostResponse.subscribe(response => {
+        this.loadingIcon = true;
+        this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post created successfully'});
+        this._classService.getClassById(this.className.replace(" ","").toLowerCase()).subscribe((response) => {
+          this.class = response;
+          this.isOwnerOrNot();
+          this.loadingIcon = false;
+          this.isDataLoaded = true;
+          this.addClassView(this.class.classId);
+        });
+      });
     }
 
     getClassDetails(classId:string){
@@ -187,12 +215,23 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     
   }
 
+  InitializeLikeUnlikePost(){
+    this.likeUnlikePost = {
+      postId: '',
+      userId: '',
+      isLike:false,
+      commentId:''
+     };
+
+  }
+
   isOwnerOrNot(){
     var validToken = localStorage.getItem("jwt");
       if (validToken != null) {
         let jwtData = validToken.split('.')[1]
         let decodedJwtJsonData = window.atob(jwtData)
         let decodedJwtData = JSON.parse(decodedJwtJsonData);
+        this.userId = decodedJwtData.jti;
         if(decodedJwtData.sub == this.class.createdBy){
           this.isOwner = true;
         }
@@ -312,6 +351,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       this._classService.saveClassLanguages(this.classLanguage).subscribe((response:any) => {
         this.closeLanguagesModal();
         this.isSubmitted = false;
+        this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Language added successfully'});
         this.ngOnInit();
   
       });
@@ -321,8 +361,8 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       this.loadingIcon = true;
       this.deleteLanguage.classId = this.class.classId;
       this._classService.deleteClassLanguage(this.deleteLanguage).subscribe((response:any) => {
+        this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Language deleted successfully'});
         this.ngOnInit();
-  
       });
   
     }
@@ -359,6 +399,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
           this._classService.saveClassTeachers(this.classTeacher).subscribe((response:any) => {
             this.closeTeachersModal();
             this.isSubmitted = false;
+            this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Teacher added successfully'});
             this.ngOnInit();
       
           });
@@ -368,6 +409,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
           this.loadingIcon = true;
           this.deleteTeacher.classId = this.class.classId;
           this._classService.deleteClassTeacher(this.deleteTeacher).subscribe((response:any) => {
+            this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Teacher deleted successfully'});
             this.ngOnInit();
       
           });
@@ -382,8 +424,8 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
           this.loadingIcon = true;
           this.deleteCertificate.classId = this.class.classId;
           this._classService.deleteClassCertificate(this.deleteCertificate).subscribe((response:any) => {
+            this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Certificate added successfully'});
             this.ngOnInit();
-      
           });
       
         }
@@ -418,8 +460,8 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
             this.isSubmitted = false;
             this.classCertificate.certificates = [];
             this.certificateToUpload.set('certificates','');
+            this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Certificate deleted successfully'});
             this.ngOnInit();
-      
           });
         }
 
@@ -451,6 +493,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
             this.closeModal();
             this.isSubmitted=true;
             this.fileToUpload = new FormData();
+            this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Class updated successfully'});
             this.ngOnInit();
           });
       
@@ -553,9 +596,12 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     
     }
 
-    convertToCourse(classId:string){
-      this._classService.convertToCourse(classId).subscribe((response) => {
-        window.location.href=`user/courseProfile/${classId}`;
+    convertToCourse(className:string,schoolName:string){
+      debugger
+      this._classService.convertToCourse(className.replace(" ","").toLowerCase()).subscribe((response) => {
+        debugger
+        window.location.href = `profile/course/${schoolName.replace(" ","").toLowerCase()}/${className.replace(" ","").toLowerCase()}`;
+        // window.location.href=`user/courseProfile/${classId}`;
       });
     }
 
@@ -563,7 +609,124 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       const initialState = {
         posts: posts
       };
-      this.bsModalService.show(PostViewComponent,{initialState});
+     this.bsModalRef= this.bsModalService.show(PostViewComponent,{initialState});
+
+     this.bsModalRef.content.event.subscribe((res: { data: any; }) => {
+      debugger
+      var a = res.data;
+      //this.itemList.push(res.data);
+    });
+    }
+
+
+    
+
+    requestMessage(){
+      if(this.validToken == ''){
+        window.open('user/auth/login', '_blank');
+      }
+    }
+
+    likeUnlikePosts(postId:string, isLike:boolean){
+      this.currentLikedPostId = postId;
+      this.class.posts.filter((p : any) => p.id == postId).forEach( (item : any) => {
+        var likes: any[] = item.likes;
+        var isLiked = likes.filter(x => x.userId == this.userId && x.postId == postId);
+        if(isLiked.length != 0){
+          this.isLiked = false;
+          this.likesLength = item.likes.length - 1;
+          item.isPostLikedByCurrentUser = false;
+        }
+        else{
+          this.isLiked = true;
+          this.likesLength = item.likes.length + 1;
+          item.isPostLikedByCurrentUser = true;
+      
+        }
+      }); 
+      
+     
+      this.likeUnlikePost.postId = postId;
+      this.likeUnlikePost.isLike = isLike;
+      this.likeUnlikePost.commentId = '00000000-0000-0000-0000-000000000000'
+      this._postService.likeUnlikePost(this.likeUnlikePost).subscribe((response) => {
+    
+    
+         this.class.posts.filter((p : any) => p.id == postId).forEach( (item : any) => {
+          var itemss = item.likes;
+          item.likes = response;
+        }); 
+  
+         this.InitializeLikeUnlikePost();
+         console.log("succes");
+      });
+
+
+    
+    
+    }
+
+    showPostDiv(postId:string){
+      debugger
+      var posts: any[] = this.class.posts;
+      this.gridItemInfo = posts.find(x => x.id == postId);
+      this.isGridItemInfo = true;
+      this.addPostView(this.gridItemInfo.id);
+    }
+
+    addPostView(postId:string){
+      debugger
+      if(this.userId != undefined){
+       this.initializePostView();
+      this.postView.postId = postId;
+      this._postService.postView(this.postView).subscribe((response) => {
+        debugger
+        this.gridItemInfo.views.length = response;
+       }); 
+      }
+    
+     
+    
+    }
+
+    initializePostView(){
+      this.postView ={
+        postId:'',
+        userId:''
+       }
+    }
+    
+    hideGridItemInfo(){
+      this.isGridItemInfo = this.isGridItemInfo ? false : true;
+    
+    }
+
+    addClassView(classId:string){
+      debugger
+      if(this.userId != undefined){
+        this.initializeClassView();
+      this.classView.classId = classId;
+      this._classService.classView(this.classView).subscribe((response) => {
+        debugger
+        console.log('success');
+        //this.posts.posts.views.length = response;
+       }); 
+      }
+    
+    }
+    initializeClassView(){
+      this.classView = {
+        classId:'',
+        userId:''
+      }
+    }
+
+    openReelsViewModal(postAttachmentId:string): void {
+      debugger
+      const initialState = {
+        postAttachmentId: postAttachmentId
+      };
+      this.bsModalService.show(ReelsViewComponent,{initialState});
     }
   
 }

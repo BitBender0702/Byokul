@@ -57,9 +57,10 @@ namespace LMS.App.Controllers
 
         [Route("getClassById")]
         [HttpGet]
-        public async Task<IActionResult> GetClassById(Guid classId)
+        public async Task<IActionResult> GetClassById(string className)
         {
-            var response = await _classService.GetClassById(classId);
+            var userId = await GetUserIdAsync(this._userManager);
+            var response = await _classService.GetClassById(className, userId);
             return Ok(response);
         }
 
@@ -173,10 +174,20 @@ namespace LMS.App.Controllers
 
         [Route("convertToCourse")]
         [HttpPost]
-        public async Task<IActionResult> ConvertToCourse(Guid classId)
+        public async Task<IActionResult> ConvertToCourse(string className)
         {
-            await _classService.ConvertToCourse(classId);
+            await _classService.ConvertToCourse(className);
             return Ok();
+        }
+
+        [Route("classView")]
+        [HttpPost]
+        public async Task<IActionResult> ClassView([FromBody] ClassViewsViewModel model)
+        {
+            var userId = await GetUserIdAsync(this._userManager);
+            model.UserId = userId;
+            var response = await _classService.ClassView(model);
+            return Ok(response);
         }
 
     }

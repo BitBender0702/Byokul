@@ -56,8 +56,18 @@ builder.Services.AddDbContext<DataContext>(options =>
 
 builder.Services.Configure<BlobConfig>(configuration.GetSection("MyConfig"));
 
-builder.Services.AddIdentity<User, IdentityRole>()
-    .AddEntityFrameworkStores<DataContext>();
+builder.Services.AddIdentity<User, IdentityRole>(option =>
+{
+    option.Password.RequireDigit = false;
+    option.Password.RequiredLength = 5;
+    option.Password.RequireLowercase = false;
+    option.Password.RequireNonAlphanumeric = false;
+    option.Password.RequireUppercase = false;
+    option.SignIn.RequireConfirmedEmail = true;
+    option.SignIn.RequireConfirmedEmail = true;
+})
+    .AddEntityFrameworkStores<DataContext>()
+    .AddDefaultTokenProviders();
 
 
 builder.Services.AddScoped<IAuthService, AuthService>();
@@ -76,14 +86,16 @@ builder.Services.AddScoped<IStripeService, StripeService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
-builder.Services.Configure<IdentityOptions>(options =>
-{
-    options.Password.RequireDigit = false;
-    options.Password.RequiredLength = 5;
-    options.Password.RequireLowercase = false;
-    options.Password.RequireNonAlphanumeric = false;
-    options.Password.RequireUppercase = false;
-});
+//builder.Services.Configure<IdentityOptions>(options =>
+//{
+//    options.Password.RequireDigit = false;
+//    options.Password.RequiredLength = 5;
+//    options.Password.RequireLowercase = false;
+//    options.Password.RequireNonAlphanumeric = false;
+//    options.Password.RequireUppercase = false;
+//    options.SignIn.RequireConfirmedEmail = true;
+
+//});
 
 StripeConfiguration.ApiKey = configuration.GetSection("Stripe")["SecretKey"];
 

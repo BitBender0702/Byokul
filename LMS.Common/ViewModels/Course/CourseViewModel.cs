@@ -21,7 +21,7 @@ namespace LMS.Common.ViewModels.Course
         public Guid? ServiceTypeId { get; set; }
         public ServiceTypeViewModel ServiceType { get; set; }
         public string? Description { get; set; }
-        public long Price { get; set; }
+        public long? Price { get; set; }
         public Guid? AccessibilityId { get; set; }
         public string CourseUrl { get; set; }
         public string? Avatar { get; set; }
@@ -37,6 +37,12 @@ namespace LMS.Common.ViewModels.Course
         public bool IsConvertable { get; set; }
         public IFormFile AvatarImage { get; set; }
         public bool IsPinned { get; set; }
+        public IFormFile Thumbnail { get; set; }
+        public string? ThumbnailUrl { get; set; }
+        public IEnumerable<string> CourseTags { get; set; }
+        public List<CourseLikeViewModel> CourseLike { get; set; }
+        public List<CourseViewsViewModel> CourseViews { get; set; }
+        public bool IsCourseLikedByCurrentUser { get; set; }
 
     }
 }

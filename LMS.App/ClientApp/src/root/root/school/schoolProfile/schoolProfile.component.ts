@@ -13,7 +13,7 @@ import { DeleteSchoolTeacher } from 'src/root/interfaces/school/deleteSchoolTeac
 import { AddSchoolCertificate } from 'src/root/interfaces/school/addSchoolCertificate';
 import { DeleteSchoolCertificate } from 'src/root/interfaces/school/deleteSchoolCertificate';
 import { MultilingualComponent } from '../../sharedModule/Multilingual/multilingual.component';
-import { CreatePostComponent } from '../../createPost/createPost.component';
+import { addPostResponse, CreatePostComponent } from '../../createPost/createPost.component';
 
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -22,13 +22,19 @@ import { FollowUnfollow } from 'src/root/interfaces/FollowUnfollow';
 import { FollowUnFollowEnum } from 'src/root/Enums/FollowUnFollowEnum';
 import { PostService } from 'src/root/service/post.service';
 import { PostViewComponent } from '../../postView/postView.component';
+import { LikeUnlikePost } from 'src/root/interfaces/post/likeUnlikePost';
+import { PostView } from 'src/root/interfaces/post/postView';
+import { LikeUnlikeClassCourse } from 'src/root/interfaces/school/likeUnlikeClassCourse';
+import { MessageService } from 'primeng/api';
+import { ReelsViewComponent } from '../../reels/reelsView.component';
 
 // import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'schoolProfile-root',
     templateUrl: './schoolProfile.component.html',
-    styleUrls: ['./schoolProfile.component.css']
+    styleUrls: ['./schoolProfile.component.css'],
+    providers: [MessageService]
   })
 
 export class SchoolProfileComponent extends MultilingualComponent implements OnInit {
@@ -47,6 +53,7 @@ export class SchoolProfileComponent extends MultilingualComponent implements OnI
 
     isDataLoaded:boolean = false;
     isSchoolFollowed:boolean = false;
+    validToken!:string;
 
 
     // eidt Schools
@@ -82,6 +89,23 @@ export class SchoolProfileComponent extends MultilingualComponent implements OnI
     isFollowed!:boolean;
     followersLength!:number;
     classCourseList:any;
+    likesLength!:number;
+    isLiked!:boolean;
+    likeUnlikePost!: LikeUnlikePost;
+    likeUnlikeClassCourses!: LikeUnlikeClassCourse;
+    userId!:string;
+    currentLikedPostId!:string;
+    currentLikedClassCourseId!:string;
+    schoolName!:string;
+    gridItemInfo:any;
+    isGridItemInfo: boolean = false;
+    postView!:PostView;
+    likesClassCourseLength!:number;
+    isClassCourseLiked!:boolean;
+    itemsPerSlide = 7;
+    singleSlideOffset = true;
+    noWrap = true;
+    isFeedHide:boolean = false;
     @ViewChild('closeEditModal') closeEditModal!: ElementRef;
     @ViewChild('closeTeacherModal') closeTeacherModal!: ElementRef;
     @ViewChild('closeLanguageModal') closeLanguageModal!: ElementRef;
@@ -92,44 +116,46 @@ export class SchoolProfileComponent extends MultilingualComponent implements OnI
     @ViewChild('createPostModal', { static: true }) createPostModal!: CreatePostComponent;
     Certificates!: string[];
 
-    constructor(injector: Injector,postService:PostService,private bsModalService: BsModalService,private matDialog: MatDialog,public modalService: NgbModal,private route: ActivatedRoute,private domSanitizer: DomSanitizer,schoolService: SchoolService,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
+    constructor(injector: Injector,public messageService:MessageService,postService:PostService,private bsModalService: BsModalService,private matDialog: MatDialog,public modalService: NgbModal,private route: ActivatedRoute,private domSanitizer: DomSanitizer,schoolService: SchoolService,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
       super(injector);
         this._schoolService = schoolService;
         this._postService = postService;
     }
   
     ngOnInit(): void {
+      this.validToken = localStorage.getItem("jwt")?? '';
       this.loadingIcon = true;
       var selectedLang = localStorage.getItem("selectedLanguage");
       this.translate.use(selectedLang?? '');
 
-      var id = this.route.snapshot.paramMap.get('schoolId');
-      this.schoolId = id ?? '';
+      // var id = this.route.snapshot.paramMap.get('schoolId');
+      // this.schoolId = id ?? '';
 
-      var schoolName = this.route.snapshot.paramMap.get('schoolName');
+      this.schoolName = this.route.snapshot.paramMap.get('schoolName')??'';
 
-      if(this.schoolId == ''){
-        this._schoolService.getSchoolByName(schoolName).subscribe((response) => {
-          this.schoolId = response.schoolId;
-          this._schoolService.getSchoolById(this.schoolId).subscribe((response) => {
-            this.school = response;
-            this.followersLength = this.school.schoolFollowers.length;
-            this.isOwnerOrNot();
-            this.loadingIcon = false;
-            this.isDataLoaded = true;
-          });
-        });
-      }
+      // if(this.schoolId == ''){
+      //   this._schoolService.getSchoolByName(this.schoolName).subscribe((response) => {
+      //     this.schoolId = response.schoolId;
+      //     this._schoolService.getSchoolById(this.schoolName).subscribe((response) => {
+      //       this.school = response;
+      //       this.followersLength = this.school.schoolFollowers.length;
+      //       this.isOwnerOrNot();
+      //       this.loadingIcon = false;
+      //       this.isDataLoaded = true;
+      //     });
+      //   });
+      // }
       
-      else{
-      this._schoolService.getSchoolById(this.schoolId).subscribe((response) => {
+      // else{
+      this._schoolService.getSchoolById(this.schoolName.replace(" ","").toLowerCase()).subscribe((response) => {
+        debugger
         this.school = response;
         this.followersLength = this.school.schoolFollowers.length;
         this.isOwnerOrNot();
         this.loadingIcon = false;
         this.isDataLoaded = true;
       });
-    }
+    // }
 
       this._schoolService.getAccessibility().subscribe((response) => {
         this.accessibility = response;
@@ -200,12 +226,37 @@ export class SchoolProfileComponent extends MultilingualComponent implements OnI
         certificateId:''
        }
 
+       this.InitializeLikeUnlikePost();
+
       
         this.followUnfollowSchool = {
           id: '',
           isFollowed: false
          };
-  
+
+         addPostResponse.subscribe(response => {
+          this.loadingIcon = true;
+          this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post created successfully'});
+          this._schoolService.getSchoolById(this.schoolName.replace(" ","").toLowerCase()).subscribe((response) => {
+            this.school = response;
+            this.loadingIcon = false;
+            this.followersLength = this.school.schoolFollowers.length;
+            this.isOwnerOrNot();
+            this.loadingIcon = false;
+            this.isDataLoaded = true;
+          });
+        });
+
+         //this.GetSchoolClassCourseList(this.school.schoolId);
+    }
+
+    InitializeLikeUnlikePost(){
+      this.likeUnlikePost = {
+        postId: '',
+        userId: '',
+        isLike:false,
+        commentId:''
+       };
 
     }
 
@@ -215,6 +266,7 @@ export class SchoolProfileComponent extends MultilingualComponent implements OnI
           let jwtData = validToken.split('.')[1]
           let decodedJwtJsonData = window.atob(jwtData)
           let decodedJwtData = JSON.parse(decodedJwtJsonData);
+          this.userId = decodedJwtData.jti;
           if(decodedJwtData.sub == this.school.createdBy){
             this.isOwner = true;
           }
@@ -239,6 +291,10 @@ export class SchoolProfileComponent extends MultilingualComponent implements OnI
     }
 
     followSchool(schoolId:string,from:string){
+      if(this.validToken == ''){
+        window.open('user/auth/login', '_blank');
+      }
+      else{
       this.followUnfollowSchool.id = schoolId;
       if(from == FollowUnFollowEnum.Follow){
         this.followersLength += 1;
@@ -256,6 +312,7 @@ export class SchoolProfileComponent extends MultilingualComponent implements OnI
           this.isSchoolFollowed = true;
         }
       });
+    }
     }
 
     back(): void {
@@ -308,8 +365,8 @@ export class SchoolProfileComponent extends MultilingualComponent implements OnI
       schoolSlogan: this.fb.control(this.editSchool.schoolSlogan?? ''),
       founded: this.fb.control(founded,[Validators.required]),
       accessibilityId: this.fb.control(this.editSchool.accessibilityId,[Validators.required]),
-      schoolEmail: this.fb.control(this.editSchool.schoolEmail,[Validators.required,Validators.pattern(this.EMAIL_PATTERN)]),
-      description: this.fb.control(this.editSchool.description),
+      schoolEmail: this.fb.control(this.editSchool.schoolEmail??'',[Validators.pattern(this.EMAIL_PATTERN)]),
+      description: this.fb.control(this.editSchool.description??''),
       owner: this.fb.control(this.editSchool.user.email),
       // avatar: this.fb.control(this.editSchool.avatar)
     }, {validator: this.dateLessThan('founded',currentDate)});
@@ -361,6 +418,7 @@ export class SchoolProfileComponent extends MultilingualComponent implements OnI
       this.closeModal();
       this.isSubmitted=false;
       this.fileToUpload = new FormData();
+      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'School updated successfully'});
       this.ngOnInit();
     });
 
@@ -431,6 +489,7 @@ private closeLanguagesModal(): void {
     this._schoolService.saveSchoolLanguages(this.schoolLanguage).subscribe((response:any) => {
       this.closeLanguagesModal();
       this.isSubmitted = false;
+      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Language added successfully'});
       this.ngOnInit();
 
     });
@@ -444,8 +503,8 @@ private closeLanguagesModal(): void {
     this.loadingIcon = true;
     this.deleteLanguage.schoolId = this.school.schoolId;
     this._schoolService.deleteSchoolLanguage(this.deleteLanguage).subscribe((response:any) => {
+      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Language deleted successfully'});
       this.ngOnInit();
-
     });
 
   }
@@ -485,6 +544,7 @@ private closeLanguagesModal(): void {
       this.teachers = [];
       this.closeTeachersModal();
       this.isSubmitted = false;
+      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Teacher added successfully'});
       this.ngOnInit();
 
     });
@@ -498,8 +558,8 @@ private closeLanguagesModal(): void {
     this.loadingIcon = true;
     this.deleteTeacher.schoolId = this.school.schoolId;
     this._schoolService.deleteSchoolTeacher(this.deleteTeacher).subscribe((response:any) => {
+      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Teacher deleted successfully'});
       this.ngOnInit();
-
     });
 
   }
@@ -519,6 +579,7 @@ private closeLanguagesModal(): void {
       this.isSubmitted = false;
       this.schoolCertificate.certificates = [];
       this.certificateToUpload.set('certificates','');
+      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Certificate added successfully'});
       this.ngOnInit();
       console.log(response);
 
@@ -533,8 +594,8 @@ private closeLanguagesModal(): void {
     this.loadingIcon = true;
     this.deleteCertificate.schoolId = this.school.schoolId;
     this._schoolService.deleteSchoolCertificate(this.deleteCertificate).subscribe((response:any) => {
+      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Certificate deleted successfully'});
       this.ngOnInit();
-
     });
 
   }
@@ -601,6 +662,7 @@ openPostsViewModal(posts:string): void {
 }
 
 hideUnhideFeedFilters(hideUnhide:boolean){
+  this.isFeedHide = false;
   if(hideUnhide){
     this.hideFeedFilters = true;
   }
@@ -612,15 +674,229 @@ else{
 }
 
 GetSchoolClassCourseList(schoolId:string){
-  this.hideFeedFilters = false;
+  this.isFeedHide = true;
+  debugger
+  if(this.classCourseList == undefined){
+    this.loadingIcon = true;
+    this.hideFeedFilters = false;
     this._schoolService.getSchoolClassCourseList(schoolId).subscribe((response) => {
+      debugger
       this.classCourseList = response;
+      this.loadingIcon = false;
+
   })
+}
 }
 
 pinUnpinClassCourse(id:string,type:string,isPinned:boolean){
   this._schoolService.pinUnpinClassCourse(id,type,isPinned).subscribe((response) => {
     this.ngOnInit();
   });
+}
+
+schoolChat(){
+  if(this.validToken == ''){
+    window.open('user/auth/login', '_blank');
+  }
+  else{
+    window.location.href=`user/chat`;
+  }   
+}
+
+getDeletedId(id:string,type:any){
+  if(type == 1){
+    this._schoolService.deleteClass(id).subscribe((response) => {
+      this.ngOnInit();
+    });
+  }
+  if(type == 2){
+    this._schoolService.deleteCourse(id).subscribe((response) => {
+      this.ngOnInit();
+    });
+
+  }
+
+
+}
+
+deleteClassCourse(){
+
+}
+
+likeUnlikePosts(postId:string, isLike:boolean){
+  this.currentLikedPostId = postId;
+  this.school.posts.filter((p : any) => p.id == postId).forEach( (item : any) => {
+
+    // here item.likes is null
+    var likes: any[] = item.likes;
+
+    var isLiked = likes.filter(x => x.userId == this.userId && x.postId == postId);
+    if(isLiked.length != 0){
+      this.isLiked = false;
+      this.likesLength = item.likes.length - 1;
+      item.isPostLikedByCurrentUser = false;
+    }
+    else{
+      this.isLiked = true;
+      this.likesLength = item.likes.length + 1;
+      item.isPostLikedByCurrentUser = true;
+  
+    }
+  }); 
+  
+ 
+  this.likeUnlikePost.postId = postId;
+  this.likeUnlikePost.isLike = isLike;
+  this.likeUnlikePost.commentId = '00000000-0000-0000-0000-000000000000'
+  this._postService.likeUnlikePost(this.likeUnlikePost).subscribe((response) => {
+
+
+     this.school.posts.filter((p : any) => p.id == postId).forEach( (item : any) => {
+      var itemss = item.likes;
+      item.likes = response;
+    }); 
+
+
+
+
+     this.InitializeLikeUnlikePost();
+     console.log("succes");
+  });
+
+
+}
+
+showPostDiv(postId:string){
+  debugger
+  var posts: any[] = this.school.posts;
+  this.gridItemInfo = posts.find(x => x.id == postId);
+  this.isGridItemInfo = true;
+
+  // here we also add a view for this post
+  this.addPostView(this.gridItemInfo.id);
+  
+
+}
+
+addPostView(postId:string){
+  debugger
+  if(this.userId != undefined){
+   this.initializePostView();
+  this.postView.postId = postId;
+  this._postService.postView(this.postView).subscribe((response) => {
+    debugger
+    this.gridItemInfo.views.length = response;
+    // this.user.posts.filter((p : any) => p.id == postId).forEach( (item : any) => {
+    //  var itemss = item.likes;
+    //  item.likes = response;
+   }); 
+  }
+
+ 
+
+}
+
+initializePostView(){
+  this.postView ={
+    postId:'',
+    userId:''
+   }
+}
+
+hideGridItemInfo(){
+  this.isGridItemInfo = this.isGridItemInfo ? false : true;
+
+}
+
+likeUnlikeClassCourse(Id:string, isLike:boolean,type:number){
+  debugger
+   this.currentLikedClassCourseId = Id;
+   this.classCourseList.filter((p : any) => p.id == Id).forEach( (item : any) => {
+    debugger
+
+  //   // here item.likes is null
+  if(item.type == 1){
+    var likes: any[] = item.classLikes;
+    var isLiked = likes.filter(x => x.userId == this.userId && x.classId == Id);
+
+  }
+  else{
+    var likes: any[] = item.courseLikes;
+    var isLiked = likes.filter(x => x.userId == this.userId && x.courseId == Id);
+
+  }
+    // var likes: any[] = item.likes;
+
+    
+    if(isLiked.length != 0){
+      this.isClassCourseLiked = false;
+      if(item.type == 1){
+        this.likesClassCourseLength = item.classLikes.length - 1;
+      }
+      else{
+        this.likesClassCourseLength = item.courseLikes.length - 1;
+      }
+      item.isLikedByCurrentUser = false;
+    }
+    else{
+      this.isClassCourseLiked = true;
+      if(item.type == 1){
+        this.likesClassCourseLength = item.classLikes.length + 1;
+      }
+      else{
+        this.likesClassCourseLength = item.courseLikes.length + 1;
+      }
+      
+      item.isLikedByCurrentUser = true;
+  
+    }
+  }); 
+  
+  this.InitializeLikeUnlikeClassCourse();
+  this.likeUnlikeClassCourses.Id = Id;
+  this.likeUnlikeClassCourses.isLike = isLike;
+  this.likeUnlikeClassCourses.type = type;
+  
+  this._schoolService.likeUnlikeClassCourse(this.likeUnlikeClassCourses).subscribe((response) => {
+    debugger
+
+     if(type == 1){
+       this.classCourseList.filter((p : any) => p.id == Id).forEach( (item : any) => {
+       item.classLikes = response;
+    }); 
+
+     }
+     else{
+         this.classCourseList.filter((p : any) => p.id == Id).forEach( (item : any) => {
+         item.courseLikes = response;
+    }); 
+
+     }
+
+
+
+     this.InitializeLikeUnlikeClassCourse();
+     console.log("succes");
+  });
+
+
+}
+
+InitializeLikeUnlikeClassCourse(){
+  this.likeUnlikeClassCourses ={
+    isLike:false,
+    userId:'',
+    Id:'',
+    type:0
+   }
+  
+}
+
+openReelsViewModal(postAttachmentId:string): void {
+  debugger
+  const initialState = {
+    postAttachmentId: postAttachmentId
+  };
+  this.bsModalService.show(ReelsViewComponent,{initialState});
 }
 }

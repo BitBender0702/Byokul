@@ -16,9 +16,10 @@ import { HttpClient,HttpClientModule } from '@angular/common/http';
 import { SharedModule } from '../root/sharedModule/shared.module';
 import { LandingComponent } from './user-auth/component/landing/landing.component';
 import { LogoutComponent } from './user-auth/component/logout/logout.component';
+import { ConfirmEmailComponent } from './user-auth/component/confirmEmail/confirmEmail.component';
 
 @NgModule({
-  declarations: [UserAuthComponent, LoginComponent,RegisterComponent, ChangePasswordComponent, ForgetPasswordComponent],
+  declarations: [UserAuthComponent, LoginComponent,ConfirmEmailComponent,RegisterComponent, ChangePasswordComponent, ForgetPasswordComponent],
   imports: [
     SharedModule,
     CommonModule,
@@ -68,9 +69,14 @@ import { LogoutComponent } from './user-auth/component/logout/logout.component';
           component:ResetPasswordComponent
       },
       {
+        path: 'emailConfirm',
+        component:ConfirmEmailComponent
+    },
+      {
         path: 'logout',
         component:LogoutComponent
-    }
+    },
+
 
   ]}])],
   

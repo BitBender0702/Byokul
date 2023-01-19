@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, ViewChild, inject, Inject, TemplateRef } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild, inject, Inject, TemplateRef, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { HttpClient, HttpEventType, HttpHeaders } from "@angular/common/http";
 import {MenuItem} from 'primeng/api';
@@ -11,15 +11,21 @@ import { UploadVideo } from 'src/root/interfaces/post/uploadVideo';
 import { PostAuthorTypeEnum } from 'src/root/Enums/postAuthorTypeEnum';
 import { PostTypeEnum } from 'src/root/Enums/postTypeEnum';
 import { BsModalRef, BsModalService, ModalDirective, ModalOptions } from 'ngx-bootstrap/modal';
+import { MessageService } from 'primeng/api';
 
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Calendar } from 'primeng/calendar';
+import { Subject } from 'rxjs';
+
+export const addPostResponse =new Subject<{}>();  
+
 
 @Component({
   selector: 'create-post',
   templateUrl: 'createPost.component.html',
   styleUrls: ['createPost.component.css'],
+  providers: [MessageService]
 })
 
 export class CreatePostComponent implements OnInit {
@@ -98,6 +104,8 @@ export class CreatePostComponent implements OnInit {
   initialState:any;
   schoolId:any;
 
+  public event: EventEmitter<any> = new EventEmitter();
+
   @ViewChild("calendar", { static: false }) private calendar!: Calendar;
 
   attachmentModalRef!: BsModalRef;
@@ -109,7 +117,7 @@ export class CreatePostComponent implements OnInit {
 
 
   
-  constructor(private domSanitizer: DomSanitizer,private bsModalService: BsModalService,public options: ModalOptions,private fb: FormBuilder,postService: PostService,private http: HttpClient) {
+  constructor(private domSanitizer: DomSanitizer,public messageService:MessageService,private bsModalService: BsModalService,public options: ModalOptions,private fb: FormBuilder,postService: PostService,private http: HttpClient) {
     this._postService = postService;
   }
 
@@ -317,15 +325,16 @@ export class CreatePostComponent implements OnInit {
 
 
 
-    this._postService.createPost(this.postToUpload).subscribe((response:any) => {
+    this._postService.createPost(this.postToUpload).subscribe((response:any) => {  
+      debugger
       this.isSubmitted=false;
       this.loadingIcon = false;
+      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post created successfully'});
+      addPostResponse.next({response}); 
       this.postToUpload = new FormData();
       this.close();
       this.ngOnInit();
     });
-
-
    }
 
    postFrom(){
@@ -382,22 +391,29 @@ export class CreatePostComponent implements OnInit {
     }
 
     this._postService.createPost(this.postToUpload).subscribe((response:any) => {
+      debugger
       this.isSubmitted=false;
       this.loadingIcon = false;
+      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Reel created successfully'});
+      addPostResponse.next({response}); 
       this.postToUpload = new FormData();
       this.close();
       this.ngOnInit();
     });
 
-
    }
-
-
 
    removeTags(tag:any){
     const tagIndex = this.tagLists.findIndex((item) => item ===tag);
     if (tagIndex > -1) {
       this.tagLists.splice(tagIndex, 1);
+    }
+   }
+
+   removeInitialTags(tag:any){
+    const tagIndex = this.initialTagList.findIndex((item) => item ===tag);
+    if (tagIndex > -1) {
+      this.initialTagList.splice(tagIndex, 1);
     }
    }
 
@@ -409,9 +425,7 @@ export class CreatePostComponent implements OnInit {
     this.tagLists = [ ...this.tagLists, ...this.initialTagList];
     this.isTagsValid = true;
     this.closeTagsModal();
-
    }
-
 
   private openFirstModal(): void {
     this.openFirst.nativeElement.click();

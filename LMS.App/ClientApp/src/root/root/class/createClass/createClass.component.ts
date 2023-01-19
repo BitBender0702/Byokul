@@ -1,7 +1,7 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { HttpClient, HttpEventType, HttpHeaders } from "@angular/common/http";
-import {MenuItem} from 'primeng/api';
+import {MenuItem, MessageService} from 'primeng/api';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MultilingualComponent } from '../../sharedModule/Multilingual/multilingual.component';
 import { CreateClassModel } from 'src/root/interfaces/class/createClassModel';
@@ -13,7 +13,7 @@ import { IfStmt } from '@angular/compiler';
   selector: 'students-Home',
   templateUrl: './createClass.component.html',
   styleUrls: ['./createClass.component.css'],
-  providers: [FilterService]
+  providers: [FilterService,MessageService]
 })
 
 export class CreateClassComponent extends MultilingualComponent implements OnInit {
@@ -59,9 +59,12 @@ export class CreateClassComponent extends MultilingualComponent implements OnIni
   classUrl!:string;
   classId!:string;
   className!:string;
+  tags!:string;
+  tagList!: string[];
+  isTagsValid: boolean = true;
 
 
-  constructor(injector: Injector,private route: ActivatedRoute,private router: Router,private fb: FormBuilder,classService: ClassService,private http: HttpClient) {
+  constructor(injector: Injector,public messageService:MessageService,private route: ActivatedRoute,private router: Router,private fb: FormBuilder,classService: ClassService,private http: HttpClient) {
     super(injector);
     this._classService = classService;
   }
@@ -130,7 +133,8 @@ export class CreateClassComponent extends MultilingualComponent implements OnIni
     serviceTypeId: this.fb.control('',[Validators.required]),
     accessibilityId: this.fb.control('',[Validators.required]),
     languageIds:this.fb.control('',[Validators.required]),
-    price:this.fb.control('')
+    price:this.fb.control(''),
+    tags:this.fb.control('',[Validators.required]),
 
 }, {validator: this.dateLessThan('startDate', 'endDate',this.currentDate)});
 
@@ -144,6 +148,8 @@ this.createClassForm2 = this.fb.group({
 this.createClassForm3 = this.fb.group({
   classUrl: this.fb.control('',[Validators.required])
 });
+
+this.tagList = [];
 }
 
 getSchoolsForDropdown(){
@@ -216,13 +222,14 @@ captureTeacherId(event: any) {
   }
 
   createClass(){
+    debugger
     this.isSubmitted=true;
     if (!this.createClassForm3.valid) {
       return;
     }
 
     this.loadingIcon = true;
-    this.router.navigateByUrl(`user/classProfile/${this.classId}`)
+    this.router.navigateByUrl(`profile/class/${this.selectedSchool.schoolName.replace(" ","").toLowerCase()}/${this.className.replace(" ","").toLowerCase()}`)
 
     // this._classService.createClass(this.fileToUpload).subscribe((response:any) => {
     //   this.loadingIcon = false;
@@ -237,15 +244,29 @@ captureTeacherId(event: any) {
   }
 
   forwardStep() {
+    debugger
     this.isStepCompleted = true;
     if (!this.createClassForm1.valid || this.uploadImageName == undefined) {
       return;
     }
 
-    var schoolId = this.createClassForm1.get('schoolId')?.value;
-    this.class=this.createClassForm1.value;
-    this.class.schoolId = schoolId;
+    if(this.tagList == undefined || this.tagList.length == 0){
+      this.isTagsValid = false;
+      return;
+    }
 
+    // var schoolId = this.createClassForm1.get('schoolId')?.value;
+    this.class=this.createClassForm1.value;
+    this.className = this.class.className.split(' ').join('');
+    this.fileToUpload.append('classTags', JSON.stringify(this.tagList))
+    // this.schoolName = this.class.schoolId.schoolName.split(' ').join('');
+    this._classService.isClassNameExist(this.class.className).subscribe((response) => {
+      if(!response){
+        this.createClassForm1.setErrors({ unauthenticated: true });
+        return;
+      }
+      else{
+    // this.class.schoolId = schoolId;
     this.fileToUpload.append('schoolId', this.class.schoolId);
     this.fileToUpload.append('className', this.class.className);
     this.fileToUpload.append('description', this.class.description);
@@ -256,21 +277,13 @@ captureTeacherId(event: any) {
     this.fileToUpload.append('accessibilityId',this.class.accessibilityId);
     this.fileToUpload.append('languageIds',JSON.stringify(this.class.languageIds));
     this.fileToUpload.append('price',this.class.price?.toString());
-    this.className = this.class.className.split(' ').join('');
-    // this.schoolName = this.class.schoolId.schoolName.split(' ').join('');
-    this._classService.isClassNameExist(this.class.className).subscribe((response) => {
-      if(!response){
-        this.createClassForm1.setErrors({ unauthenticated: true });
-        return;
-      }
-      else{
         this.step += 1;
         this.isStepCompleted = false;
         this.nextPage = true;
     
         if(this.fromSchoolProfile != ''){
         this.createClassForm3.patchValue({
-          classUrl: 'byokul.com/profile/class/' + this.selectedSchool.schoolName.split(' ').join('') + "/" +  this.class.className.split(' ').join(''),
+          classUrl: 'byokul.com/profile/class/' + this.selectedSchool.schoolName.split(' ').join('').replace(" ","").toLowerCase() + "/" +  this.class.className.split(' ').join('').replace(" ","").toLowerCase(),
           });
         }
        else{
@@ -278,13 +291,54 @@ captureTeacherId(event: any) {
         this._classService.getSelectedSchool(schoolId).subscribe((response) => {
           this.selectedSchool = response;
           this.createClassForm3.patchValue({
-            classUrl: 'byokul.com/profile/class/' + this.selectedSchool.schoolName.split(' ').join('') + "/" +  this.class.className.split(' ').join(''),
+            classUrl: 'byokul.com/profile/class/' + this.selectedSchool.schoolName.split(' ').join('').replace(" ","").toLowerCase() + "/" +  this.class.className.split(' ').join('').replace(" ","").toLowerCase(),
           });
         });  
       
         }
       }
     });
+    // this.class.schoolId = schoolId;
+    // this.fileToUpload.append('schoolId', this.class.schoolId);
+    // this.fileToUpload.append('className', this.class.className);
+    // this.fileToUpload.append('description', this.class.description);
+    // this.fileToUpload.append('noOfStudents',this.class.noOfStudents);
+    // this.fileToUpload.append('startDate',this.class.startDate);
+    // this.fileToUpload.append('endDate',this.class.endDate);
+    // this.fileToUpload.append('serviceTypeId',this.class.serviceTypeId);
+    // this.fileToUpload.append('accessibilityId',this.class.accessibilityId);
+    // this.fileToUpload.append('languageIds',JSON.stringify(this.class.languageIds));
+    // this.fileToUpload.append('price',this.class.price?.toString());
+    // this.className = this.class.className.split(' ').join('');
+    // this.fileToUpload.append('classTags', JSON.stringify(this.tagList))
+    // // this.schoolName = this.class.schoolId.schoolName.split(' ').join('');
+    // this._classService.isClassNameExist(this.class.className).subscribe((response) => {
+    //   if(!response){
+    //     this.createClassForm1.setErrors({ unauthenticated: true });
+    //     return;
+    //   }
+    //   else{
+    //     this.step += 1;
+    //     this.isStepCompleted = false;
+    //     this.nextPage = true;
+    
+    //     if(this.fromSchoolProfile != ''){
+    //     this.createClassForm3.patchValue({
+    //       classUrl: 'byokul.com/profile/class/' + this.selectedSchool.schoolName.split(' ').join('') + "/" +  this.class.className.split(' ').join(''),
+    //       });
+    //     }
+    //    else{
+    //     var schoolId = this.createClassForm1.controls['schoolId'].value;
+    //     this._classService.getSelectedSchool(schoolId).subscribe((response) => {
+    //       this.selectedSchool = response;
+    //       this.createClassForm3.patchValue({
+    //         classUrl: 'byokul.com/profile/class/' + this.selectedSchool.schoolName.split(' ').join('') + "/" +  this.class.className.split(' ').join(''),
+    //       });
+    //     });  
+      
+    //     }
+    //   }
+    // });
    
     
 
@@ -300,7 +354,7 @@ captureTeacherId(event: any) {
     this.fileToUpload.append('disciplineIds',JSON.stringify(this.disciplineIds));
     this.fileToUpload.append('studentIds',JSON.stringify(this.studentIds));
     this.fileToUpload.append('teacherIds',JSON.stringify(this.teacherIds));
-    this.classUrl = 'byokul.com/profile/class/' + this.selectedSchool.schoolName.split(' ').join('') + "/" +  this.className.split(' ').join('');
+    this.classUrl = 'byokul.com/profile/class/' + this.selectedSchool.schoolName.split(' ').join('').replace(" ","").toLowerCase() + "/" +  this.className.split(' ').join('').replace(" ","").toLowerCase();
     this.fileToUpload.append('classUrl',JSON.stringify(this.classUrl));
     this._classService.createClass(this.fileToUpload).subscribe((response:any) => {
          var classId =  response;
@@ -308,6 +362,7 @@ captureTeacherId(event: any) {
          this.loadingIcon = false;
          this.step += 1;
          this.isStepCompleted = false;
+         this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Class added successfully'});
     });
   }
   backStep() {
@@ -413,7 +468,32 @@ captureTeacherId(event: any) {
     }
   }
 
+
+
   classProfile(){
-    window.location.href=`profile/class/${this.selectedSchool.schoolName}/${this.className}`;
+    window.open(`profile/class/${this.selectedSchool.schoolName.replace(" ","").toLowerCase()}/${this.className.replace(" ","").toLowerCase()}`, '_blank');
+
+    //window.location.href=`profile/class/${this.selectedSchool.schoolName}/${this.className}`;
   }
+
+  onEnter(event:any) {
+    debugger
+    if(event.target.value.indexOf('#') > -1){
+      this.tagList.push(event.target.value);
+    }
+    else{
+      event.target.value = '#' + event.target.value;
+      this.tagList.push(event.target.value);
+    }
+    event.target.value = '';
+  }
+
+  removeTag(tag:any){
+    const tagIndex = this.tagList.findIndex((item) => item ===tag);
+    if (tagIndex > -1) {
+      this.tagList.splice(tagIndex, 1);
+    }
+   }
+
+
 }

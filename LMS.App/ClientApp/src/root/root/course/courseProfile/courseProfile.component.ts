@@ -4,22 +4,28 @@ import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BsModalService } from 'ngx-bootstrap/modal';
+import { MessageService } from 'primeng/api';
 import { AddCourseCertificate } from 'src/root/interfaces/course/addCourseCertificate';
 import { AddCourseLanguage } from 'src/root/interfaces/course/addCourseLanguage';
 import { AddCourseTeacher } from 'src/root/interfaces/course/addCourseTeacher';
+import { CourseView } from 'src/root/interfaces/course/courseView';
 import { DeleteCourseCertificate } from 'src/root/interfaces/course/deleteCourseCertificate';
 import { DeleteCourseLanguage } from 'src/root/interfaces/course/deleteCourseLanguage';
 import { DeleteCourseTeacher } from 'src/root/interfaces/course/deleteCourseTeacher';
+import { LikeUnlikePost } from 'src/root/interfaces/post/likeUnlikePost';
+import { PostView } from 'src/root/interfaces/post/postView';
 import { CourseService } from 'src/root/service/course.service';
 import { PostService } from 'src/root/service/post.service';
-import { CreatePostComponent } from '../../createPost/createPost.component';
+import { addPostResponse, CreatePostComponent } from '../../createPost/createPost.component';
 import { PostViewComponent } from '../../postView/postView.component';
+import { ReelsViewComponent } from '../../reels/reelsView.component';
 import { MultilingualComponent } from '../../sharedModule/Multilingual/multilingual.component';
 
 @Component({
     selector: 'courseProfile-root',
     templateUrl: './courseProfile.component.html',
-    styleUrls: ['./courseProfile.component.css']
+    styleUrls: ['./courseProfile.component.css'],
+    providers: [MessageService]
   })
 
 export class CourseProfileComponent extends MultilingualComponent implements OnInit {
@@ -40,7 +46,6 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     courseTeacher!:AddCourseTeacher;
     deleteLanguage!: DeleteCourseLanguage;
     deleteTeacher!: DeleteCourseTeacher;
-    //editCourse:any;
     editCourseForm!:FormGroup;
     languageForm!:FormGroup;
     teacherForm!:FormGroup;
@@ -58,8 +63,20 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     fileToUpload= new FormData();
     isCoursePaid!:boolean;
     disabled:boolean = true;
-    // currentDate!:string;
-
+    validToken!:string;
+    currentLikedPostId!:string;
+    userId!:string;
+    likesLength!:number;
+    isLiked!:boolean;
+    likeUnlikePost!: LikeUnlikePost;
+    courseName!:string;
+    gridItemInfo:any;
+    isGridItemInfo: boolean = false;
+    postView!:PostView;
+    courseView!:CourseView;
+    itemsPerSlide = 7;
+    singleSlideOffset = true;
+    noWrap = true;
 
     @ViewChild('closeEditModal') closeEditModal!: ElementRef;
     @ViewChild('closeTeacherModal') closeTeacherModal!: ElementRef;
@@ -70,43 +87,46 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     @ViewChild('createPostModal', { static: true }) createPostModal!: CreatePostComponent;
 
     isDataLoaded:boolean = false;
-    constructor(injector: Injector,postService:PostService,private bsModalService: BsModalService,courseService: CourseService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
+    constructor(injector: Injector,public messageService:MessageService,postService:PostService,private bsModalService: BsModalService,courseService: CourseService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
       super(injector);
         this._courseService = courseService;
          this._postService = postService;
     }
   
     ngOnInit(): void {
+      debugger
+      this.validToken = localStorage.getItem("jwt")?? '';
       this.loadingIcon = true;
       var selectedLang = localStorage.getItem("selectedLanguage");
       this.translate.use(selectedLang?? '');
 
-      var id = this.route.snapshot.paramMap.get('courseId');
-      this.courseId = id ?? '';
+      // var id = this.route.snapshot.paramMap.get('courseId');
+      // this.courseId = id ?? '';
 
-      var courseName = this.route.snapshot.paramMap.get('courseName');
+      this.courseName = this.route.snapshot.paramMap.get('courseName')??'';
       var schoolName = this.route.snapshot.paramMap.get('schoolName');
 
-      if(this.courseId == ''){
-        this._courseService.getCourseByName(courseName,schoolName).subscribe((response) => {
-          this.courseId = response.courseId;
-          this._courseService.getCourseById(this.courseId).subscribe((response) => {
-            this.course = response;
-            this.isOwnerOrNot();
-            this.loadingIcon = false;
-            this.isDataLoaded = true;
-          });
-        })
+      // if(this.courseId == ''){
+      //   this._courseService.getCourseByName(this.courseName,schoolName).subscribe((response) => {
+      //     this.courseId = response.courseId;
+      //     this._courseService.getCourseById(this.courseId).subscribe((response) => {
+      //       this.course = response;
+      //       this.isOwnerOrNot();
+      //       this.loadingIcon = false;
+      //       this.isDataLoaded = true;
+      //     });
+      //   })
 
-      }
-      else{
-      this._courseService.getCourseById(this.courseId).subscribe((response) => {
+      // }
+      // else{
+      this._courseService.getCourseById(this.courseName.replace(" ","").toLowerCase()).subscribe((response) => {
         this.course = response;
         this.isOwnerOrNot();
         this.loadingIcon = false;
         this.isDataLoaded = true;
+        this.addCourseView(this.course.courseId);
       });
-    }
+    // }
 
       this.editCourseForm = this.fb.group({
         schoolName: this.fb.control(''),
@@ -173,6 +193,23 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
         courseId:'',
         certificates:[]
        }
+       this.InitializeLikeUnlikePost();
+
+      //  addPostResponse.subscribe(response => {
+      //   this.ngOnInit();
+      // });
+
+      addPostResponse.subscribe(response => {
+        this.loadingIcon = true;
+        this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post created successfully'});
+        this._courseService.getCourseById(this.courseName.replace(" ","").toLowerCase()).subscribe((response) => {
+          this.course = response;
+          this.isOwnerOrNot();
+          this.loadingIcon = false;
+          this.isDataLoaded = true;
+          this.addCourseView(this.course.courseId);
+        });
+      });
 
 //     }
 
@@ -185,12 +222,23 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
 //   }
     }
 
+    InitializeLikeUnlikePost(){
+      this.likeUnlikePost = {
+        postId: '',
+        userId: '',
+        isLike:false,
+        commentId:''
+       };
+
+    }
+
   isOwnerOrNot(){
     var validToken = localStorage.getItem("jwt");
       if (validToken != null) {
         let jwtData = validToken.split('.')[1]
         let decodedJwtJsonData = window.atob(jwtData)
         let decodedJwtData = JSON.parse(decodedJwtJsonData);
+        this.userId = decodedJwtData.jti;
         if(decodedJwtData.sub == this.course.createdBy){
           this.isOwner = true;
         }
@@ -298,6 +346,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       this._courseService.saveCourseLanguages(this.courseLanguage).subscribe((response:any) => {
         this.closeLanguagesModal();
         this.isSubmitted = false;
+        this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Language added successfully'});
         this.ngOnInit();
   
       });
@@ -307,6 +356,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       this.loadingIcon = true;
       this.deleteLanguage.courseId = this.course.courseId;
       this._courseService.deleteCourseLanguage(this.deleteLanguage).subscribe((respteachersonse:any) => {
+        this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Language deleted successfully'});
         this.ngOnInit();
   
       });
@@ -345,6 +395,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
           this._courseService.saveCourseTeachers(this.courseTeacher).subscribe((response:any) => {
             this.closeTeachersModal();
             this.isSubmitted = false;
+            this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Teacher added successfully'});
             this.ngOnInit();
       
           });
@@ -354,8 +405,8 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
           this.loadingIcon = true;
           this.deleteTeacher.courseId = this.course.courseId;
           this._courseService.deleteCourseTeacher(this.deleteTeacher).subscribe((response:any) => {
+            this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Teacher deleted successfully'});
             this.ngOnInit();
-      
           });
       
         }
@@ -368,8 +419,8 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
           this.loadingIcon = true;
           this.deleteCertificate.courseId = this.course.courseId;
           this._courseService.deleteCourseCertificate(this.deleteCertificate).subscribe((response:any) => {
+            this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Certificate deleted successfully'});
             this.ngOnInit();
-      
           });
       
         }
@@ -404,6 +455,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
             this.isSubmitted = false;
             this.courseCertificate.certificates = [];
             this.certificateToUpload.set('certificates','');
+            this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Certificate added successfully'});
             this.ngOnInit();
       
           });
@@ -433,6 +485,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
             this.closeModal();
             this.isSubmitted=true;
             this.fileToUpload = new FormData();
+            this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Course updated successfully'});
             this.ngOnInit();
           });
         }
@@ -535,9 +588,12 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     
     }
 
-    convertToClass(courseId:string){
-      this._courseService.convertToClass(courseId).subscribe((response) => {
-        window.location.href=`user/classProfile/${courseId}`;
+    convertToClass(courseName:string,schoolName:string){
+      debugger
+      this._courseService.convertToClass(courseName.replace(" ","").toLowerCase()).subscribe((response) => {
+        // window.location.href=`user/classProfile/${courseId}`;
+        window.location.href = `profile/class/${schoolName.replace(" ","").toLowerCase()}/${courseName.replace(" ","").toLowerCase()}`;
+
       });
     }
 
@@ -547,6 +603,112 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
         posts: posts
       };
       this.bsModalService.show(PostViewComponent,{initialState});
+    }
+
+    requestMessage(){
+      if(this.validToken == ''){
+        window.open('user/auth/login', '_blank');
+      }
+    }
+
+    likeUnlikePosts(postId:string, isLike:boolean){
+      this.currentLikedPostId = postId;
+      this.course.posts.filter((p : any) => p.id == postId).forEach( (item : any) => {
+        var likes: any[] = item.likes;
+        var isLiked = likes.filter(x => x.userId == this.userId && x.postId == postId);
+      if(isLiked.length != 0){
+        this.isLiked = false;
+        this.likesLength = item.likes.length - 1;
+        item.isPostLikedByCurrentUser = false;
+      }
+      else{
+        this.isLiked = true;
+        this.likesLength = item.likes.length + 1;
+        item.isPostLikedByCurrentUser = true;
+    
+      }
+      }); 
+      
+     
+      this.likeUnlikePost.postId = postId;
+      this.likeUnlikePost.isLike = isLike;
+      this.likeUnlikePost.commentId = '00000000-0000-0000-0000-000000000000'
+      this._postService.likeUnlikePost(this.likeUnlikePost).subscribe((response) => {
+    
+    
+         this.course.posts.filter((p : any) => p.id == postId).forEach( (item : any) => {
+          var itemss = item.likes;
+          item.likes = response;
+        }); 
+    
+    
+    
+    
+         this.InitializeLikeUnlikePost();
+         console.log("succes");
+      });
+    
+    
+    }
+
+    showPostDiv(postId:string){
+      debugger
+      var posts: any[] = this.course.posts;
+      this.gridItemInfo = posts.find(x => x.id == postId);
+      this.isGridItemInfo = true;
+      this.addPostView(this.gridItemInfo.id);
+    }
+    
+    addPostView(postId:string){
+      debugger
+      if(this.userId != undefined){
+       this.initializePostView();
+      this.postView.postId = postId;
+      this._postService.postView(this.postView).subscribe((response) => {
+        debugger
+        this.gridItemInfo.views.length = response;
+       }); 
+      }
+    }
+    
+    initializePostView(){
+      this.postView ={
+        postId:'',
+        userId:''
+       }
+    }
+    
+    hideGridItemInfo(){
+      this.isGridItemInfo = this.isGridItemInfo ? false : true;
+    
+    }
+
+    addCourseView(courseId:string){
+      debugger
+      if(this.userId != undefined){
+        this.initializeCourseView();
+      this.courseView.courseId = courseId;
+      this._courseService.courseView(this.courseView).subscribe((response) => {
+        debugger
+        console.log('success');
+        //this.posts.posts.views.length = response;
+       }); 
+      }
+    
+    }
+    initializeCourseView(){
+      this.courseView = {
+        courseId:'',
+        userId:''
+      }
+    }
+
+    openReelsViewModal(postAttachmentId:string): void {
+      debugger
+      const initialState = {
+        postAttachmentId: postAttachmentId
+      };
+      this.bsModalService.show(ReelsViewComponent,{initialState});
     }
   
 }
