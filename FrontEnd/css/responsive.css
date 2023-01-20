@@ -43,6 +43,10 @@
 	.followers_name {
 		margin-bottom: 10px;
 	}
+	/*---- new media start here ---*/
+	.certi-template-select li {
+		width: 50%;
+	}
 }
 
 @media screen and (max-width:767px) {
@@ -130,6 +134,10 @@
 		margin-right: 10px;
 		margin-bottom: 8px;
 		font-size: 13px !important;
+	}
+	/*---- new media start here ---*/
+	.certi-template-select li {
+		width: 100%;
 	}
 }
 @media (max-width:451px) {

@@ -35,6 +35,7 @@ export class RegisterComponent extends MultilingualComponent implements OnInit {
 
     isConfirmPasswordDirty = false;
     isRegister!:boolean;
+    currentDate!:string;
 
     date = new Date();
     credentials: RegisterModel = {email:'', password:'',confirmPassword:'',firstName:'',lastName:'',gender:0,dob: ''};
@@ -54,6 +55,7 @@ export class RegisterComponent extends MultilingualComponent implements OnInit {
         Validators.required,
       ];
 
+      this.currentDate = this.getCurrentDate();
       this.selectedLanguage = localStorage.getItem("selectedLanguage");
       this.registrationForm = this.fb.group({
         firstName: this.fb.control('', [Validators.required]),
@@ -63,8 +65,33 @@ export class RegisterComponent extends MultilingualComponent implements OnInit {
         dob: this.fb.control('',[Validators.required]),
         password: this.fb.control('', [...passwordValidators]),
         confirmPassword: this.fb.control('', [...passwordValidators]),
-      });
+      }, {validator: this.dateLessThan('dob',this.currentDate)});
     }
+
+    getCurrentDate(){
+      var today = new Date();
+        var dd = String(today. getDate()). padStart(2, '0');
+        var mm = String(today. getMonth() + 1). padStart(2, '0');
+        var yyyy = today. getFullYear();
+      ​  var currentDate = yyyy + '-' + mm + '-' + dd;
+        return currentDate;
+      }
+
+      dateLessThan(from: string, currentDate:string) {
+        return (group: FormGroup): {[key: string]: any} => {
+         let f = group.controls[from];
+         if(f.value ==""){
+          return {};
+
+         }
+         if (f.value > currentDate) {
+           return {
+             dates: `Please enter valid date`
+           };
+         }
+         return {};
+        }
+      }
 
     matchPassword(){
 
@@ -87,6 +114,7 @@ export class RegisterComponent extends MultilingualComponent implements OnInit {
   get confirmPassword() { return this.registrationForm.get('confirmPassword'); }
 
     register(){
+      this.isRegister = false;
       this.isSubmitted = true;
       if (!this.registrationForm.valid) {
         return;}
@@ -113,6 +141,9 @@ export class RegisterComponent extends MultilingualComponent implements OnInit {
                     localStorage.setItem("jwt", token); 
                     this.invalidRegister = false; 
                     this.isRegister = true;
+                    this.registrationForm.reset();
+
+                    
                     //this.router.navigateByUrl("user/auth/confirmEmail");
                     //this.router.navigateByUrl("user/auth/login");
                   }

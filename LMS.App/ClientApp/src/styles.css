@@ -99,6 +99,9 @@ img {
 .fw_700 {
 	font-weight: 700 !important;
 }
+.font_6 {
+	font-size: 6px;
+}
 
 .font_10 {
 	font-size: 10px;
@@ -126,6 +129,10 @@ img {
 
 .font_24 {
 	font-size: 24px;
+}
+
+.font_28{
+	font-size: 28px;
 }
 
 .font_34 {
@@ -1141,7 +1148,7 @@ input[type=number]::-webkit-outer-spin-button {
 .feed-name {
 	position: absolute;
 	bottom: 55px;
-	background: rgba(255, 255, 255, 0.8);
+	background: rgba(255, 255, 255, 0.9);
 	padding: 10px;
 	width: 100%;
 }
@@ -1165,10 +1172,10 @@ input[type=number]::-webkit-outer-spin-button {
 	width: 210px;
 }
 
-.feedbox-inner {
+/* .feedbox-inner {
 	overflow: hidden;
 	flex-wrap: nowrap !important;
-}
+} */
 
 .next-feed {
 	position: absolute;
@@ -1642,6 +1649,7 @@ body .liv-postbtn .post-attch-btn.active,
 	background: rgba(159, 159, 159, 0.6) !important;
 	width: 25px;
 	height: 25px;
+	min-width: 25px;
 	color: #fff !important;
 	font-size: 13px;
 	right: 12px;
@@ -2200,7 +2208,131 @@ input[type="search"] {
 	background: linear-gradient(0deg, rgba(124, 141, 167, 0.04), rgba(124, 141, 167, 0.04)), #FFFFFF;
 	border: 1px solid rgba(124, 141, 167, 0.5);
 }
+.sign-res-img {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;
+    border: 0.5px solid #E4E4E4;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+	justify-content: center;
+}
+.sign-res-img .dl-post-img {
+    background: rgba(159, 159, 159, 0.6) !important;
+    width: 25px;
+    height: 25px !important;
+    color: #fff !important;
+    font-size: 13px;
+    right: 4px;
+    top: 4px;
+}
+.cer-schol-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+.certi-template-select li {
+    width: 33.33333%;
+}
+.certi-template-select .custom-radio {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+}
+.orng-text{
+	color:#FF811C;
+}
+.font_7{
+	font-size: 7px;
+}
+.certi-template-select .custom-radio {
+    width: 257.96px;
+height: 186.73px;
+    border-radius: 0;
+	margin: 0 auto;
+}
+.certi-template-select .custom-radio .checkmark {
+    width: 257.96px;
+    height: 186.73px;
+    border-radius: 7.07965px;
+    background: rgba(189, 189, 189, 0.1);
+    /* background-image: url(../images/certificate-frame-first.svg); */
+    background-size: 96%;
+    padding: 10px 10px;
+    background-repeat: no-repeat;
+    background-position: center center;
+	
+}
+.cer-bot-icon{
+	border: 0.442478px solid #DEE0E3;
+	border-radius: 50%;
+	width: 13.27px;
+height: 13.27px;
+}
+.certi-template-select .custom-radio input:checked~.checkmark {
+    border-color: #FFDDC2;
+    background-color: rgba(255, 130, 28, 0.3);
+    border: 4px solid #FF821C;
+    backdrop-filter: blur(0.5px);
+    border-radius: 8px;
+}
+.certi-template-select .custom-radio input:checked~.checkmark:after {
+    content: "";
+    /* background-image: url(../images/theme-check-certificate.svg); */
+    width: 21px;
+    height: 21px;
+}
+/* .certificate-form {
+    max-width: 912px;
+    width: auto;
+} */
+/* .certi-template-select .custom-radio2 .checkmark{
+	background-image: url(../images/certificate-frame-2.svg);
+}
+.certi-template-select .custom-radio3 .checkmark{
+	background-image: url(../images/certificate-frame3.svg);
+}
+.certi-template-select .custom-radio4 .checkmark{
+	background-image: url(../images/certificate-frame4.svg);
+}
+.certi-template-select .custom-radio5 .checkmark{
+	background-image: url(../images/certificate-frame5.svg);
+}
+.certi-template-select .custom-radio6 .checkmark{
+	background-image: url(../images/certificate-frame6.svg);
+} */
+.final-certificate {
+    background: #FFFFFF;
+    border: 1px solid #F8F8F8;
+    border-radius: 16px;
+    margin: 0 auto;
+    padding: 15px 16px;
+}
 
+.final-certificate .cert-inner {
+    background: rgba(189, 189, 189, 0.1);
+    border-radius: 16px;
+    height: 100%;
+    /* background-image: url(../images/certificate-frame-2.svg); */
+    background-repeat: no-repeat;
+    background-size: 90%;
+    background-position: center center;
+    padding: 30px 0;
+}
+.final-certificate .cer-schol-icon {
+    width: 64px;
+    height: 64px;
+}
+.final-certificate .cer-bot-icon {
+    width: 30px;
+    height: 30px;
+}
+.final-dateqr {
+    max-width: 280px;
+    margin: 0 auto;
+}
 
 /* For primeNg multiselect style*/
 
@@ -2540,10 +2672,49 @@ button.delete-tag img {
 .post-view-large .item {
     max-height: 750px;
 }
+.feed-section .carousel-indicators {
+    display: none;
+}
+.feed-section carousel {
+    width: 100%;
+}
+.feed-section .carousel-control.carousel-control-prev, .feed-section .carousel-control.carousel-control-next {
+    background: #FFFFFF;
+    border: 1px solid rgba(124, 141, 167, 0.5);
+    box-shadow: -4px 4px 30px rgb(0 0 0 / 8%);
+    border-radius: 60px;
+    transform: matrix(-1, 0, 0, 1, 0, 0);
+    width: 27px;
+    height: 27px;
+    top: 120px;
+	opacity: 1;
+}
+.feed-section .carousel-control-next-icon, .feed-section .carousel-control-prev-icon{
+	background-image: url(../src/assets/images/chevron-feed.svg);
+    width: 5px;
+    height: 9px;
+    background-position: center center;
+    background-size: contain;	
+}
+.feed-section .carousel-control-next{
+	right: -15px;
+}
+.feed-section .carousel-control-prev{
+	left: -15px;
+}
+.feed-section .carousel-control-next span.icon-next.carousel-control-next-icon {
+    transform: rotate(-180deg);
+}
+.post-view-large .col-md-8 p {
+    max-height: 690px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
 
 @media screen and (min-width:1200px) {
 	.main_content{
-		padding-left: 310px !important;
+		padding-left: 330px !important;
 	}
 }
 @media screen and (max-width:1199px) {
@@ -2591,6 +2762,9 @@ button.delete-tag img {
 	}
 	.followers_name {
 		margin-bottom: 10px;
+	}
+	.certi-template-select li {
+		width: 50%;
 	}
 }
 
@@ -2780,6 +2954,11 @@ button.delete-tag img {
 		width: 25px;
 		height: 25px;		
 	}
+	.school-grid-box .school-grid-body p.text_sec1 {
+		overflow-y: auto;
+		max-height: 230px;
+		padding-right: 5px;
+	}
 
 }
 @media (max-width:575px) {
@@ -2787,6 +2966,9 @@ button.delete-tag img {
 		margin-right: 10px;
 		margin-bottom: 8px;
 		font-size: 13px !important;
+	}
+	.certi-template-select li {
+		width: 100%;
 	}
 }
 @media (max-width:451px) {

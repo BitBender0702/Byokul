@@ -14,6 +14,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Security.Claims;
 using System.Text;
+using LMS.Common.ViewModels.Post;
 
 namespace LMS.Services.Account
 {
@@ -42,13 +43,17 @@ namespace LMS.Services.Account
             if (user != null)
             {
                 var result = await _signInManager.PasswordSignInAsync(loginViewModel.Email, loginViewModel.Password, false, false);
-                if (result.Succeeded)
+                if (result.Succeeded && !result.IsNotAllowed)
                 {
                     var token = await GenerateJSONWebToken(user);
                     return token;
                 }
+                if(!result.Succeeded && result.IsNotAllowed)
+                {
+                    return Constants.EmailNotConfirmed;
+                }
             }
-            return null;
+            return Constants.UserNotFound;
         }
 
         public async Task<string> GenerateJSONWebToken(User userInfo)
@@ -97,12 +102,12 @@ namespace LMS.Services.Account
 
             var response = await _userManager.UpdateAsync(user);
             if (response.Succeeded)
-                return await TriggerResetPasswordEmail(forgetPasswordViewModel.Email, user.UniqueToken);
+                return await TriggerResetPasswordEmail(forgetPasswordViewModel.Email, user.UniqueToken,user);
 
             return false;
         }
 
-        private async Task<bool> TriggerResetPasswordEmail(string email, string token)
+        private async Task<bool> TriggerResetPasswordEmail(string email, string token,User user)
         {
             string callBackUrl = string.Format(_config["ForgotPasswordCallback"], token);
 
@@ -111,11 +116,11 @@ namespace LMS.Services.Account
             var imagePath = Path.Combine(path, "Email/images/icon_instagram.png");
 
             var text = System.IO.File.ReadAllText(filePath);
-            text = text.Replace("[ImageSrc]", imagePath);
+            text = text.Replace("[Recipient]", user.FirstName + " " + user.LastName);
             text = text.Replace("[ACTIVATIONLINK]", callBackUrl);
             text = text.Replace("*#FirstName#*", email);
 
-            await _commonService.SendEmail(new List<string> { email }, null, null, subject: "Forgot password", body: text);
+            await _commonService.SendEmail(new List<string> { email }, null, null, subject: "Reset Your Password", body: text);
             //SendEmail(new List<string> { email }, null, null, subject: "Forgot password", body: text);
             return true;
         }

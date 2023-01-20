@@ -33,9 +33,12 @@
           </div>
           <div class="col-md-6">
             <div class="form-group">
-              <input type="date" class="form-control rounded-8" formControlName="dob" placeholder="DD/MM/YYYY">
+              <input type="date" class="form-control rounded-8" min="1950-12-31" formControlName="dob" placeholder="DD/MM/YYYY">
               <small class="p-error" style="color: orange;"
               *ngIf="(isSubmitted && registrationForm.controls.dob.errors)">Date of birth is required
+            </small>
+            <small class="p-error" style="color: orange;" *ngIf="isSubmitted && registrationForm.errors">
+              {{ registrationForm.errors.dates}}
             </small>
             </div>
           </div>
@@ -48,7 +51,7 @@
                 <option value="3">{{'Other'| translate }}</option>
               </select>
               <small class="p-error" style="color: orange;"
-              *ngIf="(isSubmitted && registrationForm.controls.gender.errors)">Date of birth is required
+              *ngIf="(isSubmitted && registrationForm.controls.gender.errors)">Gender is required
             </small>
             </div>
           </div>
