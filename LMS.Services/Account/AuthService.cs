@@ -121,7 +121,6 @@ namespace LMS.Services.Account
             text = text.Replace("*#FirstName#*", email);
 
             await _commonService.SendEmail(new List<string> { email }, null, null, subject: "Reset Your Password", body: text);
-            //SendEmail(new List<string> { email }, null, null, subject: "Forgot password", body: text);
             return true;
         }
 
