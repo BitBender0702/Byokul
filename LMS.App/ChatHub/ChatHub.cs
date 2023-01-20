@@ -25,7 +25,7 @@ public class ChatHub : Hub
     }
     public override Task OnConnectedAsync()
     {
-        ContectedUsers.ContectedIds.Add(Context.ConnectionId);
+        //ContectedUsers.ContectedIds.Add(Context.ConnectionId);
         //var user =  await GetUser();
         var name = Context.GetHttpContext()?.Request.Query["username"];
         Clients.All.SendAsync("UserCount", UserIDConnectionID.Count + 1);
@@ -46,7 +46,7 @@ public class ChatHub : Hub
             return base.OnDisconnectedAsync(exception);
         }
         //ContectedUsers.ContectedIds.Remove(UserIDConnectionID.FindFirstKeyByValue(Context.ConnectionId));
-        Clients.All.SendAsync("UserCount", UserIDConnectionID.Count);
+        //Clients.All.SendAsync("UserCount", UserIDConnectionID.Count);
         return base.OnDisconnectedAsync(exception);
     }
     public Task SendMessage(string user, string message) => Clients.All.SendAsync("ReceiveMessage", user, message);

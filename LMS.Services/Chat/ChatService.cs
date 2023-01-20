@@ -9,6 +9,7 @@ using LMS.Services.Blob;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using MimeKit;
 using Newtonsoft.Json;
 using Org.BouncyCastle.Asn1.Crmf;
 using Org.BouncyCastle.Math.EC.Rfc7748;
@@ -208,7 +209,7 @@ namespace LMS.Services.Chat
 
                 var LastChatObject = chatRepo.Where(x => x.ChatHeadId == chatUser.ChatHeadId).OrderByDescending(x => x.CreatedOn).First();
                 var chatId = LastChatObject.Id;
-                var receiverUser = await _userManager.FindByIdAsync(LastChatObject.ReceiverId.ToString());
+                var receiverUser = await _userManager.FindByIdAsync(LastChatObject.ReceiverId==userId?LastChatObject.SenderId.ToString(): LastChatObject.ReceiverId.ToString());
 
                 if (chatUser.LastMessage is null)
                 {
@@ -225,11 +226,13 @@ namespace LMS.Services.Chat
                 chatUser.UserName = receiverUser.FirstName + " " + receiverUser.LastName;
             }
 
+            users = users.OrderByDescending(x => x.UserID == IsPinnedReceiverId).ThenBy(x => x.Time);
+            users.First().Chats = await GetParticularUserChat(userId,  users.First().UserID);
 
-            return users.OrderByDescending(x => x.UserID == IsPinnedReceiverId).ThenBy(x => x.Time);
+            return users;
         }
 
-        public async Task<IEnumerable<ParticularChat>> GetParticularUserChat(Guid SenderId, Guid ReceiverId, int pageSize, int pageNumber)
+        public async Task<IEnumerable<ParticularChat>> GetParticularUserChat(Guid SenderId, Guid ReceiverId, int pageSize = 2, int pageNumber = 1)
         {
             var attachRepo = _attachmentRepository.GetAll();
             var chatRepo = _chatMessageRepository.GetAll().Where(x => !x.IsDeleted).Where(x => (x.SenderId == SenderId && x.ReceiverId == ReceiverId) || (x.SenderId == ReceiverId && x.ReceiverId == SenderId)).OrderByDescending(x => x.CreatedOn).Skip((pageNumber - 1) * pageSize).Take(pageSize);
@@ -258,14 +261,14 @@ namespace LMS.Services.Chat
 
                 chatList.Add(partChat);
             }
-            return chatList.OrderBy(x=>x.Time);
+            return chatList.OrderBy(x => x.Time);
         }
         public async Task<int> SetParticularUserPinned(Guid SenderId, Guid ReceiverId)
         {
 
-            var chatHeadObject=_chatHeadRepository.GetAll().Where(x => (x.User1 == SenderId && x.User2 == ReceiverId)|| (x.User1 == ReceiverId && x.User2 == SenderId)).First();
+            var chatHeadObject = _chatHeadRepository.GetAll().Where(x => (x.User1 == SenderId && x.User2 == ReceiverId) || (x.User1 == ReceiverId && x.User2 == SenderId)).First();
 
-            string SenderCol=chatHeadObject.User1 == SenderId ? "User1" : "User2";
+            string SenderCol = chatHeadObject.User1 == SenderId ? "User1" : "User2";
 
             if (SenderCol == "User1")
                 chatHeadObject.IsPinnedUser1 = chatHeadObject.IsPinnedUser1 == false ? true : false;
@@ -275,6 +278,6 @@ namespace LMS.Services.Chat
             _chatHeadRepository.Save();
             return 200;
         }
-        
+
     }
 }

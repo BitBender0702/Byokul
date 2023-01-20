@@ -87,6 +87,7 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
 
             this.loginForm.setErrors({ unauthenticated: true });
           }
+
           if(response.token == "email not confirm"){
 
             this.loginForm.setErrors({ emailNotConfirmed: true });
@@ -96,6 +97,7 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
             this.loadingIcon = false;
         const token = response.token;
         localStorage.setItem("jwt", token); 
+        this.connectSignalR();
         var decodeData = this.getUserRoles(token);
         if(decodeData.role?.indexOf(RolesEnum.SchoolAdmin) > -1){
           this.router.navigateByUrl(`administration/adminHome`)
@@ -123,5 +125,14 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
       let decodedJwtData = JSON.parse(decodedJwtJsonData)
       return decodedJwtData;
     }
-    
+    connectSignalR() : void {
+      let token = localStorage.getItem("jwt"); 
+      if(!token)
+        return;
+      this.signalRService.startConnection();
+      setTimeout(() => {
+              this.signalRService.askServerListener();
+              this.signalRService.askServer(this.getUserRoles(token!).jti);
+            }, 500);
+    }
   }

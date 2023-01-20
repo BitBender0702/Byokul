@@ -15,5 +15,6 @@ namespace LMS.Common.ViewModels.Chat
         public DateTime Time { get; set; }
         public string? ProfileURL { get; set; }
         public string UserName { get; set; }
+        public IEnumerable<ParticularChat>? Chats { get; set; }
     }
 }
