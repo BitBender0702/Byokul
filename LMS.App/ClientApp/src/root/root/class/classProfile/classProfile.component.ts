@@ -101,7 +101,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     }
   
     ngOnInit(): void {
-      debugger
+      
       this.validToken = localStorage.getItem("jwt")?? '';
       this.loadingIcon = true;
       var selectedLang = localStorage.getItem("selectedLanguage");
@@ -111,7 +111,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       var schoolName = this.route.snapshot.paramMap.get('schoolName');
 
       this._classService.getClassById(this.className.replace(" ","").toLowerCase()).subscribe((response) => {
-        debugger
+        
         this.class = response;
         this.isOwnerOrNot();
         this.loadingIcon = false;
@@ -597,9 +597,9 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     }
 
     convertToCourse(className:string,schoolName:string){
-      debugger
+      
       this._classService.convertToCourse(className.replace(" ","").toLowerCase()).subscribe((response) => {
-        debugger
+        
         window.location.href = `profile/course/${schoolName.replace(" ","").toLowerCase()}/${className.replace(" ","").toLowerCase()}`;
         // window.location.href=`user/courseProfile/${classId}`;
       });
@@ -612,7 +612,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
      this.bsModalRef= this.bsModalService.show(PostViewComponent,{initialState});
 
      this.bsModalRef.content.event.subscribe((res: { data: any; }) => {
-      debugger
+      
       var a = res.data;
       //this.itemList.push(res.data);
     });
@@ -667,7 +667,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     }
 
     showPostDiv(postId:string){
-      debugger
+      
       var posts: any[] = this.class.posts;
       this.gridItemInfo = posts.find(x => x.id == postId);
       this.isGridItemInfo = true;
@@ -675,12 +675,12 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     }
 
     addPostView(postId:string){
-      debugger
+      
       if(this.userId != undefined){
        this.initializePostView();
       this.postView.postId = postId;
       this._postService.postView(this.postView).subscribe((response) => {
-        debugger
+        
         this.gridItemInfo.views.length = response;
        }); 
       }
@@ -702,12 +702,12 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     }
 
     addClassView(classId:string){
-      debugger
+      
       if(this.userId != undefined){
         this.initializeClassView();
       this.classView.classId = classId;
       this._classService.classView(this.classView).subscribe((response) => {
-        debugger
+        
         console.log('success');
         //this.posts.posts.views.length = response;
        }); 
@@ -722,7 +722,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     }
 
     openReelsViewModal(postAttachmentId:string): void {
-      debugger
+      
       const initialState = {
         postAttachmentId: postAttachmentId
       };

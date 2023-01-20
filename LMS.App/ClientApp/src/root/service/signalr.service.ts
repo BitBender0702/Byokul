@@ -58,6 +58,7 @@ import { Injectable } from '@angular/core';
 import * as signalR from "@microsoft/signalr"
 import { getuid } from 'process';
 import { Subject } from 'rxjs';
+import { json } from 'stream/consumers';
 import { ChartModel } from '../interfaces/chat/ChatModel';
 import { CustomXhrHttpClient } from './signalr.httpclient';
 
@@ -68,9 +69,6 @@ export const signalRResponse =new Subject<{receiver : string , message: string, 
   providedIn: 'root'
 })
 export class SignalrService {
-  public data!: ChartModel[];
-  public bradcastedData!: ChartModel[];
-
 
   private hubConnection!: signalR.HubConnection
     public startConnection = () => {
@@ -80,28 +78,13 @@ export class SignalrService {
                                             skipNegotiation: true,
                                             transport: signalR.HttpTransportType.WebSockets
                                         } )
-                              .build();
+                                        .withAutomaticReconnect()
+                                        .configureLogging(signalR.LogLevel.Information)
+                                        .build();
       this.hubConnection
         .start()
         .then(() => console.log('Connection started'))
-        .catch(err => console.log('Error while starting connection: ' + err))
-
-
-   
-
-    
-  //   this.hubConnection.start().then( () => {
-  //     console.log($("#userID").val());
-  //     this.hubConnection.invoke("GetConnectionId", $("#userID").val()).then(function (id)
-  //    {
-  //         // document.getElementById("connectionId").innerText = id;
-  //     });
-  //     // document.getElementById("sendButton").disabled = false;
-  // }).catch(function (err) {
-  //     return console.error(err.toString());
-  // });
-
-  
+        .catch(err => console.log('Error while starting connection: ' + err));
 }
 
 askServer(userId:string) {
@@ -109,8 +92,9 @@ askServer(userId:string) {
   .catch(err => console.error(err));
 }
 
-sendToUser(userName:string,recieverId:string,messageToUser:string){
-  this.hubConnection.invoke("SendToUser", userName,recieverId,messageToUser)
+sendToUser(model:any){
+  
+  this.hubConnection.invoke("SendToUser",  model)
   .catch(err => console.error(err));
 }
 
@@ -118,6 +102,7 @@ askServerListener(){
 this.hubConnection.on("ReceiveMessage", (user,message) => {
   signalRResponse.next({receiver: user, message : message, isTest : true});
               console.log(`this ${user} send ${message}`);
+              
               
           })
 }

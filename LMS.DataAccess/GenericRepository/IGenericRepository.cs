@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,5 +18,6 @@ namespace LMS.DataAccess.Repository
         void DeleteAll(List<T> obj);
         IEnumerable<T> Includes(params Expression<Func<T, Object>>[] includes);
         IQueryable<T> GetAll();
+        T GetFirstOrDefaultBy(Expression<Func<T, bool>> condition);
     }
 }

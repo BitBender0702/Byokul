@@ -103,7 +103,7 @@ export class AuthService{
       }
 
     confirmEmail(token:string,email:string):Observable<any>{
-      debugger
+      
       let queryParams = new HttpParams().append("token",token).append("email",email);
       return this.http.get(`${this.apiUrl}/auth/confirmEmail`, {params:queryParams});
     }

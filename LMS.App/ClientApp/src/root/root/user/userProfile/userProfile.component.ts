@@ -104,7 +104,7 @@ export const userImageResponse =new Subject<{userAvatar : string}>();
       
 
       this._userService.getUserById(this.userId).subscribe((response) => {
-        debugger
+        
         this.user = response;
         this.followersLength = this.user.followers.length;
         this.isOwnerOrNot();
@@ -145,7 +145,7 @@ export const userImageResponse =new Subject<{userAvatar : string}>();
       this.InitializePostView();
 
       userImageResponse.subscribe(response => {
-        debugger
+        
         this.user.avatar = response.userAvatar;
         // this.ngOnInit();
       });
@@ -154,7 +154,7 @@ export const userImageResponse =new Subject<{userAvatar : string}>();
         this.loadingIcon = true;
         this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post created successfully'});
         this._userService.getUserById(this.userId).subscribe((response) => {
-          debugger
+          
           this.user = response;
           this.followersLength = this.user.followers.length;
           this.isOwnerOrNot();
@@ -253,7 +253,7 @@ export const userImageResponse =new Subject<{userAvatar : string}>();
     }
 
     saveUserLanguages(){
-      debugger
+      
       this.isSubmitted = true;
       if (!this.languageForm.valid) {
         return;
@@ -261,7 +261,7 @@ export const userImageResponse =new Subject<{userAvatar : string}>();
       this.loadingIcon = true;
       this.userLanguage.userId = this.user.id;
       this._userService.saveUserLanguages(this.userLanguage).subscribe((response:any) => {
-        debugger
+        
         this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Language added successfully'});
         this.closeLanguagesModal();
         this.isSubmitted = true;
@@ -344,7 +344,7 @@ export const userImageResponse =new Subject<{userAvatar : string}>();
   }
 
   updateUser(){
-    debugger
+    
     this.isSubmitted=true;
     if (!this.editUserForm.valid) {
       return;
@@ -457,7 +457,7 @@ openPostsViewModal(posts:string): void {
 }
 
 openReelsViewModal(postAttachmentId:string): void {
-  debugger
+  
   const initialState = {
     postAttachmentId: postAttachmentId
   };
@@ -514,7 +514,7 @@ likeUnlikePosts(postId:string, isLike:boolean){
 }
 
 showPostDiv(postId:string){
-  debugger
+  
   var posts: any[] = this.user.posts;
   this.gridItemInfo = posts.find(x => x.id == postId);
   this.isGridItemInfo = true;
@@ -526,12 +526,12 @@ showPostDiv(postId:string){
 }
 
 addPostView(postId:string){
-  debugger
+  
   if(this.loginUserId != undefined){
    this.initializePostView();
   this.postView.postId = postId;
   this._postService.postView(this.postView).subscribe((response) => {
-    debugger
+    
     this.gridItemInfo.views.length = response;
     // this.user.posts.filter((p : any) => p.id == postId).forEach( (item : any) => {
     //  var itemss = item.likes;
@@ -556,11 +556,11 @@ hideGridItemInfo(){
 }
 
 // addPostView(postId:string){
-//   debugger
+//   
 //   if(this.loginUserId != undefined){
 //   this.postView.postId = postId;
 //   this._postService.postView(this.postView).subscribe((response) => {
-//     debugger
+//     
 //     console.log('success');
 //     // this.user.posts.filter((p : any) => p.id == postId).forEach( (item : any) => {
 //     //  var itemss = item.likes;

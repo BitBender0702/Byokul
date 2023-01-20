@@ -51,13 +51,13 @@ import { UserService } from 'src/root/service/user.service';
       }
 
     ngOnInit(): void {
-      debugger
+      
 
         this.getLoginUserId();
         //this.reelId = this.route.snapshot.paramMap.get('id') ?? '';
         this.postAttachmentId = this.options.initialState;
         this._reelsService.getReelById(this.postAttachmentId.postAttachmentId).subscribe((response) => {
-          debugger
+          
             this.reels = response;
             this.addPostView(this.reels.post.id);
             this.isDataLoaded = true;
@@ -210,11 +210,11 @@ import { UserService } from 'src/root/service/user.service';
       }
 
       addPostView(postId:string){
-        debugger
+        
         if(this.loginUserId != undefined){
         this.postView.postId = postId;
         this._postService.postView(this.postView).subscribe((response) => {
-          debugger
+          
           console.log('success');
           this.reels.post.views.length = response;
           // this.user.posts.filter((p : any) => p.id == postId).forEach( (item : any) => {

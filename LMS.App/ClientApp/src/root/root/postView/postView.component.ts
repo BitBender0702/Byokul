@@ -36,7 +36,7 @@ export class PostViewComponent implements OnInit {
     }
   
     ngOnInit(): void {
-      debugger
+      
       this.getLoginUserId();
       this.posts = this.options.initialState;
        this.postView ={
@@ -91,7 +91,7 @@ export class PostViewComponent implements OnInit {
     }
   
     showComments(){
-      debugger
+      
       if(this.showCommentsField){
           this.showCommentsField = false;
       }
@@ -145,11 +145,11 @@ export class PostViewComponent implements OnInit {
 
   
   addPostView(postId:string){
-    debugger
+    
     if(this.userId != undefined){
     this.postView.postId = postId;
     this._postService.postView(this.postView).subscribe((response) => {
-      debugger
+      
       console.log('success');
       this.posts.posts.views.length = response;
       // this.user.posts.filter((p : any) => p.id == postId).forEach( (item : any) => {

@@ -222,7 +222,7 @@ captureTeacherId(event: any) {
   }
 
   createClass(){
-    debugger
+    
     this.isSubmitted=true;
     if (!this.createClassForm3.valid) {
       return;
@@ -244,7 +244,7 @@ captureTeacherId(event: any) {
   }
 
   forwardStep() {
-    debugger
+    
     this.isStepCompleted = true;
     if (!this.createClassForm1.valid || this.uploadImageName == undefined) {
       return;
@@ -477,7 +477,7 @@ captureTeacherId(event: any) {
   }
 
   onEnter(event:any) {
-    debugger
+    
     if(event.target.value.indexOf('#') > -1){
       this.tagList.push(event.target.value);
     }

@@ -145,5 +145,8 @@
       }
     }
   },
-  "defaultProject": "LMS.App"
+  "defaultProject": "LMS.App",
+  "cli": {
+    "analytics": false
+  }
 }

@@ -54,11 +54,11 @@ const routes: Routes = [
   {
     path: 'createSchool',component:CreateSchoolComponent
   },
+  // {
+  //   path: 'chat',component:ChatComponent
+  // },
   {
-    path: 'chat',component:ChatComponent
-  },
-  {
-    path: 'chat/:userId',component:ChatComponent
+    path: 'chat/:id/:chatType',component:ChatComponent
   },
 
   {

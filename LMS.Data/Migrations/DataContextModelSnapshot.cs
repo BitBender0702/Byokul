@@ -37,6 +37,114 @@ namespace LMS.Data.Migrations
                     b.ToTable("Accessibility");
                 });
 
+            modelBuilder.Entity("LMS.Data.Entity.Chat.Attachment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ChatMessageId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("FileType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FileURL")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChatMessageId");
+
+                    b.ToTable("Attachments");
+                });
+
+            modelBuilder.Entity("LMS.Data.Entity.Chat.ChatHead", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("ChatType")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("ChatTypeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsPinnedUser1")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsPinnedUser2")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastMessage")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UnreadMessageCount")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("User1")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("User2")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ChatHeads");
+                });
+
+            modelBuilder.Entity("LMS.Data.Entity.Chat.ChatMessage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ChatHeadId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("EditedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsEdited")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LikedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ReceiverId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("SenderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChatHeadId");
+
+                    b.ToTable("ChatMessages");
+                });
+
             modelBuilder.Entity("LMS.Data.Entity.City", b =>
                 {
                     b.Property<Guid>("Id")
@@ -78,7 +186,6 @@ namespace LMS.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CreatedById")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreatedOn")
@@ -383,7 +490,6 @@ namespace LMS.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CreatedById")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreatedOn")
@@ -616,7 +722,6 @@ namespace LMS.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CreatedById")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreatedOn")
@@ -704,7 +809,6 @@ namespace LMS.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CreatedById")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreatedOn")
@@ -762,7 +866,6 @@ namespace LMS.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CreatedById")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreatedOn")
@@ -844,7 +947,6 @@ namespace LMS.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CreatedById")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreatedOn")
@@ -996,7 +1098,6 @@ namespace LMS.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CreatedById")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreatedOn")
@@ -1114,7 +1215,6 @@ namespace LMS.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CreatedById")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreatedOn")
@@ -1154,7 +1254,6 @@ namespace LMS.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CreatedById")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreatedOn")
@@ -1550,6 +1649,28 @@ namespace LMS.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("LMS.Data.Entity.Chat.Attachment", b =>
+                {
+                    b.HasOne("LMS.Data.Entity.Chat.ChatMessage", "ChatMessage")
+                        .WithMany("Attachments")
+                        .HasForeignKey("ChatMessageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ChatMessage");
+                });
+
+            modelBuilder.Entity("LMS.Data.Entity.Chat.ChatMessage", b =>
+                {
+                    b.HasOne("LMS.Data.Entity.Chat.ChatHead", "ChatHead")
+                        .WithMany("Chat")
+                        .HasForeignKey("ChatHeadId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ChatHead");
+                });
+
             modelBuilder.Entity("LMS.Data.Entity.City", b =>
                 {
                     b.HasOne("LMS.Data.Entity.Country", "Country")
@@ -1567,9 +1688,7 @@ namespace LMS.Data.Migrations
 
                     b.HasOne("LMS.Data.Entity.User", "CreatedBy")
                         .WithMany()
-                        .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CreatedById");
 
                     b.HasOne("LMS.Data.Entity.User", "DeletedBy")
                         .WithMany()
@@ -1729,9 +1848,7 @@ namespace LMS.Data.Migrations
 
                     b.HasOne("LMS.Data.Entity.User", "CreatedBy")
                         .WithMany()
-                        .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CreatedById");
 
                     b.HasOne("LMS.Data.Entity.User", "DeletedBy")
                         .WithMany()
@@ -1872,9 +1989,7 @@ namespace LMS.Data.Migrations
                 {
                     b.HasOne("LMS.Data.Entity.User", "CreatedBy")
                         .WithMany()
-                        .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CreatedById");
 
                     b.HasOne("LMS.Data.Entity.User", "DeletedBy")
                         .WithMany()
@@ -1910,9 +2025,7 @@ namespace LMS.Data.Migrations
                 {
                     b.HasOne("LMS.Data.Entity.User", "CreatedBy")
                         .WithMany()
-                        .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CreatedById");
 
                     b.HasOne("LMS.Data.Entity.User", "DeletedBy")
                         .WithMany()
@@ -1927,9 +2040,7 @@ namespace LMS.Data.Migrations
                 {
                     b.HasOne("LMS.Data.Entity.User", "CreatedBy")
                         .WithMany()
-                        .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CreatedById");
 
                     b.HasOne("LMS.Data.Entity.User", "DeletedBy")
                         .WithMany()
@@ -1967,9 +2078,7 @@ namespace LMS.Data.Migrations
 
                     b.HasOne("LMS.Data.Entity.User", "CreatedBy")
                         .WithMany()
-                        .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CreatedById");
 
                     b.HasOne("LMS.Data.Entity.User", "DeletedBy")
                         .WithMany()
@@ -2035,9 +2144,7 @@ namespace LMS.Data.Migrations
                 {
                     b.HasOne("LMS.Data.Entity.User", "CreatedBy")
                         .WithMany()
-                        .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CreatedById");
 
                     b.HasOne("LMS.Data.Entity.User", "DeletedBy")
                         .WithMany()
@@ -2088,9 +2195,7 @@ namespace LMS.Data.Migrations
                 {
                     b.HasOne("LMS.Data.Entity.User", "CreatedBy")
                         .WithMany()
-                        .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CreatedById");
 
                     b.HasOne("LMS.Data.Entity.User", "DeletedBy")
                         .WithMany()
@@ -2111,9 +2216,7 @@ namespace LMS.Data.Migrations
                 {
                     b.HasOne("LMS.Data.Entity.User", "CreatedBy")
                         .WithMany()
-                        .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CreatedById");
 
                     b.HasOne("LMS.Data.Entity.User", "DeletedBy")
                         .WithMany()
@@ -2253,6 +2356,16 @@ namespace LMS.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("LMS.Data.Entity.Chat.ChatHead", b =>
+                {
+                    b.Navigation("Chat");
+                });
+
+            modelBuilder.Entity("LMS.Data.Entity.Chat.ChatMessage", b =>
+                {
+                    b.Navigation("Attachments");
                 });
 #pragma warning restore 612, 618
         }

@@ -20,7 +20,8 @@ const PROXY_CONFIG = [
       "/stripe",
       "/chats",
       "/admins",
-      "/chart"
+      "/chart",
+      "/chats"
    ],
     target: target,
     secure: false,

@@ -62,5 +62,12 @@ namespace LMS.DataAccess.Repository
             IQueryable<T> set = table;
             return set;
         }
+        public T GetFirstOrDefaultBy(Expression<Func<T, bool>> condition)
+        {
+            T res =  _context.Set<T>().Where(condition).FirstOrDefault();
+            return res;
+        }
+
+        
     }
 }

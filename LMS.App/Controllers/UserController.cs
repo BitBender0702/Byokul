@@ -1,7 +1,9 @@
-﻿using LMS.Common.ViewModels.Common;
+﻿using LMS.Common.ViewModels.Chat;
+using LMS.Common.ViewModels.Common;
 using LMS.Common.ViewModels.User;
 using LMS.Data.Entity;
 using LMS.Services;
+using LMS.Services.Chat;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -14,12 +16,15 @@ namespace LMS.App.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly IUserService _userService;
+        private readonly IChatService _chatService;
 
 
-        public UserController(UserManager<User> userManager, IUserService userService)
+        public UserController(UserManager<User> userManager, IUserService userService, IChatService chatService)
         {
             _userManager = userManager;
             _userService = userService;
+            _chatService = chatService;
+
         }
     
 
@@ -144,6 +149,31 @@ namespace LMS.App.Controllers
         }
 
 
+
+        // for chats
+        [Route("getChatHead")]
+        [HttpGet]
+        public async Task<IActionResult> GetChatHead(Guid senderId, Guid receiverId)
+        {
+            var response = await _chatService.GetChatHead(senderId, receiverId);
+            return Ok(response);
+        }
+
+        [Route("saveSentMssage")]
+        [HttpGet]
+        public async Task<IActionResult> SaveSentMssage(Guid senderId, Guid receiverId)
+        {
+            var response = await _chatService.GetChatHead(senderId, receiverId);
+            return Ok(response);
+        }
+
+        [Route("saveChatAttachments")]
+        [HttpPost]
+        public async Task<IActionResult> SaveChatAttachments(SaveChatAttachmentViewModel model)
+        {
+            var response = await _chatService.SaveChatAttachments(model);
+            return Ok(response);
+        }
 
     }
 }

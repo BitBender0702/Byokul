@@ -133,7 +133,7 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
   }
 
   forwardStep() {
-    debugger
+    
     this.isStepCompleted = true;
     if (!this.createSchoolForm1.valid) {
       return;

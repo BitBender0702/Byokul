@@ -3,12 +3,14 @@ using BigBlueButtonAPI.Core;
 using LMS.Data;
 using LMS.Data.Entity;
 using LMS.DataAccess.Automapper;
+using LMS.DataAccess.GenericRepository;
 using LMS.DataAccess.Repository;
 using LMS.Services;
 using LMS.Services.Account;
 using LMS.Services.Admin;
 using LMS.Services.BigBlueButton;
 using LMS.Services.Blob;
+using LMS.Services.Chat;
 using LMS.Services.Common;
 using LMS.Services.Stripe;
 using LMS.Services.Students;
@@ -84,7 +86,9 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserDashboardService, UserDashboardService>();
 builder.Services.AddScoped<IStripeService, StripeService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
+builder.Services.AddScoped<IChatService, ChatService>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+builder.Services.AddScoped(typeof(IAsyncGenericRepository<>), typeof(AsyncGenericRepository<>));
 
 //builder.Services.Configure<IdentityOptions>(options =>
 //{
@@ -137,6 +141,7 @@ builder.Services.AddAutoMapper(config =>
     config.AddProfile<StudentProfile>();
     config.AddProfile<CourseProfile>();
     config.AddProfile<CommonProfile>();
+    config.AddProfile<ChatProfile>();
 });
 
 builder.Services.AddSwaggerGen();
@@ -146,7 +151,7 @@ builder.Services.AddSignalR(options =>
 });
 
 var app = builder.Build();
-var temp = new Seeder(app);
+//var temp = new Seeder(app);
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -217,8 +222,8 @@ public class Seeder
     {
         using (var scope = app.Services.CreateScope())
         {
-            var seeder = scope.ServiceProvider.GetRequiredService<DbSeed>();
+        var seeder = scope.ServiceProvider.GetRequiredService<DbSeed>();
             seeder?.SeedAsync().Wait();
-        }
     }
+}
 }

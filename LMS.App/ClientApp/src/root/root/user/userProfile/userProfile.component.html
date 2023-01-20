@@ -41,7 +41,7 @@
               class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn follow-btn">{{'Follow'| translate }}</button>
               <button *ngIf="!isOwner && isFollowed" (click)="followUser(user.id,'UnFollow')" type="button"
               class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn follow-btn">{{'UnFollow'| translate }}</button>
-            <button  *ngIf="!isOwner" type="button" (click)="userChat()"
+            <button *ngIf="!isOwner" type="button" [routerLink]="['/user/chat', user.id,1]"
               class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn me-0 minw-142">{{'Message'| translate }}</button>
             <button *ngIf="isOwner" (click)="getUserDetails(user.id)" class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins" data-bs-toggle="modal"
               data-bs-target="#editUser"><img src="../../../../assets/images/Setting-solid-dark.svg" class="me-2" /> {{'EditProfile'| translate }}

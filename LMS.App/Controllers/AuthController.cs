@@ -1,4 +1,6 @@
-﻿using LMS.Common.ViewModels.Account;
+﻿using Abp.Net.Mail;
+using LMS.Common.ViewModels.Account;
+using LMS.Common.ViewModels.Chat;
 using LMS.Data.Entity;
 using LMS.Services.Account;
 using Microsoft.AspNetCore.Identity;
@@ -156,5 +158,7 @@ namespace LMS.App.Controllers
             await _authService.Logout();
             return Ok();
         }
+
+        
     }
 }

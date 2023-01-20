@@ -148,7 +148,7 @@ export class SchoolProfileComponent extends MultilingualComponent implements OnI
       
       // else{
       this._schoolService.getSchoolById(this.schoolName.replace(" ","").toLowerCase()).subscribe((response) => {
-        debugger
+        
         this.school = response;
         this.followersLength = this.school.schoolFollowers.length;
         this.isOwnerOrNot();
@@ -675,12 +675,12 @@ else{
 
 GetSchoolClassCourseList(schoolId:string){
   this.isFeedHide = true;
-  debugger
+  
   if(this.classCourseList == undefined){
     this.loadingIcon = true;
     this.hideFeedFilters = false;
     this._schoolService.getSchoolClassCourseList(schoolId).subscribe((response) => {
-      debugger
+      
       this.classCourseList = response;
       this.loadingIcon = false;
 
@@ -767,7 +767,7 @@ likeUnlikePosts(postId:string, isLike:boolean){
 }
 
 showPostDiv(postId:string){
-  debugger
+  
   var posts: any[] = this.school.posts;
   this.gridItemInfo = posts.find(x => x.id == postId);
   this.isGridItemInfo = true;
@@ -779,12 +779,12 @@ showPostDiv(postId:string){
 }
 
 addPostView(postId:string){
-  debugger
+  
   if(this.userId != undefined){
    this.initializePostView();
   this.postView.postId = postId;
   this._postService.postView(this.postView).subscribe((response) => {
-    debugger
+    
     this.gridItemInfo.views.length = response;
     // this.user.posts.filter((p : any) => p.id == postId).forEach( (item : any) => {
     //  var itemss = item.likes;
@@ -809,10 +809,10 @@ hideGridItemInfo(){
 }
 
 likeUnlikeClassCourse(Id:string, isLike:boolean,type:number){
-  debugger
+  
    this.currentLikedClassCourseId = Id;
    this.classCourseList.filter((p : any) => p.id == Id).forEach( (item : any) => {
-    debugger
+    
 
   //   // here item.likes is null
   if(item.type == 1){
@@ -858,7 +858,7 @@ likeUnlikeClassCourse(Id:string, isLike:boolean,type:number){
   this.likeUnlikeClassCourses.type = type;
   
   this._schoolService.likeUnlikeClassCourse(this.likeUnlikeClassCourses).subscribe((response) => {
-    debugger
+    
 
      if(type == 1){
        this.classCourseList.filter((p : any) => p.id == Id).forEach( (item : any) => {
@@ -893,7 +893,7 @@ InitializeLikeUnlikeClassCourse(){
 }
 
 openReelsViewModal(postAttachmentId:string): void {
-  debugger
+  
   const initialState = {
     postAttachmentId: postAttachmentId
   };

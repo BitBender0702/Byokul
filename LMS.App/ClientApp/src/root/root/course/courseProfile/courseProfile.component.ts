@@ -94,7 +94,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     }
   
     ngOnInit(): void {
-      debugger
+      
       this.validToken = localStorage.getItem("jwt")?? '';
       this.loadingIcon = true;
       var selectedLang = localStorage.getItem("selectedLanguage");
@@ -589,7 +589,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     }
 
     convertToClass(courseName:string,schoolName:string){
-      debugger
+      
       this._courseService.convertToClass(courseName.replace(" ","").toLowerCase()).subscribe((response) => {
         // window.location.href=`user/classProfile/${courseId}`;
         window.location.href = `profile/class/${schoolName.replace(" ","").toLowerCase()}/${courseName.replace(" ","").toLowerCase()}`;
@@ -652,7 +652,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     }
 
     showPostDiv(postId:string){
-      debugger
+      
       var posts: any[] = this.course.posts;
       this.gridItemInfo = posts.find(x => x.id == postId);
       this.isGridItemInfo = true;
@@ -660,12 +660,12 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     }
     
     addPostView(postId:string){
-      debugger
+      
       if(this.userId != undefined){
        this.initializePostView();
       this.postView.postId = postId;
       this._postService.postView(this.postView).subscribe((response) => {
-        debugger
+        
         this.gridItemInfo.views.length = response;
        }); 
       }
@@ -684,12 +684,12 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     }
 
     addCourseView(courseId:string){
-      debugger
+      
       if(this.userId != undefined){
         this.initializeCourseView();
       this.courseView.courseId = courseId;
       this._courseService.courseView(this.courseView).subscribe((response) => {
-        debugger
+        
         console.log('success');
         //this.posts.posts.views.length = response;
        }); 
@@ -704,7 +704,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     }
 
     openReelsViewModal(postAttachmentId:string): void {
-      debugger
+      
       const initialState = {
         postAttachmentId: postAttachmentId
       };

@@ -10,6 +10,8 @@ import { LoginModel } from 'src/root/interfaces/login';
 import { RolesEnum } from 'src/root/RolesEnum/rolesEnum';
 import { MultilingualComponent } from 'src/root/root/sharedModule/Multilingual/multilingual.component';
 import { finalize } from 'rxjs';
+import { SignalrService } from 'src/root/service/signalr.service';
+import { UserService } from 'src/root/service/user.service';
 
 @Component({
     selector: 'login-root',
@@ -28,7 +30,9 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
 
     //credentials: LoginModel = {email:'', password:'',rememberMe:false};
     private _authService;
-    constructor(injector: Injector,private fb: FormBuilder,private router: Router, private http: HttpClient,authService:AuthService,private route: ActivatedRoute) { 
+    constructor(injector: Injector,private fb: FormBuilder,private router: Router,private signalRService: SignalrService, 
+      private userService: UserService,
+      private http: HttpClient,authService:AuthService,private route: ActivatedRoute) { 
       super(injector);
       this._authService = authService;
     }
@@ -64,6 +68,14 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
           else{
             this.isSubmitted = false;
             this.loadingIcon = false;
+
+    //         this.signalRService.startConnection();
+    // setTimeout(() => {
+    //         this.signalRService.askServerListener();
+    //         this.signalRService.askServer(this.getUserRoles(response.token).jti);
+    //       }, 5000);
+
+
         const token = response.token;
         localStorage.setItem("jwt", token); 
         var decodeData = this.getUserRoles(token);
@@ -93,5 +105,5 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
       let decodedJwtData = JSON.parse(decodedJwtJsonData)
       return decodedJwtData;
     }
-    
+   
   }
