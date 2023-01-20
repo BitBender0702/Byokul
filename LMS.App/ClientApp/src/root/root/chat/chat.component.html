@@ -264,14 +264,27 @@
               </span>
               <input [(ngModel)]="messageToUser" type="text" class="form-control rounded-8 font_14 fw_400" placeholder="Your message">
               <div class="post-bot-left d-flex">
-                <button type="button"
+                <!-- <button type="button"
                   class="post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center"><img
                     src="../../../assets/images/gallery-dark.svg" class="dark-attach"><img src="../../../assets/images/gallery-light.svg"
-                    class="light-attach"></button>
-                <button type="button"
+                    class="light-attach"></button> -->
+                    <label class="custom-file-upload post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center">
+                      <input id="hideFileType" type="file" (change)="handleImages($event)"/>
+                      <img
+                      src="../../../assets/images/Video-dark.svg" class="dark-attach" /><img src="../../../assets/images/Video-light.svg"
+                      class="light-attach" />
+                    </label>
+                    <!-- <input type="file" id="certificate" (change)="handleImages($event)" class="dropzone"/> -->
+                <!-- <button type="button"
                   class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"><img
                     src="../../../assets/images/Video-dark.svg" class="dark-attach"><img src="../../../assets/images/Video-light.svg"
-                    class="light-attach"></button>
+                    class="light-attach"></button> -->
+                    <!-- <label class="custom-file-upload post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center">
+                      <input id="hideFileType" type="file" (change)="handleVideos($event)"/>
+                      <img
+                      src="../../../assets/images/Video-dark.svg" class="dark-attach" /><img src="../../../assets/images/Video-light.svg"
+                      class="light-attach" />
+                    </label> -->
                 <button type="button"
                   class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"><img
                     src="../../../assets/images/Paper-Plus-dark.svg" class="dark-attach"><img src="../../../assets/images/Paper-Plus-light.svg"

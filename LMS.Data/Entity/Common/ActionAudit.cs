@@ -9,7 +9,7 @@ namespace LMS.Data.Entity
 {
     public class ActionAudit
     {
-        public string CreatedById { get; set; }
+        public string? CreatedById { get; set; }
 
         [ForeignKey("CreatedById")]
         public User? CreatedBy { get; set; }

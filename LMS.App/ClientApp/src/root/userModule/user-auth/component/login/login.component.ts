@@ -12,6 +12,8 @@ import { MultilingualComponent } from 'src/root/root/sharedModule/Multilingual/m
 import { finalize } from 'rxjs';
 import { confirmEmailResponse } from '../confirmEmail/confirmEmail.component';
 import { MessageService } from 'primeng/api';
+import { SignalrService } from 'src/root/service/signalr.service';
+import { UserService } from 'src/root/service/user.service';
 
 @Component({
     selector: 'login-root',
@@ -31,7 +33,9 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
 
     //credentials: LoginModel = {email:'', password:'',rememberMe:false};
     private _authService;
-    constructor(injector: Injector,public messageService:MessageService,private fb: FormBuilder,private router: Router, private http: HttpClient,authService:AuthService,private route: ActivatedRoute) { 
+    constructor(injector: Injector, public messageService:MessageService,private fb: FormBuilder,private router: Router,private signalRService: SignalrService, 
+      private userService: UserService,
+      private http: HttpClient,authService:AuthService,private route: ActivatedRoute) { 
       super(injector);
       this._authService = authService;
     }

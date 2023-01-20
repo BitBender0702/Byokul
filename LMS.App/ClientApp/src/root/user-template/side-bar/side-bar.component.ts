@@ -43,7 +43,7 @@ export class SideBarComponent extends MultilingualComponent implements OnInit {
     });
 
     userImageResponse.subscribe(response => {
-      debugger
+      
       this.sidebarInfo.user.avatar = response.userAvatar;
       // this.ngOnInit();
     });
@@ -61,12 +61,12 @@ export class SideBarComponent extends MultilingualComponent implements OnInit {
   }
 
   getSelectedClass(className:string,schoolName:string){
-    debugger
+    
     window.location.href=`profile/class/${schoolName.replace(" ","").toLowerCase()}/${className.replace(" ","").toLowerCase()}`;
   }
 
   getSelectedCourse(courseName:string,schoolName:string){
-    debugger
+    
     // window.location.href=`user/courseProfile/${courseId}`;
     window.location.href=`profile/course/${schoolName.replace(" ","").toLowerCase()}/${courseName.replace(" ","").toLowerCase()}`;
 

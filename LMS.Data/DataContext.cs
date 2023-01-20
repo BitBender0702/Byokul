@@ -1,4 +1,5 @@
 ﻿using LMS.Data.Entity;
+using LMS.Data.Entity.Chat;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -61,5 +62,8 @@ namespace LMS.Data
         public DbSet<CourseLike> CourseLikes { get; set; }
         public DbSet<ClassViews> ClassViews { get; set; }
         public DbSet<CourseViews> CourseViews { get; set; }
+        public DbSet<ChatHead> ChatHeads { get; set; }
+        public DbSet<ChatMessage> ChatMessages { get; set; }
+        public DbSet<Attachment> Attachments { get; set; }
     }
 }

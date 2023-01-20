@@ -326,7 +326,7 @@ export class CreatePostComponent implements OnInit {
 
 
     this._postService.createPost(this.postToUpload).subscribe((response:any) => {  
-      debugger
+      
       this.isSubmitted=false;
       this.loadingIcon = false;
       this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post created successfully'});
@@ -391,7 +391,7 @@ export class CreatePostComponent implements OnInit {
     }
 
     this._postService.createPost(this.postToUpload).subscribe((response:any) => {
-      debugger
+      
       this.isSubmitted=false;
       this.loadingIcon = false;
       this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Reel created successfully'});
