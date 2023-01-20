@@ -2999,6 +2999,11 @@ button.delete-tag img {
 	z-index: 99999 !important;
   }
 
+  .profileUrl{
+    height: 25px;
+    margin-left: 15px;
+}
+
 
   /* .carousel-control-prev-icon{
 	margin-left: -168px;
