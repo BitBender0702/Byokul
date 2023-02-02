@@ -11,6 +11,7 @@ using LMS.Services.Blob;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using MimeKit;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Org.BouncyCastle.Asn1.Crmf;
@@ -385,7 +386,7 @@ namespace LMS.Services.Chat
 
                 chatList.Add(partChat);
             }
-            return chatList.OrderBy(x=>x.Time);
+            return chatList.OrderBy(x => x.Time);
         }
         public async Task<bool> SetParticularUserPinned(Guid SenderId, Guid ReceiverId,ChatType chatType)
         {
