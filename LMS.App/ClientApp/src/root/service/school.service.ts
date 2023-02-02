@@ -124,4 +124,13 @@ export class SchoolService{
         return this.http.post(`${this.apiUrl}/school/likeUnlikeClassCourse`, likeUnlikeClassCourse);
     }
 
+    getUserAllSchools(userId:string): Observable<any> {
+        return this.http.get(`${this.apiUrl}/school/getUserAllSchools`+ '?userId=' + userId);
+    }
+
+    getSchool(schoolId:any):Observable<any>{
+        return this.http.get(`${this.apiUrl}/school/getBasicSchoolInfo` + '?schoolId=' + schoolId);
+
+    }
+
 }

@@ -61,8 +61,8 @@ namespace LMS.App.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateSchool(SchoolUpdateViewModel schoolUpdateViewModel)
         {
-            var schoolId = await _schoolService.UpdateSchool(schoolUpdateViewModel);
-            return Ok(schoolId);
+            var response = await _schoolService.UpdateSchool(schoolUpdateViewModel);
+            return Ok(response);
         }
 
         [Route("getSchoolById")]
@@ -246,6 +246,14 @@ namespace LMS.App.Controllers
                 return Ok(response);
             }
             return Ok();
+        }
+
+        [Route("getUserAllSchools")]
+        [HttpGet]
+        public async Task<IActionResult> GetUserAllSchools(string userId)
+        {
+            var response = await _schoolService.GetUserAllSchools(userId);
+            return Ok(response);
         }
 
     }

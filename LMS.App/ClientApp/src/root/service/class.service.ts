@@ -105,4 +105,9 @@ export class ClassService{
         return this.http.post(`${this.apiUrl}/class/classView`, classView);
     }
 
+    getClass(classId:string):Observable<any>{
+        return this.http.get(`${this.apiUrl}/class/getBasicClassInfo` + '?classId=' + classId);
+
+    }
+
 }

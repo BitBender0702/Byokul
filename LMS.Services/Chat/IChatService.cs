@@ -1,4 +1,5 @@
 ﻿using LMS.Common.ViewModels.Chat;
+using LMS.Data.Entity.Chat;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -14,11 +15,13 @@ namespace LMS.Services.Chat
         Task<ChatMessageViewModel> GetChatMessageForChatHead(Guid chatHeadId);
         Task<Guid> AddChatHead(ChatHeadViewModel chatViewModel);
         Task UpdateChatHead(ChatMessageViewModel chatheadViewModel);
-        Task<ChatHeadViewModel> GetChatHead(Guid sender, Guid receiver);
-        Task<IEnumerable<ChatUsersViewModel>> GetAllChatHeadForLoggedInUser(Guid user);
+        Task<ChatHeadViewModel> GetChatHead(Guid sender, Guid receiver, ChatType chatType);
+        Task<List<ChatUsersViewModel>> GetAllChatHeadForLoggedInUser(Guid user);
         Task<List<ChatHeadViewModel>> GetChatHeadsForReceiver(string receiver);
-        Task<ChatAttachmentResponse> SaveChatAttachments(SaveChatAttachmentViewModel model);
-        Task<IEnumerable<ParticularChat>> GetParticularUserChat(Guid SenderId, Guid ReceiverId, int pageSize, int pageNumber);
-        Task<int> SetParticularUserPinned(Guid senderId, Guid receiverId);
+        Task<List<ChatAttachmentResponse>> SaveChatAttachments(SaveChatAttachmentViewModel model);
+        Task<IEnumerable<ParticularChat>> GetParticularUserChat(Guid SenderId, Guid ReceiverId,ChatType chatType, int pageSize, int pageNumber);
+        Task<bool> SetParticularUserPinned(Guid senderId, Guid receiverId,ChatType chatType);
+        Task RemoveUnreadMessageCount(Guid senderId, Guid receiverId,ChatType chatType);
+        
     }
 }

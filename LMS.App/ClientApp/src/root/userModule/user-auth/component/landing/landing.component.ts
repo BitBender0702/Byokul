@@ -15,14 +15,15 @@ import { finalize } from 'rxjs';
   })
 
 export class LandingComponent implements OnInit {
-  
+  private _authService;
     //credentials: LoginModel = {email:'', password:'',rememberMe:false};
     // private _authService;
-    constructor() { 
-
+    constructor(authService:AuthService) { 
+      this._authService = authService;
     }
   
     ngOnInit(): void {
+      this._authService.loginState$.next(false);
     //   this.selectedLanguage = localStorage.getItem("selectedLanguage");
 
     }

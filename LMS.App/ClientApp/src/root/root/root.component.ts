@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Subject } from 'rxjs';
+import { AuthService } from '../service/auth.service';
 import { SignalrService } from '../service/signalr.service';
 
 @Component({
@@ -8,8 +10,10 @@ import { SignalrService } from '../service/signalr.service';
 })
 export class RootComponent implements OnInit {
   title = 'app';
-  constructor( private signalRService: SignalrService) { 
+  displaySideBar: boolean = false;
+  constructor( private signalRService: SignalrService, authService: AuthService) { 
    console.log("in app comp");
+   authService.loginState$.asObservable().subscribe(x => { this.displaySideBar = x;})
   }
   ngOnInit(): void {
     console.log("temp");

@@ -8,6 +8,10 @@ import { CreateClassModel } from 'src/root/interfaces/class/createClassModel';
 import { ClassService } from 'src/root/service/class.service';
 import { FilterService } from "primeng/api";
 import { IfStmt } from '@angular/compiler';
+import { Subject } from 'rxjs';
+
+export const ownedClassResponse =new Subject<{classId: string, classAvatar : string,className:string,schoolName:string, action:string}>(); 
+
 
 @Component({
   selector: 'students-Home',
@@ -156,6 +160,7 @@ getSchoolsForDropdown(){
   this._classService.getAllSchools().subscribe((response) => {
     this.schools = response;
     this.createClassForm1.controls['schoolId'].setValue(this.schools[0].schoolId, {onlySelf: true});
+    this.createClassForm1.controls['schoolName'].setValue(this.schools[0].schoolName, {onlySelf: true});
   });  
 }
 
@@ -244,7 +249,7 @@ captureTeacherId(event: any) {
   }
 
   forwardStep() {
-    
+    debugger
     this.isStepCompleted = true;
     if (!this.createClassForm1.valid || this.uploadImageName == undefined) {
       return;
@@ -349,6 +354,11 @@ captureTeacherId(event: any) {
   }
 
   forwardStep2() {
+    debugger
+    // var classes = this.createClassForm1.value;
+    // var schoolName = classes.schoolName;
+    // var a = this.selectedSchool.schooName;
+    // var b = this.selectedSchoolName;
     this.loadingIcon = true;
     this.isStepCompleted = true;
     this.fileToUpload.append('disciplineIds',JSON.stringify(this.disciplineIds));
@@ -357,9 +367,11 @@ captureTeacherId(event: any) {
     this.classUrl = 'byokul.com/profile/class/' + this.selectedSchool.schoolName.split(' ').join('').replace(" ","").toLowerCase() + "/" +  this.className.split(' ').join('').replace(" ","").toLowerCase();
     this.fileToUpload.append('classUrl',JSON.stringify(this.classUrl));
     this._classService.createClass(this.fileToUpload).subscribe((response:any) => {
+      debugger
          var classId =  response;
          this.classId = classId;
          this.loadingIcon = false;
+         ownedClassResponse.next({classId:response.classId, classAvatar:response.avatar, className:response.className,schoolName:response.school.schoolName,action:"add"});
          this.step += 1;
          this.isStepCompleted = false;
          this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Class added successfully'});

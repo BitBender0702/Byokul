@@ -60,7 +60,6 @@ export class UserFeedComponent implements OnInit {
       this.isOwnerOrNot();
         // for global feed
         this._userService.getMyFeed().subscribe((response) => {
-          debugger
             this.myFeeds = response;
             if(this.myFeeds.length==0){
               this.getGlobalFeeds();
@@ -308,12 +307,10 @@ export class UserFeedComponent implements OnInit {
       }
     
       getSelectedClass(className:string,schoolName:string){
-        debugger
         window.location.href=`profile/class/${schoolName.replace(" ","").toLowerCase()}/${className.replace(" ","").toLowerCase()}`;
       }
     
       getSelectedCourse(courseName:string,schoolName:string){
-        debugger
         // window.location.href=`user/courseProfile/${courseId}`;
         window.location.href=`profile/course/${schoolName.replace(" ","").toLowerCase()}/${courseName.replace(" ","").toLowerCase()}`;
     

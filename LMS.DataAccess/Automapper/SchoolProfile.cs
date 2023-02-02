@@ -14,7 +14,8 @@ namespace LMS.DataAccess.Automapper
         public SchoolProfile()
         {
             CreateMap<School, SchoolViewModel>()
-                 .ForMember(x => x.CreatedBy, opt => opt.MapFrom(o => o.CreatedBy.FirstName + " " + o.CreatedBy.LastName));
+                 .ForMember(x => x.CreatedBy, opt => opt.MapFrom(o => o.CreatedBy.FirstName + " " + o.CreatedBy.LastName))
+                   .ForMember(x => x.CreatedById, opt => opt.MapFrom(o => o.CreatedById));
             CreateMap<School, SchoolUpdateViewModel>()
                 .ForMember(x => x.User, opt => opt.MapFrom(o => o.CreatedBy));
             CreateMap<SchoolCertificate, SchoolCertificateViewModel>();
@@ -23,7 +24,8 @@ namespace LMS.DataAccess.Automapper
             CreateMap<Specialization, SpecializationViewModel>();
             CreateMap<Language, LanguageViewModel>();
             CreateMap<SchoolLanguage, SchoolLanguageViewModel>();
-            CreateMap<School, SchoolDetailsViewModel>();
+            CreateMap<School, SchoolDetailsViewModel>()
+                .ForMember(x => x.CreatedById, opt => opt.MapFrom(o => o.CreatedById));
             CreateMap<SchoolFollower, SchoolFollowerViewModel>();
             CreateMap<User, UserViewModel>();
             CreateMap<SchoolUser, SchoolUserViewModel>();

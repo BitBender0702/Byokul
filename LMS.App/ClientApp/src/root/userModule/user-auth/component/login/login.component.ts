@@ -41,6 +41,7 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
     }
   
     ngOnInit(): void {
+      this._authService.loginState$.next(false);
       this.selectedLanguage = localStorage.getItem("selectedLanguage");
       this.loginForm = this.fb.group({
         email: this.fb.control('', [Validators.required,Validators.pattern(this.EMAIL_PATTERN)]),
@@ -84,18 +85,20 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
       this._authService.loginUser(this.user).pipe(finalize(()=> this.loadingIcon= false)).subscribe({
         next: (response: AuthenticatedResponse) => {
           if(response.token == "user not found"){
-
+            this._authService.loginState$.next(false);
             this.loginForm.setErrors({ unauthenticated: true });
           }
           if(response.token == "email not confirm"){
-
+            this._authService.loginState$.next(false);
             this.loginForm.setErrors({ emailNotConfirmed: true });
           }
           if(response.token != "user not found" && response.token != "email not confirm"){
             this.isSubmitted = false;
             this.loadingIcon = false;
+            this._authService.loginState$.next(true);
         const token = response.token;
         localStorage.setItem("jwt", token); 
+        
         var decodeData = this.getUserRoles(token);
         if(decodeData.role?.indexOf(RolesEnum.SchoolAdmin) > -1){
           this.router.navigateByUrl(`administration/adminHome`)

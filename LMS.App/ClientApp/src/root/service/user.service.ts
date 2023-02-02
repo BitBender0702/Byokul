@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core"; 
 import { Router } from "@angular/router";
-import { Observable } from "rxjs";
+import { Observable, Subject } from "rxjs";
 import { environment } from "src/environments/environment";
 import { FollowUnfollow } from "../interfaces/FollowUnfollow";
 
@@ -76,6 +76,14 @@ export class UserService{
     saveUserPreference(preferenceString:string): Observable<any> {
         return this.http.post(`${this.apiUrl}/users/saveUserPreference` + '?preferenceString=' + preferenceString,'');
     }
+
+    shareDataSubject = new Subject<any>(); //Decalring new RxJs Subject
+ 
+     sendDataToOtherComponent(userId:string){
+        debugger
+      this.shareDataSubject.next(userId);
+     }
+
     
 
 }

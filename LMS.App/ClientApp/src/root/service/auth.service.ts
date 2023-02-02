@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core"; 
 import { Router } from "@angular/router";
 import { JwtHelperService } from "@auth0/angular-jwt";
-import { Observable } from "rxjs";
+import { BehaviorSubject, observable, Observable } from "rxjs";
 import { AuthenticatedResponse } from "../interfaces/auth_response";
 import { ChangePasswordModel } from "../interfaces/change-password";
 import { JwtResult } from "../interfaces/jwtResult";
@@ -13,6 +13,7 @@ import jwt_decode from 'jwt-decode';
 import { RolesEnum } from "../RolesEnum/rolesEnum";
 import { ResetPasswordModel } from "../interfaces/reset-password";
 import { environment } from "src/environments/environment";
+import { Subject } from "@microsoft/signalr";
 
 @Injectable({providedIn: 'root'})
 
@@ -24,6 +25,7 @@ export class AuthService{
     currentUser: string | null = '';
     role: string[] = [];
 
+    loginState$ = new BehaviorSubject<boolean>(true);
     get apiUrl(): string {
       return environment.apiUrl;
     }
@@ -107,5 +109,4 @@ export class AuthService{
       let queryParams = new HttpParams().append("token",token).append("email",email);
       return this.http.get(`${this.apiUrl}/auth/confirmEmail`, {params:queryParams});
     }
-
 }

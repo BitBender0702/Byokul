@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, ElementRef, Injector, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -20,6 +20,7 @@ import { addPostResponse, CreatePostComponent } from '../../createPost/createPos
 import { PostViewComponent } from '../../postView/postView.component';
 import { ReelsViewComponent } from '../../reels/reelsView.component';
 import { MultilingualComponent } from '../../sharedModule/Multilingual/multilingual.component';
+import { ownedCourseResponse } from '../createCourse/createCourse.component';
 
 @Component({
     selector: 'courseProfile-root',
@@ -28,7 +29,7 @@ import { MultilingualComponent } from '../../sharedModule/Multilingual/multiling
     providers: [MessageService]
   })
 
-export class CourseProfileComponent extends MultilingualComponent implements OnInit {
+export class CourseProfileComponent extends MultilingualComponent implements OnInit, OnDestroy {
 
     private _courseService;
     private _postService;
@@ -77,6 +78,9 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     itemsPerSlide = 7;
     singleSlideOffset = true;
     noWrap = true;
+    courseParamsData$: any;
+    schoolName!:string;
+
 
     @ViewChild('closeEditModal') closeEditModal!: ElementRef;
     @ViewChild('closeTeacherModal') closeTeacherModal!: ElementRef;
@@ -89,11 +93,19 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     isDataLoaded:boolean = false;
     constructor(injector: Injector,public messageService:MessageService,postService:PostService,private bsModalService: BsModalService,courseService: CourseService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
       super(injector);
+      debugger
         this._courseService = courseService;
          this._postService = postService;
+         this.courseParamsData$ = this.route.params.subscribe(routeParams => {
+          debugger
+          // if(!this.loadingIcon)
+          this.ngOnInit();
+        });
     }
+
   
     ngOnInit(): void {
+      debugger
       
       this.validToken = localStorage.getItem("jwt")?? '';
       this.loadingIcon = true;
@@ -230,6 +242,10 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
         commentId:''
        };
 
+    }
+
+    ngOnDestroy(): void {
+      if(this.courseParamsData$) this.courseParamsData$.unsubscribe();
     }
 
   isOwnerOrNot(){
@@ -473,6 +489,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
           }
       
            this.updateCourseDetails=this.editCourseForm.value;
+           this.schoolName = this.editCourseForm.get('schoolName')?.value;
            this.fileToUpload.append('courseId', this.course.courseId);
            this.fileToUpload.append('courseName', this.updateCourseDetails.courseName);
            this.fileToUpload.append('price', this.updateCourseDetails.price?.toString());
@@ -482,11 +499,13 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
            this.fileToUpload.append('serviceTypeId',this.updateCourseDetails.serviceTypeId);
         
           this._courseService.editCourse(this.fileToUpload).subscribe((response:any) => {
+            debugger
             this.closeModal();
             this.isSubmitted=true;
+            ownedCourseResponse.next({courseId:response.courseId, courseAvatar:response.avatar, courseName:response.courseName,schoolName: this.schoolName, action:"update"});
             this.fileToUpload = new FormData();
             this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Course updated successfully'});
-            this.ngOnInit();
+            // this.ngOnInit();
           });
         }
 
@@ -605,10 +624,16 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       this.bsModalService.show(PostViewComponent,{initialState});
     }
 
-    requestMessage(){
+    requestMessage(userId:string,type:string,chatTypeId:string){
       if(this.validToken == ''){
         window.open('user/auth/login', '_blank');
       }
+      else{
+        //window.location.href=`user/chat`;
+        this.router.navigate(
+          [`user/chats`],
+          { state: { chatHead: {receiverId: userId, type : type,chatTypeId:chatTypeId} } });
+      } 
     }
 
     likeUnlikePosts(postId:string, isLike:boolean){

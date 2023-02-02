@@ -8,8 +8,10 @@ namespace LMS.Data.Entity.Chat
     {
         [Key]
         public Guid Id { get; set; }
-        public Guid User1 { get; set; }
-        public Guid User2 { get; set; }
+        public string? SenderId { get; set; }
+        public User Sender { get; set; }
+        public string? ReceiverId { get; set; }
+        public User Receiver { get; set; }
         public string? LastMessage{ get; set; }
         public int UnreadMessageCount { get; set; }
         public virtual List<ChatMessage> Chat { get; set; }

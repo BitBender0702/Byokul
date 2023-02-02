@@ -175,23 +175,6 @@ app.MapControllerRoute(
 
 app.MapFallbackToFile("index.html");
 
-//app.MapHub<ChartHub>("/chatHub", options =>
-//{
-//    options.Transports =
-//            HttpTransportType.WebSockets |
-//            HttpTransportType.LongPolling;
-//});
-
-//app.UseSignalR(routes =>
-//{
-//    routes.MapHub<NotifyHub>("/notify", options =>
-//    {
-//        options.Transports =
-//            HttpTransportType.WebSockets |
-//            HttpTransportType.LongPolling;
-//    });
-//});
-
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapHub<ChatHub>("/chatHub", options =>
@@ -202,16 +185,6 @@ app.UseEndpoints(endpoints =>
     });
 });
 
-
-//app.UseEndpoints(endpoints =>
-//{
-//    endpoints.MapHub<MyHub>("/notify");
-//});
-
-//app.UseEndpoints(endpoints =>
-//{
-//    endpoints.MapHub<MyHub>("/notify");
-//});
 
 
 app.Run();

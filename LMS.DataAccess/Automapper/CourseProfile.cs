@@ -15,9 +15,11 @@ namespace LMS.DataAccess.Automapper
         public CourseProfile()
         {
             CreateMap<Course, CourseViewModel>()
-                .ForMember(x => x.CreatedBy, opt => opt.MapFrom(o => o.CreatedBy.FirstName + " " + o.CreatedBy.LastName));
+                .ForMember(x => x.CreatedBy, opt => opt.MapFrom(o => o.CreatedBy.FirstName + " " + o.CreatedBy.LastName))
+            .ForMember(x => x.CreatedById, opt => opt.MapFrom(o => o.CreatedById));
             CreateMap<Course, CourseDetailsViewModel>()
-                .ForMember(x => x.CreatedBy, opt => opt.MapFrom(o => o.CreatedBy.Email));
+                .ForMember(x => x.CreatedBy, opt => opt.MapFrom(o => o.CreatedBy.Email))
+                .ForMember(x => x.CreatedById, opt => opt.MapFrom(o => o.CreatedById));
             CreateMap<CourseCertificate, CourseCertificateViewModel>();
             CreateMap<ClassCertificateViewModel, CourseCertificateViewModel>();
             CreateMap<CourseLanguageViewModel, ClassLanguageViewModel>()

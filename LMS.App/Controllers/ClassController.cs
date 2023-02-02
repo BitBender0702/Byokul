@@ -2,11 +2,13 @@
 using LMS.Data.Entity;
 using LMS.Services;
 using LMS.Services.Common;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LMS.App.Controllers
 {
+    [Authorize]
     [Route("class")]
     public class ClassController : BaseController
     {
@@ -42,8 +44,8 @@ namespace LMS.App.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateClass(ClassUpdateViewModel classUpdateViewModel)
         {
-            var classId = await _classService.UpdateClass(classUpdateViewModel);
-            return Ok(new { classId = classId });
+            var response = await _classService.UpdateClass(classUpdateViewModel);
+            return Ok(response);
         }
 
         [Route("deleteClassById")]

@@ -17,9 +17,9 @@ export class ChatService{
         this.headers = new HttpHeaders({'Content-Type': 'application/json; charset=utf-8'});
     }
     
-    getChatHead(senderId:string,receiverId:string): Observable<any> {
-        
-        let queryParams = new HttpParams().append("senderId",senderId).append("receiverId",receiverId);
+    getChatHead(senderId:string,receiverId:string,chatType:number): Observable<any> {
+        debugger
+        let queryParams = new HttpParams().append("senderId",senderId).append("receiverId",receiverId).append("chatType",chatType);
         return this.http.get(`${this.apiUrl}/users/getChatHead`, {params:queryParams});
     }
 
@@ -32,5 +32,27 @@ export class ChatService{
         
         return this.http.post<FileUploadResult>(`${this.apiUrl}/users/saveChatAttachments`, saveChatAttachments);
 
+    }
+
+    removeChatAttachment(fileUrl:string) : Observable<any>{
+        
+        return this.http.post(`${this.apiUrl}/chats/removeChatAttachment` + '?fileUrl=' + fileUrl,'');
+
+    }
+
+    getAllChatUsers(senderId:string):Observable<any>{
+        return this.http.get(`${this.apiUrl}/chats/getAllChatUsers` + '?senderId=' + senderId);
+
+    }
+
+    getUsersChat(senderId:string,receiverId:string,chatType:number,pageSize:number,pageNumber:number):Observable<any>{
+        let queryParams = new HttpParams().append("senderId",senderId).append("receiverId",receiverId).append("chatType",chatType).append("pageSize",pageSize).append("pageNumber",pageNumber);
+        return this.http.get(`${this.apiUrl}/chats/GetUsersChat`, {params:queryParams});
+
+    }
+
+    pinUnpinChat(senderId:string,receiverId:string,chatType:number): Observable<any> {
+        let queryParams = new HttpParams().append("senderId",senderId).append("receiverId",receiverId).append("chatType",chatType);
+        return this.http.post(`${this.apiUrl}/chats/setUserPinned`,null, {params:queryParams});
     }
 }

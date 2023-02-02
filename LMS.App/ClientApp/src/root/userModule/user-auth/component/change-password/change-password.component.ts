@@ -29,7 +29,7 @@ export class ChangePasswordComponent extends MultilingualComponent implements On
         this._authService = authService;
     }
     ngOnInit(): void {
-
+      this._authService.loginState$.next(false);
       const passwordValidators = [
         Validators.minLength(6),
         Validators.required,

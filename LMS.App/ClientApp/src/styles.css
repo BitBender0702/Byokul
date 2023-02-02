@@ -2022,6 +2022,59 @@ main {
 #chat li.me:hover .forward-reply {
     right: auto;
 }
+
+ #chats {
+    padding-left: 0;
+    margin: 0;
+    list-style-type: none;
+    overflow-y: scroll;
+    height: calC(100vh - 267px);
+    border-top: 2px solid #fff;
+    border-bottom: 2px solid #fff;
+}
+  #chats li {
+    padding: 28px 30px;
+	margin-bottom: 0;
+}
+  #chats h2,#chats h3{
+	display:inline-block;
+	font-size:13px;
+	font-weight:normal;
+  }
+  #chats h3{
+	color:#bbb;
+  }
+
+  #chats .message {
+    max-width: 45%;
+    display: inline-block;
+    text-align: left;
+    font-size: 12px;
+    color: #151718;
+    line-height: 18px;
+}
+#chats .me .chat-username, .gallery-attch {
+    margin: 0 0 0 auto;
+    max-width: 45%;
+}
+#chats .me .gallery-attch{
+	text-align: left;
+}
+  #chats .me{
+	text-align:right;
+  }
+  .forward-reply {
+    position: absolute;
+    right: 28px;
+    top: 30px;
+	display: none;
+}
+#chats li:hover .forward-reply{
+	display: block;
+}
+#chats li.me:hover .forward-reply {
+    right: auto;
+}
   .forward-btn {
     border: 1px solid #F5F5F5;
     border-radius: 4px;

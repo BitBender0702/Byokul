@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using LMS.Common.ViewModels.Chat;
 using LMS.Common.ViewModels.Class;
+using LMS.Common.ViewModels.Course;
+using LMS.Common.ViewModels.School;
 using LMS.Data.Entity;
 using LMS.Data.Entity.Chat;
 using LMS.DataAccess.GenericRepository;
@@ -9,6 +11,7 @@ using LMS.Services.Blob;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Org.BouncyCastle.Asn1.Crmf;
 using Org.BouncyCastle.Math.EC.Rfc7748;
@@ -23,10 +26,13 @@ namespace LMS.Services.Chat
         private readonly IGenericRepository<ChatMessage> _chatMessageRepository;
         private readonly IGenericRepository<ChatHead> _chatHeadRepository;
         private readonly IGenericRepository<Attachment> _attachmentRepository;
+        private readonly IGenericRepository<School> _schoolRepository;
+        private readonly IGenericRepository<Class> _classRepository;
+        private readonly IGenericRepository<Course> _courseRepository;
         private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
         private readonly IBlobService _blobService;
-        public ChatService(IGenericRepository<ChatMessage> repository, IMapper mapper, IGenericRepository<ChatHead> chatHeadRepository, IBlobService blobService, IGenericRepository<Attachment> attachmentRepo, UserManager<User> userManager)
+        public ChatService(IGenericRepository<ChatMessage> repository, IMapper mapper, IGenericRepository<ChatHead> chatHeadRepository, IBlobService blobService, IGenericRepository<Attachment> attachmentRepo, UserManager<User> userManager, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository)
         {
             _chatMessageRepository = repository;
             _chatHeadRepository = chatHeadRepository;
@@ -34,6 +40,9 @@ namespace LMS.Services.Chat
             _blobService = blobService;
             _attachmentRepository = attachmentRepo;
             _userManager = userManager;
+            _schoolRepository = schoolRepository;
+            _classRepository = classRepository;
+            _courseRepository = courseRepository;
         }
         public async Task<ChatMessageViewModel> AddChatMessage(ChatMessageViewModel chatViewModel)
         {
@@ -45,23 +54,16 @@ namespace LMS.Services.Chat
                     ChatType = chatViewModel.ChatType,
                     ChatTypeId = chatViewModel.ChatTypeId,
                     UnreadMessageCount = 1,
-                    Receiver = chatViewModel.Receiver,
-                    Sender = chatViewModel.Sender,
+                    ReceiverId = chatViewModel.Receiver.ToString(),
+                    SenderId = chatViewModel.Sender.ToString(),
                     LastMessage = chatViewModel.Message
                 });
             }
             else
-            {
-                try
-                {
+            { 
 
                     await UpdateChatHead(chatViewModel);
-                }
-                catch (Exception ex)
-                {
-
-                    throw ex;
-                }
+                
             }
             var chatModel = _mapper.Map<ChatMessage>(chatViewModel);
             chatModel.Id = Guid.NewGuid();
@@ -69,8 +71,6 @@ namespace LMS.Services.Chat
             chatModel.IsRead = false;
             chatModel.SenderId = chatViewModel.Sender;
             chatModel.ReceiverId = chatViewModel.Receiver;
-            //chatModel.AttachmentURLs = await saveAttachmentsAndReturnURL(chatViewModel.Attachments);
-
             _chatMessageRepository.Insert(chatModel);
             try
             {
@@ -100,8 +100,8 @@ namespace LMS.Services.Chat
 
             chatHead.Id = Guid.NewGuid();
             chatHead.UnreadMessageCount = 1;
-            chatHead.User1 = chatViewModel.Sender;
-            chatHead.User2 = chatViewModel.Receiver;
+            chatHead.SenderId = chatViewModel.SenderId;
+            chatHead.ReceiverId = chatViewModel.ReceiverId;
             _chatHeadRepository.Insert(chatHead);
             try
             {
@@ -118,7 +118,6 @@ namespace LMS.Services.Chat
 
         public async Task UpdateChatHead(ChatMessageViewModel chatheadViewModel)
         {
-            //var existingChatHead =   _chatHeadRepository.GetById(chatheadViewModel.Id);
             var existingChatHead = _chatHeadRepository.GetAll().Where(x => x.Id == chatheadViewModel.ChatHeadId).FirstOrDefault();
             if (existingChatHead is null)
             {
@@ -135,13 +134,13 @@ namespace LMS.Services.Chat
             throw new NotImplementedException();
         }
 
-        public async Task<ChatHeadViewModel> GetChatHead(Guid sender, Guid receiver)
+        public async Task<ChatHeadViewModel> GetChatHead(Guid sender, Guid receiver,ChatType chatType)
         {
             ChatHead res;
-            res = _chatHeadRepository.GetFirstOrDefaultBy(x => x.User1 == sender && x.User2 == receiver);
+            res = _chatHeadRepository.GetFirstOrDefaultBy(x => x.SenderId == sender.ToString() && x.ReceiverId == receiver.ToString() && x.ChatType == chatType);
 
             if (res is null)
-                res = _chatHeadRepository.GetFirstOrDefaultBy(x => x.User1 == receiver && x.User2 == sender);
+                res = _chatHeadRepository.GetFirstOrDefaultBy(x => x.SenderId == receiver.ToString() && x.ReceiverId == sender.ToString() && x.ChatType == chatType);
 
             var result = _mapper.Map<ChatHeadViewModel>(res);
             if (result == null)
@@ -158,99 +157,227 @@ namespace LMS.Services.Chat
             throw new NotImplementedException();
         }
 
-        public async Task<ChatAttachmentResponse> SaveChatAttachments(SaveChatAttachmentViewModel model)
+        public async Task<List<ChatAttachmentResponse>> SaveChatAttachments(SaveChatAttachmentViewModel model)
         {
             var containerName = "chatattachments";
-            var response = new ChatAttachmentResponse();
-            response.FileUrl = await _blobService.UploadFileAsync(model.File, containerName);
-            response.FileName = model.File.FileName;
-            response.FileType = Convert.ToInt16(model.FileType);
+            var response = new List<ChatAttachmentResponse>();
+            foreach (var attachment in model.File)
+            {
+                var chatAttach = new ChatAttachmentResponse();
+                chatAttach.FileURL = await _blobService.UploadFileAsync(attachment, containerName);
+
+                chatAttach.FileName = attachment.FileName;
+                chatAttach.FileType = model.FileType;
+                response.Add(chatAttach);
+
+            }
             return response;
         }
 
-        public async Task<IEnumerable<ChatUsersViewModel>> GetAllChatHeadForLoggedInUser(Guid userId)
+        public async Task<List<ChatUsersViewModel>> GetAllChatHeadForLoggedInUser(Guid userId)
         {
 
-            IEnumerable<ChatUsersViewModel> users = new List<ChatUsersViewModel>();
-            var res = _chatHeadRepository.GetAll().Where(x => x.User1 == userId || x.User2 == userId).ToList();
-            var IsPinnedUser1Object = res.FirstOrDefault(x => x.IsPinnedUser1);
-            var IsPinnedUser2Object = res.FirstOrDefault(x => x.IsPinnedUser2);
-            Guid IsPinnedReceiverId = default;
+            List<ChatUsersViewModel> users = new List<ChatUsersViewModel>();
+            var res = _chatHeadRepository.GetAll().Include(x => x.Receiver).Where(x => x.SenderId == userId.ToString() || x.ReceiverId == userId.ToString()).ToList();
 
-            if (IsPinnedUser1Object != null)
-                if (IsPinnedUser1Object.IsPinnedUser1 && IsPinnedUser1Object.User1 == userId)
-                    IsPinnedReceiverId = IsPinnedUser1Object.User2;
+                var first = res.Where(x => x.ReceiverId == userId.ToString() && x.ChatType == ChatType.Personal).Select(x => new ChatUsersViewModel
+                {
+                    UserID = new Guid(x.SenderId),
+                    LastMessage = x.LastMessage,
+                    ChatHeadId = x.Id,
+                    ChatType = x.ChatType
+                }).ToList();
 
+                users = users.Concat(first).ToList();
 
-            if (IsPinnedUser2Object != null)
-                if (IsPinnedUser2Object.IsPinnedUser2 && IsPinnedUser2Object.User2 == userId)
-                    IsPinnedReceiverId = IsPinnedUser2Object.User1;
+                var second = res.Where(x => x.SenderId == userId.ToString() && x.ChatType == ChatType.Personal).Select(x => new ChatUsersViewModel { UserID = new Guid(x.ReceiverId), LastMessage = x.LastMessage, ChatHeadId = x.Id , ChatType = x.ChatType }).ToList();
 
+                users = users.Concat(second).ToList();
 
-
-            var first = res.Where(x => x.User2 == userId).Select(x => new ChatUsersViewModel
+            var third = res.Where(x => x.ReceiverId == userId.ToString() && x.ChatType == ChatType.School).Select( x => new ChatUsersViewModel
             {
-                UserID = x.User1,
+                UserID = new Guid(x.SenderId),
                 LastMessage = x.LastMessage,
-                ChatHeadId = x.Id
+                ChatHeadId = x.Id,
+                School =   GetSchoolInfo(x.ChatTypeId),
+                ChatType = x.ChatType
             }).ToList();
 
-            users = users.Concat(first).ToList();
+            users = users.Concat(third).ToList();
 
-            var second = res.Where(x => x.User1 == userId).Select(x => new ChatUsersViewModel { UserID = x.User2, LastMessage = x.LastMessage, ChatHeadId = x.Id }).ToList();
+            var fourth = res.Where(x => x.SenderId == userId.ToString() && x.ChatType == ChatType.School).Select(x => new ChatUsersViewModel { UserID = new Guid(x.ReceiverId), LastMessage = x.LastMessage, ChatHeadId = x.Id,
+                School = GetSchoolInfo(x.ChatTypeId),
+                ChatType = x.ChatType
+            }).ToList();
 
-            users = users.Concat(second).ToList();
+            users = users.Concat(fourth).ToList();
+
+            var five = res.Where(x => x.ReceiverId == userId.ToString() && x.ChatType == ChatType.Class).Select(x => new ChatUsersViewModel
+            {
+                UserID = new Guid(x.SenderId),
+                LastMessage = x.LastMessage,
+                ChatHeadId = x.Id,
+                Class = GetClassInfo(x.ChatTypeId),
+                ChatType = x.ChatType
+            }).ToList();
+
+            users = users.Concat(five).ToList();
+
+            var six = res.Where(x => x.SenderId == userId.ToString() && x.ChatType == ChatType.Class).Select(x => new ChatUsersViewModel
+            {
+                UserID = new Guid(x.ReceiverId),
+                LastMessage = x.LastMessage,
+                ChatHeadId = x.Id,
+                Class = GetClassInfo(x.ChatTypeId),
+                ChatType = x.ChatType
+            }).ToList();
+
+            users = users.Concat(six).ToList();
+
+            var seven = res.Where(x => x.ReceiverId == userId.ToString() && x.ChatType == ChatType.Course).Select(x => new ChatUsersViewModel
+            {
+                UserID = new Guid(x.SenderId),
+                LastMessage = x.LastMessage,
+                ChatHeadId = x.Id,
+                Course = GetCourseInfo(x.ChatTypeId),
+                ChatType = x.ChatType
+            }).ToList();
+
+            users = users.Concat(seven).ToList();
+
+            var eight = res.Where(x => x.SenderId == userId.ToString() && x.ChatType == ChatType.Course).Select(x => new ChatUsersViewModel
+            {
+                UserID = new Guid(x.ReceiverId),
+                LastMessage = x.LastMessage,
+                ChatHeadId = x.Id,
+                Course = GetCourseInfo(x.ChatTypeId),
+                ChatType = x.ChatType
+            }).ToList();
+
+            users = users.Concat(eight).ToList();
 
             var chatRepo = _chatMessageRepository.GetAll();
             var attachRepo = _attachmentRepository.GetAll();
             foreach (var chatUser in users)
             {
+                if(res.First(x=>x.Id == chatUser.ChatHeadId).SenderId==userId.ToString() && res.First(x => x.Id == chatUser.ChatHeadId).IsPinnedUser1){
+                    chatUser.IsPinned = true;
+                }
+                if (res.First(x => x.Id == chatUser.ChatHeadId).ReceiverId == userId.ToString() && res.First(x => x.Id == chatUser.ChatHeadId).IsPinnedUser2)
+                {
+                    chatUser.IsPinned = true;
+                }
 
                 var LastChatObject = chatRepo.Where(x => x.ChatHeadId == chatUser.ChatHeadId).OrderByDescending(x => x.CreatedOn).First();
                 var chatId = LastChatObject.Id;
-                var receiverUser = await _userManager.FindByIdAsync(LastChatObject.ReceiverId.ToString());
+                LastChatObject.Attachments = await attachRepo.Where(x => x.ChatMessageId == chatId).ToListAsync();
+
+
+                var receiverUser = await _userManager.FindByIdAsync(LastChatObject.ReceiverId == userId ? LastChatObject.SenderId.ToString() : LastChatObject.ReceiverId.ToString());
 
                 if (chatUser.LastMessage is null)
                 {
-                    //var messages = _chatMessageRepository.GetAll().Where(y => users.Select(x => x.ChatHeadId).ToList().Contains(y.Id)).GroupBy(x => x.ChatHeadId).Select(z => new
-                    //   ChatUsersViewModel
-                    //{
-                    //    ChatHeadId = z.Key,
-                    //    LastMessage = z.OrderByDescending(a => a.CreatedOn).FirstOrDefault().Message
-                    //}).ToList();
                     chatUser.FileName = attachRepo.Where(x => x.ChatMessageId == chatId).First().FileName;
                 }
                 chatUser.Time = LastChatObject.CreatedOn;
-                chatUser.ProfileURL = receiverUser.Avatar;
-                chatUser.UserName = receiverUser.FirstName + " " + receiverUser.LastName;
+
+                if (chatUser.ChatType == ChatType.School) {
+                    chatUser.ProfileURL = chatUser.School.Avatar;
+                    chatUser.UserName = chatUser.School.SchoolName;
+                }
+                else if (chatUser.ChatType == ChatType.Class)
+                {
+                    chatUser.ProfileURL = chatUser.Class.Avatar;
+                    chatUser.UserName = chatUser.Class.ClassName;
+                }
+                else if (chatUser.ChatType == ChatType.Course)
+                {
+                    chatUser.ProfileURL = chatUser.Course.Avatar;
+                    chatUser.UserName = chatUser.Course.CourseName;
+                }
+                else
+                {
+                    chatUser.ProfileURL = receiverUser.Avatar;
+                    chatUser.UserName = receiverUser.FirstName + " " + receiverUser.LastName;
+                }
+            }
+            users = users.OrderByDescending(x => x.IsPinned).ThenBy(x => x.Time).ToList();
+
+            var firstUser = users.Where(x => x.ChatType == ChatType.Personal).FirstOrDefault();
+            if (firstUser!= null)
+            {
+                firstUser.Chats = await GetParticularUserChat(userId, firstUser.UserID, ChatType.Personal);
+
             }
 
+            var firstSchool = users.Where(x => x.ChatType == ChatType.School).FirstOrDefault();
+            if (firstSchool!= null)
+            {
+                firstSchool.Chats = await GetParticularUserChat(userId, firstSchool.UserID, ChatType.School);
+            }
 
-            return users.OrderByDescending(x => x.UserID == IsPinnedReceiverId).ThenBy(x => x.Time);
+            var firstClass = users.Where(x => x.ChatType == ChatType.Class).FirstOrDefault();
+            if (firstClass != null)
+            {
+                firstClass.Chats = await GetParticularUserChat(userId, firstClass.UserID, ChatType.Class);
+            }
+
+            var firstCourse = users.Where(x => x.ChatType == ChatType.Course).FirstOrDefault();
+            if (firstCourse != null)
+            {
+                firstCourse.Chats = await GetParticularUserChat(userId, firstCourse.UserID, ChatType.Course);
+            }
+            return users;
         }
 
-        public async Task<IEnumerable<ParticularChat>> GetParticularUserChat(Guid SenderId, Guid ReceiverId, int pageSize, int pageNumber)
+        public SchoolUpdateViewModel GetSchoolInfo(Guid? schoolId)
         {
+            var school = _schoolRepository.GetById(schoolId);
+            return new SchoolUpdateViewModel {SchoolId = school.SchoolId, SchoolName = school.SchoolName, Avatar = school.Avatar, OwnerId = school.CreatedById };
+        }
+
+        public ClassViewModel GetClassInfo(Guid? classId)
+        {
+            var classes = _classRepository.GetById(classId);
+            return new ClassViewModel { ClassId = classes.ClassId, ClassName = classes.ClassName, Avatar = classes.Avatar, CreatedById = classes.CreatedById, SchoolId = classes.SchoolId};
+        }
+
+        public CourseViewModel GetCourseInfo(Guid? classId)
+        {
+            var course = _courseRepository.GetById(classId);
+            return new CourseViewModel { CourseId = course.CourseId, CourseName = course.CourseName, Avatar = course.Avatar, CreatedById = course.CreatedById, SchoolId = course.SchoolId };
+        }
+
+        public async Task<IEnumerable<ParticularChat>> GetParticularUserChat(Guid SenderId, Guid ReceiverId,ChatType chatType, int pageSize = 2, int pageNumber = 1)
+        {
+            const int MinimumPageSize = 10;
             var attachRepo = _attachmentRepository.GetAll();
-            var chatRepo = _chatMessageRepository.GetAll().Where(x => !x.IsDeleted).Where(x => (x.SenderId == SenderId && x.ReceiverId == ReceiverId) || (x.SenderId == ReceiverId && x.ReceiverId == SenderId)).OrderByDescending(x => x.CreatedOn).Skip((pageNumber - 1) * pageSize).Take(pageSize);
+            var chatRepo = _chatMessageRepository.GetAll().Where(x => !x.IsDeleted).Include(x => x.ChatHead).Where(x => (x.SenderId == SenderId && x.ReceiverId == ReceiverId && x.ChatHead.ChatType  == chatType) || (x.SenderId == ReceiverId && x.ReceiverId == SenderId && x.ChatHead.ChatType == chatType));
+
+            //if (chatRepo.Count() < MinimumPageSize)
+                chatRepo = chatRepo.OrderByDescending(x => x.CreatedOn);
+            //else
+            //    chatRepo = chatRepo.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+
 
             List<ParticularChat> chatList = new List<ParticularChat>();
 
             foreach (var item in chatRepo)
             {
                 var partChat = new ParticularChat { Time = item.CreatedOn };
-
-                if (item.Message is null)
+                var AttachRepoObject = await attachRepo.Where(x => x.ChatMessageId == item.Id).ToListAsync();
+                //if (item.Message is null)
+                //{
+                if (AttachRepoObject != null)
                 {
-                    var AttachRepoObject = attachRepo.Where(x => x.ChatMessageId == item.Id).First();
-
-                    partChat.FileName = AttachRepoObject.FileName;
-                    partChat.FileUrl = AttachRepoObject.FileURL;
+                    partChat.Attachment = _mapper.Map<List<AttachmentViewModel>>(AttachRepoObject);
+                    
                 }
-                else
-                {
-                    partChat.Text = item.Message;
-                }
+                //}
+                //else
+                //{
+                partChat.Text = item.Message;
+                //}
                 if (item.SenderId == SenderId)
                     partChat.SendByMe = true;
 
@@ -260,12 +387,12 @@ namespace LMS.Services.Chat
             }
             return chatList.OrderBy(x=>x.Time);
         }
-        public async Task<int> SetParticularUserPinned(Guid SenderId, Guid ReceiverId)
+        public async Task<bool> SetParticularUserPinned(Guid SenderId, Guid ReceiverId,ChatType chatType)
         {
 
-            var chatHeadObject=_chatHeadRepository.GetAll().Where(x => (x.User1 == SenderId && x.User2 == ReceiverId)|| (x.User1 == ReceiverId && x.User2 == SenderId)).First();
+            var chatHeadObject = _chatHeadRepository.GetAll().Where(x => (x.SenderId == SenderId.ToString() && x.ReceiverId == ReceiverId.ToString() && x.ChatType == chatType) || (x.SenderId == ReceiverId.ToString() && x.ReceiverId == SenderId.ToString() && x.ChatType == chatType)).First();
 
-            string SenderCol=chatHeadObject.User1 == SenderId ? "User1" : "User2";
+            string SenderCol = chatHeadObject.SenderId == SenderId.ToString() ? "User1" : "User2";
 
             if (SenderCol == "User1")
                 chatHeadObject.IsPinnedUser1 = chatHeadObject.IsPinnedUser1 == false ? true : false;
@@ -273,8 +400,26 @@ namespace LMS.Services.Chat
                 chatHeadObject.IsPinnedUser2 = chatHeadObject.IsPinnedUser2 == false ? true : false;
 
             _chatHeadRepository.Save();
-            return 200;
+
+            return chatHeadObject.IsPinnedUser2;
+
         }
-        
-    }
+
+        public async Task RemoveUnreadMessageCount(Guid SenderId, Guid ReceiverId,ChatType chatType)
+        {
+            var result = await _chatHeadRepository.GetAll().Where(x => (x.SenderId == SenderId.ToString() && x.ReceiverId == ReceiverId.ToString() && x.ChatType == chatType) || (x.SenderId == ReceiverId.ToString() && x.ReceiverId == SenderId.ToString() && x.ChatType == chatType)).FirstAsync();
+
+            if (result.UnreadMessageCount != 0)
+            {
+                var chatHead = new ChatHead
+                {
+                    UnreadMessageCount = 0
+                };
+
+                _chatHeadRepository.Update(chatHead);
+                _chatHeadRepository.Save();
+            }
+        }
+
+        }
 }

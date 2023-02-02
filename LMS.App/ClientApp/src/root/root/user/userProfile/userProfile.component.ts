@@ -20,10 +20,11 @@ import { PostViewComponent } from '../../postView/postView.component';
 import { MessageService } from 'primeng/api';
 import { LikeUnlikePost } from 'src/root/interfaces/post/likeUnlikePost';
 import { PostView } from 'src/root/interfaces/post/postView';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { ReelsViewComponent } from '../../reels/reelsView.component';
 
 export const userImageResponse =new Subject<{userAvatar : string}>();  
+export const chatResponse =new Subject<{receiverId : string , type: string,chatTypeId:string}>();  
 
 
 
@@ -73,6 +74,7 @@ export const userImageResponse =new Subject<{userAvatar : string}>();
     loginUserId!:string;
     gridItemInfo:any;
     isGridItemInfo: boolean = false;
+    userParamsData$: any;
 
     @ViewChild('closeEditModal') closeEditModal!: ElementRef;
     @ViewChild('closeLanguageModal') closeLanguageModal!: ElementRef;
@@ -89,6 +91,10 @@ export const userImageResponse =new Subject<{userAvatar : string}>();
       super(injector);
         this._userService = userService;
         this._postService = postService;
+        this.userParamsData$ = this.route.params.subscribe(routeParams => {
+          if(!this.loadingIcon)
+          this.ngOnInit();
+        });
     }
   
     ngOnInit(): void {
@@ -165,6 +171,10 @@ export const userImageResponse =new Subject<{userAvatar : string}>();
       });
 
 
+    }
+
+    ngOnDestroy(): void {
+      if(this.userParamsData$) this.userParamsData$.unsubscribe();
     }
 
     InitializeFollowUnfollowUser(){
@@ -553,6 +563,19 @@ initializePostView(){
 hideGridItemInfo(){
   this.isGridItemInfo = this.isGridItemInfo ? false : true;
 
+}
+
+openChat(userId:string,type:string){
+  debugger
+var chatTypeId = ''
+  // this.router.navigate(['user/chats', {chatHead_object: JSON.stringify({receiverId: userId, type : type,chatTypeId:''})}]);
+
+  this.router.navigate(
+    [`user/chats`],
+    { state: { chatHead: {receiverId: userId, type : type,chatTypeId:''} } });
+
+  //this._userService.sendDataToOtherComponent(userId);
+  // chatResponse.next({receiverId: userId, type : type,chatTypeId:''});
 }
 
 // addPostView(postId:string){

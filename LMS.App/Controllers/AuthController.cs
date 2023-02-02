@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Configuration;
 using LMS.Common.ViewModels.Post;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LMS.App.Controllers
 {
@@ -131,6 +132,7 @@ namespace LMS.App.Controllers
 
 
         // Change password
+        [Authorize]
         [Route("updatePassword")]
         [HttpPost]
         public async Task<IActionResult> UpdatePassword([FromBody] UpdatePasswordViewModel updatePasswordViewModel)
@@ -153,6 +155,7 @@ namespace LMS.App.Controllers
             return Ok(new { result = "" });
         }
 
+        [Authorize]
         [Route("resetPassword")]
         [HttpPost]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordViewModel resetPasswordViewModel)

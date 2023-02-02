@@ -37,10 +37,11 @@ namespace LMS.Services
         private readonly UserManager<User> _userManager;
         private IGenericRepository<ClassLike> _classLikeRepository;
         private IGenericRepository<ClassViews> _classViewsRepository;
+        private IGenericRepository<School> _schoolRepository;
         private readonly IBlobService _blobService;
         private readonly IUserService _userService;
 
-        public ClassService(IMapper mapper, IGenericRepository<Class> classRepository, IGenericRepository<ClassLanguage> classLanguageRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<ClassDiscipline> classDisciplineRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<ClassTag> classTagRepository, IGenericRepository<ClassCertificate> classCertificateRepository, UserManager<User> userManager, IBlobService blobService, IUserService userService, IGenericRepository<ClassLike> classLikeRepository, IGenericRepository<ClassViews> classViewsRepository)
+        public ClassService(IMapper mapper, IGenericRepository<Class> classRepository, IGenericRepository<ClassLanguage> classLanguageRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<ClassDiscipline> classDisciplineRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<ClassTag> classTagRepository, IGenericRepository<ClassCertificate> classCertificateRepository, UserManager<User> userManager, IBlobService blobService, IUserService userService, IGenericRepository<ClassLike> classLikeRepository, IGenericRepository<ClassViews> classViewsRepository, IGenericRepository<School> schoolRepository)
         {
             _mapper = mapper;
             _classRepository = classRepository;
@@ -58,8 +59,9 @@ namespace LMS.Services
             _userService = userService;
             _classLikeRepository = classLikeRepository;
             _classViewsRepository = classViewsRepository;
+            _schoolRepository = schoolRepository;
         }
-        public async Task<Guid> SaveNewClass(ClassViewModel classViewModel, string createdById)
+        public async Task<ClassViewModel> SaveNewClass(ClassViewModel classViewModel, string createdById)
         {
 
             var langList = JsonConvert.DeserializeObject<string[]>(classViewModel.LanguageIds.First());
@@ -136,7 +138,18 @@ namespace LMS.Services
                 await SaveClassTags(classViewModel.ClassTags, classViewModel.ClassId);
             }
 
-            return classViewModel.ClassId;
+            var school = await _schoolRepository.GetAll().Where(x=> x.SchoolId == classViewModel.SchoolId).FirstOrDefaultAsync();
+            try
+            {
+                var schoolResult = _mapper.Map<SchoolViewModel>(school);
+                classViewModel.School = schoolResult;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            
+            return classViewModel;
 
         }
 
@@ -215,7 +228,7 @@ namespace LMS.Services
             return result;
         }
 
-        public async Task<Guid> UpdateClass(ClassUpdateViewModel classUpdateViewModel)
+        public async Task<ClassUpdateViewModel> UpdateClass(ClassUpdateViewModel classUpdateViewModel)
         {
             var containerName = "classlogo";
             if (classUpdateViewModel.AvatarImage != null)
@@ -243,7 +256,19 @@ namespace LMS.Services
             {
                 await UpdateClassLanguages(classUpdateViewModel.LanguageIds, classUpdateViewModel.ClassId);
             }
-            return classUpdateViewModel.ClassId;
+
+            var school = await _schoolRepository.GetAll().Where(x => x.SchoolId == classUpdateViewModel.SchoolId).FirstOrDefaultAsync();
+            try
+            {
+                var schoolResult = _mapper.Map<SchoolViewModel>(school);
+                classUpdateViewModel.School = schoolResult;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return classUpdateViewModel;
 
         }
 

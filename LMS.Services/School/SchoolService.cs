@@ -79,7 +79,7 @@ namespace LMS.Services
             _courseService = courseService;
         }
 
-        public async Task<Guid> SaveNewSchool(SchoolViewModel schoolViewModel, string createdById)
+        public async Task<SchoolViewModel> SaveNewSchool(SchoolViewModel schoolViewModel, string createdById)
         {
             if (schoolViewModel.AvatarImage != null)
             {
@@ -113,7 +113,7 @@ namespace LMS.Services
 
             await AddRoleForUser(createdById, "School Owner");
 
-            return schoolViewModel.SchoolId;
+            return schoolViewModel;
         }
 
         public async Task SaveSchoolLanguages(IEnumerable<string> languageIds, Guid schoolId)
@@ -248,7 +248,7 @@ namespace LMS.Services
             return result;
         }
 
-        public async Task<Guid> UpdateSchool(SchoolUpdateViewModel schoolUpdateViewModel)
+        public async Task<SchoolUpdateViewModel> UpdateSchool(SchoolUpdateViewModel schoolUpdateViewModel)
         {
             if (schoolUpdateViewModel.AvatarImage != null)
             {
@@ -267,8 +267,9 @@ namespace LMS.Services
             _schoolRepository.Update(school);
             _schoolRepository.Save();
 
+            schoolUpdateViewModel.SchoolId = school.SchoolId;
             //await AddRoleForUser(schoolUpdateViewModel.OwnerId, "School Owner");
-            return school.SchoolId;
+            return schoolUpdateViewModel;
         }
 
         async Task UpdateSchoolLanguages(IEnumerable<string> languageIds, Guid schoolId)
@@ -892,6 +893,12 @@ namespace LMS.Services
 
             }
             return false;
+        }
+        public async Task<List<SchoolViewModel>> GetUserAllSchools(string userId)
+        {
+            var schools = await _schoolRepository.GetAll().Where(x => x.CreatedById == userId).Select(x => new SchoolViewModel {SchoolId = x.SchoolId, SchoolName= x.SchoolName,Avatar = x.Avatar }).ToListAsync();
+            return schools;
+            
         }
     }
 }

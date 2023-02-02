@@ -20,5 +20,6 @@ namespace LMS.Common.ViewModels.UserDashboard
         public IEnumerable<SchoolViewModel> FollowedSchools { get; set; }
         public IEnumerable<ClassViewModel> FollowedClasses { get; set; }
         public IEnumerable<CourseViewModel> FollowedCourses { get; set; }
+        public int UnreadMessageCount { get; set; }
     }
 }

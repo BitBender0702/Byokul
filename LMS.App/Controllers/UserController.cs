@@ -2,6 +2,7 @@
 using LMS.Common.ViewModels.Common;
 using LMS.Common.ViewModels.User;
 using LMS.Data.Entity;
+using LMS.Data.Entity.Chat;
 using LMS.Services;
 using LMS.Services.Chat;
 using Microsoft.AspNetCore.Http;
@@ -153,19 +154,19 @@ namespace LMS.App.Controllers
         // for chats
         [Route("getChatHead")]
         [HttpGet]
-        public async Task<IActionResult> GetChatHead(Guid senderId, Guid receiverId)
+        public async Task<IActionResult> GetChatHead(Guid senderId, Guid receiverId,ChatType chatType)
         {
-            var response = await _chatService.GetChatHead(senderId, receiverId);
+            var response = await _chatService.GetChatHead(senderId, receiverId, chatType);
             return Ok(response);
         }
 
-        [Route("saveSentMssage")]
-        [HttpGet]
-        public async Task<IActionResult> SaveSentMssage(Guid senderId, Guid receiverId)
-        {
-            var response = await _chatService.GetChatHead(senderId, receiverId);
-            return Ok(response);
-        }
+        //[Route("saveSentMssage")]
+        //[HttpGet]
+        //public async Task<IActionResult> SaveSentMssage(Guid senderId, Guid receiverId)
+        //{
+        //    var response = await _chatService.GetChatHead(senderId, receiverId);
+        //    return Ok(response);
+        //}
 
         [Route("saveChatAttachments")]
         [HttpPost]

@@ -31,7 +31,7 @@ export class ResetPasswordComponent extends MultilingualComponent implements OnI
     }
 
     ngOnInit(): void {
-
+      this._authService.loginState$.next(false);
       const passwordValidators = [
         Validators.minLength(6),
         Validators.required,

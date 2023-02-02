@@ -8,6 +8,9 @@ import {MenuItem, MessageService} from 'primeng/api';
 import { Router } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MultilingualComponent } from '../../sharedModule/Multilingual/multilingual.component';
+import { Subject } from 'rxjs';
+
+export const ownedSchoolResponse =new Subject<{schoolId: string, schoolAvatar : string,schoolName:string,action:string}>(); 
 
 @Component({
   selector: 'students-Home',
@@ -202,6 +205,8 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
          var schoolId =  response;
          this.schoolId = schoolId;
          this.loadingIcon = false;
+         var form1Value =this.createSchoolForm1.value;
+         ownedSchoolResponse.next({schoolId:response.schoolId, schoolAvatar:response.avatar, schoolName:response.schoolName,action:"add"});
          this.step += 1;
          this.isStepCompleted = false;
          this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'School created successfully'});

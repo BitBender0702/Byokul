@@ -30,8 +30,7 @@
       </li>
       <li class="d-inline-block"><button type="button"
           class="notification-btn position-relative border-0 bg-transparent"><img src="../../../assets/images/school/chat-icon.svg" />
-          <span
-            class="badge rounded-circle d-inline-flex align-items-center justify-content-center fw_700 font_12">3</span></button>
+          <span *ngIf="sidebarInfo?.unreadMessageCount!=null && sidebarInfo?.unreadMessageCount!=0" class="badge rounded-circle d-inline-flex align-items-center justify-content-center fw_700 font_12">{{sidebarInfo?.unreadMessageCount}}</span></button>
       </li>
       <li class="d-inline-block"><button type="button "
           class="notification-btn position-relative border-0 bg-transparent"><img src="../../../assets/images/school/Notification.svg" />
@@ -172,7 +171,7 @@
                 <div  *ngFor="let item of sidebarInfo.ownedSchools;">
                   <div *ngIf="!item.isBan" class="school-name d-flex align-items-center font_16">
                     <div class="school-img rounded-circle me-3">
-                      <img [src]="item.avatar" />
+                      <img *ngIf="item.avatar!= null" [src]="item.avatar" />
                     </div>
                     <a style="cursor:pointer;" (click)="getSelectedSchool(item.schoolName)">{{item.schoolName}}</a>
                   </div>
@@ -202,7 +201,7 @@
                 <div  *ngFor="let item of sidebarInfo.ownedClasses;">
                   <div *ngIf="!item.isEnable" class="school-name d-flex align-items-center font_16">
                     <div class="school-img rounded-circle me-3">
-                      <img [src]="item.avatar" />
+                      <img *ngIf="item.avatar!= null && item.avatar!= 'null'" [src]="item.avatar" />
                     </div>
                     <a style="cursor:pointer;" (click)="getSelectedClass(item.className,item.school.schoolName)">{{item.className}}</a>
                   </div>
@@ -231,7 +230,7 @@
                 <div  *ngFor="let item of sidebarInfo.ownedCourses;">
                   <div *ngIf="!item.isEnable" class="school-name d-flex align-items-center font_16">
                     <div class="school-img rounded-circle me-3">
-                      <img [src]="item.avatar" />
+                      <img *ngIf="item.avatar!= null && item.avatar!= 'null'" [src]="item.avatar" />
                     </div>
                     <a style="cursor:pointer;" (click)="getSelectedCourse(item.courseName,item.school.schoolName)">{{item.courseName}}</a>
                   </div>

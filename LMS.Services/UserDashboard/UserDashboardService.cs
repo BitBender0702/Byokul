@@ -6,6 +6,7 @@ using LMS.Common.ViewModels.School;
 using LMS.Common.ViewModels.User;
 using LMS.Common.ViewModels.UserDashboard;
 using LMS.Data.Entity;
+using LMS.Data.Entity.Chat;
 using LMS.DataAccess.Repository;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -28,7 +29,8 @@ namespace LMS.Services.UserDashboard
         private IGenericRepository<ClassStudent> _classStudentRepository;
         private IGenericRepository<CourseStudent> _courseStudentRepository;
         private IGenericRepository<User> _userRepository;
-        public UserDashboardService(IMapper mapper, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<SchoolFollower> schoolFollowerRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<UserFollower> userFollowerRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<User> userRepository)
+        private IGenericRepository<ChatHead> _ChatHeadRepository;
+        public UserDashboardService(IMapper mapper, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<SchoolFollower> schoolFollowerRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<UserFollower> userFollowerRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<User> userRepository, IGenericRepository<ChatHead> ChatHeadRepository)
         {
             _mapper = mapper;
             _schoolRepository = schoolRepository;
@@ -40,6 +42,7 @@ namespace LMS.Services.UserDashboard
             _classStudentRepository = classStudentRepository;
             _courseStudentRepository = courseStudentRepository;
             _userRepository = userRepository;
+            _ChatHeadRepository = ChatHeadRepository;
         }
         public async Task<UserDashboardViewModel> UserDashboard(string userId)
         {
@@ -102,6 +105,17 @@ namespace LMS.Services.UserDashboard
 
             var followedCourses = _mapper.Map<IEnumerable<CourseViewModel>>(courseStudents.Select(x => x.Course).ToList());
             model.FollowedCourses = followedCourses;
+
+            //unread messages
+            
+            var unreadMessages = await _ChatHeadRepository.GetAll().Where(x=> (x.SenderId == userId) || (x.ReceiverId == userId)).Select(x => x.UnreadMessageCount).ToListAsync();
+            int messageCount = 0;
+            foreach (var item in unreadMessages)
+            {
+                messageCount = messageCount + item;
+            }
+
+            model.UnreadMessageCount = messageCount;
 
             return model;
         }

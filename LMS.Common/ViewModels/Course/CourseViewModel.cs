@@ -33,6 +33,7 @@ namespace LMS.Common.ViewModels.Course
         public IEnumerable<string> DisciplineIds { get; set; }
         public DateTime CreatedOn { get; set; }
         public string CreatedBy { get; set; }
+        public string CreatedById { get; set; }
         public bool IsEnable { get; set; }
         public bool IsConvertable { get; set; }
         public IFormFile AvatarImage { get; set; }

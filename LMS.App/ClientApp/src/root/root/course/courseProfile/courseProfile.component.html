@@ -1,6 +1,5 @@
 <div *ngIf="isDataLoaded">
     <section class="f-poppins">
-      <side-bar [isOpenSidebar]="isOpenSidebar"></side-bar> 
       <div *ngIf="isOpenModal"><create-post [isOpenModal]="isOpenModal" [courseId]="courseId"></create-post></div>
       <div class="main_content">
         <div class="create-post-header d-flex justify-content-between d-none d-xl-flex">
@@ -27,7 +26,7 @@
             <div class="d-flex align-items-center mb-3 mb-md-0">
             <div class="position-relative">
                  <div class="school-profile-icon rounded-circle class-course-image ">
-                    <img [src]="course.avatar"/>
+                    <img *ngIf="course.avatar != 'null'" [src]="course.avatar"/>
                 </div>
                 <div class="univ-logo">
                 <img [src]="course.school.avatar"  />
@@ -56,7 +55,7 @@
               <div class="followers_name d-inline-block font_16 mr-_24"><img src="../../../../assets/images/Edit-dark.svg" />{{'Post'| translate }}: <b
                   class="fw_700">{{course.posts.length}}</b></div>
                 </div>
-              <button *ngIf="!isOwner" type="button" (click)="requestMessage()"
+              <button *ngIf="!isOwner" type="button" (click)="requestMessage(course.createdById,'5',course.courseId)"
                 class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn me-0 minw-142 class-request-msg">{{'RequestMessage'| translate }}</button>
               </div>
               <div class="hover-double-button">              
@@ -879,7 +878,7 @@
                     <img [src]="uploadImage">
                   </div>
                   <div *ngIf="uploadImage == ''">
-                    <img src={{course?.avatar}} style="scale: 1.8;">
+                    <img *ngIf="course?.avatar != 'null'" src={{course?.avatar}} style="scale: 1.8;">
                   </div>
             </div>
   
@@ -1221,4 +1220,3 @@
   </div>
   <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
   <p-toast></p-toast>
-  

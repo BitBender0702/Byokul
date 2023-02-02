@@ -10,7 +10,8 @@ namespace LMS.Common.ViewModels.Chat
 {
     public class SaveChatAttachmentViewModel
     {
-        public string FileType { get; set; }
-        public IFormFile File { get; set; }
+        public int FileType { get; set; }
+        //public IFormFile File { get; set; }
+        public List<IFormFile> File { get; set; }
     }
 }

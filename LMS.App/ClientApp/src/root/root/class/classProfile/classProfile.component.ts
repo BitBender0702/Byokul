@@ -21,6 +21,7 @@ import { PostView } from 'src/root/interfaces/post/postView';
 import { ClassView } from 'src/root/interfaces/class/classView';
 import { MessageService } from 'primeng/api';
 import { ReelsViewComponent } from '../../reels/reelsView.component';
+import { ownedClassResponse } from '../createClass/createClass.component';
 
 @Component({
     selector: 'classProfile-root',
@@ -82,6 +83,8 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     itemsPerSlide = 7;
     singleSlideOffset = true;
     noWrap = true;
+    classParamsData$: any;
+    schoolName!:string;
 
     public event: EventEmitter<any> = new EventEmitter();
 
@@ -98,10 +101,14 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       super(injector);
         this._classService = classService;
         this._postService = postService;
+        this.classParamsData$ = this.route.params.subscribe(routeParams => {
+          // if(!this.loadingIcon)
+          this.ngOnInit();
+        });
     }
   
     ngOnInit(): void {
-      
+      debugger
       this.validToken = localStorage.getItem("jwt")?? '';
       this.loadingIcon = true;
       var selectedLang = localStorage.getItem("selectedLanguage");
@@ -205,6 +212,10 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
           this.addClassView(this.class.classId);
         });
       });
+    }
+
+    ngOnDestroy(): void {
+      if(this.classParamsData$) this.classParamsData$.unsubscribe();
     }
 
     getClassDetails(classId:string){
@@ -478,6 +489,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
           }
       
           this.updateClassDetails=this.editClassForm.value;
+          this.schoolName = this.editClassForm.get('schoolName')?.value;
           this.fileToUpload.append('classId', this.class.classId);
           this.fileToUpload.append('className', this.updateClassDetails.className);
           this.fileToUpload.append('noOfStudents', this.updateClassDetails.noOfStudents.toString());
@@ -490,11 +502,14 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
           this.fileToUpload.append('serviceTypeId',this.updateClassDetails.serviceTypeId);
         
           this._classService.editClass(this.fileToUpload).subscribe((response:any) => {
+            debugger
             this.closeModal();
             this.isSubmitted=true;
+            ownedClassResponse.next({classId:response.classId, classAvatar:response.avatar, className:response.className,schoolName: this.schoolName, action:"update"});
+
             this.fileToUpload = new FormData();
             this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Class updated successfully'});
-            this.ngOnInit();
+            // this.ngOnInit();
           });
       
           
@@ -621,10 +636,16 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
 
     
 
-    requestMessage(){
+    requestMessage(userId:string,type:string,chatTypeId:string){
       if(this.validToken == ''){
         window.open('user/auth/login', '_blank');
       }
+      else{
+        //window.location.href=`user/chat`;
+        this.router.navigate(
+          [`user/chats`],
+          { state: { chatHead: {receiverId: userId, type : type,chatTypeId:chatTypeId} } });
+      }   
     }
 
     likeUnlikePosts(postId:string, isLike:boolean){

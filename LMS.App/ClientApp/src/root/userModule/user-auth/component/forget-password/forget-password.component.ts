@@ -35,6 +35,7 @@ export class ForgetPasswordComponent extends MultilingualComponent implements On
   }
   
     ngOnInit(): void {
+      this._authService.loginState$.next(false);
       this.selectedLanguage = localStorage.getItem("selectedLanguage");
       this.forgotPasswordForm = this.fb.group({
         email: this.fb.control('', [Validators.required,Validators.pattern(this.EMAIL_PATTERN)])

@@ -1,7 +1,5 @@
 <div *ngIf="isDataLoaded">
   <section class="f-poppins">
-    <side-bar [isOpenSidebar]="isOpenSidebar"></side-bar>
-    <!-- <div *ngIf="isOpenModal"><create-post [isOpenModal]="isOpenModal" [schoolId]="schoolId"></create-post></div> -->
     <div class="main_content">
       <div class="create-post-header d-flex justify-content-between d-none d-xl-flex">
         <button (click)="back()" mat-mini-fab type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
@@ -45,7 +43,7 @@
             class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn follow-btn">{{'Follow'| translate }}</button>
           <button *ngIf="!isOwner && isFollowed" (click)="followSchool(school.schoolId,'UnFollow')" type="button"
             class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn follow-btn">{{'UnFollow'| translate }}</button>
-          <button *ngIf="!isOwner" type="button" (click)="schoolChat()"
+          <button *ngIf="!isOwner" type="button" (click)="schoolChat(school.createdById,'3',school.schoolId)"
             class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn me-0">{{'MessageSchool'| translate }}
             </button>
           <p class="font_16 mt-4">{{school.description}}</p>

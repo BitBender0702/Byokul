@@ -100,4 +100,9 @@ export class CourseService{
         return this.http.post(`${this.apiUrl}/course/courseView`, courseView);
     }
 
+    getCourse(courseId:string):Observable<any>{
+        return this.http.get(`${this.apiUrl}/course/getBasicCourseInfo` + '?courseId=' + courseId);
+
+    }
+
 }

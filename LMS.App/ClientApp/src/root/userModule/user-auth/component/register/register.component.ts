@@ -49,7 +49,7 @@ export class RegisterComponent extends MultilingualComponent implements OnInit {
       window.history.back();
   }
     ngOnInit(): void {
-
+      this._authService.loginState$.next(false);
       const passwordValidators = [
         Validators.minLength(6),
         Validators.required,
@@ -114,6 +114,8 @@ export class RegisterComponent extends MultilingualComponent implements OnInit {
   get confirmPassword() { return this.registrationForm.get('confirmPassword'); }
 
     register(){
+      debugger
+      this.user = this.registrationForm.value;
       this.isRegister = false;
       this.isSubmitted = true;
       if (!this.registrationForm.valid) {

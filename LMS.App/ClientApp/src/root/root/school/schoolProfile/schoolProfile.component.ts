@@ -1,9 +1,9 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Component, ElementRef, Injector, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { finalize } from 'rxjs';
+import { finalize, Subject } from 'rxjs';
 import { EditSchoolModel } from 'src/root/interfaces/school/editSchoolModel';
 import { AddSchoolLanguage } from 'src/root/interfaces/school/addSchoolLanguage';
 import { SchoolService } from 'src/root/service/school.service';
@@ -27,6 +27,10 @@ import { PostView } from 'src/root/interfaces/post/postView';
 import { LikeUnlikeClassCourse } from 'src/root/interfaces/school/likeUnlikeClassCourse';
 import { MessageService } from 'primeng/api';
 import { ReelsViewComponent } from '../../reels/reelsView.component';
+import { ownedSchoolResponse } from '../createSchool/createSchool.component';
+
+// export const ownedSchoolResponse =new Subject<{schoolAvatar : string,schoolName:string}>(); 
+
 
 // import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -37,7 +41,7 @@ import { ReelsViewComponent } from '../../reels/reelsView.component';
     providers: [MessageService]
   })
 
-export class SchoolProfileComponent extends MultilingualComponent implements OnInit {
+export class SchoolProfileComponent extends MultilingualComponent implements OnInit, OnDestroy {
 
     private _schoolService;
     private _postService;
@@ -115,24 +119,41 @@ export class SchoolProfileComponent extends MultilingualComponent implements OnI
 
     @ViewChild('createPostModal', { static: true }) createPostModal!: CreatePostComponent;
     Certificates!: string[];
+  schoolParamsData$: any;
 
-    constructor(injector: Injector,public messageService:MessageService,postService:PostService,private bsModalService: BsModalService,private matDialog: MatDialog,public modalService: NgbModal,private route: ActivatedRoute,private domSanitizer: DomSanitizer,schoolService: SchoolService,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
+    constructor(injector: Injector,public messageService:MessageService,postService:PostService,private bsModalService: BsModalService,
+                private matDialog: MatDialog,public modalService: NgbModal,private route: ActivatedRoute,private domSanitizer: DomSanitizer,
+              schoolService: SchoolService,private fb: FormBuilder,private router: Router, private http: HttpClient) { 
       super(injector);
         this._schoolService = schoolService;
         this._postService = postService;
+        this.schoolParamsData$ = this.route.params.subscribe(routeParams => {
+              if(!this.loadingIcon)
+              this.ngOnInit();
+            });
+        // router.events.subscribe(routeData => {
+        //   debugger;
+        //   if(!this.loadingIcon)
+        //     this.ngOnInit();
+        // })
     }
+  ngOnDestroy(): void {
+    if(this.schoolParamsData$) this.schoolParamsData$.unsubscribe();
+  }
   
     ngOnInit(): void {
-      this.validToken = localStorage.getItem("jwt")?? '';
+      debugger
       this.loadingIcon = true;
+            this.validToken = localStorage.getItem("jwt")?? '';
       var selectedLang = localStorage.getItem("selectedLanguage");
       this.translate.use(selectedLang?? '');
 
       // var id = this.route.snapshot.paramMap.get('schoolId');
       // this.schoolId = id ?? '';
-
+if(this.schoolName == undefined){
       this.schoolName = this.route.snapshot.paramMap.get('schoolName')??'';
-
+}
+      
       // if(this.schoolId == ''){
       //   this._schoolService.getSchoolByName(this.schoolName).subscribe((response) => {
       //     this.schoolId = response.schoolId;
@@ -390,6 +411,7 @@ export class SchoolProfileComponent extends MultilingualComponent implements OnI
     
   }
   updateSchool(){
+    debugger
     this.isSubmitted=true;
     if (!this.editSchoolForm.valid) {
       return;
@@ -415,8 +437,11 @@ export class SchoolProfileComponent extends MultilingualComponent implements OnI
 
 
     this._schoolService.editSchool(this.fileToUpload).subscribe((response:any) => {
+      debugger
       this.closeModal();
       this.isSubmitted=false;
+      this.schoolName = this.updateSchoolDetails.schoolName;
+      ownedSchoolResponse.next({schoolId:response.schoolId, schoolAvatar:response.avatar, schoolName:response.schoolName,action:"update"});
       this.fileToUpload = new FormData();
       this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'School updated successfully'});
       this.ngOnInit();
@@ -694,12 +719,16 @@ pinUnpinClassCourse(id:string,type:string,isPinned:boolean){
   });
 }
 
-schoolChat(){
+schoolChat(userId:string,type:string,chatTypeId:string){
+  debugger
   if(this.validToken == ''){
     window.open('user/auth/login', '_blank');
   }
   else{
-    window.location.href=`user/chat`;
+    //window.location.href=`user/chat`;
+    this.router.navigate(
+      [`user/chats`],
+      { state: { chatHead: {receiverId: userId, type : type,chatTypeId:chatTypeId} } });
   }   
 }
 

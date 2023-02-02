@@ -10,9 +10,9 @@ namespace LMS.Services
 {
     public interface IClassService
     {
-        Task<Guid> SaveNewClass(ClassViewModel classViewModel, string createdById);
+        Task<ClassViewModel> SaveNewClass(ClassViewModel classViewModel, string createdById);
         Task<ClassUpdateViewModel> GetClassEditDetails(Guid classId);
-        Task<Guid> UpdateClass(ClassUpdateViewModel classUpdateViewModel);
+        Task<ClassUpdateViewModel> UpdateClass(ClassUpdateViewModel classUpdateViewModel);
         Task DeleteClassById(Guid classId, string deletedById);
         Task<ClassDetailsViewModel> GetClassById(string className,string loginUserId);
         Task<IEnumerable<ClassViewModel>> GetAllClasses();

@@ -23,6 +23,7 @@ namespace LMS.Common.ViewModels.School
         public string? Description { get; set; }
         public DateTime CreatedOn { get; set; }
         public string CreatedBy { get; set; }
+        public string CreatedById { get; set; }
         public bool IsDeleted { get; set; }
         public Guid? SpecializationId { get; set; }
         public SpecializationViewModel Specialization { get; set; }

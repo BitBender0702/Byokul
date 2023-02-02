@@ -22,6 +22,7 @@ namespace LMS.Common.ViewModels.Class
         public DateTime EndDate { get; set; }
         public DateTime CreatedOn { get; set; }
         public string CreatedBy { get; set; }
+        public string CreatedById { get; set; }
         public Guid? SchoolId { get; set; }
         public SchoolViewModel School { get; set; }
         public Guid? ServiceTypeId { get; set; }

@@ -52,18 +52,18 @@ public class ChatHub : Hub
     public Task SendMessage(string user, string message) => Clients.All.SendAsync("ReceiveMessage", user, message);
     public async Task SendToUser(ChatMessageViewModel chatMessageViewModel)
     {
-       
 
-        //var a = UserIDConnectionID[chatMessageViewModel.Receiver.ToString()];
-        var reposnseMessage = _chatService.AddChatMessage(chatMessageViewModel);
-        //if (a is not null)
-        //    await Clients.Client(a).SendAsync("ReceiveMessage", reposnseMessage);
-        
-        
+
+        var reposnseMessage = await _chatService.AddChatMessage(chatMessageViewModel);
+        var a = UserIDConnectionID[chatMessageViewModel.Receiver.ToString()];
+        if (a is not null)
+            await Clients.Client(a).SendAsync("ReceiveMessage", chatMessageViewModel, "test");
+
+
     }
 
     public string GetConnectionId(string UserID)
-    {
+   {
         if (UserIDConnectionID.ContainsKey(UserID))
             UserIDConnectionID[UserID] = Context.ConnectionId;
         else

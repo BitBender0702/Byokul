@@ -9,7 +9,7 @@ namespace LMS.Common.ViewModels.Chat
 {
     public class ChatAttachmentResponse
     {
-        public string FileUrl { get; set; }
+        public string FileURL { get; set; }
         public string FileName { get; set; }
         public int FileType { get; set; }
     }

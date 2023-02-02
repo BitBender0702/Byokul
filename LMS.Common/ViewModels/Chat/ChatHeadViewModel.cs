@@ -10,8 +10,8 @@ namespace LMS.Common.ViewModels.Chat
     public class ChatHeadViewModel
     {
         public Guid Id { get; set; }
-        public Guid Sender { get; set; }
-        public Guid Receiver { get; set; }
+        public string? SenderId { get; set; }
+        public string? ReceiverId { get; set; }
         public string LastMessage { get; set; }
         public int UnreadMessageCount { get; set; }
         public ChatType ChatType { get; set; }

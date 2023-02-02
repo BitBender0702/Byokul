@@ -11,9 +11,9 @@ namespace LMS.Services
 {
     public interface ISchoolService
     {
-        Task<Guid> SaveNewSchool(SchoolViewModel leadViewModel, string createdById);
+        Task<SchoolViewModel> SaveNewSchool(SchoolViewModel leadViewModel, string createdById);
         Task<SchoolUpdateViewModel> GetSchoolEditDetails(Guid schoolId);
-        Task<Guid> UpdateSchool(SchoolUpdateViewModel schoolUpdateViewModel);
+        Task<SchoolUpdateViewModel> UpdateSchool(SchoolUpdateViewModel schoolUpdateViewModel);
         Task<SchoolDetailsViewModel> GetSchoolById(string schoolName,string loginUserId);
         Task<IEnumerable<SchoolViewModel>> GetAllSchools();
         Task DeleteSchoolById(Guid schoolId, string deletedById);
@@ -36,6 +36,7 @@ namespace LMS.Services
         Task<SchoolViewModel> GetSchoolByName(string schoolName);
         Task<IOrderedEnumerable<CombineClassCourseViewModel>> GetSchoolClassCourse(Guid schoolId,string userId);
         Task<bool> PinUnpinClassCourse(Guid id, ClassCourseEnum type, bool isPinned);
+        Task<List<SchoolViewModel>> GetUserAllSchools(string userId);
 
 
     }
