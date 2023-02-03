@@ -1,6 +1,7 @@
 import { Component, Injector, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
+import { unreadChatResponse } from 'src/root/root/chat/chat.component';
 import { ownedClassResponse } from 'src/root/root/class/createClass/createClass.component';
 import { ownedCourseResponse } from 'src/root/root/course/createCourse/createCourse.component';
 import { ownedSchoolResponse } from 'src/root/root/school/createSchool/createSchool.component';
@@ -44,6 +45,15 @@ export class SideBarComponent extends MultilingualComponent implements OnInit {
       this.sidebarInfo = response;
       this.loadingIcon = false;
       this.isDataLoaded = true;
+    });
+
+    unreadChatResponse.subscribe(response => {
+      if(response.type=="add"){
+        this.sidebarInfo.unreadMessageCount = this.sidebarInfo.unreadMessageCount + response.readMessagesCount;
+      }
+      else{
+        this.sidebarInfo.unreadMessageCount = this.sidebarInfo.unreadMessageCount - response.readMessagesCount;
+      }
     });
 
     userImageResponse.subscribe(response => {

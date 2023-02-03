@@ -65,5 +65,13 @@ namespace LMS.App.Controllers
             var response = await _blobService.DeleteFile(fileUrl, ContainerName);
             return Ok(response);
         }
+
+        [Route("removeUnreadMessageCount")]
+        [HttpPost]
+        public async Task<IActionResult> RemoveUnreadMessageCount(Guid senderId, Guid receiverId, ChatType chatType)
+        {
+            await _chatService.RemoveUnreadMessageCount(senderId, receiverId, chatType);
+            return Ok();
+        }
     }
 }

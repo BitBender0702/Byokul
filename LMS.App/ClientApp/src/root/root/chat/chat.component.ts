@@ -16,6 +16,10 @@ import { SchoolService } from 'src/root/service/school.service';
 import { ClassService } from 'src/root/service/class.service';
 import { IfStmt } from '@angular/compiler';
 import { CourseService } from 'src/root/service/course.service';
+import { Subject } from 'rxjs';
+
+export const unreadChatResponse =new Subject<{readMessagesCount: number,type:string}>(); 
+
 
 
 @Component({
@@ -95,6 +99,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   classInfo!:any;
   courseInfo!:any;
   selectedChatHeadDiv:boolean = false;
+  chatHeadId!:string;
 
   constructor(@Inject(DOCUMENT) document: Document,schoolService:SchoolService,classService:ClassService,courseService:CourseService, chatService:ChatService,private renderer: Renderer2,public signalRService: SignalrService, private http: HttpClient,private route: ActivatedRoute,private userService: UserService) { 
     this._userService = userService;
@@ -208,6 +213,33 @@ export class ChatComponent implements OnInit, OnDestroy {
     
     signalRResponse.subscribe(response => {
       debugger
+
+     //var chatHeadId = localStorage.getItem("chatHeadId");
+     if(this.chatHeadId == response.chatHeadId){         
+         // means user in its div and remove the unreadcount
+         this._chatService.removeUnreadMessageCount(response.receiverId,response.senderId,Number(response.chatType)).subscribe((result) => {
+         });
+
+         //this._chatService.removeUnreadMessageCount(response.senderId,response.receiverId,Number(response.chatType));
+     }
+     else{
+      unreadChatResponse.next({readMessagesCount:1,type:"add"});
+      var chatUsers: any[] = this.allChatUsers;
+      var chatUser = chatUsers.find(x => x.userID == response.senderId && x.chatType == response.chatType);
+      if(chatUser == undefined){
+        var chatSchoolUsers: any[] = this.schoolInboxList;
+        chatUser = chatSchoolUsers.find(x => x.userID == response.senderId && x.chatType == response.chatType);
+        if(chatUser == undefined){
+          var chatClassUsers: any[] = this.classInboxList;
+          chatUser = chatClassUsers.find(x => x.userID == response.senderId && x.chatType == response.chatType);
+          if(chatUser == undefined){
+            var chatCourseUsers: any[] = this.courseInboxList;
+            chatUser = chatCourseUsers.find(x => x.userID == response.senderId && x.chatType == response.chatType);
+          }
+        }
+      }
+      chatUser.unreadMessageCount = chatUser.unreadMessageCount + 1;
+     }
     for(let i=0;i< response.attachments.length; i++){
       debugger
       if(response.attachments[i].fileType ==1){
@@ -322,7 +354,7 @@ if(response.chatType =="1"){
                  this.schoolInboxList.unshift(userDetails);
                  
                  var users: any[] = this.allChatUsers;
-                 var receiverLastMessage = users.find(x => x.userID == response.senderId);
+                 var receiverLastMessage = users.find(x => x.userID == response.senderId && x.chatType == 3);
                  receiverLastMessage.lastMessage = response.message;
                  var users: any[] = this.schoolInboxList;
                  var user = users.find(x => x.userID == response.senderId);
@@ -354,11 +386,9 @@ if(response.chatType =="1"){
             }
   
             else{
-              var users: any[] = this.allChatUsers;
-              var receiverLastMessage = users.find(x => x.userID == response.senderId);
-              receiverLastMessage.lastMessage = response.message;
        var users: any[] = this.schoolInboxList;
        var user = users.find(x => x.userID == response.senderId);
+       user.lastMessage = response.message;
        if(user.school != null){
        if(user.school.ownerId == this.sender.id || user.school?.createdById == this.sender.id){
         this.isSchoolOwner = true;
@@ -618,7 +648,7 @@ this.addChatAttachments = {
         this.allChatUsers.unshift(this.schoolInfo);
       }
       else{
-        this.getUsersChat(isuserExist.userID,isuserExist.profileURL,isuserExist.userName,isuserExist.chatType,10,1);
+        this.getUsersChat(isuserExist.chatHeadId,isuserExist.userID,isuserExist.profileURL,isuserExist.userName,isuserExist.chatType,10,1);
       }
 
         }
@@ -630,7 +660,7 @@ this.addChatAttachments = {
         this.allChatUsers.unshift(this.classInfo);
       }
       else{
-        this.getUsersChat(isuserExist.userID,isuserExist.profileURL,isuserExist.userName,isuserExist.chatType,10,1);
+        this.getUsersChat(isuserExist.chatHeadId,isuserExist.userID,isuserExist.profileURL,isuserExist.userName,isuserExist.chatType,10,1);
       }
     }
 
@@ -641,7 +671,7 @@ this.addChatAttachments = {
       this.allChatUsers.unshift(this.courseInfo);
     }
     else{
-      this.getUsersChat(isuserExist.userID,isuserExist.profileURL,isuserExist.userName,isuserExist.chatType,10,1);
+      this.getUsersChat(isuserExist.chatHeadId,isuserExist.userID,isuserExist.profileURL,isuserExist.userName,isuserExist.chatType,10,1);
     }
   }
 
@@ -694,10 +724,12 @@ this.addChatAttachments = {
           this.allChatUsers.unshift(user);
         }
         else{
-          this.getUsersChat(isuserExist.userID,isuserExist.profileURL,isuserExist.userName,isuserExist.chatType,10,1);
+          this.getUsersChat(isuserExist.chatHeadId,isuserExist.userID,isuserExist.profileURL,isuserExist.userName,isuserExist.chatType,10,1);
         }
 
         }
+
+
         this.selectedChatHeadDiv = true;
         this.firstuserChats = this.allChatUsers[0]?.chats;
         this.userName = this.allChatUsers[0].userName;
@@ -706,8 +738,12 @@ this.addChatAttachments = {
         this.receiverName = this.allChatUsers[0]?.userName;
         this.chatType = this.allChatUsers[0]?.chatType;
         this.profileURL = this.sender.avatar;
+        unreadChatResponse.next({readMessagesCount:this.allChatUsers[0]?.unreadMessageCount,type:"remove"});
+        this.allChatUsers[0].unreadMessageCount = 0;
 
-        console.log(response);
+
+        this.chatHeadId = this.allChatUsers[0].chatHeadId;
+        //localStorage.setItem("chatHead", this.allChatUsers[0].chatHeadId); 
       });
     }
 
@@ -743,11 +779,41 @@ this.addChatAttachments = {
         }
       });
       this.schoolInboxList = newList;
+      this.chatHeadId = this.schoolInboxList[0].chatHeadId;
+
+      unreadChatResponse.next({readMessagesCount:this.schoolInboxList[0]?.unreadMessageCount,type:"remove"});
+      this.schoolInboxList[0].unreadMessageCount = 0;
     }
 
-    getUsersChat(recieverId:string,receiverAvatar:string,username:string,chatType:string,pageSize:number,pageNumber:number){
+    getUsersChat(chatHeadId:string,recieverId:string,receiverAvatar:string,username:string,chatType:string,pageSize:number,pageNumber:number){
+      debugger
       this.loadingIcon = true;
       this.selectedChatHeadDiv = true;
+      
+      //var previousChatHeadId = localStorage.getItem("chatHead");
+      this.chatHeadId = chatHeadId;
+      //localStorage.setItem("chatHead", chatHeadId); 
+      
+
+
+      // here for remove unread message count from chathead and also minus from total count
+
+      var chatUsers: any[] = this.allChatUsers;
+      let currentChatHead = chatUsers.find(x => x.userID == recieverId && x.chatType == chatType);
+      if(currentChatHead.unreadMessageCount > 0){
+      unreadChatResponse.next({readMessagesCount:currentChatHead.unreadMessageCount,type:"remove"});
+      currentChatHead.unreadMessageCount = 0;
+      }
+
+
+
+
+
+
+
+
+
+
      //document.getElementById('chat')?.addEventListener('scroll', this.myScrollFunction, false);
     // document.getElementById('chat')?.scrollIntoView({
     //   behavior:"smooth",

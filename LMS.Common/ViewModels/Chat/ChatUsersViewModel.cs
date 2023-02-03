@@ -25,5 +25,7 @@ namespace LMS.Common.ViewModels.Chat
         public CourseViewModel Course { get; set; }
         public ChatType ChatType { get; set; }
         public bool IsPinned { get; set; } = false;
+        public int UnreadMessageCount { get; set; }
+        public Guid User2ID { get; set; }
     }
 }

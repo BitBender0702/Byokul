@@ -6,3 +6,7 @@
     background-color: #EAEAEA;
     border-color: #FF821C;
 }
+
+.badgeBackground{
+    background: red;
+}

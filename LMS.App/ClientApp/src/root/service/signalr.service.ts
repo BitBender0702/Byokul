@@ -62,7 +62,7 @@ import { json } from 'stream/consumers';
 import { ChartModel } from '../interfaces/chat/ChatModel';
 import { CustomXhrHttpClient } from './signalr.httpclient';
 
-export const signalRResponse =new Subject<{receiver : any , message: string,attachments:any, isTest : boolean,senderId:string,chatType:string,receiverId:string,chatTypeId:string}>();  
+export const signalRResponse =new Subject<{receiver : any , message: string,attachments:any, isTest : boolean,senderId:string,chatType:string,receiverId:string,chatTypeId:string,chatHeadId:string}>();  
 
 
 @Injectable({
@@ -73,7 +73,7 @@ export class SignalrService {
   private hubConnection!: signalR.HubConnection
     public startConnection = () => {
       this.hubConnection = new signalR.HubConnectionBuilder()
-                              .withUrl('https://localhost:7220/chatHub', 
+                              .withUrl('https://byokul.com/chatHub', 
                                {
                                             skipNegotiation: true,
                                             transport: signalR.HttpTransportType.WebSockets
@@ -101,7 +101,7 @@ sendToUser(model:any){
 askServerListener(){
 this.hubConnection.on("ReceiveMessage", (user,message) => {
   debugger
-  signalRResponse.next({receiver: "test", message : user.message,attachments: user.attachments, isTest : true,senderId:user.sender,chatType:user.chatType,receiverId:user.receiver,chatTypeId:user.chatTypeId});
+  signalRResponse.next({receiver: "test", message : user.message,attachments: user.attachments, isTest : true,senderId:user.sender,chatType:user.chatType,receiverId:user.receiver,chatTypeId:user.chatTypeId,chatHeadId:user.chatHeadId});
               console.log(`this ${user} send ${message}`);
               
               
