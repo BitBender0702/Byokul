@@ -125,7 +125,18 @@ namespace LMS.Services.Chat
                 throw new ArgumentException();
             }
             existingChatHead.LastMessage = chatheadViewModel.Message;
-            existingChatHead.UnreadMessageCount += 1;
+            if (chatheadViewModel.Sender == new Guid(existingChatHead.SenderId))
+            {
+                existingChatHead.UnreadMessageCount += 1;
+            }
+
+            if (chatheadViewModel.Sender != new Guid(existingChatHead.SenderId))
+            {
+                existingChatHead.SenderId = chatheadViewModel.Sender.ToString();
+                existingChatHead.ReceiverId = chatheadViewModel.Receiver.ToString();
+                existingChatHead.UnreadMessageCount = 1;
+            }
+            
             _chatHeadRepository.Update(existingChatHead);
 
         }
@@ -355,10 +366,10 @@ namespace LMS.Services.Chat
             var attachRepo = _attachmentRepository.GetAll();
             var chatRepo = _chatMessageRepository.GetAll().Where(x => !x.IsDeleted).Include(x => x.ChatHead).Where(x => (x.SenderId == SenderId && x.ReceiverId == ReceiverId && x.ChatHead.ChatType  == chatType) || (x.SenderId == ReceiverId && x.ReceiverId == SenderId && x.ChatHead.ChatType == chatType));
 
-            //if (chatRepo.Count() < MinimumPageSize)
+            if (chatRepo.Count() < MinimumPageSize)
                 chatRepo = chatRepo.OrderByDescending(x => x.CreatedOn);
-            //else
-            //    chatRepo = chatRepo.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+            else
+                chatRepo = chatRepo.Skip((pageNumber - 1) * pageSize).Take(pageSize);
 
 
             List<ParticularChat> chatList = new List<ParticularChat>();
@@ -412,12 +423,8 @@ namespace LMS.Services.Chat
 
             if (result.UnreadMessageCount != 0)
             {
-                var chatHead = new ChatHead
-                {
-                    UnreadMessageCount = 0
-                };
-
-                _chatHeadRepository.Update(chatHead);
+                result.UnreadMessageCount = 0;
+                _chatHeadRepository.Update(result);
                 _chatHeadRepository.Save();
             }
         }

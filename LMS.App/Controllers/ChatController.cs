@@ -33,7 +33,7 @@ namespace LMS.App.Controllers
             return Ok(response);
         }
 
-        [Route("getAllUsers")]
+        [Route("getAllChatUsers")]
         [HttpGet]
         public async Task<IActionResult> GetAllUsers(Guid senderId)
         {
@@ -45,7 +45,7 @@ namespace LMS.App.Controllers
         [HttpGet]
         public async Task<IActionResult> GetUsersChat(Guid senderId, Guid receiverId,ChatType chatType, int pageSize=10, int pageNumber=1)
         {
-            //await _chatService.RemoveUnreadMessageCount(senderId, receiverId, chatType);
+            await _chatService.RemoveUnreadMessageCount(senderId, receiverId, chatType);
             var response = await _chatService.GetParticularUserChat(senderId, receiverId,chatType,  pageSize,  pageNumber);
             return Ok(response);
         }

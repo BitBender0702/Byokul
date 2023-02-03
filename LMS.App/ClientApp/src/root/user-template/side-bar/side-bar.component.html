@@ -28,7 +28,7 @@
           </ul>
         </div>
       </li>
-      <li class="d-inline-block"><button type="button"
+      <li class="d-inline-block"><button [routerLink]="['/user/chats']" type="button"
           class="notification-btn position-relative border-0 bg-transparent"><img src="../../../assets/images/school/chat-icon.svg" />
           <span *ngIf="sidebarInfo?.unreadMessageCount!=null && sidebarInfo?.unreadMessageCount!=0" class="badge rounded-circle d-inline-flex align-items-center justify-content-center fw_700 font_12">{{sidebarInfo?.unreadMessageCount}}</span></button>
       </li>

@@ -108,7 +108,7 @@ namespace LMS.Services.UserDashboard
 
             //unread messages
             
-            var unreadMessages = await _ChatHeadRepository.GetAll().Where(x=> (x.SenderId == userId) || (x.ReceiverId == userId)).Select(x => x.UnreadMessageCount).ToListAsync();
+            var unreadMessages = await _ChatHeadRepository.GetAll().Where(x=> x.ReceiverId == userId).Select(x => x.UnreadMessageCount).ToListAsync();
             int messageCount = 0;
             foreach (var item in unreadMessages)
             {

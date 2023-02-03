@@ -1085,9 +1085,10 @@ getTextMessage(){
     debugger
     var isFromReciever='you';
     const p: HTMLParagraphElement = this.renderer.createElement('p');
-    // if(!response.isTest){
+     if(!response.isTest){
       isFromReciever = 'me'
      }
+     
 
      var imageHtml = '';
      if(this.uploadImage != undefined){
@@ -1190,6 +1191,7 @@ getTextMessage(){
   }
 
 }
+
 
   export enum ChartTypeEnum {
     Personal = 1,

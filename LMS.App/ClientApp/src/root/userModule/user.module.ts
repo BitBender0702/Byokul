@@ -58,7 +58,7 @@ const routes: Routes = [
   //   path: 'chat',component:ChatComponent
   // },
   {
-    path: 'chat/:id/:chatType',component:ChatComponent
+    path: 'chats',component:ChatComponent
   },
 
   {
