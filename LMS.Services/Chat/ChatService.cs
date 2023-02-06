@@ -387,10 +387,10 @@ namespace LMS.Services.Chat
             var attachRepo = _attachmentRepository.GetAll();
             var chatRepo = _chatMessageRepository.GetAll().Where(x => !x.IsDeleted).Include(x => x.ChatHead).Where(x => (x.SenderId == SenderId && x.ReceiverId == ReceiverId && x.ChatHead.ChatType == chatType) || (x.SenderId == ReceiverId && x.ReceiverId == SenderId && x.ChatHead.ChatType == chatType));
 
-            //if (chatRepo.Count() < MinimumPageSize)
+            if (chatRepo.Count() < MinimumPageSize)
                 chatRepo = chatRepo.OrderByDescending(x => x.CreatedOn);
-            //else
-            //    chatRepo = chatRepo.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+            else
+                chatRepo = chatRepo.Skip((pageNumber - 1) * pageSize).Take(pageSize);
 
 
             List<ParticularChat> chatList = new List<ParticularChat>();

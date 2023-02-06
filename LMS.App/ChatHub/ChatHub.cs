@@ -25,12 +25,8 @@ public class ChatHub : Hub
     }
     public override Task OnConnectedAsync()
     {
-        //ContectedUsers.ContectedIds.Add(Context.ConnectionId);
-        //var user =  await GetUser();
-        var name = Context.GetHttpContext()?.Request.Query["username"];
+        ContectedUsers.ContectedIds.Add(Context.ConnectionId);
         Clients.All.SendAsync("UserCount", UserIDConnectionID.Count + 1);
-        //Clients.Client(Context.ConnectionId).SendAsync("Conn", user.NormalizedUserName + " " + user.City);
-
         return base.OnConnectedAsync();
     }
     public override Task OnDisconnectedAsync(Exception? exception)

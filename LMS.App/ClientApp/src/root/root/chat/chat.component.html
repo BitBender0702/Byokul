@@ -15,7 +15,7 @@
                     <li class="nav-item ps-0 mb-0" role="presentation">
                       <div class="dropdown">
                         <button class="bg-transparent dropdown-toggle rounded-circle" type="button" data-bs-toggle="dropdown"
-                          aria-expanded="false">
+                          aria-expanded="false" (click)="showSchoolInboxDiv()">
                           My School Inbox
                         </button>
                         <ul class="dropdown-menu">
@@ -54,7 +54,7 @@
         <div class="message-box">
           <aside class="chat-aside">
             <ul class="before-none">
-              <li *ngFor="let item of allChatUsers" [ngClass]="selectedChatHeadDiv && item.userID == recieverId && item.chatType == chatType ? 'd-flex justify-content-between align-items-end selectedChatHead':'d-flex justify-content-between align-items-end'" class="d-flex justify-content-between align-items-end" (click)="getUsersChat(item.chatHeadId,item.userID,item.profileURL,item.userName,item.chatType,10,1)">
+              <li *ngFor="let item of allChatUsers" [ngClass]="selectedChatHeadDiv && item.userID == recieverId && item.chatType == chatType ? 'd-flex justify-content-between align-items-end selectedChatHead':'d-flex justify-content-between align-items-end'" class="d-flex justify-content-between align-items-end" (click)="getUsersChat(item.chatHeadId,item.userID,item.profileURL,item.userName,item.chatType,'FromMyInbox',10,1)">
                 <input [value]="item.userID" hidden/>
                 <div class="chat-userleft">
                   <div class="chat-username d-flex align-items-center mb-2">
@@ -207,7 +207,7 @@
           <aside class="chat-aside">
             <ul class="before-none">
               <div *ngIf="schoolInboxList != undefined">
-              <li *ngFor="let item of schoolInboxList" class="d-flex justify-content-between align-items-end" (click)="getUsersChat(item.chatHeadId,item.userID,item.profileURL,item.userName,item.chatType,10,1)">
+              <li *ngFor="let item of schoolInboxList" [ngClass]="selectedChatHeadDiv && item.chatHeadId == chatHeadId ? 'd-flex justify-content-between align-items-end selectedChatHead':'d-flex justify-content-between align-items-end'" class="d-flex justify-content-between align-items-end" (click)="getUsersChat(item.chatHeadId,item.userID,item.profileURL,item.userName,item.chatType,'FromSchoolInbox',10,1)">
                 <input [value]="item.userID" hidden/>
                 <div class="chat-userleft">
                   <div class="chat-username d-flex align-items-center mb-2">
@@ -238,8 +238,10 @@
             <ul *ngIf="schoolInboxList != undefined" #schoolChatList id="chats" class="before-none">
               <li [ngClass]="this.userChat.sendByMe ? 'me':'you'" *ngFor="let userChat of schoolInboxList[0]?.chats">
                 <div class="chat-username d-flex align-items-center mb-2">
-                  <img *ngIf="!userChat.sendByMe" [src]="receiverAvatar" alt="" class="rounded-circle me-2" style="max-width: 35px;">
-                  <div *ngIf="schoolInboxList[0]?.school!=null">
+                  <img *ngIf="!userChat.sendByMe" [src]="schoolInboxUserAvatar" alt="" class="rounded-circle me-2" style="max-width: 35px;">
+                  <img *ngIf="userChat.sendByMe" [src]="senderAvatar" alt="" class="rounded-circle me-2" style="max-width: 35px;">
+                    <h2 *ngIf="userChat.sendByMe" class="mb-0 font_16 fw_600 text_sec1">{{senderName}}</h2>
+                  <!-- <div *ngIf="schoolInboxList[0]?.school!=null">
                     <img *ngIf="userChat.sendByMe" [src]="schoolInboxList[0]?.school.avatar" alt="" class="rounded-circle me-2" style="max-width: 35px;">
                     <h2 *ngIf="userChat.sendByMe" class="mb-0 font_16 fw_600 text_sec1">{{schoolInboxList[0]?.school.schoolName}}</h2>
                   </div>
@@ -250,8 +252,8 @@
                   <div *ngIf="schoolInboxList[0]?.course!=null">
                     <img *ngIf="userChat.sendByMe" [src]="schoolInboxList[0]?.course.avatar" alt="" class="rounded-circle me-2" style="max-width: 35px;">
                     <h2 *ngIf="userChat.sendByMe" class="mb-0 font_16 fw_600 text_sec1">{{schoolInboxList[0]?.course.courseName}}</h2>
-                  </div>
-                  <h2 *ngIf="!userChat.sendByMe" class="mb-0 font_16 fw_600 text_sec1">{{userName}}</h2>
+                  </div> -->
+                  <h2 *ngIf="!userChat.sendByMe" class="mb-0 font_16 fw_600 text_sec1">{{schoolInboxUserName}}</h2>
                 </div>
                 <div class="message">
                   <span *ngIf="userChat.text != null">{{userChat.text}}</span>
@@ -358,8 +360,8 @@
                       </label>
   
                 </div>
-                <button *ngIf="invalidMessage" disabled (click)="sendToUser(recieverId)" type="button" class="comment-btn border-0"><img src="../../../assets/images/school/arrowup.svg"></button>
-                <button *ngIf="!invalidMessage" (click)="sendToUser(recieverId)" type="button" class="comment-btn border-0"><img src="../../../assets/images/school/arrowup.svg"></button>
+                <button *ngIf="invalidMessage" disabled (click)="sendToUser(schoolInboxReceiverId)" type="button" class="comment-btn border-0"><img src="../../../assets/images/school/arrowup.svg"></button>
+                <button *ngIf="!invalidMessage" (click)="sendToUser(schoolInboxReceiverId)" type="button" class="comment-btn border-0"><img src="../../../assets/images/school/arrowup.svg"></button>
               </div>
             </div>
   

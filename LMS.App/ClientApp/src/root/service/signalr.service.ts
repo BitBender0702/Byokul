@@ -73,7 +73,7 @@ export class SignalrService {
   private hubConnection!: signalR.HubConnection
     public startConnection = () => {
       this.hubConnection = new signalR.HubConnectionBuilder()
-                              .withUrl('https://byokul.com/chatHub', 
+                              .withUrl('https://localhost:7220/chatHub', 
                                {
                                             skipNegotiation: true,
                                             transport: signalR.HttpTransportType.WebSockets
@@ -85,6 +85,9 @@ export class SignalrService {
         .start()
         .then(() => console.log('Connection started'))
         .catch(err => console.log('Error while starting connection: ' + err));
+        this.hubConnection.on("UserCount", (count) => {
+         console.log('User Count ' + count);   
+                  })
 }
 
 askServer(userId:string) {
@@ -102,9 +105,7 @@ askServerListener(){
 this.hubConnection.on("ReceiveMessage", (user,message) => {
   debugger
   signalRResponse.next({receiver: "test", message : user.message,attachments: user.attachments, isTest : true,senderId:user.sender,chatType:user.chatType,receiverId:user.receiver,chatTypeId:user.chatTypeId,chatHeadId:user.chatHeadId});
-              console.log(`this ${user} send ${message}`);
-              
-              
+              console.log(`this ${user} send ${message}`);   
           })
 }
 
