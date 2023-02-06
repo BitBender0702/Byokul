@@ -73,7 +73,7 @@ export class SignalrService {
   private hubConnection!: signalR.HubConnection
     public startConnection = () => {
       this.hubConnection = new signalR.HubConnectionBuilder()
-                              .withUrl('https://localhost:7220/chatHub', 
+                              .withUrl('https://byokul.com/chatHub', 
                                {
                                             skipNegotiation: true,
                                             transport: signalR.HttpTransportType.WebSockets
