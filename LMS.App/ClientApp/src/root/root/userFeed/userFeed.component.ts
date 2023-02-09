@@ -59,6 +59,8 @@ export class UserFeedComponent implements OnInit {
     postResponse:any;
     globalFeedReels:any;
     isGlobalFeed:boolean = false;
+    isMyFeedsEmpty:boolean = false;
+    isMyFeedReelsEmpty:boolean = false;
     @ViewChild('carousel') carousel!: ElementRef;
     @ViewChild('globalReelCarousel') globalReelCarousel!: ElementRef;
 
@@ -87,6 +89,9 @@ export class UserFeedComponent implements OnInit {
         this._userService.getMyFeed(1,this.myFeedsPageNumber).subscribe((response) => {
           this.isGlobalFeed = false;
             this.myFeeds = response;
+            if(this.myFeeds.length == 0){
+               this.isMyFeedsEmpty = true;
+            }
               this.isDataLoaded = true;
             
             // if(this.myFeeds.length==0){
@@ -100,6 +105,9 @@ export class UserFeedComponent implements OnInit {
 
           this._userService.getMyFeed(3,this.myFeedsPageNumber).subscribe((result) => {
             this.myFeedsReels = result;
+            if(this.myFeedsReels.length == 0){
+              this.isMyFeedReelsEmpty = true;
+           }
             this.isDataLoaded = true;
             // if(this.myFeeds.length==0 && this.myFeedsReels.length ==0){
             //   this.getGlobalFeeds();
@@ -110,7 +118,7 @@ export class UserFeedComponent implements OnInit {
             this.addListenerToNextButton();
           });
 
-          if(this.myFeeds.length==0 && this.myFeedsReels.length ==0){
+          if(this.isMyFeedsEmpty && this.isMyFeedReelsEmpty){
             this.getGlobalFeeds();
           }
 

@@ -27,12 +27,12 @@
         <div class="custom-tabs profile-custom-tabs">
           <ul class="nav nav-tabs border-0 before-none" id="myTab" role="tablist">
             <li class="nav-item ps-0 mb-0" role="presentation">
-              <button [ngClass]="myFeeds.length > 0 ? 'nav-link active':'nav-link'" id="school-tab" data-bs-toggle="tab"
+              <button [ngClass]="myFeeds?.length > 0 || myFeedsReels?.length > 0 ? 'nav-link active':'nav-link'" id="school-tab" data-bs-toggle="tab"
                 data-bs-target="#school-feed-tab-pane" type="button" role="tab" aria-controls="school-feed-tab-pane"
                 aria-selected="true">{{'MyFeed'| translate }}</button>
             </li>
             <li class="nav-item ps-0 mb-0" role="presentation">
-              <button (click)="getGlobalFeeds()" [ngClass]="myFeeds.length == 0 ? 'nav-link active':'nav-link'" class="nav-link" id="classes-tab" data-bs-toggle="tab" data-bs-target="#classes-tab-pane"
+              <button (click)="getGlobalFeeds()" [ngClass]="myFeeds?.length == 0 && myFeedsReels?.length == 0 ? 'nav-link active':'nav-link'" class="nav-link" id="classes-tab" data-bs-toggle="tab" data-bs-target="#classes-tab-pane"
                 type="button" role="tab" aria-controls="classes-tab-pane" aria-selected="false" tabindex="-1">{{'GlobalFeed'| translate }}</button>
             </li>
           </ul>
@@ -41,7 +41,7 @@
       </div>
 
       <div class="tab-content position-relative active" id="pills-tabContent">
-        <div [ngClass]="myFeeds.length > 0 ? 'tab-pane fade show active':'tab-pane fade show'" (scroll)="myScrollFunction($event)" id="school-feed-tab-pane" role="tabpanel"
+        <div [ngClass]="myFeeds?.length > 0 || myFeedsReels?.length > 0 ? 'tab-pane fade show active':'tab-pane fade show'" (scroll)="myScrollFunction($event)" id="school-feed-tab-pane" role="tabpanel"
           aria-labelledby="school-feed-tab" tabindex="0">
           <div class="button-list-grid">
             <button [ngClass]="isProfileGrid ? 'btn border-btn active d-inline-flex align-items-center justify-content-center' : 'btn border-btn d-inline-flex align-items-center justify-content-center'" (click)="profileGrid()" type="button" >
@@ -113,7 +113,7 @@
             </div>
           </div>
           <div class="school-grid-view grid-active" *ngIf="isProfileGrid">
-            <div *ngIf="myFeeds.length == 0" style="font-weight: 500;color: orange; margin-top: 40px;font-size: 40px" class="text-center font-34">Posts from your friends and schools you follow will appear here</div>
+            <div *ngIf="myFeeds?.length == 0 && myFeedsReels?.length == 0" style="font-weight: 500;color: orange; margin-top: 40px;font-size: 40px" class="text-center font-34">Posts from your friends and schools you follow will appear here</div>
             <ng-container *ngFor="let post of myFeeds">
               <div *ngIf="post.postType == 1" class="school-grid-box position-relative">
               <div class="schoolgrid-header d-flex align-items-center position-relative">
@@ -388,7 +388,7 @@
                 </div>
               </div>
             </div> 
-            <div *ngIf="myFeeds.length == 0" style="font-weight: 500;color: orange; margin-top: 40px;font-size: 40px" class="text-center font-34">Posts from your friends and schools you follow will appear here</div>
+            <div *ngIf="myFeeds?.length == 0 && myFeedsReels?.length == 0" style="font-weight: 500;color: orange; margin-top: 40px;font-size: 40px" class="text-center font-34">Posts from your friends and schools you follow will appear here</div>
             <div class="row">
               <ng-container *ngFor="let post of myFeeds">
                 <div *ngIf="post.postType == 1" class="col-md-6 col-xl-4">
@@ -464,7 +464,7 @@
 
 
         </div>
-        <div [ngClass]="myFeeds.length == 0 ? 'tab-pane fade show active':'tab-pane fade show'" (scroll)="globalScrollFunction($event)" class="tab-pane fade show" id="classes-tab-pane" role="tabpanel" aria-labelledby="school-feed-tab"
+        <div [ngClass]="myFeeds?.length == 0 && myFeedsReels?.length == 0 ? 'tab-pane fade show active':'tab-pane fade show'" (scroll)="globalScrollFunction($event)" class="tab-pane fade show" id="classes-tab-pane" role="tabpanel" aria-labelledby="school-feed-tab"
           tabindex="0">
           <div class="button-list-grid">
             <button [ngClass]="isProfileGrid ? 'btn border-btn active d-inline-flex align-items-center justify-content-center' : 'btn border-btn d-inline-flex align-items-center justify-content-center'" (click)="profileGrid()" type="button" >
