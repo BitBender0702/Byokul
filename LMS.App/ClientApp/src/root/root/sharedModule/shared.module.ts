@@ -7,11 +7,15 @@ import { HttpClient,HttpClientModule } from '@angular/common/http';
 import { MultilingualComponent } from './Multilingual/multilingual.component';
 import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.component';
 import { CommonModule } from '@angular/common';
+import { PostLoadingSpinnerComponent } from './post-loading-spinner/post-loading-spinner.component';
+import { ReelsLoadingSpinnerComponent } from './reels-loading-spinner/reels-loading-spinner.component';
 
 @NgModule({
     declarations: [
       MultilingualComponent,
-      LoadingSpinnerComponent
+      LoadingSpinnerComponent,
+      PostLoadingSpinnerComponent,
+      ReelsLoadingSpinnerComponent
     ],
     imports: [
       CommonModule,
@@ -23,7 +27,7 @@ import { CommonModule } from '@angular/common';
             }
           })
     ],
-    exports:[MultilingualComponent,LoadingSpinnerComponent],
+    exports:[MultilingualComponent,LoadingSpinnerComponent,PostLoadingSpinnerComponent,ReelsLoadingSpinnerComponent],
     providers: [TranslateService]
   })
 

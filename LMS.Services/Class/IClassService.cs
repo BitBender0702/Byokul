@@ -1,4 +1,5 @@
 ﻿using LMS.Common.ViewModels.Class;
+using LMS.Common.ViewModels.Post;
 using LMS.Common.ViewModels.School;
 using System;
 using System.Collections.Generic;
@@ -30,5 +31,7 @@ namespace LMS.Services
         Task<List<ClassViewsViewModel>> GetViewsOnClass(Guid classid);
         Task<List<ClassLikeViewModel>> LikeUnlikeClass(LikeUnlikeClassCourse model);
         Task<int> ClassView(ClassViewsViewModel model);
+        Task<IEnumerable<PostDetailsViewModel>> GetPostsByClassId(Guid classId, string loginUserId, int pageNumber, int pageSize);
+        Task<IEnumerable<PostDetailsViewModel>> GetReelsByClassId(Guid classId, string loginUserId, int pageNumber, int pageSize);
     }
 }

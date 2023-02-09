@@ -1,4 +1,5 @@
-﻿using LMS.Common.ViewModels.Chat;
+﻿using LMS.Common.Enums;
+using LMS.Common.ViewModels.Chat;
 using LMS.Common.ViewModels.Common;
 using LMS.Common.ViewModels.User;
 using LMS.Data.Entity;
@@ -96,10 +97,10 @@ namespace LMS.App.Controllers
 
         [Route("myFeed")]
         [HttpGet]
-        public async Task<IActionResult> MyFeed()
+        public async Task<IActionResult> MyFeed(PostTypeEnum postType,int pageNumber)
         {
             var userId = await GetUserIdAsync(this._userManager);
-            return Ok(await _userService.GetMyFeed(userId));
+            return Ok(await _userService.GetMyFeed(userId,postType, pageNumber));
         }
 
         [Route("userProfileFeed")]
@@ -134,10 +135,10 @@ namespace LMS.App.Controllers
 
         [Route("globalFeed")]
         [HttpGet]
-        public async Task<IActionResult> GlobalFeed()
+        public async Task<IActionResult> GlobalFeed(PostTypeEnum postType, int pageNumber)
         {
             var userId = await GetUserIdAsync(this._userManager);
-            return Ok(await _userService.GetGlobalFeed(userId));
+            return Ok(await _userService.GetGlobalFeed(userId,postType,pageNumber));
         }
 
         [Route("saveUserPreference")]
@@ -175,6 +176,23 @@ namespace LMS.App.Controllers
             var response = await _chatService.SaveChatAttachments(model);
             return Ok(response);
         }
+
+        [Route("getPostsByUserId")]
+        [HttpGet]
+        public async Task<IActionResult> GetPostsByUserId(string userId, int pageNumber, int pageSize = 4)
+        {
+            var response = await _userService.GetPostsByUserId(userId, pageNumber, pageSize);
+            return Ok(response);
+        }
+
+        [Route("getReelsByUserId")]
+        [HttpGet]
+        public async Task<IActionResult> GetReelsByUserId(string userId, int pageNumber, int pageSize = 4)
+        {
+            var response = await _userService.GetReelsByUserId(userId, pageNumber, pageSize);
+            return Ok(response);
+        }
+
 
     }
 }

@@ -81,6 +81,7 @@ namespace LMS.Services
             result.Languages = await GetLanguages(userId);
             result.Followings = await GetFollowings(userId);
             result.Posts = await GetPostsByUserId(userId);
+            result.Reels = await GetReelsByUserId(userId);
             var classStudents = await GetClassStudents(userId);
             var courseStudents = await GetCourseStudents(userId);
 
@@ -352,8 +353,27 @@ namespace LMS.Services
             return result;
         }
 
-        public async Task<IEnumerable<PostDetailsViewModel>> GetMyFeed(string userId)
+        private class FeedConvertDTO
         {
+            public Guid? Id { get; set; }
+            public string ParentImageUrl { get; set; }
+            public string ParentName { get; set; }
+            public string SchoolName { get; set; }
+        }
+
+        public async Task<IEnumerable<PostDetailsViewModel>> GetMyFeed(string userId, PostTypeEnum postType, int pageNumber = 1)
+        {
+            int pageSize = 0;
+            if (postType == PostTypeEnum.Post)
+            {
+                pageSize = 6;
+            }
+
+            if (postType == PostTypeEnum.Reel)
+            {
+                pageSize = 8;
+            }
+
             var myFeeds = new List<PostDetailsViewModel>();
 
             // feeds from schools user follow
@@ -362,205 +382,261 @@ namespace LMS.Services
                 .Include(x => x.School)
                 .Where(x => x.UserId == userId).ToListAsync();
 
+            var userFollowersData = await _userFollowerRepository.GetAll().Include(x => x.User).Where(x => x.FollowerId == userId).ToListAsync();
 
-            foreach (var schoolFollower in schoolFollowers)
-            {
-                var postList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == schoolFollower.SchoolId).OrderByDescending(x => x.IsPinned).ToListAsync();
-
-                var result = _mapper.Map<List<PostDetailsViewModel>>(postList);
-
-                foreach (var post in result)
-                {
-                    var attachment = await GetAttachmentsByPostId(post.Id);
-                    post.PostAttachments = attachment;
-                    post.ParentImageUrl = schoolFollower.School.Avatar;
-                    post.ParentName = schoolFollower.School.SchoolName;
-                    post.Likes = await GetLikesOnPost(post.Id);
-                    post.Views = await GetViewsOnPost(post.Id);
-                    post.PostAuthorType = (int)PostAuthorTypeEnum.School;
-                    post.ParentId = schoolFollower.School.SchoolId;
-                    post.SchoolName = "";
-                    if (post.Likes.Any(x => x.UserId == userId && x.PostId == post.Id))
-                    {
-                        post.IsPostLikedByCurrentUser = true;
-                    }
-                    else
-                    {
-                        post.IsPostLikedByCurrentUser = false;
-                    }
-                }
-
-                foreach (var post in result)
-                {
-                    var tags = await GetTagsByPostId(post.Id);
-                    post.PostTags = tags;
-                }
-
-                myFeeds.AddRange(result);
-
-                //var postAttachments = await _postAttachmentRepository.GetAll().Include(x => x.Post).Where(x => x.Post.ParentId == schoolFollower.SchoolId).ToListAsync();
-
-                //myFeeds.AddRange(_mapper.Map<List<PostAttachmentViewModel>>(postAttachments));
-
-            }
-
-            // posts from people user follow
-            var userFollowers = await _userFollowerRepository.GetAll().Where(x => x.FollowerId == userId).ToListAsync();
-            foreach (var userFollower in userFollowers)
-            {
-                var postList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == new Guid(userFollower.UserId)).OrderByDescending(x => x.IsPinned).ToListAsync();
-
-                var result = _mapper.Map<List<PostDetailsViewModel>>(postList);
-
-                foreach (var post in result)
-                {
-                    var attachment = await GetAttachmentsByPostId(post.Id);
-                    post.PostAttachments = attachment;
-                    post.ParentImageUrl = userFollower.User.Avatar;
-                    post.ParentName = userFollower.User.FirstName + ' ' + userFollower.User.LastName;
-                    post.Likes = await GetLikesOnPost(post.Id);
-                    post.Views = await GetViewsOnPost(post.Id);
-                    post.PostAuthorType = (int)PostAuthorTypeEnum.User;
-                    post.ParentId = new Guid(userFollower.User.Id);
-                    post.SchoolName = "";
-                    if (post.Likes.Any(x => x.UserId == userId && x.PostId == post.Id))
-                    {
-                        post.IsPostLikedByCurrentUser = true;
-                    }
-                    else
-                    {
-                        post.IsPostLikedByCurrentUser = false;
-                    }
-
-                }
-
-                foreach (var post in result)
-                {
-                    var tags = await GetTagsByPostId(post.Id);
-                    post.PostTags = tags;
-                }
-
-                myFeeds.AddRange(result);
-
-
-            }
-
-            //foreach (var userFollower in userFollowers)
-            //{
-            //    var postAttachments = await _postAttachmentRepository.GetAll().Include(x => x.Post).Where(x => x.Post.ParentId == new Guid(userFollower.UserId)).ToListAsync();
-
-            //    myFeeds.AddRange(_mapper.Map<List<PostAttachmentViewModel>>(postAttachments));
-            //}
-
-            // posts from classes user is a student for
-            var classStudents = await _classStudentRepository.GetAll()
+            var classStudentsData = await _classStudentRepository.GetAll()
                 .Include(x => x.Student)
                 .Include(x => x.Class)
                 .ThenInclude(x => x.School)
                 .Where(x => x.Student.UserId == userId).ToListAsync();
 
-            foreach (var classStudent in classStudents)
-            {
-
-
-                var courseList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == classStudent.ClassId).OrderByDescending(x => x.IsPinned).ToListAsync();
-
-                var result = _mapper.Map<List<PostDetailsViewModel>>(courseList);
-
-                foreach (var post in result)
-                {
-                    var attachment = await GetAttachmentsByPostId(post.Id);
-                    post.PostAttachments = attachment;
-                    post.ParentImageUrl = classStudent.Class.Avatar;
-                    post.ParentName = classStudent.Class.ClassName;
-                    post.Likes = await GetLikesOnPost(post.Id);
-                    post.Views = await GetViewsOnPost(post.Id);
-                    post.PostAuthorType = (int)PostAuthorTypeEnum.Class;
-                    post.ParentId = classStudent.Class.ClassId;
-                    post.SchoolName = classStudent.Class.School.SchoolName;
-                    if (post.Likes.Any(x => x.UserId == userId && x.PostId == post.Id))
-                    {
-                        post.IsPostLikedByCurrentUser = true;
-                    }
-                    else
-                    {
-                        post.IsPostLikedByCurrentUser = false;
-                    }
-
-                }
-
-                foreach (var post in result)
-                {
-                    var tags = await GetTagsByPostId(post.Id);
-                    post.PostTags = tags;
-                }
-
-                myFeeds.AddRange(result);
-
-
-            }
-            //foreach (var classStudent in classStudents)
-            //{
-            //    var postAttachments = await _postAttachmentRepository.GetAll().Include(x => x.Post).Where(x => x.Post.ParentId == classStudent.ClassId).ToListAsync();
-
-            //    myFeeds.AddRange(_mapper.Map<List<PostAttachmentViewModel>>(postAttachments));
-            //}
-
-
-
-            // posts from courses user is a student for
-            var courseStudents = await _courseStudentRepository.GetAll()
+            var courseStudentsData = await _courseStudentRepository.GetAll()
                 .Include(x => x.Student)
                 .Include(x => x.Course)
                 .ThenInclude(x => x.School)
                 .Where(x => x.Student.UserId == userId).ToListAsync();
 
-            foreach (var courseStudent in courseStudents)
+            var requiredIds = schoolFollowers.Select(x => new FeedConvertDTO { Id = x.SchoolId, ParentImageUrl=x.School.Avatar, ParentName = x.School.SchoolName, SchoolName =""}).ToList();
+            var testData = userFollowersData.Where(p => p.UserId != string.Empty).Select(x => new FeedConvertDTO { Id = new Guid(x.UserId), ParentImageUrl = x.User.Avatar, ParentName = x.User.FirstName, SchoolName = "" }).ToList();
+            requiredIds.AddRange(testData);
+            requiredIds.AddRange(classStudentsData.Select(c => new FeedConvertDTO { Id = c.ClassId, ParentImageUrl = c.Class.Avatar, ParentName = c.Class.ClassName, SchoolName = c.Class.School.SchoolName }).ToList());
+            requiredIds.AddRange(courseStudentsData.Select(c => new FeedConvertDTO { Id = c.CourseId, ParentImageUrl = c.Course.Avatar, ParentName = c.Course.CourseName, SchoolName = c.Course.School.SchoolName }).ToList());
+
+
+            var postList = _postRepository.GetAll();
+            var test = requiredIds.Where(a => a.Id.HasValue).ToList();
+            var postListData = ( postList.Include(p => p.CreatedBy).AsEnumerable()).Where(x => test.Any(q => q.Id == x.ParentId) && x.PostType == (int)postType).Skip((pageNumber - 1) * pageSize).Take(pageSize).OrderByDescending(x => x.IsPinned).ToList();
+
+            var resultData = _mapper.Map<List<PostDetailsViewModel>>(postListData);
+            foreach (var post in resultData)
             {
-
-
-                var courseList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == courseStudent.CourseId).OrderByDescending(x => x.IsPinned).ToListAsync();
-
-                var result = _mapper.Map<List<PostDetailsViewModel>>(courseList);
-
-                foreach (var post in result)
+                var data = requiredIds.FirstOrDefault(x => x.Id == post.ParentId);
+                var attachment = await GetAttachmentsByPostId(post.Id);
+                post.PostAttachments = attachment;
+                post.ParentImageUrl = data.ParentImageUrl;
+                post.ParentName = data.ParentName;
+                post.Likes = await GetLikesOnPost(post.Id);
+                post.Views = await GetViewsOnPost(post.Id);
+                post.PostAuthorType = (int)PostAuthorTypeEnum.School;
+                post.ParentId = data.Id != null ? data.Id.Value : Guid.Empty;
+                post.SchoolName = data.SchoolName;
+                if (post.Likes.Any(x => x.UserId == userId && x.PostId == post.Id))
                 {
-                    var attachment = await GetAttachmentsByPostId(post.Id);
-                    post.PostAttachments = attachment;
-                    post.ParentImageUrl = courseStudent.Course.Avatar;
-                    post.ParentName = courseStudent.Course.CourseName;
-                    post.Likes = await GetLikesOnPost(post.Id);
-                    post.Views = await GetViewsOnPost(post.Id);
-                    post.ParentId = courseStudent.Course.CourseId;
-                    post.PostAuthorType = (int)PostAuthorTypeEnum.Course;
-                    post.SchoolName = courseStudent.Course.School.SchoolName;
-                    if (post.Likes.Any(x => x.UserId == userId && x.PostId == post.Id))
-                    {
-                        post.IsPostLikedByCurrentUser = true;
-                    }
-                    else
-                    {
-                        post.IsPostLikedByCurrentUser = false;
-                    }
-
+                    post.IsPostLikedByCurrentUser = true;
                 }
-
-                foreach (var post in result)
+                else
                 {
-                    var tags = await GetTagsByPostId(post.Id);
-                    post.PostTags = tags;
+                    post.IsPostLikedByCurrentUser = false;
                 }
-
-                myFeeds.AddRange(result);
-
-
             }
+
+            foreach (var post in resultData)
+            {
+                var tags = await GetTagsByPostId(post.Id);
+                post.PostTags = tags;
+            }
+
+            myFeeds.AddRange(resultData);
+
+
+            //foreach (var schoolFollower in schoolFollowers)
+            //{
+            //    var postList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == schoolFollower.SchoolId && x.PostType == (int)postType).OrderByDescending(x => x.IsPinned).ToListAsync();
+
+            //    var result = _mapper.Map<List<PostDetailsViewModel>>(postList);
+
+            //    foreach (var post in result)
+            //    {
+            //        var attachment = await GetAttachmentsByPostId(post.Id);
+            //        post.PostAttachments = attachment;
+            //        post.ParentImageUrl = schoolFollower.School.Avatar;
+            //        post.ParentName = schoolFollower.School.SchoolName;
+            //        post.Likes = await GetLikesOnPost(post.Id);
+            //        post.Views = await GetViewsOnPost(post.Id);
+            //        post.PostAuthorType = (int)PostAuthorTypeEnum.School;
+            //        post.ParentId = schoolFollower.School.SchoolId;
+            //        post.SchoolName = "";
+            //        if (post.Likes.Any(x => x.UserId == userId && x.PostId == post.Id))
+            //        {
+            //            post.IsPostLikedByCurrentUser = true;
+            //        }
+            //        else
+            //        {
+            //            post.IsPostLikedByCurrentUser = false;
+            //        }
+            //    }
+
+            //    foreach (var post in result)
+            //    {
+            //        var tags = await GetTagsByPostId(post.Id);
+            //        post.PostTags = tags;
+            //    }
+
+            //    myFeeds.AddRange(result);
+
+            //    //var postAttachments = await _postAttachmentRepository.GetAll().Include(x => x.Post).Where(x => x.Post.ParentId == schoolFollower.SchoolId).ToListAsync();
+
+            //    //myFeeds.AddRange(_mapper.Map<List<PostAttachmentViewModel>>(postAttachments));
+
+            //}
+
+            //// posts from people user follow
+            //var userFollowers = await _userFollowerRepository.GetAll().Where(x => x.FollowerId == userId).ToListAsync();
+            //foreach (var userFollower in userFollowers)
+            //{
+            //    var postList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == new Guid(userFollower.UserId) && x.PostType == (int)postType).OrderByDescending(x => x.IsPinned).ToListAsync();
+
+            //    var result = _mapper.Map<List<PostDetailsViewModel>>(postList);
+
+            //    foreach (var post in result)
+            //    {
+            //        var attachment = await GetAttachmentsByPostId(post.Id);
+            //        post.PostAttachments = attachment;
+            //        post.ParentImageUrl = userFollower.User.Avatar;
+            //        post.ParentName = userFollower.User.FirstName + ' ' + userFollower.User.LastName;
+            //        post.Likes = await GetLikesOnPost(post.Id);
+            //        post.Views = await GetViewsOnPost(post.Id);
+            //        post.PostAuthorType = (int)PostAuthorTypeEnum.User;
+            //        post.ParentId = new Guid(userFollower.User.Id);
+            //        post.SchoolName = "";
+            //        if (post.Likes.Any(x => x.UserId == userId && x.PostId == post.Id))
+            //        {
+            //            post.IsPostLikedByCurrentUser = true;
+            //        }
+            //        else
+            //        {
+            //            post.IsPostLikedByCurrentUser = false;
+            //        }
+
+            //    }
+
+            //    foreach (var post in result)
+            //    {
+            //        var tags = await GetTagsByPostId(post.Id);
+            //        post.PostTags = tags;
+            //    }
+
+            //    myFeeds.AddRange(result);
+
+
+            //}
+
+            ////foreach (var userFollower in userFollowers)
+            ////{
+            ////    var postAttachments = await _postAttachmentRepository.GetAll().Include(x => x.Post).Where(x => x.Post.ParentId == new Guid(userFollower.UserId)).ToListAsync();
+
+            ////    myFeeds.AddRange(_mapper.Map<List<PostAttachmentViewModel>>(postAttachments));
+            ////}
+
+            //// posts from classes user is a student for
+            //var classStudents = await _classStudentRepository.GetAll()
+            //    .Include(x => x.Student)
+            //    .Include(x => x.Class)
+            //    .ThenInclude(x => x.School)
+            //    .Where(x => x.Student.UserId == userId).ToListAsync();
+
+            //foreach (var classStudent in classStudents)
+            //{
+
+
+            //    var courseList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == classStudent.ClassId && x.PostType == (int)postType).OrderByDescending(x => x.IsPinned).ToListAsync();
+
+            //    var result = _mapper.Map<List<PostDetailsViewModel>>(courseList);
+
+            //    foreach (var post in result)
+            //    {
+            //        var attachment = await GetAttachmentsByPostId(post.Id);
+            //        post.PostAttachments = attachment;
+            //        post.ParentImageUrl = classStudent.Class.Avatar;
+            //        post.ParentName = classStudent.Class.ClassName;
+            //        post.Likes = await GetLikesOnPost(post.Id);
+            //        post.Views = await GetViewsOnPost(post.Id);
+            //        post.PostAuthorType = (int)PostAuthorTypeEnum.Class;
+            //        post.ParentId = classStudent.Class.ClassId;
+            //        post.SchoolName = classStudent.Class.School.SchoolName;
+            //        if (post.Likes.Any(x => x.UserId == userId && x.PostId == post.Id))
+            //        {
+            //            post.IsPostLikedByCurrentUser = true;
+            //        }
+            //        else
+            //        {
+            //            post.IsPostLikedByCurrentUser = false;
+            //        }
+
+            //    }
+
+            //    foreach (var post in result)
+            //    {
+            //        var tags = await GetTagsByPostId(post.Id);
+            //        post.PostTags = tags;
+            //    }
+
+            //    myFeeds.AddRange(result);
+
+
+            //}
+            ////foreach (var classStudent in classStudents)
+            ////{
+            ////    var postAttachments = await _postAttachmentRepository.GetAll().Include(x => x.Post).Where(x => x.Post.ParentId == classStudent.ClassId).ToListAsync();
+
+            ////    myFeeds.AddRange(_mapper.Map<List<PostAttachmentViewModel>>(postAttachments));
+            ////}
+
+
+
+            //// posts from courses user is a student for
+            //var courseStudents = await _courseStudentRepository.GetAll()
+            //    .Include(x => x.Student)
+            //    .Include(x => x.Course)
+            //    .ThenInclude(x => x.School)
+            //    .Where(x => x.Student.UserId == userId).ToListAsync();
+
             //foreach (var courseStudent in courseStudents)
             //{
-            //    var postAttachments = await _postAttachmentRepository.GetAll().Include(x => x.Post).Where(x => x.Post.ParentId == courseStudent.CourseId).ToListAsync();
 
-            //    myFeeds.AddRange(_mapper.Map<List<PostAttachmentViewModel>>(postAttachments));
+
+            //    var courseList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == courseStudent.CourseId && x.PostType == (int)postType).OrderByDescending(x => x.IsPinned).ToListAsync();
+
+            //    var result = _mapper.Map<List<PostDetailsViewModel>>(courseList);
+
+            //    foreach (var post in result)
+            //    {
+            //        var attachment = await GetAttachmentsByPostId(post.Id);
+            //        post.PostAttachments = attachment;
+            //        post.ParentImageUrl = courseStudent.Course.Avatar;
+            //        post.ParentName = courseStudent.Course.CourseName;
+            //        post.Likes = await GetLikesOnPost(post.Id);
+            //        post.Views = await GetViewsOnPost(post.Id);
+            //        post.ParentId = courseStudent.Course.CourseId;
+            //        post.PostAuthorType = (int)PostAuthorTypeEnum.Course;
+            //        post.SchoolName = courseStudent.Course.School.SchoolName;
+            //        if (post.Likes.Any(x => x.UserId == userId && x.PostId == post.Id))
+            //        {
+            //            post.IsPostLikedByCurrentUser = true;
+            //        }
+            //        else
+            //        {
+            //            post.IsPostLikedByCurrentUser = false;
+            //        }
+
+            //    }
+
+            //    foreach (var post in result)
+            //    {
+            //        var tags = await GetTagsByPostId(post.Id);
+            //        post.PostTags = tags;
+            //    }
+
+            //    myFeeds.AddRange(result);
+
+
             //}
+            ////foreach (var courseStudent in courseStudents)
+            ////{
+            ////    var postAttachments = await _postAttachmentRepository.GetAll().Include(x => x.Post).Where(x => x.Post.ParentId == courseStudent.CourseId).ToListAsync();
+
+            ////    myFeeds.AddRange(_mapper.Map<List<PostAttachmentViewModel>>(postAttachments));
+            ////}
 
             return myFeeds;
         }
@@ -585,11 +661,11 @@ namespace LMS.Services
 
         }
 
-        public async Task<IEnumerable<PostDetailsViewModel>> GetPostsByUserId(string userId)
+        public async Task<IEnumerable<PostDetailsViewModel>> GetPostsByUserId(string userId, int pageNumber=1, int pageSize = 4)
         {
-            var courseList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == new Guid(userId)).OrderByDescending(x => x.IsPinned).ToListAsync();
+            var courseList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == new Guid(userId) && x.PostType == (int)PostTypeEnum.Post).OrderByDescending(x => x.IsPinned).ToListAsync();
 
-            var result = _mapper.Map<List<PostDetailsViewModel>>(courseList);
+            var result = _mapper.Map<List<PostDetailsViewModel>>(courseList).Skip((pageNumber - 1) * pageSize).Take(pageSize);
 
             foreach (var post in result)
             {
@@ -612,42 +688,37 @@ namespace LMS.Services
                 post.PostTags = await GetTagsByPostId(post.Id);
             }
             return result;
-            //var posts = await _postAttachmentRepository.GetAll()
-            //    .Include(x => x.Post)
-            //    .Where(x => x.CreatedById == userId).OrderByDescending(x => x.Post.IsPinned).ToListAsync();
 
-            //var response = _mapper.Map<List<PostAttachmentViewModel>>(posts);
+        }
 
-            //foreach (var item in response)
-            //{
-            //    if (item.Post.PostAuthorType == (int)PostAuthorTypeEnum.School)
-            //    {
-            //        var school = _schoolRepository.GetById(item.Post.ParentId);
-            //        item.School = _mapper.Map<SchoolViewModel>(school);
-            //    }
+        public async Task<IEnumerable<PostDetailsViewModel>> GetReelsByUserId(string userId, int pageNumber = 1, int pageSize = 8)
+        {
+            var courseList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == new Guid(userId) && x.PostType == (int)PostTypeEnum.Reel).OrderByDescending(x => x.IsPinned).ToListAsync();
 
-            //    if (item.Post.PostAuthorType == (int)PostAuthorTypeEnum.Class)
-            //    {
-            //        var classes = _classRepository.GetById(item.Post.ParentId);
-            //        item.Class = _mapper.Map<ClassViewModel>(classes);
-            //    }
+            var result = _mapper.Map<List<PostDetailsViewModel>>(courseList).Skip((pageNumber - 1) * pageSize).Take(pageSize);
 
-            //    if (item.Post.PostAuthorType == (int)PostAuthorTypeEnum.User)
-            //    {
-            //        try
-            //        {
-            //            var user = _userRepository.GetById(item.Post.ParentId.ToString());
-            //            item.User = _mapper.Map<UserDetailsViewModel>(user);
-            //        }
-            //        catch (Exception ex)
-            //        {
-            //            throw ex;
-            //        }
-            //    }
-            //}
+            foreach (var post in result)
+            {
+                post.PostAttachments = await GetAttachmentsByPostId(post.Id);
+                post.Likes = await GetLikesOnPost(post.Id);
+                post.Views = await GetViewsOnPost(post.Id);
+                if (post.Likes.Any(x => x.UserId == userId && x.PostId == post.Id))
+                {
+                    post.IsPostLikedByCurrentUser = true;
+                }
+                else
+                {
+                    post.IsPostLikedByCurrentUser = false;
+                }
 
+            }
 
-            //return response;
+            foreach (var post in result)
+            {
+                post.PostTags = await GetTagsByPostId(post.Id);
+            }
+            return result;
+           
         }
 
         public async Task<List<UserFollowerViewModel>> GetUserFollowers(string userId)
@@ -705,8 +776,18 @@ namespace LMS.Services
             return result;
         }
 
-        public async Task<IEnumerable<GlobalFeedViewModel>> GetGlobalFeed(string userId)
+        public async Task<IEnumerable<GlobalFeedViewModel>> GetGlobalFeed(string userId,PostTypeEnum postType,int pageNumber)
         {
+            int pageSize = 0;
+            if (postType == PostTypeEnum.Post)
+            {
+                pageSize = 6;
+            }
+
+            if (postType == PostTypeEnum.Reel)
+            {
+                pageSize = 8;
+            }
             var tokenList = new List<string>();
             var result = await _userPreferenceRepository.GetAll().Where(x => x.UserId == userId).FirstOrDefaultAsync();
 
@@ -722,12 +803,12 @@ namespace LMS.Services
 
             if (tokenList.Count() != 0)
             {
-                var PostGUIDScore = await GenericCompareAlgo(String.Join(" ", tokenList));
-                return await GetFeedResult(PostGUIDScore, userId);
+                var PostGUIDScore = await GenericCompareAlgo(String.Join(" ", tokenList), postType, pageNumber, pageSize);
+                return await GetFeedResult(PostGUIDScore, userId, postType, pageNumber, pageSize);
             }
             else
             {
-                return await GetDefaultFeeds(userId);
+                return await GetDefaultFeeds(userId,postType, pageNumber, pageSize);
             }
 
         }
@@ -853,12 +934,12 @@ namespace LMS.Services
         }
 
 
-        async Task<Dictionary<Guid, int>> GenericCompareAlgo(string tokenList)
+        async Task<Dictionary<Guid, int>> GenericCompareAlgo(string tokenList,PostTypeEnum postType, int pageNumber, int pageSize)
         {
             var DBPostTokens = new List<string>();
             var PostGUIDScore = new Dictionary<Guid, int>();
 
-            var listOfPosts = await _postRepository.GetAll().ToListAsync();
+            var listOfPosts = await _postRepository.GetAll().Where(x => x.PostType == (int)postType).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
             var listOfTags = await _postTagRepository.GetAll().ToListAsync();
 
             foreach (var post in listOfPosts)
@@ -892,13 +973,13 @@ namespace LMS.Services
 
         }
 
-        async Task<List<GlobalFeedViewModel>> GetFeedResult(Dictionary<Guid, int> postGUIDScore, string loginUserId)
+        async Task<List<GlobalFeedViewModel>> GetFeedResult(Dictionary<Guid, int> postGUIDScore, string loginUserId,PostTypeEnum postType, int pageNumber, int pageSize)
         {
             bool IsPostLikedByCurrentUser;
             var response = new List<GlobalFeedViewModel>();
-            var postList = await _postRepository.GetAll().ToListAsync();
-            var likeList = await _likeRepository.GetAll().ToListAsync();
-            var viewList = await _viewRepository.GetAll().ToListAsync();
+            var postList = await _postRepository.GetAll().Where(x => x.PostType == (int)postType).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+            //var likeList = await _likeRepository.GetAll().ToListAsync();
+            //var viewList = await _viewRepository.GetAll().ToListAsync();
             var postAttachmentList = await _postAttachmentRepository.GetAll().ToListAsync();
             var postTagsList = await _postTagRepository.GetAll().ToListAsync();
             var likesList = await _likeRepository.GetAll().ToListAsync();
@@ -995,13 +1076,13 @@ namespace LMS.Services
             return response;
         }
 
-        async Task<List<GlobalFeedViewModel>> GetDefaultFeeds(string loginUserId)
+        async Task<List<GlobalFeedViewModel>> GetDefaultFeeds(string loginUserId, PostTypeEnum postType, int pageNumber, int pageSize)
         {
             bool IsPostLikedByCurrentUser;
             var response = new List<GlobalFeedViewModel>();
-            var postList = await _postRepository.GetAll().ToListAsync();
-            var likeList = await _likeRepository.GetAll().ToListAsync();
-            var viewList = await _viewRepository.GetAll().ToListAsync();
+            var postList = await _postRepository.GetAll().Where(x => x.PostType == (int)postType).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+            //var likeList = await _likeRepository.GetAll().ToListAsync();
+            //var viewList = await _viewRepository.GetAll().ToListAsync();
             var postAttachmentList = await _postAttachmentRepository.GetAll().ToListAsync();
             var postTagsList = await _postTagRepository.GetAll().ToListAsync();
             var likesList = await _likeRepository.GetAll().ToListAsync();
@@ -1050,7 +1131,7 @@ namespace LMS.Services
                 }
                 if (post.PostAuthorType == (int)PostAuthorTypeEnum.Course)
                 {
-                    var course = await _courseRepository.GetAll().Where(x=> x.CourseId == post.ParentId).FirstOrDefaultAsync();
+                    var course = await _courseRepository.GetAll().Include(x => x.School).Where(x=> x.CourseId == post.ParentId).FirstOrDefaultAsync();
                     parentName = course.CourseName;
                     parentImageUrl = course.Avatar;
                     postAuthorType = (int)PostAuthorTypeEnum.Course;

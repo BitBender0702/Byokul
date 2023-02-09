@@ -109,14 +109,18 @@
           aria-labelledby="school-feed-tab" tabindex="0">
           <div class="feed-section">
             <div class="feed-box position-relative">
-                <button type="button" class="bg-transparent border-0 next-feed">
+                <!-- <button type="button" class="bg-transparent border-0 next-feed">
                     <img src="../../../../assets/images/chevron-right-circle.svg" />
-                </button>
+                </button> -->
                 <div class="feedbox-inner d-flex ">
-    
-                  <div *ngFor="let post of user.posts">
+                  <carousel #carousel
+                  [itemsPerSlide]="itemsPerSlide"
+                  [singleSlideOffset]="singleSlideOffset"
+                  [interval]="0"
+                  [noWrap]="noWrap">
+                  <div *ngFor="let post of user.reels">
                     <div *ngIf="post.postType == 3 && post.postAuthorType == 4">
-                    <div *ngFor="let postAttachment of post.postAttachments">
+                    <slide *ngFor="let postAttachment of post.postAttachments">
                       <div *ngIf="postAttachment.fileType == 2">
                         <div class="feedimg-box position-relative text-light position-relative">
                           <a (click)="openReelsViewModal(postAttachment.id)" style="cursor: pointer;">
@@ -129,7 +133,7 @@
                             <!-- <img src="../../../../assets/images/feed1.jpg" /> -->
                             <div class="pinned-view d-flex  justify-content-between align-items-start">
                                 <button type="button" class="view font_12 bg-transparent border-0 text-light">
-                                    <img src="../../../../assets/images/eye-light.svg" /> 954
+                                    <img src="../../../../assets/images/eye-light.svg" /> {{post.views.length}}
                                 </button>
                                 <!-- here is pinned for -->
                                   <button *ngIf="post.isPinned && isOwner" (click)="pinUnpinPost(post.id,false)" type="button" class="pinned bg-transparent border-0">
@@ -158,11 +162,13 @@
                             </div>
                         </div>
                       </div>
+                  </slide>
                   </div>
                   </div>
-                  </div>
+                </carousel>
                 </div>
             </div>
+            <reels-loading-spinner [reelsLoadingIcon]="reelsLoadingIcon"></reels-loading-spinner>
         </div>
           <div class="school-grid-view grid-active" *ngIf="isProfileGrid">
             <ng-container *ngFor="let post of user.posts">
@@ -1030,6 +1036,7 @@ aria-labelledby="delete-language" aria-hidden="true">
 
 </div>
 <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
+<post-loading-spinner [postLoadingIcon]="postLoadingIcon"></post-loading-spinner>
 <p-toast></p-toast>
 
 

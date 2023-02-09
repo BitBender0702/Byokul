@@ -56,7 +56,6 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
       }
 
     // confirmEmailResponse.subscribe(response => {
-    //   debugger
     //   this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Email confirm successfully'});
     //   this.selectedLanguage = localStorage.getItem("selectedLanguage");
     //   this.loginForm = this.fb.group({
@@ -84,7 +83,6 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
       this.user = this.loginForm.value;
       this._authService.loginUser(this.user).pipe(finalize(()=> this.loadingIcon= false)).subscribe({
         next: (response: AuthenticatedResponse) => {
-          debugger
           if(response.token == "user not found"){
             this._authService.loginState$.next(false);
             this.loginForm.setErrors({ unauthenticated: true });

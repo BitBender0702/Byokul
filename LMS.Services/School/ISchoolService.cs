@@ -1,5 +1,6 @@
 ﻿using LMS.Common.Enums;
 using LMS.Common.ViewModels.Common;
+using LMS.Common.ViewModels.Post;
 using LMS.Common.ViewModels.School;
 using System;
 using System.Collections.Generic;
@@ -37,6 +38,8 @@ namespace LMS.Services
         Task<IOrderedEnumerable<CombineClassCourseViewModel>> GetSchoolClassCourse(Guid schoolId,string userId);
         Task<bool> PinUnpinClassCourse(Guid id, ClassCourseEnum type, bool isPinned);
         Task<List<SchoolViewModel>> GetUserAllSchools(string userId);
+        Task<IEnumerable<PostDetailsViewModel>> GetPostsBySchool(Guid schoolId, string loginUserId, int pageNumber, int pageSize);
+        Task<IEnumerable<PostDetailsViewModel>> GetReelsBySchool(Guid schoolId, string loginUserId, int pageNumber, int pageSize);
 
 
     }

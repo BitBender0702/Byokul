@@ -1,5 +1,13 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Component, ElementRef, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Injector,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -13,7 +21,10 @@ import { DeleteSchoolTeacher } from 'src/root/interfaces/school/deleteSchoolTeac
 import { AddSchoolCertificate } from 'src/root/interfaces/school/addSchoolCertificate';
 import { DeleteSchoolCertificate } from 'src/root/interfaces/school/deleteSchoolCertificate';
 import { MultilingualComponent } from '../../sharedModule/Multilingual/multilingual.component';
-import { addPostResponse, CreatePostComponent } from '../../createPost/createPost.component';
+import {
+  addPostResponse,
+  CreatePostComponent,
+} from '../../createPost/createPost.component';
 
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -28,391 +39,454 @@ import { LikeUnlikeClassCourse } from 'src/root/interfaces/school/likeUnlikeClas
 import { MessageService } from 'primeng/api';
 import { ReelsViewComponent } from '../../reels/reelsView.component';
 import { ownedSchoolResponse } from '../createSchool/createSchool.component';
-
-// export const ownedSchoolResponse =new Subject<{schoolAvatar : string,schoolName:string}>(); 
-
+import * as $ from 'jquery';
+// export const ownedSchoolResponse =new Subject<{schoolAvatar : string,schoolName:string}>();
 
 // import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-    selector: 'schoolProfile-root',
-    templateUrl: './schoolProfile.component.html',
-    styleUrls: ['./schoolProfile.component.css'],
-    providers: [MessageService]
-  })
+  selector: 'schoolProfile-root',
+  templateUrl: './schoolProfile.component.html',
+  styleUrls: ['./schoolProfile.component.css'],
+  providers: [MessageService],
+})
+export class SchoolProfileComponent
+  extends MultilingualComponent
+  implements OnInit, OnDestroy, OnChanges
+{
+  private _schoolService;
+  private _postService;
+  school: any;
+  isProfileGrid: boolean = true;
+  isOpenSidebar: boolean = false;
+  hideFeedFilters: boolean = true;
 
-export class SchoolProfileComponent extends MultilingualComponent implements OnInit, OnDestroy {
+  loadingIcon: boolean = false;
+  postLoadingIcon: boolean = false;
+  reelsLoadingIcon:boolean = false;
+  isOpenModal: boolean = false;
+  schoolId!: string;
 
-    private _schoolService;
-    private _postService;
-    school:any;
-    isProfileGrid:boolean = true;
-    isOpenSidebar:boolean = false;
-    hideFeedFilters:boolean = true;
+  isDataLoaded: boolean = false;
+  isSchoolFollowed: boolean = false;
+  validToken!: string;
 
+  // eidt Schools
+  editSchool: any;
+  editSchoolForm!: FormGroup;
+  accessibility: any;
+  isSubmitted: boolean = false;
+  fileToUpload = new FormData();
+  certificateToUpload = new FormData();
+  uploadImage!: any;
+  updateSchoolDetails!: EditSchoolModel;
 
-    loadingIcon:boolean = false;
-    isOpenModal:boolean = false;
-    schoolId!:string;
+  // add/delete Languages
+  languageForm!: FormGroup;
+  teacherForm!: FormGroup;
+  certificateForm!: FormGroup;
+  languageIds: string[] = [];
+  schoolLanguage!: AddSchoolLanguage;
+  schoolTeacher!: AddSchoolTeacher;
+  schoolCertificate!: AddSchoolCertificate;
+  filteredLanguages!: any[];
+  languages: any;
+  deleteLanguage!: DeleteSchoolLanguage;
+  deleteTeacher!: DeleteSchoolTeacher;
+  deleteCertificate!: DeleteSchoolCertificate;
+  EMAIL_PATTERN = '^[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$';
+  selectedCertificates: any;
+  isOwner!: boolean;
+  teacherInfo: any[] = [];
+  teachers: any;
+  filteredTeachers!: any[];
+  followUnfollowSchool!: FollowUnfollow;
+  isFollowed!: boolean;
+  followersLength!: number;
+  classCourseList: any;
+  likesLength!: number;
+  isLiked!: boolean;
+  likeUnlikePost!: LikeUnlikePost;
+  likeUnlikeClassCourses!: LikeUnlikeClassCourse;
+  userId!: string;
+  currentLikedPostId!: string;
+  currentLikedClassCourseId!: string;
+  schoolName!: string;
+  gridItemInfo: any;
+  isGridItemInfo: boolean = false;
+  postView!: PostView;
+  likesClassCourseLength!: number;
+  isClassCourseLiked!: boolean;
+  itemsPerSlide = 7;
+  singleSlideOffset = true;
+  noWrap = true;
+  isFeedHide: boolean = false;
+  frontEndPageNumber: number = 1;
+  postResponse:any;
+  @ViewChild('closeEditModal') closeEditModal!: ElementRef;
+  @ViewChild('closeTeacherModal') closeTeacherModal!: ElementRef;
+  @ViewChild('closeLanguageModal') closeLanguageModal!: ElementRef;
+  @ViewChild('closeCertificateModal') closeCertificateModal!: ElementRef;
+  @ViewChild('imageFile') imageFile!: ElementRef;
+  @ViewChild('carousel') carousel!: ElementRef;
 
-    isDataLoaded:boolean = false;
-    isSchoolFollowed:boolean = false;
-    validToken!:string;
-
-
-    // eidt Schools
-    editSchool:any;
-    editSchoolForm!:FormGroup;
-    accessibility:any;
-    isSubmitted: boolean = false;
-    fileToUpload= new FormData();
-    certificateToUpload = new FormData();
-    uploadImage!:any;
-    updateSchoolDetails!:EditSchoolModel;
-
-    // add/delete Languages
-    languageForm!:FormGroup;
-    teacherForm!:FormGroup;
-    certificateForm!:FormGroup;
-    languageIds:string[] = [];
-    schoolLanguage!:AddSchoolLanguage;
-    schoolTeacher!:AddSchoolTeacher;
-    schoolCertificate!:AddSchoolCertificate;
-    filteredLanguages!: any[];
-    languages:any;
-    deleteLanguage!: DeleteSchoolLanguage;
-    deleteTeacher!: DeleteSchoolTeacher;
-    deleteCertificate!: DeleteSchoolCertificate;
-    EMAIL_PATTERN = '^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$';
-    selectedCertificates:any;
-    isOwner!:boolean;
-    teacherInfo:any[] = [];
-    teachers:any;
-    filteredTeachers!: any[];
-    followUnfollowSchool!: FollowUnfollow;
-    isFollowed!:boolean;
-    followersLength!:number;
-    classCourseList:any;
-    likesLength!:number;
-    isLiked!:boolean;
-    likeUnlikePost!: LikeUnlikePost;
-    likeUnlikeClassCourses!: LikeUnlikeClassCourse;
-    userId!:string;
-    currentLikedPostId!:string;
-    currentLikedClassCourseId!:string;
-    schoolName!:string;
-    gridItemInfo:any;
-    isGridItemInfo: boolean = false;
-    postView!:PostView;
-    likesClassCourseLength!:number;
-    isClassCourseLiked!:boolean;
-    itemsPerSlide = 7;
-    singleSlideOffset = true;
-    noWrap = true;
-    isFeedHide:boolean = false;
-    @ViewChild('closeEditModal') closeEditModal!: ElementRef;
-    @ViewChild('closeTeacherModal') closeTeacherModal!: ElementRef;
-    @ViewChild('closeLanguageModal') closeLanguageModal!: ElementRef;
-    @ViewChild('closeCertificateModal') closeCertificateModal!: ElementRef;
-    @ViewChild('imageFile') imageFile!: ElementRef;
-
-
-    @ViewChild('createPostModal', { static: true }) createPostModal!: CreatePostComponent;
-    Certificates!: string[];
+  @ViewChild('createPostModal', { static: true })
+  createPostModal!: CreatePostComponent;
+  Certificates!: string[];
   schoolParamsData$: any;
+  reelsPageNumber:number = 1;
 
-    constructor(injector: Injector,public messageService:MessageService,postService:PostService,private bsModalService: BsModalService,
-                private matDialog: MatDialog,public modalService: NgbModal,private route: ActivatedRoute,private domSanitizer: DomSanitizer,
-              schoolService: SchoolService,private fb: FormBuilder,private router: Router, private http: HttpClient) { 
-      super(injector);
-        this._schoolService = schoolService;
-        this._postService = postService;
-        this.schoolParamsData$ = this.route.params.subscribe(routeParams => {
-              if(!this.loadingIcon)
-              this.ngOnInit();
-            });
-        // router.events.subscribe(routeData => {
-        //   debugger;
-        //   if(!this.loadingIcon)
-        //     this.ngOnInit();
-        // })
-    }
-  ngOnDestroy(): void {
-    if(this.schoolParamsData$) this.schoolParamsData$.unsubscribe();
+  constructor(
+    injector: Injector,
+    public messageService: MessageService,
+    postService: PostService,
+    private bsModalService: BsModalService,
+    private matDialog: MatDialog,
+    public modalService: NgbModal,
+    private route: ActivatedRoute,
+    private domSanitizer: DomSanitizer,
+    schoolService: SchoolService,
+    private fb: FormBuilder,
+    private router: Router,
+    private http: HttpClient
+  ) {
+    super(injector);
+    this._schoolService = schoolService;
+    this._postService = postService;
+    this.schoolParamsData$ = this.route.params.subscribe((routeParams) => {
+      if (!this.loadingIcon) this.ngOnInit();
+    });
+    // router.events.subscribe(routeData => {
+    //   if(!this.loadingIcon)
+    //     this.ngOnInit();
+    // })
   }
-  
-    ngOnInit(): void {
-      debugger
-      this.loadingIcon = true;
-            this.validToken = localStorage.getItem("jwt")?? '';
-      var selectedLang = localStorage.getItem("selectedLanguage");
-      this.translate.use(selectedLang?? '');
+  ngOnDestroy(): void {
+    if (this.schoolParamsData$) this.schoolParamsData$.unsubscribe();
+  }
+  ngOnChanges(): void {
+    if(this.carousel){
+    this.carousel.nativeElement.querySelectorAll('span.carousel-control-next-icon')
+      .forEach((elem: Element) => {
+        elem.remove();
+      });
+    }
+  }
+  ngOnInit(): void {
+    document.addEventListener('scroll', this.myScrollFunction, false);
+    this.loadingIcon = true;
+    this.validToken = localStorage.getItem('jwt') ?? '';
+    var selectedLang = localStorage.getItem('selectedLanguage');
+    this.translate.use(selectedLang ?? '');
 
-      // var id = this.route.snapshot.paramMap.get('schoolId');
-      // this.schoolId = id ?? '';
-if(this.schoolName == undefined){
-      this.schoolName = this.route.snapshot.paramMap.get('schoolName')??'';
-}
-      
-      // if(this.schoolId == ''){
-      //   this._schoolService.getSchoolByName(this.schoolName).subscribe((response) => {
-      //     this.schoolId = response.schoolId;
-      //     this._schoolService.getSchoolById(this.schoolName).subscribe((response) => {
-      //       this.school = response;
-      //       this.followersLength = this.school.schoolFollowers.length;
-      //       this.isOwnerOrNot();
-      //       this.loadingIcon = false;
-      //       this.isDataLoaded = true;
-      //     });
-      //   });
-      // }
-      
-      // else{
-      this._schoolService.getSchoolById(this.schoolName.replace(" ","").toLowerCase()).subscribe((response) => {
-        
+    // var id = this.route.snapshot.paramMap.get('schoolId');
+    // this.schoolId = id ?? '';
+    // if (this.schoolName == undefined) {
+      this.schoolName = this.route.snapshot.paramMap.get('schoolName') ?? '';
+    // }
+
+    // if(this.schoolId == ''){
+    //   this._schoolService.getSchoolByName(this.schoolName).subscribe((response) => {
+    //     this.schoolId = response.schoolId;
+    //     this._schoolService.getSchoolById(this.schoolName).subscribe((response) => {
+    //       this.school = response;
+    //       this.followersLength = this.school.schoolFollowers.length;
+    //       this.isOwnerOrNot();
+    //       this.loadingIcon = false;
+    //       this.isDataLoaded = true;
+    //     });
+    //   });
+    // }
+
+    // else{
+    this._schoolService.getSchoolById(this.schoolName.replace(' ', '').toLowerCase()).subscribe((response) => {
+        this.frontEndPageNumber = 1;
+        this.reelsPageNumber = 1;
         this.school = response;
         this.followersLength = this.school.schoolFollowers.length;
         this.isOwnerOrNot();
         this.loadingIcon = false;
         this.isDataLoaded = true;
+        if(this.carousel!=undefined){
+          if($('carousel')[0].querySelectorAll('a.carousel-control-next')[0])
+          {
+            $('carousel')[0].querySelectorAll('a.carousel-control-next')[0].addEventListener('click', () => {
+              this.reelsPageNumber++;
+              if(this.reelsPageNumber == 2){
+                this.reelsLoadingIcon = true;
+              }
+              this._schoolService.getReelsBySchoolId(this.school.schoolId, this.reelsPageNumber).subscribe((response) => {
+                 this.school.reels = [...this.school.reels, ...response];
+                 this.reelsLoadingIcon = false;
+            });
+
+            })
+          }  
+      }
       });
     // }
 
-      this._schoolService.getAccessibility().subscribe((response) => {
-        this.accessibility = response;
+    this._schoolService.getAccessibility().subscribe((response) => {
+      this.accessibility = response;
+    });
+
+    this._schoolService.getLanguageList().subscribe((response) => {
+      this.languages = response;
+    });
+
+    // here we call this when user click on plus icon not in ngon init try tomorrow.
+    this._schoolService.getAllTeachers().subscribe((response) => {
+      this.teachers = response;
+    });
+
+    this.editSchoolForm = this.fb.group({
+      schoolName: this.fb.control(''),
+      schoolSlogan: this.fb.control(''),
+      founded: this.fb.control(''),
+      accessibilityId: this.fb.control(''),
+      schoolEmail: this.fb.control(''),
+      description: this.fb.control(''),
+      owner: this.fb.control(''),
+      // avatar: this.fb.control('')
+    });
+
+    this.languageForm = this.fb.group({
+      languages: this.fb.control([], [Validators.required]),
+    });
+
+    this.teacherForm = this.fb.group({
+      teachers: this.fb.control([], [Validators.required]),
+    });
+
+    this.certificateForm = this.fb.group({
+      certificates: this.fb.control([], [Validators.required]),
+    });
+
+    this.schoolLanguage = {
+      schoolId: '',
+      languageIds: [],
+    };
+
+    this.deleteLanguage = {
+      schoolId: '',
+      languageId: '',
+    };
+
+    this.schoolTeacher = {
+      schoolId: '',
+      teacherIds: [],
+    };
+
+    this.deleteTeacher = {
+      schoolId: '',
+      teacherId: '',
+    };
+
+    this.schoolCertificate = {
+      schoolId: '',
+      certificates: [],
+    };
+
+    this.deleteCertificate = {
+      schoolId: '',
+      certificateId: '',
+    };
+
+    this.InitializeLikeUnlikePost();
+
+    this.followUnfollowSchool = {
+      id: '',
+      isFollowed: false,
+    };
+
+    addPostResponse.subscribe((response) => {
+      this.loadingIcon = true;
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Success',
+        life: 3000,
+        detail: 'Post created successfully',
       });
-
-      this._schoolService.getLanguageList().subscribe((response) => {
-        this.languages = response;
-      });
-
-
-      // here we call this when user click on plus icon not in ngon init try tomorrow.
-      this._schoolService.getAllTeachers().subscribe((response) => {
-        this.teachers = response;
-      });
-
-
-      this.editSchoolForm = this.fb.group({
-        schoolName: this.fb.control(''),
-        schoolSlogan: this.fb.control(''),
-        founded: this.fb.control(''),
-        accessibilityId: this.fb.control(''),
-        schoolEmail: this.fb.control(''),
-        description: this.fb.control(''),
-        owner: this.fb.control(''),
-        // avatar: this.fb.control('')
-      });
-
-      this.languageForm = this.fb.group({
-        languages:this.fb.control([],[Validators.required]),
-      });
-
-      this.teacherForm = this.fb.group({
-        teachers:this.fb.control([],[Validators.required]),
-      });
-
-      this.certificateForm = this.fb.group({
-        certificates:this.fb.control([],[Validators.required]),
-      });
-
-      this.schoolLanguage = {
-        schoolId: '',
-        languageIds: []
-       };
-
-       this.deleteLanguage = {
-        schoolId: '',
-        languageId: ''
-       };
-
-       this.schoolTeacher = {
-        schoolId: '',
-        teacherIds: []
-       };
-
-
-       this.deleteTeacher = {
-        schoolId: '',
-        teacherId: ''
-       };
-
-       this.schoolCertificate = {
-        schoolId:'',
-        certificates:[]
-       }
-
-       this.deleteCertificate = {
-        schoolId:'',
-        certificateId:''
-       }
-
-       this.InitializeLikeUnlikePost();
-
-      
-        this.followUnfollowSchool = {
-          id: '',
-          isFollowed: false
-         };
-
-         addPostResponse.subscribe(response => {
-          this.loadingIcon = true;
-          this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post created successfully'});
-          this._schoolService.getSchoolById(this.schoolName.replace(" ","").toLowerCase()).subscribe((response) => {
-            this.school = response;
-            this.loadingIcon = false;
-            this.followersLength = this.school.schoolFollowers.length;
-            this.isOwnerOrNot();
-            this.loadingIcon = false;
-            this.isDataLoaded = true;
-          });
+      this._schoolService
+        .getSchoolById(this.schoolName.replace(' ', '').toLowerCase())
+        .subscribe((response) => {
+          this.school = response;
+          this.loadingIcon = false;
+          this.followersLength = this.school.schoolFollowers.length;
+          this.isOwnerOrNot();
+          this.loadingIcon = false;
+          this.isDataLoaded = true;
         });
+    });
 
-         //this.GetSchoolClassCourseList(this.school.schoolId);
-    }
+    //this.GetSchoolClassCourseList(this.school.schoolId);
+  }
 
-    InitializeLikeUnlikePost(){
-      this.likeUnlikePost = {
-        postId: '',
-        userId: '',
-        isLike:false,
-        commentId:''
-       };
+  InitializeLikeUnlikePost() {
+    this.likeUnlikePost = {
+      postId: '',
+      userId: '',
+      isLike: false,
+      commentId: '',
+    };
+  }
 
-    }
+  myScrollFunction = (ev: any): void => {
+    this.postLoadingIcon = true;
+    this.frontEndPageNumber++;
+    this.getPostsBySchoolId();
 
-    isOwnerOrNot(){
-      var validToken = localStorage.getItem("jwt");
-        if (validToken != null) {
-          let jwtData = validToken.split('.')[1]
-          let decodedJwtJsonData = window.atob(jwtData)
-          let decodedJwtData = JSON.parse(decodedJwtJsonData);
-          this.userId = decodedJwtData.jti;
-          if(decodedJwtData.sub == this.school.createdBy){
-            this.isOwner = true;
-          }
-          else{
-            this.isOwner = false;
-            this.isFollowedOwnerOrNot(decodedJwtData.jti);
-          }
-  
-        }
-        
-    }
 
-    isFollowedOwnerOrNot(userId:string){
-      var followers: any[] = this.school.schoolFollowers;
-      var isFollowed = followers.filter(x => x.userId == userId);
-      if(isFollowed.length != 0){
-        this.isFollowed = true;
+    // if(this.postResponse == undefined){
+    //   this.postLoadingIcon = true;
+    //   this.frontEndPageNumber++;
+    //   this.getPostsBySchoolId();
+    // }
+    //   else{
+    //     if(this.postResponse.length != 0){
+    //       this.frontEndPageNumber++;
+    //       this.getPostsBySchoolId();
+    //     }
+    //   }
+  };
+
+  getPostsBySchoolId() {
+    this._schoolService
+      .getPostsBySchoolId(this.school.schoolId, this.frontEndPageNumber)
+      .subscribe((response) => {
+        this.school.posts = [...this.school.posts, ...response];
+        this.postLoadingIcon = false;
+        this.postResponse = response;
+      });
+  }
+
+  isOwnerOrNot() {
+    var validToken = localStorage.getItem('jwt');
+    if (validToken != null) {
+      let jwtData = validToken.split('.')[1];
+      let decodedJwtJsonData = window.atob(jwtData);
+      let decodedJwtData = JSON.parse(decodedJwtJsonData);
+      this.userId = decodedJwtData.jti;
+      if (decodedJwtData.sub == this.school.createdBy) {
+        this.isOwner = true;
+      } else {
+        this.isOwner = false;
+        this.isFollowedOwnerOrNot(decodedJwtData.jti);
       }
-      else{
-        this.isFollowed = false;
-      }
     }
+  }
 
-    followSchool(schoolId:string,from:string){
-      if(this.validToken == ''){
-        window.open('user/auth/login', '_blank');
-      }
-      else{
+  isFollowedOwnerOrNot(userId: string) {
+    var followers: any[] = this.school.schoolFollowers;
+    var isFollowed = followers.filter((x) => x.userId == userId);
+    if (isFollowed.length != 0) {
+      this.isFollowed = true;
+    } else {
+      this.isFollowed = false;
+    }
+  }
+
+  followSchool(schoolId: string, from: string) {
+    if (this.validToken == '') {
+      window.open('user/auth/login', '_blank');
+    } else {
       this.followUnfollowSchool.id = schoolId;
-      if(from == FollowUnFollowEnum.Follow){
+      if (from == FollowUnFollowEnum.Follow) {
         this.followersLength += 1;
         this.isFollowed = true;
         this.followUnfollowSchool.isFollowed = true;
-      }
-      else{
-        this.followersLength -= 1; 
+      } else {
+        this.followersLength -= 1;
         this.isFollowed = false;
         this.followUnfollowSchool.isFollowed = false;
       }
-      this._schoolService.saveSchoolFollower(this.followUnfollowSchool).subscribe((response) => {
-        console.log(response);
-        if(response.result == "success"){
-          this.isSchoolFollowed = true;
-        }
-      });
+      this._schoolService
+        .saveSchoolFollower(this.followUnfollowSchool)
+        .subscribe((response) => {
+          console.log(response);
+          if (response.result == 'success') {
+            this.isSchoolFollowed = true;
+          }
+        });
     }
-    }
-
-    back(): void {
-      window.history.back();
-    }
-  
-    profileGrid(){
-      this.isProfileGrid = true;
-
-    }
-
-    profileList(){
-      this.isProfileGrid = false;
-
-    }
-
-    openSidebar(){
-      this.isOpenSidebar = true;
-  
-    }
-    
-    getSchoolDetails(schoolId:string){
-      this._schoolService.getSchoolEditDetails(schoolId).subscribe((response) => {
-        this.editSchool = response;
-        this.initializeEditFormControls();
-    })
-
-    
   }
 
-  initializeEditFormControls(){
+  back(): void {
+    window.history.back();
+  }
+
+  profileGrid() {
+    this.isProfileGrid = true;
+  }
+
+  profileList() {
+    this.isProfileGrid = false;
+  }
+
+  openSidebar() {
+    this.isOpenSidebar = true;
+  }
+
+  getSchoolDetails(schoolId: string) {
+    this._schoolService.getSchoolEditDetails(schoolId).subscribe((response) => {
+      this.editSchool = response;
+      this.initializeEditFormControls();
+    });
+  }
+
+  initializeEditFormControls() {
     this.uploadImage = '';
-    this.imageFile.nativeElement.value = "";
-    this.fileToUpload.set('avatarImage','');
+    this.imageFile.nativeElement.value = '';
+    this.fileToUpload.set('avatarImage', '');
     var today = new Date();
-    var dd = String(today. getDate()). padStart(2, '0');
-    var mm = String(today. getMonth() + 1). padStart(2, '0'); //January is 0!
-    var yyyy = today. getFullYear();
-​    var currentDate = yyyy + '-' + mm + '-' + dd;
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+    var currentDate = yyyy + '-' + mm + '-' + dd;
 
     var founded = this.editSchool.founded;
-    if(founded!=null){
+    if (founded != null) {
       founded = founded.substring(0, founded.indexOf('T'));
     }
 
-
-
-    this.editSchoolForm = this.fb.group({
-      schoolName: this.fb.control(this.editSchool.schoolName,[Validators.required]),
-      schoolSlogan: this.fb.control(this.editSchool.schoolSlogan?? ''),
-      founded: this.fb.control(founded,[Validators.required]),
-      accessibilityId: this.fb.control(this.editSchool.accessibilityId,[Validators.required]),
-      schoolEmail: this.fb.control(this.editSchool.schoolEmail??'',[Validators.pattern(this.EMAIL_PATTERN)]),
-      description: this.fb.control(this.editSchool.description??''),
-      owner: this.fb.control(this.editSchool.user.email),
-      // avatar: this.fb.control(this.editSchool.avatar)
-    }, {validator: this.dateLessThan('founded',currentDate)});
+    this.editSchoolForm = this.fb.group(
+      {
+        schoolName: this.fb.control(this.editSchool.schoolName, [
+          Validators.required,
+        ]),
+        schoolSlogan: this.fb.control(this.editSchool.schoolSlogan ?? ''),
+        founded: this.fb.control(founded, [Validators.required]),
+        accessibilityId: this.fb.control(this.editSchool.accessibilityId, [
+          Validators.required,
+        ]),
+        schoolEmail: this.fb.control(this.editSchool.schoolEmail ?? '', [
+          Validators.pattern(this.EMAIL_PATTERN),
+        ]),
+        description: this.fb.control(this.editSchool.description ?? ''),
+        owner: this.fb.control(this.editSchool.user.email),
+        // avatar: this.fb.control(this.editSchool.avatar)
+      },
+      { validator: this.dateLessThan('founded', currentDate) }
+    );
     this.editSchoolForm.updateValueAndValidity();
   }
 
   dateLessThan(from: string, to: string) {
-    return (group: FormGroup): {[key: string]: any} => {
-     let f = group.controls[from];
-     let t = to;
-     if (f.value > t) {
-       return {
-         dates: `Founded date should be less than Current date`
-       };
-     }
-     return {};
-    }
+    return (group: FormGroup): { [key: string]: any } => {
+      let f = group.controls[from];
+      let t = to;
+      if (f.value > t) {
+        return {
+          dates: `Founded date should be less than Current date`,
+        };
+      }
+      return {};
+    };
   }
 
-  resetImage(){
-    
-  }
-  updateSchool(){
-    debugger
-    this.isSubmitted=true;
+  resetImage() {}
+  updateSchool() {
+    this.isSubmitted = true;
     if (!this.editSchoolForm.valid) {
       return;
     }
@@ -421,72 +495,98 @@ if(this.schoolName == undefined){
 
     // this.closeModal();
 
-    if(!this.uploadImage){
+    if (!this.uploadImage) {
       this.fileToUpload.append('avatar', this.editSchool.avatar);
-
     }
 
-    this.updateSchoolDetails=this.editSchoolForm.value;
+    this.updateSchoolDetails = this.editSchoolForm.value;
     this.fileToUpload.append('schoolId', this.school.schoolId);
     this.fileToUpload.append('schoolName', this.updateSchoolDetails.schoolName);
-    this.fileToUpload.append('schoolSlogan', this.updateSchoolDetails.schoolSlogan);
-    this.fileToUpload.append('founded',this.updateSchoolDetails.founded);
-    this.fileToUpload.append('accessibilityId',this.updateSchoolDetails.accessibilityId);
-    this.fileToUpload.append('schoolEmail',this.updateSchoolDetails.schoolEmail);
-    this.fileToUpload.append('description',this.updateSchoolDetails.description);
+    this.fileToUpload.append(
+      'schoolSlogan',
+      this.updateSchoolDetails.schoolSlogan
+    );
+    this.fileToUpload.append('founded', this.updateSchoolDetails.founded);
+    this.fileToUpload.append(
+      'accessibilityId',
+      this.updateSchoolDetails.accessibilityId
+    );
+    this.fileToUpload.append(
+      'schoolEmail',
+      this.updateSchoolDetails.schoolEmail
+    );
+    this.fileToUpload.append(
+      'description',
+      this.updateSchoolDetails.description
+    );
 
-
-    this._schoolService.editSchool(this.fileToUpload).subscribe((response:any) => {
-      debugger
-      this.closeModal();
-      this.isSubmitted=false;
-      this.schoolName = this.updateSchoolDetails.schoolName;
-      ownedSchoolResponse.next({schoolId:response.schoolId, schoolAvatar:response.avatar, schoolName:response.schoolName,action:"update"});
-      this.fileToUpload = new FormData();
-      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'School updated successfully'});
-      this.ngOnInit();
-    });
-
-    
+    this._schoolService
+      .editSchool(this.fileToUpload)
+      .subscribe((response: any) => {
+        this.closeModal();
+        this.isSubmitted = false;
+        this.schoolName = this.updateSchoolDetails.schoolName;
+        ownedSchoolResponse.next({
+          schoolId: response.schoolId,
+          schoolAvatar: response.avatar,
+          schoolName: response.schoolName,
+          action: 'update',
+        });
+        this.fileToUpload = new FormData();
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          life: 3000,
+          detail: 'School updated successfully',
+        });
+        this.ngOnInit();
+      });
   }
 
   private closeModal(): void {
     this.closeEditModal.nativeElement.click();
-}
+  }
 
-private closeCertificatesModal(): void {
-  this.closeCertificateModal.nativeElement.click();
-}
+  private closeCertificatesModal(): void {
+    this.closeCertificateModal.nativeElement.click();
+  }
 
-private closeTeachersModal(): void {
-  this.closeTeacherModal.nativeElement.click();
-}
+  private closeTeachersModal(): void {
+    this.closeTeacherModal.nativeElement.click();
+  }
 
-private closeLanguagesModal(): void {
-  this.closeLanguageModal.nativeElement.click();
-}
+  private closeLanguagesModal(): void {
+    this.closeLanguageModal.nativeElement.click();
+  }
 
   handleImageInput(event: any) {
-    this.fileToUpload.append("avatarImage", event.target.files[0], event.target.files[0].name);
+    this.fileToUpload.append(
+      'avatarImage',
+      event.target.files[0],
+      event.target.files[0].name
+    );
     const reader = new FileReader();
-    reader.onload = (_event) => { 
-        this.uploadImage = _event.target?.result; 
-        this.uploadImage = this.domSanitizer.bypassSecurityTrustUrl(this.uploadImage);
-    }
-    reader.readAsDataURL(event.target.files[0]); 
-
+    reader.onload = (_event) => {
+      this.uploadImage = _event.target?.result;
+      this.uploadImage = this.domSanitizer.bypassSecurityTrustUrl(
+        this.uploadImage
+      );
+    };
+    reader.readAsDataURL(event.target.files[0]);
   }
 
   handleCertificates(event: any) {
-      this.schoolCertificate.certificates.push(event.target.files[0],);
+    this.schoolCertificate.certificates.push(event.target.files[0]);
   }
 
-  filterLanguages(event:any) {
+  filterLanguages(event: any) {
     var schoolLanguages: any[] = this.school.languages;
     var languages: any[] = this.languages;
 
-    this.languages = languages.filter(x => !schoolLanguages.find(y => y.id == x.id));
-    
+    this.languages = languages.filter(
+      (x) => !schoolLanguages.find((y) => y.id == x.id)
+    );
+
     let filtered: any[] = [];
     let query = event.query;
     for (let i = 0; i < this.languages.length; i++) {
@@ -504,41 +604,55 @@ private closeLanguagesModal(): void {
     this.schoolLanguage.languageIds.push(languageId);
   }
 
-  saveSchoolLanguages(){
+  saveSchoolLanguages() {
     this.isSubmitted = true;
     if (!this.languageForm.valid) {
       return;
     }
     this.loadingIcon = true;
     this.schoolLanguage.schoolId = this.school.schoolId;
-    this._schoolService.saveSchoolLanguages(this.schoolLanguage).subscribe((response:any) => {
-      this.closeLanguagesModal();
-      this.isSubmitted = false;
-      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Language added successfully'});
-      this.ngOnInit();
-
-    });
+    this._schoolService
+      .saveSchoolLanguages(this.schoolLanguage)
+      .subscribe((response: any) => {
+        this.closeLanguagesModal();
+        this.isSubmitted = false;
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          life: 3000,
+          detail: 'Language added successfully',
+        });
+        this.ngOnInit();
+      });
   }
 
-  getDeletedLanguage(deletedLanguage:string){
+  getDeletedLanguage(deletedLanguage: string) {
     this.deleteLanguage.languageId = deletedLanguage;
   }
 
-  deleteSchoolLanguage(){
+  deleteSchoolLanguage() {
     this.loadingIcon = true;
     this.deleteLanguage.schoolId = this.school.schoolId;
-    this._schoolService.deleteSchoolLanguage(this.deleteLanguage).subscribe((response:any) => {
-      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Language deleted successfully'});
-      this.ngOnInit();
-    });
-
+    this._schoolService
+      .deleteSchoolLanguage(this.deleteLanguage)
+      .subscribe((response: any) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          life: 3000,
+          detail: 'Language deleted successfully',
+        });
+        this.ngOnInit();
+      });
   }
 
-  filterTeachers(event:any) {
+  filterTeachers(event: any) {
     var schoolTeachers: any[] = this.school.teachers;
     var teachers: any[] = this.teachers;
 
-    this.teachers = teachers.filter(x => !schoolTeachers.find(y => y.teacherId == x.teacherId));
+    this.teachers = teachers.filter(
+      (x) => !schoolTeachers.find((y) => y.teacherId == x.teacherId)
+    );
 
     let filteredTeachers: any[] = [];
     let query = event.query;
@@ -557,7 +671,7 @@ private closeLanguagesModal(): void {
     this.teacherInfo.push(event);
   }
 
-  saveSchoolTeachers(){
+  saveSchoolTeachers() {
     this.isSubmitted = true;
     if (!this.teacherForm.valid) {
       return;
@@ -565,367 +679,371 @@ private closeLanguagesModal(): void {
 
     this.loadingIcon = true;
     this.schoolTeacher.schoolId = this.school.schoolId;
-    this._schoolService.saveSchoolTeachers(this.schoolTeacher).subscribe((response:any) => {
-      this.teachers = [];
-      this.closeTeachersModal();
-      this.isSubmitted = false;
-      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Teacher added successfully'});
-      this.ngOnInit();
-
-    });
+    this._schoolService
+      .saveSchoolTeachers(this.schoolTeacher)
+      .subscribe((response: any) => {
+        this.teachers = [];
+        this.closeTeachersModal();
+        this.isSubmitted = false;
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          life: 3000,
+          detail: 'Teacher added successfully',
+        });
+        this.ngOnInit();
+      });
   }
 
-  getDeletedTeacher(deletedTeacher:string){
+  getDeletedTeacher(deletedTeacher: string) {
     this.deleteTeacher.teacherId = deletedTeacher;
   }
 
-  deleteSchoolTeacher(){
+  deleteSchoolTeacher() {
     this.loadingIcon = true;
     this.deleteTeacher.schoolId = this.school.schoolId;
-    this._schoolService.deleteSchoolTeacher(this.deleteTeacher).subscribe((response:any) => {
-      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Teacher deleted successfully'});
-      this.ngOnInit();
-    });
-
+    this._schoolService
+      .deleteSchoolTeacher(this.deleteTeacher)
+      .subscribe((response: any) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          life: 3000,
+          detail: 'Teacher deleted successfully',
+        });
+        this.ngOnInit();
+      });
   }
 
-  saveSchoolCertificates(){
+  saveSchoolCertificates() {
     this.isSubmitted = true;
     if (!this.certificateForm.valid) {
       return;
     }
     this.loadingIcon = true;
-    for(var i=0; i<this.schoolCertificate.certificates.length; i++){
-      this.certificateToUpload.append('certificates', this.schoolCertificate.certificates[i]);
-   }
+    for (var i = 0; i < this.schoolCertificate.certificates.length; i++) {
+      this.certificateToUpload.append(
+        'certificates',
+        this.schoolCertificate.certificates[i]
+      );
+    }
     this.certificateToUpload.append('schoolId', this.school.schoolId);
-    this._schoolService.saveSchoolCertificates(this.certificateToUpload).subscribe((response:any) => {
-      this.closeCertificatesModal();
-      this.isSubmitted = false;
-      this.schoolCertificate.certificates = [];
-      this.certificateToUpload.set('certificates','');
-      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Certificate added successfully'});
-      this.ngOnInit();
-      console.log(response);
-
-    });
+    this._schoolService
+      .saveSchoolCertificates(this.certificateToUpload)
+      .subscribe((response: any) => {
+        this.closeCertificatesModal();
+        this.isSubmitted = false;
+        this.schoolCertificate.certificates = [];
+        this.certificateToUpload.set('certificates', '');
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          life: 3000,
+          detail: 'Certificate added successfully',
+        });
+        this.ngOnInit();
+        console.log(response);
+      });
   }
 
-  getDeletedCertificate(deletedCertificate:string){
+  getDeletedCertificate(deletedCertificate: string) {
     this.deleteCertificate.certificateId = deletedCertificate;
   }
 
-  deleteSchoolCertificate(){
+  deleteSchoolCertificate() {
     this.loadingIcon = true;
     this.deleteCertificate.schoolId = this.school.schoolId;
-    this._schoolService.deleteSchoolCertificate(this.deleteCertificate).subscribe((response:any) => {
-      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Certificate deleted successfully'});
-      this.ngOnInit();
-    });
-
+    this._schoolService
+      .deleteSchoolCertificate(this.deleteCertificate)
+      .subscribe((response: any) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          life: 3000,
+          detail: 'Certificate deleted successfully',
+        });
+        this.ngOnInit();
+      });
   }
 
-  resetCertificateModal(){
+  resetCertificateModal() {
     this.isSubmitted = false;
     this.schoolCertificate.certificates = [];
   }
 
-  resetLanguageModal(){
+  resetLanguageModal() {
     this.isSubmitted = false;
     this.languageForm.setValue({
       languages: [],
     });
   }
 
-  resetTeacherModal(){
+  resetTeacherModal() {
     this.isSubmitted = false;
     this.teacherForm.setValue({
       teachers: [],
     });
   }
 
-  removeTeacher(event: any){
-    const teacherIndex = this.schoolTeacher.teacherIds.findIndex((item) => item === event.teacherId);
+  removeTeacher(event: any) {
+    const teacherIndex = this.schoolTeacher.teacherIds.findIndex(
+      (item) => item === event.teacherId
+    );
     if (teacherIndex > -1) {
       this.schoolTeacher.teacherIds.splice(teacherIndex, 1);
     }
   }
 
-  removeLanguage(event: any){
-    const languageIndex = this.schoolLanguage.languageIds.findIndex((item) => item === event.id);
+  removeLanguage(event: any) {
+    const languageIndex = this.schoolLanguage.languageIds.findIndex(
+      (item) => item === event.id
+    );
     if (languageIndex > -1) {
       this.schoolLanguage.languageIds.splice(languageIndex, 1);
     }
   }
 
-  createPost(){
+  createPost() {
     this.isOpenModal = true;
-    }
+  }
 
   openPostModal(): void {
     const initialState = {
       schoolId: this.school.schoolId,
-      from: "school"
+      from: 'school',
     };
     //var initialState = this.school.schoolId;
-    this.bsModalService.show(CreatePostComponent,{initialState});
-}
-
-pinUnpinPost(attachmentId:string,isPinned:boolean){
-  this._postService.pinUnpinPost(attachmentId,isPinned).subscribe((response) => {
-    this.ngOnInit();
-    console.log(response);
-  });
-
-}
-
-openPostsViewModal(posts:string): void {
-  const initialState = {
-    posts: posts
-  };
-  this.bsModalService.show(PostViewComponent,{initialState});
-}
-
-hideUnhideFeedFilters(hideUnhide:boolean){
-  this.isFeedHide = false;
-  if(hideUnhide){
-    this.hideFeedFilters = true;
-  }
-else{
-    this.hideFeedFilters = false;
+    this.bsModalService.show(CreatePostComponent, { initialState });
   }
 
-
-}
-
-GetSchoolClassCourseList(schoolId:string){
-  this.isFeedHide = true;
-  
-  if(this.classCourseList == undefined){
-    this.loadingIcon = true;
-    this.hideFeedFilters = false;
-    this._schoolService.getSchoolClassCourseList(schoolId).subscribe((response) => {
-      
-      this.classCourseList = response;
-      this.loadingIcon = false;
-
-  })
-}
-}
-
-pinUnpinClassCourse(id:string,type:string,isPinned:boolean){
-  this._schoolService.pinUnpinClassCourse(id,type,isPinned).subscribe((response) => {
-    this.ngOnInit();
-  });
-}
-
-schoolChat(userId:string,type:string,chatTypeId:string){
-  debugger
-  if(this.validToken == ''){
-    window.open('user/auth/login', '_blank');
-  }
-  else{
-    //window.location.href=`user/chat`;
-    this.router.navigate(
-      [`user/chats`],
-      { state: { chatHead: {receiverId: userId, type : type,chatTypeId:chatTypeId} } });
-  }   
-}
-
-getDeletedId(id:string,type:any){
-  if(type == 1){
-    this._schoolService.deleteClass(id).subscribe((response) => {
-      this.ngOnInit();
-    });
-  }
-  if(type == 2){
-    this._schoolService.deleteCourse(id).subscribe((response) => {
-      this.ngOnInit();
-    });
-
+  pinUnpinPost(attachmentId: string, isPinned: boolean) {
+    this._postService
+      .pinUnpinPost(attachmentId, isPinned)
+      .subscribe((response) => {
+        this.ngOnInit();
+        console.log(response);
+      });
   }
 
+  openPostsViewModal(posts: string): void {
+    const initialState = {
+      posts: posts,
+    };
+    this.bsModalService.show(PostViewComponent, { initialState });
+  }
 
-}
-
-deleteClassCourse(){
-
-}
-
-likeUnlikePosts(postId:string, isLike:boolean){
-  this.currentLikedPostId = postId;
-  this.school.posts.filter((p : any) => p.id == postId).forEach( (item : any) => {
-
-    // here item.likes is null
-    var likes: any[] = item.likes;
-
-    var isLiked = likes.filter(x => x.userId == this.userId && x.postId == postId);
-    if(isLiked.length != 0){
-      this.isLiked = false;
-      this.likesLength = item.likes.length - 1;
-      item.isPostLikedByCurrentUser = false;
+  hideUnhideFeedFilters(hideUnhide: boolean) {
+    this.isFeedHide = false;
+    if (hideUnhide) {
+      this.hideFeedFilters = true;
+    } else {
+      this.hideFeedFilters = false;
     }
-    else{
-      this.isLiked = true;
-      this.likesLength = item.likes.length + 1;
-      item.isPostLikedByCurrentUser = true;
-  
-    }
-  }); 
-  
- 
-  this.likeUnlikePost.postId = postId;
-  this.likeUnlikePost.isLike = isLike;
-  this.likeUnlikePost.commentId = '00000000-0000-0000-0000-000000000000'
-  this._postService.likeUnlikePost(this.likeUnlikePost).subscribe((response) => {
-
-
-     this.school.posts.filter((p : any) => p.id == postId).forEach( (item : any) => {
-      var itemss = item.likes;
-      item.likes = response;
-    }); 
-
-
-
-
-     this.InitializeLikeUnlikePost();
-     console.log("succes");
-  });
-
-
-}
-
-showPostDiv(postId:string){
-  
-  var posts: any[] = this.school.posts;
-  this.gridItemInfo = posts.find(x => x.id == postId);
-  this.isGridItemInfo = true;
-
-  // here we also add a view for this post
-  this.addPostView(this.gridItemInfo.id);
-  
-
-}
-
-addPostView(postId:string){
-  
-  if(this.userId != undefined){
-   this.initializePostView();
-  this.postView.postId = postId;
-  this._postService.postView(this.postView).subscribe((response) => {
-    
-    this.gridItemInfo.views.length = response;
-    // this.user.posts.filter((p : any) => p.id == postId).forEach( (item : any) => {
-    //  var itemss = item.likes;
-    //  item.likes = response;
-   }); 
   }
 
- 
+  GetSchoolClassCourseList(schoolId: string) {
+    this.isFeedHide = true;
 
-}
-
-initializePostView(){
-  this.postView ={
-    postId:'',
-    userId:''
-   }
-}
-
-hideGridItemInfo(){
-  this.isGridItemInfo = this.isGridItemInfo ? false : true;
-
-}
-
-likeUnlikeClassCourse(Id:string, isLike:boolean,type:number){
-  
-   this.currentLikedClassCourseId = Id;
-   this.classCourseList.filter((p : any) => p.id == Id).forEach( (item : any) => {
-    
-
-  //   // here item.likes is null
-  if(item.type == 1){
-    var likes: any[] = item.classLikes;
-    var isLiked = likes.filter(x => x.userId == this.userId && x.classId == Id);
-
-  }
-  else{
-    var likes: any[] = item.courseLikes;
-    var isLiked = likes.filter(x => x.userId == this.userId && x.courseId == Id);
-
-  }
-    // var likes: any[] = item.likes;
-
-    
-    if(isLiked.length != 0){
-      this.isClassCourseLiked = false;
-      if(item.type == 1){
-        this.likesClassCourseLength = item.classLikes.length - 1;
-      }
-      else{
-        this.likesClassCourseLength = item.courseLikes.length - 1;
-      }
-      item.isLikedByCurrentUser = false;
+    if (this.classCourseList == undefined) {
+      this.loadingIcon = true;
+      this.hideFeedFilters = false;
+      this._schoolService
+        .getSchoolClassCourseList(schoolId)
+        .subscribe((response) => {
+          this.classCourseList = response;
+          this.loadingIcon = false;
+        });
     }
-    else{
-      this.isClassCourseLiked = true;
-      if(item.type == 1){
-        this.likesClassCourseLength = item.classLikes.length + 1;
-      }
-      else{
-        this.likesClassCourseLength = item.courseLikes.length + 1;
-      }
-      
-      item.isLikedByCurrentUser = true;
-  
+  }
+
+  pinUnpinClassCourse(id: string, type: string, isPinned: boolean) {
+    this._schoolService
+      .pinUnpinClassCourse(id, type, isPinned)
+      .subscribe((response) => {
+        this.ngOnInit();
+      });
+  }
+
+  schoolChat(userId: string, type: string, chatTypeId: string) {
+    if (this.validToken == '') {
+      window.open('user/auth/login', '_blank');
+    } else {
+      //window.location.href=`user/chat`;
+      this.router.navigate([`user/chats`], {
+        state: {
+          chatHead: { receiverId: userId, type: type, chatTypeId: chatTypeId },
+        },
+      });
     }
-  }); 
-  
-  this.InitializeLikeUnlikeClassCourse();
-  this.likeUnlikeClassCourses.Id = Id;
-  this.likeUnlikeClassCourses.isLike = isLike;
-  this.likeUnlikeClassCourses.type = type;
-  
-  this._schoolService.likeUnlikeClassCourse(this.likeUnlikeClassCourses).subscribe((response) => {
-    
+  }
 
-     if(type == 1){
-       this.classCourseList.filter((p : any) => p.id == Id).forEach( (item : any) => {
-       item.classLikes = response;
-    }); 
+  getDeletedId(id: string, type: any) {
+    if (type == 1) {
+      this._schoolService.deleteClass(id).subscribe((response) => {
+        this.ngOnInit();
+      });
+    }
+    if (type == 2) {
+      this._schoolService.deleteCourse(id).subscribe((response) => {
+        this.ngOnInit();
+      });
+    }
+  }
 
-     }
-     else{
-         this.classCourseList.filter((p : any) => p.id == Id).forEach( (item : any) => {
-         item.courseLikes = response;
-    }); 
+  deleteClassCourse() {}
 
-     }
+  likeUnlikePosts(postId: string, isLike: boolean) {
+    this.currentLikedPostId = postId;
+    this.school.posts
+      .filter((p: any) => p.id == postId)
+      .forEach((item: any) => {
+        // here item.likes is null
+        var likes: any[] = item.likes;
 
+        var isLiked = likes.filter(
+          (x) => x.userId == this.userId && x.postId == postId
+        );
+        if (isLiked.length != 0) {
+          this.isLiked = false;
+          this.likesLength = item.likes.length - 1;
+          item.isPostLikedByCurrentUser = false;
+        } else {
+          this.isLiked = true;
+          this.likesLength = item.likes.length + 1;
+          item.isPostLikedByCurrentUser = true;
+        }
+      });
 
+    this.likeUnlikePost.postId = postId;
+    this.likeUnlikePost.isLike = isLike;
+    this.likeUnlikePost.commentId = '00000000-0000-0000-0000-000000000000';
+    this._postService
+      .likeUnlikePost(this.likeUnlikePost)
+      .subscribe((response) => {
+        this.school.posts
+          .filter((p: any) => p.id == postId)
+          .forEach((item: any) => {
+            var itemss = item.likes;
+            item.likes = response;
+          });
 
-     this.InitializeLikeUnlikeClassCourse();
-     console.log("succes");
-  });
+        this.InitializeLikeUnlikePost();
+        console.log('succes');
+      });
+  }
 
+  showPostDiv(postId: string) {
+    var posts: any[] = this.school.posts;
+    this.gridItemInfo = posts.find((x) => x.id == postId);
+    this.isGridItemInfo = true;
 
-}
+    // here we also add a view for this post
+    this.addPostView(this.gridItemInfo.id);
+  }
 
-InitializeLikeUnlikeClassCourse(){
-  this.likeUnlikeClassCourses ={
-    isLike:false,
-    userId:'',
-    Id:'',
-    type:0
-   }
-  
-}
+  addPostView(postId: string) {
+    if (this.userId != undefined) {
+      this.initializePostView();
+      this.postView.postId = postId;
+      this._postService.postView(this.postView).subscribe((response) => {
+        this.gridItemInfo.views.length = response;
+        // this.user.posts.filter((p : any) => p.id == postId).forEach( (item : any) => {
+        //  var itemss = item.likes;
+        //  item.likes = response;
+      });
+    }
+  }
 
-openReelsViewModal(postAttachmentId:string): void {
-  
-  const initialState = {
-    postAttachmentId: postAttachmentId
-  };
-  this.bsModalService.show(ReelsViewComponent,{initialState});
-}
+  initializePostView() {
+    this.postView = {
+      postId: '',
+      userId: '',
+    };
+  }
+
+  hideGridItemInfo() {
+    this.isGridItemInfo = this.isGridItemInfo ? false : true;
+  }
+
+  likeUnlikeClassCourse(Id: string, isLike: boolean, type: number) {
+    this.currentLikedClassCourseId = Id;
+    this.classCourseList
+      .filter((p: any) => p.id == Id)
+      .forEach((item: any) => {
+        //   // here item.likes is null
+        if (item.type == 1) {
+          var likes: any[] = item.classLikes;
+          var isLiked = likes.filter(
+            (x) => x.userId == this.userId && x.classId == Id
+          );
+        } else {
+          var likes: any[] = item.courseLikes;
+          var isLiked = likes.filter(
+            (x) => x.userId == this.userId && x.courseId == Id
+          );
+        }
+        // var likes: any[] = item.likes;
+
+        if (isLiked.length != 0) {
+          this.isClassCourseLiked = false;
+          if (item.type == 1) {
+            this.likesClassCourseLength = item.classLikes.length - 1;
+          } else {
+            this.likesClassCourseLength = item.courseLikes.length - 1;
+          }
+          item.isLikedByCurrentUser = false;
+        } else {
+          this.isClassCourseLiked = true;
+          if (item.type == 1) {
+            this.likesClassCourseLength = item.classLikes.length + 1;
+          } else {
+            this.likesClassCourseLength = item.courseLikes.length + 1;
+          }
+
+          item.isLikedByCurrentUser = true;
+        }
+      });
+
+    this.InitializeLikeUnlikeClassCourse();
+    this.likeUnlikeClassCourses.Id = Id;
+    this.likeUnlikeClassCourses.isLike = isLike;
+    this.likeUnlikeClassCourses.type = type;
+
+    this._schoolService
+      .likeUnlikeClassCourse(this.likeUnlikeClassCourses)
+      .subscribe((response) => {
+        if (type == 1) {
+          this.classCourseList
+            .filter((p: any) => p.id == Id)
+            .forEach((item: any) => {
+              item.classLikes = response;
+            });
+        } else {
+          this.classCourseList
+            .filter((p: any) => p.id == Id)
+            .forEach((item: any) => {
+              item.courseLikes = response;
+            });
+        }
+
+        this.InitializeLikeUnlikeClassCourse();
+        console.log('succes');
+      });
+  }
+
+  InitializeLikeUnlikeClassCourse() {
+    this.likeUnlikeClassCourses = {
+      isLike: false,
+      userId: '',
+      Id: '',
+      type: 0,
+    };
+  }
+
+  openReelsViewModal(postAttachmentId: string): void {
+    const initialState = {
+      postAttachmentId: postAttachmentId,
+    };
+    this.bsModalService.show(ReelsViewComponent, { initialState });
+  }
 }

@@ -25,10 +25,8 @@ loadingIcon:boolean = false;
 
   ngOnInit(): void {
     this.loadingIcon = true;
-    debugger
     this.tokenParm$ = this.route.queryParams
     .subscribe(params => {
-        debugger
       this.token = params.token;
       this.email = params.email;
     }
@@ -37,7 +35,6 @@ loadingIcon:boolean = false;
     // var token = this.route.snapshot.paramMap.get('token')??'';
     // var email = this.route.snapshot.paramMap.get('email')??'';
     this._authService.confirmEmail(this.token,this.email).subscribe((response) => {
-        debugger
        if(response.result == "success"){
         // confirmEmailResponse.next({confirmEmail: "confirm"});
         this.router.navigate(['../login'], { relativeTo: this.route });

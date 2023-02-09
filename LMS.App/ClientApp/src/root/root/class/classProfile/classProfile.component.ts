@@ -39,6 +39,8 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     isOpenSidebar:boolean = false;
     isOpenModal:boolean = false;
     loadingIcon:boolean = false;
+    postLoadingIcon: boolean = false;
+    reelsLoadingIcon:boolean = false;
     classId!:string;
     validToken!:string;
 
@@ -85,6 +87,9 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     noWrap = true;
     classParamsData$: any;
     schoolName!:string;
+    postsEndPageNumber: number = 1;
+    reelsPageNumber:number = 1;
+    postResponse:any;
 
     public event: EventEmitter<any> = new EventEmitter();
 
@@ -93,6 +98,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     @ViewChild('closeLanguageModal') closeLanguageModal!: ElementRef;
     @ViewChild('closeCertificateModal') closeCertificateModal!: ElementRef;
     @ViewChild('imageFile') imageFile!: ElementRef;
+    @ViewChild('carousel') carousel!: ElementRef;
 
     @ViewChild('createPostModal', { static: true }) createPostModal!: CreatePostComponent;
 
@@ -109,6 +115,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   
     ngOnInit(): void {
       debugger
+      document.addEventListener('scroll', this.myScrollFunction, false);
       this.validToken = localStorage.getItem("jwt")?? '';
       this.loadingIcon = true;
       var selectedLang = localStorage.getItem("selectedLanguage");
@@ -118,12 +125,32 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       var schoolName = this.route.snapshot.paramMap.get('schoolName');
 
       this._classService.getClassById(this.className.replace(" ","").toLowerCase()).subscribe((response) => {
-        
+        debugger
+        this.postsEndPageNumber = 1;
+        this.reelsPageNumber = 1;
         this.class = response;
         this.isOwnerOrNot();
         this.loadingIcon = false;
         this.isDataLoaded = true;
         this.addClassView(this.class.classId);
+        if(this.carousel!=undefined){
+          if($('carousel')[0].querySelectorAll('a.carousel-control-next')[0])
+          {
+            $('carousel')[0].querySelectorAll('a.carousel-control-next')[0].addEventListener('click', () => {
+              debugger
+              this.reelsPageNumber++;
+              if(this.reelsPageNumber == 2){
+                this.reelsLoadingIcon = true;
+              }
+              this._classService.getReelsByClassId(this.class.classId, this.reelsPageNumber).subscribe((response) => {
+                debugger
+                 this.class.reels = [...this.class.reels, ...response];
+                 this.reelsLoadingIcon = false;
+            });
+
+            })
+          }  
+      }
       });
 
       this.editClassForm = this.fb.group({
@@ -234,6 +261,34 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       commentId:''
      };
 
+  }
+
+  myScrollFunction = (ev: any): void => {
+
+      this.postLoadingIcon = true;
+    this.postsEndPageNumber++;
+    this.getPostsByClassId();
+    // if(this.postResponse == undefined){
+    //   this.postLoadingIcon = true;
+    //   this.postsEndPageNumber++;
+    //   this.getPostsByClassId();
+    // }
+    //   else{
+    //     if(this.postResponse.length != 0){
+    //       this.postsEndPageNumber++;
+    //       this.getPostsByClassId();
+    //     }
+    //   }
+  };
+
+  getPostsByClassId() {
+    this._classService
+      .getPostsByClassId(this.class.classId, this.postsEndPageNumber)
+      .subscribe((response) => {
+        this.class.posts = [...this.class.posts, ...response];
+        this.postLoadingIcon = false;
+        this.postResponse = response;
+      });
   }
 
   isOwnerOrNot(){

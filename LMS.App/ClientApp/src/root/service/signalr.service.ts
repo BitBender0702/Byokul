@@ -88,6 +88,9 @@ export class SignalrService {
         this.hubConnection.on("UserCount", (count) => {
          console.log('User Count ' + count);   
                   })
+                  this.hubConnection.on("DisconnectedUser", (userId) => {
+                    console.log('Disconnected UserId ' + userId);   
+                             })
 }
 
 askServer(userId:string) {
@@ -103,7 +106,6 @@ sendToUser(model:any){
 
 askServerListener(){
 this.hubConnection.on("ReceiveMessage", (user,message) => {
-  debugger
   signalRResponse.next({receiver: "test", message : user.message,attachments: user.attachments, isTest : true,senderId:user.sender,chatType:user.chatType,receiverId:user.receiver,chatTypeId:user.chatTypeId,chatHeadId:user.chatHeadId});
               console.log(`this ${user} send ${message}`);   
           })

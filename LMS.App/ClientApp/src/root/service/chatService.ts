@@ -18,7 +18,6 @@ export class ChatService{
     }
     
     getChatHead(senderId:string,receiverId:string,chatType:number): Observable<any> {
-        debugger
         let queryParams = new HttpParams().append("senderId",senderId).append("receiverId",receiverId).append("chatType",chatType);
         return this.http.get(`${this.apiUrl}/users/getChatHead`, {params:queryParams});
     }
@@ -57,7 +56,6 @@ export class ChatService{
     }
 
     removeUnreadMessageCount(senderId:string,receiverId:string,chatType:number): Observable<any> {
-        debugger
         let queryParams = new HttpParams().append("senderId",senderId).append("receiverId",receiverId).append("chatType",chatType);
         return this.http.post(`${this.apiUrl}/chats/removeUnreadMessageCount`,null, {params:queryParams});
     }

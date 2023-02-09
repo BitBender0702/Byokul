@@ -63,13 +63,17 @@ export class UserService{
 
     }
 
-    getMyFeed():Observable<any>{
-        return this.http.get(`${this.apiUrl}/users/myFeed`);
+    getMyFeed(postType:number,pageNumber:number):Observable<any>{
+        //return this.http.get(`${this.apiUrl}/users/myFeed`);
+        let queryParams = new HttpParams().append("postType",postType).append("pageNumber",pageNumber);
+        return this.http.get(`${this.apiUrl}/users/myFeed`, {params:queryParams});
 
     }
 
-    getGlobalFeed():Observable<any>{
-        return this.http.get(`${this.apiUrl}/users/globalFeed`);
+    getGlobalFeed(postType:number, pageNumber:number):Observable<any>{
+        //return this.http.get(`${this.apiUrl}/users/globalFeed`);
+        let queryParams = new HttpParams().append("postType",postType).append("pageNumber",pageNumber);
+        return this.http.get(`${this.apiUrl}/users/globalFeed`, {params:queryParams});
 
     }
 
@@ -80,9 +84,18 @@ export class UserService{
     shareDataSubject = new Subject<any>(); //Decalring new RxJs Subject
  
      sendDataToOtherComponent(userId:string){
-        debugger
       this.shareDataSubject.next(userId);
      }
+
+     getPostsByUserId(userId:string,pageNumber:number):Observable<any>{
+        let queryParams = new HttpParams().append("userId",userId).append("pageNumber",pageNumber);
+        return this.http.get(`${this.apiUrl}/users/getPostsByUserId`, {params:queryParams});
+    }
+
+    getReelsByUserId(userId:string,pageNumber:number):Observable<any>{
+        let queryParams = new HttpParams().append("userId",userId).append("pageNumber",pageNumber);
+        return this.http.get(`${this.apiUrl}/users/getReelsByUserId`, {params:queryParams});
+    }
 
     
 

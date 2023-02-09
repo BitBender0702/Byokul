@@ -110,4 +110,14 @@ export class ClassService{
 
     }
 
+    getPostsByClassId(classId:string,pageNumber:number):Observable<any>{
+        let queryParams = new HttpParams().append("classId",classId).append("pageNumber",pageNumber);
+        return this.http.get(`${this.apiUrl}/class/getPostsByClass`, {params:queryParams});
+    }
+
+    getReelsByClassId(classId:string,pageNumber:number):Observable<any>{
+        let queryParams = new HttpParams().append("classId",classId).append("pageNumber",pageNumber);
+        return this.http.get(`${this.apiUrl}/class/getReelsByClass`, {params:queryParams});
+    }
+
 }

@@ -249,7 +249,6 @@ captureTeacherId(event: any) {
   }
 
   forwardStep() {
-    debugger
     this.isStepCompleted = true;
     if (!this.createClassForm1.valid || this.uploadImageName == undefined) {
       return;
@@ -354,7 +353,6 @@ captureTeacherId(event: any) {
   }
 
   forwardStep2() {
-    debugger
     // var classes = this.createClassForm1.value;
     // var schoolName = classes.schoolName;
     // var a = this.selectedSchool.schooName;
@@ -367,7 +365,6 @@ captureTeacherId(event: any) {
     this.classUrl = 'byokul.com/profile/class/' + this.selectedSchool.schoolName.split(' ').join('').replace(" ","").toLowerCase() + "/" +  this.className.split(' ').join('').replace(" ","").toLowerCase();
     this.fileToUpload.append('classUrl',JSON.stringify(this.classUrl));
     this._classService.createClass(this.fileToUpload).subscribe((response:any) => {
-      debugger
          var classId =  response;
          this.classId = classId;
          this.loadingIcon = false;

@@ -326,7 +326,6 @@ captureTeacherId(event: any) {
     this.courseUrl = 'byokul.com/profile/course/' + this.selectedSchool.schoolName.split(' ').join('').replace(" ","").toLowerCase() + "/" +  this.courseName.split(' ').join('').replace(" ","").toLowerCase();
     this.fileToUpload.append('courseUrl',JSON.stringify(this.courseUrl));
     this._courseService.createCourse(this.fileToUpload).subscribe((response:any) => {
-      debugger
       this.courseId = response;
       this.loadingIcon = false;
       ownedCourseResponse.next({courseId:response.courseId, courseAvatar:response.avatar, courseName:response.courseName,schoolName:response.school.schoolName,action:"add"});

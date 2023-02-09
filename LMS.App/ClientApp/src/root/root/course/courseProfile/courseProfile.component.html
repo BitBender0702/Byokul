@@ -138,12 +138,12 @@
                       <img src="../../../../assets/images/chevron-right-circle.svg" />
                   </button> -->
                   <div class="feedbox-inner d-flex ">
-                    <carousel
+                    <carousel #carousel
                     [itemsPerSlide]="itemsPerSlide"
                     [singleSlideOffset]="singleSlideOffset"
                     [interval]="0"
                     [noWrap]="noWrap">
-                    <div *ngFor="let post of course.posts">
+                    <div *ngFor="let post of course.reels">
                       <div *ngIf="post.postType == 3">
                       <slide *ngFor="let postAttachment of post.postAttachments">
                         <div *ngIf="postAttachment.fileType == 2">
@@ -180,6 +180,7 @@
                     </carousel>
                   </div>
               </div>
+              <reels-loading-spinner [reelsLoadingIcon]="reelsLoadingIcon"></reels-loading-spinner>
           </div>
 
             <div class="school-grid-view grid-active" *ngIf="isProfileGrid">
@@ -1219,4 +1220,5 @@
   
   </div>
   <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
+  <post-loading-spinner [postLoadingIcon]="postLoadingIcon"></post-loading-spinner>
   <p-toast></p-toast>

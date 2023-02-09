@@ -123,7 +123,6 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    debugger
     this.loadingIcon = true;
     let chatHeadObj = history.state.chatHead;
     if(chatHeadObj!= undefined){
@@ -131,13 +130,11 @@ export class ChatComponent implements OnInit, OnDestroy {
       this.chatType = chatHeadObj.type;
       this.chatTypeId = chatHeadObj.chatTypeId;
       this._userService.getUser(this.userId).subscribe((response) => {
-        debugger
         this.user = response;
       });
 
       if(this.chatTypeId != "" && this.chatType == "3"){
         this._schoolService.getSchool(this.chatTypeId).subscribe((result) => {
-          debugger
           this.schoolInfo = {
             userName:result.schoolName,
             userID:this.userId,
@@ -153,7 +150,6 @@ export class ChatComponent implements OnInit, OnDestroy {
 
       if(this.chatTypeId != "" && this.chatType == "4"){
         this._classService.getClass(this.chatTypeId).subscribe((result) => {
-          debugger
           this.classInfo = {
             userName:result.className,
             userID:this.userId,
@@ -168,7 +164,6 @@ export class ChatComponent implements OnInit, OnDestroy {
 
       if(this.chatTypeId != "" && this.chatType == "5"){
         this._courseService.getCourse(this.chatTypeId).subscribe((result) => {
-          debugger
           this.courseInfo = {
             userName:result.courseName,
             userID:this.userId,
@@ -222,15 +217,9 @@ export class ChatComponent implements OnInit, OnDestroy {
 
     
     signalRResponse.subscribe(response => {
-      debugger
-
-     //var chatHeadId = localStorage.getItem("chatHeadId");
      if(this.chatHeadId == response.chatHeadId){         
-         // means user in its div and remove the unreadcount
          this._chatService.removeUnreadMessageCount(response.receiverId,response.senderId,Number(response.chatType)).subscribe((result) => {
          });
-
-         //this._chatService.removeUnreadMessageCount(response.senderId,response.receiverId,Number(response.chatType));
      }
      else{
       if(this.chatHeadId != "1"){
@@ -257,7 +246,6 @@ export class ChatComponent implements OnInit, OnDestroy {
      }
     }
     for(let i=0;i< response.attachments.length; i++){
-      debugger
       if(response.attachments[i].fileType ==1){
         this.uploadImage.push(response.attachments[i]);
       }
@@ -281,7 +269,6 @@ if(response.chatType =="1"){
           if(isuserExist == undefined)
           {
             this._userService.getUser(response.senderId).subscribe((result) => {
-              debugger
               var userDetails = {
                 userName:result.firstName + " " + result.lastName,
                 userID:response.senderId,
@@ -349,7 +336,6 @@ if(response.chatType =="1"){
             if(isuserExist == undefined)
             {
               this._userService.getUser(response.senderId).subscribe((result) => {
-                debugger
                 var userDetails = {
                   userName:result.firstName + " " + result.lastName,
                   userID:response.senderId,
@@ -360,7 +346,6 @@ if(response.chatType =="1"){
                   };
 
                 this._schoolService.getSchool(response.chatTypeId).subscribe((schoolDeatail) => {
-                debugger
                 userDetails.school['createdById']=schoolDeatail.createdById;
                 userDetails.school['schoolName']=schoolDeatail.schoolName;
                 userDetails.school['avatar']=schoolDeatail.avatar;
@@ -447,7 +432,6 @@ if(response.chatType =="1"){
             if(isuserExist == undefined)
             {
               this._userService.getUser(response.senderId).subscribe((result) => {
-                debugger
                 var userDetails = {
                   userName:result.firstName + " " + result.lastName,
                   userID:response.senderId,
@@ -458,7 +442,6 @@ if(response.chatType =="1"){
                   };
 
                 this._classService.getClass(response.chatTypeId).subscribe((classDeatail) => {
-                debugger
                 userDetails.class['createdById']=classDeatail.createdById;
                 userDetails.class['className']=classDeatail.className;
                 userDetails.class['avatar']=classDeatail.avatar;
@@ -565,7 +548,6 @@ if(response.chatType =="1"){
             if(isuserExist == undefined)
             {
               this._userService.getUser(response.senderId).subscribe((result) => {
-                debugger
                 var userDetails = {
                   userName:result.firstName + " " + result.lastName,
                   userID:response.senderId,
@@ -576,7 +558,6 @@ if(response.chatType =="1"){
                   };
 
                 this._courseService.getCourse(response.chatTypeId).subscribe((courseDeatail) => {
-                debugger
                 userDetails.course['createdById']=courseDeatail.createdById;
                 userDetails.course['courseName']=courseDeatail.courseName;
                 userDetails.course['avatar']=courseDeatail.avatar;
@@ -697,7 +678,6 @@ this.addChatAttachments = {
     getChatUsersList(senderId:string){
       this.loadingIcon = true;
       this._chatService.getAllChatUsers(senderId).subscribe((response) => {
-        debugger
         this.allChatUsers = response;
         this.loadingIcon = false;
         this.isDataLoaded = true;
@@ -743,9 +723,7 @@ this.addChatAttachments = {
   }
 
       this.schoolInboxList.forEach((item: any) => {
-        debugger
         this._userService.getUser(item.userID).subscribe((result) => {
-          debugger
           item.userName = result.firstName + result.lastName;
           item.profileURL = result.avatar;  
         });
@@ -820,7 +798,6 @@ this.addChatAttachments = {
     }
 
     clearChat() {
-      debugger
       if(this.chatList != undefined){
       this.chatList.nativeElement.querySelectorAll('p').forEach((elem :Element) => {
          elem.remove();
@@ -834,7 +811,6 @@ this.addChatAttachments = {
   }
 
     getSelectedSchoolInbox(schoolId:string){
-      debugger
       this.showMySchoolInbox = true;
       this.showMyInbox = false;
       var inboxList: any[] = this.schoolInboxList;
@@ -861,7 +837,6 @@ this.addChatAttachments = {
         }
       });
       // schoolIbList.forEach(item => {
-      //   debugger
       //   let isExist = newList.findIndex(x => x.userID == item.userID);
       //   if (!(isExist >= 0)) {
       //     newList.push(item);
@@ -896,7 +871,6 @@ this.addChatAttachments = {
     }
 
     getUsersChat(chatHeadId:string,recieverId:string,receiverAvatar:string,username:string,chatType:string,From:string,pageSize:number,pageNumber:number){
-      debugger
       this.loadingIcon = true;
       this.selectedChatHeadDiv = true;
       
@@ -928,7 +902,6 @@ this.addChatAttachments = {
     // })
      this.clearChat();
       this.usersChatSub = this._chatService.getUsersChat(this.senderId,recieverId,Number(chatType),pageSize,pageNumber).subscribe((response) => {
-        debugger
        if(chatType == "4" && From=="FromSchoolInbox"){
         this.schoolInboxChatType = "4";
         this.chatType = "4";
@@ -1012,7 +985,6 @@ this.addChatAttachments = {
     }
 
     pinUnpinChat(recieverId:string,chatType:string,isPinned:boolean){
-      debugger
      this.isPinned = isPinned;
      var chatUsers: any[] = this.allChatUsers;
      
@@ -1026,7 +998,6 @@ this.addChatAttachments = {
      }
      this.allChatUsers.unshift(currentUser)
       this.usersChatSub = this._chatService.pinUnpinChat(this.senderId,recieverId,Number(chatType)).subscribe((response) => {
-        debugger
       var isPinned = response;
       });
 
@@ -1045,7 +1016,6 @@ this.addChatAttachments = {
   }
 
   handleImages(event: any) {
-    debugger
     this.selectedFile = event.target.files;
     var formData = new FormData(); 
     for(var i=0; i<this.selectedFile.length; i++){
@@ -1055,7 +1025,6 @@ this.addChatAttachments = {
     formData.append('fileType', '1');
     
       this._chatService.saveChatAttachments(formData).subscribe((response : FileUploadResult) => {
-        debugger
         this.uploadImage = response
         formData = new FormData();
         this.selectedFile = [];
@@ -1064,7 +1033,6 @@ this.addChatAttachments = {
 }
 
 handleVideos(event: any) {
-  debugger
   this.selectedFile = event.target.files;
   var formData = new FormData(); 
   for(var i=0; i<this.selectedFile.length; i++){
@@ -1074,7 +1042,6 @@ handleVideos(event: any) {
   formData.append('fileType', '2');
   
     this._chatService.saveChatAttachments(formData).subscribe((response : FileUploadResult) => {
-      debugger
       this.uploadVideos = response
       formData = new FormData();
       this.selectedFile = [];
@@ -1084,7 +1051,6 @@ handleVideos(event: any) {
 }
 
 handleAttachments(event: any) {
-  debugger
   this.selectedFile = event.target.files;
   var formData = new FormData(); 
   for(var i=0; i<this.selectedFile.length; i++){
@@ -1094,7 +1060,6 @@ handleAttachments(event: any) {
   formData.append('fileType', '3');
   
     this._chatService.saveChatAttachments(formData).subscribe((response : FileUploadResult) => {
-      debugger
       this.uploadAttachments = response
       formData = new FormData();
       this.selectedFile = [];
@@ -1103,7 +1068,6 @@ handleAttachments(event: any) {
 }
 
 removeUploadFile(fileURL:any){
-  debugger
   if(this.uploadImage != undefined){
   const index = this.uploadImage.findIndex((item:any) => item.fileURL === fileURL);
   if (index > -1) {
@@ -1128,7 +1092,6 @@ if(this.uploadAttachments != undefined){
   }
 }
   this._chatService.removeChatAttachment(fileURL).subscribe((response : any) => {
-    debugger
     this.uploadImage = response
 
 });
@@ -1144,7 +1107,6 @@ getTextMessage(){
 }
 
   sendToUser(receiverId:string){
-    debugger
     this.InitializeChatViewModel();
     if(receiverId == undefined){
       receiverId = this.senderID;
@@ -1253,13 +1215,11 @@ getTextMessage(){
           return
         }
     }
-    debugger
     if(this.userId ==""){
       this.userId = receiverId;
     }
 
     this.chatheadSub = this._chatService.getChatHead(this.senderId,this.userId,Number(this.chatType)).subscribe((response) => {
-      debugger
       this.chatViewModel.sender = this.senderId;
       this.chatViewModel.receiver = this.userId;
 
@@ -1313,7 +1273,6 @@ getTextMessage(){
   }
 
   generateChatLi(response:any,profileImage:string,chatType:string){
-    debugger
     var isFromReciever='you';
     const p: HTMLParagraphElement = this.renderer.createElement('p');
      if(!response.isTest){

@@ -80,6 +80,11 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     noWrap = true;
     courseParamsData$: any;
     schoolName!:string;
+    postsPageNumber: number = 1;
+    reelsPageNumber:number = 1;
+    postLoadingIcon: boolean = false;
+    reelsLoadingIcon:boolean = false;
+    postResponse:any;
 
 
     @ViewChild('closeEditModal') closeEditModal!: ElementRef;
@@ -87,17 +92,16 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     @ViewChild('closeLanguageModal') closeLanguageModal!: ElementRef;
     @ViewChild('closeCertificateModal') closeCertificateModal!: ElementRef;
     @ViewChild('imageFile') imageFile!: ElementRef;
+    @ViewChild('carousel') carousel!: ElementRef;
 
     @ViewChild('createPostModal', { static: true }) createPostModal!: CreatePostComponent;
 
     isDataLoaded:boolean = false;
     constructor(injector: Injector,public messageService:MessageService,postService:PostService,private bsModalService: BsModalService,courseService: CourseService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
       super(injector);
-      debugger
         this._courseService = courseService;
          this._postService = postService;
          this.courseParamsData$ = this.route.params.subscribe(routeParams => {
-          debugger
           // if(!this.loadingIcon)
           this.ngOnInit();
         });
@@ -105,8 +109,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
 
   
     ngOnInit(): void {
-      debugger
-      
+      document.addEventListener('scroll', this.myScrollFunction, false);
       this.validToken = localStorage.getItem("jwt")?? '';
       this.loadingIcon = true;
       var selectedLang = localStorage.getItem("selectedLanguage");
@@ -132,11 +135,30 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       // }
       // else{
       this._courseService.getCourseById(this.courseName.replace(" ","").toLowerCase()).subscribe((response) => {
+        this.postsPageNumber = 1;
+        this.reelsPageNumber = 1;
         this.course = response;
         this.isOwnerOrNot();
         this.loadingIcon = false;
         this.isDataLoaded = true;
         this.addCourseView(this.course.courseId);
+        if(this.carousel!=undefined){
+          if($('carousel')[0].querySelectorAll('a.carousel-control-next')[0])
+          {
+            $('carousel')[0].querySelectorAll('a.carousel-control-next')[0].addEventListener('click', () => {
+              this.reelsPageNumber++;
+              if(this.reelsPageNumber == 2){
+                this.reelsLoadingIcon = true;
+              }
+              this._courseService.getReelsByCourseId(this.course.classId, this.reelsPageNumber).subscribe((response) => {
+                 this.course.reels = [...this.course.reels, ...response];
+                 this.reelsLoadingIcon = false;
+
+            });
+
+            })
+          }  
+      }
       });
     // }
 
@@ -246,6 +268,35 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
 
     ngOnDestroy(): void {
       if(this.courseParamsData$) this.courseParamsData$.unsubscribe();
+    }
+
+    myScrollFunction = (ev: any): void => {
+      this.postLoadingIcon = true;
+      this.postsPageNumber++;
+      this.getPostsByCourseId();
+
+      // if(this.postResponse == undefined){
+      //   this.postLoadingIcon = true;
+      //   this.postsPageNumber++;
+      //   this.getPostsByCourseId();
+      // }
+      //   else{
+      //     if(this.postResponse.length != 0){
+      //       this.postsPageNumber++;
+      //       this.getPostsByCourseId();
+      //     }
+      //   }
+    };
+  
+    getPostsByCourseId() {
+      this._courseService
+        .getPostsByCourseId(this.course.courseId, this.postsPageNumber)
+        .subscribe((response) => {
+          this.course.posts = [...this.course.posts, ...response];
+          this.postResponse = response;
+          this.postLoadingIcon = false;
+
+        });
     }
 
   isOwnerOrNot(){
@@ -499,7 +550,6 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
            this.fileToUpload.append('serviceTypeId',this.updateCourseDetails.serviceTypeId);
         
           this._courseService.editCourse(this.fileToUpload).subscribe((response:any) => {
-            debugger
             this.closeModal();
             this.isSubmitted=true;
             ownedCourseResponse.next({courseId:response.courseId, courseAvatar:response.avatar, courseName:response.courseName,schoolName: this.schoolName, action:"update"});

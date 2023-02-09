@@ -114,7 +114,6 @@ export class RegisterComponent extends MultilingualComponent implements OnInit {
   get confirmPassword() { return this.registrationForm.get('confirmPassword'); }
 
     register(){
-      debugger
       this.user = this.registrationForm.value;
       this.isRegister = false;
       this.isSubmitted = true;

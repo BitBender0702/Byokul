@@ -105,4 +105,13 @@ export class CourseService{
 
     }
 
+    getPostsByCourseId(courseId:string,pageNumber:number):Observable<any>{
+        let queryParams = new HttpParams().append("courseId",courseId).append("pageNumber",pageNumber);
+        return this.http.get(`${this.apiUrl}/course/getPostsByCourse`, {params:queryParams});
+    }
+
+    getReelsByCourseId(courseId:string,pageNumber:number):Observable<any>{
+        let queryParams = new HttpParams().append("courseId",courseId).append("pageNumber",pageNumber);
+        return this.http.get(`${this.apiUrl}/course/getReelsByCourse`, {params:queryParams});
+    }
 }

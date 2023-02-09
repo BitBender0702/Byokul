@@ -41,7 +41,7 @@
       </div>
 
       <div class="tab-content position-relative active" id="pills-tabContent">
-        <div [ngClass]="myFeeds.length > 0 ? 'tab-pane fade show active':'tab-pane fade show'" id="school-feed-tab-pane" role="tabpanel"
+        <div [ngClass]="myFeeds.length > 0 ? 'tab-pane fade show active':'tab-pane fade show'" (scroll)="myScrollFunction($event)" id="school-feed-tab-pane" role="tabpanel"
           aria-labelledby="school-feed-tab" tabindex="0">
           <div class="button-list-grid">
             <button [ngClass]="isProfileGrid ? 'btn border-btn active d-inline-flex align-items-center justify-content-center' : 'btn border-btn d-inline-flex align-items-center justify-content-center'" (click)="profileGrid()" type="button" >
@@ -56,12 +56,12 @@
               <!-- <button type="button" class="bg-transparent border-0 next-feed"><img
                   src="../../../assets/images/chevron-right-circle.svg" /></button> -->
               <div class="feedbox-inner d-flex ">
-                <carousel
+                <carousel #carousel id="reels-carousel"
                 [itemsPerSlide]="itemsPerSlide"
                 [singleSlideOffset]="singleSlideOffset"
                 [interval]="0"
                 [noWrap]="noWrap">
-                <div *ngFor="let post of myFeeds">
+                <div *ngFor="let post of myFeedsReels">
                   <div *ngIf="post.postType == 3">
                   <slide *ngFor="let postAttachment of post.postAttachments">
                     <div *ngIf="postAttachment.fileType == 2">
@@ -464,7 +464,7 @@
 
 
         </div>
-        <div [ngClass]="myFeeds.length == 0 ? 'tab-pane fade show active':'tab-pane fade show'" class="tab-pane fade show" id="classes-tab-pane" role="tabpanel" aria-labelledby="school-feed-tab"
+        <div [ngClass]="myFeeds.length == 0 ? 'tab-pane fade show active':'tab-pane fade show'" (scroll)="globalScrollFunction($event)" class="tab-pane fade show" id="classes-tab-pane" role="tabpanel" aria-labelledby="school-feed-tab"
           tabindex="0">
           <div class="button-list-grid">
             <button [ngClass]="isProfileGrid ? 'btn border-btn active d-inline-flex align-items-center justify-content-center' : 'btn border-btn d-inline-flex align-items-center justify-content-center'" (click)="profileGrid()" type="button" >
@@ -479,12 +479,12 @@
               <!-- <button type="button" class="bg-transparent border-0 next-feed"><img
                   src="../../../assets/images/chevron-right-circle.svg" /></button> -->
               <div class="feedbox-inner d-flex ">
-                <carousel
+                <carousel #globalReelCarousel id="globalReels-carousel"
                 [itemsPerSlide]="itemsPerSlide"
                 [singleSlideOffset]="singleSlideOffset"
                 [interval]="0"
                 [noWrap]="noWrap">
-                <div *ngFor="let post of globalFeeds">
+                <div *ngFor="let post of globalFeedReels">
                   <div *ngIf="post.postType == 3">
                   <slide *ngFor="let postAttachment of post.postAttachments">
                     <div *ngIf="postAttachment.fileType == 2">
@@ -1500,3 +1500,7 @@
   </script>
   </div>
   <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
+  <post-loading-spinner [postLoadingIcon]="postLoadingIcon"></post-loading-spinner>
+  <reels-loading-spinner [reelsLoadingIcon]="reelsLoadingIcon"></reels-loading-spinner>
+
+

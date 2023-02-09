@@ -44,6 +44,8 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
     isSubmitted: boolean = false;
     isOpenModal:boolean = false;
     loadingIcon:boolean = false;
+    postLoadingIcon: boolean = false;
+    reelsLoadingIcon:boolean = false;
     blockedDocument: boolean = false;
     isProfileGrid:boolean = true;
     userId!:string;
@@ -76,9 +78,17 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
     isGridItemInfo: boolean = false;
     userParamsData$: any;
 
+    itemsPerSlide = 7;
+    singleSlideOffset = true;
+    noWrap = true;
+
+    frontEndPageNumber:number = 1;
+    reelsPageNumber:number = 1;
+    postResponse:any;
     @ViewChild('closeEditModal') closeEditModal!: ElementRef;
     @ViewChild('closeLanguageModal') closeLanguageModal!: ElementRef;
     @ViewChild('imageFile') imageFile!: ElementRef;
+    @ViewChild('carousel') carousel!: ElementRef;
 
     @ViewChild('createPostModal', { static: true }) createPostModal!: CreatePostComponent;
 
@@ -98,6 +108,9 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
     }
   
     ngOnInit(): void {
+
+      document.addEventListener('scroll', this.myScrollFunction, false);
+
       this.validToken = localStorage.getItem("jwt")?? '';
       this.loadingIcon = true;
       // this.blockUI();
@@ -108,15 +121,32 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
       this.userId = id ?? '';
 
       
-
+      // this.getByUserId(this.userId);
       this._userService.getUserById(this.userId).subscribe((response) => {
-        
+        this.frontEndPageNumber = 1;
+        this.reelsPageNumber = 1;
         this.user = response;
         this.followersLength = this.user.followers.length;
         this.isOwnerOrNot();
         this.loadingIcon = false;
         // this.unblockUI();
         this.isDataLoaded = true;
+        if(this.carousel!=undefined){
+          if($('carousel')[0].querySelectorAll('a.carousel-control-next')[0])
+          {
+            $('carousel')[0].querySelectorAll('a.carousel-control-next')[0].addEventListener('click', () => {
+              this.reelsPageNumber++;
+              if(this.reelsPageNumber == 2){
+                this.reelsLoadingIcon = true;
+              }
+              this._userService.getReelsByUserId(this.user.id, this.reelsPageNumber).subscribe((response) => {
+                 this.user.reels = [...this.user.reels, ...response];
+                 this.reelsLoadingIcon = false;
+            });
+
+            })
+          }  
+      }
       });
 
       this._userService.getLanguageList().subscribe((response) => {
@@ -173,9 +203,45 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
 
     }
 
+    getByUserId(){
+      this._userService.getPostsByUserId(this.userId,this.frontEndPageNumber).subscribe((response) => {
+        this.user.posts =[...this.user.posts, ...response];
+        this.postResponse = response;
+        this.postLoadingIcon = false;
+        // this.followersLength = this.user.followers.length;
+        // this.isOwnerOrNot();
+        // this.loadingIcon = false;
+        // // this.unblockUI();
+        // this.isDataLoaded = true;
+      });
+    }
+
+    
+
     ngOnDestroy(): void {
       if(this.userParamsData$) this.userParamsData$.unsubscribe();
     }
+
+        myScrollFunction= (ev: any): void => {
+          this.postLoadingIcon = true;
+          this.frontEndPageNumber++;
+          this.getByUserId();
+          // if(this.postResponse == undefined){
+          // this.postLoadingIcon = true;
+          // this.frontEndPageNumber++;
+          // this.getByUserId();
+          // }
+          // else{
+          //   if(this.postResponse.length != 0){
+          //     this.frontEndPageNumber++;
+          //     this.getByUserId();
+          //   }
+          // }
+    }
+
+    
+   
+
 
     InitializeFollowUnfollowUser(){
       this.followUnfollowUser = {
@@ -467,7 +533,6 @@ openPostsViewModal(posts:string): void {
 }
 
 openReelsViewModal(postAttachmentId:string): void {
-  
   const initialState = {
     postAttachmentId: postAttachmentId
   };
@@ -566,7 +631,6 @@ hideGridItemInfo(){
 }
 
 openChat(userId:string,type:string){
-  debugger
 var chatTypeId = ''
   // this.router.navigate(['user/chats', {chatHead_object: JSON.stringify({receiverId: userId, type : type,chatTypeId:''})}]);
 

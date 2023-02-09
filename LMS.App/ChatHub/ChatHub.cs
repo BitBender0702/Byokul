@@ -33,6 +33,8 @@ public class ChatHub : Hub
     {
         try
         {
+            var userId = UserIDConnectionID.FindFirstKeyByValue(Context.ConnectionId);
+            Clients.All.SendAsync("DisconnectedUser", userId);
             UserIDConnectionID.Remove(UserIDConnectionID.FindFirstKeyByValue(Context.ConnectionId));
 
         }

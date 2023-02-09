@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using LMS.Common.Enums;
 using LMS.Common.ViewModels.Class;
 using LMS.Common.ViewModels.Common;
 using LMS.Common.ViewModels.Course;
@@ -358,6 +359,7 @@ namespace LMS.Services
                     courses.Students = classDetails.Students;
                     courses.Teachers = classDetails.Teachers;
                     courses.Posts = classDetails.Posts;
+                    courses.Reels = classDetails.Reels;
                     courses.IsConvertable = true;
 
 
@@ -375,6 +377,7 @@ namespace LMS.Services
                 model.Students = await GetStudents(course.CourseId);
                 model.Teachers = await GetTeachers(course.CourseId);
                 model.Posts = await GetPostsByCourseId(course.CourseId, loginUserid);
+                model.Reels = await GetReelsByCourseId(course.CourseId, loginUserid);
                 model.CourseCertificates = await GetCertificateByCourseId(course.CourseId);
 
 
@@ -456,10 +459,10 @@ namespace LMS.Services
             return model;
         }
 
-        public async Task<IEnumerable<PostDetailsViewModel>> GetPostsByCourseId(Guid courseId, string loginUserId)
+        public async Task<IEnumerable<PostDetailsViewModel>> GetPostsByCourseId(Guid courseId, string loginUserId, int pageNumber = 1, int pageSize = 4)
         {
-            var courseList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == courseId).OrderByDescending(x => x.IsPinned).ToListAsync();
-            var result = _mapper.Map<List<PostDetailsViewModel>>(courseList);
+            var courseList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == courseId && x.PostType == (int)PostTypeEnum.Post).OrderByDescending(x => x.IsPinned).ToListAsync();
+            var result = _mapper.Map<List<PostDetailsViewModel>>(courseList).Skip((pageNumber - 1) * pageSize).Take(pageSize); ;
 
             foreach (var post in result)
             {
@@ -482,19 +485,34 @@ namespace LMS.Services
                 post.PostTags = tags;
             }
 
-            //foreach (var post in result)
-            //{
-            //    var author = await _courseRepository.GetAll().Include(x => x.School).Where(x => x.CourseId == post.ParentId).FirstOrDefaultAsync();
+            return result;
+        }
 
-            //    post.Owner = _mapper.Map<OwnerViewModel>(author.School);
-            //}
+        public async Task<IEnumerable<PostDetailsViewModel>> GetReelsByCourseId(Guid courseId, string loginUserId, int pageNumber = 1, int pageSize = 8)
+        {
+            var courseList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == courseId && x.PostType == (int)PostTypeEnum.Reel).OrderByDescending(x => x.IsPinned).ToListAsync();
+            var result = _mapper.Map<List<PostDetailsViewModel>>(courseList).Skip((pageNumber - 1) * pageSize).Take(pageSize); ;
 
-            //foreach (var post in result)
-            //{
-            //    var author = await _userManager.Users.Where(x => x.Id == post.CreatedBy).FirstOrDefaultAsync();
+            foreach (var post in result)
+            {
+                post.PostAttachments = await GetAttachmentsByPostId(post.Id);
+                post.Likes = await _userService.GetLikesOnPost(post.Id);
+                post.Views = await _userService.GetViewsOnPost(post.Id);
+                if (post.Likes.Any(x => x.UserId == loginUserId && x.PostId == post.Id))
+                {
+                    post.IsPostLikedByCurrentUser = true;
+                }
+                else
+                {
+                    post.IsPostLikedByCurrentUser = false;
+                }
+            }
 
-            //    post.Author = _mapper.Map<AuthorViewModel>(author);
-            //}
+            foreach (var post in result)
+            {
+                var tags = await GetTagsByPostId(post.Id);
+                post.PostTags = tags;
+            }
 
             return result;
         }

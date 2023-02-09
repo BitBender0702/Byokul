@@ -330,12 +330,12 @@
                 <img src="../../../../assets/images/chevron-right-circle.svg" />
             </button> -->
             <div class="feedbox-inner d-flex ">
-              <carousel
+              <carousel #carousel id="reels-carousel"
                 [itemsPerSlide]="itemsPerSlide"
                 [singleSlideOffset]="singleSlideOffset"
                 [interval]="0"
                 [noWrap]="noWrap">
-              <div *ngFor="let post of school.posts">
+              <div *ngFor="let post of school.reels">
                 <div *ngIf="post.postType == 3 && post.postAuthorType == 1">
                 <slide *ngFor="let postAttachment of post.postAttachments">
                   <div *ngIf="postAttachment.fileType == 2">
@@ -373,6 +373,7 @@
               </carousel>
             </div>
         </div>
+        <reels-loading-spinner [reelsLoadingIcon]="reelsLoadingIcon"></reels-loading-spinner>
     </div>
 
     <div class="tab-content" id="pills-tabContent" *ngIf="isProfileGrid">
@@ -527,10 +528,7 @@
                 </div>
               </ng-container>
             </div>
-
-
         </div>
-
     </div>
 
 
@@ -650,6 +648,7 @@
                         </div>
                     </div>
                     </ng-container>
+                    <post-loading-spinner [postLoadingIcon]="postLoadingIcon"></post-loading-spinner>
                     <!-- <div *ngIf="post.postType == 1 && post.postAuthorType == 1"> -->
                       
                     <!-- </div> -->
@@ -1305,5 +1304,6 @@ aria-labelledby="delete-class" aria-hidden="true">
   </section>
 </div>
 <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
+<post-loading-spinner [postLoadingIcon]="postLoadingIcon"></post-loading-spinner>
 <p-toast></p-toast>
 <!-- <div *ngIf="isOpenModal"><create-post [isOpenModal]="isOpenModal" [schoolId]="schoolId"></create-post></div> -->

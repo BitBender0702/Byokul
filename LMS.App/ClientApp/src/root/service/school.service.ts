@@ -133,4 +133,14 @@ export class SchoolService{
 
     }
 
+    getPostsBySchoolId(schoolId:string,pageNumber:number):Observable<any>{
+        let queryParams = new HttpParams().append("schoolId",schoolId).append("pageNumber",pageNumber);
+        return this.http.get(`${this.apiUrl}/school/getPostsBySchool`, {params:queryParams});
+    }
+
+    getReelsBySchoolId(schoolId:string,pageNumber:number):Observable<any>{
+        let queryParams = new HttpParams().append("schoolId",schoolId).append("pageNumber",pageNumber);
+        return this.http.get(`${this.apiUrl}/school/getReelsBySchool`, {params:queryParams});
+    }
+
 }

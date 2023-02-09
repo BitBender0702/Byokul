@@ -57,7 +57,6 @@ import { UserService } from 'src/root/service/user.service';
         //this.reelId = this.route.snapshot.paramMap.get('id') ?? '';
         this.postAttachmentId = this.options.initialState;
         this._reelsService.getReelById(this.postAttachmentId.postAttachmentId).subscribe((response) => {
-          
             this.reels = response;
             this.addPostView(this.reels.post.id);
             this.isDataLoaded = true;

@@ -192,5 +192,23 @@ namespace LMS.App.Controllers
             return Ok(response);
         }
 
+        [Route("getPostsByClass")]
+        [HttpGet]
+        public async Task<IActionResult> GetPostsByClass(Guid classId, int pageNumber, int pageSize = 4)
+        {
+            var userId = await GetUserIdAsync(this._userManager);
+            var response = await _classService.GetPostsByClassId(classId, userId, pageNumber, pageSize);
+            return Ok(response);
+        }
+
+        [Route("getReelsByClass")]
+        [HttpGet]
+        public async Task<IActionResult> GetReelsByClass(Guid classId, int pageNumber, int pageSize = 4)
+        {
+            var userId = await GetUserIdAsync(this._userManager);
+            var response = await _classService.GetReelsByClassId(classId, userId, pageNumber, pageSize);
+            return Ok(response);
+        }
+
     }
 }

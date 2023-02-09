@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Component, Injector, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Injector, OnInit, ViewChild} from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BsModalService, ModalDirective, ModalOptions } from 'ngx-bootstrap/modal';
@@ -31,12 +31,15 @@ export class UserFeedComponent implements OnInit {
     isProfileGrid:boolean = true;
 
     myFeeds:any;
+    myFeedsReels:any;
     globalFeeds:any;
     isOpenSidebar:boolean = false;
     isOwner!:boolean;
     userId!:string;
     isDataLoaded:boolean = false;
     loadingIcon:boolean = false;
+    postLoadingIcon: boolean = false;
+    reelsLoadingIcon:boolean = false;
     currentLikedPostId!:string;
     likesLength!:number;
     isLiked!:boolean;
@@ -49,26 +52,67 @@ export class UserFeedComponent implements OnInit {
     itemsPerSlide = 7;
     singleSlideOffset = true;
     noWrap = true;
+    myFeedsPageNumber:number = 1;
+    reelsPageNumber:number = 1;
+    globalFeedsPageNumber:number = 1;
+    globalReelsPageNumber:number = 1;
+    postResponse:any;
+    globalFeedReels:any;
+    isGlobalFeed:boolean = false;
+    @ViewChild('carousel') carousel!: ElementRef;
+    @ViewChild('globalReelCarousel') globalReelCarousel!: ElementRef;
 
     constructor(private bsModalService: BsModalService,postService: PostService,public userService:UserService, public options: ModalOptions,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
          this._userService = userService;
          this._postService = postService;
     }
+
+    ngOnChanges(): void {
+      if(this.carousel){
+      this.carousel.nativeElement.querySelectorAll('span.carousel-control-next-icon')
+        .forEach((elem: Element) => {
+          elem.remove();
+        });
+      }
+    }
   
     ngOnInit(): void {
+      document.addEventListener('scroll', this.myScrollFunction, false);
+      // document.getElementById('school-feed-tab-pane')?.addEventListener('scroll', this.myScrollFunction, false);
+      // document.getElementById('classes-tab-pane')?.addEventListener('scroll', this.globalScrollFunction, false);
+
       this.loadingIcon = true;
       this.isOwnerOrNot();
         // for global feed
-        this._userService.getMyFeed().subscribe((response) => {
+        this._userService.getMyFeed(1,this.myFeedsPageNumber).subscribe((response) => {
+          this.isGlobalFeed = false;
             this.myFeeds = response;
-            if(this.myFeeds.length==0){
-              this.getGlobalFeeds();
-            }
-            else{
+              this.isDataLoaded = true;
+            
+            // if(this.myFeeds.length==0){
+            //   this.getGlobalFeeds();
+            // }
+            // else{
+            // this.loadingIcon = false;
+            // this.isDataLoaded = true;
+            // }
+          });
+
+          this._userService.getMyFeed(3,this.myFeedsPageNumber).subscribe((result) => {
+            this.myFeedsReels = result;
+            this.isDataLoaded = true;
+            // if(this.myFeeds.length==0 && this.myFeedsReels.length ==0){
+            //   this.getGlobalFeeds();
+            // }
+            // else{
             this.loadingIcon = false;
             this.isDataLoaded = true;
-            }
+            this.addListenerToNextButton();
           });
+
+          if(this.myFeeds.length==0 && this.myFeedsReels.length ==0){
+            this.getGlobalFeeds();
+          }
 
           // this._userService.getGlobalFeed().subscribe((response) => {
           //   this.globalFeeds = response;
@@ -80,6 +124,106 @@ export class UserFeedComponent implements OnInit {
 
 
     }
+
+  addListenerToNextButton() {
+    if(this.carousel != undefined){
+      
+      setTimeout(() => {
+        if($('#reels-carousel')[0].querySelectorAll('a.carousel-control-next')[0])
+        {
+          $('#reels-carousel')[0].querySelectorAll('a.carousel-control-next')[0].addEventListener('click', () => {
+            this.reelsPageNumber++;
+            if(this.reelsPageNumber == 2){
+              this.reelsLoadingIcon = true;
+            }
+            this._userService.getMyFeed(3, this.reelsPageNumber).subscribe((response) => {
+               this.myFeedsReels = [...this.myFeedsReels, ...response];
+               this.reelsLoadingIcon = false;
+          });
+          })
+        }  
+      },
+      1500);
+    }
+  }
+
+  addGlobalFeedListenerToNextButton() {
+    if(this.globalReelCarousel != undefined){
+      
+      setTimeout(() => {
+        if($('#globalReels-carousel')[0].querySelectorAll('a.carousel-control-next')[0])
+        {
+          $('#globalReels-carousel')[0].querySelectorAll('a.carousel-control-next')[0].addEventListener('click', () => {
+            this.globalReelsPageNumber++;
+            if(this.globalReelsPageNumber == 2){
+              this.reelsLoadingIcon = true;
+            }
+
+          this._userService.getGlobalFeed(3, this.globalReelsPageNumber).subscribe((result) => {
+              this.globalFeedReels = [...this.globalFeedReels, ...result];
+              this.reelsLoadingIcon = false;
+            });
+          })
+        }  
+      },
+      1500);
+    }
+  }
+
+    myScrollFunction= (ev: any): void => {
+      if(!this.isGlobalFeed){
+        this.postLoadingIcon = true;
+      this.myFeedsPageNumber++;
+      //this.getMyFeed(1,this.myFeedsPageNumber);
+      this._userService.getMyFeed(1,this.myFeedsPageNumber).subscribe((response) => {
+        this.myFeeds =[...this.myFeeds, ...response];
+        this.postLoadingIcon = false;
+        this.postResponse = response;
+      });
+    }
+    else{
+      this.postLoadingIcon = true;
+      this.globalFeedsPageNumber++;
+      //this.getMyFeed(1,this.myFeedsPageNumber);
+      
+      this._userService.getGlobalFeed(1,this.globalFeedsPageNumber).subscribe((response) => {
+        this.globalFeeds =[...this.globalFeeds, ...response];
+        this.postLoadingIcon = false;
+        });
+    }
+    }
+      globalScrollFunction= (ev: any): void => {
+        this.postLoadingIcon = true;
+      this.globalFeedsPageNumber++;
+      //this.getMyFeed(1,this.myFeedsPageNumber);
+      
+      this._userService.getGlobalFeed(1,this.globalFeedsPageNumber).subscribe((response) => {
+        this.globalFeeds =[...this.globalFeeds, ...response];
+        this.postLoadingIcon = false;
+        });
+      }
+    
+
+    // if(this.postResponse == undefined){
+    //   this.postLoadingIcon = true;
+    //   this.myFeedsPageNumber++;
+    //   this._userService.getMyFeed(1,this.myFeedsPageNumber).subscribe((response) => {
+    //     this.myFeeds =[...this.myFeeds, ...response];
+    //     this.postLoadingIcon = false;
+    //     this.postResponse = response;
+    //   });
+    // }
+    //   else{
+    //     if(this.postResponse.length != 0){
+    //       this.myFeedsPageNumber++;
+    //       this._userService.getMyFeed(1,this.myFeedsPageNumber).subscribe((response) => {
+    //         this.myFeeds =[...this.myFeeds, ...response];
+    //         this.postLoadingIcon = false;
+    //         this.postResponse = response;
+    //       });
+    //     }
+    //   }
+  
 
     InitializeLikeUnlikePost(){
       this.likeUnlikePost = {
@@ -128,12 +272,11 @@ export class UserFeedComponent implements OnInit {
       }
 
       getGlobalFeeds(){
-        debugger
-       if(this.globalFeeds == undefined){
-
+        this.isGlobalFeed = true;
         this.loadingIcon = true;
-        this._userService.getGlobalFeed().subscribe((response) => {
-          debugger
+       if(this.globalFeeds == undefined){
+        this.loadingIcon = true;
+        this._userService.getGlobalFeed(1,this.globalFeedsPageNumber).subscribe((response) => {
             this.globalFeeds = response;
             this.loadingIcon = false;
             this.isDataLoaded = true;
@@ -141,7 +284,16 @@ export class UserFeedComponent implements OnInit {
           });
         }
 
-      }
+          this._userService.getGlobalFeed(3, this.globalReelsPageNumber).subscribe((result) => {
+              this.globalFeedReels = result;
+              this.loadingIcon = false;
+              this.isDataLoaded = true;
+              this.addGlobalFeedListenerToNextButton();
+
+            });
+          }
+
+      
 
       isOwnerOrNot(){
         var validToken = localStorage.getItem("jwt");
@@ -163,7 +315,6 @@ export class UserFeedComponent implements OnInit {
       }
 
       likeUnlikePosts(postId:string, isLike:boolean){
-        debugger
         this.currentLikedPostId = postId;
 
         this.myFeeds.filter((p : any) => p.id == postId).forEach( (item : any) => {
@@ -246,7 +397,6 @@ export class UserFeedComponent implements OnInit {
       }
 
       showPostDiv(postId:string,From:string){
-        debugger
         if(From == 'FromMyFeeds'){
           var posts: any[] = this.myFeeds;
           this.gridItemInfo = posts.find(x => x.id == postId);
@@ -264,12 +414,10 @@ export class UserFeedComponent implements OnInit {
       }
       
       addPostView(postId:string,From:string){
-        debugger
         if(this.userId != undefined){
          this.initializePostView();
         this.postView.postId = postId;
         this._postService.postView(this.postView).subscribe((response) => {
-          debugger
           if(From == 'FromMyFeeds'){
             this.gridItemInfo.views.length = response;
           }
@@ -321,7 +469,6 @@ export class UserFeedComponent implements OnInit {
       }
 
       openReelsViewModal(postAttachmentId:string): void {
-        debugger
         const initialState = {
           postAttachmentId: postAttachmentId
         };

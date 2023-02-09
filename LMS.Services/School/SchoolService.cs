@@ -317,6 +317,7 @@ namespace LMS.Services
                 response.Classes = await GetClassesBySchoolId(response.SchoolId,loginUserId);
                 response.Courses = await GetCoursesBySchoolId(response.SchoolId,loginUserId);
                 response.Posts = await GetPostsBySchool(response.SchoolId, loginUserId);
+                response.Reels = await GetReelsBySchool(response.SchoolId, loginUserId);
 
                 var classTeachers = await GetClassTeachersBySchoolId(response.SchoolId);
                 var courseTeachers = await GetCourseTeachersBySchoolId(response.SchoolId);
@@ -603,11 +604,11 @@ namespace LMS.Services
 
         }
 
-        public async Task<IEnumerable<PostDetailsViewModel>> GetPostsBySchool(Guid schoolId, string loginUserId)
+        public async Task<IEnumerable<PostDetailsViewModel>> GetPostsBySchool(Guid schoolId, string loginUserId, int pageNumber = 1, int pageSize = 4)
         {
-            var courseList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == schoolId).OrderByDescending(x => x.IsPinned).ToListAsync();
+            var courseList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == schoolId && x.PostType == (int)PostTypeEnum.Post).OrderByDescending(x => x.IsPinned).ToListAsync();
 
-            var result = _mapper.Map<List<PostDetailsViewModel>>(courseList);
+            var result = _mapper.Map<List<PostDetailsViewModel>>(courseList).Skip((pageNumber - 1) * pageSize).Take(pageSize);
 
             foreach (var post in result)
             {
@@ -631,34 +632,36 @@ namespace LMS.Services
                 post.PostTags = tags;
             }
 
-            //var user = await _userManager.Users.Where(x => x.Id == loginUserId).FirstOrDefaultAsync();
-            //var role = await _userManager.GetRolesAsync(user);
+            return result;
+        }
 
-            //if (role.Any(x => x.Contains("School Owner")))
-            //{
-            //    foreach (var post in result)
-            //    {
-            //        var postDetail = await _postRepository.GetAll().Where(x => x.CreatedById == post.CreatedBy).FirstOrDefaultAsync();
+        public async Task<IEnumerable<PostDetailsViewModel>> GetReelsBySchool(Guid schoolId, string loginUserId, int pageNumber = 1, int pageSize = 8)
+        {
+            var courseList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == schoolId && x.PostType == (int)PostTypeEnum.Reel).OrderByDescending(x => x.IsPinned).ToListAsync();
 
-            //        post.Author = _mapper.Map<AuthorViewModel>(postDetail.CreatedBy);
-            //    }
-            //}
+            var result = _mapper.Map<List<PostDetailsViewModel>>(courseList).Skip((pageNumber - 1) * pageSize).Take(pageSize);
 
-            //else
-            //{
-            //    foreach (var post in result)
-            //    {
-            //        var author = await _schoolRepository.GetAll().Where(x => x.SchoolId == post.AuthorId).FirstOrDefaultAsync();
+            foreach (var post in result)
+            {
+                post.PostAttachments = await GetAttachmentsByPostId(post.Id, loginUserId);
+                post.Likes = await _userService.GetLikesOnPost(post.Id);
+                post.Views = await _userService.GetViewsOnPost(post.Id);
+                if (post.Likes.Any(x => x.UserId == loginUserId && x.PostId == post.Id))
+                {
+                    post.IsPostLikedByCurrentUser = true;
+                }
+                else
+                {
+                    post.IsPostLikedByCurrentUser = false;
+                }
 
-            //        post.Author = _mapper.Map<AuthorViewModel>(author);
-            //    }
-            //}
+            }
 
-            //foreach (var post in result)
-            //{
-            //    var owner = await _userManager.Users.Where(x => x.Id == post.CreatedBy).FirstOrDefaultAsync();
-            //    post.Owner = _mapper.Map<OwnerViewModel>(owner);
-            //}
+            foreach (var post in result)
+            {
+                var tags = await GetTagsByPostId(post.Id);
+                post.PostTags = tags;
+            }
 
             return result;
         }

@@ -1,4 +1,5 @@
-﻿using LMS.Common.ViewModels.Common;
+﻿using LMS.Common.Enums;
+using LMS.Common.ViewModels.Common;
 using LMS.Common.ViewModels.Post;
 using LMS.Common.ViewModels.User;
 using LMS.Data.Entity;
@@ -15,15 +16,18 @@ namespace LMS.Services
         Task<UserUpdateViewModel> UpdateUser(UserUpdateViewModel userUpdateViewModel);
         Task<IEnumerable<CountryViewModel>> CountryList();
         Task<IEnumerable<CityViewModel>> CityList(Guid countryId);
-        Task<IEnumerable<PostDetailsViewModel>> GetMyFeed(string userId);
+        Task<IEnumerable<PostDetailsViewModel>> GetMyFeed(string userId,PostTypeEnum postType,int pageNumber);
         Task<IEnumerable<PostAttachmentViewModel>> GetUserProfileFeed(string userId);
         Task<UserDetailsViewModel> GetBasicUserInfo(string userId);
         Task<List<UserFollowerViewModel>> GetUserFollowers(string userId);
         Task<bool> BanFollower(string followerId);
-        Task<IEnumerable<GlobalFeedViewModel>> GetGlobalFeed(string userId);
+        Task<IEnumerable<GlobalFeedViewModel>> GetGlobalFeed(string userId, PostTypeEnum postType, int pageNumber);
         Task<Guid> SaveUserPreference(string userId,string preferenceString);
         Task<List<LikeViewModel>> GetLikesOnPost(Guid postId);
         Task<List<ViewsViewModel>> GetViewsOnPost(Guid postId);
+        Task<IEnumerable<PostDetailsViewModel>> GetPostsByUserId(string userId, int pageNumber, int pageSize);
+        Task<IEnumerable<PostDetailsViewModel>> GetReelsByUserId(string userId, int pageNumber, int pageSize);
+
 
     }
 }
