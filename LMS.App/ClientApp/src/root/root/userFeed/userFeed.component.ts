@@ -91,6 +91,7 @@ export class UserFeedComponent implements OnInit {
             this.myFeeds = response;
             if(this.myFeeds.length == 0){
                this.isMyFeedsEmpty = true;
+               this.getGlobalFeedsData()
             }
               this.isDataLoaded = true;
             
@@ -107,6 +108,7 @@ export class UserFeedComponent implements OnInit {
             this.myFeedsReels = result;
             if(this.myFeedsReels.length == 0){
               this.isMyFeedReelsEmpty = true;
+              this.getGlobalFeedsData()
            }
             this.isDataLoaded = true;
             // if(this.myFeeds.length==0 && this.myFeedsReels.length ==0){
@@ -118,9 +120,7 @@ export class UserFeedComponent implements OnInit {
             this.addListenerToNextButton();
           });
 
-          if(this.isMyFeedsEmpty && this.isMyFeedReelsEmpty){
-            this.getGlobalFeeds();
-          }
+          this.getGlobalFeedsData();
 
           // this._userService.getGlobalFeed().subscribe((response) => {
           //   this.globalFeeds = response;
@@ -132,6 +132,13 @@ export class UserFeedComponent implements OnInit {
 
 
     }
+
+    getGlobalFeedsData(){
+      if(this.isMyFeedsEmpty && this.isMyFeedReelsEmpty){
+        this.getGlobalFeeds();
+      }
+    }
+
 
   addListenerToNextButton() {
     if(this.carousel != undefined){
@@ -280,6 +287,7 @@ export class UserFeedComponent implements OnInit {
       }
 
       getGlobalFeeds(){
+        debugger
         this.isGlobalFeed = true;
         this.loadingIcon = true;
        if(this.globalFeeds == undefined){
