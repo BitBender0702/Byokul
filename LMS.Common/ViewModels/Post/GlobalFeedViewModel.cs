@@ -18,6 +18,7 @@ namespace LMS.Common.ViewModels.Post
         public IEnumerable<PostTagViewModel> PostTags { get; set; }
         public List<LikeViewModel> Likes { get; set; }
         public List<ViewsViewModel> Views { get; set; }
+        public int CommentsCount { get; set; }
         public List<PostAttachmentViewModel> PostAttachments { get; set; }
         public bool IsPostLikedByCurrentUser { get; set; }
         public int PostAuthorType { get; set; }

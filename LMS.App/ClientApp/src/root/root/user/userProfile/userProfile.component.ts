@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Component, ElementRef, Injector, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, Injector, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -84,7 +84,8 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
 
     frontEndPageNumber:number = 1;
     reelsPageNumber:number = 1;
-    postResponse:any;
+    scrolled:boolean = false;
+    scrollFeedResponseCount:number = 1;
     @ViewChild('closeEditModal') closeEditModal!: ElementRef;
     @ViewChild('closeLanguageModal') closeLanguageModal!: ElementRef;
     @ViewChild('imageFile') imageFile!: ElementRef;
@@ -108,8 +109,8 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
     }
   
     ngOnInit(): void {
-
-      document.addEventListener('scroll', this.myScrollFunction, false);
+      this.postLoadingIcon = false;
+      //document.addEventListener('scroll', this.myScrollFunction, false);
 
       this.validToken = localStorage.getItem("jwt")?? '';
       this.loadingIcon = true;
@@ -129,6 +130,8 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
         this.followersLength = this.user.followers.length;
         this.isOwnerOrNot();
         this.loadingIcon = false;
+        this.scrolled = false;
+        this.postLoadingIcon = false;
         // this.unblockUI();
         this.isDataLoaded = true;
         if(this.carousel!=undefined){
@@ -197,6 +200,8 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
           this.loadingIcon = false;
           // this.unblockUI();
           this.isDataLoaded = true;
+          this.scrolled = false;
+          this.postLoadingIcon = false;
         });
       });
 
@@ -204,10 +209,15 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
     }
 
     getByUserId(){
+      if(this.userId == undefined){
+        this.postLoadingIcon = true;
+        return;
+      }
       this._userService.getPostsByUserId(this.userId,this.frontEndPageNumber).subscribe((response) => {
         this.user.posts =[...this.user.posts, ...response];
-        this.postResponse = response;
         this.postLoadingIcon = false;
+        this.scrollFeedResponseCount = response.length; 
+        this.scrolled = false;
         // this.followersLength = this.user.followers.length;
         // this.isOwnerOrNot();
         // this.loadingIcon = false;
@@ -222,22 +232,21 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
       if(this.userParamsData$) this.userParamsData$.unsubscribe();
     }
 
-        myScrollFunction= (ev: any): void => {
-          this.postLoadingIcon = true;
-          this.frontEndPageNumber++;
-          this.getByUserId();
-          // if(this.postResponse == undefined){
-          // this.postLoadingIcon = true;
-          // this.frontEndPageNumber++;
-          // this.getByUserId();
-          // }
-          // else{
-          //   if(this.postResponse.length != 0){
-          //     this.frontEndPageNumber++;
-          //     this.getByUserId();
-          //   }
-          // }
+    @HostListener("window:scroll", [])
+    onWindowScroll() {
+      if(!this.scrolled && this.scrollFeedResponseCount != 0){
+        this.scrolled = true;
+        this.postLoadingIcon = true;
+        this.frontEndPageNumber++;
+        this.getByUserId();
+      }
     }
+    //     myScrollFunction= (ev: any): void => {
+    //       this.postLoadingIcon = true;
+    //       this.frontEndPageNumber++;
+    //       this.getByUserId();
+         
+    // }
 
     
    

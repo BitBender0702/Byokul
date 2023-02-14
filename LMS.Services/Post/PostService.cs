@@ -14,6 +14,7 @@ using LMS.Common.ViewModels.Class;
 using LMS.Common.ViewModels.User;
 using Newtonsoft.Json;
 using LMS.Common.ViewModels.Course;
+using LMS.Services.Chat;
 
 namespace LMS.Services
 {
@@ -29,12 +30,15 @@ namespace LMS.Services
         private IGenericRepository<User> _userRepository;
         private IGenericRepository<Like> _likeRepository;
         private IGenericRepository<View> _viewRepository;
+        private IGenericRepository<Comment> _commentRepository;
+        private IGenericRepository<CommentLike> _commentLikeRepository;
         private readonly IBlobService _blobService;
         private readonly IUserService _userService;
+        private readonly IChatService _chatService;
         private readonly IBigBlueButtonService _bigBlueButtonService;
         private IConfiguration _config;
 
-        public PostService(IMapper mapper, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<User> userRepository, IGenericRepository<Like> likeRpository, IGenericRepository<View> viewRepository, IBlobService blobService, IUserService userService, IBigBlueButtonService bigBlueButtonService, IConfiguration config)
+        public PostService(IMapper mapper, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<User> userRepository, IGenericRepository<Like> likeRpository, IGenericRepository<View> viewRepository, IGenericRepository<Comment> commentRepository, IGenericRepository<CommentLike> commentLikeRepository, IBlobService blobService, IUserService userService, IChatService chatService, IBigBlueButtonService bigBlueButtonService, IConfiguration config)
         {
             _mapper = mapper;
             _postRepository = postRepository;
@@ -46,8 +50,11 @@ namespace LMS.Services
             _userRepository = userRepository;
             _likeRepository = likeRpository;
             _viewRepository = viewRepository;
+            _commentRepository = commentRepository;
+            _commentLikeRepository = commentLikeRepository;
             _blobService = blobService;
             _userService = userService;
+            _chatService = chatService;
             _bigBlueButtonService = bigBlueButtonService;
             _config = config;
         }
@@ -209,6 +216,7 @@ namespace LMS.Services
             var result = _mapper.Map<PostAttachmentViewModel>(postAttachment);
             result.Post.Likes = await _userService.GetLikesOnPost(postAttachment.Post.Id);
             result.Post.Views = await _userService.GetViewsOnPost(postAttachment.Post.Id);
+            result.Post.Comments = await _chatService.GetComments(id, userId, 1);
 
             if (result.Post.Likes.Any(x => x.UserId == userId && x.PostId == postAttachment.Post.Id))
             {
@@ -310,6 +318,48 @@ namespace LMS.Services
                 return  _viewRepository.GetAll().Where(x => x.PostId == model.PostId).Count();
             }
             return _viewRepository.GetAll().Where(x => x.PostId == model.PostId).Count();
+        }
+
+        public async Task<bool> LikeUnlikeComment(Guid commentId, bool isLike, string userId)
+        {
+
+            var commentLike = await _commentLikeRepository.GetAll().Where(x => x.CommentId == commentId && x.UserId == userId).FirstOrDefaultAsync();
+
+            if (commentLike != null)
+            {
+                _commentLikeRepository.Delete(commentLike.Id);
+                _commentLikeRepository.Save();
+
+                Comment comment = _commentRepository.GetById(commentId);
+                comment.LikeCount = comment.LikeCount - 1;
+                _commentRepository.Update(comment);
+                _commentRepository.Save();
+                return true;
+
+                //var totalLikes = await _likeRepository.GetAll().Where(x => x.PostId == model.PostId).ToListAsync();
+                //return _mapper.Map<List<LikeViewModel>>(totalLikes);
+            }
+
+            else
+            {
+                var commentLikes = new CommentLike
+                {
+                    UserId = userId,
+                    CommentId = commentId
+                };
+
+                _commentLikeRepository.Insert(commentLikes);
+                _commentLikeRepository.Save();
+
+                Comment comment = _commentRepository.GetById(commentId);
+                comment.LikeCount = comment.LikeCount + 1;
+                _commentRepository.Update(comment);
+                _commentRepository.Save();
+                return true;
+                //var totalLikes = await _likeRepository.GetAll().Where(x => x.PostId == model.PostId).ToListAsync();
+                //return _mapper.Map<List<LikeViewModel>>(totalLikes);
+            }
+            return false;
         }
     }
 }

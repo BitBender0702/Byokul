@@ -6,9 +6,6 @@
     <div class="bg-gray-gradient register-section rounded-8">
       <button (click)="back()" type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
         src="../../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
-
-      <!-- <a (click)="back()" class="back-step text-decoration-none font_16 text_dark"><img src="../../../../../assets/images/arrow-left.svg"
-          alt="arrow" /> {{'Back'| translate }}</a> -->
       <div *ngIf="isRegister" class="alert alert-info text-center register-form mx-auto ng-dirty ng-touched ng-valid ng-submitted" role="alert">
        An Email is sent to you.Please confirm the email to login!
       </div>
@@ -97,12 +94,8 @@
         </div>
         <p class="font_14 fw_300 text-center al-account">{{'AlreadyAccount'| translate }} <a [routerLink]="['/user/auth/login']"
             class="fw_700 text_dark text-decoration-none">{{'Login'| translate }}</a></p>
-
         <multi-lingual></multi-lingual>
-
       </form>
     </div>
   </section>
-
-
 <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>

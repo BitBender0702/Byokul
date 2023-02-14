@@ -459,28 +459,35 @@ namespace LMS.Services
         public async Task<IEnumerable<ClassViewModel>> GetClassesBySchoolId(Guid schoolId,string loginUserId)
         {
             var classList = await _classRepository.GetAll().Include(x => x.Accessibility).Include(x => x.ServiceType).Where(x => x.SchoolId == schoolId && !x.IsEnable && !x.IsDeleted).ToListAsync();
-
-            var result = _mapper.Map<List<ClassViewModel>>(classList);
-            var tagList = await _classTagRepository.GetAll().ToListAsync();
-            foreach (var item in result)
+            try
             {
-                item.ClassTags = tagList.Where(x => x.ClassId == item.ClassId).Select(x => x.ClassTagValue).ToList();
-
-                item.ClassLike = await _classService.GetLikesOnClass(item.ClassId);
-                item.ClassViews = await _classService.GetViewsOnClass(item.ClassId);
-
-                if (item.ClassLike.Any(x => x.UserId == loginUserId && x.ClassId == item.ClassId))
+                var result = _mapper.Map<List<ClassViewModel>>(classList);
+                var tagList = await _classTagRepository.GetAll().ToListAsync();
+                foreach (var item in result)
                 {
-                    item.IsClassLikedByCurrentUser = true;
+                    item.ClassTags = tagList.Where(x => x.ClassId == item.ClassId).Select(x => x.ClassTagValue).ToList();
+
+                    item.ClassLike = await _classService.GetLikesOnClass(item.ClassId);
+                    item.ClassViews = await _classService.GetViewsOnClass(item.ClassId);
+                    item.CommentsCount = await _userService.GetCommentsCountOnPost(item.ClassId);
+
+                    if (item.ClassLike.Any(x => x.UserId == loginUserId && x.ClassId == item.ClassId))
+                    {
+                        item.IsClassLikedByCurrentUser = true;
+                    }
+                    else
+                    {
+                        item.IsClassLikedByCurrentUser = false;
+                    }
                 }
-                else
-                {
-                    item.IsClassLikedByCurrentUser = false;
-                }
+
+
+                return result;
             }
-
-           
-            return result;
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
         }
 
@@ -496,6 +503,7 @@ namespace LMS.Services
 
                 item.CourseLike = await _courseService.GetLikesOnCourse(item.CourseId);
                 item.CourseViews = await _courseService.GetViewsOnCourse(item.CourseId);
+                item.CommentsCount = await _userService.GetCommentsCountOnPost(item.CourseId);
 
                 if (item.CourseLike.Any(x => x.UserId == loginUserId && x.CourseId == item.CourseId))
                 {
@@ -615,6 +623,7 @@ namespace LMS.Services
                 post.PostAttachments = await GetAttachmentsByPostId(post.Id, loginUserId);
                 post.Likes = await _userService.GetLikesOnPost(post.Id);
                 post.Views = await _userService.GetViewsOnPost(post.Id);
+                post.CommentsCount = await _userService.GetCommentsCountOnPost(post.Id);
                 if (post.Likes.Any(x => x.UserId == loginUserId && x.PostId == post.Id))
                 {
                     post.IsPostLikedByCurrentUser = true;
@@ -808,8 +817,9 @@ namespace LMS.Services
             return null;
         }
 
-        public async Task<IOrderedEnumerable<CombineClassCourseViewModel>> GetSchoolClassCourse(Guid schoolId,string userId)
+        public async Task<IEnumerable<CombineClassCourseViewModel>> GetSchoolClassCourse(Guid schoolId,string userId, int pageNumber)
         {
+            int pageSize = 4;
             var classes = await GetClassesBySchoolId(schoolId, userId);
             var courses = await GetCoursesBySchoolId(schoolId, userId);
 
@@ -836,6 +846,8 @@ namespace LMS.Services
                 item.IsLikedByCurrentUser = classDetails.IsClassLikedByCurrentUser;
                 item.ClassLikes = classDetails.ClassLike;
                 item.ClassViews = classDetails.ClassViews;
+                item.CommentsCount = classDetails.CommentsCount;
+                item.ThumbnailType = classDetails.ThumbnailType;
 
                 model.Add(item);
             }
@@ -859,11 +871,14 @@ namespace LMS.Services
                 item.IsLikedByCurrentUser = courseDetails.IsCourseLikedByCurrentUser;
                 item.CourseLikes = courseDetails.CourseLike;
                 item.CourseViews = courseDetails.CourseViews;
+                item.CommentsCount = courseDetails.CommentsCount;
+                item.ThumbnailType = courseDetails.ThumbnailType;
 
                 model.Add(item);
             }
 
-            var response = model.OrderByDescending(x => x.IsPinned);
+            //var response = model.OrderByDescending(x => x.IsPinned);
+            var response = model.Skip((pageNumber - 1) * pageSize).Take(pageSize).OrderByDescending(x => x.IsPinned).ThenByDescending(x => x.CreatedOn);
             return response;
 
         }

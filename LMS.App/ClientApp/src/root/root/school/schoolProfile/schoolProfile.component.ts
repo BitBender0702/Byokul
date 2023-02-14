@@ -2,6 +2,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import {
   Component,
   ElementRef,
+  HostListener,
   Injector,
   OnChanges,
   OnDestroy,
@@ -40,6 +41,7 @@ import { MessageService } from 'primeng/api';
 import { ReelsViewComponent } from '../../reels/reelsView.component';
 import { ownedSchoolResponse } from '../createSchool/createSchool.component';
 import * as $ from 'jquery';
+import { ClassCourseModalComponent } from '../../ClassCourseModal/classCourseModal.component';
 // export const ownedSchoolResponse =new Subject<{schoolAvatar : string,schoolName:string}>();
 
 // import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -122,7 +124,13 @@ export class SchoolProfileComponent
   noWrap = true;
   isFeedHide: boolean = false;
   frontEndPageNumber: number = 1;
-  postResponse:any;
+  scrollFeedResponseCount:number = 1;
+
+  classCoursePageNumber: number = 1;
+  scrollClassCourseResponseCount:number = 1;
+
+  classCourseItem:any;
+
   @ViewChild('closeEditModal') closeEditModal!: ElementRef;
   @ViewChild('closeTeacherModal') closeTeacherModal!: ElementRef;
   @ViewChild('closeLanguageModal') closeLanguageModal!: ElementRef;
@@ -135,6 +143,7 @@ export class SchoolProfileComponent
   Certificates!: string[];
   schoolParamsData$: any;
   reelsPageNumber:number = 1;
+  scrolled:boolean = false;
 
   constructor(
     injector: Injector,
@@ -173,7 +182,11 @@ export class SchoolProfileComponent
     }
   }
   ngOnInit(): void {
-    document.addEventListener('scroll', this.myScrollFunction, false);
+    
+    // document.addEventListener('scroll', this.myScrollFunction, false);
+   // document.getElementById('chat')?.addEventListener('scroll', this.myScrollFunction, false);
+
+   this.postLoadingIcon = false;
     this.loadingIcon = true;
     this.validToken = localStorage.getItem('jwt') ?? '';
     var selectedLang = localStorage.getItem('selectedLanguage');
@@ -206,6 +219,8 @@ export class SchoolProfileComponent
         this.followersLength = this.school.schoolFollowers.length;
         this.isOwnerOrNot();
         this.loadingIcon = false;
+        this.postLoadingIcon = false;
+        this.scrolled = false;
         this.isDataLoaded = true;
         if(this.carousel!=undefined){
           if($('carousel')[0].querySelectorAll('a.carousel-control-next')[0])
@@ -307,11 +322,11 @@ export class SchoolProfileComponent
         life: 3000,
         detail: 'Post created successfully',
       });
-      this._schoolService
-        .getSchoolById(this.schoolName.replace(' ', '').toLowerCase())
-        .subscribe((response) => {
+      this._schoolService.getSchoolById(this.schoolName.replace(' ', '').toLowerCase()).subscribe((response) => {
           this.school = response;
           this.loadingIcon = false;
+          this.postLoadingIcon = false;
+          this.scrolled = false;
           this.followersLength = this.school.schoolFollowers.length;
           this.isOwnerOrNot();
           this.loadingIcon = false;
@@ -331,32 +346,49 @@ export class SchoolProfileComponent
     };
   }
 
-  myScrollFunction = (ev: any): void => {
+  @HostListener("window:scroll", [])
+  onWindowScroll() {
+    if(this.isFeedHide){
+      if(!this.scrolled && this.scrollClassCourseResponseCount != 0){
+        this.scrolled = true;
+        this.postLoadingIcon = true;
+        this.classCoursePageNumber++;
+        this.GetSchoolClassCourses();
+        }
+    }
+    if(!this.scrolled && this.scrollFeedResponseCount != 0){
+    this.scrolled = true;
     this.postLoadingIcon = true;
     this.frontEndPageNumber++;
     this.getPostsBySchoolId();
-
-
-    // if(this.postResponse == undefined){
-    //   this.postLoadingIcon = true;
-    //   this.frontEndPageNumber++;
-    //   this.getPostsBySchoolId();
-    // }
-    //   else{
-    //     if(this.postResponse.length != 0){
-    //       this.frontEndPageNumber++;
-    //       this.getPostsBySchoolId();
-    //     }
-    //   }
-  };
+    }
+  }
 
   getPostsBySchoolId() {
-    this._schoolService
-      .getPostsBySchoolId(this.school.schoolId, this.frontEndPageNumber)
-      .subscribe((response) => {
+    if(this.school?.schoolId == undefined){
+      this.postLoadingIcon = true;
+      return;
+    }
+    this._schoolService.getPostsBySchoolId(this.school.schoolId, this.frontEndPageNumber).subscribe((response) => {
         this.school.posts = [...this.school.posts, ...response];
         this.postLoadingIcon = false;
-        this.postResponse = response;
+        this.scrollFeedResponseCount = response.length;
+        this.scrolled = false;
+      });
+  }
+
+  GetSchoolClassCourses() {
+    if(this.school?.schoolId == undefined){
+      this.postLoadingIcon = true;
+      return;
+    }
+      this._schoolService.getSchoolClassCourseList(this.school.schoolId,this.classCoursePageNumber).subscribe((result) => {
+        if(this.classCourseList != undefined){
+        this.classCourseList = [...this.classCourseList, ...result];
+        }
+        this.postLoadingIcon = false;
+        this.scrollClassCourseResponseCount = result.length;
+        this.scrolled = false;
       });
   }
 
@@ -832,6 +864,13 @@ export class SchoolProfileComponent
     this.bsModalService.show(PostViewComponent, { initialState });
   }
 
+  openClassCourseViewModal(item: string): void {
+    const initialState = {
+      classCourseItem: item,
+    };
+    this.bsModalService.show(ClassCourseModalComponent, { initialState });
+  }
+
   hideUnhideFeedFilters(hideUnhide: boolean) {
     this.isFeedHide = false;
     if (hideUnhide) {
@@ -842,14 +881,13 @@ export class SchoolProfileComponent
   }
 
   GetSchoolClassCourseList(schoolId: string) {
+    debugger
+    var school = this.school;
     this.isFeedHide = true;
-
     if (this.classCourseList == undefined) {
       this.loadingIcon = true;
       this.hideFeedFilters = false;
-      this._schoolService
-        .getSchoolClassCourseList(schoolId)
-        .subscribe((response) => {
+      this._schoolService.getSchoolClassCourseList(schoolId,this.classCoursePageNumber).subscribe((response) => {
           this.classCourseList = response;
           this.loadingIcon = false;
         });

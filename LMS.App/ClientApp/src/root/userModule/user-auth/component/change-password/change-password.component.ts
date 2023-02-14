@@ -36,7 +36,6 @@ export class ChangePasswordComponent extends MultilingualComponent implements On
       ];
 
       this.changePasswordForm = this.fb.group({
-        //email: this.fb.control('', [Validators.required,Validators.pattern(this.EMAIL_PATTERN)]),
         currentPassword: this.fb.control('', [Validators.required]),
         password: this.fb.control('', [...passwordValidators]),
         confirmPassword: this.fb.control('', [...passwordValidators]),

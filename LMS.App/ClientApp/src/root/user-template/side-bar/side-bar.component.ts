@@ -8,6 +8,7 @@ import { ownedSchoolResponse } from 'src/root/root/school/createSchool/createSch
 import { MultilingualComponent } from 'src/root/root/sharedModule/Multilingual/multilingual.component';
 import { userImageResponse } from 'src/root/root/user/userProfile/userProfile.component';
 import { UserService } from 'src/root/service/user.service';
+import { dashboardResponse } from 'src/root/userModule/user-auth/component/login/login.component';
 
 @Component({
   selector: 'side-bar',
@@ -45,6 +46,18 @@ export class SideBarComponent extends MultilingualComponent implements OnInit {
       this.sidebarInfo = response;
       this.loadingIcon = false;
       this.isDataLoaded = true;
+    });
+
+    dashboardResponse.subscribe(response => {
+      debugger
+      if(response.token != ''){
+      this._userService.getSidebarInfo(response.token).subscribe((response) => {
+        debugger
+        this.sidebarInfo = response;
+        this.loadingIcon = false;
+        this.isDataLoaded = true;
+      });
+    }
     });
 
     unreadChatResponse.subscribe(response => {

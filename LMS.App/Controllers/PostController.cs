@@ -77,8 +77,14 @@ namespace LMS.App.Controllers
             return Ok(response);
         }
 
-
-
+        [Route("likeUnlikeComment")]
+        [HttpPost]
+        public async Task<IActionResult> LikeUnlikeComment(Guid commentId, bool isLike)
+        {
+            var userId = await GetUserIdAsync(this._userManager);
+            var response = await _postService.LikeUnlikeComment(commentId, isLike, userId);
+            return Ok(response);
+        }
 
     }
 }

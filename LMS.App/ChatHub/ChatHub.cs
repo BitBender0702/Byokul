@@ -1,19 +1,25 @@
 ﻿using LMS.ChatHub;
 using LMS.Common.ViewModels.Chat;
+using LMS.Common.ViewModels.Post;
 using LMS.Data.Entity;
 using LMS.Data.Entity.Chat;
 using LMS.Services.Chat;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class ChatHub : Hub
 {
     private readonly UserManager<User> _userManager;
     private readonly IChatService _chatService;
-    public ChatHub(UserManager<User> userManager, IChatService chatService)
+    private readonly IHttpContextAccessor _contextAccessor;
+    public ChatHub(UserManager<User> userManager, IChatService chatService, IHttpContextAccessor contextAccessor)
     {
         _userManager = userManager;
         _chatService = chatService;
+        _contextAccessor = contextAccessor;
     }
 
     static Dictionary<string, string> UserIDConnectionID = new Dictionary<string, string>();
@@ -25,7 +31,15 @@ public class ChatHub : Hub
     }
     public override Task OnConnectedAsync()
     {
-        ContectedUsers.ContectedIds.Add(Context.ConnectionId);
+        var userId = Context.User?.Claims?.FirstOrDefault(x => x.Type == "jti").Value;
+        if (!string.IsNullOrEmpty(userId))
+        {
+            if (UserIDConnectionID.ContainsKey(userId))
+                UserIDConnectionID[userId] = Context.ConnectionId;
+            else
+                UserIDConnectionID.Add(userId, Context.ConnectionId);
+        }
+
         Clients.All.SendAsync("UserCount", UserIDConnectionID.Count + 1);
         return base.OnConnectedAsync();
     }
@@ -71,13 +85,21 @@ public class ChatHub : Hub
 
     public Task JoinGroup(string group) => Groups.AddToGroupAsync(Context.ConnectionId, group);
 
-    public Task SendMessageToGroup(string groupname, string sender, string message) => 
-        //here we will store the recieverid for anyone.
-      Clients.Group(groupname).SendAsync("ReceiveMessage", sender, message);
+    public async Task SendMessageToGroup(CommentViewModel model)
+    {
+        var reposnseMessage = await _chatService.AddComment(model);
+        var currentUserConnectionId = UserIDConnectionID[model.UserId.ToString()];
+        await Clients.GroupExcept(model.GroupName, currentUserConnectionId).SendAsync("ReceiveMessageFromGroup", reposnseMessage);
+    }
 
     public void LikedMethod(string likedByUserID)
     {
         Clients.Client(UserIDConnectionID[likedByUserID]).SendAsync("NotifyLike");
+    }
+
+    public async Task NotifyCommentLike(string commentId,int likeCount,bool isLike,string groupName)
+    {
+        await Clients.Group(groupName).SendAsync("NotifyCommentLikeToReceiver", commentId, likeCount, isLike);
     }
 
 

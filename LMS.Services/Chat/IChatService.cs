@@ -1,4 +1,5 @@
 ﻿using LMS.Common.ViewModels.Chat;
+using LMS.Common.ViewModels.Post;
 using LMS.Data.Entity.Chat;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -22,6 +23,8 @@ namespace LMS.Services.Chat
         Task<IEnumerable<ParticularChat>> GetParticularUserChat(Guid SenderId, Guid ReceiverId,ChatType chatType, int pageSize, int pageNumber);
         Task<bool> SetParticularUserPinned(Guid senderId, Guid receiverId,ChatType chatType);
         Task RemoveUnreadMessageCount(Guid senderId, Guid receiverId,ChatType chatType);
-        
+        Task<CommentViewModel> AddComment(CommentViewModel model);
+        Task<List<CommentViewModel>> GetComments(Guid id,string userId, int pageNumber);
+
     }
 }

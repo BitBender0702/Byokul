@@ -1,11 +1,12 @@
 import { Component, ElementRef, Injector, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { CommentViewModel } from 'src/root/interfaces/chat/commentViewModel';
 import { LikeUnlikePost } from 'src/root/interfaces/post/likeUnlikePost';
 import { PostView } from 'src/root/interfaces/post/postView';
 import { PostService } from 'src/root/service/post.service';
 import { ReelsService } from 'src/root/service/reels.service';
-import { signalRResponse, SignalrService } from 'src/root/service/signalr.service';
+import { commentResponse, signalRResponse, SignalrService } from 'src/root/service/signalr.service';
 import { UserService } from 'src/root/service/user.service';
 
 @Component({
@@ -38,6 +39,8 @@ import { UserService } from 'src/root/service/user.service';
     loginUserId!:string;
 
     postAttachmentId:any;
+    commentViewModel!: CommentViewModel;
+    commentLikeCount!:number;
 
     @ViewChild('groupChatList') groupChatList!: ElementRef;
 
@@ -51,8 +54,6 @@ import { UserService } from 'src/root/service/user.service';
       }
 
     ngOnInit(): void {
-      
-
         this.getLoginUserId();
         //this.reelId = this.route.snapshot.paramMap.get('id') ?? '';
         this.postAttachmentId = this.options.initialState;
@@ -60,6 +61,8 @@ import { UserService } from 'src/root/service/user.service';
             this.reels = response;
             this.addPostView(this.reels.post.id);
             this.isDataLoaded = true;
+
+            this._signalRService.createGroupName(this.reels.id);
             // this.loadingIcon = false;
           });
 
@@ -77,22 +80,32 @@ import { UserService } from 'src/root/service/user.service';
              
       }
 
-          this.signalRService.startConnection();
+          // this.signalRService.startConnection();
 
-          setTimeout(() => {
-            this._signalRService.createGroupName();
-            this._signalRService.askServerListener();
-            this._signalRService.askServer(this.sender.id);
-          }, 5000);
+          // setTimeout(() => {
+          //   this._signalRService.createGroupName(this.reels.id);
+          //   this._signalRService.askServerListener();
+          //   this._signalRService.askServer(this.sender.id);
+          // }, 5000);
 
-          signalRResponse.subscribe(response => {
-            //this.getSenderInfo(response.receiver);
-             this.generateChatDiv(response,this.sender.avatar);
-          });
+          // signalRResponse.subscribe(response => {
+          //   //this.getSenderInfo(response.receiver);
+          //    this.generateChatDiv(response,this.sender.avatar);
+          // });
 
 
           this.InitializeLikeUnlikePost();
           this.InitializePostView();
+
+          commentResponse.subscribe(response => {
+            debugger
+            var comment: any[] = this.reels.post.comments;
+            var commentObj = {content:response.message,likeCount:0,isCommentLikedByCurrentUser:false,userAvatar:response.senderAvatar};
+            comment.push(commentObj);
+
+            // var result ={receiver:this.sender.firstName,message:response.message,isTest:false};
+            // this.generateChatDiv(result,response.senderAvatar);
+          });
 
 
 
@@ -108,12 +121,35 @@ import { UserService } from 'src/root/service/user.service';
       }
     }
 
+    InitializeCommentViewModel(){
+      this.commentViewModel = {
+        userId: '',
+        content:'',
+        groupName:'',
+        userAvatar:''
+       };
+
+    }
+
     
 
     sendToGroup(){
-      this._signalRService.sendToGroup(this.sender.id,this.messageToGroup);
+      var comment: any[] = this.reels.post.comments;
+      var commentObj = {content:this.messageToGroup,likeCount:0,isCommentLikedByCurrentUser:false,userAvatar:this.sender.avatar};
+      comment.push(commentObj);
+
+      this.InitializeCommentViewModel();
+      this.commentViewModel.userId = this.sender.id;
+      this.commentViewModel.groupName = this.reels.id + "_group";
+      this.commentViewModel.content = this.messageToGroup;
+      this.commentViewModel.userAvatar = this.sender.avatar;
       var response ={receiver:this.sender.firstName,message:this.messageToGroup,isTest:false};
-      // this.generateChatDiv(response,this.sender.avatar);
+      //this.generateChatDiv(response,this.sender.avatar);
+      this._signalRService.sendToGroup(this.commentViewModel);
+
+
+      
+      
       }
 
     generateChatDiv(response:any,profileImage:string){
@@ -124,7 +160,6 @@ import { UserService } from 'src/root/service/user.service';
       <p class="text_sec1 font_12 fw_400 text-start mb-0">${response.message}</p>
       <button type="button" class="btn bg-transparent text_ltgray font_12 p-0 border-0 reel-like-chat"><img
           src="../../../assets/images/Heart-dark.svg" class="d-block" /> 34</button>
-      <button type="button" class="border-0 bg-transparent pinned-chat"><img src="../../../assets/images/pinned.svg" /></button>
     </div>`
     p.innerHTML =li;
       // this.recieverMessageInfo = response;
@@ -204,6 +239,58 @@ import { UserService } from 'src/root/service/user.service';
            this.InitializeLikeUnlikePost();
            console.log("succes");
         });
+      
+      
+      }
+
+      likeUnlikeComments(commentId:string, isLike:boolean,isCommentLikedByCurrentUser:boolean,likeCount:number){
+        var comment: any[] = this.reels.post.comments;
+        var isCommentLiked = comment.find(x => x.id == commentId);
+       if(isCommentLiked.isCommentLikedByCurrentUser){
+        isCommentLiked.isCommentLikedByCurrentUser = false;
+        isCommentLiked.likeCount = isCommentLiked.likeCount - 1;
+        this.signalRService.notifyCommentLike(commentId,isCommentLiked.likeCount,false,this.reels.id + "_group");
+       }
+       else{
+        isCommentLiked.isCommentLikedByCurrentUser = true;
+        isCommentLiked.likeCount = isCommentLiked.likeCount + 1;
+        this.signalRService.notifyCommentLike(commentId,isCommentLiked.likeCount,true,this.reels.id + "group");
+        // this.commentLikeCount = likeCount + 1;
+       }
+
+       if(commentId!= undefined){
+          this._postService.likeUnlikeComments(commentId,isLike).subscribe((response) => {
+          //  this.reels.post.likes = response;
+          //  this.InitializeLikeUnlikePost();
+          //  console.log("succes");
+        });
+      }
+
+        // this.currentLikedPostId = postId;
+        //   var likes: any[] = this.reels.post.likes;
+        //   var isLiked = likes.filter(x => x.userId == this.loginUserId && x.postId == postId);
+        // if(isLiked.length != 0){
+        //   this.isLiked = false;
+        //   this.likesLength = this.reels.post.likes.length - 1;
+        //   this.reels.post.isPostLikedByCurrentUser = false;
+        // }
+        // else{
+        //   this.isLiked = true;
+        //   this.likesLength = this.reels.post.likes.length + 1;
+        //   this.reels.post.isPostLikedByCurrentUser = true;
+      
+        // }
+
+        
+       
+        // this.likeUnlikePost.postId = postId;
+        // this.likeUnlikePost.isLike = isLike;
+        // this.likeUnlikePost.commentId = '00000000-0000-0000-0000-000000000000'
+        // this._postService.likeUnlikePost(this.likeUnlikePost).subscribe((response) => {
+        //    this.reels.post.likes = response;
+        //    this.InitializeLikeUnlikePost();
+        //    console.log("succes");
+        // });
       
       
       }

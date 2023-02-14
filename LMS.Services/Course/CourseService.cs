@@ -90,6 +90,19 @@ namespace LMS.Services
             if (courseViewModel.Thumbnail != null)
             {
                 courseViewModel.ThumbnailUrl = await _blobService.UploadFileAsync(courseViewModel.Thumbnail, containerName);
+
+                int index = courseViewModel.Thumbnail.ContentType.IndexOf('/');
+                if (index > 0)
+                {
+                    if (courseViewModel.Thumbnail.ContentType.Substring(0, index) == "video")
+                    {
+                        courseViewModel.ThumbnailType = (int)FileTypeEnum.Video;
+                    }
+                    else
+                    {
+                        courseViewModel.ThumbnailType = (int)FileTypeEnum.Image;
+                    }
+                }
             }
 
             var course = new Course
@@ -102,6 +115,7 @@ namespace LMS.Services
                 Price = courseViewModel.Price,
                 CourseUrl = courseViewModel.CourseUrl,
                 ThumbnailUrl = courseViewModel.ThumbnailUrl,
+                ThumbnailType = courseViewModel.ThumbnailType,
                 CreatedById = createdById,
                 CreatedOn = DateTime.UtcNow
             };
@@ -469,6 +483,7 @@ namespace LMS.Services
                 post.PostAttachments = await GetAttachmentsByPostId(post.Id);
                 post.Likes = await _userService.GetLikesOnPost(post.Id);
                 post.Views = await _userService.GetViewsOnPost(post.Id);
+                post.CommentsCount = await _userService.GetCommentsCountOnPost(post.Id);
                 if (post.Likes.Any(x => x.UserId == loginUserId && x.PostId == post.Id))
                 {
                     post.IsPostLikedByCurrentUser = true;

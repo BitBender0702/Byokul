@@ -214,10 +214,10 @@ namespace LMS.App.Controllers
 
         [Route("getSchoolClassCourse")]
         [HttpGet]
-        public async Task<IActionResult> GetSchoolClassCourse(Guid schoolId)
+        public async Task<IActionResult> GetSchoolClassCourse(Guid schoolId, int pageNumber)
         {
             var userId = await GetUserIdAsync(this._userManager);
-            var response = await _schoolService.GetSchoolClassCourse(schoolId, userId);
+            var response = await _schoolService.GetSchoolClassCourse(schoolId, userId, pageNumber);
             return Ok(response);
         }
 

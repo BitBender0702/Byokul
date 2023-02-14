@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LMS.App.Controllers
 {
-    [Authorize]
     [Route("class")]
     public class ClassController : BaseController
     {

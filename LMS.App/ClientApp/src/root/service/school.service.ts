@@ -103,8 +103,10 @@ export class SchoolService{
         return this.http.get(`${this.apiUrl}/school/getSchoolByName` + '?schoolName=' + schoolName);
     }
 
-    getSchoolClassCourseList(schoolId:any):Observable<any>{
-        return this.http.get(`${this.apiUrl}/school/getSchoolClassCourse` + '?schoolId=' + schoolId);
+    getSchoolClassCourseList(schoolId:any,pageNumber:number):Observable<any>{
+        // return this.http.get(`${this.apiUrl}/school/getSchoolClassCourse` + '?schoolId=' + schoolId);
+        let queryParams = new HttpParams().append("schoolId",schoolId).append("pageNumber",pageNumber);
+        return this.http.get(`${this.apiUrl}/school/getSchoolClassCourse`, {params:queryParams});
     }
 
     pinUnpinClassCourse(id:string,type:string,isPinned:boolean): Observable<any> {

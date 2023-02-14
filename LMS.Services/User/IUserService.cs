@@ -25,6 +25,7 @@ namespace LMS.Services
         Task<Guid> SaveUserPreference(string userId,string preferenceString);
         Task<List<LikeViewModel>> GetLikesOnPost(Guid postId);
         Task<List<ViewsViewModel>> GetViewsOnPost(Guid postId);
+        Task<int> GetCommentsCountOnPost(Guid postId);
         Task<IEnumerable<PostDetailsViewModel>> GetPostsByUserId(string userId, int pageNumber, int pageSize);
         Task<IEnumerable<PostDetailsViewModel>> GetReelsByUserId(string userId, int pageNumber, int pageSize);
 

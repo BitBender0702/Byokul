@@ -57,7 +57,8 @@ import { PostViewComponent } from './root/postView/postView.component';
 import { CourseProfileComponent } from './root/course/courseProfile/courseProfile.component';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { UserFeedComponent } from './root/userFeed/userFeed.component';
-//import { AdminModule } from './admin/admin.module';
+import { ClassCourseModalComponent } from './root/ClassCourseModal/classCourseModal.component';
+import { PaymentComponent } from './root/payment/payment.component';
 
 
 const routes: Routes = [
@@ -83,11 +84,6 @@ const routes: Routes = [
       .then(m => m.UrlRoutesModule)
   }
 
-  // {
-  //   path: 'school',data: { preload: true },
-  //   loadChildren: () => import('./root/urlRouting.module')
-  //     .then(m => m.UrlRoutingModule)
-  // }
 
 ];
 
@@ -114,7 +110,9 @@ const routes: Routes = [
     UserFollowersComponent,
     SchoolFollowersComponent,
     PostViewComponent,
-    ChatComponent
+    ClassCourseModalComponent,
+    ChatComponent,
+    PaymentComponent
 
   ],
   imports: [

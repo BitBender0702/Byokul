@@ -90,19 +90,7 @@ builder.Services.AddScoped<IChatService, ChatService>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped(typeof(IAsyncGenericRepository<>), typeof(AsyncGenericRepository<>));
 
-//builder.Services.Configure<IdentityOptions>(options =>
-//{
-//    options.Password.RequireDigit = false;
-//    options.Password.RequiredLength = 5;
-//    options.Password.RequireLowercase = false;
-//    options.Password.RequireNonAlphanumeric = false;
-//    options.Password.RequireUppercase = false;
-//    options.SignIn.RequireConfirmedEmail = true;
-
-//});
-
 StripeConfiguration.ApiKey = configuration.GetSection("Stripe")["SecretKey"];
-
 
 builder.Services.AddOptions();
 builder.Services.AddHttpClient();
@@ -130,6 +118,22 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme
             ValidAudience = configuration["Jwt:Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]))
         };
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                var accessToken = context.Request.Query["access_token"];
+                // If the request is for our hub...
+                var path = context.HttpContext.Request.Path;
+                if (!string.IsNullOrEmpty(accessToken) &&
+                    (path.StartsWithSegments("/chatHub")))
+                {
+                    // Read the token out of the query string
+                    context.Token = accessToken;
+                }
+                return Task.CompletedTask;
+            }
+        };
     });
 
 
@@ -151,7 +155,6 @@ builder.Services.AddSignalR(options =>
 });
 
 var app = builder.Build();
-//var temp = new Seeder(app);
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -161,8 +164,9 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-app.UseRouting();
 app.UseCors("EnableCORS");
+app.UseRouting();
+
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseSwagger();

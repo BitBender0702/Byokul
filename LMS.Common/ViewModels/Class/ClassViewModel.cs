@@ -29,6 +29,7 @@ namespace LMS.Common.ViewModels.Class
         public long? Price { get; set; }
         public double? Rating { get; set; }
         public string? ThumbnailUrl { get; set; }
+        public int? ThumbnailType { get; set; }
         public IFormFile Thumbnail { get; set; }
         public string ClassUrl { get; set; }
         public string? Avatar { get; set; }
@@ -43,6 +44,7 @@ namespace LMS.Common.ViewModels.Class
         public IEnumerable<string> ClassTags { get; set; }
         public List<ClassLikeViewModel> ClassLike { get; set; }
         public List<ClassViewsViewModel> ClassViews { get; set; }
+        public int CommentsCount { get; set; }
         public bool IsClassLikedByCurrentUser { get; set; }
 
 

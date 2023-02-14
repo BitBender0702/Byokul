@@ -87,49 +87,15 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
             <div class="chat-enabled d-inline-flex align-items-center"><img src="../../../assets/images/Unlock.svg" />{{'ChatEnabled'| translate }}
             </div>
             <div #groupChatList id="groupChat" class="live-chat-outer">
-            <div class="live-message d-flex position-relative align-items-start">
-              <img src="../../../assets/images/school/user.jpg" class="comment-user">
-              <p class="text_sec1 font_12 fw_400 text-start mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing
-                elit. Id odio congue suscipit sodales nec vitae hac ac senectus. Varius sed id.</p>
-              <button type="button" class="btn bg-transparent text_ltgray font_12 p-0 border-0 reel-like-chat"><img
-                  src="../../../assets/images/Heart-dark.svg" class="d-block" /> 34</button>
-              <button type="button" class="border-0 bg-transparent pinned-chat"><img src="../../../assets/images/pinned.svg" /></button>
-            </div>
-            <div class="live-message d-flex position-relative align-items-start">
-              <img src="../../../assets/images/school/user.jpg" class="comment-user">
-              <p class="text_sec1 font_12 fw_400 text-start mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing
-                elit. Tristique dolor senectus facilisi urna. Dictum vitae morbi turpis sed. In.</p>
-              <button type="button" class="btn bg-transparent text_ltgray font_12 p-0 border-0 reel-like-chat"><img
-                  src="../../../assets/images/Heart-dark.svg" class="d-block" /> 34</button>
-            </div>
-            <div class="live-message d-flex position-relative align-items-start">
-              <img src="../../../assets/images/school/user.jpg" class="comment-user">
-              <p class="text_sec1 font_12 fw_400 text-start mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing
-                elit. Lorem diam nunc mollis in. Dictum vitae morbi turpis sed. In. Sed feugiat iaculis gravida
-                ultricies blandit justo sit.</p>
-              <button type="button" class="btn bg-transparent text_ltgray font_12 p-0 border-0 reel-like-chat"><img
-                  src="../../../assets/images/Heart-dark.svg" class="d-block" /> 34</button>
-            </div>
-            <div class="live-message d-flex position-relative align-items-start">
-              <img src="../../../assets/images/school/user.jpg" class="comment-user">
-              <p class="text_sec1 font_12 fw_400 text-start mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing
-                elit. </p>
-              <button type="button" class="btn bg-transparent text_ltgray font_12 p-0 border-0 reel-like-chat"><img
-                  src="../../../assets/images/Heart-dark.svg" class="d-block" /> 34</button>
-            </div>
-            <div class="live-message d-flex position-relative align-items-start">
-              <img src="../../../assets/images/school/user.jpg" class="comment-user">
-              <p class="text_sec1 font_12 fw_400 text-start mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing
-                elit. Id odio congue suscipit sodales nec vitae hac.</p>
-              <button type="button" class="btn bg-transparent text_ltgray font_12 p-0 border-0 reel-like-chat"><img
-                  src="../../../assets/images/Heart-dark.svg" class="d-block" /> 34</button>
-            </div>
-            <div class="live-message d-flex position-relative align-items-start">
-              <img src="../../../assets/images/school/user.jpg" class="comment-user">
-              <p class="text_sec1 font_12 fw_400 text-start mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing
-                elit. Id odio congue suscipit sodales nec vitae hac ac senectus. Varius sed id.</p>
-              <button type="button" class="btn bg-transparent text_ltgray font_12 p-0 border-0 reel-like-chat"><img
-                  src="../../../assets/images/Heart-dark.svg" class="d-block" /> 34</button>
+            <div *ngFor="let item of reels.post.comments" class="live-message d-flex position-relative align-items-start">
+              <img [src]="item.userAvatar" class="comment-user">
+              <p class="text_sec1 font_12 fw_400 text-start mb-0">{{item.content}}</p>
+              <button (click)="likeUnlikeComments(item.id,true,item.isCommentLikedByCurrentUser,item.likeCount)" type="button" class="btn bg-transparent text_ltgray font_12 p-0 border-0 reel-like-chat">
+                <img *ngIf="item.isCommentLikedByCurrentUser" src="../../../assets/images/heart-red.svg" class="d-block" />
+                <img *ngIf="!item.isCommentLikedByCurrentUser" src="../../../assets/images/Heart-dark.svg" class="d-block" />
+                <span>{{item.likeCount}}</span>
+              </button>
+              <!-- <button type="button" class="border-0 bg-transparent pinned-chat"><img src="../../../assets/images/pinned.svg" /></button> -->
             </div>
           </div>
             <div class="add-comment d-flex align-items-center justify-content-between">

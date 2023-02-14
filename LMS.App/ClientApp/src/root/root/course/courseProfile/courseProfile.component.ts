@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, ElementRef, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -84,7 +84,8 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     reelsPageNumber:number = 1;
     postLoadingIcon: boolean = false;
     reelsLoadingIcon:boolean = false;
-    postResponse:any;
+    scrolled:boolean = false;
+    scrollFeedResponseCount:number = 1;
 
 
     @ViewChild('closeEditModal') closeEditModal!: ElementRef;
@@ -109,7 +110,8 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
 
   
     ngOnInit(): void {
-      document.addEventListener('scroll', this.myScrollFunction, false);
+      this.postLoadingIcon = false;
+      // document.addEventListener('scroll', this.myScrollFunction, false);
       this.validToken = localStorage.getItem("jwt")?? '';
       this.loadingIcon = true;
       var selectedLang = localStorage.getItem("selectedLanguage");
@@ -141,6 +143,8 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
         this.isOwnerOrNot();
         this.loadingIcon = false;
         this.isDataLoaded = true;
+        this.scrolled = false;
+        this.postLoadingIcon = false;
         this.addCourseView(this.course.courseId);
         if(this.carousel!=undefined){
           if($('carousel')[0].querySelectorAll('a.carousel-control-next')[0])
@@ -241,6 +245,8 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
           this.isOwnerOrNot();
           this.loadingIcon = false;
           this.isDataLoaded = true;
+          this.scrolled = false;
+          this.postLoadingIcon = false;
           this.addCourseView(this.course.courseId);
         });
       });
@@ -270,31 +276,43 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       if(this.courseParamsData$) this.courseParamsData$.unsubscribe();
     }
 
-    myScrollFunction = (ev: any): void => {
-      this.postLoadingIcon = true;
-      this.postsPageNumber++;
-      this.getPostsByCourseId();
+    @HostListener("window:scroll", [])
+    onWindowScroll() {
+      if(!this.scrolled && this.scrollFeedResponseCount != 0){
+        this.scrolled = true;
+        this.postLoadingIcon = true;
+        this.postsPageNumber++;
+        this.getPostsByCourseId();
+      }
+    }
+    // myScrollFunction = (ev: any): void => {
+    //   this.postLoadingIcon = true;
+    //   this.postsPageNumber++;
+    //   this.getPostsByCourseId();
 
-      // if(this.postResponse == undefined){
-      //   this.postLoadingIcon = true;
-      //   this.postsPageNumber++;
-      //   this.getPostsByCourseId();
-      // }
-      //   else{
-      //     if(this.postResponse.length != 0){
-      //       this.postsPageNumber++;
-      //       this.getPostsByCourseId();
-      //     }
-      //   }
-    };
+    //   // if(this.postResponse == undefined){
+    //   //   this.postLoadingIcon = true;
+    //   //   this.postsPageNumber++;
+    //   //   this.getPostsByCourseId();
+    //   // }
+    //   //   else{
+    //   //     if(this.postResponse.length != 0){
+    //   //       this.postsPageNumber++;
+    //   //       this.getPostsByCourseId();
+    //   //     }
+    //   //   }
+    // };
   
     getPostsByCourseId() {
-      this._courseService
-        .getPostsByCourseId(this.course.courseId, this.postsPageNumber)
-        .subscribe((response) => {
+      if(this.course?.courseId == undefined){
+        this.postLoadingIcon = true;
+        return;
+      }
+      this._courseService.getPostsByCourseId(this.course.courseId, this.postsPageNumber).subscribe((response) => {
           this.course.posts = [...this.course.posts, ...response];
-          this.postResponse = response;
           this.postLoadingIcon = false;
+          this.scrolled = false;
+          this.scrollFeedResponseCount = response.length;  
 
         });
     }

@@ -84,6 +84,18 @@ namespace LMS.Services
             if (classViewModel.Thumbnail != null)
             {
                 classViewModel.ThumbnailUrl = await _blobService.UploadFileAsync(classViewModel.Thumbnail, containerName);
+               int index = classViewModel.Thumbnail.ContentType.IndexOf('/');
+                if (index > 0)
+                {
+                    if(classViewModel.Thumbnail.ContentType.Substring(0, index) == "video")
+                    {
+                        classViewModel.ThumbnailType = (int)FileTypeEnum.Video;
+                    }
+                    else
+                    {
+                        classViewModel.ThumbnailType = (int)FileTypeEnum.Image;
+                    }
+                }
             }
 
             var classes = new Class
@@ -99,6 +111,7 @@ namespace LMS.Services
                 AccessibilityId = classViewModel.AccessibilityId,
                 ClassUrl = classViewModel.ClassUrl,
                 ThumbnailUrl = classViewModel.ThumbnailUrl,
+                ThumbnailType = classViewModel.ThumbnailType,
                 CreatedById = createdById,
                 CreatedOn = DateTime.UtcNow
             };
@@ -139,7 +152,7 @@ namespace LMS.Services
                 await SaveClassTags(classViewModel.ClassTags, classViewModel.ClassId);
             }
 
-            var school = await _schoolRepository.GetAll().Where(x=> x.SchoolId == classViewModel.SchoolId).FirstOrDefaultAsync();
+            var school = await _schoolRepository.GetAll().Where(x => x.SchoolId == classViewModel.SchoolId).FirstOrDefaultAsync();
             try
             {
                 var schoolResult = _mapper.Map<SchoolViewModel>(school);
@@ -149,7 +162,7 @@ namespace LMS.Services
             {
                 throw ex;
             }
-            
+
             return classViewModel;
 
         }
@@ -317,7 +330,7 @@ namespace LMS.Services
             await SaveClassTeachers(teacherIds, classId);
         }
 
-        public async Task<ClassDetailsViewModel> GetClassById(string className,string loginUserId)
+        public async Task<ClassDetailsViewModel> GetClassById(string className, string loginUserId)
         {
             ClassDetailsViewModel model = new ClassDetailsViewModel();
             if (className != null)
@@ -424,7 +437,7 @@ namespace LMS.Services
             return model;
         }
 
-        public async Task<IEnumerable<PostDetailsViewModel>> GetPostsByClassId(Guid classId,string loginUserId, int pageNumber = 1, int pageSize = 4)
+        public async Task<IEnumerable<PostDetailsViewModel>> GetPostsByClassId(Guid classId, string loginUserId, int pageNumber = 1, int pageSize = 4)
         {
             var courseList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == classId && x.PostType == (int)PostTypeEnum.Post).OrderByDescending(x => x.IsPinned).ToListAsync();
             var result = _mapper.Map<List<PostDetailsViewModel>>(courseList).Skip((pageNumber - 1) * pageSize).Take(pageSize);
@@ -434,6 +447,7 @@ namespace LMS.Services
                 post.PostAttachments = await GetAttachmentsByPostId(post.Id);
                 post.Likes = await _userService.GetLikesOnPost(post.Id);
                 post.Views = await _userService.GetViewsOnPost(post.Id);
+                post.CommentsCount = await _userService.GetCommentsCountOnPost(post.Id);
 
                 if (post.Likes.Any(x => x.UserId == loginUserId && x.PostId == post.Id))
                 {
@@ -597,7 +611,7 @@ namespace LMS.Services
             return null;
         }
 
-        public async Task<bool> IsClassNameExist(string className)  
+        public async Task<bool> IsClassNameExist(string className)
         {
             var result = await _classRepository.GetAll().Where(x => x.ClassName == className).FirstOrDefaultAsync();
             if (result != null)

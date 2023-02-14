@@ -41,7 +41,7 @@
       </div>
 
       <div class="tab-content position-relative active" id="pills-tabContent">
-        <div [ngClass]="myFeeds?.length > 0 || myFeedsReels?.length > 0 ? 'tab-pane fade show active':'tab-pane fade show'" (scroll)="myScrollFunction($event)" id="school-feed-tab-pane" role="tabpanel"
+        <div [ngClass]="myFeeds?.length > 0 || myFeedsReels?.length > 0 ? 'tab-pane fade show active':'tab-pane fade show'" id="school-feed-tab-pane" role="tabpanel"
           aria-labelledby="school-feed-tab" tabindex="0">
           <div class="button-list-grid">
             <button [ngClass]="isProfileGrid ? 'btn border-btn active d-inline-flex align-items-center justify-content-center' : 'btn border-btn d-inline-flex align-items-center justify-content-center'" (click)="profileGrid()" type="button" >
@@ -254,7 +254,7 @@
                 </button>
                 <button type="button" class="bg-transparent border-0 function-btns text-light">
                   <img src="../../../../assets/images/Chat-light.svg" class="d-block mx-auto" />
-                  34
+                  {{post.commentsCount}}
                 </button>
                 <button type="button" class="bg-transparent border-0 function-btns text-light">
                   <img src="../../../../assets/images/Bookmark-light.svg" class="d-block mx-auto" />
@@ -280,7 +280,7 @@
                 </button>
                 <button type="button" class="bg-transparent border-0 function-btns text-light">
                   <img src="../../../../assets/images/Chat-dark.svg" class="d-block mx-auto" />
-                  <span class="textBlack">34</span>
+                  <span class="textBlack"> {{post.commentsCount}}</span>
                 </button>
                 <button type="button" class="bg-transparent border-0 function-btns text-light">
                   <img src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto" />
@@ -373,7 +373,7 @@
                       </button>
                       <button (click)="openPostsViewModal(gridItemInfo)" type="button" class="bg-transparent border-0 function-btns">
                         <img src="../../../../assets/images/Chat-dark.svg" class="d-block mx-auto">
-                        34
+                        {{gridItemInfo.commentsCount}}
                       </button>
                       <button type="button" class="bg-transparent border-0 function-btns">
                         <img src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto">
@@ -464,7 +464,7 @@
 
 
         </div>
-        <div [ngClass]="myFeeds?.length == 0 && myFeedsReels?.length == 0 ? 'tab-pane fade show active':'tab-pane fade show'" (scroll)="globalScrollFunction($event)" class="tab-pane fade show" id="classes-tab-pane" role="tabpanel" aria-labelledby="school-feed-tab"
+        <div [ngClass]="myFeeds?.length == 0 && myFeedsReels?.length == 0 ? 'tab-pane fade show active':'tab-pane fade show'" class="tab-pane fade show" id="classes-tab-pane" role="tabpanel" aria-labelledby="school-feed-tab"
           tabindex="0">
           <div class="button-list-grid">
             <button [ngClass]="isProfileGrid ? 'btn border-btn active d-inline-flex align-items-center justify-content-center' : 'btn border-btn d-inline-flex align-items-center justify-content-center'" (click)="profileGrid()" type="button" >
@@ -677,7 +677,7 @@
                 </button>
                 <button type="button" class="bg-transparent border-0 function-btns text-light">
                   <img src="../../../../assets/images/Chat-light.svg" class="d-block mx-auto" />
-                  34
+                  {{post.commentsCount}}
                 </button>
                 <button type="button" class="bg-transparent border-0 function-btns text-light">
                   <img src="../../../../assets/images/Bookmark-light.svg" class="d-block mx-auto" />
@@ -703,7 +703,7 @@
                 </button>
                 <button type="button" class="bg-transparent border-0 function-btns text-light">
                   <img src="../../../../assets/images/Chat-dark.svg" class="d-block mx-auto" />
-                  <span class="textBlack">34</span>
+                  <span class="textBlack">{{post.commentsCount}}</span>
                 </button>
                 <button type="button" class="bg-transparent border-0 function-btns text-light">
                   <img src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto" />
@@ -796,7 +796,7 @@
                       </button>
                       <button (click)="openPostsViewModal(gridItemInfoForGlobal)" type="button" class="bg-transparent border-0 function-btns">
                         <img src="../../../../assets/images/Chat-dark.svg" class="d-block mx-auto">
-                        34
+                        {{gridItemInfoForGlobal.commentsCount}}
                       </button>
                       <button type="button" class="bg-transparent border-0 function-btns">
                         <img src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto">
@@ -1498,9 +1498,9 @@
 
     
   </script>
+    <post-loading-spinner [postLoadingIcon]="postLoadingIcon"></post-loading-spinner>
   </div>
   <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
-  <post-loading-spinner [postLoadingIcon]="postLoadingIcon"></post-loading-spinner>
   <reels-loading-spinner [reelsLoadingIcon]="reelsLoadingIcon"></reels-loading-spinner>
 
 

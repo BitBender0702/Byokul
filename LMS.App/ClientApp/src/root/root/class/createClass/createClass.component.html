@@ -172,7 +172,7 @@
                 <i class="glyphicon glyphicon-download-alt"></i>
                 <p class="text-center fw_400">{{'ChooseImageFile'| translate }} <b>{{'DragItHere'| translate }}</b></p>
               </div>
-              <input type="file" name="img_logo" (change)="handleImageInput($event)"  class="dropzone">
+              <input type="file" name="img_logo" (change)="handleImageInput($event)"  class="dropzone" accept="image/*, video/*">
             </div>
             <div>
               <p class="text-center">{{uploadImageName}}</p>

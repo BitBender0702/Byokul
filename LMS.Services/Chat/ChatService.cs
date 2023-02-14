@@ -19,6 +19,7 @@ using Org.BouncyCastle.Math.EC.Rfc7748;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using LMS.Common.ViewModels.Post;
 
 namespace LMS.Services.Chat
 {
@@ -30,10 +31,12 @@ namespace LMS.Services.Chat
         private readonly IGenericRepository<School> _schoolRepository;
         private readonly IGenericRepository<Class> _classRepository;
         private readonly IGenericRepository<Course> _courseRepository;
+        private readonly IGenericRepository<Comment> _commentRepository;
+        private readonly IGenericRepository<CommentLike> _commentLikeRepository;
         private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
         private readonly IBlobService _blobService;
-        public ChatService(IGenericRepository<ChatMessage> repository, IMapper mapper, IGenericRepository<ChatHead> chatHeadRepository, IBlobService blobService, IGenericRepository<Attachment> attachmentRepo, UserManager<User> userManager, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository)
+        public ChatService(IGenericRepository<ChatMessage> repository, IMapper mapper, IGenericRepository<ChatHead> chatHeadRepository, IBlobService blobService, IGenericRepository<Attachment> attachmentRepo, UserManager<User> userManager, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<Comment> commentRepository, IGenericRepository<CommentLike> commentLikeRepository)
         {
             _chatMessageRepository = repository;
             _chatHeadRepository = chatHeadRepository;
@@ -44,6 +47,8 @@ namespace LMS.Services.Chat
             _schoolRepository = schoolRepository;
             _classRepository = classRepository;
             _courseRepository = courseRepository;
+            _commentRepository = commentRepository;
+            _commentLikeRepository = commentLikeRepository;
         }
         public async Task<ChatMessageViewModel> AddChatMessage(ChatMessageViewModel chatViewModel)
         {
@@ -387,10 +392,10 @@ namespace LMS.Services.Chat
             var attachRepo = _attachmentRepository.GetAll();
             var chatRepo = _chatMessageRepository.GetAll().Where(x => !x.IsDeleted).Include(x => x.ChatHead).Where(x => (x.SenderId == SenderId && x.ReceiverId == ReceiverId && x.ChatHead.ChatType == chatType) || (x.SenderId == ReceiverId && x.ReceiverId == SenderId && x.ChatHead.ChatType == chatType));
 
-          //  if (chatRepo.Count() < MinimumPageSize)
-                chatRepo = chatRepo.OrderByDescending(x => x.CreatedOn);
+            //  if (chatRepo.Count() < MinimumPageSize)
+            chatRepo = chatRepo.OrderByDescending(x => x.CreatedOn);
             //else
-              //  chatRepo = chatRepo.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+            //  chatRepo = chatRepo.Skip((pageNumber - 1) * pageSize).Take(pageSize);
 
 
             List<ParticularChat> chatList = new List<ParticularChat>();
@@ -441,7 +446,7 @@ namespace LMS.Services.Chat
         public async Task RemoveUnreadMessageCount(Guid SenderId, Guid ReceiverId, ChatType chatType)
         {
             var result = await _chatHeadRepository.GetAll().Where(x => /*(x.SenderId == SenderId.ToString() && x.ReceiverId == ReceiverId.ToString() && x.ChatType == chatType) || (*/x.SenderId == ReceiverId.ToString() && x.ReceiverId == SenderId.ToString() && x.ChatType == chatType)/*)*/.FirstOrDefaultAsync();
-            if (result!= null)
+            if (result != null)
             {
                 if (result.UnreadMessageCount != 0)
                 {
@@ -451,6 +456,46 @@ namespace LMS.Services.Chat
                 }
             }
         }
+
+        public async Task<CommentViewModel> AddComment(CommentViewModel chatViewModel)
+        {
+            var comment = new Comment
+            {
+                UserId = chatViewModel.UserId,
+                GroupName = chatViewModel.GroupName,
+                Content = chatViewModel.Content,
+                CreatedOn = DateTime.UtcNow
+            };
+
+            _commentRepository.Insert(comment);
+            _commentRepository.Save();
+
+            return chatViewModel;
+
+        }
+
+        public async Task<List<CommentViewModel>> GetComments(Guid id,string userid,int pageNumber)
+        {
+            int pageSize = 15;
+            var comments = await _commentRepository.GetAll().Include(x => x.User).Where(x => x.GroupName == id + "_group").Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            var response = _mapper.Map<List<CommentViewModel>>(comments);
+            var CommentLikes = await _commentLikeRepository.GetAll().ToListAsync();
+            foreach (var item in response)
+            {
+                item.UserAvatar = item.User.Avatar;
+                if (CommentLikes.Any(x => x.CommentId == item.Id))
+                {
+                    item.isCommentLikedByCurrentUser = true;
+                }
+            }
+            return response;
+
+
+
+        }
+
+
 
     }
 }

@@ -6,6 +6,7 @@ using LMS.Data.Entity;
 using LMS.Data.Entity.Chat;
 using LMS.Services;
 using LMS.Services.Chat;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +14,7 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace LMS.App.Controllers
 {
+    [Authorize]
     [Route("users")]
     public class UserController : BaseController
     {

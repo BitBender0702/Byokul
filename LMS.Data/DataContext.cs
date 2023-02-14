@@ -65,5 +65,6 @@ namespace LMS.Data
         public DbSet<ChatHead> ChatHeads { get; set; }
         public DbSet<ChatMessage> ChatMessages { get; set; }
         public DbSet<Attachment> Attachments { get; set; }
+        public DbSet<CommentLike> CommentLikes { get; set; }
     }
 }

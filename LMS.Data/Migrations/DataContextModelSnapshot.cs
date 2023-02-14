@@ -237,6 +237,9 @@ namespace LMS.Data.Migrations
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("ThumbnailType")
+                        .HasColumnType("int");
+
                     b.Property<string>("ThumbnailUrl")
                         .HasColumnType("nvarchar(max)");
 
@@ -440,7 +443,30 @@ namespace LMS.Data.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("PostId")
+                    b.Property<string>("GroupName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("LikeCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Comments");
+                });
+
+            modelBuilder.Entity("LMS.Data.Entity.CommentLike", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CommentId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("UserId")
@@ -448,11 +474,11 @@ namespace LMS.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PostId");
+                    b.HasIndex("CommentId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Comments");
+                    b.ToTable("CommentLikes");
                 });
 
             modelBuilder.Entity("LMS.Data.Entity.Country", b =>
@@ -528,6 +554,9 @@ namespace LMS.Data.Migrations
 
                     b.Property<Guid?>("ServiceTypeId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<int?>("ThumbnailType")
+                        .HasColumnType("int");
 
                     b.Property<string>("ThumbnailUrl")
                         .HasColumnType("nvarchar(max)");
@@ -1846,15 +1875,24 @@ namespace LMS.Data.Migrations
 
             modelBuilder.Entity("LMS.Data.Entity.Comment", b =>
                 {
-                    b.HasOne("LMS.Data.Entity.Post", "Post")
+                    b.HasOne("LMS.Data.Entity.User", "User")
                         .WithMany()
-                        .HasForeignKey("PostId");
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("LMS.Data.Entity.CommentLike", b =>
+                {
+                    b.HasOne("LMS.Data.Entity.Comment", "Comment")
+                        .WithMany()
+                        .HasForeignKey("CommentId");
 
                     b.HasOne("LMS.Data.Entity.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
 
-                    b.Navigation("Post");
+                    b.Navigation("Comment");
 
                     b.Navigation("User");
                 });

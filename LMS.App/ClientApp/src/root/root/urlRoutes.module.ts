@@ -23,20 +23,6 @@ import { ChatComponent } from '../root/chat/chat.component';
 import { UrlRoutesComponent } from './urlRoutes.component';
 import { CourseProfileComponent } from './course/courseProfile/courseProfile.component';
 
-
-// const routes: Routes = [
-//   {
-//     path: '',
-//     redirectTo:':schoolName'
-//   },
-  
-//   {
-//     path: ':schoolName',component:SchoolProfileComponent
-//   },
-
-// ];
-
-
 @NgModule({
   declarations: [UrlRoutesComponent],
   imports: [
@@ -62,7 +48,5 @@ import { CourseProfileComponent } from './course/courseProfile/courseProfile.com
   providers: [],
   exports:[RouterModule]
  
-  
-  
 })
 export class UrlRoutesModule {}

@@ -8,10 +8,13 @@ import { ILogger, LogLevel } from "@aspnet/signalr";
 
 export class CustomXhrHttpClient extends HttpClient {
     private readonly logger: ILogger;
+    private readonly token: string;
 
-    public constructor(logger?: ILogger) {
+    public constructor(token:string, logger?: ILogger) {
         super();
-        this.logger = logger == null ? new Object as ILogger : logger;    }
+        this.logger = logger == null ? new Object as ILogger : logger; 
+    this.token = token;
+    }
 
     /** @inheritDoc */
     public send(request: HttpRequest): Promise<HttpResponse> {
@@ -34,6 +37,7 @@ export class CustomXhrHttpClient extends HttpClient {
             xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
             // Explicitly setting the Content-Type header for React Native on Android platform.
             xhr.setRequestHeader("Content-Type", "text/plain;charset=UTF-8");
+            xhr.setRequestHeader("Authorization", `Bearer ${this.token}`);
 
             const headers = request.headers;
             if (headers) {

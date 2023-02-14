@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Component, ElementRef, EventEmitter, Injector, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Injector, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -22,6 +22,7 @@ import { ClassView } from 'src/root/interfaces/class/classView';
 import { MessageService } from 'primeng/api';
 import { ReelsViewComponent } from '../../reels/reelsView.component';
 import { ownedClassResponse } from '../createClass/createClass.component';
+import { PaymentComponent } from '../../payment/payment.component';
 
 @Component({
     selector: 'classProfile-root',
@@ -89,7 +90,8 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     schoolName!:string;
     postsEndPageNumber: number = 1;
     reelsPageNumber:number = 1;
-    postResponse:any;
+    scrollFeedResponseCount:number = 1;
+    scrolled:boolean = false;
 
     public event: EventEmitter<any> = new EventEmitter();
 
@@ -114,8 +116,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     }
   
     ngOnInit(): void {
-      debugger
-      document.addEventListener('scroll', this.myScrollFunction, false);
+      this.postLoadingIcon = false;
       this.validToken = localStorage.getItem("jwt")?? '';
       this.loadingIcon = true;
       var selectedLang = localStorage.getItem("selectedLanguage");
@@ -125,25 +126,24 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       var schoolName = this.route.snapshot.paramMap.get('schoolName');
 
       this._classService.getClassById(this.className.replace(" ","").toLowerCase()).subscribe((response) => {
-        debugger
         this.postsEndPageNumber = 1;
         this.reelsPageNumber = 1;
         this.class = response;
         this.isOwnerOrNot();
         this.loadingIcon = false;
         this.isDataLoaded = true;
+        this.postLoadingIcon = false;
+        this.scrolled = false;
         this.addClassView(this.class.classId);
         if(this.carousel!=undefined){
           if($('carousel')[0].querySelectorAll('a.carousel-control-next')[0])
           {
             $('carousel')[0].querySelectorAll('a.carousel-control-next')[0].addEventListener('click', () => {
-              debugger
               this.reelsPageNumber++;
               if(this.reelsPageNumber == 2){
                 this.reelsLoadingIcon = true;
               }
               this._classService.getReelsByClassId(this.class.classId, this.reelsPageNumber).subscribe((response) => {
-                debugger
                  this.class.reels = [...this.class.reels, ...response];
                  this.reelsLoadingIcon = false;
             });
@@ -224,9 +224,6 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
 
        this.InitializeLikeUnlikePost();
 
-      //  addPostResponse.subscribe(response => {
-      //   this.ngOnInit();
-      // });
 
       addPostResponse.subscribe(response => {
         this.loadingIcon = true;
@@ -236,6 +233,8 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
           this.isOwnerOrNot();
           this.loadingIcon = false;
           this.isDataLoaded = true;
+          this.postLoadingIcon = false;
+          this.scrolled = false;
           this.addClassView(this.class.classId);
         });
       });
@@ -263,31 +262,27 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
 
   }
 
-  myScrollFunction = (ev: any): void => {
-
-      this.postLoadingIcon = true;
+  @HostListener("window:scroll", [])
+  onWindowScroll() {
+    if(!this.scrolled && this.scrollFeedResponseCount != 0){
+    this.scrolled = true;
+    this.postLoadingIcon = true;
     this.postsEndPageNumber++;
     this.getPostsByClassId();
-    // if(this.postResponse == undefined){
-    //   this.postLoadingIcon = true;
-    //   this.postsEndPageNumber++;
-    //   this.getPostsByClassId();
-    // }
-    //   else{
-    //     if(this.postResponse.length != 0){
-    //       this.postsEndPageNumber++;
-    //       this.getPostsByClassId();
-    //     }
-    //   }
-  };
+    }
+  }
+
 
   getPostsByClassId() {
-    this._classService
-      .getPostsByClassId(this.class.classId, this.postsEndPageNumber)
-      .subscribe((response) => {
+    if(this.class?.classId == undefined){
+      this.postLoadingIcon = true;
+      return;
+    }
+    this._classService.getPostsByClassId(this.class.classId, this.postsEndPageNumber).subscribe((response) => {
         this.class.posts = [...this.class.posts, ...response];
         this.postLoadingIcon = false;
-        this.postResponse = response;
+        this.scrollFeedResponseCount = response.length;  
+        this.scrolled = false;
       });
   }
 
@@ -384,7 +379,6 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     captureLanguageId(event: any) {
       var languageId = event.id;
       this.classLanguage.languageIds.push(languageId);
-      // this.languageIds.push(languageId);
     }
 
     filterLanguages(event:any) {
@@ -557,7 +551,6 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
           this.fileToUpload.append('serviceTypeId',this.updateClassDetails.serviceTypeId);
         
           this._classService.editClass(this.fileToUpload).subscribe((response:any) => {
-            debugger
             this.closeModal();
             this.isSubmitted=true;
             ownedClassResponse.next({classId:response.classId, classAvatar:response.avatar, className:response.className,schoolName: this.schoolName, action:"update"});
@@ -803,6 +796,14 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
         postAttachmentId: postAttachmentId
       };
       this.bsModalService.show(ReelsViewComponent,{initialState});
+    }
+
+    openPaymentModal(){
+      var classDetails = {"Id":this.class.classId,"Name":this.class.className,"Avatar":this.class.avatar}
+      const initialState = {
+        paymentDetails: classDetails
+      };
+      this.bsModalService.show(PaymentComponent,{initialState});
     }
   
 }

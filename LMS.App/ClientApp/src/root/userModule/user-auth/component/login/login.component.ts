@@ -9,11 +9,14 @@ import { AuthenticatedResponse } from 'src/root/interfaces/auth_response';
 import { LoginModel } from 'src/root/interfaces/login';
 import { RolesEnum } from 'src/root/RolesEnum/rolesEnum';
 import { MultilingualComponent } from 'src/root/root/sharedModule/Multilingual/multilingual.component';
-import { finalize } from 'rxjs';
+import { finalize, Subject } from 'rxjs';
 import { confirmEmailResponse } from '../confirmEmail/confirmEmail.component';
 import { MessageService } from 'primeng/api';
 import { SignalrService } from 'src/root/service/signalr.service';
 import { UserService } from 'src/root/service/user.service';
+
+export const dashboardResponse =new Subject<{token:string}>(); 
+
 
 @Component({
     selector: 'login-root',
@@ -30,8 +33,6 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
     user: any = {};
     selectedLanguage:any;
     loadingIcon:boolean = false;
-
-    //credentials: LoginModel = {email:'', password:'',rememberMe:false};
     private _authService;
     constructor(injector: Injector, public messageService:MessageService,private fb: FormBuilder,private router: Router,private signalRService: SignalrService, 
       private userService: UserService,
@@ -98,7 +99,12 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
             this._authService.loginState$.next(true);
         const token = response.token;
         localStorage.setItem("jwt", token); 
-        this.connectSignalR();
+        dashboardResponse.next({token:token});
+        this.signalRService.initializeConnection(token);
+        this.signalRService.startConnection();
+        setTimeout(() => {
+          this.signalRService.askServerListener();
+        }, 500);
         var decodeData = this.getUserRoles(token);
         if(decodeData.role?.indexOf(RolesEnum.SchoolAdmin) > -1){
           this.router.navigateByUrl(`administration/adminHome`)

@@ -376,7 +376,7 @@
         <reels-loading-spinner [reelsLoadingIcon]="reelsLoadingIcon"></reels-loading-spinner>
     </div>
 
-    <div class="tab-content" id="pills-tabContent" *ngIf="isProfileGrid">
+    <div class="tab-content scroll-schoolTab" id="pills-tabContent" *ngIf="isProfileGrid">
         <div class="tab-pane fade show active" id="school-feed-tab-pane" role="tabpanel"
              aria-labelledby="school-feed-tab" tabindex="0">
             <div class="accordion" id="accordionPanelsStayOpenExample">
@@ -489,6 +489,11 @@
                           <span *ngIf="likesLength != undefined && currentLikedPostId== post.id">{{likesLength}}</span>
                           <span *ngIf="currentLikedPostId!= post.id">{{post.likes.length}}</span>
                         </button>
+
+                        <button type="button" class="bg-transparent border-0 function-btns text-light">
+                          <img src="../../../../assets/images/Chat-light.svg" class="d-block mx-auto" />
+                          {{post.commentsCount}}
+                        </button>
                        
                         <button type="button" class="bg-transparent border-0 function-btns text-light">
                             <img src="../../../../assets/images/Bookmark-light.svg" class="d-block mx-auto" />
@@ -514,7 +519,7 @@
                       </button>
                       <button type="button" class="bg-transparent border-0 function-btns text-light">
                         <img src="../../../../assets/images/Chat-dark.svg" class="d-block mx-auto" />
-                        <span class="textBlack">34</span>
+                        <span class="textBlack">{{post.commentsCount}}</span>
                       </button>
                       <button type="button" class="bg-transparent border-0 function-btns text-light">
                         <img src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto" />
@@ -532,7 +537,7 @@
     </div>
 
 
-    <div class="tab-content" id="pills-tabContent" *ngIf="!isProfileGrid">
+    <div class="tab-content scroll-schoolTab" id="pills-tabContent" *ngIf="!isProfileGrid">
       <!-- here is for view -->
        <div [ngClass]="isGridItemInfo ? 'd-block school-grid-box position-relative school-list-box h-100':'d-none school-grid-box position-relative school-list-box h-100'" *ngIf="gridItemInfo!=undefined">
         <div class="row post-list-preview-sec">
@@ -586,7 +591,7 @@
                 </button>
                 <button (click)="openPostsViewModal(gridItemInfo)" type="button" class="bg-transparent border-0 function-btns">
                   <img src="../../../../assets/images/Chat-dark.svg" class="d-block mx-auto">
-                  34
+                  {{gridItemInfo.commentsCount}}
                 </button>
                 <button type="button" class="bg-transparent border-0 function-btns">
                   <img src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto">
@@ -891,11 +896,19 @@
                         <span class="custom-tag"></span>
                         <!-- <button type="button" class="custom-tag border-0">See more...</button> -->
                       </div>
-                      <div class="school-grid-thumbnail shadow-thumnail position-relative classes-grid overflow-hidden">
+                      <div class="school-grid-thumbnail shadow-thumnail position-relative classes-grid overflow-hidden" (click)="openClassCourseViewModal(item)">
                         <div class="row gx-1">
                           <div class="col-md-12">
                             <div class="school-large-thumbnail position-relative ">
-                              <img class="w-100" [src]="item.thumbnailUrl" />
+
+                              <img *ngIf="item.thumbnailType == 1" class="w-100" [src]="item.thumbnailUrl" />
+
+                              <div *ngIf="item.thumbnailType == 2" class="videofile">
+                                <video preload="metadata" style="height: 300px;">
+                                  <source [src]="item.thumbnailUrl" type="video/mp4"/>
+                                </video>
+                              </div>
+
                             </div>
                           </div>
                         </div>
@@ -916,7 +929,7 @@
                           </button>
                           <button type="button" class="bg-transparent border-0 function-btns text-light">
                             <img src="../../../../assets/images/Chat-light.svg" class="d-block mx-auto">
-                            34
+                            {{item.commentsCount}}
                           </button>
                           <button type="button" class="bg-transparent border-0 function-btns text-light">
                             <img src="../../../../assets/images/Bookmark-light.svg" class="d-block mx-auto">
@@ -1302,8 +1315,8 @@ aria-labelledby="delete-class" aria-hidden="true">
 </div>
     </div>
   </section>
+  <post-loading-spinner [postLoadingIcon]="postLoadingIcon"></post-loading-spinner>
 </div>
 <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
-<post-loading-spinner [postLoadingIcon]="postLoadingIcon"></post-loading-spinner>
 <p-toast></p-toast>
 <!-- <div *ngIf="isOpenModal"><create-post [isOpenModal]="isOpenModal" [schoolId]="schoolId"></create-post></div> -->

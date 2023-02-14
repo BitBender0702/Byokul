@@ -40,9 +40,11 @@ namespace LMS.Common.ViewModels.Course
         public bool IsPinned { get; set; }
         public IFormFile Thumbnail { get; set; }
         public string? ThumbnailUrl { get; set; }
+        public int? ThumbnailType { get; set; }
         public IEnumerable<string> CourseTags { get; set; }
         public List<CourseLikeViewModel> CourseLike { get; set; }
         public List<CourseViewsViewModel> CourseViews { get; set; }
+        public int CommentsCount { get; set; }
         public bool IsCourseLikedByCurrentUser { get; set; }
 
     }

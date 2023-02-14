@@ -56,4 +56,10 @@ export class PostService{
         return this.http.post(`${this.apiUrl}/posts/postView`, postView);
 
     }
+
+    likeUnlikeComments(commentId:string,isLike:boolean): Observable<any> {
+        let queryParams = new HttpParams().append("commentId",commentId).append("isLike",isLike);
+        return this.http.post(`${this.apiUrl}/posts/likeUnlikeComment`,null, {params:queryParams});
+    }
+
 }

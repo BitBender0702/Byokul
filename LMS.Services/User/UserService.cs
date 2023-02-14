@@ -42,10 +42,11 @@ namespace LMS.Services
         private IGenericRepository<UserPreference> _userPreferenceRepository;
         private IGenericRepository<Like> _likeRepository;
         private IGenericRepository<View> _viewRepository;
+        private IGenericRepository<Comment> _commentRepository;
         private readonly UserManager<User> _userManager;
         private readonly IBlobService _blobService;
         public UserService(IMapper mapper, IGenericRepository<User> userRepository, IGenericRepository<UserFollower> userFollowerRepository, IGenericRepository<UserLanguage> userLanguageRepository, IGenericRepository<City> cityRepository, IGenericRepository<Country> countryRepository, IGenericRepository<SchoolFollower> schoolFollowerRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<CourseTeacher> courseTeacherRepository,
-          IGenericRepository<SchoolTeacher> schoolteacherRepository, IGenericRepository<Student> studentRepository, IGenericRepository<Teacher> teacherRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<UserPreference> userPreferenceRepository, IGenericRepository<Like> likeRepository, IGenericRepository<View> viewRepository, UserManager<User> userManager, IBlobService blobService)
+          IGenericRepository<SchoolTeacher> schoolteacherRepository, IGenericRepository<Student> studentRepository, IGenericRepository<Teacher> teacherRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<UserPreference> userPreferenceRepository, IGenericRepository<Like> likeRepository, IGenericRepository<View> viewRepository, IGenericRepository<Comment> commentRepository, UserManager<User> userManager, IBlobService blobService)
         {
             _mapper = mapper;
             _userRepository = userRepository;
@@ -70,6 +71,7 @@ namespace LMS.Services
             _userPreferenceRepository = userPreferenceRepository;
             _likeRepository = likeRepository;
             _viewRepository = viewRepository;
+            _commentRepository = commentRepository;
             _userManager = userManager;
             _blobService = blobService;
         }
@@ -417,6 +419,7 @@ namespace LMS.Services
                 post.ParentName = data.ParentName;
                 post.Likes = await GetLikesOnPost(post.Id);
                 post.Views = await GetViewsOnPost(post.Id);
+                post.CommentsCount = await GetCommentsCountOnPost(post.Id);
                 post.PostAuthorType = (int)PostAuthorTypeEnum.School;
                 post.ParentId = data.Id != null ? data.Id.Value : Guid.Empty;
                 post.SchoolName = data.SchoolName;
@@ -672,6 +675,7 @@ namespace LMS.Services
                 post.PostAttachments = await GetAttachmentsByPostId(post.Id);
                 post.Likes = await GetLikesOnPost(post.Id);
                 post.Views = await GetViewsOnPost(post.Id);
+                post.CommentsCount = await GetCommentsCountOnPost(post.Id);
                 if (post.Likes.Any(x => x.UserId == userId && x.PostId == post.Id))
                 {
                     post.IsPostLikedByCurrentUser = true;
@@ -702,6 +706,7 @@ namespace LMS.Services
                 post.PostAttachments = await GetAttachmentsByPostId(post.Id);
                 post.Likes = await GetLikesOnPost(post.Id);
                 post.Views = await GetViewsOnPost(post.Id);
+                post.CommentsCount = await GetCommentsCountOnPost(post.Id);
                 if (post.Likes.Any(x => x.UserId == userId && x.PostId == post.Id))
                 {
                     post.IsPostLikedByCurrentUser = true;
@@ -991,6 +996,7 @@ namespace LMS.Services
                 var postTag = postTagsList.Where(x => x.PostId == item.Key).ToList();
                 var Likes = await GetLikesOnPost(item.Key);
                 var Views = await GetViewsOnPost(item.Key);
+                var CommentsCount = await GetCommentsCountOnPost(item.Key);
 
                 var isLiked = likesList.Any(x => x.UserId == loginUserId && x.PostId == item.Key);
 
@@ -1056,6 +1062,7 @@ namespace LMS.Services
                     Description = post.Description,
                     Likes = Likes,
                     Views = Views,
+                    CommentsCount = CommentsCount,
                     IsPostLikedByCurrentUser = IsPostLikedByCurrentUser,
                     PostType = post.PostType,
                     ParentName = parentName,
@@ -1094,6 +1101,7 @@ namespace LMS.Services
                 var postTag = postTagsList.Where(x => x.PostId == item.Id).ToList();
                 var Likes = await GetLikesOnPost(post.Id);
                 var Views = await GetViewsOnPost(post.Id);
+                var CommentsCount = await GetCommentsCountOnPost(post.Id);
 
                 var isLiked = likesList.Any(x => x.UserId == loginUserId && x.PostId == post.Id);
 
@@ -1158,6 +1166,7 @@ namespace LMS.Services
                     Description = post.Description,
                     Likes = Likes,
                     Views = Views,
+                    CommentsCount = CommentsCount,
                     IsPostLikedByCurrentUser = IsPostLikedByCurrentUser,
                     PostType = post.PostType,
                     ParentName = parentName,
@@ -1227,6 +1236,13 @@ namespace LMS.Services
             }
             return userPreference.Id;
         }
+
+        public async Task<int> GetCommentsCountOnPost(Guid postId)
+        {
+            var CommentsCount = await _commentRepository.GetAll().Where(x => x.GroupName == postId + "_group").ToListAsync();
+            return CommentsCount.Count();
+        }
+            
 
     }
 

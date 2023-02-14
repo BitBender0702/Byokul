@@ -16,35 +16,12 @@ import { finalize } from 'rxjs';
 
 export class LandingComponent implements OnInit {
   private _authService;
-    //credentials: LoginModel = {email:'', password:'',rememberMe:false};
-    // private _authService;
     constructor(authService:AuthService) { 
       this._authService = authService;
     }
   
     ngOnInit(): void {
       this._authService.loginState$.next(false);
-    //   this.selectedLanguage = localStorage.getItem("selectedLanguage");
-
     }
-  
-    // login(): void {
 
-    //   if (!this.loginForm.valid) {
-    //     return;}
-        
-    //   this.loadingIcon = true;
-    //   this.isSubmitted = true;
-    //   this.user = this.loginForm.value;
-    //   this._authService.loginUser(this.user).pipe(finalize(()=> this.loadingIcon= false)).subscribe({
-    //     next: (response: AuthenticatedResponse) => {
-    //     this.isSubmitted = false;
-    //     const token = response.token;
-    //     localStorage.setItem("jwt", token); 
-    //     this.router.navigate(["../../createSchool"],{ relativeTo: this.route });
-    //     },
-    //   error: (err: HttpErrorResponse) => this.invalidLogin = true
-    //   })
-    // }
-    
   }

@@ -94,13 +94,11 @@ export class RegisterComponent extends MultilingualComponent implements OnInit {
       }
 
     matchPassword(){
-
       if(this.password?.value!=this.confirmPassword?.value){
         return true;
       }
       else 
       return false
-    
     }
 
    omit_special_char(event:any)
@@ -125,11 +123,7 @@ export class RegisterComponent extends MultilingualComponent implements OnInit {
         }
 
         this.loadingIcon = true;
-        // var dob = this.registrationForm.get('dob')?.value;
-        // const date = new Date(dob + 'UTC');
-       
         this.user = this.registrationForm.value;
-        // this.user.dob = date;
         this._authService.registerUser(this.user).pipe(finalize(()=> this.loadingIcon = false)).subscribe({
                   next: (response: AuthenticatedResponse) => {
 
@@ -143,10 +137,6 @@ export class RegisterComponent extends MultilingualComponent implements OnInit {
                     this.invalidRegister = false; 
                     this.isRegister = true;
                     this.registrationForm.reset();
-
-                    
-                    //this.router.navigateByUrl("user/auth/confirmEmail");
-                    //this.router.navigateByUrl("user/auth/login");
                   }
                   },
                   error: (err: HttpErrorResponse) => this.invalidRegister = true

@@ -17,12 +17,14 @@ namespace LMS.App.Controllers
 
         private readonly IChatService _chatService;
         private readonly IBlobService _blobService;
+        private readonly UserManager<User> _userManager;
         private string ContainerName = "chatattachments";
 
-        public ChatController(IChatService chatService, IBlobService blobService)
+        public ChatController(IChatService chatService, IBlobService blobService, UserManager<User> userManager)
         {
             _chatService = chatService;
             _blobService = blobService;
+            _userManager = userManager;
         }
 
         [Route("getChatHead")]
@@ -72,6 +74,15 @@ namespace LMS.App.Controllers
         {
             await _chatService.RemoveUnreadMessageCount(senderId, receiverId, chatType);
             return Ok();
+        }
+
+        [Route("getComments")]
+        [HttpGet]
+        public async Task<IActionResult> GetComments(Guid id, int pageNumber)
+        {
+            var userId = await GetUserIdAsync(this._userManager);
+            var response = await _chatService.GetComments(id, userId, pageNumber);
+            return Ok(response);
         }
     }
 }

@@ -282,7 +282,7 @@
                   </button>
                   <button type="button" class="bg-transparent border-0 function-btns text-light">
                     <img src="../../../../assets/images/Chat-light.svg" class="d-block mx-auto" />
-                    34
+                    {{post.commentsCount}}
                   </button>
                   <button type="button" class="bg-transparent border-0 function-btns text-light">
                     <img src="../../../../assets/images/Bookmark-light.svg" class="d-block mx-auto" />
@@ -308,7 +308,7 @@
                   </button>
                   <button type="button" class="bg-transparent border-0 function-btns text-light">
                     <img src="../../../../assets/images/Chat-dark.svg" class="d-block mx-auto" />
-                    <span class="textBlack">34</span>
+                    <span class="textBlack">{{post.commentsCount}}</span>
                   </button>
                   <button type="button" class="bg-transparent border-0 function-btns text-light">
                     <img src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto" />
@@ -379,7 +379,7 @@
                         </button>
                         <button (click)="openPostsViewModal(gridItemInfo)" type="button" class="bg-transparent border-0 function-btns">
                           <img src="../../../../assets/images/Chat-dark.svg" class="d-block mx-auto">
-                          34
+                          {{gridItemInfo.commentsCount}}
                         </button>
                         <button type="button" class="bg-transparent border-0 function-btns">
                           <img src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto">
@@ -1217,8 +1217,7 @@
       </div>
   
     </section>
-  
+    <post-loading-spinner [postLoadingIcon]="postLoadingIcon"></post-loading-spinner>
   </div>
   <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
-  <post-loading-spinner [postLoadingIcon]="postLoadingIcon"></post-loading-spinner>
   <p-toast></p-toast>

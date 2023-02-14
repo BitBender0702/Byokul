@@ -16,18 +16,30 @@ export class UserService{
       }
     constructor(private router: Router, private http: HttpClient) { 
         this.headers = new HttpHeaders({'Content-Type': 'application/json; charset=utf-8'});
+        this.headers = new HttpHeaders().set("Authorization", "Bearer " + this.token);
     }
     
-    getSidebarInfo():Observable<any>{
-        return this.http.get(`${this.apiUrl}/userdashboard/dashboardDetails`);
+    getSidebarInfo(token?:string):Observable<any>{
+        debugger
+        if(this.token == ""){
+            this.token = localStorage.getItem("jwt")?? '';
+            this.headers = new HttpHeaders().set("Authorization", "Bearer " + this.token);
+        }
+        return this.http.get(`${this.apiUrl}/userdashboard/dashboardDetails`,{
+            headers: this.headers
+          });
     }
 
     getUserById(userId:string):Observable<any>{
-        return this.http.get(`${this.apiUrl}/users/getUser` + '?userId=' + userId);
+        return this.http.get(`${this.apiUrl}/users/getUser` + '?userId=' + userId,{
+            headers: this.headers
+          });
     }
 
     getLanguageList():Observable<any>{
-        return this.http.get(`${this.apiUrl}/class/languageList`);
+        return this.http.get(`${this.apiUrl}/class/languageList`,{
+            headers: this.headers
+          });
     }
 
     saveUserLanguages(addLanguages:any):Observable<any>{
@@ -66,14 +78,14 @@ export class UserService{
     getMyFeed(postType:number,pageNumber:number):Observable<any>{
         //return this.http.get(`${this.apiUrl}/users/myFeed`);
         let queryParams = new HttpParams().append("postType",postType).append("pageNumber",pageNumber);
-        return this.http.get(`${this.apiUrl}/users/myFeed`, {params:queryParams});
+        return this.http.get(`${this.apiUrl}/users/myFeed`, {params:queryParams, headers: this.headers});
 
     }
 
     getGlobalFeed(postType:number, pageNumber:number):Observable<any>{
         //return this.http.get(`${this.apiUrl}/users/globalFeed`);
         let queryParams = new HttpParams().append("postType",postType).append("pageNumber",pageNumber);
-        return this.http.get(`${this.apiUrl}/users/globalFeed`, {params:queryParams});
+        return this.http.get(`${this.apiUrl}/users/globalFeed`, {params:queryParams, headers: this.headers});
 
     }
 
@@ -89,12 +101,12 @@ export class UserService{
 
      getPostsByUserId(userId:string,pageNumber:number):Observable<any>{
         let queryParams = new HttpParams().append("userId",userId).append("pageNumber",pageNumber);
-        return this.http.get(`${this.apiUrl}/users/getPostsByUserId`, {params:queryParams});
+        return this.http.get(`${this.apiUrl}/users/getPostsByUserId`, {params:queryParams,headers: this.headers});
     }
 
     getReelsByUserId(userId:string,pageNumber:number):Observable<any>{
         let queryParams = new HttpParams().append("userId",userId).append("pageNumber",pageNumber);
-        return this.http.get(`${this.apiUrl}/users/getReelsByUserId`, {params:queryParams});
+        return this.http.get(`${this.apiUrl}/users/getReelsByUserId`, {params:queryParams,headers: this.headers});
     }
 
     

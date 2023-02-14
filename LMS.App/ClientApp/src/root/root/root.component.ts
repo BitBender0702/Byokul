@@ -24,11 +24,11 @@ export class RootComponent implements OnInit {
     let token = localStorage.getItem("jwt"); 
     if(!token)
       return;
+    this.signalRService.initializeConnection(token);
     this.signalRService.startConnection();
-    setTimeout(() => {
-            this.signalRService.askServerListener();
-            this.signalRService.askServer(this.getUserRoles(token!).jti);
-          }, 500);
+     setTimeout(() => {
+             this.signalRService.askServerListener();
+           }, 500);
   }
 
   getUserRoles(token:string): any{

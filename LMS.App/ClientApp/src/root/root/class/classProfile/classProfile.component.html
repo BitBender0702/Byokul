@@ -6,8 +6,7 @@
         <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
             src="../../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
         <button *ngIf="isOwner" (click)="openPostModal()" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44">{{'CreatePost'| translate }}</button>
-        <button *ngIf="!isOwner && class.price != null && class.price != 0" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44">{{'Buyfor'| translate }} ${{class.price}}</button>
-
+        <button (click)="openPaymentModal()" *ngIf="!isOwner && class.price != null && class.price != 0" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44">{{'Buyfor'| translate }} ${{class.price}}</button>
       </div>
       <div class="live-header d-flex align-items-center justify-content-between">
         <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark  d-xl-none"><img
@@ -299,7 +298,7 @@
                
                 <button type="button" class="bg-transparent border-0 function-btns text-light">
                   <img src="../../../../assets/images/Chat-light.svg" class="d-block mx-auto" />
-                  34
+                  {{post.commentsCount}}
                 </button>
                 <button type="button" class="bg-transparent border-0 function-btns text-light">
                   <img src="../../../../assets/images/Bookmark-light.svg" class="d-block mx-auto" />
@@ -325,7 +324,7 @@
                 </button>
                 <button type="button" class="bg-transparent border-0 function-btns text-light">
                   <img src="../../../../assets/images/Chat-dark.svg" class="d-block mx-auto" />
-                  <span class="textBlack">34</span>
+                  <span class="textBlack"> {{post.commentsCount}}</span>
                 </button>
                 <button type="button" class="bg-transparent border-0 function-btns text-light">
                   <img src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto" />
@@ -393,7 +392,7 @@
                 </button>
                 <button (click)="openPostsViewModal(gridItemInfo)" type="button" class="bg-transparent border-0 function-btns">
                   <img src="../../../../assets/images/Chat-dark.svg" class="d-block mx-auto">
-                  34
+                  {{gridItemInfo.commentsCount}}
                 </button>
                 <button type="button" class="bg-transparent border-0 function-btns">
                   <img src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto">
@@ -909,8 +908,7 @@ aria-labelledby="delete-certificate" aria-hidden="true">
     </div>
 
   </section>
-
+  <post-loading-spinner [postLoadingIcon]="postLoadingIcon"></post-loading-spinner>
 </div>
 <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
-<post-loading-spinner [postLoadingIcon]="postLoadingIcon"></post-loading-spinner>
 <p-toast></p-toast>

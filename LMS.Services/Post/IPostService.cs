@@ -14,6 +14,7 @@ namespace LMS.Services
         Task<bool> PinUnpinPost(Guid attachmentId, bool isPinned);
         Task<List<LikeViewModel>> LikeUnlikePost(LikeUnlikeViewModel model);
         Task<int> PostView(PostViewsViewModel model);
+        Task<bool> LikeUnlikeComment(Guid commentId, bool isLike, string userId);
 
     }
 }
