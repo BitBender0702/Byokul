@@ -4,6 +4,7 @@ import { getuid } from 'process';
 import { Subject } from 'rxjs';
 import { json } from 'stream/consumers';
 import { ChartModel } from '../interfaces/chat/ChatModel';
+import { CommentLikeUnlike } from '../interfaces/chat/commentsLike';
 import { CommentViewModel } from '../interfaces/chat/commentViewModel';
 import { CustomXhrHttpClient } from './signalr.httpclient';
 
@@ -19,9 +20,15 @@ export const signalRResponse = new Subject<{
   chatHeadId: string;
 }>();
 export const commentResponse = new Subject<{
+  id:string;
   senderAvatar: string;
   message: string;
   userId: string;
+}>();
+
+export const commentLikeResponse = new Subject<{
+  commentId: string;
+  isLike: boolean;
 }>();
 
 @Injectable({
@@ -74,7 +81,6 @@ export class SignalrService {
   }
 
   askServerListener() {
-    debugger
     this.hubConnection?.on('ReceiveMessage', (user, message) => {
       signalRResponse.next({
         receiver: 'test',
@@ -91,17 +97,26 @@ export class SignalrService {
     });
 
     this.hubConnection?.on('ReceiveMessageFromGroup', (model) => {
-      debugger
       commentResponse.next({
+        id:model.id,
         senderAvatar: model.userAvatar,
         message: model.content,
         userId: model.userId,
       });
 
       console.log(`this ${model.userId} send ${model.content}`);
-
       // this.hubConnection?.off('ReceiveMessageFromGroup');
     });
+
+    this.hubConnection?.on('NotifyCommentLikeToReceiver',
+    (model) => {
+      commentLikeResponse.next({
+        commentId: model.commentId,
+        isLike: model.isLike
+      });
+      console.log(`this ${model.commentId}`);
+    }
+  );
   }
 
   sendToGroup(model: CommentViewModel) {
@@ -117,20 +132,15 @@ export class SignalrService {
       .catch((err) => console.error(err));
   }
 
-  notifyCommentLike(
-    commentId: string,
-    likeCount: number,
-    isLike: boolean,
-    groupName: string
-  ) {
-    this.hubConnection?.invoke('NotifyCommentLike', commentId, likeCount, isLike, groupName)
+  notifyCommentLike(model:CommentLikeUnlike) {
+    this.hubConnection?.invoke('NotifyCommentLike', model)
       .catch((err) => console.error(err));
 
-    this.hubConnection?.on(
-      'NotifyCommentLikeToReceiver',
-      (commentId, likeCount, isLike) => {
-        console.log(`this ${commentId}`);
-      }
-    );
+    // this.hubConnection?.on(
+    //   'NotifyCommentLikeToReceiver',
+    //   (commentId, likeCount, isLike) => {
+    //     console.log(`this ${commentId}`);
+    //   }
+    // );
   }
 }

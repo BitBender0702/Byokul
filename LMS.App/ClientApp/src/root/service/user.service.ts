@@ -20,7 +20,6 @@ export class UserService{
     }
     
     getSidebarInfo(token?:string):Observable<any>{
-        debugger
         if(this.token == ""){
             this.token = localStorage.getItem("jwt")?? '';
             this.headers = new HttpHeaders().set("Authorization", "Bearer " + this.token);

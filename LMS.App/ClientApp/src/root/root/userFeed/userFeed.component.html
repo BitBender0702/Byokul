@@ -252,7 +252,7 @@
                   <span *ngIf="likesLength != undefined && currentLikedPostId== post.id">{{likesLength}}</span>
                   <span *ngIf="currentLikedPostId!= post.id">{{post.likes.length}}</span>
                 </button>
-                <button type="button" class="bg-transparent border-0 function-btns text-light">
+                <button (click)="openPostsViewModal(post)" type="button" class="bg-transparent border-0 function-btns text-light">
                   <img src="../../../../assets/images/Chat-light.svg" class="d-block mx-auto" />
                   {{post.commentsCount}}
                 </button>
@@ -278,7 +278,7 @@
                   <span class="textBlack" *ngIf="likesLength != undefined && currentLikedPostId== post.id">{{likesLength}}</span>
                   <span class="textBlack" *ngIf="currentLikedPostId!= post.id">{{post.likes.length}}</span>
                 </button>
-                <button type="button" class="bg-transparent border-0 function-btns text-light">
+                <button (click)="openPostsViewModal(post)" type="button" class="bg-transparent border-0 function-btns text-light">
                   <img src="../../../../assets/images/Chat-dark.svg" class="d-block mx-auto" />
                   <span class="textBlack"> {{post.commentsCount}}</span>
                 </button>
@@ -675,7 +675,7 @@
                   <span *ngIf="likesLength != undefined && currentLikedPostId== post.id">{{likesLength}}</span>
                   <span *ngIf="currentLikedPostId!= post.id">{{post.likes.length}}</span>
                 </button>
-                <button type="button" class="bg-transparent border-0 function-btns text-light">
+                <button (click)="openPostsViewModal(post)" type="button" class="bg-transparent border-0 function-btns text-light">
                   <img src="../../../../assets/images/Chat-light.svg" class="d-block mx-auto" />
                   {{post.commentsCount}}
                 </button>
@@ -701,7 +701,7 @@
                   <span class="textBlack" *ngIf="likesLength != undefined && currentLikedPostId== post.id">{{likesLength}}</span>
                   <span class="textBlack" *ngIf="currentLikedPostId!= post.id">{{post.likes.length}}</span>
                 </button>
-                <button type="button" class="bg-transparent border-0 function-btns text-light">
+                <button (click)="openPostsViewModal(post)" type="button" class="bg-transparent border-0 function-btns text-light">
                   <img src="../../../../assets/images/Chat-dark.svg" class="d-block mx-auto" />
                   <span class="textBlack">{{post.commentsCount}}</span>
                 </button>

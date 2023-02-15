@@ -151,7 +151,7 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
         </div>
       </div>
         <div class="add-comment d-flex align-items-center justify-content-between">
-          <span class="bg-transparent rounded-circle comment-post-user rounded-circle"><img style="max-height: 100%;"/>
+          <span class="bg-transparent rounded-circle comment-post-user rounded-circle"><img [src]="sender.avatar" style="max-height: 100%;"/>
           </span>
           <input [(ngModel)]="messageToGroup" type="text" class="form-control rounded-8 font_14 fw_400" placeholder="{{'YourMessage'| translate }}">
           <button (click)="sendToGroup()" type="button" class="comment-btn border-0"><img src="../../../assets/images/arrowup.svg" /></button>

@@ -470,6 +470,7 @@ namespace LMS.Services.Chat
             _commentRepository.Insert(comment);
             _commentRepository.Save();
 
+            chatViewModel.Id = comment.Id;
             return chatViewModel;
 
         }
@@ -484,7 +485,7 @@ namespace LMS.Services.Chat
             foreach (var item in response)
             {
                 item.UserAvatar = item.User.Avatar;
-                if (CommentLikes.Any(x => x.CommentId == item.Id))
+                if (CommentLikes.Any(x => x.CommentId == item.Id && x.UserId == userid))
                 {
                     item.isCommentLikedByCurrentUser = true;
                 }
@@ -493,6 +494,50 @@ namespace LMS.Services.Chat
 
 
 
+        }
+
+        public async Task<CommentLikeUnlikeViiewModel> LikeUnlikeComment(CommentLikeUnlikeViiewModel model)
+        {
+
+            var commentLike = await _commentLikeRepository.GetAll().Where(x => x.CommentId == new  Guid(model.CommentId) && x.UserId == model.UserId).FirstOrDefaultAsync();
+
+            if (commentLike != null)
+            {
+                _commentLikeRepository.Delete(commentLike.Id);
+                _commentLikeRepository.Save();
+
+                Comment comment = _commentRepository.GetById(new Guid(model.CommentId));
+                comment.LikeCount = comment.LikeCount - 1;
+                _commentRepository.Update(comment);
+                _commentRepository.Save();
+                return model;
+
+            }
+
+            else
+            {
+                var commentLikes = new CommentLike
+                {
+                    UserId = model.UserId,
+                    CommentId = new Guid(model.CommentId)
+                };
+
+                _commentLikeRepository.Insert(commentLikes);
+                _commentLikeRepository.Save();
+                try
+                {
+                    Comment comment = _commentRepository.GetById(new Guid(model.CommentId));
+                    comment.LikeCount = comment.LikeCount + 1;
+                    _commentRepository.Update(comment);
+                    _commentRepository.Save();
+                    return model;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            return null;
         }
 
 

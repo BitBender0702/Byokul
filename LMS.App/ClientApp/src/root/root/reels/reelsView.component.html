@@ -68,7 +68,7 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
         <!-- <div class="accordion-open" id="live-chat-open" style="display:none;"> -->
           <div class="live-action-buttons d-flex justify-content-between">
             <button type="button" class="btn bg-transparent text_ltgray font_12 active"><img src="../../../assets/images/chat-icon.svg"
-                class="d-block" /> 34</button>
+                class="d-block" /> {{reels.post.comments.length}}</button>
             <button type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/eye.svg"
                 class="d-block" /> {{reels.post.views.length}}</button>
                 <button (click)="likeUnlikePosts(reels.post.id,true)" type="button" class="btn bg-transparent text_ltgray font_12">

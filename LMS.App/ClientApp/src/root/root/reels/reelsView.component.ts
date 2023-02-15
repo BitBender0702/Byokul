@@ -1,12 +1,14 @@
 import { Component, ElementRef, Injector, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { CommentLikeUnlike } from 'src/root/interfaces/chat/commentsLike';
 import { CommentViewModel } from 'src/root/interfaces/chat/commentViewModel';
 import { LikeUnlikePost } from 'src/root/interfaces/post/likeUnlikePost';
 import { PostView } from 'src/root/interfaces/post/postView';
+import { ChatService } from 'src/root/service/chatService';
 import { PostService } from 'src/root/service/post.service';
 import { ReelsService } from 'src/root/service/reels.service';
-import { commentResponse, signalRResponse, SignalrService } from 'src/root/service/signalr.service';
+import { commentLikeResponse, commentResponse, signalRResponse, SignalrService } from 'src/root/service/signalr.service';
 import { UserService } from 'src/root/service/user.service';
 
 @Component({
@@ -19,6 +21,7 @@ import { UserService } from 'src/root/service/user.service';
 
     private _reelsService;
     private _postService;
+    private _chatService;
     //reelId!:string;
     reels:any;
     isOpenSidebar:boolean = false;
@@ -41,21 +44,21 @@ import { UserService } from 'src/root/service/user.service';
     postAttachmentId:any;
     commentViewModel!: CommentViewModel;
     commentLikeCount!:number;
+    commentLikeUnlike!:CommentLikeUnlike;
 
     @ViewChild('groupChatList') groupChatList!: ElementRef;
 
-    constructor(private bsModalService: BsModalService,private renderer: Renderer2,public options: ModalOptions,private userService: UserService,postService: PostService,public signalRService: SignalrService,private route: ActivatedRoute,reelsService: ReelsService,private activatedRoute: ActivatedRoute) { 
-        // super(injector);
+    constructor(private bsModalService: BsModalService,chatService:ChatService,private renderer: Renderer2,public options: ModalOptions,private userService: UserService,postService: PostService,public signalRService: SignalrService,private route: ActivatedRoute,reelsService: ReelsService,private activatedRoute: ActivatedRoute) { 
           this._reelsService = reelsService;
           this._signalRService = signalRService;
           this._userService = userService;
           this._postService = postService;
+          this._chatService = chatService;
   
       }
 
     ngOnInit(): void {
         this.getLoginUserId();
-        //this.reelId = this.route.snapshot.paramMap.get('id') ?? '';
         this.postAttachmentId = this.options.initialState;
         this._reelsService.getReelById(this.postAttachmentId.postAttachmentId).subscribe((response) => {
             this.reels = response;
@@ -63,7 +66,6 @@ import { UserService } from 'src/root/service/user.service';
             this.isDataLoaded = true;
 
             this._signalRService.createGroupName(this.reels.id);
-            // this.loadingIcon = false;
           });
 
           var validToken = localStorage.getItem("jwt");
@@ -80,35 +82,25 @@ import { UserService } from 'src/root/service/user.service';
              
       }
 
-          // this.signalRService.startConnection();
-
-          // setTimeout(() => {
-          //   this._signalRService.createGroupName(this.reels.id);
-          //   this._signalRService.askServerListener();
-          //   this._signalRService.askServer(this.sender.id);
-          // }, 5000);
-
-          // signalRResponse.subscribe(response => {
-          //   //this.getSenderInfo(response.receiver);
-          //    this.generateChatDiv(response,this.sender.avatar);
-          // });
-
-
           this.InitializeLikeUnlikePost();
           this.InitializePostView();
 
           commentResponse.subscribe(response => {
-            debugger
             var comment: any[] = this.reels.post.comments;
-            var commentObj = {content:response.message,likeCount:0,isCommentLikedByCurrentUser:false,userAvatar:response.senderAvatar};
+            var commentObj = {id:response.id,content:response.message,likeCount:0,isCommentLikedByCurrentUser:false,userAvatar:response.senderAvatar};
             comment.push(commentObj);
-
-            // var result ={receiver:this.sender.firstName,message:response.message,isTest:false};
-            // this.generateChatDiv(result,response.senderAvatar);
           });
 
-
-
+          commentLikeResponse.subscribe(response => {
+            var comments: any[] = this.reels.post.comments;
+            var reqComment = comments.find(x => x.id == response.commentId);
+            if(response.isLike){
+              reqComment.likeCount = reqComment.likeCount + 1;
+            }
+            else{
+              reqComment.likeCount = reqComment.likeCount - 1;
+            }
+          });
     }
 
     getLoginUserId(){
@@ -123,6 +115,7 @@ import { UserService } from 'src/root/service/user.service';
 
     InitializeCommentViewModel(){
       this.commentViewModel = {
+        id:'',
         userId: '',
         content:'',
         groupName:'',
@@ -131,25 +124,20 @@ import { UserService } from 'src/root/service/user.service';
 
     }
 
-    
-
     sendToGroup(){
       var comment: any[] = this.reels.post.comments;
-      var commentObj = {content:this.messageToGroup,likeCount:0,isCommentLikedByCurrentUser:false,userAvatar:this.sender.avatar};
-      comment.push(commentObj);
-
       this.InitializeCommentViewModel();
       this.commentViewModel.userId = this.sender.id;
       this.commentViewModel.groupName = this.reels.id + "_group";
       this.commentViewModel.content = this.messageToGroup;
       this.commentViewModel.userAvatar = this.sender.avatar;
-      var response ={receiver:this.sender.firstName,message:this.messageToGroup,isTest:false};
-      //this.generateChatDiv(response,this.sender.avatar);
-      this._signalRService.sendToGroup(this.commentViewModel);
-
-
-      
-      
+      this.messageToGroup = "";
+      this.commentViewModel.id = '00000000-0000-0000-0000-000000000000';
+      this._chatService.addComments(this.commentViewModel).subscribe((response) => {
+        comment.push(response);
+        this.commentViewModel.id = response.id;
+        this._signalRService.sendToGroup(this.commentViewModel);
+        });
       }
 
     generateChatDiv(response:any,profileImage:string){
@@ -162,10 +150,7 @@ import { UserService } from 'src/root/service/user.service';
           src="../../../assets/images/Heart-dark.svg" class="d-block" /> 34</button>
     </div>`
     p.innerHTML =li;
-      // this.recieverMessageInfo = response;
       this.renderer.appendChild(this.groupChatList.nativeElement, p)
-      // document.getElementById('chat')?.appendChild();
-      console.log(response)   
     }
 
     getSenderInfo(userId:string){
@@ -214,7 +199,6 @@ import { UserService } from 'src/root/service/user.service';
 
       likeUnlikePosts(postId:string, isLike:boolean){
         this.currentLikedPostId = postId;
-        // this.user.posts.filter((p : any) => p.id == postId).forEach( (item : any) => {
           var likes: any[] = this.reels.post.likes;
           var isLiked = likes.filter(x => x.userId == this.loginUserId && x.postId == postId);
         if(isLiked.length != 0){
@@ -229,8 +213,6 @@ import { UserService } from 'src/root/service/user.service';
       
         }
 
-        
-       
         this.likeUnlikePost.postId = postId;
         this.likeUnlikePost.isLike = isLike;
         this.likeUnlikePost.commentId = '00000000-0000-0000-0000-000000000000'
@@ -246,53 +228,35 @@ import { UserService } from 'src/root/service/user.service';
       likeUnlikeComments(commentId:string, isLike:boolean,isCommentLikedByCurrentUser:boolean,likeCount:number){
         var comment: any[] = this.reels.post.comments;
         var isCommentLiked = comment.find(x => x.id == commentId);
+        this.initializeCommentLikeUnlike();
+        this.commentLikeUnlike.userId = this.sender.id;
+        this.commentLikeUnlike.commentId = commentId;
+        this.commentLikeUnlike.groupName = this.reels.id + "_group";
        if(isCommentLiked.isCommentLikedByCurrentUser){
         isCommentLiked.isCommentLikedByCurrentUser = false;
         isCommentLiked.likeCount = isCommentLiked.likeCount - 1;
-        this.signalRService.notifyCommentLike(commentId,isCommentLiked.likeCount,false,this.reels.id + "_group");
+        this.commentLikeUnlike.isLike = false;
+        this.commentLikeUnlike.likeCount = isCommentLiked.likeCount;
        }
        else{
         isCommentLiked.isCommentLikedByCurrentUser = true;
         isCommentLiked.likeCount = isCommentLiked.likeCount + 1;
-        this.signalRService.notifyCommentLike(commentId,isCommentLiked.likeCount,true,this.reels.id + "group");
-        // this.commentLikeCount = likeCount + 1;
-       }
 
-       if(commentId!= undefined){
-          this._postService.likeUnlikeComments(commentId,isLike).subscribe((response) => {
-          //  this.reels.post.likes = response;
-          //  this.InitializeLikeUnlikePost();
-          //  console.log("succes");
-        });
+        this.commentLikeUnlike.isLike = true;
+        this.commentLikeUnlike.likeCount = isCommentLiked.likeCount;
+       }
+       this.signalRService.notifyCommentLike(this.commentLikeUnlike);
       }
 
-        // this.currentLikedPostId = postId;
-        //   var likes: any[] = this.reels.post.likes;
-        //   var isLiked = likes.filter(x => x.userId == this.loginUserId && x.postId == postId);
-        // if(isLiked.length != 0){
-        //   this.isLiked = false;
-        //   this.likesLength = this.reels.post.likes.length - 1;
-        //   this.reels.post.isPostLikedByCurrentUser = false;
-        // }
-        // else{
-        //   this.isLiked = true;
-        //   this.likesLength = this.reels.post.likes.length + 1;
-        //   this.reels.post.isPostLikedByCurrentUser = true;
-      
-        // }
+      initializeCommentLikeUnlike(){
+        this.commentLikeUnlike = {
+          commentId:"",
+          userId:"",
+          likeCount:0,
+          isLike:false,
+          groupName:""
+        }
 
-        
-       
-        // this.likeUnlikePost.postId = postId;
-        // this.likeUnlikePost.isLike = isLike;
-        // this.likeUnlikePost.commentId = '00000000-0000-0000-0000-000000000000'
-        // this._postService.likeUnlikePost(this.likeUnlikePost).subscribe((response) => {
-        //    this.reels.post.likes = response;
-        //    this.InitializeLikeUnlikePost();
-        //    console.log("succes");
-        // });
-      
-      
       }
 
       addPostView(postId:string){
@@ -303,9 +267,6 @@ import { UserService } from 'src/root/service/user.service';
           
           console.log('success');
           this.reels.post.views.length = response;
-          // this.user.posts.filter((p : any) => p.id == postId).forEach( (item : any) => {
-          //  var itemss = item.likes;
-          //  item.likes = response;
          }); 
         }
       
@@ -313,7 +274,6 @@ import { UserService } from 'src/root/service/user.service';
 
       close(): void {
         this.bsModalService.hide();
-        //this.addAttachmentModal.nativeElement.click();
       }
 
   }

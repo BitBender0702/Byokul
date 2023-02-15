@@ -881,7 +881,6 @@ export class SchoolProfileComponent
   }
 
   GetSchoolClassCourseList(schoolId: string) {
-    debugger
     var school = this.school;
     this.isFeedHide = true;
     if (this.classCourseList == undefined) {

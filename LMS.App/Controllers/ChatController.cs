@@ -7,6 +7,7 @@ using LMS.Services.Chat;
 using LMS.Services.Blob;
 using Microsoft.AspNetCore.Authorization;
 using LMS.Data.Entity.Chat;
+using LMS.Common.ViewModels.Post;
 
 namespace LMS.App.Controllers
 {
@@ -82,6 +83,14 @@ namespace LMS.App.Controllers
         {
             var userId = await GetUserIdAsync(this._userManager);
             var response = await _chatService.GetComments(id, userId, pageNumber);
+            return Ok(response);
+        }
+
+        [Route("addComment")]
+        [HttpPost]
+        public async Task<IActionResult> AddComment([FromBody]CommentViewModel model)
+        {
+            var response = await _chatService.AddComment( model);
             return Ok(response);
         }
     }

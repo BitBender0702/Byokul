@@ -87,9 +87,8 @@ public class ChatHub : Hub
 
     public async Task SendMessageToGroup(CommentViewModel model)
     {
-        var reposnseMessage = await _chatService.AddComment(model);
         var currentUserConnectionId = UserIDConnectionID[model.UserId.ToString()];
-        await Clients.GroupExcept(model.GroupName, currentUserConnectionId).SendAsync("ReceiveMessageFromGroup", reposnseMessage);
+        await Clients.GroupExcept(model.GroupName, currentUserConnectionId).SendAsync("ReceiveMessageFromGroup", model);
     }
 
     public void LikedMethod(string likedByUserID)
@@ -97,9 +96,13 @@ public class ChatHub : Hub
         Clients.Client(UserIDConnectionID[likedByUserID]).SendAsync("NotifyLike");
     }
 
-    public async Task NotifyCommentLike(string commentId,int likeCount,bool isLike,string groupName)
+    public async Task NotifyCommentLike(CommentLikeUnlikeViiewModel model)
     {
-        await Clients.Group(groupName).SendAsync("NotifyCommentLikeToReceiver", commentId, likeCount, isLike);
+        var reposnseMessage = await _chatService.LikeUnlikeComment(model);
+
+        var currentUserConnectionId = UserIDConnectionID[model.UserId.ToString()];
+
+        await Clients.GroupExcept(model.GroupName, currentUserConnectionId).SendAsync("NotifyCommentLikeToReceiver", reposnseMessage);
     }
 
 

@@ -49,10 +49,8 @@ export class SideBarComponent extends MultilingualComponent implements OnInit {
     });
 
     dashboardResponse.subscribe(response => {
-      debugger
       if(response.token != ''){
       this._userService.getSidebarInfo(response.token).subscribe((response) => {
-        debugger
         this.sidebarInfo = response;
         this.loadingIcon = false;
         this.isDataLoaded = true;

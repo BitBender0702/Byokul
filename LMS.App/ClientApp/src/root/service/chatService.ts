@@ -3,6 +3,7 @@ import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { Observable } from "rxjs";
 import { environment } from "src/environments/environment";
+import { CommentViewModel } from "../interfaces/chat/commentViewModel";
 import { SaveChatAttachment } from "../interfaces/chat/saveChatAttachment";
 import { FileUploadResult } from "../interfaces/chat/uploadFiles";
 
@@ -65,5 +66,15 @@ export class ChatService{
     getComments(id:string,pageNumber:number):Observable<any>{
         let queryParams = new HttpParams().append("id",id).append("pageNumber",pageNumber);
         return this.http.get(`${this.apiUrl}/chats/getComments`, {params:queryParams,headers: this.headers});
+    }
+
+    addComments(commentViewModel:CommentViewModel):Observable<any>{
+        return this.http.post(`${this.apiUrl}/chats/addComment`,commentViewModel,{headers: this.headers});
+
+    }
+
+    likeUnlikeComments(commentId:string,isLike:boolean): Observable<any> {
+        let queryParams = new HttpParams().append("commentId",commentId).append("isLike",isLike);
+        return this.http.post(`${this.apiUrl}/posts/likeUnlikeComment`,null, {params:queryParams});
     }
 }

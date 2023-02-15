@@ -25,6 +25,7 @@ namespace LMS.Services.Chat
         Task RemoveUnreadMessageCount(Guid senderId, Guid receiverId,ChatType chatType);
         Task<CommentViewModel> AddComment(CommentViewModel model);
         Task<List<CommentViewModel>> GetComments(Guid id,string userId, int pageNumber);
+        Task<CommentLikeUnlikeViiewModel> LikeUnlikeComment(CommentLikeUnlikeViiewModel model);
 
     }
 }

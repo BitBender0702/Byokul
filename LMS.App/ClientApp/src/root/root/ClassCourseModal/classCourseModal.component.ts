@@ -1,6 +1,7 @@
 import { Component, ElementRef, Injector, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { CommentLikeUnlike } from 'src/root/interfaces/chat/commentsLike';
 import { CommentViewModel } from 'src/root/interfaces/chat/commentViewModel';
 import { LikeUnlikePost } from 'src/root/interfaces/post/likeUnlikePost';
 import { PostView } from 'src/root/interfaces/post/postView';
@@ -9,7 +10,7 @@ import { ChatService } from 'src/root/service/chatService';
 import { PostService } from 'src/root/service/post.service';
 import { ReelsService } from 'src/root/service/reels.service';
 import { SchoolService } from 'src/root/service/school.service';
-import { commentResponse, signalRResponse, SignalrService } from 'src/root/service/signalr.service';
+import { commentLikeResponse, commentResponse, signalRResponse, SignalrService } from 'src/root/service/signalr.service';
 import { UserService } from 'src/root/service/user.service';
 
 @Component({
@@ -53,14 +54,11 @@ import { UserService } from 'src/root/service/user.service';
     commentLikeCount!:number;
     private _chatService;
     pageNumber:number = 1;
+    commentLikeUnlike!:CommentLikeUnlike;
 
     @ViewChild('groupChatList') groupChatList!: ElementRef;
 
     constructor(private bsModalService: BsModalService,chatService:ChatService,schoolService: SchoolService,public options: ModalOptions,private userService: UserService,postService: PostService,public signalRService: SignalrService,private route: ActivatedRoute,reelsService: ReelsService,private activatedRoute: ActivatedRoute) { 
-        //   this._reelsService = reelsService;
-        //   this._signalRService = signalRService;
-        //   this._userService = userService;
-        //   this._postService = postService;
         this._schoolService = schoolService;
         this._chatService = chatService;
         this._signalRService = signalRService;
@@ -91,49 +89,24 @@ import { UserService } from 'src/root/service/user.service';
 
         commentResponse.subscribe(response => {
           var comment: any[] =this.classCourseDetails.classCourseItem.comments;
-          var commentObj = {content:response.message,likeCount:0,isCommentLikedByCurrentUser:false,userAvatar:response.senderAvatar};
+          var commentObj = {id:response.id,content:response.message,likeCount:0,isCommentLikedByCurrentUser:false,userAvatar:response.senderAvatar};
           comment.push(commentObj);
         });
+
+        commentLikeResponse.subscribe(response => {
+          var comments: any[] = this.classCourseDetails.classCourseItem.comments;
+          var reqComment = comments.find(x => x.id == response.commentId);
+          if(response.isLike){
+            reqComment.likeCount = reqComment.likeCount + 1;
+          }
+          else{
+            reqComment.likeCount = reqComment.likeCount - 1;
+          }
+          
+
+        });
+        
       }
-
-    //     this._reelsService.getReelById(this.postAttachmentId.postAttachmentId).subscribe((response) => {
-    //         this.reels = response;
-    //         this.addPostView(this.reels.post.id);
-    //         this.isDataLoaded = true;
-
-    //         this._signalRService.createGroupName(this.reels.id);
-    //         // this.loadingIcon = false;
-    //       });
-
-    //       var validToken = localStorage.getItem("jwt");
-    //       if (validToken != null) {
-    //       let jwtData = validToken.split('.')[1]
-    //       let decodedJwtJsonData = window.atob(jwtData)
-    //       let decodedJwtData = JSON.parse(decodedJwtJsonData);
-    //       this.senderId = decodedJwtData.jti;
-
-    //     this._userService.getUser(this.senderId).subscribe((response) => {
-    //       this.sender = response;
-    //     });
-
-             
-    //   }
-
-    //       this.InitializeLikeUnlikePost();
-    //       this.InitializePostView();
-
-    //       commentResponse.subscribe(response => {
-    //         debugger
-    //         var comment: any[] = this.reels.post.comments;
-    //         var commentObj = {content:response.message,likeCount:0,isCommentLikedByCurrentUser:false,userAvatar:response.senderAvatar};
-    //         comment.push(commentObj);
-
-    //         // var result ={receiver:this.sender.firstName,message:response.message,isTest:false};
-    //         // this.generateChatDiv(result,response.senderAvatar);
-    //       });
-
-
-
      }
 
     getLoginUserId(){
@@ -146,44 +119,6 @@ import { UserService } from 'src/root/service/user.service';
       }
     }
 
-    // InitializeCommentViewModel(){
-    //   this.commentViewModel = {
-    //     userId: '',
-    //     content:'',
-    //     groupName:'',
-    //     userAvatar:''
-    //    };
-
-    // }
-
-
-
-    // showComments(){
-    //     if(this.showCommentsField){
-    //         this.showCommentsField = false;
-    //     }
-    //     else{
-    //         this.showCommentsField = true;
-    //     }
-    // }
-
-    // InitializeLikeUnlikePost(){
-    //   this.likeUnlikePost = {
-    //     postId: '',
-    //     userId: '',
-    //     isLike:false,
-    //     commentId:''
-    //    };
-
-    // }
-
-    // InitializePostView(){
-    //   this.postView = {
-    //     postId: '',
-    //     userId: ''
-    //    };
-
-    // }
 
     back(): void {
         window.history.back();
@@ -253,33 +188,63 @@ import { UserService } from 'src/root/service/user.service';
   }
 
   likeUnlikeComments(commentId:string, isLike:boolean,isCommentLikedByCurrentUser:boolean,likeCount:number){
+    var comment: any[] = this.classCourseDetails.classCourseItem.comments;
+    var isCommentLiked = comment.find(x => x.id == commentId);
+    this.initializeCommentLikeUnlike();
+    this.commentLikeUnlike.userId = this.sender.id;
+    this.commentLikeUnlike.commentId = commentId;
+    this.commentLikeUnlike.groupName = this.classCourseDetails.classCourseItem.id + "_group";
+   if(isCommentLiked.isCommentLikedByCurrentUser){
+    isCommentLiked.isCommentLikedByCurrentUser = false;
+    isCommentLiked.likeCount = isCommentLiked.likeCount - 1;
+    this.commentLikeUnlike.isLike = false;
+    this.commentLikeUnlike.likeCount = isCommentLiked.likeCount;
+   }
+   else{
+    isCommentLiked.isCommentLikedByCurrentUser = true;
+    isCommentLiked.likeCount = isCommentLiked.likeCount + 1;
+
+    this.commentLikeUnlike.isLike = true;
+    this.commentLikeUnlike.likeCount = isCommentLiked.likeCount;
+   }
+   this.signalRService.notifyCommentLike(this.commentLikeUnlike);
+  
+  }
+
+  initializeCommentLikeUnlike(){
+    this.commentLikeUnlike = {
+      commentId:"",
+      userId:"",
+      likeCount:0,
+      isLike:false,
+      groupName:""
+    }
+
   }
 
   sendToGroup(){
     var comment: any[] = this.classCourseDetails.classCourseItem.comments;
-    var commentObj = {content:this.messageToGroup,likeCount:0,isCommentLikedByCurrentUser:false,userAvatar:this.sender.avatar};
-    comment.push(commentObj);
-
     this.InitializeCommentViewModel();
     this.commentViewModel.userId = this.sender.id;
     this.commentViewModel.groupName = this.classCourseDetails.classCourseItem.id + "_group";
     this.commentViewModel.content = this.messageToGroup;
     this.commentViewModel.userAvatar = this.sender.avatar;
-    var response ={receiver:this.sender.firstName,message:this.messageToGroup,isTest:false};
-    //this.generateChatDiv(response,this.sender.avatar);
-    this._signalRService.sendToGroup(this.commentViewModel);
-
+    this.messageToGroup = "";
+    this.commentViewModel.id = '00000000-0000-0000-0000-000000000000';
+    this._chatService.addComments(this.commentViewModel).subscribe((response) => {
+      comment.push(response);
+      this.commentViewModel.id = response.id;
+      this._signalRService.sendToGroup(this.commentViewModel);
+      });
   }
 
   InitializeCommentViewModel(){
     this.commentViewModel = {
+      id:'',
       userId: '',
       content:'',
       groupName:'',
       userAvatar:''
      };
-
   }
-
-
-  }
+}
