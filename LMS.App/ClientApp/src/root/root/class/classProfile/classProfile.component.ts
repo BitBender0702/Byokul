@@ -25,6 +25,8 @@ import { ownedClassResponse } from '../createClass/createClass.component';
 import { PaymentComponent } from '../../payment/payment.component';
 import { NotificationService } from 'src/root/service/notification.service';
 import { NotificationType } from 'src/root/interfaces/notification/notificationViewModel';
+import { CertificateViewComponent } from '../../certificateView/certificateView.component';
+import { PostAuthorTypeEnum } from 'src/root/Enums/postAuthorTypeEnum';
 
 @Component({
     selector: 'classProfile-root',
@@ -816,6 +818,16 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
         paymentDetails: classDetails
       };
       this.bsModalService.show(PaymentComponent,{initialState});
+    }
+
+    openCertificateViewModal(certificateUrl:string,certificateName:string){
+      debugger
+      const initialState = {
+        certificateUrl: certificateUrl,
+        certificateName:certificateName,
+        from:PostAuthorTypeEnum.Class
+      };
+      this.bsModalService.show(CertificateViewComponent, { initialState });
     }
   
 }

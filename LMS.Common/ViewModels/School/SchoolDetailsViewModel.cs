@@ -42,5 +42,8 @@ namespace LMS.Common.ViewModels.School
         public IEnumerable<CourseViewModel> Courses { get; set; }
         public IEnumerable<PostDetailsViewModel> Posts { get; set; }
         public IEnumerable<PostDetailsViewModel> Reels { get; set; }
+        public int NoOfAppliedClassFilters { get; set; }
+        public int NoOfAppliedCourseFilters { get; set; }
+
     }
 }

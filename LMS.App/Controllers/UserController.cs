@@ -5,6 +5,7 @@ using LMS.Common.ViewModels.User;
 using LMS.Data.Entity;
 using LMS.Data.Entity.Chat;
 using LMS.Services;
+using LMS.Services.Blob;
 using LMS.Services.Chat;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -21,16 +22,19 @@ namespace LMS.App.Controllers
         private readonly UserManager<User> _userManager;
         private readonly IUserService _userService;
         private readonly IChatService _chatService;
+        private readonly IBlobService _blobService;
+        private IConfiguration _config;
 
 
-        public UserController(UserManager<User> userManager, IUserService userService, IChatService chatService)
+        public UserController(UserManager<User> userManager, IUserService userService, IChatService chatService, IBlobService blobService, IConfiguration config)
         {
             _userManager = userManager;
             _userService = userService;
             _chatService = chatService;
-
+            _blobService = blobService;
+            _config = config;
         }
-    
+
 
         [Route("getUser")]
         [HttpGet]
@@ -152,9 +156,6 @@ namespace LMS.App.Controllers
             return Ok(reponse);
         }
 
-
-
-        // for chats
         [Route("getChatHead")]
         [HttpGet]
         public async Task<IActionResult> GetChatHead(Guid senderId, Guid receiverId,ChatType chatType)
@@ -162,14 +163,6 @@ namespace LMS.App.Controllers
             var response = await _chatService.GetChatHead(senderId, receiverId, chatType);
             return Ok(response);
         }
-
-        //[Route("saveSentMssage")]
-        //[HttpGet]
-        //public async Task<IActionResult> SaveSentMssage(Guid senderId, Guid receiverId)
-        //{
-        //    var response = await _chatService.GetChatHead(senderId, receiverId);
-        //    return Ok(response);
-        //}
 
         [Route("saveChatAttachments")]
         [HttpPost]
@@ -192,6 +185,27 @@ namespace LMS.App.Controllers
         public async Task<IActionResult> GetReelsByUserId(string userId, int pageNumber, int pageSize = 4)
         {
             var response = await _userService.GetReelsByUserId(userId, pageNumber, pageSize);
+            return Ok(response);
+        }
+
+        [Route("getCertificatePdf")]
+        [HttpGet]
+        public async Task<IActionResult> GetCertificatePdf(string certificateName, int from)
+        {
+            string containerName = "";
+            if (from == (int)PostAuthorTypeEnum.School)
+            {
+                containerName = this._config.GetValue<string>("Container:SchoolContainer");
+            }
+            if (from == (int)PostAuthorTypeEnum.Class)
+            {
+                containerName = this._config.GetValue<string>("Container:ClassContainer");
+            }
+            if (from == (int)PostAuthorTypeEnum.Course)
+            {
+                containerName = this._config.GetValue<string>("Container:CourseContainer");
+            }
+            var response = await _blobService.GetFileContentAsync(containerName, certificateName);
             return Ok(response);
         }
 

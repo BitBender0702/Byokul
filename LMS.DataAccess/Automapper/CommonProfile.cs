@@ -26,6 +26,7 @@ namespace LMS.DataAccess.Automapper
             CreateMap<Like, LikeViewModel>();
             CreateMap<View, ViewsViewModel>();
             CreateMap<Comment, CommentViewModel>();
+            CreateMap<ClassCourseFilter, ClassCourseFilterViewModel>();
 
         }
     }

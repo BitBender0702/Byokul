@@ -114,4 +114,14 @@ export class CourseService{
         let queryParams = new HttpParams().append("courseId",courseId).append("pageNumber",pageNumber);
         return this.http.get(`${this.apiUrl}/course/getReelsByCourse`, {params:queryParams});
     }
+
+    getCourseFilters(userId:string,schoolId:string):Observable<any>{
+        let queryParams = new HttpParams().append("userId",userId).append("schoolId",schoolId);
+        return this.http.get(`${this.apiUrl}/course/getCourseFilters`, {params:queryParams});
+    }
+
+    saveCourseFilters(courseFiltersList:any):Observable<any>{
+        debugger
+        return this.http.post(`${this.apiUrl}/course/saveCourseFilters`,courseFiltersList, {headers: this.headers});         
+      }
 }

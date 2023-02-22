@@ -120,4 +120,14 @@ export class ClassService{
         return this.http.get(`${this.apiUrl}/class/getReelsByClass`, {params:queryParams});
     }
 
+    getClassFilters(userId:string,schoolId:string):Observable<any>{
+        let queryParams = new HttpParams().append("userId",userId).append("schoolId",schoolId);
+        return this.http.get(`${this.apiUrl}/class/getClassFilters`, {params:queryParams});
+    }
+
+    saveClassFilters(classFiltersList:any):Observable<any>{
+        debugger
+        return this.http.post(`${this.apiUrl}/class/saveClassFilters`,classFiltersList, {headers: this.headers});
+      }
+
 }

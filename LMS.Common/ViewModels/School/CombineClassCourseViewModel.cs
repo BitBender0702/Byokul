@@ -39,7 +39,8 @@ namespace LMS.Common.ViewModels.School
         public List<CourseViewsViewModel> CourseViews { get; set; }
         public List<CommentViewModel> Comments { get; set; }
         public int CommentsCount { get; set; }
-
+        public int NoOfAppliedFilters { get; set; }
+        public int NoOfStudents { get; set; }
 
 
     }

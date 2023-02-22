@@ -13,5 +13,6 @@ namespace LMS.Services.Blob
         Task<string> DownloadJsonAsync(string filetoDownload, string azure_ContainerName);
         Task<bool> DeleteFile(string fileName, string containerName);
         Task<string> UploadVideoAsync(Stream stream, string containerName, string fileName, string fileType);
+        Task<byte[]> GetFileContentAsync(string containerName, string fileName);
     }
 }

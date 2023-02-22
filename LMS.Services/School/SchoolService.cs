@@ -13,6 +13,7 @@ using LMS.DataAccess.Repository;
 using LMS.Services.Blob;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 
 namespace LMS.Services
@@ -43,12 +44,14 @@ namespace LMS.Services
         private IGenericRepository<PostTag> _postTagRepository;
         private IGenericRepository<ClassTag> _classTagRepository;
         private IGenericRepository<SchoolDefaultLogo> _schoolDefaultLogoRepository;
+        private IGenericRepository<UserClassCourseFilter> _userClassCourseFilterRepository;
         private readonly UserManager<User> _userManager;
         private readonly IBlobService _blobService;
         private readonly IUserService _userService;
         private readonly IClassService _classService;
         private readonly ICourseService _courseService;
-        public SchoolService(IMapper mapper, IGenericRepository<School> schoolRepository, IGenericRepository<SchoolCertificate> schoolCertificateRepository, IGenericRepository<SchoolTag> schoolTagRepository, IGenericRepository<Country> countryRepository, IGenericRepository<Specialization> specializationRepository, IGenericRepository<Language> languageRepository, IGenericRepository<SchoolUser> schoolUserRepository, IGenericRepository<SchoolFollower> schoolFollowerRepository, IGenericRepository<SchoolLanguage> schoolLanguageRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<SchoolTeacher> schoolTeacherRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<CourseTeacher> courseTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<SchoolDefaultLogo> schoolDefaultLogoRepository, UserManager<User> userManager, IBlobService blobService, IUserService userService, IGenericRepository<ClassTag> classTagRepository, IClassService classService, ICourseService courseService)
+        private IConfiguration _config;
+        public SchoolService(IMapper mapper, IGenericRepository<School> schoolRepository, IGenericRepository<SchoolCertificate> schoolCertificateRepository, IGenericRepository<SchoolTag> schoolTagRepository, IGenericRepository<Country> countryRepository, IGenericRepository<Specialization> specializationRepository, IGenericRepository<Language> languageRepository, IGenericRepository<SchoolUser> schoolUserRepository, IGenericRepository<SchoolFollower> schoolFollowerRepository, IGenericRepository<SchoolLanguage> schoolLanguageRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<SchoolTeacher> schoolTeacherRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<CourseTeacher> courseTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<SchoolDefaultLogo> schoolDefaultLogoRepository, IGenericRepository<UserClassCourseFilter> userClassCourseFilterRepository, UserManager<User> userManager, IBlobService blobService, IUserService userService, IGenericRepository<ClassTag> classTagRepository, IClassService classService, ICourseService courseService, IConfiguration config)
         {
             _mapper = mapper;
             _schoolRepository = schoolRepository;
@@ -71,12 +74,14 @@ namespace LMS.Services
             _postAttachmentRepository = postAttachmentRepository;
             _postTagRepository = postTagRepository;
             _schoolDefaultLogoRepository = schoolDefaultLogoRepository;
+            _userClassCourseFilterRepository = userClassCourseFilterRepository;
             _userManager = userManager;
             _blobService = blobService;
             _userService = userService;
             _classTagRepository = classTagRepository;
             _classService = classService;
             _courseService = courseService;
+            _config = config;
         }
 
         public async Task<SchoolViewModel> SaveNewSchool(SchoolViewModel schoolViewModel, string createdById)
@@ -208,7 +213,8 @@ namespace LMS.Services
 
         public async Task SaveSchoolCertificates(SaveSchoolCertificateViewModel schoolCertificates)
         {
-            string containerName = "schoolcertificates";
+            //string containerName = "schoolcertificates";
+            string containerName = this._config.GetValue<string>("Container:SchoolContainer");
 
             foreach (var certificate in schoolCertificates.Certificates)
             {
@@ -314,8 +320,8 @@ namespace LMS.Services
                 response.Languages = languageViewModel;
                 response.SchoolCertificates = await GetCertificateBySchoolId(response.SchoolId);
                 response.SchoolFollowers = await FollowerList(response.SchoolId);
-                response.Classes = await GetClassesBySchoolId(response.SchoolId,loginUserId);
-                response.Courses = await GetCoursesBySchoolId(response.SchoolId,loginUserId);
+                //response.Classes = await GetClassesBySchoolId(response.SchoolId,loginUserId);
+                //response.Courses = await GetCoursesBySchoolId(response.SchoolId,loginUserId);
                 response.Posts = await GetPostsBySchool(response.SchoolId, loginUserId);
                 response.Reels = await GetReelsBySchool(response.SchoolId, loginUserId);
 
@@ -336,6 +342,10 @@ namespace LMS.Services
 
                 response.Teachers = schoolTeachers;
                 response.Students = schoolStudents.Count();
+
+                response.NoOfAppliedClassFilters = await _userClassCourseFilterRepository.GetAll().Where(x => x.UserId == loginUserId && x.ClassCourseFilterType == ClassCourseFilterEnum.Class && x.IsActive).CountAsync();
+
+                response.NoOfAppliedCourseFilters = await _userClassCourseFilterRepository.GetAll().Where(x => x.UserId == loginUserId && x.ClassCourseFilterType == ClassCourseFilterEnum.Course && x.IsActive).CountAsync();
 
                 return response;
             }
@@ -456,7 +466,7 @@ namespace LMS.Services
             await AddRoleForUser(schoolUser.UserId, "Teacher");
         }
 
-        public async Task<IEnumerable<ClassViewModel>> GetClassesBySchoolId(Guid schoolId,string loginUserId)
+        public async Task<IEnumerable<ClassViewModel>> GetClassesBySchoolId(Guid? schoolId, string loginUserId)
         {
             var classList = await _classRepository.GetAll().Include(x => x.Accessibility).Include(x => x.ServiceType).Where(x => x.SchoolId == schoolId && !x.IsEnable && !x.IsDeleted).ToListAsync();
             try
@@ -481,7 +491,6 @@ namespace LMS.Services
                     }
                 }
 
-
                 return result;
             }
             catch (Exception ex)
@@ -491,7 +500,7 @@ namespace LMS.Services
 
         }
 
-        public async Task<IEnumerable<CourseViewModel>> GetCoursesBySchoolId(Guid schoolId,string loginUserId)
+        public async Task<IEnumerable<CourseViewModel>> GetCoursesBySchoolId(Guid? schoolId, string loginUserId)
         {
             var courseList = await _courseRepository.GetAll().Where(x => x.SchoolId == schoolId && !x.IsEnable && !x.IsDeleted).ToListAsync();
 
@@ -514,6 +523,7 @@ namespace LMS.Services
                     item.IsCourseLikedByCurrentUser = false;
                 }
             }
+
             return result;
 
         }
@@ -675,7 +685,7 @@ namespace LMS.Services
             return result;
         }
 
-        public async Task<IEnumerable<PostAttachmentViewModel>> GetAttachmentsByPostId(Guid postId,string loginUserId)
+        public async Task<IEnumerable<PostAttachmentViewModel>> GetAttachmentsByPostId(Guid postId, string loginUserId)
         {
             var attacchmentList = await _postAttachmentRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.PostId == postId).OrderByDescending(x => x.IsPinned).ToListAsync();
 
@@ -817,8 +827,10 @@ namespace LMS.Services
             return null;
         }
 
-        public async Task<IEnumerable<CombineClassCourseViewModel>> GetSchoolClassCourse(Guid schoolId,string userId, int pageNumber)
+        public async Task<IEnumerable<CombineClassCourseViewModel>> GetSchoolClassCourse(Guid? schoolId, string userId, int pageNumber)
         {
+            var filters = await _userClassCourseFilterRepository.GetAll().Include(x => x.ClassCourseFilter).Where(x => x.SchoolId == schoolId && x.IsActive).ToListAsync();
+
             int pageSize = 4;
             var classes = await GetClassesBySchoolId(schoolId, userId);
             var courses = await GetCoursesBySchoolId(schoolId, userId);
@@ -848,6 +860,10 @@ namespace LMS.Services
                 item.ClassViews = classDetails.ClassViews;
                 item.CommentsCount = classDetails.CommentsCount;
                 item.ThumbnailType = classDetails.ThumbnailType;
+                item.NoOfStudents = await _classService.GetStudents(classDetails.ClassId);
+                item.Rating = classDetails.Rating;
+
+                //item.NoOfAppliedFilters = classDetails.NoOfAppliedClassFilters;
 
                 model.Add(item);
             }
@@ -873,10 +889,204 @@ namespace LMS.Services
                 item.CourseViews = courseDetails.CourseViews;
                 item.CommentsCount = courseDetails.CommentsCount;
                 item.ThumbnailType = courseDetails.ThumbnailType;
+                item.NoOfStudents = await _courseService.GetStudents(courseDetails.CourseId);
+                item.Rating = courseDetails.Rating;
+                //item.NoOfAppliedFilters = courseDetails.NoOfAppliedCourseFilters;
 
                 model.Add(item);
             }
 
+
+            if (filters.Count() != 0)
+            {
+                var appliedFilterResult = new List<CombineClassCourseViewModel>();
+                foreach (var filter in filters)
+                {
+                    if (filter.ClassCourseFilterType == ClassCourseFilterEnum.Class)
+                    {
+                        if (filter.ClassCourseFilter.FilterType == FilterTypeEnum.Free)
+                        {
+                            var freeClassResult = model.Where(x => x.ServiceType.Type == "Free" && x.Type == ClassCourseEnum.Class).ToList();
+                            appliedFilterResult.AddRange(freeClassResult);
+                        }
+
+                        if (filter.ClassCourseFilter.FilterType == FilterTypeEnum.Paid)
+                        {
+                            var paidClassResult = model.Where(x => x.ServiceType.Type == "Paid" && x.Type == ClassCourseEnum.Class).ToList();
+                            appliedFilterResult.AddRange(paidClassResult);
+                        }
+
+                        if (filter.ClassCourseFilter.FilterType == FilterTypeEnum.MostStudents)
+                        {
+                            if (appliedFilterResult.Count() != 0)
+                            {
+                                if (filters.Any(x => x.ClassCourseFilter.FilterType == FilterTypeEnum.MostStudents && x.ClassCourseFilterType == ClassCourseFilterEnum.Course))
+                                {
+                                    var appliedMostStudentsOnClass = model.Where(x => x.Type == ClassCourseEnum.Class).ToList();
+                                    appliedFilterResult.AddRange(appliedMostStudentsOnClass);
+                                    appliedFilterResult = appliedFilterResult.OrderByDescending(x => x.NoOfStudents).ToList();
+
+                                }
+                                else
+                                {
+                                    appliedFilterResult = appliedFilterResult.Where(x => x.Type == ClassCourseEnum.Class).OrderByDescending(x => x.NoOfStudents).ToList();
+                                }
+                            }
+                            else
+                            {
+                                appliedFilterResult = model.Where(x => x.Type == ClassCourseEnum.Class).OrderByDescending(x => x.NoOfStudents).ToList();
+                            }
+                        }
+
+
+                        if (filter.ClassCourseFilter.FilterType == FilterTypeEnum.MostViewed)
+                        {
+                            if (appliedFilterResult.Count() != 0)
+                            {
+                                if (filters.Any(x => x.ClassCourseFilter.FilterType == FilterTypeEnum.MostViewed && x.ClassCourseFilterType == ClassCourseFilterEnum.Course))
+                                {
+                                    var appliedMostViewedOnClass = model.Where(x => x.Type == ClassCourseEnum.Class).ToList();
+                                    appliedFilterResult.AddRange(appliedMostViewedOnClass);
+                                    appliedFilterResult = appliedFilterResult.OrderByDescending(x => (x.ClassViews.Count() + x.CourseLikes.Count())).ToList();
+                                }
+                                else
+                                {
+                                    appliedFilterResult = appliedFilterResult.Where(x => x.Type == ClassCourseEnum.Class).OrderByDescending(x => x.ClassViews.Count()).ToList();
+                                }
+                            }
+                            else
+                            {
+                                appliedFilterResult = model.Where(x => x.Type == ClassCourseEnum.Class).OrderByDescending(x => x.ClassViews.Count()).ToList();
+                            }
+                        }
+
+                        if (filter.ClassCourseFilter.FilterType == FilterTypeEnum.TopRated)
+                        {
+                            if (appliedFilterResult.Count() != 0)
+                            {
+                                if (filters.Any(x => x.ClassCourseFilter.FilterType == FilterTypeEnum.TopRated && x.ClassCourseFilterType == ClassCourseFilterEnum.Course))
+                                {
+                                    var appliedTopRatedOnClass = model.Where(x => x.Type == ClassCourseEnum.Class).ToList();
+                                    appliedFilterResult.AddRange(appliedTopRatedOnClass);
+                                    appliedFilterResult = appliedFilterResult.OrderByDescending(x => x.Rating).ToList();
+                                }
+                            }
+                            else
+                            {
+                                appliedFilterResult = model.Where(x => x.Type == ClassCourseEnum.Class).OrderByDescending(x => x.Rating).ToList();
+                            }
+                        }
+
+                        if (filter.ClassCourseFilter.FilterType == FilterTypeEnum.Name)
+                        {
+                            if (appliedFilterResult.Count() != 0 && model.Any(x => x.Type == ClassCourseEnum.Course))
+                            {
+                                appliedFilterResult = appliedFilterResult.OrderBy(x => x.Name).ToList();
+                            }
+
+                            else
+                            {
+                                if (appliedFilterResult.Count() != 0 && !model.Any(x => x.Type == ClassCourseEnum.Course))
+                                {
+                                    appliedFilterResult = appliedFilterResult.Where(x => x.Type == ClassCourseEnum.Class).OrderBy(x => x.Name).ToList();
+                                }
+                                else
+                                {
+                                    appliedFilterResult = model.OrderBy(x => x.Name).ToList();
+                                }
+                            }
+                        }
+                    }
+
+                    if (filter.ClassCourseFilterType == ClassCourseFilterEnum.Course)
+                    {
+                        if (filter.ClassCourseFilter.FilterType == FilterTypeEnum.Free)
+                        {
+                            var freeCourseResult = model.Where(x => x.ServiceType.Type == "Free" && x.Type == ClassCourseEnum.Course).ToList();
+                            appliedFilterResult.AddRange(freeCourseResult);
+                        }
+
+                        if (filter.ClassCourseFilter.FilterType == FilterTypeEnum.Paid)
+                        {
+                            var paidCourseResult = model.Where(x => x.ServiceType.Type == "Paid" && x.Type == ClassCourseEnum.Course).ToList();
+                            appliedFilterResult.AddRange(paidCourseResult);
+                        }
+
+                        if (filter.ClassCourseFilter.FilterType == FilterTypeEnum.MostStudents)
+                        {
+                            if (appliedFilterResult.Count() != 0)
+                            {
+                                if (filters.Any(x => x.ClassCourseFilter.FilterType == FilterTypeEnum.MostStudents && x.ClassCourseFilterType == ClassCourseFilterEnum.Class))
+                                {
+                                    var appliedMostStudentsOnCourse = model.Where(x => x.Type == ClassCourseEnum.Course).ToList();
+                                    appliedFilterResult.AddRange(appliedMostStudentsOnCourse);
+                                    appliedFilterResult = appliedFilterResult.OrderByDescending(x => x.NoOfStudents).ToList();
+                                }
+                                else
+                                {
+                                    appliedFilterResult = appliedFilterResult.Where(x => x.Type == ClassCourseEnum.Course).OrderByDescending(x => x.NoOfStudents).ToList();
+                                }
+                            }
+                            else
+                            {
+                                appliedFilterResult = model.Where(x => x.Type == ClassCourseEnum.Course).OrderByDescending(x => x.NoOfStudents).ToList();
+                            }
+                        }
+
+                        if (filter.ClassCourseFilter.FilterType == FilterTypeEnum.MostViewed)
+                        {
+                            if (appliedFilterResult.Count() != 0)
+                            {
+                                if (filters.Any(x => x.ClassCourseFilter.FilterType == FilterTypeEnum.MostViewed && x.ClassCourseFilterType == ClassCourseFilterEnum.Class))
+                                {
+                                    var appliedMostViewedOnCourse = model.Where(x => x.Type == ClassCourseEnum.Course).ToList();
+                                    appliedFilterResult.AddRange(appliedMostViewedOnCourse);
+                                    appliedFilterResult = appliedFilterResult.OrderByDescending(x => (x.CourseViews.Count() + x.ClassViews.Count())).ToList();
+                                }
+                                else
+                                {
+                                    appliedFilterResult = appliedFilterResult.Where(x => x.Type == ClassCourseEnum.Course).OrderByDescending(x => x.CourseViews.Count()).ToList();
+                                }
+                            }
+                            else
+                            {
+                                appliedFilterResult = model.Where(x => x.Type == ClassCourseEnum.Course).OrderByDescending(x => x.CourseViews.Count()).ToList();
+                            }
+                        }
+
+                        if (filter.ClassCourseFilter.FilterType == FilterTypeEnum.TopRated)
+                        {
+                            if (appliedFilterResult.Count() != 0)
+                            {
+                                if (filters.Any(x => x.ClassCourseFilter.FilterType == FilterTypeEnum.TopRated && x.ClassCourseFilterType == ClassCourseFilterEnum.Class))
+                                {
+                                    var appliedTopRatedOnCourse = model.Where(x => x.Type == ClassCourseEnum.Course).ToList();
+                                    appliedFilterResult.AddRange(appliedTopRatedOnCourse);
+                                    appliedFilterResult = appliedFilterResult.OrderByDescending(x => x.Rating).ToList();
+                                }
+                            }
+                            else
+                            {
+                                appliedFilterResult = model.Where(x => x.Type == ClassCourseEnum.Course).OrderByDescending(x => x.Rating).ToList();
+                            }
+                        }
+
+                        if (filter.ClassCourseFilter.FilterType == FilterTypeEnum.Name)
+                        {
+                            if (appliedFilterResult.Count() != 0)
+                            {
+                                appliedFilterResult = appliedFilterResult.OrderBy(x => x.Name).ToList();
+                            }
+                            else
+                            {
+                                appliedFilterResult = model.OrderBy(x => x.Name).ToList();
+                            }
+
+                        }
+                    }
+                }
+                return appliedFilterResult.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+            }
             //var response = model.OrderByDescending(x => x.IsPinned);
             var response = model.Skip((pageNumber - 1) * pageSize).Take(pageSize).OrderByDescending(x => x.IsPinned).ThenByDescending(x => x.CreatedOn);
             return response;
@@ -914,9 +1124,9 @@ namespace LMS.Services
         }
         public async Task<List<SchoolViewModel>> GetUserAllSchools(string userId)
         {
-            var schools = await _schoolRepository.GetAll().Where(x => x.CreatedById == userId).Select(x => new SchoolViewModel {SchoolId = x.SchoolId, SchoolName= x.SchoolName,Avatar = x.Avatar }).ToListAsync();
+            var schools = await _schoolRepository.GetAll().Where(x => x.CreatedById == userId).Select(x => new SchoolViewModel { SchoolId = x.SchoolId, SchoolName = x.SchoolName, Avatar = x.Avatar }).ToListAsync();
             return schools;
-            
+
         }
     }
 }

@@ -14,7 +14,7 @@ namespace LMS.Services.Blob
     public class BlobService : IBlobService
     {
         private readonly IOptions<BlobConfig> config;
-        public BlobService(IOptions<BlobConfig> config, IOptions<BlobServiceClient> blobServiceClient)
+        public BlobService(IOptions<BlobConfig> config)
         {
             this.config = config;
         }
@@ -134,6 +134,31 @@ namespace LMS.Services.Blob
             catch (Exception ex)
             {
                 return ex.Message;
+            }
+        }
+
+        public async Task<byte[]> GetFileContentAsync(string containerName, string fileName)
+        {
+            if (CloudStorageAccount.TryParse(config.Value.StorageConnection, out CloudStorageAccount cloudStorageAccount))
+                    {
+                CloudBlobClient blobClient = cloudStorageAccount.CreateCloudBlobClient();
+
+                CloudBlobContainer container = blobClient.GetContainerReference(containerName);
+                CloudBlockBlob cloudBlockBlob = container.GetBlockBlobReference(fileName);
+                using (var ms = new MemoryStream())
+                {
+                    if (await cloudBlockBlob.ExistsAsync())
+                    {
+                        await cloudBlockBlob.DownloadToStreamAsync(ms);
+                    }
+                    return ms.ToArray();
+                }
+
+                return null;
+            }
+            else
+            {
+                return null;
             }
         }
     }

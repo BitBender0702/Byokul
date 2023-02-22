@@ -1,4 +1,5 @@
 ﻿using LMS.Common.ViewModels.Class;
+using LMS.Common.ViewModels.Common;
 using LMS.Data.Entity;
 using LMS.Services;
 using LMS.Services.Common;
@@ -207,6 +208,23 @@ namespace LMS.App.Controllers
             var userId = await GetUserIdAsync(this._userManager);
             var response = await _classService.GetReelsByClassId(classId, userId, pageNumber, pageSize);
             return Ok(response);
+        }
+
+        [Route("getClassFilters")]
+        [HttpGet]
+        public async Task<IActionResult> GetClassFilters(string userId,Guid schoolId)
+        {
+            var response = await _classService.GetClassFilters(userId, schoolId);
+            return Ok(response);
+        }
+
+        [Route("saveClassFilters")]
+        [HttpPost]
+        public async Task<IActionResult> SaveClassFilters([FromBody] List<UserClassCourseFilterViewModel> model)
+        {
+            var userId = await GetUserIdAsync(this._userManager);
+            await _classService.SaveClassFilters(model, userId);
+            return Ok();
         }
 
     }

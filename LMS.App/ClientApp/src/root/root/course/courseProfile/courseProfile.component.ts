@@ -5,6 +5,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { MessageService } from 'primeng/api';
+import { PostAuthorTypeEnum } from 'src/root/Enums/postAuthorTypeEnum';
 import { AddCourseCertificate } from 'src/root/interfaces/course/addCourseCertificate';
 import { AddCourseLanguage } from 'src/root/interfaces/course/addCourseLanguage';
 import { AddCourseTeacher } from 'src/root/interfaces/course/addCourseTeacher';
@@ -18,6 +19,7 @@ import { PostView } from 'src/root/interfaces/post/postView';
 import { CourseService } from 'src/root/service/course.service';
 import { NotificationService } from 'src/root/service/notification.service';
 import { PostService } from 'src/root/service/post.service';
+import { CertificateViewComponent } from '../../certificateView/certificateView.component';
 import { addPostResponse, CreatePostComponent } from '../../createPost/createPost.component';
 import { PostViewComponent } from '../../postView/postView.component';
 import { ReelsViewComponent } from '../../reels/reelsView.component';
@@ -814,6 +816,16 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
         postAttachmentId: postAttachmentId
       };
       this.bsModalService.show(ReelsViewComponent,{initialState});
+    }
+
+    openCertificateViewModal(certificateUrl:string,certificateName:string){
+      debugger
+      const initialState = {
+        certificateUrl: certificateUrl,
+        certificateName:certificateName,
+        from:PostAuthorTypeEnum.Course
+      };
+      this.bsModalService.show(CertificateViewComponent, { initialState });
     }
   
 }

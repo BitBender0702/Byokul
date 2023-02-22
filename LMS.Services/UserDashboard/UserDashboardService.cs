@@ -30,7 +30,8 @@ namespace LMS.Services.UserDashboard
         private IGenericRepository<CourseStudent> _courseStudentRepository;
         private IGenericRepository<User> _userRepository;
         private IGenericRepository<ChatHead> _ChatHeadRepository;
-        public UserDashboardService(IMapper mapper, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<SchoolFollower> schoolFollowerRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<UserFollower> userFollowerRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<User> userRepository, IGenericRepository<ChatHead> ChatHeadRepository)
+        private IGenericRepository<Notification> _NotificationRepository;
+        public UserDashboardService(IMapper mapper, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<SchoolFollower> schoolFollowerRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<UserFollower> userFollowerRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<User> userRepository, IGenericRepository<ChatHead> ChatHeadRepository, IGenericRepository<Notification> NotificationRepository)
         {
             _mapper = mapper;
             _schoolRepository = schoolRepository;
@@ -43,6 +44,7 @@ namespace LMS.Services.UserDashboard
             _courseStudentRepository = courseStudentRepository;
             _userRepository = userRepository;
             _ChatHeadRepository = ChatHeadRepository;
+            _NotificationRepository = NotificationRepository;
         }
         public async Task<UserDashboardViewModel> UserDashboard(string userId)
         {
@@ -85,6 +87,7 @@ namespace LMS.Services.UserDashboard
                 .Include(x => x.School)
                 .Where(x => x.UserId == userId).ToListAsync();
 
+            
             var followedSchool = _mapper.Map<IEnumerable<SchoolViewModel>>(schoolFollowers.Select(x => x.School).ToList());
             model.FollowedSchools = followedSchool;
 
@@ -117,6 +120,8 @@ namespace LMS.Services.UserDashboard
 
             model.UnreadMessageCount = messageCount;
 
+            var unreadNotifications = await _NotificationRepository.GetAll().Where(x => x.UserId == userId && !x.IsRead).ToListAsync();
+            model.UnreadNotificationCount = unreadNotifications.Count;
             return model;
         }
 

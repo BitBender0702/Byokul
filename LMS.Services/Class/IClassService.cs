@@ -1,4 +1,5 @@
 ﻿using LMS.Common.ViewModels.Class;
+using LMS.Common.ViewModels.Common;
 using LMS.Common.ViewModels.Post;
 using LMS.Common.ViewModels.School;
 using System;
@@ -15,7 +16,7 @@ namespace LMS.Services
         Task<ClassUpdateViewModel> GetClassEditDetails(Guid classId);
         Task<ClassUpdateViewModel> UpdateClass(ClassUpdateViewModel classUpdateViewModel);
         Task DeleteClassById(Guid classId, string deletedById);
-        Task<ClassDetailsViewModel> GetClassById(string className,string loginUserId);
+        Task<ClassDetailsViewModel> GetClassById(string className, string loginUserId);
         Task<IEnumerable<ClassViewModel>> GetAllClasses();
         Task SaveClassLanguages(IEnumerable<string> languageIds, Guid classId);
         Task DeleteClassLanguage(ClassLanguageViewModel model);
@@ -33,5 +34,8 @@ namespace LMS.Services
         Task<int> ClassView(ClassViewsViewModel model);
         Task<IEnumerable<PostDetailsViewModel>> GetPostsByClassId(Guid classId, string loginUserId, int pageNumber, int pageSize);
         Task<IEnumerable<PostDetailsViewModel>> GetReelsByClassId(Guid classId, string loginUserId, int pageNumber, int pageSize);
-    }
+        Task<List<ClassCourseFilterViewModel>> GetClassFilters(string userId,Guid schoolId);
+        Task SaveClassFilters(List<UserClassCourseFilterViewModel> model, string userId);
+        Task<int> GetStudents(Guid classId);
+        }
 }

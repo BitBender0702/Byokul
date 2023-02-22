@@ -21,7 +21,8 @@ const PROXY_CONFIG = [
       "/chats",
       "/admins",
       "/chart",
-      "/chats"
+      "/chats",
+      "/notifications"
    ],
     target: target,
     secure: false,

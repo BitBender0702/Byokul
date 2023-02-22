@@ -43,9 +43,12 @@ namespace LMS.Services
         private IGenericRepository<CourseLike> _courseLikeRepository;
         private IGenericRepository<CourseViews> _courseViewsRepository;
         private IGenericRepository<School> _schoolRepository;
+        private IGenericRepository<ClassCourseFilter> _classCourseFilterRepository;
+        private IGenericRepository<UserClassCourseFilter> _userClassCourseFilterRepository;
+        private IConfiguration _config;
 
 
-        public CourseService(IMapper mapper, IGenericRepository<Course> courseRepository, IGenericRepository<CourseLanguage> courseLanguageRepository, IGenericRepository<CourseDiscipline> courseDisciplineRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<CourseTeacher> courseTeacherRepository, IGenericRepository<Post> postRepository, IGenericRepository<Class> classRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<CourseCertificate> courseCertificateRepository, IGenericRepository<CourseTag> courseTagRepository, UserManager<User> userManager, IBlobService blobService, IClassService classService, IUserService userService, IGenericRepository<CourseLike> courseLikeRepository, IGenericRepository<CourseViews> courseViewsRepository, IGenericRepository<School> schoolRepository)
+        public CourseService(IMapper mapper, IGenericRepository<Course> courseRepository, IGenericRepository<CourseLanguage> courseLanguageRepository, IGenericRepository<CourseDiscipline> courseDisciplineRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<CourseTeacher> courseTeacherRepository, IGenericRepository<Post> postRepository, IGenericRepository<Class> classRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<CourseCertificate> courseCertificateRepository, IGenericRepository<CourseTag> courseTagRepository, UserManager<User> userManager, IBlobService blobService, IClassService classService, IUserService userService, IGenericRepository<CourseLike> courseLikeRepository, IGenericRepository<CourseViews> courseViewsRepository, IGenericRepository<School> schoolRepository, IGenericRepository<ClassCourseFilter> classCourseFilterRepository, IGenericRepository<UserClassCourseFilter> userClassCourseFilterRepository, IConfiguration config)
         {
             _mapper = mapper;
             _courseRepository = courseRepository;
@@ -66,6 +69,9 @@ namespace LMS.Services
             _courseLikeRepository = courseLikeRepository;
             _courseViewsRepository = courseViewsRepository;
             _schoolRepository = schoolRepository;
+            _classCourseFilterRepository = classCourseFilterRepository;
+            _userClassCourseFilterRepository = userClassCourseFilterRepository;
+            _config = config;
         }
 
         public async Task<CourseViewModel> SaveNewCourse(CourseViewModel courseViewModel, string createdById)
@@ -428,7 +434,7 @@ namespace LMS.Services
             return discipleneViewModel;
         }
 
-        async Task<int> GetStudents(Guid courseId)
+        public async Task<int> GetStudents(Guid courseId)
         {
             var courseStudents = _courseStudentRepository.GetAll()
                 .Include(x => x.Student)
@@ -607,7 +613,8 @@ namespace LMS.Services
         }
         public async Task SaveCourseCertificates(SaveCourseCertificateViewModel courseCertificates)
         {
-            string containerName = "coursecertificates";
+            //string containerName = "coursecertificates";
+            string containerName = this._config.GetValue<string>("Container:CourseContainer");
 
             var courses = await GetAllCourses();
             var isCourseExist = courses.Where(x => x.CourseId == courseCertificates.CourseId).FirstOrDefault();
@@ -759,6 +766,60 @@ namespace LMS.Services
                 return _courseViewsRepository.GetAll().Where(x => x.CourseId == model.CourseId).Count();
             }
             return _courseViewsRepository.GetAll().Where(x => x.CourseId == model.CourseId).Count();
+        }
+
+        public async Task<List<ClassCourseFilterViewModel>> GetCourseFilters(string userId, Guid schoolId)
+        {
+            var classCourseFilters = await _classCourseFilterRepository.GetAll().OrderBy(x => x.DateTime).ToListAsync();
+
+            var result = _mapper.Map<List<ClassCourseFilterViewModel>>(classCourseFilters);
+
+            var userClassCourseFilters = await _userClassCourseFilterRepository.GetAll().Where(x => x.UserId == userId && x.SchoolId == schoolId).ToListAsync();
+
+
+            foreach (var item in result)
+            {
+                var response = userClassCourseFilters.Where(x => x.ClassCourseFilterId == item.Id && x.UserId == userId && x.ClassCourseFilterType == ClassCourseFilterEnum.Course).FirstOrDefault();
+
+                if (response != null)
+                {
+                    item.IsFilterActive = response.IsActive;
+                }
+
+            }
+
+            return result;
+
+        }
+
+        public async Task SaveCourseFilters(List<UserClassCourseFilterViewModel> model, string userId)
+        {
+            var result = await _userClassCourseFilterRepository.GetAll().ToListAsync();
+            foreach (var item in model)
+            {
+                var isUserClassCourseFilterExist = result.Where(x => x.UserId == userId && x.ClassCourseFilterId == item.Id && x.ClassCourseFilterType == ClassCourseFilterEnum.Course).FirstOrDefault();
+
+                if (isUserClassCourseFilterExist != null)
+                {
+                    isUserClassCourseFilterExist.IsActive = item.IsActive;
+                    _userClassCourseFilterRepository.Update(isUserClassCourseFilterExist);
+                    _userClassCourseFilterRepository.Save();
+                }
+                else
+                {
+                    var userClassCourseFilter = new UserClassCourseFilter
+                    {
+                        UserId = userId,
+                        ClassCourseFilterId = item.Id,
+                        IsActive = item.IsActive,
+                        SchoolId = item.SchoolId,
+                        ClassCourseFilterType = ClassCourseFilterEnum.Course
+                    };
+
+                    _userClassCourseFilterRepository.Insert(userClassCourseFilter);
+                    _userClassCourseFilterRepository.Save();
+                }
+            }
         }
 
 

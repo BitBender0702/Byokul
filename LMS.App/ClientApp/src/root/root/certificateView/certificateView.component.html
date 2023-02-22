@@ -1,0 +1,34 @@
+<div *ngIf="isDataLoaded">
+<div appBsModal bsModal class="modal fade edit-school-modal show d-block post-view-large" id="create-post" tabindex="-1"
+aria-labelledby="create-post" aria-hidden="true" area-modal="true">
+<div class="modal-dialog modal-dialog-centered">
+  <div class="modal-content">
+    <div class="modal-header border-0 justify-content-center position-relative">
+        <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">ABC</h1>
+        <button (click)="close()" type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"><img
+            src="../../../assets/images/cross.svg" /></button>
+    </div>
+    <div class="modal-body">
+        <div class="attach-img-full">
+         <pdf-viewer
+          [src]="pdfSrc"
+          [rotation]="0"
+          [original-size]="false"
+          [show-all]="true"
+          [fit-to-page]="false"
+          [zoom]="1"
+          [zoom-scale]="'page-width'"
+          [stick-to-page]="false"
+          [render-text]="true"
+          [external-link-target]="'blank'"
+          [autoresize]="true"
+          [show-borders]="false"
+          style="width: 100%; height: 600px;">
+        </pdf-viewer>
+       </div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+
