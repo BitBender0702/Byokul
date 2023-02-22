@@ -48,6 +48,15 @@ namespace LMS.App.Controllers
             return Ok(response);
         }
 
+        [Route("getPostById")]
+        [HttpGet]
+        public async Task<IActionResult> GetPostById(Guid id)
+        {
+            var userId = await GetUserIdAsync(this._userManager);
+            var response = await _postService.GetPostById(id, userId);
+            return Ok(response);
+        }
+
         [Route("pinUnpinPost")]
         [HttpPost]
         public async Task<IActionResult> PinUnpinPost(Guid attachmentId, bool isPinned)

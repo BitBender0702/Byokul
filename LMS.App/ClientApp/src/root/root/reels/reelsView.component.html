@@ -71,7 +71,7 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
                 class="d-block" /> {{reels.post.comments.length}}</button>
             <button type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/eye.svg"
                 class="d-block" /> {{reels.post.views.length}}</button>
-                <button (click)="likeUnlikePosts(reels.post.id,true)" type="button" class="btn bg-transparent text_ltgray font_12">
+                <button (click)="likeUnlikePosts(reels.post.id,true,reels.post.postType,reels.id,reels.post)" type="button" class="btn bg-transparent text_ltgray font_12">
                   <img *ngIf="reels.post.isPostLikedByCurrentUser" src="../../../assets/images/heart-red.svg" class="d-block" />
                   <img *ngIf="!reels.post.isPostLikedByCurrentUser" src="../../../assets/images/Heart-dark.svg" class="d-block" />
 

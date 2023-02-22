@@ -405,7 +405,7 @@ namespace LMS.Services
             requiredIds.AddRange(courseStudentsData.Select(c => new FeedConvertDTO { Id = c.CourseId, ParentImageUrl = c.Course.Avatar, ParentName = c.Course.CourseName, SchoolName = c.Course.School.SchoolName }).ToList());
 
 
-            var postList = _postRepository.GetAll();
+            var postList = _postRepository.GetAll().Include(x => x.CreatedBy);
             var test = requiredIds.Where(a => a.Id.HasValue).ToList();
             var postListData = ( postList.Include(p => p.CreatedBy).AsEnumerable()).Where(x => test.Any(q => q.Id == x.ParentId) && x.PostType == (int)postType).Skip((pageNumber - 1) * pageSize).Take(pageSize).OrderByDescending(x => x.IsPinned).ToList();
 
@@ -1072,7 +1072,8 @@ namespace LMS.Services
                     ParentId = parentId,
                     DateTime = post.DateTime,
                     PostAttachments = _mapper.Map<List<PostAttachmentViewModel>>(postAttachment),
-                    PostTags = _mapper.Map<List<PostTagViewModel>>(postTag)
+                    PostTags = _mapper.Map<List<PostTagViewModel>>(postTag),
+                    CreatedBy = post.CreatedById
 
                 };
 
@@ -1176,7 +1177,8 @@ namespace LMS.Services
                     ParentId = parentId,
                     DateTime = post.DateTime,
                     PostAttachments = _mapper.Map<List<PostAttachmentViewModel>>(postAttachment),
-                    PostTags = _mapper.Map<List<PostTagViewModel>>(postTag)
+                    PostTags = _mapper.Map<List<PostTagViewModel>>(postTag),
+                    CreatedBy = post.CreatedById
 
                 };
 

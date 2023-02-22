@@ -3,9 +3,11 @@ import { AfterViewInit, Component, ElementRef, HostListener, Injector, OnInit, V
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BsModalService, ModalDirective, ModalOptions } from 'ngx-bootstrap/modal';
+import { NotificationType } from 'src/root/interfaces/notification/notificationViewModel';
 import { LikeUnlikePost } from 'src/root/interfaces/post/likeUnlikePost';
 import { PostView } from 'src/root/interfaces/post/postView';
 import { UserPreference } from 'src/root/interfaces/post/userPreference';
+import { NotificationService } from 'src/root/service/notification.service';
 import { PostService } from 'src/root/service/post.service';
 import { SchoolService } from 'src/root/service/school.service';
 import { UserService } from 'src/root/service/user.service';
@@ -21,9 +23,10 @@ import { ReelsViewComponent } from '../reels/reelsView.component';
 
 export class UserFeedComponent implements OnInit {
 
+    private _userService;
+    private _notificationService;
     showCommentsField:boolean = false;
     messageToGroup!:string;
-    private _userService;
     likeUnlikePost!: LikeUnlikePost;
     postView!:PostView;
     isProfileGrid:boolean = true;
@@ -62,9 +65,10 @@ export class UserFeedComponent implements OnInit {
     @ViewChild('globalReelCarousel') globalReelCarousel!: ElementRef;
     scrolled:boolean = false;
 
-    constructor(private bsModalService: BsModalService,postService: PostService,public userService:UserService, public options: ModalOptions,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
+    constructor(private bsModalService: BsModalService,notificationService:NotificationService,postService: PostService,public userService:UserService, public options: ModalOptions,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
          this._userService = userService;
          this._postService = postService;
+         this._notificationService = notificationService;
     }
 
     ngOnChanges(): void {
@@ -269,7 +273,7 @@ export class UserFeedComponent implements OnInit {
           this.bsModalService.show(CreatePostComponent,{initialState});
       }
 
-      likeUnlikePosts(postId:string, isLike:boolean){
+      likeUnlikePosts(postId:string, isLike:boolean,postType:number,post:any){
         this.currentLikedPostId = postId;
 
         this.myFeeds.filter((p : any) => p.id == postId).forEach( (item : any) => {
@@ -284,6 +288,15 @@ export class UserFeedComponent implements OnInit {
           this.isLiked = true;
           this.likesLength = item.likes.length + 1;
           item.isPostLikedByCurrentUser = true;
+
+          if(post.title != null){
+            var notificationContent = `liked your post(${post.title})`;
+          }
+          else{
+            var notificationContent = "liked your post";
+          }
+          this._notificationService.initializeNotificationViewModel(post.createdBy,NotificationType.Likes,notificationContent,this.userId,postId,postType,post,null).subscribe((response) => {
+          });
         }
         }); 
         
@@ -300,7 +313,7 @@ export class UserFeedComponent implements OnInit {
         });
       }
 
-      likeUnlikeGlobalPosts(postId:string, isLike:boolean){
+      likeUnlikeGlobalPosts(postId:string, isLike:boolean,postType:number,post:any){
         this.currentLikedPostId = postId;
         this.globalFeeds.filter((p : any) => p.id == postId).forEach( (item : any) => {
           var likes: any[] = item.likes;
@@ -314,6 +327,15 @@ export class UserFeedComponent implements OnInit {
           this.isLiked = true;
           this.likesLength = item.likes.length + 1;
           item.isPostLikedByCurrentUser = true;
+
+          if(post.title != null){
+            var notificationContent = `liked your post(${post.title})`;
+          }
+          else{
+            var notificationContent = "liked your post";
+          }
+          this._notificationService.initializeNotificationViewModel(post.createdBy,NotificationType.Likes,notificationContent,this.userId,postId,postType,post,null).subscribe((response) => {
+          });
         }
         }); 
         

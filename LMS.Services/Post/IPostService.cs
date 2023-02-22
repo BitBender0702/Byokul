@@ -11,6 +11,7 @@ namespace LMS.Services
     {
         Task<PostViewModel> SavePost(PostViewModel postViewModel, string createdById);
         Task<PostAttachmentViewModel> GetReelById(Guid id,string userId);
+        Task<PostDetailsViewModel> GetPostById(Guid id, string userId);
         Task<bool> PinUnpinPost(Guid attachmentId, bool isPinned);
         Task<List<LikeViewModel>> LikeUnlikePost(LikeUnlikeViewModel model);
         Task<int> PostView(PostViewsViewModel model);

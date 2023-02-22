@@ -24,6 +24,7 @@ import { ReelsViewComponent } from '../root/reels/reelsView.component';
 import { ChatComponent } from '../root/chat/chat.component';
 import { CourseProfileComponent } from '../root/course/courseProfile/courseProfile.component';
 import { UserFeedComponent } from '../root/userFeed/userFeed.component';
+import { NotificationsComponent } from '../root/Notifications/notifications.component';
 
 
 const routes: Routes = [
@@ -60,7 +61,9 @@ const routes: Routes = [
   {
     path: 'chats',component:ChatComponent
   },
-
+  {
+    path: 'notifications',component:NotificationsComponent
+  },
   {
     path: 'schoolProfile/:schoolId',component:SchoolProfileComponent
   },

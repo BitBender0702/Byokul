@@ -108,6 +108,20 @@ export class UserService{
         return this.http.get(`${this.apiUrl}/users/getReelsByUserId`, {params:queryParams,headers: this.headers});
     }
 
+    getNotificationSettings(userId:string):Observable<any>{
+        return this.http.get(`${this.apiUrl}/notifications/getNotificationSettings` + '?userId=' + userId, {headers: this.headers});
+    }
+    
+    getCertificatePdf(certificateName:string,from:number){
+        debugger
+        let queryParams = new HttpParams().append("certificateName",certificateName).append("from",from);
+        return this.http.get(`${this.apiUrl}/users/getCertificatePdf`, {params:queryParams,headers: this.headers}
+        );
+        
+
+        
+    }
+
     
 
 }

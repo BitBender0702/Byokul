@@ -12,9 +12,11 @@ import { CourseView } from 'src/root/interfaces/course/courseView';
 import { DeleteCourseCertificate } from 'src/root/interfaces/course/deleteCourseCertificate';
 import { DeleteCourseLanguage } from 'src/root/interfaces/course/deleteCourseLanguage';
 import { DeleteCourseTeacher } from 'src/root/interfaces/course/deleteCourseTeacher';
+import { NotificationType } from 'src/root/interfaces/notification/notificationViewModel';
 import { LikeUnlikePost } from 'src/root/interfaces/post/likeUnlikePost';
 import { PostView } from 'src/root/interfaces/post/postView';
 import { CourseService } from 'src/root/service/course.service';
+import { NotificationService } from 'src/root/service/notification.service';
 import { PostService } from 'src/root/service/post.service';
 import { addPostResponse, CreatePostComponent } from '../../createPost/createPost.component';
 import { PostViewComponent } from '../../postView/postView.component';
@@ -33,6 +35,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
 
     private _courseService;
     private _postService;
+    private _notificationService;
     course:any;
     isProfileGrid:boolean = true;
     // isOpenSidebar:boolean = false;
@@ -98,10 +101,11 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     @ViewChild('createPostModal', { static: true }) createPostModal!: CreatePostComponent;
 
     isDataLoaded:boolean = false;
-    constructor(injector: Injector,public messageService:MessageService,postService:PostService,private bsModalService: BsModalService,courseService: CourseService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
+    constructor(injector: Injector,notificationService:NotificationService,public messageService:MessageService,postService:PostService,private bsModalService: BsModalService,courseService: CourseService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
       super(injector);
         this._courseService = courseService;
          this._postService = postService;
+         this._notificationService = notificationService;
          this.courseParamsData$ = this.route.params.subscribe(routeParams => {
           // if(!this.loadingIcon)
           this.ngOnInit();
@@ -704,7 +708,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       } 
     }
 
-    likeUnlikePosts(postId:string, isLike:boolean){
+    likeUnlikePosts(postId:string, isLike:boolean,postType:number,post:any){
       this.currentLikedPostId = postId;
       this.course.posts.filter((p : any) => p.id == postId).forEach( (item : any) => {
         var likes: any[] = item.likes;
@@ -718,6 +722,14 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
         this.isLiked = true;
         this.likesLength = item.likes.length + 1;
         item.isPostLikedByCurrentUser = true;
+        if(post.title != null){
+          var notificationContent = `liked your post(${post.title})`;
+        }
+        else{
+          var notificationContent = "liked your post";
+        }
+        this._notificationService.initializeNotificationViewModel(post.createdBy,NotificationType.Likes,notificationContent,this.userId,postId,postType,post,null).subscribe((response) => {
+        });
     
       }
       }); 

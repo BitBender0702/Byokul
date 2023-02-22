@@ -67,7 +67,7 @@
       <div class="teacher-tags tag-box mt-0 hover-tags">
         <div class="teacher-content font_14 d-inline-block"><img src="../../../../assets/images/dark-star.svg" />{{'Sertificates'| translate }}</div>
 
-        <span *ngFor="let item of school.schoolCertificates;" class="custom-tag">{{item.name}}<button (click)="getDeletedCertificate(item.certificateId)" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#delete-schoolCertificate">
+        <span *ngFor="let item of school.schoolCertificates;" class="custom-tag"><span (click)="openCertificateViewModal(item.certificateUrl,item.name)">{{item.name}}</span><button (click)="getDeletedCertificate(item.certificateId)" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#delete-schoolCertificate">
           <img *ngIf="isOwner" src="../../../../assets/images/cross-sm-light.svg" /></button></span>
 
             <span *ngIf="isOwner" class="custom-tag">Add Certificates<button (click)="resetCertificateModal()" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#add-certificate"><img
@@ -125,9 +125,9 @@
               </svg>
               
           <div class=" btn-group dropdown-filter">
-            <button type="button" class="btn btn-default dropdown-toggle after-none border-0 py-0 h-auto" data-bs-toggle="dropdown" aria-haspopup="true"
+            <button (click)="getClassFilters()" type="button" class="btn btn-default dropdown-toggle after-none border-0 py-0 h-auto" data-bs-toggle="dropdown" aria-haspopup="true"
               aria-expanded="false">Classes  <span class="position-absolute start-100 translate-middle border border-light rounded-circle filter-badge">
-                5
+                {{noOfAppliedClassFilters}}
               </span></button>
             <div class="dropdown-menu px-4 py-3">
               <div class="d-flex align-items-center justify-content-between mb-3">
@@ -137,7 +137,7 @@
                   </svg>
                   <button type="button" class="btn btn-default dropdown-toggle after-none border-0 py-0 h-auto" data-bs-toggle="dropdown" aria-haspopup="true"
               aria-expanded="false">Classes  <span class="position-absolute start-100 translate-middle border border-light rounded-circle filter-badge">
-                5
+                {{noOfAppliedClassFilters}}
               </span></button>
               </div>
               <button type="button" class="close border-0 bg-transparent"><svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -150,79 +150,54 @@
               <div class="text-line-border position-relative text-center mb-2">
                 <span class="line-text font_12 text_ltgray fw_400 text-center">Time</span>
               </div>   
-              <div class="form-group position-relative">
-                <div class="form-check form-check-inline font_14 fw_500 d-flex align-items-center">
-                  <input class="form-check-input" checked="" type="checkbox" id="inlineCheckbox1" value="option1">
-                  Live
-                </div>
-              </div> 
-              <div class="form-group position-relative">
-                <div class="form-check form-check-inline font_14 fw_500 d-flex align-items-center">
-                  <input class="form-check-input" checked="" type="checkbox" id="inlineCheckbox1" value="option1">
-                  Scheduled
-                </div>
-              </div> 
+              <ng-container *ngFor="let classFilter of classFilters">
+                <div *ngIf="classFilter.type == 1" class="form-group position-relative">
+                  <div class="form-check form-check-inline font_14 fw_500 d-flex align-items-center">
+                    <input *ngIf="classFilter.isFilterActive" (change)="changeClassFilterSettings(classFilter.id,false)" class="form-check-input" checked type="checkbox" id="inlineCheckbox1" value="option1">
+                    <input *ngIf="!classFilter.isFilterActive" (change)="changeClassFilterSettings(classFilter.id,true)" class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+                    {{classFilter.name}}
+                  </div>
+                </div> 
+              </ng-container>
+
               <div class="text-line-border position-relative text-center mb-2">
                 <span class="line-text font_12 text_ltgray fw_400 text-center">Pricing</span>
               </div>   
-              <div class="form-group position-relative">
-                <div class="form-check form-check-inline font_14 fw_500 d-flex align-items-center">
-                  <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
-                  Free
-                </div>
-              </div> 
-              <div class="form-group position-relative">
-                <div class="form-check form-check-inline font_14 fw_500 d-flex align-items-center">
-                  <input class="form-check-input" checked="" type="checkbox" id="inlineCheckbox1" value="option1">
-                  Paid
-                </div>
-              </div> 
+              <ng-container *ngFor="let classFilter of classFilters">
+                <div *ngIf="classFilter.type == 2" class="form-group position-relative">
+                  <div class="form-check form-check-inline font_14 fw_500 d-flex align-items-center">
+                    <input *ngIf="classFilter.isFilterActive" (change)="changeClassFilterSettings(classFilter.id,false)" class="form-check-input" checked type="checkbox" id="inlineCheckbox1" value="option1">
+                    <input *ngIf="!classFilter.isFilterActive" (change)="changeClassFilterSettings(classFilter.id,true)" class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+                    {{classFilter.name}}
+                  </div>
+                </div> 
+              </ng-container>
+
               <div class="text-line-border position-relative text-center mb-2">
                 <span class="line-text font_12 text_ltgray fw_400 text-center">Sorting</span>
-              </div>   
-              <div class="form-group position-relative">
-                <div class="form-check form-check-inline font_14 fw_500 d-flex align-items-center">
-                  <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
-                  Name A-Z
-                </div>
-              </div> 
-              <div class="form-group position-relative">
-                <div class="form-check form-check-inline font_14 fw_500 d-flex align-items-center">
-                  <input class="form-check-input" checked="" type="checkbox" id="inlineCheckbox1" value="option1">
-                  For Beginners
-                </div>
-              </div>   
-              <div class="form-group position-relative">
-                <div class="form-check form-check-inline font_14 fw_500 d-flex align-items-center">
-                  <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
-                  Most Students
-                </div>
               </div>  
-              <div class="form-group position-relative">
-                <div class="form-check form-check-inline font_14 fw_500 d-flex align-items-center">
-                  <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
-                  Most Viewed
-                </div>
-              </div>  
-              <div class="form-group position-relative">
-                <div class="form-check form-check-inline font_14 fw_500 d-flex align-items-center">
-                  <input class="form-check-input" checked="" type="checkbox" id="inlineCheckbox1" value="option1">
-                  Top Rated
-                </div>
-              </div> 
+              <ng-container *ngFor="let classFilter of classFilters">
+                <div *ngIf="classFilter.type == 3" class="form-group position-relative">
+                  <div class="form-check form-check-inline font_14 fw_500 d-flex align-items-center">
+                    <input *ngIf="classFilter.isFilterActive" (change)="changeClassFilterSettings(classFilter.id,false)" class="form-check-input" checked type="checkbox" id="inlineCheckbox1" value="option1">
+                    <input *ngIf="!classFilter.isFilterActive" (change)="changeClassFilterSettings(classFilter.id,true)" class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+                    {{classFilter.name}}
+                  </div>
+                </div> 
+              </ng-container>
+
               <div class=" d-flex align-items-center justify-content-between flex-sm-nowrap border-0">
                 <button type="button" class="btn custom-btn primary_btn earning-btn fw_500 h_44 w-100 font_14 prev-step-btn prev-step me-2" data-bs-dismiss="modal">Clear All</button>
-                <button type="button" class="btn custom-btn primary_btn earning-btn fw_500 h_44 w-100 font_14  next-step m-0">Apply</button>
-      
+                <button (click)="saveClassFilters()" type="button" class="btn custom-btn primary_btn earning-btn fw_500 h_44 w-100 font_14  next-step m-0">Apply</button>
               </div>       
             </div>
            
           </div>
           <span class="divider">|</span>
           <div class="btn-group dropdown-filter">
-            <button type="button" class="btn btn-default dropdown-toggle after-none border-0 py-0 h-auto" data-bs-toggle="dropdown" aria-haspopup="true"
+            <button (click)="getCourseFilters()" type="button" class="btn btn-default dropdown-toggle after-none border-0 py-0 h-auto" data-bs-toggle="dropdown" aria-haspopup="true"
               aria-expanded="false">Courses <span class="position-absolute start-100 translate-middle border border-light rounded-circle filter-badge">
-                3
+                {{noOfAppliedCourseFilters}}
               </span></button>
             <div class="dropdown-menu px-4 py-3">
               <div class="d-flex align-items-center justify-content-between mb-3">
@@ -232,7 +207,7 @@
                     </svg>
                     <button type="button" class="btn btn-default dropdown-toggle after-none border-0 py-0 h-auto" data-bs-toggle="dropdown" aria-haspopup="true"
                 aria-expanded="false">Courses  <span class="position-absolute start-100 translate-middle border border-light rounded-circle filter-badge">
-                  3
+                  {{noOfAppliedCourseFilters}}
                 </span></button>
                 </div>
                 <button type="button" class="close border-0 bg-transparent"><svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -244,70 +219,48 @@
               <div class="text-line-border position-relative text-center mb-2">
                 <span class="line-text font_12 text_ltgray fw_400 text-center">Time</span>
               </div>   
-              <div class="form-group position-relative">
-                <div class="form-check form-check-inline font_14 fw_500 d-flex align-items-center">
-                  <input class="form-check-input" checked="" type="checkbox" id="inlineCheckbox1" value="option1">
-                  Live
-                </div>
-              </div> 
-              <div class="form-group position-relative">
-                <div class="form-check form-check-inline font_14 fw_500 d-flex align-items-center">
-                  <input class="form-check-input" checked="" type="checkbox" id="inlineCheckbox1" value="option1">
-                  Scheduled
-                </div>
-              </div> 
+              <ng-container *ngFor="let courseFilter of courseFilters">
+                <div *ngIf="courseFilter.type == 1" class="form-group position-relative">
+                  <div class="form-check form-check-inline font_14 fw_500 d-flex align-items-center">
+                    <input *ngIf="courseFilter.isFilterActive" (change)="changeCourseFilterSettings(courseFilter.id,false)" class="form-check-input" checked type="checkbox" id="inlineCheckbox1" value="option1">
+                    <input *ngIf="!courseFilter.isFilterActive" (change)="changeCourseFilterSettings(courseFilter.id,true)" class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+                    {{courseFilter.name}}
+                  </div>
+                </div> 
+              </ng-container>
+
+             
               <div class="text-line-border position-relative text-center mb-2">
                 <span class="line-text font_12 text_ltgray fw_400 text-center">Pricing</span>
               </div>   
-              <div class="form-group position-relative">
-                <div class="form-check form-check-inline font_14 fw_500 d-flex align-items-center">
-                  <input class="form-check-input" checked="" type="checkbox" id="inlineCheckbox1" value="option1">
-                  Free
-                </div>
-              </div> 
-              <div class="form-group position-relative">
-                <div class="form-check form-check-inline font_14 fw_500 d-flex align-items-center">
-                  <input class="form-check-input" checked="" type="checkbox" id="inlineCheckbox1" value="option1">
-                  Paid
-                </div>
-              </div> 
+
+              <ng-container *ngFor="let courseFilter of courseFilters">
+                <div *ngIf="courseFilter.type == 2" class="form-group position-relative">
+                  <div class="form-check form-check-inline font_14 fw_500 d-flex align-items-center">
+                    <input *ngIf="courseFilter.isFilterActive" (change)="changeCourseFilterSettings(courseFilter.id,false)" class="form-check-input" checked type="checkbox" id="inlineCheckbox1" value="option1">
+                    <input *ngIf="!courseFilter.isFilterActive" (change)="changeCourseFilterSettings(courseFilter.id,true)" class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+                    {{courseFilter.name}}
+                  </div>
+                </div> 
+              </ng-container>
+
               <div class="text-line-border position-relative text-center mb-2">
                 <span class="line-text font_12 text_ltgray fw_400 text-center">Sorting</span>
               </div>   
-              <div class="form-group position-relative">
-                <div class="form-check form-check-inline font_14 fw_500 d-flex align-items-center">
-                  <input class="form-check-input" checked="" type="checkbox" id="inlineCheckbox1" value="option1">
-                  Name A-Z
-                </div>
-              </div> 
-              <div class="form-group position-relative">
-                <div class="form-check form-check-inline font_14 fw_500 d-flex align-items-center">
-                  <input class="form-check-input" checked="" type="checkbox" id="inlineCheckbox1" value="option1">
-                  For Beginners
-                </div>
-              </div>   
-              <div class="form-group position-relative">
-                <div class="form-check form-check-inline font_14 fw_500 d-flex align-items-center">
-                  <input class="form-check-input" checked="" type="checkbox" id="inlineCheckbox1" value="option1">
-                  Most Students
-                </div>
-              </div>  
-              <div class="form-group position-relative">
-                <div class="form-check form-check-inline font_14 fw_500 d-flex align-items-center">
-                  <input class="form-check-input" checked="" type="checkbox" id="inlineCheckbox1" value="option1">
-                  Most Viewed
-                </div>
-              </div>  
-              <div class="form-group position-relative">
-                <div class="form-check form-check-inline font_14 fw_500 d-flex align-items-center">
-                  <input class="form-check-input" checked="" type="checkbox" id="inlineCheckbox1" value="option1">
-                  Top Rated
-                </div>
-              </div> 
+
+              <ng-container *ngFor="let courseFilter of courseFilters">
+                <div *ngIf="courseFilter.type == 3" class="form-group position-relative">
+                  <div class="form-check form-check-inline font_14 fw_500 d-flex align-items-center">
+                    <input *ngIf="courseFilter.isFilterActive" (change)="changeCourseFilterSettings(courseFilter.id,false)" class="form-check-input" checked type="checkbox" id="inlineCheckbox1" value="option1">
+                    <input *ngIf="!courseFilter.isFilterActive" (change)="changeCourseFilterSettings(courseFilter.id,true)" class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+                    {{courseFilter.name}}
+                  </div>
+                </div> 
+              </ng-container>
+
               <div class=" d-flex align-items-center justify-content-between flex-sm-nowrap border-0">
                 <button type="button" class="btn custom-btn primary_btn earning-btn fw_500 h_44 w-100 font_14 prev-step-btn prev-step me-2" data-bs-dismiss="modal">Clear All</button>
-                <button type="button" class="btn custom-btn primary_btn earning-btn fw_500 h_44 w-100 font_14  next-step m-0">Apply</button>
-      
+                <button (click)="saveCourseFilters()" type="button" class="btn custom-btn primary_btn earning-btn fw_500 h_44 w-100 font_14  next-step m-0">Apply</button>
               </div>       
             </div>
            
@@ -482,7 +435,7 @@
                             <img src="../../../../assets/images/eye-light.svg" class="d-block mx-auto" />
                             {{post.views.length}}
                         </button>
-                        <button (click)="likeUnlikePosts(post.id,true)" type="button" class="bg-transparent border-0 function-btns text-light">
+                        <button (click)="likeUnlikePosts(post.id,true,post.postType,post)" type="button" class="bg-transparent border-0 function-btns text-light">
                           <img *ngIf="post.isPostLikedByCurrentUser" src="../../../assets/images/heart-red.svg" class="d-block mx-auto" />
                           <img *ngIf="!post.isPostLikedByCurrentUser" src="../../../../assets/images/Heart-light.svg" class="d-block mx-auto" />
         
@@ -510,7 +463,7 @@
                         <img src="../../../../assets/images/eye.svg" class="d-block mx-auto" />
                         <span class="textBlack">{{post.views.length}}</span>
                       </button>
-                      <button (click)="likeUnlikePosts(post.id,true)" type="button" class="bg-transparent border-0 function-btns text-light">
+                      <button (click)="likeUnlikePosts(post.id,true,post.postType,post)" type="button" class="bg-transparent border-0 function-btns text-light">
                         <img *ngIf="post.isPostLikedByCurrentUser" src="../../../assets/images/heart-red.svg" class="d-block mx-auto" />
                         <img *ngIf="!post.isPostLikedByCurrentUser" src="../../../../assets/images/Heart-dark.svg" class="d-block mx-auto" />
       
@@ -582,7 +535,7 @@
                   <img src="../../../../assets/images/eye.svg" class="d-block mx-auto">
                   <span class="textBlack">{{gridItemInfo.views.length}}</span>
                 </button>
-                <button (click)="likeUnlikePosts(gridItemInfo.id,true)" type="button" class="bg-transparent border-0 function-btns text-light">
+                <button (click)="likeUnlikePosts(gridItemInfo.id,true,gridItemInfo.postType,gridItemInfo)" type="button" class="bg-transparent border-0 function-btns text-light">
                   <img *ngIf="gridItemInfo.isPostLikedByCurrentUser" src="../../../assets/images/heart-red.svg" class="d-block mx-auto" />
                   <img *ngIf="!gridItemInfo.isPostLikedByCurrentUser" src="../../../../assets/images/Heart-dark.svg" class="d-block mx-auto" />
 

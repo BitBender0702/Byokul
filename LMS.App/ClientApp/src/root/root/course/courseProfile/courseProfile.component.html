@@ -273,7 +273,7 @@
                     <img src="../../../../assets/images/eye-light.svg" class="d-block mx-auto" />
                     {{post.views.length}}
                   </button>
-                  <button (click)="likeUnlikePosts(post.id,true)" type="button" class="bg-transparent border-0 function-btns text-light">
+                  <button (click)="likeUnlikePosts(post.id,true,post.postType,post)" type="button" class="bg-transparent border-0 function-btns text-light">
                     <img *ngIf="post.isPostLikedByCurrentUser" src="../../../assets/images/heart-red.svg" class="d-block mx-auto" />
                     <img *ngIf="!post.isPostLikedByCurrentUser" src="../../../../assets/images/Heart-light.svg" class="d-block mx-auto" />
   
@@ -299,7 +299,7 @@
                     <img src="../../../../assets/images/eye.svg" class="d-block mx-auto" />
                     <span class="textBlack">{{post.views.length}}</span>
                   </button>
-                  <button (click)="likeUnlikePosts(post.id,true)" type="button" class="bg-transparent border-0 function-btns text-light">
+                  <button (click)="likeUnlikePosts(post.id,true,post.postType,post)" type="button" class="bg-transparent border-0 function-btns text-light">
                     <img *ngIf="post.isPostLikedByCurrentUser" src="../../../assets/images/heart-red.svg" class="d-block mx-auto" />
                     <img *ngIf="!post.isPostLikedByCurrentUser" src="../../../../assets/images/Heart-dark.svg" class="d-block mx-auto" />
   
@@ -370,7 +370,7 @@
                           <img src="../../../../assets/images/eye.svg" class="d-block mx-auto">
                           <span class="textBlack">{{gridItemInfo.views.length}}</span>
                         </button>
-                        <button (click)="likeUnlikePosts(gridItemInfo.id,true)" type="button" class="bg-transparent border-0 function-btns text-light">
+                        <button (click)="likeUnlikePosts(gridItemInfo.id,true,gridItemInfo.postType,gridItemInfo)" type="button" class="bg-transparent border-0 function-btns text-light">
                           <img *ngIf="gridItemInfo.isPostLikedByCurrentUser" src="../../../assets/images/heart-red.svg" class="d-block mx-auto" />
                           <img *ngIf="!gridItemInfo.isPostLikedByCurrentUser" src="../../../../assets/images/Heart-dark.svg" class="d-block mx-auto" />
         

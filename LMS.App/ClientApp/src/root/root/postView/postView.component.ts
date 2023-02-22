@@ -5,9 +5,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BsModalService, ModalDirective, ModalOptions } from 'ngx-bootstrap/modal';
 import { CommentLikeUnlike } from 'src/root/interfaces/chat/commentsLike';
 import { CommentViewModel } from 'src/root/interfaces/chat/commentViewModel';
+import { NotificationType } from 'src/root/interfaces/notification/notificationViewModel';
 import { LikeUnlikePost } from 'src/root/interfaces/post/likeUnlikePost';
 import { PostView } from 'src/root/interfaces/post/postView';
 import { ChatService } from 'src/root/service/chatService';
+import { NotificationService } from 'src/root/service/notification.service';
 import { PostService } from 'src/root/service/post.service';
 import { SchoolService } from 'src/root/service/school.service';
 import { commentLikeResponse, commentResponse, SignalrService } from 'src/root/service/signalr.service';
@@ -28,6 +30,7 @@ export class PostViewComponent implements OnInit {
     private _signalRService;
     private _userService;
     private _chatService;
+    private _notificationService;
     showCommentsField:boolean = true;
     messageToGroup!:string;
     private _postService;
@@ -43,11 +46,12 @@ export class PostViewComponent implements OnInit {
     commentViewModel!: CommentViewModel;
     commentLikeUnlike!:CommentLikeUnlike;
 
-    constructor(private bsModalService: BsModalService,chatService: ChatService,public signalRService: SignalrService,public postService:PostService, public options: ModalOptions,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,userService:UserService) { 
+    constructor(private bsModalService: BsModalService,notificationService:NotificationService,chatService: ChatService,public signalRService: SignalrService,public postService:PostService, public options: ModalOptions,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,userService:UserService) { 
          this._postService = postService;
          this._signalRService = signalRService;
          this._userService = userService;
          this._chatService = chatService;
+         this._notificationService = notificationService;
     }
   
     ngOnInit(): void {
@@ -134,7 +138,7 @@ export class PostViewComponent implements OnInit {
       }
   }
 
-  likeUnlikePosts(postId:string, isLike:boolean){
+  likeUnlikePosts(postId:string, isLike:boolean,postType:number,post:any){
     this.currentLikedPostId = postId;
       var likes: any[] = this.posts.posts.likes;
       var isLiked = likes.filter(x => x.userId == this.userId && x.postId == postId);
@@ -147,6 +151,13 @@ export class PostViewComponent implements OnInit {
       this.isLiked = true;
       this.likesLength = this.posts.posts.likes.length + 1;
       this.posts.posts.isPostLikedByCurrentUser = true;
+
+      var notificationContent = `liked your post(${post.title})`;
+      //this.initializeNotificationViewModel(this.user.id,notificationType,notificationContent);
+
+      this._notificationService.initializeNotificationViewModel(post.createdBy,NotificationType.Likes,notificationContent,this.userId,postId,postType,post,null).subscribe((response) => {
+          
+      });
   
     }
 

@@ -3,9 +3,11 @@ import { ActivatedRoute } from '@angular/router';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { CommentLikeUnlike } from 'src/root/interfaces/chat/commentsLike';
 import { CommentViewModel } from 'src/root/interfaces/chat/commentViewModel';
+import { NotificationType } from 'src/root/interfaces/notification/notificationViewModel';
 import { LikeUnlikePost } from 'src/root/interfaces/post/likeUnlikePost';
 import { PostView } from 'src/root/interfaces/post/postView';
 import { ChatService } from 'src/root/service/chatService';
+import { NotificationService } from 'src/root/service/notification.service';
 import { PostService } from 'src/root/service/post.service';
 import { ReelsService } from 'src/root/service/reels.service';
 import { commentLikeResponse, commentResponse, signalRResponse, SignalrService } from 'src/root/service/signalr.service';
@@ -22,6 +24,7 @@ import { UserService } from 'src/root/service/user.service';
     private _reelsService;
     private _postService;
     private _chatService;
+    private _notificationService;
     //reelId!:string;
     reels:any;
     isOpenSidebar:boolean = false;
@@ -48,12 +51,13 @@ import { UserService } from 'src/root/service/user.service';
 
     @ViewChild('groupChatList') groupChatList!: ElementRef;
 
-    constructor(private bsModalService: BsModalService,chatService:ChatService,private renderer: Renderer2,public options: ModalOptions,private userService: UserService,postService: PostService,public signalRService: SignalrService,private route: ActivatedRoute,reelsService: ReelsService,private activatedRoute: ActivatedRoute) { 
+    constructor(private bsModalService: BsModalService,notificationService:NotificationService,chatService:ChatService,private renderer: Renderer2,public options: ModalOptions,private userService: UserService,postService: PostService,public signalRService: SignalrService,private route: ActivatedRoute,reelsService: ReelsService,private activatedRoute: ActivatedRoute) { 
           this._reelsService = reelsService;
           this._signalRService = signalRService;
           this._userService = userService;
           this._postService = postService;
           this._chatService = chatService;
+          this._notificationService = notificationService;
   
       }
 
@@ -197,7 +201,7 @@ import { UserService } from 'src/root/service/user.service';
     
       }
 
-      likeUnlikePosts(postId:string, isLike:boolean){
+      likeUnlikePosts(postId:string, isLike:boolean,postType:number,reelId:any,post:any){
         this.currentLikedPostId = postId;
           var likes: any[] = this.reels.post.likes;
           var isLiked = likes.filter(x => x.userId == this.loginUserId && x.postId == postId);
@@ -210,6 +214,19 @@ import { UserService } from 'src/root/service/user.service';
           this.isLiked = true;
           this.likesLength = this.reels.post.likes.length + 1;
           this.reels.post.isPostLikedByCurrentUser = true;
+
+          var notificationType = NotificationType.Likes;
+          if(post.title != null){
+            var notificationContent = `liked your post(${post.title})`;
+          }
+          else{
+            var notificationContent = "liked your post";
+          }
+          //this.initializeNotificationViewModel(this.user.id,notificationType,notificationContent);
+
+          this._notificationService.initializeNotificationViewModel(this.reels.user.id,notificationType,notificationContent,this.loginUserId,postId,postType,null,reelId).subscribe((response) => {
+           
+          });
       
         }
 

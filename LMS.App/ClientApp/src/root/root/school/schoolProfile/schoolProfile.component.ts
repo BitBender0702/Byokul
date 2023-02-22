@@ -42,6 +42,13 @@ import { ReelsViewComponent } from '../../reels/reelsView.component';
 import { ownedSchoolResponse } from '../createSchool/createSchool.component';
 import * as $ from 'jquery';
 import { ClassCourseModalComponent } from '../../ClassCourseModal/classCourseModal.component';
+import { NotificationService } from 'src/root/service/notification.service';
+import { NotificationType } from 'src/root/interfaces/notification/notificationViewModel';
+import { CourseService } from 'src/root/service/course.service';
+import { ClassService } from 'src/root/service/class.service';
+import { ClassCourseFilterTypeEnum } from 'src/root/Enums/classCourseFilterTypeEnum';
+import { CertificateViewComponent } from '../../certificateView/certificateView.component';
+import { PostAuthorTypeEnum } from 'src/root/Enums/postAuthorTypeEnum';
 // export const ownedSchoolResponse =new Subject<{schoolAvatar : string,schoolName:string}>();
 
 // import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -58,6 +65,9 @@ export class SchoolProfileComponent
 {
   private _schoolService;
   private _postService;
+  private _notificationService;
+  private _classService;
+  private _courseService;
   school: any;
   isProfileGrid: boolean = true;
   isOpenSidebar: boolean = false;
@@ -130,6 +140,12 @@ export class SchoolProfileComponent
   scrollClassCourseResponseCount:number = 1;
 
   classCourseItem:any;
+  classFilters:any;
+  courseFilters:any;
+  noOfAppliedClassFilters!:number;
+  noOfAppliedCourseFilters!:number;
+  classFilterList:any[] = [];
+  courseFilterList:any[] = [];
 
   @ViewChild('closeEditModal') closeEditModal!: ElementRef;
   @ViewChild('closeTeacherModal') closeTeacherModal!: ElementRef;
@@ -157,11 +173,17 @@ export class SchoolProfileComponent
     schoolService: SchoolService,
     private fb: FormBuilder,
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    notificationService:NotificationService,
+    classService:ClassService,
+    courseService:CourseService
   ) {
     super(injector);
     this._schoolService = schoolService;
     this._postService = postService;
+    this._notificationService = notificationService;
+    this._classService = classService,
+    this._courseService = courseService,
     this.schoolParamsData$ = this.route.params.subscribe((routeParams) => {
       if (!this.loadingIcon) this.ngOnInit();
     });
@@ -222,6 +244,8 @@ export class SchoolProfileComponent
         this.postLoadingIcon = false;
         this.scrolled = false;
         this.isDataLoaded = true;
+        this.noOfAppliedClassFilters = this.school.noOfAppliedClassFilters;
+        this.noOfAppliedCourseFilters = this.school.noOfAppliedCourseFilters;
         if(this.carousel!=undefined){
           if($('carousel')[0].querySelectorAll('a.carousel-control-next')[0])
           {
@@ -599,6 +623,7 @@ export class SchoolProfileComponent
     );
     const reader = new FileReader();
     reader.onload = (_event) => {
+      debugger
       this.uploadImage = _event.target?.result;
       this.uploadImage = this.domSanitizer.bypassSecurityTrustUrl(
         this.uploadImage
@@ -880,13 +905,18 @@ export class SchoolProfileComponent
     }
   }
 
-  GetSchoolClassCourseList(schoolId: string) {
+  GetSchoolClassCourseList(schoolId: string,appliedFilters?:boolean,pageNumber?:number) {
+    debugger
     var school = this.school;
     this.isFeedHide = true;
-    if (this.classCourseList == undefined) {
+    if(pageNumber != undefined){
+      this.classCoursePageNumber = pageNumber;
+    }
+    if (this.classCourseList == undefined || appliedFilters) {
       this.loadingIcon = true;
       this.hideFeedFilters = false;
       this._schoolService.getSchoolClassCourseList(schoolId,this.classCoursePageNumber).subscribe((response) => {
+        debugger
           this.classCourseList = response;
           this.loadingIcon = false;
         });
@@ -929,7 +959,7 @@ export class SchoolProfileComponent
 
   deleteClassCourse() {}
 
-  likeUnlikePosts(postId: string, isLike: boolean) {
+  likeUnlikePosts(postId: string, isLike: boolean,postType:number,post:any) {
     this.currentLikedPostId = postId;
     this.school.posts
       .filter((p: any) => p.id == postId)
@@ -948,6 +978,14 @@ export class SchoolProfileComponent
           this.isLiked = true;
           this.likesLength = item.likes.length + 1;
           item.isPostLikedByCurrentUser = true;
+          if(post.title != null){
+            var notificationContent = `liked your post(${post.title})`;
+          }
+          else{
+            var notificationContent = "liked your post";
+          }
+          this._notificationService.initializeNotificationViewModel(post.createdBy,NotificationType.Likes,notificationContent,this.userId,postId,postType,post,null).subscribe((response) => {
+          });
         }
       });
 
@@ -1082,5 +1120,96 @@ export class SchoolProfileComponent
       postAttachmentId: postAttachmentId,
     };
     this.bsModalService.show(ReelsViewComponent, { initialState });
+  }
+
+  getClassFilters(){
+    this._classService.getClassFilters(this.userId,this.school.schoolId).subscribe((classFilters) => {
+      this.classFilters = classFilters;
+      this.noOfAppliedClassFilters = this.classFilters[0].noOfAppliedFilters;
+    });
+
+  }
+
+  getCourseFilters(){
+    this._courseService.getCourseFilters(this.userId,this.school.schoolId).subscribe((courseFilters) => {
+      this.courseFilters = courseFilters;
+      this.noOfAppliedCourseFilters = this.courseFilters[0].noOfAppliedFilters;
+    });
+
+  }
+
+  changeClassFilterSettings(id:string,isActive:boolean){
+    debugger
+    var classFilters: any[] = this.classFilters;
+    var item = classFilters.find(x => x.id == id);
+    item.isFilterActive = isActive;
+
+    var filterItem = {id:'',isActive:false,schoolId:''};
+    filterItem.id = id;
+    filterItem.isActive = isActive;
+    filterItem.schoolId = this.school.schoolId;
+    if(isActive){
+      this.noOfAppliedClassFilters +=1;
+
+    }
+    if(!isActive){
+      this.noOfAppliedClassFilters -=1;
+
+    }
+    var index = this.classFilterList.findIndex(x => x.id == id);
+    if(index > -1){
+    this.classFilterList.splice(index, 1);   
+    }
+    this.classFilterList.push(filterItem);
+  }
+
+  changeCourseFilterSettings(id:string,isActive:boolean){
+    debugger
+    var courseFilters: any[] = this.courseFilters;
+    var item = courseFilters.find(x => x.id == id);
+    item.isFilterActive = isActive;
+
+    var filterItem = {id:'',isActive:false,schoolId:''};
+    filterItem.id = id;
+    filterItem.isActive = isActive;
+    filterItem.schoolId = this.school.schoolId;
+    if(isActive){
+      this.noOfAppliedCourseFilters +=1;
+
+    }
+    if(!isActive){
+      this.noOfAppliedCourseFilters -=1;
+
+    }
+    var index = this.courseFilterList.findIndex(x => x.id == id);
+    if(index > -1){
+    this.courseFilterList.splice(index, 1);   
+    }
+    this.courseFilterList.push(filterItem);
+  }
+
+  saveClassFilters(){
+    this._classService.saveClassFilters(this.classFilterList).subscribe((response) => {
+      debugger
+      this.classFilterList = [];
+      this.GetSchoolClassCourseList(this.school.schoolId,true,1);
+    });
+  }
+
+  saveCourseFilters(){
+    this._courseService.saveCourseFilters(this.courseFilterList).subscribe((response) => {
+      this.courseFilterList = [];
+      this.GetSchoolClassCourseList(this.school.schoolId,true,1);
+    });
+  }
+
+  openCertificateViewModal(certificateUrl:string,certificateName:string){
+    debugger
+    const initialState = {
+      certificateUrl: certificateUrl,
+      certificateName:certificateName,
+      from:PostAuthorTypeEnum.School
+    };
+    this.bsModalService.show(CertificateViewComponent, { initialState });
   }
 }

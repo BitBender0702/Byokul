@@ -4,6 +4,7 @@ import { MenuItem } from 'primeng/api';
 import { unreadChatResponse } from 'src/root/root/chat/chat.component';
 import { ownedClassResponse } from 'src/root/root/class/createClass/createClass.component';
 import { ownedCourseResponse } from 'src/root/root/course/createCourse/createCourse.component';
+import { unreadNotificationResponse } from 'src/root/root/Notifications/notifications.component';
 import { ownedSchoolResponse } from 'src/root/root/school/createSchool/createSchool.component';
 import { MultilingualComponent } from 'src/root/root/sharedModule/Multilingual/multilingual.component';
 import { userImageResponse } from 'src/root/root/user/userProfile/userProfile.component';
@@ -66,6 +67,16 @@ export class SideBarComponent extends MultilingualComponent implements OnInit {
         this.sidebarInfo.unreadMessageCount = this.sidebarInfo.unreadMessageCount - response.readMessagesCount;
       }
     });
+
+    unreadNotificationResponse.subscribe(response => {
+      if(response.type =="remove"){
+      this.sidebarInfo.unreadNotificationCount = 0;
+      }
+      else{
+        this.sidebarInfo.unreadNotificationCount += 1;
+      }
+    });
+
 
     userImageResponse.subscribe(response => {
       this.sidebarInfo.user.avatar = response.userAvatar;

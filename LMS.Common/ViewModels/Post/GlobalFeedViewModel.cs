@@ -24,6 +24,7 @@ namespace LMS.Common.ViewModels.Post
         public int PostAuthorType { get; set; }
         public string SchoolName { get; set; }
         public string ParentId { get; set; }
+        public string CreatedBy { get; set; }
 
     }
 }

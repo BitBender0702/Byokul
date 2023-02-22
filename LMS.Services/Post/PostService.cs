@@ -253,6 +253,48 @@ namespace LMS.Services
             return result;
         }
 
+        public async Task<PostDetailsViewModel> GetPostById(Guid id, string userId)
+        {
+            var postResult = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.Id == id).FirstOrDefaultAsync();
+
+            var post = _mapper.Map<PostDetailsViewModel>(postResult);
+
+
+                post.PostAttachments = await GetAttachmentsByPostId(post.Id);
+                post.Likes = await _userService.GetLikesOnPost(post.Id);
+                post.Views = await _userService.GetViewsOnPost(post.Id);
+                post.CommentsCount = await _userService.GetCommentsCountOnPost(post.Id);
+                if (post.Likes.Any(x => x.UserId == userId && x.PostId == post.Id))
+                {
+                    post.IsPostLikedByCurrentUser = true;
+                }
+                else
+                {
+                    post.IsPostLikedByCurrentUser = false;
+                }
+
+                var tags = await GetTagsByPostId(post.Id);
+                post.PostTags = tags;
+
+            return post;
+        }
+
+        public async Task<IEnumerable<PostAttachmentViewModel>> GetAttachmentsByPostId(Guid postId)
+        {
+            var attacchmentList = await _postAttachmentRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.PostId == postId).OrderByDescending(x => x.IsPinned).ToListAsync();
+
+            var result = _mapper.Map<List<PostAttachmentViewModel>>(attacchmentList);
+            return result;
+        }
+
+        public async Task<IEnumerable<PostTagViewModel>> GetTagsByPostId(Guid postId)
+        {
+            var tagList = await _postTagRepository.GetAll().Where(x => x.PostId == postId).ToListAsync();
+
+            var result = _mapper.Map<List<PostTagViewModel>>(tagList);
+            return result;
+        }
+
         public async Task<bool> PinUnpinPost(Guid attachmentId, bool isPinned)
         {
             var post = await _postRepository.GetAll().Where(x => x.Id == attachmentId).FirstOrDefaultAsync();

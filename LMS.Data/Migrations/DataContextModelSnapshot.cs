@@ -281,6 +281,30 @@ namespace LMS.Data.Migrations
                     b.ToTable("ClassCertificates");
                 });
 
+            modelBuilder.Entity("LMS.Data.Entity.ClassCourseFilter", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("FilterType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ClassCourseFilters");
+                });
+
             modelBuilder.Entity("LMS.Data.Entity.ClassDiscipline", b =>
                 {
                     b.Property<Guid>("Id")
@@ -827,6 +851,85 @@ namespace LMS.Data.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Likes");
+                });
+
+            modelBuilder.Entity("LMS.Data.Entity.Notification", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ActionDoneBy")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Avatar")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ChatType")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("ChatTypeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("NotificationContent")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("NotificationType")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("PostId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int?>("PostType")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("ReelId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ActionDoneBy");
+
+                    b.HasIndex("PostId");
+
+                    b.ToTable("Notifications");
+                });
+
+            modelBuilder.Entity("LMS.Data.Entity.NotificationSeeting", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("NotificationType")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("NotificationSeetings");
                 });
 
             modelBuilder.Entity("LMS.Data.Entity.Post", b =>
@@ -1463,6 +1566,38 @@ namespace LMS.Data.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("LMS.Data.Entity.UserClassCourseFilter", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("ClassCourseFilterId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("ClassCourseFilterType")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid?>("SchoolId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClassCourseFilterId");
+
+                    b.HasIndex("SchoolId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserClassCourseFilters");
+                });
+
             modelBuilder.Entity("LMS.Data.Entity.UserFollower", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1506,6 +1641,30 @@ namespace LMS.Data.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserLanguages");
+                });
+
+            modelBuilder.Entity("LMS.Data.Entity.UserNotificationSetting", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid?>("NotificationSettingId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NotificationSettingId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserNotificationSettings");
                 });
 
             modelBuilder.Entity("LMS.Data.Entity.UserPreference", b =>
@@ -2078,6 +2237,21 @@ namespace LMS.Data.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("LMS.Data.Entity.Notification", b =>
+                {
+                    b.HasOne("LMS.Data.Entity.User", "User")
+                        .WithMany()
+                        .HasForeignKey("ActionDoneBy");
+
+                    b.HasOne("LMS.Data.Entity.Post", "Post")
+                        .WithMany()
+                        .HasForeignKey("PostId");
+
+                    b.Navigation("Post");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("LMS.Data.Entity.Post", b =>
                 {
                     b.HasOne("LMS.Data.Entity.User", "CreatedBy")
@@ -2308,6 +2482,27 @@ namespace LMS.Data.Migrations
                     b.Navigation("City");
                 });
 
+            modelBuilder.Entity("LMS.Data.Entity.UserClassCourseFilter", b =>
+                {
+                    b.HasOne("LMS.Data.Entity.ClassCourseFilter", "ClassCourseFilter")
+                        .WithMany()
+                        .HasForeignKey("ClassCourseFilterId");
+
+                    b.HasOne("LMS.Data.Entity.School", "School")
+                        .WithMany()
+                        .HasForeignKey("SchoolId");
+
+                    b.HasOne("LMS.Data.Entity.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("ClassCourseFilter");
+
+                    b.Navigation("School");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("LMS.Data.Entity.UserFollower", b =>
                 {
                     b.HasOne("LMS.Data.Entity.User", "Follower")
@@ -2334,6 +2529,21 @@ namespace LMS.Data.Migrations
                         .HasForeignKey("UserId");
 
                     b.Navigation("Language");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("LMS.Data.Entity.UserNotificationSetting", b =>
+                {
+                    b.HasOne("LMS.Data.Entity.NotificationSeeting", "NotificationSetting")
+                        .WithMany()
+                        .HasForeignKey("NotificationSettingId");
+
+                    b.HasOne("LMS.Data.Entity.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("NotificationSetting");
 
                     b.Navigation("User");
                 });

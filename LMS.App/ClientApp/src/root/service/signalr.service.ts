@@ -6,7 +6,10 @@ import { json } from 'stream/consumers';
 import { ChartModel } from '../interfaces/chat/ChatModel';
 import { CommentLikeUnlike } from '../interfaces/chat/commentsLike';
 import { CommentViewModel } from '../interfaces/chat/commentViewModel';
+import { NotificationViewModel } from '../interfaces/notification/notificationViewModel';
+import { NotificationService } from './notification.service';
 import { CustomXhrHttpClient } from './signalr.httpclient';
+import { UserService } from './user.service';
 
 export const signalRResponse = new Subject<{
   receiver: any;
@@ -31,15 +34,23 @@ export const commentLikeResponse = new Subject<{
   isLike: boolean;
 }>();
 
+export const notificationResponse = new Subject<NotificationViewModel>();
+
 @Injectable({
   providedIn: 'root',
 })
 export class SignalrService {
   private hubConnection?: signalR.HubConnection;
+  private _userService;
+  notificationSettings:any;
+
+  constructor(userService: UserService) { 
+    this._userService = userService;
+}
 
   initializeConnection(token: string) {
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl('https://byokul.com/chatHub', {
+      .withUrl('https://localhost:7220/chatHub', {
          httpClient: new CustomXhrHttpClient(token)
       })
       .withAutomaticReconnect()
@@ -115,8 +126,13 @@ export class SignalrService {
         isLike: model.isLike
       });
       console.log(`this ${model.commentId}`);
-    }
-  );
+    });
+
+    
+    this.hubConnection?.on('ReceiveNotification',
+    (model) => {
+      notificationResponse.next(model);
+    });
   }
 
   sendToGroup(model: CommentViewModel) {
@@ -142,5 +158,21 @@ export class SignalrService {
     //     console.log(`this ${commentId}`);
     //   }
     // );
+  }
+
+  sendNotification(model:NotificationViewModel){
+    this._userService.getNotificationSettings(model.userId).subscribe((response) => {
+      this.notificationSettings = response;
+      var notificationSettings: any[] = this.notificationSettings;
+      var notificationInfo = notificationSettings.find(x => x.notificationType == model.notificationType);
+      if(!notificationInfo.isSettingActive){
+        return
+      }
+      else{
+        this.hubConnection?.invoke('SendNotification', model)
+        .catch((err) => console.error(err));
+      }
+  })
+
   }
 }

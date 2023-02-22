@@ -1,8 +1,10 @@
 ﻿using LMS.ChatHub;
 using LMS.Common.ViewModels.Chat;
+using LMS.Common.ViewModels.Notification;
 using LMS.Common.ViewModels.Post;
 using LMS.Data.Entity;
 using LMS.Data.Entity.Chat;
+using LMS.Services;
 using LMS.Services.Chat;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -14,11 +16,13 @@ public class ChatHub : Hub
 {
     private readonly UserManager<User> _userManager;
     private readonly IChatService _chatService;
+    private readonly INotificationService _notificationService;
     private readonly IHttpContextAccessor _contextAccessor;
-    public ChatHub(UserManager<User> userManager, IChatService chatService, IHttpContextAccessor contextAccessor)
+    public ChatHub(UserManager<User> userManager, IChatService chatService, INotificationService notificationService,IHttpContextAccessor contextAccessor)
     {
         _userManager = userManager;
         _chatService = chatService;
+        _notificationService = notificationService;
         _contextAccessor = contextAccessor;
     }
 
@@ -57,8 +61,6 @@ public class ChatHub : Hub
 
             return base.OnDisconnectedAsync(exception);
         }
-        //ContectedUsers.ContectedIds.Remove(UserIDConnectionID.FindFirstKeyByValue(Context.ConnectionId));
-        //Clients.All.SendAsync("UserCount", UserIDConnectionID.Count);
         return base.OnDisconnectedAsync(exception);
     }
     public Task SendMessage(string user, string message) => Clients.All.SendAsync("ReceiveMessage", user, message);
@@ -70,7 +72,6 @@ public class ChatHub : Hub
         var a = UserIDConnectionID[chatMessageViewModel.Receiver.ToString()];
         if (a is not null)
             await Clients.Client(a).SendAsync("ReceiveMessage", chatMessageViewModel, "test");
-
 
     }
 
@@ -105,6 +106,16 @@ public class ChatHub : Hub
         await Clients.GroupExcept(model.GroupName, currentUserConnectionId).SendAsync("NotifyCommentLikeToReceiver", reposnseMessage);
     }
 
+    public async Task SendNotification(NotificationViewModel model)
+    {
+        var responseNotification = await _notificationService.AddNotification(model);
+
+        var a = UserIDConnectionID[model.UserId.ToString()];
+
+        if (a is not null)
+            await Clients.Client(a).SendAsync("ReceiveNotification", responseNotification);
+
+    }
 
 }
 

@@ -59,6 +59,10 @@ import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { UserFeedComponent } from './root/userFeed/userFeed.component';
 import { ClassCourseModalComponent } from './root/ClassCourseModal/classCourseModal.component';
 import { PaymentComponent } from './root/payment/payment.component';
+import { NotificationsComponent } from './root/Notifications/notifications.component';
+import { CertificateViewComponent } from './root/certificateView/certificateView.component';
+import { PdfViewerModule } from 'ng2-pdf-viewer'; 
+// import { PdfJsViewerModule } from 'ng2-pdfjs-viewer';
 
 
 const routes: Routes = [
@@ -112,7 +116,9 @@ const routes: Routes = [
     PostViewComponent,
     ClassCourseModalComponent,
     ChatComponent,
-    PaymentComponent
+    PaymentComponent,
+    NotificationsComponent,
+    CertificateViewComponent
 
   ],
   imports: [
@@ -135,6 +141,8 @@ const routes: Routes = [
     ModalModule.forRoot(),
     CalendarModule,
     CarouselModule,
+    PdfViewerModule,
+    // PdfJsViewerModule,
     TranslateModule.forRoot({
       loader:{
         provide:TranslateLoader,

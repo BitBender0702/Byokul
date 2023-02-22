@@ -23,6 +23,8 @@ import { MessageService } from 'primeng/api';
 import { ReelsViewComponent } from '../../reels/reelsView.component';
 import { ownedClassResponse } from '../createClass/createClass.component';
 import { PaymentComponent } from '../../payment/payment.component';
+import { NotificationService } from 'src/root/service/notification.service';
+import { NotificationType } from 'src/root/interfaces/notification/notificationViewModel';
 
 @Component({
     selector: 'classProfile-root',
@@ -35,6 +37,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
 
     private _classService;
     private _postService;
+    private _notificationService;
     class:any;
     isProfileGrid:boolean = true;
     isOpenSidebar:boolean = false;
@@ -105,10 +108,11 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     @ViewChild('createPostModal', { static: true }) createPostModal!: CreatePostComponent;
 
     isDataLoaded:boolean = false;
-    constructor(injector: Injector,public messageService:MessageService,postService:PostService,private bsModalService: BsModalService,classService: ClassService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
+    constructor(injector: Injector,notificationService:NotificationService,public messageService:MessageService,postService:PostService,private bsModalService: BsModalService,classService: ClassService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
       super(injector);
         this._classService = classService;
         this._postService = postService;
+        this._notificationService = notificationService;
         this.classParamsData$ = this.route.params.subscribe(routeParams => {
           // if(!this.loadingIcon)
           this.ngOnInit();
@@ -696,7 +700,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       }   
     }
 
-    likeUnlikePosts(postId:string, isLike:boolean){
+    likeUnlikePosts(postId:string, isLike:boolean,postType:number,post:any){
       this.currentLikedPostId = postId;
       this.class.posts.filter((p : any) => p.id == postId).forEach( (item : any) => {
         var likes: any[] = item.likes;
@@ -710,6 +714,14 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
           this.isLiked = true;
           this.likesLength = item.likes.length + 1;
           item.isPostLikedByCurrentUser = true;
+          if(post.title != null){
+            var notificationContent = `liked your post(${post.title})`;
+          }
+          else{
+            var notificationContent = "liked your post";
+          }
+          this._notificationService.initializeNotificationViewModel(post.createdBy,NotificationType.Likes,notificationContent,this.userId,postId,postType,post,null).subscribe((response) => {
+          });
       
         }
       }); 

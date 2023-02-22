@@ -17,6 +17,8 @@ import { ClassService } from 'src/root/service/class.service';
 import { IfStmt } from '@angular/compiler';
 import { CourseService } from 'src/root/service/course.service';
 import { Subject } from 'rxjs';
+import { NotificationService } from 'src/root/service/notification.service';
+import { NotificationType } from 'src/root/interfaces/notification/notificationViewModel';
 
 export const unreadChatResponse =new Subject<{readMessagesCount: number,type:string}>(); 
 
@@ -65,6 +67,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   private _courseService;
   private _signalRService;
   private _chatService;
+  private _notificationService;
   chatheadSub: any;
   saveChat:any;
   isDataLoaded:boolean = false;
@@ -108,13 +111,14 @@ export class ChatComponent implements OnInit, OnDestroy {
   schoolInboxUserAvatar!:string;
   schoolInboxReceiverId!:string;
 
-  constructor(@Inject(DOCUMENT) document: Document,schoolService:SchoolService,classService:ClassService,courseService:CourseService, chatService:ChatService,private renderer: Renderer2,public signalRService: SignalrService, private http: HttpClient,private route: ActivatedRoute,private userService: UserService) { 
+  constructor(@Inject(DOCUMENT) document: Document,notificationService:NotificationService,schoolService:SchoolService,classService:ClassService,courseService:CourseService, chatService:ChatService,private renderer: Renderer2,public signalRService: SignalrService, private http: HttpClient,private route: ActivatedRoute,private userService: UserService) { 
     this._userService = userService;
     this._schoolService = schoolService;
     this._classService = classService;
     this._courseService = courseService;
     this._signalRService = signalRService;
     this._chatService = chatService;
+    this._notificationService = notificationService;
 
     this._userService.shareDataSubject.subscribe(receiveddata=>{
       console.log(receiveddata); 
@@ -126,6 +130,10 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.loadingIcon = true;
     let chatHeadObj = history.state.chatHead;
     if(chatHeadObj!= undefined){
+
+
+
+
       this.userId = chatHeadObj.receiverId;
       this.chatType = chatHeadObj.type;
       this.chatTypeId = chatHeadObj.chatTypeId;
@@ -695,7 +703,12 @@ this.addChatAttachments = {
         this.allChatUsers.unshift(this.schoolInfo);
       }
       else{
+        if(isuserExist.school.ownerId == this.senderId){
+          this.getUsersChat(isuserExist.chatHeadId,isuserExist.userID,isuserExist.profileURL,isuserExist.userName,isuserExist.chatType,"FromSchoolInbox",10,1,isuserExist.school.schoolId);
+        }
+        else{
         this.getUsersChat(isuserExist.chatHeadId,isuserExist.userID,isuserExist.profileURL,isuserExist.userName,isuserExist.chatType,"FromMyInbox",10,1);
+        }
       }
 
         }
@@ -810,7 +823,7 @@ this.addChatAttachments = {
     }
   }
 
-    getSelectedSchoolInbox(schoolId:string){
+    getSelectedSchoolInbox(schoolId?:string){
       this.showMySchoolInbox = true;
       this.showMyInbox = false;
       var inboxList: any[] = this.schoolInboxList;
@@ -867,10 +880,11 @@ this.addChatAttachments = {
       this.schoolInboxUserAvatar = this.schoolInboxList[0].profileURL;
       this.schoolInboxReceiverId = this.schoolInboxList[0].userID;
       this.chatType = this.schoolInboxList[0].chatType;
+      this.loadingIcon = false;
 
     }
 
-    getUsersChat(chatHeadId:string,recieverId:string,receiverAvatar:string,username:string,chatType:string,From:string,pageSize:number,pageNumber:number){
+    getUsersChat(chatHeadId:string,recieverId:string,receiverAvatar:string,username:string,chatType:string,From:string,pageSize:number,pageNumber:number,school?:any){
       this.loadingIcon = true;
       this.selectedChatHeadDiv = true;
       
@@ -921,6 +935,10 @@ this.addChatAttachments = {
        }
        else{
        if(chatType == "3" && From=="FromSchoolInbox"){
+        if(school.ownerId == this.senderId){
+        this.getSelectedSchoolInbox(school.schoolId);
+       }
+       else{
         this.schoolInboxChatType = "3";
         this.chatType = "3";
         this.schoolInboxList[0].chats = response;
@@ -930,9 +948,7 @@ this.addChatAttachments = {
         this.schoolInboxUserName = currentChatHead.userName;
         this.schoolInboxUserAvatar = currentChatHead.profileURL;
         this.schoolInboxReceiverId = currentChatHead.userID;
-        // this.schoolInboxList[0].school = currentChatHead.school;
-        // this.schoolInboxList[0].course = null;
-        // this.schoolInboxList[0].class = null;
+      }
        }
        else{
         if(chatType == "5" && From=="FromSchoolInbox"){
@@ -1107,6 +1123,7 @@ getTextMessage(){
 }
 
   sendToUser(receiverId:string){
+
     this.InitializeChatViewModel();
     if(receiverId == undefined){
       receiverId = this.senderID;
@@ -1126,7 +1143,7 @@ getTextMessage(){
     if(this.receiverInfo.course!= null){
       this.chatViewModel.chatTypeId = this.receiverInfo?.course.courseId;
     }
-    this.chatViewModel.chatTypeId = this.receiverInfo?.chatTypeId;
+    // this.chatViewModel.chatTypeId = this.receiverInfo?.chatTypeId;
     if(this.receiverInfo.school?.ownerId == this.sender.id || this.receiverInfo.school?.createdById == this.sender.id){
        this.isSchoolOwner = true;
         this.chatViewModel.chatTypeId = this.receiverInfo.school.schoolId;
@@ -1236,6 +1253,11 @@ getTextMessage(){
       else{
         this.chatViewModel.chatTypeId = null;
       }
+
+      var notificationContent = "sent you a message";
+      this._notificationService.initializeNotificationViewModel(receiverId,NotificationType.Messages,notificationContent,this.senderId,null,0,null,null, this.chatViewModel.chatType,this.chatViewModel.chatTypeId).subscribe((response) => {
+      });    
+
       this._signalRService.sendToUser(this.chatViewModel);
       console.log(this.chatViewModel);
       this.chatViewModel = new Object as ChatViewModel;

@@ -12,6 +12,7 @@ using LMS.Services.BigBlueButton;
 using LMS.Services.Blob;
 using LMS.Services.Chat;
 using LMS.Services.Common;
+using LMS.Services;
 using LMS.Services.Stripe;
 using LMS.Services.Students;
 using LMS.Services.UserDashboard;
@@ -27,6 +28,8 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Stripe;
 using System.Text;
+using Microsoft.Extensions.Azure;
+using Azure.Storage.Blobs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -57,7 +60,10 @@ builder.Services.AddDbContext<DataContext>(options =>
 
 
 builder.Services.Configure<BlobConfig>(configuration.GetSection("MyConfig"));
-
+//builder.Services.AddAzureClients(builder =>
+//{
+//    builder.AddBlobServiceClient(configuration.GetSection("MyConfig: StorageConnection"));
+//});
 builder.Services.AddIdentity<User, IdentityRole>(option =>
 {
     option.Password.RequireDigit = false;
@@ -87,9 +93,9 @@ builder.Services.AddScoped<IUserDashboardService, UserDashboardService>();
 builder.Services.AddScoped<IStripeService, StripeService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IChatService, ChatService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped(typeof(IAsyncGenericRepository<>), typeof(AsyncGenericRepository<>));
-
 StripeConfiguration.ApiKey = configuration.GetSection("Stripe")["SecretKey"];
 
 builder.Services.AddOptions();
@@ -146,6 +152,7 @@ builder.Services.AddAutoMapper(config =>
     config.AddProfile<CourseProfile>();
     config.AddProfile<CommonProfile>();
     config.AddProfile<ChatProfile>();
+    config.AddProfile<NotificationProfile>();
 });
 
 builder.Services.AddSwaggerGen();

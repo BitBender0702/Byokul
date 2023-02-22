@@ -22,6 +22,8 @@ import { LikeUnlikePost } from 'src/root/interfaces/post/likeUnlikePost';
 import { PostView } from 'src/root/interfaces/post/postView';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { ReelsViewComponent } from '../../reels/reelsView.component';
+import { SignalrService } from 'src/root/service/signalr.service';
+import { NotificationType, NotificationViewModel } from 'src/root/interfaces/notification/notificationViewModel';
 
 export const userImageResponse =new Subject<{userAvatar : string}>();  
 export const chatResponse =new Subject<{receiverId : string , type: string,chatTypeId:string}>();  
@@ -55,6 +57,7 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
 
     private _userService;
     private _postService;
+    private _signalrService;
     user:any;
     validToken!:string;
 
@@ -86,6 +89,7 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
     reelsPageNumber:number = 1;
     scrolled:boolean = false;
     scrollFeedResponseCount:number = 1;
+    notificationViewModel!:NotificationViewModel;
     @ViewChild('closeEditModal') closeEditModal!: ElementRef;
     @ViewChild('closeLanguageModal') closeLanguageModal!: ElementRef;
     @ViewChild('imageFile') imageFile!: ElementRef;
@@ -98,10 +102,11 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
     fileToUpload= new FormData();
     translate!: TranslateService;
     
-    constructor(injector: Injector,public messageService:MessageService, private bsModalService: BsModalService,userService: UserService,postService: PostService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
+    constructor(injector: Injector,signalrservice:SignalrService,public messageService:MessageService, private bsModalService: BsModalService,userService: UserService,postService: PostService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
       super(injector);
         this._userService = userService;
         this._postService = postService;
+        this._signalrService = signalrservice;
         this.userParamsData$ = this.route.params.subscribe(routeParams => {
           if(!this.loadingIcon)
           this.ngOnInit();
@@ -378,6 +383,10 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
         this.followersLength += 1;
         this.isFollowed = true;
         this.followUnfollowUser.isFollowed = true;
+        var notificationContent = "followed you"
+        var postId = '00000000-0000-0000-0000-000000000000';
+        var post = null;
+        this.initializeNotificationViewModel(userId,NotificationType.Followings,notificationContent,postId);
       }
       else{
         this.followersLength -= 1; 
@@ -388,6 +397,24 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
         this.InitializeFollowUnfollowUser();
       });
     }
+    }
+
+    initializeNotificationViewModel(userid:string,notificationType:NotificationType,notificationContent:string,postId:string,postType?:number,post?:any){
+      this._userService.getUser(this.loginUserId).subscribe((response) => {
+        this.notificationViewModel = {
+          id:'00000000-0000-0000-0000-000000000000',
+          userId: userid,
+          actionDoneBy: this.loginUserId,
+          avatar: response.avatar,
+          isRead:false,
+          notificationContent:`${response.firstName + ' ' + response.lastName + ' ' + notificationContent}`,
+          notificationType:notificationType,
+          postId:postId,
+          postType:postType,
+          post:post
+        }
+        this._signalrService.sendNotification(this.notificationViewModel);
+      });
     }
 
     getUserDetails(userId:string){
@@ -557,11 +584,11 @@ userChat(){
   }   
 }
 
-likeUnlikePosts(postId:string, isLike:boolean){
+likeUnlikePosts(postId:string, isLike:boolean,postType:number,post:any){
   this.currentLikedPostId = postId;
   this.user.posts.filter((p : any) => p.id == postId).forEach( (item : any) => {
     var likes: any[] = item.likes;
-    var isLiked = likes.filter(x => x.userId == this.user.id && x.postId == postId);
+    var isLiked = likes.filter(x => x.userId == this.loginUserId && x.postId == postId);
   if(isLiked.length != 0){
     this.isLiked = false;
     this.likesLength = item.likes.length - 1;
@@ -571,7 +598,9 @@ likeUnlikePosts(postId:string, isLike:boolean){
     this.isLiked = true;
     this.likesLength = item.likes.length + 1;
     item.isPostLikedByCurrentUser = true;
-
+    var notificationType = NotificationType.Likes;
+    var notificationContent = "liked your post";
+    this.initializeNotificationViewModel(post.createdBy,notificationType,notificationContent,postId,postType,post);
   }
   }); 
   
@@ -580,8 +609,6 @@ likeUnlikePosts(postId:string, isLike:boolean){
   this.likeUnlikePost.isLike = isLike;
   this.likeUnlikePost.commentId = '00000000-0000-0000-0000-000000000000'
   this._postService.likeUnlikePost(this.likeUnlikePost).subscribe((response) => {
-
-
      this.user.posts.filter((p : any) => p.id == postId).forEach( (item : any) => {
       var itemss = item.likes;
       item.likes = response;
@@ -646,9 +673,6 @@ var chatTypeId = ''
   this.router.navigate(
     [`user/chats`],
     { state: { chatHead: {receiverId: userId, type : type,chatTypeId:''} } });
-
-  //this._userService.sendDataToOtherComponent(userId);
-  // chatResponse.next({receiverId: userId, type : type,chatTypeId:''});
 }
 
 // addPostView(postId:string){
