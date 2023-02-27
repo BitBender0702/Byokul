@@ -140,35 +140,17 @@ namespace LMS.Services.Students
         public async Task UploadStudentCertificates(UploadStudentCertificateViewModel model,string userId)
         {
             string certificateName = "";
-           
-
-           // string DEST = $"D:/Projects/BYOkulLatest/Code/LMS.App/wwwroot/AssignedCertificates/{uniqueId}.pdf";
-
-            //string DEST = $"D:/Projects/BYOkulLatest/Code/LMS.App/Email/{uniqueId}.pdf";
-            //string cssFilePath = $"D:/Projects/BYOkulLatest/Code/LMS.App/ClientApp/src/styles.css";
-
-
-
-
-            // for css 
             var converterProperties = new ConverterProperties();
             converterProperties.SetMediaDeviceDescription(new MediaDeviceDescription(MediaType.PRINT));
-
-            //var fontProvider = new DefaultFontProvider(true, true, true);
-            //fontProvider.AddFont("Helvetica", "arial");
-            //converterProperties.SetFontProvider(fontProvider);
-            converterProperties.SetBaseUri("http://localhost:44472");
-
-
+            converterProperties.SetBaseUri("https://byokul.com");
 
             string firstStudentName = model.Students[0].StudentName;
             foreach (var studentInfo in model.Students)
             {
                 var uniqueId = Guid.NewGuid();
                 var path = _webHostEnvironment.ContentRootPath;
-                var filePath = Path.Combine(path, $"wwwroot/AssignedCertificates/{uniqueId}.pdf");
+                var filePath = Path.Combine(path, $"AssignedCertificates/{uniqueId}.pdf");
                 model.CertificateHtml = model.CertificateHtml.Replace(firstStudentName, studentInfo.StudentName);
-
 
                 HtmlConverter.ConvertToPdf(model.CertificateHtml, new FileStream(filePath, FileMode.Create), converterProperties);
 
@@ -181,21 +163,12 @@ namespace LMS.Services.Students
 
                 string certificateUrl = await _blobService.UploadVideoAsync(stream, _config.GetValue<string>("Container:SchoolContainer"), uniqueId.ToString(), "pdf");
 
-
-
-
                 certificateName = model.certificateName;
-
                 await SaveStudentCertificates(certificateUrl, studentInfo.StudentId, userId, certificateName);
 
                 var email = await _studentRepository.GetAll().Include(x => x.User).Where(x => x.StudentId == studentInfo.StudentId).Select(x => x.User.Email).FirstAsync();
 
-                //var emails = await _studentRepository.GetAll().Include(x => x.User).Where(p => model.StudentIds.Contains(p.StudentId)).Select(x => x.User.Email).ToListAsync();
-
-                //foreach (var email in emails)
-                //{
                     await _commonService.SendEmail(new List<string> { email }, null, null, "Congratulations, You receive a certificate", body: $"You received a certificate by completing the {certificateName}", pdfContent, pdfName);
-                //}
 
                 firstStudentName = studentInfo.StudentName;
             }
@@ -204,8 +177,6 @@ namespace LMS.Services.Students
 
         public async Task SaveStudentCertificates(string certificateUrl,Guid? studentId, string userId,string certificateName)
         {
-            //foreach (var studentId in studentIds)
-            //{
                 var studentCertificate = new StudentCertificate
                 {
                     CertificateUrl = certificateUrl,
@@ -217,7 +188,6 @@ namespace LMS.Services.Students
 
                 _studentCertificateRepository.Insert(studentCertificate);
                 _studentCertificateRepository.Save();
-            //}
         }
 
 

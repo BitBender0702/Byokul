@@ -62,6 +62,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="AssignedCertificates\" />
     <Folder Include="Properties\PublishProfiles\" />
     <Folder Include="wwwroot\certificateTemplate\" />
     <Folder Include="wwwroot\graduateCertificates\" />
