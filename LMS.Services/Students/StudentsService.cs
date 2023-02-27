@@ -139,38 +139,45 @@ namespace LMS.Services.Students
 
         public async Task UploadStudentCertificates(UploadStudentCertificateViewModel model,string userId)
         {
-            string certificateName = "";
-            var converterProperties = new ConverterProperties();
-            converterProperties.SetMediaDeviceDescription(new MediaDeviceDescription(MediaType.PRINT));
-            converterProperties.SetBaseUri("https://byokul.com");
-
-            string firstStudentName = model.Students[0].StudentName;
-            foreach (var studentInfo in model.Students)
+            try
             {
-                var uniqueId = Guid.NewGuid();
-                var path = _webHostEnvironment.ContentRootPath;
-                var filePath = Path.Combine(path, $"AssignedCertificates/{uniqueId}.pdf");
-                model.CertificateHtml = model.CertificateHtml.Replace(firstStudentName, studentInfo.StudentName);
+                string certificateName = "";
+                var converterProperties = new ConverterProperties();
+                converterProperties.SetMediaDeviceDescription(new MediaDeviceDescription(MediaType.PRINT));
+                converterProperties.SetBaseUri("https://byokul.com");
 
-                HtmlConverter.ConvertToPdf(model.CertificateHtml, new FileStream(filePath, FileMode.Create), converterProperties);
+                string firstStudentName = model.Students[0].StudentName;
+                foreach (var studentInfo in model.Students)
+                {
+                    var uniqueId = Guid.NewGuid();
+                    var path = _webHostEnvironment.ContentRootPath;
+                    var filePath = Path.Combine(path, $"AssignedCertificates/{uniqueId}.pdf");
+                    model.CertificateHtml = model.CertificateHtml.Replace(firstStudentName, studentInfo.StudentName);
 
-                var wc = new System.Net.WebClient();
-                var data = wc.DownloadData(filePath);
-                var stream = new MemoryStream(data);
-                var bytes = stream.ToArray();
-                var pdfContent = Convert.ToBase64String(bytes);
-                var pdfName = model.certificateName + " Certificate.pdf";
+                    HtmlConverter.ConvertToPdf(model.CertificateHtml, new FileStream(filePath, FileMode.Create), converterProperties);
 
-                string certificateUrl = await _blobService.UploadVideoAsync(stream, _config.GetValue<string>("Container:SchoolContainer"), uniqueId.ToString(), "pdf");
+                    var wc = new System.Net.WebClient();
+                    var data = wc.DownloadData(filePath);
+                    var stream = new MemoryStream(data);
+                    var bytes = stream.ToArray();
+                    var pdfContent = Convert.ToBase64String(bytes);
+                    var pdfName = model.certificateName + " Certificate.pdf";
 
-                certificateName = model.certificateName;
-                await SaveStudentCertificates(certificateUrl, studentInfo.StudentId, userId, certificateName);
+                    string certificateUrl = await _blobService.UploadVideoAsync(stream, _config.GetValue<string>("Container:SchoolContainer"), uniqueId.ToString(), "pdf");
 
-                var email = await _studentRepository.GetAll().Include(x => x.User).Where(x => x.StudentId == studentInfo.StudentId).Select(x => x.User.Email).FirstAsync();
+                    certificateName = model.certificateName;
+                    await SaveStudentCertificates(certificateUrl, studentInfo.StudentId, userId, certificateName);
+
+                    var email = await _studentRepository.GetAll().Include(x => x.User).Where(x => x.StudentId == studentInfo.StudentId).Select(x => x.User.Email).FirstAsync();
 
                     await _commonService.SendEmail(new List<string> { email }, null, null, "Congratulations, You receive a certificate", body: $"You received a certificate by completing the {certificateName}", pdfContent, pdfName);
 
-                firstStudentName = studentInfo.StudentName;
+                    firstStudentName = studentInfo.StudentName;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
 
         }
