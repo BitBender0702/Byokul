@@ -776,5 +776,32 @@ namespace LMS.Services
             //await _schoolService.GetSchoolClassCourse(model.First().SchoolId,userId,1);
             
         }
+
+        public async Task<ClassInfoForCertificateViewModel> GetClassInfoForCertificate(Guid classId)
+        {
+            ClassInfoForCertificateViewModel model = new ClassInfoForCertificateViewModel();
+
+                var classes = await _classRepository.GetAll()
+                    .Include(x => x.School)
+                    .Include(x => x.CreatedBy)
+                    .Where(x => x.ClassId == classId).FirstOrDefaultAsync();
+
+                    model = _mapper.Map<ClassInfoForCertificateViewModel>(classes);
+
+                    model.Students = await GetClassStudents(classes.ClassId);
+            return model;
+
+        }
+
+        public async Task<List<StudentViewModel>> GetClassStudents(Guid classId)
+        {
+            var classStudents = _classStudentRepository.GetAll()
+                .Include(x => x.Student)
+                .ThenInclude(x => x.CreatedBy)
+                .Where(x => x.ClassId == classId).ToList();
+
+            var result = _mapper.Map<List<StudentViewModel>>(classStudents.Select(x => x.Student));
+            return result;
+        }
     }
 }

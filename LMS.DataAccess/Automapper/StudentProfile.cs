@@ -15,6 +15,7 @@ namespace LMS.DataAccess.Automapper
         {
             CreateMap<Student, StudentViewModel>()
                 .ForMember(x => x.CreatedBy, opt => opt.MapFrom(o => o.CreatedBy.Email));
+            CreateMap<StudentCertificate, StudentCertificateViewModel>();
         }
     }
 }

@@ -88,13 +88,13 @@ namespace LMS.Services.Common
             return stream;
         }
 
-        public async Task<bool> SendEmail(List<string> to, List<string> cc, List<string> bcc, string subject, string body)
+        public async Task<bool> SendEmail(List<string> to, List<string> cc, List<string> bcc, string subject, string body,string? pdfContent,string? pdfName)
         {
             var emailMessage = new MimeMessage();
             emailMessage.To.AddRange(to.Select(x => new MailboxAddress("email", x)));
             emailMessage.Subject = subject;
             emailMessage.Body = new TextPart("html") { Text = body };
-            await SendSGMail(emailMessage, true);
+            await SendSGMail(emailMessage, true, pdfContent,pdfName);
             return true;
         }
 
@@ -135,7 +135,7 @@ namespace LMS.Services.Common
 
         }
 
-        private async Task SendSGMail(MimeMessage emailMessage, bool isHtml)
+        private async Task SendSGMail(MimeMessage emailMessage, bool isHtml,string? pdfContent, string? pdfName)
         {
             try
             {
@@ -149,6 +149,14 @@ namespace LMS.Services.Common
                     var toAddress = new EmailAddress(to);
                     var htmlContent = isHtml ? emailMessage.HtmlBody.ToString() : emailMessage.Body.ToString();
                     var msg = MailHelper.CreateSingleEmail(from, toAddress, subject, "", htmlContent);
+
+                    //var bytes = File.ReadAllBytes("~/Templates/output.pdf");
+                    //var file = Convert.ToBase64String(bytes);
+                    if (pdfContent != null)
+                    {
+                        msg.AddAttachment(pdfName, pdfContent);
+                    }
+                    //msg.AddAttachment(attachmentFileStream,"");
                     var response = await client.SendEmailAsync(msg);
                 }
             }

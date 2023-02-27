@@ -1,6 +1,7 @@
 ﻿using LMS.Common.ViewModels.Common;
 using LMS.Common.ViewModels.Post;
 using LMS.Common.ViewModels.School;
+using LMS.Common.ViewModels.Student;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +30,7 @@ namespace LMS.Common.ViewModels.User
         //public IEnumerable<PostAttachmentViewModel> PostAttachment { get; set; }
         public IEnumerable<PostDetailsViewModel> Posts { get; set; }
         public IEnumerable<PostDetailsViewModel> Reels { get; set; }
-        //public IEnumerable<SchoolCertificateViewModel> SchoolCertificates { get; set; }
+        public IEnumerable<StudentCertificateViewModel> StudentCertificates { get; set; }
 
     }
 }

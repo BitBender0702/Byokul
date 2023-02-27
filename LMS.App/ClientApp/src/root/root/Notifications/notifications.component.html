@@ -55,6 +55,12 @@
               <p class="font_16 ms-2 d-inline-block fw_400 mb-0"> {{item.notificationContent}}</p>
             </span>
             </div>
+
+            <div *ngIf="item.notificationType == 7" style="cursor: pointer;" class="d-flex align-items-center justify-content-between"><span class="followers-name font_16 text_sec1 fw_600">
+              <span class="new-notidot"><i class="fa-solid fa-circle"></i></span>
+              <p class="font_16 ms-2 d-inline-block fw_400 mb-0"> {{item.notificationContent}}</p>
+            </span>
+            </div>
           </li>
         </ul>
       </div>

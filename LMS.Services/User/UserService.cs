@@ -43,10 +43,11 @@ namespace LMS.Services
         private IGenericRepository<Like> _likeRepository;
         private IGenericRepository<View> _viewRepository;
         private IGenericRepository<Comment> _commentRepository;
+        private IGenericRepository<StudentCertificate> _studentCertificateRepository;
         private readonly UserManager<User> _userManager;
         private readonly IBlobService _blobService;
         public UserService(IMapper mapper, IGenericRepository<User> userRepository, IGenericRepository<UserFollower> userFollowerRepository, IGenericRepository<UserLanguage> userLanguageRepository, IGenericRepository<City> cityRepository, IGenericRepository<Country> countryRepository, IGenericRepository<SchoolFollower> schoolFollowerRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<CourseTeacher> courseTeacherRepository,
-          IGenericRepository<SchoolTeacher> schoolteacherRepository, IGenericRepository<Student> studentRepository, IGenericRepository<Teacher> teacherRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<UserPreference> userPreferenceRepository, IGenericRepository<Like> likeRepository, IGenericRepository<View> viewRepository, IGenericRepository<Comment> commentRepository, UserManager<User> userManager, IBlobService blobService)
+          IGenericRepository<SchoolTeacher> schoolteacherRepository, IGenericRepository<Student> studentRepository, IGenericRepository<Teacher> teacherRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<UserPreference> userPreferenceRepository, IGenericRepository<Like> likeRepository, IGenericRepository<View> viewRepository, IGenericRepository<Comment> commentRepository, IGenericRepository<StudentCertificate> studentCertificateRepository, UserManager<User> userManager, IBlobService blobService)
         {
             _mapper = mapper;
             _userRepository = userRepository;
@@ -72,6 +73,7 @@ namespace LMS.Services
             _likeRepository = likeRepository;
             _viewRepository = viewRepository;
             _commentRepository = commentRepository;
+            _studentCertificateRepository = studentCertificateRepository;
             _userManager = userManager;
             _blobService = blobService;
         }
@@ -92,6 +94,7 @@ namespace LMS.Services
             var schoolTeachers = await GetSchoolTeachers(userId);
             var classTeachers = await GetClassTeachers(userId);
             var courseTeachers = await GetCourseTeachers(userId);
+            result.StudentCertificates = await GetCertificateByUser(userId);
 
             var classCourseTeachers = classTeachers.Union(courseTeachers).DistinctBy(x => x.SchoolId).ToList();
 
@@ -99,6 +102,13 @@ namespace LMS.Services
 
             return result;
 
+        }
+
+
+        public async Task<List<StudentCertificateViewModel>> GetCertificateByUser(string userId)
+        {
+            var studentCertificates = await _studentCertificateRepository.GetAll().Include(x => x.Student).Where(x => x.Student.UserId == userId).ToListAsync();
+            return _mapper.Map<List<StudentCertificateViewModel>>(studentCertificates);
         }
 
         public async Task<UserUpdateViewModel> GetUserEditDetails(string userId)
@@ -398,7 +408,7 @@ namespace LMS.Services
                 .ThenInclude(x => x.School)
                 .Where(x => x.Student.UserId == userId).ToListAsync();
 
-            var requiredIds = schoolFollowers.Select(x => new FeedConvertDTO { Id = x.SchoolId, ParentImageUrl=x.School.Avatar, ParentName = x.School.SchoolName, SchoolName =""}).ToList();
+            var requiredIds = schoolFollowers.Select(x => new FeedConvertDTO { Id = x.SchoolId, ParentImageUrl = x.School.Avatar, ParentName = x.School.SchoolName, SchoolName = "" }).ToList();
             var testData = userFollowersData.Where(p => p.UserId != string.Empty).Select(x => new FeedConvertDTO { Id = new Guid(x.UserId), ParentImageUrl = x.User.Avatar, ParentName = x.User.FirstName, SchoolName = "" }).ToList();
             requiredIds.AddRange(testData);
             requiredIds.AddRange(classStudentsData.Select(c => new FeedConvertDTO { Id = c.ClassId, ParentImageUrl = c.Class.Avatar, ParentName = c.Class.ClassName, SchoolName = c.Class.School.SchoolName }).ToList());
@@ -407,7 +417,7 @@ namespace LMS.Services
 
             var postList = _postRepository.GetAll().Include(x => x.CreatedBy);
             var test = requiredIds.Where(a => a.Id.HasValue).ToList();
-            var postListData = ( postList.Include(p => p.CreatedBy).AsEnumerable()).Where(x => test.Any(q => q.Id == x.ParentId) && x.PostType == (int)postType).Skip((pageNumber - 1) * pageSize).Take(pageSize).OrderByDescending(x => x.IsPinned).ToList();
+            var postListData = (postList.Include(p => p.CreatedBy).AsEnumerable()).Where(x => test.Any(q => q.Id == x.ParentId) && x.PostType == (int)postType).Skip((pageNumber - 1) * pageSize).Take(pageSize).OrderByDescending(x => x.IsPinned).ToList();
 
             var resultData = _mapper.Map<List<PostDetailsViewModel>>(postListData);
             foreach (var post in resultData)
@@ -664,7 +674,7 @@ namespace LMS.Services
 
         }
 
-        public async Task<IEnumerable<PostDetailsViewModel>> GetPostsByUserId(string userId, int pageNumber=1, int pageSize = 4)
+        public async Task<IEnumerable<PostDetailsViewModel>> GetPostsByUserId(string userId, int pageNumber = 1, int pageSize = 4)
         {
             var courseList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == new Guid(userId) && x.PostType == (int)PostTypeEnum.Post).OrderByDescending(x => x.IsPinned).ToListAsync();
 
@@ -723,7 +733,7 @@ namespace LMS.Services
                 post.PostTags = await GetTagsByPostId(post.Id);
             }
             return result;
-           
+
         }
 
         public async Task<List<UserFollowerViewModel>> GetUserFollowers(string userId)
@@ -781,7 +791,7 @@ namespace LMS.Services
             return result;
         }
 
-        public async Task<IEnumerable<GlobalFeedViewModel>> GetGlobalFeed(string userId,PostTypeEnum postType,int pageNumber)
+        public async Task<IEnumerable<GlobalFeedViewModel>> GetGlobalFeed(string userId, PostTypeEnum postType, int pageNumber)
         {
             int pageSize = 0;
             if (postType == PostTypeEnum.Post)
@@ -813,7 +823,7 @@ namespace LMS.Services
             }
             else
             {
-                return await GetDefaultFeeds(userId,postType, pageNumber, pageSize);
+                return await GetDefaultFeeds(userId, postType, pageNumber, pageSize);
             }
 
         }
@@ -939,7 +949,7 @@ namespace LMS.Services
         }
 
 
-        async Task<Dictionary<Guid, int>> GenericCompareAlgo(string tokenList,PostTypeEnum postType, int pageNumber, int pageSize)
+        async Task<Dictionary<Guid, int>> GenericCompareAlgo(string tokenList, PostTypeEnum postType, int pageNumber, int pageSize)
         {
             var DBPostTokens = new List<string>();
             var PostGUIDScore = new Dictionary<Guid, int>();
@@ -978,7 +988,7 @@ namespace LMS.Services
 
         }
 
-        async Task<List<GlobalFeedViewModel>> GetFeedResult(Dictionary<Guid, int> postGUIDScore, string loginUserId,PostTypeEnum postType, int pageNumber, int pageSize)
+        async Task<List<GlobalFeedViewModel>> GetFeedResult(Dictionary<Guid, int> postGUIDScore, string loginUserId, PostTypeEnum postType, int pageNumber, int pageSize)
         {
             bool IsPostLikedByCurrentUser;
             var response = new List<GlobalFeedViewModel>();
@@ -1140,7 +1150,7 @@ namespace LMS.Services
                 }
                 if (post.PostAuthorType == (int)PostAuthorTypeEnum.Course)
                 {
-                    var course = await _courseRepository.GetAll().Include(x => x.School).Where(x=> x.CourseId == post.ParentId).FirstOrDefaultAsync();
+                    var course = await _courseRepository.GetAll().Include(x => x.School).Where(x => x.CourseId == post.ParentId).FirstOrDefaultAsync();
                     parentName = course.CourseName;
                     parentImageUrl = course.Avatar;
                     postAuthorType = (int)PostAuthorTypeEnum.Course;
@@ -1244,7 +1254,7 @@ namespace LMS.Services
             var CommentsCount = await _commentRepository.GetAll().Where(x => x.GroupName == postId + "_group").ToListAsync();
             return CommentsCount.Count();
         }
-            
+
 
     }
 

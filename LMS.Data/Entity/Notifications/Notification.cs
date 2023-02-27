@@ -35,6 +35,7 @@ namespace LMS.Data.Entity
         StatusChanges = 3,
         LectureStart = 4,
         Messages = 5,
-        AssignTeacher = 6
+        AssignTeacher = 6,
+        CertificateSent = 7
     }
 }

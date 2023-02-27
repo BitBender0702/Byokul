@@ -65,6 +65,7 @@
     <Folder Include="Properties\PublishProfiles\" />
     <Folder Include="wwwroot\certificateTemplate\" />
     <Folder Include="wwwroot\graduateCertificates\" />
+    <Folder Include="wwwroot\AssignedCertificates\" />
     <Folder Include="wwwroot\tmp\" />
   </ItemGroup>
 

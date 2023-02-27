@@ -62,6 +62,10 @@ export class NotificationService{
             chatType:chatType,
             chatTypeId:chatTypeId
           }
+
+          if(notificationType == NotificationType.CertificateSent){
+            this.notificationViewModel.notificationContent = notificationContent;
+          }
           this._signalrService.sendNotification(this.notificationViewModel);
         });
      return new Observable<void>();

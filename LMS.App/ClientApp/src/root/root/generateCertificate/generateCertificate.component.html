@@ -1,0 +1,449 @@
+<div *ngIf="isDataLoaded">
+  <section class="f-poppins">
+    <div class="main_content">
+      <div class="create-post-header d-flex justify-content-between d-none d-xl-flex">
+        <div class="search-header position-relative">
+          <input type="search" class="form-control h_44" />
+          <button type="button" class="btn search-icon"><img src="../../../assets/images/school/search-gray.svg" /></button>
+        </div>
+        <button type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44" data-bs-toggle="modal"
+          data-bs-target="#create-post">Create Post</button>
+      </div>
+      <div class="live-header d-flex align-items-center justify-content-between">
+        <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
+            src="../../../assets/images/arrow-left.svg" /> Back</button>
+        <span class="logo_mobile d-xl-none">
+          <img src="../../../assets/images/logo.svg" />
+        </span>
+        <div class="d-xl-none">
+          <button type="button" class="mobile-search border_btn" onclick="openSearch()"><img
+              src="../../../assets/images/search-lg.svg" /></button>
+          <button type="button" class="mobile-search border_btn" onclick="openSidebar()"><img
+              src="../../../assets/images/menu.svg" /></button>
+        </div>
+      </div>
+
+        <div id="regForm" class="step-form mx-auto f-monteserrat" [style.max-width]="step == 0 || step == 2?'600px':'880px'">
+        <h3 *ngIf="step!=2" id="create_school" class="font_24 text_dark fw-bold text-center">Create Certificate</h3>
+
+        <p-steps *ngIf="step<2" [(activeIndex)]="step" [readonly]="true">
+        </p-steps>
+
+        <div class="tab-content registerTabs">
+          <div [ngClass]="step == 0 ? 'tab tab-pane active' : 'tab tab-pane'">
+            <p class="text-center font_16 fw_600 step-desc">Step 1: Information on Sertificate</p>
+            <form id="regForm" [formGroup]="createCertificateForm1">
+            <div class="form-group">
+              <label class="font_10">School Name</label>
+              <input formControlName="schoolId" hidden type="text" placeholder="School Name" name="schoolId" class="form-control w-100">
+              <input [attr.disabled]="disabled" formControlName="schoolName" readonly type="text" placeholder="School Name" name="schoolId" class="form-control w-100">
+
+              <!-- <label class="font_10">School Name</label>
+              <select class="form-select rounded-8 w-100">
+                <option selected>School Name</option>
+                <option value="1">Option 1</option>
+                <option value="2">Option 2</option>
+                <option value="3">Option 3</option>
+              </select> -->
+            </div>
+            <div class="form-group">
+              <label class="font_10">Sertificate Title</label>
+              <input formControlName="certificateTitle" placeholder="This Sertificate is presented to" name="certificateTitle" class="form-control w-100">
+              <small class="p-error" style="color: orange;"
+              *ngIf="(isStepCompleted && createCertificateForm1.controls.certificateTitle.errors)">Certificate Title is required
+            </small>
+            </div>
+            <div class="form-group">
+              <label class="font_10">Student Name</label>
+              <select class="form-select rounded-8 w-100" formControlName="studentId">
+                <option>All</option>
+                <option *ngFor="let student of this.certificateInfo.students; let i = index" [value]="student.studentId" [ngValue]="student.studentId">{{student.studentName}}</option>
+             </select>
+              <!-- <select class="form-select rounded-8 w-100">
+                <option selected>John Smith</option>
+                <option value="1">John Smith 1</option>
+                <option value="2">John Smith 2</option>
+                <option value="3">John Smith 3</option>
+              </select> -->
+            </div>
+            <div class="form-group">
+              <label class="font_10">Sertificate Reason</label>
+              <input formControlName="certificateReason" placeholder="Certificate for completing the Course Name" name="certificateReason" class="form-control w-100">
+              <small class="p-error" style="color: orange;"
+              *ngIf="(isStepCompleted && createCertificateForm1.controls.certificateReason.errors)">Certificate Reason is required
+            </small>
+            </div>
+            <div class="form-group">
+
+              <div *ngIf="isCreatingClassCertificate">
+              <label class="font_10">Class Name</label>
+              <input formControlName="classId" hidden type="text" placeholder="class Id" name="classId" class="form-control w-100">
+              <input [attr.disabled]="disabled" formControlName="className" readonly type="text" placeholder="class Name" name="className" class="form-control w-100">
+             </div> 
+
+             <div *ngIf="!isCreatingClassCertificate">
+              <label class="font_10">Course Name</label>
+              <input formControlName="courseId" hidden type="text" placeholder="course Id" name="courseId" class="form-control w-100">
+              <input [attr.disabled]="disabled" formControlName="courseName" readonly type="text" placeholder="course Name" name="courseName" class="form-control w-100">
+            </div>
+              <!-- <label class="font_10">Course Name</label>
+              <select class="form-select rounded-8 w-100">
+                <option selected>Course Name</option>
+                <option value="1">Course Name</option>
+                <option value="2">Course Name</option>
+                <option value="3">Course Name</option>
+              </select> -->
+            </div>
+            <div class="form-group">
+              <label class="font_10">Date</label>
+              <input formControlName="date" type="date" placeholder="Certificate for completing the Course Name" name="schoolname" class="form-control w-100">
+              <small class="p-error" style="color: orange;"
+              *ngIf="(isStepCompleted && createCertificateForm1.controls.date.errors)">Date is required
+              </small>
+              <small class="p-error" style="color: orange;" *ngIf="isStepCompleted && createCertificateForm1.errors">
+                {{ createCertificateForm1.errors.dates}}
+              </small>
+            </div>
+            <div class="row">
+              <div class="col-sm-6">                
+                <div class="form-group">
+
+                  <!-- <div class="preview-zone hidden">
+                    <div class="box box-solid">
+                      <div class="box-header with-border">
+                      </div>
+                      <div class="box-body">
+                        <img style="width: 200px;" class="mb-3" [src]="uploadSignatureImage">
+                        <br>
+                      </div>
+                    </div>
+                  </div> -->
+
+                  <label class="font_10">Signature (Optional)</label>
+                  <div class="dropzone-wrapper">
+                    <div class="dropzone-desc">
+                      <i class="glyphicon glyphicon-download-alt"></i>
+                      <p class="text-center fw_400">Drop or <b>click to browse</b></p>
+                    </div>
+                    <input type="file" name="img_logo" class="dropzone" (change)="handleSignatureInput($event)" accept="image/*">
+                  </div>
+                </div> 
+                <div *ngIf="uploadSignatureImage != null">
+                  <div class="preview-zone hidden img-upl-result mt-3 sign-res-img position-relative">
+                    <span class="d-inline-block">
+                      <img [src]="uploadSignatureImage" />
+                      <button (click)="removeSignatureImage()" type="button" class="btn dl-post-img d-flex align-items-center justify-content-center rounded-circle position-absolute"><i class="fa-solid fa-xmark"></i></button>
+                    </span>                    
+                  </div>        
+                </div>                  
+              </div>
+              <div class="col-sm-6">                
+                <div class="form-group">
+                 
+                  <label class="font_10">QR Code (Optional)</label>
+                  <div class="dropzone-wrapper">
+                    <div class="dropzone-desc">
+                      <i class="glyphicon glyphicon-download-alt"></i>
+                      <p class="text-center fw_400">Drop or <b>click to browse</b></p>
+                    </div>
+                    <input type="file" name="img_logo" class="dropzone" (change)="handleQrCodeInput($event)" accept="image/*">
+                  </div>
+                </div> 
+                <!-- <div class="preview-zone hidden">
+                  <div class="box box-solid">
+                    <div class="box-header with-border">
+                    </div>
+                    <div class="box-body">
+                      <img style="width: 200px;" class="mb-3" [src]="uploadQrImage">
+                      <button type="button" class="btn dl-post-img d-flex align-items-center justify-content-center rounded-circle position-absolute"><i class="fa-solid fa-xmark"></i></button>
+                      <br>
+                    </div>
+                  </div>
+                </div> -->
+                <div *ngIf="uploadQrImage != null">
+                  <div class="preview-zone hidden img-upl-result mt-3 sign-res-img position-relative">
+                    <span class="d-inline-block">
+                      <img [src]="uploadQrImage" />
+                      <button (click)="removeQrImage()" type="button" class="btn dl-post-img d-flex align-items-center justify-content-center rounded-circle position-absolute"><i class="fa-solid fa-xmark"></i></button>
+                    </span>                    
+                  </div>        
+                </div>     
+              </div>
+            </div>
+            <div class="steps_btns d-flex align-items-center justify-content-center mt-4">
+              <button (click)="forwardStep1()" type="button"
+                class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 text-uppercase next-step">Next</button>
+            </div>
+            </form>
+          </div>
+
+          <div [ngClass]="step == 1 ? 'tab tab-pane active' : 'tab tab-pane'">
+            <p class="text-center font_16 fw_600 step-desc">Step 2: Select Temlate</p>
+            <form id="regForm">
+            <div class="select-class-default-icon certi-template-select">
+              <ul class="list-unstyled before-none d-flex flex-wrap justify-content-center">
+                <li>
+                  <label id="certificate1" class="custom-radio">
+                    <input type="radio" checked="checked" name="radio">
+                    <span class="checkmark d-flex align-items-center justify-content-center" (click)="addCertificateId(1)">
+                      <div class="certificate-template-box text-center">
+                        <div class="cer-schol-icon d-flex align-items-center justify-content-center mx-auto">
+                          <img src="../../../assets/images/certificate-school.png" />
+                        </div>
+                        <h3 class="font_10 fw_700 text_dark ">School Name</h3>
+                        <h4 class="font_6 text_dark fw_600 pt-1">This Sertificate is presented to</h4>
+                        <h2 class="font_12 f-poppins fw_600 orng-text">User Name</h2>
+                        <h4 class="font_6 text_dark fw_600">Certificate for completing the Course Name</h4>
+                        <h4 class="font_7 text_dark fw_600">16 December 2022 </h4>
+                        <div class="cer-bot-icon d-flex align-items-center justify-content-center mx-auto">
+                          <img src="../../../assets/images/profile-grid-school-may.jpg" />
+                        </div>
+                      </div>
+                    </span>
+                  </label>
+                </li>
+                <li>
+                  <label id="certificate2" class="custom-radio custom-radio2">
+                    <input type="radio" checked="" name="radio">
+                    <span class="checkmark d-flex align-items-center justify-content-center" (click)="addCertificateId(2)">
+                      <div class="certificate-template-box text-center">
+                        <div class="cer-schol-icon d-flex align-items-center justify-content-center mx-auto">
+                          <img src="../../../assets/images/certificate-school.png" />
+                        </div>
+                        <h3 class="font_10 fw_700 text_dark ">School Name</h3>
+                        <h4 class="font_6 text_dark fw_600 pt-1">This Sertificate is presented to</h4>
+                        <h2 class="font_12 f-poppins fw_600 orng-text">User Name</h2>
+                        <h4 class="font_6 text_dark fw_600">Certificate for completing the Course Name</h4>
+                        <h4 class="font_7 text_dark fw_600">16 December 2022 </h4>
+                        <div class="cer-bot-icon d-flex align-items-center justify-content-center mx-auto">
+                          <img src="../../../assets/images/profile-grid-school-may.jpg" />
+                        </div>
+                      </div>
+                    </span>
+                  </label>
+                </li>
+                <li>
+                  <label id="certificate3" class="custom-radio custom-radio3">
+                    <input type="radio" checked="" name="radio">
+                    <span class="checkmark d-flex align-items-center justify-content-center" (click)="addCertificateId(3)">
+                      <div class="certificate-template-box text-center">
+                        <div class="cer-schol-icon d-flex align-items-center justify-content-center mx-auto">
+                          <img src="../../../assets/images/certificate-school.png" />
+                        </div>
+                        <h3 class="font_10 fw_700 text_dark ">School Name</h3>
+                        <h4 class="font_6 text_dark fw_600 pt-1">This Sertificate is presented to</h4>
+                        <h2 class="font_12 f-poppins fw_600 orng-text">User Name</h2>
+                        <h4 class="font_6 text_dark fw_600">Certificate for completing the Course Name</h4>
+                        <h4 class="font_7 text_dark fw_600">16 December 2022 </h4>
+                        <div class="cer-bot-icon d-flex align-items-center justify-content-center mx-auto">
+                          <img src="../../../assets/images/profile-grid-school-may.jpg" />
+                        </div>
+                      </div>
+                    </span>
+                  </label>
+                </li>
+                <li>
+                  <label id="certificate4" class="custom-radio custom-radio4">
+                    <input type="radio" checked="" name="radio">
+                    <span class="checkmark d-flex align-items-center justify-content-center" (click)="addCertificateId(4)">
+                      <div class="certificate-template-box text-center">
+                        <div class="cer-schol-icon d-flex align-items-center justify-content-center mx-auto">
+                          <img src="../../../assets/images/certificate-school.png" />
+                        </div>
+                        <h3 class="font_10 fw_700 text_dark ">School Name</h3>
+                        <h4 class="font_6 text_dark fw_600 pt-1">This Sertificate is presented to</h4>
+                        <h2 class="font_12 f-poppins fw_600 orng-text">User Name</h2>
+                        <h4 class="font_6 text_dark fw_600">Certificate for completing the Course Name</h4>
+                        <h4 class="font_7 text_dark fw_600">16 December 2022 </h4>
+                        <div class="cer-bot-icon d-flex align-items-center justify-content-center mx-auto">
+                          <img src="../../../assets/images/profile-grid-school-may.jpg" />
+                        </div>
+                      </div>
+                    </span>
+                  </label>
+                </li>
+                <li>
+                  <label id="certificate5" class="custom-radio custom-radio5">
+                    <input type="radio" checked="" name="radio">
+                    <span class="checkmark d-flex align-items-center justify-content-center" (click)="addCertificateId(5)">
+                      <div class="certificate-template-box text-center">
+                        <div class="cer-schol-icon d-flex align-items-center justify-content-center mx-auto">
+                          <img src="../../../assets/images/certificate-school.png" />
+                        </div>
+                        <h3 class="font_10 fw_700 text_dark ">School Name</h3>
+                        <h4 class="font_6 text_dark fw_600 pt-1">This Sertificate is presented to</h4>
+                        <h2 class="font_12 f-poppins fw_600 orng-text">User Name</h2>
+                        <h4 class="font_6 text_dark fw_600">Certificate for completing the Course Name</h4>
+                        <h4 class="font_7 text_dark fw_600">16 December 2022 </h4>
+                        <div class="cer-bot-icon d-flex align-items-center justify-content-center mx-auto">
+                          <img src="../../../assets/images/profile-grid-school-may.jpg" />
+                        </div>
+                      </div>
+                    </span>
+                  </label>
+                </li>
+                <li>
+                  <label id="certificate6" class="custom-radio custom-radio6">
+                    <input type="radio" checked="" name="radio">
+                    <span class="checkmark d-flex align-items-center justify-content-center" (click)="addCertificateId(6)">
+                      <div class="certificate-template-box text-center">
+                        <div class="cer-schol-icon d-flex align-items-center justify-content-center mx-auto">
+                          <img src="../../../assets/images/certificate-school.png" />
+                        </div>
+                        <h3 class="font_10 fw_700 text_dark ">School Name</h3>
+                        <h4 class="font_6 text_dark fw_600 pt-1">This Sertificate is presented to</h4>
+                        <h2 class="font_12 f-poppins fw_600 orng-text">User Name</h2>
+                        <h4 class="font_6 text_dark fw_600">Certificate for completing the Course Name</h4>
+                        <h4 class="font_7 text_dark fw_600">16 December 2022 </h4>
+                        <div class="cer-bot-icon d-flex align-items-center justify-content-center mx-auto">
+                          <img src="../../../assets/images/profile-grid-school-may.jpg" />
+                        </div>
+                      </div>
+                    </span>
+                  </label>
+                </li>
+              </ul>
+            </div>
+            <div class="steps_btns d-flex align-items-center justify-content-center">
+              <button (click)="backStep()" type="button"
+                class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 text-uppercase prev-step-btn prev-step"
+                id="prevBtn">Back</button>
+              <button (click)="forwardStep2()" type="button" id="step2_btn"
+                class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 text-uppercase next-step">Continue</button>
+            </div>
+          </form>
+          </div>
+          <div [ngClass]="step == 2 ? 'tab tab-pane active final-multiple-step' : 'tab tab-pane final-multiple-step'">
+            <h2 class="font_24 fw-bold text_dark text-center my_32 mt-1">Create Sertificate</h2>
+            <p class="font_16 text_dark fw_600 text-center">Step 3: Check final result</p>
+            <form id="regForm">
+              <div id="finalCertificate">
+            <html>
+            <div class="certificate-template-box text-center final-certificate" 
+                style="text-align: center;background: #FFFFFF;
+                       border: 1px solid #F8F8F8;
+                       border-radius: 16px;
+                       margin: 0 auto;
+                       padding: 15px 16px;">
+              <!-- <div [ngClass]="certificateId == 1? 'cert-inner backgroundCertificate1':certificateId == 2?'cert-inner backgroundCertificate2':certificateId == 3?'cert-inner backgroundCertificate3':certificateId == 4?'cert-inner backgroundCertificate4':certificateId == 5?'cert-inner backgroundCertificate5':certificateId == 6?'cert-inner backgroundCertificate5':''"
+                 style=" background: rgba(189, 189, 189, 0.1);
+                 border-radius: 16px;
+                 height: 100%;
+                 background-repeat: no-repeat;
+                 background-size: 90%;
+                 background-position: center center;
+                 padding: 30px 0;"> -->
+
+                <div [style.background-image] = "certificateId == 1?'url(../../../assets/images/certificate-frame-first.svg)':certificateId == 2?'url(../../../assets/images/certificate-frame-2.svg)':certificateId == 3?'url(../../../assets/images/certificate-frame3.svg)':certificateId == 4?'url(../../../assets/images/certificate-frame4.svg)':certificateId == 5?'url(../../../assets/images/certificate-frame5.svg)':certificateId == 6?'url(../../../assets/images/certificate-frame6.svg)':'url(../../../assets/images/certificate-frame-first.svg)'"
+                 style=" background: rgba(189, 189, 189, 0.1);
+                 border-radius: 16px;
+                 height: 100%;
+                 background-repeat: no-repeat;
+                 background-size: 90%;
+                 background-position: center center;
+                 padding: 30px 0;
+                 background-size: contain">
+
+              <div class="cer-schol-icon d-flex align-items-center justify-content-center mx-auto"
+                    style="width: 28px;
+                    height: 28px;
+                    border-radius: 50%;
+                    overflow: hidden;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin-left: auto;
+                    margin-right: auto;"
+                    >
+                <img src="../../../assets/images/certificate-school.png" />
+              </div>
+
+              <h3 class="font_24 fw_700 text_dark"
+                  style="font-size: 22px;
+                         font-weight: 700 !important;
+                         color: #313131 !important;">
+                  {{certificateInfo.school.schoolName}}</h3>
+
+              <h4 class="font_14 text_dark fw_600 mt-4"
+                   style="font-size: 13px;
+                          color: #313131 !important;
+                          font-weight: 600 !important;
+                          margin-top: 25px;">{{certificateTitle}}
+              </h4>
+
+              <h2 class="font_28 f-poppins fw_600 orng-text mt-2"
+                 style="font-size: 28px;
+                        font-family: 'Poppins', sans-serif;
+                        font-weight: 600 !important;
+                        color:#FF811C;
+                        margin-top: 13px;">{{studentName}}
+              </h2>
+
+              <h4 class="font_14 text_dark fw_600"
+                  style="font-size: 14px;
+	                       color: #313131 !important;
+                         font-weight: 600 !important;">{{certificateReason}}
+                <!-- <span>{{classOrCourseName}}</span> -->
+                <!-- <span>{{classOrCourseName}}</span> -->
+              </h4>
+              <div style="display: flex;
+                 justify-content: space-between;
+                 max-width: 400px;
+                 margin: 0 auto;">
+                         <img style=" max-width: 100px; max-height: 100px;" [src]="uploadSignatureImage">
+                <div>
+
+                   <h4 style="min-width: max-content;
+                   font-size: 16px !important;
+                   color: #313131 !important;
+                   font-weight: 600 !important;
+                   margin-top: 25px;">
+                         {{createdDate  | date : "d MMMM yyyy"}} 
+                    </h4>
+
+                  <div 
+                       style=" border: 0.442478px solid #DEE0E3;
+                       border-radius: 50%;
+                       width: 13.27px;
+                       height: 13.27px;
+                       display: flex;
+                       align-items: center;
+                       justify-content: center;
+                       margin-left: auto;
+                       margin-right: auto;">
+                     <img style="max-width: 36px;" [src]="certificateInfo.school.avatar" />
+                  </div>
+                </div>
+                <img style=" max-width: 100px; max-height: 100px;" [src]="uploadQrImage">
+              </div>
+             
+            </div>
+            </div>
+            </html>
+          </div>
+            <div class="steps_btns mt-3">
+              <input (click)="createCertificate()" type="submit" id="nextBtn"
+                class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 text-uppercase"
+                value="Finish" />
+            </div>
+           </form>
+          </div>
+        </div>
+        <!-- Circles which indicates the steps of the form: -->
+
+
+      </div>
+      <div class="d-flex justify-content-end mt-5 d-md-none">
+        <button type="button"
+          class="step-edit-button btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase next-step"><img
+            src="../../../assets/images/Edit-light.svg" alt="edit" /></button>
+      </div>
+
+    </div>
+
+  </section>
+</div>
+
+  <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
+  <p-toast></p-toast>
+

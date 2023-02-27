@@ -205,5 +205,13 @@ namespace LMS.App.Controllers
             return Ok();
         }
 
+        [Route("getCourseInfoForCertificate")]
+        [HttpGet]
+        public async Task<IActionResult> GetCourseInfoForCertificate(Guid courseId)
+        {
+            var response = await _courseService.GetCourseInfoForCertificate(courseId);
+            return Ok(response);
+        }
+
     }
 }

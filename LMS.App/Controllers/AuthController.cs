@@ -86,7 +86,7 @@ namespace LMS.App.Controllers
                     var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     string callBackUrl = $"{_config["AppUrl"]}/user/auth/emailConfirm?token={token}&email={user.Email}";
                     text = text.Replace("[URL]", callBackUrl);
-                    _commonService.SendEmail(new List<string> { user.Email }, null, null, "Verify Your Email Address", body: text);
+                    _commonService.SendEmail(new List<string> { user.Email }, null, null, "Verify Your Email Address", body: text,null,null);
 
                     return Ok(new { result = "success" });
                 }

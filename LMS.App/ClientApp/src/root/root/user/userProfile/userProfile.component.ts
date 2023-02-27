@@ -24,6 +24,8 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import { ReelsViewComponent } from '../../reels/reelsView.component';
 import { SignalrService } from 'src/root/service/signalr.service';
 import { NotificationType, NotificationViewModel } from 'src/root/interfaces/notification/notificationViewModel';
+import { PostAuthorTypeEnum } from 'src/root/Enums/postAuthorTypeEnum';
+import { CertificateViewComponent } from '../../certificateView/certificateView.component';
 
 export const userImageResponse =new Subject<{userAvatar : string}>();  
 export const chatResponse =new Subject<{receiverId : string , type: string,chatTypeId:string}>();  
@@ -129,6 +131,7 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
       
       // this.getByUserId(this.userId);
       this._userService.getUserById(this.userId).subscribe((response) => {
+        debugger
         this.frontEndPageNumber = 1;
         this.reelsPageNumber = 1;
         this.user = response;
@@ -675,20 +678,15 @@ var chatTypeId = ''
     { state: { chatHead: {receiverId: userId, type : type,chatTypeId:''} } });
 }
 
-// addPostView(postId:string){
-//   
-//   if(this.loginUserId != undefined){
-//   this.postView.postId = postId;
-//   this._postService.postView(this.postView).subscribe((response) => {
-//     
-//     console.log('success');
-//     // this.user.posts.filter((p : any) => p.id == postId).forEach( (item : any) => {
-//     //  var itemss = item.likes;
-//     //  item.likes = response;
-//    }); 
-//   }
-
-// }
+openCertificateViewModal(certificateUrl:string,certificateName:string){
+  debugger
+  const initialState = {
+    certificateUrl: certificateUrl,
+    certificateName:certificateName,
+    from:PostAuthorTypeEnum.School
+  };
+  this.bsModalService.show(CertificateViewComponent, { initialState });
+}
 
 }
 

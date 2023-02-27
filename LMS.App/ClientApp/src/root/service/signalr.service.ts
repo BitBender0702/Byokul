@@ -50,7 +50,7 @@ export class SignalrService {
 
   initializeConnection(token: string) {
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl('https://localhost:7220/chatHub', {
+      .withUrl('https://byokul.com/chatHub', {
          httpClient: new CustomXhrHttpClient(token)
       })
       .withAutomaticReconnect()
@@ -165,6 +165,7 @@ export class SignalrService {
       this.notificationSettings = response;
       var notificationSettings: any[] = this.notificationSettings;
       var notificationInfo = notificationSettings.find(x => x.notificationType == model.notificationType);
+      if(notificationInfo!= undefined){
       if(!notificationInfo.isSettingActive){
         return
       }
@@ -172,6 +173,11 @@ export class SignalrService {
         this.hubConnection?.invoke('SendNotification', model)
         .catch((err) => console.error(err));
       }
+    }
+    else{
+      this.hubConnection?.invoke('SendNotification', model)
+        .catch((err) => console.error(err));
+    }
   })
 
   }

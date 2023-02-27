@@ -1,0 +1,32 @@
+.backgroundCertificate1{
+    background-image: url(../../../assets/images/certificate-frame-first.svg);
+    background-size: contain;
+}
+
+.backgroundCertificate2{
+    background-image: url(../../../assets/images/certificate-frame-2.svg);
+    background-size: contain;
+}
+
+.backgroundCertificate3{
+    background-image: url(../../../assets/images/certificate-frame3.svg);
+    background-size: contain;
+}
+.backgroundCertificate4{
+    background-image: url(../../../assets/images/certificate-frame4.svg);
+    background-size: contain;
+}
+.backgroundCertificate5{
+    background-image: url(../../../assets/images/certificate-frame5.svg);
+    background-size: contain;
+}
+.backgroundCertificate6{
+    background-image: url(../../../assets/images/certificate-frame6.svg);
+    background-size: contain;
+}
+
+
+
+.orng-text{
+    color:#FF811C;
+   }

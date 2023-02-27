@@ -5,6 +5,7 @@
         <div class="create-post-header d-flex justify-content-between d-none d-xl-flex">
           <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
               src="../../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
+          <button *ngIf="isOwner" [routerLink]="['/user/createCertificate',2, course.courseId]" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44">{{'CreateCertificate'| translate }}</button>
           <button *ngIf="isOwner" (click)="openPostModal()" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44">{{'CreatePost'| translate }}</button>
           <button *ngIf="!isOwner && course.price != null && course.price != 0" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44">{{'Buyfor'| translate }} ${{course.price}}</button>
         </div>

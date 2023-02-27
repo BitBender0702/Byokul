@@ -36,6 +36,8 @@ namespace LMS.Services
         Task<List<ClassCourseFilterViewModel>> GetCourseFilters(string userId, Guid schoolId);
         Task SaveCourseFilters(List<UserClassCourseFilterViewModel> model, string userId);
         Task<int> GetStudents(Guid courseId);
+        Task<CourseInfoForCertificateViewModel> GetCourseInfoForCertificate(Guid courseId);
 
-        }
+
+    }
 }

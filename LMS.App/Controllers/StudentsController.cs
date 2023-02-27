@@ -1,4 +1,5 @@
 ﻿using LMS.Common.ViewModels;
+using LMS.Common.ViewModels.Student;
 using LMS.Data.Entity;
 using LMS.Services.Blob;
 using LMS.Services.Students;
@@ -8,12 +9,14 @@ using Microsoft.AspNetCore.Mvc;
 namespace LMS.App.Controllers
 {
     [Route("students")]
-    public class StudentsController : Controller
+    public class StudentsController : BaseController
     {
         private readonly IStudentsService _studentsService;
-        public StudentsController(IStudentsService studentsService)
+        private readonly UserManager<User> _userManager;
+        public StudentsController(IStudentsService studentsService, UserManager<User> userManager)
         {
             _studentsService = studentsService;
+            _userManager = userManager;
         }
         [Route("getAllStudents")]
         [HttpGet]
@@ -29,6 +32,15 @@ namespace LMS.App.Controllers
             Guid classId = new Guid("FBD30D50-4B03-42BC-10EB-08DAC173147E");
             await _studentsService.ClassGraduateCertificate("052b51ec-2d9d-4573-963a-774fef03ac30",classId,new Guid());
 
+            return Ok();
+        }
+
+        [Route("uploadStudentCertificates")]
+        [HttpPost]
+        public async Task<IActionResult> UploadStudentCertificates([FromBody] UploadStudentCertificateViewModel model)
+        {
+            var userId = await GetUserIdAsync(this._userManager);
+            await _studentsService.UploadStudentCertificates(model, userId);
             return Ok();
         }
     }

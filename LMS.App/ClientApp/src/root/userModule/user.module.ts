@@ -25,6 +25,7 @@ import { ChatComponent } from '../root/chat/chat.component';
 import { CourseProfileComponent } from '../root/course/courseProfile/courseProfile.component';
 import { UserFeedComponent } from '../root/userFeed/userFeed.component';
 import { NotificationsComponent } from '../root/Notifications/notifications.component';
+import { GenerateCertificateComponent } from '../root/generateCertificate/generateCertificate.component';
 
 
 const routes: Routes = [
@@ -63,6 +64,9 @@ const routes: Routes = [
   },
   {
     path: 'notifications',component:NotificationsComponent
+  },
+  {
+    path: 'createCertificate/:from/:id',component:GenerateCertificateComponent
   },
   {
     path: 'schoolProfile/:schoolId',component:SchoolProfileComponent
@@ -112,7 +116,7 @@ const routes: Routes = [
   },
   {
     path: 'reels/:id',component:ReelsViewComponent
-  },
+  }
 ];
 
 

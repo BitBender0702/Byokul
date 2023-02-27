@@ -820,6 +820,34 @@ namespace LMS.Services
                     _userClassCourseFilterRepository.Save();
                 }
             }
+
+        }
+
+        public async Task<CourseInfoForCertificateViewModel> GetCourseInfoForCertificate(Guid courseId)
+        {
+            CourseInfoForCertificateViewModel model = new CourseInfoForCertificateViewModel();
+
+            var course = await _courseRepository.GetAll()
+                .Include(x => x.School)
+                .Include(x => x.CreatedBy)
+                .Where(x => x.CourseId == courseId).FirstOrDefaultAsync();
+
+            model = _mapper.Map<CourseInfoForCertificateViewModel>(course);
+
+            model.Students = await GetCourseStudents(course.CourseId);
+            return model;
+
+        }
+
+        public async Task<List<StudentViewModel>> GetCourseStudents(Guid courseId)
+        {
+            var courseStudents = _courseStudentRepository.GetAll()
+                .Include(x => x.Student)
+                .ThenInclude(x => x.CreatedBy)
+                .Where(x => x.CourseId == courseId).ToList();
+
+            var result = _mapper.Map<List<StudentViewModel>>(courseStudents.Select(x => x.Student));
+            return result;
         }
 
 

@@ -55,9 +55,8 @@
       <div class="teacher-tags tag-box hover-tags">
         <div class="teacher-tags tag-box mt-0  hover-tags">
           <div class="teacher-content font_14 d-inline-block"><img src="../../../../assets/images/dark-star.svg" /> {{'Sertificates'| translate }}</div>
-          <!-- <span class="custom-tag">Sertificate 1 <button *ngIf="isOwner"
-              class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
-                src="../../../../assets/images/cross-sm-light.svg" /></button></span> -->
+          <span *ngFor="let item of user.studentCertificates;" class="custom-tag"><span (click)="openCertificateViewModal(item.certificateUrl,item.name)">{{item.name}}</span><button *ngIf="isOwner"
+              class="border-0 bg-transparent p-0 position-absolute delete-tag"></button></span>
         </div>
         <div class="teacher-tags tag-box mt-0  hover-tags">
           <div class="teacher-content font_14 d-inline-block"><img src="../../../../assets/images/Volume-Down.svg" /> {{'Languages'| translate }}</div>

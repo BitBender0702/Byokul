@@ -120,7 +120,7 @@ namespace LMS.Services.Account
             text = text.Replace("[ACTIVATIONLINK]", callBackUrl);
             text = text.Replace("*#FirstName#*", email);
 
-            await _commonService.SendEmail(new List<string> { email }, null, null, subject: "Reset Your Password", body: text);
+            await _commonService.SendEmail(new List<string> { email }, null, null, subject: "Reset Your Password", body: text,null,null);
             return true;
         }
 

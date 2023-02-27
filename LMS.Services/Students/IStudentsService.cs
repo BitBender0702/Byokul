@@ -13,5 +13,6 @@ namespace LMS.Services.Students
         Task<IEnumerable<StudentViewModel>> GetAllStudents();
         Task ClassGraduateCertificate(string userId, Guid classId, Guid providerId);
         Task SaveClassStudents(Guid classId, Guid studentId);
+        Task UploadStudentCertificates(UploadStudentCertificateViewModel model,string userId);
     }
 }

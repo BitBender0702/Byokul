@@ -124,4 +124,8 @@ export class CourseService{
         debugger
         return this.http.post(`${this.apiUrl}/course/saveCourseFilters`,courseFiltersList, {headers: this.headers});         
       }
+
+      getCourseInfoForCertificate(courseId:string):Observable<any>{
+        return this.http.get(`${this.apiUrl}/course/getCourseInfoForCertificate` + '?courseId=' + courseId);
+    }
 }

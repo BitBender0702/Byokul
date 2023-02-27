@@ -62,7 +62,7 @@ import { PaymentComponent } from './root/payment/payment.component';
 import { NotificationsComponent } from './root/Notifications/notifications.component';
 import { CertificateViewComponent } from './root/certificateView/certificateView.component';
 import { PdfViewerModule } from 'ng2-pdf-viewer'; 
-// import { PdfJsViewerModule } from 'ng2-pdfjs-viewer';
+import { GenerateCertificateComponent } from './root/generateCertificate/generateCertificate.component';
 
 
 const routes: Routes = [
@@ -118,7 +118,8 @@ const routes: Routes = [
     ChatComponent,
     PaymentComponent,
     NotificationsComponent,
-    CertificateViewComponent
+    CertificateViewComponent,
+    GenerateCertificateComponent
 
   ],
   imports: [

@@ -72,6 +72,8 @@ namespace LMS.Data
         public DbSet<UserNotificationSetting> UserNotificationSettings { get; set; }
         public DbSet<ClassCourseFilter> ClassCourseFilters { get; set; }
         public DbSet<UserClassCourseFilter> UserClassCourseFilters { get; set; }
+        public DbSet<StudentCertificate> StudentCertificates { get; set; }
+
 
     }
 }

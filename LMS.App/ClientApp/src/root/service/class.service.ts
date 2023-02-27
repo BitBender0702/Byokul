@@ -130,4 +130,8 @@ export class ClassService{
         return this.http.post(`${this.apiUrl}/class/saveClassFilters`,classFiltersList, {headers: this.headers});
       }
 
+      getClassInfoForCertificate(classId:string):Observable<any>{
+        return this.http.get(`${this.apiUrl}/class/getClassInfoForCertificate` + '?classId=' + classId);
+    }
+
 }
