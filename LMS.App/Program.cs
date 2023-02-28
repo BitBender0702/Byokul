@@ -110,8 +110,12 @@ builder.Services.AddScoped<BigBlueButtonAPIClient>(provider =>
 
 // Add service for JWT.
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme
-    /*CookieAuthenticationDefaults.AuthenticationScheme*/)
+ builder.Services.AddAuthentication(options =>
+ {
+     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+ })
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
@@ -155,7 +159,31 @@ builder.Services.AddAutoMapper(config =>
     config.AddProfile<NotificationProfile>();
 });
 
-builder.Services.AddSwaggerGen();
+
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+        Description = "JWT Authorization header using the Bearer scheme."
+    });
+    options.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement {
+        {
+            new Microsoft.OpenApi.Models.OpenApiSecurityScheme {
+                    Reference = new Microsoft.OpenApi.Models.OpenApiReference {
+                        Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                    }
+                },
+                new string[] {}
+        }
+    });
+});
+
 builder.Services.AddSignalR(options =>
 {
     options.EnableDetailedErrors = true;
@@ -206,8 +234,8 @@ public class Seeder
     {
         using (var scope = app.Services.CreateScope())
         {
-        var seeder = scope.ServiceProvider.GetRequiredService<DbSeed>();
+            var seeder = scope.ServiceProvider.GetRequiredService<DbSeed>();
             seeder?.SeedAsync().Wait();
+        }
     }
-}
 }
