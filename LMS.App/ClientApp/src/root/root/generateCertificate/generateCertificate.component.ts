@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
+import { CertificateTemplateEnum } from 'src/root/Enums/certificateTemplateEnum';
 import { PostAuthorTypeEnum } from 'src/root/Enums/postAuthorTypeEnum';
 import { NotificationType } from 'src/root/interfaces/notification/notificationViewModel';
 import { SaveStudentCertificate } from 'src/root/interfaces/student/saveStudentCertificate';
@@ -44,7 +45,7 @@ import { StudentService } from 'src/root/service/student.service';
     studentId!:string;
     classOrCourseName!:string;
     courseName!:string;
-    createdDate!:string;
+    createdDate!:any;
     certificateHtml!:string;
     saveStudentCertificate!:SaveStudentCertificate;
     isCreatingClassCertificate!:boolean;
@@ -155,7 +156,6 @@ import { StudentService } from 'src/root/service/student.service';
       }
 
     forwardStep1() {
-        debugger
         this.isStepCompleted = true;
         if (!this.createCertificateForm1.valid) {
             return;
@@ -165,7 +165,6 @@ import { StudentService } from 'src/root/service/student.service';
     }
 
     forwardStep2() {
-      debugger
       if(this.certificateId == undefined){
          this.certificateId = 6;
       }
@@ -191,6 +190,7 @@ import { StudentService } from 'src/root/service/student.service';
             this.studentName = student.studentName;
             this.certificateTitle = certificateInfo.certificateTitle;
             this.certificateReason = certificateInfo.certificateReason;
+            
         this.step += 1;
     }
 
@@ -212,14 +212,43 @@ import { StudentService } from 'src/root/service/student.service';
 
         }
         else{
-         // this.saveStudentCertificate.studentIds?.push(this.studentId);
          var students: any[] = this.certificateInfo.students;
          var student = students.find(x => x.studentId == this.studentId);
          this.saveStudentCertificate.students?.push(student);
           this.saveStudentCertificate.studentId = null;
         }
         this.saveStudentCertificate.certificateName = this.classOrCourseName;
+        this.saveStudentCertificate.schoolName = this.certificateInfo.school.schoolName;
+        this.saveStudentCertificate.certificateTitle = this.certificateTitle;
+        this.saveStudentCertificate.certificateReason = this.certificateReason;
+        this.saveStudentCertificate.date = this.createdDate;
+        this.saveStudentCertificate.uploadSignatureImage = this.uploadSignatureImage.changingThisBreaksApplicationSecurity;
+        this.saveStudentCertificate.uploadQrImage = this.uploadQrImage.changingThisBreaksApplicationSecurity;
+        this.saveStudentCertificate.schoolAvatar = this.certificateInfo.school.avatar;
 
+        if(this.certificateId == CertificateTemplateEnum.Certificate1Id){
+          this.saveStudentCertificate.backgroundImage = "ClientApp\\src\\assets\\images\\certificate-frame-first.svg";
+        }
+        if(this.certificateId == CertificateTemplateEnum.Certificate2Id){
+          this.saveStudentCertificate.backgroundImage = "ClientApp\\src\\assets\\images\\certificate-frame-2.svg";
+        }
+        if(this.certificateId == CertificateTemplateEnum.Certificate3Id){
+          this.saveStudentCertificate.backgroundImage = "ClientApp\\src\\assets\\images\\certificate-frame3.svg";
+        }
+        if(this.certificateId == CertificateTemplateEnum.Certificate4Id){
+          this.saveStudentCertificate.backgroundImage = "ClientApp\\src\\assets\\images\\certificate-frame4.svg";
+        }
+        if(this.certificateId == CertificateTemplateEnum.Certificate5Id){
+          this.saveStudentCertificate.backgroundImage = "ClientApp\\src\\assets\\images\\certificate-frame5.svg";
+        }
+        if(this.certificateId == CertificateTemplateEnum.Certificate6Id){
+          this.saveStudentCertificate.backgroundImage = "ClientApp\\src\\assets\\images\\certificate-frame6.svg";
+        }
+ 
+
+
+
+      
         if(!this.isSendCertificateToAll){
           this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:`Certificate successfully sent to the ${this.studentName}`});
         }
@@ -228,7 +257,6 @@ import { StudentService } from 'src/root/service/student.service';
         }
 
         this._studentService.saveStudentCertificates(this.saveStudentCertificate).subscribe((response) => {
-          debugger
           if(this.isSendCertificateToAll){
              var notificationContent = `Certificates created for ${this.classOrCourseName} students are successfully sent`;
              this._notificationService.initializeNotificationViewModel(this.loginUserId,NotificationType.CertificateSent,notificationContent,this.loginUserId,null,0,null,null).subscribe((response) => {});
@@ -250,8 +278,15 @@ import { StudentService } from 'src/root/service/student.service';
         certificateHtml: '',
         studentId: '',
         certificateName:'',
-        //studentIds:[]
-        students:[]
+        students:[],
+        schoolName:'',
+        certificateTitle:'',
+        certificateReason:'',
+        date:new Date(),
+        uploadSignatureImage:'',
+        uploadQrImage:'',
+        backgroundImage:'',
+        schoolAvatar:''
      }
     }
 

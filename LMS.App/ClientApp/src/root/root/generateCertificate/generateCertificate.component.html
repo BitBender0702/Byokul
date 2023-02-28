@@ -36,15 +36,7 @@
             <div class="form-group">
               <label class="font_10">School Name</label>
               <input formControlName="schoolId" hidden type="text" placeholder="School Name" name="schoolId" class="form-control w-100">
-              <input [attr.disabled]="disabled" formControlName="schoolName" readonly type="text" placeholder="School Name" name="schoolId" class="form-control w-100">
-
-              <!-- <label class="font_10">School Name</label>
-              <select class="form-select rounded-8 w-100">
-                <option selected>School Name</option>
-                <option value="1">Option 1</option>
-                <option value="2">Option 2</option>
-                <option value="3">Option 3</option>
-              </select> -->
+              <input [attr.disabled]="disabled" formControlName="schoolName" readonly type="text" placeholder="School Name" name="schoolId" class="form-control w-100"> 
             </div>
             <div class="form-group">
               <label class="font_10">Sertificate Title</label>
@@ -59,12 +51,6 @@
                 <option>All</option>
                 <option *ngFor="let student of this.certificateInfo.students; let i = index" [value]="student.studentId" [ngValue]="student.studentId">{{student.studentName}}</option>
              </select>
-              <!-- <select class="form-select rounded-8 w-100">
-                <option selected>John Smith</option>
-                <option value="1">John Smith 1</option>
-                <option value="2">John Smith 2</option>
-                <option value="3">John Smith 3</option>
-              </select> -->
             </div>
             <div class="form-group">
               <label class="font_10">Sertificate Reason</label>
@@ -86,13 +72,6 @@
               <input formControlName="courseId" hidden type="text" placeholder="course Id" name="courseId" class="form-control w-100">
               <input [attr.disabled]="disabled" formControlName="courseName" readonly type="text" placeholder="course Name" name="courseName" class="form-control w-100">
             </div>
-              <!-- <label class="font_10">Course Name</label>
-              <select class="form-select rounded-8 w-100">
-                <option selected>Course Name</option>
-                <option value="1">Course Name</option>
-                <option value="2">Course Name</option>
-                <option value="3">Course Name</option>
-              </select> -->
             </div>
             <div class="form-group">
               <label class="font_10">Date</label>
@@ -107,17 +86,6 @@
             <div class="row">
               <div class="col-sm-6">                
                 <div class="form-group">
-
-                  <!-- <div class="preview-zone hidden">
-                    <div class="box box-solid">
-                      <div class="box-header with-border">
-                      </div>
-                      <div class="box-body">
-                        <img style="width: 200px;" class="mb-3" [src]="uploadSignatureImage">
-                        <br>
-                      </div>
-                    </div>
-                  </div> -->
 
                   <label class="font_10">Signature (Optional)</label>
                   <div class="dropzone-wrapper">
@@ -149,17 +117,6 @@
                     <input type="file" name="img_logo" class="dropzone" (change)="handleQrCodeInput($event)" accept="image/*">
                   </div>
                 </div> 
-                <!-- <div class="preview-zone hidden">
-                  <div class="box box-solid">
-                    <div class="box-header with-border">
-                    </div>
-                    <div class="box-body">
-                      <img style="width: 200px;" class="mb-3" [src]="uploadQrImage">
-                      <button type="button" class="btn dl-post-img d-flex align-items-center justify-content-center rounded-circle position-absolute"><i class="fa-solid fa-xmark"></i></button>
-                      <br>
-                    </div>
-                  </div>
-                </div> -->
                 <div *ngIf="uploadQrImage != null">
                   <div class="preview-zone hidden img-upl-result mt-3 sign-res-img position-relative">
                     <span class="d-inline-block">
@@ -325,25 +282,14 @@
                        border-radius: 16px;
                        margin: 0 auto;
                        padding: 15px 16px;">
-              <!-- <div [ngClass]="certificateId == 1? 'cert-inner backgroundCertificate1':certificateId == 2?'cert-inner backgroundCertificate2':certificateId == 3?'cert-inner backgroundCertificate3':certificateId == 4?'cert-inner backgroundCertificate4':certificateId == 5?'cert-inner backgroundCertificate5':certificateId == 6?'cert-inner backgroundCertificate5':''"
-                 style=" background: rgba(189, 189, 189, 0.1);
-                 border-radius: 16px;
-                 height: 100%;
-                 background-repeat: no-repeat;
-                 background-size: 90%;
-                 background-position: center center;
-                 padding: 30px 0;"> -->
 
                 <div [style.background-image] = "certificateId == 1?'url(../../../assets/images/certificate-frame-first.svg)':certificateId == 2?'url(../../../assets/images/certificate-frame-2.svg)':certificateId == 3?'url(../../../assets/images/certificate-frame3.svg)':certificateId == 4?'url(../../../assets/images/certificate-frame4.svg)':certificateId == 5?'url(../../../assets/images/certificate-frame5.svg)':certificateId == 6?'url(../../../assets/images/certificate-frame6.svg)':'url(../../../assets/images/certificate-frame-first.svg)'"
                  style=" background: rgba(189, 189, 189, 0.1);
                  border-radius: 16px;
-                 height: 100%;
                  background-repeat: no-repeat;
-                 background-size: 90%;
                  background-position: center center;
                  padding: 30px 0;
                  background-size: contain">
-
               <div class="cer-schol-icon d-flex align-items-center justify-content-center mx-auto"
                     style="width: 28px;
                     height: 28px;

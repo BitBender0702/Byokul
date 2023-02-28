@@ -11,13 +11,16 @@ namespace LMS.Common.ViewModels.Student
         public string CertificateHtml { get; set; }
         public Guid? StudentId { get; set; }
         public string? certificateName { get; set; }
-        //public List<Guid?> StudentIds { get; set; }
-
         public List<StudentViewModel> Students { get; set; }
-        //public Guid? ClassId { get; set; }
-        //public string? ClassName { get; set; }
-        //public Guid? CourseId { get; set; }
-        //public string? CourseName { get; set; }
+        public string SchoolName { get; set; }
+        public string SchoolAvatar { get; set; }
+        public string CertificateTitle { get; set; }
+        public string CertificateReason { get; set; }
+        public String Date { get; set; }
+        public string UploadSignatureImage { get; set; }
+        public string UploadQrImage { get; set; }
+        public string BackgroundImage{ get; set; }
+
 
     }
 }

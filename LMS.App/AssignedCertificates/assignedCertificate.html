@@ -1,0 +1,104 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body style="margin:0">
+    <div style="text-align: center;background: #FFFFFF;
+                       border: 1px solid #F8F8F8;
+                       border-radius: 16px;
+                       margin: 0 auto;
+                       height:730px;">
+
+        <div [style.background-image]="url([BackgroundImage])"
+             style=" background: rgba(189, 189, 189, 0.1);
+                 border-radius: 16px;
+                 background-repeat: no-repeat;
+                 background-position: center center;
+                 padding: 30px 0;
+                 background-size: contain;
+                 height:100%;
+                 background-image:url([BackgroundImage]);
+">
+            <div>
+                
+                <div class="cer-schol-icon d-flex align-items-center justify-content-center mx-auto"
+                     style="
+                    border-radius: 50%;
+                    overflow: hidden;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin-left: auto;
+                    margin-right: auto;
+                    margin-top:90px">
+                    <img style="max-width: 50px;max-height:70px;" src=[CertificateImage] />
+                </div>
+
+                <h3 class="font_24 fw_700 text_dark"
+                    style="font-size: 45px;
+                         font-weight: 700 !important;
+                         color: #313131 !important;">
+                    [SchoolName]
+                </h3>
+
+                <h4 class="font_14 text_dark fw_600 mt-4"
+                    style="font-size: 25px;
+                          color: #313131 !important;
+                          font-weight: 600 !important;
+                          margin-top: 25px;">
+                    [CertificateTitle]
+                </h4>
+
+                <h2 class="font_28 f-poppins fw_600 orng-text mt-2"
+                    style="font-size: 55px;
+                        font-family: 'Poppins', sans-serif;
+                        font-weight: 600 !important;
+                        color:#FF811C;
+                        margin-top: 13px;">
+                    [StudentName]
+                </h2>
+
+                <h4 class="font_14 text_dark fw_600"
+                    style="font-size: 25px;
+	                       color: #313131 !important;
+                         font-weight: 600 !important;">
+                    [CertificateReason]
+                </h4>
+                <div style="display: flex;
+                 justify-content: space-between;
+                 max-width: 400px;
+                 margin: 0 auto;">
+                    <img style=" max-width: 100px; max-height: 100px;margin-right:24px;" src="[UploadSignatureImage]">
+                    <div>
+
+                        <h4 style="
+                   font-size: 27px !important;
+                   color: #313131 !important;
+                   font-weight: 600 !important;
+                   margin-top: 25px;">
+                            [CreatedDate]
+                        </h4>
+
+                        <div style=" border: 0.442478px solid #DEE0E3;
+                       border-radius: 50%;
+                       width: 13.27px;
+                       height: 13.27px;
+                       display: flex;
+                       align-items: center;
+                       justify-content: center;
+                       margin-left: auto;
+                       margin-right: auto;">
+                            <img style="max-width: 50px;max-height:70px;margin-top:120px" src="[SchoolAvatar]" />
+                        </div>
+                    </div>
+                    <img style=" max-width: 100px; max-height: 100px; margin-left:24px" src="[UploadQrImage]">
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

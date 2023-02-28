@@ -17,6 +17,9 @@ using LMS.Common.ViewModels.Student;
 using AutoMapper;
 using iText.StyledXmlParser.Css.Media;
 using iText.Html2pdf.Resolver.Font;
+using iText.StyledXmlParser.Jsoup;
+using iText.StyledXmlParser.Jsoup.Nodes;
+using iText.Kernel.Pdf;
 
 namespace LMS.Services.Students
 {
@@ -66,61 +69,6 @@ namespace LMS.Services.Students
 
         public async Task ClassGraduateCertificate(string userId, Guid classId, Guid providerId)
         {
-            //    var graduateStudent = await _studentRepository.GetAll().Where(x => x.UserId == userId).FirstOrDefaultAsync();
-
-            //    var studentInfo = _userRepository.GetById(userId);
-
-
-            //    var path = _webHostEnvironment.ContentRootPath;
-            //    var fileName = Path.Combine(path, "wwwroot/certificateTemplate/template01.html");
-
-            //    string text = File.ReadAllText(fileName);
-            //    string htmlText = text.Replace("ABCD", studentInfo.Email);
-
-            //    string DEST = $"D:/Projects/BYOkulLatest/Code/LMS.App/wwwroot/graduateCertificates/{studentInfo.Email}.pdf";
-
-
-            //    HtmlConverter.ConvertToPdf(htmlText, new FileStream(DEST, FileMode.Create));
-
-            //    var wc = new System.Net.WebClient();
-            //    var data = wc.DownloadData(DEST);
-            //    var stream = new MemoryStream(data);
-
-            //    string certificateUrl = await _blobService.UploadVideoAsync(stream, "test", studentInfo.Email, "pdf");
-
-
-            //    //now we will enter this entry in the Student certificate table.
-
-            //    // here we will find the providerinfo
-            //    var certificateProvider = _userRepository.GetById(providerId);
-
-            //    // find schoolId related to the class
-            //    var classInfo = _classRepository.GetById(classId);
-
-            //    var studentCertificate = new StudentCertificate
-            //    {
-            //        StudentId = graduateStudent.StudentId,
-            //        Name = "Issued for completion of X class",
-            //        // for this find school of this class id
-            //        SchoolId = classInfo.SchoolId,
-            //        ProviderName = certificateProvider.FirstName,
-            //        StudentName = graduateStudent.StudentName,
-            //        IssueDate = DateTime.UtcNow,
-            //        Description = "certificate description",
-            //        CertificateUrl = certificateUrl
-
-            //    };
-
-            //    _studentCertificateRepository.Insert(studentCertificate);
-            //    _studentCertificateRepository.Save();
-
-
-            //    var pdfText = System.IO.File.ReadAllText(DEST);
-
-            //    var result = await _commonService.SendEmail(new List<string> { studentInfo.Email }, null, null, subject: "Graduate Certificate", body: pdfText);
-
-
-            //    // now delete the pdf stored in the folder.
 
         }
 
@@ -141,21 +89,42 @@ namespace LMS.Services.Students
         {
             try
             {
+                var certificateCreatedDate = DateTime.Parse(model.Date).ToString("dd MMM yyy");
+                var path = _webHostEnvironment.ContentRootPath;
+                var htmlFilePath = Path.Combine(path, "AssignedCertificates/assignedCertificate.html");
+                var text = File.ReadAllText(htmlFilePath);
+
+                text = text.Replace("[SchoolName]", model.SchoolName);
+                text = text.Replace("[SchoolAvatar]", model.SchoolAvatar);
+                text = text.Replace("[CertificateTitle]", model.CertificateTitle);
+                text = text.Replace("[CertificateReason]", model.CertificateReason);
+                text = text.Replace("[CreatedDate]", certificateCreatedDate);
+                text = text.Replace("[UploadQrImage]", model.UploadQrImage);
+                text = text.Replace("[UploadSignatureImage]", model.UploadSignatureImage);
+                var backgroundUrl = path + model.BackgroundImage;
+                text = text.Replace("[BackgroundImage]", backgroundUrl);
+                var certificateImage = path + "ClientApp\\src\\assets\\images\\certificate-school.png";
+                text = text.Replace("[CertificateImage]", certificateImage);
+
                 string certificateName = "";
-                var converterProperties = new ConverterProperties();
+                var converterProperties = new ConverterProperties();             
                 converterProperties.SetMediaDeviceDescription(new MediaDeviceDescription(MediaType.PRINT));
-                converterProperties.SetBaseUri("https://byokul.com");
+                converterProperties.SetBaseUri(_config["AppUrl"]);
+
+                Document htmlDoc = Jsoup.Parse(text);
+                htmlDoc.Head().Append("<style>" +
+                        "@page { size: landscape;margin:0} " + "</style>");
+
+                var htmlContent = htmlDoc.OuterHtml();
 
                 string firstStudentName = model.Students[0].StudentName;
                 foreach (var studentInfo in model.Students)
                 {
                     var uniqueId = Guid.NewGuid();
-                    var path = _webHostEnvironment.ContentRootPath;
                     var filePath = Path.Combine(path, $"AssignedCertificates/{uniqueId}.pdf");
-                    model.CertificateHtml = model.CertificateHtml.Replace(firstStudentName, studentInfo.StudentName);
+                    htmlContent = htmlContent.Replace("[StudentName]", studentInfo.StudentName);
 
-                    HtmlConverter.ConvertToPdf(model.CertificateHtml, new FileStream(filePath, FileMode.Create), converterProperties);
-
+                    HtmlConverter.ConvertToPdf(htmlContent, new FileStream(filePath, FileMode.Create), converterProperties);
                     var wc = new System.Net.WebClient();
                     var data = wc.DownloadData(filePath);
                     var stream = new MemoryStream(data);
