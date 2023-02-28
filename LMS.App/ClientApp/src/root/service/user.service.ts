@@ -14,9 +14,8 @@ export class UserService{
     get apiUrl(): string {
         return environment.apiUrl;
       }
-    constructor(private router: Router, private http: HttpClient) { 
-        this.headers = new HttpHeaders({'Content-Type': 'application/json; charset=utf-8'});
-        this.headers = new HttpHeaders().set("Authorization", "Bearer " + this.token);
+  constructor(private router: Router, private http: HttpClient) {
+    this.headers = new HttpHeaders().set("Authorization", "Bearer " + this.token);
     }
     
     getSidebarInfo(token?:string):Observable<any>{
