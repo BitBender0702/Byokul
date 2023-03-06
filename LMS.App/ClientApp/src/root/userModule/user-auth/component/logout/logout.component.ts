@@ -15,6 +15,7 @@ export class LogoutComponent implements OnInit {
   ngOnInit(): void {
     
     localStorage.removeItem("jwt");
+    localStorage.removeItem("userPermissions");
     this.authService.loginState$.next(false);
     this.router.navigate(['../login'], { relativeTo: this.route });
   }

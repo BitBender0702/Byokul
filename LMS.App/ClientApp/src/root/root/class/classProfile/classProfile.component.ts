@@ -27,6 +27,8 @@ import { NotificationService } from 'src/root/service/notification.service';
 import { NotificationType } from 'src/root/interfaces/notification/notificationViewModel';
 import { CertificateViewComponent } from '../../certificateView/certificateView.component';
 import { PostAuthorTypeEnum } from 'src/root/Enums/postAuthorTypeEnum';
+import { PermissionNameConstant } from 'src/root/interfaces/permissionNameConstant';
+import { PermissionTypeEnum } from 'src/root/Enums/permissionTypeEnum';
 
 @Component({
     selector: 'classProfile-root',
@@ -97,6 +99,14 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     reelsPageNumber:number = 1;
     scrollFeedResponseCount:number = 1;
     scrolled:boolean = false;
+
+    userPermissions:any;
+    hasPostPermission!:boolean;
+    hasUpdateClassPermission!:boolean;
+    hasAddClassCertificatesPermission!:boolean;
+    hasAddLanguagesPermission!:boolean;
+    hasIssueCertificatePermission!:boolean;
+
 
     public event: EventEmitter<any> = new EventEmitter();
 
@@ -305,8 +315,28 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
         else{
           this.isOwner = false;
         }
-
       }
+
+      this.userPermissions  = JSON.parse(localStorage.getItem('userPermissions')??'');
+      var userPermissions: any[] = this.userPermissions;
+  
+      userPermissions.forEach(element => {
+          if((element.typeId == this.class.classId || element.typeId == PermissionNameConstant.DefaultClassId) && element.ownerId == this.class.school.createdById && element.permissionType == PermissionTypeEnum.Class && element.permission.name == PermissionNameConstant.Post && (element.schoolId == null || element.schoolId == this.class.school.schoolId)){
+          this.hasPostPermission = true;
+          }
+          if((element.typeId == this.class.classId || element.typeId == PermissionNameConstant.DefaultClassId) && element.ownerId == this.class.school.createdById && element.permissionType == PermissionTypeEnum.Class && element.permission.name == PermissionNameConstant.UpdateClass && (element.schoolId == null || element.schoolId == this.class.school.schoolId)){
+          this.hasUpdateClassPermission = true;
+          }
+          if((element.typeId == this.class.classId || element.typeId == PermissionNameConstant.DefaultClassId)  && element.ownerId == this.class.school.createdById && element.permissionType == PermissionTypeEnum.Class && element.permission.name == PermissionNameConstant.IssueCertificate && (element.schoolId == null || element.schoolId == this.class.school.schoolId)){
+          this.hasIssueCertificatePermission = true;
+          }
+          if((element.typeId == this.class.classId || element.typeId == PermissionNameConstant.DefaultClassId) && element.ownerId == this.class.school.createdById && element.permissionType == PermissionTypeEnum.Class && element.permission.name == PermissionNameConstant.AddClassCertificates && (element.schoolId == null || element.schoolId == this.class.school.schoolId)){
+          this.hasAddClassCertificatesPermission = true;
+          }
+          if((element.typeId == this.class.classId || element.typeId == PermissionNameConstant.DefaultClassId)  && element.ownerId == this.class.school.createdById && element.permissionType == PermissionTypeEnum.Class && element.permission.name == PermissionNameConstant.AddLanguages && (element.schoolId == null || element.schoolId == this.class.school.schoolId)){
+          this.hasAddLanguagesPermission = true;
+          }
+      });
       
   }
   
@@ -821,7 +851,6 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     }
 
     openCertificateViewModal(certificateUrl:string,certificateName:string){
-      debugger
       const initialState = {
         certificateUrl: certificateUrl,
         certificateName:certificateName,

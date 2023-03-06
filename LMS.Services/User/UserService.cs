@@ -1255,6 +1255,17 @@ namespace LMS.Services
             return CommentsCount.Count();
         }
 
+        public async Task<UserDetailsViewModel> GetUserByEmail(string email)
+        {
+            var user = await _userRepository.GetAll().Where(x => x.Email == email).FirstOrDefaultAsync();
+            if (user!=null)
+            {
+                var response = _mapper.Map<UserDetailsViewModel>(user);
+                return response;
+            }
+            return null;
+        }
+
 
     }
 

@@ -11,20 +11,14 @@ namespace LMS.App.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly ITeacherService _teacherService;
+        private readonly IPermissionService _permissionService;
 
-        public TeachersController(UserManager<User> userManager, ITeacherService teacherService)
+
+        public TeachersController(UserManager<User> userManager, ITeacherService teacherService, IPermissionService permissionService)
         {
             _userManager = userManager;
             _teacherService = teacherService;
-        }
-
-        [Route("saveNewTeacher")]
-        [HttpPost]
-        public async Task<IActionResult> SaveNewTeacher([FromBody] TeacherViewModel teacherViewModel, Guid schoolId)
-        {
-            var userId = await GetUserIdAsync(this._userManager);
-            await _teacherService.SaveNewTeacher(teacherViewModel, schoolId, userId);
-            return Ok("success");
+            _permissionService = permissionService;
         }
 
         [Route("updateTeacher")]
@@ -58,6 +52,22 @@ namespace LMS.App.Controllers
         {
             var response = await _teacherService.GetAllTeachers();
             return Ok(response);
+        }
+
+        [Route("getAllPermissions")]
+        [HttpGet]
+        public async Task<IActionResult> GetAllPermissions()
+        {
+            var response = await _permissionService.GetAllPermissions();
+            return Ok(response);
+        }
+
+        [Route("addTeacher")]
+        [HttpPost]
+        public async Task<IActionResult> AddTeacherPermissions([FromBody] AddTeacherViewModel model)
+        {
+            await _teacherService.AddTeacher(model);
+            return Ok();
         }
     }
 }

@@ -73,6 +73,8 @@ namespace LMS.Data
         public DbSet<ClassCourseFilter> ClassCourseFilters { get; set; }
         public DbSet<UserClassCourseFilter> UserClassCourseFilters { get; set; }
         public DbSet<StudentCertificate> StudentCertificates { get; set; }
+        public DbSet<PermissionMaster> PermissionMaster { get; set; }
+        public DbSet<UserPermission> UserPermissions { get; set; }
 
 
     }

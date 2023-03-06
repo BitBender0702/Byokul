@@ -39,20 +39,7 @@ namespace LMS.App.Controllers
         public async Task<IActionResult> Login([FromBody] LoginViewModel loginViewModel)
         {
             var result = await _authService.AuthenticateUser(loginViewModel);
-            if (result != Constants.EmailNotConfirmed || result!= Constants.UserNotFound)
-            {
-                Token = result;
-                return Ok(new { token = result });
-            }
-            if (result == Constants.EmailNotConfirmed)
-            {
-                return Ok(new { token = Constants.EmailNotConfirmed });
-            }
-            if (result == Constants.UserNotFound)
-            {
-                return Ok(new { token = Constants.UserNotFound });
-            }
-            return Ok();
+            return Ok(result);
         }
 
 
@@ -178,6 +165,21 @@ namespace LMS.App.Controllers
             return Ok();
         }
 
-        
+        [Route("setPassword")]
+        [HttpPost]
+        public async Task<IActionResult> SetPassword([FromBody] SetPasswordViewModel model)
+        {
+            var result = await _authService.SetPassword(model);
+            if (result.Succeeded)
+            {
+                return Ok(new { result = "Success" });
+            }
+            else
+            {
+                return Ok(new { result = "" });
+            }
+        }
+
+
     }
 }

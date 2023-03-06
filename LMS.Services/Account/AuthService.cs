@@ -15,6 +15,9 @@ using System.Net.Mail;
 using System.Security.Claims;
 using System.Text;
 using LMS.Common.ViewModels.Post;
+using Newtonsoft.Json;
+using AutoMapper;
+using LMS.Common.ViewModels.Permission;
 
 namespace LMS.Services.Account
 {
@@ -26,8 +29,12 @@ namespace LMS.Services.Account
         private readonly UserManager<User> _userManager;
         private readonly DataContext _context;
         private readonly ICommonService _commonService;
+        private IGenericRepository<UserPermission> _userPermissionRepository;
+        private IGenericRepository<User> _userRepository;
+        private readonly IMapper _mapper;
 
-        public AuthService(IConfiguration config, IWebHostEnvironment webHostEnvironment, SignInManager<User> signInManager, UserManager<User> userManager, DataContext context, ICommonService commonService)
+
+        public AuthService(IConfiguration config, IWebHostEnvironment webHostEnvironment, SignInManager<User> signInManager, UserManager<User> userManager, DataContext context, ICommonService commonService, IGenericRepository<UserPermission> userPermissionRepository, IGenericRepository<User> userRepository, IMapper mapper)
         {
             _config = config;
             _webHostEnvironment = webHostEnvironment;
@@ -35,25 +42,36 @@ namespace LMS.Services.Account
             _userManager = userManager;
             _context = context;
             _commonService = commonService;
+            _userPermissionRepository = userPermissionRepository;
+            _userRepository = userRepository;
+            _mapper = mapper;
         }
 
-        public async Task<string> AuthenticateUser(LoginViewModel loginViewModel)
+        public async Task<JwtResponseViewModel> AuthenticateUser(LoginViewModel loginViewModel)
         {
+            var jwtResponse = new JwtResponseViewModel();
             var user = await _userManager.FindByNameAsync(loginViewModel.Email);
             if (user != null)
             {
+                var permissions = await _userPermissionRepository.GetAll().Include(x => x.Permission).Where(x => x.UserId == user.Id).ToListAsync();
+                var userPermissions = _mapper.Map<List<UserPermissionViewModel>>(permissions);
                 var result = await _signInManager.PasswordSignInAsync(loginViewModel.Email, loginViewModel.Password, false, false);
                 if (result.Succeeded && !result.IsNotAllowed)
                 {
+
                     var token = await GenerateJSONWebToken(user);
-                    return token;
+                    jwtResponse.Token = token;
+                    jwtResponse.UserPermissions = userPermissions;
+                    return jwtResponse;
                 }
-                if(!result.Succeeded && result.IsNotAllowed)
+                if (!result.Succeeded && result.IsNotAllowed)
                 {
-                    return Constants.EmailNotConfirmed;
+                    jwtResponse.ErrorMessage = Constants.EmailNotConfirmed;
+                    return jwtResponse;
                 }
             }
-            return Constants.UserNotFound;
+            jwtResponse.ErrorMessage = Constants.UserNotFound;
+            return jwtResponse;
         }
 
         public async Task<string> GenerateJSONWebToken(User userInfo)
@@ -72,7 +90,7 @@ namespace LMS.Services.Account
                 claims.Add(new Claim("role", role));
             }
 
-            claims.Add(new Claim("isBan",userInfo.IsBan.ToString()));
+            claims.Add(new Claim("isBan", userInfo.IsBan.ToString()));
 
             var identity = new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
 
@@ -102,12 +120,12 @@ namespace LMS.Services.Account
 
             var response = await _userManager.UpdateAsync(user);
             if (response.Succeeded)
-                return await TriggerResetPasswordEmail(forgetPasswordViewModel.Email, user.UniqueToken,user);
+                return await TriggerResetPasswordEmail(forgetPasswordViewModel.Email, user.UniqueToken, user);
 
             return false;
         }
 
-        private async Task<bool> TriggerResetPasswordEmail(string email, string token,User user)
+        private async Task<bool> TriggerResetPasswordEmail(string email, string token, User user)
         {
             string callBackUrl = string.Format(_config["ForgotPasswordCallback"], token);
 
@@ -120,7 +138,7 @@ namespace LMS.Services.Account
             text = text.Replace("[ACTIVATIONLINK]", callBackUrl);
             text = text.Replace("*#FirstName#*", email);
 
-            await _commonService.SendEmail(new List<string> { email }, null, null, subject: "Reset Your Password", body: text,null,null);
+            await _commonService.SendEmail(new List<string> { email }, null, null, subject: "Reset Your Password", body: text, null, null);
             return true;
         }
 
@@ -221,6 +239,21 @@ namespace LMS.Services.Account
             {
                 throw ex;
             }
+
+        }
+
+        public async Task<IdentityResult> SetPassword(SetPasswordViewModel model)
+        {
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            var result = await _userManager.RemovePasswordAsync(user);
+            if (result.Succeeded)
+            {
+                await _userManager.AddPasswordAsync(user, model.NewPassword);
+            }
+            user.EmailConfirmed = true;
+            _userRepository.Update(user);
+            _userRepository.Save();
+            return result;
 
         }
     }

@@ -37,6 +37,7 @@ namespace LMS.App.Controllers
 
 
         [Route("getUser")]
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetUser(string? userId)
         {
@@ -123,6 +124,7 @@ namespace LMS.App.Controllers
             return Ok(await _userService.GetUserFollowers(userId));
         }
 
+        [AllowAnonymous]
         [Route("getBasicUserInfo")]
         [HttpGet]
         public async Task<IActionResult> GetBasicUserInfo(string userId)
@@ -207,6 +209,15 @@ namespace LMS.App.Controllers
             }
             var response = await _blobService.GetFileContentAsync(containerName, certificateName);
             return Ok(response);
+        }
+
+        [AllowAnonymous]
+        [Route("getUserByEmail")]
+        [HttpGet]
+        public async Task<IActionResult> GetUserByEmail(string email)
+        {
+            var user = await _userService.GetUserByEmail(email);
+            return Ok(user);
         }
 
 

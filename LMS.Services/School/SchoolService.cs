@@ -1130,6 +1130,40 @@ namespace LMS.Services
         }
 
 
+        public async Task<SchoolsClassCourseViewModel> GetSchoolsClassCourse(IEnumerable<string> schoolIds)
+        {
+            var model = new SchoolsClassCourseViewModel();
+            var classes = await _classRepository.GetAll().ToListAsync();
+            var courses = await _courseRepository.GetAll().ToListAsync();
+
+
+            foreach (var schoolId in schoolIds)
+            {
+                var requiredClasses = classes.Where(x => x.SchoolId == new Guid(schoolId)).Select(x => new ClassViewModel
+                {
+                    ClassId = x.ClassId,
+                    ClassName = x.ClassName,
+                    SchoolId = x.SchoolId,
+                    CreatedById = x.CreatedById
+                }).ToList();
+
+                model.Classes.AddRange(requiredClasses);
+
+                var requiredCourses = courses.Where(x => x.SchoolId == new Guid(schoolId)).Select(x => new CourseViewModel
+                {
+                    CourseId = x.CourseId,
+                    CourseName = x.CourseName,
+                    SchoolId = x.SchoolId,
+                    CreatedById = x.CreatedById
+                }).ToList();
+
+                model.Courses.AddRange(requiredCourses);
+
+            }
+            return model;
+        }
+
+
 
     }
 }

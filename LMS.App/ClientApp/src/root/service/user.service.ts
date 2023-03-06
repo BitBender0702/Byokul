@@ -29,9 +29,7 @@ export class UserService{
     }
 
     getUserById(userId:string):Observable<any>{
-        return this.http.get(`${this.apiUrl}/users/getUser` + '?userId=' + userId,{
-            headers: this.headers
-          });
+        return this.http.get(`${this.apiUrl}/users/getUser` + '?userId=' + userId);
     }
 
     getLanguageList():Observable<any>{
@@ -41,23 +39,23 @@ export class UserService{
     }
 
     saveUserLanguages(addLanguages:any):Observable<any>{
-        return this.http.post(`${this.apiUrl}/users/saveUserLanguages`,addLanguages);
+        return this.http.post(`${this.apiUrl}/users/saveUserLanguages`,addLanguages,{headers: this.headers});
     }
 
     deleteUserLanguage(deletelanguages:any):Observable<any>{
-        return this.http.post(`${this.apiUrl}/users/deleteUserLanguage`,deletelanguages);
+        return this.http.post(`${this.apiUrl}/users/deleteUserLanguage`,deletelanguages,{headers: this.headers});
     }
 
     saveUserFollower(followUnfollowUser:FollowUnfollow):Observable<any>{
-        return this.http.post(`${this.apiUrl}/users/followUnfollowUser`,followUnfollowUser);
+        return this.http.post(`${this.apiUrl}/users/followUnfollowUser`,followUnfollowUser,{headers: this.headers});
     }
 
     getUserEditDetails(userId:string):Observable<any>{
-        return this.http.get(`${this.apiUrl}/users/getUserEditDetails` + '?userId=' + userId);
+        return this.http.get(`${this.apiUrl}/users/getUserEditDetails` + '?userId=' + userId,{headers: this.headers});
     }
 
     editUser(credentials:any): Observable<any> {
-        return this.http.post(`${this.apiUrl}/users/updateUser`, credentials);
+        return this.http.post(`${this.apiUrl}/users/updateUser`, credentials,{headers: this.headers});
     }
 
     getUserFollowers(userId:string):Observable<any>{
@@ -65,7 +63,7 @@ export class UserService{
     }
 
     banFollower(followerId:any): Observable<any> {
-        return this.http.post(`${this.apiUrl}/users/banFollower` + '?followerId=' + followerId,'');
+        return this.http.post(`${this.apiUrl}/users/banFollower` + '?followerId=' + followerId,'',{headers: this.headers});
     }
 
     getUser(userId:string):Observable<any>{
@@ -112,13 +110,16 @@ export class UserService{
     }
     
     getCertificatePdf(certificateName:string,from:number){
-        debugger
         let queryParams = new HttpParams().append("certificateName",certificateName).append("from",from);
         return this.http.get(`${this.apiUrl}/users/getCertificatePdf`, {params:queryParams,headers: this.headers}
         );
         
 
         
+    }
+
+    getUserByEmail(email:string):Observable<any>{
+        return this.http.get(`${this.apiUrl}/users/getUserByEmail` + '?email=' + email);
     }
 
     

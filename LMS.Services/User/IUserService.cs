@@ -28,6 +28,8 @@ namespace LMS.Services
         Task<int> GetCommentsCountOnPost(Guid postId);
         Task<IEnumerable<PostDetailsViewModel>> GetPostsByUserId(string userId, int pageNumber, int pageSize);
         Task<IEnumerable<PostDetailsViewModel>> GetReelsByUserId(string userId, int pageNumber, int pageSize);
+        Task<UserDetailsViewModel> GetUserByEmail(string email);
+
 
 
     }

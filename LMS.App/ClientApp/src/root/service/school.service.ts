@@ -145,4 +145,9 @@ export class SchoolService{
         return this.http.get(`${this.apiUrl}/school/getReelsBySchool`, {params:queryParams});
     }
 
+    getSchoolsClassCourse(schoolIds:any):Observable<any>{
+        let queryParams = new HttpParams().append("schoolIds",schoolIds);
+        return this.http.get(`${this.apiUrl}/school/getSchoolsClassCourse`, {params:queryParams});
+    }
+
 }

@@ -26,6 +26,7 @@ import { CourseProfileComponent } from '../root/course/courseProfile/courseProfi
 import { UserFeedComponent } from '../root/userFeed/userFeed.component';
 import { NotificationsComponent } from '../root/Notifications/notifications.component';
 import { GenerateCertificateComponent } from '../root/generateCertificate/generateCertificate.component';
+import { AddTeacherComponent } from '../root/teacher/addTeacher.component';
 
 
 const routes: Routes = [
@@ -116,6 +117,9 @@ const routes: Routes = [
   },
   {
     path: 'reels/:id',component:ReelsViewComponent
+  },
+  {
+    path: 'addTeacher/:userId',component:AddTeacherComponent
   }
 ];
 

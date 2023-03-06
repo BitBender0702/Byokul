@@ -1,0 +1,169 @@
+<!-- <div *ngIf="isDataLoaded"> -->
+    <section class="f-poppins">
+      <div class="main_content">
+        <div class="create-post-header d-flex justify-content-between d-none d-xl-flex">
+          <div class="search-header position-relative">
+            <input type="search" class="form-control h_44" />
+            <button type="button" class="btn search-icon"><img src="../../../assets/images/school/search-gray.svg" /></button>
+          </div>
+          <button type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44" data-bs-toggle="modal"
+            data-bs-target="#create-post">Create Post</button>
+        </div>
+        <div class="live-header d-flex align-items-center justify-content-between">
+          <button (click)="back()" type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
+              src="../../../assets/images/arrow-left.svg" /> Back</button>
+          <span class="logo_mobile d-xl-none">
+            <img src="../../../assets/images/logo.svg" />
+          </span>
+          <div class="d-xl-none">
+            <button type="button" class="mobile-search border_btn" onclick="openSearch()"><img
+                src="../../../assets/images/search-lg.svg" /></button>
+            <button type="button" class="mobile-search border_btn" onclick="openSidebar()"><img
+                src="../../../assets/images/menu.svg" /></button>
+          </div>
+        </div>
+  
+          <div id="regForm" class="step-form mx-auto f-monteserrat" style="max-width: 100%;">
+          <h3 id="create_school" class="font_24 text_dark fw-bold text-center">Add Teacher</h3>
+          <br>
+
+  
+          <div class="tab-content registerTabs">
+            <div  tab-pane active>
+        <div class="col-12">
+           <form [formGroup]="createTeacherForm">
+            <div class="row">
+                <div class="col-6">
+                  <div class="form-group">
+                    <label class="font_10">{{'Email'| translate }}</label>
+                    <input (blur)="getExistingUser()" type="text" formControlName="email" name="email" class="form-control w-100" placeholder="{{'Email'| translate }}">
+                    <small class="p-error" style="color: orange;"
+                    *ngIf="(isSubmitted && createTeacherForm.controls.email.errors)">Email is required
+                  </small>
+                  </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                      <label class="font_10">{{'FirstName'| translate }}*</label>
+                      <input type="text" formControlName="firstName" name="firstName" class="form-control w-100" placeholder="{{'FirstName'| translate }}">
+                      <small class="p-error" style="color: orange;"
+                      *ngIf="(isSubmitted && createTeacherForm.controls.firstName.errors)">First Name is required
+                    </small>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="form-group">
+                      <label class="font_10">{{'LastName'| translate }}</label>
+                      <input type="text" formControlName="lastName" name="lastName" class="form-control w-100" placeholder="{{'LastName'| translate }}">
+                      <small class="p-error" style="color: orange;"
+                      *ngIf="(isSubmitted && createTeacherForm.controls.firstName.errors)">Last Name is required
+                    </small>
+                    </div>
+                  </div>
+                  <div class="col-6" style="margin-top:20px">
+                  <div class="form-group">
+                    <select class="form-select rounded-8" formControlName="gender" aria-label="Default select example">
+                      <option value="" disabled selected hidden>{{'Gender'| translate }}</option>
+                      <option value="1">{{'Male'| translate }}</option>
+                      <option value="2">{{'Female'| translate }}</option>
+                      <option value="3">{{'Other'| translate }}</option>
+                    </select>
+                    <small class="p-error" style="color: orange;"
+                    *ngIf="(isSubmitted && createTeacherForm.controls.gender.errors)">Gender is required
+                  </small>
+                  </div>
+                  </div>
+            </div>
+            </form>
+            <br>
+            <br>
+            <div>
+                <h3>Permissions</h3>
+            </div>
+
+            <div class="row">
+                <div class="col-5">
+                    <label class="font_10">Select Schools</label>
+                    <div class="form-group">
+                        <div class="custom-language-select">
+                          <p-multiSelect  [defaultLabel]="'Select Schools'" [panelStyle]="{'width':'100%'}" [filter]="false" [showToggleAll]="true" [options]="schoolList" optionLabel="schoolName" optionValue="schoolId" name="languageSelect[]" class="form-control" multiple id="languageSelect" [(ngModel)]="selectedSchools" (onChange)="hideUnhideClassCourse($event)" (onPanelHide)="getClassesAndCourses($event)">
+                            <ng-template pTemplate="header">
+                              <div style="position: absolute;left: 48px;" class="checkbox-all-text">Select All</div>
+                            </ng-template>
+                         </p-multiSelect>
+                      </div>
+                      </div>
+                      <br>
+                      <div *ngFor="let permission of permissions">
+                        <div *ngIf="permission.permissionType == 1" class="col-12">
+                            <label class="col-6">{{permission.displayName}}</label>
+                            <input (click)="getSchoolPermissions(permission,$event)" class="form-check-input col-6" type="checkbox" id="inlineCheckbox1" value="option1">
+                        </div>
+                      </div> 
+                </div>
+              </div>
+              <br><br>
+              <div class="row">
+                <div *ngIf="!hideClassSection" class="col-5">
+                    <label class="font_10">Select Classes</label>
+                    <div class="form-group">
+                        <div class="custom-language-select">
+                          <p-multiSelect  [defaultLabel]="'Select Classes'" [panelStyle]="{'width':'100%'}" [filter]="false" [showToggleAll]="true" [options]="classList" optionLabel="className" optionValue="classId" name="languageSelect[]" class="form-control" multiple id="languageSelect" [(ngModel)]="selectedClasses">
+                            <ng-template pTemplate="header">
+                              <div style="position: absolute;left: 48px;" class="checkbox-all-text">Select All</div>
+                            </ng-template>
+                         </p-multiSelect>
+                      </div>
+                      </div>
+                      <br>
+                      <div *ngFor="let permission of permissions">
+                        <div *ngIf="permission.permissionType == 2" class="col-12">
+                            <label class="col-6">{{permission.displayName}}</label>
+                            <input (click)="getClassPermissions(permission.id)" class="form-check-input col-6" type="checkbox" id="inlineCheckbox1" value="option1">
+                        </div>
+                      </div> 
+                </div>
+              </div>
+              <br><br>
+              <div class="row">
+                <div *ngIf="!hideCourseSection" class="col-5">
+                    <label class="font_10">Select Courses</label>
+                    <div class="form-group">
+                        <div class="custom-language-select">
+                          <p-multiSelect  [defaultLabel]="'Select Courses'" [panelStyle]="{'width':'100%'}" [filter]="false" [showToggleAll]="true" [options]="courseList" optionLabel="courseName" optionValue="courseId" name="languageSelect[]" class="form-control" multiple id="languageSelect" [(ngModel)]="selectedCourses">
+                            <ng-template pTemplate="header">
+                              <div style="position: absolute;left: 48px;" class="checkbox-all-text">Select All</div>
+                            </ng-template>
+                         </p-multiSelect>
+                      </div>
+                      </div>
+                      <br>
+                      <div *ngFor="let permission of permissions">
+                        <div *ngIf="permission.permissionType == 3" class="col-12">
+                            <label class="col-6">{{permission.displayName}}</label>
+                            <input (click)="getCoursePermissions(permission.id)" class="form-check-input col-6" type="checkbox" id="inlineCheckbox1" value="option1">
+                        </div>
+                      </div> 
+                </div>
+                </div>
+            <br><br>
+            <div class="row">
+                <input (click)="addTeacher()" type="submit" id="nextBtn" class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 text-uppercase" value="Add/Invite Teacher" />
+            </div>
+        </div>
+      </div>
+          </div>
+        </div>
+        <div class="d-flex justify-content-end mt-5 d-md-none">
+          <button type="button"
+            class="step-edit-button btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase next-step"><img
+              src="../../../assets/images/Edit-light.svg" alt="edit" /></button>
+        </div>
+  
+      </div>
+  
+    </section>  
+    <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
+    <p-toast></p-toast>
+  
+  

@@ -12,12 +12,13 @@ namespace LMS.Services.Account
 {
     public interface IAuthService
     {
-        Task<string> AuthenticateUser(LoginViewModel loginViewModel);
+        Task<JwtResponseViewModel> AuthenticateUser(LoginViewModel loginViewModel);
         Task<string> GenerateJSONWebToken(User userInfo);
         Task<bool> GeneratePasswordResetRequest(ForgetPasswordViewModel resetPasswordRequestViewModel);
         Task<IdentityResult> UpdatePassword(UpdatePasswordViewModel updatePasswordViewModel);
         Task Logout();
         Task<string> ResetPassword(ResetPasswordViewModel resetPasswordDto);
+        Task<IdentityResult> SetPassword(SetPasswordViewModel model);
         bool SendEmail(List<string> to, List<string> cc, List<string> bcc, string subject, string body);
     }
 }

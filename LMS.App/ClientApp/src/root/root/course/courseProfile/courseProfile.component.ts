@@ -5,6 +5,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { MessageService } from 'primeng/api';
+import { PermissionTypeEnum } from 'src/root/Enums/permissionTypeEnum';
 import { PostAuthorTypeEnum } from 'src/root/Enums/postAuthorTypeEnum';
 import { AddCourseCertificate } from 'src/root/interfaces/course/addCourseCertificate';
 import { AddCourseLanguage } from 'src/root/interfaces/course/addCourseLanguage';
@@ -14,6 +15,7 @@ import { DeleteCourseCertificate } from 'src/root/interfaces/course/deleteCourse
 import { DeleteCourseLanguage } from 'src/root/interfaces/course/deleteCourseLanguage';
 import { DeleteCourseTeacher } from 'src/root/interfaces/course/deleteCourseTeacher';
 import { NotificationType } from 'src/root/interfaces/notification/notificationViewModel';
+import { PermissionNameConstant } from 'src/root/interfaces/permissionNameConstant';
 import { LikeUnlikePost } from 'src/root/interfaces/post/likeUnlikePost';
 import { PostView } from 'src/root/interfaces/post/postView';
 import { CourseService } from 'src/root/service/course.service';
@@ -91,6 +93,13 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     reelsLoadingIcon:boolean = false;
     scrolled:boolean = false;
     scrollFeedResponseCount:number = 1;
+
+    userPermissions:any;
+    hasPostPermission!:boolean;
+    hasUpdateCoursePermission!:boolean;
+    hasAddCourseCertificatesPermission!:boolean;
+    hasAddLanguagesPermission!:boolean;
+    hasIssueCertificatePermission!:boolean;
 
 
     @ViewChild('closeEditModal') closeEditModal!: ElementRef;
@@ -338,6 +347,27 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
         }
 
       }
+
+      this.userPermissions  = JSON.parse(localStorage.getItem('userPermissions')??'');
+      var userPermissions: any[] = this.userPermissions;
+  
+      userPermissions.forEach(element => {
+          if((element.typeId == this.course.courseId || element.typeId == PermissionNameConstant.DefaultCourseId)  && element.ownerId == this.course.school.createdById && element.permissionType == PermissionTypeEnum.Course && element.permission.name == PermissionNameConstant.Post && (element.schoolId == null || element.schoolId == this.course.school.schoolId)){
+          this.hasPostPermission = true;
+          }
+          if((element.typeId == this.course.courseId || element.typeId == PermissionNameConstant.DefaultCourseId) && element.ownerId == this.course.school.createdById && element.permissionType == PermissionTypeEnum.Course && element.permission.name == PermissionNameConstant.UpdateCourse && (element.schoolId == null || element.schoolId == this.course.school.schoolId)){
+          this.hasUpdateCoursePermission = true;
+          }
+          if((element.typeId == this.course.courseId || element.typeId == PermissionNameConstant.DefaultCourseId) && element.ownerId == this.course.school.createdById && element.permissionType == PermissionTypeEnum.Course && element.permission.name == PermissionNameConstant.IssueCertificate && (element.schoolId == null || element.schoolId == this.course.school.schoolId)){
+          this.hasIssueCertificatePermission = true;
+          }
+          if((element.typeId == this.course.courseId || element.typeId == PermissionNameConstant.DefaultCourseId) && element.ownerId == this.course.school.createdById && element.permissionType == PermissionTypeEnum.Course && element.permission.name == PermissionNameConstant.AddCourseCertificates && (element.schoolId == null || element.schoolId == this.course.school.schoolId)){
+          this.hasAddCourseCertificatesPermission = true;
+          }
+          if((element.typeId == this.course.courseId || element.typeId == PermissionNameConstant.DefaultCourseId) && element.ownerId == this.course.school.createdById && element.permissionType == PermissionTypeEnum.Course && element.permission.name == PermissionNameConstant.AddLanguages && (element.schoolId == null || element.schoolId == this.course.school.schoolId)){
+          this.hasAddLanguagesPermission = true;
+          }
+      });
       
   }
   
@@ -819,7 +849,6 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     }
 
     openCertificateViewModal(certificateUrl:string,certificateName:string){
-      debugger
       const initialState = {
         certificateUrl: certificateUrl,
         certificateName:certificateName,

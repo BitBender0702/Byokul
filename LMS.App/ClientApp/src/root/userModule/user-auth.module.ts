@@ -18,9 +18,10 @@ import { LandingComponent } from './user-auth/component/landing/landing.componen
 import { LogoutComponent } from './user-auth/component/logout/logout.component';
 import { ConfirmEmailComponent } from './user-auth/component/confirmEmail/confirmEmail.component';
 import { ToastModule } from 'primeng/toast';
+import { SetPasswordComponent } from './user-auth/component/set-password/set-password.component';
 
 @NgModule({
-  declarations: [UserAuthComponent, LoginComponent,ConfirmEmailComponent,RegisterComponent, ChangePasswordComponent, ForgetPasswordComponent],
+  declarations: [UserAuthComponent, LoginComponent,ConfirmEmailComponent,SetPasswordComponent,RegisterComponent, ChangePasswordComponent, ForgetPasswordComponent],
   imports: [
     SharedModule,
     CommonModule,
@@ -73,6 +74,10 @@ import { ToastModule } from 'primeng/toast';
       {
         path: 'emailConfirm',
         component:ConfirmEmailComponent
+     },
+    {
+      path: 'setPassword',
+      component:SetPasswordComponent
     },
       {
         path: 'logout',

@@ -63,6 +63,7 @@ import { NotificationsComponent } from './root/Notifications/notifications.compo
 import { CertificateViewComponent } from './root/certificateView/certificateView.component';
 import { PdfViewerModule } from 'ng2-pdf-viewer'; 
 import { GenerateCertificateComponent } from './root/generateCertificate/generateCertificate.component';
+import { AddTeacherComponent } from './root/teacher/addTeacher.component';
 
 
 const routes: Routes = [
@@ -119,7 +120,8 @@ const routes: Routes = [
     PaymentComponent,
     NotificationsComponent,
     CertificateViewComponent,
-    GenerateCertificateComponent
+    GenerateCertificateComponent,
+    AddTeacherComponent
 
   ],
   imports: [

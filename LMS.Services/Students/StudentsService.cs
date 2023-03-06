@@ -101,11 +101,7 @@ namespace LMS.Services.Students
                 text = text.Replace("[CreatedDate]", certificateCreatedDate);
                 text = text.Replace("[UploadQrImage]", model.UploadQrImage);
                 text = text.Replace("[UploadSignatureImage]", model.UploadSignatureImage);
-                var backgroundUrl = path + model.BackgroundImage;
-                text = text.Replace("[BackgroundImage]", backgroundUrl);
-                var certificateImage = path + "ClientApp\\src\\assets\\images\\certificate-school.png";
-                text = text.Replace("[CertificateImage]", certificateImage);
-
+                text = text.Replace("[BackgroundImage]", model.BackgroundImage);
                 string certificateName = "";
                 var converterProperties = new ConverterProperties();             
                 converterProperties.SetMediaDeviceDescription(new MediaDeviceDescription(MediaType.PRINT));

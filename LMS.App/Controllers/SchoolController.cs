@@ -274,5 +274,14 @@ namespace LMS.App.Controllers
             return Ok(response);
         }
 
+        [Route("getSchoolsClassCourse")]
+        [HttpGet]
+        public async Task<IActionResult> GetSchoolsClassCourse(IEnumerable<string> schoolIds)
+        {
+            schoolIds = JsonConvert.DeserializeObject<string[]>(schoolIds.First());
+            var response = await _schoolService.GetSchoolsClassCourse(schoolIds);
+            return Ok(response);
+        }
+
     }
 }

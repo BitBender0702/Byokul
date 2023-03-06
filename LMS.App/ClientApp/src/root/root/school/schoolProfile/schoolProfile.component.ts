@@ -49,6 +49,8 @@ import { ClassService } from 'src/root/service/class.service';
 import { ClassCourseFilterTypeEnum } from 'src/root/Enums/classCourseFilterTypeEnum';
 import { CertificateViewComponent } from '../../certificateView/certificateView.component';
 import { PostAuthorTypeEnum } from 'src/root/Enums/postAuthorTypeEnum';
+import { PermissionNameConstant } from 'src/root/interfaces/permissionNameConstant';
+import { PermissionTypeEnum } from 'src/root/Enums/permissionTypeEnum';
 // export const ownedSchoolResponse =new Subject<{schoolAvatar : string,schoolName:string}>();
 
 // import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -160,6 +162,15 @@ export class SchoolProfileComponent
   schoolParamsData$: any;
   reelsPageNumber:number = 1;
   scrolled:boolean = false;
+  userPermissions:any;
+  hasAllPermission:any;
+  hasPostPermission!:boolean;
+  hasUpdateSchoolPermission!:boolean;
+  hasCreateEditClassPermission!:boolean;
+  hasCreateEditCoursePermission!:boolean;
+  hasManageTeachersPermission!:boolean;
+  hasAddSchoolCertificatesPermission!:boolean;
+  hasAddLanguagesPermission!:boolean;
 
   constructor(
     injector: Injector,
@@ -430,6 +441,33 @@ export class SchoolProfileComponent
         this.isFollowedOwnerOrNot(decodedJwtData.jti);
       }
     }
+
+    this.userPermissions  = JSON.parse(localStorage.getItem('userPermissions')??'');
+    var userPermissions: any[] = this.userPermissions;
+
+    userPermissions.forEach(element => {
+        if((element.typeId == this.school.schoolId || element.typeId == PermissionNameConstant.DefaultSchoolId) && element.ownerId == this.school.createdById && element.permissionType == PermissionTypeEnum.School && element.permission.name == PermissionNameConstant.Post){
+        this.hasPostPermission = true;
+        }
+        if((element.typeId == this.school.schoolId || element.typeId == PermissionNameConstant.DefaultSchoolId) && element.ownerId == this.school.createdById && element.permissionType == PermissionTypeEnum.School && element.permission.name == PermissionNameConstant.UpdateSchool){
+        this.hasUpdateSchoolPermission = true;
+        }
+        if((element.typeId == this.school.schoolId || element.typeId == PermissionNameConstant.DefaultSchoolId) && element.ownerId == this.school.createdById && element.permissionType == PermissionTypeEnum.School && element.permission.name == PermissionNameConstant.CreateEditClass){
+        this.hasCreateEditClassPermission = true;
+        }
+        if((element.typeId == this.school.schoolId || element.typeId == PermissionNameConstant.DefaultSchoolId) && element.ownerId == this.school.createdById && element.permissionType == PermissionTypeEnum.School && element.permission.name == PermissionNameConstant.CreateEditCourse){
+        this.hasCreateEditCoursePermission = true;
+        }
+        if((element.typeId == this.school.schoolId || element.typeId == PermissionNameConstant.DefaultSchoolId) && element.ownerId == this.school.createdById && element.permissionType == PermissionTypeEnum.School && element.permission.name == PermissionNameConstant.ManageTeachers){
+        this.hasManageTeachersPermission = true;
+        }
+        if((element.typeId == this.school.schoolId || element.typeId == PermissionNameConstant.DefaultSchoolId) && element.ownerId == this.school.createdById && element.permissionType == PermissionTypeEnum.School && element.permission.name == PermissionNameConstant.AddSchoolCertificates){
+        this.hasAddSchoolCertificatesPermission = true;
+        }
+        if((element.typeId == this.school.schoolId || element.typeId == PermissionNameConstant.DefaultSchoolId) && element.ownerId == this.school.createdById && element.permissionType == PermissionTypeEnum.School && element.permission.name == PermissionNameConstant.AddLanguages){
+        this.hasAddLanguagesPermission = true;
+      }
+    });
   }
 
   isFollowedOwnerOrNot(userId: string) {
@@ -623,7 +661,6 @@ export class SchoolProfileComponent
     );
     const reader = new FileReader();
     reader.onload = (_event) => {
-      debugger
       this.uploadImage = _event.target?.result;
       this.uploadImage = this.domSanitizer.bypassSecurityTrustUrl(
         this.uploadImage
@@ -906,7 +943,6 @@ export class SchoolProfileComponent
   }
 
   GetSchoolClassCourseList(schoolId: string,appliedFilters?:boolean,pageNumber?:number) {
-    debugger
     var school = this.school;
     this.isFeedHide = true;
     if(pageNumber != undefined){
@@ -916,7 +952,6 @@ export class SchoolProfileComponent
       this.loadingIcon = true;
       this.hideFeedFilters = false;
       this._schoolService.getSchoolClassCourseList(schoolId,this.classCoursePageNumber).subscribe((response) => {
-        debugger
           this.classCourseList = response;
           this.loadingIcon = false;
         });
@@ -1139,7 +1174,6 @@ export class SchoolProfileComponent
   }
 
   changeClassFilterSettings(id:string,isActive:boolean){
-    debugger
     var classFilters: any[] = this.classFilters;
     var item = classFilters.find(x => x.id == id);
     item.isFilterActive = isActive;
@@ -1164,7 +1198,6 @@ export class SchoolProfileComponent
   }
 
   changeCourseFilterSettings(id:string,isActive:boolean){
-    debugger
     var courseFilters: any[] = this.courseFilters;
     var item = courseFilters.find(x => x.id == id);
     item.isFilterActive = isActive;
@@ -1190,7 +1223,6 @@ export class SchoolProfileComponent
 
   saveClassFilters(){
     this._classService.saveClassFilters(this.classFilterList).subscribe((response) => {
-      debugger
       this.classFilterList = [];
       this.GetSchoolClassCourseList(this.school.schoolId,true,1);
     });
@@ -1204,7 +1236,6 @@ export class SchoolProfileComponent
   }
 
   openCertificateViewModal(certificateUrl:string,certificateName:string){
-    debugger
     const initialState = {
       certificateUrl: certificateUrl,
       certificateName:certificateName,

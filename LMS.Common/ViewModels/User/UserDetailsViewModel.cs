@@ -19,6 +19,7 @@ namespace LMS.Common.ViewModels.User
         public string? Description { get; set; }
         public Guid? CityId { get; set; }
         public CityViewModel City { get; set; }
+        public int? Gender { get; set; }
         public IEnumerable<UserFollowerViewModel> Followers { get; set; }
         public int Followings { get; set; }
         public bool? IsBan { get; set; }

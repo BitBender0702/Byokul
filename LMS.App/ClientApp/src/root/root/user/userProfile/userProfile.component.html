@@ -5,6 +5,7 @@
       <div class="create-post-header d-flex justify-content-between d-none d-xl-flex">
         <button (click)="back()" type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
             src="../../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
+            <button *ngIf="isOwner" [routerLink]="['/user/addTeacher', user.id]" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44">{{'AddTeacher'| translate }}</button>
         <button *ngIf="isOwner" (click)="openPostModal()" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44">{{'CreatePost'| translate }}</button>
       </div>
       <div class="live-header d-flex align-items-center justify-content-between">
@@ -79,7 +80,7 @@
 
         <div class="teacher-content font_14 d-inline-block"><img src="../../../../assets/images/bag-dark.svg" /> {{'Teacher'| translate }}</div>
 
-        <span *ngFor="let item of user.schoolsAsTeacher;" class="custom-tag">{{item.schoolName}}<button class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#delete-classTeacher">
+        <span *ngFor="let item of user.schoolsAsTeacher;" class="custom-tag"><span [routerLink]="['/profile/school', item.schoolName]">{{item.schoolName}}</span><button class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#delete-classTeacher">
           <img *ngIf="isOwner" src="../../../../assets/images/cross-sm-light.svg" /></button></span>
 
       </div>

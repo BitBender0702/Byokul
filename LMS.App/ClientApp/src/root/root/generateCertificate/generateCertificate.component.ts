@@ -227,22 +227,22 @@ import { StudentService } from 'src/root/service/student.service';
         this.saveStudentCertificate.schoolAvatar = this.certificateInfo.school.avatar;
 
         if(this.certificateId == CertificateTemplateEnum.Certificate1Id){
-          this.saveStudentCertificate.backgroundImage = "ClientApp\\src\\assets\\images\\certificate-frame-first.svg";
+          this.saveStudentCertificate.backgroundImage = "../../../assets/images/certificate-frame-first.svg";
         }
         if(this.certificateId == CertificateTemplateEnum.Certificate2Id){
-          this.saveStudentCertificate.backgroundImage = "ClientApp\\src\\assets\\images\\certificate-frame-2.svg";
+          this.saveStudentCertificate.backgroundImage = "./../../assets/images/certificate-frame-2.svg";
         }
         if(this.certificateId == CertificateTemplateEnum.Certificate3Id){
-          this.saveStudentCertificate.backgroundImage = "ClientApp\\src\\assets\\images\\certificate-frame3.svg";
+          this.saveStudentCertificate.backgroundImage = "./../../assets/images/certificate-frame3.svg";
         }
         if(this.certificateId == CertificateTemplateEnum.Certificate4Id){
-          this.saveStudentCertificate.backgroundImage = "ClientApp\\src\\assets\\images\\certificate-frame4.svg";
+          this.saveStudentCertificate.backgroundImage = "./../../assets/images/certificate-frame4.svg";
         }
         if(this.certificateId == CertificateTemplateEnum.Certificate5Id){
-          this.saveStudentCertificate.backgroundImage = "ClientApp\\src\\assets\\images\\certificate-frame5.svg";
+          this.saveStudentCertificate.backgroundImage = "./../../assets/images/certificate-frame5.svg";
         }
         if(this.certificateId == CertificateTemplateEnum.Certificate6Id){
-          this.saveStudentCertificate.backgroundImage = "ClientApp\\src\\assets\\images\\certificate-frame6.svg";
+          this.saveStudentCertificate.backgroundImage = "./../../assets/images/certificate-frame6.svg";
         }
  
 

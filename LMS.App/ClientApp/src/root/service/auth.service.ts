@@ -14,6 +14,7 @@ import { RolesEnum } from "../RolesEnum/rolesEnum";
 import { ResetPasswordModel } from "../interfaces/reset-password";
 import { environment } from "src/environments/environment";
 import { Subject } from "@microsoft/signalr";
+import { SetPasswordViewModel } from "../interfaces/set-password";
 
 @Injectable({providedIn: 'root'})
 
@@ -109,4 +110,9 @@ export class AuthService{
       let queryParams = new HttpParams().append("token",token).append("email",email);
       return this.http.get(`${this.apiUrl}/auth/confirmEmail`, {params:queryParams});
     }
+
+    setPassword(model:SetPasswordViewModel): Observable<any> {
+      debugger
+      return this.http.post(`${this.apiUrl}/auth/setPassword`, model);
+  }
 }

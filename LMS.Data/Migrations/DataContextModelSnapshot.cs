@@ -932,6 +932,31 @@ namespace LMS.Data.Migrations
                     b.ToTable("NotificationSeetings");
                 });
 
+            modelBuilder.Entity("LMS.Data.Entity.PermissionMaster", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PermissionType")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PermissionMaster");
+                });
+
             modelBuilder.Entity("LMS.Data.Entity.Post", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1707,6 +1732,40 @@ namespace LMS.Data.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserNotificationSettings");
+                });
+
+            modelBuilder.Entity("LMS.Data.Entity.UserPermission", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("OwnerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("PermissionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("PermissionType")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("SchoolId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TypeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PermissionId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserPermissions");
                 });
 
             modelBuilder.Entity("LMS.Data.Entity.UserPreference", b =>
@@ -2607,6 +2666,21 @@ namespace LMS.Data.Migrations
                         .HasForeignKey("UserId");
 
                     b.Navigation("NotificationSetting");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("LMS.Data.Entity.UserPermission", b =>
+                {
+                    b.HasOne("LMS.Data.Entity.PermissionMaster", "Permission")
+                        .WithMany()
+                        .HasForeignKey("PermissionId");
+
+                    b.HasOne("LMS.Data.Entity.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Permission");
 
                     b.Navigation("User");
                 });

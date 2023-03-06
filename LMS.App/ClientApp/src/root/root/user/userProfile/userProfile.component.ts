@@ -131,7 +131,6 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
       
       // this.getByUserId(this.userId);
       this._userService.getUserById(this.userId).subscribe((response) => {
-        debugger
         this.frontEndPageNumber = 1;
         this.reelsPageNumber = 1;
         this.user = response;
@@ -679,7 +678,6 @@ var chatTypeId = ''
 }
 
 openCertificateViewModal(certificateUrl:string,certificateName:string){
-  debugger
   const initialState = {
     certificateUrl: certificateUrl,
     certificateName:certificateName,

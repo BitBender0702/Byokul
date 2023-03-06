@@ -94,6 +94,7 @@ builder.Services.AddScoped<IStripeService, StripeService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IChatService, ChatService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddScoped<IPermissionService, PermissionService>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped(typeof(IAsyncGenericRepository<>), typeof(AsyncGenericRepository<>));
 StripeConfiguration.ApiKey = configuration.GetSection("Stripe")["SecretKey"];

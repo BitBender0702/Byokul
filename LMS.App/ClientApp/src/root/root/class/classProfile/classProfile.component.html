@@ -5,8 +5,8 @@
       <div class="create-post-header d-flex justify-content-between d-none d-xl-flex">
         <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
             src="../../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
-        <button *ngIf="isOwner" [routerLink]="['/user/createCertificate',1, class.classId]" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44">{{'CreateCertificate'| translate }}</button>
-        <button *ngIf="isOwner" (click)="openPostModal()" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44">{{'CreatePost'| translate }}</button>
+        <button *ngIf="isOwner || hasIssueCertificatePermission" [routerLink]="['/user/createCertificate',1, class.classId]" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44">{{'CreateCertificate'| translate }}</button>
+        <button *ngIf="isOwner || hasPostPermission" (click)="openPostModal()" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44">{{'CreatePost'| translate }}</button>
         <button (click)="openPaymentModal()" *ngIf="!isOwner && class.price != null && class.price != 0" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44">{{'Buyfor'| translate }} ${{class.price}}</button>
       </div>
       <div class="live-header d-flex align-items-center justify-content-between">
@@ -63,7 +63,7 @@
             <div class="hover-double-button">
             <button *ngIf="isOwner" (click)="convertToCourse(class.className,class.school.schoolName)" type="button" class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins" >{{'ConvertToCourse'| translate }}</button>
 
-            <button *ngIf="isOwner" (click)="getClassDetails(class.classId)" class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins ms-1" data-bs-toggle="modal"
+            <button *ngIf="isOwner || hasUpdateClassPermission" (click)="getClassDetails(class.classId)" class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins ms-1" data-bs-toggle="modal"
               data-bs-target="#editClass"><img src="../../../../assets/images/Setting-solid-dark.svg" class="me-2" /> {{'EditProfile'| translate }}
               </button>
             </div>
@@ -77,9 +77,9 @@
           <div class="teacher-content font_14 d-inline-block"><img src="../../../../assets/images/dark-star.svg" />{{'Sertificates'| translate }}</div>
 
           <span *ngFor="let item of class.classCertificates;" class="custom-tag"><span (click)="openCertificateViewModal(item.certificateUrl,item.name)">{{item.name}}</span><button (click)="getDeletedCertificate(item.certificateId)" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#delete-classCertificate">
-            <img *ngIf="isOwner" src="../../../../assets/images/cross-sm-light.svg" /></button></span>
+            <img *ngIf="isOwner || hasAddClassCertificatesPermission" src="../../../../assets/images/cross-sm-light.svg" /></button></span>
 
-            <span *ngIf="isOwner" class="custom-tag">Add Certificates<button (click)="resetCertificateModal()" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#add-certificate"><img
+            <span *ngIf="isOwner || hasAddClassCertificatesPermission" class="custom-tag">Add Certificates<button (click)="resetCertificateModal()" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#add-certificate"><img
               src="../../../../assets/images/school/plus-light.svg" /></button>
             </span>
         </div>
@@ -88,9 +88,9 @@
           <div class="teacher-content font_14 d-inline-block"><img src="../../../../assets/images/Volume-Down.svg" />{{'Languages'| translate }}</div>
 
           <span *ngFor="let item of class.languages;" class="custom-tag">{{item.name}}<button (click)="getDeletedLanguage(item.id)" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#delete-classLanguage">
-            <img *ngIf="isOwner" src="../../../../assets/images/cross-sm-light.svg" /></button></span>
+            <img *ngIf="isOwner || hasAddLanguagesPermission" src="../../../../assets/images/cross-sm-light.svg" /></button></span>
   
-          <span *ngIf="isOwner" class="custom-tag">Add Languages<button (click)="resetLanguageModal()" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#add-language"><img
+          <span *ngIf="isOwner || hasAddLanguagesPermission" class="custom-tag">Add Languages<button (click)="resetLanguageModal()" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#add-language"><img
             src="../../../../assets/images/school/plus-light.svg" /></button>
           </span>
           

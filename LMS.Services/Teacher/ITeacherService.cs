@@ -1,4 +1,5 @@
-﻿using LMS.Common.ViewModels.Teacher;
+﻿using LMS.Common.ViewModels.Permission;
+using LMS.Common.ViewModels.Teacher;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +10,12 @@ namespace LMS.Services
 {
     public interface ITeacherService
     {
-        Task SaveNewTeacher(TeacherViewModel teacherViewModel, Guid schoolId, string createdById);
         Task UpdateTeacher(TeacherViewModel teacherViewModel);
         Task<TeacherViewModel> GetTeacherById(Guid teacherId);
         Task DeleteTeacherById(Guid teacherId, string deletedById);
         Task<IEnumerable<TeacherViewModel>> GetAllTeachers();
+        Task AddTeacher(AddTeacherViewModel model);
+
+
     }
 }

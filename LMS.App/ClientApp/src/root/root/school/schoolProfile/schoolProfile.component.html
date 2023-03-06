@@ -4,7 +4,7 @@
       <div class="create-post-header d-flex justify-content-between d-none d-xl-flex">
         <button (click)="back()" mat-mini-fab type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
             src="../../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
-        <button *ngIf="isOwner" (click)="openPostModal()" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44">{{'CreatePost'| translate }}</button>
+        <button *ngIf="isOwner || hasPostPermission" (click)="openPostModal()" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44">{{'CreatePost'| translate }}</button>
       </div>
       <div class="live-header d-flex align-items-center justify-content-between">
         <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark  d-xl-none"><img
@@ -47,7 +47,7 @@
             class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn me-0">{{'MessageSchool'| translate }}
             </button>
           <p class="font_16 mt-4">{{school.description}}</p>
-          <button *ngIf="isOwner" (click)="getSchoolDetails(school.schoolId)" class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins" data-bs-toggle="modal"
+          <button *ngIf="isOwner || hasUpdateSchoolPermission" (click)="getSchoolDetails(school.schoolId)" class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins" data-bs-toggle="modal"
               data-bs-target="#editschool"><img src="../../../../assets/images/Setting-solid-dark.svg" class="me-2" /> {{'EditProfile'| translate }}
               </button>
         </div>
@@ -57,9 +57,9 @@
         <div class="teacher-content font_14 d-inline-block"><img src="../../../../assets/images/Profile-dark.svg" />{{'Teachers'| translate }}</div>
 
           <span *ngFor="let item of school.teachers;" class="custom-tag">{{item.firstName + ' ' + item.lastName}}<button (click)="getDeletedTeacher(item.teacherId)" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#delete-schoolTeacher">
-            <img *ngIf="isOwner" src="../../../../assets/images/cross-sm-light.svg" /></button></span>
+            <img *ngIf="isOwner || hasManageTeachersPermission" src="../../../../assets/images/cross-sm-light.svg" /></button></span>
 
-            <span *ngIf="isOwner" class="custom-tag">Add Teachers<button (click)="resetTeacherModal()" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#add-schoolTeacher"><img
+            <span *ngIf="isOwner || hasManageTeachersPermission" class="custom-tag">Add Teachers<button (click)="resetTeacherModal()" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#add-schoolTeacher"><img
               src="../../../../assets/images/school/plus-light.svg" /></button>
             </span>
 
@@ -68,9 +68,9 @@
         <div class="teacher-content font_14 d-inline-block"><img src="../../../../assets/images/dark-star.svg" />{{'Sertificates'| translate }}</div>
 
         <span *ngFor="let item of school.schoolCertificates;" class="custom-tag"><span (click)="openCertificateViewModal(item.certificateUrl,item.name)">{{item.name}}</span><button (click)="getDeletedCertificate(item.certificateId)" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#delete-schoolCertificate">
-          <img *ngIf="isOwner" src="../../../../assets/images/cross-sm-light.svg" /></button></span>
+          <img *ngIf="isOwner || hasAddSchoolCertificatesPermission" src="../../../../assets/images/cross-sm-light.svg" /></button></span>
 
-            <span *ngIf="isOwner" class="custom-tag">Add Certificates<button (click)="resetCertificateModal()" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#add-certificate"><img
+            <span *ngIf="isOwner || hasAddSchoolCertificatesPermission" class="custom-tag">Add Certificates<button (click)="resetCertificateModal()" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#add-certificate"><img
               src="../../../../assets/images/school/plus-light.svg" /></button>
             </span>    
 
@@ -79,9 +79,9 @@
         <div class="teacher-content font_14 d-inline-block"><img src="../../../../assets/images/Volume-Down.svg" />{{'Languages'| translate }}</div>
 
         <span *ngFor="let item of school.languages;" class="custom-tag">{{item.name}}<button (click)="getDeletedLanguage(item.id)" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#delete-schoolLanguage">
-          <img *ngIf="isOwner" src="../../../../assets/images/cross-sm-light.svg" /></button></span>
+          <img *ngIf="isOwner || hasAddLanguagesPermission" src="../../../../assets/images/cross-sm-light.svg" /></button></span>
 
-        <span *ngIf="isOwner" class="custom-tag">Add Languages<button (click)="resetLanguageModal()" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#add-language"><img
+        <span *ngIf="isOwner || hasAddLanguagesPermission" class="custom-tag">Add Languages<button (click)="resetLanguageModal()" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#add-language"><img
           src="../../../../assets/images/school/plus-light.svg" /></button>
         </span>
 
@@ -108,8 +108,8 @@
         </div>
         <div class="filter-main d-flex">
           <div class="btn-filter1 align-items-center">
-          <button *ngIf="isOwner" [routerLink]="['/user/createClass', school.schoolId]" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 me-2">Create Class</button>
-          <button *ngIf="isOwner" [routerLink]="['/user/createCourse', school.schoolId]" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 me-2">Create Course</button>
+          <button *ngIf="isOwner || hasCreateEditClassPermission" [routerLink]="['/user/createClass', school.schoolId]" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 me-2">Create Class</button>
+          <button *ngIf="isOwner || hasCreateEditCoursePermission" [routerLink]="['/user/createCourse', school.schoolId]" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 me-2">Create Course</button>
 
           <button *ngIf="hideFeedFilters" [ngClass]="isProfileGrid ? 'btn border-btn active d-inline-flex align-items-center justify-content-center' : 'btn border-btn d-inline-flex align-items-center justify-content-center'" (click)="profileGrid()" type="button" >
             <img src="../../../../assets/images/Filter.svg" />

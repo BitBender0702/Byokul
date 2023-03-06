@@ -14,6 +14,7 @@ import { confirmEmailResponse } from '../confirmEmail/confirmEmail.component';
 import { MessageService } from 'primeng/api';
 import { SignalrService } from 'src/root/service/signalr.service';
 import { UserService } from 'src/root/service/user.service';
+import { stringify } from 'querystring';
 
 export const dashboardResponse =new Subject<{token:string}>(); 
 
@@ -84,21 +85,24 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
       this.user = this.loginForm.value;
       this._authService.loginUser(this.user).pipe(finalize(()=> this.loadingIcon= false)).subscribe({
         next: (response: AuthenticatedResponse) => {
-          if(response.token == "user not found"){
+          debugger
+          if(response.errorMessage == "user not found"){
             this._authService.loginState$.next(false);
             this.loginForm.setErrors({ unauthenticated: true });
           }
 
-          if(response.token == "email not confirm"){
+          if(response.errorMessage == "email not confirm"){
             this._authService.loginState$.next(false);
             this.loginForm.setErrors({ emailNotConfirmed: true });
           }
-          if(response.token != "user not found" && response.token != "email not confirm"){
+          if(response.errorMessage != "user not found" && response.errorMessage != "email not confirm"){
             this.isSubmitted = false;
             this.loadingIcon = false;
             this._authService.loginState$.next(true);
         const token = response.token;
         localStorage.setItem("jwt", token); 
+        const userpermissions = response.userPermissions;
+        localStorage.setItem("userPermissions", JSON.stringify(userpermissions));
         dashboardResponse.next({token:token});
         this.signalRService.initializeConnection(token);
         this.signalRService.startConnection();
