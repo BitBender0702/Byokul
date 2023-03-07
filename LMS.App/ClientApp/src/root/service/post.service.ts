@@ -66,4 +66,9 @@ export class PostService{
         return this.http.get(`${this.apiUrl}/posts/getPostById` + '?id=' + id);
     }
 
+    enableDisableComments(postId:string,isHideComments:boolean):Observable<any>{
+        let queryParams = new HttpParams().append("postId",postId).append("isHideComments",isHideComments);
+        return this.http.post(`${this.apiUrl}/posts/enableDisableComments`,null, {params:queryParams});
+    }
+
 }

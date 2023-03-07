@@ -6,3 +6,7 @@
 .heightForText{
     height: 300px;
   }
+
+  .cursor_auto{
+    cursor: auto;
+  }

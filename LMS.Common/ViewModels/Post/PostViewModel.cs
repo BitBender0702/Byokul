@@ -32,6 +32,7 @@ namespace LMS.Common.ViewModels.Post
         public List<IFormFile> UploadAttachments { get; set; }
         public IFormFile UploadReels { get; set; }
         public bool IsPinned { get; set; }
+        public Boolean IsCommentsDisabled { get; set; }
 
     }
 }

@@ -106,6 +106,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     hasAddClassCertificatesPermission!:boolean;
     hasAddLanguagesPermission!:boolean;
     hasIssueCertificatePermission!:boolean;
+    hasManageTeachersPermission!:boolean;
 
 
     public event: EventEmitter<any> = new EventEmitter();
@@ -303,6 +304,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   }
 
   isOwnerOrNot(){
+    debugger
     var validToken = localStorage.getItem("jwt");
       if (validToken != null) {
         let jwtData = validToken.split('.')[1]
@@ -321,6 +323,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       var userPermissions: any[] = this.userPermissions;
   
       userPermissions.forEach(element => {
+        debugger
           if((element.typeId == this.class.classId || element.typeId == PermissionNameConstant.DefaultClassId) && element.ownerId == this.class.school.createdById && element.permissionType == PermissionTypeEnum.Class && element.permission.name == PermissionNameConstant.Post && (element.schoolId == null || element.schoolId == this.class.school.schoolId)){
           this.hasPostPermission = true;
           }
@@ -335,6 +338,9 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
           }
           if((element.typeId == this.class.classId || element.typeId == PermissionNameConstant.DefaultClassId)  && element.ownerId == this.class.school.createdById && element.permissionType == PermissionTypeEnum.Class && element.permission.name == PermissionNameConstant.AddLanguages && (element.schoolId == null || element.schoolId == this.class.school.schoolId)){
           this.hasAddLanguagesPermission = true;
+          }
+          if((element.typeId == this.class.classId || element.typeId == PermissionNameConstant.DefaultClassId) && element.ownerId == this.class.school.createdById && element.permissionType == PermissionTypeEnum.Class && element.permission.name == PermissionNameConstant.ManageTeachers && (element.schoolId == null || element.schoolId == this.class.school.schoolId)){
+            this.hasManageTeachersPermission = true;
           }
       });
       

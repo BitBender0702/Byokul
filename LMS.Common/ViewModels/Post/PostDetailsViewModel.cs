@@ -37,5 +37,7 @@ namespace LMS.Common.ViewModels.Post
         public string SchoolName { get; set; }
         public List<CommentViewModel> Comments { get; set; }
         public int CommentsCount { get; set; }
+        public Boolean IsCommentsDisabled { get; set; }
+
     }
 }

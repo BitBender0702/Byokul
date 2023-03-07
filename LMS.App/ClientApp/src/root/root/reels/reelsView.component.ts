@@ -1,4 +1,4 @@
-import { Component, ElementRef, Injector, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, Injector, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { CommentLikeUnlike } from 'src/root/interfaces/chat/commentsLike';
@@ -19,7 +19,7 @@ import { UserService } from 'src/root/service/user.service';
     styleUrls: ['reelsView.component.css'],
   })
   
-  export class ReelsViewComponent implements OnInit {
+  export class ReelsViewComponent implements OnInit, AfterViewChecked  {
 
     private _reelsService;
     private _postService;
@@ -66,9 +66,8 @@ import { UserService } from 'src/root/service/user.service';
         this.postAttachmentId = this.options.initialState;
         this._reelsService.getReelById(this.postAttachmentId.postAttachmentId).subscribe((response) => {
             this.reels = response;
-            this.addPostView(this.reels.post.id);
             this.isDataLoaded = true;
-
+            this.addPostView(this.reels.post.id);
             this._signalRService.createGroupName(this.reels.id);
           });
 
@@ -105,7 +104,19 @@ import { UserService } from 'src/root/service/user.service';
               reqComment.likeCount = reqComment.likeCount - 1;
             }
           });
+
+          this.scrollToBottom();
     }
+
+    ngAfterViewChecked() {        
+      this.scrollToBottom();        
+  } 
+
+  scrollToBottom(): void {
+      try {
+          this.groupChatList.nativeElement.scrollTop = this.groupChatList.nativeElement.scrollHeight;
+      } catch(err) { }                 
+  }
 
     getLoginUserId(){
       var validToken = localStorage.getItem("jwt");
@@ -292,5 +303,22 @@ import { UserService } from 'src/root/service/user.service';
       close(): void {
         this.bsModalService.hide();
       }
+
+      showCommentsDiv(isShowComments:boolean){
+        debugger
+        if(isShowComments){
+          // this.isHideCommentsDiv = false;
+          this.reels.post.isCommentsDisabled = false;
+        }
+        else{
+          // this.isHideCommentsDiv = true;
+          this.reels.post.isCommentsDisabled = true;
+        }
+
+        this._postService.enableDisableComments(this.reels.post.id,this.reels.post.isCommentsDisabled).subscribe((response) => {
+          
+         }); 
+      }
+
 
   }

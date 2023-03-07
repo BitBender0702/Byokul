@@ -210,6 +210,7 @@ namespace LMS.Services
         {
             var postAttachment = await _postAttachmentRepository.GetAll()
                 .Include(x => x.Post)
+                .ThenInclude(x => x.CreatedBy)
                 .Include(x => x.CreatedBy)
                 .Where(x => x.Id == id).FirstOrDefaultAsync();
 
@@ -260,21 +261,21 @@ namespace LMS.Services
             var post = _mapper.Map<PostDetailsViewModel>(postResult);
 
 
-                post.PostAttachments = await GetAttachmentsByPostId(post.Id);
-                post.Likes = await _userService.GetLikesOnPost(post.Id);
-                post.Views = await _userService.GetViewsOnPost(post.Id);
-                post.CommentsCount = await _userService.GetCommentsCountOnPost(post.Id);
-                if (post.Likes.Any(x => x.UserId == userId && x.PostId == post.Id))
-                {
-                    post.IsPostLikedByCurrentUser = true;
-                }
-                else
-                {
-                    post.IsPostLikedByCurrentUser = false;
-                }
+            post.PostAttachments = await GetAttachmentsByPostId(post.Id);
+            post.Likes = await _userService.GetLikesOnPost(post.Id);
+            post.Views = await _userService.GetViewsOnPost(post.Id);
+            post.CommentsCount = await _userService.GetCommentsCountOnPost(post.Id);
+            if (post.Likes.Any(x => x.UserId == userId && x.PostId == post.Id))
+            {
+                post.IsPostLikedByCurrentUser = true;
+            }
+            else
+            {
+                post.IsPostLikedByCurrentUser = false;
+            }
 
-                var tags = await GetTagsByPostId(post.Id);
-                post.PostTags = tags;
+            var tags = await GetTagsByPostId(post.Id);
+            post.PostTags = tags;
 
             return post;
         }
@@ -357,7 +358,7 @@ namespace LMS.Services
 
                 _viewRepository.Insert(view);
                 _viewRepository.Save();
-                return  _viewRepository.GetAll().Where(x => x.PostId == model.PostId).Count();
+                return _viewRepository.GetAll().Where(x => x.PostId == model.PostId).Count();
             }
             return _viewRepository.GetAll().Where(x => x.PostId == model.PostId).Count();
         }
@@ -402,6 +403,17 @@ namespace LMS.Services
                 //return _mapper.Map<List<LikeViewModel>>(totalLikes);
             }
             return false;
+        }
+
+
+        public async Task EnableDisableComments(Guid postId, bool isHideComments)
+        {
+            var post = _postRepository.GetById(postId);
+
+            post.IsCommentsDisabled = isHideComments;
+            _postRepository.Update(post);
+            _postRepository.Save();
+
         }
     }
 }

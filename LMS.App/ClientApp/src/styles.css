@@ -586,7 +586,7 @@ button.live_chats .live-chat-back {
 }
 
 .chat-enabled {
-	padding: 11px 21px;
+	padding: 11px 33px;
 	background: rgba(124, 141, 167, 0.05);
 	border-radius: 600px;
 	margin-bottom: 32px;
@@ -648,7 +648,7 @@ button.comment-btn {
 
 .add-comment input {
 	height: 41px;
-	margin: 0 18px 0 22px;
+	margin: 0 9px 0 8px;
 }
 
 .comment-post-user {
@@ -1685,7 +1685,7 @@ body .liv-postbtn .post-attch-btn.active,
 
 .live-chat-outer {
 	margin: -32px -32px 0 -50px;
-	padding: 32px 32px 30px 50px;
+	padding: 32px 13px 30px 10px;
 	max-height: 550px;
 	overflow: auto;
 }

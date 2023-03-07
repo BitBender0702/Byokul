@@ -45,6 +45,7 @@ export class PostViewComponent implements OnInit {
     sender:any;
     commentViewModel!: CommentViewModel;
     commentLikeUnlike!:CommentLikeUnlike;
+    isCommentsDisabled!:boolean;
 
     constructor(private bsModalService: BsModalService,notificationService:NotificationService,chatService: ChatService,public signalRService: SignalrService,public postService:PostService, public options: ModalOptions,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,userService:UserService) { 
          this._postService = postService;
@@ -56,8 +57,13 @@ export class PostViewComponent implements OnInit {
   
     ngOnInit(): void {
       this.posts = this.options.initialState;
-      this._chatService.getComments(this.posts.posts.id,this.pageNumber).subscribe((response) => {
+
+      this._postService.getPostById(this.posts.posts.id).subscribe((response) => {
+        this.isCommentsDisabled = response.isCommentsDisabled
         this.isDataLoaded = true;
+        });
+
+      this._chatService.getComments(this.posts.posts.id,this.pageNumber).subscribe((response) => {
         this.posts.posts.comments = response;
         });
 
@@ -247,6 +253,20 @@ export class PostViewComponent implements OnInit {
         groupName:""
       }
 
+    }
+
+    showCommentsDiv(isShowComments:boolean){
+      debugger
+      if(isShowComments){
+        this.isCommentsDisabled = false;
+      }
+      else{
+        this.isCommentsDisabled = true;
+      }
+
+      this._postService.enableDisableComments(this.posts.posts.id,this.isCommentsDisabled).subscribe((response) => {
+        
+       }); 
     }
 
 }

@@ -20,5 +20,6 @@ namespace LMS.Data.Entity
         public Guid ParentId { get;set; }
         public string? CoverLetter { get; set; }
         public bool IsPinned { get; set; }
+        public Boolean IsCommentsDisabled { get; set; }
     }
 }

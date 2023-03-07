@@ -95,5 +95,13 @@ namespace LMS.App.Controllers
             return Ok(response);
         }
 
+        [Route("enableDisableComments")]
+        [HttpPost]
+        public async Task<IActionResult> EnableDisableComments(Guid postId, bool isHideComments)
+        {
+            await _postService.EnableDisableComments(postId,isHideComments);
+            return Ok();
+        }
+
     }
 }

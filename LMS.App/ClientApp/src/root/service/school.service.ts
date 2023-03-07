@@ -10,12 +10,14 @@ import { CreateSchoolModel } from "../interfaces/school/createSchoolModel";
 @Injectable({providedIn: 'root'})
 
 export class SchoolService{
+    token:string = localStorage.getItem("jwt")?? '';
     private headers!: HttpHeaders;
     get apiUrl(): string {
         return environment.apiUrl;
       }
     constructor(private router: Router, private http: HttpClient) { 
         this.headers = new HttpHeaders({'Content-Type': 'application/json; charset=utf-8'});
+        this.headers = new HttpHeaders().set("Authorization", "Bearer " + this.token);
     }
     
     createSchool(credentials:any): Observable<any> {
@@ -35,7 +37,7 @@ export class SchoolService{
     }
 
     getCountryList():Observable<any>{
-        return this.http.get(`${this.apiUrl}/users/countryList`);
+        return this.http.get(`${this.apiUrl}/users/countryList`,{headers: this.headers});
     }
 
     getSpecializationList():Observable<any>{
