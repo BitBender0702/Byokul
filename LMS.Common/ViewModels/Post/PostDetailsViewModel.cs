@@ -38,6 +38,7 @@ namespace LMS.Common.ViewModels.Post
         public List<CommentViewModel> Comments { get; set; }
         public int CommentsCount { get; set; }
         public Boolean IsCommentsDisabled { get; set; }
+        public int PostSharedCount { get; set; }
 
     }
 }

@@ -123,7 +123,6 @@ export class CreatePostComponent implements OnInit {
 
   ngOnInit(): void {
     var initialValue = this.options.initialState;
-
     if(initialValue?.from == "school"){
     this.schoolId = initialValue.schoolId;
     this._postService.getSchool(this.schoolId).subscribe((response) => {
@@ -329,7 +328,7 @@ export class CreatePostComponent implements OnInit {
       
       this.isSubmitted=false;
       this.loadingIcon = false;
-      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post created successfully'});
+      // this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post created successfully'});
       addPostResponse.next({response}); 
       this.postToUpload = new FormData();
       this.close();

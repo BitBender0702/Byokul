@@ -64,6 +64,7 @@ import { CertificateViewComponent } from './root/certificateView/certificateView
 import { PdfViewerModule } from 'ng2-pdf-viewer'; 
 import { GenerateCertificateComponent } from './root/generateCertificate/generateCertificate.component';
 import { AddTeacherComponent } from './root/teacher/addTeacher.component';
+import { SharePostComponent } from './root/sharePost/sharePost.component';
 
 
 const routes: Routes = [
@@ -121,7 +122,8 @@ const routes: Routes = [
     NotificationsComponent,
     CertificateViewComponent,
     GenerateCertificateComponent,
-    AddTeacherComponent
+    AddTeacherComponent,
+    SharePostComponent
 
   ],
   imports: [

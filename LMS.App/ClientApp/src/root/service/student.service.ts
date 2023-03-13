@@ -17,7 +17,6 @@ export class StudentService{
     }
 
     saveStudentCertificates(saveStudentCertificates:SaveStudentCertificate): Observable<any> {
-        debugger
         return this.http.post(`${this.apiUrl}/students/uploadStudentCertificates`, saveStudentCertificates);
     }
 }

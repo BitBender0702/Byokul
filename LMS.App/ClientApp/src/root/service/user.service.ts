@@ -122,6 +122,14 @@ export class UserService{
         return this.http.get(`${this.apiUrl}/users/getUserByEmail` + '?email=' + email);
     }
 
+    getCountryList():Observable<any>{
+        return this.http.get(`${this.apiUrl}/users/countryList`);
+    }
+
+    getCityList(countryId:string):Observable<any>{
+        return this.http.get(`${this.apiUrl}/users/cityList` + '?countryId=' + countryId);
+    }
+
     
 
 }

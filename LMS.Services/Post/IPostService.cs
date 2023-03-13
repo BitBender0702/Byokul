@@ -17,8 +17,9 @@ namespace LMS.Services
         Task<int> PostView(PostViewsViewModel model);
         Task<bool> LikeUnlikeComment(Guid commentId, bool isLike, string userId);
         Task EnableDisableComments(Guid postId, bool isHideComments);
+        Task SaveUserSharedPost(string userId, Guid postId);
 
-        
+
 
     }
 }

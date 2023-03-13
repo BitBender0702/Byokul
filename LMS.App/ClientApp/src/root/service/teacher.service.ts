@@ -23,7 +23,6 @@ export class TeacherService{
     }
 
     addTeacher(addTeacherViewModel:AddTeacherViewModel): Observable<any> {
-        debugger
         return this.http.post(`${this.apiUrl}/teachers/addTeacher`, addTeacherViewModel);
     }
 

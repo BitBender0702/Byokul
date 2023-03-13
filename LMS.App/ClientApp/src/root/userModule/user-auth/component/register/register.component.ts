@@ -10,6 +10,7 @@ import { finalize } from 'rxjs';
 
 
 import { MultilingualComponent } from 'src/root/root/sharedModule/Multilingual/multilingual.component';
+import { UserService } from 'src/root/service/user.service';
 
 @Component({
     selector: 'register-root',
@@ -36,24 +37,36 @@ export class RegisterComponent extends MultilingualComponent implements OnInit {
     isConfirmPasswordDirty = false;
     isRegister!:boolean;
     currentDate!:string;
+    countries!:any;
+    cities!:any;
+    isDataLoaded:boolean = false;
 
     date = new Date();
     credentials: RegisterModel = {email:'', password:'',confirmPassword:'',firstName:'',lastName:'',gender:0,dob: ''};
     private _authService;
-    constructor(injector: Injector, private fb: FormBuilder,private router: Router, private http: HttpClient,authService:AuthService) { 
+    private _userService;
+    constructor(injector: Injector, private fb: FormBuilder,private router: Router, private http: HttpClient,authService:AuthService,userService:UserService) { 
       super(injector);
         this._authService = authService;
+        this._userService = userService;
     }
 
     back(): void {
       window.history.back();
   }
     ngOnInit(): void {
+      this.loadingIcon = true;
       this._authService.loginState$.next(false);
       const passwordValidators = [
         Validators.minLength(6),
         Validators.required,
       ];
+
+      this._userService.getCountryList().subscribe((response) => {
+        this.countries = response;
+        this.isDataLoaded = true;
+        this.loadingIcon = false;
+      });
 
       this.currentDate = this.getCurrentDate();
       this.selectedLanguage = localStorage.getItem("selectedLanguage");
@@ -65,6 +78,8 @@ export class RegisterComponent extends MultilingualComponent implements OnInit {
         dob: this.fb.control('',[Validators.required]),
         password: this.fb.control('', [...passwordValidators]),
         confirmPassword: this.fb.control('', [...passwordValidators]),
+        countryId: this.fb.control('', [Validators.required]),
+        cityId: this.fb.control('', [Validators.required]),
       }, {validator: this.dateLessThan('dob',this.currentDate)});
     }
 
@@ -141,6 +156,15 @@ export class RegisterComponent extends MultilingualComponent implements OnInit {
                   },
                   error: (err: HttpErrorResponse) => this.invalidRegister = true
                 })
-        }
+      }
+
+      getCityByCountry(event:any){
+        var countryId = event.value;
+        this._userService.getCityList(countryId).subscribe((response) => {
+          this.cities = response;
+        });
+
+
+      }
 
   }

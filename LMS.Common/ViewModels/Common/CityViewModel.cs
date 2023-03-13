@@ -10,5 +10,6 @@ namespace LMS.Common.ViewModels.Common
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
+        public CountryViewModel Country { get; set; }
     }
 }

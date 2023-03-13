@@ -12,6 +12,7 @@ import { PostService } from 'src/root/service/post.service';
 import { ReelsService } from 'src/root/service/reels.service';
 import { commentLikeResponse, commentResponse, signalRResponse, SignalrService } from 'src/root/service/signalr.service';
 import { UserService } from 'src/root/service/user.service';
+import { SharePostComponent } from '../sharePost/sharePost.component';
 
 @Component({
     selector: 'reels-view',
@@ -49,6 +50,9 @@ import { UserService } from 'src/root/service/user.service';
     commentLikeCount!:number;
     commentLikeUnlike!:CommentLikeUnlike;
 
+    attachmentId!:any;
+    reelPageView:boolean = false;
+
     @ViewChild('groupChatList') groupChatList!: ElementRef;
 
     constructor(private bsModalService: BsModalService,notificationService:NotificationService,chatService:ChatService,private renderer: Renderer2,public options: ModalOptions,private userService: UserService,postService: PostService,public signalRService: SignalrService,private route: ActivatedRoute,reelsService: ReelsService,private activatedRoute: ActivatedRoute) { 
@@ -63,8 +67,19 @@ import { UserService } from 'src/root/service/user.service';
 
     ngOnInit(): void {
         this.getLoginUserId();
+
+        var id = this.route.snapshot.paramMap.get('id');
+        if(id != null){
+          this.attachmentId = id;
+          this.reelPageView = true;
+        }
+
+        else{
         this.postAttachmentId = this.options.initialState;
-        this._reelsService.getReelById(this.postAttachmentId.postAttachmentId).subscribe((response) => {
+        this.attachmentId = this.postAttachmentId.postAttachmentId;
+        }
+
+        this._reelsService.getReelById( this.attachmentId).subscribe((response) => {
             this.reels = response;
             this.isDataLoaded = true;
             this.addPostView(this.reels.post.id);
@@ -305,19 +320,23 @@ import { UserService } from 'src/root/service/user.service';
       }
 
       showCommentsDiv(isShowComments:boolean){
-        debugger
         if(isShowComments){
-          // this.isHideCommentsDiv = false;
           this.reels.post.isCommentsDisabled = false;
         }
         else{
-          // this.isHideCommentsDiv = true;
           this.reels.post.isCommentsDisabled = true;
         }
 
         this._postService.enableDisableComments(this.reels.post.id,this.reels.post.isCommentsDisabled).subscribe((response) => {
           
          }); 
+      }
+
+      openSharePostModal(postId:string): void {
+        const initialState = {
+          postId: postId
+        };
+        this.bsModalService.show(SharePostComponent,{initialState});
       }
 
 

@@ -3,8 +3,10 @@ import { Component, Injector, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BsModalService, ModalDirective, ModalOptions } from 'ngx-bootstrap/modal';
+import { Subject } from 'rxjs';
 import { CommentLikeUnlike } from 'src/root/interfaces/chat/commentsLike';
 import { CommentViewModel } from 'src/root/interfaces/chat/commentViewModel';
+import { Constant } from 'src/root/interfaces/constant';
 import { NotificationType } from 'src/root/interfaces/notification/notificationViewModel';
 import { LikeUnlikePost } from 'src/root/interfaces/post/likeUnlikePost';
 import { PostView } from 'src/root/interfaces/post/postView';
@@ -14,6 +16,10 @@ import { PostService } from 'src/root/service/post.service';
 import { SchoolService } from 'src/root/service/school.service';
 import { commentLikeResponse, commentResponse, SignalrService } from 'src/root/service/signalr.service';
 import { UserService } from 'src/root/service/user.service';
+import { SharePostComponent } from '../sharePost/sharePost.component';
+
+export const sharePostResponse =new Subject<{}>();  
+
 
 @Component({
     selector: 'post-view',
@@ -24,6 +30,9 @@ import { UserService } from 'src/root/service/user.service';
 export class PostViewComponent implements OnInit {
 
     posts:any;
+    // serviceType!:string;
+    // accessibility!:string;
+    
     @ViewChild('createPostModal', { static: true }) createPostModal!: ModalDirective;
 
     //
@@ -46,6 +55,10 @@ export class PostViewComponent implements OnInit {
     commentViewModel!: CommentViewModel;
     commentLikeUnlike!:CommentLikeUnlike;
     isCommentsDisabled!:boolean;
+    postId!:string;
+    postPageView:boolean = false;
+
+    post!:any;
 
     constructor(private bsModalService: BsModalService,notificationService:NotificationService,chatService: ChatService,public signalRService: SignalrService,public postService:PostService, public options: ModalOptions,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,userService:UserService) { 
          this._postService = postService;
@@ -56,64 +69,128 @@ export class PostViewComponent implements OnInit {
     }
   
     ngOnInit(): void {
-      this.posts = this.options.initialState;
+      var id = this.activatedRoute.snapshot.paramMap.get('id');
+      if(id != null){
+        this.postId = id;
+        this.postPageView = true;
+      }
 
-      this._postService.getPostById(this.posts.posts.id).subscribe((response) => {
+      else{
+      this.posts = this.options.initialState;
+      this.post = this.posts.posts;
+      this.postId = this.post.id;
+      this.getComments();
+      }
+
+      this._postService.getPostById(this.postId).subscribe((response) => {
+        if(id != null){
+          this.post = response;
+          this.getComments();
+        }
         this.isCommentsDisabled = response.isCommentsDisabled
+        this.createGroupName();
+        this.commentResponse();
+        this.commentLikeResponse();
+        if(this.post.postId != null){
+          this.addPostView(this.post.postId);
+        }
+        else{
+        this.addPostView(this.post.id);
+        }
         this.isDataLoaded = true;
         });
 
-      this._chatService.getComments(this.posts.posts.id,this.pageNumber).subscribe((response) => {
-        this.posts.posts.comments = response;
-        });
+        this.InitializeLikeUnlikePost();
+        this.getSenderInfo();
 
-      this._signalRService.createGroupName(this.posts.posts.id);
-       this.postView ={
-        postId:'',
-        userId:''
-       }
 
-      if(this.posts.posts.postId != null){
-        this.addPostView(this.posts.posts.postId);
-      }
-      else{
-      this.addPostView(this.posts.posts.id);
-      }
+      // this._chatService.getComments(this.post.id,this.pageNumber).subscribe((response) => {
+      //   this.post.comments = response;
+      //   });
 
-    var validToken = localStorage.getItem("jwt");
-          if (validToken != null) {
-          let jwtData = validToken.split('.')[1]
-          let decodedJwtJsonData = window.atob(jwtData)
-          let decodedJwtData = JSON.parse(decodedJwtJsonData);
-          this.userId = decodedJwtData.jti;
+      // this._signalRService.createGroupName(this.post.id);
+      //  this.postView ={
+      //   postId:'',
+      //   userId:''
+      //  }
 
-        this._userService.getUser(this.userId).subscribe((response) => {
-          this.sender = response;
-        });
-      }
+      // if(this.post.postId != null){
+      //   this.addPostView(this.post.postId);
+      // }
+      // else{
+      // this.addPostView(this.post.id);
+      // }
 
-     this.InitializeLikeUnlikePost();
+  
+    //  commentResponse.subscribe(response => {
+    //   var comment: any[] = this.post.comments;
+    //   var commentObj = {id:response.id,content:response.message,likeCount:0,isCommentLikedByCurrentUser:false,userAvatar:response.senderAvatar};
+    //   comment.push(commentObj);
+    // });
 
-     commentResponse.subscribe(response => {
-      var comment: any[] = this.posts.posts.comments;
-      var commentObj = {id:response.id,content:response.message,likeCount:0,isCommentLikedByCurrentUser:false,userAvatar:response.senderAvatar};
-      comment.push(commentObj);
-    });
-
-    commentLikeResponse.subscribe(response => {
-      var comments: any[] = this.posts.posts.comments;
-      var reqComment = comments.find(x => x.id == response.commentId);
-      if(response.isLike){
-        reqComment.likeCount = reqComment.likeCount + 1;
-      }
-      else{
-        reqComment.likeCount = reqComment.likeCount - 1;
-      }
+    // commentLikeResponse.subscribe(response => {
+    //   var comments: any[] = this.post.comments;
+    //   var reqComment = comments.find(x => x.id == response.commentId);
+    //   if(response.isLike){
+    //     reqComment.likeCount = reqComment.likeCount + 1;
+    //   }
+    //   else{
+    //     reqComment.likeCount = reqComment.likeCount - 1;
+    //   }
       
 
+    // });
+
+
+    }
+
+    commentResponse(){
+      commentResponse.subscribe(response => {
+        var comment: any[] = this.post.comments;
+        var commentObj = {id:response.id,content:response.message,likeCount:0,isCommentLikedByCurrentUser:false,userAvatar:response.senderAvatar};
+        comment.push(commentObj);
+      });
+    }
+
+    commentLikeResponse(){
+      commentLikeResponse.subscribe(response => {
+        var comments: any[] = this.post.comments;
+        var reqComment = comments.find(x => x.id == response.commentId);
+        if(response.isLike){
+          reqComment.likeCount = reqComment.likeCount + 1;
+        }
+        else{
+          reqComment.likeCount = reqComment.likeCount - 1;
+        }
+      });
+    }
+
+    getComments(){
+      this._chatService.getComments(this.post.id,this.pageNumber).subscribe((response) => {
+        this.post.comments = response;
+        });
+    }
+
+    getSenderInfo(){
+      var validToken = localStorage.getItem("jwt");
+      if (validToken != null) {
+      let jwtData = validToken.split('.')[1]
+      let decodedJwtJsonData = window.atob(jwtData)
+      let decodedJwtData = JSON.parse(decodedJwtJsonData);
+      this.userId = decodedJwtData.jti;
+
+    this._userService.getUser(this.userId).subscribe((response) => {
+      this.sender = response;
     });
+     }
+    }
 
-
+    createGroupName(){
+      this._signalRService.createGroupName(this.post.id);
+      this.postView ={
+       postId:'',
+       userId:''
+      }
     }
 
     InitializeLikeUnlikePost(){
@@ -146,17 +223,17 @@ export class PostViewComponent implements OnInit {
 
   likeUnlikePosts(postId:string, isLike:boolean,postType:number,post:any){
     this.currentLikedPostId = postId;
-      var likes: any[] = this.posts.posts.likes;
+      var likes: any[] = this.post.likes;
       var isLiked = likes.filter(x => x.userId == this.userId && x.postId == postId);
     if(isLiked.length != 0){
       this.isLiked = false;
-      this.likesLength = this.posts.posts.likes.length - 1;
-      this.posts.posts.isPostLikedByCurrentUser = false;
+      this.likesLength = this.post.likes.length - 1;
+      this.post.isPostLikedByCurrentUser = false;
     }
     else{
       this.isLiked = true;
-      this.likesLength = this.posts.posts.likes.length + 1;
-      this.posts.posts.isPostLikedByCurrentUser = true;
+      this.likesLength = this.post.likes.length + 1;
+      this.post.isPostLikedByCurrentUser = true;
 
       var notificationContent = `liked your post(${post.title})`;
       //this.initializeNotificationViewModel(this.user.id,notificationType,notificationContent);
@@ -173,7 +250,7 @@ export class PostViewComponent implements OnInit {
     this.likeUnlikePost.isLike = isLike;
     this.likeUnlikePost.commentId = '00000000-0000-0000-0000-000000000000'
     this._postService.likeUnlikePost(this.likeUnlikePost).subscribe((response) => {
-      this.posts.posts.likes = response;
+      this.post.likes = response;
        this.InitializeLikeUnlikePost();
        console.log("succes");
     });
@@ -189,17 +266,17 @@ export class PostViewComponent implements OnInit {
     this._postService.postView(this.postView).subscribe((response) => {
       
       console.log('success');
-      this.posts.posts.views.length = response;
+      this.post.views.length = response;
      }); 
     }
   
   }
 
   sendToGroup(){
-    var comment: any[] = this.posts.posts.comments;
+    var comment: any[] = this.post.comments;
     this.InitializeCommentViewModel();
     this.commentViewModel.userId = this.sender.id;
-    this.commentViewModel.groupName = this.posts.posts.id + "_group";
+    this.commentViewModel.groupName = this.post.id + "_group";
     this.commentViewModel.content = this.messageToGroup;
     this.commentViewModel.userAvatar = this.sender.avatar;
     this.messageToGroup = "";
@@ -222,12 +299,12 @@ export class PostViewComponent implements OnInit {
     }
 
     likeUnlikeComments(commentId:string, isLike:boolean,isCommentLikedByCurrentUser:boolean,likeCount:number){
-      var comment: any[] = this.posts.posts.comments;
+      var comment: any[] = this.post.comments;
       var isCommentLiked = comment.find(x => x.id == commentId);
       this.initializeCommentLikeUnlike();
       this.commentLikeUnlike.userId = this.sender.id;
       this.commentLikeUnlike.commentId = commentId;
-      this.commentLikeUnlike.groupName = this.posts.posts.id + "_group";
+      this.commentLikeUnlike.groupName = this.post.id + "_group";
      if(isCommentLiked.isCommentLikedByCurrentUser){
       isCommentLiked.isCommentLikedByCurrentUser = false;
       isCommentLiked.likeCount = isCommentLiked.likeCount - 1;
@@ -256,7 +333,6 @@ export class PostViewComponent implements OnInit {
     }
 
     showCommentsDiv(isShowComments:boolean){
-      debugger
       if(isShowComments){
         this.isCommentsDisabled = false;
       }
@@ -264,9 +340,25 @@ export class PostViewComponent implements OnInit {
         this.isCommentsDisabled = true;
       }
 
-      this._postService.enableDisableComments(this.posts.posts.id,this.isCommentsDisabled).subscribe((response) => {
+      this._postService.enableDisableComments(this.post.id,this.isCommentsDisabled).subscribe((response) => {
         
        }); 
+    }
+
+    openSharePostModal(postId:string): void {
+      if(this.posts?.name == Constant.Private || this.posts?.serviceType == Constant.Paid){
+        sharePostResponse.next({}); 
+      }
+      else{
+      const initialState = {
+        postId: postId
+      };
+      this.bsModalService.show(SharePostComponent,{initialState});
+    }
+  }
+
+    back(): void {
+      window.history.back();
     }
 
 }

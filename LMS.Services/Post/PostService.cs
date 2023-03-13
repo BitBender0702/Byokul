@@ -32,13 +32,14 @@ namespace LMS.Services
         private IGenericRepository<View> _viewRepository;
         private IGenericRepository<Comment> _commentRepository;
         private IGenericRepository<CommentLike> _commentLikeRepository;
+        private IGenericRepository<UserSharedPost> _userSharedPostRepository;
         private readonly IBlobService _blobService;
         private readonly IUserService _userService;
         private readonly IChatService _chatService;
         private readonly IBigBlueButtonService _bigBlueButtonService;
         private IConfiguration _config;
 
-        public PostService(IMapper mapper, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<User> userRepository, IGenericRepository<Like> likeRpository, IGenericRepository<View> viewRepository, IGenericRepository<Comment> commentRepository, IGenericRepository<CommentLike> commentLikeRepository, IBlobService blobService, IUserService userService, IChatService chatService, IBigBlueButtonService bigBlueButtonService, IConfiguration config)
+        public PostService(IMapper mapper, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<User> userRepository, IGenericRepository<Like> likeRpository, IGenericRepository<View> viewRepository, IGenericRepository<Comment> commentRepository, IGenericRepository<CommentLike> commentLikeRepository, IBlobService blobService, IUserService userService, IChatService chatService, IBigBlueButtonService bigBlueButtonService, IConfiguration config, IGenericRepository<UserSharedPost> userSharedPostRepository)
         {
             _mapper = mapper;
             _postRepository = postRepository;
@@ -57,6 +58,7 @@ namespace LMS.Services
             _chatService = chatService;
             _bigBlueButtonService = bigBlueButtonService;
             _config = config;
+            _userSharedPostRepository = userSharedPostRepository;
         }
         public async Task<PostViewModel> SavePost(PostViewModel postViewModel, string createdById)
         {
@@ -414,6 +416,26 @@ namespace LMS.Services
             _postRepository.Update(post);
             _postRepository.Save();
 
+        }
+
+        public async Task SaveUserSharedPost(string userId, Guid postId)
+        {
+            var isUserSharedPostExist = await _userSharedPostRepository.GetAll().Where(x => x.UserId == userId && x.PostId == postId).FirstOrDefaultAsync();
+
+            if (isUserSharedPostExist != null)
+            {
+                _userSharedPostRepository.Delete(isUserSharedPostExist.Id);
+                _userSharedPostRepository.Save();
+            }
+
+            var userSharedPost = new UserSharedPost
+            {
+                UserId = userId,
+                PostId = postId
+            };
+
+            _userSharedPostRepository.Insert(userSharedPost);
+            _userSharedPostRepository.Save();
         }
     }
 }

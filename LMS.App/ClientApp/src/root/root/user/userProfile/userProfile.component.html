@@ -82,13 +82,12 @@
 
         <span *ngFor="let item of user.schoolsAsTeacher;" class="custom-tag"><span [routerLink]="['/profile/school', item.schoolName]">{{item.schoolName}}</span><button class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#delete-classTeacher">
           <img *ngIf="isOwner" src="../../../../assets/images/cross-sm-light.svg" /></button></span>
-
       </div>
       
       
       <div class="teacher-tags tag-box mt-0">
         <div class="teacher-content font_14 d-inline-block"><img src="../../../../assets/images/Location-dark.svg" /> {{'Location'| translate }}</div>
-        <span class="custom-tag d-inline-flex align-items-center"> <span class="vr-border"></span> </span>
+        <span class="custom-tag d-inline-flex align-items-center"> <span class="vr-border"></span>{{user.city.name + " " + user.city.country.name}} </span>
       </div>
       <hr class="hr-gray" />
       <div class="school-profile-tabs d-flex align-content-center justify-content-end">
@@ -109,9 +108,7 @@
           aria-labelledby="school-feed-tab" tabindex="0">
           <div class="feed-section">
             <div class="feed-box position-relative">
-                <!-- <button type="button" class="bg-transparent border-0 next-feed">
-                    <img src="../../../../assets/images/chevron-right-circle.svg" />
-                </button> -->
+              <reels-loading-spinner [reelsLoadingIcon]="reelsLoadingIcon" class="position-absolute translate-middle reel_spinner_position"></reels-loading-spinner>
                 <div class="feedbox-inner d-flex ">
                   <carousel #carousel
                   [itemsPerSlide]="itemsPerSlide"
@@ -119,7 +116,7 @@
                   [interval]="0"
                   [noWrap]="noWrap">
                   <div *ngFor="let post of user.reels">
-                    <div *ngIf="post.postType == 3 && post.postAuthorType == 4">
+                    <div *ngIf="post.postType == 3">
                     <slide *ngFor="let postAttachment of post.postAttachments">
                       <div *ngIf="postAttachment.fileType == 2">
                         <div class="feedimg-box position-relative text-light position-relative">
@@ -147,7 +144,8 @@
                                 </button> -->
                             </div>
                             <div class="feed-name font_14 text_sec1">
-                              <div *ngIf="post.postAuthorType == 1">
+                              <img [src]="post.parentImageUrl"/> {{post.parentName}}
+                              <!-- <div *ngIf="post.postAuthorType == 1">
                                 <img [src]="postAttachment.school.avatar"/> {{postAttachment.school.schoolName}}
                               </div>
                               <div *ngIf="post.postAuthorType == 2">
@@ -155,7 +153,7 @@
                               </div>
                               <div *ngIf="post.postAuthorType == 4">
                                 <img [src]="postAttachment.user.avatar"/> {{postAttachment.user.firstName}}
-                              </div>
+                              </div> -->
                             </div>
                             <div class="feed-title font_14 text_sec1 d-flex align-content-center fw_600">
                                 {{post.title}}
@@ -168,14 +166,13 @@
                 </carousel>
                 </div>
             </div>
-            <reels-loading-spinner [reelsLoadingIcon]="reelsLoadingIcon"></reels-loading-spinner>
         </div>
           <div class="school-grid-view grid-active" *ngIf="isProfileGrid">
             <ng-container *ngFor="let post of user.posts">
-              <div *ngIf="post.postType == 1 && post.postAuthorType == 4" class="school-grid-box position-relative">
+              <div *ngIf="post.postType == 1" class="school-grid-box position-relative">
               <div class="schoolgrid-header d-flex align-items-center position-relative">
                 <div class="school-gridprofile-icon">
-                  <img [src]="user.avatar" />
+                  <img [src]="post.parentImageUrl" />
                 </div>
                 <h2 class="d-inline-block font_20 fw_600 text_sec1 mb-0">{{post.title}}</h2>
                 <p class="font_14 school-grid-date d-inline-block mb-0">
@@ -290,11 +287,11 @@
                 </button>
                 <button type="button" class="bg-transparent border-0 function-btns text-light">
                   <img src="../../../../assets/images/Bookmark-light.svg" class="d-block mx-auto" />
-                  954
+                  0
                 </button>
-                <button type="button" class="bg-transparent border-0 function-btns text-light">
+                <button (click)="openSharePostModal(post.id)" type="button" class="bg-transparent border-0 function-btns text-light">
                   <img src="../../../../assets/images/Upload-light.svg" class="d-block mx-auto" />
-                  954
+                  {{post.postSharedCount}}
                 </button>
               </div>
 
@@ -316,11 +313,11 @@
                 </button>
                 <button type="button" class="bg-transparent border-0 function-btns text-light">
                   <img src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto" />
-                  <span class="textBlack">954</span>
+                  <span class="textBlack">0</span>
                 </button>
-                <button type="button" class="bg-transparent border-0 function-btns text-light">
+                <button (click)="openSharePostModal(post.id)" type="button" class="bg-transparent border-0 function-btns text-light">
                   <img src="../../../../assets/images/Upload-dark.svg" class="d-block mx-auto" />
-                  <span class="textBlack">954</span>
+                  <span class="textBlack">{{post.postSharedCount}}</span>
                 </button>
               </div>
 
@@ -385,11 +382,11 @@
                       </button>
                       <button type="button" class="bg-transparent border-0 function-btns">
                         <img src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto">
-                        954
+                        0
                       </button>
-                      <button type="button" class="bg-transparent border-0 function-btns">
+                      <button (click)="openSharePostModal(gridItemInfo.id)" type="button" class="bg-transparent border-0 function-btns">
                         <img src="../../../../assets/images/Upload-dark.svg" class="d-block mx-auto">
-                        954
+                        {{gridItemInfo.postSharedCount}}
                       </button>
                     </div>
                   </div>
@@ -399,7 +396,7 @@
 
             <div class="row">
               <ng-container *ngFor="let post of user.posts">
-              <div *ngIf="post.postType == 1 && post.postAuthorType == 4" class="col-md-6 col-xl-4">
+              <div *ngIf="post.postType == 1" class="col-md-6 col-xl-4">
                 <div class="school-grid-box position-relative school-list-box h-100 mb-0">
                   <div class="schoolgrid-header d-flex align-items-center position-relative">
                     <div class="school-gridprofile-icon">

@@ -197,19 +197,12 @@ import { StudentService } from 'src/root/service/student.service';
 
 
     createCertificate(){
-      debugger
         this.InitializeSaveStudentCertificate();
         this.certificateHtml = document.getElementById('finalCertificate')?.innerHTML??'';
         this.saveStudentCertificate.certificateHtml = this.certificateHtml;
         if(this.isSendCertificateToAll){
-          // var studentIds = this.certificateInfo.students.map(function (val:any) {
-          //   return val.studentId;
-          // });
-          //this.saveStudentCertificate.studentIds = studentIds;
-
           this.saveStudentCertificate.students = this.certificateInfo.students;
           this.saveStudentCertificate.studentId = null;
-
         }
         else{
          var students: any[] = this.certificateInfo.students;

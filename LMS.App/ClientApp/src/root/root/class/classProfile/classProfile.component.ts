@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Component, ElementRef, EventEmitter, HostListener, Injector, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, Injector, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -15,7 +15,7 @@ import { ClassService } from 'src/root/service/class.service';
 import { PostService } from 'src/root/service/post.service';
 import { addPostResponse, CreatePostComponent } from '../../createPost/createPost.component';
 import { MultilingualComponent } from '../../sharedModule/Multilingual/multilingual.component';
-import { PostViewComponent } from '../../postView/postView.component';
+import { PostViewComponent, sharePostResponse } from '../../postView/postView.component';
 import { LikeUnlikePost } from 'src/root/interfaces/post/likeUnlikePost';
 import { PostView } from 'src/root/interfaces/post/postView';
 import { ClassView } from 'src/root/interfaces/class/classView';
@@ -29,6 +29,8 @@ import { CertificateViewComponent } from '../../certificateView/certificateView.
 import { PostAuthorTypeEnum } from 'src/root/Enums/postAuthorTypeEnum';
 import { PermissionNameConstant } from 'src/root/interfaces/permissionNameConstant';
 import { PermissionTypeEnum } from 'src/root/Enums/permissionTypeEnum';
+import { SharePostComponent } from '../../sharePost/sharePost.component';
+import { Constant } from 'src/root/interfaces/constant';
 
 @Component({
     selector: 'classProfile-root',
@@ -107,6 +109,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     hasAddLanguagesPermission!:boolean;
     hasIssueCertificatePermission!:boolean;
     hasManageTeachersPermission!:boolean;
+    isOnInitInitialize:boolean = false;
 
 
     public event: EventEmitter<any> = new EventEmitter();
@@ -121,7 +124,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     @ViewChild('createPostModal', { static: true }) createPostModal!: CreatePostComponent;
 
     isDataLoaded:boolean = false;
-    constructor(injector: Injector,notificationService:NotificationService,public messageService:MessageService,postService:PostService,private bsModalService: BsModalService,classService: ClassService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
+    constructor(injector: Injector,notificationService:NotificationService,public messageService:MessageService,postService:PostService,private bsModalService: BsModalService,classService: ClassService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,private cd: ChangeDetectorRef) { 
       super(injector);
         this._classService = classService;
         this._postService = postService;
@@ -130,9 +133,15 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
           // if(!this.loadingIcon)
           this.ngOnInit();
         });
+
+        // this.classParamsData$ = this.route.params.subscribe((routeParams) => {
+        //   this.className = routeParams.className;
+        //   if (!this.loadingIcon && this.isOnInitInitialize) this.ngOnInit();
+        // });
     }
   
     ngOnInit(): void {
+      this.isOnInitInitialize = true;
       this.postLoadingIcon = false;
       this.validToken = localStorage.getItem("jwt")?? '';
       this.loadingIcon = true;
@@ -140,7 +149,6 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       this.translate.use(selectedLang?? '');
 
       this.className = this.route.snapshot.paramMap.get('className')??'';
-      var schoolName = this.route.snapshot.paramMap.get('schoolName');
 
       this._classService.getClassById(this.className.replace(" ","").toLowerCase()).subscribe((response) => {
         this.postsEndPageNumber = 1;
@@ -149,25 +157,12 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
         this.isOwnerOrNot();
         this.loadingIcon = false;
         this.isDataLoaded = true;
+        this.cd.detectChanges();
         this.postLoadingIcon = false;
         this.scrolled = false;
         this.addClassView(this.class.classId);
-        if(this.carousel!=undefined){
-          if($('carousel')[0].querySelectorAll('a.carousel-control-next')[0])
-          {
-            $('carousel')[0].querySelectorAll('a.carousel-control-next')[0].addEventListener('click', () => {
-              this.reelsPageNumber++;
-              if(this.reelsPageNumber == 2){
-                this.reelsLoadingIcon = true;
-              }
-              this._classService.getReelsByClassId(this.class.classId, this.reelsPageNumber).subscribe((response) => {
-                 this.class.reels = [...this.class.reels, ...response];
-                 this.reelsLoadingIcon = false;
-            });
-
-            })
-          }  
-      }
+        this.addEventListnerOnCarousel();
+       
       });
 
       this.editClassForm = this.fb.group({
@@ -255,6 +250,10 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
           this.addClassView(this.class.classId);
         });
       });
+
+      sharePostResponse.subscribe(response => {
+        this.messageService.add({severity:'info', summary:'Info',life: 3000, detail:'This class is private/paid, you cant share the post!'});
+      });
     }
 
     ngOnDestroy(): void {
@@ -267,6 +266,25 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
         this.initializeEditFormControls();
     })
     
+  }
+
+  addEventListnerOnCarousel(){
+    if(this.carousel!=undefined){
+      if($('carousel')[0].querySelectorAll('a.carousel-control-next')[0])
+      {
+        $('carousel')[0].querySelectorAll('a.carousel-control-next')[0].addEventListener('click', () => {
+          this.reelsPageNumber++;
+          if(this.reelsPageNumber == 2){
+            this.reelsLoadingIcon = true;
+          }
+          this._classService.getReelsByClassId(this.class.classId, this.reelsPageNumber).subscribe((response) => {
+             this.class.reels = [...this.class.reels, ...response];
+             this.reelsLoadingIcon = false;
+        });
+
+        })
+      }  
+  }
   }
 
   InitializeLikeUnlikePost(){
@@ -304,7 +322,6 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   }
 
   isOwnerOrNot(){
-    debugger
     var validToken = localStorage.getItem("jwt");
       if (validToken != null) {
         let jwtData = validToken.split('.')[1]
@@ -323,7 +340,6 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       var userPermissions: any[] = this.userPermissions;
   
       userPermissions.forEach(element => {
-        debugger
           if((element.typeId == this.class.classId || element.typeId == PermissionNameConstant.DefaultClassId) && element.ownerId == this.class.school.createdById && element.permissionType == PermissionTypeEnum.Class && element.permission.name == PermissionNameConstant.Post && (element.schoolId == null || element.schoolId == this.class.school.schoolId)){
           this.hasPostPermission = true;
           }
@@ -712,7 +728,9 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
 
     openPostsViewModal(posts:string): void {
       const initialState = {
-        posts: posts
+        posts: posts,
+        serviceType: this.class.serviceType.type,
+        accessibility: this.class.accessibility.name
       };
      this.bsModalRef= this.bsModalService.show(PostViewComponent,{initialState});
 
@@ -863,6 +881,18 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
         from:PostAuthorTypeEnum.Class
       };
       this.bsModalService.show(CertificateViewComponent, { initialState });
+    }
+
+    openSharePostModal(postId:string): void {
+      if(this.class.accessibility.name == Constant.Private || this.class.serviceType.type == Constant.Paid){
+        this.messageService.add({severity:'info', summary:'Info',life: 3000, detail:'This class is private/paid, you cant share the post!'});
+      }
+      else{
+      const initialState = {
+        postId: postId
+      };
+      this.bsModalService.show(SharePostComponent,{initialState});
+    }
     }
   
 }

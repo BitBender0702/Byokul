@@ -16,7 +16,7 @@ namespace LMS.Common.ViewModels.Account
         public string LastName { get; set; }
         public DateTime? DOB { get; set; }
         public int? Gender { get; set; }
-        public Guid? CityId { get; set; }
+        public Guid CityId { get; set; }
         public CityViewModel City { get; set; }
     }
 }

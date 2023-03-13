@@ -11,3 +11,9 @@
 .cursor_auto{
   cursor: auto;
 }
+
+.reel_spinner_position{
+  top: 114px;
+  right: 92px;
+  z-index: 999;
+}

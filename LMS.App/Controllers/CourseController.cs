@@ -3,11 +3,13 @@ using LMS.Common.ViewModels.Course;
 using LMS.Data.Entity;
 using LMS.Services;
 using LMS.Services.Common;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LMS.App.Controllers
 {
+    [Authorize]
     [Route("course")]
     public class CourseController : BaseController
     {

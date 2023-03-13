@@ -15,6 +15,7 @@ using System.Security.Claims;
 
 namespace LMS.App.Controllers
 {
+    [Authorize]
     [Route("school")]
     public class SchoolController : BaseController
     {
@@ -65,11 +66,10 @@ namespace LMS.App.Controllers
             return Ok(response);
         }
 
+        [AllowAnonymous]
         [Route("getSchoolById")]
         [HttpGet]
-        public async Task<IActionResult> GetSchoolById(string schoolName)
-        
-        
+        public async Task<IActionResult> GetSchoolById(string schoolName)        
         {
             var userId = await GetUserIdAsync(this._userManager);
             var response = await _schoolService.GetSchoolById(schoolName, userId);    
@@ -204,6 +204,7 @@ namespace LMS.App.Controllers
             return Ok(await _schoolService.IsSchoolNameExist(schoolName));
         }
 
+        [AllowAnonymous]
         [Route("getSchoolByName")]
         [HttpGet]
         public async Task<IActionResult> GetSchoolByName(string schoolName)
@@ -212,6 +213,7 @@ namespace LMS.App.Controllers
             return Ok(response);
         }
 
+        [AllowAnonymous]
         [Route("getSchoolClassCourse")]
         [HttpGet]
         public async Task<IActionResult> GetSchoolClassCourse(Guid schoolId, int pageNumber)
@@ -229,6 +231,7 @@ namespace LMS.App.Controllers
             return Ok(response);
         }
 
+        [AllowAnonymous]
         [Route("likeUnlikeClassCourse")]
         [HttpPost]
         public async Task<IActionResult> LikeUnlikeClassCourse([FromBody] LikeUnlikeClassCourse model)

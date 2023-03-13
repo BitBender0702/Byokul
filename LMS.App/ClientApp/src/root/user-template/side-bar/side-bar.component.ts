@@ -85,6 +85,7 @@ export class SideBarComponent extends MultilingualComponent implements OnInit {
     ownedSchoolResponse.subscribe(response => {
       if(response.action== "add"){
       let schoolObj = {
+        schoolId:response.schoolId,
         avatar:response.schoolAvatar,
         schoolName: response.schoolName
       };
@@ -104,6 +105,7 @@ export class SideBarComponent extends MultilingualComponent implements OnInit {
     ownedClassResponse.subscribe(response => {
       if(response.action== "add"){
       let classObj = {
+        classId:response.classId,
         avatar:response.classAvatar,
         className: response.className,
         school:{
@@ -126,6 +128,7 @@ export class SideBarComponent extends MultilingualComponent implements OnInit {
     ownedCourseResponse.subscribe(response => {
       if(response.action== "add"){
       let courseObj = {
+        courseId:response.courseId,
         avatar:response.courseAvatar,
         courseName: response.courseName,
         school:{
@@ -142,7 +145,6 @@ export class SideBarComponent extends MultilingualComponent implements OnInit {
       reqClass.avatar = response.courseAvatar;
       this.router.navigateByUrl(`profile/course/${reqClass.school.schoolName.replace(" ","").toLowerCase()}/${response.courseName.replace(" ","").toLowerCase()}`);
     }
-      // this.ngOnInit();
     });
 
   }
@@ -152,34 +154,18 @@ export class SideBarComponent extends MultilingualComponent implements OnInit {
   }
 
   getSelectedSchool(schoolName:string){
-    // window.location.href=`user/schoolProfile/${schoolId}`;
     this.router.navigateByUrl(`profile/school/${schoolName.replace(" ","").toLowerCase()}`);
-
-    //window.location.href=`profile/school/${schoolName.replace(" ","").toLowerCase()}`;
-
   }
 
   getSelectedClass(className:string,schoolName:string){
-    
-    // window.location.href=`profile/class/${schoolName.replace(" ","").toLowerCase()}/${className.replace(" ","").toLowerCase()}`;
-
     this.router.navigateByUrl(`profile/class/${schoolName.replace(" ","").toLowerCase()}/${className.replace(" ","").toLowerCase()}`);
-
   }
 
   getSelectedCourse(courseName:string,schoolName:string){
-    
-    // window.location.href=`user/courseProfile/${courseId}`;
-    // window.location.href=`profile/course/${schoolName.replace(" ","").toLowerCase()}/${courseName.replace(" ","").toLowerCase()}`;
-
     this.router.navigateByUrl(`profile/course/${schoolName.replace(" ","").toLowerCase()}/${courseName.replace(" ","").toLowerCase()}`);
-
-
   }
 
   getUserDetails(userId:string){
-    // window.location.href=`user/userProfile/${userId}`;
     this.router.navigateByUrl(`user/userProfile/${userId}`);
-
   }
 }

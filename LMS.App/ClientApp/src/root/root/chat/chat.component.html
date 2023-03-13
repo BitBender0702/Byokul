@@ -137,7 +137,7 @@
                 <span class="bg-transparent rounded-circle comment-post-user rounded-circle"><img style="max-height: 160%;" [src]="sender.avatar">
                 </span>
                 
-                  <input (keyup)="getTextMessage()" [(ngModel)]="messageToUser" type="text" class="form-control rounded-8 font_14 fw_400" placeholder="Your message">
+                  <input (keyup)="getTextMessage($event,recieverId)" [(ngModel)]="messageToUser" type="text" class="form-control rounded-8 font_14 fw_400" placeholder="Your message">
                   <br>
                   <div *ngIf="(uploadImage != undefined)">
                     <span *ngFor="let item of uploadImage" class="position-relative d-inline-block">
@@ -304,7 +304,7 @@
                 <span class="bg-transparent rounded-circle comment-post-user rounded-circle"><img style="max-height: 160%;" [src]="sender.avatar">
                 </span>
                 
-                  <input (keyup)="getTextMessage()" [(ngModel)]="messageToUser" type="text" class="form-control rounded-8 font_14 fw_400" placeholder="Your message">
+                  <input (keyup)="getTextMessage($event,schoolInboxReceiverId)" [(ngModel)]="messageToUser" type="text" class="form-control rounded-8 font_14 fw_400" placeholder="Your message">
                   <br>
                   <div *ngIf="(uploadImage != undefined)">
                     <span *ngFor="let item of uploadImage" class="position-relative d-inline-block">

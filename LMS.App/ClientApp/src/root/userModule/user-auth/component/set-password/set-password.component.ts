@@ -30,10 +30,7 @@ setPasswordViewModel!:SetPasswordViewModel;
       }
 
   ngOnInit(): void {
-    debugger
-
     this._authService.loginState$.next(false);
-
     const passwordValidators = [
         Validators.minLength(6),
         Validators.required,
@@ -47,7 +44,6 @@ setPasswordViewModel!:SetPasswordViewModel;
     this.initializeSetPasswordViewModel();
     this.tokenParm$ = this.route.queryParams
     .subscribe(params => {
-        debugger
       this.email = params.email;
     }
    );

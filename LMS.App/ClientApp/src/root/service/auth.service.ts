@@ -112,7 +112,6 @@ export class AuthService{
     }
 
     setPassword(model:SetPasswordViewModel): Observable<any> {
-      debugger
       return this.http.post(`${this.apiUrl}/auth/setPassword`, model);
   }
 }

@@ -9,15 +9,8 @@ namespace LMS.App.Controllers
         [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<string> GetUserIdAsync(UserManager<User> userManager)
         {
-            if (User.Identity.Name == null)
-            {
-                return "d2e00a9d-c26a-4389-a8b3-470a575ef8f4";
-            }
-            else
-            {
-                var results = await userManager.FindByEmailAsync(User.Identity.Name.ToString());
-                return results.Id;
-            }
+            var userClaim = User.FindFirst("jti");
+            return userClaim.Value;
         }
     }
 }

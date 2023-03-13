@@ -1,5 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import {
+  ChangeDetectorRef,
   Component,
   ElementRef,
   HostListener,
@@ -51,6 +52,7 @@ import { CertificateViewComponent } from '../../certificateView/certificateView.
 import { PostAuthorTypeEnum } from 'src/root/Enums/postAuthorTypeEnum';
 import { PermissionNameConstant } from 'src/root/interfaces/permissionNameConstant';
 import { PermissionTypeEnum } from 'src/root/Enums/permissionTypeEnum';
+import { SharePostComponent } from '../../sharePost/sharePost.component';
 // export const ownedSchoolResponse =new Subject<{schoolAvatar : string,schoolName:string}>();
 
 // import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -148,6 +150,7 @@ export class SchoolProfileComponent
   noOfAppliedCourseFilters!:number;
   classFilterList:any[] = [];
   courseFilterList:any[] = [];
+  isOnInitInitialize:boolean = false;
 
   @ViewChild('closeEditModal') closeEditModal!: ElementRef;
   @ViewChild('closeTeacherModal') closeTeacherModal!: ElementRef;
@@ -187,21 +190,19 @@ export class SchoolProfileComponent
     private http: HttpClient,
     notificationService:NotificationService,
     classService:ClassService,
-    courseService:CourseService
+    courseService:CourseService,
+    private cd: ChangeDetectorRef
   ) {
     super(injector);
     this._schoolService = schoolService;
     this._postService = postService;
     this._notificationService = notificationService;
     this._classService = classService,
-    this._courseService = courseService,
+    this._courseService = courseService
     this.schoolParamsData$ = this.route.params.subscribe((routeParams) => {
-      if (!this.loadingIcon) this.ngOnInit();
+      this.schoolName = routeParams.schoolName;
+      if (!this.loadingIcon && this.isOnInitInitialize) this.ngOnInit();
     });
-    // router.events.subscribe(routeData => {
-    //   if(!this.loadingIcon)
-    //     this.ngOnInit();
-    // })
   }
   ngOnDestroy(): void {
     if (this.schoolParamsData$) this.schoolParamsData$.unsubscribe();
@@ -215,10 +216,7 @@ export class SchoolProfileComponent
     }
   }
   ngOnInit(): void {
-    
-    // document.addEventListener('scroll', this.myScrollFunction, false);
-   // document.getElementById('chat')?.addEventListener('scroll', this.myScrollFunction, false);
-
+   this.isOnInitInitialize = true;
    this.postLoadingIcon = false;
     this.loadingIcon = true;
     this.validToken = localStorage.getItem('jwt') ?? '';
@@ -228,7 +226,10 @@ export class SchoolProfileComponent
     // var id = this.route.snapshot.paramMap.get('schoolId');
     // this.schoolId = id ?? '';
     // if (this.schoolName == undefined) {
-      this.schoolName = this.route.snapshot.paramMap.get('schoolName') ?? '';
+      // this.route.params.subscribe(params => {
+      //   this.schoolName = params['schoolName'];
+      // });
+      // this.schoolName = this.route.snapshot.paramMap.get('schoolName') ?? '';
     // }
 
     // if(this.schoolId == ''){
@@ -255,24 +256,10 @@ export class SchoolProfileComponent
         this.postLoadingIcon = false;
         this.scrolled = false;
         this.isDataLoaded = true;
+        this.cd.detectChanges();
         this.noOfAppliedClassFilters = this.school.noOfAppliedClassFilters;
         this.noOfAppliedCourseFilters = this.school.noOfAppliedCourseFilters;
-        if(this.carousel!=undefined){
-          if($('carousel')[0].querySelectorAll('a.carousel-control-next')[0])
-          {
-            $('carousel')[0].querySelectorAll('a.carousel-control-next')[0].addEventListener('click', () => {
-              this.reelsPageNumber++;
-              if(this.reelsPageNumber == 2){
-                this.reelsLoadingIcon = true;
-              }
-              this._schoolService.getReelsBySchoolId(this.school.schoolId, this.reelsPageNumber).subscribe((response) => {
-                 this.school.reels = [...this.school.reels, ...response];
-                 this.reelsLoadingIcon = false;
-            });
-
-            })
-          }  
-      }
+        this.addEventListnerOnCarousel();
       });
     // }
 
@@ -372,6 +359,24 @@ export class SchoolProfileComponent
     //this.GetSchoolClassCourseList(this.school.schoolId);
   }
 
+  addEventListnerOnCarousel(){
+    if(this.carousel!=undefined){
+      if($('carousel')[0].querySelectorAll('a.carousel-control-next')[0])
+      {
+        $('carousel')[0].querySelectorAll('a.carousel-control-next')[0].addEventListener('click', () => {
+          this.reelsPageNumber++;
+          if(this.reelsPageNumber == 2){
+            this.reelsLoadingIcon = true;
+          }
+          this._schoolService.getReelsBySchoolId(this.school.schoolId, this.reelsPageNumber).subscribe((response) => {
+             this.school.reels = [...this.school.reels, ...response];
+             this.reelsLoadingIcon = false;
+        });
+
+        })
+      }  
+  }
+  }
   InitializeLikeUnlikePost() {
     this.likeUnlikePost = {
       postId: '',
@@ -383,6 +388,11 @@ export class SchoolProfileComponent
 
   @HostListener("window:scroll", [])
   onWindowScroll() {
+    const scrollPosition = window.pageYOffset;
+    const windowSize = window.innerHeight;
+    const bodyHeight = document.body.offsetHeight;
+
+  if (scrollPosition >= bodyHeight - windowSize) {
     if(this.isFeedHide){
       if(!this.scrolled && this.scrollClassCourseResponseCount != 0){
         this.scrolled = true;
@@ -397,6 +407,7 @@ export class SchoolProfileComponent
     this.frontEndPageNumber++;
     this.getPostsBySchoolId();
     }
+  }
   }
 
   getPostsBySchoolId() {
@@ -1242,5 +1253,12 @@ export class SchoolProfileComponent
       from:PostAuthorTypeEnum.School
     };
     this.bsModalService.show(CertificateViewComponent, { initialState });
+  }
+
+  openSharePostModal(postId:string): void {
+    const initialState = {
+      postId: postId
+    };
+    this.bsModalService.show(SharePostComponent,{initialState});
   }
 }

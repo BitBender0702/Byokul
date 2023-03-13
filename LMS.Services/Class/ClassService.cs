@@ -41,11 +41,12 @@ namespace LMS.Services
         private IGenericRepository<School> _schoolRepository;
         private IGenericRepository<ClassCourseFilter> _classCourseFilterRepository;
         private IGenericRepository<UserClassCourseFilter> _userClassCourseFilterRepository;
+        private IGenericRepository<UserSharedPost> _userSharedPostRepository;
         private readonly IBlobService _blobService;
         private readonly IUserService _userService;
         private IConfiguration _config;
 
-        public ClassService(IMapper mapper, IGenericRepository<Class> classRepository, IGenericRepository<ClassLanguage> classLanguageRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<ClassDiscipline> classDisciplineRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<ClassTag> classTagRepository, IGenericRepository<ClassCertificate> classCertificateRepository, UserManager<User> userManager, IBlobService blobService, IUserService userService, IGenericRepository<ClassLike> classLikeRepository, IGenericRepository<ClassViews> classViewsRepository, IGenericRepository<School> schoolRepository, IGenericRepository<ClassCourseFilter> classCourseFilterRepository, IGenericRepository<UserClassCourseFilter> userClassCourseFilterRepository, IConfiguration config)
+        public ClassService(IMapper mapper, IGenericRepository<Class> classRepository, IGenericRepository<ClassLanguage> classLanguageRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<ClassDiscipline> classDisciplineRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<ClassTag> classTagRepository, IGenericRepository<ClassCertificate> classCertificateRepository, UserManager<User> userManager, IBlobService blobService, IUserService userService, IGenericRepository<ClassLike> classLikeRepository, IGenericRepository<ClassViews> classViewsRepository, IGenericRepository<School> schoolRepository, IGenericRepository<ClassCourseFilter> classCourseFilterRepository, IGenericRepository<UserClassCourseFilter> userClassCourseFilterRepository, IGenericRepository<UserSharedPost> userSharedPostRepository, IConfiguration config)
         {
             _mapper = mapper;
             _classRepository = classRepository;
@@ -66,6 +67,7 @@ namespace LMS.Services
             _schoolRepository = schoolRepository;
             _classCourseFilterRepository = classCourseFilterRepository;
             _userClassCourseFilterRepository = userClassCourseFilterRepository;
+            _userSharedPostRepository = userSharedPostRepository;
             _config = config;
         }
         public async Task<ClassViewModel> SaveNewClass(ClassViewModel classViewModel, string createdById)
@@ -454,7 +456,7 @@ namespace LMS.Services
                 post.Likes = await _userService.GetLikesOnPost(post.Id);
                 post.Views = await _userService.GetViewsOnPost(post.Id);
                 post.CommentsCount = await _userService.GetCommentsCountOnPost(post.Id);
-
+                post.PostSharedCount = await _userSharedPostRepository.GetAll().Where(x => x.PostId == post.Id).CountAsync();
                 if (post.Likes.Any(x => x.UserId == loginUserId && x.PostId == post.Id))
                 {
                     post.IsPostLikedByCurrentUser = true;

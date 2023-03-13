@@ -53,8 +53,7 @@
           </div>
           <div class="feed-section mt-0">
             <div class="feed-box position-relative">
-              <!-- <button type="button" class="bg-transparent border-0 next-feed"><img
-                  src="../../../assets/images/chevron-right-circle.svg" /></button> -->
+                <reels-loading-spinner [reelsLoadingIcon]="reelsLoadingIcon" class="position-absolute translate-middle reel_spinner_position"></reels-loading-spinner>
               <div class="feedbox-inner d-flex ">
                 <carousel #carousel id="reels-carousel"
                 [itemsPerSlide]="itemsPerSlide"
@@ -260,9 +259,9 @@
                   <img src="../../../../assets/images/Bookmark-light.svg" class="d-block mx-auto" />
                   0
                 </button>
-                <button type="button" class="bg-transparent border-0 function-btns text-light">
+                <button (click)="openSharePostModal(post.id)" type="button" class="bg-transparent border-0 function-btns text-light">
                   <img src="../../../../assets/images/Upload-light.svg" class="d-block mx-auto" />
-                  0
+                  {{post.postSharedCount}}
                 </button>
               </div>
 
@@ -286,9 +285,9 @@
                   <img src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto" />
                   <span class="textBlack">0</span>
                 </button>
-                <button type="button" class="bg-transparent border-0 function-btns text-light">
+                <button (click)="openSharePostModal(post.id)" type="button" class="bg-transparent border-0 function-btns text-light">
                   <img src="../../../../assets/images/Upload-dark.svg" class="d-block mx-auto" />
-                  <span class="textBlack">0</span>
+                  <span class="textBlack">{{post.postSharedCount}}</span>
                 </button>
               </div>
               </div>
@@ -379,9 +378,9 @@
                         <img src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto">
                         0
                       </button>
-                      <button type="button" class="bg-transparent border-0 function-btns">
+                      <button (click)="openSharePostModal(gridItemInfo.id)" type="button" class="bg-transparent border-0 function-btns">
                         <img src="../../../../assets/images/Upload-dark.svg" class="d-block mx-auto">
-                        0
+                        {{gridItemInfo.postSharedCount}}
                       </button>
                     </div>
                   </div>
@@ -476,6 +475,7 @@
           </div>
           <div class="feed-section mt-0">
             <div class="feed-box position-relative">
+              <reels-loading-spinner [reelsLoadingIcon]="reelsLoadingIcon" class="position-absolute translate-middle reel_spinner_position"></reels-loading-spinner>
               <!-- <button type="button" class="bg-transparent border-0 next-feed"><img
                   src="../../../assets/images/chevron-right-circle.svg" /></button> -->
               <div class="feedbox-inner d-flex ">
@@ -683,9 +683,9 @@
                   <img src="../../../../assets/images/Bookmark-light.svg" class="d-block mx-auto" />
                   0
                 </button>
-                <button type="button" class="bg-transparent border-0 function-btns text-light">
+                <button (click)="openSharePostModal(post.id)" type="button" class="bg-transparent border-0 function-btns text-light">
                   <img src="../../../../assets/images/Upload-light.svg" class="d-block mx-auto" />
-                  0
+                  {{post.postSharedCount}}
                 </button>
               </div>
 
@@ -709,9 +709,9 @@
                   <img src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto" />
                   <span class="textBlack">0</span>
                 </button>
-                <button type="button" class="bg-transparent border-0 function-btns text-light">
+                <button (click)="openSharePostModal(post.id)" type="button" class="bg-transparent border-0 function-btns text-light">
                   <img src="../../../../assets/images/Upload-dark.svg" class="d-block mx-auto" />
-                  <span class="textBlack">0</span>
+                  <span class="textBlack">{{post.postSharedCount}}</span>
                 </button>
               </div>
               </div>
@@ -802,9 +802,9 @@
                         <img src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto">
                         0
                       </button>
-                      <button type="button" class="bg-transparent border-0 function-btns">
+                      <button (click)="openSharePostModal(gridItemInfoForGlobal.id)" type="button" class="bg-transparent border-0 function-btns">
                         <img src="../../../../assets/images/Upload-dark.svg" class="d-block mx-auto">
-                        0
+                        {{gridItemInfoForGlobal.postSharedCount}}
                       </button>
                     </div>
                   </div>
@@ -1501,6 +1501,6 @@
     <post-loading-spinner [postLoadingIcon]="postLoadingIcon"></post-loading-spinner>
   </div>
   <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
-  <reels-loading-spinner [reelsLoadingIcon]="reelsLoadingIcon"></reels-loading-spinner>
+  <!-- <reels-loading-spinner [reelsLoadingIcon]="reelsLoadingIcon"></reels-loading-spinner> -->
 
 

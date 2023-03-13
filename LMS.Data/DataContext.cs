@@ -75,6 +75,7 @@ namespace LMS.Data
         public DbSet<StudentCertificate> StudentCertificates { get; set; }
         public DbSet<PermissionMaster> PermissionMaster { get; set; }
         public DbSet<UserPermission> UserPermissions { get; set; }
+        public DbSet<UserSharedPost> UserSharedPosts { get; set; }
 
 
     }

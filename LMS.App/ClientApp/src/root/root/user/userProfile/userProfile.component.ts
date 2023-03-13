@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Component, ElementRef, HostListener, Injector, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, HostListener, Injector, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -26,6 +26,7 @@ import { SignalrService } from 'src/root/service/signalr.service';
 import { NotificationType, NotificationViewModel } from 'src/root/interfaces/notification/notificationViewModel';
 import { PostAuthorTypeEnum } from 'src/root/Enums/postAuthorTypeEnum';
 import { CertificateViewComponent } from '../../certificateView/certificateView.component';
+import { SharePostComponent } from '../../sharePost/sharePost.component';
 
 export const userImageResponse =new Subject<{userAvatar : string}>();  
 export const chatResponse =new Subject<{receiverId : string , type: string,chatTypeId:string}>();  
@@ -104,7 +105,7 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
     fileToUpload= new FormData();
     translate!: TranslateService;
     
-    constructor(injector: Injector,signalrservice:SignalrService,public messageService:MessageService, private bsModalService: BsModalService,userService: UserService,postService: PostService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
+    constructor(injector: Injector,signalrservice:SignalrService,public messageService:MessageService, private bsModalService: BsModalService,userService: UserService,postService: PostService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,private cd: ChangeDetectorRef) { 
       super(injector);
         this._userService = userService;
         this._postService = postService;
@@ -141,22 +142,9 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
         this.postLoadingIcon = false;
         // this.unblockUI();
         this.isDataLoaded = true;
-        if(this.carousel!=undefined){
-          if($('carousel')[0].querySelectorAll('a.carousel-control-next')[0])
-          {
-            $('carousel')[0].querySelectorAll('a.carousel-control-next')[0].addEventListener('click', () => {
-              this.reelsPageNumber++;
-              if(this.reelsPageNumber == 2){
-                this.reelsLoadingIcon = true;
-              }
-              this._userService.getReelsByUserId(this.user.id, this.reelsPageNumber).subscribe((response) => {
-                 this.user.reels = [...this.user.reels, ...response];
-                 this.reelsLoadingIcon = false;
-            });
+        this.cd.detectChanges();
+        this.addEventListnerOnCarousel();
 
-            })
-          }  
-      }
       });
 
       this._userService.getLanguageList().subscribe((response) => {
@@ -211,6 +199,7 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
           this.postLoadingIcon = false;
         });
       });
+      
 
 
     }
@@ -254,6 +243,25 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
     //       this.getByUserId();
          
     // }
+
+    addEventListnerOnCarousel(){
+     if(this.carousel!=undefined){
+          if($('carousel')[0].querySelectorAll('a.carousel-control-next')[0])
+          {
+            $('carousel')[0].querySelectorAll('a.carousel-control-next')[0].addEventListener('click', () => {
+              this.reelsPageNumber++;
+              if(this.reelsPageNumber == 2){
+                this.reelsLoadingIcon = true;
+              }
+              this._userService.getReelsByUserId(this.user.id, this.reelsPageNumber).subscribe((response) => {
+                 this.user.reels = [...this.user.reels, ...response];
+                 this.reelsLoadingIcon = false;
+            });
+
+            })
+          }  
+      }
+     }
 
     
    
@@ -684,6 +692,13 @@ openCertificateViewModal(certificateUrl:string,certificateName:string){
     from:PostAuthorTypeEnum.School
   };
   this.bsModalService.show(CertificateViewComponent, { initialState });
+}
+
+openSharePostModal(postId:string): void {
+  const initialState = {
+    postId: postId
+  };
+  this.bsModalService.show(SharePostComponent,{initialState});
 }
 
 }

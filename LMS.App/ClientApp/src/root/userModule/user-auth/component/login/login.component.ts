@@ -85,7 +85,6 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
       this.user = this.loginForm.value;
       this._authService.loginUser(this.user).pipe(finalize(()=> this.loadingIcon= false)).subscribe({
         next: (response: AuthenticatedResponse) => {
-          debugger
           if(response.errorMessage == "user not found"){
             this._authService.loginState$.next(false);
             this.loginForm.setErrors({ unauthenticated: true });

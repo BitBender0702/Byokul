@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, ElementRef, HostListener, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, HostListener, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -7,6 +7,7 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { MessageService } from 'primeng/api';
 import { PermissionTypeEnum } from 'src/root/Enums/permissionTypeEnum';
 import { PostAuthorTypeEnum } from 'src/root/Enums/postAuthorTypeEnum';
+import { Constant } from 'src/root/interfaces/constant';
 import { AddCourseCertificate } from 'src/root/interfaces/course/addCourseCertificate';
 import { AddCourseLanguage } from 'src/root/interfaces/course/addCourseLanguage';
 import { AddCourseTeacher } from 'src/root/interfaces/course/addCourseTeacher';
@@ -26,6 +27,7 @@ import { addPostResponse, CreatePostComponent } from '../../createPost/createPos
 import { PostViewComponent } from '../../postView/postView.component';
 import { ReelsViewComponent } from '../../reels/reelsView.component';
 import { MultilingualComponent } from '../../sharedModule/Multilingual/multilingual.component';
+import { SharePostComponent } from '../../sharePost/sharePost.component';
 import { ownedCourseResponse } from '../createCourse/createCourse.component';
 
 @Component({
@@ -101,6 +103,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     hasAddLanguagesPermission!:boolean;
     hasIssueCertificatePermission!:boolean;
     hasManageTeachersPermission!:boolean;
+    isOnInitInitialize:boolean = false;
 
 
     @ViewChild('closeEditModal') closeEditModal!: ElementRef;
@@ -113,7 +116,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     @ViewChild('createPostModal', { static: true }) createPostModal!: CreatePostComponent;
 
     isDataLoaded:boolean = false;
-    constructor(injector: Injector,notificationService:NotificationService,public messageService:MessageService,postService:PostService,private bsModalService: BsModalService,courseService: CourseService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
+    constructor(injector: Injector,notificationService:NotificationService,public messageService:MessageService,postService:PostService,private bsModalService: BsModalService,courseService: CourseService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,private cd: ChangeDetectorRef) { 
       super(injector);
         this._courseService = courseService;
          this._postService = postService;
@@ -122,10 +125,16 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
           // if(!this.loadingIcon)
           this.ngOnInit();
         });
+
+        // this.courseParamsData$ = this.route.params.subscribe((routeParams) => {
+        //   this.courseName = routeParams.courseName;
+        //   if (!this.loadingIcon && this.isOnInitInitialize) this.ngOnInit();
+        // });
     }
 
   
     ngOnInit(): void {
+      this.isOnInitInitialize = true;
       this.postLoadingIcon = false;
       // document.addEventListener('scroll', this.myScrollFunction, false);
       this.validToken = localStorage.getItem("jwt")?? '';
@@ -136,8 +145,8 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       // var id = this.route.snapshot.paramMap.get('courseId');
       // this.courseId = id ?? '';
 
-      this.courseName = this.route.snapshot.paramMap.get('courseName')??'';
-      var schoolName = this.route.snapshot.paramMap.get('schoolName');
+      // this.courseName = this.route.snapshot.paramMap.get('courseName')??'';
+      //var schoolName = this.route.snapshot.paramMap.get('schoolName');
 
       // if(this.courseId == ''){
       //   this._courseService.getCourseByName(this.courseName,schoolName).subscribe((response) => {
@@ -159,26 +168,12 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
         this.isOwnerOrNot();
         this.loadingIcon = false;
         this.isDataLoaded = true;
+        this.cd.detectChanges();
         this.scrolled = false;
         this.postLoadingIcon = false;
         this.addCourseView(this.course.courseId);
-        if(this.carousel!=undefined){
-          if($('carousel')[0].querySelectorAll('a.carousel-control-next')[0])
-          {
-            $('carousel')[0].querySelectorAll('a.carousel-control-next')[0].addEventListener('click', () => {
-              this.reelsPageNumber++;
-              if(this.reelsPageNumber == 2){
-                this.reelsLoadingIcon = true;
-              }
-              this._courseService.getReelsByCourseId(this.course.classId, this.reelsPageNumber).subscribe((response) => {
-                 this.course.reels = [...this.course.reels, ...response];
-                 this.reelsLoadingIcon = false;
-
-            });
-
-            })
-          }  
-      }
+        this.addEventListnerOnCarousel();
+       
       });
     // }
 
@@ -276,6 +271,26 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
 //     })
     
 //   }
+    }
+
+    addEventListnerOnCarousel(){
+      if(this.carousel!=undefined){
+        if($('carousel')[0].querySelectorAll('a.carousel-control-next')[0])
+        {
+          $('carousel')[0].querySelectorAll('a.carousel-control-next')[0].addEventListener('click', () => {
+            this.reelsPageNumber++;
+            if(this.reelsPageNumber == 2){
+              this.reelsLoadingIcon = true;
+            }
+            this._courseService.getReelsByCourseId(this.course.classId, this.reelsPageNumber).subscribe((response) => {
+               this.course.reels = [...this.course.reels, ...response];
+               this.reelsLoadingIcon = false;
+
+          });
+
+          })
+        }  
+    }
     }
 
     InitializeLikeUnlikePost(){
@@ -859,6 +874,18 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
         from:PostAuthorTypeEnum.Course
       };
       this.bsModalService.show(CertificateViewComponent, { initialState });
+    }
+
+    openSharePostModal(postId:string): void {
+      if(this.course.accessibility.name == Constant.Private || this.course.serviceType.type == Constant.Paid){
+        this.messageService.add({severity:'info', summary:'Info',life: 3000, detail:'This course is private/paid, you cant share the post!'});
+      }
+      else{
+      const initialState = {
+        postId: postId
+      };
+      this.bsModalService.show(SharePostComponent,{initialState});
+    }
     }
   
 }

@@ -27,6 +27,7 @@ import { UserFeedComponent } from '../root/userFeed/userFeed.component';
 import { NotificationsComponent } from '../root/Notifications/notifications.component';
 import { GenerateCertificateComponent } from '../root/generateCertificate/generateCertificate.component';
 import { AddTeacherComponent } from '../root/teacher/addTeacher.component';
+import { PostViewComponent } from '../root/postView/postView.component';
 
 
 const routes: Routes = [
@@ -120,7 +121,10 @@ const routes: Routes = [
   },
   {
     path: 'addTeacher/:userId',component:AddTeacherComponent
-  }
+  },
+  {
+    path: 'post/:id',component:PostViewComponent
+  },
 ];
 
 

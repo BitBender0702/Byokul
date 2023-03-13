@@ -1113,12 +1113,15 @@ if(this.uploadAttachments != undefined){
 });
 }
 
-getTextMessage(){
+getTextMessage(evant:any,receiverId:string){
   if(this.messageToUser ==""){
    this.invalidMessage = true;
   }
   else{
     this.invalidMessage = false;
+    if(evant.code == "Enter"){
+      this.sendToUser(receiverId);
+   }
   }
 }
 

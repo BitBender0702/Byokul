@@ -14,6 +14,7 @@ import { UserService } from 'src/root/service/user.service';
 import { CreatePostComponent } from '../createPost/createPost.component';
 import { PostViewComponent } from '../postView/postView.component';
 import { ReelsViewComponent } from '../reels/reelsView.component';
+import { SharePostComponent } from '../sharePost/sharePost.component';
 
 @Component({
     selector: 'post-view',
@@ -164,6 +165,11 @@ export class UserFeedComponent implements OnInit {
 
   @HostListener("window:scroll", [])
   onWindowScroll() {
+    const scrollPosition = window.pageYOffset;
+    const windowSize = window.innerHeight;
+    const bodyHeight = document.body.offsetHeight;
+
+  if (scrollPosition >= bodyHeight - windowSize) {
     if(!this.isGlobalFeed){
       if(!this.scrolled && this.scrollMyFeedResponseCount != 0 && this.myFeeds !=undefined){
         this.scrolled = true;
@@ -192,6 +198,7 @@ export class UserFeedComponent implements OnInit {
       });
     }
   }
+}
   }
 
     InitializeLikeUnlikePost(){
@@ -419,6 +426,13 @@ export class UserFeedComponent implements OnInit {
           postAttachmentId: postAttachmentId
         };
         this.bsModalService.show(ReelsViewComponent,{initialState});
+      }
+
+      openSharePostModal(postId:string): void {
+        const initialState = {
+          postId: postId
+        };
+        this.bsModalService.show(SharePostComponent,{initialState});
       }
 
 }

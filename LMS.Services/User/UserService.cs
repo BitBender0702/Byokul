@@ -44,10 +44,11 @@ namespace LMS.Services
         private IGenericRepository<View> _viewRepository;
         private IGenericRepository<Comment> _commentRepository;
         private IGenericRepository<StudentCertificate> _studentCertificateRepository;
+        private IGenericRepository<UserSharedPost> _userSharedPostRepository;
         private readonly UserManager<User> _userManager;
         private readonly IBlobService _blobService;
         public UserService(IMapper mapper, IGenericRepository<User> userRepository, IGenericRepository<UserFollower> userFollowerRepository, IGenericRepository<UserLanguage> userLanguageRepository, IGenericRepository<City> cityRepository, IGenericRepository<Country> countryRepository, IGenericRepository<SchoolFollower> schoolFollowerRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<CourseTeacher> courseTeacherRepository,
-          IGenericRepository<SchoolTeacher> schoolteacherRepository, IGenericRepository<Student> studentRepository, IGenericRepository<Teacher> teacherRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<UserPreference> userPreferenceRepository, IGenericRepository<Like> likeRepository, IGenericRepository<View> viewRepository, IGenericRepository<Comment> commentRepository, IGenericRepository<StudentCertificate> studentCertificateRepository, UserManager<User> userManager, IBlobService blobService)
+          IGenericRepository<SchoolTeacher> schoolteacherRepository, IGenericRepository<Student> studentRepository, IGenericRepository<Teacher> teacherRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<UserPreference> userPreferenceRepository, IGenericRepository<Like> likeRepository, IGenericRepository<View> viewRepository, IGenericRepository<Comment> commentRepository, IGenericRepository<StudentCertificate> studentCertificateRepository, IGenericRepository<UserSharedPost> userSharedPostRepository, UserManager<User> userManager, IBlobService blobService)
         {
             _mapper = mapper;
             _userRepository = userRepository;
@@ -74,12 +75,13 @@ namespace LMS.Services
             _viewRepository = viewRepository;
             _commentRepository = commentRepository;
             _studentCertificateRepository = studentCertificateRepository;
+            _userSharedPostRepository = userSharedPostRepository;
             _userManager = userManager;
             _blobService = blobService;
         }
         public async Task<UserDetailsViewModel> GetUserById(string userId)
         {
-            var user = await _userRepository.GetAll().Include(x => x.City).Where(x => x.Id == userId).FirstOrDefaultAsync();
+            var user = await _userRepository.GetAll().Include(x => x.City).ThenInclude(x => x.Country).Where(x => x.Id == userId).FirstOrDefaultAsync();
             var result = _mapper.Map<UserDetailsViewModel>(user);
             result.Followers = await GetFollowers(userId);
             result.Languages = await GetLanguages(userId);
@@ -419,6 +421,8 @@ namespace LMS.Services
             var test = requiredIds.Where(a => a.Id.HasValue).ToList();
             var postListData = (postList.Include(p => p.CreatedBy).AsEnumerable()).Where(x => test.Any(q => q.Id == x.ParentId) && x.PostType == (int)postType).Skip((pageNumber - 1) * pageSize).Take(pageSize).OrderByDescending(x => x.IsPinned).ToList();
 
+            var sharedPosts = await _userSharedPostRepository.GetAll().ToListAsync();
+
             var resultData = _mapper.Map<List<PostDetailsViewModel>>(postListData);
             foreach (var post in resultData)
             {
@@ -430,6 +434,7 @@ namespace LMS.Services
                 post.Likes = await GetLikesOnPost(post.Id);
                 post.Views = await GetViewsOnPost(post.Id);
                 post.CommentsCount = await GetCommentsCountOnPost(post.Id);
+                post.PostSharedCount = sharedPosts.Where(x => x.PostId == post.Id).Count();
                 post.PostAuthorType = (int)PostAuthorTypeEnum.School;
                 post.ParentId = data.Id != null ? data.Id.Value : Guid.Empty;
                 post.SchoolName = data.SchoolName;
@@ -676,16 +681,55 @@ namespace LMS.Services
 
         public async Task<IEnumerable<PostDetailsViewModel>> GetPostsByUserId(string userId, int pageNumber = 1, int pageSize = 4)
         {
-            var courseList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == new Guid(userId) && x.PostType == (int)PostTypeEnum.Post).OrderByDescending(x => x.IsPinned).ToListAsync();
 
-            var result = _mapper.Map<List<PostDetailsViewModel>>(courseList).Skip((pageNumber - 1) * pageSize).Take(pageSize);
+            var postList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == new Guid(userId) && x.PostType == (int)PostTypeEnum.Post && x.PostAuthorType == (int)PostAuthorTypeEnum.User).OrderByDescending(x => x.IsPinned).ToListAsync();
+
+            var sharedPosts = await _userSharedPostRepository.GetAll().Include(x => x.Post).ThenInclude(x => x.CreatedBy).Where(x => x.UserId == userId && x.Post.PostType == (int)PostTypeEnum.Post).OrderByDescending(x => x.Post.IsPinned).ToListAsync();
+
+            foreach (var sharedPost in sharedPosts)
+            {
+                postList.Add(sharedPost.Post);
+            }
+
+            var requiredPostList = postList.OrderByDescending(x => x.IsPinned).OrderByDescending(x => x.CreatedOn).ToList();
+
+            var result = _mapper.Map<List<PostDetailsViewModel>>(requiredPostList).Skip((pageNumber - 1) * pageSize).Take(pageSize);
 
             foreach (var post in result)
             {
+                if (post.PostAuthorType == (int)PostAuthorTypeEnum.School)
+                {
+                    var school = _schoolRepository.GetById(post.ParentId);
+                    post.ParentName = school.SchoolName;
+                    post.ParentImageUrl = school.Avatar;
+                }
+
+                if (post.PostAuthorType == (int)PostAuthorTypeEnum.Class)
+                {
+                    var classes = _classRepository.GetById(post.ParentId);
+                    post.ParentName = classes.ClassName;
+                    post.ParentImageUrl = classes.Avatar;
+                }
+
+                if (post.PostAuthorType == (int)PostAuthorTypeEnum.Course)
+                {
+                    var course = _courseRepository.GetById(post.ParentId);
+                    post.ParentName = course.CourseName;
+                    post.ParentImageUrl = course.Avatar;
+                }
+
+                if (post.PostAuthorType == (int)PostAuthorTypeEnum.User)
+                {
+                    var user = _userRepository.GetById(post.ParentId.ToString());
+                    post.ParentName = user.FirstName + " " + user.LastName;
+                    post.ParentImageUrl = user.Avatar;
+                }
+              
                 post.PostAttachments = await GetAttachmentsByPostId(post.Id);
                 post.Likes = await GetLikesOnPost(post.Id);
                 post.Views = await GetViewsOnPost(post.Id);
                 post.CommentsCount = await GetCommentsCountOnPost(post.Id);
+                post.PostSharedCount = await _userSharedPostRepository.GetAll().Where(x => x.PostId == post.Id).CountAsync();
                 if (post.Likes.Any(x => x.UserId == userId && x.PostId == post.Id))
                 {
                     post.IsPostLikedByCurrentUser = true;
@@ -707,12 +751,47 @@ namespace LMS.Services
 
         public async Task<IEnumerable<PostDetailsViewModel>> GetReelsByUserId(string userId, int pageNumber = 1, int pageSize = 8)
         {
-            var courseList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == new Guid(userId) && x.PostType == (int)PostTypeEnum.Reel).OrderByDescending(x => x.IsPinned).ToListAsync();
+            var reelList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == new Guid(userId) && x.PostType == (int)PostTypeEnum.Reel && x.PostAuthorType == (int)PostAuthorTypeEnum.User).OrderByDescending(x => x.IsPinned).ToListAsync();
 
-            var result = _mapper.Map<List<PostDetailsViewModel>>(courseList).Skip((pageNumber - 1) * pageSize).Take(pageSize);
+            var sharedPosts = await _userSharedPostRepository.GetAll().Include(x => x.Post).ThenInclude(x => x.CreatedBy).Where(x => x.UserId == userId && x.Post.PostType == (int)PostTypeEnum.Reel).OrderByDescending(x => x.Post.IsPinned).ToListAsync();
+
+            foreach (var sharedPost in sharedPosts)
+            {
+                reelList.Add(sharedPost.Post);
+            }
+
+            var result = _mapper.Map<List<PostDetailsViewModel>>(reelList).Skip((pageNumber - 1) * pageSize).Take(pageSize);
 
             foreach (var post in result)
             {
+                if (post.PostAuthorType == (int)PostAuthorTypeEnum.School)
+                {
+                    var school = _schoolRepository.GetById(post.ParentId);
+                    post.ParentName = school.SchoolName;
+                    post.ParentImageUrl = school.Avatar;
+                }
+
+                if (post.PostAuthorType == (int)PostAuthorTypeEnum.Class)
+                {
+                    var classes = _classRepository.GetById(post.ParentId);
+                    post.ParentName = classes.ClassName;
+                    post.ParentImageUrl = classes.Avatar;
+                }
+
+                if (post.PostAuthorType == (int)PostAuthorTypeEnum.Course)
+                {
+                    var course = _courseRepository.GetById(post.ParentId);
+                    post.ParentName = course.CourseName;
+                    post.ParentImageUrl = course.Avatar;
+                }
+
+                if (post.PostAuthorType == (int)PostAuthorTypeEnum.User)
+                {
+                    var user = _userRepository.GetById(post.ParentId.ToString());
+                    post.ParentName = user.FirstName + " " + user.LastName;
+                    post.ParentImageUrl = user.Avatar;
+                }
+
                 post.PostAttachments = await GetAttachmentsByPostId(post.Id);
                 post.Likes = await GetLikesOnPost(post.Id);
                 post.Views = await GetViewsOnPost(post.Id);
@@ -998,16 +1077,16 @@ namespace LMS.Services
             var postAttachmentList = await _postAttachmentRepository.GetAll().ToListAsync();
             var postTagsList = await _postTagRepository.GetAll().ToListAsync();
             var likesList = await _likeRepository.GetAll().ToListAsync();
-
+            var sharedPostList = await _userSharedPostRepository.GetAll().ToListAsync();
             foreach (var item in postGUIDScore)
             {
                 var post = postList.Where(x => x.Id == item.Key).First();
                 var postAttachment = postAttachmentList.Where(x => x.PostId == item.Key).ToList();
                 var postTag = postTagsList.Where(x => x.PostId == item.Key).ToList();
-                var Likes = await GetLikesOnPost(item.Key);
-                var Views = await GetViewsOnPost(item.Key);
-                var CommentsCount = await GetCommentsCountOnPost(item.Key);
-
+                var likes = await GetLikesOnPost(item.Key);
+                var views = await GetViewsOnPost(item.Key);
+                var commentsCount = await GetCommentsCountOnPost(item.Key);
+                var sharedPostCount = sharedPostList.Where(x => x.PostId == item.Key).Count();
                 var isLiked = likesList.Any(x => x.UserId == loginUserId && x.PostId == item.Key);
 
                 if (isLiked)
@@ -1070,9 +1149,10 @@ namespace LMS.Services
                     Id = post.Id,
                     Title = post.Title,
                     Description = post.Description,
-                    Likes = Likes,
-                    Views = Views,
-                    CommentsCount = CommentsCount,
+                    Likes = likes,
+                    Views = views,
+                    CommentsCount = commentsCount,
+                    PostSharedCount = sharedPostCount,
                     IsPostLikedByCurrentUser = IsPostLikedByCurrentUser,
                     PostType = post.PostType,
                     ParentName = parentName,
@@ -1104,15 +1184,17 @@ namespace LMS.Services
             var postAttachmentList = await _postAttachmentRepository.GetAll().ToListAsync();
             var postTagsList = await _postTagRepository.GetAll().ToListAsync();
             var likesList = await _likeRepository.GetAll().ToListAsync();
+            var sharedPostList = await _userSharedPostRepository.GetAll().ToListAsync();
 
             foreach (var item in postList)
             {
                 var post = postList.Where(x => x.Id == item.Id).First();
                 var postAttachment = postAttachmentList.Where(x => x.PostId == item.Id).ToList();
                 var postTag = postTagsList.Where(x => x.PostId == item.Id).ToList();
-                var Likes = await GetLikesOnPost(post.Id);
-                var Views = await GetViewsOnPost(post.Id);
-                var CommentsCount = await GetCommentsCountOnPost(post.Id);
+                var likes = await GetLikesOnPost(post.Id);
+                var views = await GetViewsOnPost(post.Id);
+                var commentsCount = await GetCommentsCountOnPost(post.Id);
+                var sharedPostCount = sharedPostList.Where(x => x.PostId == post.Id).Count();
 
                 var isLiked = likesList.Any(x => x.UserId == loginUserId && x.PostId == post.Id);
 
@@ -1175,9 +1257,10 @@ namespace LMS.Services
                     Id = post.Id,
                     Title = post.Title,
                     Description = post.Description,
-                    Likes = Likes,
-                    Views = Views,
-                    CommentsCount = CommentsCount,
+                    Likes = likes,
+                    Views = views,
+                    CommentsCount = commentsCount,
+                    PostSharedCount = sharedPostCount,
                     IsPostLikedByCurrentUser = IsPostLikedByCurrentUser,
                     PostType = post.PostType,
                     ParentName = parentName,
@@ -1258,7 +1341,7 @@ namespace LMS.Services
         public async Task<UserDetailsViewModel> GetUserByEmail(string email)
         {
             var user = await _userRepository.GetAll().Where(x => x.Email == email).FirstOrDefaultAsync();
-            if (user!=null)
+            if (user != null)
             {
                 var response = _mapper.Map<UserDetailsViewModel>(user);
                 return response;

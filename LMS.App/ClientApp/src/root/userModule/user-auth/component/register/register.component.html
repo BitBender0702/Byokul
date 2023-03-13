@@ -1,4 +1,4 @@
-
+<div *ngIf="isDataLoaded">
   <section class="container">
     <div class="logo mb-3 pt-5">
       <img src="../../../../../assets/images/logo.svg" alt="logo" />
@@ -52,6 +52,28 @@
             </small>
             </div>
           </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <select class="form-select rounded-8 w-100" formControlName="countryId" aria-label="Default select example" (change)="getCityByCountry($event.target)">
+                <option value="" disabled selected hidden>Country</option>
+                <option *ngFor="let country of countries;" [value]="country.id">{{country.name}}</option>
+             </select>
+             <small class="p-error" style="color: orange;"
+             *ngIf="(isSubmitted && registrationForm.controls.countryId.errors)">This Field is required
+             </small>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <select class="form-select rounded-8 w-100" formControlName="cityId" aria-label="Default select example">
+                <option value="" disabled selected hidden>City</option>
+                 <option *ngFor="let city of cities;" [value]="city.id">{{city.name}}</option>
+             </select>
+             <small class="p-error" style="color: orange;"
+             *ngIf="(isSubmitted && registrationForm.controls.cityId.errors)">This Field is required
+             </small>
+            </div>
+          </div>
           <div class="col-md-12">
             <div class="form-group">
               <input type="email" class="form-control rounded-8" formControlName="email" placeholder="{{'Email'| translate }}">
@@ -98,4 +120,5 @@
       </form>
     </div>
   </section>
+</div>
 <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
