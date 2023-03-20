@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using System.Configuration;
 using LMS.Common.ViewModels.Post;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace LMS.App.Controllers
 {
@@ -39,6 +40,7 @@ namespace LMS.App.Controllers
         public async Task<IActionResult> Login([FromBody] LoginViewModel loginViewModel)
         {
             var result = await _authService.AuthenticateUser(loginViewModel);
+            Token = result.Token;
             return Ok(result);
         }
 
@@ -142,7 +144,6 @@ namespace LMS.App.Controllers
             return Ok(new { result = "" });
         }
 
-        [Authorize]
         [Route("resetPassword")]
         [HttpPost]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordViewModel resetPasswordViewModel)

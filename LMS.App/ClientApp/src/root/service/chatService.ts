@@ -42,9 +42,9 @@ export class ChatService{
 
     }
 
-    getAllChatUsers(senderId:string):Observable<any>{
-        return this.http.get(`${this.apiUrl}/chats/getAllChatUsers` + '?senderId=' + senderId,{headers: this.headers});
-
+    getAllChatUsers(senderId:string,pageNumber:number,searchString:string):Observable<any>{
+        let queryParams = new HttpParams().append("senderId",senderId).append("pageNumber",pageNumber).append("searchString",searchString);
+        return this.http.get(`${this.apiUrl}/chats/getAllChatUsers`, {params:queryParams,headers: this.headers});
     }
 
     getUsersChat(senderId:string,receiverId:string,chatType:number,pageSize:number,pageNumber:number):Observable<any>{

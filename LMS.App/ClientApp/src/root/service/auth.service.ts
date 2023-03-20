@@ -20,7 +20,7 @@ import { SetPasswordViewModel } from "../interfaces/set-password";
 
 export class AuthService{
     private headers!: HttpHeaders;
-
+    authToken:string = localStorage.getItem("jwt")?? '';
     token: JwtResult = new Object as JwtResult;
     tokenExpiration = new Date();
     currentUser: string | null = '';
@@ -33,42 +33,42 @@ export class AuthService{
 
 
     constructor(private router: Router, private http: HttpClient) { 
-        this.headers = new HttpHeaders({'Content-Type': 'application/json; charset=utf-8'});
+        this.headers = new HttpHeaders().set("Authorization", "Bearer " + this.authToken);
+
     }
 
     loginUser(credentials:LoginModel): Observable<any> {
         const headers = { 'content-type': 'application/json'} 
-        return this.http.post<AuthenticatedResponse>(`${this.apiUrl}/auth/login`, credentials, {'headers':headers});
+        return this.http.post<AuthenticatedResponse>(`${this.apiUrl}/auth/login`, credentials, {'headers':this.headers});
     }
 
     registerUser(credentials:RegisterModel): Observable<any> {
         const headers = { 'content-type': 'application/json'} 
-        return this.http.post<AuthenticatedResponse>(`${this.apiUrl}/auth/register`, credentials, {'headers':headers});
+        return this.http.post<AuthenticatedResponse>(`${this.apiUrl}/auth/register`, credentials, {'headers':this.headers});
     }
 
     changePassword(credentials:ChangePasswordModel): Observable<any> {
         const headers = { 'content-type': 'application/json'} 
-        return this.http.post<AuthenticatedResponse>(`${this.apiUrl}/auth/updatePassword`, credentials, {'headers':headers});
+        return this.http.post<AuthenticatedResponse>(`${this.apiUrl}/auth/updatePassword`, credentials, {'headers':this.headers});
     }
 
     forgetPassword(credentials:ForgetPasswordModel): Observable<any> {
         const headers = { 'content-type': 'application/json'} 
-        return this.http.post<AuthenticatedResponse>(`${this.apiUrl}/auth/forgetPassword`, credentials, {'headers':headers});
+        return this.http.post<AuthenticatedResponse>(`${this.apiUrl}/auth/forgetPassword`, credentials, {'headers':this.headers});
     }
 
     getBigBlueButton(): Observable<any> {
         
         const headers = { 'content-type': 'application/json'} 
-        return this.http.post<AuthenticatedResponse>(`${this.apiUrl}/bigbluebutton/api/join?${`shi-vex-mpo-m9j`}`, '', {'headers':headers});
+        return this.http.post<AuthenticatedResponse>(`${this.apiUrl}/bigbluebutton/api/join?${`shi-vex-mpo-m9j`}`, '', {'headers':this.headers});
     }
 
     resetPassword(credentials:ResetPasswordModel): Observable<any> {
         const headers = { 'content-type': 'application/json'} 
-        return this.http.post(`${this.apiUrl}/auth/resetPassword`, credentials, {'headers':headers});
+        return this.http.post(`${this.apiUrl}/auth/resetPassword`, credentials, {'headers':this.headers});
     }
 
     isUserAuthenticateed(){
-        
         const helper = new JwtHelperService();
         const token = localStorage.getItem("jwt");
         const decodedToken = helper.decodeToken(token!);
@@ -108,10 +108,10 @@ export class AuthService{
     confirmEmail(token:string,email:string):Observable<any>{
       
       let queryParams = new HttpParams().append("token",token).append("email",email);
-      return this.http.get(`${this.apiUrl}/auth/confirmEmail`, {params:queryParams});
+      return this.http.get(`${this.apiUrl}/auth/confirmEmail`, {params:queryParams, headers:this.headers});
     }
 
     setPassword(model:SetPasswordViewModel): Observable<any> {
-      return this.http.post(`${this.apiUrl}/auth/setPassword`, model);
+      return this.http.post(`${this.apiUrl}/auth/setPassword`, model,{headers: this.headers});
   }
 }
