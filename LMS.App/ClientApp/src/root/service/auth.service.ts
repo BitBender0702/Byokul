@@ -39,33 +39,33 @@ export class AuthService{
 
     loginUser(credentials:LoginModel): Observable<any> {
         const headers = { 'content-type': 'application/json'} 
-        return this.http.post<AuthenticatedResponse>(`${this.apiUrl}/auth/login`, credentials, {'headers':this.headers});
+        return this.http.post<AuthenticatedResponse>(`${this.apiUrl}/auth/login`, credentials, {headers: this.headers});
     }
 
     registerUser(credentials:RegisterModel): Observable<any> {
         const headers = { 'content-type': 'application/json'} 
-        return this.http.post<AuthenticatedResponse>(`${this.apiUrl}/auth/register`, credentials, {'headers':this.headers});
+        return this.http.post<AuthenticatedResponse>(`${this.apiUrl}/auth/register`, credentials, {headers: this.headers});
     }
 
     changePassword(credentials:ChangePasswordModel): Observable<any> {
-        const headers = { 'content-type': 'application/json'} 
-        return this.http.post<AuthenticatedResponse>(`${this.apiUrl}/auth/updatePassword`, credentials, {'headers':this.headers});
+      debugger
+        return this.http.post<AuthenticatedResponse>(`${this.apiUrl}/auth/updatePassword`, credentials, {headers: this.headers});
     }
 
     forgetPassword(credentials:ForgetPasswordModel): Observable<any> {
         const headers = { 'content-type': 'application/json'} 
-        return this.http.post<AuthenticatedResponse>(`${this.apiUrl}/auth/forgetPassword`, credentials, {'headers':this.headers});
+        return this.http.post<AuthenticatedResponse>(`${this.apiUrl}/auth/forgetPassword`, credentials, {headers: this.headers});
     }
 
     getBigBlueButton(): Observable<any> {
         
         const headers = { 'content-type': 'application/json'} 
-        return this.http.post<AuthenticatedResponse>(`${this.apiUrl}/bigbluebutton/api/join?${`shi-vex-mpo-m9j`}`, '', {'headers':this.headers});
+        return this.http.post<AuthenticatedResponse>(`${this.apiUrl}/bigbluebutton/api/join?${`shi-vex-mpo-m9j`}`, '', {headers: this.headers});
     }
 
     resetPassword(credentials:ResetPasswordModel): Observable<any> {
         const headers = { 'content-type': 'application/json'} 
-        return this.http.post(`${this.apiUrl}/auth/resetPassword`, credentials, {'headers':this.headers});
+        return this.http.post(`${this.apiUrl}/auth/resetPassword`, credentials, {headers: this.headers});
     }
 
     isUserAuthenticateed(){

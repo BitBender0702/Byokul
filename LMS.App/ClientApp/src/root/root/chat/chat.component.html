@@ -44,7 +44,7 @@
             </div>
           </div>
           <div class="search-header position-relative">
-            <input type="search" class="form-control h_44" />
+            <input (keyup)="chatHeadsSearch()" [(ngModel)]="searchString" type="search" class="form-control h_44" />
             <button type="button" class="btn search-icon border-0"><img src="../../../assets/images/school/search-gray.svg" /></button>
           </div>
         </div>
@@ -53,9 +53,12 @@
         aria-labelledby="school-feed-tab" aria-selected="false" tabindex="0">
         <div class="message-box">
           <aside class="chat-aside">
-            <ul class="before-none">
+            <ul class="before-none position-relative" #chatHeadsScrollList (scroll)="scrollHandler($event)">
+              <div *ngIf="chatHeadsLoadingIcon" class="postloader-main position-absolute translate-middle">
+                <div class="postlds-ring" style="margin-left: 177px;margin-bottom: -344px;"><div></div><div></div><div></div><div></div></div>
+              </div>
               <li *ngFor="let item of allChatUsers" [ngClass]="selectedChatHeadDiv && item.userID == recieverId && item.chatType == chatType ? 'd-flex justify-content-between align-items-end selectedChatHead':'d-flex justify-content-between align-items-end'" class="d-flex justify-content-between align-items-end" (click)="getUsersChat(item.chatHeadId,item.userID,item.profileURL,item.userName,item.chatType,'FromMyInbox',10,1)">
-                <input [value]="item.userID" hidden/>
+                <input [value]="item.userID" hidden/>   
                 <div class="chat-userleft">
                   <div class="chat-username d-flex align-items-center mb-2">
                     <img [src]="item?.profileURL" alt="">
@@ -80,7 +83,10 @@
             </ul>
           </aside>
           <main>
-            <ul #chatList id="chat" class="before-none">
+            <ul #chatList id="chat" class="before-none position-relative" (scroll)="scrollChatHandler($event)">
+              <div *ngIf="chatsLoadingIcon" class="postloader-main position-absolute translate-middle">
+                <div class="postlds-ring" style="margin-left: 547px;margin-bottom: 270px;"><div></div><div></div><div></div><div></div></div>
+              </div>
               <li [ngClass]="this.userChat.sendByMe ? 'me':'you'" *ngFor="let userChat of firstuserChats">
                 <div class="chat-username d-flex align-items-center mb-2">
                   <img *ngIf="userChat.sendByMe" [src]="profileURL" alt="" class="rounded-circle me-2" style="max-width: 35px;">
@@ -205,7 +211,7 @@
         aria-labelledby="school-feed-tab" aria-selected="true" tabindex="0">
         <div class="message-box">
           <aside class="chat-aside">
-            <ul class="before-none">
+            <ul class="before-none position-relative">
               <div *ngIf="schoolInboxList != undefined">
               <li *ngFor="let item of schoolInboxList" [ngClass]="selectedChatHeadDiv && item.chatHeadId == chatHeadId ? 'd-flex justify-content-between align-items-end selectedChatHead':'d-flex justify-content-between align-items-end'" class="d-flex justify-content-between align-items-end" (click)="getUsersChat(item.chatHeadId,item.userID,item.profileURL,item.userName,item.chatType,'FromSchoolInbox',10,1)">
                 <input [value]="item.userID" hidden/>
@@ -235,7 +241,10 @@
             </ul>
           </aside>
           <main>
-            <ul *ngIf="schoolInboxList != undefined" #schoolChatList id="chats" class="before-none">
+            <ul *ngIf="schoolInboxList != undefined" #schoolChatList id="chats" class="before-none position-relative" (scroll)="scrollSchoolChatHandler($event)">
+              <div *ngIf="schoolChatsLoadingIcon" class="postloader-main position-absolute translate-middle">
+                <div class="postlds-ring" style="margin-left: 547px;margin-bottom: 270px;"><div></div><div></div><div></div><div></div></div>
+              </div>
               <li [ngClass]="this.userChat.sendByMe ? 'me':'you'" *ngFor="let userChat of schoolInboxList[0]?.chats">
                 <div class="chat-username d-flex align-items-center mb-2">
                   <img *ngIf="!userChat.sendByMe" [src]="schoolInboxUserAvatar" alt="" class="rounded-circle me-2" style="max-width: 35px;">

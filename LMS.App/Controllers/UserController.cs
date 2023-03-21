@@ -106,10 +106,10 @@ namespace LMS.App.Controllers
 
         [Route("myFeed")]
         [HttpGet]
-        public async Task<IActionResult> MyFeed(PostTypeEnum postType,int pageNumber)
+        public async Task<IActionResult> MyFeed(PostTypeEnum postType, int pageNumber,string? searchString)
         {
             var userId = await GetUserIdAsync(this._userManager);
-            return Ok(await _userService.GetMyFeed(userId,postType, pageNumber));
+            return Ok(await _userService.GetMyFeed(userId, postType, searchString, pageNumber));
         }
 
         [Route("userProfileFeed")]
@@ -121,9 +121,9 @@ namespace LMS.App.Controllers
 
         [Route("userFollowers")]
         [HttpGet]
-        public async Task<IActionResult> UserFollowers(string userId)
+        public async Task<IActionResult> UserFollowers(string userId, int pageNumber,string? searchString)
         {
-            return Ok(await _userService.GetUserFollowers(userId));
+            return Ok(await _userService.GetUserFollowers(userId, pageNumber, searchString));
         }
 
         [AllowAnonymous]
@@ -145,10 +145,10 @@ namespace LMS.App.Controllers
 
         [Route("globalFeed")]
         [HttpGet]
-        public async Task<IActionResult> GlobalFeed(PostTypeEnum postType, int pageNumber)
+        public async Task<IActionResult> GlobalFeed(PostTypeEnum postType, int pageNumber,string? searchString)
         {
             var userId = await GetUserIdAsync(this._userManager);
-            return Ok(await _userService.GetGlobalFeed(userId,postType,pageNumber));
+            return Ok(await _userService.GetGlobalFeed(userId, postType, pageNumber, searchString));
         }
 
         [Route("saveUserPreference")]
@@ -156,13 +156,13 @@ namespace LMS.App.Controllers
         public async Task<IActionResult> SaveUserPreference(string preferenceString)
         {
             var userId = await GetUserIdAsync(this._userManager);
-            var reponse = await _userService.SaveUserPreference(userId,preferenceString);
+            var reponse = await _userService.SaveUserPreference(userId, preferenceString);
             return Ok(reponse);
         }
 
         [Route("getChatHead")]
         [HttpGet]
-        public async Task<IActionResult> GetChatHead(Guid senderId, Guid receiverId,ChatType chatType)
+        public async Task<IActionResult> GetChatHead(Guid senderId, Guid receiverId, ChatType chatType)
         {
             var response = await _chatService.GetChatHead(senderId, receiverId, chatType);
             return Ok(response);
@@ -221,6 +221,15 @@ namespace LMS.App.Controllers
             var user = await _userService.GetUserByEmail(email);
             return Ok(user);
         }
+
+
+        //[Route("searchUserFollowers")]
+        //[HttpGet]
+        //public async Task<IActionResult> SearchUserFollowers(string searchString)
+        //{
+        //    var user = await _userService.SearchUserFollowers(searchString);
+        //    return Ok(user);
+        //}
 
 
     }

@@ -1,4 +1,4 @@
-<div *ngIf="isDataLoaded">
+<!-- <div *ngIf="isDataLoaded"> -->
 <div *ngIf="!reelPageView" appBsModal bsModal class="modal fade edit-school-modal show d-block post-view-large" id="create-post" tabindex="-1"
 aria-labelledby="create-post" aria-hidden="true" area-modal="true">
 <div class="modal-dialog modal-dialog-centered">
@@ -66,7 +66,11 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
             <div>
               <span *ngIf="reels.post.createdBy != loginUserId && reels.post.isCommentsDisabled">Comments are disabled</span>
             </div>
-            <div *ngIf="!reels.post.isCommentsDisabled" #groupChatList id="groupChat" class="live-chat-outer">
+            <div *ngIf="!reels.post.isCommentsDisabled" #groupChatList id="groupChat" class="live-chat-outer position-relative" (scroll)="scrollHandler($event)">
+              <!-- <reels-loading-spinner [reelsLoadingIcon]="commentsLoadingIcon" class="position-absolute translate-middle reel_spinner_position"></reels-loading-spinner> -->
+              <div *ngIf="commentsLoadingIcon" class="postloader-main position-absolute translate-middle">
+                <div class="postlds-ring" style="margin-left: 200px;margin-bottom: 214px;"><div></div><div></div><div></div><div></div></div>
+              </div>
             <div *ngFor="let item of reels.post.comments" class="live-message d-flex position-relative align-items-start">
               <img [src]="item.userAvatar" class="comment-user">
               <p class="text_sec1 font_12 fw_400 text-start mb-0">{{item.content}}</p>
@@ -185,5 +189,7 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
     </div>
   </div>
 </section>
-</div>
+<!-- </div> -->
+
+  
 

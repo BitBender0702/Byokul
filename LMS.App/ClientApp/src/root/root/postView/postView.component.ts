@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Component, Injector, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, Injector, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BsModalService, ModalDirective, ModalOptions } from 'ngx-bootstrap/modal';
@@ -27,7 +27,7 @@ export const sharePostResponse =new Subject<{}>();
     styleUrls: ['./postView.component.css']
   })
 
-export class PostViewComponent implements OnInit {
+export class PostViewComponent implements OnInit,AfterViewInit {
 
     posts:any;
     // serviceType!:string;
@@ -59,8 +59,13 @@ export class PostViewComponent implements OnInit {
     postPageView:boolean = false;
 
     post!:any;
+    commentsScrolled:boolean = false;
+    scrollCommentsResponseCount:number = 1;
+    commentsLoadingIcon: boolean = false;
+    commentsPageNumber:number = 1;
+    @ViewChild('groupChatList') groupChatList!: ElementRef;
 
-    constructor(private bsModalService: BsModalService,notificationService:NotificationService,chatService: ChatService,public signalRService: SignalrService,public postService:PostService, public options: ModalOptions,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,userService:UserService) { 
+    constructor(private bsModalService: BsModalService,notificationService:NotificationService,chatService: ChatService,public signalRService: SignalrService,public postService:PostService, public options: ModalOptions,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,userService:UserService,private cd: ChangeDetectorRef) { 
          this._postService = postService;
          this._signalRService = signalRService;
          this._userService = userService;
@@ -144,11 +149,23 @@ export class PostViewComponent implements OnInit {
 
     }
 
+    ngAfterViewInit() {        
+      setTimeout(() => this.scrollToBottom());
+    } 
+
+  scrollToBottom(): void {
+      try {
+          this.groupChatList.nativeElement.scrollTop = this.groupChatList.nativeElement.scrollHeight;
+      } catch(err) { }                 
+  }
+
     commentResponse(){
       commentResponse.subscribe(response => {
         var comment: any[] = this.post.comments;
         var commentObj = {id:response.id,content:response.message,likeCount:0,isCommentLikedByCurrentUser:false,userAvatar:response.senderAvatar};
         comment.push(commentObj);
+        this.cd.detectChanges();
+        this.groupChatList.nativeElement.scrollTop = this.groupChatList.nativeElement.scrollHeight;
       });
     }
 
@@ -283,6 +300,8 @@ export class PostViewComponent implements OnInit {
     this.commentViewModel.id = '00000000-0000-0000-0000-000000000000';
     this._chatService.addComments(this.commentViewModel).subscribe((response) => {
       comment.push(response);
+      this.cd.detectChanges();
+      this.groupChatList.nativeElement.scrollTop = this.groupChatList.nativeElement.scrollHeight;
       this.commentViewModel.id = response.id;
       this._signalRService.sendToGroup(this.commentViewModel);
       });
@@ -360,5 +379,44 @@ export class PostViewComponent implements OnInit {
     back(): void {
       window.history.back();
     }
+
+    @HostListener('scroll', ['$event'])
+    scrollHandler(event: any) {
+     const element = event.target;
+     if (element.scrollTop === 0) {
+        if(!this.commentsScrolled && this.scrollCommentsResponseCount != 0){
+            this.commentsScrolled = true;
+            this.commentsLoadingIcon = true;
+            this.commentsPageNumber++;
+            this.getNextComments();
+            }
+     }
+     
+   }
+
+   getNextComments() {
+    this._chatService.getComments(this.post.id,this.commentsPageNumber).subscribe((response) => {
+      this.post.comments = response.concat(this.post.comments);
+      this.cd.detectChanges();
+      this.commentsLoadingIcon = false;
+      this.scrollCommentsResponseCount = response.length; 
+      this.commentsScrolled = false;
+      // Scroll to the bottom of the chat list with animation
+      const chatList = this.groupChatList.nativeElement;
+      const chatListHeight = chatList.scrollHeight;
+      this.groupChatList.nativeElement.scrollTop = this.groupChatList.nativeElement.clientHeight;
+      const scrollOptions = { 
+        duration: 300,
+        easing: 'ease-in-out'
+      };
+      chatList.scrollTo({
+        top: this.groupChatList.nativeElement.scrollTop,
+        left: 0,
+        ...scrollOptions
+      });
+    });
+  }
+
+   
 
 }

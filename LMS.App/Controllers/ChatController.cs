@@ -38,9 +38,9 @@ namespace LMS.App.Controllers
 
         [Route("getAllChatUsers")]
         [HttpGet]
-        public async Task<IActionResult> GetAllUsers(Guid senderId)
+        public async Task<IActionResult> GetAllUsers(Guid senderId,int pageNumber,string? searchString)
         {
-            var response = await _chatService.GetAllChatHeadForLoggedInUser(senderId);
+            var response = await _chatService.GetAllChatHeadForLoggedInUser(senderId, pageNumber, searchString);
             return Ok(response);
         }
 

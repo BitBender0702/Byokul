@@ -32,7 +32,7 @@ namespace LMS.Services
         Task SaveSchoolTeachers(SaveSchoolTeacherViewModel model);
         Task DeleteSchoolTeacher(SchoolTeacherViewModel model);
         Task<SchoolViewModel> GetBasicSchoolInfo(Guid schoolId);
-        Task<List<SchoolFollowerViewModel>> GetSchoolFollowers(Guid schoolId);
+        Task<List<SchoolFollowerViewModel>> GetSchoolFollowers(Guid schoolId, int pageNumber, string? searchString);
         Task<bool> IsSchoolNameExist(string schoolName);
         Task<SchoolViewModel> GetSchoolByName(string schoolName);
         Task<IEnumerable<CombineClassCourseViewModel>> GetSchoolClassCourse(Guid? schoolId, string userId, int pageNumber);
@@ -40,8 +40,11 @@ namespace LMS.Services
         Task<List<SchoolViewModel>> GetUserAllSchools(string userId);
         Task<IEnumerable<PostDetailsViewModel>> GetPostsBySchool(Guid schoolId, string loginUserId, int pageNumber, int pageSize);
         Task<IEnumerable<PostDetailsViewModel>> GetReelsBySchool(Guid schoolId, string loginUserId, int pageNumber, int pageSize);
-
         Task<SchoolsClassCourseViewModel> GetSchoolsClassCourse(IEnumerable<string> schoolIds);
+        Task SaveClassCourse(string userId, Guid id, ClassCourseEnum type);
+        Task<IEnumerable<CombineClassCourseViewModel>> GetSavedClassCourse(string userId, int pageNumber);
+
+
 
 
 

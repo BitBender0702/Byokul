@@ -66,7 +66,6 @@ namespace LMS.App.Controllers
             return Ok(response);
         }
 
-        [AllowAnonymous]
         [Route("getSchoolById")]
         [HttpGet]
         public async Task<IActionResult> GetSchoolById(string schoolName)        
@@ -192,9 +191,9 @@ namespace LMS.App.Controllers
 
         [Route("schoolFollowers")]
         [HttpGet]
-        public async Task<IActionResult> SchoolFollowers(Guid schoolId)
+        public async Task<IActionResult> SchoolFollowers(Guid schoolId, int pageNumber, string? searchString)
         {
-            return Ok(await _schoolService.GetSchoolFollowers(schoolId));
+            return Ok(await _schoolService.GetSchoolFollowers(schoolId, pageNumber,searchString));
         }
 
         [Route("isSchoolNameExist")]
@@ -204,7 +203,6 @@ namespace LMS.App.Controllers
             return Ok(await _schoolService.IsSchoolNameExist(schoolName));
         }
 
-        [AllowAnonymous]
         [Route("getSchoolByName")]
         [HttpGet]
         public async Task<IActionResult> GetSchoolByName(string schoolName)
@@ -213,7 +211,6 @@ namespace LMS.App.Controllers
             return Ok(response);
         }
 
-        [AllowAnonymous]
         [Route("getSchoolClassCourse")]
         [HttpGet]
         public async Task<IActionResult> GetSchoolClassCourse(Guid schoolId, int pageNumber)
@@ -231,7 +228,6 @@ namespace LMS.App.Controllers
             return Ok(response);
         }
 
-        [AllowAnonymous]
         [Route("likeUnlikeClassCourse")]
         [HttpPost]
         public async Task<IActionResult> LikeUnlikeClassCourse([FromBody] LikeUnlikeClassCourse model)
@@ -283,6 +279,22 @@ namespace LMS.App.Controllers
         {
             schoolIds = JsonConvert.DeserializeObject<string[]>(schoolIds.First());
             var response = await _schoolService.GetSchoolsClassCourse(schoolIds);
+            return Ok(response);
+        }
+
+        [Route("saveClassCourse")]
+        [HttpPost]
+        public async Task<IActionResult> SaveClassCourse(string userId, Guid id, ClassCourseEnum type)
+        {
+            await _schoolService.SaveClassCourse(userId, id, type);
+            return Ok();
+        }
+
+        [Route("getSavedClassCourse")]
+        [HttpPost]
+        public async Task<IActionResult> GetSavedClassCourse(string userId, int pageNumber)
+        {
+            var response = await _schoolService.GetSavedClassCourse(userId, pageNumber);
             return Ok(response);
         }
 

@@ -1,4 +1,4 @@
-import { Component, ElementRef, Inject, OnInit, Renderer2, ViewChild ,OnDestroy} from '@angular/core';
+import { Component, ElementRef, Inject, OnInit, Renderer2, ViewChild ,OnDestroy, HostListener, ChangeDetectorRef, AfterViewInit} from '@angular/core';
 import { signalRResponse, SignalrService } from 'src/root/service/signalr.service';
 import { HttpClient } from '@angular/common/http';
 import { ChartConfiguration, ChartType } from 'chart.js';
@@ -29,7 +29,7 @@ export const unreadChatResponse =new Subject<{readMessagesCount: number,type:str
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.css']
 })
-export class ChatComponent implements OnInit, OnDestroy {
+export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
 
   isOpenSidebar:boolean = false;
   userId:string = "";
@@ -111,7 +111,28 @@ export class ChatComponent implements OnInit, OnDestroy {
   schoolInboxUserAvatar!:string;
   schoolInboxReceiverId!:string;
 
-  constructor(@Inject(DOCUMENT) document: Document,notificationService:NotificationService,schoolService:SchoolService,classService:ClassService,courseService:CourseService, chatService:ChatService,private renderer: Renderer2,public signalRService: SignalrService, private http: HttpClient,private route: ActivatedRoute,private userService: UserService) { 
+  chatHeadsPageNumber:number = 1;
+  chatHeadScrolled:boolean = false;
+  chatHeadsLoadingIcon: boolean = false;
+  scrollChatHeadsResponseCount:number = 1;
+
+  chatsPageNumber:number = 1;
+  chatsScrolled:boolean = false;
+  chatsLoadingIcon: boolean = false;
+  scrollChatsResponseCount:number = 1;
+
+  schoolChatsPageNumber:number = 1;
+  schoolChatsScrolled:boolean = false;
+  schoolChatsLoadingIcon: boolean = false;
+  scrollSchoolChatsResponseCount:number = 1;
+
+  searchString:string = "";
+  @ViewChild('chatHeadsScrollList') chatHeadsScrollList!: ElementRef;
+  // @ViewChild('chatScrollList') chatScrollList!: ElementRef;
+
+
+
+  constructor(@Inject(DOCUMENT) document: Document,notificationService:NotificationService,schoolService:SchoolService,classService:ClassService,courseService:CourseService, chatService:ChatService,private renderer: Renderer2,public signalRService: SignalrService, private http: HttpClient,private route: ActivatedRoute,private userService: UserService,private cd: ChangeDetectorRef) { 
     this._userService = userService;
     this._schoolService = schoolService;
     this._classService = classService;
@@ -669,6 +690,17 @@ this.addChatAttachments = {
  }
   }
 
+  ngAfterViewInit() {        
+    //setTimeout(() => this.scrollToBottom());
+  } 
+
+// scrollToBottom(): void {
+//     try {
+//         this.cd.detectChanges();
+//         this.chatScrollList.nativeElement.scrollTop = this.chatScrollList.nativeElement.scrollHeight;
+//     } catch(err) { }                 
+// }
+
     ngOnDestroy() {
       // this.chatheadSub.unsubscribe();
       // this.saveChat.unsubscribe();
@@ -685,7 +717,7 @@ this.addChatAttachments = {
 
     getChatUsersList(senderId:string){
       this.loadingIcon = true;
-      this._chatService.getAllChatUsers(senderId).subscribe((response) => {
+      this._chatService.getAllChatUsers(senderId,this.chatHeadsPageNumber,this.searchString).subscribe((response) => {
         this.allChatUsers = response;
         this.loadingIcon = false;
         this.isDataLoaded = true;
@@ -806,7 +838,8 @@ this.addChatAttachments = {
 
 
         this.chatHeadId = this.allChatUsers[0].chatHeadId;
-        //localStorage.setItem("chatHead", this.allChatUsers[0].chatHeadId); 
+        this.cd.detectChanges();
+        this.chatList.nativeElement.scrollTop = this.chatList.nativeElement.scrollHeight;
       });
     }
 
@@ -881,6 +914,9 @@ this.addChatAttachments = {
       this.schoolInboxReceiverId = this.schoolInboxList[0].userID;
       this.chatType = this.schoolInboxList[0].chatType;
       this.loadingIcon = false;
+
+      this.cd.detectChanges();
+      this.schoolChatList.nativeElement.scrollTop = this.schoolChatList.nativeElement.scrollHeight;
 
     }
 
@@ -996,7 +1032,7 @@ this.addChatAttachments = {
       //  else{
       //   this.userChats = response;
       //  }
-    
+
       });
     }
 
@@ -1373,15 +1409,21 @@ getTextMessage(evant:any,receiverId:string){
     this.renderer.appendChild(this.chatList.nativeElement, p)
     if(chatType=="3" && response.isSchoolOwner){
       document.getElementById('chats')?.appendChild(p);
+      this.cd.detectChanges();
+      this.schoolChatList.nativeElement.scrollTop = this.schoolChatList.nativeElement.scrollHeight;
       return;
     }
     if(chatType=="4" && response.isSchoolOwner){
       document.getElementById('chats')?.appendChild(p);
+      this.cd.detectChanges();
+      this.schoolChatList.nativeElement.scrollTop = this.schoolChatList.nativeElement.scrollHeight;
       return;
     }
 
     if(chatType=="5" && response.isSchoolOwner){
       document.getElementById('chats')?.appendChild(p);
+      this.cd.detectChanges();
+      this.schoolChatList.nativeElement.scrollTop = this.schoolChatList.nativeElement.scrollHeight;
       return;
     }
       if(response.receiverName == this.recieverId){
@@ -1390,6 +1432,9 @@ getTextMessage(evant:any,receiverId:string){
     
     console.log(response)   
   }
+
+  this.cd.detectChanges();
+  this.chatList.nativeElement.scrollTop = this.chatList.nativeElement.scrollHeight;
 
   }
 
@@ -1410,6 +1455,132 @@ getTextMessage(evant:any,receiverId:string){
     this.chatType = this.schoolInboxList[0].chatType;
   }
 
+  @HostListener('scroll', ['$event']) 
+  scrollHandler(event:any) {
+    const element = event.target; // get the scrolled element
+    if (element.scrollHeight - element.scrollTop === element.clientHeight) {
+      if(!this.chatHeadScrolled && this.scrollChatHeadsResponseCount != 0){
+        this.chatHeadScrolled = true;
+        this.chatHeadsLoadingIcon = true;
+        this.chatHeadsPageNumber++;
+        this.getNextChatHeads();
+        }
+    }
+  }
+
+
+  getNextChatHeads(){
+    this._chatService.getAllChatUsers(this.senderId,this.chatHeadsPageNumber,this.searchString).subscribe((response) => {
+      this.allChatUsers = [...this.allChatUsers, ...response];
+      this.chatHeadsLoadingIcon = false;
+      this.cd.detectChanges();
+      this.scrollChatHeadsResponseCount = response.length;  
+      this.chatHeadScrolled = false;
+
+      const chatList = this.chatHeadsScrollList.nativeElement;
+      const chatListHeight = chatList.scrollHeight;
+      this.chatHeadsScrollList.nativeElement.scrollTop = this.chatHeadsScrollList.nativeElement.clientHeight;
+      const scrollOptions = { 
+        duration: 300,
+        easing: 'ease-in-out'
+      };
+      chatList.scrollTo({
+        top: this.chatHeadsScrollList.nativeElement.scrollTop,
+        left: 0,
+        ...scrollOptions
+      });
+  });
+}
+
+chatHeadsSearch(){
+  this.chatHeadsPageNumber = 1;
+      if(this.searchString.length >2 || this.searchString == ""){
+        this._chatService.getAllChatUsers(this.senderId,this.chatHeadsPageNumber,this.searchString).subscribe((response) => {
+          this.allChatUsers = response;
+          this.firstuserChats = this.allChatUsers[0]?.chats;
+        });
+      }
+}
+
+@HostListener('scroll', ['$event'])
+scrollChatHandler(event: any) {
+ const element = event.target;
+ if (element.scrollTop === 0) {
+    if(!this.chatsScrolled && this.scrollChatsResponseCount != 0){
+        this.chatsScrolled = true;
+        this.chatsLoadingIcon = true;
+        this.chatsPageNumber++;
+        this.getNextChats();
+        }
+ }
+ 
+}
+
+getNextChats(){
+     this._chatService.getUsersChat(this.senderId,this.recieverId,Number(this.chatType),7,this.chatsPageNumber).subscribe((response) => {
+      this.firstuserChats = response.concat(this.firstuserChats);
+      this.cd.detectChanges();
+      this.chatsLoadingIcon = false;
+      this.scrollChatsResponseCount = response.length; 
+      this.chatsScrolled = false;
+      // Scroll to the bottom of the chat list with animation
+      const chatList = this.chatList.nativeElement;
+      const chatListHeight = chatList.scrollHeight;
+      this.chatList.nativeElement.scrollTop = this.chatList.nativeElement.clientHeight;
+      const scrollOptions = { 
+        duration: 300,
+        easing: 'ease-in-out'
+      };
+      chatList.scrollTo({
+        top: this.chatList.nativeElement.scrollTop,
+        left: 0,
+        ...scrollOptions
+      });
+    });
+  }
+
+
+  @HostListener('scroll', ['$event'])
+  scrollSchoolChatHandler(event: any) {
+   const element = event.target;
+   if (element.scrollTop === 0) {
+    if(!this.schoolChatsScrolled && this.scrollSchoolChatsResponseCount != 0){
+        this.schoolChatsScrolled = true;
+        this.schoolChatsLoadingIcon = true;
+        this.schoolChatsPageNumber++;
+        this.getNextSchoolChats();
+        }
+ }
+
+}
+
+getNextSchoolChats(){
+  this._chatService.getUsersChat(this.senderId,this.recieverId,Number(this.chatType),7,this.schoolChatsPageNumber).subscribe((response) => {
+   this.schoolInboxList[0].chats = response.concat(this.schoolInboxList[0].chats);
+   this.cd.detectChanges();
+   this.schoolChatsLoadingIcon = false;
+   this.scrollSchoolChatsResponseCount = response.length; 
+   this.schoolChatsScrolled = false;
+   // Scroll to the bottom of the chat list with animation
+   const chatList = this.schoolChatList.nativeElement;
+   const chatListHeight = chatList.scrollHeight;
+   this.schoolChatList.nativeElement.scrollTop = this.schoolChatList.nativeElement.clientHeight;
+   const scrollOptions = { 
+     duration: 300,
+     easing: 'ease-in-out'
+   };
+   chatList.scrollTo({
+     top: this.schoolChatList.nativeElement.scrollTop,
+     left: 0,
+     ...scrollOptions
+   });
+ });
+}
+
+
+
+
+
 }
 
 
@@ -1420,5 +1591,6 @@ getTextMessage(evant:any,receiverId:string){
     Class ,
     Course
   }
+  
 
 

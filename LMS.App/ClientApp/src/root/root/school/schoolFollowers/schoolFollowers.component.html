@@ -5,8 +5,10 @@
            <button (click)="back()" type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
                src="../../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
                <h2 class="font_22 fw_700 f-monteserrat mb-md-0">{{'Followers'| translate }}</h2>
-           <button type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44" data-bs-toggle="modal"
-             data-bs-target="#create-post">{{'CreatePost'| translate }}</button>
+             <div class="search-header position-relative">
+              <input (keyup)="schoolFollowersSearch()" [(ngModel)]="searchString" type="search" class="form-control h_44">
+              <button type="button" class="btn search-icon"><img src="../../../assets/images/school/search-gray.svg"></button>
+            </div>
          </div>
          <div class="live-header d-flex align-items-center justify-content-between">
            <button (click)="back()" type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark  d-xl-none"><img
@@ -38,3 +40,6 @@
        </div>
      </section>
      </div>
+
+     <post-loading-spinner [postLoadingIcon]="postLoadingIcon"></post-loading-spinner>
+

@@ -3,6 +3,7 @@ import { AfterViewInit, Component, ElementRef, HostListener, Injector, OnInit, V
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BsModalService, ModalDirective, ModalOptions } from 'ngx-bootstrap/modal';
+import { MessageService } from 'primeng/api';
 import { NotificationType } from 'src/root/interfaces/notification/notificationViewModel';
 import { LikeUnlikePost } from 'src/root/interfaces/post/likeUnlikePost';
 import { PostView } from 'src/root/interfaces/post/postView';
@@ -19,7 +20,8 @@ import { SharePostComponent } from '../sharePost/sharePost.component';
 @Component({
     selector: 'post-view',
     templateUrl: './userFeed.component.html',
-    styleUrls: ['./userFeed.component.css']
+    styleUrls: ['./userFeed.component.css'],
+    providers: [MessageService]
   })
 
 export class UserFeedComponent implements OnInit {
@@ -66,7 +68,10 @@ export class UserFeedComponent implements OnInit {
     @ViewChild('globalReelCarousel') globalReelCarousel!: ElementRef;
     scrolled:boolean = false;
 
-    constructor(private bsModalService: BsModalService,notificationService:NotificationService,postService: PostService,public userService:UserService, public options: ModalOptions,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
+    searchString:string = "";
+    isOpenGlobalFeed:boolean = false;
+
+    constructor(private bsModalService: BsModalService,notificationService:NotificationService,postService: PostService,public userService:UserService, public options: ModalOptions,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,public messageService:MessageService) { 
          this._userService = userService;
          this._postService = postService;
          this._notificationService = notificationService;
@@ -85,7 +90,7 @@ export class UserFeedComponent implements OnInit {
       this.postLoadingIcon = false;
       this.loadingIcon = true;
       this.isOwnerOrNot();
-        this._userService.getMyFeed(1,this.myFeedsPageNumber).subscribe((response) => {
+        this._userService.getMyFeed(1,this.myFeedsPageNumber,this.searchString).subscribe((response) => {
           this.isGlobalFeed = false;
           this.postLoadingIcon = false;
             this.myFeeds = response;
@@ -96,7 +101,7 @@ export class UserFeedComponent implements OnInit {
               this.isDataLoaded = true;
           });
 
-          this._userService.getMyFeed(3,this.myFeedsPageNumber).subscribe((result) => {
+          this._userService.getMyFeed(3,this.myFeedsPageNumber,this.searchString).subscribe((result) => {
             this.myFeedsReels = result;
             if(this.myFeedsReels.length == 0){
               this.isMyFeedReelsEmpty = true;
@@ -129,7 +134,7 @@ export class UserFeedComponent implements OnInit {
             if(this.reelsPageNumber == 2){
               this.reelsLoadingIcon = true;
             }
-            this._userService.getMyFeed(3, this.reelsPageNumber).subscribe((response) => {
+            this._userService.getMyFeed(3, this.reelsPageNumber,this.searchString).subscribe((response) => {
                this.myFeedsReels = [...this.myFeedsReels, ...response];
                this.reelsLoadingIcon = false;
           });
@@ -152,7 +157,7 @@ export class UserFeedComponent implements OnInit {
               this.reelsLoadingIcon = true;
             }
 
-          this._userService.getGlobalFeed(3, this.globalReelsPageNumber).subscribe((result) => {
+          this._userService.getGlobalFeed(3, this.globalReelsPageNumber,this.searchString).subscribe((result) => {
               this.globalFeedReels = [...this.globalFeedReels, ...result];
               this.reelsLoadingIcon = false;
             });
@@ -175,7 +180,7 @@ export class UserFeedComponent implements OnInit {
         this.scrolled = true;
       this.postLoadingIcon = true;
       this.myFeedsPageNumber++;
-      this._userService.getMyFeed(1,this.myFeedsPageNumber).subscribe((response) => {
+      this._userService.getMyFeed(1,this.myFeedsPageNumber,this.searchString).subscribe((response) => {
         if(this.myFeeds!=undefined){
         this.myFeeds =[...this.myFeeds, ...response];
         }
@@ -190,7 +195,7 @@ export class UserFeedComponent implements OnInit {
       this.scrolled = true;
     this.postLoadingIcon = true;
     this.globalFeedsPageNumber++;    
-    this._userService.getGlobalFeed(1,this.globalFeedsPageNumber).subscribe((result) => {
+    this._userService.getGlobalFeed(1,this.globalFeedsPageNumber,this.searchString).subscribe((result) => {
       this.globalFeeds =[...this.globalFeeds, ...result];
       this.postLoadingIcon = false;
       this.scrollGlobalFeedResponseCount = result;
@@ -242,18 +247,19 @@ export class UserFeedComponent implements OnInit {
       }
 
       getGlobalFeeds(){
+        this.isOpenGlobalFeed = true;
         this.isGlobalFeed = true;
         this.loadingIcon = true;
        if(this.globalFeeds == undefined){
         this.loadingIcon = true;
-        this._userService.getGlobalFeed(1,this.globalFeedsPageNumber).subscribe((response) => {
+        this._userService.getGlobalFeed(1,this.globalFeedsPageNumber,this.searchString).subscribe((response) => {
             this.globalFeeds = response;
             this.loadingIcon = false;
             this.isDataLoaded = true;
             console.log(this.globalFeeds);
           });
         }
-          this._userService.getGlobalFeed(3, this.globalReelsPageNumber).subscribe((result) => {
+          this._userService.getGlobalFeed(3, this.globalReelsPageNumber,this.searchString).subscribe((result) => {
               this.globalFeedReels = result;
               this.loadingIcon = false;
               this.isDataLoaded = true;
@@ -435,4 +441,64 @@ export class UserFeedComponent implements OnInit {
         this.bsModalService.show(SharePostComponent,{initialState});
       }
 
+      feedSearch(){
+        if(!this.isOpenGlobalFeed){
+        this.myFeedsPageNumber = 1;
+        this.reelsPageNumber = 1;
+        
+        if(this.searchString.length >2 || this.searchString == ""){
+          this.loadingIcon = true;
+          this._userService.getMyFeed(1,this.myFeedsPageNumber,this.searchString).subscribe((response) => {
+            this.loadingIcon = false;
+             this.myFeeds = response;
+            });
+  
+            this._userService.getMyFeed(3,this.myFeedsPageNumber,this.searchString).subscribe((result) => {
+              this.myFeedsReels = result;
+              this.loadingIcon = false;
+            });
+        }
+      }
+
+      else{
+        this.globalFeedsPageNumber = 1;
+        this.globalReelsPageNumber = 1;
+        
+        if(this.searchString.length >2 || this.searchString == ""){
+          this.loadingIcon = true;
+          this._userService.getGlobalFeed(1,this.globalFeedsPageNumber,this.searchString).subscribe((response) => {
+            this.globalFeeds = response;
+            this.loadingIcon = false;
+          });
+    
+          this._userService.getGlobalFeed(3, this.globalReelsPageNumber,this.searchString).subscribe((result) => {
+              this.globalFeedReels = result;
+              this.loadingIcon = false;
+            });
+          }
+        }
+        }
+      
+        getMyFeeds(){
+          this.isOpenGlobalFeed = false;
+        }
+
+        savePost(postId:string){
+          var myFeeds: any[] = this.myFeeds;
+          var isSavedPost = myFeeds.find(x => x.id == postId);
+
+          if(isSavedPost.isPostSavedByCurrentUser){
+            isSavedPost.savedPostsCount -= 1;
+            isSavedPost.isPostSavedByCurrentUser = false;
+            this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post removed successfully'});
+           }
+           else{
+            isSavedPost.savedPostsCount += 1;
+            isSavedPost.isPostSavedByCurrentUser = true;
+            this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post saved successfully'});
+           }
+
+          this._postService.savePost(postId,this.userId).subscribe((result) => {
+          });
+        }
 }

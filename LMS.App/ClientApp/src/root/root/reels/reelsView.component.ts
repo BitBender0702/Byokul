@@ -1,4 +1,4 @@
-import { AfterViewChecked, Component, ElementRef, Injector, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, Injector, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { CommentLikeUnlike } from 'src/root/interfaces/chat/commentsLike';
@@ -20,7 +20,7 @@ import { SharePostComponent } from '../sharePost/sharePost.component';
     styleUrls: ['reelsView.component.css'],
   })
   
-  export class ReelsViewComponent implements OnInit, AfterViewChecked  {
+  export class ReelsViewComponent implements OnInit, AfterViewInit  {
 
     private _reelsService;
     private _postService;
@@ -53,9 +53,15 @@ import { SharePostComponent } from '../sharePost/sharePost.component';
     attachmentId!:any;
     reelPageView:boolean = false;
 
+    commentsScrolled:boolean = false;
+    scrollCommentsResponseCount:number = 1;
+    commentsLoadingIcon: boolean = false;
+    commentsPageNumber:number = 1;
+
+
     @ViewChild('groupChatList') groupChatList!: ElementRef;
 
-    constructor(private bsModalService: BsModalService,notificationService:NotificationService,chatService:ChatService,private renderer: Renderer2,public options: ModalOptions,private userService: UserService,postService: PostService,public signalRService: SignalrService,private route: ActivatedRoute,reelsService: ReelsService,private activatedRoute: ActivatedRoute) { 
+    constructor(private bsModalService: BsModalService,notificationService:NotificationService,chatService:ChatService,private renderer: Renderer2,public options: ModalOptions,private userService: UserService,postService: PostService,public signalRService: SignalrService,private route: ActivatedRoute,reelsService: ReelsService,private activatedRoute: ActivatedRoute,private cd: ChangeDetectorRef) { 
           this._reelsService = reelsService;
           this._signalRService = signalRService;
           this._userService = userService;
@@ -107,6 +113,8 @@ import { SharePostComponent } from '../sharePost/sharePost.component';
             var comment: any[] = this.reels.post.comments;
             var commentObj = {id:response.id,content:response.message,likeCount:0,isCommentLikedByCurrentUser:false,userAvatar:response.senderAvatar};
             comment.push(commentObj);
+            this.cd.detectChanges();
+            this.groupChatList.nativeElement.scrollTop = this.groupChatList.nativeElement.scrollHeight;
           });
 
           commentLikeResponse.subscribe(response => {
@@ -120,12 +128,12 @@ import { SharePostComponent } from '../sharePost/sharePost.component';
             }
           });
 
-          this.scrollToBottom();
+          // this.scrollToBottom();
     }
 
-    ngAfterViewChecked() {        
-      this.scrollToBottom();        
-  } 
+    ngAfterViewInit() {        
+      setTimeout(() => this.scrollToBottom());
+    } 
 
   scrollToBottom(): void {
       try {
@@ -165,6 +173,8 @@ import { SharePostComponent } from '../sharePost/sharePost.component';
       this.commentViewModel.id = '00000000-0000-0000-0000-000000000000';
       this._chatService.addComments(this.commentViewModel).subscribe((response) => {
         comment.push(response);
+        this.cd.detectChanges();
+        this.groupChatList.nativeElement.scrollTop = this.groupChatList.nativeElement.scrollHeight;
         this.commentViewModel.id = response.id;
         this._signalRService.sendToGroup(this.commentViewModel);
         });
@@ -337,6 +347,54 @@ import { SharePostComponent } from '../sharePost/sharePost.component';
           postId: postId
         };
         this.bsModalService.show(SharePostComponent,{initialState});
+      }
+
+    @HostListener('scroll', ['$event'])
+    scrollHandler(event: any) {
+     const element = event.target;
+     if (element.scrollTop === 0) {
+        if(!this.commentsScrolled && this.scrollCommentsResponseCount != 0){
+            this.commentsScrolled = true;
+            this.commentsLoadingIcon = true;
+            this.commentsPageNumber++;
+            this.getComments();
+            }
+     }
+     
+   }
+
+      // getComments(){
+      //   this._chatService.getComments(this.attachmentId,this.commentsPageNumber).subscribe((response) => {
+      //     this.reels.post.comments = response.concat(this.reels.post.comments);
+      //     this.cd.detectChanges();
+      //     this.groupChatList.nativeElement.scrollTop = this.groupChatList.nativeElement.clientHeight;
+      //     this.commentsLoadingIcon = false;
+      //     this.scrollCommentsResponseCount = response.length; 
+      //     this.commentsScrolled = false;
+      //     });
+      // }
+
+      getComments() {
+        this._chatService.getComments(this.attachmentId,this.commentsPageNumber).subscribe((response) => {
+          this.reels.post.comments = response.concat(this.reels.post.comments);
+          this.cd.detectChanges();
+          this.commentsLoadingIcon = false;
+          this.scrollCommentsResponseCount = response.length; 
+          this.commentsScrolled = false;
+          // Scroll to the bottom of the chat list with animation
+          const chatList = this.groupChatList.nativeElement;
+          const chatListHeight = chatList.scrollHeight;
+          this.groupChatList.nativeElement.scrollTop = this.groupChatList.nativeElement.clientHeight;
+          const scrollOptions = { 
+            duration: 300,
+            easing: 'ease-in-out'
+          };
+          chatList.scrollTo({
+            top: this.groupChatList.nativeElement.scrollTop,
+            left: 0,
+            ...scrollOptions
+          });
+        });
       }
 
 

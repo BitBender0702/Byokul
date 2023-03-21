@@ -93,8 +93,9 @@ export class SchoolService{
         return this.http.post(`${this.apiUrl}/school/deleteSchoolCertificate`,deleteCertificate,{headers: this.headers});
     }
 
-    getSchoolFollowers(schoolId:string):Observable<any>{
-        return this.http.get(`${this.apiUrl}/school/schoolFollowers` + '?schoolId=' + schoolId,{headers: this.headers});
+    getSchoolFollowers(schoolId:string,pageNumber:number,searchString:string):Observable<any>{
+        let queryParams = new HttpParams().append("schoolId",schoolId).append("pageNumber",pageNumber).append("searchString",searchString);
+        return this.http.get(`${this.apiUrl}/school/schoolFollowers`, {params:queryParams,headers: this.headers})
     }
 
     isSchoolNameExist(schoolName:string){
@@ -102,13 +103,13 @@ export class SchoolService{
     }
 
     getSchoolByName(schoolName:any):Observable<any>{
-        return this.http.get(`${this.apiUrl}/school/getSchoolByName` + '?schoolName=' + schoolName);
+        return this.http.get(`${this.apiUrl}/school/getSchoolByName` + '?schoolName=' + schoolName,{headers: this.headers});
     }
 
     getSchoolClassCourseList(schoolId:any,pageNumber:number):Observable<any>{
         // return this.http.get(`${this.apiUrl}/school/getSchoolClassCourse` + '?schoolId=' + schoolId);
         let queryParams = new HttpParams().append("schoolId",schoolId).append("pageNumber",pageNumber);
-        return this.http.get(`${this.apiUrl}/school/getSchoolClassCourse`, {params:queryParams});
+        return this.http.get(`${this.apiUrl}/school/getSchoolClassCourse`, {params:queryParams,headers: this.headers});
     }
 
     pinUnpinClassCourse(id:string,type:string,isPinned:boolean): Observable<any> {
@@ -125,7 +126,8 @@ export class SchoolService{
     }
 
     likeUnlikeClassCourse(likeUnlikeClassCourse:any):Observable<any>{
-        return this.http.post(`${this.apiUrl}/school/likeUnlikeClassCourse`, likeUnlikeClassCourse);
+        debugger
+        return this.http.post(`${this.apiUrl}/school/likeUnlikeClassCourse`, likeUnlikeClassCourse,{headers: this.headers});
     }
 
     getUserAllSchools(userId:string): Observable<any> {
@@ -150,6 +152,16 @@ export class SchoolService{
     getSchoolsClassCourse(schoolIds:any):Observable<any>{
         let queryParams = new HttpParams().append("schoolIds",schoolIds);
         return this.http.get(`${this.apiUrl}/school/getSchoolsClassCourse`, {params:queryParams,headers: this.headers});
+    }
+
+    saveClassCourse(id:string,userId:string,type:number): Observable<any> {
+        let queryParams = new HttpParams().append("userId",userId).append("id",id).append("type",type);
+        return this.http.post(`${this.apiUrl}/school/saveClassCourse`,null, {params:queryParams,headers: this.headers});
+    }
+
+    getSavedClassCourse(userId:string,pageNumber:number):Observable<any>{
+        let queryParams = new HttpParams().append("userId",userId).append("pageNumber",pageNumber);
+        return this.http.post(`${this.apiUrl}/school/getSavedClassCourse`,null, {params:queryParams,headers: this.headers});
     }
 
 }

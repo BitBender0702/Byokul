@@ -1758,8 +1758,8 @@ body .liv-postbtn .post-attch-btn.active,
 }
 /*---- Followers page css start ----*/
 .followers_box {
-    max-height: calC(100vh - 190px);
-    overflow-y: auto;
+    /* max-height: calC(100vh - 190px); */
+    /* overflow-y: auto; */
     padding-right: 6px;
 }
 .wht_newbox{

@@ -1,4 +1,4 @@
-<div *ngIf="isDataLoaded">
+<!-- <div *ngIf="isDataLoaded"> -->
 <div *ngIf="!postPageView" appBsModal bsModal class="modal fade edit-school-modal show d-block post-view-large" id="create-post" tabindex="-1"
 aria-labelledby="create-post" aria-hidden="true" area-modal="true">
 <div class="modal-dialog modal-dialog-centered">
@@ -79,7 +79,10 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
         <div>
           <span *ngIf="post.createdBy != userId && isCommentsDisabled">Comments are disabled</span>
         </div>
-        <div *ngIf="!isCommentsDisabled" #groupChatList id="groupChat" class="live-chat-outer">
+        <div *ngIf="!isCommentsDisabled" #groupChatList id="groupChat" class="live-chat-outer position-relative" (scroll)="scrollHandler($event)">
+          <div *ngIf="commentsLoadingIcon" class="postloader-main position-absolute translate-middle">
+            <div class="postlds-ring" style="margin-left: 200px;margin-bottom: 214px;"><div></div><div></div><div></div><div></div></div>
+          </div>
         <div *ngFor="let item of post.comments" class="live-message d-flex position-relative align-items-start">
           <img [src]="item.userAvatar" class="comment-user">
           <p class="text_sec1 font_12 fw_400 text-start mb-0">{{item.content}}</p>
@@ -188,7 +191,10 @@ margin-top: 30px;">
       <div>
         <span *ngIf="post.createdBy != userId && isCommentsDisabled">Comments are disabled</span>
       </div>
-      <div *ngIf="!isCommentsDisabled" #groupChatList id="groupChat" class="live-chat-outer">
+      <div *ngIf="!isCommentsDisabled" #groupChatList id="groupChat" class="live-chat-outer position-relative" (scroll)="scrollHandler($event)">
+        <div *ngIf="commentsLoadingIcon" class="postloader-main position-absolute translate-middle">
+          <div class="postlds-ring" style="margin-left: 200px;margin-bottom: 214px;"><div></div><div></div><div></div><div></div></div>
+        </div>
       <div *ngFor="let item of post.comments" class="live-message d-flex position-relative align-items-start">
         <img [src]="item.userAvatar" class="comment-user">
         <p class="text_sec1 font_12 fw_400 text-start mb-0">{{item.content}}</p>
@@ -216,7 +222,7 @@ margin-top: 30px;">
     </div>
   </div>
 </section>
-</div>
+<!-- </div> -->
 
 
 <!--  tet-->

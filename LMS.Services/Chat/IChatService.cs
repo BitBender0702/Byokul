@@ -17,7 +17,7 @@ namespace LMS.Services.Chat
         Task<Guid> AddChatHead(ChatHeadViewModel chatViewModel);
         Task UpdateChatHead(ChatMessageViewModel chatheadViewModel);
         Task<ChatHeadViewModel> GetChatHead(Guid sender, Guid receiver, ChatType chatType);
-        Task<List<ChatUsersViewModel>> GetAllChatHeadForLoggedInUser(Guid user);
+        Task<List<ChatUsersViewModel>> GetAllChatHeadForLoggedInUser(Guid user, int pageNumber, string? searchString);
         Task<List<ChatHeadViewModel>> GetChatHeadsForReceiver(string receiver);
         Task<List<ChatAttachmentResponse>> SaveChatAttachments(SaveChatAttachmentViewModel model);
         Task<IEnumerable<ParticularChat>> GetParticularUserChat(Guid SenderId, Guid ReceiverId,ChatType chatType, int pageSize, int pageNumber);

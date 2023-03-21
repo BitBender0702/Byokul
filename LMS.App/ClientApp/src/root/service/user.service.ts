@@ -19,8 +19,11 @@ export class UserService{
     }
     
     getSidebarInfo(token?:string):Observable<any>{
-        if(this.token == ""){
-            this.token = localStorage.getItem("jwt")?? '';
+        this.token = localStorage.getItem("jwt")?? '';
+        if(this.token == "" || undefined){
+            this.headers = new HttpHeaders().set("Authorization", "Bearer " + token);
+        }
+        else{
             this.headers = new HttpHeaders().set("Authorization", "Bearer " + this.token);
         }
         return this.http.get(`${this.apiUrl}/userdashboard/dashboardDetails`,{
@@ -58,8 +61,9 @@ export class UserService{
         return this.http.post(`${this.apiUrl}/users/updateUser`, credentials,{headers: this.headers});
     }
 
-    getUserFollowers(userId:string):Observable<any>{
-        return this.http.get(`${this.apiUrl}/users/userFollowers` + '?userId=' + userId);
+    getUserFollowers(userId:string,pageNumber:number,searchString:string):Observable<any>{
+        let queryParams = new HttpParams().append("userId",userId).append("pageNumber",pageNumber).append("searchString",searchString);
+        return this.http.get(`${this.apiUrl}/users/userFollowers`, {params:queryParams,headers: this.headers})
     }
 
     banFollower(followerId:any): Observable<any> {
@@ -71,16 +75,16 @@ export class UserService{
 
     }
 
-    getMyFeed(postType:number,pageNumber:number):Observable<any>{
+    getMyFeed(postType:number,pageNumber:number,searchString:string):Observable<any>{
         //return this.http.get(`${this.apiUrl}/users/myFeed`);
-        let queryParams = new HttpParams().append("postType",postType).append("pageNumber",pageNumber);
+        let queryParams = new HttpParams().append("postType",postType).append("pageNumber",pageNumber).append("searchString",searchString);
         return this.http.get(`${this.apiUrl}/users/myFeed`, {params:queryParams, headers: this.headers});
 
     }
 
-    getGlobalFeed(postType:number, pageNumber:number):Observable<any>{
+    getGlobalFeed(postType:number, pageNumber:number,searchString:string):Observable<any>{
         //return this.http.get(`${this.apiUrl}/users/globalFeed`);
-        let queryParams = new HttpParams().append("postType",postType).append("pageNumber",pageNumber);
+        let queryParams = new HttpParams().append("postType",postType).append("pageNumber",pageNumber).append("searchString",searchString);
         return this.http.get(`${this.apiUrl}/users/globalFeed`, {params:queryParams, headers: this.headers});
 
     }
@@ -128,8 +132,6 @@ export class UserService{
 
     getCityList(countryId:string):Observable<any>{
         return this.http.get(`${this.apiUrl}/users/cityList` + '?countryId=' + countryId);
-    }
-
-    
+    }   
 
 }

@@ -10,16 +10,11 @@ import { AuthService } from './auth.service';
 export class AuthGuard implements CanActivate {
   constructor(private authService: AuthService, private router: Router) {}
   canActivate(): boolean {
-    
     if (this.authService.loginRequired) {
-        this.router.navigate(["schoolAdmin/auth/login"]);
+        this.router.navigate(["user/auth/login"]);
         return false;
     } else {
-      if(!this.authService.roleUser(RolesEnum.SchoolAdmin)){
-        localStorage.removeItem("jwt");
-        this.router.navigateByUrl("schoolAdmin/auth/login");
-      }
-        return true;
+         return true;
     }
 }
   
