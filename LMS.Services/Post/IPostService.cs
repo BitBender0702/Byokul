@@ -10,7 +10,7 @@ namespace LMS.Services
     public interface IPostService
     {
         Task<PostViewModel> SavePost(PostViewModel postViewModel, string createdById);
-        Task<PostAttachmentViewModel> GetReelById(Guid id,string userId);
+        Task<PostAttachmentViewModel> GetReelById(Guid id, string userId);
         Task<PostDetailsViewModel> GetPostById(Guid id, string userId);
         Task<bool> PinUnpinPost(Guid attachmentId, bool isPinned);
         Task<List<LikeViewModel>> LikeUnlikePost(LikeUnlikeViewModel model);
@@ -18,6 +18,9 @@ namespace LMS.Services
         Task<bool> LikeUnlikeComment(Guid commentId, bool isLike, string userId);
         Task EnableDisableComments(Guid postId, bool isHideComments);
         Task SaveUserSharedPost(string userId, Guid postId);
+        Task SavePostByUser(string userId, Guid postId);
+        Task<List<PostDetailsViewModel>> GetSavedPostsByUser(string userId, int pageNumber);
+
 
 
 

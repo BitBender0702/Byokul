@@ -6,9 +6,6 @@ import { SetPasswordViewModel } from 'src/root/interfaces/set-password';
 import { MultilingualComponent } from 'src/root/root/sharedModule/Multilingual/multilingual.component';
 import { AuthService } from 'src/root/service/auth.service';
 
-export const confirmEmailResponse =new Subject<{confirmEmail : string}>();  
-
-
 @Component({
   selector: 'logout',
   templateUrl: './set-password.component.html',

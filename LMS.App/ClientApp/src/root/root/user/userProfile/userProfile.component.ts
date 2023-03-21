@@ -27,6 +27,9 @@ import { NotificationType, NotificationViewModel } from 'src/root/interfaces/not
 import { PostAuthorTypeEnum } from 'src/root/Enums/postAuthorTypeEnum';
 import { CertificateViewComponent } from '../../certificateView/certificateView.component';
 import { SharePostComponent } from '../../sharePost/sharePost.component';
+import { SchoolService } from 'src/root/service/school.service';
+import { ClassCourseModalComponent } from '../../ClassCourseModal/classCourseModal.component';
+import { LikeUnlikeClassCourse } from 'src/root/interfaces/school/likeUnlikeClassCourse';
 
 export const userImageResponse =new Subject<{userAvatar : string}>();  
 export const chatResponse =new Subject<{receiverId : string , type: string,chatTypeId:string}>();  
@@ -61,6 +64,7 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
     private _userService;
     private _postService;
     private _signalrService;
+    private _schoolService;
     user:any;
     validToken!:string;
 
@@ -104,11 +108,39 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
     uploadImage!:any;
     fileToUpload= new FormData();
     translate!: TranslateService;
+
+    isSavedProfileList: boolean = false;
+    savedPostsPageNumber: number = 1;
+    savedPostsList!:any;
+    isSavedPostList!:boolean;
+    isSavedClassCourseList!:boolean;
+
+    isPostTab:boolean = true;
+    isSavedPostTab:boolean = false;
+    isSavedClassCourseTab:boolean = false;
+    savedPostGridInfo:any;
+    isSavedPostGridInfo: boolean = false;
+    savedClassCourseGridInfo:any;
+    isSavedClassCourseGridInfo: boolean = false;
+
+
+    savedClassCourseList!:any;
+    saveClassCoursePageNumber: number = 1;
+
+    currentLikedClassCourseId!: string;
+    isClassCourseLiked!: boolean;
+    likesClassCourseLength!: number;
+    likeUnlikeClassCourses!: LikeUnlikeClassCourse;
+
+
+
+
     
-    constructor(injector: Injector,signalrservice:SignalrService,public messageService:MessageService, private bsModalService: BsModalService,userService: UserService,postService: PostService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,private cd: ChangeDetectorRef) { 
+    constructor(injector: Injector,signalrservice:SignalrService,public messageService:MessageService, private bsModalService: BsModalService,userService: UserService,postService: PostService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,private cd: ChangeDetectorRef,private schoolService:SchoolService) { 
       super(injector);
         this._userService = userService;
         this._postService = postService;
+        this._schoolService = schoolService;
         this._signalrService = signalrservice;
         this.userParamsData$ = this.route.params.subscribe(routeParams => {
           if(!this.loadingIcon)
@@ -230,19 +262,19 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
 
     @HostListener("window:scroll", [])
     onWindowScroll() {
+      const scrollPosition = window.pageYOffset;
+    const windowSize = window.innerHeight;
+    const bodyHeight = document.body.offsetHeight;
+
+    if (scrollPosition >= bodyHeight - windowSize) {
       if(!this.scrolled && this.scrollFeedResponseCount != 0){
         this.scrolled = true;
         this.postLoadingIcon = true;
         this.frontEndPageNumber++;
         this.getByUserId();
       }
+     }
     }
-    //     myScrollFunction= (ev: any): void => {
-    //       this.postLoadingIcon = true;
-    //       this.frontEndPageNumber++;
-    //       this.getByUserId();
-         
-    // }
 
     addEventListnerOnCarousel(){
      if(this.carousel!=undefined){
@@ -551,6 +583,26 @@ profileList(){
 
 }
 
+savePostGrid(){
+  this.isSavedPostList = true;
+
+}
+
+savePostList(){
+  this.isSavedPostList = false;
+
+}
+
+saveClassCourseGrid(){
+  this.isSavedClassCourseList = true;
+
+}
+
+saveClassCourseList(){
+  this.isSavedClassCourseList = false;
+
+}
+
 back(): void {
   window.history.back();
 }
@@ -594,9 +646,16 @@ userChat(){
   }   
 }
 
-likeUnlikePosts(postId:string, isLike:boolean,postType:number,post:any){
+likeUnlikePosts(postId:string, isLike:boolean,postType:number,post:any,from:number){
+  debugger
   this.currentLikedPostId = postId;
-  this.user.posts.filter((p : any) => p.id == postId).forEach( (item : any) => {
+  if(from == 1){
+    var posts = this.user.posts;
+  }
+  if(from == 2){
+    var posts = this.savedPostsList;
+  }
+  posts.filter((p : any) => p.id == postId).forEach( (item : any) => {
     var likes: any[] = item.likes;
     var isLiked = likes.filter(x => x.userId == this.loginUserId && x.postId == postId);
   if(isLiked.length != 0){
@@ -619,10 +678,18 @@ likeUnlikePosts(postId:string, isLike:boolean,postType:number,post:any){
   this.likeUnlikePost.isLike = isLike;
   this.likeUnlikePost.commentId = '00000000-0000-0000-0000-000000000000'
   this._postService.likeUnlikePost(this.likeUnlikePost).subscribe((response) => {
+    if(from == 1){
      this.user.posts.filter((p : any) => p.id == postId).forEach( (item : any) => {
-      var itemss = item.likes;
+      // var itemss = item.likes;
       item.likes = response;
     }); 
+  }
+  else{
+    this.savedPostsList.filter((p : any) => p.id == postId).forEach( (item : any) => {
+      // var itemss = item.likes;
+      item.likes = response;
+  });
+}
 
 
 
@@ -635,15 +702,24 @@ likeUnlikePosts(postId:string, isLike:boolean,postType:number,post:any){
 }
 
 showPostDiv(postId:string){
-  
   var posts: any[] = this.user.posts;
   this.gridItemInfo = posts.find(x => x.id == postId);
   this.isGridItemInfo = true;
-
-  // here we also add a view for this post
   this.addPostView(this.gridItemInfo.id);
-  
+}
 
+showSavedPostDiv(postId:string){
+  var posts: any[] = this.savedPostsList;
+  this.savedPostGridInfo = posts.find(x => x.id == postId);
+  this.isSavedPostGridInfo = true;
+  this.addPostView(this.savedPostGridInfo.id);
+}
+
+showSavedClassCourseDiv(id:string){
+  var classCourses: any[] = this.savedClassCourseList;
+  this.savedClassCourseGridInfo = classCourses.find(x => x.id == id);
+  this.isSavedClassCourseGridInfo = true;
+  //this.addPostView(this.savedClassCourseGridInfo.id);
 }
 
 addPostView(postId:string){
@@ -673,7 +749,14 @@ initializePostView(){
 
 hideGridItemInfo(){
   this.isGridItemInfo = this.isGridItemInfo ? false : true;
+}
 
+hideSavedPostGridInfo(){
+  this.isSavedPostGridInfo = this.isSavedPostGridInfo ? false : true;
+}
+
+hideSavedClassCourseGridInfo(){
+  this.isSavedClassCourseGridInfo = this.isSavedClassCourseGridInfo ? false : true;
 }
 
 openChat(userId:string,type:string){
@@ -699,6 +782,192 @@ openSharePostModal(postId:string): void {
     postId: postId
   };
   this.bsModalService.show(SharePostComponent,{initialState});
+}
+
+// isSavedProfileLists(){
+//   this.cd.detectChanges();
+//   this.isSavedProfileList = true;
+// }
+
+GetSavedPostsByUser(userId:string){
+  this.loadingIcon = true;
+  this.isPostTab = false;
+  this.isSavedClassCourseTab = false;
+  this.isSavedPostTab = true;
+  this.isSavedPostList = true;
+  //if(this.savedPostsList == undefined){
+  this._postService.getSavedPostsByUser(userId,this.savedPostsPageNumber).subscribe((response) => {
+    this.savedPostsList = response;
+    this.loadingIcon = false;
+   }); 
+  //}
+
+}
+
+isPostsTab(){
+  this.isPostTab = true;
+  this.isSavedPostTab = false;
+  this.isSavedClassCourseTab = false;
+}
+
+savePost(postId:string,from:number){
+  if(from == 1){
+    var posts: any[] = this.user.posts;
+    var isSavedPost = posts.find(x => x.id == postId);
+  }
+  if(from == 2){
+    var posts: any[] = this.savedPostsList;
+    var isSavedPost = posts.find(x => x.id == postId);
+  }
+
+  if(isSavedPost.isPostSavedByCurrentUser){
+    isSavedPost.savedPostsCount -= 1;
+    isSavedPost.isPostSavedByCurrentUser = false;
+    this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post removed successfully'});
+   }
+   else{
+    isSavedPost.savedPostsCount += 1;
+    isSavedPost.isPostSavedByCurrentUser = true;
+    this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post saved successfully'});
+   }
+
+  this._postService.savePost(postId,this.userId).subscribe((result) => {
+  });
+}
+
+GetSavedClassCourseByUser(userId:string){
+  this.loadingIcon = true;
+  this.isPostTab = false;
+  this.isSavedPostTab = false;
+  this.isSavedClassCourseTab = true;
+  this.isSavedClassCourseList = true;
+  // if(this.savedClassCourseList == undefined){
+  this._schoolService.getSavedClassCourse(userId,this.saveClassCoursePageNumber).subscribe((response) => {
+    this.savedClassCourseList = response;
+    this.postLoadingIcon = false;
+    this.loadingIcon = false;
+   }); 
+  // }
+
+}
+
+getDeletedId(id: string, type: any) {
+  if (type == 1) {
+    this._schoolService.deleteClass(id).subscribe((response) => {
+      this.ngOnInit();
+    });
+  }
+  if (type == 2) {
+    this._schoolService.deleteCourse(id).subscribe((response) => {
+      this.ngOnInit();
+    });
+  }
+}
+
+pinUnpinClassCourse(id: string, type: string, isPinned: boolean) {
+  this._schoolService
+    .pinUnpinClassCourse(id, type, isPinned)
+    .subscribe((response) => {
+      this.ngOnInit();
+    });
+}
+
+openClassCourseViewModal(item: string): void {
+  const initialState = {
+    classCourseItem: item,
+  };
+  this.bsModalService.show(ClassCourseModalComponent, { initialState });
+}
+
+likeUnlikeClassCourse(Id: string, isLike: boolean, type: number) {
+  debugger
+  this.currentLikedClassCourseId = Id;
+  this.savedClassCourseList.filter((p: any) => p.id == Id).forEach((item: any) => {
+      if (item.type == 1) {
+        var likes: any[] = item.classLikes;
+        var isLiked = likes.filter(
+          (x) => x.userId == this.userId && x.classId == Id
+        );
+      } else {
+        var likes: any[] = item.courseLikes;
+        var isLiked = likes.filter(
+          (x) => x.userId == this.userId && x.courseId == Id
+        );
+      }
+      // var likes: any[] = item.likes;
+
+      if (isLiked.length != 0) {
+        this.isClassCourseLiked = false;
+        if (item.type == 1) {
+          this.likesClassCourseLength = item.classLikes.length - 1;
+        } else {
+          this.likesClassCourseLength = item.courseLikes.length - 1;
+        }
+        item.isLikedByCurrentUser = false;
+      } else {
+        this.isClassCourseLiked = true;
+        if (item.type == 1) {
+          this.likesClassCourseLength = item.classLikes.length + 1;
+        } else {
+          this.likesClassCourseLength = item.courseLikes.length + 1;
+        }
+
+        item.isLikedByCurrentUser = true;
+      }
+    });
+
+  this.InitializeLikeUnlikeClassCourse();
+  this.likeUnlikeClassCourses.Id = Id;
+  this.likeUnlikeClassCourses.isLike = isLike;
+  this.likeUnlikeClassCourses.type = type;
+
+  this._schoolService
+    .likeUnlikeClassCourse(this.likeUnlikeClassCourses)
+    .subscribe((response) => {
+      if (type == 1) {
+        this.savedClassCourseList
+          .filter((p: any) => p.id == Id)
+          .forEach((item: any) => {
+            item.classLikes = response;
+          });
+      } else {
+        this.savedClassCourseList
+          .filter((p: any) => p.id == Id)
+          .forEach((item: any) => {
+            item.courseLikes = response;
+          });
+      }
+
+      this.InitializeLikeUnlikeClassCourse();
+    });
+}
+
+InitializeLikeUnlikeClassCourse() {
+  this.likeUnlikeClassCourses = {
+    isLike: false,
+    userId: '',
+    Id: '',
+    type: 0,
+  };
+}
+
+saveClassCourse(id:string,type:number){
+  var classCourseList: any[] = this.savedClassCourseList;
+  var isSavedClassCourse = classCourseList.find(x => x.id == id);
+
+  if(isSavedClassCourse.isClassCourseSavedByCurrentUser){
+    isSavedClassCourse.savedClassCourseCount -= 1;
+    isSavedClassCourse.isClassCourseSavedByCurrentUser = false;
+    this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post removed successfully'});
+   }
+   else{
+    isSavedClassCourse.savedClassCourseCount += 1;
+    isSavedClassCourse.isClassCourseSavedByCurrentUser = true;
+    this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post saved successfully'});
+   }
+
+  this._schoolService.saveClassCourse(id,this.userId,type).subscribe((result) => {
+  });
 }
 
 }

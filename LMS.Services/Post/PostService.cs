@@ -33,13 +33,14 @@ namespace LMS.Services
         private IGenericRepository<Comment> _commentRepository;
         private IGenericRepository<CommentLike> _commentLikeRepository;
         private IGenericRepository<UserSharedPost> _userSharedPostRepository;
+        private IGenericRepository<SavedPost> _savedPostRepository;
         private readonly IBlobService _blobService;
         private readonly IUserService _userService;
         private readonly IChatService _chatService;
         private readonly IBigBlueButtonService _bigBlueButtonService;
         private IConfiguration _config;
 
-        public PostService(IMapper mapper, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<User> userRepository, IGenericRepository<Like> likeRpository, IGenericRepository<View> viewRepository, IGenericRepository<Comment> commentRepository, IGenericRepository<CommentLike> commentLikeRepository, IBlobService blobService, IUserService userService, IChatService chatService, IBigBlueButtonService bigBlueButtonService, IConfiguration config, IGenericRepository<UserSharedPost> userSharedPostRepository)
+        public PostService(IMapper mapper, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<User> userRepository, IGenericRepository<Like> likeRpository, IGenericRepository<View> viewRepository, IGenericRepository<Comment> commentRepository, IGenericRepository<CommentLike> commentLikeRepository, IGenericRepository<SavedPost> savedPostRepository, IBlobService blobService, IUserService userService, IChatService chatService, IBigBlueButtonService bigBlueButtonService, IConfiguration config, IGenericRepository<UserSharedPost> userSharedPostRepository)
         {
             _mapper = mapper;
             _postRepository = postRepository;
@@ -53,6 +54,7 @@ namespace LMS.Services
             _viewRepository = viewRepository;
             _commentRepository = commentRepository;
             _commentLikeRepository = commentLikeRepository;
+            _savedPostRepository = savedPostRepository;
             _blobService = blobService;
             _userService = userService;
             _chatService = chatService;
@@ -284,7 +286,7 @@ namespace LMS.Services
 
         public async Task<IEnumerable<PostAttachmentViewModel>> GetAttachmentsByPostId(Guid postId)
         {
-            var attacchmentList = await _postAttachmentRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.PostId == postId).OrderByDescending(x => x.IsPinned).ToListAsync();
+            var attacchmentList = await _postAttachmentRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.PostId == postId).OrderByDescending(x => x.IsPinned).ToListAsync();    
 
             var result = _mapper.Map<List<PostAttachmentViewModel>>(attacchmentList);
             return result;
@@ -437,5 +439,77 @@ namespace LMS.Services
             _userSharedPostRepository.Insert(userSharedPost);
             _userSharedPostRepository.Save();
         }
+
+        public async Task SavePostByUser(string userId, Guid postId)
+        {
+
+            var isSavedPostExist = await _savedPostRepository.GetAll().Where(x => x.UserId == userId && x.PostId == postId).FirstOrDefaultAsync();
+
+            if (isSavedPostExist != null)
+            {
+                _savedPostRepository.Delete(isSavedPostExist.Id);
+                _savedPostRepository.Save();
+            }
+
+            else
+            {
+                var savedPost = new SavedPost
+                {
+                    UserId = userId,
+                    PostId = postId,
+                    CreatedOn = DateTime.UtcNow
+                };
+
+                _savedPostRepository.Insert(savedPost);
+                _savedPostRepository.Save();
+            }
+        }
+
+        public async Task<List<PostDetailsViewModel>> GetSavedPostsByUser(string userId, int pageNumber)
+        {
+            int pageSize = 6;
+            var savedPostList = await _savedPostRepository.GetAll().Include(x => x.Post).Where(x => x.UserId == userId).OrderByDescending(x => x.CreatedOn).Select(x => x.Post).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            var result = _mapper.Map<List<PostDetailsViewModel>>(savedPostList);
+            var savedPosts = await _savedPostRepository.GetAll().ToListAsync();
+
+            foreach (var post in result)
+            {
+                
+                post.PostAttachments = await GetAttachmentsByPostId(post.Id);
+                post.Likes = await _userService.GetLikesOnPost(post.Id);
+                post.Views = await _userService.GetViewsOnPost(post.Id);
+                post.CommentsCount = await _userService.GetCommentsCountOnPost(post.Id);
+                post.PostSharedCount = await _userSharedPostRepository.GetAll().Where(x => x.PostId == post.Id).CountAsync();
+                post.IsPostSavedByCurrentUser = savedPosts.Any(x => x.PostId == post.Id && x.UserId == userId);
+                post.SavedPostsCount = savedPosts.Where(x => x.PostId == post.Id && x.UserId == userId).Count();
+                if (post.Likes.Any(x => x.UserId == userId && x.PostId == post.Id))
+                {
+                    post.IsPostLikedByCurrentUser = true;
+                }
+                else
+                {
+                    post.IsPostLikedByCurrentUser = false;
+                }
+
+            }
+
+            foreach (var post in result)
+            {
+                var tags = await GetTagsByPostId(post.Id);
+                post.PostTags = tags;
+            }
+
+            return result;
+        }
+
+        //public async Task<IEnumerable<PostAttachmentViewModel>> GetAttachmentsByPostId(Guid postId)
+        //{
+        //    var attacchmentList = await _postAttachmentRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.PostId == postId).OrderByDescending(x => x.IsPinned).ToListAsync();
+
+        //    var result = _mapper.Map<List<PostAttachmentViewModel>>(attacchmentList);
+        //    return result;
+        //}
+
     }
 }

@@ -45,26 +45,26 @@
              
             </div>
             <div>
-              <div [ngClass]="showCommentsField? 'accordion-open d-block' : 'accordion-open d-none'" id="live-chat-open" style="display:none;">
+              <div [ngClass]="showCommentsField? 'accordion-open d-block' : 'accordion-open d-none'" id="live-chat-open" style="display:none;max-width: 505px;">
               <div class="live-action-buttons d-flex justify-content-between">
-                <button type="button" class="btn bg-transparent text_ltgray font_12 active"><img src="../../../assets/images/chat-icon.svg"
-                    class="d-block" /> {{classCourseDetails.classCourseItem.commentsCount}}</button>
-                <button *ngIf="classCourseDetails.classCourseItem.type == 1" type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/eye.svg"
-                    class="d-block" /> {{classCourseDetails.classCourseItem.classViews.length}}</button>
+                <button type="button" class="btn bg-transparent text_ltgray font_12 cursor_auto"><img src="../../../assets/images/chat-icon.svg"
+                    class="d-block rightImagesWidth" /> {{classCourseDetails.classCourseItem.commentsCount}}</button>
+                <button *ngIf="classCourseDetails.classCourseItem.type == 1" type="button" class="btn bg-transparent text_ltgray font_12 cursor_auto"><img src="../../../assets/images/eye.svg"
+                    class="d-block rightImagesWidth" /> {{classCourseDetails.classCourseItem.classViews.length}}</button>
                     <button *ngIf="classCourseDetails.classCourseItem.type == 2" type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/eye.svg"
                       class="d-block" /> {{classCourseDetails.classCourseItem.courseViews.length}}</button>
                     <button (click)="likeUnlikeClassCourse(classCourseDetails.classCourseItem.id,true,classCourseDetails.classCourseItem.type)" type="button" class="btn bg-transparent text_ltgray font_12">
-                      <img *ngIf="classCourseDetails.classCourseItem.isLikedByCurrentUser" src="../../../assets/images/heart-red.svg" class="d-block" />
-                      <img *ngIf="!classCourseDetails.classCourseItem.isLikedByCurrentUser" src="../../../assets/images/Heart-dark.svg" class="d-block" />
+                      <img *ngIf="classCourseDetails.classCourseItem.isLikedByCurrentUser" src="../../../assets/images/heart-red.svg" class="d-block rightImagesWidth" />
+                      <img *ngIf="!classCourseDetails.classCourseItem.isLikedByCurrentUser" src="../../../assets/images/Heart-dark.svg" class="d-block rightImagesWidth" />
     
                       <span *ngIf="likesClassCourseLength != undefined && currentLikedClassCourseId== classCourseDetails.classCourseItem.id">{{likesClassCourseLength}}</span>
                       <span *ngIf="currentLikedClassCourseId!= classCourseDetails.classCourseItem.id && classCourseDetails.classCourseItem.type == 1">{{classCourseDetails.classCourseItem.classLikes.length}}</span>
                       <span *ngIf="currentLikedClassCourseId!= classCourseDetails.classCourseItem.id && classCourseDetails.classCourseItem.type == 2">{{classCourseDetails.classCourseItem.courseLikes.length}}</span>
                     </button>
                 <button type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Bookmark.svg"
-                    class="d-block" /> 34</button>
+                    class="d-block rightImagesWidth" /> {{classCourseDetails.classCourseItem.savedClassCourseCount}}</button>
                 <button type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Upload.svg"
-                    class="d-block" /> 34</button>
+                    class="d-block rightImagesWidth" /> 0</button>
               </div>
               <div class="live-chat-box text-center">
                 <div class="chat-enabled d-inline-flex align-items-center"><img src="../../../assets/images/Unlock.svg" />{{'ChatEnabled'| translate }}
@@ -80,7 +80,7 @@
                   </button>
                 </div>
               </div>
-                <div class="add-comment d-flex align-items-center justify-content-between">
+                <div class="add-comment d-flex align-items-center justify-content-between" style="margin-left:-40px">
                   <span class="bg-transparent rounded-circle comment-post-user rounded-circle"><img [src]="sender.avatar" style="max-height: 100%;"/>
                   </span>
                   <input [(ngModel)]="messageToGroup" type="text" class="form-control rounded-8 font_14 fw_400" placeholder="{{'YourMessage'| translate }}">

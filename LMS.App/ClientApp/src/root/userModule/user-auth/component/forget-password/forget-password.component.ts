@@ -5,7 +5,10 @@ import { Router } from '@angular/router';
 import { AuthService } from 'src/root/service/auth.service';
 import { ForgetPasswordModel } from 'src/root/interfaces/forget-password';
 import { MultilingualComponent } from 'src/root/root/sharedModule/Multilingual/multilingual.component';
-import { finalize } from 'rxjs';
+import { BehaviorSubject, finalize } from 'rxjs';
+
+export const forgotPassResponse =new BehaviorSubject <boolean>(false);  
+
 
 
 @Component({
@@ -22,6 +25,8 @@ export class ForgetPasswordComponent extends MultilingualComponent implements On
     isSubmitted: boolean = false;
     user: any = {};
     loadingIcon:boolean = false;
+    isResetEmailSent!:boolean;
+
     
     credentials: ForgetPasswordModel = {email:''};
     private _authService;
@@ -44,6 +49,7 @@ export class ForgetPasswordComponent extends MultilingualComponent implements On
 
     forgotPassword(){
       this.isSubmitted = true;
+      this.isResetEmailSent = false;
       if (!this.forgotPasswordForm.valid) {
         return;}
         this.loadingIcon = true;
@@ -57,7 +63,11 @@ export class ForgetPasswordComponent extends MultilingualComponent implements On
                   else{
                   this.isSubmitted = false;
                   this.invalidForgetPassword = false; 
+                  this.isResetEmailSent = true;
+                  // this.forgotPasswordForm.reset();
                   this.router.navigateByUrl("user/auth/login");
+                  forgotPassResponse.next(true); 
+                  //this.router.navigateByUrl("user/auth/login");
                   }
                 },
                 error: (err: HttpErrorResponse) => this.invalidForgetPassword = true

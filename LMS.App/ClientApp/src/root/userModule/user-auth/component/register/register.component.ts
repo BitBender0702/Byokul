@@ -1,16 +1,19 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Component, Injector, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Injector, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/root/service/auth.service';
 import { AuthenticatedResponse } from 'src/root/interfaces/auth_response';
 import { RegisterModel } from 'src/root/interfaces/register';
 import { RolesEnum } from 'src/root/RolesEnum/rolesEnum';
-import { finalize } from 'rxjs';
+import { BehaviorSubject, finalize, Subject } from 'rxjs';
 
 
 import { MultilingualComponent } from 'src/root/root/sharedModule/Multilingual/multilingual.component';
 import { UserService } from 'src/root/service/user.service';
+
+export const registrationResponse =new BehaviorSubject <boolean>(false);  
+
 
 @Component({
     selector: 'register-root',
@@ -45,7 +48,7 @@ export class RegisterComponent extends MultilingualComponent implements OnInit {
     credentials: RegisterModel = {email:'', password:'',confirmPassword:'',firstName:'',lastName:'',gender:0,dob: ''};
     private _authService;
     private _userService;
-    constructor(injector: Injector, private fb: FormBuilder,private router: Router, private http: HttpClient,authService:AuthService,userService:UserService) { 
+    constructor(injector: Injector, private fb: FormBuilder,private router: Router, private http: HttpClient,authService:AuthService,userService:UserService,private cd: ChangeDetectorRef) { 
       super(injector);
         this._authService = authService;
         this._userService = userService;
@@ -99,7 +102,7 @@ export class RegisterComponent extends MultilingualComponent implements OnInit {
           return {};
 
          }
-         if (f.value > currentDate) {
+         if (f.value > currentDate || f.value < "1960-12-31") {
            return {
              dates: `Please enter valid date`
            };
@@ -141,7 +144,6 @@ export class RegisterComponent extends MultilingualComponent implements OnInit {
         this.user = this.registrationForm.value;
         this._authService.registerUser(this.user).pipe(finalize(()=> this.loadingIcon = false)).subscribe({
                   next: (response: AuthenticatedResponse) => {
-
                     if(response.token == ""){
                       this.registrationForm.setErrors({ unauthenticated: true });
                     }
@@ -150,8 +152,8 @@ export class RegisterComponent extends MultilingualComponent implements OnInit {
                     const token = response.token;
                     localStorage.setItem("jwt", token); 
                     this.invalidRegister = false; 
-                    this.isRegister = true;
-                    this.registrationForm.reset();
+                    this.router.navigateByUrl("user/auth/login");
+                    registrationResponse.next(true); 
                   }
                   },
                   error: (err: HttpErrorResponse) => this.invalidRegister = true

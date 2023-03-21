@@ -41,6 +41,8 @@ namespace LMS.Common.ViewModels.School
         public int CommentsCount { get; set; }
         public int NoOfAppliedFilters { get; set; }
         public int NoOfStudents { get; set; }
+        public bool IsClassCourseSavedByCurrentUser { get; set; }
+        public int SavedClassCourseCount { get; set; }
 
 
     }

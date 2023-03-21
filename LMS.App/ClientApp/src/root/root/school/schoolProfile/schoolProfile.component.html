@@ -445,9 +445,10 @@
                           {{post.commentsCount}}
                         </button>
                        
-                        <button type="button" class="bg-transparent border-0 function-btns text-light">
-                            <img src="../../../../assets/images/Bookmark-light.svg" class="d-block mx-auto" />
-                            0
+                        <button (click)="savePost(post.id)" type="button" class="bg-transparent border-0 function-btns text-light">
+                            <img *ngIf="!post.isPostSavedByCurrentUser" src="../../../../assets/images/Bookmark-light.svg" class="d-block mx-auto" />
+                            <img *ngIf="post.isPostSavedByCurrentUser" src="../../../../assets/images/Bookmark-light.svg" class="d-block mx-auto">
+                            {{post.savedPostsCount}}
                         </button>
                         <button (click)="openSharePostModal(post.id)" type="button" class="bg-transparent border-0 function-btns text-light">
                             <img src="../../../../assets/images/Upload-light.svg" class="d-block mx-auto" />
@@ -471,9 +472,10 @@
                         <img src="../../../../assets/images/Chat-dark.svg" class="d-block mx-auto" />
                         <span class="textBlack">{{post.commentsCount}}</span>
                       </button>
-                      <button type="button" class="bg-transparent border-0 function-btns text-light">
-                        <img src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto" />
-                        <span class="textBlack">0</span>
+                      <button (click)="savePost(post.id)" type="button" class="bg-transparent border-0 function-btns text-light">
+                        <img *ngIf="!post.isPostSavedByCurrentUser" src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto" />
+                        <img *ngIf="post.isPostSavedByCurrentUser" src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto">
+                        <span class="textBlack">{{post.savedPostsCount}}</span>
                       </button>
                       <button (click)="openSharePostModal(post.id)" type="button" class="bg-transparent border-0 function-btns text-light">
                         <img src="../../../../assets/images/Upload-dark.svg" class="d-block mx-auto" />
@@ -543,9 +545,10 @@
                   <img src="../../../../assets/images/Chat-dark.svg" class="d-block mx-auto">
                   {{gridItemInfo.commentsCount}}
                 </button>
-                <button type="button" class="bg-transparent border-0 function-btns">
-                  <img src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto">
-                  0
+                <button (click)="savePost(gridItemInfo.id)" type="button" class="bg-transparent border-0 function-btns">
+                  <img *ngIf="!gridItemInfo.isPostSavedByCurrentUser" src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto">
+                  <img *ngIf="gridItemInfo.isPostSavedByCurrentUser" src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto">
+                  {{gridItemInfo.savedPostsCount}}
                 </button>
                 <button (click)="openSharePostModal(gridItemInfo.id)" type="button" class="bg-transparent border-0 function-btns">
                   <img src="../../../../assets/images/Upload-dark.svg" class="d-block mx-auto">
@@ -708,9 +711,10 @@
                             <img src="../../../../assets/images/Chat-light.svg" class="d-block mx-auto">
                             {{item.commentsCount}}
                           </button>
-                          <button type="button" class="bg-transparent border-0 function-btns text-light">
-                            <img src="../../../../assets/images/Bookmark-light.svg" class="d-block mx-auto">
-                            0
+                          <button (click)="saveClassCourse(item.id,item.type)" type="button" class="bg-transparent border-0 function-btns text-light">
+                            <img *ngIf="!item.isClassCourseSavedByCurrentUser" src="../../../../assets/images/Bookmark-light.svg" class="d-block mx-auto">
+                            <img *ngIf="item.isClassCourseSavedByCurrentUser" src="../../../../assets/images/Bookmark-light.svg" class="d-block mx-auto">
+                            {{item.savedClassCourseCount}}
                           </button>
                           <button type="button" class="bg-transparent border-0 function-btns text-light">
                             <img src="../../../../assets/images/Upload-light.svg" class="d-block mx-auto">
@@ -1096,4 +1100,3 @@ aria-labelledby="delete-class" aria-hidden="true">
 </div>
 <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
 <p-toast></p-toast>
-<!-- <div *ngIf="isOpenModal"><create-post [isOpenModal]="isOpenModal" [schoolId]="schoolId"></create-post></div> -->

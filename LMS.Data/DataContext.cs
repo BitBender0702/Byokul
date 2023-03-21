@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LMS.Data.Entity.Common;
 
 namespace LMS.Data
 {
@@ -76,6 +77,10 @@ namespace LMS.Data
         public DbSet<PermissionMaster> PermissionMaster { get; set; }
         public DbSet<UserPermission> UserPermissions { get; set; }
         public DbSet<UserSharedPost> UserSharedPosts { get; set; }
+        public DbSet<SavedPost> SavedPosts { get; set; }
+        public DbSet<SavedClassCourse> SavedClassCourses { get; set; }
+
+
 
 
     }

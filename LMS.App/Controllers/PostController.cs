@@ -69,7 +69,6 @@ namespace LMS.App.Controllers
             return Ok(response);
         }
 
-        [AllowAnonymous]
         [Route("likeUnlikePost")]
         [HttpPost]
         public async Task<IActionResult> LikeUnlikePost([FromBody] LikeUnlikeViewModel model)
@@ -80,7 +79,6 @@ namespace LMS.App.Controllers
             return Ok(response);
         }
 
-        [AllowAnonymous]
         [Route("postView")]
         [HttpPost]
         public async Task<IActionResult> PostView([FromBody] PostViewsViewModel model)
@@ -91,7 +89,6 @@ namespace LMS.App.Controllers
             return Ok(response);
         }
 
-        [AllowAnonymous]
         [Route("likeUnlikeComment")]
         [HttpPost]
         public async Task<IActionResult> LikeUnlikeComment(Guid commentId, bool isLike)
@@ -115,6 +112,22 @@ namespace LMS.App.Controllers
         {
             await _postService.SaveUserSharedPost(userId, postId);
             return Ok();
+        }
+
+        [Route("savePostByUser")]
+        [HttpPost]
+        public async Task<IActionResult> SavePostByUser(string userId, Guid postId)
+        {
+            await _postService.SavePostByUser(userId, postId);
+            return Ok();
+        }
+
+        [Route("getSavedPostsByUser")]
+        [HttpPost]
+        public async Task<IActionResult> GetSavedPostsByUser(string userId, int pageNumber)
+        {
+            var response = await _postService.GetSavedPostsByUser(userId, pageNumber);
+            return Ok(response);
         }
 
     }

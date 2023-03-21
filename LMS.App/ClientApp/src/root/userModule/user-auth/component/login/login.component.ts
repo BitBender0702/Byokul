@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Component, Injector, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Injector, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -10,11 +10,15 @@ import { LoginModel } from 'src/root/interfaces/login';
 import { RolesEnum } from 'src/root/RolesEnum/rolesEnum';
 import { MultilingualComponent } from 'src/root/root/sharedModule/Multilingual/multilingual.component';
 import { finalize, Subject } from 'rxjs';
-import { confirmEmailResponse } from '../confirmEmail/confirmEmail.component';
 import { MessageService } from 'primeng/api';
 import { SignalrService } from 'src/root/service/signalr.service';
 import { UserService } from 'src/root/service/user.service';
 import { stringify } from 'querystring';
+import { registrationResponse } from '../register/register.component';
+import { forgotPassResponse } from '../forget-password/forget-password.component';
+import { confirmEmailResponse } from '../confirmEmail/confirmEmail.component';
+import { resetPassResponse } from 'src/root/root/sharedModule/reset-password.component';
+import { changePassResponse } from '../change-password/change-password.component';
 
 export const dashboardResponse =new Subject<{token:string}>(); 
 
@@ -34,15 +38,20 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
     user: any = {};
     selectedLanguage:any;
     loadingIcon:boolean = false;
+    isRegister!:boolean;
+    isConfirmEmail!:boolean;
     private _authService;
+    isForgotPassSent!: boolean;
+    isResetpassword!: boolean;
+    isChangePassword!: boolean;
     constructor(injector: Injector, public messageService:MessageService,private fb: FormBuilder,private router: Router,private signalRService: SignalrService, 
       private userService: UserService,
-      private http: HttpClient,authService:AuthService,private route: ActivatedRoute) { 
+      private http: HttpClient,authService:AuthService,private route: ActivatedRoute,private cd: ChangeDetectorRef) { 
       super(injector);
       this._authService = authService;
     }
   
-    ngOnInit(): void {
+    ngOnInit(): void {        
       this._authService.loginState$.next(false);
       this.selectedLanguage = localStorage.getItem("selectedLanguage");
       this.loginForm = this.fb.group({
@@ -57,23 +66,40 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
          console.log(error);   
       }
 
-    // confirmEmailResponse.subscribe(response => {
-    //   this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Email confirm successfully'});
-    //   this.selectedLanguage = localStorage.getItem("selectedLanguage");
-    //   this.loginForm = this.fb.group({
-    //     email: this.fb.control('', [Validators.required,Validators.pattern(this.EMAIL_PATTERN)]),
-    //     password: this.fb.control('', [Validators.required])
-    //   });
+      registrationResponse.subscribe(response => {
+        this.isRegister = response;
+      });
 
-    //   try {
-    //     var result = this._authService.getBigBlueButton();
-    //     console.log(result);
-    //   } catch (error) {
-    //      console.log(error);   
-    //   }
+      forgotPassResponse.subscribe(response => {
+        this.isForgotPassSent = response;
+      });
 
-        
-    //   });
+      resetPassResponse.subscribe(response => {
+        this.cd.detectChanges();
+        this.isResetpassword = response;
+        if(this.isResetpassword){
+          this.messageService.add({severity: 'success',summary: 'Success',life: 3000,detail: 'Password reset successfully',
+          });        
+        }
+      });
+
+      changePassResponse.subscribe(response => {
+        this.cd.detectChanges();
+        this.isChangePassword = response;
+        if(this.isChangePassword){
+          this.messageService.add({severity: 'success',summary: 'Success',life: 3000,detail: 'Password changed successfully',
+          });        
+        }
+      });
+
+      confirmEmailResponse.subscribe(response => {
+        this.cd.detectChanges();
+        this.isConfirmEmail = response;
+        if(this.isConfirmEmail){
+          this.messageService.add({severity: 'success',summary: 'Success',life: 3000,detail: 'Email confirmed successfully',
+          });        
+        }
+      });
     }
   
     login(): void {
@@ -145,4 +171,8 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
               this.signalRService.askServer(this.getUserRoles(token!).jti);
             }, 500);
     }
+
+    showSuccess() {
+      this.messageService.add({severity:'success', summary: 'Success', detail: 'Message Content'});
+  }
   }

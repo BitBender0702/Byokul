@@ -28,6 +28,7 @@ import { NotificationsComponent } from '../root/Notifications/notifications.comp
 import { GenerateCertificateComponent } from '../root/generateCertificate/generateCertificate.component';
 import { AddTeacherComponent } from '../root/teacher/addTeacher.component';
 import { PostViewComponent } from '../root/postView/postView.component';
+import { AuthGuard } from '../service/auth.guard';
 
 
 const routes: Routes = [
@@ -56,7 +57,7 @@ const routes: Routes = [
     path: 'joinMeeting/:meetingId',component:JoinMeetingComponent
   },
   {
-    path: 'createSchool',component:CreateSchoolComponent
+    path: 'createSchool',component:CreateSchoolComponent, canActivate: [AuthGuard]
   },
   // {
   //   path: 'chat',component:ChatComponent
@@ -99,16 +100,16 @@ const routes: Routes = [
     path: 'schoolFollowers/:schoolId',component:SchoolFollowersComponent
   },
   {
-    path: 'createClass/:id',component:CreateClassComponent
+    path: 'createClass/:id',component:CreateClassComponent, canActivate: [AuthGuard]
   },
   {
-    path: 'createClass',component:CreateClassComponent
+    path: 'createClass',component:CreateClassComponent, canActivate: [AuthGuard]
   },
   {
-    path: 'createCourse/:id',component:CreateCourseComponent
+    path: 'createCourse/:id',component:CreateCourseComponent, canActivate: [AuthGuard]
   },
   {
-    path: 'createCourse',component:CreateCourseComponent
+    path: 'createCourse',component:CreateCourseComponent, canActivate: [AuthGuard]
   },
   {
     path: 'editSchool',component:EditSchoolComponent

@@ -27,6 +27,8 @@ namespace LMS.Common.ViewModels.Post
         public string CreatedBy { get; set; }
         public Boolean IsCommentsDisabled { get; set; }
         public int PostSharedCount { get; set; }
+        public bool IsPostSavedByCurrentUser { get; set; }
+        public int SavedPostsCount { get; set; }
 
     }
 }

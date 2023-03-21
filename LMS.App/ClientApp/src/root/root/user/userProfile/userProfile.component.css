@@ -18,3 +18,13 @@
     right: 92px;
     z-index: 999;
   }
+
+  .saved_post_header_img{
+    width: 30px;
+    height: 30px;
+    background-color: white;
+  }
+
+  .heightForText{
+    height: 300px;
+  }

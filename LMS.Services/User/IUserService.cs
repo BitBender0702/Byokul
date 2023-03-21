@@ -16,12 +16,12 @@ namespace LMS.Services
         Task<UserUpdateViewModel> UpdateUser(UserUpdateViewModel userUpdateViewModel);
         Task<IEnumerable<CountryViewModel>> CountryList();
         Task<IEnumerable<CityViewModel>> CityList(Guid countryId);
-        Task<IEnumerable<PostDetailsViewModel>> GetMyFeed(string userId,PostTypeEnum postType,int pageNumber);
+        Task<IEnumerable<PostDetailsViewModel>> GetMyFeed(string userId,PostTypeEnum postType, string? searchString, int pageNumber);
         Task<IEnumerable<PostAttachmentViewModel>> GetUserProfileFeed(string userId);
         Task<UserDetailsViewModel> GetBasicUserInfo(string userId);
-        Task<List<UserFollowerViewModel>> GetUserFollowers(string userId);
+        Task<List<UserFollowerViewModel>> GetUserFollowers(string userId, int pageNumber, string? searchString);
         Task<bool> BanFollower(string followerId);
-        Task<IEnumerable<GlobalFeedViewModel>> GetGlobalFeed(string userId, PostTypeEnum postType, int pageNumber);
+        Task<IEnumerable<GlobalFeedViewModel>> GetGlobalFeed(string userId, PostTypeEnum postType, int pageNumber, string? searchString);
         Task<Guid> SaveUserPreference(string userId,string preferenceString);
         Task<List<LikeViewModel>> GetLikesOnPost(Guid postId);
         Task<List<ViewsViewModel>> GetViewsOnPost(Guid postId);
@@ -29,6 +29,9 @@ namespace LMS.Services
         Task<IEnumerable<PostDetailsViewModel>> GetPostsByUserId(string userId, int pageNumber, int pageSize);
         Task<IEnumerable<PostDetailsViewModel>> GetReelsByUserId(string userId, int pageNumber, int pageSize);
         Task<UserDetailsViewModel> GetUserByEmail(string email);
+        //Task<List<UserFollowerViewModel>> SearchUserFollowers(string searchString);
+
+
 
 
 

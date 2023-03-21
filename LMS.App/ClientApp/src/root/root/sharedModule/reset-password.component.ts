@@ -5,6 +5,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/root/service/auth.service';
 import { ResetPasswordModel } from 'src/root/interfaces/reset-password';
 import { MultilingualComponent } from './Multilingual/multilingual.component';
+import { BehaviorSubject } from 'rxjs';
+export const resetPassResponse =new BehaviorSubject <boolean>(false);  
 
 @Component({
     selector: 'change-password',
@@ -72,6 +74,7 @@ export class ResetPasswordComponent extends MultilingualComponent implements OnI
                   this.isSubmitted = false;
                   this.invalidPasswordReset = false; 
                   this.router.navigateByUrl("user/auth/login");
+                  resetPassResponse.next(true); 
                 },
                 error: (err: HttpErrorResponse) => this.invalidPasswordReset = true
               })

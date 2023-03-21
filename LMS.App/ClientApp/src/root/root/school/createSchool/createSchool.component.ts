@@ -56,7 +56,6 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
   }
 
   ngOnInit(): void {
-
     this.step = 0;
     this.selectedLanguage = localStorage.getItem("selectedLanguage");
     this.translate.use(this.selectedLanguage);

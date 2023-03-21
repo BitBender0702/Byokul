@@ -1,4 +1,5 @@
   <section class="container pt-3 pt-lg-4">
+    <button type="button" pButton pRipple (click)="showSuccess()" label="Success" class="p-button-success mb-2"></button>
     <div class="logo mb-3">
       <img src="../../../../../assets/images/logo.svg" alt="logo" />
     </div>
@@ -20,6 +21,16 @@
                 <li class="font_14">{{'LoginInfo3'| translate }}</li>
                 <li class="font_14">{{'LoginInfo4'| translate }}</li>
               </ul>
+
+              <div *ngIf="isRegister" class="alert alert-info text-center register-form mx-auto ng-dirty ng-touched ng-valid ng-submitted" role="alert"
+                   style="background-color: #FFFFE0;max-width: 468px;border: 2px solid #f3eded;">
+                An Email has been sent to you.Please confirm the email to login!
+               </div>
+
+               <div *ngIf="isForgotPassSent" class="alert alert-info text-center register-form mx-auto ng-dirty ng-touched ng-valid ng-submitted" role="alert"
+                   style="background-color: #FFFFE0;max-width: 468px;border: 2px solid #f3eded;">
+                An Email has been sent to you.Please reset your password!
+               </div>
 
               <div class="form-group">
                 <input type="email" formControlName="email" class="form-control rounded-8 " placeholder="{{'Email'| translate }}">
@@ -60,5 +71,5 @@
   </section>
 
 <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
-<!-- <p-toast></p-toast> -->
+<p-toast></p-toast>
 

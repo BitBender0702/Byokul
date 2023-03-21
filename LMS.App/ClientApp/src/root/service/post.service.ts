@@ -77,4 +77,14 @@ export class PostService{
         return this.http.post(`${this.apiUrl}/posts/saveUserSharedPost`,null, {params:queryParams,headers: this.headers});
     }
 
+    savePost(postId:string,userId:string): Observable<any> {
+        let queryParams = new HttpParams().append("userId",userId).append("postId",postId);
+        return this.http.post(`${this.apiUrl}/posts/savePostByUser`,null, {params:queryParams,headers: this.headers});
+    }
+
+    getSavedPostsByUser(userId:string,pageNumber:number):Observable<any>{
+        let queryParams = new HttpParams().append("userId",userId).append("pageNumber",pageNumber);
+        return this.http.post(`${this.apiUrl}/posts/getSavedPostsByUser`,null, {params:queryParams,headers: this.headers});
+    }
+
 }

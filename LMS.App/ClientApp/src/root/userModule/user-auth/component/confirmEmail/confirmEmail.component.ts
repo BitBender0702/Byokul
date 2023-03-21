@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { AuthService } from 'src/root/service/auth.service';
 
-export const confirmEmailResponse =new Subject<{confirmEmail : string}>();  
+export const confirmEmailResponse =new BehaviorSubject <boolean>(false);  
 
 
 @Component({
@@ -38,6 +38,7 @@ loadingIcon:boolean = false;
        if(response.result == "success"){
         // confirmEmailResponse.next({confirmEmail: "confirm"});
         this.router.navigate(['../login'], { relativeTo: this.route });
+        confirmEmailResponse.next(true); 
        }
        else{ 
         this.isDataLoaded = true;

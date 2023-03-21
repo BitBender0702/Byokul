@@ -45,10 +45,12 @@ namespace LMS.Services
         private IGenericRepository<Comment> _commentRepository;
         private IGenericRepository<StudentCertificate> _studentCertificateRepository;
         private IGenericRepository<UserSharedPost> _userSharedPostRepository;
+        private IGenericRepository<SavedPost> _savedPostRepository;
+
         private readonly UserManager<User> _userManager;
         private readonly IBlobService _blobService;
         public UserService(IMapper mapper, IGenericRepository<User> userRepository, IGenericRepository<UserFollower> userFollowerRepository, IGenericRepository<UserLanguage> userLanguageRepository, IGenericRepository<City> cityRepository, IGenericRepository<Country> countryRepository, IGenericRepository<SchoolFollower> schoolFollowerRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<CourseTeacher> courseTeacherRepository,
-          IGenericRepository<SchoolTeacher> schoolteacherRepository, IGenericRepository<Student> studentRepository, IGenericRepository<Teacher> teacherRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<UserPreference> userPreferenceRepository, IGenericRepository<Like> likeRepository, IGenericRepository<View> viewRepository, IGenericRepository<Comment> commentRepository, IGenericRepository<StudentCertificate> studentCertificateRepository, IGenericRepository<UserSharedPost> userSharedPostRepository, UserManager<User> userManager, IBlobService blobService)
+          IGenericRepository<SchoolTeacher> schoolteacherRepository, IGenericRepository<Student> studentRepository, IGenericRepository<Teacher> teacherRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<UserPreference> userPreferenceRepository, IGenericRepository<Like> likeRepository, IGenericRepository<View> viewRepository, IGenericRepository<Comment> commentRepository, IGenericRepository<StudentCertificate> studentCertificateRepository, IGenericRepository<UserSharedPost> userSharedPostRepository, IGenericRepository<SavedPost> savedPostRepository, UserManager<User> userManager, IBlobService blobService)
         {
             _mapper = mapper;
             _userRepository = userRepository;
@@ -76,6 +78,7 @@ namespace LMS.Services
             _commentRepository = commentRepository;
             _studentCertificateRepository = studentCertificateRepository;
             _userSharedPostRepository = userSharedPostRepository;
+            _savedPostRepository = savedPostRepository;
             _userManager = userManager;
             _blobService = blobService;
         }
@@ -375,7 +378,7 @@ namespace LMS.Services
             public string SchoolName { get; set; }
         }
 
-        public async Task<IEnumerable<PostDetailsViewModel>> GetMyFeed(string userId, PostTypeEnum postType, int pageNumber = 1)
+        public async Task<IEnumerable<PostDetailsViewModel>> GetMyFeed(string userId, PostTypeEnum postType, string? searchString, int pageNumber = 1)
         {
             int pageSize = 0;
             if (postType == PostTypeEnum.Post)
@@ -419,9 +422,11 @@ namespace LMS.Services
 
             var postList = _postRepository.GetAll().Include(x => x.CreatedBy);
             var test = requiredIds.Where(a => a.Id.HasValue).ToList();
-            var postListData = (postList.Include(p => p.CreatedBy).AsEnumerable()).Where(x => test.Any(q => q.Id == x.ParentId) && x.PostType == (int)postType).Skip((pageNumber - 1) * pageSize).Take(pageSize).OrderByDescending(x => x.IsPinned).ToList();
+            var postListData = postList.Include(p => p.CreatedBy).AsEnumerable().Where(x => test.Any(q => q.Id == x.ParentId) && x.PostType == (int)postType && ((string.IsNullOrEmpty(searchString)) || (x.Title?.Contains(searchString) == true || test.Any(q => q.ParentName.Contains(searchString))))).Skip((pageNumber - 1) * pageSize).Take(pageSize).OrderByDescending(x => x.IsPinned).ToList();
 
             var sharedPosts = await _userSharedPostRepository.GetAll().ToListAsync();
+            var savedPosts = await _savedPostRepository.GetAll().ToListAsync();
+
 
             var resultData = _mapper.Map<List<PostDetailsViewModel>>(postListData);
             foreach (var post in resultData)
@@ -435,6 +440,8 @@ namespace LMS.Services
                 post.Views = await GetViewsOnPost(post.Id);
                 post.CommentsCount = await GetCommentsCountOnPost(post.Id);
                 post.PostSharedCount = sharedPosts.Where(x => x.PostId == post.Id).Count();
+                post.IsPostSavedByCurrentUser = savedPosts.Any(x => x.PostId == post.Id && x.UserId == userId);
+                post.SavedPostsCount = savedPosts.Where(x => x.PostId == post.Id && x.UserId == userId).Count();
                 post.PostAuthorType = (int)PostAuthorTypeEnum.School;
                 post.ParentId = data.Id != null ? data.Id.Value : Guid.Empty;
                 post.SchoolName = data.SchoolName;
@@ -684,16 +691,10 @@ namespace LMS.Services
 
             var postList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == new Guid(userId) && x.PostType == (int)PostTypeEnum.Post && x.PostAuthorType == (int)PostAuthorTypeEnum.User).OrderByDescending(x => x.IsPinned).ToListAsync();
 
-            var sharedPosts = await _userSharedPostRepository.GetAll().Include(x => x.Post).ThenInclude(x => x.CreatedBy).Where(x => x.UserId == userId && x.Post.PostType == (int)PostTypeEnum.Post).OrderByDescending(x => x.Post.IsPinned).ToListAsync();
-
-            foreach (var sharedPost in sharedPosts)
-            {
-                postList.Add(sharedPost.Post);
-            }
-
             var requiredPostList = postList.OrderByDescending(x => x.IsPinned).OrderByDescending(x => x.CreatedOn).ToList();
 
             var result = _mapper.Map<List<PostDetailsViewModel>>(requiredPostList).Skip((pageNumber - 1) * pageSize).Take(pageSize);
+            var savedPosts = await _savedPostRepository.GetAll().ToListAsync();
 
             foreach (var post in result)
             {
@@ -724,12 +725,14 @@ namespace LMS.Services
                     post.ParentName = user.FirstName + " " + user.LastName;
                     post.ParentImageUrl = user.Avatar;
                 }
-              
+
                 post.PostAttachments = await GetAttachmentsByPostId(post.Id);
                 post.Likes = await GetLikesOnPost(post.Id);
                 post.Views = await GetViewsOnPost(post.Id);
                 post.CommentsCount = await GetCommentsCountOnPost(post.Id);
                 post.PostSharedCount = await _userSharedPostRepository.GetAll().Where(x => x.PostId == post.Id).CountAsync();
+                post.IsPostSavedByCurrentUser = savedPosts.Any(x => x.PostId == post.Id && x.UserId == userId);
+                post.SavedPostsCount = savedPosts.Where(x => x.PostId == post.Id && x.UserId == userId).Count();
                 if (post.Likes.Any(x => x.UserId == userId && x.PostId == post.Id))
                 {
                     post.IsPostLikedByCurrentUser = true;
@@ -815,9 +818,12 @@ namespace LMS.Services
 
         }
 
-        public async Task<List<UserFollowerViewModel>> GetUserFollowers(string userId)
+        public async Task<List<UserFollowerViewModel>> GetUserFollowers(string userId, int pageNumber, string? searchString)
         {
-            var followerList = await _userFollowerRepository.GetAll().Include(x => x.Follower).Where(x => x.UserId == userId && !x.IsBan).ToListAsync();
+            int pageSize = 13;
+            var followerList = await _userFollowerRepository.GetAll().Include(x => x.Follower)
+                .Where(x => x.UserId == userId && !x.IsBan && ((string.IsNullOrEmpty(searchString)) || (x.Follower.FirstName.Contains(searchString) || x.Follower.LastName.Contains(searchString)))).Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize).ToListAsync();
 
             var response = _mapper.Map<List<UserFollowerViewModel>>(followerList);
             return response;
@@ -870,7 +876,7 @@ namespace LMS.Services
             return result;
         }
 
-        public async Task<IEnumerable<GlobalFeedViewModel>> GetGlobalFeed(string userId, PostTypeEnum postType, int pageNumber)
+        public async Task<IEnumerable<GlobalFeedViewModel>> GetGlobalFeed(string userId, PostTypeEnum postType, int pageNumber, string? searchString)
         {
             int pageSize = 0;
             if (postType == PostTypeEnum.Post)
@@ -898,11 +904,11 @@ namespace LMS.Services
             if (tokenList.Count() != 0)
             {
                 var PostGUIDScore = await GenericCompareAlgo(String.Join(" ", tokenList), postType, pageNumber, pageSize);
-                return await GetFeedResult(PostGUIDScore, userId, postType, pageNumber, pageSize);
+                return await GetFeedResult(PostGUIDScore, userId, postType, pageNumber, pageSize, searchString);
             }
             else
             {
-                return await GetDefaultFeeds(userId, postType, pageNumber, pageSize);
+                return await GetDefaultFeeds(userId, postType, pageNumber, pageSize, searchString);
             }
 
         }
@@ -1067,17 +1073,16 @@ namespace LMS.Services
 
         }
 
-        async Task<List<GlobalFeedViewModel>> GetFeedResult(Dictionary<Guid, int> postGUIDScore, string loginUserId, PostTypeEnum postType, int pageNumber, int pageSize)
+        async Task<List<GlobalFeedViewModel>> GetFeedResult(Dictionary<Guid, int> postGUIDScore, string loginUserId, PostTypeEnum postType, int pageNumber, int pageSize, string? searchString)
         {
             bool IsPostLikedByCurrentUser;
             var response = new List<GlobalFeedViewModel>();
-            var postList = await _postRepository.GetAll().Where(x => x.PostType == (int)postType).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
-            //var likeList = await _likeRepository.GetAll().ToListAsync();
-            //var viewList = await _viewRepository.GetAll().ToListAsync();
+            var postList = await _postRepository.GetAll().Where(x => x.PostType == (int)postType && ((string.IsNullOrEmpty(searchString)) || (x.Title.Contains(searchString)))).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
             var postAttachmentList = await _postAttachmentRepository.GetAll().ToListAsync();
             var postTagsList = await _postTagRepository.GetAll().ToListAsync();
             var likesList = await _likeRepository.GetAll().ToListAsync();
             var sharedPostList = await _userSharedPostRepository.GetAll().ToListAsync();
+            var savedPosts = await _savedPostRepository.GetAll().ToListAsync();
             foreach (var item in postGUIDScore)
             {
                 var post = postList.Where(x => x.Id == item.Key).First();
@@ -1163,9 +1168,11 @@ namespace LMS.Services
                     DateTime = post.DateTime,
                     PostAttachments = _mapper.Map<List<PostAttachmentViewModel>>(postAttachment),
                     PostTags = _mapper.Map<List<PostTagViewModel>>(postTag),
-                    CreatedBy = post.CreatedById
+                    CreatedBy = post.CreatedById,
+                    IsPostSavedByCurrentUser = savedPosts.Any(x => x.PostId == post.Id && x.UserId == loginUserId),
+                    SavedPostsCount = savedPosts.Where(x => x.PostId == post.Id && x.UserId == loginUserId).Count()
 
-                };
+            };
 
                 response.Add(result);
 
@@ -1174,17 +1181,16 @@ namespace LMS.Services
             return response;
         }
 
-        async Task<List<GlobalFeedViewModel>> GetDefaultFeeds(string loginUserId, PostTypeEnum postType, int pageNumber, int pageSize)
+        async Task<List<GlobalFeedViewModel>> GetDefaultFeeds(string loginUserId, PostTypeEnum postType, int pageNumber, int pageSize, string? searchString)
         {
             bool IsPostLikedByCurrentUser;
             var response = new List<GlobalFeedViewModel>();
-            var postList = await _postRepository.GetAll().Where(x => x.PostType == (int)postType).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
-            //var likeList = await _likeRepository.GetAll().ToListAsync();
-            //var viewList = await _viewRepository.GetAll().ToListAsync();
+            var postList = await _postRepository.GetAll().Where(x => x.PostType == (int)postType && ((string.IsNullOrEmpty(searchString)) || (x.Title.Contains(searchString)))).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
             var postAttachmentList = await _postAttachmentRepository.GetAll().ToListAsync();
             var postTagsList = await _postTagRepository.GetAll().ToListAsync();
             var likesList = await _likeRepository.GetAll().ToListAsync();
             var sharedPostList = await _userSharedPostRepository.GetAll().ToListAsync();
+            var savedPosts = await _savedPostRepository.GetAll().ToListAsync();
 
             foreach (var item in postList)
             {
@@ -1271,7 +1277,9 @@ namespace LMS.Services
                     DateTime = post.DateTime,
                     PostAttachments = _mapper.Map<List<PostAttachmentViewModel>>(postAttachment),
                     PostTags = _mapper.Map<List<PostTagViewModel>>(postTag),
-                    CreatedBy = post.CreatedById
+                    CreatedBy = post.CreatedById,
+                    IsPostSavedByCurrentUser = savedPosts.Any(x => x.PostId == post.Id && x.UserId == loginUserId),
+                    SavedPostsCount = savedPosts.Where(x => x.PostId == post.Id && x.UserId == loginUserId).Count()
 
                 };
 
@@ -1349,6 +1357,11 @@ namespace LMS.Services
             return null;
         }
 
+
+        //public async Task<UserDetailsViewModel> SearchUserFollowers(string searchString)
+        //{
+
+        //}
 
     }
 

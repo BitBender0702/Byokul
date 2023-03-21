@@ -299,12 +299,18 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
 
   @HostListener("window:scroll", [])
   onWindowScroll() {
-    if(!this.scrolled && this.scrollFeedResponseCount != 0){
-    this.scrolled = true;
-    this.postLoadingIcon = true;
-    this.postsEndPageNumber++;
-    this.getPostsByClassId();
+    const scrollPosition = window.pageYOffset;
+    const windowSize = window.innerHeight;
+    const bodyHeight = document.body.offsetHeight;
+
+    if (scrollPosition >= bodyHeight - windowSize) {
+      if(!this.scrolled && this.scrollFeedResponseCount != 0){
+      this.scrolled = true;
+      this.postLoadingIcon = true;
+      this.postsEndPageNumber++;
+      this.getPostsByClassId();
     }
+  }
   }
 
 
@@ -893,6 +899,25 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       };
       this.bsModalService.show(SharePostComponent,{initialState});
     }
+    }
+
+    savePost(postId:string){
+      var posts: any[] = this.class.posts;
+      var isSavedPost = posts.find(x => x.id == postId);
+    
+      if(isSavedPost.isPostSavedByCurrentUser){
+        isSavedPost.savedPostsCount -= 1;
+        isSavedPost.isPostSavedByCurrentUser = false;
+        this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post removed successfully'});
+       }
+       else{
+        isSavedPost.savedPostsCount += 1;
+        isSavedPost.isPostSavedByCurrentUser = true;
+        this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post saved successfully'});
+       }
+    
+      this._postService.savePost(postId,this.userId).subscribe((result) => {
+      });
     }
   
 }

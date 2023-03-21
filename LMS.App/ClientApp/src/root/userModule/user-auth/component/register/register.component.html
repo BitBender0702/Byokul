@@ -7,7 +7,7 @@
       <button (click)="back()" type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
         src="../../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
       <div *ngIf="isRegister" class="alert alert-info text-center register-form mx-auto ng-dirty ng-touched ng-valid ng-submitted" role="alert">
-       An Email is sent to you.Please confirm the email to login!
+       An Email has been sent to you.Please confirm the email to login!
       </div>
       <form class="register-form mx-auto" [formGroup]="registrationForm">
         <h2 class="font_34 fw_700 text-center">{{'NewAccount'| translate }} <span class="text_secondary">{{'Okul'| translate }}</span></h2>
@@ -30,7 +30,7 @@
           </div>
           <div class="col-md-6">
             <div class="form-group">
-              <input type="date" class="form-control rounded-8" min="1950-12-31" formControlName="dob" placeholder="DD/MM/YYYY">
+              <input type="date" class="form-control rounded-8" min="1960-12-31" max="9999-12-31" formControlName="dob" placeholder="DD/MM/YYYY">
               <small class="p-error" style="color: orange;"
               *ngIf="(isSubmitted && registrationForm.controls.dob.errors)">Date of birth is required
             </small>

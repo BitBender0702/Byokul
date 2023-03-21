@@ -1261,4 +1261,43 @@ export class SchoolProfileComponent
     };
     this.bsModalService.show(SharePostComponent,{initialState});
   }
+
+  savePost(postId:string){
+    var posts: any[] = this.school.posts;
+    var isSavedPost = posts.find(x => x.id == postId);
+  
+    if(isSavedPost.isPostSavedByCurrentUser){
+      isSavedPost.savedPostsCount -= 1;
+      isSavedPost.isPostSavedByCurrentUser = false;
+      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post removed successfully'});
+     }
+     else{
+      isSavedPost.savedPostsCount += 1;
+      isSavedPost.isPostSavedByCurrentUser = true;
+      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post saved successfully'});
+     }
+  
+    this._postService.savePost(postId,this.userId).subscribe((result) => {
+    });
+  }
+
+  saveClassCourse(id:string,type:number){
+    var classCourseList: any[] = this.classCourseList;
+    var isSavedClassCourse = classCourseList.find(x => x.id == id);
+  
+    if(isSavedClassCourse.isClassCourseSavedByCurrentUser){
+      isSavedClassCourse.savedClassCourseCount -= 1;
+      isSavedClassCourse.isClassCourseSavedByCurrentUser = false;
+      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post removed successfully'});
+     }
+     else{
+      isSavedClassCourse.savedClassCourseCount += 1;
+      isSavedClassCourse.isClassCourseSavedByCurrentUser = true;
+      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post saved successfully'});
+     }
+  
+    this._schoolService.saveClassCourse(id,this.userId,type).subscribe((result) => {
+    });
+  }
+
 }

@@ -5,7 +5,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/root/service/auth.service';
 import { ChangePasswordModel } from 'src/root/interfaces/change-password';
 import { MultilingualComponent } from 'src/root/root/sharedModule/Multilingual/multilingual.component';
-import { finalize } from 'rxjs';
+import { BehaviorSubject, finalize } from 'rxjs';
+export const changePassResponse =new BehaviorSubject <boolean>(false);  
+
 
 @Component({
     selector: 'change-password',
@@ -65,7 +67,7 @@ export class ChangePasswordComponent extends MultilingualComponent implements On
 
       this.loadingIcon = true;
       this.user = this.changePasswordForm.value;
-      this.user.passwordResetToken = this.route.snapshot.paramMap.get('id');
+      //this.user.passwordResetToken = this.route.snapshot.paramMap.get('id');
       this._authService.changePassword(this.user).pipe(finalize(()=> this.loadingIcon = false)).subscribe({
                 next: (response:any) => {
                   if(response.result == ""){
@@ -76,11 +78,16 @@ export class ChangePasswordComponent extends MultilingualComponent implements On
                   this.isSubmitted = false;
                   this.invalidPasswordChange = false; 
                   this.router.navigateByUrl("user/auth/login");
+                  changePassResponse.next(true); 
                   }
                 },
                 error: (err: HttpErrorResponse) => this.invalidPasswordChange = true
               })
       }
+
+    back(): void {
+        window.history.back();
+    }
 
 
   }
