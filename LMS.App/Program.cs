@@ -30,6 +30,7 @@ using Stripe;
 using System.Text;
 using Microsoft.Extensions.Azure;
 using Azure.Storage.Blobs;
+using LMS.Services.FileStorage;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -95,6 +96,7 @@ builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IChatService, ChatService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IPermissionService, PermissionService>();
+builder.Services.AddScoped<IFileStorageService, FileStorageService>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped(typeof(IAsyncGenericRepository<>), typeof(AsyncGenericRepository<>));
 StripeConfiguration.ApiKey = configuration.GetSection("Stripe")["SecretKey"];

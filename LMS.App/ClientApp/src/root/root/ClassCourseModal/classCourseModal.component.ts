@@ -244,7 +244,9 @@ import { UserService } from 'src/root/service/user.service';
       userId: '',
       content:'',
       groupName:'',
-      userAvatar:''
+      userAvatar:'',
+      createdOn:new Date(),
+      userName:''
      };
   }
 }

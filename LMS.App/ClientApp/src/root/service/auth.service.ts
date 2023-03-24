@@ -48,7 +48,6 @@ export class AuthService{
     }
 
     changePassword(credentials:ChangePasswordModel): Observable<any> {
-      debugger
         return this.http.post<AuthenticatedResponse>(`${this.apiUrl}/auth/updatePassword`, credentials, {headers: this.headers});
     }
 

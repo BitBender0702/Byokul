@@ -88,7 +88,6 @@ namespace LMS.App.Controllers
             return Ok(response);
         }
 
-        [AllowAnonymous]
         [Route("countryList")]
         [HttpGet]
         public async Task<IActionResult> CountryList()
@@ -96,7 +95,6 @@ namespace LMS.App.Controllers
             return Ok(await _userService.CountryList());
         }
 
-        [AllowAnonymous]
         [Route("cityList")]
         [HttpGet]
         public async Task<IActionResult> CityList(Guid countryId)

@@ -570,10 +570,10 @@ button.live_chats {
 	border: 1px solid rgba(124, 141, 167, 0.5);
 	border-radius: 600px;
 	background: #FFFFFF;
-	padding: 8px 12px;
+	/* padding: 8px 12px;
 	position: absolute;
 	right: 25px;
-	top: 25px;
+	top: 25px; */
 }
 
 button.live_chats .chat-gray-icon {

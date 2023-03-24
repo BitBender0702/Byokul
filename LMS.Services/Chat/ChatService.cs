@@ -20,6 +20,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using LMS.Common.ViewModels.Post;
+using LMS.Common.ViewModels.User;
 
 namespace LMS.Services.Chat
 {
@@ -528,8 +529,10 @@ namespace LMS.Services.Chat
 
             _commentRepository.Insert(comment);
             _commentRepository.Save();
-
+            var user = await _commentRepository.GetAll().Include(x => x.User).Where(x => x.Id == comment.Id).Select(x => x.User).FirstAsync();
+            chatViewModel.User = _mapper.Map<UserDetailsViewModel>(user);
             chatViewModel.Id = comment.Id;
+            chatViewModel.CreatedOn = DateTime.SpecifyKind(comment.CreatedOn, DateTimeKind.Unspecified);
             return chatViewModel;
 
         }

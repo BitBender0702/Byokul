@@ -4,6 +4,7 @@ using LMS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LMS.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230321145905_Add_Folder_table")]
+    partial class Add_Folder_table
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -836,59 +838,16 @@ namespace LMS.Data.Migrations
                     b.ToTable("Disciplines");
                 });
 
-            modelBuilder.Entity("LMS.Data.Entity.File", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("CreatedById")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DeletedById")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("FileName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("FileType")
-                        .HasColumnType("int");
-
-                    b.Property<string>("FileUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("FolderId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid?>("ParentId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("DeletedById");
-
-                    b.HasIndex("FolderId");
-
-                    b.ToTable("Files");
-                });
-
             modelBuilder.Entity("LMS.Data.Entity.Folder", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("ClassId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CourseId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CreatedById")
@@ -910,13 +869,14 @@ namespace LMS.Data.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<Guid?>("ParentFolderId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("ParentId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ClassId");
+
+                    b.HasIndex("CourseId");
 
                     b.HasIndex("CreatedById");
 
@@ -2509,29 +2469,16 @@ namespace LMS.Data.Migrations
                     b.Navigation("DeletedBy");
                 });
 
-            modelBuilder.Entity("LMS.Data.Entity.File", b =>
-                {
-                    b.HasOne("LMS.Data.Entity.User", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("LMS.Data.Entity.User", "DeletedBy")
-                        .WithMany()
-                        .HasForeignKey("DeletedById");
-
-                    b.HasOne("LMS.Data.Entity.Folder", "Folder")
-                        .WithMany()
-                        .HasForeignKey("FolderId");
-
-                    b.Navigation("CreatedBy");
-
-                    b.Navigation("DeletedBy");
-
-                    b.Navigation("Folder");
-                });
-
             modelBuilder.Entity("LMS.Data.Entity.Folder", b =>
                 {
+                    b.HasOne("LMS.Data.Entity.Class", "Class")
+                        .WithMany()
+                        .HasForeignKey("ClassId");
+
+                    b.HasOne("LMS.Data.Entity.Course", "Course")
+                        .WithMany()
+                        .HasForeignKey("CourseId");
+
                     b.HasOne("LMS.Data.Entity.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
@@ -2539,6 +2486,10 @@ namespace LMS.Data.Migrations
                     b.HasOne("LMS.Data.Entity.User", "DeletedBy")
                         .WithMany()
                         .HasForeignKey("DeletedById");
+
+                    b.Navigation("Class");
+
+                    b.Navigation("Course");
 
                     b.Navigation("CreatedBy");
 

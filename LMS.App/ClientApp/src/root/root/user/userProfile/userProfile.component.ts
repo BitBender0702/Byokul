@@ -647,7 +647,6 @@ userChat(){
 }
 
 likeUnlikePosts(postId:string, isLike:boolean,postType:number,post:any,from:number){
-  debugger
   this.currentLikedPostId = postId;
   if(from == 1){
     var posts = this.user.posts;
@@ -880,7 +879,6 @@ openClassCourseViewModal(item: string): void {
 }
 
 likeUnlikeClassCourse(Id: string, isLike: boolean, type: number) {
-  debugger
   this.currentLikedClassCourseId = Id;
   this.savedClassCourseList.filter((p: any) => p.id == Id).forEach((item: any) => {
       if (item.type == 1) {

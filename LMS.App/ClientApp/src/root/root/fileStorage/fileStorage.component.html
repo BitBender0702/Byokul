@@ -1,0 +1,213 @@
+<div *ngIf="isDataLoaded">
+<section class="f-poppins">
+    <div class="main_content">
+      <div class="create-post-header d-flex justify-content-between d-none d-xl-flex align-items-center">
+        <button (click)="back()" type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
+            src="../../../assets/images/arrow-left.svg" /> Back</button>
+            <h2 class="font_22 fw_700 f-monteserrat mb-md-0">{{folderLocation}}</h2>
+            <div class="search-header position-relative">
+              <input type="search" class="form-control h_44">
+              <button type="button" class="btn search-icon"><img src="../../../assets/images/school/search-gray.svg"></button>
+            </div>
+      </div>
+      <div class="live-header d-flex align-items-center justify-content-between">
+        <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark  d-xl-none"><img
+            src="../../../assets/images/arrow-left.svg" /> Back</button>
+        <span class="logo_mobile d-xl-none">
+          <img src="../../../assets/images/logo.svg" />
+        </span>
+        <div class="d-xl-none">
+          <button type="button" class="mobile-search border_btn" onclick="openSearch()"><img
+              src="../../../assets/images/search-lg.svg" /></button>
+          <button type="button" class="mobile-search border_btn" onclick="openSidebar()"><img
+              src="../../../assets/images/menu.svg" /></button>
+        </div>
+      </div>
+<div class="files-main d-md-flex">
+  <div>
+      <!---- folder html start ------>
+      <div class="text-line-border position-relative text-center mb-5 mt-0">
+        <span class="line-text font_12 text_ltgray fw_400 text-center">Folders</span>
+      </div>
+
+      <div>
+        <button type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 me-2" data-bs-toggle="modal" data-bs-target="#add-folder">Create Folder</button>
+      </div>
+      <br>
+
+      <div class="folder-sec">
+        <div class="row">
+          <div *ngFor="let item of folders" class="col-md-3" (click)="getNestedFolders(item.id,item.folderName)">
+            <div class="folder-box" style="cursor:pointer">
+              <h3 class="foldername font_14 fw_400 text_sec1 mb-0">
+                {{item.folderName}}
+              </h3>
+              <div class="foldericon d-flex align-items-center justify-content-between">
+                <img src="../../../assets/images/folder-regular.svg" />               
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!------file html start ---->
+      <div class="text-line-border position-relative text-center mb-5 mt-4">
+        <span class="line-text font_12 text_ltgray fw_400 text-center">Files</span>
+      </div>
+
+      <div>
+        <button (click)="resetFilesModal()" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 me-2" data-bs-toggle="modal" data-bs-target="#add-file">Create File</button>
+      </div>
+      <br>
+      
+      <div class="folder-sec">
+        <div class="d-flex files-sec flex-wrap">
+            <div *ngFor="let file of files" class="folder-box">
+              <h3 class="foldername font_14 fw_400 text_sec1 mb-0">
+                {{file.fileName}}
+              </h3>
+              <div class="foldericon d-flex align-items-center justify-content-between">
+                <img *ngIf="file.fileType == 1" src="../../../assets/images/gallery-dark.svg" />
+                <img *ngIf="file.fileType == 2" src="../../../assets/images/Video-dark.svg" />
+                <img *ngIf="file.fileType == 4" src="../../../assets/images/microsoft-word.svg" />
+                <img *ngIf="file.fileType == 5" src="../../../assets/images/microsoft-excel.svg" />
+                <img *ngIf="file.fileType == 6" src="../../../assets/images/microsoft-powerpoint.svg" />
+                <img *ngIf="file.fileType == 7" src="../../../assets/images/pdf-icon.svg" />
+
+                <div class="file-action d-flex align-items-center">
+                  <button (click)="openCommentsSection(file.id)" type="button" class="btn border-0 shadow-none" id="live-chat" class="live_chats"><img src="../../../assets/images/Chat-dark.svg" /></button>
+                  <!-- <button type="button" class="btn border-0 shadow-none"><img src="../../../assets/images/Upload-dark.svg" /></button> -->
+                  <button (click)="downloadFile(file.fileUrl)" type="button" class="btn border-0 shadow-none"><img src="../../../assets/images/download-dark.svg" /></button>
+                  <!-- <button type="button" class="btn border-0 shadow-none"><img src="../../../assets/images/pinned-gray.svg" /></button> -->
+                </div>
+              </div>
+            </div>       
+        </div>
+      </div>
+    </div>
+      <div [ngClass]="isOpenCommentsSection ? 'd-block':'d-none'" class="accordion-open" id="live-chat-open" style="min-width: 600px;">
+        <!-- <div class="d-flex">
+          <div class="text-center">Comments</div>
+          <div></div>
+        </div> -->
+        <div class="live-action-buttons d-flex justify-content-center pb-4">
+           <div class="text-center w-100 font_20 fw-bold">Comments</div>
+          <div>
+            <button (click)="closeCommentsSection()" type="button" class="back-button bg-transparent border-0"><img src="../../../assets/images/cross.svg" style="width: 25px;" /></button>
+          </div>
+        </div>
+        <div class="live-chat-box text-center">
+          <!-- <div class="chat-enabled d-inline-flex align-items-center"><img src="images/Unlock.svg" /> Chat Enabled
+          </div> -->
+          <div #groupChatList class="live-chat-outer position-relative" (scroll)="scrollHandler($event)">
+            <!-- <div *ngIf="commentsLoadingIcon" class="postloader-main position-absolute translate-middle">
+              <div class="postlds-ring" style="margin-left: 200px;margin-bottom: 214px;"><div></div><div></div><div></div><div></div></div>
+            </div> -->
+          <div *ngFor="let item of fileComments" class="live-message d-flex position-relative align-items-start flex-column">
+            <div class="d-flex">
+              <img [src]="item.userAvatar" class="comment-user" style="margin-right: 12px; width: 36px;height: 36px;">
+              <p *ngIf="item.userName == null" class="font_16 fw-bold mb-0 mt-1 text-start text_sec1">{{item.user.firstName + item.user.lastName}}</p>
+              <p *ngIf="item.userName != null" class="font_16 fw-bold mb-0 mt-1 text-start text_sec1">{{item.userName}}</p>
+            </div>
+            <div>
+              <p class="text_sec1 font_12 fw_400 text-start mb-0 ms-1 pt-2">{{item.content}}</p>
+            </div>
+            <div class="d-flex justify-content-end w-100">
+              <p class="text_sec1 font_12 fw_400 text-start mb-0 ms-1 pt-2 text-muted">{{item.createdOn | date : "HH:mm"}}</p>
+            </div>
+          </div>
+        </div>
+          <div class="add-comment d-flex align-items-center justify-content-between pt-5" style="margin-left:-40px">
+            <span class="bg-transparent rounded-circle comment-post-user rounded-circle"><img [src]="sender.avatar" style="max-height: 100%;" />
+            </span>
+            <input (keyup.enter)="sendToGroup()" [(ngModel)]="messageToGroup" type="text" class="form-control rounded-8 font_14 fw_400" placeholder="Your message">
+            <button (click)="sendToGroup()" type="button" class="comment-btn border-0"><img src="../../../assets/images/arrowup.svg" /></button>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </section>
+
+  <!-- Modal -->
+
+  <div class="modal fade edit-school-modal" id="add-folder" tabindex="-1"
+  aria-labelledby="add-language" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header border-0 justify-content-center position-relative">
+        <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">{{'Add Folder'| translate }}</h1>
+        <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"><img
+            src="../../../../assets/images/cross.svg" /></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="saveFolderForm" class="latest-form add-tag-step">
+          <label class="font_10">{{'Folder Name'| translate }}</label>
+          <div class="form-group">
+            <input type="text" formControlName="folderName" name="folderName" class="form-control w-100" placeholder="{{'Folder Name'| translate }}">
+          </div>
+          <small class="p-error" style="color: orange;" class="text-center d-block"
+          *ngIf="(isSubmitted && saveFolderForm.controls.folderName.errors)"> Folder name is required!
+        </small>
+          <div class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 mt-4">
+          <button #closeFolderModal type="button"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+            data-bs-dismiss="modal">{{'DiscardChanges'| translate }}</button>
+          <button (click)="saveFolder()" type="button"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step">{{'Save'| translate }}</button>
+        </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade edit-school-modal" id="add-file" tabindex="-1"
+aria-labelledby="add-certificate" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered">
+  <div class="modal-content">
+    <div class="modal-header border-0 justify-content-center position-relative">
+      <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">{{'Add Files'| translate }}</h1>
+      <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"><img
+          src="../../../../assets/images/cross.svg" /></button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="filesForm" class="latest-form add-tag-step">
+
+        <div class="form-group">
+          <div class="dropzone-wrapper">
+            <div class="dropzone-desc">
+              <i class="glyphicon glyphicon-download-alt"></i>
+              <p class="text-center fw_400">{{'ChooseImageFile'| translate }} <b>{{'DragItHere'| translate }}</b></p>
+            </div>
+            <input formControlName="files" type="file" id="file" (change)="handleFiles($event)" class="dropzone"/>
+          </div>
+        </div>
+        <div class="teacher-tags tag-box language-tag my-0">
+          <button *ngFor="let file of this.saveFileViewModel.files" type="button" class="custom-tag border-0">{{file.name}}</button>
+        </div>
+
+        <small class="p-error" style="color: orange;"class="text-center d-block"
+        *ngIf="(isSubmitted && filesForm.controls.files.errors)"> Please select atleast one file
+      </small>
+        <div
+        class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 mt-4">
+        <button #closeFileModal type="button"
+          class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+          data-bs-dismiss="modal">{{'DiscardChanges'| translate }}</button>
+        <button (click)="saveFiles()" type="button"
+          class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step">{{'Save'| translate }}</button>
+
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+
+<p-toast></p-toast>
+<loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
+
+

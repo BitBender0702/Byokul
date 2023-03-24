@@ -29,6 +29,8 @@ import { GenerateCertificateComponent } from '../root/generateCertificate/genera
 import { AddTeacherComponent } from '../root/teacher/addTeacher.component';
 import { PostViewComponent } from '../root/postView/postView.component';
 import { AuthGuard } from '../service/auth.guard';
+import { EarningsComponent } from '../root/earnings/earnings.component';
+import { FileStorageComponent } from '../root/fileStorage/fileStorage.component';
 
 
 const routes: Routes = [
@@ -86,7 +88,9 @@ const routes: Routes = [
   {
     path: 'myEarnings',component:MyEarningsComponent
   },
-
+  {
+    path: 'earnings',component:EarningsComponent
+  },
   {
     path: 'userProfile/:userId',component:UserProfileComponent
   },
@@ -125,6 +129,9 @@ const routes: Routes = [
   },
   {
     path: 'post/:id',component:PostViewComponent
+  },
+  {
+    path: 'fileStorage/:id',component:FileStorageComponent
   },
 ];
 

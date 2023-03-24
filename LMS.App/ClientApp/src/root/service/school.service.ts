@@ -126,7 +126,6 @@ export class SchoolService{
     }
 
     likeUnlikeClassCourse(likeUnlikeClassCourse:any):Observable<any>{
-        debugger
         return this.http.post(`${this.apiUrl}/school/likeUnlikeClassCourse`, likeUnlikeClassCourse,{headers: this.headers});
     }
 

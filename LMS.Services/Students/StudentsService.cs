@@ -92,7 +92,7 @@ namespace LMS.Services.Students
                 var certificateCreatedDate = DateTime.Parse(model.Date).ToString("dd MMM yyy");
                 var path = _webHostEnvironment.ContentRootPath;
                 var htmlFilePath = Path.Combine(path, "AssignedCertificates/assignedCertificate.html");
-                var text = File.ReadAllText(htmlFilePath);
+                var text = System.IO.File.ReadAllText(htmlFilePath);
 
                 text = text.Replace("[SchoolName]", model.SchoolName);
                 text = text.Replace("[SchoolAvatar]", model.SchoolAvatar);

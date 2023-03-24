@@ -17,5 +17,7 @@ namespace LMS.Common.ViewModels.Post
         public string UserAvatar { get; set; }
         public int LikeCount { get; set; }
         public bool isCommentLikedByCurrentUser { get; set; }
+        public DateTime? CreatedOn { get; set; }
+        public string? UserName { get; set; }
     }
 }

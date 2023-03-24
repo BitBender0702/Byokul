@@ -210,7 +210,7 @@ namespace LMS.Services
         {
             var path = _webHostEnvironment.ContentRootPath;
             var filePath = Path.Combine(path, "Email/user-permissions.html");
-            var text = File.ReadAllText(filePath);
+            var text = System.IO.File.ReadAllText(filePath);
             text = text.Replace("[Recipient]", user.FirstName + " " + user.LastName);
             text = text.Replace("[OwnerName]", OwnerName);
 

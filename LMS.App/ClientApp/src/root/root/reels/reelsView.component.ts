@@ -157,7 +157,9 @@ import { SharePostComponent } from '../sharePost/sharePost.component';
         userId: '',
         content:'',
         groupName:'',
-        userAvatar:''
+        userAvatar:'',
+        createdOn:new Date(),
+        userName:''
        };
 
     }

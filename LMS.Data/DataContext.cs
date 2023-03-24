@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using LMS.Data.Entity.Common;
+using File = LMS.Data.Entity.File;
 
 namespace LMS.Data
 {
@@ -79,8 +80,8 @@ namespace LMS.Data
         public DbSet<UserSharedPost> UserSharedPosts { get; set; }
         public DbSet<SavedPost> SavedPosts { get; set; }
         public DbSet<SavedClassCourse> SavedClassCourses { get; set; }
-
-
+        public DbSet<Folder> Folders { get; set; }
+        public DbSet<File> Files { get; set; }
 
 
     }

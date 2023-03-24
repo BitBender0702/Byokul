@@ -65,6 +65,8 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { GenerateCertificateComponent } from './root/generateCertificate/generateCertificate.component';
 import { AddTeacherComponent } from './root/teacher/addTeacher.component';
 import { SharePostComponent } from './root/sharePost/sharePost.component';
+import { EarningsComponent } from './root/earnings/earnings.component';
+import { FileStorageComponent } from './root/fileStorage/fileStorage.component';
 
 
 const routes: Routes = [
@@ -123,7 +125,9 @@ const routes: Routes = [
     CertificateViewComponent,
     GenerateCertificateComponent,
     AddTeacherComponent,
-    SharePostComponent
+    SharePostComponent,
+    EarningsComponent,
+    FileStorageComponent
 
   ],
   imports: [

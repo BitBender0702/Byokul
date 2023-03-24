@@ -27,6 +27,8 @@ export const commentResponse = new Subject<{
   senderAvatar: string;
   message: string;
   userId: string;
+  createdOn: Date,
+  userName:string
 }>();
 
 export const commentLikeResponse = new Subject<{
@@ -50,7 +52,7 @@ export class SignalrService {
 
   initializeConnection(token: string) {
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl('https://byokul.com/chatHub', {
+      .withUrl('https://localhost:7220/chatHub', {
          httpClient: new CustomXhrHttpClient(token)
       })
       .withAutomaticReconnect()
@@ -113,6 +115,8 @@ export class SignalrService {
         senderAvatar: model.userAvatar,
         message: model.content,
         userId: model.userId,
+        createdOn:model.createdOn,
+        userName: model.userName
       });
 
       console.log(`this ${model.userId} send ${model.content}`);
@@ -138,8 +142,6 @@ export class SignalrService {
   sendToGroup(model: CommentViewModel) {
     this.hubConnection?.invoke('SendMessageToGroup', model)
       .catch((err) => console.error(err));
-
-      
   }
   
 

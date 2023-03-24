@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using LMS.Common.ViewModels.Admin;
 using LMS.Common.ViewModels.Common;
+using LMS.Common.ViewModels.FileStorage;
 using LMS.Common.ViewModels.Permission;
 using LMS.Common.ViewModels.Post;
 using LMS.Common.ViewModels.User;
@@ -10,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using File = LMS.Data.Entity.File;
 
 namespace LMS.DataAccess.Automapper
 {
@@ -30,6 +32,9 @@ namespace LMS.DataAccess.Automapper
             CreateMap<ClassCourseFilter, ClassCourseFilterViewModel>();
             CreateMap<PermissionMaster, PermissionMasterViewModel>();
             CreateMap<UserPermission, UserPermissionViewModel>();
+            CreateMap<Folder, FolderViewModel>();
+            CreateMap<File, FileViewModel>();
+
 
         }
     }

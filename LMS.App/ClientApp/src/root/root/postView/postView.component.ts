@@ -313,7 +313,9 @@ export class PostViewComponent implements OnInit,AfterViewInit {
         userId: '',
         content:'',
         groupName:'',
-        userAvatar:''
+        userAvatar:'',
+        createdOn:new Date(),
+        userName:''
        };
     }
 
