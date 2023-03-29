@@ -38,9 +38,6 @@ export class PostService{
     }
 
     createPost(credentials:any): Observable<any> {
-        for(var pair of credentials.entries()) {
-            console.log(pair[0]+ ', '+ pair[1]);
-         }
         return this.http.post(`${this.apiUrl}/posts/savePost`, credentials,{headers: this.headers});
     }
 

@@ -219,7 +219,7 @@ app.MapFallbackToFile("index.html");
 
 app.UseEndpoints(endpoints =>
 {
-    endpoints.MapHub<ChatHub>("/chatHub", options =>
+    endpoints.MapHub<ChatHubs>("/chatHub", options =>
     {
         options.Transports =
             HttpTransportType.WebSockets |

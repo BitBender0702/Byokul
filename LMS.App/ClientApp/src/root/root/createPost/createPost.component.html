@@ -31,7 +31,7 @@
                         class="dark-attach" /><img src="../../../assets/images/Edit-light.svg" class="light-attach" /> Post</button>
                   </li>
                   <li class="nav-item p-0">
-                    <button class="nav-link post-attch-btn d-inline-flex justify-content-center align-items-center"
+                    <button (click)="reelsTab()" class="nav-link post-attch-btn d-inline-flex justify-content-center align-items-center"
                       id="reels-tab" data-bs-toggle="tab" data-bs-target="#reels-tab-pane" type="button" role="tab"
                       aria-controls="reels-tab-pane" aria-selected="false"><img src="../../../assets/images/category-grey.svg"
                         class="dark-attach" /><img src="../../../assets/images/category-light.svg" class="light-attach" />
@@ -170,8 +170,11 @@
                     </small>
                     </div>
 
-                  
+
                   <div class="img-upl-result pt-4">
+                    <!-- <div class="position-relative d-inline-block">
+                        <video #videoPlayer class="video-js" preload="metadata" style="height: 300px;"></video>
+                    </div> -->
                     <!-- <div *ngFor="let image of uploadImage"> -->
                      <span *ngFor="let image of uploadImage" class="position-relative d-inline-block">
                        <img [src]="image.imageUrl" style="height: 150px; max-width: 100%;">
@@ -187,12 +190,26 @@
                           <source [src]="video.videoUrl" type="video/mp4"/>
                         </video>
                       </div>
+                      <!-- <div>
+                      <video #videoPlayer class="video-js vjs-default-skin" preload="metadata" style="height: 300px;">
+                         <source [src]="video.videoUrl" type="video/mp4">
+                      </video>
+                      </div> -->
                       <!-- <img [src]="video.videoUrl" style="height: 150px; max-width: 100%;"/> -->
                       <button (click)="removeUploadVideo(video)" type="button"
                         class="btn dl-post-img d-flex align-items-center justify-content-center rounded-circle position-absolute"><i
                           class="fa-solid fa-xmark"></i></button>
                     </span>
                     </div>
+                    <div *ngIf="isSubmitted && totalFilesLength>0">
+                      <p class="mb-0 mt-4">{{fileCount + '/' + totalFilesLength}}</p>
+                      <div class="progress">
+                        <div class="progress-bar bg-success" role="progressbar" [style.width.%]="progressBarValue">
+                          {{ progressBarValue }}%
+                        </div>
+                        <br>
+                      </div> 
+                  </div> 
                   <!-- </div> -->
                   <div class="teacher-tags tag-box hashtag_post mt-4 mb-2 hover-tags">
                     <span *ngFor="let tag of tagLists" class="custom-tag">{{tag}}
@@ -276,7 +293,6 @@
                         src="../../../assets/images/Send-light.svg" class="me-2" />{{scheduleTime | date : "MMMM d, y"}} at {{scheduleTime | date : "H:mm"}}</button>
                     <button *ngIf="scheduleTime == undefined" (click)="savePost()" type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 lg_btn"><img
                         src="../../../assets/images/Send-light.svg" class="me-2" />Post</button>
-
                   </div>
     
                 </div>
@@ -354,6 +370,14 @@
                 </small>
                   </div>
                   <hr class="mb-0 sepearator mx-0 mt-3 opacity-100" />
+                  <div *ngIf="isSubmitted">
+                    <div class="progress">
+                      <div class="progress-bar bg-success" role="progressbar" [style.width.%]="progressBarValue">
+                        {{ progressBarValue }}%
+                      </div>
+                      <br>
+                    </div> 
+                </div> 
                   <div
                     class="modal-footer steps_btns d-flex align-items-center justify-content-center flex-sm-nowrap border-0 pb-0 cr-postfooter pt-0 mt-3 px-0">
                     <div class="post-bot-right d-flex justify-content-end">

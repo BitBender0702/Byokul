@@ -14,7 +14,8 @@ namespace LMS.DataAccess.Automapper
         public TeacherProfile()
         {
             CreateMap<TeacherCertificate, TeacherCertificateViewModel>();
-            CreateMap<Teacher, TeacherViewModel>();
+            CreateMap<Teacher, TeacherViewModel>()
+                .ForMember(x => x.CreatedBy, opt => opt.MapFrom(o => o.CreatedById));
         }
     }
 }

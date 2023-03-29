@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using LMS.Common.Enums;
 using LMS.Common.ViewModels.FileStorage;
+using LMS.Common.ViewModels.Post;
 using LMS.Data.Entity;
 using LMS.DataAccess.Repository;
 using LMS.Services.Blob;
@@ -50,9 +51,9 @@ namespace LMS.Services.FileStorage
             return model;
         }
 
-        public async Task<List<FolderViewModel>> GetFolders(Guid parentId)
+        public async Task<List<FolderViewModel>> GetFolders(Guid parentId, string? searchString)
         {
-            var folders = await _folderRepository.GetAll().Where(x => x.ParentId == parentId && x.ParentFolderId == null).OrderByDescending(x => x.CreatedOn).ToListAsync();
+            var folders = await _folderRepository.GetAll().Where(x => x.ParentId == parentId && x.ParentFolderId == null && ((string.IsNullOrEmpty(searchString)) || (x.FolderName.Contains(searchString)))).OrderByDescending(x => x.CreatedOn).ToListAsync();
             var response = _mapper.Map<List<FolderViewModel>>(folders);
             return response;
         }
@@ -70,13 +71,32 @@ namespace LMS.Services.FileStorage
                 int index = file.ContentType.IndexOf('/');
                 if (index > 0)
                 {
-                    if (file.ContentType.Substring(0, index) == "video")
+                    if (file.ContentType.Substring(0, index) == Constants.Image)
+                    {
+                        model.FileType = FileTypeEnum.Image;
+                    }
+
+                    if (file.ContentType.Substring(0, index) == Constants.Video)
                     {
                         model.FileType = FileTypeEnum.Video;
                     }
-                    else
+
+                    if (file.ContentType.Substring(index + 1) == Constants.Pdf)
                     {
-                        model.FileType = FileTypeEnum.Image;
+                        model.FileType = FileTypeEnum.Pdf;
+                    }
+
+                    if (file.ContentType.Substring(index + 1) == Constants.Word)
+                    {
+                        model.FileType = FileTypeEnum.Word;
+                    }
+                    if (file.ContentType.Substring(index + 1) == Constants.Excel)
+                    {
+                        model.FileType = FileTypeEnum.Excel;
+                    }
+                    if (file.ContentType.Substring(index + 1) == Constants.PPT)
+                    {
+                        model.FileType = FileTypeEnum.Presentation;
                     }
                 }
 
@@ -104,19 +124,19 @@ namespace LMS.Services.FileStorage
 
         }
 
-        public async Task<List<FileViewModel>> GetFiles(Guid parentId)
+        public async Task<List<FileViewModel>> GetFiles(Guid parentId, string? searchString)
         {
-            var files = await _fileRepository.GetAll().Where(x => x.ParentId == parentId && x.FolderId == null).OrderByDescending(x => x.CreatedOn).ToListAsync();
+            var files = await _fileRepository.GetAll().Where(x => x.ParentId == parentId && x.FolderId == null && ((string.IsNullOrEmpty(searchString)) || (x.FileName.Contains(searchString)))).OrderByDescending(x => x.CreatedOn).ToListAsync();
             var response = _mapper.Map<List<FileViewModel>>(files);
             return response;
         }
 
-        public async Task<NestedFoldersViewModel> GetNestedFolders(Guid folderId)
+        public async Task<NestedFoldersViewModel> GetNestedFolders(Guid folderId, string? searchString)
         {
             var nestedFolders = new NestedFoldersViewModel();
-            var folders = await _folderRepository.GetAll().Where(x => x.ParentFolderId == folderId).OrderByDescending(x => x.CreatedOn).ToListAsync();
+            var folders = await _folderRepository.GetAll().Where(x => x.ParentFolderId == folderId && ((string.IsNullOrEmpty(searchString)) || (x.FolderName.Contains(searchString)))).OrderByDescending(x => x.CreatedOn).ToListAsync();
 
-            var firstFolderFiles = await _fileRepository.GetAll().Where(x => x.FolderId == folderId).OrderByDescending(x => x.CreatedOn).ToListAsync();
+            var firstFolderFiles = await _fileRepository.GetAll().Where(x => x.FolderId == folderId && ((string.IsNullOrEmpty(searchString)) || (x.FileName.Contains(searchString)))).OrderByDescending(x => x.CreatedOn).ToListAsync();
             nestedFolders.Folders.AddRange(_mapper.Map<List<FolderViewModel>>(folders));
             nestedFolders.Files.AddRange(_mapper.Map<List<FileViewModel>>(firstFolderFiles));
             return nestedFolders;

@@ -1,5 +1,4 @@
-﻿using LMS.ChatHub;
-using LMS.Common.ViewModels.Chat;
+﻿using LMS.Common.ViewModels.Chat;
 using LMS.Common.ViewModels.Notification;
 using LMS.Common.ViewModels.Post;
 using LMS.Data.Entity;
@@ -11,26 +10,25 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 
+
 [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-public class ChatHub : Hub
+public class ChatHubs : Hub
 {
     private readonly UserManager<User> _userManager;
     private readonly IChatService _chatService;
     private readonly INotificationService _notificationService;
-    private readonly IHttpContextAccessor _contextAccessor;
-    public ChatHub(UserManager<User> userManager, IChatService chatService, INotificationService notificationService,IHttpContextAccessor contextAccessor)
+    public ChatHubs(UserManager<User> userManager, IChatService chatService, INotificationService notificationService)
     {
         _userManager = userManager;
         _chatService = chatService;
         _notificationService = notificationService;
-        _contextAccessor = contextAccessor;
     }
 
     static Dictionary<string, string> UserIDConnectionID = new Dictionary<string, string>();
 
     private async Task<User> GetUser()
     {
-        var user = await _userManager.FindByIdAsync(UserIDConnectionID.FindFirstKeyByValue(Context.ConnectionId));
+        var user = await _userManager.FindByIdAsync(UserIDConnectionID.FindFirstKeyByValue2(Context.ConnectionId));
         return user;
     }
     public override Task OnConnectedAsync()
@@ -51,9 +49,9 @@ public class ChatHub : Hub
     {
         try
         {
-            var userId = UserIDConnectionID.FindFirstKeyByValue(Context.ConnectionId);
+            var userId = UserIDConnectionID.FindFirstKeyByValue2(Context.ConnectionId);
             Clients.All.SendAsync("DisconnectedUser", userId);
-            UserIDConnectionID.Remove(UserIDConnectionID.FindFirstKeyByValue(Context.ConnectionId));
+            UserIDConnectionID.Remove(UserIDConnectionID.FindFirstKeyByValue2(Context.ConnectionId));
 
         }
         catch (Exception)
@@ -76,7 +74,7 @@ public class ChatHub : Hub
     }
 
     public string GetConnectionId(string UserID)
-   {
+    {
         if (UserIDConnectionID.ContainsKey(UserID))
             UserIDConnectionID[UserID] = Context.ConnectionId;
         else
@@ -117,11 +115,16 @@ public class ChatHub : Hub
 
     }
 
+    public async Task UpdateProgress(float progress)
+    {
+        await Clients.All.SendAsync("UpdateProgress", progress);
+    }
+
 }
 
 public static class Extensions
 {
-    public static K FindFirstKeyByValue<K, V>(this Dictionary<K, V> dict, V val)
+    public static K FindFirstKeyByValue2<K, V>(this Dictionary<K, V> dict, V val)
     {
         return dict.FirstOrDefault(entry =>
             EqualityComparer<V>.Default.Equals(entry.Value, val)).Key;

@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, ViewChild, inject, Inject, TemplateRef, EventEmitter } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild, inject, Inject, TemplateRef, EventEmitter, AfterViewInit, ChangeDetectorRef, QueryList, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { HttpClient, HttpEventType, HttpHeaders } from "@angular/common/http";
 import {MenuItem} from 'primeng/api';
@@ -16,7 +16,11 @@ import { MessageService } from 'primeng/api';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Calendar } from 'primeng/calendar';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
+
+import videojs from 'video.js';
+import 'video.js/dist/video-js.css';
+import { progressResponse } from 'src/root/service/signalr.service';
 
 export const addPostResponse =new Subject<{}>();  
 
@@ -28,7 +32,7 @@ export const addPostResponse =new Subject<{}>();
   providers: [MessageService]
 })
 
-export class CreatePostComponent implements OnInit {
+export class CreatePostComponent implements OnInit,OnDestroy, AfterViewInit {
 
   @Input() isOpenModal!:boolean;
   // @Input() schoolId!:string;
@@ -110,6 +114,14 @@ export class CreatePostComponent implements OnInit {
 
   attachmentModalRef!: BsModalRef;
   tagModalRef!: BsModalRef;
+  private progressSubscription!: Subscription;
+  progressBarValue:number = 0;
+  fileCount:number = 1;
+  progressFileName!:string;
+  filesLength!:number;
+  totalFilesLength!:number;
+
+  @ViewChild('videoPlayer') videoPlayers!: QueryList<ElementRef>;
 
 
   // @ViewChild('createPostModal', { static: true }) modal!: any;
@@ -117,7 +129,7 @@ export class CreatePostComponent implements OnInit {
 
 
   
-  constructor(private domSanitizer: DomSanitizer,public messageService:MessageService,private bsModalService: BsModalService,public options: ModalOptions,private fb: FormBuilder,postService: PostService,private http: HttpClient) {
+  constructor(private domSanitizer: DomSanitizer,public messageService:MessageService,private bsModalService: BsModalService,public options: ModalOptions,private fb: FormBuilder,postService: PostService,private http: HttpClient,private cd: ChangeDetectorRef) {
     this._postService = postService;
   }
 
@@ -181,8 +193,32 @@ export class CreatePostComponent implements OnInit {
     this.initializeImageObject();
     this.initializeVideoObject();
 
+     this.progressSubscription = progressResponse.subscribe(response => {
+      this.progressBarValue = response.progressCount;
+      this.filesLength = this.images.length + this.videos.length + this.attachment.length;
+      if(this.progressBarValue == 100 && this.filesLength != this.fileCount){
+         this.fileCount += 1;
+      }
+      this.progressFileName = response.fileName;
+      this.cd.detectChanges();
+    });
 
    }
+
+   ngOnDestroy() {
+    this.progressSubscription.unsubscribe();
+  }
+
+   ngAfterViewInit() {
+    // const player = videojs(this.videoPlayer.nativeElement, {
+    //   autoplay: false,
+    //   controls: true,
+    //   sources: [{
+    //     src: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+    //     type: 'video/mp4'
+    //   }]
+    // });
+  }
 
    initializeImageObject(){
     this.imageObject = {
@@ -227,6 +263,21 @@ export class CreatePostComponent implements OnInit {
    }
 
    handleVideoInput(event: any) {
+    debugger
+    this.cd.detectChanges();
+
+    // this.videoPlayers.forEach((videoPlayer) => {
+    //   const player = videojs(videoPlayer.nativeElement, {
+    //     autoplay: false,
+    //     controls: false,
+    //     preload: 'metadata',
+    //     sources: [{
+    //       src: videoPlayer.nativeElement.querySelector('source').getAttribute('src'),
+    //       type: 'video/mp4'
+    //     }]
+    //   });
+    // });
+    
     this.videos.push(event.target.files[0]);
     const reader = new FileReader();
     reader.onload = (_event) => { 
@@ -236,6 +287,8 @@ export class CreatePostComponent implements OnInit {
         this.initializeVideoObject();
     }
     reader.readAsDataURL(event.target.files[0]); 
+
+
  }
 
  removeUploadVideo(video:any){
@@ -295,7 +348,8 @@ export class CreatePostComponent implements OnInit {
     }
   }
 
-  this.loadingIcon = true;
+  // this.loadingIcon = true;
+  this.totalFilesLength = this.images.length + this.videos.length + this.attachment.length;
     // for images
     for(var i=0; i<this.images.length; i++){
       this.postToUpload.append('uploadImages', this.images[i]);
@@ -381,7 +435,7 @@ export class CreatePostComponent implements OnInit {
      }
     }
 
-    this.loadingIcon = true;
+    // this.loadingIcon = true;
     var reel =this.createReelForm.value;
     this.postFrom();
     this.postToUpload.append('postType', PostTypeEnum.Reel.toString());
@@ -487,6 +541,10 @@ export class CreatePostComponent implements OnInit {
    this.attachment = [ ...this.attachment, ...this.initialAttachment];
    this.isAttachmentsValid = true;
     this.closeAttachmentModal();
+   }
+
+   reelsTab(){
+    this.totalFilesLength = 0;
    }
 
 }

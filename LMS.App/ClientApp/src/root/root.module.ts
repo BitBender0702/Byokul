@@ -67,6 +67,7 @@ import { AddTeacherComponent } from './root/teacher/addTeacher.component';
 import { SharePostComponent } from './root/sharePost/sharePost.component';
 import { EarningsComponent } from './root/earnings/earnings.component';
 import { FileStorageComponent } from './root/fileStorage/fileStorage.component';
+import { PaginatorModule } from 'primeng/paginator';
 
 
 const routes: Routes = [
@@ -151,6 +152,8 @@ const routes: Routes = [
     CalendarModule,
     CarouselModule,
     PdfViewerModule,
+    PaginatorModule,
+    NgbModule,
     // PdfJsViewerModule,
     TranslateModule.forRoot({
       loader:{

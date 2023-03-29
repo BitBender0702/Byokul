@@ -1,4 +1,6 @@
-﻿using LMS.Common.ViewModels.Permission;
+﻿using LMS.Common.ViewModels.Class;
+using LMS.Common.ViewModels.Course;
+using LMS.Common.ViewModels.Permission;
 using LMS.Common.ViewModels.Teacher;
 using System;
 using System.Collections.Generic;
@@ -15,7 +17,8 @@ namespace LMS.Services
         Task DeleteTeacherById(Guid teacherId, string deletedById);
         Task<IEnumerable<TeacherViewModel>> GetAllTeachers();
         Task AddTeacher(AddTeacherViewModel model);
-
+        Task<List<ClassTeacherViewModel>> GetClassTeachers(Guid classId);
+        Task<List<CourseTeacherViewModel>> GetCourseTeachers(Guid classId);
 
     }
 }

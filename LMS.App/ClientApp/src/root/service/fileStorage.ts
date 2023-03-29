@@ -1,7 +1,7 @@
-import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
+import { HttpClient, HttpEventType, HttpHeaders, HttpParams, HttpRequest } from "@angular/common/http";
 import { Injectable } from "@angular/core"; 
 import { Router } from "@angular/router";
-import { Observable } from "rxjs";
+import { map, Observable } from "rxjs";
 import { environment } from "src/environments/environment";
 
 @Injectable({providedIn: 'root'})
@@ -20,19 +20,22 @@ export class FileStorageService{
         return this.http.post(`${this.apiUrl}/fileStorage/saveFolder`, model,{headers: this.headers});
     }
 
-    getFolders(parentId:string):Observable<any>{
-        return this.http.get(`${this.apiUrl}/fileStorage/getFolders` + '?parentId=' + parentId,{headers: this.headers});
+    getFolders(parentId:string,searchString:string):Observable<any>{
+        let queryParams = new HttpParams().append("parentId",parentId).append("searchString",searchString);
+        return this.http.get(`${this.apiUrl}/fileStorage/getFolders`, {params:queryParams,headers: this.headers})
     }
 
     saveFiles(saveFiles:any):Observable<any>{
-        return this.http.post(`${this.apiUrl}/fileStorage/saveFiles`,saveFiles,{headers: this.headers});
+        return this.http.post(`${this.apiUrl}/fileStorage/saveFiles`,saveFiles,{headers: this.headers,reportProgress:true});
     }
 
-    getFiles(parentId:string):Observable<any>{
-        return this.http.get(`${this.apiUrl}/fileStorage/getFiles` + '?parentId=' + parentId,{headers: this.headers});
+    getFiles(parentId:string,searchString:string):Observable<any>{
+        let queryParams = new HttpParams().append("parentId",parentId).append("searchString",searchString);
+        return this.http.get(`${this.apiUrl}/fileStorage/getFiles`, {params:queryParams,headers: this.headers,reportProgress:true})
     }
 
-    getNestedFolders(folderId:string):Observable<any>{
-        return this.http.get(`${this.apiUrl}/fileStorage/getNestedFolders` + '?folderId=' + folderId ,{headers: this.headers});
+    getNestedFolders(folderId:string,searchString:string):Observable<any>{
+        let queryParams = new HttpParams().append("folderId",folderId).append("searchString",searchString);
+        return this.http.get(`${this.apiUrl}/fileStorage/getNestedFolders`, {params:queryParams,headers: this.headers})
     }
 }

@@ -118,7 +118,7 @@
       <hr class="hr-gray" />
       <div class="school-profile-tabs d-flex align-content-center justify-content-center">
         <div></div>
-        <button type="button" class="btn button-stroage font_16 fw_600 text_dark d-inline-flex align-items-center justify-content-center" [routerLink]="['/user/fileStorage', class.classId]"><img src="../../../../assets/images/Folder.svg" class="me-2" />{{' FileStorage'| translate }}</button>
+        <button type="button" class="btn button-stroage font_16 fw_600 text_dark d-inline-flex align-items-center justify-content-center" [routerLink]="['/user/fileStorage', class.classId,1]"><img src="../../../../assets/images/Folder.svg" class="me-2" />{{' FileStorage'| translate }}</button>
         <div class="button-list-grid-filter">
           <button (click)="profileGrid()" type="button" [ngClass]="isProfileGrid ? 'btn border-btn active d-inline-flex align-items-center justify-content-center' : 'btn border-btn d-inline-flex align-items-center justify-content-center'"
             id="list-btn">

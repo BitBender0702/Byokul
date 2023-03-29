@@ -131,7 +131,7 @@ const routes: Routes = [
     path: 'post/:id',component:PostViewComponent
   },
   {
-    path: 'fileStorage/:id',component:FileStorageComponent
+    path: 'fileStorage/:id/:type',component:FileStorageComponent
   },
 ];
 

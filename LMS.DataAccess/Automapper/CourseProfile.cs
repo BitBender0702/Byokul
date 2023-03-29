@@ -33,6 +33,7 @@ namespace LMS.DataAccess.Automapper
             CreateMap<CourseLike, CourseLikeViewModel>();
             CreateMap<CourseViews, CourseViewsViewModel>();
             CreateMap<Course, CourseInfoForCertificateViewModel>();
+            CreateMap<CourseTeacher, CourseTeacherViewModel>();
         }
     }
 }

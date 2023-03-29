@@ -26,4 +26,11 @@ export class TeacherService{
         return this.http.post(`${this.apiUrl}/teachers/addTeacher`, addTeacherViewModel);
     }
 
+    getClassTeachers(classId:string): Observable<any> {
+        return this.http.get(`${this.apiUrl}/teachers/getClassTeachers`+ '?classId=' + classId,{headers: this.headers});
+    }
+
+    getCourseTeachers(courseId:string): Observable<any> {
+        return this.http.get(`${this.apiUrl}/teachers/getCourseTeachers`+ '?courseId=' + courseId,{headers: this.headers});
+    }
 }

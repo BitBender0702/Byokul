@@ -1,0 +1,5 @@
+.folder_files_overflow{
+    overflow-y: auto;
+    overflow-x: clip;
+    max-height: 800px;
+}

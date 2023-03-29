@@ -69,5 +69,21 @@ namespace LMS.App.Controllers
             await _teacherService.AddTeacher(model);
             return Ok();
         }
+
+        [Route("getClassTeachers")]
+        [HttpGet]
+        public async Task<IActionResult> GetClassTeachers(Guid classId)
+        {
+            var response = await _teacherService.GetClassTeachers(classId);
+            return Ok(response);
+        }
+
+        [Route("getCourseTeachers")]
+        [HttpGet]
+        public async Task<IActionResult> GetCourseTeachers(Guid courseId)
+        {
+            var response = await _teacherService.GetCourseTeachers(courseId);
+            return Ok(response);
+        }
     }
 }

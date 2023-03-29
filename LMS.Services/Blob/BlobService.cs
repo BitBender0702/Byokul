@@ -1,5 +1,6 @@
 ﻿using Azure.Storage.Blobs;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Options;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
@@ -14,13 +15,20 @@ namespace LMS.Services.Blob
     public class BlobService : IBlobService
     {
         private readonly IOptions<BlobConfig> config;
-        public BlobService(IOptions<BlobConfig> config)
+        private readonly IHubContext<ChatHubs> _hubContext;
+
+        public BlobService(IOptions<BlobConfig> config, IHubContext<ChatHubs> hubContext)
         {
             this.config = config;
+            _hubContext = hubContext;
         }
 
         public async Task<string> UploadFileAsync(IFormFile asset, string containerName)
         {
+
+            byte[] buffer = new byte[2000000];
+            int bytesRead;
+            IProgress<float> progress = null;
             string imageFullPath = null;
             if (asset == null)
             {
@@ -40,7 +48,34 @@ namespace LMS.Services.Blob
                     });
                     var filename = Guid.NewGuid() + asset.FileName;
                     CloudBlockBlob blockBlob = cloudBlobContainer.GetBlockBlobReference(filename);
-                    await blockBlob.UploadFromStreamAsync(asset.OpenReadStream());
+
+                    using (var stream = asset.OpenReadStream())
+                    {
+                        float totalBytes = stream.Length;
+                        float uploadedBytes = 0;
+                        float lastProgress = 0;
+
+                        var options = new BlobRequestOptions()
+                        {
+                            ParallelOperationThreadCount = 1,
+                            DisableContentMD5Validation = true,
+                            StoreBlobContentMD5 = false,
+                            MaximumExecutionTime = TimeSpan.FromMinutes(10)
+                        };
+
+                        while ((bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length)) > 0)
+                        {
+                            await blockBlob.UploadFromByteArrayAsync(buffer, 0, bytesRead);
+                            uploadedBytes += bytesRead;
+                            var currentProgress = (uploadedBytes * 100 / totalBytes);
+                            if (currentProgress != lastProgress)
+                            {
+                             await _hubContext.Clients.All.SendAsync("UpdateProgress", (int)currentProgress, asset.FileName);
+                             lastProgress = currentProgress;
+                            }
+                        }
+                    }
+
                     imageFullPath = blockBlob.Uri.ToString();
                 }
             }
@@ -50,6 +85,10 @@ namespace LMS.Services.Blob
             }
             return imageFullPath;
         }
+
+
+
+
 
         public async Task<string> UploadVideoAsync(Stream stream, string containerName,
             string fileName, string fileType)
@@ -162,4 +201,6 @@ namespace LMS.Services.Blob
             }
         }
     }
+
+
 }

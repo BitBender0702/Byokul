@@ -567,7 +567,8 @@ hr.earning-hr {
 }
 
 button.live_chats {
-	border: 1px solid rgba(124, 141, 167, 0.5);
+	/* border: 1px solid rgba(124, 141, 167, 0.5); */
+	border: none;
 	border-radius: 600px;
 	background: #FFFFFF;
 	/* padding: 8px 12px;
@@ -2587,6 +2588,40 @@ button.delete-tag img {
   z-index: 999;
 }
 
+.postlds-chat-ring {
+	bottom: -92px;
+	display: inline-block;
+	position: absolute;
+	width: 80px;
+	height: 107px;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	z-index: 999;
+  }
+
+.postlds-chat-ring div{
+	box-sizing: border-box;
+    display: block;
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    margin: 8px;
+    border: 5px solid #fff;
+    border-radius: 50%;
+    animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    border-color: #ababab transparent transparent transparent;
+}
+
+.postlds-chat-ring div:nth-child(1) {
+	animation-delay: -0.45s;
+  }
+  .postlds-chat-ring div:nth-child(2) {
+	animation-delay: -0.3s;
+  }
+  .postlds-chat-ring div:nth-child(3) {
+	animation-delay: -0.15s;
+  }
+
   .postlds-ring div {
     box-sizing: border-box;
     display: block;
@@ -3184,4 +3219,8 @@ button.delete-tag img {
 
 .orng-text{
     color:#FF811C;
+   }
+
+.video-js[tabindex="-1"]{
+width: 100%;
    }

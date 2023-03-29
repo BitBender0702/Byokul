@@ -2,13 +2,13 @@
 using LMS.Common.ViewModels.Post;
 using LMS.Data.Entity;
 using LMS.Services;
-using LMS.Services.Blob;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LMS.App.Controllers
 {
+    [DisableRequestSizeLimit]
     [Authorize]
     [Route("posts")]
     public class PostController : BaseController
@@ -40,8 +40,6 @@ namespace LMS.App.Controllers
             var response = await _postService.SavePost(postViewModel, userId);
             return Ok(response);
         }
-
-        //[AllowAnonymous]
         [Route("getReelById")]
         [HttpGet]
         public async Task<IActionResult> GetReelById(Guid id)

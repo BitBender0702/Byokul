@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using LMS.Common.ViewModels.Class;
+using LMS.Common.ViewModels.Course;
 using LMS.Common.ViewModels.Permission;
 using LMS.Common.ViewModels.School;
 using LMS.Common.ViewModels.Teacher;
@@ -406,7 +408,7 @@ namespace LMS.Services
 
                     }
                 }
-                
+
                 foreach (var coursePermissions in model.Permissions.CoursePermissions)
                 {
 
@@ -429,5 +431,31 @@ namespace LMS.Services
             }
         }
 
+
+        public async Task<List<ClassTeacherViewModel>> GetClassTeachers(Guid classId)
+        {
+            var classTeachers = await _classTeacherRepository.GetAll().Include(x => x.Teacher).ThenInclude(x=> x.CreatedBy).Include(x => x.Class).ThenInclude(x => x.School).Where(x => x.ClassId == classId).Select(x => new ClassTeacher
+            {
+               Class =  x.Class,
+               Teacher =  x.Teacher,
+            }).ToListAsync();
+
+            var response = _mapper.Map<List<ClassTeacherViewModel>>(classTeachers);
+            return response;
+
+        }
+
+        public async Task<List<CourseTeacherViewModel>> GetCourseTeachers(Guid courseId)
+        {
+            var courseTeachers = await _courseTeacherRepository.GetAll().Include(x => x.Teacher).Include(x => x.Course).ThenInclude(x => x.School).Where(x => x.CourseId == courseId).Select(x => new CourseTeacher
+            {
+                Course = x.Course,
+                Teacher = x.Teacher
+            }).ToListAsync();
+
+            var response = _mapper.Map<List<CourseTeacherViewModel>>(courseTeachers);
+            return response;
+
+        }
     }
 }

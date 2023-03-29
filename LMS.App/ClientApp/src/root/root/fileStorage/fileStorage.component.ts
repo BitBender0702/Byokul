@@ -1,15 +1,17 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, Injector, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
+import { Subject, Subscription } from 'rxjs';
 import { CommentViewModel } from 'src/root/interfaces/chat/commentViewModel';
 import { Constant } from 'src/root/interfaces/constant';
 import { SaveFilesViewModel } from 'src/root/interfaces/fileStorage/saveFilesViewModel';
 import { ChatService } from 'src/root/service/chatService';
 import { FileStorageService } from 'src/root/service/fileStorage';
 import { SchoolService } from 'src/root/service/school.service';
-import { commentResponse, SignalrService } from 'src/root/service/signalr.service';
+import { commentResponse, progressResponse, SignalrService } from 'src/root/service/signalr.service';
+import { TeacherService } from 'src/root/service/teacher.service';
 import { UserService } from 'src/root/service/user.service';
 
 @Component({
@@ -19,12 +21,13 @@ import { UserService } from 'src/root/service/user.service';
     providers: [MessageService]
   })
 
-export class FileStorageComponent implements OnInit {
+export class FileStorageComponent implements OnInit, OnDestroy {
 
     private _fileStorageService;
     private _userService;
     private _signalRService;
     private _chatService;
+    private _teacherService;
     saveFolderForm!: FormGroup;
     isSubmitted: boolean = false;
     loadingIcon: boolean = false;
@@ -37,6 +40,7 @@ export class FileStorageComponent implements OnInit {
     filesToUpload = new FormData();
     parentFolderId:string = "";
     folderName:string = "";
+    folderId:string = "";
     isOpenCommentsSection: boolean = false;
     messageToGroup!:string;
     sender:any;
@@ -53,26 +57,56 @@ export class FileStorageComponent implements OnInit {
     previousFolders!:any;
     previousFiles!:any;
     isFoldersEmpty!:boolean;
+    isTeachersEmpty:boolean = true;
     isFilesEmpty!:boolean;
     isOpenSidebar:boolean = false;
     isOpenSearch:boolean = false;
+    searchString:string = "";
+    fileStorageType!:string;
+    teachers:any;
+    isClassTeacher!:boolean;
+    isCourseTeacher!:boolean;
+    foldersPageNumber:number = 1;
+    filesPageNumber:number = 1;
+    totalFolderRecords!:number;
+    totalFileRecords!:number;
+    folderItemsPerPage: number = 8;
+    fileItemsPerPage: number = 10;
+    folderRecords:any;
+    fileRecords:any;
+    progressBarValue:number = 0;
+    fileSize:number = 0;
+    filesModalInterval:any;
+    progressFileName!:string;
+    fileCount:number = 1;
+    private progressSubscription!: Subscription;
 
     @ViewChild('closeFileModal') closeFileModal!: ElementRef;
     @ViewChild('closeFolderModal') closeFolderModal!: ElementRef;
     @ViewChild('groupChatList') groupChatList!: ElementRef;
+    @ViewChild('searchInput') searchInput!: ElementRef;
 
-    constructor(private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,userService:UserService,fileStorageService:FileStorageService,signalRService:SignalrService,chatService:ChatService,public messageService:MessageService,private cd: ChangeDetectorRef) { 
+
+    constructor(private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,userService:UserService,fileStorageService:FileStorageService,signalRService:SignalrService,chatService:ChatService,teacherService:TeacherService,public messageService:MessageService,private cd: ChangeDetectorRef) { 
       this._userService = userService; 
       this._fileStorageService = fileStorageService;
       this._signalRService = signalRService;
       this._chatService = chatService;
+      this._teacherService = teacherService;
     }
   
     ngOnInit(): void {
       this.loadingIcon = true;
       this.isFirstPage = true;
       this.parentId = this.activatedRoute.snapshot.paramMap.get('id')??'';
+      this.fileStorageType = this.activatedRoute.snapshot.paramMap.get('type')??'';
 
+      if(this.fileStorageType == "1"){
+        this.getClassTeachers(this.parentId);
+      }
+      else{
+        this.getCourseTeachers(this.parentId);
+      }
       this.getFolders();
       this.getFiles();
       
@@ -90,29 +124,93 @@ export class FileStorageComponent implements OnInit {
       this.getLoginUserInfo();
       this.commentResponse();
 
+      this.progressSubscription = progressResponse.subscribe(response => {
+        this.progressBarValue = response.progressCount;
+        if(this.progressBarValue == 100 && this.saveFileViewModel.files.length != this.fileCount){
+           this.fileCount += 1;
+        }
+        this.progressFileName = response.fileName;
+        this.cd.detectChanges();
+      });
     }
 
-    getFolders(){
-      this._fileStorageService.getFolders(this.parentId).subscribe((response: any) => {
+    ngOnDestroy() {
+      this.progressSubscription.unsubscribe();
+    }
+
+    getClassTeachers(classId:string){
+      this._teacherService.getClassTeachers(classId).subscribe((response: any) => {
+        this.teachers = response;
+        this.isTeachersEmpty = false;
+        var teachers: any[] = this.teachers;
+        var classTeacher = teachers.find(x =>  x.teacher.userId == this.senderId || x.class.createdById == this.senderId || x.class.school.createdById == this.senderId);
+        if(classTeacher != null){
+           this.isClassTeacher = true;
+        }
+        this.checkFoldersAndFilesExist();
+        });
+    }
+
+    getCourseTeachers(courseId:string){
+      this._teacherService.getCourseTeachers(courseId).subscribe((response: any) => {
+        this.teachers = response;
+        this.isTeachersEmpty = false;
+        var teachers: any[] = this.teachers;
+        var courseTeacher = teachers.find(x =>  x.teacher.userId == this.senderId || x.course.createdById == this.senderId || x.course.school.createdById == this.senderId);
+        if(courseTeacher != null){
+           this.isCourseTeacher = true;
+        }
+        this.checkFoldersAndFilesExist();
+        });
+    }
+
+    getFolders(pageNumber?: number){
+      this._fileStorageService.getFolders(this.parentId,this.searchString).subscribe((response: any) => {
         this.folders = response;
         this.isFoldersEmpty = false;
-        this.checkFoldersAndFilesExist()
+        this.totalFolderRecords = this.folders.length;
+        this.getFoldersSelectedPage();
+        this.checkFoldersAndFilesExist();
         });
     }
 
     getFiles(){
-      this._fileStorageService.getFiles(this.parentId).subscribe((response: any) => {
+      this._fileStorageService.getFiles(this.parentId,this.searchString).subscribe((response: any) => {
         this.files = response;
         this.isFilesEmpty = false;
+        this.totalFileRecords = this.files.length;
+        this.getFilesSelectedPage();
         this.checkFoldersAndFilesExist()
         });
     }
 
     checkFoldersAndFilesExist(){
-        if(!this.isFoldersEmpty && !this.isFilesEmpty){
+        if(!this.isFoldersEmpty && !this.isFilesEmpty && !this.isTeachersEmpty){
           this.isDataLoaded = true;
           this.loadingIcon = false;
         }
+    }
+
+    getFoldersSelectedPage(event?:any){
+      if(event == undefined){
+        var startIndex = ((this.foldersPageNumber) - 1) * this.folderItemsPerPage;
+      }
+      else{
+        var startIndex = ((event.page + 1) - 1) * this.folderItemsPerPage;
+      }
+      var endIndex = startIndex + this.folderItemsPerPage;
+      this.folderRecords = this.folders.slice(startIndex, endIndex);
+    }
+
+    getFilesSelectedPage(event?:any){
+      if(event == undefined){
+        var startIndex = ((this.filesPageNumber) - 1) * this.fileItemsPerPage;
+      }
+      else{
+        var startIndex = ((event.page + 1) - 1) * this.fileItemsPerPage;
+      }
+      const endIndex = startIndex + this.fileItemsPerPage;
+      this.fileRecords = this.files.slice(startIndex, endIndex);
     }
 
     getLoginUserInfo(){
@@ -147,16 +245,21 @@ export class FileStorageComponent implements OnInit {
           this.closeFoldersModal();
         this.isSubmitted = false;
         this.folders.unshift(response);
+        this.getFoldersSelectedPage();
+        this.totalFolderRecords = this.folders.length;
+
+        this.loadingIcon = false;
         this.messageService.add({
           severity: 'success',
           summary: 'Success',
           life: 3000,
-          detail: 'Language added successfully',
+          detail: 'Folder added successfully',
         });
       });
     }
 
     handleFiles(event: any) {
+      this.isSubmitted = false;
       this.saveFileViewModel.files.push(event.target.files[0]);
     }
 
@@ -172,8 +275,11 @@ export class FileStorageComponent implements OnInit {
     if (!this.filesForm.valid) {
       return;
     }
-    this.loadingIcon = true;
+    // this.loadingIcon = true;
+    this.progressBarValue = 0;
+    this.cd.detectChanges();
     for (var i = 0; i < this.saveFileViewModel.files.length; i++) {
+      this.fileSize += this.saveFileViewModel.files[i].size;
       this.filesToUpload.append(
         'files',
         this.saveFileViewModel.files[i]
@@ -185,10 +291,12 @@ export class FileStorageComponent implements OnInit {
         this.filesToUpload.append('folderId', this.parentFolderId);
       }
 
-    this._fileStorageService.saveFiles(this.filesToUpload).subscribe((response: any) => {
-        this.closeFilesModal();
+    this._fileStorageService.saveFiles(this.filesToUpload).subscribe(response => {
         this.isSubmitted = false;
+        this.loadingIcon = false;
         this.files = response.concat(this.files);
+        this.getFilesSelectedPage();
+        this.totalFolderRecords = this.files.length;
         this.saveFileViewModel.files = [];
         this.filesToUpload.set('files', '');
         this.messageService.add({
@@ -197,7 +305,10 @@ export class FileStorageComponent implements OnInit {
           life: 3000,
           detail: 'Files added successfully',
         });
+
+        this.closeFilesModal();
       });
+      
   }
 
   private closeFoldersModal(): void {
@@ -220,11 +331,16 @@ export class FileStorageComponent implements OnInit {
     this.folderName = folderName;
     this.previousFolders = this.folders;
     this.previousFiles = this.files;
+    this.folderId = folderId;
     this.folders = null;
     this.files = null;
-    this._fileStorageService.getNestedFolders(folderId).subscribe((response: any) => {
+    this._fileStorageService.getNestedFolders(folderId,this.searchString).subscribe((response: any) => {
       this.folders = response.folders;
       this.files = response.files;
+      this.getFoldersSelectedPage();
+      this.totalFolderRecords = this.folders.length;
+      this.getFilesSelectedPage();
+      this.totalFileRecords = this.files.length;
       this.loadingIcon = false;
       this.isDataLoaded = true;
     });
@@ -232,6 +348,9 @@ export class FileStorageComponent implements OnInit {
 
   openCommentsSection(fileId:string){
     this.loadingIcon = true;
+    this.commentsScrolled = false;
+    this.scrollCommentsResponseCount = 1;
+    this.fileCommentsPageNumber = 1;
     this.fileId = fileId;
     this.getFileComments(fileId);
     this._signalRService.createGroupName(fileId);
@@ -260,9 +379,19 @@ export class FileStorageComponent implements OnInit {
     URL.revokeObjectURL(fileUrl);
   }
 
+  resetFolderModal(){
+    this.isSubmitted = false;
+    this.saveFolderForm.patchValue({
+      folderName: ""
+    });
+  }
+
     resetFilesModal() {
+      this.fileCount = 1;
       this.isSubmitted = false;
+      clearInterval(this.filesModalInterval);
       this.saveFileViewModel.files = [];
+      this.progressBarValue = 0;
     }
   
     openSearch(){
@@ -332,6 +461,7 @@ export class FileStorageComponent implements OnInit {
       this.commentsScrolled = false;
       const chatList = this.groupChatList.nativeElement;
       const chatListHeight = chatList.scrollHeight;
+      if(response.length != 0){
       this.groupChatList.nativeElement.scrollTop = this.groupChatList.nativeElement.clientHeight;
       const scrollOptions = { 
         duration: 300,
@@ -342,6 +472,7 @@ export class FileStorageComponent implements OnInit {
         left: 0,
         ...scrollOptions
       });
+    }
     });
   }
 
@@ -374,9 +505,45 @@ export class FileStorageComponent implements OnInit {
     else{
       this.loadingIcon = true;
       this.folders = this.previousFolders;
+      this.getFoldersSelectedPage();
+      this.totalFolderRecords = this.folders.length;
       this.files = this.previousFiles;
+      this.getFilesSelectedPage();
+      this.totalFileRecords = this.files.length;
       this.loadingIcon = false;
     }
    }
   }
+
+  FoldersAndFilesSearch(value:string){
+    this.foldersPageNumber = 1;
+    if(this.searchString.length >2 || this.searchString == ""){
+      if(this.isFirstPage){
+      this._fileStorageService.getFolders(this.parentId,this.searchString).subscribe((response: any) => {
+        this.folders = response;
+        this.getFoldersSelectedPage();
+        this.totalFolderRecords = this.folders.length;
+        this.isFoldersEmpty = false;
+        this.checkFoldersAndFilesExist()
+        });
+
+        this._fileStorageService.getFiles(this.parentId,this.searchString).subscribe((response: any) => {
+          this.files = response;
+          this.getFilesSelectedPage();
+          this.totalFileRecords = this.files.length;
+          this.isFilesEmpty = false;
+          this.checkFoldersAndFilesExist()
+          });
+        }
+        else{
+            this._fileStorageService.getNestedFolders(this.folderId,this.searchString).subscribe((response: any) => {
+              this.folders = response.folders;
+              this.files = response.files;
+              this.loadingIcon = false;
+              this.isDataLoaded = true;
+            });
+          }
+    }
+  }
+
 }

@@ -17,6 +17,7 @@ namespace LMS.Common.ViewModels.Teacher
         public DateTime CreatedOn { get; set; }
         public string CreatedBy { get; set; }
         public bool IsDeleted { get; set; }
+        public string? UserId { get; set; }
         public IEnumerable<TeacherCertificateViewModel> TeacherCertificateViewModel { get; set; }
     }
 }

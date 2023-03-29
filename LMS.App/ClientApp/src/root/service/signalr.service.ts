@@ -38,6 +38,11 @@ export const commentLikeResponse = new Subject<{
 
 export const notificationResponse = new Subject<NotificationViewModel>();
 
+export const progressResponse = new Subject<{
+  progressCount: number;
+  fileName: string;
+}>();
+
 @Injectable({
   providedIn: 'root',
 })
@@ -86,11 +91,6 @@ export class SignalrService {
   sendToUser(model: any) {
     this.hubConnection?.invoke('SendToUser', model)
       .catch((err) => console.error(err));
-
-  
-
-      // this.hubConnection?.off('ReceiveMessage');
-
   }
 
   askServerListener() {
@@ -120,7 +120,6 @@ export class SignalrService {
       });
 
       console.log(`this ${model.userId} send ${model.content}`);
-      // this.hubConnection?.off('ReceiveMessageFromGroup');
     });
 
     this.hubConnection?.on('NotifyCommentLikeToReceiver',
@@ -136,6 +135,13 @@ export class SignalrService {
     this.hubConnection?.on('ReceiveNotification',
     (model) => {
       notificationResponse.next(model);
+    });
+
+    this.hubConnection?.on('UpdateProgress', (progress: number,fileName: string) => {
+      progressResponse.next({
+        progressCount:progress,
+        fileName:fileName
+      });
     });
   }
 
@@ -153,13 +159,6 @@ export class SignalrService {
   notifyCommentLike(model:CommentLikeUnlike) {
     this.hubConnection?.invoke('NotifyCommentLike', model)
       .catch((err) => console.error(err));
-
-    // this.hubConnection?.on(
-    //   'NotifyCommentLikeToReceiver',
-    //   (commentId, likeCount, isLike) => {
-    //     console.log(`this ${commentId}`);
-    //   }
-    // );
   }
 
   sendNotification(model:NotificationViewModel){
@@ -181,6 +180,5 @@ export class SignalrService {
         .catch((err) => console.error(err));
     }
   })
-
   }
 }

@@ -44,9 +44,5 @@ namespace LMS.Services
         Task SaveClassCourse(string userId, Guid id, ClassCourseEnum type);
         Task<IEnumerable<CombineClassCourseViewModel>> GetSavedClassCourse(string userId, int pageNumber);
 
-
-
-
-
     }
 }
