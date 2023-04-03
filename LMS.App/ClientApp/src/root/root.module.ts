@@ -9,7 +9,6 @@ import { NewMeetingComponent } from './root/bigBlueButton/newMeeting/newMeeting.
 import { JoinMeetingComponent } from './root/bigBlueButton/joinMeeting/joinMeeting.component';
 import { CreateSchoolComponent } from './root/school/createSchool/createSchool.component';
 import { SchoolProfileComponent } from './root/school/schoolProfile/schoolProfile.component';
-import { EditSchoolComponent } from './root/school/editSchool/editSchool.component';
 import { ClassProfileComponent } from './root/class/classProfile/classProfile.component';
 import { UserProfileComponent } from './root/user/userProfile/userProfile.component';
 
@@ -106,7 +105,6 @@ const routes: Routes = [
     SchoolProfileComponent,
     CreateClassComponent,
     CreateCourseComponent,
-    EditSchoolComponent,
     SideBarComponent,
     CreatePostComponent,
     VideoPlayerComponent,

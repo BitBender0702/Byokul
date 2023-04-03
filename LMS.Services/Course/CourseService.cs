@@ -97,7 +97,7 @@ namespace LMS.Services
 
             if (courseViewModel.Thumbnail != null)
             {
-                courseViewModel.ThumbnailUrl = await _blobService.UploadFileAsync(courseViewModel.Thumbnail, containerName);
+                courseViewModel.ThumbnailUrl = await _blobService.UploadFileAsync(courseViewModel.Thumbnail, containerName, false);
 
                 int index = courseViewModel.Thumbnail.ContentType.IndexOf('/');
                 if (index > 0)
@@ -250,7 +250,7 @@ namespace LMS.Services
             var containerName = "courselogo";
             if (courseViewModel.AvatarImage != null)
             {
-                courseViewModel.Avatar = await _blobService.UploadFileAsync(courseViewModel.AvatarImage, containerName);
+                courseViewModel.Avatar = await _blobService.UploadFileAsync(courseViewModel.AvatarImage, containerName, false);
             }
 
             courseViewModel.LanguageIds = JsonConvert.DeserializeObject<string[]>(courseViewModel.LanguageIds.First());
@@ -481,9 +481,9 @@ namespace LMS.Services
             return model;
         }
 
-        public async Task<IEnumerable<PostDetailsViewModel>> GetPostsByCourseId(Guid courseId, string loginUserId, int pageNumber = 1, int pageSize = 4)
+        public async Task<IEnumerable<PostDetailsViewModel>> GetPostsByCourseId(Guid courseId, string loginUserId, int pageNumber = 1, int pageSize = 6)
         {
-            var courseList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == courseId && x.PostType == (int)PostTypeEnum.Post).OrderByDescending(x => x.IsPinned).ToListAsync();
+            var courseList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == courseId && x.PostType == (int)PostTypeEnum.Post).OrderByDescending(x => x.IsPinned).ThenByDescending(x => x.CreatedOn).ToListAsync();
             var result = _mapper.Map<List<PostDetailsViewModel>>(courseList).Skip((pageNumber - 1) * pageSize).Take(pageSize); ;
 
             foreach (var post in result)
@@ -514,8 +514,8 @@ namespace LMS.Services
 
         public async Task<IEnumerable<PostDetailsViewModel>> GetReelsByCourseId(Guid courseId, string loginUserId, int pageNumber = 1, int pageSize = 8)
         {
-            var courseList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == courseId && x.PostType == (int)PostTypeEnum.Reel).OrderByDescending(x => x.IsPinned).ToListAsync();
-            var result = _mapper.Map<List<PostDetailsViewModel>>(courseList).Skip((pageNumber - 1) * pageSize).Take(pageSize); ;
+            var courseList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == courseId && x.PostType == (int)PostTypeEnum.Reel).OrderByDescending(x => x.IsPinned).ThenByDescending(x => x.CreatedOn).ToListAsync();
+            var result = _mapper.Map<List<PostDetailsViewModel>>(courseList).Skip((pageNumber - 1) * pageSize).Take(pageSize);
 
             foreach (var post in result)
             {
@@ -629,7 +629,7 @@ namespace LMS.Services
             {
                 foreach (var certificate in courseCertificates.Certificates)
                 {
-                    string certificateUrl = await _blobService.UploadFileAsync(certificate, containerName);
+                    string certificateUrl = await _blobService.UploadFileAsync(certificate, containerName, false);
 
                     string certificateName = certificate.FileName;
 

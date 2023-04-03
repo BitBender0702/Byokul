@@ -26,6 +26,7 @@ namespace LMS.Common.ViewModels.Post
         public CourseViewModel Course { get; set; }
         public UserDetailsViewModel User { get; set; }
         public bool IsPinned { get; set; }
+        public string? FileThumbnail { get; set; }
 
     }
 }

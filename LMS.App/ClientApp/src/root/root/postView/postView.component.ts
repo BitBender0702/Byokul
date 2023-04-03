@@ -17,6 +17,8 @@ import { SchoolService } from 'src/root/service/school.service';
 import { commentLikeResponse, commentResponse, SignalrService } from 'src/root/service/signalr.service';
 import { UserService } from 'src/root/service/user.service';
 import { SharePostComponent } from '../sharePost/sharePost.component';
+import videojs from 'video.js';
+import 'video.js/dist/video-js.css';
 
 export const sharePostResponse =new Subject<{}>();  
 
@@ -28,14 +30,10 @@ export const sharePostResponse =new Subject<{}>();
   })
 
 export class PostViewComponent implements OnInit,AfterViewInit {
-
-    posts:any;
-    // serviceType!:string;
-    // accessibility!:string;
-    
+    posts:any;    
     @ViewChild('createPostModal', { static: true }) createPostModal!: ModalDirective;
-
-    //
+    @ViewChild('groupChatList') groupChatList!: ElementRef;
+    @ViewChild('videoPlayer') videoPlayer!: ElementRef;
     private _signalRService;
     private _userService;
     private _chatService;
@@ -57,13 +55,12 @@ export class PostViewComponent implements OnInit,AfterViewInit {
     isCommentsDisabled!:boolean;
     postId!:string;
     postPageView:boolean = false;
-
     post!:any;
     commentsScrolled:boolean = false;
     scrollCommentsResponseCount:number = 1;
     commentsLoadingIcon: boolean = false;
     commentsPageNumber:number = 1;
-    @ViewChild('groupChatList') groupChatList!: ElementRef;
+    isPlayerLoad:boolean = false;
 
     constructor(private bsModalService: BsModalService,notificationService:NotificationService,chatService: ChatService,public signalRService: SignalrService,public postService:PostService, public options: ModalOptions,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,userService:UserService,private cd: ChangeDetectorRef) { 
          this._postService = postService;
@@ -88,6 +85,7 @@ export class PostViewComponent implements OnInit,AfterViewInit {
       }
 
       this._postService.getPostById(this.postId).subscribe((response) => {
+        debugger
         if(id != null){
           this.post = response;
           this.getComments();
@@ -103,50 +101,15 @@ export class PostViewComponent implements OnInit,AfterViewInit {
         this.addPostView(this.post.id);
         }
         this.isDataLoaded = true;
+        this.cd.detectChanges();
+        const player = videojs(this.videoPlayer.nativeElement, {autoplay: false,});
+
+        this.isPlayerLoad = true;
+        this.cd.detectChanges();
         });
 
         this.InitializeLikeUnlikePost();
         this.getSenderInfo();
-
-
-      // this._chatService.getComments(this.post.id,this.pageNumber).subscribe((response) => {
-      //   this.post.comments = response;
-      //   });
-
-      // this._signalRService.createGroupName(this.post.id);
-      //  this.postView ={
-      //   postId:'',
-      //   userId:''
-      //  }
-
-      // if(this.post.postId != null){
-      //   this.addPostView(this.post.postId);
-      // }
-      // else{
-      // this.addPostView(this.post.id);
-      // }
-
-  
-    //  commentResponse.subscribe(response => {
-    //   var comment: any[] = this.post.comments;
-    //   var commentObj = {id:response.id,content:response.message,likeCount:0,isCommentLikedByCurrentUser:false,userAvatar:response.senderAvatar};
-    //   comment.push(commentObj);
-    // });
-
-    // commentLikeResponse.subscribe(response => {
-    //   var comments: any[] = this.post.comments;
-    //   var reqComment = comments.find(x => x.id == response.commentId);
-    //   if(response.isLike){
-    //     reqComment.likeCount = reqComment.likeCount + 1;
-    //   }
-    //   else{
-    //     reqComment.likeCount = reqComment.likeCount - 1;
-    //   }
-      
-
-    // });
-
-
     }
 
     ngAfterViewInit() {        
@@ -251,18 +214,11 @@ export class PostViewComponent implements OnInit,AfterViewInit {
       this.isLiked = true;
       this.likesLength = this.post.likes.length + 1;
       this.post.isPostLikedByCurrentUser = true;
-
       var notificationContent = `liked your post(${post.title})`;
-      //this.initializeNotificationViewModel(this.user.id,notificationType,notificationContent);
-
-      this._notificationService.initializeNotificationViewModel(post.createdBy,NotificationType.Likes,notificationContent,this.userId,postId,postType,post,null).subscribe((response) => {
-          
+      this._notificationService.initializeNotificationViewModel(post.createdBy,NotificationType.Likes,notificationContent,this.userId,postId,postType,post,null).subscribe((response) => { 
       });
-  
     }
 
-    
-   
     this.likeUnlikePost.postId = postId;
     this.likeUnlikePost.isLike = isLike;
     this.likeUnlikePost.commentId = '00000000-0000-0000-0000-000000000000'
@@ -286,7 +242,6 @@ export class PostViewComponent implements OnInit,AfterViewInit {
       this.post.views.length = response;
      }); 
     }
-  
   }
 
   sendToGroup(){
@@ -418,7 +373,5 @@ export class PostViewComponent implements OnInit,AfterViewInit {
       });
     });
   }
-
-   
 
 }

@@ -15,13 +15,12 @@ import { MessageService } from 'primeng/api';
 
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { Calendar } from 'primeng/calendar';
 import { Subject, Subscription } from 'rxjs';
 
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
 import { progressResponse } from 'src/root/service/signalr.service';
-
+import { stringify } from 'querystring';
 export const addPostResponse =new Subject<{}>();  
 
 
@@ -32,41 +31,21 @@ export const addPostResponse =new Subject<{}>();
   providers: [MessageService]
 })
 
-export class CreatePostComponent implements OnInit,OnDestroy, AfterViewInit {
+export class CreatePostComponent implements OnInit,OnDestroy {
 
   @Input() isOpenModal!:boolean;
-  // @Input() schoolId!:string;
-
   @Input() classId!:any;
   @Input() courseId!:string;
   @Input() userId!:any;
-
-
   @ViewChild('openModal') openModal!: ElementRef;
-  // @ViewChild('closeTagModal') TagModal!: ElementRef;
-  // @ViewChild('openCreatePostModal') CreatePostModal!: ElementRef;
-
   @ViewChild('openFirst') openFirst!: ElementRef;
-
   @ViewChild('addAttachmentModal') addAttachmentModal!: ElementRef;
-
   @ViewChild('closeMainModal') closeMainModal!: ElementRef;
-
-
-  
   @ViewChild('createPostModal', { static: true }) createPostModal!: ModalDirective;
-  // @ViewChild('createPostModal') public createPostModal!:ModalDirective;
-
   @ViewChild('closePostM') closePostM!: ElementRef;
-
-  
   @ViewChild('openAttachmentModal') openAttachmentModals!: ElementRef;
-
   @ViewChild('templatefirst') templatefirst!:  TemplateRef<any>;
-
-
-
-
+  @ViewChild('videoPlayer') videoPlayers!: QueryList<ElementRef>;
 
   private _postService;
   isSubmitted: boolean = false;
@@ -91,8 +70,9 @@ export class CreatePostComponent implements OnInit,OnDestroy, AfterViewInit {
   imageObject!:UploadImage;
 
   videoToUpload= new FormData();
-  videos:string[] = [];
+  videos:any[] = [];
   uploadVideo:any[] = [];
+  uploadReels:any[] = [];
   videoObject!:UploadVideo;
 
   attachmentToUpload= new FormData();
@@ -107,11 +87,11 @@ export class CreatePostComponent implements OnInit,OnDestroy, AfterViewInit {
 
   initialState:any;
   schoolId:any;
+  videoThumbnails:any[] = [];
+
+  listOfObject:any[] = [];
 
   public event: EventEmitter<any> = new EventEmitter();
-
-  @ViewChild("calendar", { static: false }) private calendar!: Calendar;
-
   attachmentModalRef!: BsModalRef;
   tagModalRef!: BsModalRef;
   private progressSubscription!: Subscription;
@@ -121,14 +101,7 @@ export class CreatePostComponent implements OnInit,OnDestroy, AfterViewInit {
   filesLength!:number;
   totalFilesLength!:number;
 
-  @ViewChild('videoPlayer') videoPlayers!: QueryList<ElementRef>;
 
-
-  // @ViewChild('createPostModal', { static: true }) modal!: any;
-
-
-
-  
   constructor(private domSanitizer: DomSanitizer,public messageService:MessageService,private bsModalService: BsModalService,public options: ModalOptions,private fb: FormBuilder,postService: PostService,private http: HttpClient,private cd: ChangeDetectorRef) {
     this._postService = postService;
   }
@@ -209,17 +182,6 @@ export class CreatePostComponent implements OnInit,OnDestroy, AfterViewInit {
     this.progressSubscription.unsubscribe();
   }
 
-   ngAfterViewInit() {
-    // const player = videojs(this.videoPlayer.nativeElement, {
-    //   autoplay: false,
-    //   controls: true,
-    //   sources: [{
-    //     src: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-    //     type: 'video/mp4'
-    //   }]
-    // });
-  }
-
    initializeImageObject(){
     this.imageObject = {
       imageUrl: '',
@@ -231,7 +193,8 @@ export class CreatePostComponent implements OnInit,OnDestroy, AfterViewInit {
    initializeVideoObject(){
     this.videoObject = {
       videoUrl: '',
-      name: ''
+      name: '',
+      type:''
      };
 
    }
@@ -262,34 +225,67 @@ export class CreatePostComponent implements OnInit,OnDestroy, AfterViewInit {
 
    }
 
-   handleVideoInput(event: any) {
-    debugger
-    this.cd.detectChanges();
+handleVideoInput(event: any) {
+  this.videos.push(event.target.files[0]);
+  const file = event.target.files[0];
+  const videoUrl = URL.createObjectURL(file);
+  this.getVideoThumbnail(videoUrl,file.name, (thumbnailUrl) => {
+    this.videoObject.videoUrl = thumbnailUrl;
+    this.videoObject.name = file.name;
+    this.videoObject.type = file.type;
+    this.uploadVideo.push(this.videoObject); 
+    this.initializeVideoObject();
+  });
+}
 
-    // this.videoPlayers.forEach((videoPlayer) => {
-    //   const player = videojs(videoPlayer.nativeElement, {
-    //     autoplay: false,
-    //     controls: false,
-    //     preload: 'metadata',
-    //     sources: [{
-    //       src: videoPlayer.nativeElement.querySelector('source').getAttribute('src'),
-    //       type: 'video/mp4'
-    //     }]
-    //   });
-    // });
-    
-    this.videos.push(event.target.files[0]);
-    const reader = new FileReader();
-    reader.onload = (_event) => { 
-      this.videoObject.videoUrl = _event.target?.result;
-      this.videoObject.name = event.target.files[0].name;
-        this.uploadVideo.push(this.videoObject); 
-        this.initializeVideoObject();
-    }
-    reader.readAsDataURL(event.target.files[0]); 
+getVideoThumbnail(videoUrl: string,fileName:string, callback: (thumbnailUrl: string) => void) {
+  const video = document.createElement('video');
+  video.preload = 'metadata';
+  video.src = videoUrl;
+  video.currentTime = 4;
+  video.addEventListener('loadedmetadata', () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const ctx = canvas.getContext('2d');
+    video.addEventListener('seeked', () => {
+      ctx?.drawImage(video, 0, 0, canvas.width, canvas.height);
+      const thumbnailUrl = canvas.toDataURL();
+
+  this.saveCanvasToFile(canvas,fileName);
+      callback(thumbnailUrl);
+    });
+    video.currentTime = 4;
+  });
+}
+
+async saveCanvasToFile(canvas: HTMLCanvasElement, fileName: string) {
+  const blob = await this.canvasToBlob(canvas);
+
+  let lastSlashIndex = blob.type.lastIndexOf("/");
+if (lastSlashIndex !== -1) {
+  var thumbnailType = blob.type.substring(lastSlashIndex + 1);
+} 
 
 
- }
+let lastDotIndex = fileName.lastIndexOf(".");
+if (lastDotIndex !== -1) {
+  fileName = fileName.substring(0, lastDotIndex + 1);
+} 
+
+fileName = fileName + thumbnailType;
+
+  const file = new File([blob], fileName, { type: blob.type });
+  this.videoThumbnails.push(file);
+}
+
+canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
+  return new Promise((resolve) => {
+    canvas.toBlob((blob) => {
+      resolve(blob);
+    });
+  });
+}
 
  removeUploadVideo(video:any){
   const index = this.videos.findIndex((item:any) => item.name === video.name);
@@ -320,12 +316,14 @@ export class CreatePostComponent implements OnInit,OnDestroy, AfterViewInit {
  handleReels(event:any){
   this.postToUpload.append('uploadVideos', event.target.files[0]);
   this.reel = event.target.files[0];
-  const reader = new FileReader();
-    reader.onload = (_event) => { 
-        this.uploadReel = _event.target?.result; 
-        this.uploadReel = this.domSanitizer.bypassSecurityTrustUrl(this.uploadReel);
-    }
-    reader.readAsDataURL(event.target.files[0]); 
+  const videoUrl = URL.createObjectURL(this.reel);
+  this.getVideoThumbnail(videoUrl,this.reel.name, (thumbnailUrl) => {
+    this.videoObject.videoUrl = thumbnailUrl;
+    this.videoObject.name = this.reel.name;
+    this.videoObject.type = this.reel.type;
+    this.uploadReel = this.videoObject; 
+    this.initializeVideoObject();
+  });
  }
 
  removeUploadReel(uploadReel:any){
@@ -348,7 +346,6 @@ export class CreatePostComponent implements OnInit,OnDestroy, AfterViewInit {
     }
   }
 
-  // this.loadingIcon = true;
   this.totalFilesLength = this.images.length + this.videos.length + this.attachment.length;
     // for images
     for(var i=0; i<this.images.length; i++){
@@ -360,13 +357,16 @@ export class CreatePostComponent implements OnInit,OnDestroy, AfterViewInit {
       this.postToUpload.append('uploadVideos', this.videos[i]);
     }
 
+    for(var i=0; i<this.videoThumbnails.length; i++){
+      this.postToUpload.append('uploadVideosThumbnail', this.videoThumbnails[i]);
+    }
+
     // for attachments
     for(var i=0; i<this.attachment.length; i++){
       this.postToUpload.append('uploadAttachments', this.attachment[i]);
     }
 
     var post =this.createPostForm.value;
-
     this.postFrom();
 
     this.postToUpload.append('title', post.title);
@@ -382,7 +382,6 @@ export class CreatePostComponent implements OnInit,OnDestroy, AfterViewInit {
       
       this.isSubmitted=false;
       this.loadingIcon = false;
-      // this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post created successfully'});
       addPostResponse.next({response}); 
       this.postToUpload = new FormData();
       this.close();
@@ -403,7 +402,6 @@ export class CreatePostComponent implements OnInit,OnDestroy, AfterViewInit {
     }
 
     if(this.courseId!= undefined){
-      // condition
       if(this.parentDetails?.isConvertable){
         this.appendData('',this.courseId,this.parentDetails.school.schoolId,PostAuthorTypeEnum.Class.toString());
       }
@@ -435,9 +433,11 @@ export class CreatePostComponent implements OnInit,OnDestroy, AfterViewInit {
      }
     }
 
-    // this.loadingIcon = true;
     var reel =this.createReelForm.value;
     this.postFrom();
+    for(var i=0; i<this.videoThumbnails.length; i++){
+      this.postToUpload.append('uploadVideosThumbnail', this.videoThumbnails[i]);
+    }
     this.postToUpload.append('postType', PostTypeEnum.Reel.toString());
     if(reel.scheduleTime != undefined){
     this.postToUpload.append('dateTime', reel.scheduleTime.toISOString());
@@ -495,10 +495,8 @@ export class CreatePostComponent implements OnInit,OnDestroy, AfterViewInit {
 
   close(): void {
     this.bsModalService.hide();
-    //this.addAttachmentModal.nativeElement.click();
   }
 
-  // for ngx
   show() {
     this.bsModalService.show(this.templatefirst);
     this.createPostModal.show();

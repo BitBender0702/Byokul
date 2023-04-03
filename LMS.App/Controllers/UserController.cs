@@ -37,7 +37,6 @@ namespace LMS.App.Controllers
 
 
         [Route("getUser")]
-        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetUser(string? userId)
         {
@@ -88,6 +87,7 @@ namespace LMS.App.Controllers
             return Ok(response);
         }
 
+        [AllowAnonymous]
         [Route("countryList")]
         [HttpGet]
         public async Task<IActionResult> CountryList()
@@ -95,6 +95,7 @@ namespace LMS.App.Controllers
             return Ok(await _userService.CountryList());
         }
 
+        [AllowAnonymous]
         [Route("cityList")]
         [HttpGet]
         public async Task<IActionResult> CityList(Guid countryId)
@@ -124,7 +125,6 @@ namespace LMS.App.Controllers
             return Ok(await _userService.GetUserFollowers(userId, pageNumber, searchString));
         }
 
-        [AllowAnonymous]
         [Route("getBasicUserInfo")]
         [HttpGet]
         public async Task<IActionResult> GetBasicUserInfo(string userId)
@@ -211,7 +211,6 @@ namespace LMS.App.Controllers
             return Ok(response);
         }
 
-        [AllowAnonymous]
         [Route("getUserByEmail")]
         [HttpGet]
         public async Task<IActionResult> GetUserByEmail(string email)
@@ -219,16 +218,6 @@ namespace LMS.App.Controllers
             var user = await _userService.GetUserByEmail(email);
             return Ok(user);
         }
-
-
-        //[Route("searchUserFollowers")]
-        //[HttpGet]
-        //public async Task<IActionResult> SearchUserFollowers(string searchString)
-        //{
-        //    var user = await _userService.SearchUserFollowers(searchString);
-        //    return Ok(user);
-        //}
-
 
     }
 }

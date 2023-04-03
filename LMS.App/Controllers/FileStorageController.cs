@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace LMS.App.Controllers
 {
-    [DisableRequestSizeLimit]
     [Authorize]
     [Route("fileStorage")]
     public class FileStorageController : BaseController
@@ -41,11 +40,11 @@ namespace LMS.App.Controllers
         [HttpGet]
         public async Task<IActionResult> GetFolders(Guid parentId, string? searchString)
         {
-            //var userId = await GetUserIdAsync(this._userManager);
             var courseId = await _fileStorageService.GetFolders(parentId, searchString); 
             return Ok(courseId);
         }
 
+        [DisableRequestSizeLimit,RequestFormLimits(MultipartBodyLengthLimit = int.MaxValue,ValueLengthLimit = int.MaxValue)]
         [Route("saveFiles")]
         [HttpPost]
         public async Task<IActionResult> SaveFiles(SaveFilesViewModel model)

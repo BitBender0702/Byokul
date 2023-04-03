@@ -65,7 +65,7 @@ namespace LMS.Services.FileStorage
 
             foreach (var file in model.Files)
             {
-                string fileUrl = await _blobService.UploadFileAsync(file, containerName);
+                string fileUrl = await _blobService.UploadFileAsync(file, containerName,true);
                 string fileName = file.FileName;
 
                 int index = file.ContentType.IndexOf('/');

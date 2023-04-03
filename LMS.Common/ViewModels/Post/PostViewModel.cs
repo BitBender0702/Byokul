@@ -23,7 +23,6 @@ namespace LMS.Common.ViewModels.Post
         public string CreatedBy { get; set; }
         public bool IsDeleted { get; set; }
         public IEnumerable<IFormFile> PostAttachments { get; set; }
-        //public IEnumerable<PostTagViewModel> PostTags { get; set; }
         public IEnumerable<string> PostTags { get; set; }
         public Guid ParentId { get; set; }
         public string? CoverLetter { get; set; }
@@ -33,6 +32,7 @@ namespace LMS.Common.ViewModels.Post
         public IFormFile UploadReels { get; set; }
         public bool IsPinned { get; set; }
         public Boolean IsCommentsDisabled { get; set; }
+        public List<IFormFile> UploadVideosThumbnail { get; set; }
 
     }
 }

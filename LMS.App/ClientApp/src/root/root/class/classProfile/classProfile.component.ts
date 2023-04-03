@@ -31,6 +31,8 @@ import { PermissionNameConstant } from 'src/root/interfaces/permissionNameConsta
 import { PermissionTypeEnum } from 'src/root/Enums/permissionTypeEnum';
 import { SharePostComponent } from '../../sharePost/sharePost.component';
 import { Constant } from 'src/root/interfaces/constant';
+import videojs from 'video.js';
+import 'video.js/dist/video-js.css';
 
 @Component({
     selector: 'classProfile-root',
@@ -120,6 +122,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     @ViewChild('closeCertificateModal') closeCertificateModal!: ElementRef;
     @ViewChild('imageFile') imageFile!: ElementRef;
     @ViewChild('carousel') carousel!: ElementRef;
+    @ViewChild('videoPlayer') videoPlayer!: ElementRef;
 
     @ViewChild('createPostModal', { static: true }) createPostModal!: CreatePostComponent;
 
@@ -704,7 +707,11 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   
       profileList(){
         this.isProfileGrid = false;
-  
+        this.isGridItemInfo = true;
+        this.cd.detectChanges();
+        if(this.videoPlayer != undefined){
+          videojs(this.videoPlayer.nativeElement, {autoplay: false});
+        }
       }
 
       openPostModal(): void {
@@ -810,10 +817,11 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     }
 
     showPostDiv(postId:string){
-      
       var posts: any[] = this.class.posts;
       this.gridItemInfo = posts.find(x => x.id == postId);
       this.isGridItemInfo = true;
+      this.cd.detectChanges();
+      const player = videojs(this.videoPlayer.nativeElement, { autoplay: false });
       this.addPostView(this.gridItemInfo.id);
     }
 

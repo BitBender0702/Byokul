@@ -15,6 +15,7 @@ namespace LMS.Data.Entity
         public string FileUrl { get; set; }
         public int FileType { get; set; }
         public bool IsPinned { get; set; }
+        public string? FileThumbnail { get; set; }
 
     }
 }

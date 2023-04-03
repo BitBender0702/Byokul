@@ -5,3 +5,7 @@ max-width: 20px;
 .cursorPointer{
     cursor: pointer;
 }
+
+#vjs_video_3{
+    width: 100%;
+}

@@ -15,3 +15,15 @@
     right: 92px;
     z-index: 999;
   }
+
+  .description_scroll{
+    overflow-y: auto;
+  }
+
+  .description_scroll::-webkit-scrollbar {
+    width: 2px;
+  }
+
+  #vjs_video_3{
+    height: 300px;
+  }

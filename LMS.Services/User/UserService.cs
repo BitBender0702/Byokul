@@ -338,7 +338,7 @@ namespace LMS.Services
 
             if (userUpdateViewModel.AvatarImage != null)
             {
-                userUpdateViewModel.Avatar = await _blobService.UploadFileAsync(userUpdateViewModel.AvatarImage, containerName);
+                userUpdateViewModel.Avatar = await _blobService.UploadFileAsync(userUpdateViewModel.AvatarImage, containerName, false);
             }
 
             User user = _userRepository.GetById(userUpdateViewModel.Id);
@@ -422,7 +422,12 @@ namespace LMS.Services
 
             var postList = _postRepository.GetAll().Include(x => x.CreatedBy);
             var test = requiredIds.Where(a => a.Id.HasValue).ToList();
-            var postListData = postList.Include(p => p.CreatedBy).AsEnumerable().Where(x => test.Any(q => q.Id == x.ParentId) && x.PostType == (int)postType && ((string.IsNullOrEmpty(searchString)) || (x.Title?.Contains(searchString) == true || test.Any(q => q.ParentName.Contains(searchString))))).Skip((pageNumber - 1) * pageSize).Take(pageSize).OrderByDescending(x => x.IsPinned).ToList();
+
+
+            //var a = postList.Include(p => p.CreatedBy).ToList();
+            //var b = a.Where(x => test.Any(q => q.Id == x.ParentId && x.PostType == (int)postType)).ToList();
+            //var c = b.Where(x => (string.IsNullOrEmpty(searchString) || x.Title.ToLower().Contains(searchString.ToLower()))).ToList();
+            var postListData = postList.Include(p => p.CreatedBy).AsEnumerable().Where(x => test.Any(q => q.Id == x.ParentId) && x.PostType == (int)postType && ((string.IsNullOrEmpty(searchString)) || (string.IsNullOrEmpty(x.Title) || (x.Title.ToLower().Contains(searchString.ToLower()))))).Skip((pageNumber - 1) * pageSize).Take(pageSize).OrderByDescending(x => x.IsPinned).ToList();
 
             var sharedPosts = await _userSharedPostRepository.GetAll().ToListAsync();
             var savedPosts = await _savedPostRepository.GetAll().ToListAsync();
@@ -1085,97 +1090,99 @@ namespace LMS.Services
             var savedPosts = await _savedPostRepository.GetAll().ToListAsync();
             foreach (var item in postGUIDScore)
             {
-                var post = postList.Where(x => x.Id == item.Key).First();
-                var postAttachment = postAttachmentList.Where(x => x.PostId == item.Key).ToList();
-                var postTag = postTagsList.Where(x => x.PostId == item.Key).ToList();
-                var likes = await GetLikesOnPost(item.Key);
-                var views = await GetViewsOnPost(item.Key);
-                var commentsCount = await GetCommentsCountOnPost(item.Key);
-                var sharedPostCount = sharedPostList.Where(x => x.PostId == item.Key).Count();
-                var isLiked = likesList.Any(x => x.UserId == loginUserId && x.PostId == item.Key);
-
-                if (isLiked)
+                var post = postList.Where(x => x.Id == item.Key).FirstOrDefault();
+                if (post != null)
                 {
-                    IsPostLikedByCurrentUser = true;
+                    var postAttachment = postAttachmentList.Where(x => x.PostId == item.Key).ToList();
+                    var postTag = postTagsList.Where(x => x.PostId == item.Key).ToList();
+                    var likes = await GetLikesOnPost(item.Key);
+                    var views = await GetViewsOnPost(item.Key);
+                    var commentsCount = await GetCommentsCountOnPost(item.Key);
+                    var sharedPostCount = sharedPostList.Where(x => x.PostId == item.Key).Count();
+                    var isLiked = likesList.Any(x => x.UserId == loginUserId && x.PostId == item.Key);
+
+                    if (isLiked)
+                    {
+                        IsPostLikedByCurrentUser = true;
+                    }
+                    else
+                    {
+                        IsPostLikedByCurrentUser = false;
+                    }
+
+                    //var likeCount = likeList.Where(x => x.PostId == item.Key).Count();
+                    //var viewCount = viewList.Where(x => x.PostId == item.Key).Count();
+                    string parentName = "";
+                    string parentImageUrl = "";
+                    string schoolName = "";
+                    string parentId = "";
+                    int postAuthorType = 0;
+                    if (post.PostAuthorType == (int)PostAuthorTypeEnum.School)
+                    {
+                        var school = _schoolRepository.GetById(post.ParentId);
+                        parentName = school.SchoolName;
+                        parentImageUrl = school.Avatar;
+                        postAuthorType = (int)PostAuthorTypeEnum.School;
+                        schoolName = "";
+                        parentId = school.SchoolId.ToString();
+
+
+
+                    }
+                    if (post.PostAuthorType == (int)PostAuthorTypeEnum.Class)
+                    {
+                        var classes = await _classRepository.GetAll().Where(x => x.ClassId == post.ParentId).Include(x => x.School).FirstOrDefaultAsync();
+                        parentName = classes.ClassName;
+                        parentImageUrl = classes.Avatar;
+                        postAuthorType = (int)PostAuthorTypeEnum.Class;
+                        schoolName = classes.School.SchoolName;
+                        parentId = classes.ClassId.ToString();
+                    }
+                    if (post.PostAuthorType == (int)PostAuthorTypeEnum.Course)
+                    {
+                        var course = await _courseRepository.GetAll().Where(x => x.CourseId == post.ParentId).Include(x => x.School).FirstOrDefaultAsync();
+                        parentName = course.CourseName;
+                        parentImageUrl = course.Avatar;
+                        postAuthorType = (int)PostAuthorTypeEnum.Course;
+                        schoolName = course.School.SchoolName;
+                        parentId = course.CourseId.ToString();
+                    }
+                    if (post.PostAuthorType == (int)PostAuthorTypeEnum.User)
+                    {
+                        var user = _userRepository.GetById(post.ParentId.ToString());
+                        parentName = user.FirstName + " " + user.LastName;
+                        parentImageUrl = user.Avatar;
+                        postAuthorType = (int)PostAuthorTypeEnum.User;
+                        schoolName = "";
+                        parentId = user.Id;
+                    }
+                    var result = new GlobalFeedViewModel()
+                    {
+                        Id = post.Id,
+                        Title = post.Title,
+                        Description = post.Description,
+                        Likes = likes,
+                        Views = views,
+                        CommentsCount = commentsCount,
+                        PostSharedCount = sharedPostCount,
+                        IsPostLikedByCurrentUser = IsPostLikedByCurrentUser,
+                        PostType = post.PostType,
+                        ParentName = parentName,
+                        ParentImageUrl = parentImageUrl,
+                        PostAuthorType = postAuthorType,
+                        SchoolName = schoolName,
+                        ParentId = parentId,
+                        DateTime = post.DateTime,
+                        PostAttachments = _mapper.Map<List<PostAttachmentViewModel>>(postAttachment),
+                        PostTags = _mapper.Map<List<PostTagViewModel>>(postTag),
+                        CreatedBy = post.CreatedById,
+                        IsPostSavedByCurrentUser = savedPosts.Any(x => x.PostId == post.Id && x.UserId == loginUserId),
+                        SavedPostsCount = savedPosts.Where(x => x.PostId == post.Id && x.UserId == loginUserId).Count()
+
+                    };
+
+                    response.Add(result);
                 }
-                else
-                {
-                    IsPostLikedByCurrentUser = false;
-                }
-
-                //var likeCount = likeList.Where(x => x.PostId == item.Key).Count();
-                //var viewCount = viewList.Where(x => x.PostId == item.Key).Count();
-                string parentName = "";
-                string parentImageUrl = "";
-                string schoolName = "";
-                string parentId = "";
-                int postAuthorType = 0;
-                if (post.PostAuthorType == (int)PostAuthorTypeEnum.School)
-                {
-                    var school = _schoolRepository.GetById(post.ParentId);
-                    parentName = school.SchoolName;
-                    parentImageUrl = school.Avatar;
-                    postAuthorType = (int)PostAuthorTypeEnum.School;
-                    schoolName = "";
-                    parentId = school.SchoolId.ToString();
-
-
-
-                }
-                if (post.PostAuthorType == (int)PostAuthorTypeEnum.Class)
-                {
-                    var classes = await _classRepository.GetAll().Where(x => x.ClassId == post.ParentId).Include(x => x.School).FirstOrDefaultAsync();
-                    parentName = classes.ClassName;
-                    parentImageUrl = classes.Avatar;
-                    postAuthorType = (int)PostAuthorTypeEnum.Class;
-                    schoolName = classes.School.SchoolName;
-                    parentId = classes.ClassId.ToString();
-                }
-                if (post.PostAuthorType == (int)PostAuthorTypeEnum.Course)
-                {
-                    var course = await _courseRepository.GetAll().Where(x => x.CourseId == post.ParentId).Include(x => x.School).FirstOrDefaultAsync();
-                    parentName = course.CourseName;
-                    parentImageUrl = course.Avatar;
-                    postAuthorType = (int)PostAuthorTypeEnum.Course;
-                    schoolName = course.School.SchoolName;
-                    parentId = course.CourseId.ToString();
-                }
-                if (post.PostAuthorType == (int)PostAuthorTypeEnum.User)
-                {
-                    var user = _userRepository.GetById(post.ParentId.ToString());
-                    parentName = user.FirstName + " " + user.LastName;
-                    parentImageUrl = user.Avatar;
-                    postAuthorType = (int)PostAuthorTypeEnum.User;
-                    schoolName = "";
-                    parentId = user.Id;
-                }
-                var result = new GlobalFeedViewModel()
-                {
-                    Id = post.Id,
-                    Title = post.Title,
-                    Description = post.Description,
-                    Likes = likes,
-                    Views = views,
-                    CommentsCount = commentsCount,
-                    PostSharedCount = sharedPostCount,
-                    IsPostLikedByCurrentUser = IsPostLikedByCurrentUser,
-                    PostType = post.PostType,
-                    ParentName = parentName,
-                    ParentImageUrl = parentImageUrl,
-                    PostAuthorType = postAuthorType,
-                    SchoolName = schoolName,
-                    ParentId = parentId,
-                    DateTime = post.DateTime,
-                    PostAttachments = _mapper.Map<List<PostAttachmentViewModel>>(postAttachment),
-                    PostTags = _mapper.Map<List<PostTagViewModel>>(postTag),
-                    CreatedBy = post.CreatedById,
-                    IsPostSavedByCurrentUser = savedPosts.Any(x => x.PostId == post.Id && x.UserId == loginUserId),
-                    SavedPostsCount = savedPosts.Where(x => x.PostId == post.Id && x.UserId == loginUserId).Count()
-
-            };
-
-                response.Add(result);
-
 
             }
             return response;

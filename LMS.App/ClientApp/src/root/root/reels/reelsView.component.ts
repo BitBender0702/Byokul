@@ -14,6 +14,9 @@ import { commentLikeResponse, commentResponse, signalRResponse, SignalrService }
 import { UserService } from 'src/root/service/user.service';
 import { SharePostComponent } from '../sharePost/sharePost.component';
 
+import videojs from 'video.js';
+import 'video.js/dist/video-js.css';
+
 @Component({
     selector: 'reels-view',
     templateUrl: 'reelsView.component.html',
@@ -22,6 +25,8 @@ import { SharePostComponent } from '../sharePost/sharePost.component';
   
   export class ReelsViewComponent implements OnInit, AfterViewInit  {
 
+    @ViewChild('groupChatList') groupChatList!: ElementRef;
+    @ViewChild('videoPlayer') videoPlayer!: ElementRef;
     private _reelsService;
     private _postService;
     private _chatService;
@@ -58,9 +63,6 @@ import { SharePostComponent } from '../sharePost/sharePost.component';
     commentsLoadingIcon: boolean = false;
     commentsPageNumber:number = 1;
 
-
-    @ViewChild('groupChatList') groupChatList!: ElementRef;
-
     constructor(private bsModalService: BsModalService,notificationService:NotificationService,chatService:ChatService,private renderer: Renderer2,public options: ModalOptions,private userService: UserService,postService: PostService,public signalRService: SignalrService,private route: ActivatedRoute,reelsService: ReelsService,private activatedRoute: ActivatedRoute,private cd: ChangeDetectorRef) { 
           this._reelsService = reelsService;
           this._signalRService = signalRService;
@@ -88,6 +90,8 @@ import { SharePostComponent } from '../sharePost/sharePost.component';
         this._reelsService.getReelById( this.attachmentId).subscribe((response) => {
             this.reels = response;
             this.isDataLoaded = true;
+            this.cd.detectChanges();
+            const player = videojs(this.videoPlayer.nativeElement, {autoplay: false,});
             this.addPostView(this.reels.post.id);
             this._signalRService.createGroupName(this.reels.id);
           });
@@ -127,8 +131,6 @@ import { SharePostComponent } from '../sharePost/sharePost.component';
               reqComment.likeCount = reqComment.likeCount - 1;
             }
           });
-
-          // this.scrollToBottom();
     }
 
     ngAfterViewInit() {        
@@ -161,7 +163,6 @@ import { SharePostComponent } from '../sharePost/sharePost.component';
         createdOn:new Date(),
         userName:''
        };
-
     }
 
     sendToGroup(){
@@ -184,7 +185,6 @@ import { SharePostComponent } from '../sharePost/sharePost.component';
 
     generateChatDiv(response:any,profileImage:string){
       const p: HTMLParagraphElement = this.renderer.createElement('p');
-
       var li=`<div class="live-message d-flex position-relative align-items-start">
       <img src="${profileImage}" class="comment-user">
       <p class="text_sec1 font_12 fw_400 text-start mb-0">${response.message}</p>
@@ -201,7 +201,6 @@ import { SharePostComponent } from '../sharePost/sharePost.component';
         this.generateChatDiv(response,this.user.avatar);
       });
     }
-
 
     showComments(){
         if(this.showCommentsField){
@@ -260,8 +259,6 @@ import { SharePostComponent } from '../sharePost/sharePost.component';
           else{
             var notificationContent = "liked your post";
           }
-          //this.initializeNotificationViewModel(this.user.id,notificationType,notificationContent);
-
           this._notificationService.initializeNotificationViewModel(this.reels.user.id,notificationType,notificationContent,this.loginUserId,postId,postType,null,reelId).subscribe((response) => {
            
           });
@@ -361,20 +358,8 @@ import { SharePostComponent } from '../sharePost/sharePost.component';
             this.commentsPageNumber++;
             this.getComments();
             }
-     }
-     
+     } 
    }
-
-      // getComments(){
-      //   this._chatService.getComments(this.attachmentId,this.commentsPageNumber).subscribe((response) => {
-      //     this.reels.post.comments = response.concat(this.reels.post.comments);
-      //     this.cd.detectChanges();
-      //     this.groupChatList.nativeElement.scrollTop = this.groupChatList.nativeElement.clientHeight;
-      //     this.commentsLoadingIcon = false;
-      //     this.scrollCommentsResponseCount = response.length; 
-      //     this.commentsScrolled = false;
-      //     });
-      // }
 
       getComments() {
         this._chatService.getComments(this.attachmentId,this.commentsPageNumber).subscribe((response) => {
@@ -383,7 +368,6 @@ import { SharePostComponent } from '../sharePost/sharePost.component';
           this.commentsLoadingIcon = false;
           this.scrollCommentsResponseCount = response.length; 
           this.commentsScrolled = false;
-          // Scroll to the bottom of the chat list with animation
           const chatList = this.groupChatList.nativeElement;
           const chatListHeight = chatList.scrollHeight;
           this.groupChatList.nativeElement.scrollTop = this.groupChatList.nativeElement.clientHeight;
@@ -398,6 +382,5 @@ import { SharePostComponent } from '../sharePost/sharePost.component';
           });
         });
       }
-
 
   }

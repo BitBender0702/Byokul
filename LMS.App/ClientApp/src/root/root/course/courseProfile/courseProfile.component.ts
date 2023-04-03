@@ -29,6 +29,8 @@ import { ReelsViewComponent } from '../../reels/reelsView.component';
 import { MultilingualComponent } from '../../sharedModule/Multilingual/multilingual.component';
 import { SharePostComponent } from '../../sharePost/sharePost.component';
 import { ownedCourseResponse } from '../createCourse/createCourse.component';
+import videojs from 'video.js';
+import 'video.js/dist/video-js.css';
 
 @Component({
     selector: 'courseProfile-root',
@@ -112,6 +114,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     @ViewChild('closeCertificateModal') closeCertificateModal!: ElementRef;
     @ViewChild('imageFile') imageFile!: ElementRef;
     @ViewChild('carousel') carousel!: ElementRef;
+    @ViewChild('videoPlayer') videoPlayer!: ElementRef;
 
     @ViewChild('createPostModal', { static: true }) createPostModal!: CreatePostComponent;
 
@@ -717,7 +720,11 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
   
       profileList(){
         this.isProfileGrid = false;
-  
+        this.isGridItemInfo = true;
+        this.cd.detectChanges();
+        if(this.videoPlayer != undefined){
+          videojs(this.videoPlayer.nativeElement, {autoplay: false});
+        }
       }
 
       openPostModal(): void {
@@ -818,6 +825,8 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       var posts: any[] = this.course.posts;
       this.gridItemInfo = posts.find(x => x.id == postId);
       this.isGridItemInfo = true;
+      this.cd.detectChanges();
+      const player = videojs(this.videoPlayer.nativeElement, { autoplay: false });
       this.addPostView(this.gridItemInfo.id);
     }
     

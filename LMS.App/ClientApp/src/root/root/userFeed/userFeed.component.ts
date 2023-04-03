@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { AfterViewInit, Component, ElementRef, HostListener, Injector, OnInit, ViewChild} from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, Injector, OnInit, ViewChild} from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BsModalService, ModalDirective, ModalOptions } from 'ngx-bootstrap/modal';
@@ -16,6 +16,9 @@ import { CreatePostComponent } from '../createPost/createPost.component';
 import { PostViewComponent } from '../postView/postView.component';
 import { ReelsViewComponent } from '../reels/reelsView.component';
 import { SharePostComponent } from '../sharePost/sharePost.component';
+import videojs from 'video.js';
+import 'video.js/dist/video-js.css';
+import { MultilingualComponent } from '../sharedModule/Multilingual/multilingual.component';
 
 @Component({
     selector: 'post-view',
@@ -24,7 +27,7 @@ import { SharePostComponent } from '../sharePost/sharePost.component';
     providers: [MessageService]
   })
 
-export class UserFeedComponent implements OnInit {
+export class UserFeedComponent extends MultilingualComponent implements OnInit {
 
     private _userService;
     private _notificationService;
@@ -66,15 +69,26 @@ export class UserFeedComponent implements OnInit {
     isMyFeedReelsEmpty:boolean = false;
     @ViewChild('carousel') carousel!: ElementRef;
     @ViewChild('globalReelCarousel') globalReelCarousel!: ElementRef;
+    @ViewChild('searchInput') searchInput!: ElementRef;
+    @ViewChild('myFeedPlayer') myFeedPlayer!: ElementRef;
+    @ViewChild('globalFeedPlayer') globalFeedPlayer!: ElementRef;
+
     scrolled:boolean = false;
 
     searchString:string = "";
     isOpenGlobalFeed:boolean = false;
+    isGlobalPostsExist:boolean = false;
+    isGlobalReelsExist:boolean = false;
+    isMyFeedPostsExist:boolean = false;
+    isMyFeedReelsExist:boolean = false;
 
-    constructor(private bsModalService: BsModalService,notificationService:NotificationService,postService: PostService,public userService:UserService, public options: ModalOptions,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,public messageService:MessageService) { 
-         this._userService = userService;
-         this._postService = postService;
-         this._notificationService = notificationService;
+
+
+    constructor(injector: Injector,private bsModalService: BsModalService,notificationService:NotificationService,postService: PostService,public userService:UserService, public options: ModalOptions,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,public messageService:MessageService,private cd: ChangeDetectorRef) { 
+      super(injector);
+      this._userService = userService;
+      this._postService = postService;
+      this._notificationService = notificationService;
     }
 
     ngOnChanges(): void {
@@ -94,28 +108,38 @@ export class UserFeedComponent implements OnInit {
           this.isGlobalFeed = false;
           this.postLoadingIcon = false;
             this.myFeeds = response;
+            this.isMyFeedPostsExist = true;
+            this.checkMyFeedExist();
             if(this.myFeeds.length == 0){
                this.isMyFeedsEmpty = true;
                this.getGlobalFeedsData()
             }
-              this.isDataLoaded = true;
+              // this.isDataLoaded = true;
           });
 
           this._userService.getMyFeed(3,this.myFeedsPageNumber,this.searchString).subscribe((result) => {
             this.myFeedsReels = result;
+            this.isMyFeedReelsExist = true;
+            this.checkMyFeedExist();
             if(this.myFeedsReels.length == 0){
               this.isMyFeedReelsEmpty = true;
               this.getGlobalFeedsData()
            }
-            this.isDataLoaded = true;
-            this.loadingIcon = false;
-            this.isDataLoaded = true;
+            // this.isDataLoaded = true;
+            // this.loadingIcon = false;
             this.addListenerToNextButton();
           });
 
           this.getGlobalFeedsData();
           this.InitializeLikeUnlikePost();
     }
+
+    checkMyFeedExist(){
+      if(this.isMyFeedPostsExist && this.isMyFeedReelsExist){
+        this.isDataLoaded = true;
+        this.loadingIcon = false;
+      }
+  }
 
     getGlobalFeedsData(){
       if(this.isMyFeedsEmpty && this.isMyFeedReelsEmpty){
@@ -221,6 +245,16 @@ export class UserFeedComponent implements OnInit {
   
       profileList(){
         this.isProfileGrid = false;
+        this.isGridItemInfo = true;
+        this.isGridItemInfoForGlobal = true;
+        this.cd.detectChanges();
+        if(this.myFeedPlayer != undefined){
+          videojs(this.myFeedPlayer.nativeElement, {autoplay: false});
+        }
+
+        if(this.globalFeedPlayer != undefined){
+          videojs(this.globalFeedPlayer.nativeElement, {autoplay: false});
+        }
       }
 
       saveUserPreference(title:string,description:string,postTags:any){
@@ -254,19 +288,29 @@ export class UserFeedComponent implements OnInit {
         this.loadingIcon = true;
         this._userService.getGlobalFeed(1,this.globalFeedsPageNumber,this.searchString).subscribe((response) => {
             this.globalFeeds = response;
-            this.loadingIcon = false;
-            this.isDataLoaded = true;
-            console.log(this.globalFeeds);
+            // this.loadingIcon = false;
+            // this.isDataLoaded = true;
+            this.isGlobalPostsExist = true;
+            this.checkGlobalFeedExist()
           });
         }
           this._userService.getGlobalFeed(3, this.globalReelsPageNumber,this.searchString).subscribe((result) => {
               this.globalFeedReels = result;
-              this.loadingIcon = false;
-              this.isDataLoaded = true;
+              // this.loadingIcon = false;
+              // this.isDataLoaded = true;
+              this.isGlobalReelsExist = true;
+              this.checkGlobalFeedExist()
               this.addGlobalFeedListenerToNextButton();
 
             });
           }
+
+          checkGlobalFeedExist(){
+            if(this.isGlobalPostsExist && this.isGlobalReelsExist){
+              this.isDataLoaded = true;
+              this.loadingIcon = false;
+            }
+        }
 
       isOwnerOrNot(){
         var validToken = localStorage.getItem("jwt");
@@ -370,12 +414,16 @@ export class UserFeedComponent implements OnInit {
           var posts: any[] = this.myFeeds;
           this.gridItemInfo = posts.find(x => x.id == postId);
           this.isGridItemInfo = true;
+          this.cd.detectChanges();
+          const player = videojs(this.myFeedPlayer.nativeElement, {autoplay: false});
           this.addPostView(this.gridItemInfo.id,From);
         }
         else{
           var posts: any[] = this.globalFeeds;
           this.gridItemInfoForGlobal = posts.find(x => x.id == postId);
           this.isGridItemInfoForGlobal = true;
+          this.cd.detectChanges();
+          const player = videojs(this.globalFeedPlayer.nativeElement, {autoplay: false});
           this.addPostView(this.gridItemInfoForGlobal.id,From);
         }
       }
@@ -447,7 +495,7 @@ export class UserFeedComponent implements OnInit {
         this.reelsPageNumber = 1;
         
         if(this.searchString.length >2 || this.searchString == ""){
-          this.loadingIcon = true;
+          // this.loadingIcon = true;
           this._userService.getMyFeed(1,this.myFeedsPageNumber,this.searchString).subscribe((response) => {
             this.loadingIcon = false;
              this.myFeeds = response;
@@ -465,7 +513,7 @@ export class UserFeedComponent implements OnInit {
         this.globalReelsPageNumber = 1;
         
         if(this.searchString.length >2 || this.searchString == ""){
-          this.loadingIcon = true;
+          // this.loadingIcon = true;
           this._userService.getGlobalFeed(1,this.globalFeedsPageNumber,this.searchString).subscribe((response) => {
             this.globalFeeds = response;
             this.loadingIcon = false;

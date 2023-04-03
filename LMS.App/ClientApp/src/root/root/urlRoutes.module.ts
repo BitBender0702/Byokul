@@ -6,7 +6,6 @@ import { NewMeetingComponent } from '../root/bigBlueButton/newMeeting/newMeeting
 import { JoinMeetingComponent } from '../root/bigBlueButton/joinMeeting/joinMeeting.component';
 import { CreateSchoolComponent } from '../root/school/createSchool/createSchool.component';
 import { VideoPlayerComponent } from '../root/videoPlayer/video-player.component';
-import { EditSchoolComponent } from '../root/school/editSchool/editSchool.component';
 import { SharedModule } from '../root/sharedModule/shared.module';
 import { CreateClassComponent } from '../root/class/createClass/createClass.component';
 import { CreateCourseComponent } from '../root/course/createCourse/createCourse.component';

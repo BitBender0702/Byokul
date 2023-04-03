@@ -33,9 +33,12 @@
               "node_modules/select2/dist/css/select2.min.css",
               "node_modules/primeicons/primeicons.css",
               "node_modules/primeng/resources/themes/saga-blue/theme.css",
-              "node_modules/primeng/resources/primeng.min.css"
+              "node_modules/primeng/resources/primeng.min.css",
+              "node_modules/video.js/dist/video-js.css"
+
             ],
             "scripts": [
+              "node_modules/video.js/dist/video.min.js"
             ]
           },
           "configurations": {

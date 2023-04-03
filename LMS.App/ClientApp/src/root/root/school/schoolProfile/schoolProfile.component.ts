@@ -53,9 +53,9 @@ import { PostAuthorTypeEnum } from 'src/root/Enums/postAuthorTypeEnum';
 import { PermissionNameConstant } from 'src/root/interfaces/permissionNameConstant';
 import { PermissionTypeEnum } from 'src/root/Enums/permissionTypeEnum';
 import { SharePostComponent } from '../../sharePost/sharePost.component';
-// export const ownedSchoolResponse =new Subject<{schoolAvatar : string,schoolName:string}>();
+import videojs from 'video.js';
+import 'video.js/dist/video-js.css';
 
-// import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'schoolProfile-root',
@@ -76,18 +76,14 @@ export class SchoolProfileComponent
   isProfileGrid: boolean = true;
   isOpenSidebar: boolean = false;
   hideFeedFilters: boolean = true;
-
   loadingIcon: boolean = false;
   postLoadingIcon: boolean = false;
   reelsLoadingIcon:boolean = false;
   isOpenModal: boolean = false;
   schoolId!: string;
-
   isDataLoaded: boolean = false;
   isSchoolFollowed: boolean = false;
   validToken!: string;
-
-  // eidt Schools
   editSchool: any;
   editSchoolForm!: FormGroup;
   accessibility: any;
@@ -96,8 +92,6 @@ export class SchoolProfileComponent
   certificateToUpload = new FormData();
   uploadImage!: any;
   updateSchoolDetails!: EditSchoolModel;
-
-  // add/delete Languages
   languageForm!: FormGroup;
   teacherForm!: FormGroup;
   certificateForm!: FormGroup;
@@ -139,10 +133,8 @@ export class SchoolProfileComponent
   isFeedHide: boolean = false;
   frontEndPageNumber: number = 1;
   scrollFeedResponseCount:number = 1;
-
   classCoursePageNumber: number = 1;
   scrollClassCourseResponseCount:number = 1;
-
   classCourseItem:any;
   classFilters:any;
   courseFilters:any;
@@ -158,7 +150,7 @@ export class SchoolProfileComponent
   @ViewChild('closeCertificateModal') closeCertificateModal!: ElementRef;
   @ViewChild('imageFile') imageFile!: ElementRef;
   @ViewChild('carousel') carousel!: ElementRef;
-
+  @ViewChild('videoPlayer') videoPlayer!: ElementRef;
   @ViewChild('createPostModal', { static: true })
   createPostModal!: CreatePostComponent;
   Certificates!: string[];
@@ -174,6 +166,7 @@ export class SchoolProfileComponent
   hasManageTeachersPermission!:boolean;
   hasAddSchoolCertificatesPermission!:boolean;
   hasAddLanguagesPermission!:boolean;
+  videoElements:any;
 
   constructor(
     injector: Injector,
@@ -223,30 +216,9 @@ export class SchoolProfileComponent
     var selectedLang = localStorage.getItem('selectedLanguage');
     this.translate.use(selectedLang ?? '');
 
-    // var id = this.route.snapshot.paramMap.get('schoolId');
-    // this.schoolId = id ?? '';
-    // if (this.schoolName == undefined) {
-      // this.route.params.subscribe(params => {
-      //   this.schoolName = params['schoolName'];
-      // });
-      // this.schoolName = this.route.snapshot.paramMap.get('schoolName') ?? '';
-    // }
+    
 
-    // if(this.schoolId == ''){
-    //   this._schoolService.getSchoolByName(this.schoolName).subscribe((response) => {
-    //     this.schoolId = response.schoolId;
-    //     this._schoolService.getSchoolById(this.schoolName).subscribe((response) => {
-    //       this.school = response;
-    //       this.followersLength = this.school.schoolFollowers.length;
-    //       this.isOwnerOrNot();
-    //       this.loadingIcon = false;
-    //       this.isDataLoaded = true;
-    //     });
-    //   });
-    // }
-
-    // else{
-    this._schoolService.getSchoolById(this.schoolName.replace(' ', '').toLowerCase()).subscribe((response) => {
+    this._schoolService.getSchoolById(this.schoolName.replace(' ', '').toLowerCase()).subscribe(async (response) => {
         this.frontEndPageNumber = 1;
         this.reelsPageNumber = 1;
         this.school = response;
@@ -256,12 +228,11 @@ export class SchoolProfileComponent
         this.postLoadingIcon = false;
         this.scrolled = false;
         this.isDataLoaded = true;
-        this.cd.detectChanges();
+        this.cd.detectChanges(); 
         this.noOfAppliedClassFilters = this.school.noOfAppliedClassFilters;
         this.noOfAppliedCourseFilters = this.school.noOfAppliedCourseFilters;
         this.addEventListnerOnCarousel();
       });
-    // }
 
     this._schoolService.getAccessibility().subscribe((response) => {
       this.accessibility = response;
@@ -271,7 +242,6 @@ export class SchoolProfileComponent
       this.languages = response;
     });
 
-    // here we call this when user click on plus icon not in ngon init try tomorrow.
     this._schoolService.getAllTeachers().subscribe((response) => {
       this.teachers = response;
     });
@@ -284,7 +254,6 @@ export class SchoolProfileComponent
       schoolEmail: this.fb.control(''),
       description: this.fb.control(''),
       owner: this.fb.control(''),
-      // avatar: this.fb.control('')
     });
 
     this.languageForm = this.fb.group({
@@ -355,8 +324,14 @@ export class SchoolProfileComponent
           this.isDataLoaded = true;
         });
     });
+  }
 
-    //this.GetSchoolClassCourseList(this.school.schoolId);
+  async convertBlobUrlToStream(blobUrl: string): Promise<any> {
+    const response = await fetch(blobUrl);
+    const blob = await response.blob();
+    var stream = blob.stream();
+    const imageUrl = URL.createObjectURL(blob);
+    return blob.stream();
   }
 
   addEventListnerOnCarousel(){
@@ -372,7 +347,6 @@ export class SchoolProfileComponent
              this.school.reels = [...this.school.reels, ...response];
              this.reelsLoadingIcon = false;
         });
-
         })
       }  
   }
@@ -526,6 +500,11 @@ export class SchoolProfileComponent
 
   profileList() {
     this.isProfileGrid = false;
+    this.isGridItemInfo = true;
+    this.cd.detectChanges();
+    if(this.videoPlayer != undefined){
+      videojs(this.videoPlayer.nativeElement, {autoplay: false});
+    }
   }
 
   openSidebar() {
@@ -569,7 +548,6 @@ export class SchoolProfileComponent
         ]),
         description: this.fb.control(this.editSchool.description ?? ''),
         owner: this.fb.control(this.editSchool.user.email),
-        // avatar: this.fb.control(this.editSchool.avatar)
       },
       { validator: this.dateLessThan('founded', currentDate) }
     );
@@ -597,9 +575,6 @@ export class SchoolProfileComponent
     }
 
     this.loadingIcon = true;
-
-    // this.closeModal();
-
     if (!this.uploadImage) {
       this.fileToUpload.append('avatar', this.editSchool.avatar);
     }
@@ -917,7 +892,6 @@ export class SchoolProfileComponent
       schoolId: this.school.schoolId,
       from: 'school',
     };
-    //var initialState = this.school.schoolId;
     this.bsModalService.show(CreatePostComponent, { initialState });
   }
 
@@ -981,7 +955,6 @@ export class SchoolProfileComponent
     if (this.validToken == '') {
       window.open('user/auth/login', '_blank');
     } else {
-      //window.location.href=`user/chat`;
       this.router.navigate([`user/chats`], {
         state: {
           chatHead: { receiverId: userId, type: type, chatTypeId: chatTypeId },
@@ -1010,7 +983,6 @@ export class SchoolProfileComponent
     this.school.posts
       .filter((p: any) => p.id == postId)
       .forEach((item: any) => {
-        // here item.likes is null
         var likes: any[] = item.likes;
 
         var isLiked = likes.filter(
@@ -1057,8 +1029,8 @@ export class SchoolProfileComponent
     var posts: any[] = this.school.posts;
     this.gridItemInfo = posts.find((x) => x.id == postId);
     this.isGridItemInfo = true;
-
-    // here we also add a view for this post
+    this.cd.detectChanges();
+    const player = videojs(this.videoPlayer.nativeElement, {autoplay: false});
     this.addPostView(this.gridItemInfo.id);
   }
 
@@ -1068,9 +1040,6 @@ export class SchoolProfileComponent
       this.postView.postId = postId;
       this._postService.postView(this.postView).subscribe((response) => {
         this.gridItemInfo.views.length = response;
-        // this.user.posts.filter((p : any) => p.id == postId).forEach( (item : any) => {
-        //  var itemss = item.likes;
-        //  item.likes = response;
       });
     }
   }

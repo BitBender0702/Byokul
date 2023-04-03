@@ -1,4 +1,4 @@
-<!-- <div *ngIf="isDataLoaded"> -->
+<div *ngIf="isDataLoaded">
 <div *ngIf="!postPageView" appBsModal bsModal class="modal fade edit-school-modal show d-block post-view-large" id="create-post" tabindex="-1"
 aria-labelledby="create-post" aria-hidden="true" area-modal="true">
 <div class="modal-dialog modal-dialog-centered">
@@ -21,7 +21,7 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
           <carousel>
             <div *ngFor="let postAttachment of post.postAttachments" class="live-image overflow-hidden position-relative">
               <slide *ngIf="postAttachment.fileType==2">
-                <video *ngIf="postAttachment.fileType==2" width="100%" height="700" controls>
+                <video #videoPlayer *ngIf="postAttachment.fileType==2" width="100%" height="700" controls class="video-js vjs-big-play-centered" preload="metadata">
                   <source [src]="postAttachment.fileUrl" type="video/mp4"/>
                 </video>
                 <div class="live-bottom-text p-3">
@@ -105,13 +105,9 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
     </div>
   </div>
 </div>
-        
-
-      </div>
-    </div>
-  </section>
-
-
+</div>
+</div>
+</section>
     </div>
   </div>
 </div>
@@ -133,7 +129,7 @@ margin-top: 30px;">
         <carousel>
           <div *ngFor="let postAttachment of post.postAttachments" class="live-image overflow-hidden position-relative">
             <slide *ngIf="postAttachment.fileType==2">
-              <video *ngIf="postAttachment.fileType==2" width="100%" height="700" controls>
+              <video #videoPlayer *ngIf="postAttachment.fileType==2" width="100%" height="700" controls class="video-js vjs-big-play-centered" preload="metadata">
                 <source [src]="postAttachment.fileUrl" type="video/mp4"/>
               </video>
               <div class="live-bottom-text p-3">
@@ -222,7 +218,4 @@ margin-top: 30px;">
     </div>
   </div>
 </section>
-<!-- </div> -->
-
-
-<!--  tet-->
+</div>

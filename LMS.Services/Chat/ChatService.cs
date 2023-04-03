@@ -184,7 +184,7 @@ namespace LMS.Services.Chat
             foreach (var attachment in model.File)
             {
                 var chatAttach = new ChatAttachmentResponse();
-                chatAttach.FileURL = await _blobService.UploadFileAsync(attachment, containerName);
+                chatAttach.FileURL = await _blobService.UploadFileAsync(attachment, containerName,false);
 
                 chatAttach.FileName = attachment.FileName;
                 chatAttach.FileType = model.FileType;

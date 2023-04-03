@@ -180,19 +180,19 @@
                 
                 <div class="post-bot-left d-flex">
                       <label class="custom-file-upload post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center">
-                        <input id="hideFileType" type="file" multiple="multiple" (change)="handleImages($event)" accept="image/*"/>
+                        <input class="invisible" id="hideFileType" type="file" multiple="multiple" (change)="handleImages($event)" accept="image/*"/>
                         <img src="../../../assets/images/forward-icon.svg"
                         src="../../../assets/images/gallery-dark.svg" class="dark-attach" /><img src="../../../assets/images/Video-light.svg"
                         class="light-attach" />
                       </label>
                       <label class="custom-file-upload post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center">
-                        <input id="hideFileType" type="file" (change)="handleVideos($event)" accept="video/*"/>
+                        <input class="invisible" id="hideFileType" type="file" (change)="handleVideos($event)" accept="video/*"/>
                         <img
                         src="../../../assets/images/Video-dark.svg" class="dark-attach" /><img src="../../../assets/images/Video-light.svg"
                         class="light-attach" />
                       </label>
                       <label class="custom-file-upload post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center">
-                        <input id="hideFileType" type="file" (change)="handleAttachments($event)" accept="application/pdf"/>
+                        <input class="invisible" id="hideFileType" type="file" (change)="handleAttachments($event)" accept="application/pdf"/>
                         <img
                         src="../../../assets/images/Paper-Plus-dark.svg" class="dark-attach" /><img src="../../../assets/images/Paper-Plus-light.svg"
                         class="light-attach" />

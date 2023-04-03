@@ -266,14 +266,6 @@
            
           </div>
         </div>
-<!-- <div class="button-list-grid1">
-          <button [ngClass]="isProfileGrid ? 'btn border-btn active d-inline-flex align-items-center justify-content-center' : 'btn border-btn d-inline-flex align-items-center justify-content-center'" (click)="profileGrid()" type="button" >
-            <img src="../../../../assets/images/Filter.svg" />
-          </button>
-          <button [ngClass]="!isProfileGrid ? 'btn border-btn active d-inline-flex align-items-center justify-content-center' : 'btn border-btn d-inline-flex align-items-center justify-content-center'" (click)="profileList()" type="button" class="btn border-btn d-inline-flex align-items-center justify-content-center">
-            <img src="../../../../assets/images/Category.svg" />
-          </button>
-</div> -->
         </div>
       </div>
 
@@ -292,13 +284,8 @@
                   <div *ngIf="postAttachment.fileType == 2">
                     <div class="feedimg-box position-relative text-light position-relative">
                       <a (click)="openReelsViewModal(postAttachment.id)" style="cursor: pointer;">
-                        <div class="videofile">
-                          <video preload="metadata" style="height: 300px;">
-                            <source [src]="postAttachment.fileUrl" type="video/mp4"/>
-                          </video>
-                        </div>
+                          <img style="height: 300px;" [src]="postAttachment.fileThumbnail">
                       </a>
-                        <!-- <img src="../../../../assets/images/feed1.jpg" /> -->
                         <div class="pinned-view d-flex  justify-content-between align-items-start">
                             <button type="button" class="view font_12 bg-transparent border-0 text-light cursor_auto">
                                 <img src="../../../../assets/images/eye-light.svg" /> {{post.views.length}}
@@ -332,6 +319,7 @@
             <div class="accordion" id="accordionPanelsStayOpenExample">
               <ng-container *ngFor="let post of school.posts">
                   <div *ngIf="post.postType == 1 && post.postAuthorType == 1" class="school-grid-box position-relative">
+                    
                     <div class="schoolgrid-header d-flex align-items-center position-relative">
                         <div class="school-gridprofile-icon">
                             <img [src]="school.avatar" />
@@ -359,9 +347,7 @@
                               
                                 <div *ngIf="post.postAttachments.length == 1"  class="col-md-12 h-100">
                                     <div class="school-large-thumbnail shadow-thumnail position-relative">
-                                       <video *ngIf="post.postAttachments.length == 1 && post.postAttachments[0]?.fileType==2" (click)="openPostsViewModal(post)" preload="metadata" class="w-100" style="cursor: pointer;">
-                                          <source [src]="post.postAttachments[0]?.fileUrl" type="video/mp4"/>
-                                        </video>
+                                       <img *ngIf="post.postAttachments.length == 1 && post.postAttachments[0]?.fileType==2" (click)="openPostsViewModal(post)" class="w-100" style="cursor: pointer;" [src]="post.postAttachments[0]?.fileThumbnail">
                                         <img *ngIf="post.postAttachments[0]?.fileType==1" (click)="openPostsViewModal(post)" class="w-100" [src]="post.postAttachments[0]?.fileUrl" />
                                     </div>
                                 </div>
@@ -369,9 +355,7 @@
                                 <div *ngIf="post.postAttachments.length == 2"  class="col-md-12 h-100">
                                   <div class="school-large-thumbnail shadow-thumnail position-relative">
                                     <ng-container *ngFor="let attachment of post.postAttachments">
-                                     <video *ngIf="attachment?.fileType==2" (click)="openPostsViewModal(post)" preload="metadata" class="w-100" style="cursor: pointer;">
-                                      <source [src]="attachment?.fileUrl" type="video/mp4"/>
-                                     </video>
+                                      <img *ngIf="attachment?.fileType==2" (click)="openPostsViewModal(post)" class="w-100" style="cursor: pointer;" [src]="attachment?.fileThumbnail">
                                       <img style="height: 598px;" *ngIf="attachment?.fileType==1" (click)="openPostsViewModal(post)" class="w-100" [src]="attachment?.fileUrl" />
                                     </ng-container>
                                   </div>
@@ -379,9 +363,7 @@
 
                                 <div *ngIf="post.postAttachments.length == 3" class="col-md-8 h-100">
                                   <div class="school-large-thumbnail shadow-thumnail position-relative">
-                                        <video *ngIf="post.postAttachments[0]?.fileType==2" (click)="openPostsViewModal(post)" preload="metadata" class="w-100" style="cursor: pointer;margin-top:-700px;">
-                                          <source [src]="post.postAttachments[0]?.fileUrl" type="video/mp4"/>
-                                        </video>
+                                        <img *ngIf="post.postAttachments[0]?.fileType==2" (click)="openPostsViewModal(post)" class="w-100" style="cursor: pointer;margin-top:-700px;" [src]="post.postAttachments[0]?.fileThumbnail">
                                         <img *ngIf="post.postAttachments[0]?.fileType==1" class="w-100" (click)="openPostsViewModal(post)" [src]="post.postAttachments[0]?.fileUrl" />
                                   </div>
                                </div>
@@ -389,23 +371,17 @@
                                 <div *ngIf="post.postAttachments.length == 3" class="col-md-4 h-100">
                                     <div class="h-100 medium_thumbox d-flex">
                                         <div class="medium-thumnail">
-                                          <video *ngIf="post.postAttachments[1]?.fileType==2" (click)="openPostsViewModal(post)" preload="metadata" class="w-100" style="cursor: pointer;">
-                                            <source [src]="post.postAttachments[1]?.fileUrl" type="video/mp4"/>
-                                          </video>
+                                            <img *ngIf="post.postAttachments[1]?.fileType==2" (click)="openPostsViewModal(post)" class="w-100" style="cursor: pointer;" [src]="post.postAttachments[1]?.fileThumbnail">
                                             <img *ngIf="post.postAttachments[1]?.fileType==1" class="w-100" (click)="openPostsViewModal(post)" [src]="post.postAttachments[1]?.fileUrl" style="cursor: pointer;" />                                        </div>
                                         <div class="medium-thumnail">
-                                          <video *ngIf="post.postAttachments[2]?.fileType==2" (click)="openPostsViewModal(post)" preload="metadata" class="w-100" style="cursor: pointer;">
-                                            <source [src]="post.postAttachments[2]?.fileUrl" type="video/mp4"/>
-                                          </video>
+                                            <img *ngIf="post.postAttachments[2]?.fileType==2" (click)="openPostsViewModal(post)" class="w-100" style="cursor: pointer;" [src]="post.postAttachments[2]?.fileThumbnail">
                                             <img *ngIf="post.postAttachments[2]?.fileType==1" class="w-100" (click)="openPostsViewModal(post)" [src]="post.postAttachments[2]?.fileUrl" style="cursor: pointer;"/>                                        </div>
                                     </div>
                                 </div>
 
                                 <div *ngIf="post.postAttachments.length > 3" class="col-md-8 h-100">
                                   <div class="school-large-thumbnail shadow-thumnail position-relative">
-                                          <video *ngIf="post.postAttachments[0]?.fileType==2" (click)="openPostsViewModal(post)" preload="metadata" class="w-100" style="cursor: pointer;">
-                                            <source [src]="post.postAttachments[0]?.fileUrl" type="video/mp4"/>
-                                          </video>
+                                          <img *ngIf="post.postAttachments[0]?.fileType==2" (click)="openPostsViewModal(post)" class="w-100" style="cursor: pointer;" [src]="post.postAttachments[0]?.fileThumbnail">
                                           <img *ngIf="post.postAttachments[0]?.fileType==1" class="w-100" (click)="openPostsViewModal(post)" [src]="post.postAttachments[0]?.fileUrl" />
                                   </div>
                                </div>
@@ -418,9 +394,7 @@
                                           +{{post.postAttachments.length - 3}}</div>                                    
                                        </div>
                                     <div class="medium-thumnail">
-                                      <video *ngIf="post.postAttachments[1]?.fileType==2" (click)="openPostsViewModal(post)" preload="metadata" class="w-100" style="cursor: pointer;">
-                                        <source [src]="post.postAttachments[1]?.fileUrl" type="video/mp4"/>
-                                      </video>
+                                      <img *ngIf="post.postAttachments[1]?.fileType==2" (click)="openPostsViewModal(post)" class="w-100" style="cursor: pointer;" [src]="post.postAttachments[1]?.fileThumbnail">
                                       <img *ngIf="post.postAttachments[1]?.fileType==1" class="w-100" (click)="openPostsViewModal(post)" [src]="post.postAttachments[2]?.fileUrl" style="cursor: pointer;"/>                                        </div>
                                 </div>
                             </div>
@@ -498,7 +472,7 @@
             <div *ngFor="let postAttachment of gridItemInfo.postAttachments" class="school-grid-thumbnail">
               <slide *ngIf="postAttachment.fileType==2">
               <div *ngIf="postAttachment?.fileType==2" class="videofile">
-                <video style="height: 300px;" controls>
+                <video #videoPlayer controls class="video-js vjs-big-play-centered" preload="metadata">
                   <source [src]="postAttachment?.fileUrl" type="video/mp4"/>
                 </video>
               </div>
@@ -591,11 +565,9 @@
                                     <div class="row gx-1">
                                         <div class="col-md-12">
                                             <div class="school-large-thumbnail shadow-thumnail position-relative">
-                                                <div *ngIf="post.postAttachments[0]?.fileUrl == null">{{post.description}}</div>
+                                                <div *ngIf="post.postAttachments[0]?.fileUrl == null" class="description_scroll">{{post.description}}</div>
                                               <div *ngIf="post.postAttachments[0]?.fileType==2" class="videofile">
-                                                <video preload="metadata" style="height: 300px;">
-                                                  <source [src]="post.postAttachments[0]?.fileUrl" type="video/mp4"/>
-                                                </video>
+                                                <img preload="metadata" style="height: 300px;" [src]="post.postAttachments[0]?.fileThumbnail">
                                               </div>
                                                 <img *ngIf="post.postAttachments[0]?.fileType==1" class="w-100" [src]="post.postAttachments[0]?.fileUrl" />
                                             </div>
@@ -649,11 +621,7 @@
                           <button *ngIf="!item.isPinned && isOwner" (click)="pinUnpinClassCourse(item.id,item.type,true)" type="button" class="bg-transparent border-0 pinned-grid-chat position-static">
                            <img class="w-auto h-auto" src="../../../../assets/images/pinned-gray.svg" />
                           </button>
-                         
                         </div>
-                            
-
-                            
                       </div>
   
                       <div class="d-flex justify-content-between date-view-list mt-3 align-items-center mb-0">
@@ -670,25 +638,20 @@
                       <p class="text_sec1 font_14">{{item.description}} </p>
                       <div *ngIf="item.tags.length>0" class="teacher-tags tag-box hashtag_box">
                         <span *ngFor="let tag of item.tags" class="custom-tag">{{tag}}</span>
-                        <!-- <button type="button" class="custom-tag border-0">See more...</button> -->
                       </div>
                       <div *ngIf="item.tags.length==0" class="teacher-tags tag-box hashtag_box">
                         <span class="custom-tag"></span>
-                        <!-- <button type="button" class="custom-tag border-0">See more...</button> -->
                       </div>
                       <div class="school-grid-thumbnail shadow-thumnail position-relative classes-grid overflow-hidden" (click)="openClassCourseViewModal(item)">
                         <div class="row gx-1">
                           <div class="col-md-12">
                             <div class="school-large-thumbnail position-relative ">
-
                               <img *ngIf="item.thumbnailType == 1" class="w-100" [src]="item.thumbnailUrl" />
-
                               <div *ngIf="item.thumbnailType == 2" class="videofile">
                                 <video preload="metadata" style="height: 300px;">
                                   <source [src]="item.thumbnailUrl" type="video/mp4"/>
                                 </video>
                               </div>
-
                             </div>
                           </div>
                         </div>
@@ -752,11 +715,7 @@
               </div>
               </div>
             </div>
-
             <input #imageFile class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins position-static opacity-100" type="file" name="Edit Picture" id="avatar" (change)="handleImageInput($event)" accept="image/*"/>
-            
-            <!-- <button type="file" (change)="handleImageInput($event)" class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins position-static opacity-100"> {{'EditPicture'| translate }}
-              </button> -->
           </div>
           <div class="text-line-border position-relative text-center mb-4">
             <span class="line-text font_12 text_ltgray fw_400 text-center">{{'GeneralInformation'| translate }}</span>
@@ -828,23 +787,10 @@
                 data-bs-dismiss="modal">{{'DiscardChanges'| translate }}</button>
               <button (click)="updateSchool()" type="button" 
                 class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step">{{'Save'| translate }}</button>
-    
             </div>
-          
           </form>
         </div>
-        <!-- <div class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4">
-          <button type="button"
-            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
-            data-bs-dismiss="modal">Discard Changes</button>
-          <button (click)="updateSchool()" type="button" 
-            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step">Save</button>
-
-        </div> -->
-      
       </div>
-
-      
     </div>
   </div>
 
@@ -877,7 +823,6 @@
                   data-bs-dismiss="modal">{{'DiscardChanges'| translate }}</button>
                 <button (click)="saveSchoolLanguages()" type="button"
                   class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step">{{'Save'| translate }}</button>
-  
               </div>
               </form>
             </div>
@@ -895,15 +840,9 @@
                   src="../../../../assets/images/cross.svg" /></button>
             </div>
             <div class="modal-body">
-              <!-- <form [formGroup]="languageForm"> -->
-
                 <div class="form-group">
                   <h2 class="text-center font_16 f-poppins">Do you really want to delete this?</h2>
                 </div>
-
-                <!-- <div class="form-group">
-                  <input type="text" placeholder="{{'TypeLanguageToAdd'| translate }}" name="schoolname" class="form-control w-100">
-                </div> -->
                 <div
                 class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-2 mt-4">
                 <button type="button"
@@ -911,10 +850,7 @@
                   data-bs-dismiss="modal">{{'No'| translate }}</button>
                 <button (click)="deleteSchoolLanguage()" type="button"
                   class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step" data-bs-dismiss="modal">{{'Yes'| translate }}</button>
-  
               </div>
-              <!-- </form> -->
-          
             </div>
           </div>
         </div>
@@ -931,7 +867,6 @@
           </div>
           <div class="modal-body">
             <form [formGroup]="teacherForm" class="latest-form add-tag-step">
-
               <div class="form-group">
                 <label class="font_10">{{'Teacher'| translate }}</label>
                 <span class="p-fluid">
@@ -950,11 +885,9 @@
                 data-bs-dismiss="modal">{{'DiscardChanges'| translate }}</button>
               <button (click)="saveSchoolTeachers()" type="button"
                 class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step">{{'Save'| translate }}</button>
-
             </div>
             </form>
           </div>
-
         </div>
       </div>
     </div>
@@ -979,7 +912,6 @@
               data-bs-dismiss="modal">{{'No'| translate }}</button>
             <button (click)="deleteSchoolTeacher()" type="button"
               class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step" data-bs-dismiss="modal">{{'Yes'| translate }}</button>
-
           </div>      
         </div>
       </div>
@@ -997,7 +929,6 @@
       </div>
       <div class="modal-body">
         <form [formGroup]="certificateForm" class="latest-form add-tag-step">
-
           <div class="form-group">
             <div class="dropzone-wrapper">
               <div class="dropzone-desc">
@@ -1010,7 +941,6 @@
           <div class="teacher-tags tag-box language-tag my-0">
             <button *ngFor="let certificate of this.schoolCertificate.certificates" type="button" class="custom-tag border-0">{{certificate.name}}</button>
           </div>
-
           <small class="p-error" style="color: orange;"class="text-center d-block"
           *ngIf="(isSubmitted && certificateForm.controls.certificates.errors)"> Please select atleast one certificate
         </small>
@@ -1021,7 +951,6 @@
             data-bs-dismiss="modal">{{'DiscardChanges'| translate }}</button>
           <button (click)="saveSchoolCertificates()" type="button"
             class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step">{{'Save'| translate }}</button>
-
         </div>
         </form>
       </div>
@@ -1039,8 +968,6 @@ aria-labelledby="delete-certificate" aria-hidden="true">
           src="../../../../assets/images/cross.svg" /></button>
     </div>
     <div class="modal-body">
-      <!-- <form [formGroup]="languageForm"> -->  
-
         <div class="form-group">
           <h2 class="text-center font_16 f-poppins">Do you really want to delete this?</h2>
         </div>
@@ -1051,10 +978,7 @@ aria-labelledby="delete-certificate" aria-hidden="true">
           data-bs-dismiss="modal">{{'No'| translate }}</button>
         <button (click)="deleteSchoolCertificate()" type="button"
           class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step" data-bs-dismiss="modal">{{'Yes'| translate }}</button>
-
-      </div>
-      <!-- </form> -->
-  
+      </div>  
     </div>
   </div>
 </div>
@@ -1070,15 +994,9 @@ aria-labelledby="delete-class" aria-hidden="true">
           src="../../../../assets/images/cross.svg" /></button>
     </div>
     <div class="modal-body">
-      <!-- <form [formGroup]="languageForm"> -->
-
         <div class="form-group">
           <h2 class="text-center font_16 f-poppins">Do you really want to delete this?</h2>
         </div>
-
-        <!-- <div class="form-group">
-          <input type="text" placeholder="{{'TypeLanguageToAdd'| translate }}" name="schoolname" class="form-control w-100">
-        </div> -->
         <div
         class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-2 mt-4">
         <button type="button"
@@ -1086,10 +1004,7 @@ aria-labelledby="delete-class" aria-hidden="true">
           data-bs-dismiss="modal">{{'No'| translate }}</button>
         <button (click)="deleteClassCourse()" type="button"
           class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step" data-bs-dismiss="modal">{{'Yes'| translate }}</button>
-
       </div>
-      <!-- </form> -->
-  
     </div>
   </div>
 </div>

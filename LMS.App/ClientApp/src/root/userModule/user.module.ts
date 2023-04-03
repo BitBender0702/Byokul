@@ -7,7 +7,6 @@ import { JoinMeetingComponent } from '../root/bigBlueButton/joinMeeting/joinMeet
 import { UserHomeComponent } from './pages/userHome/userHome.component';
 import { CreateSchoolComponent } from '../root/school/createSchool/createSchool.component';
 import { VideoPlayerComponent } from '../root/videoPlayer/video-player.component';
-import { EditSchoolComponent } from '../root/school/editSchool/editSchool.component';
 import { SharedModule } from '../root/sharedModule/shared.module';
 import { CreateClassComponent } from '../root/class/createClass/createClass.component';
 import { CreateCourseComponent } from '../root/course/createCourse/createCourse.component';
@@ -114,9 +113,6 @@ const routes: Routes = [
   },
   {
     path: 'createCourse',component:CreateCourseComponent, canActivate: [AuthGuard]
-  },
-  {
-    path: 'editSchool',component:EditSchoolComponent
   },
   {
     path: 'videoPlayer',component:VideoPlayerComponent

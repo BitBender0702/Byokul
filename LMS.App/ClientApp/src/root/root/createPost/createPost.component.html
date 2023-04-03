@@ -1,15 +1,5 @@
-
-  <!-- <section class="f-poppins">
-
-    <button #openModal class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins" data-bs-toggle="modal"
-    data-bs-target="#openModal"><img src="../../../../assets/images/Setting-solid-dark.svg" class="me-2" /> {{'EditProfile'| translate }}
-    </button>
-
-    <div class="main_content"> -->
-
-      <button hidden #openAttachmentModal type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44" data-bs-toggle="modal"
+<button hidden #openAttachmentModal type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44" data-bs-toggle="modal"
       data-bs-target="#add-attachment">Create Post</button>
-      <!-- <div *ngIf="isDataLoaded"> -->
       <div appBsModal  bsModal #createPostModal="bs-modal" class="modal fade edit-school-modal show d-block" id="create-post" tabindex="-1"
         aria-labelledby="create-post" aria-hidden="true" [config]="{backdrop: 'static'}" area-modal="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -49,84 +39,6 @@
               <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade" id="live-tab-pane" role="tabpanel" aria-labelledby="live-tab"
                   tabindex="0">
-                  <!-- <form class="createLiveForm"  [formGroup]="createLiveForm">
-                    <div class="form-group">
-                      <label class="font_10">School Name</label>
-                      <input hidden type="text" name="schoolId" class="form-control w-100">
-                      <input readonly type="text" [placeholder]="parentDetails?.schoolName" name="schoolName" class="form-control w-100">
-
-                    </div>
-                    <div class="form-group">
-                      <label class="font_10">Title</label>
-                      <input formControlName="title" type="text" placeholder="Title" class="form-control w-100">
-                    </div>
-
-                    <div class="form-group">
-                      <label class="font_10">Body Text</label>
-                      <input formControlName="bodyText" type="text" class="form-control" placeholder="Body Text" />
-                    </div>
-                    <div class="form-group">
-                      <label class="font_10">Cover Letter before Stream start</label>
-                      <input formControlName="coverLetter" type="text" class="form-control" placeholder="Cover Letter before Stream start" />
-                    </div>
-                    <div class="form-group">
-                      <label class="font_10">Comment Throttling</label>
-                      <select class="form-select rounded-8 w-100">
-                        <option value="1">1 Comment per 1 Minute</option>
-                        <option value="2">1 Comment per 1 Minute</option>
-                        <option value="3">1 Comment per 1 Minute</option>
-                      </select>
-                    </div>
-                    <div class="text-line-border position-relative text-center my-4">
-                      <span class="line-text font_12 text_ltgray fw_400 text-center">Select Media Sources</span>
-                    </div>
-                    <div class="media-sourcebtn d-flex gap-2 f-monteserrat">
-                      <button type="button" class="post-attch-btn btn web-cmbtn font_12 text_dark m-0"><span
-                          class="text-center"><img src="../../../assets/images/webkam.svg" class=" mx-auto mb-2 dark-attach" /> <img
-                            src="../../../assets/images/webkam-light.svg" class="mx-auto mb-2 light-attach" />Webcam</span></button>
-                      <button type="button" class="post-attch-btn btn web-cmbtn font_12 text_dark m-0"><span
-                          class="text-center"><i class="fa-solid fa-gear d-block mx-auto mb-2 font_20"></i> Streaming
-                          Software</span></button>
-                      <button type="button" class="post-attch-btn btn web-cmbtn font_12 text_dark m-0"><span
-                          class="text-center"><i class="fa-solid fa-microphone d-block mx-auto mb-2 font_20"></i>
-                          Microphone</span></button>
-                      <button type="button" class="post-attch-btn btn web-cmbtn font_12 text_dark m-0">
-                        <span class="text-center"><img src="../../../assets/images/screen-share.svg"
-                            class=" mx-auto mb-2 dark-attach" /> <img src="../../../assets/images/screen-share-light.svg"
-                            class="mx-auto mb-2 light-attach" />Screen share</span></button>
-                    </div>
-
-                    <div
-                    class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 cr-postfooter pt-0">
-                    <div class="post-bot-left d-flex">
-                      <button type="button"
-                        class="post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center active"><img
-                          src="../../../assets/images/gallery-dark.svg" class="dark-attach" /><img src="../../../assets/images/gallery-light.svg"
-                          class="light-attach" /></button>
-                      <button type="button"
-                        class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"><img
-                          src="../../../assets/images/Video-dark.svg" class="dark-attach" /><img src="../../../assets/images/Video-light.svg"
-                          class="light-attach" /></button>
-                      <button type="button"
-                        class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"><img
-                          src="../../../assets/images/Paper-Plus-dark.svg" class="dark-attach" /><img src="../../../assets/images/Paper-Plus-light.svg"
-                          class="light-attach" /></button>
-                      <button type="button"
-                        class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"><img
-                          src="../../../assets/images/hashtag-dark.svg" class="dark-attach" /><img src="../../../assets/images/hashtag-light.svg"
-                          class="light-attach" /></button>
-                    </div>
-                    <div class="post-bot-right d-flex justify-content-end">
-                      <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 delay-btn"><i
-                          class="fa-solid fa-clock"></i></button>
-                      <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 lg_btn"><img
-                          src="../../../assets/images/Send-light.svg" class="me-2" /> Nov 15, 2022 at 14:30 </button>
-                    </div>
-      
-                  </div>
-                  </form> -->
-
-
                 </div>
                 <div class="tab-pane fade show active" id="Post-tab-pane" role="tabpanel" aria-labelledby="Post-tab" tabindex="0">
                   <form [formGroup]="createPostForm">
@@ -172,30 +84,16 @@
 
 
                   <div class="img-upl-result pt-4">
-                    <!-- <div class="position-relative d-inline-block">
-                        <video #videoPlayer class="video-js" preload="metadata" style="height: 300px;"></video>
-                    </div> -->
-                    <!-- <div *ngFor="let image of uploadImage"> -->
                      <span *ngFor="let image of uploadImage" class="position-relative d-inline-block">
                        <img [src]="image.imageUrl" style="height: 150px; max-width: 100%;">
                        <button (click)="removeUploadImage(image)" type="button"
                         class="btn dl-post-img d-flex align-items-center justify-content-center rounded-circle position-absolute"><i
                           class="fa-solid fa-xmark"></i></button>
                      </span>
-                    <!-- </div> -->
-                    <!-- <div *ngFor="let video of uploadVideo"> -->
                     <span *ngFor="let video of uploadVideo" class="position-relative d-inline-block">
                       <div class="videofile">
-                        <video preload="metadata" style="height: 300px;">
-                          <source [src]="video.videoUrl" type="video/mp4"/>
-                        </video>
+                        <img [src]="video.videoUrl" style="height: 150px; max-width: 100%;">
                       </div>
-                      <!-- <div>
-                      <video #videoPlayer class="video-js vjs-default-skin" preload="metadata" style="height: 300px;">
-                         <source [src]="video.videoUrl" type="video/mp4">
-                      </video>
-                      </div> -->
-                      <!-- <img [src]="video.videoUrl" style="height: 150px; max-width: 100%;"/> -->
                       <button (click)="removeUploadVideo(video)" type="button"
                         class="btn dl-post-img d-flex align-items-center justify-content-center rounded-circle position-absolute"><i
                           class="fa-solid fa-xmark"></i></button>
@@ -210,7 +108,6 @@
                         <br>
                       </div> 
                   </div> 
-                  <!-- </div> -->
                   <div class="teacher-tags tag-box hashtag_post mt-4 mb-2 hover-tags">
                     <span *ngFor="let tag of tagLists" class="custom-tag">{{tag}}
                       <button (click)="removeTags(tag)" class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
@@ -236,47 +133,16 @@
                         src="../../../assets/images/gallery-dark.svg" class="dark-attach" /><img src="../../../assets/images/gallery-light.svg"
                         class="light-attach" />
                     </label>
-
-                    <!-- <button  type="button"
-                      class="post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center active"><img
-                        src="../../../assets/images/gallery-dark.svg" class="dark-attach" /><img src="../../../assets/images/gallery-light.svg"
-                        class="light-attach" /></button> -->
-
-
                         <label class="custom-file-upload post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center">
                           <input id="hideFileType" type="file" (change)="handleVideoInput($event)" accept="video/*"/>
                           <img
                           src="../../../assets/images/Video-dark.svg" class="dark-attach" /><img src="../../../assets/images/Video-light.svg"
                           class="light-attach" />
                         </label>
-
-                    <!-- <input type="file" [size]="60" (change)="handleVideoInput($event)" accept="video/*"> -->
-
-                    <!-- <button type="button"
-                      class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"><img
-                        src="../../../assets/images/Video-dark.svg" class="dark-attach" /><img src="../../../assets/images/Video-light.svg"
-                        class="light-attach" /></button> -->
-
-
-                    <!-- <label class="custom-file-upload post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center">
-                        <input type="file" (change)="handleAttachmentInput($event)" accept="pdf/*"/>
-                        <img
-                        src="../../../assets/images/Paper-Plus-dark.svg" class="dark-attach" /><img src="../../../assets/images/Paper-Plus-light.svg"
-                        class="light-attach" />
-                    </label> -->
-
                     <button (click)="AttachmentModalOpen(attachmentTemplate)" type="button"     
                     class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"
                     ><img src="../../../assets/images/Paper-Plus-dark.svg"
                       class="dark-attach" /><img src="../../../assets/images/Paper-Plus-light.svg" class="light-attach" /></button>
-
-                    <!-- <input type="file" [size]="60" (change)="handleAttachmentInput($event)" accept="pdf/*"> -->
-
-                    <!-- <button type="button"
-                      class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"><img
-                        src="../../../assets/images/Paper-Plus-dark.svg" class="dark-attach" /><img src="../../../assets/images/Paper-Plus-light.svg"
-                        class="light-attach" /></button> -->
-
                     <button (click)="openTagModal(tagTemplate)" type="button"
                       class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"><img
                         src="../../../assets/images/hashtag-dark.svg" class="dark-attach" /><img src="../../../assets/images/hashtag-light.svg"
@@ -287,7 +153,6 @@
                       <img src="../../../assets/images/clock-orange.svg" />                     
                         <p-calendar formControlName="scheduleTime" [(ngModel)]="scheduleTime" [showTime]="true"></p-calendar>
                       </button>
-                      
                       
                     <button *ngIf="scheduleTime != undefined" (click)="savePost()" type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 lg_btn"><img
                         src="../../../assets/images/Send-light.svg" class="me-2" />{{scheduleTime | date : "MMMM d, y"}} at {{scheduleTime | date : "H:mm"}}</button>
@@ -336,23 +201,14 @@
                         <div *ngIf ="uploadReel!= null">
                         <span class="position-relative d-inline-block">
                           <div class="videofile">
-                            <video preload="metadata">
-                              <source [src]="uploadReel" type="video/mp4"/>
-                            </video>
+                            <img [src]="uploadReel.videoUrl">
                           </div>
                           <button (click)="removeUploadReel(uploadReel)" type="button"
                             class="btn dl-post-img d-flex align-items-center justify-content-center rounded-circle position-absolute"><i
                               class="fa-solid fa-xmark"></i></button>
                         </span>
                       </div>
-                        
-                        <!-- <div class="videofile">
-                          <video preload="metadata">
-                            <source [src]="uploadReel" type="video/mp4"/>
-                          </video>
-                        </div> -->
-
-                        <!-- <img style="width: 200px;" class="mb-3" [src]="uploadReel"> -->
+ 
                       </div>
                     </div>
                   </div>
@@ -397,48 +253,12 @@
                     Please select valid date!
                   </small>
                   </form>
-                </div>
-
-                  
+                </div>   
               </div>
             </div>
-            <!-- <div
-              class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 cr-postfooter pt-0">
-              <div class="post-bot-left d-flex">
-                <button type="button"
-                  class="post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center active"><img
-                    src="../../../assets/images/gallery-dark.svg" class="dark-attach" /><img src="../../../assets/images/gallery-light.svg"
-                    class="light-attach" /></button>
-                <button type="button"
-                  class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"><img
-                    src="../../../assets/images/Video-dark.svg" class="dark-attach" /><img src="../../../assets/images/Video-light.svg"
-                    class="light-attach" /></button>
-                <button type="button"
-                  class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"><img
-                    src="../../../assets/images/Paper-Plus-dark.svg" class="dark-attach" /><img src="../../../assets/images/Paper-Plus-light.svg"
-                    class="light-attach" /></button>
-                <button type="button"
-                  class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"><img
-                    src="../../../assets/images/hashtag-dark.svg" class="dark-attach" /><img src="../../../assets/images/hashtag-light.svg"
-                    class="light-attach" /></button>
-              </div>
-              <div class="post-bot-right d-flex justify-content-end">
-                <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 delay-btn"><i
-                    class="fa-solid fa-clock"></i></button>
-                <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 lg_btn"><img
-                    src="../../../assets/images/Send-light.svg" class="me-2" /> Nov 15, 2022 at 14:30 </button>
-              </div>
-
-            </div> -->
           </div>
         </div>
       </div>
-
-    <!-- </div>
-
-  </section> -->
-
-
 
   <!---- add tag Modal -->
   <div class="modal fade edit-school-modal" id="add-tag" tabindex="-1" aria-labelledby="add-tag" aria-hidden="true">
@@ -452,7 +272,6 @@
         <div class="modal-body">
           <div class="form-group latest-form">
             <label class="font_10">{{'Tags'| translate }}</label>
-            <!-- <p-chips class="form-control" placeholder="{{'TypeToAdd'| translate }}" [(ngModel)]="tagValues" separator=","></p-chips> -->
             <input [(ngModel)]="tags" (keyup.enter)="onEnter(tags)" type="text" class="form-control" placeholder="{{'TypeToAdd'| translate }}">
           </div>
           <div class="teacher-tags tag-box hashtag_post mt-4 mb-2 hover-tags">

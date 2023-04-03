@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LMS.App.Controllers
 {
-    [DisableRequestSizeLimit]
     [Authorize]
     [Route("posts")]
     public class PostController : BaseController
@@ -23,6 +22,7 @@ namespace LMS.App.Controllers
             _postService = postService;
         }
 
+        [DisableRequestSizeLimit, RequestFormLimits(MultipartBodyLengthLimit = int.MaxValue, ValueLengthLimit = int.MaxValue)]
         [Route("savePost")]
         [HttpPost]
         public async Task<IActionResult> SavePost(PostViewModel postViewModel)

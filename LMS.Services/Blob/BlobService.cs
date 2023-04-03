@@ -23,7 +23,7 @@ namespace LMS.Services.Blob
             _hubContext = hubContext;
         }
 
-        public async Task<string> UploadFileAsync(IFormFile asset, string containerName)
+        public async Task<string> UploadFileAsync(IFormFile asset, string containerName, bool showProgress)
         {
 
             byte[] buffer = new byte[2000000];
@@ -67,17 +67,21 @@ namespace LMS.Services.Blob
                         {
                             await blockBlob.UploadFromByteArrayAsync(buffer, 0, bytesRead);
                             uploadedBytes += bytesRead;
-                            var currentProgress = (uploadedBytes * 100 / totalBytes);
-                            if (currentProgress != lastProgress)
+
+                            if (showProgress)
                             {
-                             await _hubContext.Clients.All.SendAsync("UpdateProgress", (int)currentProgress, asset.FileName);
-                             lastProgress = currentProgress;
+                                var currentProgress = (uploadedBytes * 100 / totalBytes);
+                                if (currentProgress != lastProgress)
+                                {
+                                    await _hubContext.Clients.All.SendAsync("UpdateProgress", (int)currentProgress, asset.FileName);
+                                    lastProgress = currentProgress;
+                                }
                             }
                         }
                     }
 
                     imageFullPath = blockBlob.Uri.ToString();
-                }
+                       }
             }
             catch (Exception ex)
             {
@@ -85,10 +89,6 @@ namespace LMS.Services.Blob
             }
             return imageFullPath;
         }
-
-
-
-
 
         public async Task<string> UploadVideoAsync(Stream stream, string containerName,
             string fileName, string fileType)

@@ -42,9 +42,6 @@ namespace LMS.App.Controllers
 
             var langList = JsonConvert.DeserializeObject<string[]>(schoolViewModel.LanguageIds.First());
             schoolViewModel.LanguageIds = langList;
-            //TODO: Need to Implement Blob here
-            //await _blobService.DeleteFile("", containerName);
-            //schoolViewModel.Avatar = await _blobService.UploadFileAsync(schoolViewModel.AvatarImage, containerName);
             var userId = await GetUserIdAsync(this._userManager);
             var schoolId = await _schoolService.SaveNewSchool(schoolViewModel, userId);
             return Ok(schoolId);

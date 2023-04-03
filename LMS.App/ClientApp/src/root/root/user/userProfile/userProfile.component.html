@@ -41,7 +41,6 @@
               class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn follow-btn">{{'Follow'| translate }}</button>
               <button *ngIf="!isOwner && isFollowed" (click)="followUser(user.id,'UnFollow')" type="button"
               class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn follow-btn">{{'UnFollow'| translate }}</button>
-                          <!-- <button *ngIf="!isOwner" type="button" [routerLink]="['/user/chat', user.id,1]" -->
 
               <button *ngIf="!isOwner" type="button" (click)="openChat(user.id,'1')"
               class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn me-0 minw-142">{{'Message'| translate }}</button>
@@ -91,10 +90,6 @@
       </div>
       <hr class="hr-gray" />
 
-
-      <!-- <div class="tab-content" id="pills-tabContent"> -->
-        <!-- <div class="tab-pane fade show active" id="school-feed-tab-pane" role="tabpanel"
-          aria-labelledby="school-feed-tab" tabindex="0"> -->
           <div class="feed-section">
             <div class="feed-box position-relative">
               <reels-loading-spinner [reelsLoadingIcon]="reelsLoadingIcon" class="position-absolute translate-middle reel_spinner_position"></reels-loading-spinner>
@@ -111,38 +106,22 @@
                         <div class="feedimg-box position-relative text-light position-relative">
                           <a (click)="openReelsViewModal(postAttachment.id)" style="cursor: pointer;">
                             <div class="videofile">
-                              <video preload="metadata" style="height: 300px;">
-                                <source [src]="postAttachment.fileUrl" type="video/mp4"/>
-                              </video>
+                              <img style="height: 300px;" [src]="postAttachment.fileThumbnail">
                             </div>
                           </a>
-                            <!-- <img src="../../../../assets/images/feed1.jpg" /> -->
                             <div class="pinned-view d-flex  justify-content-between align-items-start">
                                 <button type="button" class="view font_12 bg-transparent border-0 text-light">
                                     <img src="../../../../assets/images/eye-light.svg" /> {{post.views.length}}
                                 </button>
-                                <!-- here is pinned for -->
                                   <button *ngIf="post.isPinned && isOwner" (click)="pinUnpinPost(post.id,false)" type="button" class="pinned bg-transparent border-0">
                                     <img src="../../../../assets/images/pinned-orange.svg" />
                                 </button>
                                 <button *ngIf="!post.isPinned && isOwner" (click)="pinUnpinPost(post.id,true)" type="button" class="pinned bg-transparent border-0">
                                   <img src="../../../../assets/images/pinned-gray.svg" />
                               </button>
-                                <!-- <button (click)="pinUnpinPost(postAttach.id)" type="button" class="pinned bg-transparent border-0">
-                                    <img src="../../../../assets/images/pinned-light.svg" />
-                                </button> -->
                             </div>
                             <div class="feed-name font_14 text_sec1">
                               <img [src]="post.parentImageUrl"/> {{post.parentName}}
-                              <!-- <div *ngIf="post.postAuthorType == 1">
-                                <img [src]="postAttachment.school.avatar"/> {{postAttachment.school.schoolName}}
-                              </div>
-                              <div *ngIf="post.postAuthorType == 2">
-                                <img [src]="postAttachment.class.avatar"/> {{postAttachment.class.className}}
-                              </div>
-                              <div *ngIf="post.postAuthorType == 4">
-                                <img [src]="postAttachment.user.avatar"/> {{postAttachment.user.firstName}}
-                              </div> -->
                             </div>
                             <div class="feed-title font_14 text_sec1 d-flex align-content-center fw_600">
                                 {{post.title}}
@@ -156,20 +135,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- <div class="school-profile-tabs d-flex align-content-center justify-content-end">
-          <div>
-            <button [ngClass]="isProfileGrid ? 'btn border-btn active d-inline-flex align-items-center justify-content-center' : 'btn border-btn d-inline-flex align-items-center justify-content-center'" (click)="profileGrid()" type="button"
-              id="list-btn">
-              <img src="../../../../assets/images/Filter.svg" />
-            </button>
-            <button [ngClass]="!isProfileGrid ? 'btn border-btn active d-inline-flex align-items-center justify-content-center' : 'btn border-btn d-inline-flex align-items-center justify-content-center'" (click)="profileList()" type="button" type="button"
-              id="grid-btn">
-              <img src="../../../../assets/images/Category.svg" />
-            </button>
-          </div>
-        </div> -->
-
         <div class="school-profile-tabs d-flex align-content-center justify-content-center">
         <div class="custom-tabs">
           <ul class="nav nav-tabs mb-3 border-0 before-none" id="myTab" role="tablist">
@@ -231,24 +196,10 @@
         </div>
       </div>
 
-      <!-- <div class="tab-pane fade show " id="classes-tab-pane" role="tabpanel" aria-labelledby="school-feed-tab"
-      tabindex="0">
-      <div class="list-schol-profile">
-        <div class="row">
-          <ng-container>
-<h1>Test212</h1>
-        </ng-container>
-        </div>
-      </div>
-    </div> -->
-          
-
       <div class="tab-content scroll-schoolTab" id="pills-tabContent" *ngIf="isProfileGrid && isPostTab">
         <div class="tab-pane fade show active" id="school-feed-tab-pane" role="tabpanel"
              aria-labelledby="school-feed-tab" tabindex="0">
             <div class="accordion" id="accordionPanelsStayOpenExample">
-
-          <!-- <div class="school-grid-view grid-active" *ngIf="isProfileGrid"> -->
             <ng-container *ngFor="let post of user.posts">
               <div *ngIf="post.postType == 1" class="school-grid-box position-relative">
               <div class="schoolgrid-header d-flex align-items-center position-relative">
@@ -258,7 +209,6 @@
                 <h2 class="d-inline-block font_20 fw_600 text_sec1 mb-0">{{post.title}}</h2>
                 <p class="font_14 school-grid-date d-inline-block mb-0">
                   {{post.dateTime | date : "MMMM d"}} - {{post.dateTime | date : "hh mm"}}
-                   <!-- <span class="fw_600 ">11:30 - 13:50</span> -->
                   </p>
                     <button *ngIf="post.isPinned && isOwner" (click)="pinUnpinPost(post.id,false)" type="button" class="bg-transparent border-0 pinned-grid-chat">
                       <img class="w-auto h-auto" src="../../../../assets/images/pinned-orange.svg" />
@@ -279,20 +229,15 @@
 
                     <div *ngIf="post.postAttachments.length == 1"  class="col-md-12 h-100">
                       <div class="school-large-thumbnail shadow-thumnail position-relative">
-
-                              <video *ngIf="post.postAttachments.length == 1 && post.postAttachments[0]?.fileType==2" (click)="openPostsViewModal(post)" preload="metadata" class="w-100" style="cursor: pointer;">
-                                <source [src]="post.postAttachments[0]?.fileUrl" type="video/mp4"/>
-                              </video>
-                                <img *ngIf="post.postAttachments[0]?.fileType==1" style="cursor: pointer;" (click)="openPostsViewModal(post)" class="w-100" [src]="post.postAttachments[0]?.fileUrl" />
+                              <img *ngIf="post.postAttachments.length == 1 && post.postAttachments[0]?.fileType==2" (click)="openPostsViewModal(post)" class="w-100" style="cursor: pointer;" [src]="post.postAttachments[0]?.fileThumbnail">
+                              <img *ngIf="post.postAttachments[0]?.fileType==1" style="cursor: pointer;" (click)="openPostsViewModal(post)" class="w-100" [src]="post.postAttachments[0]?.fileUrl" />
                       </div>
                   </div>
 
                   <div *ngIf="post.postAttachments.length == 2"  class="col-md-12 h-100">
                     <div class="school-large-thumbnail shadow-thumnail position-relative">
                         <ng-container *ngFor="let attachment of post.postAttachments">
-                      <video *ngIf="attachment?.fileType==2" (click)="openPostsViewModal(post)" preload="metadata" class="w-100" style="cursor: pointer;">
-                        <source [src]="attachment?.fileUrl" type="video/mp4"/>
-                      </video>
+                      <img *ngIf="attachment?.fileType==2" (click)="openPostsViewModal(post)" class="w-100" style="cursor: pointer;" [src]="attachment?.fileThumbnail">
                       <img style="height: 598px;cursor: pointer;" *ngIf="attachment?.fileType==1" (click)="openPostsViewModal(post)" class="w-100" [src]="attachment?.fileUrl" />
                        </ng-container>
 
@@ -301,10 +246,8 @@
 
                   <div *ngIf="post.postAttachments.length == 3" class="col-md-8 h-100">
                     <div class="school-large-thumbnail shadow-thumnail position-relative">
-                            <video *ngIf="post.postAttachments[0]?.fileType==2" (click)="openPostsViewModal(post)" preload="metadata" class="w-100" style="cursor: pointer;margin-top:-700px;">
-                              <source [src]="post.postAttachments[0]?.fileUrl" type="video/mp4"/>
-                            </video>
-                              <img *ngIf="post.postAttachments[0]?.fileType==1" style="cursor: pointer" class="w-100" (click)="openPostsViewModal(post)" [src]="post.postAttachments[0]?.fileUrl" />
+                            <img *ngIf="post.postAttachments[0]?.fileType==2" (click)="openPostsViewModal(post)" class="w-100" style="cursor: pointer;margin-top:-700px;" [src]="post.postAttachments[0]?.fileThumbnail">
+                            <img *ngIf="post.postAttachments[0]?.fileType==1" style="cursor: pointer" class="w-100" (click)="openPostsViewModal(post)" [src]="post.postAttachments[0]?.fileUrl" />
                     </div>
                  </div>
 
@@ -312,24 +255,18 @@
                   <div *ngIf="post.postAttachments.length == 3" class="col-md-4 h-100">
                       <div class="h-100 medium_thumbox d-flex">
                           <div class="medium-thumnail">
-                            <video *ngIf="post.postAttachments[1]?.fileType==2" (click)="openPostsViewModal(post)" preload="metadata" class="w-100" style="cursor: pointer;">
-                              <source [src]="post.postAttachments[1]?.fileUrl" type="video/mp4"/>
-                            </video>
-                              <img *ngIf="post.postAttachments[1]?.fileType==1" class="w-100" (click)="openPostsViewModal(post)" [src]="post.postAttachments[1]?.fileUrl" style="cursor: pointer;" />                                        </div>
+                            <img *ngIf="post.postAttachments[1]?.fileType==2" (click)="openPostsViewModal(post)" class="w-100" style="cursor: pointer;" [src]="post.postAttachments[1]?.fileThumbnail">
+                            <img *ngIf="post.postAttachments[1]?.fileType==1" class="w-100" (click)="openPostsViewModal(post)" [src]="post.postAttachments[1]?.fileUrl" style="cursor: pointer;" />                                        </div>
                           <div class="medium-thumnail">
-                            <video *ngIf="post.postAttachments[2]?.fileType==2" (click)="openPostsViewModal(post)" preload="metadata" class="w-100" style="cursor: pointer;">
-                              <source [src]="post.postAttachments[2]?.fileUrl" type="video/mp4"/>
-                            </video>
-                              <img *ngIf="post.postAttachments[2]?.fileType==1" class="w-100" (click)="openPostsViewModal(post)" [src]="post.postAttachments[2]?.fileUrl" style="cursor: pointer;"/>                                        </div>
+                            <img *ngIf="post.postAttachments[2]?.fileType==2" (click)="openPostsViewModal(post)" class="w-100" style="cursor: pointer;" [src]="post.postAttachments[2]?.fileUrl">
+                            <img *ngIf="post.postAttachments[2]?.fileType==1" class="w-100" (click)="openPostsViewModal(post)" [src]="post.postAttachments[2]?.fileUrl" style="cursor: pointer;"/>                                        </div>
                       </div>
                   </div>
 
                   <div *ngIf="post.postAttachments.length > 3" class="col-md-8 h-100">
                     <div class="school-large-thumbnail shadow-thumnail position-relative">
-                            <video *ngIf="post.postAttachments[0]?.fileType==2" (click)="openPostsViewModal(post)" preload="metadata" class="w-100" style="cursor: pointer;">
-                              <source [src]="post.postAttachments[0]?.fileUrl" type="video/mp4"/>
-                            </video>
-                              <img *ngIf="post.postAttachments[0]?.fileType==1" class="w-100" (click)="openPostsViewModal(post)" [src]="post.postAttachments[0]?.fileUrl" style="cursor: pointer;"/>
+                            <img *ngIf="post.postAttachments[0]?.fileType==2" (click)="openPostsViewModal(post)" class="w-100" style="cursor: pointer;" [src]="post.postAttachments[0]?.fileThumbnail">
+                            <img *ngIf="post.postAttachments[0]?.fileType==1" class="w-100" (click)="openPostsViewModal(post)" [src]="post.postAttachments[0]?.fileUrl" style="cursor: pointer;"/>
                     </div>
                  </div>
 
@@ -341,10 +278,8 @@
                             +{{post.postAttachments.length - 3}}</div>                                    
                          </div>
                       <div class="medium-thumnail">
-                        <video *ngIf="post.postAttachments[1]?.fileType==2" (click)="openPostsViewModal(post)" preload="metadata" class="w-100" style="cursor: pointer;">
-                          <source [src]="post.postAttachments[1]?.fileUrl" type="video/mp4"/>
-                        </video>
-                          <img *ngIf="post.postAttachments[1]?.fileType==1" class="w-100" (click)="openPostsViewModal(post)" [src]="post.postAttachments[1]?.fileUrl" style="cursor: pointer;"/>                                        </div>
+                        <img *ngIf="post.postAttachments[1]?.fileType==2" (click)="openPostsViewModal(post)" class="w-100" style="cursor: pointer;" [src]="post.postAttachments[1]?.fileThumbnail">
+                        <img *ngIf="post.postAttachments[1]?.fileType==1" class="w-100" (click)="openPostsViewModal(post)" [src]="post.postAttachments[1]?.fileUrl" style="cursor: pointer;"/>                                        </div>
                   </div>
               </div>
                   </div>
@@ -404,10 +339,8 @@
                   <span class="textBlack">{{post.postSharedCount}}</span>
                 </button>
               </div>
-
               </div>
           </ng-container>
-          <!-- </div> -->
           </div>
           </div>
           </div>
@@ -420,7 +353,7 @@
                   <div *ngFor="let postAttachment of gridItemInfo.postAttachments" class="school-grid-thumbnail">
                     <slide *ngIf="postAttachment.fileType==2">
                     <div *ngIf="postAttachment?.fileType==2" class="videofile">
-                      <video style="height: 300px;" controls>
+                      <video #videoPlayer controls class="video-js vjs-big-play-centered" preload="metadata">
                         <source [src]="postAttachment?.fileUrl" type="video/mp4"/>
                       </video>
                     </div>
@@ -512,10 +445,8 @@
                         <div class="col-md-12">
                           <div class="school-large-thumbnail shadow-thumnail position-relative">
                             <div *ngIf="post.postAttachments[0]?.fileUrl == null">{{post.description}}</div>
-                            <div *ngIf="post.postAttachments[0]?.fileUrl?.fileType==2" class="videofile">
-                              <video preload="metadata" style="height: 300px;">
-                                <source [src]="post.postAttachments[0]?.fileUrl" type="video/mp4"/>
-                              </video>
+                            <div *ngIf="post.postAttachments[0]?.fileType==2" class="videofile">
+                              <img style="height: 300px;" [src]="post.postAttachments[0]?.fileThumbnail">
                             </div>
                             <img *ngIf="post.postAttachments[0]?.fileType==1" class="w-100" [src]="post.postAttachments[0].fileUrl" />
                           </div>
@@ -528,7 +459,6 @@
             </ng-container>
             </div>
           </div>
-        <!-- </div> -->
 
         <div class="tab-pane fade show " id="classes-tab-pane" role="tabpanel" aria-labelledby="school-feed-tab"
           tabindex="0" *ngIf="isSavedPostList && !isPostTab && !isSavedClassCourseTab && isSavedPostTab">
@@ -552,7 +482,6 @@
                 <h2 class="d-inline-block font_20 fw_600 text_sec1 mb-0">{{post.title}}</h2>
                 <p class="font_14 school-grid-date d-inline-block mb-0">
                   {{post.dateTime | date : "MMMM d"}} - {{post.dateTime | date : "hh mm"}}
-                   <!-- <span class="fw_600 ">11:30 - 13:50</span> -->
                 </p>
                     <button *ngIf="post.isPinned && isOwner" (click)="pinUnpinPost(post.id,false)" type="button" class="bg-transparent border-0 pinned-grid-chat">
                       <img class="w-auto h-auto" src="../../../../assets/images/pinned-orange.svg" />
@@ -700,11 +629,8 @@
 
               </div>
           </ng-container>
-
             </div>
           </div>
-
-
         </div>
 
         <div class="list-schol-profile" *ngIf="!isSavedPostList && !isPostTab && !isSavedClassCourseTab && isSavedPostTab">
@@ -823,7 +749,7 @@
                       <div class="col-md-12">
                         <div class="school-large-thumbnail shadow-thumnail position-relative">
                           <div *ngIf="post.postAttachments[0]?.fileUrl == null">{{post.description}}</div>
-                          <div *ngIf="post.postAttachments[0]?.fileUrl?.fileType==2" class="videofile">
+                          <div *ngIf="post.postAttachments[0]?.fileType==2" class="videofile">
                             <video preload="metadata" style="height: 300px;">
                               <source [src]="post.postAttachments[0]?.fileUrl" type="video/mp4"/>
                             </video>

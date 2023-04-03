@@ -30,6 +30,8 @@ import { SharePostComponent } from '../../sharePost/sharePost.component';
 import { SchoolService } from 'src/root/service/school.service';
 import { ClassCourseModalComponent } from '../../ClassCourseModal/classCourseModal.component';
 import { LikeUnlikeClassCourse } from 'src/root/interfaces/school/likeUnlikeClassCourse';
+import videojs from 'video.js';
+import 'video.js/dist/video-js.css';
 
 export const userImageResponse =new Subject<{userAvatar : string}>();  
 export const chatResponse =new Subject<{receiverId : string , type: string,chatTypeId:string}>();  
@@ -101,6 +103,7 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
     @ViewChild('closeLanguageModal') closeLanguageModal!: ElementRef;
     @ViewChild('imageFile') imageFile!: ElementRef;
     @ViewChild('carousel') carousel!: ElementRef;
+    @ViewChild('videoPlayer') videoPlayer!: ElementRef;
 
     @ViewChild('createPostModal', { static: true }) createPostModal!: CreatePostComponent;
 
@@ -150,19 +153,13 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
   
     ngOnInit(): void {
       this.postLoadingIcon = false;
-      //document.addEventListener('scroll', this.myScrollFunction, false);
-
       this.validToken = localStorage.getItem("jwt")?? '';
       this.loadingIcon = true;
-      // this.blockUI();
       var selectedLang = localStorage.getItem("selectedLanguage");
       this.translate.use(selectedLang?? '');
-      
       var id = this.route.snapshot.paramMap.get('userId');
       this.userId = id ?? '';
 
-      
-      // this.getByUserId(this.userId);
       this._userService.getUserById(this.userId).subscribe((response) => {
         this.frontEndPageNumber = 1;
         this.reelsPageNumber = 1;
@@ -172,11 +169,9 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
         this.loadingIcon = false;
         this.scrolled = false;
         this.postLoadingIcon = false;
-        // this.unblockUI();
         this.isDataLoaded = true;
         this.cd.detectChanges();
         this.addEventListnerOnCarousel();
-
       });
 
       this._userService.getLanguageList().subscribe((response) => {
@@ -213,27 +208,21 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
       userImageResponse.subscribe(response => {
         
         this.user.avatar = response.userAvatar;
-        // this.ngOnInit();
       });
 
       addPostResponse.subscribe(response => {
         this.loadingIcon = true;
         this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post created successfully'});
         this._userService.getUserById(this.userId).subscribe((response) => {
-          
           this.user = response;
           this.followersLength = this.user.followers.length;
           this.isOwnerOrNot();
           this.loadingIcon = false;
-          // this.unblockUI();
           this.isDataLoaded = true;
           this.scrolled = false;
           this.postLoadingIcon = false;
         });
       });
-      
-
-
     }
 
     getByUserId(){
@@ -246,15 +235,8 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
         this.postLoadingIcon = false;
         this.scrollFeedResponseCount = response.length; 
         this.scrolled = false;
-        // this.followersLength = this.user.followers.length;
-        // this.isOwnerOrNot();
-        // this.loadingIcon = false;
-        // // this.unblockUI();
-        // this.isDataLoaded = true;
       });
     }
-
-    
 
     ngOnDestroy(): void {
       if(this.userParamsData$) this.userParamsData$.unsubscribe();
@@ -295,10 +277,6 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
       }
      }
 
-    
-   
-
-
     InitializeFollowUnfollowUser(){
       this.followUnfollowUser = {
         id: '',
@@ -337,9 +315,7 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
             this.isOwner = false;
             this.isFollowedOwnerOrNot(decodedJwtData.jti);
           }
-
         }
-        
     }
 
     isFollowedOwnerOrNot(userId:string){
@@ -351,15 +327,6 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
       else{
         this.isFollowed = false;
       }
-    //   const isFound = this.user.followers.some(element => {
-    //     if (element.followerId === 1) {
-    //       this.isFollowed = true;
-    //     }
-    //     else{
-    //     this.isFollowed = false;
-    //     }
-
-    // }
   }
 
     captureLanguageId(event: any) {
@@ -504,8 +471,6 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
       return;
     }
     this.loadingIcon = true;
-    // this.blockUI();
-
     if(!this.uploadImage){
       this.fileToUpload.append('avatar', this.editUser.avatar);
 
@@ -580,7 +545,11 @@ profileGrid(){
 
 profileList(){
   this.isProfileGrid = false;
-
+  this.isGridItemInfo = true;
+  this.cd.detectChanges();
+  if(this.videoPlayer != undefined){
+    videojs(this.videoPlayer.nativeElement, {autoplay: false});
+  }
 }
 
 savePostGrid(){
@@ -679,31 +648,25 @@ likeUnlikePosts(postId:string, isLike:boolean,postType:number,post:any,from:numb
   this._postService.likeUnlikePost(this.likeUnlikePost).subscribe((response) => {
     if(from == 1){
      this.user.posts.filter((p : any) => p.id == postId).forEach( (item : any) => {
-      // var itemss = item.likes;
       item.likes = response;
     }); 
   }
   else{
     this.savedPostsList.filter((p : any) => p.id == postId).forEach( (item : any) => {
-      // var itemss = item.likes;
       item.likes = response;
   });
 }
-
-
-
-
      this.InitializeLikeUnlikePost();
      console.log("succes");
   });
-
-
 }
 
 showPostDiv(postId:string){
   var posts: any[] = this.user.posts;
   this.gridItemInfo = posts.find(x => x.id == postId);
   this.isGridItemInfo = true;
+  this.cd.detectChanges();
+  videojs(this.videoPlayer.nativeElement, {autoplay: false});
   this.addPostView(this.gridItemInfo.id);
 }
 
@@ -718,7 +681,6 @@ showSavedClassCourseDiv(id:string){
   var classCourses: any[] = this.savedClassCourseList;
   this.savedClassCourseGridInfo = classCourses.find(x => x.id == id);
   this.isSavedClassCourseGridInfo = true;
-  //this.addPostView(this.savedClassCourseGridInfo.id);
 }
 
 addPostView(postId:string){
@@ -727,16 +689,9 @@ addPostView(postId:string){
    this.initializePostView();
   this.postView.postId = postId;
   this._postService.postView(this.postView).subscribe((response) => {
-    
     this.gridItemInfo.views.length = response;
-    // this.user.posts.filter((p : any) => p.id == postId).forEach( (item : any) => {
-    //  var itemss = item.likes;
-    //  item.likes = response;
    }); 
   }
-
- 
-
 }
 
 initializePostView(){
@@ -760,8 +715,6 @@ hideSavedClassCourseGridInfo(){
 
 openChat(userId:string,type:string){
 var chatTypeId = ''
-  // this.router.navigate(['user/chats', {chatHead_object: JSON.stringify({receiverId: userId, type : type,chatTypeId:''})}]);
-
   this.router.navigate(
     [`user/chats`],
     { state: { chatHead: {receiverId: userId, type : type,chatTypeId:''} } });
@@ -783,23 +736,16 @@ openSharePostModal(postId:string): void {
   this.bsModalService.show(SharePostComponent,{initialState});
 }
 
-// isSavedProfileLists(){
-//   this.cd.detectChanges();
-//   this.isSavedProfileList = true;
-// }
-
 GetSavedPostsByUser(userId:string){
   this.loadingIcon = true;
   this.isPostTab = false;
   this.isSavedClassCourseTab = false;
   this.isSavedPostTab = true;
   this.isSavedPostList = true;
-  //if(this.savedPostsList == undefined){
   this._postService.getSavedPostsByUser(userId,this.savedPostsPageNumber).subscribe((response) => {
     this.savedPostsList = response;
     this.loadingIcon = false;
    }); 
-  //}
 
 }
 
@@ -840,7 +786,6 @@ GetSavedClassCourseByUser(userId:string){
   this.isSavedPostTab = false;
   this.isSavedClassCourseTab = true;
   this.isSavedClassCourseList = true;
-  // if(this.savedClassCourseList == undefined){
   this._schoolService.getSavedClassCourse(userId,this.saveClassCoursePageNumber).subscribe((response) => {
     this.savedClassCourseList = response;
     this.postLoadingIcon = false;

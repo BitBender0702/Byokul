@@ -32,7 +32,7 @@ export class UserService{
     }
 
     getUserById(userId:string):Observable<any>{
-        return this.http.get(`${this.apiUrl}/users/getUser` + '?userId=' + userId);
+        return this.http.get(`${this.apiUrl}/users/getUser` + '?userId=' + userId, {headers: this.headers});
     }
 
     getLanguageList():Observable<any>{
@@ -71,7 +71,7 @@ export class UserService{
     }
 
     getUser(userId:string):Observable<any>{
-        return this.http.get(`${this.apiUrl}/users/getBasicUserInfo` + '?userId=' + userId);
+        return this.http.get(`${this.apiUrl}/users/getBasicUserInfo` + '?userId=' + userId, {headers: this.headers});
 
     }
 
@@ -123,7 +123,7 @@ export class UserService{
     }
 
     getUserByEmail(email:string):Observable<any>{
-        return this.http.get(`${this.apiUrl}/users/getUserByEmail` + '?email=' + email);
+        return this.http.get(`${this.apiUrl}/users/getUserByEmail` + '?email=' + email, {headers: this.headers});
     }
 
     getCountryList():Observable<any>{

@@ -100,7 +100,7 @@ namespace LMS.Services
 
             if (postViewModel.UploadVideos != null)
             {
-                await SaveUploadVideos(postViewModel.UploadVideos, postViewModel.Id, createdById);
+                await SaveUploadVideos(postViewModel.UploadVideos, postViewModel.UploadVideosThumbnail, postViewModel.Id, createdById);
             }
 
             if (postViewModel.UploadAttachments != null)
@@ -131,7 +131,7 @@ namespace LMS.Services
             foreach (var image in uploadImages)
             {
                 var postAttachment = new PostAttachmentViewModel();
-                postAttachment.FileUrl = await _blobService.UploadFileAsync(image, containerName);
+                postAttachment.FileUrl = await _blobService.UploadFileAsync(image, containerName, false);
 
                 var postAttach = new PostAttachment
                 {
@@ -148,19 +148,37 @@ namespace LMS.Services
             }
         }
 
-        async Task SaveUploadVideos(IEnumerable<IFormFile> uploadVideos, Guid postId, string createdById)
+        async Task SaveUploadVideos(IEnumerable<IFormFile> uploadVideos, IEnumerable<IFormFile> uploadVideosThumbnail, Guid postId, string createdById)
         {
             string containerName = "posts";
+            string videoThumbnailName = "";
             foreach (var video in uploadVideos)
             {
+                int lastDotIndex = video.FileName.LastIndexOf(".");
+                if (lastDotIndex != -1)
+                {
+                    videoThumbnailName = video.FileName.Substring(0,lastDotIndex + 1);
+                }
+
+                var isVideoThumbnailExist = uploadVideosThumbnail.Where(x => x.FileName.Substring(0,x.FileName.LastIndexOf(".") + 1) == videoThumbnailName).FirstOrDefault();
+
+
+
                 var postAttachment = new PostAttachmentViewModel();
-                postAttachment.FileUrl = await _blobService.UploadFileAsync(video, containerName);
+                postAttachment.FileUrl = await _blobService.UploadFileAsync(video, containerName,true);
+
+                if (isVideoThumbnailExist != null)
+                {
+                    postAttachment.FileThumbnail = await _blobService.UploadFileAsync(isVideoThumbnailExist, containerName,false);
+
+                }
 
                 var postAttach = new PostAttachment
                 {
                     PostId = postId,
                     FileName = video.FileName,
                     FileUrl = postAttachment.FileUrl,
+                    FileThumbnail = postAttachment.FileThumbnail,
                     FileType = (int)FileTypeEnum.Video,
                     CreatedById = createdById,
                     CreatedOn = DateTime.UtcNow
@@ -177,7 +195,7 @@ namespace LMS.Services
             foreach (var attachment in uploadAttachments)
             {
                 var postAttachment = new PostAttachmentViewModel();
-                postAttachment.FileUrl = await _blobService.UploadFileAsync(attachment, containerName);
+                postAttachment.FileUrl = await _blobService.UploadFileAsync(attachment, containerName, false);
 
                 var postAttach = new PostAttachment
                 {

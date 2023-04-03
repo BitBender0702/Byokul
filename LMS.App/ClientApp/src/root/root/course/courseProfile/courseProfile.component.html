@@ -149,9 +149,7 @@
                           <div class="feedimg-box position-relative text-light position-relative">
                             <a (click)="openReelsViewModal(postAttachment.id)" style="cursor: pointer;">
                               <div class="videofile">
-                                <video preload="metadata" style="height: 300px;">
-                                  <source [src]="postAttachment.fileUrl" type="video/mp4"/>
-                                </video>
+                                <img style="height: 300px;" [src]="postAttachment.fileUrl">
                               </div>
                             </a>
                               <div class="pinned-view d-flex  justify-content-between align-items-start">
@@ -213,9 +211,7 @@
 
                       <div *ngIf="post.postAttachments.length == 1" class="col-md-12 h-100">
                         <div class="school-large-thumbnail shadow-thumnail position-relative">
-                          <video *ngIf="post.postAttachments.length == 1 && post.postAttachments[0]?.fileType==2" (click)="openPostsViewModal(post)" preload="metadata" class="w-100" style="cursor: pointer;">
-                            <source [src]="post.postAttachments[0]?.fileUrl" type="video/mp4"/>
-                          </video>
+                          <img *ngIf="post.postAttachments.length == 1 && post.postAttachments[0]?.fileType==2" (click)="openPostsViewModal(post)" class="w-100" style="cursor: pointer;" [src]="post.postAttachments[0]?.fileThumbnail">
                           <img *ngIf="post.postAttachments[0]?.fileType==1" (click)="openPostsViewModal(post)" class="w-100" [src]="post.postAttachments[0]?.fileUrl" />
                         </div>
                       </div>
@@ -223,9 +219,7 @@
                       <div *ngIf="post.postAttachments.length == 2"  class="col-md-12 h-100">
                         <div class="school-large-thumbnail shadow-thumnail position-relative">
                           <ng-container *ngFor="let attachment of post.postAttachments">
-                           <video *ngIf="attachment?.fileType==2" (click)="openPostsViewModal(post)" preload="metadata" class="w-100" style="cursor: pointer;">
-                            <source [src]="attachment?.fileUrl" type="video/mp4"/>
-                           </video>
+                           <img *ngIf="attachment?.fileType==2" (click)="openPostsViewModal(post)" class="w-100" style="cursor: pointer;" [src]="attachment?.fileThumbnail">
                             <img style="height: 598px;" *ngIf="attachment?.fileType==1" (click)="openPostsViewModal(post)" class="w-100" [src]="attachment?.fileUrl" />
                           </ng-container>
                         </div>
@@ -233,18 +227,14 @@
 
                       <div *ngIf="post.postAttachments.length == 3" class="col-md-8 h-100">
                         <div class="school-large-thumbnail shadow-thumnail position-relative">
-                              <video *ngIf="post.postAttachments[0]?.fileType==2" (click)="openPostsViewModal(post)" preload="metadata" class="w-100" style="cursor: pointer;margin-top:-700px;">
-                                <source [src]="post.postAttachments[0]?.fileUrl" type="video/mp4"/>
-                              </video>
+                              <img *ngIf="post.postAttachments[0]?.fileType==2" (click)="openPostsViewModal(post)" class="w-100" style="cursor: pointer;margin-top:-700px;" [src]="post.postAttachments[0]?.fileThumbnail">
                               <img *ngIf="post.postAttachments[0]?.fileType==1" class="w-100" (click)="openPostsViewModal(post)" [src]="post.postAttachments[0]?.fileUrl" />
                         </div>
                      </div>
 
                      <div *ngIf="post.postAttachments.length > 3" class="col-md-8 h-100">
                       <div class="school-large-thumbnail shadow-thumnail position-relative">
-                              <video *ngIf="post.postAttachments[0]?.fileType==2" (click)="openPostsViewModal(post)" preload="metadata" class="w-100" style="cursor: pointer;">
-                                <source [src]="post.postAttachments[0]?.fileUrl" type="video/mp4"/>
-                              </video>
+                              <img *ngIf="post.postAttachments[0]?.fileType==2" (click)="openPostsViewModal(post)" class="w-100" style="cursor: pointer;" [src]="post.postAttachments[0]?.fileThumbnail">
                               <img *ngIf="post.postAttachments[0]?.fileType==1" class="w-100" (click)="openPostsViewModal(post)" [src]="post.postAttachments[0]?.fileUrl" />
                       </div>
                    </div>
@@ -257,9 +247,7 @@
                               +{{post.postAttachments.length - 3}}</div>                                    
                            </div>
                         <div class="medium-thumnail">
-                          <video *ngIf="post.postAttachments[1]?.fileType==2" (click)="openPostsViewModal(post)" preload="metadata" class="w-100" style="cursor: pointer;">
-                            <source [src]="post.postAttachments[1]?.fileUrl" type="video/mp4"/>
-                          </video>
+                          <img *ngIf="post.postAttachments[1]?.fileType==2" (click)="openPostsViewModal(post)" class="w-100" style="cursor: pointer;" [src]="post.postAttachments[1]?.fileThumbnail">
                           <img *ngIf="post.postAttachments[1]?.fileType==1" class="w-100" (click)="openPostsViewModal(post)" [src]="post.postAttachments[2]?.fileUrl" style="cursor: pointer;"/>                                        </div>
                     </div>
                         </div>
@@ -334,7 +322,10 @@
                     <div *ngFor="let postAttachment of gridItemInfo.postAttachments" class="school-grid-thumbnail">
                       <slide *ngIf="postAttachment.fileType==2">
                       <div *ngIf="postAttachment?.fileType==2" class="videofile">
-                        <video style="height: 300px;" controls>
+                        <!-- <video style="height: 300px;" controls>
+                          <source [src]="postAttachment?.fileUrl" type="video/mp4"/>
+                        </video> -->
+                        <video #videoPlayer controls class="video-js vjs-big-play-centered" preload="metadata">
                           <source [src]="postAttachment?.fileUrl" type="video/mp4"/>
                         </video>
                       </div>
@@ -424,11 +415,9 @@
                                 <div class="row gx-1">
                                     <div class="col-md-12">
                                         <div class="school-large-thumbnail shadow-thumnail position-relative">
-                                            <div *ngIf="post.postAttachments[0]?.fileUrl == null">{{post.description}}</div>
+                                            <div *ngIf="post.postAttachments[0]?.fileUrl == null" class="description_scroll">{{post.description}}</div>
                                           <div *ngIf="post.postAttachments[0]?.fileType==2" class="videofile">
-                                            <video preload="metadata" style="height: 300px;">
-                                              <source [src]="post.postAttachments[0]?.fileUrl" type="video/mp4"/>
-                                            </video>
+                                            <img preload="metadata" style="height: 300px;" [src]="post.postAttachments[0]?.fileThumbnail">
                                           </div>
                                             <img *ngIf="post.postAttachments[0]?.fileType==1" class="w-100" [src]="post.postAttachments[0]?.fileUrl" />
                                         </div>
