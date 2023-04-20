@@ -66,6 +66,11 @@ export class UserService{
         return this.http.get(`${this.apiUrl}/users/userFollowers`, {params:queryParams,headers: this.headers})
     }
 
+    getUserFollowings(userId:string,pageNumber:number,searchString:string):Observable<any>{
+        let queryParams = new HttpParams().append("userId",userId).append("pageNumber",pageNumber).append("searchString",searchString);
+        return this.http.get(`${this.apiUrl}/users/userFollowings`, {params:queryParams,headers: this.headers})
+    }
+
     banFollower(followerId:any): Observable<any> {
         return this.http.post(`${this.apiUrl}/users/banFollower` + '?followerId=' + followerId,'',{headers: this.headers});
     }
@@ -90,7 +95,7 @@ export class UserService{
     }
 
     saveUserPreference(preferenceString:string): Observable<any> {
-        return this.http.post(`${this.apiUrl}/users/saveUserPreference` + '?preferenceString=' + preferenceString,'');
+        return this.http.post(`${this.apiUrl}/users/saveUserPreference` + '?preferenceString=' + preferenceString,'',{headers: this.headers});
     }
 
     shareDataSubject = new Subject<any>(); //Decalring new RxJs Subject
@@ -127,11 +132,19 @@ export class UserService{
     }
 
     getCountryList():Observable<any>{
-        return this.http.get(`${this.apiUrl}/users/countryList`);
+        return this.http.get(`${this.apiUrl}/users/getCountries`,{headers: this.headers});
     }
 
-    getCityList(countryId:string):Observable<any>{
-        return this.http.get(`${this.apiUrl}/users/cityList` + '?countryId=' + countryId);
+    getCityList(countryName:string):Observable<any>{
+        return this.http.post(`${this.apiUrl}/users/getCities` + '?countryName=' + countryName,'',{headers: this.headers});
     }   
+
+    deleteSchoolTeacher(schoolId:string):Observable<any>{
+        return this.http.post(`${this.apiUrl}/users/deleteSchoolTeacher` + '?schoolId=' + schoolId,'',{headers: this.headers});
+    }
+
+    deleteSchoolStudent(schoolId:string):Observable<any>{
+        return this.http.post(`${this.apiUrl}/users/deleteSchoolStudent` + '?schoolId=' + schoolId,'',{headers: this.headers});
+    }
 
 }

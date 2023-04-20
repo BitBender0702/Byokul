@@ -143,8 +143,8 @@ namespace LMS.App.Controllers
         [HttpPost]
         public async Task<IActionResult> ConvertToClass(string courseName)
         {
-            await _courseService.ConvertToClass(courseName);
-            return Ok();
+            var response = await _courseService.ConvertToClass(courseName);
+            return Ok(response);
         }
 
         [Route("getCourseByName")]

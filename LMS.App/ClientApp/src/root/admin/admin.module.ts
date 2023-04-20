@@ -14,33 +14,34 @@ import { RegisteredCoursesComponent } from './registeredCourses/registeredCourse
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { AuthGuard } from '../service/auth.guard';
 
 const routes: Routes = [
   {
     path: '',
     redirectTo:'adminHome',
-    component: AdminHomeComponent
+    component: AdminHomeComponent, canActivate: [AuthGuard]
   },
 
   {
     path: 'adminHome',
-    component: AdminHomeComponent
+    component: AdminHomeComponent, canActivate: [AuthGuard]
   },
   {
     path: 'registeredUsers',
-    component: RegisteredUsersComponent
+    component: RegisteredUsersComponent, canActivate: [AuthGuard]
   },
   {
     path: 'registeredSchools',
-    component: RegisteredSchoolsComponent
+    component: RegisteredSchoolsComponent, canActivate: [AuthGuard]
   },
   {
     path: 'registeredClasses',
-    component: RegisteredClassesComponent
+    component: RegisteredClassesComponent, canActivate: [AuthGuard]
   },
   {
     path: 'registeredCourses',
-    component: RegisteredCoursesComponent
+    component: RegisteredCoursesComponent, canActivate: [AuthGuard]
   }
 ];
 

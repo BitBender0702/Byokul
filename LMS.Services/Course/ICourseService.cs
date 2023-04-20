@@ -1,4 +1,5 @@
-﻿using LMS.Common.ViewModels.Common;
+﻿using LMS.Common.ViewModels.Class;
+using LMS.Common.ViewModels.Common;
 using LMS.Common.ViewModels.Course;
 using LMS.Common.ViewModels.Post;
 using LMS.Common.ViewModels.School;
@@ -24,7 +25,7 @@ namespace LMS.Services
         Task DeleteCourseTeacher(CourseTeacherViewModel model);
         Task SaveCourseCertificates(SaveCourseCertificateViewModel model);
         Task DeleteCourseCertificate(CourseCertificateViewModel model);
-        Task<bool> ConvertToClass(string courseName);
+        Task<ClassViewModel> ConvertToClass(string courseName);
         Task<CourseViewModel> GetCourseByName(string courseName, string schoolName);
         Task<bool> IsCourseNameExist(string className);
         Task<List<CourseLikeViewModel>> GetLikesOnCourse(Guid courseId);

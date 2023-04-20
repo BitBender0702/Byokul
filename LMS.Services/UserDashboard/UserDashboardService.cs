@@ -60,20 +60,22 @@ namespace LMS.Services.UserDashboard
             model.OwnedSchools = OwnedSchools;
 
             // owned classes
-            var classes = await _classRepository.GetAll().Where(x => x.CreatedById == userId && !x.IsCourse).ToListAsync();
+            var classes = await _classRepository.GetAll().Include(x => x.School).Where(x => x.CreatedById == userId && !x.IsCourse).ToListAsync();
             var OwnedClasses = _mapper.Map<List<ClassViewModel>>(classes);
             model.OwnedClasses = OwnedClasses;            
 
             // owned courses
             var courses = await _courseRepository.GetAll().Where(x => x.CreatedById == userId).ToListAsync();
 
-            var classAsCourse = await _classRepository.GetAll().Where(x => x.IsCourse && x.CreatedById == userId).ToListAsync();
+            var classAsCourse = await _classRepository.GetAll().Include(x => x.School).Where(x => x.IsCourse && x.CreatedById == userId).ToListAsync();
 
             foreach (var classInfo in classAsCourse)
             {
                 var course = new Course();
                 course.CourseId = classInfo.ClassId;
                 course.CourseName = classInfo.ClassName;
+                course.School = classInfo.School;
+                course.Avatar = classInfo.Avatar;
                 courses.Add(course);
             }
 

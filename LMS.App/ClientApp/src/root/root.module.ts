@@ -35,7 +35,7 @@ import { CreateCourseComponent } from './root/course/createCourse/createCourse.c
 import { SharedModule } from './root/sharedModule/shared.module';
 
 import { PreloadAllModules } from '@angular/router'; 
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { MyEarningsComponent } from './root/myEarnings/myEarnings.component';
 import { ReelsViewComponent } from './root/reels/reelsView.component';
 import { BlockUIModule } from 'ng-block-ui';
@@ -67,6 +67,7 @@ import { SharePostComponent } from './root/sharePost/sharePost.component';
 import { EarningsComponent } from './root/earnings/earnings.component';
 import { FileStorageComponent } from './root/fileStorage/fileStorage.component';
 import { PaginatorModule } from 'primeng/paginator';
+import { UserFollowingsComponent } from './root/user/userFollowings/userFollowings.component';
 
 
 const routes: Routes = [
@@ -115,6 +116,7 @@ const routes: Routes = [
     UserFeedComponent,
     ReelsViewComponent,
     UserFollowersComponent,
+    UserFollowingsComponent,
     SchoolFollowersComponent,
     PostViewComponent,
     ClassCourseModalComponent,
@@ -169,7 +171,7 @@ const routes: Routes = [
   ],
 
   exports: [RouterModule,SharedModule,ModalModule],
-  providers: [],
+  providers: [DatePipe ],
   bootstrap: [RootComponent]
 })
 export class RootModule { }

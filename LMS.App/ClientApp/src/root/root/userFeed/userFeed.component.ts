@@ -12,13 +12,15 @@ import { NotificationService } from 'src/root/service/notification.service';
 import { PostService } from 'src/root/service/post.service';
 import { SchoolService } from 'src/root/service/school.service';
 import { UserService } from 'src/root/service/user.service';
-import { CreatePostComponent } from '../createPost/createPost.component';
-import { PostViewComponent } from '../postView/postView.component';
+import { CreatePostComponent, addPostResponse } from '../createPost/createPost.component';
+import { PostViewComponent, savedPostResponse } from '../postView/postView.component';
 import { ReelsViewComponent } from '../reels/reelsView.component';
 import { SharePostComponent } from '../sharePost/sharePost.component';
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
 import { MultilingualComponent } from '../sharedModule/Multilingual/multilingual.component';
+import { AuthService } from 'src/root/service/auth.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'post-view',
@@ -54,6 +56,7 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit {
     gridItemInfoForGlobal:any;
     isGridItemInfoForGlobal: boolean = false;
     private _postService;
+    private _authService;
     itemsPerSlide = 7;
     singleSlideOffset = true;
     noWrap = true;
@@ -81,13 +84,14 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit {
     isGlobalReelsExist:boolean = false;
     isMyFeedPostsExist:boolean = false;
     isMyFeedReelsExist:boolean = false;
+    addPostSubscription!: Subscription;
+    savedPostSubscription!: Subscription;
 
-
-
-    constructor(injector: Injector,private bsModalService: BsModalService,notificationService:NotificationService,postService: PostService,public userService:UserService, public options: ModalOptions,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,public messageService:MessageService,private cd: ChangeDetectorRef) { 
+    constructor(injector: Injector,private authService:AuthService,private bsModalService: BsModalService,notificationService:NotificationService,postService: PostService,public userService:UserService, public options: ModalOptions,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,public messageService:MessageService,private cd: ChangeDetectorRef) { 
       super(injector);
       this._userService = userService;
       this._postService = postService;
+      this._authService = authService;
       this._notificationService = notificationService;
     }
 
@@ -103,6 +107,7 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit {
     ngOnInit(): void {
       this.postLoadingIcon = false;
       this.loadingIcon = true;
+      this._authService.loginState$.next(true);
       this.isOwnerOrNot();
         this._userService.getMyFeed(1,this.myFeedsPageNumber,this.searchString).subscribe((response) => {
           this.isGlobalFeed = false;
@@ -132,6 +137,24 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit {
 
           this.getGlobalFeedsData();
           this.InitializeLikeUnlikePost();
+
+          if(!this.addPostSubscription){
+           this.addPostSubscription = addPostResponse.subscribe((response) => {
+              this.messageService.add({severity: 'success',summary: 'Success',life: 3000,detail: 'Post created successfully',
+              });
+            });
+          }
+
+          if(!this.savedPostSubscription){
+            this.savedPostSubscription = savedPostResponse.subscribe(response => {
+              if(response.isPostSaved){
+                this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post saved successfully'});
+              }
+              if(!response.isPostSaved){
+                this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post removed successfully'});
+              }
+            });
+          }
     }
 
     checkMyFeedExist(){

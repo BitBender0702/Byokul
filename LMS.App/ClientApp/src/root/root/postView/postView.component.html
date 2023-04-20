@@ -1,5 +1,5 @@
 <div *ngIf="isDataLoaded">
-<div *ngIf="!postPageView" appBsModal bsModal class="modal fade edit-school-modal show d-block post-view-large" id="create-post" tabindex="-1"
+<div *ngIf="!postPageView" appBsModal bsModal class="modal fade edit-school-modal show d-block post-view-large" id="modal-post" tabindex="-1"
 aria-labelledby="create-post" aria-hidden="true" area-modal="true">
 <div class="modal-dialog modal-dialog-centered">
   <div class="modal-content">
@@ -45,13 +45,13 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
             </div>
         </carousel>
     </div>
+    <p *ngIf="post.description != null && post.postAttachments.length>0" class="text_sec1 font_14 pt-3 overflow_paragraph">{{post.description}}</p>
     <div *ngIf="post.postAttachments.length==0">
       <h2>{{post.title}}</h2>
-      <br>
-      <p>{{post.description}}</p>
+      <p *ngIf="post.description != null" class="text_sec1 font_14 pt-3 overflow_paragraph" style="height:400px">{{post.description}}</p>
     </div>
-    </div>
-<div class="col-md-4">
+  </div>
+ <div class="col-md-4">
     <div>
       <div [ngClass]="showCommentsField? 'accordion-open d-block' : 'accordion-open d-none'" id="live-chat-open" style="display:none;">
       <div class="live-action-buttons d-flex justify-content-between">
@@ -66,8 +66,11 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
               <span *ngIf="likesLength != undefined && currentLikedPostId== post.id">{{likesLength}}</span>
               <span *ngIf="currentLikedPostId!= post.id">{{post.likes.length}}</span>
             </button>
-        <button type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Bookmark.svg"
-            class="d-block" /> 0</button>
+        <button (click)="savePost(post.id)" type="button" class="btn bg-transparent text_ltgray font_12">
+          <img *ngIf="!post.isPostSavedByCurrentUser" src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto" />
+          <img *ngIf="post.isPostSavedByCurrentUser" src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto">
+            {{post.savedPostsCount}}
+        </button>
         <button (click)="openSharePostModal(post.id)" type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Upload.svg"
             class="d-block" /> 0</button>
       </div>

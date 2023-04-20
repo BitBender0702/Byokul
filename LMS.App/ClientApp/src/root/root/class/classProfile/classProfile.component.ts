@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, Injector, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, Injector, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -15,14 +15,14 @@ import { ClassService } from 'src/root/service/class.service';
 import { PostService } from 'src/root/service/post.service';
 import { addPostResponse, CreatePostComponent } from '../../createPost/createPost.component';
 import { MultilingualComponent } from '../../sharedModule/Multilingual/multilingual.component';
-import { PostViewComponent, sharePostResponse } from '../../postView/postView.component';
+import { PostViewComponent, savedPostResponse, sharePostResponse } from '../../postView/postView.component';
 import { LikeUnlikePost } from 'src/root/interfaces/post/likeUnlikePost';
 import { PostView } from 'src/root/interfaces/post/postView';
 import { ClassView } from 'src/root/interfaces/class/classView';
 import { MessageService } from 'primeng/api';
 import { ReelsViewComponent } from '../../reels/reelsView.component';
 import { ownedClassResponse } from '../createClass/createClass.component';
-import { PaymentComponent } from '../../payment/payment.component';
+import { PaymentComponent, paymentStatusResponse } from '../../payment/payment.component';
 import { NotificationService } from 'src/root/service/notification.service';
 import { NotificationType } from 'src/root/interfaces/notification/notificationViewModel';
 import { CertificateViewComponent } from '../../certificateView/certificateView.component';
@@ -33,6 +33,14 @@ import { SharePostComponent } from '../../sharePost/sharePost.component';
 import { Constant } from 'src/root/interfaces/constant';
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
+import { AuthService } from 'src/root/service/auth.service';
+import { Subject, Subscription } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
+
+
+export const convertIntoCourseResponse =new Subject<{courseId: string, courseName : string,school:any,avatar:string}>(); 
+
 
 @Component({
     selector: 'classProfile-root',
@@ -41,11 +49,13 @@ import 'video.js/dist/video-js.css';
     providers: [MessageService]
   })
 
-export class ClassProfileComponent extends MultilingualComponent implements OnInit {
+export class ClassProfileComponent extends MultilingualComponent implements OnInit,OnDestroy,OnChanges {
 
+  private destroy$: Subject<void> = new Subject();
     private _classService;
     private _postService;
     private _notificationService;
+    private _authService;
     class:any;
     isProfileGrid:boolean = true;
     isOpenSidebar:boolean = false;
@@ -112,8 +122,9 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     hasIssueCertificatePermission!:boolean;
     hasManageTeachersPermission!:boolean;
     isOnInitInitialize:boolean = false;
-
-
+    savedPostSubscription!: Subscription;
+    addPostSubscription!: Subscription;
+    paymentStatusSubscription!:Subscription;
     public event: EventEmitter<any> = new EventEmitter();
 
     @ViewChild('closeEditModal') closeEditModal!: ElementRef;
@@ -127,31 +138,50 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     @ViewChild('createPostModal', { static: true }) createPostModal!: CreatePostComponent;
 
     isDataLoaded:boolean = false;
-    constructor(injector: Injector,notificationService:NotificationService,public messageService:MessageService,postService:PostService,private bsModalService: BsModalService,classService: ClassService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,private cd: ChangeDetectorRef) { 
+    constructor(injector: Injector,authService:AuthService,notificationService:NotificationService,public messageService:MessageService,postService:PostService,private bsModalService: BsModalService,classService: ClassService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,private cd: ChangeDetectorRef) { 
       super(injector);
         this._classService = classService;
         this._postService = postService;
         this._notificationService = notificationService;
-        this.classParamsData$ = this.route.params.subscribe(routeParams => {
-          // if(!this.loadingIcon)
-          this.ngOnInit();
+        this._authService = authService;
+        this.classParamsData$ = this.route.params.subscribe((routeParams) => {
+          if(this.savedPostSubscription){
+            this.savedPostSubscription.unsubscribe;
+          }
+          this.className = routeParams.className;
+          if (!this.loadingIcon && this.isOnInitInitialize)
+          {
+             this.ngOnInit();
+          }
         });
+    }
 
-        // this.classParamsData$ = this.route.params.subscribe((routeParams) => {
-        //   this.className = routeParams.className;
-        //   if (!this.loadingIcon && this.isOnInitInitialize) this.ngOnInit();
-        // });
+    ngOnDestroy(): void {
+      if(this.paymentStatusSubscription){
+        this.paymentStatusSubscription.unsubscribe();
+      }
+      this.destroy$.next();
+      this.destroy$.complete();
+      if(this.classParamsData$) 
+      {
+         this.classParamsData$.unsubscribe();
+      }
+    }
+
+    ngOnChanges(): void {
+     
     }
   
     ngOnInit(): void {
       this.isOnInitInitialize = true;
       this.postLoadingIcon = false;
+      this._authService.loginState$.next(true);
       this.validToken = localStorage.getItem("jwt")?? '';
       this.loadingIcon = true;
       var selectedLang = localStorage.getItem("selectedLanguage");
       this.translate.use(selectedLang?? '');
 
-      this.className = this.route.snapshot.paramMap.get('className')??'';
+      // this.className = this.route.snapshot.paramMap.get('className')??'';
 
       this._classService.getClassById(this.className.replace(" ","").toLowerCase()).subscribe((response) => {
         this.postsEndPageNumber = 1;
@@ -239,28 +269,53 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
 
        this.InitializeLikeUnlikePost();
 
-
-      addPostResponse.subscribe(response => {
-        this.loadingIcon = true;
-        this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post created successfully'});
-        this._classService.getClassById(this.className.replace(" ","").toLowerCase()).subscribe((response) => {
-          this.class = response;
-          this.isOwnerOrNot();
-          this.loadingIcon = false;
-          this.isDataLoaded = true;
-          this.postLoadingIcon = false;
-          this.scrolled = false;
-          this.addClassView(this.class.classId);
+       if(!this.addPostSubscription){
+       this.addPostSubscription = addPostResponse.subscribe(response => {
+          this.loadingIcon = true;
+          this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post created successfully'});
+          this._classService.getClassById(this.className.replace(" ","").toLowerCase()).subscribe((response) => {
+            this.class = response;
+            this.isOwnerOrNot();
+            this.loadingIcon = false;
+            this.isDataLoaded = true;
+            this.postLoadingIcon = false;
+            this.scrolled = false;
+            this.addClassView(this.class.classId);
+          });
         });
-      });
+      }
 
       sharePostResponse.subscribe(response => {
         this.messageService.add({severity:'info', summary:'Info',life: 3000, detail:'This class is private/paid, you cant share the post!'});
       });
-    }
 
-    ngOnDestroy(): void {
-      if(this.classParamsData$) this.classParamsData$.unsubscribe();
+      // const isCourseConvertIntoClass = JSON.parse(localStorage.getItem("isCourseConvertIntoClass")??'');
+      // if(isCourseConvertIntoClass){
+      //   this.cd.detectChanges();
+      //   this.messageService.add({severity: 'success',summary: 'Success',life: 3000,detail: 'Course converted into class successfully',}); 
+      //   localStorage.removeItem("isCourseConvertIntoClass");
+      // }
+
+      var isConvertIntoClass = history.state.convertIntoClass;
+      if(isConvertIntoClass){
+        this.cd.detectChanges();
+        this.messageService.add({severity: 'success',summary: 'Success',life: 3000,detail: 'Course converted into class successfully',}); 
+      }
+
+      if(!this.savedPostSubscription){
+        this.savedPostSubscription = savedPostResponse.subscribe(response => {
+          if(response.isPostSaved){
+            this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post saved successfully'});
+          }
+          if(!response.isPostSaved){
+            this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post removed successfully'});
+          }
+        });
+      }
+
+        this.paymentStatusSubscription = paymentStatusResponse.subscribe(response => {
+          this.messageService.add({severity:'info', summary:'Info',life: 3000, detail:'We will notify when payment will be successful'});
+        });
     }
 
     getClassDetails(classId:string){
@@ -593,6 +648,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
         }
 
         updateClass(){
+          debugger
            this.isSubmitted=true;
            if (!this.editClassForm.valid) {
            return;
@@ -623,6 +679,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
             ownedClassResponse.next({classId:response.classId, classAvatar:response.avatar, className:response.className,schoolName: this.schoolName, action:"update"});
 
             this.fileToUpload = new FormData();
+            this.cd.detectChanges();
             this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Class updated successfully'});
             // this.ngOnInit();
           });
@@ -731,11 +788,13 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     }
 
     convertToCourse(className:string,schoolName:string){
-      
       this._classService.convertToCourse(className.replace(" ","").toLowerCase()).subscribe((response) => {
-        
-        window.location.href = `profile/course/${schoolName.replace(" ","").toLowerCase()}/${className.replace(" ","").toLowerCase()}`;
-        // window.location.href=`user/courseProfile/${classId}`;
+        // localStorage.setItem("isClassConvertIntoCourse", JSON.stringify(true));
+
+        convertIntoCourseResponse.next({courseId:response.classId, courseName:response.className, avatar:response.avatar,school:response.school});
+        this.router.navigate([`profile/course/${schoolName.replace(" ","").toLowerCase()}/${className.replace(" ","").toLowerCase()}`],
+          { state: { convertIntoCourse: true } });
+        //window.location.href = `profile/course/${schoolName.replace(" ","").toLowerCase()}/${className.replace(" ","").toLowerCase()}`;
       });
     }
 
@@ -881,7 +940,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     }
 
     openPaymentModal(){
-      var classDetails = {"Id":this.class.classId,"Name":this.class.className,"Avatar":this.class.avatar}
+      var classDetails = {"id":this.class.classId,"name":this.class.className,"avatar":this.class.avatar,"type":1,"amount":this.class.price}
       const initialState = {
         paymentDetails: classDetails
       };
@@ -925,6 +984,18 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
        }
     
       this._postService.savePost(postId,this.userId).subscribe((result) => {
+      });
+    }
+
+    createCertificate(classId:string,type:string){
+      this._classService.getClassInfoForCertificate(classId).subscribe((response) => {
+        if(response.students.length == 0){
+          this.messageService.add({severity:'info', summary:'Info',life: 3000, detail:'Your class does not have any students yet'});
+          return;
+        }
+        else{
+          this.router.navigate([`user/createCertificate`],{ state: { certificateInfo: {id: classId, type : type,} } });
+        }
       });
     }
   

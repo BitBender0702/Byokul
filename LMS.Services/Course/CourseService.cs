@@ -234,6 +234,14 @@ namespace LMS.Services
             {
                 foreach (var teacherId in teacherIds)
                 {
+                    var isTeacherExist = await _courseTeacherRepository.GetAll().Where(x => x.TeacherId == new Guid(teacherId) && x.CourseId == courseId).FirstOrDefaultAsync();
+
+                    if (isTeacherExist != null)
+                    {
+                        _courseTeacherRepository.Delete(isTeacherExist.Id);
+                        _courseTeacherRepository.Save();
+                    }
+
                     var courseTeacher = new CourseTeacher
                     {
                         CourseId = courseId,
@@ -662,17 +670,16 @@ namespace LMS.Services
 
         }
 
-        public async Task<bool> ConvertToClass(string courseName)
+        public async Task<ClassViewModel> ConvertToClass(string courseName)
         {
-            Class classes = await _classRepository.GetAll().Where(x => x.ClassName.Replace(" ", "").ToLower() == courseName).FirstOrDefaultAsync();
+            Class classes = await _classRepository.GetAll().Include(x => x.School).Where(x => x.ClassName.Replace(" ", "").ToLower() == courseName).FirstOrDefaultAsync();
             if (classes != null)
             {
                 classes.IsCourse = false;
                 _classRepository.Update(classes);
                 _classRepository.Save();
-                return true;
             }
-            return false;
+            return _mapper.Map<ClassViewModel>(classes);
         }
 
         public async Task<CourseViewModel> GetCourseByName(string courseName, string schoolName)

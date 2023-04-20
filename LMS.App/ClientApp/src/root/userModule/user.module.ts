@@ -30,6 +30,7 @@ import { PostViewComponent } from '../root/postView/postView.component';
 import { AuthGuard } from '../service/auth.guard';
 import { EarningsComponent } from '../root/earnings/earnings.component';
 import { FileStorageComponent } from '../root/fileStorage/fileStorage.component';
+import { UserFollowingsComponent } from '../root/user/userFollowings/userFollowings.component';
 
 
 const routes: Routes = [
@@ -60,47 +61,47 @@ const routes: Routes = [
   {
     path: 'createSchool',component:CreateSchoolComponent, canActivate: [AuthGuard]
   },
-  // {
-  //   path: 'chat',component:ChatComponent
-  // },
   {
-    path: 'chats',component:ChatComponent
+    path: 'chats',component:ChatComponent, canActivate: [AuthGuard]
   },
   {
-    path: 'notifications',component:NotificationsComponent
+    path: 'notifications',component:NotificationsComponent, canActivate: [AuthGuard]
   },
   {
-    path: 'createCertificate/:from/:id',component:GenerateCertificateComponent
+    path: 'createCertificate',component:GenerateCertificateComponent, canActivate: [AuthGuard]
   },
   {
-    path: 'schoolProfile/:schoolId',component:SchoolProfileComponent
+    path: 'schoolProfile/:schoolId',component:SchoolProfileComponent, canActivate: [AuthGuard]
   },
   {
-    path: 'classProfile/:classId',component:ClassProfileComponent
+    path: 'classProfile/:classId',component:ClassProfileComponent, canActivate: [AuthGuard]
   },
   {
-    path: 'school/:schoolName/:className',component:ClassProfileComponent
+    path: 'school/:schoolName/:className',component:ClassProfileComponent, canActivate: [AuthGuard]
   },
   {
-    path: 'courseProfile/:courseId',component:CourseProfileComponent
+    path: 'courseProfile/:courseId',component:CourseProfileComponent, canActivate: [AuthGuard]
   },
   {
-    path: 'myEarnings',component:MyEarningsComponent
+    path: 'myEarnings',component:MyEarningsComponent, canActivate: [AuthGuard]
   },
   {
-    path: 'earnings',component:EarningsComponent
+    path: 'earnings',component:EarningsComponent, canActivate: [AuthGuard]
   },
   {
-    path: 'userProfile/:userId',component:UserProfileComponent
+    path: 'userProfile/:userId',component:UserProfileComponent, canActivate: [AuthGuard]
   },
   {
-    path: 'userFeed',component:UserFeedComponent
+    path: 'userFeed',component:UserFeedComponent, canActivate: [AuthGuard]
   },
   {
-    path: 'userFollowers/:userId',component:UserFollowersComponent
+    path: 'userFollowers/:userId',component:UserFollowersComponent, canActivate: [AuthGuard]
   },
   {
-    path: 'schoolFollowers/:schoolId',component:SchoolFollowersComponent
+    path: 'userFollowings/:userId',component:UserFollowingsComponent, canActivate: [AuthGuard]
+  },
+  {
+    path: 'schoolFollowers/:schoolId',component:SchoolFollowersComponent, canActivate: [AuthGuard]
   },
   {
     path: 'createClass/:id',component:CreateClassComponent, canActivate: [AuthGuard]
@@ -115,19 +116,19 @@ const routes: Routes = [
     path: 'createCourse',component:CreateCourseComponent, canActivate: [AuthGuard]
   },
   {
-    path: 'videoPlayer',component:VideoPlayerComponent
+    path: 'videoPlayer',component:VideoPlayerComponent, canActivate: [AuthGuard]
   },
   {
-    path: 'reels/:id',component:ReelsViewComponent
+    path: 'reels/:id',component:ReelsViewComponent, canActivate: [AuthGuard]
   },
   {
-    path: 'addTeacher/:userId',component:AddTeacherComponent
+    path: 'addTeacher/:userId',component:AddTeacherComponent, canActivate: [AuthGuard]
   },
   {
-    path: 'post/:id',component:PostViewComponent
+    path: 'post/:id',component:PostViewComponent, canActivate: [AuthGuard]
   },
   {
-    path: 'fileStorage/:id/:type',component:FileStorageComponent
+    path: 'fileStorage/:id/:type',component:FileStorageComponent, canActivate: [AuthGuard]
   },
 ];
 

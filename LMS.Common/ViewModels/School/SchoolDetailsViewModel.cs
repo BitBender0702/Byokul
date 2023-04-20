@@ -29,6 +29,7 @@ namespace LMS.Common.ViewModels.School
         public SpecializationViewModel Specialization { get; set; }
         public Guid? CountryId { get; set; }
         public CountryViewModel Country { get; set; }
+        public string? CountryName { get; set; }
         public IEnumerable<LanguageViewModel> Languages { get; set; }
         public string SchoolUrl { get; set; }
         public bool IsVarified { get; set; }

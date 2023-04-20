@@ -38,4 +38,9 @@ export class FileStorageService{
         let queryParams = new HttpParams().append("folderId",folderId).append("searchString",searchString);
         return this.http.get(`${this.apiUrl}/fileStorage/getNestedFolders`, {params:queryParams,headers: this.headers})
     }
+
+    getFileStorageAttachments():Observable<any>{
+        debugger
+        return this.http.get(`${this.apiUrl}/fileStorage/getAttachments`, {headers: this.headers})
+    }
 }

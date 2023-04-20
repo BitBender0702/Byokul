@@ -15,4 +15,5 @@ export interface CreateClassModel{
     studentIds:any;
     disciplineIds:any;
     classUrl:string;
+    tags:string;
 }

@@ -24,6 +24,7 @@ namespace LMS.Common.ViewModels.School
         public SpecializationViewModel Specialization { get; set; }
         public Guid? CountryId { get; set; }
         public CountryViewModel Country { get; set; }
+        public string CountryName { get; set; }
         public IEnumerable<SchoolCertificateViewModel> SchoolCertificates { get; set; }
         public IEnumerable<SchoolTagViewModel> SchoolTags { get; set; }
         public IFormFile AvatarImage { get; set; }

@@ -27,5 +27,6 @@ namespace LMS.Data.Entity
         public Guid? AccessibilityId { get; set; }
         public Accessibility Accessibility { get; set; }
         public bool IsBan { get; set; }
+        public string? CountryName { get; set; }
     }
 }

@@ -6,6 +6,7 @@ import { MessageService } from 'primeng/api';
 import { PermissionViewModel } from 'src/root/interfaces/permission/permissionViewModel';
 import { PermissionNameConstant } from 'src/root/interfaces/permissionNameConstant';
 import { AddTeacherViewModel } from 'src/root/interfaces/teacher/addTeacherViewModel';
+import { AuthService } from 'src/root/service/auth.service';
 import { SchoolService } from 'src/root/service/school.service';
 import { TeacherService } from 'src/root/service/teacher.service';
 import { UserService } from 'src/root/service/user.service';
@@ -29,6 +30,7 @@ export class AddTeacherComponent implements OnInit {
     private _schoolService;
     private _teacherService;
     private _userService;
+    private _authService;
     schoolList:any;
     classList:any;
     courseList:any;
@@ -47,14 +49,16 @@ export class AddTeacherComponent implements OnInit {
     allSchoolSelected!:boolean;
     selectedItems: string[] = [];
 
-    constructor(private fb: FormBuilder,private router: Router,private route: ActivatedRoute,schoolService:SchoolService,teacherService:TeacherService,userService:UserService,public messageService:MessageService, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
+    constructor(private fb: FormBuilder,private router: Router,private route: ActivatedRoute,authService:AuthService,schoolService:SchoolService,teacherService:TeacherService,userService:UserService,public messageService:MessageService, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
          this._schoolService = schoolService;
          this._teacherService = teacherService;
          this._userService = userService;
+         this._authService = authService;
     }
   
     ngOnInit(): void {
         this.loadingIcon = true;
+        this._authService.loginState$.next(true);
         this.loginUserId = this.route.snapshot.paramMap.get('userId')??'';
         this.isAddNewteacher = true;
 
@@ -109,6 +113,10 @@ export class AddTeacherComponent implements OnInit {
     }
 
     addTeacher(){
+        this.isSubmitted = true;
+        if (!this.createTeacherForm.valid) {
+            return;
+        }
         var teacherInfo =this.createTeacherForm.value;
         this.addTeacherViewmodel.firstName = teacherInfo.firstName;
         this.addTeacherViewmodel.lastName = teacherInfo.lastName;

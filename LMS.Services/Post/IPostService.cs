@@ -1,4 +1,5 @@
 ﻿using LMS.Common.ViewModels.Post;
+using LMS.Data.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,9 +21,6 @@ namespace LMS.Services
         Task SaveUserSharedPost(string userId, Guid postId);
         Task SavePostByUser(string userId, Guid postId);
         Task<List<PostDetailsViewModel>> GetSavedPostsByUser(string userId, int pageNumber);
-
-
-
 
     }
 }

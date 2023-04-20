@@ -2,13 +2,6 @@
   <section class="f-poppins">
     <div *ngIf="isOpenModal"><create-post [isOpenModal]="isOpenModal"></create-post></div>
         <div class="main_content">
-          <div class="create-post-header d-flex justify-content-between d-none d-xl-flex">
-            <div class="search-header position-relative">
-              <input type="search" class="form-control h_44" />
-              <button type="button" class="btn search-icon"><img src="../../../../assets/images/school/search-gray.svg" /></button>
-            </div>
-            <button (click)="createPost()" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44">{{'CreatePost'| translate }}</button>
-          </div>
           <div class="live-header d-flex align-items-center justify-content-between">
             <button (click)="back()" type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
                 src="../../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
@@ -23,16 +16,9 @@
                 </div>     
                </div>
           
-          <!-- <form id="regForm" class="step-form mx-auto f-monteserrat" [formGroup]="createSchoolForm"> -->
             <div id="regForm" class="step-form mx-auto f-monteserrat">
             <h3 *ngIf="step!=2" id="create_school" class="font_24 text_dark fw-bold text-center">{{'CreateSchool'| translate }}</h3>
 
-            <!-- One "tab" for each step in the form: -->
-            <!-- <div class="step-icon text-center">
-              <span class="step step1"></span>
-              <span class="step step2"></span>
-            </div> -->
-           
             <p-steps *ngIf="step<2" [model]="items" [(activeIndex)]="step" [readonly]="true">
             </p-steps>
 
@@ -58,12 +44,12 @@
 
               
               <div class="form-group">
-                <select class="form-select rounded-8 w-100" formControlName="countryId" aria-label="Default select example">
+                <select class="form-select rounded-8 w-100" formControlName="countryName" aria-label="Default select example">
                   <option value="" disabled selected hidden>Location</option>
-                  <option *ngFor="let country of countries;" [value]="country.id">{{country.name}}</option>
+                  <option *ngFor="let country of countries;" [value]="country.countryName">{{country.countryName}}</option>
                </select>
                <small class="p-error" style="color: orange;"
-               *ngIf="(isStepCompleted && createSchoolForm1.controls.countryId.errors)">This Field is required
+               *ngIf="(isStepCompleted && createSchoolForm1.controls.countryName.errors)">This Field is required
              </small>
               </div>
 

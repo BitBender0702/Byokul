@@ -27,7 +27,7 @@ namespace LMS.Services
         Task<ClassViewModel> GetBasicClassInfo(Guid classId);
         Task<ClassViewModel> GetClassByName(string className, string schoolName);
         Task<bool> IsClassNameExist(string className);
-        Task<bool> ConvertToCourse(string className);
+        Task<ClassViewModel> ConvertToCourse(string className);
         Task<List<ClassLikeViewModel>> GetLikesOnClass(Guid classId);
         Task<List<ClassViewsViewModel>> GetViewsOnClass(Guid classid);
         Task<List<ClassLikeViewModel>> LikeUnlikeClass(LikeUnlikeClassCourse model);

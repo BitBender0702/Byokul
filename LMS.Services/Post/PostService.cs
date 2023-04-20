@@ -15,6 +15,7 @@ using LMS.Common.ViewModels.User;
 using Newtonsoft.Json;
 using LMS.Common.ViewModels.Course;
 using LMS.Services.Chat;
+using LMS.Common.ViewModels.FileStorage;
 
 namespace LMS.Services
 {
@@ -65,6 +66,7 @@ namespace LMS.Services
         public async Task<PostViewModel> SavePost(PostViewModel postViewModel, string createdById)
         {
             postViewModel.PostTags = JsonConvert.DeserializeObject<string[]>(postViewModel.PostTags.First());
+            var uploadFromFileStorage = JsonConvert.DeserializeObject<IEnumerable<FileAttachmentViewModel>>(postViewModel.UploadFromFileStorage.First());
 
             var post = new Post
             {
@@ -113,6 +115,11 @@ namespace LMS.Services
                 await SavePostTags(postViewModel.PostTags, postViewModel.Id);
             }
 
+            if (postViewModel.UploadFromFileStorage != null)
+            {
+                await SaveFileStorageAttachments(uploadFromFileStorage, postViewModel.Id, createdById);
+            }
+
             if (postViewModel.PostType == (int)PostTypeEnum.Stream)
             {
                 var model = new NewMeetingViewModel();
@@ -122,7 +129,6 @@ namespace LMS.Services
             }
             postViewModel.Id = post.Id;
             return postViewModel;
-            //return _mapper.Map<PostViewModel>(post);
         }
 
         async Task SaveUploadImages(IEnumerable<IFormFile> uploadImages, Guid postId, string createdById)
@@ -211,6 +217,26 @@ namespace LMS.Services
                 _postAttachmentRepository.Save();
             }
         }
+
+        async Task SaveFileStorageAttachments(IEnumerable<FileAttachmentViewModel> attachments, Guid postId, string createdById)
+        {
+            foreach (var attachment in attachments)
+            {
+                var postAttach = new PostAttachment
+                {
+                    PostId = postId,
+                    FileName = attachment.FileName,
+                    FileUrl = attachment.FileUrl,
+                    FileType = (int)FileTypeEnum.Attachment,
+                    CreatedById = createdById,
+                    CreatedOn = DateTime.UtcNow
+                };
+
+                _postAttachmentRepository.Insert(postAttach);
+                _postAttachmentRepository.Save();
+            }
+        }
+
 
         async Task SavePostTags(IEnumerable<string> postTags, Guid postId)
         {
@@ -520,14 +546,6 @@ namespace LMS.Services
 
             return result;
         }
-
-        //public async Task<IEnumerable<PostAttachmentViewModel>> GetAttachmentsByPostId(Guid postId)
-        //{
-        //    var attacchmentList = await _postAttachmentRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.PostId == postId).OrderByDescending(x => x.IsPinned).ToListAsync();
-
-        //    var result = _mapper.Map<List<PostAttachmentViewModel>>(attacchmentList);
-        //    return result;
-        //}
 
     }
 }

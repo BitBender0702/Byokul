@@ -30,7 +30,7 @@
           </div>
           <div class="col-md-6">
             <div class="form-group">
-              <input type="date" class="form-control rounded-8" min="1960-12-31" max="9999-12-31" formControlName="dob" placeholder="DD/MM/YYYY">
+              <input type="date" class="form-control rounded-8" min="1903-12-31" max="9999-12-31" formControlName="dob" placeholder="DD/MM/YYYY">
               <small class="p-error" style="color: orange;"
               *ngIf="(isSubmitted && registrationForm.controls.dob.errors)">Date of birth is required
             </small>
@@ -54,9 +54,9 @@
           </div>
           <div class="col-md-6">
             <div class="form-group">
-              <select class="form-select rounded-8 w-100" formControlName="countryId" aria-label="Default select example" (change)="getCityByCountry($event.target)">
+              <select class="form-select rounded-8 w-100" formControlName="countryName" aria-label="Default select example" (change)="getCityByCountry($event.target)">
                 <option value="" disabled selected hidden>Country</option>
-                <option *ngFor="let country of countries;" [value]="country.id">{{country.name}}</option>
+                <option *ngFor="let country of countries;" [value]="country.countryName">{{country.countryName}}</option>
              </select>
              <small class="p-error" style="color: orange;"
              *ngIf="(isSubmitted && registrationForm.controls.countryId.errors)">This Field is required
@@ -65,9 +65,9 @@
           </div>
           <div class="col-md-6">
             <div class="form-group">
-              <select class="form-select rounded-8 w-100" formControlName="cityId" aria-label="Default select example">
+              <select class="form-select rounded-8 w-100" formControlName="cityName" aria-label="Default select example">
                 <option value="" disabled selected hidden>City</option>
-                 <option *ngFor="let city of cities;" [value]="city.id">{{city.name}}</option>
+                 <option *ngFor="let city of cities;" [value]="city">{{city}}</option>
              </select>
              <small class="p-error" style="color: orange;"
              *ngIf="(isSubmitted && registrationForm.controls.cityId.errors)">This Field is required
@@ -85,7 +85,7 @@
           <div class="col-md-12">
             <div class="form-group">
               <input type="password" class="form-control rounded-8" formControlName="password" placeholder="{{'Password'| translate }}">
-              <small style="color: rgb(17, 17, 17);">*Password length must be greater than 5 characters </small>
+              <small style="color: rgb(17, 17, 17);">*{{'PasswordLengthInfo'| translate }} </small>
               <br>
               <small class="p-error" style="color: orange;" *ngIf="isSubmitted && registrationForm.controls.password.errors">
                 Password is required.</small>

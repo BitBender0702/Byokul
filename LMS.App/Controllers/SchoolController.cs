@@ -76,7 +76,8 @@ namespace LMS.App.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllSchools()
         {
-            var response = await _schoolService.GetAllSchools();
+            var userId = await GetUserIdAsync(this._userManager);
+            var response = await _schoolService.GetAllSchools(userId);
             return Ok(response);
         }
 

@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using Country = LMS.Data.Entity.Country;
 
 namespace LMS.Services
 {
@@ -107,7 +108,7 @@ namespace LMS.Services
                 CreatedById = createdById,
                 CreatedOn = DateTime.UtcNow,
                 SpecializationId = schoolViewModel.SpecializationId,
-                CountryId = schoolViewModel.CountryId,
+                CountryName = schoolViewModel.CountryName,
                 SchoolUrl = schoolViewModel.SchoolUrl,
 
             };
@@ -370,9 +371,9 @@ namespace LMS.Services
             return response;
         }
 
-        public async Task<IEnumerable<SchoolViewModel>> GetAllSchools()
+        public async Task<IEnumerable<SchoolViewModel>> GetAllSchools(string userId)
         {
-            IEnumerable<SchoolViewModel> model = _schoolRepository.GetAll().Where(x => !x.IsDeleted).Select(x => new SchoolViewModel
+            IEnumerable<SchoolViewModel> model = _schoolRepository.GetAll().Where(x => !x.IsDeleted && x.CreatedById == userId).Select(x => new SchoolViewModel
             {
                 SchoolId = x.SchoolId,
                 SchoolName = x.SchoolName,
@@ -740,6 +741,14 @@ namespace LMS.Services
         {
             foreach (var teacherId in model.TeacherIds)
             {
+                var isTeacherExist = await _schoolTeacherRepository.GetAll().Where(x => x.TeacherId == new Guid (teacherId) && x.SchoolId == new Guid(model.SchoolId)).FirstOrDefaultAsync();
+
+                if (isTeacherExist != null)
+                {
+                    _schoolTeacherRepository.Delete(isTeacherExist.Id);
+                    _schoolTeacherRepository.Save();
+                }
+                
                 var schoolTeacher = new SchoolTeacher
                 {
                     SchoolId = new Guid(model.SchoolId),

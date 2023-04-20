@@ -19,14 +19,17 @@ import { UserService } from 'src/root/service/user.service';
 import { SharePostComponent } from '../sharePost/sharePost.component';
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
+import { MessageService } from 'primeng/api';
 
 export const sharePostResponse =new Subject<{}>();  
+export const savedPostResponse =new Subject<{isPostSaved:boolean}>();  
 
 
 @Component({
     selector: 'post-view',
     templateUrl: './postView.component.html',
-    styleUrls: ['./postView.component.css']
+    styleUrls: ['./postView.component.css'],
+    providers: [MessageService]
   })
 
 export class PostViewComponent implements OnInit,AfterViewInit {
@@ -62,7 +65,7 @@ export class PostViewComponent implements OnInit,AfterViewInit {
     commentsPageNumber:number = 1;
     isPlayerLoad:boolean = false;
 
-    constructor(private bsModalService: BsModalService,notificationService:NotificationService,chatService: ChatService,public signalRService: SignalrService,public postService:PostService, public options: ModalOptions,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,userService:UserService,private cd: ChangeDetectorRef) { 
+    constructor(private bsModalService: BsModalService,public messageService:MessageService,notificationService:NotificationService,chatService: ChatService,public signalRService: SignalrService,public postService:PostService, public options: ModalOptions,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,userService:UserService,private cd: ChangeDetectorRef) { 
          this._postService = postService;
          this._signalRService = signalRService;
          this._userService = userService;
@@ -85,7 +88,6 @@ export class PostViewComponent implements OnInit,AfterViewInit {
       }
 
       this._postService.getPostById(this.postId).subscribe((response) => {
-        debugger
         if(id != null){
           this.post = response;
           this.getComments();
@@ -102,19 +104,43 @@ export class PostViewComponent implements OnInit,AfterViewInit {
         }
         this.isDataLoaded = true;
         this.cd.detectChanges();
-        const player = videojs(this.videoPlayer.nativeElement, {autoplay: false,});
+        
 
+        var modal = document.getElementById('modal-post');
+        window.onclick = (event) => {
+         if (event.target == modal) {
+          if (modal != null) {
+           this.bsModalService.hide();
+          }
+        } 
+       }
+
+        const player = videojs(this.videoPlayer.nativeElement, {autoplay: false,});
         this.isPlayerLoad = true;
         this.cd.detectChanges();
         });
 
         this.InitializeLikeUnlikePost();
         this.getSenderInfo();
+        this.cd.detectChanges();
+
+        this.savePreferences(this.post.title,this.post.description,this.post.postTags);
     }
 
     ngAfterViewInit() {        
       setTimeout(() => this.scrollToBottom());
     } 
+
+    savePreferences(title:string,description:string,postTags:any){
+      var tagString = '';
+      postTags.forEach(function (item:any) {
+        tagString = tagString + item.postTagValue
+      }); 
+
+      var preferenceString = (title??'') + ' ' + (description??'') + ' ' + tagString??'';
+      this._userService.saveUserPreference(preferenceString).subscribe((response) => {
+      });
+    }
 
   scrollToBottom(): void {
       try {
@@ -371,6 +397,21 @@ export class PostViewComponent implements OnInit,AfterViewInit {
         left: 0,
         ...scrollOptions
       });
+    });
+  }
+
+  savePost(postId:string){
+    if(this.post.isPostSavedByCurrentUser){
+      this.post.savedPostsCount -= 1;
+      this.post.isPostSavedByCurrentUser = false;
+      savedPostResponse.next({isPostSaved:false}); 
+     }
+     else{
+      this.post.savedPostsCount += 1;
+      this.post.isPostSavedByCurrentUser = true;
+      savedPostResponse.next({isPostSaved:true}); 
+     }
+     this._postService.savePost(postId,this.userId).subscribe((result) => {
     });
   }
 

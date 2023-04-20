@@ -1455,6 +1455,10 @@ getTextMessage(evant:any,receiverId:string){
     this.chatType = this.schoolInboxList[0].chatType;
   }
 
+  back(): void {
+    window.history.back();
+  }
+
   @HostListener('scroll', ['$event']) 
   scrollHandler(event:any) {
     const element = event.target; // get the scrolled element

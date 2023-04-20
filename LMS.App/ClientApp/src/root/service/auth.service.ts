@@ -19,8 +19,8 @@ import { SetPasswordViewModel } from "../interfaces/set-password";
 @Injectable({providedIn: 'root'})
 
 export class AuthService{
-    private headers!: HttpHeaders;
     authToken:string = localStorage.getItem("jwt")?? '';
+    private headers!: HttpHeaders;
     token: JwtResult = new Object as JwtResult;
     tokenExpiration = new Date();
     currentUser: string | null = '';
@@ -48,7 +48,9 @@ export class AuthService{
     }
 
     changePassword(credentials:ChangePasswordModel): Observable<any> {
-        return this.http.post<AuthenticatedResponse>(`${this.apiUrl}/auth/updatePassword`, credentials, {headers: this.headers});
+      var authToken = localStorage.getItem("jwt")?? '';
+      this.headers = new HttpHeaders().set("Authorization", "Bearer " + authToken);
+      return this.http.post<AuthenticatedResponse>(`${this.apiUrl}/auth/updatePassword`, credentials, {headers: this.headers});
     }
 
     forgetPassword(credentials:ForgetPasswordModel): Observable<any> {

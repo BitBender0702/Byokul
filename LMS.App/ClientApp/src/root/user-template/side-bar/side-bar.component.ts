@@ -2,7 +2,9 @@ import { Component, Injector, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { unreadChatResponse } from 'src/root/root/chat/chat.component';
+import { convertIntoCourseResponse } from 'src/root/root/class/classProfile/classProfile.component';
 import { ownedClassResponse } from 'src/root/root/class/createClass/createClass.component';
+import { convertIntoClassResponse } from 'src/root/root/course/courseProfile/courseProfile.component';
 import { ownedCourseResponse } from 'src/root/root/course/createCourse/createCourse.component';
 import { unreadNotificationResponse } from 'src/root/root/Notifications/notifications.component';
 import { ownedSchoolResponse } from 'src/root/root/school/createSchool/createSchool.component';
@@ -97,7 +99,9 @@ export class SideBarComponent extends MultilingualComponent implements OnInit {
       var reqSchool = ownedSchools.find(x=> x.schoolId == response.schoolId);
       reqSchool.schoolName = response.schoolName;
       reqSchool.avatar = response.schoolAvatar;
-      this.router.navigateByUrl(`profile/school/${response.schoolName.replace(" ","").toLowerCase()}`);
+      setTimeout(() => {
+        this.router.navigateByUrl(`profile/school/${response.schoolName.replace(" ","").toLowerCase()}`);
+      }, 3000);
     }
       // this.ngOnInit();
     });
@@ -120,9 +124,14 @@ export class SideBarComponent extends MultilingualComponent implements OnInit {
       var reqClass = ownedClasses.find(x=> x.classId == response.classId);
       reqClass.className = response.className;
       reqClass.avatar = response.classAvatar;
-      this.router.navigateByUrl(`profile/class/${reqClass.school.schoolName.replace(" ","").toLowerCase()}/${response.className.replace(" ","").toLowerCase()}`);
-    }
-      // this.ngOnInit();
+      
+
+      setTimeout(() => {
+        this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+        this.router.onSameUrlNavigation = 'reload';
+        this.router.navigateByUrl(`profile/class/${reqClass.school.schoolName.replace(" ","").toLowerCase()}/${response.className.replace(" ","").toLowerCase()}`); 
+      }, 3000);
+     }
     });
 
     ownedCourseResponse.subscribe(response => {
@@ -143,10 +152,45 @@ export class SideBarComponent extends MultilingualComponent implements OnInit {
       var reqClass = ownedCourses.find(x=> x.courseId == response.courseId);
       reqClass.courseName = response.courseName;
       reqClass.avatar = response.courseAvatar;
-      this.router.navigateByUrl(`profile/course/${reqClass.school.schoolName.replace(" ","").toLowerCase()}/${response.courseName.replace(" ","").toLowerCase()}`);
+      setTimeout(() => {
+        this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+        this.router.onSameUrlNavigation = 'reload';
+        this.router.navigateByUrl(`profile/course/${reqClass.school.schoolName.replace(" ","").toLowerCase()}/${response.courseName.replace(" ","").toLowerCase()}`);
+      }, 3000);
     }
     });
 
+    convertIntoCourseResponse.subscribe(response => {
+      let courseObject = {
+        courseId:response.courseId,
+        avatar:response.avatar,
+        courseName: response.courseName,
+        school: response.school,
+      };
+      if(this.sidebarInfo)
+      var index = this.sidebarInfo.ownedClasses.findIndex((x: { classId: any; }) => x.classId == response.courseId);
+      if (index !== -1) {
+        this.sidebarInfo.ownedClasses.splice(index, 1);
+      }
+
+        this.sidebarInfo.ownedCourses.push(courseObject);
+    });
+
+    convertIntoClassResponse.subscribe(response => {
+      let classObject = {
+        classId:response.classId,
+        avatar:response.avatar,
+        className: response.className,
+        school: response.school
+      };
+      if(this.sidebarInfo)
+      var index = this.sidebarInfo.ownedCourses.findIndex((x: { courseId: any; }) => x.courseId == response.classId);
+      if (index !== -1) {
+        this.sidebarInfo.ownedCourses.splice(index, 1);
+      }
+        this.sidebarInfo.ownedClasses.push(classObject);
+    });
+    
   }
 
   closeSidebar(){

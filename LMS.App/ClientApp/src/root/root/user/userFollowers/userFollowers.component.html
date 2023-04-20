@@ -6,7 +6,7 @@
             src="../../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
             <h2 class="font_22 fw_700 f-monteserrat mb-md-0">{{'Followers'| translate }}</h2>
           <div class="search-header position-relative">
-            <input (keyup)="userFollowersSearch()" [(ngModel)]="searchString" type="search" class="form-control h_44">
+            <input [(ngModel)]="searchString" type="search" class="form-control h_44" #searchInput (input)="userFollowersSearch()">
             <button type="button" class="btn search-icon"><img src="../../../assets/images/school/search-gray.svg"></button>
           </div>
       </div>

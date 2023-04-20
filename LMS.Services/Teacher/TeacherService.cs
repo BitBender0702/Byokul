@@ -205,7 +205,7 @@ namespace LMS.Services
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             string callBackUrl = $"{_config["AppUrl"]}/user/auth/setPassword?email={user.Email}";
             text = text.Replace("[URL]", callBackUrl);
-            _commonService.SendEmail(new List<string> { user.Email }, null, null, "Invitation Link", body: text, null, null);
+            await _commonService.SendEmail(new List<string> { user.Email }, null, null, "Invitation Link", body: text, null, null);
         }
 
         public async Task SendPermissionsEmailToUser(User user, string OwnerName)
@@ -217,7 +217,7 @@ namespace LMS.Services
             text = text.Replace("[OwnerName]", OwnerName);
 
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            _commonService.SendEmail(new List<string> { user.Email }, null, null, "Assigned Permissions", body: text, null, null);
+            await  _commonService.SendEmail(new List<string> { user.Email }, null, null, "Assigned Permissions", body: text, null, null);
         }
 
         public async Task SaveNewTeacher(AddTeacherViewModel model, string userId)

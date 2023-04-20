@@ -171,8 +171,5 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
               this.signalRService.askServer(this.getUserRoles(token!).jti);
             }, 500);
     }
-
-    showSuccess() {
-      this.messageService.add({severity:'success', summary: 'Success', detail: 'Message Content'});
-  }
+    
   }

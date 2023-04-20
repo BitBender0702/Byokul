@@ -37,6 +37,7 @@ export const unreadNotificationResponse =new Subject<{type:string}>();
     ngOnInit(): void {
         this.loadingIcon = true;
         this._notificationService.getNotifications().subscribe((notificationsResponse) => {
+          debugger
             this.notifications = notificationsResponse;
             var notifications: any[] = this.notifications;
             var unreadNotifications = notifications.filter(x => !x.isRead);
@@ -119,6 +120,10 @@ export const unreadNotificationResponse =new Subject<{type:string}>();
             },
           });
         }
+      }
+
+      back(): void {
+        window.history.back();
       }
 
 }

@@ -26,8 +26,6 @@ import { StudentService } from 'src/root/service/student.service';
     loadingIcon:boolean = false;
 
     createCertificateForm1!:FormGroup;
-    // createCertificateForm2!:FormGroup;
-    // createCertificateForm3!:FormGroup;
     private _classService;
     private _courseService;
     private _studentService;
@@ -40,7 +38,6 @@ import { StudentService } from 'src/root/service/student.service';
     currentDate!:string;
     certificateId!:number;
     isTemplateSelected:boolean = false;
-
     studentName!:string;
     studentId!:string;
     classOrCourseName!:string;
@@ -66,18 +63,17 @@ import { StudentService } from 'src/root/service/student.service';
     }
 
     ngOnInit(): void {
+      let certificateInfo = history.state.certificateInfo;
         this.step = 0;
         this.loadingIcon = true;
-
-        var id = this.route.snapshot.paramMap.get('id')??'';
-        var from = this.route.snapshot.paramMap.get('from');
+        var id = certificateInfo.id;
+        var from = certificateInfo.type;
         this.from = Number(from);
 
         if(Number(from) == 1){
           this._classService.getClassInfoForCertificate(id).subscribe((response) => {
             this.certificateInfo = response;
             this.isCreatingClassCertificate = true;
-
             this.createCertificateForm1.controls['schoolId'].setValue(this.certificateInfo.school.schoolId, {onlySelf: true});
             this.createCertificateForm1.controls['schoolName'].setValue(this.certificateInfo.school.schoolName, {onlySelf: true});
             this.createCertificateForm1.controls['classId'].setValue(this.certificateInfo.classId, {onlySelf: true});
@@ -115,10 +111,7 @@ import { StudentService } from 'src/root/service/student.service';
             courseName: this.fb.control(''),
             date: this.fb.control('',[Validators.required]),
         }, {validator: this.dateLessThan('date',this.currentDate)});
-        
-
         this.getCurrentuserId();
-      
     }
 
     getCurrentuserId(){
@@ -179,7 +172,6 @@ import { StudentService } from 'src/root/service/student.service';
 
             this.studentId = certificateInfo.studentId;
 
-            // if All students selected
             if( this.studentId == "All"){
               this.isSendCertificateToAll = true;
              this.studentId = this.certificateInfo.students[0].studentId;
@@ -254,15 +246,6 @@ import { StudentService } from 'src/root/service/student.service';
              var notificationContent = `Certificates created for ${this.classOrCourseName} students are successfully sent`;
              this._notificationService.initializeNotificationViewModel(this.loginUserId,NotificationType.CertificateSent,notificationContent,this.loginUserId,null,0,null,null).subscribe((response) => {});
           }
-
-            // this.certificateInfo = response;
-
-            // if(this.from == 1){
-            // this.router.navigateByUrl(`profile/class/${this.certificateInfo.school.schoolName.replace(" ","").toLowerCase()}/${this.certificateInfo.className.replace(" ","").toLowerCase()}`)
-            // }
-            // else{
-            //   this.router.navigateByUrl(`profile/course/${this.certificateInfo.school.schoolName.replace(" ","").toLowerCase()}/${this.certificateInfo.courseName.replace(" ","").toLowerCase()}`);
-            // }
         });
     }
 

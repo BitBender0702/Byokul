@@ -21,6 +21,7 @@ import { ReelsViewComponent } from '../root/reels/reelsView.component';
 import { ChatComponent } from '../root/chat/chat.component';
 import { UrlRoutesComponent } from './urlRoutes.component';
 import { CourseProfileComponent } from './course/courseProfile/courseProfile.component';
+import { AuthGuard } from '../service/auth.guard';
 
 @NgModule({
   declarations: [UrlRoutesComponent],
@@ -32,13 +33,13 @@ import { CourseProfileComponent } from './course/courseProfile/courseProfile.com
         component: UrlRoutesComponent,
         children: [  
           {
-            path: 'school/:schoolName',component:SchoolProfileComponent
+            path: 'school/:schoolName',component:SchoolProfileComponent, canActivate: [AuthGuard]
           },
           {
-            path: 'class/:schoolName/:className',component:ClassProfileComponent
+            path: 'class/:schoolName/:className',component:ClassProfileComponent, canActivate: [AuthGuard]
           },
           {
-            path: 'course/:schoolName/:courseName',component:CourseProfileComponent
+            path: 'course/:schoolName/:courseName',component:CourseProfileComponent, canActivate: [AuthGuard]
           },
     ]}]),
     FormsModule,

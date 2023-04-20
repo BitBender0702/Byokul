@@ -66,6 +66,7 @@ import { SetPasswordComponent } from './user-auth/component/set-password/set-pas
         {
             path: 'change-password',
             component:ChangePasswordComponent,
+            canActivate: [AuthGuard]
         },
         {
           path: 'reset-password/:id',

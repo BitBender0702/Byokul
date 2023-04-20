@@ -20,6 +20,10 @@ namespace LMS.Data.Entity
         public string? ContactEmail { get; set; }
         public bool IsBan { get; set; }
         public bool IsVarified { get; set; }
+        public string? StripeCustomerId { get; set; }
+        public string? CountryName { get; set; }
+        public string? CityName { get; set; }
+
 
     }
 }

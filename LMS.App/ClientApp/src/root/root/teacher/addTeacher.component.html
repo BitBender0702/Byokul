@@ -1,14 +1,6 @@
 <!-- <div *ngIf="isDataLoaded"> -->
     <section class="f-poppins">
       <div class="main_content">
-        <div class="create-post-header d-flex justify-content-between d-none d-xl-flex">
-          <div class="search-header position-relative">
-            <input type="search" class="form-control h_44" />
-            <button type="button" class="btn search-icon"><img src="../../../assets/images/school/search-gray.svg" /></button>
-          </div>
-          <button type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44" data-bs-toggle="modal"
-            data-bs-target="#create-post">Create Post</button>
-        </div>
         <div class="live-header d-flex align-items-center justify-content-between">
           <button (click)="back()" type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
               src="../../../assets/images/arrow-left.svg" /> Back</button>
@@ -81,7 +73,7 @@
                 <h3>Permissions</h3>
             </div>
 
-            <div class="row">
+            <div class="row" *ngIf="schoolList.length != 0">
                 <div class="col-5">
                     <label class="font_10">Select Schools</label>
                     <div class="form-group">
@@ -102,8 +94,13 @@
                       </div> 
                 </div>
               </div>
+
+              <!-- <div *ngIf="schoolList.length == 0">
+                <p class="mt-5">Please add atleast one school to add school teacher</p>
+                <button [routerLink]="['/user/createSchool']" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 me-2">Create School</button>
+              </div> -->
               <br><br>
-              <div class="row">
+              <div class="row" *ngIf="schoolList.length != 0">
                 <div *ngIf="!hideClassSection" class="col-5">
                     <label class="font_10">Select Classes</label>
                     <div class="form-group">

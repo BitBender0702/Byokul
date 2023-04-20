@@ -5,3 +5,13 @@
 .cursor_auto{
     cursor: auto;
 }
+
+.overflow_paragraph{
+    overflow: auto;
+    height: 200px;
+
+}
+
+.overflow_paragraph::-webkit-scrollbar {
+    width: 2px;
+  }

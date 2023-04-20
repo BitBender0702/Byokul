@@ -37,7 +37,7 @@ export class SchoolService{
     }
 
     getCountryList():Observable<any>{
-        return this.http.get(`${this.apiUrl}/users/countryList`,{headers: this.headers});
+        return this.http.get(`${this.apiUrl}/users/getCountries`,{headers: this.headers});
     }
 
     getSpecializationList():Observable<any>{

@@ -25,5 +25,7 @@ namespace LMS.Data.Entity
         public bool IsPinned { get; set; }
         public string? ThumbnailUrl { get; set; }
         public int? ThumbnailType { get; set; }
+        public string? StripeProductId { get; set; }
+
     }
 }

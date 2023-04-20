@@ -29,5 +29,6 @@ namespace LMS.Data.Entity
         public bool IsEnable { get; set; }
         public bool IsCourse { get; set; }
         public bool IsPinned { get; set; }
+        public string? StripeProductId { get; set; }
     }
 }

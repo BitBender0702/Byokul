@@ -70,5 +70,14 @@ namespace LMS.App.Controllers
             return Ok(response);
         }
 
+        [Route("getAttachments")]
+        [HttpGet]
+        public async Task<IActionResult> GetAttachments()
+        {
+            var userId = await GetUserIdAsync(this._userManager);
+            var response = await _fileStorageService.GetAttachments(userId);
+            return Ok(response);
+        }
+
     }
 }

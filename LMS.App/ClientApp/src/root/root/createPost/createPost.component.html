@@ -1,6 +1,4 @@
-<button hidden #openAttachmentModal type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44" data-bs-toggle="modal"
-      data-bs-target="#add-attachment">Create Post</button>
-      <div appBsModal  bsModal #createPostModal="bs-modal" class="modal fade edit-school-modal show d-block" id="create-post" tabindex="-1"
+<div appBsModal  bsModal #createPostModal="bs-modal" class="modal fade edit-school-modal show d-block" id="create-post" tabindex="-1"
         aria-labelledby="create-post" aria-hidden="true" [config]="{backdrop: 'static'}" area-modal="true">
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
@@ -15,7 +13,7 @@
                         class="dark-attach" /><img src="../../../assets/images/Play-light.svg" class="light-attach" /> Live</button>
                   </li>
                   <li class="nav-item p-0">
-                    <button class="nav-link active post-attch-btn d-inline-flex justify-content-center align-items-center"
+                    <button (click)="postTab()" class="nav-link active post-attch-btn d-inline-flex justify-content-center align-items-center"
                       id="Post-tab" data-bs-toggle="tab" data-bs-target="#Post-tab-pane" type="button" role="tab"
                       aria-controls="Post-tab-pane" aria-selected="false"><img src="../../../assets/images/Edit-grey.svg"
                         class="dark-attach" /><img src="../../../assets/images/Edit-light.svg" class="light-attach" /> Post</button>
@@ -76,7 +74,7 @@
 
                     <div class="form-group">
                       <label class="font_10">Body Text</label>
-                      <input formControlName="bodyText" type="text" class="form-control" placeholder="Body Text" />
+                      <textarea formControlName="bodyText" class="form-control" placeholder="Body Text" style="max-height: 125px;height: 125px;"></textarea>
                       <small class="p-error" style="color: orange;"
                       *ngIf="(isSubmitted && createPostForm.controls.bodyText.errors)">Body text is required
                     </small>
@@ -116,7 +114,9 @@
 
                   <div class="teacher-tags hashtag_post tag-boxattachment-outer mt-1 mb-0 hover-tags">
                     <span *ngFor="let item of this.attachment" class="custom-tag"><img src="../../../assets/images/Paper-gray.svg" class="me-1 dark-svg"> <img
-                     src="../../../assets/images/Paper-light.svg" class="me-1 light-svg"> {{item.name}}
+                     src="../../../assets/images/Paper-light.svg" class="me-1 light-svg"> 
+                     <span *ngIf="item?.name"> {{item.name}} </span>
+                     <span *ngIf="!item?.name"> {{item.fileName}} </span>
                     <button (click)="removeAttachment(item)" class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
                        src="../../../assets/images/cross-sm-light.svg">
                     </button>
@@ -127,7 +127,7 @@
                   class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 cr-postfooter pt-0">
                   <div class="post-bot-left d-flex">
 
-                    <label class="custom-file-upload post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center active">
+                    <label class="custom-file-upload post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center">
                       <input id="hideFileType" type="file" (change)="handleImageInput($event)" accept="image/*"/>
                       <img
                         src="../../../assets/images/gallery-dark.svg" class="dark-attach" /><img src="../../../assets/images/gallery-light.svg"
@@ -193,6 +193,14 @@
                     <input readonly type="text" [placeholder]="parentDetails?.courseName" name="courseName" class="form-control w-100">
                   </div>
 
+                  <div class="form-group">
+                    <label class="font_10">Title</label>
+                    <input formControlName="title" type="text" placeholder="Title" class="form-control w-100">
+                    <small class="p-error" style="color: orange;"
+                    *ngIf="(isSubmitted && createReelForm.controls.title.errors)">Title is required
+                  </small>
+                  </div>
+
                   <div class="preview-zone hidden rel-post">
                     <div class="box box-solid">
                       <div class="box-header with-border">
@@ -234,9 +242,19 @@
                       <br>
                     </div> 
                 </div> 
-                  <div
-                    class="modal-footer steps_btns d-flex align-items-center justify-content-center flex-sm-nowrap border-0 pb-0 cr-postfooter pt-0 mt-3 px-0">
+
+                <div class="teacher-tags tag-box hashtag_post mt-4 mb-2 hover-tags">
+                  <span *ngFor="let tag of reelsTagLists" class="custom-tag">{{tag}}
+                    <button (click)="removeTags(tag)" class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
+                      src="../../../assets/images/cross-sm-light.svg"></button></span>
+                </div>
+
+                  <div class="modal-footer steps_btns d-flex align-items-center justify-content-center flex-sm-nowrap border-0 pb-0 cr-postfooter pt-0 mt-3 px-0">
                     <div class="post-bot-right d-flex justify-content-end">
+                      <button (click)="openTagModal(tagTemplate)" type="button"
+                      class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center mt-2"><img
+                        src="../../../assets/images/hashtag-dark.svg" class="dark-attach" /><img src="../../../assets/images/hashtag-light.svg"
+                        class="light-attach" /></button>
                       <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 delay-btn post-delay-btn position-relative"> 
                         <img src="../../../assets/images/clock-orange.svg" />                     
                           <p-calendar formControlName="scheduleTime" [(ngModel)]="scheduleTime" [showTime]="true"></p-calendar>
@@ -314,7 +332,7 @@
             <i class="glyphicon glyphicon-download-alt"></i>
             <p class="text-center fw_400"><b>Click to Browse</b></p>
           </div>
-          <input type="file" name="img_logo" class="dropzone" (change)="handleAttachmentInput($event)" accept="pdf/*">
+          <input type="file" name="img_logo" class="dropzone" (change)="handleAttachmentInput($event)" accept="application/pdf">
          </div>
          <p class="font_16 text_dark text-center my-4 fw_600">{{'FindInFileStorage'| translate }}</p>
          <div class="form-group latest-form">
@@ -361,11 +379,21 @@
          <p class="font_16 text_dark text-center my-4 fw_600">{{'FindInFileStorage'| translate }}</p>
          <div class="form-group latest-form">
            <label class="font_10">{{'Files'| translate }}</label>
-           <input type="text" class="form-control" placeholder="{{'TypeToAdd'| translate }}">
+           <form [formGroup]="fileAttachmentsForm">
+            <div class="form-group">
+              <span class="p-fluid">
+              <p-autoComplete #autoComplete formControlName="fileAttachments" [showEmptyMessage]="true" [emptyMessage]="'NoResultFound' | translate" [forceSelection]="true" [size]="200" (onSelect)="captureAttachmentUrl($event)" (onUnselect)="removeFileAttachment($event)" placeholder="{{'TypeToAdd'| translate }}" class="form-control w-100" 
+               [suggestions]="filteredFileAttachments" (completeMethod)="filterFileAttachments($event)" field="fileName" [multiple]="true">
+              </p-autoComplete>
+            </span>
+            </div>
+          </form>
          </div>
          <div class="teacher-tags hashtag_post tag-boxattachment-outer mt-1 mb-0 hover-tags">
                  <span *ngFor="let item of this.initialAttachment" class="custom-tag"><img src="../../../assets/images/Paper-gray.svg" class="me-1 dark-svg"> <img
-                  src="../../../assets/images/Paper-light.svg" class="me-1 light-svg"> {{item.name}}
+                  src="../../../assets/images/Paper-light.svg" class="me-1 light-svg">
+                  <span *ngIf="item?.name"> {{item.name}} </span>
+                  <span *ngIf="!item?.name"> {{item.fileName}} </span>
                  <button (click)="removeAttachment(item)" class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
                     src="../../../assets/images/cross-sm-light.svg">
                  </button>
@@ -382,12 +410,11 @@
            data-bs-toggle="modal" data-bs-target="#create-post">Discard Changes</button>
          <button (click)="isValidAttachments()" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step"
            data-bs-toggle="modal" data-bs-target="#create-post">Save</button>
+           <button (click)="deselectAutocomplete()">avv</button>
        </div>
      </div>
    </div>
 </ng-template>
-
-
 
 <ng-template #tagTemplate>
     <div class="modal-content">

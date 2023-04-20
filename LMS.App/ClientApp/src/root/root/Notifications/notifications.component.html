@@ -4,23 +4,23 @@
   <section class="f-poppins">
     <div class="main_content">
       <div class="create-post-header d-flex justify-content-between d-none d-xl-flex align-items-center">
-        <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
+        <button (click)="back()" type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
             src="../../../assets/images/arrow-left.svg" /> Back</button>
             <h2 class="font_22 fw_700 f-monteserrat mb-md-0">Notifications  <button type="button" (click)="getNotificationSettings()" class="border-0 ms-2 notification-sett-btn" data-bs-toggle="modal" data-bs-target="#notifi-settingpopup"><img src="../../../assets/images/Setting-solid-dark.svg" /></button></h2>
-        <button type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44" data-bs-toggle="modal"
+        <button type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 invisible" data-bs-toggle="modal"
           data-bs-target="#create-post">Create Post</button>
       </div>
       <div class="live-header d-flex align-items-center justify-content-between">
         <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark  d-xl-none"><img
-            src="images/arrow-left.svg" /> Back</button>
+            src="../../../assets/images/arrow-left.svg" /> Back</button>
         <span class="logo_mobile d-xl-none">
-          <img src="images/logo.svg" />
+          <img src="../../../assets/images/logo.svg" />
         </span>
         <div class="d-xl-none">
           <button type="button" class="mobile-search border_btn" onclick="openSearch()"><img
-              src="images/search-lg.svg" /></button>
+              src="../../../assets/images/search-lg.svg" /></button>
           <button type="button" class="mobile-search border_btn" onclick="openSidebar()"><img
-              src="images/menu.svg" /></button>
+              src="../../../assets/images/menu.svg" /></button>
         </div>
       </div>
 
@@ -29,35 +29,37 @@
         <ul class="list-unstyled before-none mb-0">
           <li *ngFor="let item of notifications" class="mb-0">
             <div *ngIf="item.notificationType == 2" style="cursor: pointer;" [routerLink]="['/user/userProfile', item.actionDoneBy]" class="d-flex align-items-center justify-content-between"><span class="followers-name font_16 text_sec1 fw_600">
-              <span class="new-notidot"><i class="fa-solid fa-circle"></i></span>
+              <!-- <span class="new-notidot"><i class="fa-solid fa-circle"></i></span> -->
               <img [src]="item.avatar" class="rounded-circle me-2" style="width: 38px;height: 35px;"/> 
               <p class="font_16 ms-2 d-inline-block fw_400 mb-0"> {{item.notificationContent}}</p>
             </span>
             </div>
 
             <div *ngIf="item.notificationType == 1 && item.reelId == null" style="cursor: pointer;" (click)="openPostsViewModel(item.post.id,item.postType)" class="d-flex align-items-center justify-content-between"><span class="followers-name font_16 text_sec1 fw_600">
-              <span class="new-notidot"><i class="fa-solid fa-circle"></i></span>
               <img [src]="item.avatar" class="rounded-circle me-2" style="width: 38px;height: 35px;"/> 
               <p class="font_16 ms-2 d-inline-block fw_400 mb-0"> {{item.notificationContent}}</p>
             </span>
             </div>
 
             <div *ngIf="item.notificationType == 1 && item.reelId != null" style="cursor: pointer;" (click)="openReelsViewModel(item.postType,item.reelId)" class="d-flex align-items-center justify-content-between"><span class="followers-name font_16 text_sec1 fw_600">
-              <span class="new-notidot"><i class="fa-solid fa-circle"></i></span>
               <img [src]="item.avatar" class="rounded-circle me-2" style="width: 38px;height: 35px;"/> 
               <p class="font_16 ms-2 d-inline-block fw_400 mb-0"> {{item.notificationContent}}</p>
             </span>
             </div>
 
             <div *ngIf="item.notificationType == 5" style="cursor: pointer;" (click)="openChat(item.actionDoneBy,item.chatType,item.chatTypeId)" class="d-flex align-items-center justify-content-between"><span class="followers-name font_16 text_sec1 fw_600">
-              <span class="new-notidot"><i class="fa-solid fa-circle"></i></span>
               <img [src]="item.avatar" class="rounded-circle me-2" style="width: 38px;height: 35px;"/> 
               <p class="font_16 ms-2 d-inline-block fw_400 mb-0"> {{item.notificationContent}}</p>
             </span>
             </div>
 
             <div *ngIf="item.notificationType == 7" style="cursor: pointer;" class="d-flex align-items-center justify-content-between"><span class="followers-name font_16 text_sec1 fw_600">
-              <span class="new-notidot"><i class="fa-solid fa-circle"></i></span>
+              <p class="font_16 ms-2 d-inline-block fw_400 mb-0"> {{item.notificationContent}}</p>
+            </span>
+            </div>
+
+            <div *ngIf="item.notificationType == 8" style="cursor: pointer;" class="d-flex align-items-center justify-content-between"><span class="followers-name font_16 text_sec1 fw_600">
+              <img [src]="item.avatar" class="rounded-circle me-2" style="width: 38px;height: 35px;"/> 
               <p class="font_16 ms-2 d-inline-block fw_400 mb-0"> {{item.notificationContent}}</p>
             </span>
             </div>

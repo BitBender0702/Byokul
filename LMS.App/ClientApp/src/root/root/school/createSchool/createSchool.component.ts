@@ -83,7 +83,7 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
 
   this.createSchoolForm1 = this.fb.group({
     schoolName: this.fb.control('', [Validators.required]),
-    countryId: this.fb.control('', [Validators.required]),
+    countryName: this.fb.control('', [Validators.required]),
     specializationId: this.fb.control('', [Validators.required]),
     description: this.fb.control(''),
     selectedLanguages:this.fb.control('',[Validators.required])
@@ -156,7 +156,8 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
       else{
         this.fileToUpload.append('schoolName', form1Value.schoolName);
     this.fileToUpload.append('description', form1Value.description);
-    this.fileToUpload.append('countryId',form1Value.countryId);
+    // this.fileToUpload.append('countryId',form1Value.countryId);
+    this.fileToUpload.append('countryName',form1Value.countryName);
     this.fileToUpload.append('specializationId',form1Value.specializationId); 
     this.fileToUpload.append('languageIds',JSON.stringify(form1Value.selectedLanguages));
     this.schoolUrl = 'byokul.com/profile/school/' + form1Value.schoolName.replace(" ","").toLowerCase();
@@ -165,26 +166,7 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
         this.isStepCompleted = false;
       }
     });
-
-    // this.fileToUpload.append('schoolName', form1Value.schoolName);
-    // this.fileToUpload.append('description', form1Value.description);
-    // this.fileToUpload.append('countryId',form1Value.countryId);
-    // this.fileToUpload.append('specializationId',form1Value.specializationId); 
-    // this.fileToUpload.append('languageIds',JSON.stringify(form1Value.selectedLanguages));
-    // this.schoolUrl = 'byokul.com/profile/school/' + form1Value.schoolName.replace(" ","");
-    // this.schoolName = form1Value.schoolName.split(' ').join('');
-    // this._schoolService.isSchoolNameExist(schoolName).subscribe((response) => {
-    //   if(!response){
-    //     this.createSchoolForm1.setErrors({ unauthenticated: true });
-    //     return;
-    //   }
-    //   else{
-    //     this.step += 1;
-    //     this.isStepCompleted = false;
-    //   }
-    // });
     
-
     this.createSchoolForm3.patchValue({
       schoolUrl: 'byokul.com/profile/school/' + form1Value.schoolName.split(' ').join('').toLowerCase(),
     });

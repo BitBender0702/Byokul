@@ -16,6 +16,7 @@ import { SharePostComponent } from '../sharePost/sharePost.component';
 
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
+import 'videojs-contrib-quality-levels';
 
 @Component({
     selector: 'reels-view',
@@ -91,9 +92,21 @@ import 'video.js/dist/video-js.css';
             this.reels = response;
             this.isDataLoaded = true;
             this.cd.detectChanges();
-            const player = videojs(this.videoPlayer.nativeElement, {autoplay: false,});
+            const player = videojs(this.videoPlayer.nativeElement, {autoplay: false,plugins: {
+              qualityLevels: {}
+            }});
+
+            player.hlsQualitySelector();
             this.addPostView(this.reels.post.id);
             this._signalRService.createGroupName(this.reels.id);
+            var modal = document.getElementById('modal-reel');
+          window.onclick = (event) => {
+           if (event.target == modal) {
+            if (modal != null) {
+             this.bsModalService.hide();
+            }
+          } 
+         }
           });
 
           var validToken = localStorage.getItem("jwt");
@@ -131,6 +144,9 @@ import 'video.js/dist/video-js.css';
               reqComment.likeCount = reqComment.likeCount - 1;
             }
           });
+          
+          this.cd.detectChanges();
+          
     }
 
     ngAfterViewInit() {        

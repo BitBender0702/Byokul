@@ -142,6 +142,19 @@ namespace LMS.Services.FileStorage
             return nestedFolders;
         }
 
+        public async Task<List<FileAttachmentViewModel>> GetAttachments(string userId)
+        {
+            var attachments = await _fileRepository.GetAll().Where(x => (int)x.FileType == (int)FileTypeEnum.Pdf && x.CreatedById == userId).Select(x => new FileAttachmentViewModel
+            {
+                FileName = x.FileName,
+                FileUrl = x.FileUrl
+            }).ToListAsync();
+
+            return attachments;
+        }
+
+
+
 
     }
 }

@@ -15,7 +15,7 @@ namespace LMS.Services.FileStorage
         Task<List<FileViewModel>> SaveFiles(SaveFilesViewModel model, string createdById);
         Task<List<FileViewModel>> GetFiles(Guid parentId, string? searchString);
         Task<NestedFoldersViewModel> GetNestedFolders(Guid folderId, string? searchString);
-
+        Task<List<FileAttachmentViewModel>> GetAttachments(string userId);
 
 
     }

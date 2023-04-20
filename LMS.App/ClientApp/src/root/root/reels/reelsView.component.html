@@ -1,5 +1,5 @@
 <div *ngIf="reels != undefined">
-<div *ngIf="!reelPageView" appBsModal bsModal class="modal fade edit-school-modal show d-block post-view-large" id="create-post" tabindex="-1"
+<div *ngIf="!reelPageView" appBsModal bsModal class="modal fade edit-school-modal show d-block post-view-large" id="modal-reel" tabindex="-1"
 aria-labelledby="create-post" aria-hidden="true" area-modal="true">
 <div class="modal-dialog modal-dialog-centered">
   <div class="modal-content">
@@ -55,8 +55,9 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
                   <span *ngIf="likesLength != undefined && currentLikedPostId== reels.post.id">{{likesLength}}</span>
                   <span *ngIf="currentLikedPostId!= reels.post.id">{{reels.post.likes.length}}</span>
                 </button>
-            <button type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Bookmark.svg"
-                class="d-block rightImagesWidth" /> 0</button>
+            <button type="button" class="btn bg-transparent text_ltgray font_12">
+              <img src="../../../assets/images/Bookmark.svg" class="d-block rightImagesWidth" /> 
+              0</button>
             <button type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Upload.svg"
                 class="d-block rightImagesWidth" /> 0</button>
           </div>
