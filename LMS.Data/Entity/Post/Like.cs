@@ -16,5 +16,6 @@ namespace LMS.Data.Entity
         public DateTime DateTime { get; set; }
         public Guid? CommentId { get; set; }
         public Comment Comment { get; set; }
+        public bool IsPinned { get; set; }
     }
 }

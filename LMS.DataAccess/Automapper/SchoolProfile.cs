@@ -6,6 +6,7 @@ using LMS.Common.ViewModels.Post;
 using LMS.Common.ViewModels.School;
 using LMS.Common.ViewModels.User;
 using LMS.Data.Entity;
+using Country = LMS.Data.Entity.Country;
 
 namespace LMS.DataAccess.Automapper
 {

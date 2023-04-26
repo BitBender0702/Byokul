@@ -1,5 +1,7 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, EventEmitter, Injector, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { Subject } from 'rxjs';
+export const changeLanguage =new Subject<{language:string}>();  
 
 @Component({
     selector: 'multi-lingual',
@@ -7,7 +9,7 @@ import { TranslateService } from '@ngx-translate/core';
     styleUrls: ['./multilingual.component.css']
   })
 
-  export class MultilingualComponent {
+  export class MultilingualComponent implements OnInit {
 
     translate!: TranslateService;
     selectedLanguage:any;
@@ -21,6 +23,7 @@ import { TranslateService } from '@ngx-translate/core';
     switchLanguage(lang:string){
         this.translate.use(lang);
         localStorage.setItem("selectedLanguage",lang);
+        changeLanguage.next({language:lang}); 
       }
 
       ngOnInit(): void {

@@ -1,6 +1,8 @@
-import { Component, ElementRef, HostListener, Injectable, ViewChild } from "@angular/core"; 
+import { Component, ElementRef, HostListener, Injectable, Injector, OnDestroy, OnInit, ViewChild } from "@angular/core"; 
 import { ActivatedRoute, Router } from "@angular/router";
 import { UserService } from "src/root/service/user.service";
+import { MultilingualComponent, changeLanguage } from "../../sharedModule/Multilingual/multilingual.component";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: 'user-Followers',
@@ -8,7 +10,7 @@ import { UserService } from "src/root/service/user.service";
   styleUrls: ['./userFollowings.component.css']
 })
 
-export class UserFollowingsComponent{
+export class UserFollowingsComponent extends MultilingualComponent implements OnInit, OnDestroy{
 
     private _userService;
     userId!:string;
@@ -21,8 +23,10 @@ export class UserFollowingsComponent{
     scrolled:boolean = false;
     scrollFollowingsResponseCount:number = 1;
     postLoadingIcon: boolean = false;
+    changeLanguageSubscription!: Subscription;
 
-    constructor(userService: UserService,private route: ActivatedRoute,) { 
+    constructor(injector: Injector,userService: UserService,private route: ActivatedRoute) { 
+      super(injector);
         this._userService = userService;
       
       }
@@ -30,6 +34,8 @@ export class UserFollowingsComponent{
     ngOnInit(): void {
 
       this.loadingIcon = true;
+      var selectedLang = localStorage.getItem('selectedLanguage');
+      this.translate.use(selectedLang ?? '');
       this.userId = this.route.snapshot.paramMap.get('userId') ?? '';
 
       this._userService.getUserFollowings(this.userId,this.userFollowingsPageNumber,this.searchString).subscribe((response) => {
@@ -38,6 +44,18 @@ export class UserFollowingsComponent{
         this.isDataLoaded = true;
       });
 
+      if(!this.changeLanguageSubscription){
+        this.changeLanguageSubscription = changeLanguage.subscribe(response => {
+          this.translate.use(response.language);
+        })
+      }
+
+    }
+
+    ngOnDestroy(): void {
+      if(this.changeLanguageSubscription){
+        this.changeLanguageSubscription.unsubscribe();
+      }
     }
 
     getSelectedFollowing(followingId:string){

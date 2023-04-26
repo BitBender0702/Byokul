@@ -79,9 +79,39 @@ export class PostService{
         return this.http.post(`${this.apiUrl}/posts/savePostByUser`,null, {params:queryParams,headers: this.headers});
     }
 
-    getSavedPostsByUser(userId:string,pageNumber:number):Observable<any>{
-        let queryParams = new HttpParams().append("userId",userId).append("pageNumber",pageNumber);
+    getSavedPostsByUser(userId:string,pageNumber:number,type:number):Observable<any>{
+        let queryParams = new HttpParams().append("userId",userId).append("pageNumber",pageNumber).append("type",type);
         return this.http.post(`${this.apiUrl}/posts/getSavedPostsByUser`,null, {params:queryParams,headers: this.headers});
+    }
+
+    getSharedPostsByUser(userId:string,pageNumber:number,type:number):Observable<any>{
+        let queryParams = new HttpParams().append("userId",userId).append("pageNumber",pageNumber).append("type",type);
+        return this.http.post(`${this.apiUrl}/posts/getSharedPostsByUser`,null, {params:queryParams,headers: this.headers});
+    }
+
+    getLikedPostsByUser(userId:string,pageNumber:number,type:number):Observable<any>{
+        let queryParams = new HttpParams().append("userId",userId).append("pageNumber",pageNumber).append("type",type);
+        return this.http.post(`${this.apiUrl}/posts/getLikedPostsByUser`,null, {params:queryParams,headers: this.headers});
+    }
+
+    pinUnpinSavedPost(attachmentId:any,isPinned:boolean): Observable<any> {
+        let queryParams = new HttpParams().append("attachmentId",attachmentId).append("isPinned",isPinned);
+        return this.http.post(`${this.apiUrl}/posts/pinUnpinSavedPost`,null, {params:queryParams,headers: this.headers});
+    }
+
+    pinUnpinSharedPost(attachmentId:any,isPinned:boolean): Observable<any> {
+        let queryParams = new HttpParams().append("attachmentId",attachmentId).append("isPinned",isPinned);
+        return this.http.post(`${this.apiUrl}/posts/pinUnpinSharedPost`,null, {params:queryParams,headers: this.headers});
+    }
+
+    pinUnpinLikedPost(attachmentId:any,isPinned:boolean): Observable<any> {
+        let queryParams = new HttpParams().append("attachmentId",attachmentId).append("isPinned",isPinned);
+        return this.http.post(`${this.apiUrl}/posts/pinUnpinLikedPost`,null, {params:queryParams,headers: this.headers});
+    }
+
+    pinUnpinSavedClassCourse(id:any,isPinned:boolean,type:number): Observable<any> {
+        let queryParams = new HttpParams().append("id",id).append("isPinned",isPinned).append("type",type);
+        return this.http.post(`${this.apiUrl}/school/pinUnpinSavedClassCourse`,null, {params:queryParams,headers: this.headers});
     }
 
 }

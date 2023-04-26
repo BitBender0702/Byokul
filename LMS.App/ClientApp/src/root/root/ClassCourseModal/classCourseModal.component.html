@@ -61,8 +61,11 @@
                       <span *ngIf="currentLikedClassCourseId!= classCourseDetails.classCourseItem.id && classCourseDetails.classCourseItem.type == 1">{{classCourseDetails.classCourseItem.classLikes.length}}</span>
                       <span *ngIf="currentLikedClassCourseId!= classCourseDetails.classCourseItem.id && classCourseDetails.classCourseItem.type == 2">{{classCourseDetails.classCourseItem.courseLikes.length}}</span>
                     </button>
-                <button type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Bookmark.svg"
-                    class="d-block rightImagesWidth" /> {{classCourseDetails.classCourseItem.savedClassCourseCount}}</button>
+                    <button (click)="saveClassCourse(classCourseDetails.classCourseItem.id,classCourseDetails.classCourseItem.type)" type="button" class="btn bg-transparent text_ltgray font_12">
+                      <img *ngIf="!classCourseDetails.classCourseItem.isClassCourseSavedByCurrentUser" src="../../../../assets/images/Bookmark-dark.svg" class="d-block rightImagesWidth">
+                      <img *ngIf="classCourseDetails.classCourseItem.isClassCourseSavedByCurrentUser" src="../../../../assets/images/Bookmark-dark.svg" class="d-block rightImagesWidth">
+                      {{classCourseDetails.classCourseItem.savedClassCourseCount}}
+                    </button>
                 <button type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Upload.svg"
                     class="d-block rightImagesWidth" /> 0</button>
               </div>

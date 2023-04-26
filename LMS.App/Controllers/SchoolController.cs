@@ -296,5 +296,14 @@ namespace LMS.App.Controllers
             return Ok(response);
         }
 
+        [Route("pinUnpinSavedClassCourse")]
+        [HttpPost]
+        public async Task<IActionResult> PinUnpinSavedClassCourse(Guid id, bool isPinned,ClassCourseEnum type)
+        {
+            var userId = await GetUserIdAsync(this._userManager);
+            var response = await _schoolService.PinUnpinSavedClassCourse(id, isPinned,type, userId);
+            return Ok(response);
+        }
+
     }
 }

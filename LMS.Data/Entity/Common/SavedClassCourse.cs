@@ -16,5 +16,6 @@ namespace LMS.Data.Entity.Common
         public Guid? CourseId { get; set; }
         public Course Course { get; set; }
         public DateTime CreatedOn { get; set; }
+        public bool IsPinned { get; set; }
     }
 }

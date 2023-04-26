@@ -11,7 +11,7 @@ import 'videojs-contrib-quality-levels';
 import 'videojs-hls-quality-selector';
 import { addPostResponse } from '../createPost/createPost.component';
 
-export const sharedPostResponse =new Subject<{}>();  
+export const sharedPostResponse =new Subject<{postType:number,postId:string}>();  
 
 declare var require: any;
 require('videojs-contrib-quality-levels');
@@ -28,9 +28,10 @@ require('videojs-hls-quality-selector');
 export class SharePostComponent implements OnInit {
 
     postId!:string;
+    postType!:number;
     userId!:string;
     private _postService;
-
+    post!:any;
     websiteUrl:any;
 
 
@@ -39,7 +40,8 @@ export class SharePostComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    var post = this.options.initialState;
+    debugger
+    this.post = this.options.initialState;
     //this.websiteUrl = `${environment.apiUrl}/user/post/${post?.postId}`;
     this.websiteUrl = "https://byokul.com/user/auth/login"
     var validToken = localStorage.getItem('jwt');
@@ -52,9 +54,12 @@ export class SharePostComponent implements OnInit {
 }
 
 saveUserSharedPost(){
+  debugger
     this._postService.saveUserSharedPost(this.userId, this.postId).subscribe((response) => {
         this.close();
-        this.router.navigateByUrl(`user/userProfile/${this.userId}`);
+        sharedPostResponse.next({postType:this.post.postType,postId:this.post.postId}); 
+
+        //this.router.navigateByUrl(`user/userProfile/${this.userId}`);
     });
 }
 

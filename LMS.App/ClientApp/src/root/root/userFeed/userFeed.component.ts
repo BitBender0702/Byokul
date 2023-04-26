@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, Injector, OnInit, ViewChild} from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, Injector, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BsModalService, ModalDirective, ModalOptions } from 'ngx-bootstrap/modal';
@@ -14,13 +14,13 @@ import { SchoolService } from 'src/root/service/school.service';
 import { UserService } from 'src/root/service/user.service';
 import { CreatePostComponent, addPostResponse } from '../createPost/createPost.component';
 import { PostViewComponent, savedPostResponse } from '../postView/postView.component';
-import { ReelsViewComponent } from '../reels/reelsView.component';
-import { SharePostComponent } from '../sharePost/sharePost.component';
+import { ReelsViewComponent, savedReelResponse } from '../reels/reelsView.component';
+import { SharePostComponent, sharedPostResponse } from '../sharePost/sharePost.component';
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
-import { MultilingualComponent } from '../sharedModule/Multilingual/multilingual.component';
+import { MultilingualComponent, changeLanguage } from '../sharedModule/Multilingual/multilingual.component';
 import { AuthService } from 'src/root/service/auth.service';
-import { Subscription } from 'rxjs';
+import { Subscribable, Subscription } from 'rxjs';
 
 @Component({
     selector: 'post-view',
@@ -29,7 +29,7 @@ import { Subscription } from 'rxjs';
     providers: [MessageService]
   })
 
-export class UserFeedComponent extends MultilingualComponent implements OnInit {
+export class UserFeedComponent extends MultilingualComponent implements OnInit, OnDestroy {
 
     private _userService;
     private _notificationService;
@@ -86,6 +86,10 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit {
     isMyFeedReelsExist:boolean = false;
     addPostSubscription!: Subscription;
     savedPostSubscription!: Subscription;
+    changeLanguageSubscription!: Subscription;
+    sharedPostSubscription!: Subscription;
+    savedReelSubscription!: Subscription;
+
 
     constructor(injector: Injector,private authService:AuthService,private bsModalService: BsModalService,notificationService:NotificationService,postService: PostService,public userService:UserService, public options: ModalOptions,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,public messageService:MessageService,private cd: ChangeDetectorRef) { 
       super(injector);
@@ -108,6 +112,8 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit {
       this.postLoadingIcon = false;
       this.loadingIcon = true;
       this._authService.loginState$.next(true);
+      var selectedLang = localStorage.getItem('selectedLanguage');
+      this.translate.use(selectedLang ?? '');
       this.isOwnerOrNot();
         this._userService.getMyFeed(1,this.myFeedsPageNumber,this.searchString).subscribe((response) => {
           this.isGlobalFeed = false;
@@ -155,6 +161,37 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit {
               }
             });
           }
+
+          if(!this.savedReelSubscription){
+            this.savedReelSubscription = savedReelResponse.subscribe(response => {
+              if(response.isReelSaved){
+                this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Reel saved successfully'});
+              }
+              if(!response.isReelSaved){
+                this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Reel removed successfully'});
+              }
+            });
+          }
+
+          this.sharedPostSubscription = sharedPostResponse.subscribe( response => {
+            debugger
+            if(response.postType == 1){
+              this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post shared successfully'});
+              var post = this.myFeeds.find((x: { id: string; }) => x.id == response.postId); 
+              if(post == undefined || null){
+                var post = this.globalFeeds.find((x: { id: string; }) => x.id == response.postId); 
+              }
+              post.postSharedCount++;
+            }
+            else
+              this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Reel shared successfully'});
+            });
+
+          if(!this.changeLanguageSubscription){
+            this.changeLanguageSubscription = changeLanguage.subscribe(response => {
+              this.translate.use(response.language);
+            })
+          }
     }
 
     checkMyFeedExist(){
@@ -162,6 +199,18 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit {
         this.isDataLoaded = true;
         this.loadingIcon = false;
       }
+  }
+
+  ngOnDestroy(): void {
+    if(this.changeLanguageSubscription){
+      this.changeLanguageSubscription.unsubscribe();
+    }
+    if(this.sharedPostSubscription){
+      this.sharedPostSubscription.unsubscribe();
+    }
+    if(this.savedReelSubscription){
+      this.savedReelSubscription.unsubscribe();
+    }
   }
 
     getGlobalFeedsData(){
@@ -505,9 +554,10 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit {
         this.bsModalService.show(ReelsViewComponent,{initialState});
       }
 
-      openSharePostModal(postId:string): void {
+      openSharePostModal(postId:string,postType:number): void {
         const initialState = {
-          postId: postId
+          postId: postId,
+          postType: postType
         };
         this.bsModalService.show(SharePostComponent,{initialState});
       }
@@ -555,8 +605,12 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit {
         }
 
         savePost(postId:string){
+          debugger
           var myFeeds: any[] = this.myFeeds;
           var isSavedPost = myFeeds.find(x => x.id == postId);
+          if(isSavedPost == undefined){
+            var isSavedPost = this.globalFeeds.find((x: { id: string; }) => x.id == postId);
+          }
 
           if(isSavedPost.isPostSavedByCurrentUser){
             isSavedPost.savedPostsCount -= 1;

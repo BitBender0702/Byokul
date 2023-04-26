@@ -342,8 +342,8 @@
                         <div class="teacher-tags tag-box hashtag_box">
                             <span *ngFor="let tag of post.postTags" class="custom-tag">#{{tag.postTagValue}}</span>
                         </div>
-                        <div *ngIf="post.postAttachments.length" class="school-grid-thumbnail new-school-grid-thumbnail" style="cursor: pointer;">
-                            <div  class="row gx-1 h-100">
+                        <div *ngIf="post.postAttachments.length && post.postAttachments.fileType != 3" class="school-grid-thumbnail new-school-grid-thumbnail" style="cursor: pointer;">
+                          <div  class="row gx-1 h-100">
                               
                                 <div *ngIf="post.postAttachments.length == 1"  class="col-md-12 h-100">
                                     <div class="school-large-thumbnail shadow-thumnail position-relative">
@@ -399,8 +399,8 @@
                                 </div>
                             </div>
                             </div>
+                          </div>  
                         </div>
-                    </div>
                     <div *ngIf="post.postAttachments.length" class="school-grid-footer above-thumbnail">
                         <button type="button" class="bg-transparent border-0 function-btns text-light cursor_auto">
                             <img src="../../../../assets/images/eye-light.svg" class="d-block mx-auto" />
@@ -424,7 +424,7 @@
                             <img *ngIf="post.isPostSavedByCurrentUser" src="../../../../assets/images/Bookmark-light.svg" class="d-block mx-auto">
                             {{post.savedPostsCount}}
                         </button>
-                        <button (click)="openSharePostModal(post.id)" type="button" class="bg-transparent border-0 function-btns text-light">
+                        <button (click)="openSharePostModal(post.id,post.postType)" type="button" class="bg-transparent border-0 function-btns text-light">
                             <img src="../../../../assets/images/Upload-light.svg" class="d-block mx-auto" />
                             {{post.postSharedCount}}
                         </button>
@@ -451,7 +451,7 @@
                         <img *ngIf="post.isPostSavedByCurrentUser" src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto">
                         <span class="textBlack">{{post.savedPostsCount}}</span>
                       </button>
-                      <button (click)="openSharePostModal(post.id)" type="button" class="bg-transparent border-0 function-btns text-light">
+                      <button (click)="openSharePostModal(post.id,post.postType)" type="button" class="bg-transparent border-0 function-btns text-light">
                         <img src="../../../../assets/images/Upload-dark.svg" class="d-block mx-auto" />
                         <span class="textBlack">{{post.postSharedCount}}</span>
                       </button>
@@ -524,7 +524,7 @@
                   <img *ngIf="gridItemInfo.isPostSavedByCurrentUser" src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto">
                   {{gridItemInfo.savedPostsCount}}
                 </button>
-                <button (click)="openSharePostModal(gridItemInfo.id)" type="button" class="bg-transparent border-0 function-btns">
+                <button (click)="openSharePostModal(gridItemInfo.id,gridItemInfo.postType)" type="button" class="bg-transparent border-0 function-btns">
                   <img src="../../../../assets/images/Upload-dark.svg" class="d-block mx-auto">
                   {{gridItemInfo.postSharedCount}}
                 </button>
@@ -642,8 +642,8 @@
                       <div *ngIf="item.tags.length==0" class="teacher-tags tag-box hashtag_box">
                         <span class="custom-tag"></span>
                       </div>
-                      <div class="school-grid-thumbnail shadow-thumnail position-relative classes-grid overflow-hidden" (click)="openClassCourseViewModal(item)">
-                        <div class="row gx-1">
+                      <div class="school-grid-thumbnail shadow-thumnail position-relative classes-grid overflow-hidden">
+                        <div class="row gx-1" style="cursor:pointer" (click)="openClassCourseViewModal(item)">
                           <div class="col-md-12">
                             <div class="school-large-thumbnail position-relative ">
                               <img *ngIf="item.thumbnailType == 1" class="w-100" [src]="item.thumbnailUrl" />

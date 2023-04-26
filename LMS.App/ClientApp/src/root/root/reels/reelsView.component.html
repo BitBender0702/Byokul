@@ -55,11 +55,13 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
                   <span *ngIf="likesLength != undefined && currentLikedPostId== reels.post.id">{{likesLength}}</span>
                   <span *ngIf="currentLikedPostId!= reels.post.id">{{reels.post.likes.length}}</span>
                 </button>
-            <button type="button" class="btn bg-transparent text_ltgray font_12">
-              <img src="../../../assets/images/Bookmark.svg" class="d-block rightImagesWidth" /> 
-              0</button>
-            <button type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Upload.svg"
-                class="d-block rightImagesWidth" /> 0</button>
+            <button (click)="saveReel(reels.post.id)" type="button" class="btn bg-transparent text_ltgray font_12">
+              <img *ngIf="!reels.post.isPostSavedByCurrentUser" src="../../../../assets/images/Bookmark-dark.svg" class="d-block rightImagesWidth" />
+              <img *ngIf="reels.post.isPostSavedByCurrentUser" src="../../../../assets/images/Bookmark-dark.svg" class="d-block rightImagesWidth">
+              {{reels.post.savedPostsCount}}
+            </button>
+            <button (click)="openSharePostModal(reels.post.id, reels.post.postType)" type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Upload.svg"
+                class="d-block rightImagesWidth" /> {{reels.post.postSharedCount}}</button>
           </div>
           <div class="live-chat-box text-center">
             <div *ngIf="reels.post.createdBy == loginUserId && reels.post.isCommentsDisabled" (click)="showCommentsDiv(true)" class="chat-enabled d-inline-flex align-items-center cursorPointer"><img src="../../../assets/images/Unlock.svg" />{{'ChatEnabled'| translate }}
@@ -144,10 +146,13 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
                 <span *ngIf="likesLength != undefined && currentLikedPostId== reels.post.id">{{likesLength}}</span>
                 <span *ngIf="currentLikedPostId!= reels.post.id">{{reels.post.likes.length}}</span>
               </button>
-          <button type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Bookmark.svg"
-              class="d-block rightImagesWidth" /> 0</button>
-          <button type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Upload.svg"
-              class="d-block rightImagesWidth" /> 0</button>
+              <button (click)="saveReel(reels.post.id)" type="button" class="btn bg-transparent text_ltgray font_12">
+                <img *ngIf="!reels.post.isPostSavedByCurrentUser" src="../../../../assets/images/Bookmark-dark.svg" class="d-block rightImagesWidth" />
+                <img *ngIf="reels.post.isPostSavedByCurrentUser" src="../../../../assets/images/Bookmark-dark.svg" class="d-block rightImagesWidth">
+                {{reels.post.savedPostsCount}}
+              </button>
+              <button (click)="openSharePostModal(reels.post.id, reels.post.postType)" type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Upload.svg"
+                  class="d-block rightImagesWidth" /> {{reels.post.postSharedCount}}</button>
         </div>
         <div class="live-chat-box text-center">
           <div *ngIf="reels.post.createdBy == loginUserId && reels.post.isCommentsDisabled" (click)="showCommentsDiv(true)" class="chat-enabled d-inline-flex align-items-center cursorPointer"><img src="../../../assets/images/Unlock.svg" />{{'ChatEnabled'| translate }}

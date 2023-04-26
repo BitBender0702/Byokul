@@ -5,8 +5,8 @@
     <div class="main_content">
       <div class="create-post-header d-flex justify-content-between d-none d-xl-flex align-items-center">
         <button (click)="back()" type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
-            src="../../../assets/images/arrow-left.svg" /> Back</button>
-            <h2 class="font_22 fw_700 f-monteserrat mb-md-0">Notifications  <button type="button" (click)="getNotificationSettings()" class="border-0 ms-2 notification-sett-btn" data-bs-toggle="modal" data-bs-target="#notifi-settingpopup"><img src="../../../assets/images/Setting-solid-dark.svg" /></button></h2>
+            src="../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
+            <h2 class="font_22 fw_700 f-monteserrat mb-md-0">{{'Notifications'| translate }}  <button type="button" (click)="getNotificationSettings()" class="border-0 ms-2 notification-sett-btn" data-bs-toggle="modal" data-bs-target="#notifi-settingpopup"><img src="../../../assets/images/Setting-solid-dark.svg" /></button></h2>
         <button type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 invisible" data-bs-toggle="modal"
           data-bs-target="#create-post">Create Post</button>
       </div>
@@ -203,5 +203,6 @@
 </body>
 </div>
 <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
+<post-loading-spinner [postLoadingIcon]="notificationLoadingIcon"></post-loading-spinner>
 
 

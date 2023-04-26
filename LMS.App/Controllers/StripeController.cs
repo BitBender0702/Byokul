@@ -1,86 +1,123 @@
-﻿using LMS.Services.Stripe;
+﻿using LMS.Common.ViewModels.Post;
+using LMS.Common.ViewModels.Stripe;
+using LMS.Data.Entity;
+using LMS.Services.Stripe;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Stripe;
 using Stripe.Checkout;
 
 namespace LMS.App.Controllers
 {
+    [Authorize]
     [Route("stripe")]
     [ApiController]
     public class StripeController : BaseController
     {
         private readonly IStripeService _stripeService;
-        public StripeController(IStripeService stripeService)
+        private readonly UserManager<User> _userManager;
+
+        public StripeController(IStripeService stripeService, UserManager<User> userManager)
         {
             _stripeService = stripeService;
+            _userManager = userManager;
         }
-        [Route("checkOut")]
+
+        [Route("buySubscription")]
         [HttpPost]
-        public async Task<IActionResult> CrateCheckoutSession()
+        public async Task<IActionResult> BuySubscription(BuySubscriptionViewModel model)
         {
-            var priceId = await _stripeService.CreateProduct();
+            var userId = await GetUserIdAsync(this._userManager);
+            var priceId = await _stripeService.CreateProduct(model);
 
-            var checkOuturl = await _stripeService.CreateCheckout(priceId);
-
-            return Ok(new { checkOuturl });
-
-
-            //var productOptions = new ProductCreateOptions
-            //{
-            //    Name = "Test Class",
-            //};
-            //var service2 = new ProductService();
-            //var product = service2.Create(productOptions);
-
-            //var priceOptions = new PriceCreateOptions
-            //{
-            //    UnitAmount = 1,
-            //    Currency = "inr",
-            //    Recurring = new PriceRecurringOptions
-            //    {
-            //        Interval = "year",
-            //    },
-            //    Product = product.Id,
-            //};
-            //var service1 = new PriceService();
-            //var price = service1.Create(priceOptions);
-            
-
-            //var options = new SessionCreateOptions
-            //{
-            //    SuccessUrl = "http://localhost:44472/stripe/succesCheckout",
-            //    CancelUrl = "http://localhost:44472/stripe/failedCheckout",
-
-
-            //    LineItems = new List<SessionLineItemOptions>
-            //    {
-            //         new SessionLineItemOptions
-            //         {
-            //            Price = price.Id,
-            //            Quantity = 1,
-            //         },
-            //    },
-            //    PaymentMethodTypes = new List<string>
-            //    {
-            //        "card",
-            //    },
-            //    Mode = "subscription",
-            //};
-            //var service = new SessionService();
-            //try
-            //{
-            //    Session session = service.Create(options);
-            //    Response.Headers.Add("Location", session.Url);
-            //}
-            //catch (Exception ex)
-            //{
-            //    throw ex;
-            //}
-
-
-            //return Ok();
+            var checkOuturl = await _stripeService.CreateCheckout(priceId, userId, model);
+            return Ok();
         }
+
+
+        [Route("ownedSchoolTransactionDetails")]
+        [HttpPost]
+        public async Task<IActionResult> GetSchoolTransactionDetails([FromBody] TransactionParamViewModel model)
+        {
+            var userId = await GetUserIdAsync(this._userManager);
+            var response = await _stripeService.GetSchoolTransactionDetails(model, userId);
+            return Ok(response);
+        }
+
+        [Route("withdrawDetails")]
+        [HttpPost]
+        public async Task<IActionResult> GetWithdrawDetails([FromBody] TransactionParamViewModel model)
+        {
+            var userId = await GetUserIdAsync(this._userManager);
+            var response = await _stripeService.GetWithdrawDetails(model, userId);
+            return Ok(response);
+        }
+
+        [Route("allTransactionDetails")]
+        [HttpPost]
+        public async Task<IActionResult> GetAllTransactionDetails([FromBody] TransactionParamViewModel model)
+        {
+            var userId = await GetUserIdAsync(this._userManager);
+            var response = await _stripeService.GetAllTransactionDetails(model, userId);
+            return Ok(response);
+        }
+
+        [Route("payout")]
+        [HttpPost]
+        public async Task<IActionResult> Payout([FromBody] PayoutViewModel model)
+        {
+            var userId = await GetUserIdAsync(this._userManager);
+            var response = await _stripeService.Payout(model,userId);
+            return Ok(response);
+        }
+
+        [AllowAnonymous]
+        [Route("webhook")]
+        [HttpPost]
+        public async Task<IActionResult> StripeWebhook()
+        {
+            var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
+            try
+            {
+                var stripeEvent = EventUtility.ParseEvent(json);
+                if (stripeEvent.Type == Events.PaymentIntentSucceeded)
+                {
+                    PaymentIntent paymentIntent = stripeEvent.Data.Object as PaymentIntent;
+
+
+                    var paymentIntentService = new PaymentIntentService();
+                    var paymentIntent2 = await paymentIntentService.GetAsync(paymentIntent.Id);
+
+                    var transaction = new TransactionViewModel
+                    {
+                        Amount = paymentIntent.Amount/100,
+                        StripeCustomerId = paymentIntent.CustomerId,
+                        StripeProductId = paymentIntent.Metadata["product_id"],
+                        UserId = paymentIntent.Metadata["user_id"],
+                        OwnerId = paymentIntent.Metadata["owner_id"],
+
+                    };
+
+
+                    var result = await _stripeService.SaveTransaction(transaction);
+                    return StatusCode(200, new { result = result });
+                }
+                else
+                {
+                    Console.WriteLine("Unhandled event type: {0}", stripeEvent.Type);
+                }
+                return Ok();
+            }
+
+            catch (StripeException e)
+            {
+                return BadRequest();
+            }
+        }
+
 
         [Route("succesCheckout")]
         [HttpGet]

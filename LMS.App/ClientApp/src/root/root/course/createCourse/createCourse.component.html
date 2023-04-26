@@ -1,15 +1,5 @@
-
-  <section class="f-poppins">
-
+<section class="f-poppins">
     <div class="main_content">
-
-      <div class="create-post-header d-flex justify-content-between d-none d-xl-flex">
-        <div class="search-header position-relative">
-          <input type="search" class="form-control h_44" />
-          <button type="button" class="btn search-icon" ><img src="../../../../assets/images/school/search-gray.svg" /></button>
-        </div>
-        <button (click)="openModal('abc')" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44">{{'CreatePost'| translate }}</button>
-      </div>
       <div class="live-header d-flex align-items-center justify-content-between">
         <button (click)="back()" type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
             src="../../../../assets/images/school/arrow-left.svg" /> {{'Back'| translate }}</button>
@@ -22,15 +12,8 @@
             </div>     
            </div>
 
-
-      <!-- <form id="regForm" class="step-form mx-auto f-monteserrat" [formGroup]="createCourseForm"> -->
         <div id="regForm" class="step-form mx-auto f-monteserrat">
         <h3 *ngIf="step!=2" id="create_school" class="font_24 text_dark fw-bold text-center">{{'CreateCourse'| translate }}</h3>
-        <!-- One "tab" for each step in the form: -->
-        <!-- <div class="step-icon text-center">
-          <span class="step step1"></span>
-          <span class="step step2"></span>
-        </div> -->
         <p-steps *ngIf="step<2" [model]="items" [(activeIndex)]="step" [readonly]="true">
         </p-steps>
         <div class="tab-content registerTabs">
@@ -115,7 +98,7 @@
               <label class="font_10">{{'Tags'| translate }}</label>
               <input formControlName="tags" (keyup.enter)="onEnter($event)" type="text" class="form-control" placeholder="{{'TypeToAdd'| translate }}">
               <small class="p-error" style="color: orange;"
-              *ngIf="(isStepCompleted && createCourseForm1.controls.tags.errors)">Please select atleast one tag
+              *ngIf="(isStepCompleted && createCourseForm1.controls.tags.errors)">Please add atleast one tag
             </small>
             </div>
             <div class="teacher-tags tag-box hashtag_post mt-4 mb-2 hover-tags">
@@ -128,7 +111,7 @@
             <div class="dropzone-wrapper my-4">
               <div class="dropzone-desc">
                 <i class="glyphicon glyphicon-download-alt"></i>
-                <p class="text-center fw_400">{{'ChooseImageFile'| translate }} <b>{{'DragItHere'| translate }}</b></p>
+                <p class="text-center fw_400">{{'ChooseThumbnail'| translate }} <b>{{'DragItHere'| translate }}</b></p>
               </div>
               <input type="file" name="img_logo" (change)="handleImageInput($event)"  class="dropzone" accept="image/*, video/*">
             </div>
@@ -185,7 +168,7 @@
               <button (click)="backStep()" type="button"
                 class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 text-uppercase prev-step-btn prev-step"
                 id="prevBtn">{{'Back'| translate }}</button>
-                <button (click)="forwardStep()" type="button"
+                <button (click)="forwardStep2()" type="button"
                 class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 text-uppercase prev-step-btn prev-step"
                 id="step2_btn">{{'AddLater'| translate }}</button>
               <button (click)="forwardStep2()" type="button" id="step2_btn"

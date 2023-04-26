@@ -99,6 +99,10 @@ builder.Services.AddScoped<IPermissionService, PermissionService>();
 builder.Services.AddScoped<IFileStorageService, FileStorageService>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped(typeof(IAsyncGenericRepository<>), typeof(AsyncGenericRepository<>));
+builder.Services.AddScoped<IPostRepository, PostRepository>();
+builder.Services.AddScoped<CustomerService>();
+builder.Services.AddScoped<ChargeService>();
+builder.Services.AddScoped<TokenService>();
 StripeConfiguration.ApiKey = configuration.GetSection("Stripe")["SecretKey"];
 
 builder.Services.AddOptions();
@@ -111,9 +115,14 @@ builder.Services.AddScoped<BigBlueButtonAPIClient>(provider =>
     return new BigBlueButtonAPIClient(settings, factory.CreateClient());
 });
 
+builder.Services.AddLogging(loggingBuilder =>
+{
+    loggingBuilder.AddConfiguration(configuration.GetSection("Logging"));
+});
+
 // Add service for JWT.
 
- builder.Services.AddAuthentication(options =>
+builder.Services.AddAuthentication(options =>
  {
      options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
      options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;

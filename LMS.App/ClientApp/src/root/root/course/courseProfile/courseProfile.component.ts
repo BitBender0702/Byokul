@@ -24,13 +24,18 @@ import { NotificationService } from 'src/root/service/notification.service';
 import { PostService } from 'src/root/service/post.service';
 import { CertificateViewComponent } from '../../certificateView/certificateView.component';
 import { addPostResponse, CreatePostComponent } from '../../createPost/createPost.component';
-import { PostViewComponent } from '../../postView/postView.component';
-import { ReelsViewComponent } from '../../reels/reelsView.component';
-import { MultilingualComponent } from '../../sharedModule/Multilingual/multilingual.component';
-import { SharePostComponent } from '../../sharePost/sharePost.component';
+import { PostViewComponent, savedPostResponse } from '../../postView/postView.component';
+import { ReelsViewComponent, savedReelResponse } from '../../reels/reelsView.component';
+import { MultilingualComponent, changeLanguage } from '../../sharedModule/Multilingual/multilingual.component';
+import { SharePostComponent, sharedPostResponse } from '../../sharePost/sharePost.component';
 import { ownedCourseResponse } from '../createCourse/createCourse.component';
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
+import { PaymentComponent, paymentStatusResponse } from '../../payment/payment.component';
+import { AuthService } from 'src/root/service/auth.service';
+import { commentLikeResponse } from 'src/root/service/signalr.service';
+import { Subject, Subscription } from 'rxjs';
+export const convertIntoClassResponse =new Subject<{classId: string, className : string,school:any,avatar:string}>(); 
 
 @Component({
     selector: 'courseProfile-root',
@@ -44,6 +49,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     private _courseService;
     private _postService;
     private _notificationService;
+    private _authService;
     course:any;
     isProfileGrid:boolean = true;
     // isOpenSidebar:boolean = false;
@@ -106,6 +112,13 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     hasIssueCertificatePermission!:boolean;
     hasManageTeachersPermission!:boolean;
     isOnInitInitialize:boolean = false;
+    isConvertIntoCourse!:boolean;
+    savedPostSubscription!: Subscription;
+    savedReelSubscription!: Subscription;
+    addPostSubscription!: Subscription;
+    changeLanguageSubscription!:Subscription;
+    paymentStatusSubscription!:Subscription;
+    sharedPostSubscription!:Subscription;
 
 
     @ViewChild('closeEditModal') closeEditModal!: ElementRef;
@@ -119,51 +132,31 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     @ViewChild('createPostModal', { static: true }) createPostModal!: CreatePostComponent;
 
     isDataLoaded:boolean = false;
-    constructor(injector: Injector,notificationService:NotificationService,public messageService:MessageService,postService:PostService,private bsModalService: BsModalService,courseService: CourseService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,private cd: ChangeDetectorRef) { 
+    constructor(injector: Injector,authService:AuthService,notificationService:NotificationService,public messageService:MessageService,postService:PostService,private bsModalService: BsModalService,courseService: CourseService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,private cd: ChangeDetectorRef) { 
       super(injector);
         this._courseService = courseService;
          this._postService = postService;
          this._notificationService = notificationService;
-         this.courseParamsData$ = this.route.params.subscribe(routeParams => {
-          // if(!this.loadingIcon)
-          this.ngOnInit();
+         this._authService = authService;
+         this.courseParamsData$ = this.route.params.subscribe((routeParams) => {
+          this.courseName = routeParams.courseName;
+          if (!this.loadingIcon && this.isOnInitInitialize)
+          {
+             this.ngOnInit();
+          }
         });
-
-        // this.courseParamsData$ = this.route.params.subscribe((routeParams) => {
-        //   this.courseName = routeParams.courseName;
-        //   if (!this.loadingIcon && this.isOnInitInitialize) this.ngOnInit();
-        // });
     }
 
   
     ngOnInit(): void {
       this.isOnInitInitialize = true;
       this.postLoadingIcon = false;
-      // document.addEventListener('scroll', this.myScrollFunction, false);
+      this._authService.loginState$.next(true);
       this.validToken = localStorage.getItem("jwt")?? '';
       this.loadingIcon = true;
       var selectedLang = localStorage.getItem("selectedLanguage");
       this.translate.use(selectedLang?? '');
 
-      // var id = this.route.snapshot.paramMap.get('courseId');
-      // this.courseId = id ?? '';
-
-      this.courseName = this.route.snapshot.paramMap.get('courseName')??'';
-      //var schoolName = this.route.snapshot.paramMap.get('schoolName');
-
-      // if(this.courseId == ''){
-      //   this._courseService.getCourseByName(this.courseName,schoolName).subscribe((response) => {
-      //     this.courseId = response.courseId;
-      //     this._courseService.getCourseById(this.courseId).subscribe((response) => {
-      //       this.course = response;
-      //       this.isOwnerOrNot();
-      //       this.loadingIcon = false;
-      //       this.isDataLoaded = true;
-      //     });
-      //   })
-
-      // }
-      // else{
       this._courseService.getCourseById(this.courseName.replace(" ","").toLowerCase()).subscribe((response) => {
         this.postsPageNumber = 1;
         this.reelsPageNumber = 1;
@@ -178,7 +171,6 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
         this.addEventListnerOnCarousel();
        
       });
-    // }
 
       this.editCourseForm = this.fb.group({
         schoolName: this.fb.control(''),
@@ -250,30 +242,70 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       //  addPostResponse.subscribe(response => {
       //   this.ngOnInit();
       // });
-
-      addPostResponse.subscribe(response => {
-        this.loadingIcon = true;
-        this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post created successfully'});
-        this._courseService.getCourseById(this.courseName.replace(" ","").toLowerCase()).subscribe((response) => {
-          this.course = response;
-          this.isOwnerOrNot();
-          this.loadingIcon = false;
-          this.isDataLoaded = true;
-          this.scrolled = false;
-          this.postLoadingIcon = false;
-          this.addCourseView(this.course.courseId);
+      if(!this.addPostSubscription){
+        this.addPostSubscription = addPostResponse.subscribe(response => {
+          this.loadingIcon = true;
+          this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post created successfully'});
+          this._courseService.getCourseById(this.courseName.replace(" ","").toLowerCase()).subscribe((response) => {
+            this.course = response;
+            this.isOwnerOrNot();
+            this.loadingIcon = false;
+            this.isDataLoaded = true;
+            this.scrolled = false;
+            this.postLoadingIcon = false;
+            this.addCourseView(this.course.courseId);
+          });
         });
+      }
+
+      var isConvertIntoCourse = history.state.convertIntoCourse;
+      if(isConvertIntoCourse){
+        this.cd.detectChanges();
+        this.messageService.add({severity: 'success',summary: 'Success',life: 3000,detail: 'Class converted into course successfully',}); 
+      }
+
+      if(!this.savedPostSubscription){
+      this.savedPostSubscription = savedPostResponse.subscribe(response => {
+        if(response.isPostSaved){
+          this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post saved successfully'});
+        }
+        if(!response.isPostSaved){
+          this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post removed successfully'});
+        }
+      });
+     }
+
+     if(!this.savedReelSubscription){
+      this.savedReelSubscription = savedReelResponse.subscribe(response => {
+        if(response.isReelSaved){
+          this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Reel saved successfully'});
+        }
+        if(!response.isReelSaved){
+          this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Reel removed successfully'});
+        }
+      });
+    }
+
+    this.sharedPostSubscription = sharedPostResponse.subscribe( response => {
+      if(response.postType == 1){
+        this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post shared successfully'});
+        var post = this.course.posts.find((x: { id: string; }) => x.id == response.postId);  
+        post.postSharedCount++;
+      }
+      else
+        this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Reel shared successfully'});
       });
 
-//     }
+    if(!this.changeLanguageSubscription){
+      this.changeLanguageSubscription = changeLanguage.subscribe(response => {
+        this.translate.use(response.language);
+      })
+    }
 
-//     getClassDetails(classId:string){
-//       this._classService.getClassEditDetails(classId).subscribe((response) => {
-//         this.editClass = response;
-//         this.initializeEditFormControls();
-//     })
-    
-//   }
+     this.paymentStatusSubscription = paymentStatusResponse.subscribe(response => {
+      this.messageService.add({severity:'info', summary:'Info',life: 3000, detail:'We will notify when payment will be successful'});
+     });
+
     }
 
     addEventListnerOnCarousel(){
@@ -307,7 +339,24 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     }
 
     ngOnDestroy(): void {
-      if(this.courseParamsData$) this.courseParamsData$.unsubscribe();
+      if(this.paymentStatusSubscription){
+        this.paymentStatusSubscription.unsubscribe();
+      }
+      if(this.savedPostSubscription){
+        this.savedPostSubscription.unsubscribe();
+      }
+      if(this.changeLanguageSubscription){
+        this.changeLanguageSubscription.unsubscribe();
+      }
+      if(this.savedReelSubscription){
+        this.savedReelSubscription.unsubscribe();
+      }
+      if(this.sharedPostSubscription){
+        this.sharedPostSubscription.unsubscribe();
+      }
+      if(this.courseParamsData$){
+         this.courseParamsData$.unsubscribe();
+      }
     }
 
     @HostListener("window:scroll", [])
@@ -636,6 +685,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
             this.isSubmitted=true;
             ownedCourseResponse.next({courseId:response.courseId, courseAvatar:response.avatar, courseName:response.courseName,schoolName: this.schoolName, action:"update"});
             this.fileToUpload = new FormData();
+            this.cd.detectChanges();
             this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Course updated successfully'});
             // this.ngOnInit();
           });
@@ -744,11 +794,13 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     }
 
     convertToClass(courseName:string,schoolName:string){
-      
       this._courseService.convertToClass(courseName.replace(" ","").toLowerCase()).subscribe((response) => {
-        // window.location.href=`user/classProfile/${courseId}`;
-        window.location.href = `profile/class/${schoolName.replace(" ","").toLowerCase()}/${courseName.replace(" ","").toLowerCase()}`;
-
+        // localStorage.setItem("isCourseConvertIntoClass", JSON.stringify(true));
+        convertIntoClassResponse.next({classId:response.classId, className:response.className, avatar:response.avatar,school:response.school});
+        // convertIntoCourseResponse.next({courseId:response.courseId, courseName:response.courseName, avatar:response.avatar,school:response.school});
+        this.router.navigate([`profile/class/${schoolName.replace(" ","").toLowerCase()}/${courseName.replace(" ","").toLowerCase()}`],
+        { state: { convertIntoClass: true } });
+        //window.location.href = `profile/class/${schoolName.replace(" ","").toLowerCase()}/${courseName.replace(" ","").toLowerCase()}`;
       });
     }
 
@@ -891,13 +943,14 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       this.bsModalService.show(CertificateViewComponent, { initialState });
     }
 
-    openSharePostModal(postId:string): void {
+    openSharePostModal(postId:string, postType:number): void {
       if(this.course.accessibility.name == Constant.Private || this.course.serviceType.type == Constant.Paid){
         this.messageService.add({severity:'info', summary:'Info',life: 3000, detail:'This course is private/paid, you cant share the post!'});
       }
       else{
       const initialState = {
-        postId: postId
+        postId: postId,
+        postType: postType
       };
       this.bsModalService.show(SharePostComponent,{initialState});
     }
@@ -919,6 +972,26 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
        }
     
       this._postService.savePost(postId,this.userId).subscribe((result) => {
+      });
+    }
+
+    openPaymentModal(){
+      var courseDetails = {"id":this.course.courseId,"name":this.course.courseName,"avatar":this.course.avatar,"type":2,"amount":this.course.price}
+      const initialState = {
+        paymentDetails: courseDetails
+      };
+      this.bsModalService.show(PaymentComponent,{initialState});
+    }
+
+    createCertificate(courseId:string,type:string){
+      this._courseService.getCourseInfoForCertificate(courseId).subscribe((response) => {
+        if(response.students.length == 0){
+          this.messageService.add({severity:'info', summary:'Info',life: 3000, detail:'Your course does not have any students yet'});
+          return;
+        }
+        else{
+          this.router.navigate([`user/createCertificate`],{ state: { certificateInfo: {id: courseId, type : type,} } });
+        }
       });
     }
   

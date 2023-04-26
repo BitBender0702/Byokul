@@ -45,6 +45,7 @@ export class SideBarComponent extends MultilingualComponent implements OnInit {
         }
         
     this.selectedLanguage = localStorage.getItem("selectedLanguage");
+    this.translate.use(this.selectedLanguage ?? '');
     this._userService.getSidebarInfo().subscribe((response) => {
       this.sidebarInfo = response;
       this.loadingIcon = false;
@@ -71,6 +72,7 @@ export class SideBarComponent extends MultilingualComponent implements OnInit {
     });
 
     unreadNotificationResponse.subscribe(response => {
+      debugger
       if(response.type =="remove"){
       this.sidebarInfo.unreadNotificationCount = 0;
       }

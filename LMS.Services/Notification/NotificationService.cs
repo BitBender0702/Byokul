@@ -51,9 +51,10 @@ namespace LMS.Services
             return result;
         }
 
-        public async Task<List<NotificationViewModel>> GetNotifications(string userId)
+        public async Task<List<NotificationViewModel>> GetNotifications(string userId, int pageNumber)
         {
-            var notifications = await _notificationRepository.GetAll().Include(x => x.User).Include(x => x.Post).Where(x => x.UserId == userId).ToListAsync();
+            int pageSize = 12;
+            var notifications = await _notificationRepository.GetAll().Include(x => x.User).Include(x => x.Post).Where(x => x.UserId == userId).OrderByDescending(x => x.DateTime).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
             return _mapper.Map<List<NotificationViewModel>>(notifications);
         }
 
@@ -130,6 +131,23 @@ namespace LMS.Services
                     _userNotificationSettingRepository.Save();
                 }
             }
+        }
+
+        public async Task SaveTransactionNotification(NotificationViewModel notificationViewModel)
+        {
+            var notification = new Notification
+            {
+                UserId = notificationViewModel.UserId,
+                Avatar = notificationViewModel.Avatar,
+                IsRead = false,
+                NotificationContent = notificationViewModel.NotificationContent,
+                NotificationType = NotificationTypeEnum.Transaction,
+                DateTime = DateTime.UtcNow,
+                ChatTypeId = notificationViewModel.ChatTypeId
+            };
+
+            _notificationRepository.Insert(notification);
+            _notificationRepository.Save();
         }
     }
 }

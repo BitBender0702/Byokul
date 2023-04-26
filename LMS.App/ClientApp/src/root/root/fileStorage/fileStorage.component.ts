@@ -13,6 +13,7 @@ import { SchoolService } from 'src/root/service/school.service';
 import { commentResponse, progressResponse, SignalrService } from 'src/root/service/signalr.service';
 import { TeacherService } from 'src/root/service/teacher.service';
 import { UserService } from 'src/root/service/user.service';
+import { MultilingualComponent, changeLanguage } from '../sharedModule/Multilingual/multilingual.component';
 
 @Component({
     selector: 'fileStorage',
@@ -21,7 +22,7 @@ import { UserService } from 'src/root/service/user.service';
     providers: [MessageService]
   })
 
-export class FileStorageComponent implements OnInit, OnDestroy {
+export class FileStorageComponent extends MultilingualComponent implements OnInit, OnDestroy {
 
     private _fileStorageService;
     private _userService;
@@ -79,7 +80,8 @@ export class FileStorageComponent implements OnInit, OnDestroy {
     filesModalInterval:any;
     progressFileName!:string;
     fileCount:number = 1;
-    private progressSubscription!: Subscription;
+    progressSubscription!: Subscription;
+    changeLanguageSubscription!: Subscription;
 
     @ViewChild('closeFileModal') closeFileModal!: ElementRef;
     @ViewChild('closeFolderModal') closeFolderModal!: ElementRef;
@@ -87,7 +89,8 @@ export class FileStorageComponent implements OnInit, OnDestroy {
     @ViewChild('searchInput') searchInput!: ElementRef;
 
 
-    constructor(private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,userService:UserService,fileStorageService:FileStorageService,signalRService:SignalrService,chatService:ChatService,teacherService:TeacherService,public messageService:MessageService,private cd: ChangeDetectorRef) { 
+    constructor(injector: Injector,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,userService:UserService,fileStorageService:FileStorageService,signalRService:SignalrService,chatService:ChatService,teacherService:TeacherService,public messageService:MessageService,private cd: ChangeDetectorRef) { 
+      super(injector);
       this._userService = userService; 
       this._fileStorageService = fileStorageService;
       this._signalRService = signalRService;
@@ -98,6 +101,8 @@ export class FileStorageComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
       this.loadingIcon = true;
       this.isFirstPage = true;
+      var selectedLang = localStorage.getItem('selectedLanguage');
+      this.translate.use(selectedLang ?? '');
       this.parentId = this.activatedRoute.snapshot.paramMap.get('id')??'';
       this.fileStorageType = this.activatedRoute.snapshot.paramMap.get('type')??'';
 
@@ -132,10 +137,21 @@ export class FileStorageComponent implements OnInit, OnDestroy {
         this.progressFileName = response.fileName;
         this.cd.detectChanges();
       });
+
+      if(!this.changeLanguageSubscription){
+        this.changeLanguageSubscription = changeLanguage.subscribe(response => {
+          this.translate.use(response.language);
+        })
+      }
     }
 
     ngOnDestroy() {
-      this.progressSubscription.unsubscribe();
+      if(this.changeLanguageSubscription){
+        this.changeLanguageSubscription.unsubscribe();
+      }
+      if(this.progressSubscription){
+        this.progressSubscription.unsubscribe();
+      }
     }
 
     getClassTeachers(classId:string){

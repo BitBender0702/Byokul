@@ -14,5 +14,6 @@ namespace LMS.Data.Entity
         public Guid PostId { get; set; }
         public Post Post { get; set; }
         public DateTime CreatedOn { get; set; }
+        public bool IsPinned { get; set; }
     }
 }

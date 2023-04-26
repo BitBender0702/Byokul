@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, Injector, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
@@ -10,6 +10,8 @@ import { AuthService } from 'src/root/service/auth.service';
 import { SchoolService } from 'src/root/service/school.service';
 import { TeacherService } from 'src/root/service/teacher.service';
 import { UserService } from 'src/root/service/user.service';
+import { MultilingualComponent, changeLanguage } from '../sharedModule/Multilingual/multilingual.component';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'addTeacher-root',
@@ -19,7 +21,7 @@ import { UserService } from 'src/root/service/user.service';
 
   })
 
-export class AddTeacherComponent implements OnInit {
+export class AddTeacherComponent extends MultilingualComponent implements OnInit, OnDestroy{
     loadingIcon:boolean = false;
     isSubmitted: boolean = false;
     addNewOrExisting:any;
@@ -48,17 +50,22 @@ export class AddTeacherComponent implements OnInit {
     hideCourseSection!:boolean;
     allSchoolSelected!:boolean;
     selectedItems: string[] = [];
+    changeLanguageSubscription!: Subscription;
 
-    constructor(private fb: FormBuilder,private router: Router,private route: ActivatedRoute,authService:AuthService,schoolService:SchoolService,teacherService:TeacherService,userService:UserService,public messageService:MessageService, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
-         this._schoolService = schoolService;
-         this._teacherService = teacherService;
-         this._userService = userService;
-         this._authService = authService;
+
+    constructor(injector: Injector,private fb: FormBuilder,private router: Router,private route: ActivatedRoute,authService:AuthService,schoolService:SchoolService,teacherService:TeacherService,userService:UserService,public messageService:MessageService, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
+        super(injector);
+        this._schoolService = schoolService;
+        this._teacherService = teacherService;
+        this._userService = userService;
+        this._authService = authService;
     }
   
     ngOnInit(): void {
         this.loadingIcon = true;
         this._authService.loginState$.next(true);
+        var selectedLang = localStorage.getItem('selectedLanguage');
+        this.translate.use(selectedLang ?? '');
         this.loginUserId = this.route.snapshot.paramMap.get('userId')??'';
         this.isAddNewteacher = true;
 
@@ -82,6 +89,18 @@ export class AddTeacherComponent implements OnInit {
         selectedSchools:this.fb.control('',[Validators.required])
       });
       this.initializeAddTeacherViewModel();
+
+      if(!this.changeLanguageSubscription){
+        this.changeLanguageSubscription = changeLanguage.subscribe(response => {
+          this.translate.use(response.language);
+        })
+      }
+    }
+
+    ngOnDestroy(): void {
+        if(this.changeLanguageSubscription){
+            this.changeLanguageSubscription.unsubscribe();
+          }
     }
 
     back(): void {

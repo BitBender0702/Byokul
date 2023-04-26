@@ -12,6 +12,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Newtonsoft.Json;
+using System.Text;
+using Country = LMS.Common.ViewModels.Common.Country;
 
 namespace LMS.App.Controllers
 {
@@ -24,15 +27,18 @@ namespace LMS.App.Controllers
         private readonly IChatService _chatService;
         private readonly IBlobService _blobService;
         private IConfiguration _config;
+        private readonly HttpClient _httpClient;
 
 
-        public UserController(UserManager<User> userManager, IUserService userService, IChatService chatService, IBlobService blobService, IConfiguration config)
+
+        public UserController(UserManager<User> userManager, IUserService userService, IChatService chatService, IBlobService blobService, IConfiguration config, HttpClient httpClient)
         {
             _userManager = userManager;
             _userService = userService;
             _chatService = chatService;
             _blobService = blobService;
             _config = config;
+            _httpClient = httpClient;
         }
 
 
@@ -105,7 +111,7 @@ namespace LMS.App.Controllers
 
         [Route("myFeed")]
         [HttpGet]
-        public async Task<IActionResult> MyFeed(PostTypeEnum postType, int pageNumber,string? searchString)
+        public async Task<IActionResult> MyFeed(PostTypeEnum postType, int pageNumber, string? searchString)
         {
             var userId = await GetUserIdAsync(this._userManager);
             return Ok(await _userService.GetMyFeed(userId, postType, searchString, pageNumber));
@@ -120,9 +126,16 @@ namespace LMS.App.Controllers
 
         [Route("userFollowers")]
         [HttpGet]
-        public async Task<IActionResult> UserFollowers(string userId, int pageNumber,string? searchString)
+        public async Task<IActionResult> UserFollowers(string userId, int pageNumber, string? searchString)
         {
             return Ok(await _userService.GetUserFollowers(userId, pageNumber, searchString));
+        }
+
+        [Route("userFollowings")]
+        [HttpGet]
+        public async Task<IActionResult> UserFollowings(string userId, int pageNumber, string? searchString)
+        {
+            return Ok(await _userService.GetUserFollowings(userId, pageNumber, searchString));
         }
 
         [Route("getBasicUserInfo")]
@@ -143,7 +156,7 @@ namespace LMS.App.Controllers
 
         [Route("globalFeed")]
         [HttpGet]
-        public async Task<IActionResult> GlobalFeed(PostTypeEnum postType, int pageNumber,string? searchString)
+        public async Task<IActionResult> GlobalFeed(PostTypeEnum postType, int pageNumber, string? searchString)
         {
             var userId = await GetUserIdAsync(this._userManager);
             return Ok(await _userService.GetGlobalFeed(userId, postType, pageNumber, searchString));
@@ -217,6 +230,72 @@ namespace LMS.App.Controllers
         {
             var user = await _userService.GetUserByEmail(email);
             return Ok(user);
+        }
+
+        [AllowAnonymous]
+        [Route("getCountries")]
+        [HttpGet]
+        public async Task<IEnumerable<Country>> GetCountries()
+        {
+            try
+            {
+                //var response = await _httpClient.GetFromJsonAsync<List<dynamic>>("https://restcountries.com/v3.1/all");
+                var response = await _httpClient.GetAsync("https://restcountries.com/v3.1/all");
+                var content = await response.Content.ReadAsStringAsync();
+                var countries = JsonConvert.DeserializeObject<List<Countries>>(content);
+
+                var countriesList = countries.Select(country => new Country
+                {
+                    //Name = country.Name.Common,
+                    //Alpha3Code = country.Cca3
+                    CountryName = country.Name.Common,
+                    CountryCode = country.Cca2
+                });
+
+                countriesList = countriesList.OrderBy(country => country.CountryName);
+                return countriesList;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+        }
+
+
+        [AllowAnonymous]
+        [Route("getCities")]
+        [HttpPost]
+        public async Task<IEnumerable<string>> GetCities(string countryName)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Post, "https://countriesnow.space/api/v0.1/countries/cities");
+            request.Content = new StringContent($"{{ \"country\": \"{countryName}\" }}", Encoding.UTF8, "application/json");
+            var response = await _httpClient.SendAsync(request);
+
+
+           // var response = await _httpClient.GetAsync($"https://countriesnow.space/api/v0.1/countries/cities?&country={countryCode.Country}");
+            var content = await response.Content.ReadAsStringAsync();
+            var citiesResponse = JsonConvert.DeserializeObject<CitiesResponse>(content);
+            var cities = citiesResponse.Data.OrderBy(city => city);
+            return cities;
+        }
+
+        [Route("deleteSchoolTeacher")]
+        [HttpPost]
+        public async Task<IActionResult> DeleteSchoolTeacher(Guid schoolId)
+        {
+            var userId = await GetUserIdAsync(this._userManager);
+            await _userService.DeleteSchoolTeacher(schoolId, userId);
+            return Ok();
+        }
+
+        [Route("deleteSchoolStudent")]
+        [HttpPost]
+        public async Task<IActionResult> deleteSchoolStudent(Guid schoolId)
+        {
+            var userId = await GetUserIdAsync(this._userManager);
+            await _userService.DeleteSchoolStudent(schoolId, userId);
+            return Ok();
         }
 
     }

@@ -1,67 +1,66 @@
-<div class="modal fade edit-school-modal" id="editClass" tabindex="-1" aria-labelledby="editClass"
-aria-hidden="true">
+<div *ngIf="isDataLoaded">
+<div appBsModal bsModal class="modal fade edit-school-modal show d-block" id="create-post" tabindex="-1"
+aria-labelledby="create-post" aria-hidden="true" area-modal="true">
 <div class="modal-dialog modal-dialog-centered">
   <div class="modal-content">
     <div class="modal-header border-0 justify-content-center position-relative">
       <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center" id="editschool">{{'BuyClass'| translate }}</h1>
-      <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"><img
+      <button (click)="closeModal()" type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"><img
           src="../../../../assets/images/cross.svg" /></button>
     </div>
     <div class="modal-body">
       <div class="edit-profile-header text-center mb-4">
         <div class="rounded-circle modal-school-icon text-center mb-2 class-icon-profile">
-            <!-- <div *ngIf="uploadImage!= ''">
-                <img [src]="uploadImage">
-              </div>
-              <div *ngIf="uploadImage == ''">
-                <img *ngIf="editClass?.avatar != 'null'" src={{editClass?.avatar}} style="scale: 1.8;">
-              </div> -->
+            <div>
+                <img [src]="parentInfo.paymentDetails.avatar">
+            </div>
         </div>
-
-        <!-- <input #imageFile class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins position-static opacity-100" type="file" name="Edit Picture" id="avatar" (change)="handleImageInput($event)" accept="image/*"/> -->
       </div>
       <div class="text-line-border position-relative text-center mb-4">
         <span class="line-text font_12 text_ltgray fw_400 text-center">{{'GeneralInformation'| translate }}</span>
       </div>
       <form [formGroup]="paymentForm" class="latest-form">
         <div class="row">
-          <div class="col-md-6">
+          <div class="col-md-12">
             <div class="form-group">
               <label class="font_10">{{'PaymentMethod'| translate }}</label>
               <select class="form-select rounded-8 w-100" formControlName="paymentMethod">
-                <option value="1">Credit Card</option>
-                <option value="2">Debit Card</option>
+                <option value="1" selected>{{'CreditCard'| translate }}</option>
+                <option value="2">{{'DebitCard'| translate }}</option>
               </select>
             </div>
           </div>
-          <div class="col-md-6">
+          <div class="col-md-12">
             <div class="form-group">
               <label class="font_10">{{'CardNumber'| translate }}*</label>
-              <input formControlName="cardNumber" type="number" placeholder="XXXX-XXXX-XXXX-XXXX" name="cardNumber" class="form-control w-100">
+              <input (keypress)="omit_special_char($event)" formControlName="cardNumber" type="text" placeholder="XXXX-XXXX-XXXX-XXXX" maxlength="19" name="cardNumber" class="form-control w-100" (input)="formatCardNumber($event)">
               <small class="p-error" style="color: orange;"
               *ngIf="(isSubmitted && paymentForm.controls.cardNumber.errors)">Card Number is required
             </small>
             </div>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-6">
             <div class="form-group">
               <label class="font_10">{{'ExpiresOn'| translate }}*</label>
-              <input formControlName="expiresOn" type="number" placeholder="" name="expiresOn" class="form-control w-100">
+              <input (keypress)="omit_special_char($event)" formControlName="expiresOn" type="text" placeholder="XX-XX" maxlength="5" name="expiresOn" class="form-control w-100" (input)="formatMonthYear($event)">
               <small class="p-error" style="color: orange;"
               *ngIf="(isSubmitted && paymentForm.controls.expiresOn.errors)">Expires On is required
             </small>
+            <small class="p-error" style="color: orange;" *ngIf="paymentForm.errors">
+              {{paymentForm.errors.dates}}
+            </small>
             </div>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-6">
             <div class="form-group">
               <label class="font_10">{{'SecurityCode'| translate }}*</label>
-              <input formControlName="securityCode" type="number" name="securityCode" class="form-control w-100">
+              <input formControlName="securityCode" type="text" name="securityCode" class="form-control w-100">
               <small class="p-error" style="color: orange;"
               *ngIf="(isSubmitted && paymentForm.controls.securityCode.errors)">Security Code is required
             </small>
             </div>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-6">
             <div class="form-group">
               <label class="font_10">{{'FirstName'| translate }}*</label>
               <input formControlName="firstName" type="text" name="firstName" class="form-control w-100">
@@ -71,7 +70,7 @@ aria-hidden="true">
             </div>
           </div>
 
-          <div class="col-md-4">
+          <div class="col-md-6">
             <div class="form-group">
               <label class="font_10">{{'LastName'| translate }}*</label>
               <input formControlName="lastName" type="text" name="lastName" class="form-control w-100">
@@ -95,3 +94,7 @@ aria-hidden="true">
   </div>
 </div>
 </div>
+</div>
+
+<loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
+

@@ -3,7 +3,7 @@
     <div class="main_content">
       <div class="create-post-header d-flex justify-content-between d-none d-xl-flex align-items-center">
         <button (click)="back()" type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
-            src="../../../assets/images/arrow-left.svg" /> Back</button>
+            src="../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
             <h2 class="font_22 fw_700 f-monteserrat mb-md-0">{{folderLocation}}</h2>
             <div class="search-header position-relative">
               <input [(ngModel)]="searchString" class="form-control h_44" type="search" #searchInput (input)="FoldersAndFilesSearch(searchInput.value)">

@@ -3,20 +3,20 @@
       <div class="main_content">
         <div class="create-post-header d-flex justify-content-between d-none d-xl-flex">
           <button (click)="back()" type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
-              src="../../../assets/images/arrow-left.svg"> Back</button>
+              src="../../../assets/images/arrow-left.svg"> {{'Back'| translate }}</button>
               <div class="school-profile-tabs d-flex align-content-center justify-content-center">
                 <div class="custom-tabs profile-custom-tabs">
                   <ul class="nav nav-tabs border-0 before-none" id="myTab" role="tablist">
                     <li class="nav-item ps-0 mb-0" role="presentation">
                       <button class="nav-link active" id="myInbox-tab" data-bs-toggle="tab"
                       data-bs-target="#myInbox-tab-pane" type="button" role="tab" aria-controls="myInbox-tab-pane"
-                      aria-selected="true" (click)="showMyInboxDiv()">My Inbox</button>
+                      aria-selected="true" (click)="showMyInboxDiv()">{{'MyInbox'| translate }}</button>
                     </li>
                     <li class="nav-item ps-0 mb-0" role="presentation">
                       <div class="dropdown">
                         <button class="bg-transparent dropdown-toggle rounded-circle" type="button" data-bs-toggle="dropdown"
                           aria-expanded="false" (click)="showSchoolInboxDiv()">
-                          My School Inbox
+                          {{'MySchoolInbox'| translate }}
                         </button>
                         <ul class="dropdown-menu">
                           <li *ngFor="let item of userSchoolsList"><a (click)="getSelectedSchoolInbox(item.schoolId)" class="ps-0 mb-0 dropdown-item nav-link btn chat-channel-button px-3" id="mySchoolInbox-tab" data-bs-toggle="tab"

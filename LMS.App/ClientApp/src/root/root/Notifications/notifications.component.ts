@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, Injector, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { NotificationService } from 'src/root/service/notification.service';
 import { PostService } from 'src/root/service/post.service';
@@ -6,8 +6,9 @@ import { notificationResponse } from 'src/root/service/signalr.service';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { PostViewComponent } from '../postView/postView.component';
 import { ReelsViewComponent } from '../reels/reelsView.component';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
+import { MultilingualComponent, changeLanguage } from '../sharedModule/Multilingual/multilingual.component';
 
 export const unreadNotificationResponse =new Subject<{type:string}>(); 
 
@@ -18,7 +19,7 @@ export const unreadNotificationResponse =new Subject<{type:string}>();
     styleUrls: ['./notifications.component.css']
   })
 
-  export class NotificationsComponent {
+  export class NotificationsComponent extends MultilingualComponent implements OnInit, OnDestroy {
     private _notificationService;
     private _postService;
     notifications:any;
@@ -28,21 +29,32 @@ export const unreadNotificationResponse =new Subject<{type:string}>();
     notificationSettingsList:any[] = [];
     userId!:string;
     validToken!: string;
+    changeLanguageSubscription!: Subscription;
+    notificationPageNumber:number = 1;
+    scrolled:boolean = false;
+    scrollNotificationResponseCount:number = 1;
+    notificationLoadingIcon: boolean = false;
 
-    constructor(private fb: FormBuilder,notificationService:NotificationService,private router: Router,postService:PostService,private bsModalService: BsModalService) {
-        this._notificationService = notificationService;
-        this._postService = postService;
+
+    constructor(injector: Injector,private fb: FormBuilder,notificationService:NotificationService,private router: Router,postService:PostService,private bsModalService: BsModalService) {
+       super(injector);
+       this._notificationService = notificationService;
+       this._postService = postService;
     }
 
     ngOnInit(): void {
+      debugger
         this.loadingIcon = true;
-        this._notificationService.getNotifications().subscribe((notificationsResponse) => {
+        var selectedLang = localStorage.getItem('selectedLanguage');
+        this.translate.use(selectedLang ?? '');
+        this._notificationService.getNotifications(this.notificationPageNumber).subscribe((notificationsResponse) => {
           debugger
             this.notifications = notificationsResponse;
             var notifications: any[] = this.notifications;
             var unreadNotifications = notifications.filter(x => !x.isRead);
             if(unreadNotifications.length > 0){
                 this._notificationService.removeUnreadNotifications().subscribe((response) => {
+                  debugger
                     unreadNotificationResponse.next({type:"remove"});
                 });
             }
@@ -61,6 +73,18 @@ export const unreadNotificationResponse =new Subject<{type:string}>();
         let decodedJwtJsonData = window.atob(jwtData)
         let decodedJwtData = JSON.parse(decodedJwtJsonData);
         this.userId = decodedJwtData.jti;
+      }
+      
+      if(!this.changeLanguageSubscription){
+        this.changeLanguageSubscription = changeLanguage.subscribe(response => {
+          this.translate.use(response.language);
+        })
+      }
+    }
+
+    ngOnDestroy(): void {
+      if(this.changeLanguageSubscription){
+        this.changeLanguageSubscription.unsubscribe();
       }
     }
 
@@ -124,6 +148,31 @@ export const unreadNotificationResponse =new Subject<{type:string}>();
 
       back(): void {
         window.history.back();
+    }
+
+    @HostListener("window:scroll", [])
+    onWindowScroll() {
+      const scrollPosition = window.pageYOffset;
+      const windowSize = window.innerHeight;
+      const bodyHeight = document.body.offsetHeight;
+        
+      if (scrollPosition >= bodyHeight - windowSize) {
+       if(!this.scrolled && this.scrollNotificationResponseCount != 0){
+        this.scrolled = true;
+        this.notificationLoadingIcon = true;
+        this.notificationPageNumber++;
+        this.getNotifications();
+        }
       }
+    }
+
+    getNotifications(){
+     this._notificationService.getNotifications(this.notificationPageNumber).subscribe((notificationsResponse) => {
+       this.notifications =[...this.notifications, ...notificationsResponse];
+       this.notificationLoadingIcon = false;
+       this.scrollNotificationResponseCount = notificationsResponse.length; 
+       this.scrolled = false;
+     });
+    }
 
 }

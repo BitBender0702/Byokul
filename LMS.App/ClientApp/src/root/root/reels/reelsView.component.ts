@@ -13,10 +13,12 @@ import { ReelsService } from 'src/root/service/reels.service';
 import { commentLikeResponse, commentResponse, signalRResponse, SignalrService } from 'src/root/service/signalr.service';
 import { UserService } from 'src/root/service/user.service';
 import { SharePostComponent } from '../sharePost/sharePost.component';
+export const savedReelResponse =new Subject<{isReelSaved:boolean,id:string}>();  
 
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
 import 'videojs-contrib-quality-levels';
+import { Subject } from 'rxjs';
 
 @Component({
     selector: 'reels-view',
@@ -76,7 +78,6 @@ import 'videojs-contrib-quality-levels';
 
     ngOnInit(): void {
         this.getLoginUserId();
-
         var id = this.route.snapshot.paramMap.get('id');
         if(id != null){
           this.attachmentId = id;
@@ -357,9 +358,10 @@ import 'videojs-contrib-quality-levels';
          }); 
       }
 
-      openSharePostModal(postId:string): void {
+      openSharePostModal(postId:string, postType:number): void {
         const initialState = {
-          postId: postId
+          postId: postId,
+          postType: postType
         };
         this.bsModalService.show(SharePostComponent,{initialState});
       }
@@ -396,6 +398,21 @@ import 'videojs-contrib-quality-levels';
             left: 0,
             ...scrollOptions
           });
+        });
+      }
+
+      saveReel(postId:string){
+        if(this.reels.post.isPostSavedByCurrentUser){
+          this.reels.post.savedPostsCount -= 1;
+          this.reels.post.isPostSavedByCurrentUser = false;
+          savedReelResponse.next({isReelSaved:false,id:postId}); 
+         }
+         else{
+          this.reels.post.savedPostsCount += 1;
+          this.reels.post.isPostSavedByCurrentUser = true;
+          savedReelResponse.next({isReelSaved:true,id:postId}); 
+         }
+         this._postService.savePost(postId,this.loginUserId).subscribe((result) => {
         });
       }
 

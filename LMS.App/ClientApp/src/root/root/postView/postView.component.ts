@@ -22,7 +22,7 @@ import 'video.js/dist/video-js.css';
 import { MessageService } from 'primeng/api';
 
 export const sharePostResponse =new Subject<{}>();  
-export const savedPostResponse =new Subject<{isPostSaved:boolean}>();  
+export const savedPostResponse =new Subject<{isPostSaved:boolean,postId:string}>();  
 
 
 @Component({
@@ -347,13 +347,14 @@ export class PostViewComponent implements OnInit,AfterViewInit {
        }); 
     }
 
-    openSharePostModal(postId:string): void {
+    openSharePostModal(postId:string, postType:number): void {
       if(this.posts?.name == Constant.Private || this.posts?.serviceType == Constant.Paid){
         sharePostResponse.next({}); 
       }
       else{
       const initialState = {
-        postId: postId
+        postId: postId,
+        postType: postType
       };
       this.bsModalService.show(SharePostComponent,{initialState});
     }
@@ -404,12 +405,12 @@ export class PostViewComponent implements OnInit,AfterViewInit {
     if(this.post.isPostSavedByCurrentUser){
       this.post.savedPostsCount -= 1;
       this.post.isPostSavedByCurrentUser = false;
-      savedPostResponse.next({isPostSaved:false}); 
+      savedPostResponse.next({isPostSaved:false,postId:postId}); 
      }
      else{
       this.post.savedPostsCount += 1;
       this.post.isPostSavedByCurrentUser = true;
-      savedPostResponse.next({isPostSaved:true}); 
+      savedPostResponse.next({isPostSaved:true,postId:postId}); 
      }
      this._postService.savePost(postId,this.userId).subscribe((result) => {
     });

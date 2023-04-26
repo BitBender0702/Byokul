@@ -71,8 +71,8 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
           <img *ngIf="post.isPostSavedByCurrentUser" src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto">
             {{post.savedPostsCount}}
         </button>
-        <button (click)="openSharePostModal(post.id)" type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Upload.svg"
-            class="d-block" /> 0</button>
+        <button (click)="openSharePostModal(post.id, post.postType)" type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Upload.svg"
+            class="d-block" /> {{post.postSharedCount}}</button>
       </div>
       <div class="live-chat-box text-center">
         <div *ngIf="post.createdBy == userId && isCommentsDisabled" (click)="showCommentsDiv(true)" class="chat-enabled d-inline-flex align-items-center cursor_pointer"><img src="../../../assets/images/Unlock.svg" />{{'ChatEnabled'| translate }}
@@ -177,10 +177,17 @@ margin-top: 30px;">
             <span *ngIf="likesLength != undefined && currentLikedPostId== post.id">{{likesLength}}</span>
             <span *ngIf="currentLikedPostId!= post.id">{{post.likes.length}}</span>
           </button>
-      <button type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Bookmark.svg"
+          <button (click)="savePost(post.id)" type="button" class="btn bg-transparent text_ltgray font_12">
+            <img *ngIf="!post.isPostSavedByCurrentUser" src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto" />
+            <img *ngIf="post.isPostSavedByCurrentUser" src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto">
+              {{post.savedPostsCount}}
+          </button>
+          <button (click)="openSharePostModal(post.id, post.postType)" type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Upload.svg"
+              class="d-block" /> {{post.postSharedCount}}</button>
+      <!-- <button type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Bookmark.svg"
           class="d-block" /> 0</button>
       <button (click)="openSharePostModal(post.id)" type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Upload.svg"
-          class="d-block" /> 0</button>
+          class="d-block" /> 0</button> -->
     </div>
     <div class="live-chat-box text-center">
       <div *ngIf="post.createdBy == userId && isCommentsDisabled" (click)="showCommentsDiv(true)" class="chat-enabled d-inline-flex align-items-center cursor_pointer"><img src="../../../assets/images/Unlock.svg" />{{'ChatEnabled'| translate }}

@@ -1,6 +1,7 @@
 import { Component, ElementRef, Injector, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { Subject } from 'rxjs';
 import { CommentLikeUnlike } from 'src/root/interfaces/chat/commentsLike';
 import { CommentViewModel } from 'src/root/interfaces/chat/commentViewModel';
 import { LikeUnlikePost } from 'src/root/interfaces/post/likeUnlikePost';
@@ -12,6 +13,8 @@ import { ReelsService } from 'src/root/service/reels.service';
 import { SchoolService } from 'src/root/service/school.service';
 import { commentLikeResponse, commentResponse, signalRResponse, SignalrService } from 'src/root/service/signalr.service';
 import { UserService } from 'src/root/service/user.service';
+export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,type:string}>();  
+
 
 @Component({
     selector: 'classCourseModal-view',
@@ -248,5 +251,27 @@ import { UserService } from 'src/root/service/user.service';
       createdOn:new Date(),
       userName:''
      };
+  }
+
+  saveClassCourse(id:string,type:number){
+    debugger
+    if(type == 1){
+      var typeString = "Class";
+    }
+    else{
+      var typeString = "Course";
+    }
+    if(this.classCourseDetails.classCourseItem.isClassCourseSavedByCurrentUser){
+      this.classCourseDetails.classCourseItem.savedClassCourseCount -= 1;
+      this.classCourseDetails.classCourseItem.isClassCourseSavedByCurrentUser = false;
+      savedClassCourseResponse.next({isSaved:false,id:id,type:typeString}); 
+     }
+     else{
+      this.classCourseDetails.classCourseItem.savedClassCourseCount += 1;
+      this.classCourseDetails.classCourseItem.isClassCourseSavedByCurrentUser = true;
+      savedClassCourseResponse.next({isSaved:true,id:id,type:typeString}); 
+     }
+    this._schoolService.saveClassCourse(this.classCourseDetails.classCourseItem,this.userId,type).subscribe((result) => {
+    });
   }
 }

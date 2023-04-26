@@ -21,6 +21,7 @@ using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 using MimeKit;
+using Microsoft.Extensions.Logging;
 
 namespace LMS.Services.Common
 {
@@ -33,8 +34,9 @@ namespace LMS.Services.Common
         private IGenericRepository<ServiceType> _serviceTypeRepository;
         private IGenericRepository<Accessibility> _accessibilityRepository;
         private IConfiguration _config;
+        private readonly ILogger<CommonService> _logger;
 
-        public CommonService(IMapper mapper,IWebHostEnvironment webHostEnvironment, IGenericRepository<Language> languageRepository, IGenericRepository<Discipline> disciplineRepository, IGenericRepository<ServiceType> serviceTypeRepository, IGenericRepository<Accessibility> accessibilityRepository, IConfiguration config)
+        public CommonService(IMapper mapper,IWebHostEnvironment webHostEnvironment, IGenericRepository<Language> languageRepository, IGenericRepository<Discipline> disciplineRepository, IGenericRepository<ServiceType> serviceTypeRepository, IGenericRepository<Accessibility> accessibilityRepository, IConfiguration config, ILogger<CommonService> logger)
         {
             _mapper = mapper;
             _webHostEnvironment = webHostEnvironment;
@@ -43,6 +45,7 @@ namespace LMS.Services.Common
             _serviceTypeRepository = serviceTypeRepository;
             _accessibilityRepository = accessibilityRepository;
             _config = config;
+            _logger = logger;
         }
 
         public async Task<MemoryStream> CompressVideo(string meetingID,string fileName, byte[] videoData)
@@ -139,6 +142,7 @@ namespace LMS.Services.Common
         {
             try
             {
+                _logger.LogInformation("SendSGMail called.");
                 var apiKey = _config["SENDGRID_KEY"];
                 var client = new SendGridClient(apiKey);
                 var from = new EmailAddress("noreply@devcsharp.com", "ByOkul");
@@ -158,12 +162,14 @@ namespace LMS.Services.Common
                     }
                     //msg.AddAttachment(attachmentFileStream,"");
                     var response = await client.SendEmailAsync(msg);
+                    _logger.LogInformation("getting response.");
+
                 }
             }
             catch (Exception ex)
             {
 
-                throw;
+                _logger.LogError(ex, "MyMethod failed with an exception."); ;
             }
         }
     }

@@ -8,7 +8,7 @@ import { AddUserLanguage } from 'src/root/interfaces/user/addUserLanguage';
 import { DeleteUserLanguage } from 'src/root/interfaces/user/deleteUserLanguage';
 import { EditUserModel } from 'src/root/interfaces/user/editUserModel';
 import { UserService } from 'src/root/service/user.service';
-import { MultilingualComponent } from '../../sharedModule/Multilingual/multilingual.component';
+import { MultilingualComponent, changeLanguage } from '../../sharedModule/Multilingual/multilingual.component';
 
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { BsModalService } from 'ngx-bootstrap/modal';
@@ -16,22 +16,23 @@ import { addPostResponse, CreatePostComponent } from '../../createPost/createPos
 import { FollowUnFollowEnum } from 'src/root/Enums/FollowUnFollowEnum';
 import { FollowUnfollow } from 'src/root/interfaces/FollowUnfollow';
 import { PostService } from 'src/root/service/post.service';
-import { PostViewComponent } from '../../postView/postView.component';
+import { PostViewComponent, savedPostResponse } from '../../postView/postView.component';
 import { MessageService } from 'primeng/api';
 import { LikeUnlikePost } from 'src/root/interfaces/post/likeUnlikePost';
 import { PostView } from 'src/root/interfaces/post/postView';
-import { BehaviorSubject, Subject } from 'rxjs';
-import { ReelsViewComponent } from '../../reels/reelsView.component';
+import { BehaviorSubject, Subject, Subscription } from 'rxjs';
+import { ReelsViewComponent, savedReelResponse } from '../../reels/reelsView.component';
 import { SignalrService } from 'src/root/service/signalr.service';
 import { NotificationType, NotificationViewModel } from 'src/root/interfaces/notification/notificationViewModel';
 import { PostAuthorTypeEnum } from 'src/root/Enums/postAuthorTypeEnum';
 import { CertificateViewComponent } from '../../certificateView/certificateView.component';
-import { SharePostComponent } from '../../sharePost/sharePost.component';
+import { SharePostComponent, sharedPostResponse } from '../../sharePost/sharePost.component';
 import { SchoolService } from 'src/root/service/school.service';
-import { ClassCourseModalComponent } from '../../ClassCourseModal/classCourseModal.component';
+import { ClassCourseModalComponent, savedClassCourseResponse } from '../../ClassCourseModal/classCourseModal.component';
 import { LikeUnlikeClassCourse } from 'src/root/interfaces/school/likeUnlikeClassCourse';
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
+import { AuthService } from 'src/root/service/auth.service';
 
 export const userImageResponse =new Subject<{userAvatar : string}>();  
 export const chatResponse =new Subject<{receiverId : string , type: string,chatTypeId:string}>();  
@@ -64,6 +65,7 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
     isLiked!:boolean;
 
     private _userService;
+    private _authService;
     private _postService;
     private _signalrService;
     private _schoolService;
@@ -96,8 +98,20 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
 
     frontEndPageNumber:number = 1;
     reelsPageNumber:number = 1;
+    savedPostsPageNumber:number = 1;
+    sharedPostsPageNumber:number = 1;
+    likedPostsPageNumber:number = 1;
+    savedClassCoursePageNumber:number = 1;
     scrolled:boolean = false;
+    savedPostScrolled:boolean = false;
+    savedClassCourseScrolled:boolean = false;
+    sharedPostsScrolled:boolean = false;
+    likedPostsScrolled:boolean = false;
     scrollFeedResponseCount:number = 1;
+    scrollSavedPostResponseCount:number = 1;
+    scrollSharedPostResponseCount:number = 1;
+    scrollLikedPostResponseCount:number = 1;
+    scrollSavedClassCourseResponseCount:number = 1;
     notificationViewModel!:NotificationViewModel;
     @ViewChild('closeEditModal') closeEditModal!: ElementRef;
     @ViewChild('closeLanguageModal') closeLanguageModal!: ElementRef;
@@ -111,18 +125,29 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
     uploadImage!:any;
     fileToUpload= new FormData();
     translate!: TranslateService;
-
     isSavedProfileList: boolean = false;
-    savedPostsPageNumber: number = 1;
     savedPostsList!:any;
+    sharedPostsList!:any;
+    likedPostsList!:any;
+    likedReelsList!:any;
+    savedReelsList!:any;
+    sharedReelsList!:any;
     isSavedPostList!:boolean;
+    isSharedPostList!:boolean;
+    isLikedPostList!:boolean;
     isSavedClassCourseList!:boolean;
 
     isPostTab:boolean = true;
     isSavedPostTab:boolean = false;
+    isSharedPostTab:boolean = false;
+    isLikedPostTab:boolean = false;
     isSavedClassCourseTab:boolean = false;
     savedPostGridInfo:any;
+    sharedPostGridInfo:any;
+    likedPostGridInfo:any;
     isSavedPostGridInfo: boolean = false;
+    isSharedPostGridInfo: boolean = false;
+    isLikedPostGridInfo: boolean = false;
     savedClassCourseGridInfo:any;
     isSavedClassCourseGridInfo: boolean = false;
 
@@ -134,25 +159,43 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
     isClassCourseLiked!: boolean;
     likesClassCourseLength!: number;
     likeUnlikeClassCourses!: LikeUnlikeClassCourse;
+    schoolId!:string;
+    isSavedMessageAlready:boolean = true;
+    savedPostSubscription!: Subscription;
+    savedReelSubscription!: Subscription;
+    addPostSubscription!: Subscription;
+    changeLanguageSubscription!:Subscription;
+    sharedPostSubscription!:Subscription;
+    savedClassCourseSubscription!:Subscription;
+    isOnInitInitialize:boolean = false;
+    savedMessage!:string;
+    removedMessage!:string;
 
 
-
-
-    
-    constructor(injector: Injector,signalrservice:SignalrService,public messageService:MessageService, private bsModalService: BsModalService,userService: UserService,postService: PostService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,private cd: ChangeDetectorRef,private schoolService:SchoolService) { 
+    constructor(injector: Injector,authService:AuthService,signalrservice:SignalrService,public messageService:MessageService, private bsModalService: BsModalService,userService: UserService,postService: PostService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,private cd: ChangeDetectorRef,private schoolService:SchoolService) { 
       super(injector);
         this._userService = userService;
+        this._authService = authService;
         this._postService = postService;
         this._schoolService = schoolService;
         this._signalrService = signalrservice;
-        this.userParamsData$ = this.route.params.subscribe(routeParams => {
-          if(!this.loadingIcon)
-          this.ngOnInit();
+        // this.userParamsData$ = this.route.params.subscribe(routeParams => {
+        //   if(!this.loadingIcon)
+        //   this.ngOnInit();
+        // });
+
+        this.userParamsData$ = this.route.params.subscribe((routeParams) => {
+          this.userId = routeParams.schoolName;
+          if (!this.loadingIcon && this.isOnInitInitialize){
+            this.ngOnInit();
+          }
         });
     }
   
     ngOnInit(): void {
+      this.isOnInitInitialize = true;
       this.postLoadingIcon = false;
+      this._authService.loginState$.next(true);
       this.validToken = localStorage.getItem("jwt")?? '';
       this.loadingIcon = true;
       var selectedLang = localStorage.getItem("selectedLanguage");
@@ -210,7 +253,8 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
         this.user.avatar = response.userAvatar;
       });
 
-      addPostResponse.subscribe(response => {
+      if(!this.addPostSubscription){
+      this.addPostSubscription = addPostResponse.subscribe(response => {
         this.loadingIcon = true;
         this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post created successfully'});
         this._userService.getUserById(this.userId).subscribe((response) => {
@@ -221,8 +265,90 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
           this.isDataLoaded = true;
           this.scrolled = false;
           this.postLoadingIcon = false;
+          this.cd.detectChanges();
+          this.addEventListnerOnCarousel();
         });
       });
+    }
+
+      if(!this.savedPostSubscription){
+        this.savedPostSubscription = savedPostResponse.subscribe(response => {
+          debugger
+          if(response.isPostSaved){
+            this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post saved successfully'});
+          }
+          if(!response.isPostSaved){
+              this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post removed successfully'});
+              if(this.savedPostsList != undefined){
+                var isSavedPost = this.savedPostsList.find((x: { id: any; }) => x.id == response.postId);
+                let indexToRemove = this.savedPostsList.findIndex((x: { id: any; }) => x.id == isSavedPost.id);
+                if (indexToRemove !== -1) {
+                  this.savedPostsList.splice(indexToRemove, 1);
+                }
+              }
+          }
+        });
+      }
+
+      if(!this.savedReelSubscription){
+        this.savedReelSubscription = savedReelResponse.subscribe(response => {
+          if(response.isReelSaved){
+            this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Reel saved successfully'});
+          }
+          if(!response.isReelSaved){
+            this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Reel removed successfully'});
+            if(this.savedReelsList != undefined){
+              var isSavedReel = this.savedReelsList.find((x: { id: any; }) => x.id == response.id);
+              let indexToRemove = this.savedReelsList.findIndex((x: { id: any; }) => x.id == isSavedReel.id);
+              if (indexToRemove !== -1) {
+                this.savedReelsList.splice(indexToRemove, 1);
+              }
+            }
+          }
+        });
+      }
+
+      this.sharedPostSubscription = sharedPostResponse.subscribe( response => {
+        debugger
+        if(response.postType == 1){
+          this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post shared successfully'});
+          var post = this.user.posts.find((x: { id: string; }) => x.id == response.postId); 
+          if(post == undefined || null){
+            var post = this.savedPostsList.find((x: { id: string; }) => x.id == response.postId); 
+            post.postSharedCount++;
+          } 
+          else{
+            post.postSharedCount++;
+          }
+        }
+        else
+          this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Reel shared successfully'});
+        });
+
+      if(!this.changeLanguageSubscription){
+        this.changeLanguageSubscription = changeLanguage.subscribe(response => {
+          this.translate.use(response.language);
+        })
+      }
+
+      if(!this.savedClassCourseSubscription){
+        this.savedClassCourseSubscription = savedClassCourseResponse.subscribe(response => {
+          if(response.isSaved){
+            this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:`${response.type} saved successfully`});
+          }
+          if(!response.isSaved){
+            this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:`${response.type} removed successfully`});
+            if(this.savedClassCourseList != undefined){
+              var isSavedClassCourse = this.savedClassCourseList.find((x: { id: any; }) => x.id == response.id);
+              let indexToRemove = this.savedClassCourseList.findIndex((x: { id: any; }) => x.id == isSavedClassCourse.id);
+              if (indexToRemove !== -1) {
+                this.savedClassCourseList.splice(indexToRemove, 1);
+              }
+            }
+          }
+        });
+      }
+
     }
 
     getByUserId(){
@@ -239,38 +365,149 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
     }
 
     ngOnDestroy(): void {
-      if(this.userParamsData$) this.userParamsData$.unsubscribe();
+      if(this.savedPostSubscription){
+        this.savedPostSubscription.unsubscribe();
+      }
+      if(this.savedReelSubscription){
+        this.savedReelSubscription.unsubscribe();
+      }
+      if(this.changeLanguageSubscription){
+        this.changeLanguageSubscription.unsubscribe();
+      }
+      if(this.sharedPostSubscription){
+        this.sharedPostSubscription.unsubscribe();
+      }
+      if(this.savedClassCourseSubscription){
+        this.savedClassCourseSubscription.unsubscribe();
+      }
+      if(this.userParamsData$){
+        this.userParamsData$.unsubscribe();
+      }
     }
 
     @HostListener("window:scroll", [])
     onWindowScroll() {
-      const scrollPosition = window.pageYOffset;
+    const scrollPosition = window.pageYOffset;
     const windowSize = window.innerHeight;
     const bodyHeight = document.body.offsetHeight;
 
-    if (scrollPosition >= bodyHeight - windowSize) {
-      if(!this.scrolled && this.scrollFeedResponseCount != 0){
-        this.scrolled = true;
-        this.postLoadingIcon = true;
-        this.frontEndPageNumber++;
-        this.getByUserId();
-      }
+      if (scrollPosition >= bodyHeight - windowSize) {
+        if(this.isPostTab){
+          if(!this.scrolled && this.scrollFeedResponseCount != 0){
+            this.scrolled = true;
+            this.postLoadingIcon = true;
+            this.frontEndPageNumber++;
+            this.getByUserId();
+          }
+        }
+        if(this.isSavedPostTab){
+          if(!this.savedPostScrolled && this.scrollSavedPostResponseCount != 0){
+            this.savedPostScrolled = true;
+            this.postLoadingIcon = true;
+            this.savedPostsPageNumber++;
+            this.getNextSavedPosts();
+          }
+        }
+        if(this.isSharedPostTab){
+          if(!this.sharedPostsScrolled && this.scrollSharedPostResponseCount != 0){
+            this.sharedPostsScrolled = true;
+            this.postLoadingIcon = true;
+            this.sharedPostsPageNumber++;
+            this.getNextSharedPosts();
+          }
+        }
+        if(this.isLikedPostTab){
+          if(!this.likedPostsScrolled && this.scrollLikedPostResponseCount != 0){
+            this.likedPostsScrolled = true;
+            this.postLoadingIcon = true;
+            this.likedPostsPageNumber++;
+            this.getNextLikedPosts();
+          }
+        }
+        if(this.isSavedClassCourseTab){
+          if(!this.savedClassCourseScrolled && this.scrollSavedClassCourseResponseCount != 0){
+            this.savedClassCourseScrolled = true;
+            this.postLoadingIcon = true;
+            this.saveClassCoursePageNumber++;
+            this.getNextSavedClassCourse();
+          }
+        }
+       }
      }
+
+     getNextSavedPosts(){
+      this._postService.getSavedPostsByUser(this.userId,this.savedPostsPageNumber,1).subscribe((response) => {
+        this.savedPostsList =[...this.savedPostsList, ...response];
+        this.postLoadingIcon = false;
+        this.scrollSavedPostResponseCount = response.length; 
+        this.savedPostScrolled = false;
+      });
+    }
+
+    getNextSharedPosts(){
+      this._postService.getSharedPostsByUser(this.userId,this.sharedPostsPageNumber,1).subscribe((response) => {
+        this.sharedPostsList =[...this.sharedPostsList, ...response];
+        this.postLoadingIcon = false;
+        this.scrollSharedPostResponseCount = response.length; 
+        this.sharedPostsScrolled = false;
+      });
+    }
+
+    getNextLikedPosts(){
+      this._postService.getLikedPostsByUser(this.userId,this.likedPostsPageNumber,1).subscribe((response) => {
+        this.likedPostsList =[...this.likedPostsList, ...response];
+        this.postLoadingIcon = false;
+        this.scrollLikedPostResponseCount = response.length; 
+        this.likedPostsScrolled = false;
+      });
+    }
+
+    getNextSavedClassCourse(){
+      this._schoolService.getSavedClassCourse(this.userId,this.saveClassCoursePageNumber).subscribe((response) => {
+        this.savedClassCourseList =[...this.savedClassCourseList, ...response];
+        this.postLoadingIcon = false;
+        this.scrollSavedClassCourseResponseCount = response.length; 
+        this.savedClassCourseScrolled = false;
+      });
     }
 
     addEventListnerOnCarousel(){
+      debugger
      if(this.carousel!=undefined){
-          if($('carousel')[0].querySelectorAll('a.carousel-control-next')[0])
-          {
-            $('carousel')[0].querySelectorAll('a.carousel-control-next')[0].addEventListener('click', () => {
-              this.reelsPageNumber++;
-              if(this.reelsPageNumber == 2){
-                this.reelsLoadingIcon = true;
-              }
+        if($('carousel')[0].querySelectorAll('a.carousel-control-next')[0]){
+          $('carousel')[0].querySelectorAll('a.carousel-control-next')[0].addEventListener('click', () => {
+            debugger
+            this.reelsPageNumber++;
+            if(this.reelsPageNumber == 2){
+              this.reelsLoadingIcon = true;
+            }
+            if(this.isPostTab){
               this._userService.getReelsByUserId(this.user.id, this.reelsPageNumber).subscribe((response) => {
                  this.user.reels = [...this.user.reels, ...response];
                  this.reelsLoadingIcon = false;
-            });
+              });
+            }
+
+            if(this.isSavedPostTab){
+              this._postService.getSavedPostsByUser(this.user.id, this.reelsPageNumber,3).subscribe((response) => {
+                this.savedReelsList = [...this.savedReelsList, ...response];
+                this.reelsLoadingIcon = false;
+             });
+            }
+
+            if(this.isSharedPostTab){
+              this._postService.getSharedPostsByUser(this.user.id, this.reelsPageNumber,3).subscribe((response) => {
+                this.sharedReelsList = [...this.sharedReelsList, ...response];
+                this.reelsLoadingIcon = false;
+             });
+            }
+
+            if(this.isLikedPostTab){
+              this._postService.getLikedPostsByUser(this.user.id, this.reelsPageNumber,3).subscribe((response) => {
+                this.likedReelsList = [...this.likedReelsList, ...response];
+                this.reelsLoadingIcon = false;
+             });
+            }
 
             })
           }  
@@ -562,6 +799,26 @@ savePostList(){
 
 }
 
+sharePostGrid(){
+  this.isSharedPostList = true;
+
+}
+
+sharePostList(){
+  this.isSharedPostList = false;
+
+}
+
+likePostGrid(){
+  this.isLikedPostList = true;
+
+}
+
+likePostList(){
+  this.isLikedPostList = false;
+
+}
+
 saveClassCourseGrid(){
   this.isSavedClassCourseList = true;
 
@@ -584,13 +841,47 @@ openPostModal(): void {
     this.bsModalService.show(CreatePostComponent,{initialState});
 }
 
-pinUnpinPost(attachmentId:string,isPinned:boolean){
-  this._postService.pinUnpinPost(attachmentId,isPinned).subscribe((response) => {
-    this.ngOnInit();
-    console.log(response);
-  });
+pinUnpinPost(attachmentId:string,isPinned:boolean,type?:number){
+  if(this.isPostTab){
+    this._postService.pinUnpinPost(attachmentId,isPinned).subscribe((response) => {
+      debugger
+      // if(this.isSavedPostTab){
+      //   this.GetSavedPostsByUser(this.user.id,this.isSavedPostList);
+      // }
+      // else{
+        this.ngOnInit();
+      // }
+    });
+  }
+
+  if(this.isSavedPostTab){
+    this._postService.pinUnpinSavedPost(attachmentId,isPinned).subscribe((response) => {
+      this.GetSavedPostsByUser(this.user.id,this.isSavedPostList);
+    });
+  }
+
+  if(this.isSharedPostTab){
+    this._postService.pinUnpinSharedPost(attachmentId,isPinned).subscribe((response) => {
+      this.getSharedPostsByUser(this.user.id,this.isSharedPostList);
+    });
+  }
+
+  if(this.isLikedPostTab){
+    this._postService.pinUnpinLikedPost(attachmentId,isPinned).subscribe((response) => {
+      this.getLikedPostsByUser(this.user.id,this.isLikedPostList);
+    });
+  }
+
+  if(this.isSavedClassCourseTab){
+    if(type != undefined){
+      this._postService.pinUnpinSavedClassCourse(attachmentId,isPinned,type).subscribe((response) => {
+        this.GetSavedClassCourseByUser(this.user.id,this.isSavedClassCourseList);
+      });
+    }
+  }
 
 }
+
 
 openPostsViewModal(posts:string): void {
   const initialState = {
@@ -616,20 +907,30 @@ userChat(){
 }
 
 likeUnlikePosts(postId:string, isLike:boolean,postType:number,post:any,from:number){
+  debugger
   this.currentLikedPostId = postId;
-  if(from == 1){
+  if(this.isPostTab){
     var posts = this.user.posts;
   }
-  if(from == 2){
+  if(this.isSavedPostTab){
     var posts = this.savedPostsList;
   }
+  if(this.isSharedPostTab){
+    var posts = this.sharedPostsList;
+  }
+  if(this.isLikedPostTab){
+    var posts = this.likedPostsList;
+  }
   posts.filter((p : any) => p.id == postId).forEach( (item : any) => {
+    debugger
     var likes: any[] = item.likes;
     var isLiked = likes.filter(x => x.userId == this.loginUserId && x.postId == postId);
   if(isLiked.length != 0){
     this.isLiked = false;
     this.likesLength = item.likes.length - 1;
     item.isPostLikedByCurrentUser = false;
+
+    //this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post removed successfully'});
   }
   else{
     this.isLiked = true;
@@ -646,16 +947,26 @@ likeUnlikePosts(postId:string, isLike:boolean,postType:number,post:any,from:numb
   this.likeUnlikePost.isLike = isLike;
   this.likeUnlikePost.commentId = '00000000-0000-0000-0000-000000000000'
   this._postService.likeUnlikePost(this.likeUnlikePost).subscribe((response) => {
-    if(from == 1){
+    if(this.isPostTab){
      this.user.posts.filter((p : any) => p.id == postId).forEach( (item : any) => {
       item.likes = response;
     }); 
+   }
+   if(this.isSavedPostTab){
+     this.savedPostsList.filter((p : any) => p.id == postId).forEach( (item : any) => {
+       item.likes = response;
+   });
   }
-  else{
-    this.savedPostsList.filter((p : any) => p.id == postId).forEach( (item : any) => {
-      item.likes = response;
-  });
-}
+   if(this.isSharedPostTab){
+     this.sharedPostsList.filter((p : any) => p.id == postId).forEach( (item : any) => {
+       item.likes = response;
+   });
+  }
+   if(this.isLikedPostTab){
+     this.likedPostsList.filter((p : any) => p.id == postId).forEach( (item : any) => {
+       item.likes = response;
+   });
+  }
      this.InitializeLikeUnlikePost();
      console.log("succes");
   });
@@ -675,6 +986,20 @@ showSavedPostDiv(postId:string){
   this.savedPostGridInfo = posts.find(x => x.id == postId);
   this.isSavedPostGridInfo = true;
   this.addPostView(this.savedPostGridInfo.id);
+}
+
+showSharedPostDiv(postId:string){
+  var posts: any[] = this.sharedPostsList;
+  this.sharedPostGridInfo = posts.find(x => x.id == postId);
+  this.isSharedPostGridInfo = true;
+  this.addPostView(this.sharedPostGridInfo.id);
+}
+
+showLikedPostDiv(postId:string){
+  var posts: any[] = this.likedPostsList;
+  this.likedPostGridInfo = posts.find(x => x.id == postId);
+  this.isLikedPostGridInfo = true;
+  this.addPostView(this.likedPostGridInfo.id);
 }
 
 showSavedClassCourseDiv(id:string){
@@ -709,6 +1034,14 @@ hideSavedPostGridInfo(){
   this.isSavedPostGridInfo = this.isSavedPostGridInfo ? false : true;
 }
 
+hideSharedPostGridInfo(){
+  this.isSharedPostGridInfo = this.isSharedPostGridInfo ? false : true;
+}
+
+hideLikedPostGridInfo(){
+  this.isLikedPostGridInfo = this.isLikedPostGridInfo ? false : true;
+}
+
 hideSavedClassCourseGridInfo(){
   this.isSavedClassCourseGridInfo = this.isSavedClassCourseGridInfo ? false : true;
 }
@@ -729,22 +1062,41 @@ openCertificateViewModal(certificateUrl:string,certificateName:string){
   this.bsModalService.show(CertificateViewComponent, { initialState });
 }
 
-openSharePostModal(postId:string): void {
+openSharePostModal(postId:string,postType:number): void {
   const initialState = {
-    postId: postId
+    postId: postId,
+    postType: postType
   };
   this.bsModalService.show(SharePostComponent,{initialState});
 }
 
-GetSavedPostsByUser(userId:string){
+GetSavedPostsByUser(userId:string, isSavedPostList?:boolean){
+  debugger
   this.loadingIcon = true;
   this.isPostTab = false;
   this.isSavedClassCourseTab = false;
+  this.isSharedPostTab = false;
+  this.isLikedPostTab = false;
   this.isSavedPostTab = true;
-  this.isSavedPostList = true;
-  this._postService.getSavedPostsByUser(userId,this.savedPostsPageNumber).subscribe((response) => {
+  if(isSavedPostList != undefined){
+    this.isSavedPostList = isSavedPostList;
+  }
+  else{
+    this.isSavedPostList = true;
+  }
+  this.savedPostsPageNumber = 1;
+  this.reelsPageNumber = 1;
+  this._postService.getSavedPostsByUser(userId,this.savedPostsPageNumber,1).subscribe((response) => {
+    debugger
     this.savedPostsList = response;
     this.loadingIcon = false;
+   }); 
+
+   this._postService.getSavedPostsByUser(userId,this.savedPostsPageNumber,3).subscribe((response) => {
+    debugger
+    this.savedReelsList = response;
+    this.cd.detectChanges();
+    this.addEventListnerOnCarousel();
    }); 
 
 }
@@ -753,16 +1105,32 @@ isPostsTab(){
   this.isPostTab = true;
   this.isSavedPostTab = false;
   this.isSavedClassCourseTab = false;
+  this.reelsPageNumber = 1;
+  this.cd.detectChanges();
+  this.addEventListnerOnCarousel();
 }
 
 savePost(postId:string,from:number){
-  if(from == 1){
+  debugger
+  if(this.isPostTab){
     var posts: any[] = this.user.posts;
     var isSavedPost = posts.find(x => x.id == postId);
   }
-  if(from == 2){
+  if(this.isSavedPostTab){
     var posts: any[] = this.savedPostsList;
     var isSavedPost = posts.find(x => x.id == postId);
+    let indexToRemove = posts.findIndex(x => x.id == isSavedPost.id);
+
+    if (indexToRemove !== -1) {
+      posts.splice(indexToRemove, 1);
+    }
+  }
+
+  if(this.isSharedPostTab){
+    var isSavedPost = this.sharedPostsList.find((x: { id: string; }) => x.id == postId);
+  }
+  if(this.isLikedPostTab){
+    var isSavedPost = this.likedPostsList.find((x: { id: string; }) => x.id == postId);
   }
 
   if(isSavedPost.isPostSavedByCurrentUser){
@@ -780,12 +1148,21 @@ savePost(postId:string,from:number){
   });
 }
 
-GetSavedClassCourseByUser(userId:string){
+GetSavedClassCourseByUser(userId:string,isSavedClassCourseList?:boolean){
   this.loadingIcon = true;
   this.isPostTab = false;
   this.isSavedPostTab = false;
+  this.isSharedPostTab = false;
+  this.isLikedPostTab = false;
   this.isSavedClassCourseTab = true;
-  this.isSavedClassCourseList = true;
+  if(isSavedClassCourseList != undefined){
+    this.isSavedClassCourseList = isSavedClassCourseList;
+  }
+  else{
+    this.isSavedClassCourseList = true;
+  }
+  this.saveClassCoursePageNumber = 1;
+  this.reelsPageNumber = 1;
   this._schoolService.getSavedClassCourse(userId,this.saveClassCoursePageNumber).subscribe((response) => {
     this.savedClassCourseList = response;
     this.postLoadingIcon = false;
@@ -897,20 +1274,117 @@ InitializeLikeUnlikeClassCourse() {
 saveClassCourse(id:string,type:number){
   var classCourseList: any[] = this.savedClassCourseList;
   var isSavedClassCourse = classCourseList.find(x => x.id == id);
+  if(type == 1){
+    this.savedMessage = 'Class saved successfully';
+    this.removedMessage = 'Class removed successfully'
+  }
+  if(type == 2){
+    this.savedMessage = 'Course saved successfully';
+    this.removedMessage = 'Course removed successfully'
+  }
+
+    var isSavedClassCourse = this.savedClassCourseList.find((x: { id: any; }) => x.id == id);
+    let indexToRemove = this.savedClassCourseList.findIndex((x: { id: any; }) => x.id == isSavedClassCourse.id);
+    if (indexToRemove !== -1) {
+      this.savedClassCourseList.splice(indexToRemove, 1);
+    }
 
   if(isSavedClassCourse.isClassCourseSavedByCurrentUser){
     isSavedClassCourse.savedClassCourseCount -= 1;
     isSavedClassCourse.isClassCourseSavedByCurrentUser = false;
-    this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post removed successfully'});
+    this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:this.removedMessage});
    }
    else{
     isSavedClassCourse.savedClassCourseCount += 1;
     isSavedClassCourse.isClassCourseSavedByCurrentUser = true;
-    this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post saved successfully'});
+    this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:this.savedMessage});
    }
 
   this._schoolService.saveClassCourse(id,this.userId,type).subscribe((result) => {
   });
+}
+
+getDeletedSchool(schoolId:string){[
+  this.schoolId = schoolId
+]}
+
+deleteSchoolTeacher() {
+  this.loadingIcon = true;
+  this._userService.deleteSchoolTeacher(this.schoolId).subscribe((response: any) => {
+      this.messageService.add({severity: 'success',summary: 'Success',life: 3000,detail: 'You have left the school successfully'});
+      this.ngOnInit();
+    });
+}
+
+deleteSchoolStudent() {
+  this.loadingIcon = true;
+  this._userService.deleteSchoolStudent(this.schoolId).subscribe((response: any) => {
+      this.messageService.add({severity: 'success',summary: 'Success',life: 3000,detail: 'You have left the school successfully'});
+      this.ngOnInit();
+    });
+}
+
+getSharedPostsByUser(userId:string, isSharedPostList?:boolean){
+  debugger
+  this.loadingIcon = true;
+  this.isPostTab = false;
+  this.isSavedClassCourseTab = false;
+  this.isSavedPostTab = false;
+  this.isLikedPostTab = false;
+  this.isSharedPostTab = true;
+  if(isSharedPostList != undefined){
+    this.isSharedPostList = isSharedPostList;
+  }
+  else{
+    this.isSharedPostList = true;
+  }
+  this.sharedPostsPageNumber = 1;
+  this.reelsPageNumber = 1;
+  this._postService.getSharedPostsByUser(userId,this.sharedPostsPageNumber,1).subscribe((response) => {
+    debugger
+    this.sharedPostsList = response;
+    this.loadingIcon = false;
+   }); 
+
+   this._postService.getSharedPostsByUser(userId,this.sharedPostsPageNumber,3).subscribe((response) => {
+    debugger
+    this.sharedReelsList = response;
+    this.cd.detectChanges();
+    this.addEventListnerOnCarousel();
+   }); 
+
+}
+
+getLikedPostsByUser(userId:string, isLikedPostList?:boolean){
+
+  debugger
+  this.loadingIcon = true;
+  this.isPostTab = false;
+  this.isSavedClassCourseTab = false;
+  this.isSavedPostTab = false;
+  this.isSharedPostTab = false;
+  this.isLikedPostTab = true;
+  if(isLikedPostList != undefined){
+    this.isLikedPostList = isLikedPostList;
+  }
+  else{
+    this.isLikedPostList = true;
+  }
+  this.likedPostsPageNumber = 1;
+  this.reelsPageNumber = 1;
+  this._postService.getLikedPostsByUser(userId,this.likedPostsPageNumber,1).subscribe((response) => {
+    debugger
+    this.likedPostsList = response;
+    this.loadingIcon = false;
+   }); 
+
+   this._postService.getLikedPostsByUser(userId,this.likedPostsPageNumber,3).subscribe((response) => {
+    debugger
+    this.likedReelsList = response;
+    this.cd.detectChanges();
+    this.addEventListnerOnCarousel();
+   }); 
+
 }
 
 }

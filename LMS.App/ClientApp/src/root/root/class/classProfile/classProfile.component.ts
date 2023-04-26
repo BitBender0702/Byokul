@@ -14,13 +14,13 @@ import { EditClassModel } from 'src/root/interfaces/class/editClassModel';
 import { ClassService } from 'src/root/service/class.service';
 import { PostService } from 'src/root/service/post.service';
 import { addPostResponse, CreatePostComponent } from '../../createPost/createPost.component';
-import { MultilingualComponent } from '../../sharedModule/Multilingual/multilingual.component';
+import { MultilingualComponent, changeLanguage } from '../../sharedModule/Multilingual/multilingual.component';
 import { PostViewComponent, savedPostResponse, sharePostResponse } from '../../postView/postView.component';
 import { LikeUnlikePost } from 'src/root/interfaces/post/likeUnlikePost';
 import { PostView } from 'src/root/interfaces/post/postView';
 import { ClassView } from 'src/root/interfaces/class/classView';
 import { MessageService } from 'primeng/api';
-import { ReelsViewComponent } from '../../reels/reelsView.component';
+import { ReelsViewComponent, savedReelResponse } from '../../reels/reelsView.component';
 import { ownedClassResponse } from '../createClass/createClass.component';
 import { PaymentComponent, paymentStatusResponse } from '../../payment/payment.component';
 import { NotificationService } from 'src/root/service/notification.service';
@@ -29,7 +29,7 @@ import { CertificateViewComponent } from '../../certificateView/certificateView.
 import { PostAuthorTypeEnum } from 'src/root/Enums/postAuthorTypeEnum';
 import { PermissionNameConstant } from 'src/root/interfaces/permissionNameConstant';
 import { PermissionTypeEnum } from 'src/root/Enums/permissionTypeEnum';
-import { SharePostComponent } from '../../sharePost/sharePost.component';
+import { SharePostComponent, sharedPostResponse } from '../../sharePost/sharePost.component';
 import { Constant } from 'src/root/interfaces/constant';
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
@@ -123,8 +123,11 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     hasManageTeachersPermission!:boolean;
     isOnInitInitialize:boolean = false;
     savedPostSubscription!: Subscription;
+    savedReelSubscription!: Subscription;
     addPostSubscription!: Subscription;
+    changeLanguageSubscription!:Subscription;
     paymentStatusSubscription!:Subscription;
+    sharedPostSubscription!: Subscription;
     public event: EventEmitter<any> = new EventEmitter();
 
     @ViewChild('closeEditModal') closeEditModal!: ElementRef;
@@ -157,6 +160,18 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     }
 
     ngOnDestroy(): void {
+      if(this.savedPostSubscription){
+        this.savedPostSubscription.unsubscribe();
+      }
+      if(this.savedReelSubscription){
+        this.savedReelSubscription.unsubscribe();
+      }
+      if(this.changeLanguageSubscription){
+        this.changeLanguageSubscription.unsubscribe();
+      }
+      if(this.sharedPostSubscription){
+        this.sharedPostSubscription.unsubscribe();
+      }
       if(this.paymentStatusSubscription){
         this.paymentStatusSubscription.unsubscribe();
       }
@@ -311,6 +326,33 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
             this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post removed successfully'});
           }
         });
+      }
+
+      if(!this.savedReelSubscription){
+        this.savedReelSubscription = savedReelResponse.subscribe(response => {
+          if(response.isReelSaved){
+            this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Reel saved successfully'});
+          }
+          if(!response.isReelSaved){
+            this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Reel removed successfully'});
+          }
+        });
+      }
+
+      this.sharedPostSubscription = sharedPostResponse.subscribe( response => {
+        if(response.postType == 1){
+          this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post shared successfully'});
+          var post = this.class.posts.find((x: { id: string; }) => x.id == response.postId);  
+          post.postSharedCount++;
+        }
+        else
+          this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Reel shared successfully'});
+        });
+
+      if(!this.changeLanguageSubscription){
+        this.changeLanguageSubscription = changeLanguage.subscribe(response => {
+          this.translate.use(response.language);
+        })
       }
 
         this.paymentStatusSubscription = paymentStatusResponse.subscribe(response => {
@@ -956,13 +998,14 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       this.bsModalService.show(CertificateViewComponent, { initialState });
     }
 
-    openSharePostModal(postId:string): void {
+    openSharePostModal(postId:string,postType:number): void {
       if(this.class.accessibility.name == Constant.Private || this.class.serviceType.type == Constant.Paid){
         this.messageService.add({severity:'info', summary:'Info',life: 3000, detail:'This class is private/paid, you cant share the post!'});
       }
       else{
       const initialState = {
-        postId: postId
+        postId: postId,
+        postType: postType
       };
       this.bsModalService.show(SharePostComponent,{initialState});
     }

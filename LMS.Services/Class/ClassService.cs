@@ -42,11 +42,12 @@ namespace LMS.Services
         private IGenericRepository<ClassCourseFilter> _classCourseFilterRepository;
         private IGenericRepository<UserClassCourseFilter> _userClassCourseFilterRepository;
         private IGenericRepository<UserSharedPost> _userSharedPostRepository;
+        private IGenericRepository<SavedPost> _savedPostRepository;
         private readonly IBlobService _blobService;
         private readonly IUserService _userService;
         private IConfiguration _config;
 
-        public ClassService(IMapper mapper, IGenericRepository<Class> classRepository, IGenericRepository<ClassLanguage> classLanguageRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<ClassDiscipline> classDisciplineRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<ClassTag> classTagRepository, IGenericRepository<ClassCertificate> classCertificateRepository, UserManager<User> userManager, IBlobService blobService, IUserService userService, IGenericRepository<ClassLike> classLikeRepository, IGenericRepository<ClassViews> classViewsRepository, IGenericRepository<School> schoolRepository, IGenericRepository<ClassCourseFilter> classCourseFilterRepository, IGenericRepository<UserClassCourseFilter> userClassCourseFilterRepository, IGenericRepository<UserSharedPost> userSharedPostRepository, IConfiguration config)
+        public ClassService(IMapper mapper, IGenericRepository<Class> classRepository, IGenericRepository<ClassLanguage> classLanguageRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<ClassDiscipline> classDisciplineRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<ClassTag> classTagRepository, IGenericRepository<ClassCertificate> classCertificateRepository, UserManager<User> userManager, IBlobService blobService, IUserService userService, IGenericRepository<ClassLike> classLikeRepository, IGenericRepository<ClassViews> classViewsRepository, IGenericRepository<School> schoolRepository, IGenericRepository<ClassCourseFilter> classCourseFilterRepository, IGenericRepository<UserClassCourseFilter> userClassCourseFilterRepository, IGenericRepository<UserSharedPost> userSharedPostRepository, IGenericRepository<SavedPost> savedPostRepository, IConfiguration config)
         {
             _mapper = mapper;
             _classRepository = classRepository;
@@ -68,6 +69,7 @@ namespace LMS.Services
             _classCourseFilterRepository = classCourseFilterRepository;
             _userClassCourseFilterRepository = userClassCourseFilterRepository;
             _userSharedPostRepository = userSharedPostRepository;
+            _savedPostRepository = savedPostRepository;
             _config = config;
         }
         public async Task<ClassViewModel> SaveNewClass(ClassViewModel classViewModel, string createdById)
@@ -456,6 +458,9 @@ namespace LMS.Services
         public async Task<IEnumerable<PostDetailsViewModel>> GetPostsByClassId(Guid classId, string loginUserId, int pageNumber = 1, int pageSize = 6)
         {
             var courseList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == classId && x.PostType == (int)PostTypeEnum.Post).OrderByDescending(x => x.IsPinned).ThenByDescending(x => x.CreatedOn).ToListAsync();
+
+            var sharedPost = await _userSharedPostRepository.GetAll().ToListAsync();
+            var savedPost = await _savedPostRepository.GetAll().ToListAsync();
             var result = _mapper.Map<List<PostDetailsViewModel>>(courseList).Skip((pageNumber - 1) * pageSize).Take(pageSize);
 
             foreach (var post in result)
@@ -464,7 +469,9 @@ namespace LMS.Services
                 post.Likes = await _userService.GetLikesOnPost(post.Id);
                 post.Views = await _userService.GetViewsOnPost(post.Id);
                 post.CommentsCount = await _userService.GetCommentsCountOnPost(post.Id);
-                post.PostSharedCount = await _userSharedPostRepository.GetAll().Where(x => x.PostId == post.Id).CountAsync();
+                post.PostSharedCount = sharedPost.Where(x => x.PostId == post.Id).Count();
+                post.SavedPostsCount = savedPost.Where(x => x.PostId == post.Id).Count();
+                post.IsPostSavedByCurrentUser = savedPost.Any(x => x.PostId == post.Id && x.UserId == loginUserId);
                 if (post.Likes.Any(x => x.UserId == loginUserId && x.PostId == post.Id))
                 {
                     post.IsPostLikedByCurrentUser = true;

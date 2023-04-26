@@ -33,12 +33,14 @@ export class NotificationService{
         return this.http.get(`${this.apiUrl}/notifications/getNotificationSettings` + '?userId=' + userId, {headers: this.headers});
     }
 
-    getNotifications():Observable<any>{
-        return this.http.get(`${this.apiUrl}/notifications/getNotifications`, {headers: this.headers});
+    getNotifications(pageNumber:number):Observable<any>{
+      let queryParams = new HttpParams().append("pageNumber",pageNumber);
+        return this.http.get(`${this.apiUrl}/notifications/getNotifications`, {params:queryParams,headers: this.headers})
     }
 
     removeUnreadNotifications():Observable<any>{
-      return this.http.post(`${this.apiUrl}/notifications/removeUnreadNotifications`, {headers: this.headers});
+      debugger
+      return this.http.post(`${this.apiUrl}/notifications/removeUnreadNotifications`,'', {headers: this.headers});
     }
 
     saveNotificationSettings(notificationSettingsList:any):Observable<any>{

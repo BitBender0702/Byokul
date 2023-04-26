@@ -21,6 +21,8 @@ import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
 import { progressResponse } from 'src/root/service/signalr.service';
 import { stringify } from 'querystring';
+import { FileStorageService } from 'src/root/service/fileStorage';
+import { AutoComplete } from 'primeng/autocomplete';
 export const addPostResponse =new Subject<{}>();  
 
 
@@ -44,10 +46,12 @@ export class CreatePostComponent implements OnInit,OnDestroy {
   @ViewChild('createPostModal', { static: true }) createPostModal!: ModalDirective;
   @ViewChild('closePostM') closePostM!: ElementRef;
   @ViewChild('openAttachmentModal') openAttachmentModals!: ElementRef;
+  @ViewChild('autoComplete', { static: false }) autoComplete!: AutoComplete;
   @ViewChild('templatefirst') templatefirst!:  TemplateRef<any>;
   @ViewChild('videoPlayer') videoPlayers!: QueryList<ElementRef>;
 
   private _postService;
+  private _fileStorageService;
   isSubmitted: boolean = false;
   isTagsValid: boolean = true;
   isAttachmentsValid: boolean = true;
@@ -100,10 +104,17 @@ export class CreatePostComponent implements OnInit,OnDestroy {
   progressFileName!:string;
   filesLength!:number;
   totalFilesLength!:number;
+  isOpenReelsTab:boolean = false;
+  reelsTagLists!: string[];
+  fileStorageAttachments:any;
+  fileAttachmentsForm!:FormGroup;
+  filteredFileAttachments!: any[];
+  uploadFromFileStorage!:any[];
 
 
-  constructor(private domSanitizer: DomSanitizer,public messageService:MessageService,private bsModalService: BsModalService,public options: ModalOptions,private fb: FormBuilder,postService: PostService,private http: HttpClient,private cd: ChangeDetectorRef) {
+  constructor(private bsModalRef: BsModalRef,private domSanitizer: DomSanitizer,fileStorageService:FileStorageService, public messageService:MessageService,private bsModalService: BsModalService,public options: ModalOptions,private fb: FormBuilder,postService: PostService,private http: HttpClient,private cd: ChangeDetectorRef) {
     this._postService = postService;
+    this._fileStorageService = fileStorageService;
   }
 
   ngOnInit(): void {
@@ -157,11 +168,23 @@ export class CreatePostComponent implements OnInit,OnDestroy {
 
     this.createReelForm = this.fb.group({
       scheduleTime: this.fb.control(''),
-      reelsVideo:this.fb.control([],[Validators.required])
+      reelsVideo:this.fb.control([],[Validators.required]),
+      title: this.fb.control('',[Validators.required]),
     })
 
+    this.fileAttachmentsForm = this.fb.group({
+      fileAttachments:this.fb.control([])
+    });
+
+    this._fileStorageService.getFileStorageAttachments().subscribe((response) => {
+      debugger
+      this.fileStorageAttachments = response;
+    });
+
     this.tagLists = [];
+    this.reelsTagLists = [];
     this.initialTagList = [];
+    this.uploadFromFileStorage = [];
 
     this.initializeImageObject();
     this.initializeVideoObject();
@@ -176,7 +199,33 @@ export class CreatePostComponent implements OnInit,OnDestroy {
       this.cd.detectChanges();
     });
 
+    this.cd.detectChanges();
+    var modal = document.getElementById('create-post');
+    window.onclick = (event) => {
+     if (event.target == modal) {
+      if (modal != null) {
+       this.bsModalService.hide();
+      }
+    } 
    }
+
+ 
+
+  //  onModalClick(event: MouseEvent) {
+  //   var a = document.querySelector('.modal-backdrop');
+  //   if(a != null){
+
+  //    a.addEventListener('click', () => {
+  //     this.bsModalService.hide();
+  //   });
+  // }
+
+    // // Check if the click event target is the modal element or one of its child elements
+    // if (!(event.target instanceof Element) || !event.target.closest('.modal-content')) {
+    //   // Close the modal using the hide method provided by BsModalRef
+    //   this.bsModalRef.hide();
+    // }
+  }
 
    ngOnDestroy() {
     this.progressSubscription.unsubscribe();
@@ -301,17 +350,51 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
  }
 
  handleAttachmentInput(event: any) {
+  debugger
     this.initialAttachment.push(event.target.files[0]);
  }
 
  removeAttachment(attachment:any){
+  debugger
   const attachmentIndex = this.attachment.findIndex((item) => item.name ===attachment.name);
   if (attachmentIndex > -1) {
     this.attachment.splice(attachmentIndex, 1);
   }
 
+  const initialAttachmentIndex = this.initialAttachment.findIndex((item) => item.fileName ===attachment.fileName);
+  if (initialAttachmentIndex > -1) {
+    this.initialAttachment.splice(initialAttachmentIndex, 1);
+
+  const fileAttachmentIndex = this.uploadFromFileStorage.findIndex((item) => item.fileName ===attachment.fileName);
+  if (fileAttachmentIndex > -1) {
+    this.uploadFromFileStorage.splice(fileAttachmentIndex, 1);
+  }
+    this.cd.detectChanges();
+
+    //const input = this.autocomplete.nativeElement;
+
+    //const input = this.autoComplete.inputEL.nativeElement;
+
+    // this.autocomplete.inputEL.nativeElement.blur();
+
+  }
+
+
+  // const unselectedFile = event.value;
+  // const selectedFiles = this.formGroup.get('fileAttachments').value.filter((file: any) => file !== unselectedFile);
+  // this.formGroup.get('fileAttachments').setValue(selectedFiles);
+
 
  }
+
+ deselectAutocomplete() {
+  debugger
+  this.cd.detectChanges();
+  const input = this.autoComplete.inputEL.nativeElement;
+  input.blur();
+  this.autoComplete.onModelChange([]);
+  this.autoComplete.hide();
+}
 
  handleReels(event:any){
   this.postToUpload.append('uploadVideos', event.target.files[0]);
@@ -333,6 +416,7 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
  }
 
    savePost(){
+    debugger
     this.isSubmitted=true;
     if (!this.createPostForm.valid) {
       return;
@@ -372,12 +456,14 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
     this.postToUpload.append('title', post.title);
     this.postToUpload.append('description', post.bodyText);
     this.postToUpload.append('postType', PostTypeEnum.Post.toString());
+
+    if(this.uploadFromFileStorage != undefined){
+    this.postToUpload.append('UploadFromFileStorage', JSON.stringify(this.uploadFromFileStorage));
+    }
     if(post.scheduleTime != undefined){
       this.postToUpload.append('dateTime',post.scheduleTime.toISOString());
     }
-
-
-
+    this.postToUpload.append('postTags', JSON.stringify(this.tagLists))
     this._postService.createPost(this.postToUpload).subscribe((response:any) => {  
       
       this.isSubmitted=false;
@@ -416,7 +502,7 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
       this.postToUpload.append('parentId', parentId);
       this.postToUpload.append('ownerId', ownerId);
       this.postToUpload.append('postAuthorType', postAuthorType);
-      this.postToUpload.append('postTags', JSON.stringify(this.tagLists))
+      // this.postToUpload.append('postTags', JSON.stringify(this.tagLists))
 
    }
 
@@ -443,6 +529,9 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
     this.postToUpload.append('dateTime', reel.scheduleTime.toISOString());
     }
 
+    this.postToUpload.append('title', reel.title);
+    this.postToUpload.append('postTags', JSON.stringify(this.reelsTagLists))
+
     this._postService.createPost(this.postToUpload).subscribe((response:any) => {
       
       this.isSubmitted=false;
@@ -457,11 +546,19 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
    }
 
    removeTags(tag:any){
+    if(this.isOpenReelsTab){
+      const reelsTagIndex = this.reelsTagLists.findIndex((item) => item ===tag);
+      if (reelsTagIndex > -1) {
+        this.reelsTagLists.splice(reelsTagIndex, 1);
+      }
+    }
+    else{
     const tagIndex = this.tagLists.findIndex((item) => item ===tag);
     if (tagIndex > -1) {
       this.tagLists.splice(tagIndex, 1);
-    }
-   }
+    }       
+  }
+  }
 
    removeInitialTags(tag:any){
     const tagIndex = this.initialTagList.findIndex((item) => item ===tag);
@@ -475,7 +572,12 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
       this.isTagsValid = false;
       return;
     }
-    this.tagLists = [ ...this.tagLists, ...this.initialTagList];
+    if(this.isOpenReelsTab){
+      this.reelsTagLists = [ ...this.reelsTagLists, ...this.initialTagList];
+    }
+    else{
+      this.tagLists = [ ...this.tagLists, ...this.initialTagList];
+    }
     this.isTagsValid = true;
     this.closeTagsModal();
    }
@@ -531,7 +633,8 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
   }
 
   isValidAttachments(){
-   if(this.initialAttachment == undefined || this.initialAttachment.length == 0){
+    debugger
+   if(this.uploadFromFileStorage.length == 0 && (this.initialAttachment == undefined || this.initialAttachment.length == 0)){
     this.isAttachmentsValid = false;
       return;
    }
@@ -543,7 +646,55 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
 
    reelsTab(){
     this.totalFilesLength = 0;
+    this.isOpenReelsTab = true;
    }
+
+   postTab(){
+    this.isOpenReelsTab = false;
+   }
+
+   captureAttachmentUrl(event:any){
+    debugger
+    var fileStorageAttachment = {
+      fileName:event.fileName,
+      fileUrl:event.fileUrl
+    }
+
+    this.uploadFromFileStorage.push(fileStorageAttachment);
+    this.initialAttachment.push(fileStorageAttachment);
+    this.isAttachmentsValid = true;
+   }
+
+   removeFileAttachment(event:any){
+    debugger
+    const attachmentIndex = this.uploadFromFileStorage.findIndex((item) => item.fileName === event.fileName);
+    if (attachmentIndex > -1) {
+       this.uploadFromFileStorage.splice(attachmentIndex, 1);
+    }
+
+    const attachmentInitialIndex = this.initialAttachment.findIndex((item) => item.fileName === event.fileName);
+    if (attachmentInitialIndex > -1) {
+      this.initialAttachment.splice(attachmentInitialIndex, 1);
+   }
+   }
+
+   filterFileAttachments(event:any){
+    debugger
+    var fileStorageAttachments: any[] = this.fileStorageAttachments;
+      //var attachments: any[] = this.languages;
+      // this.languages = languages.filter(x => !userLanguages.find(y => y.id == x.id));
+      
+      let filtered: any[] = [];
+      let query = event.query;
+      for (let i = 0; i < this.fileStorageAttachments.length; i++) {
+        let attachment = this.fileStorageAttachments[i];
+        if (attachment.fileName.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+          filtered.push(attachment);
+        }
+      }
+      this.filteredFileAttachments = filtered;
+   }
+  
 
 }
 

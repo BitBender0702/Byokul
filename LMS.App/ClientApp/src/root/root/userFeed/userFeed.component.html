@@ -245,7 +245,7 @@
                   <img *ngIf="post.isPostSavedByCurrentUser" src="../../../assets/images/Bookmark-light.svg" class="d-block mx-auto">
                   {{post.savedPostsCount}}
                 </button>
-                <button (click)="openSharePostModal(post.id)" type="button" class="bg-transparent border-0 function-btns text-light">
+                <button (click)="openSharePostModal(post.id,post.postType)" type="button" class="bg-transparent border-0 function-btns text-light">
                   <img src="../../../../assets/images/Upload-light.svg" class="d-block mx-auto" />
                   {{post.postSharedCount}}
                 </button>
@@ -272,7 +272,7 @@
                   <img *ngIf="post.isPostSavedByCurrentUser" src="../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto">
                   <span class="textBlack">{{post.savedPostsCount}}</span>
                 </button>
-                <button (click)="openSharePostModal(post.id)" type="button" class="bg-transparent border-0 function-btns text-light">
+                <button (click)="openSharePostModal(post.id,post.postType)" type="button" class="bg-transparent border-0 function-btns text-light">
                   <img src="../../../../assets/images/Upload-dark.svg" class="d-block mx-auto" />
                   <span class="textBlack">{{post.postSharedCount}}</span>
                 </button>
@@ -367,7 +367,7 @@
                         <img *ngIf="gridItemInfo.isPostSavedByCurrentUser" src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto">
                         {{gridItemInfo.savedPostsCount}}
                       </button>
-                      <button (click)="openSharePostModal(gridItemInfo.id)" type="button" class="bg-transparent border-0 function-btns">
+                      <button (click)="openSharePostModal(gridItemInfo.id,gridItemInfo.postType)" type="button" class="bg-transparent border-0 function-btns">
                         <img src="../../../../assets/images/Upload-dark.svg" class="d-block mx-auto">
                         {{gridItemInfo.postSharedCount}}
                       </button>
@@ -648,7 +648,7 @@
                   <img *ngIf="post.isPostSavedByCurrentUser" src="../../../assets/images/Bookmark-light.svg" class="d-block mx-auto" />
                   {{post.savedPostsCount}}
                 </button>
-                <button (click)="openSharePostModal(post.id)" type="button" class="bg-transparent border-0 function-btns text-light">
+                <button (click)="openSharePostModal(post.id,post.postType)" type="button" class="bg-transparent border-0 function-btns text-light">
                   <img src="../../../../assets/images/Upload-light.svg" class="d-block mx-auto" />
                   {{post.postSharedCount}}
                 </button>
@@ -675,7 +675,7 @@
                   <img *ngIf="post.isPostSavedByCurrentUser" src="../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto" />
                   <span class="textBlack">{{post.savedPostsCount}}</span>
                 </button>
-                <button (click)="openSharePostModal(post.id)" type="button" class="bg-transparent border-0 function-btns text-light">
+                <button (click)="openSharePostModal(post.id,post.postType)" type="button" class="bg-transparent border-0 function-btns text-light">
                   <img src="../../../../assets/images/Upload-dark.svg" class="d-block mx-auto" />
                   <span class="textBlack">{{post.postSharedCount}}</span>
                 </button>
@@ -769,7 +769,7 @@
                         <img *ngIf="gridItemInfoForGlobal.isPostSavedByCurrentUser" src="../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto">
                         {{gridItemInfoForGlobal.savedPostsCount}}
                       </button>
-                      <button (click)="openSharePostModal(gridItemInfoForGlobal.id)" type="button" class="bg-transparent border-0 function-btns">
+                      <button (click)="openSharePostModal(gridItemInfoForGlobal.id,gridItemInfoForGlobal.postType)" type="button" class="bg-transparent border-0 function-btns">
                         <img src="../../../../assets/images/Upload-dark.svg" class="d-block mx-auto">
                         {{gridItemInfoForGlobal.postSharedCount}}
                       </button>

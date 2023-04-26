@@ -1,4 +1,4 @@
-import { Component, ElementRef, Inject, OnInit, Renderer2, ViewChild ,OnDestroy, HostListener, ChangeDetectorRef, AfterViewInit} from '@angular/core';
+import { Component, ElementRef, Inject, OnInit, Renderer2, ViewChild ,OnDestroy, HostListener, ChangeDetectorRef, AfterViewInit, Injector} from '@angular/core';
 import { signalRResponse, SignalrService } from 'src/root/service/signalr.service';
 import { HttpClient } from '@angular/common/http';
 import { ChartConfiguration, ChartType } from 'chart.js';
@@ -16,9 +16,10 @@ import { SchoolService } from 'src/root/service/school.service';
 import { ClassService } from 'src/root/service/class.service';
 import { IfStmt } from '@angular/compiler';
 import { CourseService } from 'src/root/service/course.service';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { NotificationService } from 'src/root/service/notification.service';
 import { NotificationType } from 'src/root/interfaces/notification/notificationViewModel';
+import { MultilingualComponent, changeLanguage } from '../sharedModule/Multilingual/multilingual.component';
 
 export const unreadChatResponse =new Subject<{readMessagesCount: number,type:string}>(); 
 
@@ -29,7 +30,7 @@ export const unreadChatResponse =new Subject<{readMessagesCount: number,type:str
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.css']
 })
-export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ChatComponent extends MultilingualComponent implements OnInit, AfterViewInit, OnDestroy {
 
   isOpenSidebar:boolean = false;
   userId:string = "";
@@ -127,12 +128,14 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
   scrollSchoolChatsResponseCount:number = 1;
 
   searchString:string = "";
+  changeLanguageSubscription!: Subscription;
   @ViewChild('chatHeadsScrollList') chatHeadsScrollList!: ElementRef;
   // @ViewChild('chatScrollList') chatScrollList!: ElementRef;
 
 
 
-  constructor(@Inject(DOCUMENT) document: Document,notificationService:NotificationService,schoolService:SchoolService,classService:ClassService,courseService:CourseService, chatService:ChatService,private renderer: Renderer2,public signalRService: SignalrService, private http: HttpClient,private route: ActivatedRoute,private userService: UserService,private cd: ChangeDetectorRef) { 
+  constructor(@Inject(DOCUMENT) document: Document,injector: Injector,notificationService:NotificationService,schoolService:SchoolService,classService:ClassService,courseService:CourseService, chatService:ChatService,private renderer: Renderer2,public signalRService: SignalrService, private http: HttpClient,private route: ActivatedRoute,private userService: UserService,private cd: ChangeDetectorRef) { 
+    super(injector);
     this._userService = userService;
     this._schoolService = schoolService;
     this._classService = classService;
@@ -149,6 +152,8 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     this.loadingIcon = true;
+    var selectedLang = localStorage.getItem('selectedLanguage');
+    this.translate.use(selectedLang ?? '');
     let chatHeadObj = history.state.chatHead;
     if(chatHeadObj!= undefined){
 
@@ -688,32 +693,23 @@ this.addChatAttachments = {
   fileType:'',
   file:[]
  }
+
+ if(!this.changeLanguageSubscription){
+  this.changeLanguageSubscription = changeLanguage.subscribe(response => {
+    this.translate.use(response.language);
+  })
+}
+
   }
 
   ngAfterViewInit() {        
-    //setTimeout(() => this.scrollToBottom());
   } 
 
-// scrollToBottom(): void {
-//     try {
-//         this.cd.detectChanges();
-//         this.chatScrollList.nativeElement.scrollTop = this.chatScrollList.nativeElement.scrollHeight;
-//     } catch(err) { }                 
-// }
-
-    ngOnDestroy() {
-      // this.chatheadSub.unsubscribe();
-      // this.saveChat.unsubscribe();
-      // this.usersChatSub.unsubscribe();
+  ngOnDestroy() {
+    if(this.changeLanguageSubscription){
+      this.changeLanguageSubscription.unsubscribe();
     }
-
-    // myScrollFunction= (ev: any): void => {
-    //   console.log("scrolled down!!",ev.srcElement.scrollTop,this.recieverId);
-    //   if(ev.srcElement.scrollTop==100){
-    //     this.frontEndPageNumber++;
-    //     this.getUsersChat(this.recieverId,"","","1",10,this.frontEndPageNumber);
-    //   }
-    // }
+  }
 
     getChatUsersList(senderId:string){
       this.loadingIcon = true;

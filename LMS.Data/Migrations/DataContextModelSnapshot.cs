@@ -237,6 +237,9 @@ namespace LMS.Data.Migrations
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("StripeProductId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("ThumbnailType")
                         .HasColumnType("int");
 
@@ -520,6 +523,9 @@ namespace LMS.Data.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("IsPinned")
+                        .HasColumnType("bit");
+
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -608,6 +614,9 @@ namespace LMS.Data.Migrations
 
                     b.Property<Guid?>("ServiceTypeId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("StripeProductId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("ThumbnailType")
                         .HasColumnType("int");
@@ -955,6 +964,9 @@ namespace LMS.Data.Migrations
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("IsPinned")
+                        .HasColumnType("bit");
+
                     b.Property<Guid?>("PostId")
                         .HasColumnType("uniqueidentifier");
 
@@ -1223,6 +1235,9 @@ namespace LMS.Data.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("IsPinned")
+                        .HasColumnType("bit");
+
                     b.Property<Guid>("PostId")
                         .HasColumnType("uniqueidentifier");
 
@@ -1253,6 +1268,9 @@ namespace LMS.Data.Migrations
 
                     b.Property<Guid?>("CountryId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CountryName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CoveredPhoto")
                         .HasColumnType("nvarchar(max)");
@@ -1669,6 +1687,55 @@ namespace LMS.Data.Migrations
                     b.ToTable("TeacherCertificates");
                 });
 
+            modelBuilder.Entity("LMS.Data.Entity.Transaction", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid?>("ClassId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CourseId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OwnerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StripeCustomerId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StripeProductId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TransactionType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClassId");
+
+                    b.HasIndex("CourseId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Transactions");
+                });
+
             modelBuilder.Entity("LMS.Data.Entity.User", b =>
                 {
                     b.Property<string>("Id")
@@ -1683,11 +1750,17 @@ namespace LMS.Data.Migrations
                     b.Property<Guid?>("CityId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("CityName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ContactEmail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CountryName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedOn")
@@ -1753,6 +1826,9 @@ namespace LMS.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StripeCustomerId")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("TokenCreatedOn")
@@ -1943,6 +2019,12 @@ namespace LMS.Data.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsPinned")
+                        .HasColumnType("bit");
 
                     b.Property<Guid>("PostId")
                         .HasColumnType("uniqueidentifier");
@@ -2843,6 +2925,27 @@ namespace LMS.Data.Migrations
                         .HasForeignKey("TeacherId");
 
                     b.Navigation("Teacher");
+                });
+
+            modelBuilder.Entity("LMS.Data.Entity.Transaction", b =>
+                {
+                    b.HasOne("LMS.Data.Entity.Class", "Class")
+                        .WithMany()
+                        .HasForeignKey("ClassId");
+
+                    b.HasOne("LMS.Data.Entity.Course", "Course")
+                        .WithMany()
+                        .HasForeignKey("CourseId");
+
+                    b.HasOne("LMS.Data.Entity.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Class");
+
+                    b.Navigation("Course");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("LMS.Data.Entity.User", b =>

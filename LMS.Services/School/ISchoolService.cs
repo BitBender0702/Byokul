@@ -43,6 +43,7 @@ namespace LMS.Services
         Task<SchoolsClassCourseViewModel> GetSchoolsClassCourse(IEnumerable<string> schoolIds);
         Task SaveClassCourse(string userId, Guid id, ClassCourseEnum type);
         Task<IEnumerable<CombineClassCourseViewModel>> GetSavedClassCourse(string userId, int pageNumber);
+        Task<bool> PinUnpinSavedClassCourse(Guid id, bool isPinned,ClassCourseEnum type, string userId);
 
     }
 }

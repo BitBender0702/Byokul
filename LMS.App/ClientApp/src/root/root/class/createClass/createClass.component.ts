@@ -250,18 +250,34 @@ captureTeacherId(event: any) {
 
   forwardStep() {
     this.isStepCompleted = true;
+    this.class=this.createClassForm1.value;
+
     if (!this.createClassForm1.valid || this.uploadImageName == undefined) {
       return;
     }
 
-    if(this.tagList == undefined || this.tagList.length == 0){
+    if(this.class.tags == '' && (this.tagList == undefined || this.tagList.length == 0)){
       this.isTagsValid = false;
       return;
     }
 
+
     // var schoolId = this.createClassForm1.get('schoolId')?.value;
-    this.class=this.createClassForm1.value;
+    //this.class=this.createClassForm1.value;
     this.className = this.class.className.split(' ').join('');
+
+    if (this.class.tags.startsWith("#")){
+      if(!this.tagList.includes(this.class.tags)) {
+      this.tagList.push(this.class.tags);
+      }
+    }
+    else{
+      this.class.tags = '#' + this.class.tags;
+      if(!this.tagList.includes(this.class.tags)) {
+      this.tagList.push(this.class.tags);
+      }
+    }
+
     this.fileToUpload.append('classTags', JSON.stringify(this.tagList))
     // this.schoolName = this.class.schoolId.schoolName.split(' ').join('');
     this._classService.isClassNameExist(this.class.className).subscribe((response) => {
@@ -486,7 +502,6 @@ captureTeacherId(event: any) {
   }
 
   onEnter(event:any) {
-    
     if(event.target.value.indexOf('#') > -1){
       this.tagList.push(event.target.value);
     }
@@ -495,6 +510,7 @@ captureTeacherId(event: any) {
       this.tagList.push(event.target.value);
     }
     event.target.value = '';
+    // this.createClassForm1.controls['tags'].setValue('');
   }
 
   removeTag(tag:any){

@@ -13,7 +13,7 @@ import {
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { finalize, Subject } from 'rxjs';
+import { finalize, Subject, Subscription } from 'rxjs';
 import { EditSchoolModel } from 'src/root/interfaces/school/editSchoolModel';
 import { AddSchoolLanguage } from 'src/root/interfaces/school/addSchoolLanguage';
 import { SchoolService } from 'src/root/service/school.service';
@@ -22,7 +22,7 @@ import { AddSchoolTeacher } from 'src/root/interfaces/school/addSchoolTeacher';
 import { DeleteSchoolTeacher } from 'src/root/interfaces/school/deleteSchoolTeacher';
 import { AddSchoolCertificate } from 'src/root/interfaces/school/addSchoolCertificate';
 import { DeleteSchoolCertificate } from 'src/root/interfaces/school/deleteSchoolCertificate';
-import { MultilingualComponent } from '../../sharedModule/Multilingual/multilingual.component';
+import { MultilingualComponent, changeLanguage } from '../../sharedModule/Multilingual/multilingual.component';
 import {
   addPostResponse,
   CreatePostComponent,
@@ -34,15 +34,15 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { FollowUnfollow } from 'src/root/interfaces/FollowUnfollow';
 import { FollowUnFollowEnum } from 'src/root/Enums/FollowUnFollowEnum';
 import { PostService } from 'src/root/service/post.service';
-import { PostViewComponent } from '../../postView/postView.component';
+import { PostViewComponent, savedPostResponse } from '../../postView/postView.component';
 import { LikeUnlikePost } from 'src/root/interfaces/post/likeUnlikePost';
 import { PostView } from 'src/root/interfaces/post/postView';
 import { LikeUnlikeClassCourse } from 'src/root/interfaces/school/likeUnlikeClassCourse';
 import { MessageService } from 'primeng/api';
-import { ReelsViewComponent } from '../../reels/reelsView.component';
+import { ReelsViewComponent, savedReelResponse } from '../../reels/reelsView.component';
 import { ownedSchoolResponse } from '../createSchool/createSchool.component';
 import * as $ from 'jquery';
-import { ClassCourseModalComponent } from '../../ClassCourseModal/classCourseModal.component';
+import { ClassCourseModalComponent, savedClassCourseResponse } from '../../ClassCourseModal/classCourseModal.component';
 import { NotificationService } from 'src/root/service/notification.service';
 import { NotificationType } from 'src/root/interfaces/notification/notificationViewModel';
 import { CourseService } from 'src/root/service/course.service';
@@ -52,9 +52,10 @@ import { CertificateViewComponent } from '../../certificateView/certificateView.
 import { PostAuthorTypeEnum } from 'src/root/Enums/postAuthorTypeEnum';
 import { PermissionNameConstant } from 'src/root/interfaces/permissionNameConstant';
 import { PermissionTypeEnum } from 'src/root/Enums/permissionTypeEnum';
-import { SharePostComponent } from '../../sharePost/sharePost.component';
+import { SharePostComponent, sharedPostResponse } from '../../sharePost/sharePost.component';
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
+import { AuthService } from 'src/root/service/auth.service';
 
 
 @Component({
@@ -72,6 +73,7 @@ export class SchoolProfileComponent
   private _notificationService;
   private _classService;
   private _courseService;
+  private _authService;
   school: any;
   isProfileGrid: boolean = true;
   isOpenSidebar: boolean = false;
@@ -143,6 +145,7 @@ export class SchoolProfileComponent
   classFilterList:any[] = [];
   courseFilterList:any[] = [];
   isOnInitInitialize:boolean = false;
+  
 
   @ViewChild('closeEditModal') closeEditModal!: ElementRef;
   @ViewChild('closeTeacherModal') closeTeacherModal!: ElementRef;
@@ -167,6 +170,14 @@ export class SchoolProfileComponent
   hasAddSchoolCertificatesPermission!:boolean;
   hasAddLanguagesPermission!:boolean;
   videoElements:any;
+  savedPostSubscription!: Subscription;
+  savedReelSubscription!: Subscription;
+  changeLanguageSubscription!: Subscription;
+  addPostSubscription!: Subscription;
+  sharedPostSubscription!: Subscription;
+  savedClassCourseSubscription!: Subscription;
+  savedMessage!:string;
+  removedMessage!:string;
 
   constructor(
     injector: Injector,
@@ -178,6 +189,7 @@ export class SchoolProfileComponent
     private route: ActivatedRoute,
     private domSanitizer: DomSanitizer,
     schoolService: SchoolService,
+    authService:AuthService,
     private fb: FormBuilder,
     private router: Router,
     private http: HttpClient,
@@ -192,25 +204,41 @@ export class SchoolProfileComponent
     this._notificationService = notificationService;
     this._classService = classService,
     this._courseService = courseService
+    this._authService = authService;
     this.schoolParamsData$ = this.route.params.subscribe((routeParams) => {
       this.schoolName = routeParams.schoolName;
-      if (!this.loadingIcon && this.isOnInitInitialize) this.ngOnInit();
+      if (!this.loadingIcon && this.isOnInitInitialize){
+        this.ngOnInit();
+      }
     });
   }
   ngOnDestroy(): void {
-    if (this.schoolParamsData$) this.schoolParamsData$.unsubscribe();
+    if(this.savedPostSubscription){
+      this.savedPostSubscription.unsubscribe();
+    }
+    if(this.savedReelSubscription){
+      this.savedReelSubscription.unsubscribe();
+    }
+    if(this.changeLanguageSubscription){
+      this.changeLanguageSubscription.unsubscribe();
+    }
+    if(this.sharedPostSubscription){
+      this.sharedPostSubscription.unsubscribe();
+    }
+    if(this.savedClassCourseSubscription){
+      this.savedClassCourseSubscription.unsubscribe();
+    }
+    if (this.schoolParamsData$) {
+        this.schoolParamsData$.unsubscribe();
+    }
   }
   ngOnChanges(): void {
-    if(this.carousel){
-    this.carousel.nativeElement.querySelectorAll('span.carousel-control-next-icon')
-      .forEach((elem: Element) => {
-        elem.remove();
-      });
-    }
+    
   }
   ngOnInit(): void {
    this.isOnInitInitialize = true;
    this.postLoadingIcon = false;
+   this._authService.loginState$.next(true);
     this.loadingIcon = true;
     this.validToken = localStorage.getItem('jwt') ?? '';
     var selectedLang = localStorage.getItem('selectedLanguage');
@@ -219,6 +247,7 @@ export class SchoolProfileComponent
     
 
     this._schoolService.getSchoolById(this.schoolName.replace(' ', '').toLowerCase()).subscribe(async (response) => {
+      debugger
         this.frontEndPageNumber = 1;
         this.reelsPageNumber = 1;
         this.school = response;
@@ -305,25 +334,72 @@ export class SchoolProfileComponent
       isFollowed: false,
     };
 
-    addPostResponse.subscribe((response) => {
-      this.loadingIcon = true;
-      this.messageService.add({
-        severity: 'success',
-        summary: 'Success',
-        life: 3000,
-        detail: 'Post created successfully',
-      });
-      this._schoolService.getSchoolById(this.schoolName.replace(' ', '').toLowerCase()).subscribe((response) => {
-          this.school = response;
-          this.loadingIcon = false;
-          this.postLoadingIcon = false;
-          this.scrolled = false;
-          this.followersLength = this.school.schoolFollowers.length;
-          this.isOwnerOrNot();
-          this.loadingIcon = false;
-          this.isDataLoaded = true;
+    if(!this.addPostSubscription){
+      this.addPostSubscription = addPostResponse.subscribe((response) => {
+        this.loadingIcon = true;
+        this.messageService.add({severity: 'success',summary: 'Success',life: 3000,detail: 'Post created successfully',});
+        this._schoolService.getSchoolById(this.schoolName.replace(' ', '').toLowerCase()).subscribe((response) => {
+           this.school = response;
+           this.loadingIcon = false;
+           this.postLoadingIcon = false;
+           this.scrolled = false;
+           this.followersLength = this.school.schoolFollowers.length;
+           this.isOwnerOrNot();
+           this.loadingIcon = false;
+           this.isDataLoaded = true;
         });
+     });
+    }
+
+    if(!this.savedPostSubscription){
+      this.savedPostSubscription = savedPostResponse.subscribe(response => {
+        if(response.isPostSaved){
+          this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post saved successfully'});
+        }
+        if(!response.isPostSaved){
+          this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post removed successfully'});
+        }
+      });
+    }
+
+    if(!this.savedReelSubscription){
+      this.savedReelSubscription = savedReelResponse.subscribe(response => {
+        if(response.isReelSaved){
+          this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Reel saved successfully'});
+        }
+        if(!response.isReelSaved){
+          this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Reel removed successfully'});
+        }
+      });
+    }
+
+   this.sharedPostSubscription = sharedPostResponse.subscribe( response => {
+    if(response.postType == 1){
+      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'{}Post shared successfully'});
+      var post = this.school.posts.find((x: { id: string; }) => x.id == response.postId);  
+      post.postSharedCount++;
+    }
+    else
+      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Reel shared successfully'});
     });
+
+    if(!this.changeLanguageSubscription){
+      this.changeLanguageSubscription = changeLanguage.subscribe(response => {
+        this.translate.use(response.language);
+      })
+    }
+
+    if(!this.savedClassCourseSubscription){
+      this.savedClassCourseSubscription = savedClassCourseResponse.subscribe(response => {
+        if(response.isSaved){
+          this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:`${response.type} saved successfully`});
+        }
+        if(!response.isSaved){
+          this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:`${response.type} removed successfully`});
+        }
+      });
+    }
+   
   }
 
   async convertBlobUrlToStream(blobUrl: string): Promise<any> {
@@ -603,6 +679,7 @@ export class SchoolProfileComponent
     this._schoolService
       .editSchool(this.fileToUpload)
       .subscribe((response: any) => {
+        debugger
         this.closeModal();
         this.isSubmitted = false;
         this.schoolName = this.updateSchoolDetails.schoolName;
@@ -613,12 +690,7 @@ export class SchoolProfileComponent
           action: 'update',
         });
         this.fileToUpload = new FormData();
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Success',
-          life: 3000,
-          detail: 'School updated successfully',
-        });
+        this.messageService.add({severity: 'success',summary: 'Success',life: 3000,detail: 'School updated successfully',});
         this.ngOnInit();
       });
   }
@@ -892,7 +964,7 @@ export class SchoolProfileComponent
       schoolId: this.school.schoolId,
       from: 'school',
     };
-    this.bsModalService.show(CreatePostComponent, { initialState });
+    this.bsModalService.show(CreatePostComponent, { initialState, backdrop: 'static' });
   }
 
   pinUnpinPost(attachmentId: string, isPinned: boolean) {
@@ -1224,9 +1296,10 @@ export class SchoolProfileComponent
     this.bsModalService.show(CertificateViewComponent, { initialState });
   }
 
-  openSharePostModal(postId:string): void {
+  openSharePostModal(postId:string, postType:number): void {
     const initialState = {
-      postId: postId
+      postId: postId,
+      postType: postType
     };
     this.bsModalService.show(SharePostComponent,{initialState});
   }
@@ -1257,12 +1330,20 @@ export class SchoolProfileComponent
     if(isSavedClassCourse.isClassCourseSavedByCurrentUser){
       isSavedClassCourse.savedClassCourseCount -= 1;
       isSavedClassCourse.isClassCourseSavedByCurrentUser = false;
-      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post removed successfully'});
+      if(type == 1){
+        this.savedMessage = 'Class saved successfully';
+        this.removedMessage = 'Class removed successfully'
+      }
+      if(type == 2){
+        this.savedMessage = 'Course saved successfully';
+        this.removedMessage = 'Course removed successfully'
+      }
+      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:this.removedMessage});
      }
      else{
       isSavedClassCourse.savedClassCourseCount += 1;
       isSavedClassCourse.isClassCourseSavedByCurrentUser = true;
-      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post saved successfully'});
+      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:this.savedMessage});
      }
   
     this._schoolService.saveClassCourse(id,this.userId,type).subscribe((result) => {

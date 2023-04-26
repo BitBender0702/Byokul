@@ -1,7 +1,9 @@
-import { Component, HostListener, Injectable } from "@angular/core"; 
+import { Component, HostListener, Injectable, Injector, OnDestroy, OnInit } from "@angular/core"; 
 import { ActivatedRoute, Router } from "@angular/router";
+import { Subscription } from "rxjs";
 import { SchoolService } from "src/root/service/school.service";
 import { UserService } from "src/root/service/user.service";
+import { MultilingualComponent, changeLanguage } from "../../sharedModule/Multilingual/multilingual.component";
 
 @Component({
   selector: 'user-Followers',
@@ -9,7 +11,7 @@ import { UserService } from "src/root/service/user.service";
   styleUrls: ['./schoolFollowers.component.css']
 })
 
-export class SchoolFollowersComponent{
+export class SchoolFollowersComponent extends MultilingualComponent implements OnInit, OnDestroy{
 
     private _schoolService;
     schoolId!:string;
@@ -23,18 +25,20 @@ export class SchoolFollowersComponent{
     scrolled:boolean = false;
     postLoadingIcon: boolean = false;
     scrollFollowersResponseCount:number = 1;
+    changeLanguageSubscription!: Subscription;
 
+    
 
-
-
-    constructor(schoolService: SchoolService,private route: ActivatedRoute,) { 
-        this._schoolService = schoolService;
-      
-      }
+    constructor(injector: Injector,schoolService: SchoolService,private route: ActivatedRoute,) { 
+      super(injector);
+      this._schoolService = schoolService;
+    }
 
     ngOnInit(): void {
 
       this.loadingIcon = true;
+      var selectedLang = localStorage.getItem('selectedLanguage');
+      this.translate.use(selectedLang ?? '');
       this.schoolId = this.route.snapshot.paramMap.get('schoolId') ?? '';
 
       this._schoolService.getSchoolFollowers(this.schoolId,this.schoolFollowersPageNumber,this.searchString).subscribe((response) => {
@@ -43,6 +47,18 @@ export class SchoolFollowersComponent{
         this.isDataLoaded = true;
       });
 
+      if(!this.changeLanguageSubscription){
+        this.changeLanguageSubscription = changeLanguage.subscribe(response => {
+          this.translate.use(response.language);
+        })
+      }
+
+    }
+
+    ngOnDestroy(): void {
+      if(this.changeLanguageSubscription){
+        this.changeLanguageSubscription.unsubscribe();
+      }
     }
 
     getSelectedFollower(followerId:string){

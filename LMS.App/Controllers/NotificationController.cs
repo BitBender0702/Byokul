@@ -1,11 +1,13 @@
 ﻿using LMS.Common.ViewModels.Notification;
 using LMS.Data.Entity;
 using LMS.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LMS.App.Controllers
 {
+    [Authorize]
     [Route("notifications")]
     public class NotificationController : BaseController
     {
@@ -18,20 +20,12 @@ namespace LMS.App.Controllers
             _userManager = userManager;
         }
 
-        //[Route("saveNotifications")]
-        //[HttpPost]
-        //public async Task<IActionResult> SaveNotification()
-        //{
-        //    var response = await _notificationService.SaveNotification();
-        //    return Ok(response);
-        //}
-
         [Route("getNotifications")]
         [HttpGet]
-        public async Task<IActionResult> GetNotifications()
+        public async Task<IActionResult> GetNotifications(int pageNumber)
         {
             var userId = await GetUserIdAsync(this._userManager);
-            var response = await _notificationService.GetNotifications(userId);
+            var response = await _notificationService.GetNotifications(userId, pageNumber);
             return Ok(response);
         }
 

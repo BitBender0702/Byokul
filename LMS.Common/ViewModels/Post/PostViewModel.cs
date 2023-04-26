@@ -1,4 +1,5 @@
-﻿using LMS.Common.ViewModels.School;
+﻿using LMS.Common.ViewModels.FileStorage;
+using LMS.Common.ViewModels.School;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -33,6 +34,7 @@ namespace LMS.Common.ViewModels.Post
         public bool IsPinned { get; set; }
         public Boolean IsCommentsDisabled { get; set; }
         public List<IFormFile> UploadVideosThumbnail { get; set; }
+        public IEnumerable<string> UploadFromFileStorage { get; set; }
 
     }
 }

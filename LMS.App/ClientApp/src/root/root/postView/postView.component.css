@@ -8,7 +8,7 @@
 
 .overflow_paragraph{
     overflow: auto;
-    height: 200px;
+    max-height: 200px !important;
 
 }
 
