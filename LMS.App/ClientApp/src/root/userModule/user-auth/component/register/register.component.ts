@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectorRef, Component, Injector, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Injector, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/root/service/auth.service';
@@ -11,6 +11,7 @@ import { BehaviorSubject, finalize, Subject } from 'rxjs';
 
 import { MultilingualComponent } from 'src/root/root/sharedModule/Multilingual/multilingual.component';
 import { UserService } from 'src/root/service/user.service';
+import { Country, State, City } from 'country-state-city';
 
 export const registrationResponse =new BehaviorSubject <boolean>(false);  
 
@@ -43,6 +44,10 @@ export class RegisterComponent extends MultilingualComponent implements OnInit {
     countries!:any;
     cities!:any;
     isDataLoaded:boolean = false;
+    isPasswordVisible:boolean=false;
+    isConfirmPasswordVisible:boolean = false;
+    @ViewChild('passwordInput') passwordInput!: ElementRef<HTMLInputElement>;
+    @ViewChild('confirmPasswordInput') confirmPasswordInput!: ElementRef<HTMLInputElement>;
 
     date = new Date();
     credentials: RegisterModel = {email:'', password:'',confirmPassword:'',firstName:'',lastName:'',gender:0,dob: ''};
@@ -65,6 +70,7 @@ export class RegisterComponent extends MultilingualComponent implements OnInit {
         Validators.required,
       ];
 
+      //this.countries = Country.getAllCountries();
       this._userService.getCountryList().subscribe((response) => {
         this.countries = response;
         this.isDataLoaded = true;
@@ -81,8 +87,8 @@ export class RegisterComponent extends MultilingualComponent implements OnInit {
         dob: this.fb.control('',[Validators.required]),
         password: this.fb.control('', [...passwordValidators]),
         confirmPassword: this.fb.control('', [...passwordValidators]),
-        countryId: this.fb.control('', [Validators.required]),
-        cityId: this.fb.control('', [Validators.required]),
+        countryName: this.fb.control('', [Validators.required]),
+        cityName: this.fb.control('', [Validators.required]),
       }, {validator: this.dateLessThan('dob',this.currentDate)});
     }
 
@@ -95,6 +101,22 @@ export class RegisterComponent extends MultilingualComponent implements OnInit {
         return currentDate;
       }
 
+      onPasswordShow(){
+        this.isPasswordVisible=true;
+      }
+    
+      onPasswordHide(){
+        this.isPasswordVisible=false;
+      }
+
+      onConfirmPasswordShow(){
+        this.isConfirmPasswordVisible=true;
+      }
+    
+      onConfirmPasswordHide(){
+        this.isConfirmPasswordVisible=false;
+      }
+
       dateLessThan(from: string, currentDate:string) {
         return (group: FormGroup): {[key: string]: any} => {
          let f = group.controls[from];
@@ -102,7 +124,7 @@ export class RegisterComponent extends MultilingualComponent implements OnInit {
           return {};
 
          }
-         if (f.value > currentDate || f.value < "1960-12-31") {
+         if (f.value > currentDate || f.value < "1903-12-31") {
            return {
              dates: `Please enter valid date`
            };
@@ -161,12 +183,10 @@ export class RegisterComponent extends MultilingualComponent implements OnInit {
       }
 
       getCityByCountry(event:any){
-        var countryId = event.value;
-        this._userService.getCityList(countryId).subscribe((response) => {
+        var countryName = event.value;
+        this._userService.getCityList(countryName).subscribe((response) => {
           this.cities = response;
         });
-
-
       }
 
   }

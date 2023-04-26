@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectorRef, Component, Injector, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Injector, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -44,6 +44,10 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
     isForgotPassSent!: boolean;
     isResetpassword!: boolean;
     isChangePassword!: boolean;
+    isPasswordVisible:boolean=false;
+    @ViewChild('passwordInput') passwordInput!: ElementRef<HTMLInputElement>;
+
+    
     constructor(injector: Injector, public messageService:MessageService,private fb: FormBuilder,private router: Router,private signalRService: SignalrService, 
       private userService: UserService,
       private http: HttpClient,authService:AuthService,private route: ActivatedRoute,private cd: ChangeDetectorRef) { 
@@ -102,6 +106,14 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
       });
     }
   
+    onPasswordShow(){
+      this.isPasswordVisible=true;
+    }
+  
+    onPasswordHide(){
+      this.isPasswordVisible=false;
+    }
+    
     login(): void {
         
       this.isSubmitted = true;
@@ -171,5 +183,6 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
               this.signalRService.askServer(this.getUserRoles(token!).jti);
             }, 500);
     }
+    
     
   }

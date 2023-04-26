@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, ElementRef, Injector, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/root/service/auth.service';
@@ -11,7 +11,7 @@ export const resetPassResponse =new BehaviorSubject <boolean>(false);
 @Component({
     selector: 'change-password',
     templateUrl: './reset-password.component.html',
-    styleUrls: []
+    styleUrls: ['./reset-password.component.css']
   })
 
 export class ResetPasswordComponent extends MultilingualComponent implements OnInit {
@@ -21,6 +21,10 @@ export class ResetPasswordComponent extends MultilingualComponent implements OnI
     isSubmitted: boolean = false;
     user: any;
     loadingIcon:boolean = false;
+    isNewPasswordVisible:boolean=false;
+    isConfirmPasswordVisible:boolean = false;
+    @ViewChild('newPasswordInput') passwordInput!: ElementRef<HTMLInputElement>;
+    @ViewChild('confirmPasswordInput') confirmPasswordInput!: ElementRef<HTMLInputElement>;
     
   private _authService;
     constructor(injector: Injector,private fb: FormBuilder,private router: Router, authService:AuthService, private route:ActivatedRoute) { 
@@ -44,6 +48,22 @@ export class ResetPasswordComponent extends MultilingualComponent implements OnI
         confirmPassword: this.fb.control('', [...passwordValidators])
       });
 
+    }
+
+    onNewPasswordShow(){
+      this.isNewPasswordVisible=true;
+    }
+  
+    onNewPasswordHide(){
+      this.isNewPasswordVisible=false;
+    }
+
+    onConfirmPasswordShow(){
+      this.isConfirmPasswordVisible=true;
+    }
+  
+    onConfirmPasswordHide(){
+      this.isConfirmPasswordVisible=false;
     }
 
     get newPassword() { return this.resetPasswordForm.get('newPassword'); }

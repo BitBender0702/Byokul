@@ -16,7 +16,7 @@
             <div class="form-group">
               <input (keypress)="omit_special_char($event)" type="text" class="form-control rounded-8" formControlName="firstName" placeholder="{{'Name'| translate }}">
               <small class="p-error" style="color: orange;"
-                *ngIf="(isSubmitted && registrationForm.controls.firstName.errors)">First Name is required
+                *ngIf="(isSubmitted && registrationForm.controls.firstName.errors)">{{'FirstNameRequired'| translate }}
               </small>
             </div>
           </div>
@@ -30,7 +30,7 @@
           </div>
           <div class="col-md-6">
             <div class="form-group">
-              <input type="date" class="form-control rounded-8" min="1903-12-31" max="9999-12-31" formControlName="dob" placeholder="DD/MM/YYYY">
+              <input type="date" class="form-control rounded-8" min="1903-12-31" max="9999-12-31" formControlName="dob" placeholder="Test">
               <small class="p-error" style="color: orange;"
               *ngIf="(isSubmitted && registrationForm.controls.dob.errors)">Date of birth is required
             </small>
@@ -55,22 +55,22 @@
           <div class="col-md-6">
             <div class="form-group">
               <select class="form-select rounded-8 w-100" formControlName="countryName" aria-label="Default select example" (change)="getCityByCountry($event.target)">
-                <option value="" disabled selected hidden>Country</option>
+                <option value="" disabled selected hidden>{{'Country'| translate }}</option>
                 <option *ngFor="let country of countries;" [value]="country.countryName">{{country.countryName}}</option>
              </select>
              <small class="p-error" style="color: orange;"
-             *ngIf="(isSubmitted && registrationForm.controls.countryId.errors)">This Field is required
+             *ngIf="(isSubmitted && registrationForm.controls.countryName.errors)">This Field is required
              </small>
             </div>
           </div>
           <div class="col-md-6">
             <div class="form-group">
               <select class="form-select rounded-8 w-100" formControlName="cityName" aria-label="Default select example">
-                <option value="" disabled selected hidden>City</option>
+                <option value="" disabled selected hidden>{{'City'| translate }}</option>
                  <option *ngFor="let city of cities;" [value]="city">{{city}}</option>
              </select>
              <small class="p-error" style="color: orange;"
-             *ngIf="(isSubmitted && registrationForm.controls.cityId.errors)">This Field is required
+             *ngIf="(isSubmitted && registrationForm.controls.cityName.errors)">This Field is required
              </small>
             </div>
           </div>
@@ -83,8 +83,9 @@
             </div>
           </div>
           <div class="col-md-12">
-            <div class="form-group">
-              <input type="password" class="form-control rounded-8" formControlName="password" placeholder="{{'Password'| translate }}">
+            <div class="form-group input-container">
+              <input #passwordInput type="password" class="form-control rounded-8" formControlName="password" placeholder="{{'Password'| translate }}">
+              <button class="eye_button_style" type="button" (click)="passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password'"><i class="fa fa-eye-slash" (click)="onPasswordShow()" *ngIf="!isPasswordVisible"></i><i class="fa fa-eye" (click)="onPasswordHide()" *ngIf="isPasswordVisible"></i></button>
               <small style="color: rgb(17, 17, 17);">*{{'PasswordLengthInfo'| translate }} </small>
               <br>
               <small class="p-error" style="color: orange;" *ngIf="isSubmitted && registrationForm.controls.password.errors">
@@ -92,8 +93,9 @@
             </div>
           </div>
           <div class="col-md-12">
-            <div class="form-group">
-              <input type="password" class="form-control rounded-8" formControlName="confirmPassword" placeholder="{{'RepeatPassword'| translate }}">
+            <div class="form-group input-container">
+              <input #confirmPasswordInput type="password" class="form-control rounded-8" formControlName="confirmPassword" placeholder="{{'RepeatPassword'| translate }}">
+              <button class="eye_button_style" type="button" (click)="confirmPasswordInput.type = confirmPasswordInput.type === 'password' ? 'text' : 'password'"><i class="fa fa-eye-slash" (click)="onConfirmPasswordShow()" *ngIf="!isConfirmPasswordVisible"></i><i class="fa fa-eye" (click)="onConfirmPasswordHide()" *ngIf="isConfirmPasswordVisible"></i></button>
               <small class="p-error" style="color: orange;"
               *ngIf="isSubmitted && registrationForm.controls.confirmPassword.errors">Confirm Password is
               required.</small>

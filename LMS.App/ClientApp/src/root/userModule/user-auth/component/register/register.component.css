@@ -1,0 +1,22 @@
+.input-container {
+    position: relative;
+  }
+  
+.input-container input {
+    padding-right: 3em;
+}
+  
+.input-container button {
+    position: absolute;
+   top: 20px;
+   right: 8px;
+   transform: translateY(-50%); 
+}
+
+.eye_button_style {
+    margin-right: 5px;
+    border: none;
+    color: #2F6463;
+    margin-top: 5px;
+    background-color: white;
+}

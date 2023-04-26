@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, ElementRef, Injector, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/root/service/auth.service';
@@ -23,6 +23,14 @@ export class ChangePasswordComponent extends MultilingualComponent implements On
     isSubmitted: boolean = false;
     user: any = {};
     loadingIcon:boolean = false;
+    isCurrentPasswordVisible:boolean=false;
+    isNewPasswordVisible:boolean=false;
+    isRepeatPasswordVisible:boolean=false;
+
+    @ViewChild('currentPasswordInput') currentPasswordInput!: ElementRef<HTMLInputElement>;
+    @ViewChild('newPasswordInput') newPasswordInput!: ElementRef<HTMLInputElement>;
+    @ViewChild('repeatPasswordInput') repeatPasswordInput!: ElementRef<HTMLInputElement>;
+
 
     credentials: ChangePasswordModel = {email:'', currentPassword:'',password:'', confirmPassword:''};
     private _authService;
@@ -43,6 +51,30 @@ export class ChangePasswordComponent extends MultilingualComponent implements On
         confirmPassword: this.fb.control('', [...passwordValidators]),
       });
 
+    }
+
+    onCurrentPasswordShow(){
+      this.isCurrentPasswordVisible=true;
+    }
+  
+    onCurrentPasswordHide(){
+      this.isCurrentPasswordVisible=false;
+    }
+
+    onNewPasswordShow(){
+      this.isNewPasswordVisible=true;
+    }
+  
+    onNewPasswordHide(){
+      this.isNewPasswordVisible=false;
+    }
+
+    onRepeatPasswordShow(){
+      this.isRepeatPasswordVisible=true;
+    }
+  
+    onRepeatPasswordHide(){
+      this.isRepeatPasswordVisible=false;
     }
 
     matchPassword(){
@@ -86,8 +118,8 @@ export class ChangePasswordComponent extends MultilingualComponent implements On
       }
 
     back(): void {
-        window.history.back();
+       window.history.back();
     }
 
 
-  }
+}
