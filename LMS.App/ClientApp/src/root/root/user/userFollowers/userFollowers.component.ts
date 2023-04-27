@@ -23,6 +23,8 @@ export class UserFollowersComponent extends MultilingualComponent implements OnI
     scrolled:boolean = false;
     scrollFollowersResponseCount:number = 1;
     postLoadingIcon: boolean = false;
+    loginUserId!:string;
+    isOwner:boolean = false;
     changeLanguageSubscription!: Subscription;
 
     constructor(injector: Injector,userService: UserService,private route: ActivatedRoute,) { 
@@ -49,6 +51,7 @@ export class UserFollowersComponent extends MultilingualComponent implements OnI
         })
       }
 
+      this.isOwnerOrNot();
     }
 
     ngOnDestroy(): void {
@@ -57,6 +60,22 @@ export class UserFollowersComponent extends MultilingualComponent implements OnI
       }
     }
 
+    isOwnerOrNot(){
+      var validToken = localStorage.getItem("jwt");
+        if (validToken != null) {
+          let jwtData = validToken.split('.')[1]
+          let decodedJwtJsonData = window.atob(jwtData)
+          let decodedJwtData = JSON.parse(decodedJwtJsonData);
+          this.loginUserId = decodedJwtData.jti;
+          if(this.loginUserId == this.userId){
+            this.isOwner = true;
+          }
+          else{
+            this.isOwner = false;
+          }
+        }
+    }
+    
     getSelectedFollower(followerId:string){
       window.location.href=`user/userProfile/${followerId}`;
     }

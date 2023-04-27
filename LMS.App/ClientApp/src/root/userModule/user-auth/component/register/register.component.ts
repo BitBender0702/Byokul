@@ -59,9 +59,6 @@ export class RegisterComponent extends MultilingualComponent implements OnInit {
         this._userService = userService;
     }
 
-    back(): void {
-      window.history.back();
-  }
     ngOnInit(): void {
       this.loadingIcon = true;
       this._authService.loginState$.next(false);
@@ -69,8 +66,6 @@ export class RegisterComponent extends MultilingualComponent implements OnInit {
         Validators.minLength(6),
         Validators.required,
       ];
-
-      //this.countries = Country.getAllCountries();
       this._userService.getCountryList().subscribe((response) => {
         this.countries = response;
         this.isDataLoaded = true;
@@ -84,7 +79,7 @@ export class RegisterComponent extends MultilingualComponent implements OnInit {
         lastName: this.fb.control('', [Validators.required]),
         email: this.fb.control('',[Validators.required,Validators.pattern(this.EMAIL_PATTERN)]),
         gender: this.fb.control('',[Validators.required]),
-        dob: this.fb.control('',[Validators.required]),
+        dob: this.fb.control(new Date().toISOString().substring(0, 10),[Validators.required]),
         password: this.fb.control('', [...passwordValidators]),
         confirmPassword: this.fb.control('', [...passwordValidators]),
         countryName: this.fb.control('', [Validators.required]),
@@ -145,8 +140,8 @@ export class RegisterComponent extends MultilingualComponent implements OnInit {
    {   
       var k;  
       k = event.charCode;
-      return((k > 64 && k < 91) || (k > 96 && k < 123) || k == 8 || k == 32 || (k >= 48 && k <= 57)); 
-   }
+      return ((k > 64 && k < 91) || (k > 96 && k < 123) || k == 8 || k == 32) && !(k >= 48 && k <= 57);
+    }
 
   get password() { return this.registrationForm.get('password'); }
   get confirmPassword() { return this.registrationForm.get('confirmPassword'); }

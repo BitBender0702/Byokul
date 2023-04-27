@@ -164,7 +164,7 @@ namespace LMS.Services
             return model;
         }
 
-        public async Task AddTeacher(AddTeacherViewModel model)
+        public async Task AddTeacher(AddTeacherViewModel model, string loginUserId)
         {
             var ownerInfo = _userRepository.GetById(model.OwnerId);
             var ownerName = ownerInfo.FirstName + " " + ownerInfo.LastName;
@@ -187,7 +187,11 @@ namespace LMS.Services
             }
             else
             {
-                await SendPermissionsEmailToUser(isEmailExist, ownerName);
+                var user = _userManager.FindByIdAsync(loginUserId);
+                if (user.Result.Email != model.Email)
+                {
+                    await SendPermissionsEmailToUser(isEmailExist, ownerName);
+                }
                 userId = isEmailExist.Id;
             }
             await SaveNewTeacher(model, userId);

@@ -3,6 +3,8 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { UserService } from "src/root/service/user.service";
 import { MultilingualComponent, changeLanguage } from "../../sharedModule/Multilingual/multilingual.component";
 import { Subscription } from "rxjs";
+import { FollowUnfollow } from "src/root/interfaces/FollowUnfollow";
+import { FollowUnFollowEnum } from "src/root/Enums/FollowUnFollowEnum";
 
 @Component({
   selector: 'user-Followers',
@@ -23,6 +25,10 @@ export class UserFollowingsComponent extends MultilingualComponent implements On
     scrolled:boolean = false;
     scrollFollowingsResponseCount:number = 1;
     postLoadingIcon: boolean = false;
+    followUnfollowUser!: FollowUnfollow;
+    isFollowed:boolean = true;
+    loginUserId!:string;
+    isOwner:boolean = false;
     changeLanguageSubscription!: Subscription;
 
     constructor(injector: Injector,userService: UserService,private route: ActivatedRoute) { 
@@ -50,12 +56,29 @@ export class UserFollowingsComponent extends MultilingualComponent implements On
         })
       }
 
+      this.isOwnerOrNot();
     }
 
     ngOnDestroy(): void {
       if(this.changeLanguageSubscription){
         this.changeLanguageSubscription.unsubscribe();
       }
+    }
+
+    isOwnerOrNot(){
+      var validToken = localStorage.getItem("jwt");
+        if (validToken != null) {
+          let jwtData = validToken.split('.')[1]
+          let decodedJwtJsonData = window.atob(jwtData)
+          let decodedJwtData = JSON.parse(decodedJwtJsonData);
+          this.loginUserId = decodedJwtData.jti;
+          if(this.loginUserId == this.userId){
+            this.isOwner = true;
+          }
+          else{
+            this.isOwner = false;
+          }
+        }
     }
 
     getSelectedFollowing(followingId:string){
@@ -99,5 +122,33 @@ export class UserFollowingsComponent extends MultilingualComponent implements On
       this.scrollFollowingsResponseCount = response.length; 
       this.scrolled = false;
     });
+  }
+
+  followUser(userId:string,from:string){
+    debugger
+    var followingUser = this.userFollowings.find((x: { userId: string; }) => x.userId == userId);
+
+    this.InitializeFollowUnfollowUser();
+    this.followUnfollowUser.id = userId;
+    if(from == FollowUnFollowEnum.Follow){
+      this.isFollowed = true;
+      this.followUnfollowUser.isFollowed = true;
+      followingUser.isUserFollowing = true;
+    }
+    else{
+      this.isFollowed = false;
+      this.followUnfollowUser.isFollowed = false;
+      followingUser.isUserFollowing = false;
+    }
+    this._userService.saveUserFollower(this.followUnfollowUser).subscribe((response) => {
+      this.InitializeFollowUnfollowUser();
+    });
+  }
+
+  InitializeFollowUnfollowUser(){
+    this.followUnfollowUser = {
+      id: '',
+      isFollowed: false
+     };
   }
 }

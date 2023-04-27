@@ -31,8 +31,10 @@
             <div class="d-flex align-items-center justify-content-between"><span class="followers-name font_16 text_sec1 fw_600">
               <img [src]="userfollower.follower.avatar" class="rounded-circle me-2" style="max-height: 30px;"/>
                  <a style="cursor:pointer;" (click)="getSelectedFollower(userfollower.follower.id)">{{userfollower.follower.firstName + ' ' + userfollower.follower.lastName}}</a></span>
-                  <span class="followe_report"><button type="button" class="border-0 bg-transparent font_14 text_dark fw_400 me-3">{{'Report'| translate }}</button> 
-                 <button (click)="banFollower(userfollower.follower.id)" type="button" class="border-0 bg-transparent font_14 text_dark fw_400 ">{{'Ban'| translate }}</button></span>
+                  <span *ngIf="isOwner" class="followe_report">
+                    <button type="button" class="border-0 bg-transparent font_14 text_dark fw_400 me-3">{{'Report'| translate }}</button> 
+                    <button (click)="banFollower(userfollower.follower.id)" type="button" class="border-0 bg-transparent font_14 text_dark fw_400 ">{{'Ban'| translate }}</button>
+                  </span>
             </div>
           </li>
         </ul>

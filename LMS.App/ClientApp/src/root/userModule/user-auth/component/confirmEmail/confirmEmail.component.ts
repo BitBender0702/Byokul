@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { AuthService } from 'src/root/service/auth.service';
 
-export const confirmEmailResponse =new BehaviorSubject <boolean>(false);  
+export const confirmEmailResponse =new BehaviorSubject <string>('');  
 
 
 @Component({
@@ -35,10 +35,11 @@ loadingIcon:boolean = false;
     // var token = this.route.snapshot.paramMap.get('token')??'';
     // var email = this.route.snapshot.paramMap.get('email')??'';
     this._authService.confirmEmail(this.token,this.email).subscribe((response) => {
+      debugger
        if(response.result == "success"){
         // confirmEmailResponse.next({confirmEmail: "confirm"});
         this.router.navigate(['../login'], { relativeTo: this.route });
-        confirmEmailResponse.next(true); 
+        confirmEmailResponse.next(this.email); 
        }
        else{ 
         this.isDataLoaded = true;

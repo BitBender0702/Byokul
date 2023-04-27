@@ -743,6 +743,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
 
       resetLanguageModal(){
         this.isSubmitted=false;
+        this.courseLanguage.languageIds = [];
         this.languageForm.setValue({
           languages: [],
         });

@@ -90,11 +90,18 @@ export class ResetPasswordComponent extends MultilingualComponent implements OnI
       this.user = this.resetPasswordForm.value;
       this.user.passwordResetToken = this.route.snapshot.paramMap.get('id');
       this._authService.resetPassword(this.user).subscribe({ 
-                next: () => {
+                next: (response) => {
+                  debugger
+                  if(response.token == "reset token expired"){
+                    this.resetPasswordForm.setErrors({ tokenExpire: true });
+                    this.loadingIcon = false;
+                  }
+                  else{
                   this.isSubmitted = false;
                   this.invalidPasswordReset = false; 
                   this.router.navigateByUrl("user/auth/login");
                   resetPassResponse.next(true); 
+                 }
                 },
                 error: (err: HttpErrorResponse) => this.invalidPasswordReset = true
               })

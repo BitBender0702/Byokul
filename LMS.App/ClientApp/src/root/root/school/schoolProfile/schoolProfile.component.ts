@@ -925,6 +925,7 @@ export class SchoolProfileComponent
 
   resetLanguageModal() {
     this.isSubmitted = false;
+    this.schoolLanguage.languageIds = [];
     this.languageForm.setValue({
       languages: [],
     });

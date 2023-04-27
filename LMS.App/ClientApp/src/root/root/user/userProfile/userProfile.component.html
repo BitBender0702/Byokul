@@ -64,7 +64,7 @@
           <span *ngFor="let item of user.languages;" class="custom-tag">{{item.name}}<button *ngIf="user.languages.length > 1" (click)="getDeletedLanguage(item.id)" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#delete-userLanguage">
             <img *ngIf="isOwner" src="../../../../assets/images/cross-sm-light.svg" /></button></span>
   
-          <span *ngIf="isOwner" class="custom-tag add-language-tag" (click)="resetLanguageModal()" data-bs-toggle="modal" data-bs-target="#add-language">Add Languages <button (click)="resetLanguageModal()" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#add-language">
+          <span *ngIf="isOwner" class="custom-tag add-language-tag" (click)="resetLanguageModal()" data-bs-toggle="modal" data-bs-target="#add-language">{{'AddLanguage'| translate }} <button (click)="resetLanguageModal()" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#add-language">
             <img *ngIf="isOwner" src="../../../../assets/images/school/plus-light.svg" /></button>
           </span>
           
@@ -101,25 +101,25 @@
             <li class="nav-item ps-0 mb-0" role="presentation">
               <button (click)="GetSavedPostsByUser(user.id)" class="nav-link" id="classes-tab" data-bs-toggle="tab"
                 data-bs-target="#classes-tab-pane" type="button" role="tab" aria-controls="classes-tab-pane"
-                aria-selected="false" tabindex="-1">{{'Saved Posts'| translate }}</button>
+                aria-selected="false" tabindex="-1">{{'SavedPosts'| translate }}</button>
             </li>
 
             <li class="nav-item ps-0 mb-0" role="presentation">
               <button (click)="GetSavedClassCourseByUser(user.id)" class="nav-link" id="savedClassCourse-tab" data-bs-toggle="tab"
                 data-bs-target="#saved-classcourse-tab-pane" type="button" role="tab" aria-controls="saved-classcourse-tab-pane"
-                aria-selected="true">{{'Saved Class/Course'| translate }}</button>
+                aria-selected="true">{{'SavedClassCourse'| translate }}</button>
             </li>
 
             <li class="nav-item ps-0 mb-0" role="presentation">
               <button (click)="getSharedPostsByUser(user.id)" class="nav-link" id="sharedPosts-tab" data-bs-toggle="tab"
                 data-bs-target="#sharedPosts-tab-pane" type="button" role="tab" aria-controls="classes-tab-pane"
-                aria-selected="false" tabindex="-1">{{'Shared Post'| translate }}</button>
+                aria-selected="false" tabindex="-1">{{'SharedPost'| translate }}</button>
             </li>
 
             <li class="nav-item ps-0 mb-0" role="presentation">
               <button (click)="getLikedPostsByUser(user.id)" class="nav-link" id="likedPosts-tab" data-bs-toggle="tab"
                 data-bs-target="#likedPosts-tab-pane" type="button" role="tab" aria-controls="classes-tab-pane"
-                aria-selected="false" tabindex="-1">{{'Liked Post'| translate }}</button>
+                aria-selected="false" tabindex="-1">{{'LikedPost'| translate }}</button>
             </li>
 
           </ul>
@@ -2022,50 +2022,50 @@
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
-                <label class="font_10">Name*</label>
+                <label class="font_10">{{'Name'| translate }}*</label>
                 <input (keypress)="omit_special_char($event)" formControlName="firstName" type="text" name="firstName" class="form-control w-100">
                 <small class="p-error" style="color: orange;"
-                *ngIf="(isSubmitted && editUserForm.controls.firstName.errors)">First Name is required
+                *ngIf="(isSubmitted && editUserForm.controls.firstName.errors)">{{'FirstNameRequired'| translate }}
               </small>
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-group">
-                <label class="font_10">Surname*</label>
+                <label class="font_10">{{'SurName'| translate }}*</label>
                 <input (keypress)="omit_special_char($event)" formControlName="lastName" type="text" name="lastName"  class="form-control w-100">
                 <small class="p-error" style="color: orange;"
-                *ngIf="(isSubmitted && editUserForm.controls.lastName.errors)">Last Name is required
+                *ngIf="(isSubmitted && editUserForm.controls.lastName.errors)">{{'LastNameRequired'| translate }}
               </small>
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-group">
-                <label class="font_10">Date of Birth*</label>
-                <input formControlName="dob" type="date" name="dob" class="form-control w-100">
+                <label class="font_10">{{'DateOfBirth'| translate }}*</label>
+                <input formControlName="dob" type="date" name="dob" [max]="editUserForm.controls.dob.value" class="form-control w-100">
                 <small class="p-error" style="color: orange;"
-                *ngIf="(isSubmitted && editUserForm.controls.dob.errors)">Last Name is required
+                *ngIf="(isSubmitted && editUserForm.controls.dob.errors)">{{'DateRequired'| translate }}
               </small>
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-group">
-                <label class="font_10">Gender*</label>
+                <label class="font_10">{{'Gender'| translate }}*</label>
                 <select formControlName="gender" class="form-select rounded-8 w-100">
-                  <option value=1>Male</option>
-                  <option value=2>Female</option>
-                  <option value=3>Other</option>
+                  <option value=1>{{'Male'| translate }}</option>
+                  <option value=2>{{'Female'| translate }}</option>
+                  <option value=3>{{'Other'| translate }}</option>
                 </select>
                 <small class="p-error" style="color: orange;"
-                *ngIf="(isSubmitted && editUserForm.controls.gender.errors)">Last Name is required
+                *ngIf="(isSubmitted && editUserForm.controls.gender.errors)">{{'GenderRequired'| translate }}
               </small>
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-group">                
-                <label class="font_10">Contact Email</label>
+                <label class="font_10">{{'ContactEmail'| translate }}</label>
                 <input formControlName="contactEmail" placeholder="Contact Email" type="email" name="contactEmail" class="form-control w-100">
                 <small class="p-error" style="color: orange;"
-                *ngIf="(isSubmitted && editUserForm.controls.contactEmail.errors)">Contact Email is invalid
+                *ngIf="(isSubmitted && editUserForm.controls.contactEmail.errors)">{{'ContactEmailInvalid'| translate }}
               </small>
               </div>
             </div>
@@ -2074,7 +2074,7 @@
             <span class="line-text font_12 text_ltgray fw_400 text-center">{{'UserBio'| translate }}</span>
           </div> -->
           <div class="form-group ">
-            <label class="font_10">User Bio</label>
+            <label class="font_10">{{'UserBio'| translate }}</label>
             <textarea formControlName="description" class="form-control resize-none ht_96"></textarea>
           </div>
         </form>
@@ -2087,7 +2087,6 @@
           data-bs-dismiss="modal">{{'DiscardChanges'| translate }}</button>
         <button (click)="updateUser()" type="button"
           class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step">{{'Save'| translate }}</button>
-
       </div>
     </div>
   </div>

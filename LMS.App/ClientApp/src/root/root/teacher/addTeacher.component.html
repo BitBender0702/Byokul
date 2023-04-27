@@ -1,9 +1,8 @@
-<!-- <div *ngIf="isDataLoaded"> -->
     <section class="f-poppins">
       <div class="main_content">
         <div class="live-header d-flex align-items-center justify-content-between">
           <button (click)="back()" type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
-              src="../../../assets/images/arrow-left.svg" /> Back</button>
+              src="../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
           <span class="logo_mobile d-xl-none">
             <img src="../../../assets/images/logo.svg" />
           </span>
@@ -16,7 +15,7 @@
         </div>
   
           <div id="regForm" class="step-form mx-auto f-monteserrat" style="max-width: 100%;">
-          <h3 id="create_school" class="font_24 text_dark fw-bold text-center">Add Teacher</h3>
+          <h3 id="create_school" class="font_24 text_dark fw-bold text-center">{{'AddTeacher'| translate }}</h3>
           <br>
 
   
@@ -30,25 +29,25 @@
                     <label class="font_10">{{'Email'| translate }}</label>
                     <input (blur)="getExistingUser()" type="text" formControlName="email" name="email" class="form-control w-100" placeholder="{{'Email'| translate }}">
                     <small class="p-error" style="color: orange;"
-                    *ngIf="(isSubmitted && createTeacherForm.controls.email.errors)">Email is required
+                    *ngIf="(isSubmitted && createTeacherForm.controls.email.errors)">{{'EmailRequired'| translate }}
                   </small>
                   </div>
                 </div>
                 <div class="col-6">
                     <div class="form-group">
                       <label class="font_10">{{'FirstName'| translate }}*</label>
-                      <input type="text" formControlName="firstName" name="firstName" class="form-control w-100" placeholder="{{'FirstName'| translate }}">
+                      <input (keypress)="omit_special_char($event)" type="text" formControlName="firstName" name="firstName" class="form-control w-100" placeholder="{{'FirstName'| translate }}">
                       <small class="p-error" style="color: orange;"
-                      *ngIf="(isSubmitted && createTeacherForm.controls.firstName.errors)">First Name is required
+                      *ngIf="(isSubmitted && createTeacherForm.controls.firstName.errors)">{{'FirstNameRequired'| translate }}
                     </small>
                     </div>
                   </div>
                   <div class="col-6">
                     <div class="form-group">
-                      <label class="font_10">{{'LastName'| translate }}</label>
-                      <input type="text" formControlName="lastName" name="lastName" class="form-control w-100" placeholder="{{'LastName'| translate }}">
+                      <label class="font_10">{{'LastName'| translate }}*</label>
+                      <input (keypress)="omit_special_char($event)" type="text" formControlName="lastName" name="lastName" class="form-control w-100" placeholder="{{'LastName'| translate }}">
                       <small class="p-error" style="color: orange;"
-                      *ngIf="(isSubmitted && createTeacherForm.controls.firstName.errors)">Last Name is required
+                      *ngIf="(isSubmitted && createTeacherForm.controls.firstName.errors)">{{'LastNameRequired'| translate }}
                     </small>
                     </div>
                   </div>
@@ -61,7 +60,7 @@
                       <option value="3">{{'Other'| translate }}</option>
                     </select>
                     <small class="p-error" style="color: orange;"
-                    *ngIf="(isSubmitted && createTeacherForm.controls.gender.errors)">Gender is required
+                    *ngIf="(isSubmitted && createTeacherForm.controls.gender.errors)">{{'GenderRequired'| translate }}
                   </small>
                   </div>
                   </div>
@@ -70,17 +69,17 @@
             <br>
             <br>
             <div>
-                <h3>Permissions</h3>
+                <h3>{{'Permissions'| translate }}</h3>
             </div>
 
             <div class="row" *ngIf="schoolList.length != 0">
                 <div class="col-5">
-                    <label class="font_10">Select Schools</label>
+                    <label class="font_10">{{'SelectSchools'| translate }}</label>
                     <div class="form-group">
                         <div class="custom-language-select">
                           <p-multiSelect  [defaultLabel]="'Select Schools'" [panelStyle]="{'width':'100%'}" [filter]="false" [showToggleAll]="true" [options]="schoolList" optionLabel="schoolName" optionValue="schoolId" name="languageSelect[]" class="form-control" multiple id="languageSelect" [(ngModel)]="selectedSchools" (onChange)="hideUnhideClassCourse($event)" (onPanelHide)="getClassesAndCourses($event)">
                             <ng-template pTemplate="header">
-                              <div style="position: absolute;left: 48px;" class="checkbox-all-text">Select All</div>
+                              <div style="position: absolute;left: 48px;" class="checkbox-all-text">{{'SelectAll'| translate }}</div>
                             </ng-template>
                          </p-multiSelect>
                       </div>
@@ -102,12 +101,12 @@
               <br><br>
               <div class="row" *ngIf="schoolList.length != 0">
                 <div *ngIf="!hideClassSection" class="col-5">
-                    <label class="font_10">Select Classes</label>
+                    <label class="font_10">{{'SelectClasses'| translate }}</label>
                     <div class="form-group">
                         <div class="custom-language-select">
                           <p-multiSelect  [defaultLabel]="'Select Classes'" [panelStyle]="{'width':'100%'}" [filter]="false" [showToggleAll]="true" [options]="classList" optionLabel="className" optionValue="classId" name="languageSelect[]" class="form-control" multiple id="languageSelect" [(ngModel)]="selectedClasses">
                             <ng-template pTemplate="header">
-                              <div style="position: absolute;left: 48px;" class="checkbox-all-text">Select All</div>
+                              <div style="position: absolute;left: 48px;" class="checkbox-all-text">{{'SelectAll'| translate }}</div>
                             </ng-template>
                          </p-multiSelect>
                       </div>
@@ -124,12 +123,12 @@
               <br><br>
               <div class="row">
                 <div *ngIf="!hideCourseSection" class="col-5">
-                    <label class="font_10">Select Courses</label>
+                    <label class="font_10">{{'SelectCourses'| translate }}</label>
                     <div class="form-group">
                         <div class="custom-language-select">
                           <p-multiSelect  [defaultLabel]="'Select Courses'" [panelStyle]="{'width':'100%'}" [filter]="false" [showToggleAll]="true" [options]="courseList" optionLabel="courseName" optionValue="courseId" name="languageSelect[]" class="form-control" multiple id="languageSelect" [(ngModel)]="selectedCourses">
                             <ng-template pTemplate="header">
-                              <div style="position: absolute;left: 48px;" class="checkbox-all-text">Select All</div>
+                              <div style="position: absolute;left: 48px;" class="checkbox-all-text">{{'SelectAll'| translate }}</div>
                             </ng-template>
                          </p-multiSelect>
                       </div>
@@ -145,7 +144,7 @@
                 </div>
             <br><br>
             <div class="row">
-                <input (click)="addTeacher()" type="submit" id="nextBtn" class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 text-uppercase" value="Add/Invite Teacher" />
+                <input (click)="addTeacher()" type="submit" id="nextBtn" class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 text-uppercase" value="{{'AddOrInviteTeacher'| translate }}" />
             </div>
         </div>
       </div>
@@ -162,5 +161,4 @@
     </section>  
     <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
     <p-toast></p-toast>
-  
   

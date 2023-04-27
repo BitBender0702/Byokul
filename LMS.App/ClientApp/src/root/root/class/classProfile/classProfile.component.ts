@@ -779,6 +779,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
 
       resetLanguageModal(){
         this.isSubmitted=false;
+        this.classLanguage.languageIds = [];
         this.languageForm.setValue({
           languages: [],
         });

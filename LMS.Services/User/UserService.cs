@@ -393,6 +393,7 @@ namespace LMS.Services
 
             var myFeeds = new List<PostDetailsViewModel>();
 
+            var myData = await _userRepository.GetAll().Where(x => x.Id == userId).ToListAsync();
             // feeds from schools user follow
             var schoolFollowers = await _schoolFollowerRepository.GetAll()
                 .Include(x => x.User)
@@ -419,10 +420,12 @@ namespace LMS.Services
             requiredIds.AddRange(classStudentsData.Select(c => new FeedConvertDTO { Id = c.ClassId, ParentImageUrl = c.Class.Avatar, ParentName = c.Class.ClassName, SchoolName = c.Class.School.SchoolName }).ToList());
             requiredIds.AddRange(courseStudentsData.Select(c => new FeedConvertDTO { Id = c.CourseId, ParentImageUrl = c.Course.Avatar, ParentName = c.Course.CourseName, SchoolName = c.Course.School.SchoolName }).ToList());
 
+            requiredIds.AddRange(myData.Select(c => new FeedConvertDTO { Id = new Guid(c.Id), ParentImageUrl = c.Avatar, ParentName = c.FirstName, SchoolName = "" }).ToList());
+
 
             var postList = _postRepository.GetAll().Include(x => x.CreatedBy);
             var test = requiredIds.Where(a => a.Id.HasValue).ToList();
-            var postListData = postList.Include(p => p.CreatedBy).AsEnumerable().Where(x => test.Any(q => q.Id == x.ParentId) && x.PostType == (int)postType && ((string.IsNullOrEmpty(searchString)) || (string.IsNullOrEmpty(x.Title) || (x.Title.ToLower().Contains(searchString.ToLower()))))).Skip((pageNumber - 1) * pageSize).Take(pageSize).OrderByDescending(x => x.IsPinned).ToList();
+            var postListData = postList.Include(p => p.CreatedBy).AsEnumerable().Where(x => test.Any(q => q.Id == x.ParentId) && x.PostType == (int)postType && ((string.IsNullOrEmpty(searchString)) || (string.IsNullOrEmpty(x.Title) || (x.Title.ToLower().Contains(searchString.ToLower()))))).OrderByDescending(x => x.CreatedOn).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
 
             var sharedPosts = await _userSharedPostRepository.GetAll().ToListAsync();
             var savedPosts = await _savedPostRepository.GetAll().ToListAsync();
@@ -830,6 +833,10 @@ namespace LMS.Services
                 .Take(pageSize).ToListAsync();
 
             var response = _mapper.Map<List<UserFollowingViewModel>>(followingList);
+            foreach (var item in response)
+            {
+                item.IsUserFollowing = true;
+            }
             return response;
 
         }

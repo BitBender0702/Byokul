@@ -23,38 +23,38 @@
 
               <div *ngIf="isRegister" class="alert alert-info text-center register-form mx-auto ng-dirty ng-touched ng-valid ng-submitted" role="alert"
                    style="background-color: #FFFFE0;max-width: 468px;border: 2px solid #f3eded;">
-                An Email has been sent to you.Please confirm the email to login!
+                {{'ConfirmEmailSentMessage'| translate }}
                </div>
 
                <div *ngIf="isForgotPassSent" class="alert alert-info text-center register-form mx-auto ng-dirty ng-touched ng-valid ng-submitted" role="alert"
                    style="background-color: #FFFFE0;max-width: 468px;border: 2px solid #f3eded;">
-                An Email has been sent to you.Please reset your password!
+                {{'ResetEmailSentMessage'| translate }}
                </div>
 
               <div class="form-group">
                 <input type="email" formControlName="email" class="form-control rounded-8 " placeholder="{{'Email'| translate }}">
                 <small class="p-error" style="color: orange;"
-                *ngIf="(isSubmitted && loginForm.controls.email.errors)">Valid email address is required.</small>
+                *ngIf="(isSubmitted && loginForm.controls.email.errors)">{{'ValidEmailRequired'| translate }}</small>
               </div>
               <div class="form-group mb-3 input-container">
                 <input #passwordInput type="password" formControlName="password" class="form-control rounded-8" placeholder="{{'Password'| translate }}">
                 <button class="eye_button_style" type="button" (click)="passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password'"><i class="fa fa-eye-slash" (click)="onPasswordShow()" *ngIf="!isPasswordVisible"></i><i class="fa fa-eye" (click)="onPasswordHide()" *ngIf="isPasswordVisible"></i></button>
                 <small class="p-error" style="color: orange;"
-                *ngIf="isSubmitted && loginForm.controls.password.errors">Password is required.</small>
+                *ngIf="isSubmitted && loginForm.controls.password.errors">{{'PasswordRequired'| translate }}</small>
               </div>
 
               <p class="font_14 fw_300 text-center al-account mt-0"><a [routerLink]="['/user/auth/request-password']"
                   class="text_dark text-decoration-none">{{'ForgotPassword'| translate }}</a></p>
 
                   <small class="p-error" style="color: orange;margin-left: 123px;" *ngIf="loginForm.errors?.unauthenticated">
-                    Email or Password incorrect!
+                    {{'EmailNotRegistered'| translate }}
                   </small>
 
                   <small class="p-error" style="color: orange;margin-left: 102px;" *ngIf="loginForm.errors?.banUserMessage">
-                    This account is banned by the admin!
+                    {{'AccountBanned'| translate }}
                   </small>
                   <small class="p-error" style="color: orange;margin-left: 138px;" *ngIf="loginForm.errors?.emailNotConfirmed">
-                    Please confirm your email!
+                    {{'ConfirmYourEmail'| translate }}
                   </small>
 
               <button type="submit" (click)="login()" class="btn primary_btn w-100 rounded-8 text-uppercase">{{'Login'| translate }}</button>

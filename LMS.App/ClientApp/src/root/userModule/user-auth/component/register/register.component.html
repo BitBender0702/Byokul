@@ -4,7 +4,7 @@
       <img src="../../../../../assets/images/logo.svg" alt="logo" />
     </div>
     <div class="bg-gray-gradient register-section rounded-8">
-      <button (click)="back()" type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
+      <button [routerLink]="['/user/auth/login']" type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
         src="../../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
       <div *ngIf="isRegister" class="alert alert-info text-center register-form mx-auto ng-dirty ng-touched ng-valid ng-submitted" role="alert">
        An Email has been sent to you.Please confirm the email to login!
@@ -24,15 +24,15 @@
             <div class="form-group">
               <input (keypress)="omit_special_char($event)" type="text" class="form-control rounded-8" formControlName="lastName" placeholder="{{'SurName'| translate }}">
               <small class="p-error" style="color: orange;"
-                *ngIf="(isSubmitted && registrationForm.controls.lastName.errors)">Last Name is required
+                *ngIf="(isSubmitted && registrationForm.controls.lastName.errors)">{{'LastNameRequired'| translate }}    
               </small>
             </div>
           </div>
           <div class="col-md-6">
             <div class="form-group">
-              <input type="date" class="form-control rounded-8" min="1903-12-31" max="9999-12-31" formControlName="dob" placeholder="Test">
+              <input type="date" class="form-control rounded-8" min="1903-12-31" [max]="registrationForm.controls.dob.value" formControlName="dob" placeholder="Test">
               <small class="p-error" style="color: orange;"
-              *ngIf="(isSubmitted && registrationForm.controls.dob.errors)">Date of birth is required
+              *ngIf="(isSubmitted && registrationForm.controls.dob.errors)">{{'DOBRequired'| translate }} 
             </small>
             <small class="p-error" style="color: orange;" *ngIf="isSubmitted && registrationForm.errors">
               {{ registrationForm.errors.dates}}
@@ -48,7 +48,7 @@
                 <option value="3">{{'Other'| translate }}</option>
               </select>
               <small class="p-error" style="color: orange;"
-              *ngIf="(isSubmitted && registrationForm.controls.gender.errors)">Gender is required
+              *ngIf="(isSubmitted && registrationForm.controls.gender.errors)">{{'GenderRequired'| translate }}
             </small>
             </div>
           </div>
@@ -59,7 +59,7 @@
                 <option *ngFor="let country of countries;" [value]="country.countryName">{{country.countryName}}</option>
              </select>
              <small class="p-error" style="color: orange;"
-             *ngIf="(isSubmitted && registrationForm.controls.countryName.errors)">This Field is required
+             *ngIf="(isSubmitted && registrationForm.controls.countryName.errors)">{{'ThisFieldRequired'| translate }}
              </small>
             </div>
           </div>
@@ -70,7 +70,7 @@
                  <option *ngFor="let city of cities;" [value]="city">{{city}}</option>
              </select>
              <small class="p-error" style="color: orange;"
-             *ngIf="(isSubmitted && registrationForm.controls.cityName.errors)">This Field is required
+             *ngIf="(isSubmitted && registrationForm.controls.cityName.errors)">{{'ThisFieldRequired'| translate }}
              </small>
             </div>
           </div>
@@ -78,7 +78,7 @@
             <div class="form-group">
               <input type="email" class="form-control rounded-8" formControlName="email" placeholder="{{'Email'| translate }}">
               <small class="p-error" style="color: orange;"
-              *ngIf="(isSubmitted && registrationForm.controls.email.errors)">Valid Email address is required
+              *ngIf="(isSubmitted && registrationForm.controls.email.errors)">{{'ValidEmailRequired'| translate }}
             </small>
             </div>
           </div>
@@ -89,7 +89,7 @@
               <small style="color: rgb(17, 17, 17);">*{{'PasswordLengthInfo'| translate }} </small>
               <br>
               <small class="p-error" style="color: orange;" *ngIf="isSubmitted && registrationForm.controls.password.errors">
-                Password is required.</small>
+                {{'PasswordRequired'| translate }}</small>
             </div>
           </div>
           <div class="col-md-12">
@@ -97,18 +97,17 @@
               <input #confirmPasswordInput type="password" class="form-control rounded-8" formControlName="confirmPassword" placeholder="{{'RepeatPassword'| translate }}">
               <button class="eye_button_style" type="button" (click)="confirmPasswordInput.type = confirmPasswordInput.type === 'password' ? 'text' : 'password'"><i class="fa fa-eye-slash" (click)="onConfirmPasswordShow()" *ngIf="!isConfirmPasswordVisible"></i><i class="fa fa-eye" (click)="onConfirmPasswordHide()" *ngIf="isConfirmPasswordVisible"></i></button>
               <small class="p-error" style="color: orange;"
-              *ngIf="isSubmitted && registrationForm.controls.confirmPassword.errors">Confirm Password is
-              required.</small>
+              *ngIf="isSubmitted && registrationForm.controls.confirmPassword.errors">{{'ConfirmPasswordRequired'| translate }}</small>
 
               <small class="p-error" style="color: orange;"
               *ngIf=" isSubmitted && matchPassword() && registrationForm.controls.confirmPassword.touched && !registrationForm.controls.confirmPassword.errors">
-              Password and Confirm password does not match!
+               {{'PasswordDoesNotMatch'| translate }}
               </small>
             </div>
           </div>
 
           <small class="p-error" style="color: orange;margin-left: 127px;" *ngIf="registrationForm.errors?.unauthenticated">
-            Email is already taken!
+            {{'EmailAlreadyTaken'| translate }}
           </small>
 
           <div class="col-md-12">

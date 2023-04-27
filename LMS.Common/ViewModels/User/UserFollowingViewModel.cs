@@ -11,5 +11,6 @@ namespace LMS.Common.ViewModels.User
         public Guid Id { get; set; }
         public string? UserId { get; set; }
         public UserDetailsViewModel User { get; set; }
+        public bool IsUserFollowing { get; set; }
     }
 }

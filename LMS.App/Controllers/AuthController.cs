@@ -150,11 +150,11 @@ namespace LMS.App.Controllers
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordViewModel resetPasswordViewModel)
         {
             var result = await _authService.ResetPassword(resetPasswordViewModel);
-            if (result != null)
+            if (result == Constants.ResetTokenExpired)
             {
-                return Ok(new { token = result });
+                return Ok(new { token = Constants.ResetTokenExpired });
             }
-            return BadRequest("Some error occurred");
+            return Ok(new { token = result });
         }
 
 

@@ -508,6 +508,7 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
 
    saveReels(){
     this.isSubmitted = true;
+    this.loadingIcon = true;
     if (!this.createReelForm.valid) {
       return;
     }

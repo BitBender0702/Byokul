@@ -58,12 +58,6 @@
                       <input readonly type="text" [placeholder]="parentDetails?.courseName" name="schoolName" class="form-control w-100">
                     </div>
 
-                    <div *ngIf="this.userId != undefined" class="form-group">
-                      <label class="font_10">User Name</label>
-                      <input hidden type="text" name="userId" class="form-control w-100">
-                      <input readonly type="text" [placeholder]="parentDetails?.firstName + ' ' + parentDetails?.lastName" name="userName" class="form-control w-100">
-                    </div>
-
                     <div class="form-group">
                       <label class="font_10">Title</label>
                       <input formControlName="title" type="text" placeholder="Title" class="form-control w-100">
@@ -179,12 +173,6 @@
                     <label class="font_10">Class Name</label>
                     <input hidden type="text" name="classId" class="form-control w-100">
                     <input readonly type="text" [placeholder]="parentDetails?.className" name="schoolName" class="form-control w-100">
-                  </div>
-
-                  <div *ngIf="this.userId != undefined" class="form-group">
-                    <label class="font_10">User Name</label>
-                    <input hidden type="text" name="userId" class="form-control w-100">
-                    <input readonly type="text" [placeholder]="parentDetails?.firstName + ' ' + parentDetails?.lastName" name="userName" class="form-control w-100">
                   </div>
 
                   <div *ngIf="this.courseId != undefined" class="form-group">

@@ -58,16 +58,13 @@ export class ForgetPasswordComponent extends MultilingualComponent implements On
                 next: (response:any) => {
                   if(response.result == ""){
                     this.forgotPasswordForm.setErrors({ unauthenticated: true });
-
                   }
                   else{
                   this.isSubmitted = false;
                   this.invalidForgetPassword = false; 
                   this.isResetEmailSent = true;
-                  // this.forgotPasswordForm.reset();
                   this.router.navigateByUrl("user/auth/login");
                   forgotPassResponse.next(true); 
-                  //this.router.navigateByUrl("user/auth/login");
                   }
                 },
                 error: (err: HttpErrorResponse) => this.invalidForgetPassword = true

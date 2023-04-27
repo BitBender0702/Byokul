@@ -89,6 +89,7 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
     changeLanguageSubscription!: Subscription;
     sharedPostSubscription!: Subscription;
     savedReelSubscription!: Subscription;
+    isGlobalFeedLoading!:boolean;
 
 
     constructor(injector: Injector,private authService:AuthService,private bsModalService: BsModalService,notificationService:NotificationService,postService: PostService,public userService:UserService, public options: ModalOptions,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,public messageService:MessageService,private cd: ChangeDetectorRef) { 
@@ -145,7 +146,7 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
           this.InitializeLikeUnlikePost();
 
           if(!this.addPostSubscription){
-           this.addPostSubscription = addPostResponse.subscribe((response) => {
+           this.addPostSubscription = addPostResponse.subscribe((response) => {          
               this.messageService.add({severity: 'success',summary: 'Success',life: 3000,detail: 'Post created successfully',
               });
             });
@@ -353,6 +354,9 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
       }
 
       getGlobalFeeds(){
+        if(this.isGlobalFeedLoading){
+          return;
+        }
         this.isOpenGlobalFeed = true;
         this.isGlobalFeed = true;
         this.loadingIcon = true;
@@ -366,22 +370,23 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
             this.checkGlobalFeedExist()
           });
         }
-          this._userService.getGlobalFeed(3, this.globalReelsPageNumber,this.searchString).subscribe((result) => {
-              this.globalFeedReels = result;
-              // this.loadingIcon = false;
-              // this.isDataLoaded = true;
-              this.isGlobalReelsExist = true;
-              this.checkGlobalFeedExist()
-              this.addGlobalFeedListenerToNextButton();
-
+        this._userService.getGlobalFeed(3, this.globalReelsPageNumber,this.searchString).subscribe((result) => {
+            this.globalFeedReels = result;
+            // this.loadingIcon = false;
+            // this.isDataLoaded = true;
+            this.isGlobalReelsExist = true;
+            this.checkGlobalFeedExist()
+            this.addGlobalFeedListenerToNextButton();
             });
-          }
 
-          checkGlobalFeedExist(){
-            if(this.isGlobalPostsExist && this.isGlobalReelsExist){
-              this.isDataLoaded = true;
-              this.loadingIcon = false;
-            }
+        this.isGlobalFeedLoading = true;    
+        }
+
+        checkGlobalFeedExist(){
+           if(this.isGlobalPostsExist && this.isGlobalReelsExist){
+            this.isDataLoaded = true;
+             this.loadingIcon = false;
+           }
         }
 
       isOwnerOrNot(){

@@ -19,11 +19,11 @@ export class TeacherService{
     }
 
     getAllPermissions(): Observable<any> {
-        return this.http.get(`${this.apiUrl}/teachers/getAllPermissions`);
+        return this.http.get(`${this.apiUrl}/teachers/getAllPermissions`,{headers: this.headers});
     }
 
     addTeacher(addTeacherViewModel:AddTeacherViewModel): Observable<any> {
-        return this.http.post(`${this.apiUrl}/teachers/addTeacher`, addTeacherViewModel);
+        return this.http.post(`${this.apiUrl}/teachers/addTeacher`, addTeacherViewModel,{headers: this.headers});
     }
 
     getClassTeachers(classId:string): Observable<any> {

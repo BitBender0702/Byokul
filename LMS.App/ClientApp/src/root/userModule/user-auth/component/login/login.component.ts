@@ -19,6 +19,7 @@ import { forgotPassResponse } from '../forget-password/forget-password.component
 import { confirmEmailResponse } from '../confirmEmail/confirmEmail.component';
 import { resetPassResponse } from 'src/root/root/sharedModule/reset-password.component';
 import { changePassResponse } from '../change-password/change-password.component';
+import { setPassResponse } from '../set-password/set-password.component';
 
 export const dashboardResponse =new Subject<{token:string}>(); 
 
@@ -43,6 +44,7 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
     private _authService;
     isForgotPassSent!: boolean;
     isResetpassword!: boolean;
+    isSetPassword!: boolean;
     isChangePassword!: boolean;
     isPasswordVisible:boolean=false;
     @ViewChild('passwordInput') passwordInput!: ElementRef<HTMLInputElement>;
@@ -96,9 +98,25 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
         }
       });
 
-      confirmEmailResponse.subscribe(response => {
+      setPassResponse.subscribe(response => {
         this.cd.detectChanges();
-        this.isConfirmEmail = response;
+        this.isSetPassword = response;
+        if(this.isSetPassword){
+          this.messageService.add({severity: 'success',summary: 'Success',life: 3000,detail: 'Password set successfully',
+          });        
+        }
+      });
+
+      confirmEmailResponse.subscribe(response => {
+        debugger
+        this.cd.detectChanges();
+        if(response != ''){
+          this.isConfirmEmail = true;
+          this.loginForm.controls.email.setValue(response);     
+        }
+        else{
+          this.isConfirmEmail = false;
+        }
         if(this.isConfirmEmail){
           this.messageService.add({severity: 'success',summary: 'Success',life: 3000,detail: 'Email confirmed successfully',
           });        

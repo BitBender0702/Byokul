@@ -33,7 +33,7 @@ import { LikeUnlikeClassCourse } from 'src/root/interfaces/school/likeUnlikeClas
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
 import { AuthService } from 'src/root/service/auth.service';
-
+import { addTeacherResponse } from '../../teacher/addTeacher.component';
 export const userImageResponse =new Subject<{userAvatar : string}>();  
 export const chatResponse =new Subject<{receiverId : string , type: string,chatTypeId:string}>();  
 
@@ -167,6 +167,7 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
     changeLanguageSubscription!:Subscription;
     sharedPostSubscription!:Subscription;
     savedClassCourseSubscription!:Subscription;
+    // addTeacherSubscription!:Subscription;
     isOnInitInitialize:boolean = false;
     savedMessage!:string;
     removedMessage!:string;
@@ -238,7 +239,7 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
        this.editUserForm = this.fb.group({
         firstName: this.fb.control(''),
         lastName: this.fb.control(''),
-        dob: this.fb.control(''),
+        dob: this.fb.control(new Date().toISOString().substring(0, 10)),
         gender: this.fb.control(''),
         description: this.fb.control(''),
         contactEmail: this.fb.control('')
@@ -349,6 +350,14 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
         });
       }
 
+      addTeacherResponse.subscribe(response => {
+        this.cd.detectChanges();
+        if(response){
+          this.messageService.add({severity: 'success',summary: 'Success',life: 3000,detail: 'Teacher added successfully',
+          });        
+        }
+      });
+
     }
 
     getByUserId(){
@@ -380,6 +389,9 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
       if(this.savedClassCourseSubscription){
         this.savedClassCourseSubscription.unsubscribe();
       }
+      // if(this.addTeacherSubscription){
+      //   this.addTeacherSubscription.unsubscribe();
+      // }
       if(this.userParamsData$){
         this.userParamsData$.unsubscribe();
       }
@@ -745,8 +757,8 @@ omit_special_char(event:any)
 {   
    var k;  
    k = event.charCode;
-   return((k > 64 && k < 91) || (k > 96 && k < 123) || k == 8 || k == 32 || (k >= 48 && k <= 57)); 
-}
+   return ((k > 64 && k < 91) || (k > 96 && k < 123) || k == 8 || k == 32) && !(k >= 48 && k <= 57);
+  }
 
 removeLanguage(event: any){
   const languageIndex = this.userLanguage.languageIds.findIndex((item) => item === event.id);
@@ -757,6 +769,7 @@ removeLanguage(event: any){
 
 resetLanguageModal(){
   this.isSubmitted = false;
+  this.userLanguage.languageIds = [];
   this.languageForm.setValue({
     languages: [],
   });

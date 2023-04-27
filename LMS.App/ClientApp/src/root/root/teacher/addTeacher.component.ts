@@ -11,7 +11,8 @@ import { SchoolService } from 'src/root/service/school.service';
 import { TeacherService } from 'src/root/service/teacher.service';
 import { UserService } from 'src/root/service/user.service';
 import { MultilingualComponent, changeLanguage } from '../sharedModule/Multilingual/multilingual.component';
-import { Subscription } from 'rxjs';
+import { BehaviorSubject, Subject, Subscription } from 'rxjs';
+export const addTeacherResponse =new BehaviorSubject <boolean>(false);  
 
 @Component({
     selector: 'addTeacher-root',
@@ -136,6 +137,7 @@ export class AddTeacherComponent extends MultilingualComponent implements OnInit
         if (!this.createTeacherForm.valid) {
             return;
         }
+        this.loadingIcon = true;
         var teacherInfo =this.createTeacherForm.value;
         this.addTeacherViewmodel.firstName = teacherInfo.firstName;
         this.addTeacherViewmodel.lastName = teacherInfo.lastName;
@@ -202,7 +204,8 @@ export class AddTeacherComponent extends MultilingualComponent implements OnInit
 
         this._teacherService.addTeacher(this.addTeacherViewmodel).subscribe((result) => {
             this.router.navigateByUrl(`user/userProfile/${this.loginUserId}`);
-          });
+            addTeacherResponse.next(true); 
+        });
     }
 
     initializeAddTeacherViewModel(){
@@ -310,26 +313,27 @@ export class AddTeacherComponent extends MultilingualComponent implements OnInit
         this.schoolIds.push(schoolId);
     }
 
-    getExistingUser(){
+    getExistingUser(){        
         var email =this.createTeacherForm.get("email")?.value;
-        this._userService.getUserByEmail(email).subscribe((result) => {
+        if(email != ""){
+          this._userService.getUserByEmail(email).subscribe((result) => {
             if(result != null){
                 this.createTeacherForm.setValue({
                     firstName: result.firstName,
                     lastName: result.lastName,
                     gender: result.gender,
                     email: result.email
-                 });
+                });
             }
-            else{
-                this.createTeacherForm.patchValue({
-                    firstName: '',
-                    lastName: '',
-                    gender: ''
-                 });
-            }
-
           });
+        }
     }
+
+    omit_special_char(event:any)
+    {   
+       var k;  
+       k = event.charCode;
+       return ((k > 64 && k < 91) || (k > 96 && k < 123) || k == 8 || k == 32) && !(k >= 48 && k <= 57);
+     }
 
 }

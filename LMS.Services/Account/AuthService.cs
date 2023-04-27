@@ -201,7 +201,7 @@ namespace LMS.Services.Account
             var user = await GetUserByToken(resetPasswordDto.PasswordResetToken);
             if (user.ResetTokenExirationTime < DateTime.UtcNow)
             {
-                return null;
+                return Constants.ResetTokenExpired;
             }
 
             if (user != null)

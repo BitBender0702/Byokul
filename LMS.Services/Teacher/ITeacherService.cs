@@ -16,7 +16,7 @@ namespace LMS.Services
         Task<TeacherViewModel> GetTeacherById(Guid teacherId);
         Task DeleteTeacherById(Guid teacherId, string deletedById);
         Task<IEnumerable<TeacherViewModel>> GetAllTeachers();
-        Task AddTeacher(AddTeacherViewModel model);
+        Task AddTeacher(AddTeacherViewModel model, string userId);
         Task<List<ClassTeacherViewModel>> GetClassTeachers(Guid classId);
         Task<List<CourseTeacherViewModel>> GetCourseTeachers(Guid classId);
 

@@ -1,11 +1,13 @@
 ﻿using LMS.Common.ViewModels.Teacher;
 using LMS.Data.Entity;
 using LMS.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LMS.App.Controllers
 {
+    [Authorize]
     [Route("teachers")]
     public class TeachersController : BaseController
     {
@@ -66,7 +68,8 @@ namespace LMS.App.Controllers
         [HttpPost]
         public async Task<IActionResult> AddTeacherPermissions([FromBody] AddTeacherViewModel model)
         {
-            await _teacherService.AddTeacher(model);
+            var userId = await GetUserIdAsync(this._userManager);
+            await _teacherService.AddTeacher(model, userId);
             return Ok();
         }
 

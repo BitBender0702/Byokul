@@ -28,9 +28,19 @@
          <div class="wht_newbox followers_box">
            <ul class="list-unstyled before-none mb-0">
              <li *ngFor="let userfollowing of userFollowings" class="mb-0">
-               <div class="d-flex align-items-center justify-content-between"><span class="followers-name font_16 text_sec1 fw_600">
+               <div class="d-flex align-items-center justify-content-between">
+                <span class="followers-name font_16 text_sec1 fw_600">
                  <img [src]="userfollowing.user.avatar" class="rounded-circle me-2" style="max-height: 30px;"/>
-                    <a style="cursor:pointer;" (click)="getSelectedFollowing(userfollowing.user.id)">{{userfollowing.user.firstName + ' ' + userfollowing.user.lastName}}</a></span>
+                    <a style="cursor:pointer;" (click)="getSelectedFollowing(userfollowing.user.id)">{{userfollowing.user.firstName + ' ' + userfollowing.user.lastName}}</a>
+                </span>
+                <div *ngIf="isOwner">
+                  <button *ngIf="!userfollowing.isUserFollowing" (click)="followUser(userfollowing.user.id,'Follow')" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 me-4 ps-4 pe-4">
+                       {{'Follow'| translate }}
+                  </button>
+                  <button *ngIf="userfollowing.isUserFollowing" (click)="followUser(userfollowing.user.id,'UnFollow')" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 me-4 ps-4 pe-4">
+                       {{'UnFollow'| translate }}
+                  </button>
+                </div>
                </div>
              </li>
            </ul>
