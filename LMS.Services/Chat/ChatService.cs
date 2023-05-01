@@ -185,7 +185,6 @@ namespace LMS.Services.Chat
             {
                 var chatAttach = new ChatAttachmentResponse();
                 chatAttach.FileURL = await _blobService.UploadFileAsync(attachment, containerName,false);
-
                 chatAttach.FileName = attachment.FileName;
                 chatAttach.FileType = model.FileType;
                 response.Add(chatAttach);

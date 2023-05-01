@@ -44,6 +44,7 @@ namespace LMS.Common.ViewModels.School
         public bool IsClassCourseSavedByCurrentUser { get; set; }
         public int SavedClassCourseCount { get; set; }
         public bool IsSavedClassCoursePinned { get; set; }
+        public string SchoolName { get; set; }
 
 
     }

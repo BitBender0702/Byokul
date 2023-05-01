@@ -298,5 +298,13 @@ namespace LMS.App.Controllers
             return Ok();
         }
 
+        [Route("reportFollower")]
+        [HttpPost]
+        public async Task<IActionResult> ReportFollower([FromBody] ReportFollowerViewModel model)
+        {
+            await _userService.ReportFollower(model);
+            return Ok();
+        }
+
     }
 }

@@ -37,6 +37,7 @@ namespace LMS.Data.Entity
         Messages = 5,
         AssignTeacher = 6,
         CertificateSent = 7,
-        Transaction = 8
+        Transaction = 8,
+        Report = 9
     }
 }

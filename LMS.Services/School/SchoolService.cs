@@ -1238,6 +1238,7 @@ namespace LMS.Services
             var classList = await _savedClassCourseRepository.GetAll()
                 .Include(x => x.Class).ThenInclude(x => x.Accessibility)
                 .Include(x => x.Class).ThenInclude(x => x.ServiceType)
+                .Include(x => x.Class).ThenInclude(x => x.School)
                 .Where(x => x.UserId == userId && x.ClassId != null).Select(x => x.Class).ToListAsync();
 
             var classViewModelList = _mapper.Map<List<ClassViewModel>>(classList);
@@ -1256,6 +1257,7 @@ namespace LMS.Services
                 item.ServiceType = classDetails.ServiceType;
                 item.Description = classDetails.Description;
                 item.Name = classDetails.ClassName;
+                item.SchoolName = classDetails.School.SchoolName;
                 item.Price = classDetails.Price;
                 item.Rating = classDetails.Rating;
                 item.CreatedOn = classDetails.CreatedOn;
@@ -1289,6 +1291,7 @@ namespace LMS.Services
             var courseList = await _savedClassCourseRepository.GetAll()
                  .Include(x => x.Course).ThenInclude(x => x.Accessibility)
                  .Include(x => x.Course).ThenInclude(x => x.ServiceType)
+                 .Include(x => x.Course).ThenInclude(x => x.School)
                  .Where(x => x.UserId == userId && x.CourseId != null).Select(x => x.Course).ToListAsync();
             var courseViewModelList = _mapper.Map<List<CourseViewModel>>(courseList);
 
@@ -1301,6 +1304,7 @@ namespace LMS.Services
                 item.ServiceType = courseDetails.ServiceType;
                 item.Description = courseDetails.Description;
                 item.Name = courseDetails.CourseName;
+                item.SchoolName = courseDetails.School.SchoolName;
                 item.Price = courseDetails.Price;
                 item.Rating = courseDetails.Rating;
                 item.CreatedOn = courseDetails.CreatedOn;

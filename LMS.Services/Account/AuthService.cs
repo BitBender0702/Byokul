@@ -69,6 +69,11 @@ namespace LMS.Services.Account
                     jwtResponse.ErrorMessage = Constants.EmailNotConfirmed;
                     return jwtResponse;
                 }
+                if (!result.Succeeded)
+                {
+                    jwtResponse.ErrorMessage = Constants.InCorrectPassword;
+                    return jwtResponse;
+                }
             }
             jwtResponse.ErrorMessage = Constants.UserNotFound;
             return jwtResponse;
@@ -83,6 +88,7 @@ namespace LMS.Services.Account
             new Claim(JwtRegisteredClaimNames.Sub, userInfo.Email),
             new Claim(JwtRegisteredClaimNames.Jti, userInfo.Id),
             new Claim(JwtRegisteredClaimNames.UniqueName, userInfo.UserName),
+            new Claim(JwtRegisteredClaimNames.Name,userInfo.FirstName + " " + userInfo.LastName)
             };
 
             foreach (var role in roles)

@@ -32,5 +32,7 @@ namespace LMS.Services
         Task<UserDetailsViewModel> GetUserByEmail(string email);
         Task DeleteSchoolTeacher(Guid schoolId, string userId);
         Task DeleteSchoolStudent(Guid schoolId, string userId);
+        Task ReportFollower(ReportFollowerViewModel model);
+
     }
 }
