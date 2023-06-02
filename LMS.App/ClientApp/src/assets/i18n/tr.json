@@ -53,7 +53,7 @@
     "Specialization":"Uzmanlık",
     "TellUsAboutSchool":"Bize okulunuzdan bahsedin",
     "Next":"Sonraki",
-    "ChooseImageFile":"Bir resim dosyası seçin veya",
+    "ChooseImageFile":"pdf dosyasını seçin veya",
     "DragItHere":"buraya sürükleyin.",
     "ChooseDefaultLogo":"Veya varsayılan logoyu seçin",
     "Continue":"Devam et",
@@ -156,11 +156,113 @@
     "ClickToBrowse": "Click to Browse",
     "FindInFileStorage": "Or Find in File Storage",
     "Files": "Files",
-    "Logout": "Logout",
-    "ChangePassword": "Change Password",
-    "CurrentPassword": "Current Password",
-    "NewPassword": "New Password",
-    "Ban": "Ban",
-    "Report": "Report"
+    "Logout": "Çıkış Yap",
+    "ChangePassword": "Şifre değiştir",
+    "CurrentPassword": "Mevcut Şifre",
+    "NewPassword": "Yeni Şifre",
+    "Ban": "yasak",
+    "Report": "Rapor",
+
+    "MyFeed": "Beslemem",
+    "GlobalFeed": "Küresel Besleme",
+    "MyProfile":"Benim profilim",
+    "PasswordLengthInfo": "Şifre uzunluğu 5 karakterden büyük olmalıdır",
+    "Transactions": "İşlemler",
+    "Filter": "Filter",
+    "ClearAll": "Clear All",
+    "Apply": "Apply",
+    "CurrentBalance": "Current Balance",
+    "MonthIncome": "Month Income",
+    "SourcesOfIncome": "Sources of Income",
+    "Withdraw": "Withdraw",
+    "All": "All",
+    "OwnedSchools": "Owned Schools",
+    "GuestSchools": "Guest Schools",
+    "Withdrawals": "Withdrawals",
+    "Amount": "Amount",
+    "AccountNumber": "Account Number",
+    "Payout": "Payout",
+    "AccountHolderName": "Account Holder Name",
+    "AccountHolderType": "Account Holder Type",
+    "Individual": "Individual",
+    "Company": "Company",
+    "MyInbox": "My Inbox",
+    "MySchoolInbox": "My School Inbox",
+    "Notifications": "Notifications",
+    "Country": "ülke",
+    "City": "şehir",
+    "FirstNameRequired": "Ad gereklidir",
+    "EmailNotRegistered":"Bu e-posta kayıtlı değil!",
+    "AccountBanned": "Bu hesap yönetici tarafından yasaklanmıştır!",
+    "ConfirmYourEmail": "Lütfen e-postanızı onaylayın!",
+    "ResetEmailSentMessage": "Size bir E-posta gönderildi. Lütfen şifrenizi yenileyin!",
+    "ConfirmEmailSentMessage": "Size bir E-posta gönderildi. Lütfen giriş yapmak için e-postayı onaylayın!",
+    "PasswordRequired": "Şifre gereklidir.",
+    "ValidEmailRequired": "Geçerli bir e-posta adresi gerekli.",
+    "ConfirmPasswordRequired": "Parolayı Onayla gerekli.",
+    "LastNameRequired": "Soyadı gerekli",
+    "DOBRequired": "Doğum tarihi gereklidir",
+    "GenderRequired": "Cinsiyet gereklidir",
+    "ThisFieldRequired": "Bu alan gereklidir",
+    "PasswordDoesNotMatch": "Parola ve Parolayı onayla eşleşmiyor",
+    "EmailAlreadyTaken": "E-posta zaten alınmış",
+    "ExpireResetLink": "Şifre sıfırlama bağlantısının süresi doldu, lütfen tekrar deneyin",
+    "RepeatPasswordRequired": "Şifre tekrarı gerekli",
+    "PasswordRepeatPasswordNotMatch": "Parola ve Tekrar parolası eşleşmiyor",
+    "CurrentPasswordInvalid": "Geçerli şifre Geçersiz",
+    "Posts": "Gönderiler",
+    "SavedPosts": "Kayıtlı Gönderiler",
+    "SavedClassCourse": "Kayıtlı Sınıf/Kurs",
+    "SharedPost": "Paylaşılan Gönderi",
+    "LikedPost": "Gönderiyi Beğendim",
+    "DateRequired": "Tarih gerekli",
+    "DateOfBirth": "Doğum tarihi",
+    "ContactEmail": "İletişim E-posta",
+    "ContactEmailInvalid": "İletişim E-postası geçersiz",
+    "EmailRequired": "Email gereklidir",
+    "Permissions": "İzinler",
+    "SelectSchools": "Okulları Seçin",
+    "SelectAll": "Hepsini seç",
+    "SelectClasses": "Sınıfları Seçin",
+    "SelectCourses": "Dersleri Seçin",
+    "LastName": "Soy isim",
+    "FirstName": "İlk adı",
+    "AddOrInviteTeacher": "Añadir/Invitar profesor",
+
+    "Update School": "Okulu Güncelle",
+    "Edit/Create Class": "Sınıfı Düzenle/Oluştur",
+    "Edit/Create Course": "Kursu Düzenle/Oluştur",
+    "Manage Teachers": "Öğretmenleri Yönet",
+    "Add School Certificates": "Okul Sertifikaları Ekle",
+    "Add Languages": "Dil Ekle",
+    "Update Class": "Sınıfı Güncelle",
+    "Issue Certificate": "Sertifika Verme",
+    "Add Class Certificates": "Sınıf Sertifikaları Ekle",
+    "Update Course": "Kursu Güncelle",
+    "Add Course Certificates": "Kurs Sertifikaları Ekle",
+    "CurrentPasswordRequired": "Geçerli şifre gerekli"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   }

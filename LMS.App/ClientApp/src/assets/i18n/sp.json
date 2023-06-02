@@ -54,7 +54,7 @@
     "Specialization":"Especialización",
     "TellUsAboutSchool":"Cuéntanos sobre tu Escuela",
     "Next":"Próxima",
-    "ChooseImageFile":"Elija un archivo de imagen o",
+    "ChooseImageFile":"Elija archivo pdf o",
     "DragItHere":"arrástrelo aquí.",
     "ChooseDefaultLogo":"O elija el logotipo predeterminado",
     "Continue":"Continuar",
@@ -157,12 +157,114 @@
     "ClickToBrowse": "Click to Browse",
     "FindInFileStorage": "Or Find in File Storage",
     "Files": "Files",
-    "Logout": "Logout",
-    "ChangePassword": "Change Password",
-    "CurrentPassword": "Current Password",
-    "NewPassword": "New Password",
-    "Ban": "Ban",
-    "Report": "Report"
+    "Logout": "Cerrar sesión",
+    "ChangePassword": "Cambiar la contraseña",
+    "CurrentPassword": "Contraseña actual",
+    "NewPassword": "Nueva contraseña",
+    "Ban": "Prohibición",
+    "Report": "Informe",
+
+    "MyFeed": "Mi feed",
+    "GlobalFeed": "Alimentación global",
+    "MyProfile":"Mi perfil",
+    "PasswordLengthInfo": "La longitud de la contraseña debe ser mayor a 5 caracteres",
+    "Transactions": "Actas",
+    "Filter": "Filter",
+    "ClearAll": "Clear All",
+    "Apply": "Apply",
+    "CurrentBalance": "Current Balance",
+    "MonthIncome": "Month Income",
+    "SourcesOfIncome": "Sources of Income",
+    "Withdraw": "Withdraw",
+    "All": "All",
+    "OwnedSchools": "Owned Schools",
+    "GuestSchools": "Guest Schools",
+    "Withdrawals": "Withdrawals",
+    "Amount": "Amount",
+    "AccountNumber": "Account Number",
+    "Payout": "Payout",
+    "AccountHolderName": "Account Holder Name",
+    "AccountHolderType": "Account Holder Type",
+    "Individual": "Individual",
+    "Company": "Company",
+    "MyInbox": "My Inbox",
+    "MySchoolInbox": "My School Inbox",
+    "Notifications": "Notifications",
+    "Country": "país",
+    "City": "ciudad",
+    "FirstNameRequired": "Se requiere el primer nombre",
+    "EmailNotRegistered":"¡Este correo electrónico no está registrado!",
+    "AccountBanned": "¡Esta cuenta está prohibida por el administrador!",
+    "ConfirmYourEmail": "¡Por favor, confirma tu email!",
+    "ResetEmailSentMessage": "Se le ha enviado un correo electrónico. ¡Por favor, restablezca su contraseña!",
+    "ConfirmEmailSentMessage": "Se le ha enviado un correo electrónico. ¡Confirme el correo electrónico para iniciar sesión!",
+    "PasswordRequired": "Se requiere contraseña.",
+    "ValidEmailRequired": "Es necesaria una dirección de correo electrónico válida.",
+    "ConfirmPasswordRequired": "Se requiere confirmar la contraseña.",
+    "LastNameRequired": "Se requiere apellido",
+    "DOBRequired": "Se requiere fecha de nacimiento",
+    "GenderRequired": "Se requiere género",
+    "ThisFieldRequired": "Este campo es obligatorio",
+    "PasswordDoesNotMatch": "Contraseña y Confirmar contraseña no coinciden",
+    "EmailAlreadyTaken": "el correo electronico ya ha sido tomado",
+    "ExpireResetLink": "El enlace para restablecer la contraseña ha caducado, inténtalo de nuevo",
+    "RepeatPasswordRequired": "Se requiere repetir contraseña",
+    "PasswordRepeatPasswordNotMatch": "Contraseña y Repetir contraseña no coinciden",
+    "CurrentPasswordInvalid": "La contraseña actual no es válida",
+    "Posts": "Publicaciones",
+    "SavedPosts": "Publicaciones guardadas",
+    "SavedClassCourse": "Clase/Curso Guardado",
+    "SharedPost": "Publicación compartida",
+    "LikedPost": "Publicación que le gustó",
+    "DateRequired": "La fecha es requerida",
+    "DateOfBirth": "Fecha de nacimiento",
+    "ContactEmail": "Email de contacto",
+    "ContactEmailInvalid": "El correo electrónico de contacto no es válido",
+    "EmailRequired": "correo electronico es requerido",
+    "Permissions": "permisos","SelectSchools": "Seleccionar escuelas",
+    "SelectAll": "Seleccionar todo",
+    "SelectClasses": "Seleccionar clases",
+    "SelectCourses": "Seleccionar cursos",
+    "LastName": "Apellido",
+    "FirstName": "Nombre de pila",
+    "AddOrInviteTeacher": "Añadir/Invitar profesor",
+
+    "Update School": "Actualizar Escuela",
+    "Edit/Create Class": "Editar/Crear Clase",
+    "Edit/Create Course": "Editar/Crear curso",
+    "Manage Teachers": "Administrar maestras",
+    "Add School Certificates": "Agregar Certificados Escolares",
+    "Add Languages": "Agregar idiomas",
+    "Update Class": "Actualizar clase",
+    "Issue Certificate": "Emitir Certificado",
+    "Add Class Certificates": "Agregar certificados de clase",
+    "Update Course": "Curso de actualización",
+    "Add Course Certificates": "Agregar Certificados de Curso",
+    "CurrentPasswordRequired": "Se requiere contraseña actual"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 }
