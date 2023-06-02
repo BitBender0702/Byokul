@@ -77,7 +77,7 @@
                     <label class="font_10">{{'SelectSchools'| translate }}</label>
                     <div class="form-group">
                         <div class="custom-language-select">
-                          <p-multiSelect  [defaultLabel]="'Select Schools'" [panelStyle]="{'width':'100%'}" [filter]="false" [showToggleAll]="true" [options]="schoolList" optionLabel="schoolName" optionValue="schoolId" name="languageSelect[]" class="form-control" multiple id="languageSelect" [(ngModel)]="selectedSchools" (onChange)="hideUnhideClassCourse($event)" (onPanelHide)="getClassesAndCourses($event)">
+                          <p-multiSelect  defaultLabel="{{'SelectSchools'| translate }}" [panelStyle]="{'width':'100%'}" [filter]="false" [showToggleAll]="true" [options]="schoolList" optionLabel="schoolName" optionValue="schoolId" name="languageSelect[]" class="form-control" multiple id="languageSelect" [(ngModel)]="selectedSchools" (onChange)="hideUnhideClassCourse($event)" (onPanelHide)="getClassesAndCourses($event)">
                             <ng-template pTemplate="header">
                               <div style="position: absolute;left: 48px;" class="checkbox-all-text">{{'SelectAll'| translate }}</div>
                             </ng-template>
@@ -87,24 +87,19 @@
                       <br>
                       <div *ngFor="let permission of permissions">
                         <div *ngIf="permission.permissionType == 1" class="col-12">
-                            <label class="col-6">{{permission.displayName}}</label>
+                            <label class="col-6">{{permission.displayName | translate}}</label>
                             <input (click)="getSchoolPermissions(permission,$event)" class="form-check-input col-6" type="checkbox" id="inlineCheckbox1" value="option1">
                         </div>
                       </div> 
                 </div>
               </div>
-
-              <!-- <div *ngIf="schoolList.length == 0">
-                <p class="mt-5">Please add atleast one school to add school teacher</p>
-                <button [routerLink]="['/user/createSchool']" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 me-2">Create School</button>
-              </div> -->
               <br><br>
               <div class="row" *ngIf="schoolList.length != 0">
                 <div *ngIf="!hideClassSection" class="col-5">
                     <label class="font_10">{{'SelectClasses'| translate }}</label>
                     <div class="form-group">
                         <div class="custom-language-select">
-                          <p-multiSelect  [defaultLabel]="'Select Classes'" [panelStyle]="{'width':'100%'}" [filter]="false" [showToggleAll]="true" [options]="classList" optionLabel="className" optionValue="classId" name="languageSelect[]" class="form-control" multiple id="languageSelect" [(ngModel)]="selectedClasses">
+                          <p-multiSelect  defaultLabel="{{'SelectClasses'| translate }}" [panelStyle]="{'width':'100%'}" [filter]="false" [showToggleAll]="true" [options]="classList" optionLabel="className" optionValue="classId" name="languageSelect[]" class="form-control" multiple id="languageSelect" [(ngModel)]="selectedClasses">
                             <ng-template pTemplate="header">
                               <div style="position: absolute;left: 48px;" class="checkbox-all-text">{{'SelectAll'| translate }}</div>
                             </ng-template>
@@ -114,7 +109,7 @@
                       <br>
                       <div *ngFor="let permission of permissions">
                         <div *ngIf="permission.permissionType == 2" class="col-12">
-                            <label class="col-6">{{permission.displayName}}</label>
+                            <label class="col-6">{{permission.displayName | translate}}</label>
                             <input (click)="getClassPermissions(permission.id)" class="form-check-input col-6" type="checkbox" id="inlineCheckbox1" value="option1">
                         </div>
                       </div> 
@@ -126,7 +121,7 @@
                     <label class="font_10">{{'SelectCourses'| translate }}</label>
                     <div class="form-group">
                         <div class="custom-language-select">
-                          <p-multiSelect  [defaultLabel]="'Select Courses'" [panelStyle]="{'width':'100%'}" [filter]="false" [showToggleAll]="true" [options]="courseList" optionLabel="courseName" optionValue="courseId" name="languageSelect[]" class="form-control" multiple id="languageSelect" [(ngModel)]="selectedCourses">
+                          <p-multiSelect  defaultLabel="{{'SelectCourses'| translate }}" [panelStyle]="{'width':'100%'}" [filter]="false" [showToggleAll]="true" [options]="courseList" optionLabel="courseName" optionValue="courseId" name="languageSelect[]" class="form-control" multiple id="languageSelect" [(ngModel)]="selectedCourses">
                             <ng-template pTemplate="header">
                               <div style="position: absolute;left: 48px;" class="checkbox-all-text">{{'SelectAll'| translate }}</div>
                             </ng-template>
@@ -136,7 +131,7 @@
                       <br>
                       <div *ngFor="let permission of permissions">
                         <div *ngIf="permission.permissionType == 3" class="col-12">
-                            <label class="col-6">{{permission.displayName}}</label>
+                            <label class="col-6">{{permission.displayName | translate}}</label>
                             <input (click)="getCoursePermissions(permission.id)" class="form-check-input col-6" type="checkbox" id="inlineCheckbox1" value="option1">
                         </div>
                       </div> 

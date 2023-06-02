@@ -21,7 +21,7 @@ export class ForgetPasswordComponent extends MultilingualComponent implements On
     invalidForgetPassword!: boolean;
 
     forgotPasswordForm!:FormGroup;
-    EMAIL_PATTERN = '^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$';
+    EMAIL_PATTERN = '[a-zA-Z0-9]+?(\\.[a-zA-Z0-9]+)*@[a-zA-Z]+\\.[a-zA-Z]{2,3}';
     isSubmitted: boolean = false;
     user: any = {};
     loadingIcon:boolean = false;

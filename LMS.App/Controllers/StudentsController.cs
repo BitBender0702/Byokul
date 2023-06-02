@@ -3,11 +3,13 @@ using LMS.Common.ViewModels.Student;
 using LMS.Data.Entity;
 using LMS.Services.Blob;
 using LMS.Services.Students;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LMS.App.Controllers
 {
+    [Authorize]
     [Route("students")]
     public class StudentsController : BaseController
     {
@@ -42,6 +44,28 @@ namespace LMS.App.Controllers
             var userId = await GetUserIdAsync(this._userManager);
             await _studentsService.UploadStudentCertificates(model, userId);
             return Ok();
+        }
+
+
+        [Route("getSchoolStudents")]
+        [HttpGet]
+        public async Task<IActionResult> GetSchoolStudents(Guid id, int pageNumber, string? searchString)
+        {
+            return Ok(await _studentsService.GetSchoolStudents(id, pageNumber, searchString));
+        }
+
+        [Route("getClassStudents")]
+        [HttpGet]
+        public async Task<IActionResult> GetClassStudents(Guid id, int pageNumber, string? searchString)
+        {
+            return Ok(await _studentsService.GetClassStudents(id, pageNumber, searchString));
+        }
+
+        [Route("getCourseStudents")]
+        [HttpGet]
+        public async Task<IActionResult> GetCourseStudents(Guid id, int pageNumber, string? searchString)
+        {
+            return Ok(await _studentsService.GetCourseStudents(id, pageNumber, searchString));
         }
     }
 }

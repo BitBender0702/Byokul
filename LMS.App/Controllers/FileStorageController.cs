@@ -79,5 +79,27 @@ namespace LMS.App.Controllers
             return Ok(response);
         }
 
+        [Route("isFolderNameExist")]
+        [HttpGet]
+        public async Task<IActionResult> IsFolderNameExist(string folderName,Guid parentId,Guid? parentFolderId)
+        {
+            return Ok(await _fileStorageService.IsFolderNameExist(folderName, parentId, parentFolderId));
+        }
+
+        [Route("deleteFolder")]
+        [HttpGet]
+        public async Task<IActionResult> DeleteFolder(Guid folderId)
+        {
+            var response = await _fileStorageService.DeleteFolder(folderId);
+            return Ok(new { result = response });
+        }
+
+        [Route("deleteFile")]
+        [HttpGet]
+        public async Task<IActionResult> deleteFile(Guid fileId)
+        {
+            return Ok(await _fileStorageService.DeleteFile(fileId));
+        }
+
     }
 }

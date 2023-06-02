@@ -36,11 +36,14 @@ namespace LMS.Services.Students
         private IGenericRepository<StudentCertificate> _studentCertificateRepository;
         private IGenericRepository<Class> _classRepository;
         private IGenericRepository<ClassStudent> _classStudentRepository;
+        private IGenericRepository<CourseStudent> _courseStudentRepository;
         private DataContext _context;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IBlobService _blobService;
         private readonly ICommonService _commonService;
-        public StudentsService(IConfiguration config, IMapper mapper, SignInManager<User> signInManager, UserManager<User> userManager, IGenericRepository<User> userRepository, IGenericRepository<Student> studentRepository, IGenericRepository<StudentCertificate> studentCertificateRepository, IGenericRepository<Class> classRepository, RoleManager<IdentityRole> roleManager, IGenericRepository<ClassStudent> classStudentRepository, DataContext context, IWebHostEnvironment webHostEnvironment, IBlobService blobService, ICommonService commonService)
+        private readonly ISchoolService _schoolService;
+
+        public StudentsService(IConfiguration config, IMapper mapper, SignInManager<User> signInManager, UserManager<User> userManager, IGenericRepository<User> userRepository, IGenericRepository<Student> studentRepository, IGenericRepository<StudentCertificate> studentCertificateRepository, IGenericRepository<Class> classRepository, RoleManager<IdentityRole> roleManager, IGenericRepository<ClassStudent> classStudentRepository, DataContext context, IWebHostEnvironment webHostEnvironment, IBlobService blobService, ICommonService commonService, ISchoolService schoolService, IGenericRepository<CourseStudent> courseStudentRepository)
         {
             _config = config;
             _mapper = mapper;
@@ -56,6 +59,8 @@ namespace LMS.Services.Students
             _webHostEnvironment = webHostEnvironment;
             _blobService = blobService;
             _commonService = commonService;
+            _schoolService = schoolService;
+            _courseStudentRepository = courseStudentRepository;
         }
 
         public async Task<IEnumerable<StudentViewModel>> GetAllStudents()
@@ -99,8 +104,14 @@ namespace LMS.Services.Students
                 text = text.Replace("[CertificateTitle]", model.CertificateTitle);
                 text = text.Replace("[CertificateReason]", model.CertificateReason);
                 text = text.Replace("[CreatedDate]", certificateCreatedDate);
-                text = text.Replace("[UploadQrImage]", model.UploadQrImage);
-                text = text.Replace("[UploadSignatureImage]", model.UploadSignatureImage);
+                if (model.UploadQrImage != "")
+                {
+                    text = text.Replace("[UploadQrImage]", model.UploadQrImage);
+                }
+                if (model.UploadSignatureImage != "")
+                {
+                    text = text.Replace("[UploadSignatureImage]", model.UploadSignatureImage);
+                }
                 text = text.Replace("[BackgroundImage]", model.BackgroundImage);
                 string certificateName = "";
                 var converterProperties = new ConverterProperties();             
@@ -160,6 +171,54 @@ namespace LMS.Services.Students
 
                 _studentCertificateRepository.Insert(studentCertificate);
                 _studentCertificateRepository.Save();
+        }
+
+        public async Task<List<StudentViewModel>> GetSchoolStudents(Guid id, int pageNumber, string? searchString)
+        {
+            int pageSize = 13;
+            //var studentList = await _studentRepository.GetAll().Include(x => x.Follower)
+            //    .Where(x => x.UserId == userId && !x.IsBan && ((string.IsNullOrEmpty(searchString)) || (x.Follower.FirstName.Contains(searchString) || x.Follower.LastName.Contains(searchString) || (x.Follower.FirstName + " " + x.Follower.LastName).ToLower().Contains(searchString.ToLower())))).Skip((pageNumber - 1) * pageSize)
+            //    .Take(pageSize).ToListAsync();
+
+            var classStudents = await _schoolService.GetClassStudentsBySchoolId(id);
+            var courseStudents = await _schoolService.GetCourseStudentsBySchoolId(id);
+
+            var schoolStudents = classStudents.Union(courseStudents).DistinctBy(x => x.StudentId).ToList();
+
+            var students = schoolStudents.Where(x => (string.IsNullOrEmpty(searchString)) || (x.StudentName.ToLower().Contains(searchString.ToLower()))).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+
+            return students;
+
+
+        }
+
+        public async Task<List<StudentViewModel>> GetClassStudents(Guid id, int pageNumber, string? searchString)
+        {
+            int pageSize = 13;
+            //var classStudents = await _schoolService.GetClassStudentsBySchoolId(id);
+            var classStudents = await _classStudentRepository.GetAll()
+                .Include(x => x.Student)
+                .ThenInclude(x => x.CreatedBy)
+                .Where(x => x.ClassId == id && ((string.IsNullOrEmpty(searchString)) || (x.Student.StudentName.ToLower().Contains(searchString.ToLower())))).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            var result = _mapper.Map<List<StudentViewModel>>(classStudents.Select(x => x.Student));
+            return result;
+
+            //var students = classStudents.Where(x => (string.IsNullOrEmpty(searchString)) || (x.StudentName.Contains(searchString))).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+
+            //return students;
+        }
+
+        public async Task<List<StudentViewModel>> GetCourseStudents(Guid id, int pageNumber, string? searchString)
+        {
+            int pageSize = 13;
+            var courseStudents = await _courseStudentRepository.GetAll()
+                .Include(x => x.Student)
+                .ThenInclude(x => x.CreatedBy)
+                .Where(x => x.CourseId == id && ((string.IsNullOrEmpty(searchString)) || (x.Student.StudentName.ToLower().Contains(searchString.ToLower())))).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            var result = _mapper.Map<List<StudentViewModel>>(courseStudents.Select(x => x.Student));
+            return result;
         }
 
 

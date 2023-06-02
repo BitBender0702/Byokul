@@ -13,14 +13,17 @@ import { PostService } from 'src/root/service/post.service';
 import { SchoolService } from 'src/root/service/school.service';
 import { UserService } from 'src/root/service/user.service';
 import { CreatePostComponent, addPostResponse } from '../createPost/createPost.component';
-import { PostViewComponent, savedPostResponse } from '../postView/postView.component';
-import { ReelsViewComponent, savedReelResponse } from '../reels/reelsView.component';
+import { PostViewComponent, deletePostResponse, savedPostResponse } from '../postView/postView.component';
+import { ReelsViewComponent, deleteReelResponse, savedReelResponse } from '../reels/reelsView.component';
 import { SharePostComponent, sharedPostResponse } from '../sharePost/sharePost.component';
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
 import { MultilingualComponent, changeLanguage } from '../sharedModule/Multilingual/multilingual.component';
 import { AuthService } from 'src/root/service/auth.service';
-import { Subscribable, Subscription } from 'rxjs';
+import { BehaviorSubject, Subscribable, Subscription } from 'rxjs';
+import { feedState } from 'src/root/userModule/user-auth/component/login/login.component';
+import { PostAuthorTypeEnum } from 'src/root/Enums/postAuthorTypeEnum';
+import { CertificateViewComponent } from '../certificateView/certificateView.component';
 
 @Component({
     selector: 'post-view',
@@ -60,6 +63,8 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
     itemsPerSlide = 7;
     singleSlideOffset = true;
     noWrap = true;
+    globalSearchPageNumber = 1;
+    globalSearchPageSize = 5;
     myFeedsPageNumber:number = 1;
     reelsPageNumber:number = 1;
     globalFeedsPageNumber:number = 1;
@@ -89,7 +94,18 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
     changeLanguageSubscription!: Subscription;
     sharedPostSubscription!: Subscription;
     savedReelSubscription!: Subscription;
+    deletePostSubscription!: Subscription;
+    deleteReelSubscription!: Subscription;
     isGlobalFeedLoading!:boolean;
+    gender!:string;
+
+    feedTab!:string;
+    globalSearchResult!:any;
+    filteredMyFeedAttachments:any[] = [];
+    filteredGlobalFeedAttachments:any[] = [];
+    showSearchResults:boolean = false;
+    searchNotFound:boolean = false;
+    modalRef!:any;
 
 
     constructor(injector: Injector,private authService:AuthService,private bsModalService: BsModalService,notificationService:NotificationService,postService: PostService,public userService:UserService, public options: ModalOptions,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,public messageService:MessageService,private cd: ChangeDetectorRef) { 
@@ -114,12 +130,31 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
       this.loadingIcon = true;
       this._authService.loginState$.next(true);
       var selectedLang = localStorage.getItem('selectedLanguage');
+      this.feedTab = localStorage.getItem('feedTab')??'';
+      if(this.feedTab != ''){
+        if (window.performance.navigation.type === 1) {
+          var feedTab = localStorage.getItem('feedTab');
+          feedTab = 'myFeed';
+          localStorage.setItem('feedTab',feedTab);
+          this.feedTab = 'myFeed';
+        }
+        // if (window.performance.navigation.type === 2) {
+        //   this.feedTab = localStorage.getItem('feedTab')??'';
+        // }
+      }
+      this.gender = localStorage.getItem("gender")??'';
       this.translate.use(selectedLang ?? '');
       this.isOwnerOrNot();
+      
+      if(this.feedTab == 'globalFeed'){
+          this.getGlobalFeeds();
+      }
+      else{
         this._userService.getMyFeed(1,this.myFeedsPageNumber,this.searchString).subscribe((response) => {
           this.isGlobalFeed = false;
           this.postLoadingIcon = false;
             this.myFeeds = response;
+            this.myFeeds = this.getFilteredAttachments(this.myFeeds,"myFeed");
             this.isMyFeedPostsExist = true;
             this.checkMyFeedExist();
             if(this.myFeeds.length == 0){
@@ -141,12 +176,19 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
             // this.loadingIcon = false;
             this.addListenerToNextButton();
           });
+        }
 
           this.getGlobalFeedsData();
           this.InitializeLikeUnlikePost();
 
           if(!this.addPostSubscription){
-           this.addPostSubscription = addPostResponse.subscribe((response) => {          
+           this.addPostSubscription = addPostResponse.subscribe((response) => {   
+            var feedTab = localStorage.getItem('feedTab');
+            feedTab = 'myFeed';
+            localStorage.setItem('feedTab',feedTab);
+            this.router.navigateByUrl(`user/userFeed}`);
+            this.refreshRoute();
+              //this.ngOnInit();
               this.messageService.add({severity: 'success',summary: 'Success',life: 3000,detail: 'Post created successfully',
               });
             });
@@ -175,7 +217,6 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
           }
 
           this.sharedPostSubscription = sharedPostResponse.subscribe( response => {
-            debugger
             if(response.postType == 1){
               this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post shared successfully'});
               var post = this.myFeeds.find((x: { id: string; }) => x.id == response.postId); 
@@ -193,12 +234,56 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
               this.translate.use(response.language);
             })
           }
+
+            feedState.subscribe(response => {
+            })
+
+          if(!this.deletePostSubscription){
+            this.deletePostSubscription = deletePostResponse.subscribe(response => {
+                this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post deleted successfully'});
+                var deletedPost = this.myFeeds?.find((x: { id: string; }) => x.id == response.postId);
+                if(deletedPost != null){
+                  const index = this.myFeeds.indexOf(deletedPost);
+                  if (index > -1) {
+                    this.myFeeds.splice(index, 1);
+                  }
+                }
+                var deletedPost = this.globalFeeds?.find((x: { id: string; }) => x.id == response.postId);
+                if(deletedPost != null){
+                const index = this.globalFeeds.indexOf(deletedPost);
+                if (index > -1) {
+                  this.globalFeeds.splice(index, 1);
+                 }
+                }
+            });
+          }
+      
+          if(!this.deleteReelSubscription){
+            this.deleteReelSubscription = deleteReelResponse.subscribe(response => {
+                this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Reel deleted successfully'});
+                var deletedReel = this.myFeedsReels?.find((x: { id: string; }) => x.id == response.postId);
+                if(deletedReel != null){
+                  const index = this.myFeedsReels.indexOf(deletedReel);
+                  if (index > -1) {
+                    this.myFeedsReels.splice(index, 1);
+                  }
+                }
+                  var deletedReel = this.globalFeedReels?.find((x: { id: string; }) => x.id == response.postId);
+                  if(deletedReel != null){
+                  const index = this.globalFeedReels.indexOf(deletedReel);
+                  if (index > -1) {
+                    this.globalFeedReels.splice(index, 1);
+                  }
+                }
+            });
+          }
     }
 
     checkMyFeedExist(){
       if(this.isMyFeedPostsExist && this.isMyFeedReelsExist){
         this.isDataLoaded = true;
         this.loadingIcon = false;
+        localStorage.setItem('feedTab','myFeed');
       }
   }
 
@@ -211,6 +296,12 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
     }
     if(this.savedReelSubscription){
       this.savedReelSubscription.unsubscribe();
+    }
+    if(this.deletePostSubscription){
+      this.deletePostSubscription.unsubscribe();
+    }
+    if(this.deleteReelSubscription){
+      this.deleteReelSubscription.unsubscribe();
     }
   }
 
@@ -270,22 +361,24 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
     const scrollPosition = window.pageYOffset;
     const windowSize = window.innerHeight;
     const bodyHeight = document.body.offsetHeight;
-
-  if (scrollPosition >= bodyHeight - windowSize) {
-    if(!this.isGlobalFeed){
-      if(!this.scrolled && this.scrollMyFeedResponseCount != 0 && this.myFeeds !=undefined){
-        this.scrolled = true;
-      this.postLoadingIcon = true;
-      this.myFeedsPageNumber++;
-      this._userService.getMyFeed(1,this.myFeedsPageNumber,this.searchString).subscribe((response) => {
-        if(this.myFeeds!=undefined){
-        this.myFeeds =[...this.myFeeds, ...response];
-        }
-        this.postLoadingIcon = false;
-        this.scrollMyFeedResponseCount = response.length;
-        this.scrolled = false;
+    if(!this.loadingIcon){
+      if (scrollPosition >= bodyHeight - windowSize) {
+        if(!this.isGlobalFeed){
+          if(!this.scrolled && this.scrollMyFeedResponseCount != 0 && this.myFeeds !=undefined){
+           this.scrolled = true;
+           this.postLoadingIcon = true;
+           this.myFeedsPageNumber++;
+           this._userService.getMyFeed(1,this.myFeedsPageNumber,this.searchString).subscribe((response) => {
+            if(this.myFeeds!=undefined){
+             var result = this.getFilteredAttachments(response,"myFeed");    
+             this.myFeeds = [...this.myFeeds, ...result]; 
+            }
+           this.postLoadingIcon = false;
+           this.scrollMyFeedResponseCount = response.length;
+           this.scrolled = false;
      });
-    }
+    
+  }
    }
   else{
     if(!this.scrolled && this.scrollGlobalFeedResponseCount != 0){
@@ -293,15 +386,20 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
     this.postLoadingIcon = true;
     this.globalFeedsPageNumber++;    
     this._userService.getGlobalFeed(1,this.globalFeedsPageNumber,this.searchString).subscribe((result) => {
-      this.globalFeeds =[...this.globalFeeds, ...result];
+      // this.globalFeeds =[...this.globalFeeds, ...result];
+      // this.globalFeeds = this.getFilteredAttachments(this.globalFeeds,"globalFeed");
+      var result = this.getFilteredAttachments(result,"globalFeed");    
+      this.globalFeeds = [...this.globalFeeds, ...result];
       this.postLoadingIcon = false;
       this.scrollGlobalFeedResponseCount = result;
       this.scrolled = false;
       });
     }
-  }
+  // }
+}
 }
   }
+}
 
     InitializeLikeUnlikePost(){
       this.likeUnlikePost = {
@@ -346,14 +444,24 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
         this.isOpenSidebar = true;
       }
 
-      openPostsViewModal(posts:string): void {
+      openPostsViewModal(posts:any,postType?:string): void {
+      if(postType == "myFeeds"){
+        var postAttachments = this.filteredMyFeedAttachments.filter(x => x.postId == posts.id);
+      }
+      else{
+        var postAttachments = this.filteredGlobalFeedAttachments.filter(x => x.postId == posts.id);
+      }
         const initialState = {
-          posts: posts
+          posts: posts,
+          postAttachments: postAttachments
         };
         this.bsModalService.show(PostViewComponent,{initialState});
       }
 
       getGlobalFeeds(){
+        var feedTab = localStorage.getItem('feedTab');
+        feedTab = 'globalFeed';
+        localStorage.setItem('feedTab',feedTab);
         if(this.isGlobalFeedLoading){
           return;
         }
@@ -364,6 +472,7 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
         this.loadingIcon = true;
         this._userService.getGlobalFeed(1,this.globalFeedsPageNumber,this.searchString).subscribe((response) => {
             this.globalFeeds = response;
+            this.globalFeeds = this.getFilteredAttachments(this.globalFeeds, "globalFeed");
             // this.loadingIcon = false;
             // this.isDataLoaded = true;
             this.isGlobalPostsExist = true;
@@ -379,7 +488,8 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
             this.addGlobalFeedListenerToNextButton();
             });
 
-        this.isGlobalFeedLoading = true;    
+        this.isGlobalFeedLoading = true;  
+        feedState.next('globalFeed');  
         }
 
         checkGlobalFeedExist(){
@@ -404,7 +514,18 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
           userId: this.userId,
           from: "user"
         };
-          this.bsModalService.show(CreatePostComponent,{initialState});
+        this.modalRef = this.bsModalService.show(CreatePostComponent,{initialState});
+          // this.modalRef.content.onClose.subscribe((result:any) => {
+          // var feedTab = sessionStorage.getItem('feedTab');
+          // feedTab = 'myFeed';
+          // sessionStorage.setItem('feedTab','myFeed');
+          // this.feedTab = 'myFeed';
+          // //var a = this.myFeeds;
+          // //var b = this.myFeedsReels;
+          // //this.cd.detectChanges();
+          //  //this.getMyFeeds();
+          //   // Handle the response from the modal component here
+          // });
       }
 
       likeUnlikePosts(postId:string, isLike:boolean,postType:number,post:any){
@@ -567,50 +688,97 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
         this.bsModalService.show(SharePostComponent,{initialState});
       }
 
-      feedSearch(){
-        if(!this.isOpenGlobalFeed){
-        this.myFeedsPageNumber = 1;
-        this.reelsPageNumber = 1;
-        
-        if(this.searchString.length >2 || this.searchString == ""){
-          // this.loadingIcon = true;
-          this._userService.getMyFeed(1,this.myFeedsPageNumber,this.searchString).subscribe((response) => {
-            this.loadingIcon = false;
-             this.myFeeds = response;
-            });
-  
-            this._userService.getMyFeed(3,this.myFeedsPageNumber,this.searchString).subscribe((result) => {
-              this.myFeedsReels = result;
+      globalSearch(){
+           this.globalSearchPageNumber = 1;
+           this.globalSearchPageSize = 5;
+           this.showSearchResults = false;
+           if(this.searchString.length >2){
+            this._userService.globalSearch(this.searchString,this.globalSearchPageNumber,this.globalSearchPageSize).subscribe((response:any) => {
               this.loadingIcon = false;
-            });
-        }
-      }
-
-      else{
-        this.globalFeedsPageNumber = 1;
-        this.globalReelsPageNumber = 1;
-        
-        if(this.searchString.length >2 || this.searchString == ""){
-          // this.loadingIcon = true;
-          this._userService.getGlobalFeed(1,this.globalFeedsPageNumber,this.searchString).subscribe((response) => {
-            this.globalFeeds = response;
-            this.loadingIcon = false;
-          });
-    
-          this._userService.getGlobalFeed(3, this.globalReelsPageNumber,this.searchString).subscribe((result) => {
-              this.globalFeedReels = result;
-              this.loadingIcon = false;
-            });
+               this.globalSearchResult = response;
+               this.showSearchResults = true;
+               if(response.length == 0){
+                this.searchNotFound = true;
+               }
+               else{
+                this.searchNotFound = false;
+               }
+              });
           }
-        }
+      //   if(!this.isOpenGlobalFeed){
+      //   this.myFeedsPageNumber = 1;
+      //   this.reelsPageNumber = 1;
+        
+      //   if(this.searchString.length >2 || this.searchString == ""){
+      //     // this.loadingIcon = true;
+      //     this._userService.getMyFeed(1,this.myFeedsPageNumber,this.searchString).subscribe((response) => {
+      //       this.loadingIcon = false;
+      //        this.myFeeds = response;
+      //       });
+  
+      //       this._userService.getMyFeed(3,this.myFeedsPageNumber,this.searchString).subscribe((result) => {
+      //         this.myFeedsReels = result;
+      //         this.loadingIcon = false;
+      //       });
+      //   }
+      // }
+
+      // else{
+      //   this.globalFeedsPageNumber = 1;
+      //   this.globalReelsPageNumber = 1;
+        
+      //   if(this.searchString.length >2 || this.searchString == ""){
+      //     // this.loadingIcon = true;
+      //     this._userService.getGlobalFeed(1,this.globalFeedsPageNumber,this.searchString).subscribe((response) => {
+      //       this.globalFeeds = response;
+      //       this.loadingIcon = false;
+      //     });
+    
+      //     this._userService.getGlobalFeed(3, this.globalReelsPageNumber,this.searchString).subscribe((result) => {
+      //         this.globalFeedReels = result;
+      //         this.loadingIcon = false;
+      //       });
+      //     }
+      //   }
         }
       
         getMyFeeds(){
           this.isOpenGlobalFeed = false;
+          var feedTab = localStorage.getItem('feedTab')??'';
+          feedTab = 'myFeed';
+          localStorage.setItem('feedTab',feedTab);
+          this.feedTab = feedTab;
+
+          if(this.myFeeds == undefined && this.myFeedsReels == undefined){
+            this.loadingIcon = true;
+            this._userService.getMyFeed(1,this.myFeedsPageNumber,this.searchString).subscribe((response) => {
+              this.isGlobalFeed = false;
+              this.postLoadingIcon = false;
+                this.myFeeds = response;
+                this.myFeeds = this.getFilteredAttachments(this.myFeeds,"myFeed");
+                this.isMyFeedPostsExist = true;
+                this.checkMyFeedExist();
+                if(this.myFeeds.length == 0){
+                   this.isMyFeedsEmpty = true;
+                   this.getGlobalFeedsData()
+                }
+              });
+    
+              this._userService.getMyFeed(3,this.myFeedsPageNumber,this.searchString).subscribe((result) => {
+                this.myFeedsReels = result;
+                this.isMyFeedReelsExist = true;
+                this.checkMyFeedExist();
+                if(this.myFeedsReels.length == 0){
+                  this.isMyFeedReelsEmpty = true;
+                  this.getGlobalFeedsData()
+               }
+                this.addListenerToNextButton();
+              });
+          }
+          this.cd.detectChanges();
         }
 
         savePost(postId:string){
-          debugger
           var myFeeds: any[] = this.myFeeds;
           var isSavedPost = myFeeds.find(x => x.id == postId);
           if(isSavedPost == undefined){
@@ -629,6 +797,44 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
            }
 
           this._postService.savePost(postId,this.userId).subscribe((result) => {
+          });
+        }
+
+        openCertificateViewModal(certificateUrl:string,certificateName:string,from?:number,event?:Event){
+          var fromValue = PostAuthorTypeEnum.School;
+          if(from != undefined){
+            fromValue = from;
+            event?.stopPropagation();
+          }
+          const initialState = {
+            certificateUrl: certificateUrl,
+            certificateName:certificateName,
+            from:fromValue
+          };
+          this.bsModalService.show(CertificateViewComponent, { initialState });
+        }
+
+        getFilteredAttachments(feeds:any,from:string):any{
+          const allAttachments = feeds.flatMap((post: { postAttachments: any; }) => post.postAttachments);
+          if(from == "myFeed"){
+            var result = allAttachments.filter((attachment: { fileType: number; }) => attachment.fileType === 3);
+            this.filteredMyFeedAttachments = [...this.filteredMyFeedAttachments, ...result];
+          }
+          else{
+            var result = allAttachments.filter((attachment: { fileType: number; }) => attachment.fileType === 3);
+            this.filteredGlobalFeedAttachments = [...this.filteredGlobalFeedAttachments, ...result];
+          }
+          feeds = feeds.map((post: { postAttachments: any[]; }) => {
+          const filteredPostAttachments = post.postAttachments.filter(postAttachment => postAttachment.fileType !== 3);
+          return { ...post, postAttachments: filteredPostAttachments };
+          });
+          return feeds;
+        }
+
+        refreshRoute() {
+          const currentUrl = this.router.url;
+          this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+            this.router.navigateByUrl(currentUrl);
           });
         }
 }

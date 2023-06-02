@@ -16,5 +16,6 @@ namespace LMS.Common.ViewModels.Common
         public FilterTypeEnum FilterType { get; set; }
         public Boolean IsFilterActive { get; set; }
         public int NoOfAppliedFilters { get; set; }
+
     }
 }

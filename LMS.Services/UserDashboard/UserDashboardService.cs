@@ -55,17 +55,17 @@ namespace LMS.Services.UserDashboard
             model.User = _mapper.Map<UserUpdateViewModel>(user);
 
             // owned schools
-            var schools = await _schoolRepository.GetAll().Where(x => x.CreatedById == userId).ToListAsync();
+            var schools = await _schoolRepository.GetAll().Where(x => x.CreatedById == userId && !x.IsDeleted).ToListAsync();
             var OwnedSchools = _mapper.Map<List<SchoolViewModel>>(schools);
             model.OwnedSchools = OwnedSchools;
 
             // owned classes
-            var classes = await _classRepository.GetAll().Include(x => x.School).Where(x => x.CreatedById == userId && !x.IsCourse).ToListAsync();
+            var classes = await _classRepository.GetAll().Include(x => x.School).Where(x => x.CreatedById == userId && !x.IsCourse && !x.IsDeleted).ToListAsync();
             var OwnedClasses = _mapper.Map<List<ClassViewModel>>(classes);
             model.OwnedClasses = OwnedClasses;            
 
             // owned courses
-            var courses = await _courseRepository.GetAll().Where(x => x.CreatedById == userId).ToListAsync();
+            var courses = await _courseRepository.GetAll().Where(x => x.CreatedById == userId && !x.IsDeleted).ToListAsync();
 
             var classAsCourse = await _classRepository.GetAll().Include(x => x.School).Where(x => x.IsCourse && x.CreatedById == userId).ToListAsync();
 
@@ -87,7 +87,7 @@ namespace LMS.Services.UserDashboard
             var schoolFollowers =  await _schoolFollowerRepository.GetAll()
                 .Include(x => x.User)
                 .Include(x => x.School)
-                .Where(x => x.UserId == userId).ToListAsync();
+                .Where(x => x.UserId == userId && !x.School.IsDeleted).ToListAsync();
 
             
             var followedSchool = _mapper.Map<IEnumerable<SchoolViewModel>>(schoolFollowers.Select(x => x.School).ToList());
@@ -97,7 +97,7 @@ namespace LMS.Services.UserDashboard
             var classStudents = await _classStudentRepository.GetAll()
                 .Include(x => x.Student)
                 .Include(x => x.Class)
-                .Where(x => x.Student.UserId == userId).ToListAsync();
+                .Where(x => x.Student.UserId == userId && !x.Class.IsDeleted).ToListAsync();
 
             var followedClasses = _mapper.Map<IEnumerable<ClassViewModel>>(classStudents.Select(x => x.Class).ToList());
             model.FollowedClasses = followedClasses;
@@ -106,7 +106,7 @@ namespace LMS.Services.UserDashboard
             var courseStudents = await _courseStudentRepository.GetAll()
                 .Include(x => x.Student)
                 .Include(x => x.Course)
-                .Where(x => x.Student.UserId == userId).ToListAsync();
+                .Where(x => x.Student.UserId == userId && !x.Course.IsDeleted).ToListAsync();
 
             var followedCourses = _mapper.Map<IEnumerable<CourseViewModel>>(courseStudents.Select(x => x.Course).ToList());
             model.FollowedCourses = followedCourses;

@@ -324,8 +324,8 @@ namespace LMS.Services.Stripe
             var transactionDetails = new TransactionDetailsViewModel();
             var transactions = await _transactionRepository.GetAll()
                               .Include(x => x.User)
-                              .Include(x => x.Class)
-                              .Include(x => x.Course).Where(x => x.OwnerId == userId && x.TransactionType == TransactionTypeEnum.OwnedSchoolPayment && ((string.IsNullOrEmpty(model.SearchString)) || (x.User.FirstName.Contains(model.SearchString)) || (x.Course != null && x.Course.CourseName.Contains(model.SearchString)) || (x.Class != null && x.Class.ClassName.Contains(model.SearchString)) || (x.User.FirstName.Contains(model.SearchString)) || (x.User.FirstName + " " + x.User.LastName).ToLower().Contains(model.SearchString.ToLower())) && ((model.StartDate == null) || (model.EndDate == null) || (x.CreatedOn.Date >= model.StartDate.Value.Date && x.CreatedOn.Date <= model.EndDate.Value.Date))).OrderByDescending(x => x.CreatedOn).Skip((model.pageNumber - 1) * pageSize)
+                              .Include(x => x.Class).ThenInclude(x => x.School)
+                              .Include(x => x.Course).ThenInclude(x => x.School).Where(x => x.OwnerId == userId && x.TransactionType == TransactionTypeEnum.OwnedSchoolPayment && ((string.IsNullOrEmpty(model.SearchString)) || (x.User.FirstName.Contains(model.SearchString)) || (x.Course != null && x.Course.CourseName.Contains(model.SearchString)) || (x.Class != null && x.Class.ClassName.Contains(model.SearchString)) || (x.User.FirstName.Contains(model.SearchString)) || (x.User.FirstName + " " + x.User.LastName).ToLower().Contains(model.SearchString.ToLower())) && ((model.StartDate == null) || (model.EndDate == null) || (x.CreatedOn.Date >= model.StartDate.Value.Date && x.CreatedOn.Date <= model.EndDate.Value.Date))).OrderByDescending(x => x.CreatedOn).Skip((model.pageNumber - 1) * pageSize)
              .Take(pageSize).ToListAsync();
 
             var transactionResponse = _mapper.Map<List<TransactionViewModel>>(transactions);
@@ -365,8 +365,8 @@ namespace LMS.Services.Stripe
             var transactionDetails = new TransactionDetailsViewModel();
             var transactions = await _transactionRepository.GetAll()
                               .Include(x => x.User)
-                              .Include(x => x.Class)
-                              .Include(x => x.Course).Where(x => x.OwnerId == userId && ((string.IsNullOrEmpty(model.SearchString)) || (x.User.FirstName.Contains(model.SearchString)) || (x.Course != null && x.Course.CourseName.Contains(model.SearchString)) || (x.Class != null && x.Class.ClassName.Contains(model.SearchString)) || (x.User.FirstName.Contains(model.SearchString)) || (x.User.FirstName + " " + x.User.LastName).ToLower().Contains(model.SearchString.ToLower())) && ((model.StartDate == null) || (model.EndDate == null) || (x.CreatedOn.Date >= model.StartDate.Value.Date && x.CreatedOn.Date <= model.EndDate.Value.Date))).OrderByDescending(x => x.CreatedOn).Skip((model.pageNumber - 1) * pageSize)
+                              .Include(x => x.Class).ThenInclude(x => x.School)
+                              .Include(x => x.Course).ThenInclude(x => x.School).Where(x => x.OwnerId == userId && ((string.IsNullOrEmpty(model.SearchString)) || (x.User.FirstName.Contains(model.SearchString)) || (x.Course != null && x.Course.CourseName.Contains(model.SearchString)) || (x.Class != null && x.Class.ClassName.Contains(model.SearchString)) || (x.User.FirstName.Contains(model.SearchString)) || (x.User.FirstName + " " + x.User.LastName).ToLower().Contains(model.SearchString.ToLower())) && ((model.StartDate == null) || (model.EndDate == null) || (x.CreatedOn.Date >= model.StartDate.Value.Date && x.CreatedOn.Date <= model.EndDate.Value.Date))).OrderByDescending(x => x.CreatedOn).Skip((model.pageNumber - 1) * pageSize)
              .Take(pageSize).ToListAsync();
 
             var transactionResponse = _mapper.Map<List<TransactionViewModel>>(transactions);

@@ -128,4 +128,13 @@ export class CourseService{
       getCourseInfoForCertificate(courseId:string):Observable<any>{
         return this.http.get(`${this.apiUrl}/course/getCourseInfoForCertificate` + '?courseId=' + courseId,{headers: this.headers});
     }
+
+    deleteCourse(courseId:any): Observable<any> {
+        return this.http.post(`${this.apiUrl}/course/deleteCourseById` + '?courseId=' + courseId,'',{headers: this.headers});
+    }
+
+    enableDisableCourse(courseId:string):Observable<any>{
+        debugger
+        return this.http.post(`${this.apiUrl}/course/enableDisableCourse`+ '?courseId=' + courseId,'',{headers: this.headers});
+    }
 }

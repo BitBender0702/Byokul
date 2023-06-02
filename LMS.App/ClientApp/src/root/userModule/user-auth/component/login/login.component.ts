@@ -9,7 +9,7 @@ import { AuthenticatedResponse } from 'src/root/interfaces/auth_response';
 import { LoginModel } from 'src/root/interfaces/login';
 import { RolesEnum } from 'src/root/RolesEnum/rolesEnum';
 import { MultilingualComponent } from 'src/root/root/sharedModule/Multilingual/multilingual.component';
-import { finalize, Subject } from 'rxjs';
+import { BehaviorSubject, finalize, Subject } from 'rxjs';
 import { MessageService } from 'primeng/api';
 import { SignalrService } from 'src/root/service/signalr.service';
 import { UserService } from 'src/root/service/user.service';
@@ -22,6 +22,8 @@ import { changePassResponse } from '../change-password/change-password.component
 import { setPassResponse } from '../set-password/set-password.component';
 
 export const dashboardResponse =new Subject<{token:string}>(); 
+export const feedState =new BehaviorSubject <string>('myFeed');  
+
 
 
 @Component({
@@ -34,7 +36,7 @@ export const dashboardResponse =new Subject<{token:string}>();
 export class LoginComponent extends MultilingualComponent implements OnInit {
     invalidLogin!: boolean;
     loginForm!:FormGroup;
-    EMAIL_PATTERN = '^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$';
+    EMAIL_PATTERN = '[a-zA-Z0-9]+?(\\.[a-zA-Z0-9]+)*@[a-zA-Z]+\\.[a-zA-Z]{2,3}';
     isSubmitted: boolean = false;
     user: any = {};
     selectedLanguage:any;
@@ -108,7 +110,6 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
       });
 
       confirmEmailResponse.subscribe(response => {
-        debugger
         this.cd.detectChanges();
         if(response != ''){
           this.isConfirmEmail = true;
@@ -133,7 +134,6 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
     }
     
     login(): void {
-        
       this.isSubmitted = true;
       if (!this.loginForm.valid) {
         return;}
@@ -146,11 +146,16 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
             this.loginForm.setErrors({ unauthenticated: true });
           }
 
+          if(response.errorMessage == "Incorrect password"){
+            this._authService.loginState$.next(false);
+            this.loginForm.setErrors({ incorrectPassword: true });
+          }
+
           if(response.errorMessage == "email not confirm"){
             this._authService.loginState$.next(false);
             this.loginForm.setErrors({ emailNotConfirmed: true });
           }
-          if(response.errorMessage != "user not found" && response.errorMessage != "email not confirm"){
+          if(response.errorMessage != "user not found" && response.errorMessage != "email not confirm" && response.errorMessage != "Incorrect password"){
             this.isSubmitted = false;
             this.loadingIcon = false;
             this._authService.loginState$.next(true);

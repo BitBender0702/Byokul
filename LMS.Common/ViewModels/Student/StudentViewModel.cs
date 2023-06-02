@@ -15,6 +15,6 @@ namespace LMS.Common.ViewModels.Student
         public string CreatedBy { get; set; }
         public bool IsDeleted { get; set; }
         public string? UserId { get; set; }
-        public UserViewModel User { get; set; }
+        public UserDetailsViewModel User { get; set; }
     }
 }

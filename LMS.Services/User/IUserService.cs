@@ -33,6 +33,7 @@ namespace LMS.Services
         Task DeleteSchoolTeacher(Guid schoolId, string userId);
         Task DeleteSchoolStudent(Guid schoolId, string userId);
         Task ReportFollower(ReportFollowerViewModel model);
+        Task<IEnumerable<GlobalSearchViewModel>> GlobalSearch(string searchString, int pageNumber,int pageSize);
 
     }
 }

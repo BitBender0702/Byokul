@@ -8,17 +8,21 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Security.Cryptography;
+using LMS.DataAccess.Repository;
+using LMS.Data.Entity;
 
 namespace LMS.Services.BigBlueButton
 {
     public class BigBlueButtonService : IBigBlueButtonService
     {
         private IConfiguration _config;
+        private readonly IGenericRepository<Post> _postRepository;
         private const string JsonArrayNamespace = "http://james.newtonking.com/projects/json";
 
-        public BigBlueButtonService(IConfiguration config)
+        public BigBlueButtonService(IConfiguration config, IGenericRepository<Post> postRepository)
         {
             _config = config;
+            _postRepository = postRepository;
         }
         public async Task<string> Create(NewMeetingViewModel newMeetingViewModel)
         {
@@ -29,19 +33,23 @@ namespace LMS.Services.BigBlueButton
                 string moderatorPW = "mp";
                 string attendeePW = "ap";
                 string logoutURL = _config["MeetingLogoutUrl"];
-
+                bool isMicroPhoneOpen = false;
                 string meetingId = newMeetingViewModel.meetingName + "meetings";
                 meetingId = await EncodeUrl(meetingId);
                 string meetingName = newMeetingViewModel.meetingName;
                 meetingName = await EncodeUrl(meetingName);
                 string welcome = await GetWelcomeMsg(meetingId);
+                if (newMeetingViewModel.IsMicrophoneOpen)
+                {
+                    isMicroPhoneOpen = true;
+                }
 
-                string createChecksum = "createname=" + meetingName + "&meetingID=" + meetingId + "&welcome=" + welcome + "&attendeePW=" + attendeePW + "&freeJoin=false" + "&record=true" + "&autoStartRecording=true" + "&logoutURL=" + logoutURL + "&guestPolicy=ASK_MODERATOR" + "&moderatorPW=" + moderatorPW + secretKey;
+                string createChecksum = "createname=" + meetingName + "&meetingID=" + meetingId + "&welcome=" + welcome + "&attendeePW=" + attendeePW + "&freeJoin=false" + "&record=true" + "&muteOnStart=" + isMicroPhoneOpen + "&autoStartRecording=true" + "&logoutURL=" + logoutURL + "&guestPolicy=ASK_MODERATOR" + "&moderatorPW=" + moderatorPW + secretKey;
 
                 string checksum = Hash(createChecksum);
 
-                string finalurl = "create?name=" + meetingName + "&meetingID=" + meetingId + "&welcome=" + welcome + "&attendeePW=" + attendeePW + "&freeJoin=false" + "&record=true" + "&autoStartRecording=true" + "&logoutURL=" + logoutURL + "&guestPolicy=ASK_MODERATOR" + "&moderatorPW=" + moderatorPW + "&checksum=" + checksum;
-                     
+                string finalurl = "create?name=" + meetingName + "&meetingID=" + meetingId + "&welcome=" + welcome + "&attendeePW=" + attendeePW + "&freeJoin=false" + "&record=true" + "&muteOnStart=" + isMicroPhoneOpen + "&autoStartRecording=true" + "&logoutURL=" + logoutURL + "&guestPolicy=ASK_MODERATOR" + "&moderatorPW=" + moderatorPW + "&checksum=" + checksum;
+
                 var clients = new HttpClient();
                 clients.BaseAddress = new Uri(baseUrl);
                 clients.DefaultRequestHeaders.Accept.Clear();
@@ -56,7 +64,7 @@ namespace LMS.Services.BigBlueButton
                 var result = JsonConvert.DeserializeObject<Response>(json);
 
                 //Join as a moderator
-                string fullName = "TestModerator";
+                string fullName = newMeetingViewModel.ModeratorName;
                 string joinChecksum = "joinfullName=" + fullName + "&meetingID=" + meetingId + "&password=" + moderatorPW + "&redirect=true" + secretKey;
 
                 string joinchecksum = Hash(joinChecksum);
@@ -195,6 +203,29 @@ namespace LMS.Services.BigBlueButton
             XmlTextWriter textWriter = new XmlTextWriter(stringWriter);
             invoiceXml.WriteTo(textWriter);
             return stringWriter.ToString();
+        }
+
+        public async Task EndMeeting(EndMeetingViewModel model)
+        {
+            string endMeetingChecksum = "endmeetingID=" + model.MeetingId + "&password=" + model.Password + this._config.GetValue<string>("BigBlueButtonAPISettings:SharedSecret");
+
+            string checksum = Hash(endMeetingChecksum);
+
+            string finalurl = "end?meetingID=" + model.MeetingId + "&password=" + model.Password + "&checksum=" + checksum;
+            var clients = new HttpClient();
+            clients.BaseAddress = new Uri(this._config.GetValue<string>("BigBlueButtonAPISettings:ServerAPIUrl"));
+            clients.DefaultRequestHeaders.Accept.Clear();
+
+            //GET Method
+            HttpResponseMessage response = await clients.GetAsync(finalurl);
+            var responseData = await response.Content.ReadAsStringAsync();
+
+            var post = _postRepository.GetById(model.PostId);
+            post.IsLive = false;
+
+            _postRepository.Update(post);
+            _postRepository.Save();
+
         }
     }
 }

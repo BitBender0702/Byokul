@@ -255,7 +255,7 @@ namespace LMS.App.Controllers
 
         [Route("getPostsBySchool")]
         [HttpGet]
-        public async Task<IActionResult> GetPostsBySchool(Guid schoolId, int pageNumber, int pageSize = 4)
+        public async Task<IActionResult> GetPostsBySchool(Guid schoolId, int pageNumber, int pageSize = 6)
         {
             var userId = await GetUserIdAsync(this._userManager);
             var response = await _schoolService.GetPostsBySchool(schoolId,userId, pageNumber, pageSize);
@@ -304,6 +304,15 @@ namespace LMS.App.Controllers
             var response = await _schoolService.PinUnpinSavedClassCourse(id, isPinned,type, userId);
             return Ok(response);
         }
+
+        [Route("enableDisableSchool")]
+        [HttpPost]
+        public async Task<IActionResult> EnableDisableSchool(Guid schoolId)
+        {
+            await _schoolService.EnableDisableSchool(schoolId);
+            return Ok();
+        }
+
 
     }
 }

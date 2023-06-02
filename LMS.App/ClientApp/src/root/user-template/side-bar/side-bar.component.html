@@ -2,7 +2,9 @@
   <div  [ngClass]="isOpenSidebar ? 'sidemenu d-xl-block d-block ' : 'sidemenu d-xl-block d-none'" id="side-bar">
   <span class="closebtn d-xl-none" (click)="closeSidebar()" title="Close Side Menu">×</span>
   <div class="text-center">
-    <a [routerLink]="['/user/userFeed']" class="main-logo"><img src="../../../assets/images/logo.svg" /></a>
+    <a [routerLink]="['/user/userFeed']" class="main-logo">
+      <img src="../../../assets/images/logo.svg" />
+    </a>
   </div>
   <div *ngIf="!validUser" style="margin-top:40px;">
     <button [routerLink]="['/user/auth/register']" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 me-2" style="width:100px;">Register</button>
@@ -17,10 +19,10 @@
         <div class="dropdown">
           <button class="bg-transparent dropdown-toggle rounded-circle" type="button" data-bs-toggle="dropdown"
             aria-expanded="false">
-            <img *ngIf="sidebarInfo !== undefined && sidebarInfo.user!== undefined" [src]="sidebarInfo.user?.avatar"/>
-            <img *ngIf="sidebarInfo !== undefined && sidebarInfo.user!== undefined && sidebarInfo.user.avatar ==null" src="../../../assets/images/userLogo2.png"/>
+            <img *ngIf="sidebarInfo !== undefined && sidebarInfo.user!== undefined && sidebarInfo.user?.avatar !=null" [src]="sidebarInfo.user?.avatar"/>
+            <img *ngIf="sidebarInfo !== undefined && sidebarInfo.user!== undefined && sidebarInfo.user.avatar ==null && sidebarInfo.user.gender ==1" src="../../../assets/images/maleProfile.jfif"/>
+            <img *ngIf="sidebarInfo !== undefined && sidebarInfo.user!== undefined && sidebarInfo.user.avatar ==null && (sidebarInfo.user.gender ==2 ||  sidebarInfo.user.gender ==3)" src="../../../assets/images/femaleProfile.jfif"/>
           </button>
-          
           <ul class="dropdown-menu">
             <li><a *ngIf="sidebarInfo !== undefined && sidebarInfo.user!== undefined" (click)="getUserDetails(sidebarInfo.user.id)" class="dropdown-item" style="cursor:pointer;">{{'MyProfile'| translate }}</a></li>
             <li><a class="dropdown-item" [routerLink]="['/user/auth/change-password']">{{'ChangePassword'| translate }}</a></li>
@@ -73,7 +75,7 @@
 
                 <div *ngIf="sidebarInfo !== undefined && sidebarInfo.followedSchools && sidebarInfo.followedSchools?.length > 0">
                  <div  *ngFor="let item of sidebarInfo.followedSchools;">
-                   <div *ngIf="!item.isBan" class="school-name d-flex align-items-center font_16">
+                   <div *ngIf="(!item.isBan && !item.isDisableByOwner) || (loginUserId == item.createdById)" class="school-name d-flex align-items-center font_16">
                      <div class="school-img rounded-circle me-3">
                       <img [src]="item.avatar" />
                      </div>
@@ -100,7 +102,7 @@
 
                 <div *ngIf="sidebarInfo !== undefined && sidebarInfo.followedClasses && sidebarInfo.followedClasses?.length">
                 <div  *ngFor="let item of sidebarInfo.followedClasses;">
-                  <div *ngIf="!item.isEnable" class="school-name d-flex align-items-center font_16">
+                  <div *ngIf="(!item.isEnable && !item.isDisableByOwner) || (loginUserId == item.createdById)" class="school-name d-flex align-items-center font_16">
                     <div class="school-img rounded-circle me-3">
                       <img [src]="item.avatar" />
                     </div>
@@ -126,7 +128,7 @@
 
                 <div *ngIf="sidebarInfo !== undefined && sidebarInfo.followedCourses && sidebarInfo.followedCourses?.length">
                 <div *ngFor="let item of sidebarInfo.followedCourses;">
-                  <div *ngIf="!item.isEnable" class="school-name d-flex align-items-center font_16">
+                  <div *ngIf="(!item.isEnable && !item.isDisableByOwner) || (loginUserId == item.createdById)" class="school-name d-flex align-items-center font_16">
                     <div class="school-img rounded-circle me-3">
                       <img [src]="item.avatar" />
                     </div>

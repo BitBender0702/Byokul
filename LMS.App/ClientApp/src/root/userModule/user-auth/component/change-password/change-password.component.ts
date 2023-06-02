@@ -19,7 +19,8 @@ export class ChangePasswordComponent extends MultilingualComponent implements On
 
     invalidPasswordChange!: boolean;
     changePasswordForm!:FormGroup;
-    EMAIL_PATTERN = '^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$';
+    EMAIL_PATTERN = '[a-zA-Z0-9]+?(\\.[a-zA-Z0-9]+)*@[a-zA-Z]+\\.[a-zA-Z]{2,3}';
+    PASSWORD_PATTERN = '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-=[\\]{};:\'\"\\|,.<>/?])[A-Za-z\\d!@#$%^&*()_+\\-=[\\]{};:\'\"\\|,.<>/?]+$';
     isSubmitted: boolean = false;
     user: any = {};
     loadingIcon:boolean = false;
@@ -43,6 +44,7 @@ export class ChangePasswordComponent extends MultilingualComponent implements On
       const passwordValidators = [
         Validators.minLength(6),
         Validators.required,
+        Validators.pattern(this.PASSWORD_PATTERN)
       ];
 
       this.changePasswordForm = this.fb.group({

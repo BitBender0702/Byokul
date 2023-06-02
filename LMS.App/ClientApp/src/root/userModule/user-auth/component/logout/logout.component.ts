@@ -13,10 +13,10 @@ export class LogoutComponent implements OnInit {
      protected router: Router, private authService: AuthService) { }
 
   ngOnInit(): void {
-    
     localStorage.removeItem("jwt");
     localStorage.removeItem("userPermissions");
     this.authService.loginState$.next(false);
+    this.authService.loginAdminState$.next(false);
     this.router.navigate(['../login'], { relativeTo: this.route });
   }
 

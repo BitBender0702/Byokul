@@ -16,6 +16,7 @@ using Newtonsoft.Json;
 using LMS.Common.ViewModels.Course;
 using LMS.Services.Chat;
 using LMS.Common.ViewModels.FileStorage;
+using LMS.Common.ViewModels.Notification;
 
 namespace LMS.Services
 {
@@ -38,10 +39,11 @@ namespace LMS.Services
         private readonly IBlobService _blobService;
         private readonly IUserService _userService;
         private readonly IChatService _chatService;
+        private readonly INotificationService _notificationService;
         private readonly IBigBlueButtonService _bigBlueButtonService;
         private IConfiguration _config;
 
-        public PostService(IMapper mapper, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<User> userRepository, IGenericRepository<Like> likeRpository, IGenericRepository<View> viewRepository, IGenericRepository<Comment> commentRepository, IGenericRepository<CommentLike> commentLikeRepository, IGenericRepository<SavedPost> savedPostRepository, IBlobService blobService, IUserService userService, IChatService chatService, IBigBlueButtonService bigBlueButtonService, IConfiguration config, IGenericRepository<UserSharedPost> userSharedPostRepository)
+        public PostService(IMapper mapper, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<User> userRepository, IGenericRepository<Like> likeRpository, IGenericRepository<View> viewRepository, IGenericRepository<Comment> commentRepository, IGenericRepository<CommentLike> commentLikeRepository, IGenericRepository<SavedPost> savedPostRepository, IBlobService blobService, IUserService userService, IChatService chatService, IBigBlueButtonService bigBlueButtonService, IConfiguration config, IGenericRepository<UserSharedPost> userSharedPostRepository, INotificationService notificationService)
         {
             _mapper = mapper;
             _postRepository = postRepository;
@@ -62,11 +64,17 @@ namespace LMS.Services
             _bigBlueButtonService = bigBlueButtonService;
             _config = config;
             _userSharedPostRepository = userSharedPostRepository;
+            _notificationService = notificationService;
         }
         public async Task<PostViewModel> SavePost(PostViewModel postViewModel, string createdById)
         {
+            IEnumerable<FileAttachmentViewModel> uploadFromFileStorage = null;
             postViewModel.PostTags = JsonConvert.DeserializeObject<string[]>(postViewModel.PostTags.First());
-            var uploadFromFileStorage = JsonConvert.DeserializeObject<IEnumerable<FileAttachmentViewModel>>(postViewModel.UploadFromFileStorage.First());
+
+            if (postViewModel.UploadFromFileStorage != null)
+            {
+                uploadFromFileStorage = JsonConvert.DeserializeObject<IEnumerable<FileAttachmentViewModel>>(postViewModel.UploadFromFileStorage.First());
+            }
 
             var post = new Post
             {
@@ -80,6 +88,8 @@ namespace LMS.Services
                 PostAuthorType = postViewModel.PostAuthorType,
                 ParentId = postViewModel.ParentId,
                 CoverLetter = postViewModel.CoverLetter,
+                CommentsPerMinute = postViewModel.CommentsPerMinute == 0 ? null : postViewModel.CommentsPerMinute,
+                IsLive = (postViewModel.DateTime == null && postViewModel.PostType == 2) ? true : false,
                 CreatedById = createdById,
                 CreatedOn = DateTime.UtcNow
             };
@@ -122,13 +132,31 @@ namespace LMS.Services
 
             if (postViewModel.PostType == (int)PostTypeEnum.Stream)
             {
+
+                var user = _userRepository.GetById(createdById);
                 var model = new NewMeetingViewModel();
                 model.meetingName = postViewModel.Title;
+                model.IsMicrophoneOpen = (bool)postViewModel.IsMicroPhoneOpen;
+                model.ModeratorName = user.FirstName;
                 var url = await _bigBlueButtonService.Create(model);
-                //return url;
+                postViewModel.StreamUrl = url;
+                //await SendNotifications(postViewModel.Title,post.Id, createdById);
             }
             postViewModel.Id = post.Id;
             return postViewModel;
+        }
+
+        async Task SendNotifications(string postTitle,Guid postId, string actionDoneBy)
+        {
+            var notificationViewModel = new NotificationViewModel();
+            var user = _userRepository.GetById(actionDoneBy);
+            notificationViewModel.ActionDoneBy = actionDoneBy;
+            notificationViewModel.PostId = postId;
+            notificationViewModel.Avatar = user.Avatar;
+            notificationViewModel.NotificationType = NotificationTypeEnum.LectureStart;
+            notificationViewModel.MeetingId = postTitle + "meetings";
+            notificationViewModel.NotificationContent = $"{user.FirstName + ' '} {user.LastName} start a live {postTitle}";
+            await _notificationService.AddNotification(notificationViewModel);
         }
 
         async Task SaveUploadImages(IEnumerable<IFormFile> uploadImages, Guid postId, string createdById)
@@ -163,19 +191,19 @@ namespace LMS.Services
                 int lastDotIndex = video.FileName.LastIndexOf(".");
                 if (lastDotIndex != -1)
                 {
-                    videoThumbnailName = video.FileName.Substring(0,lastDotIndex + 1);
+                    videoThumbnailName = video.FileName.Substring(0, lastDotIndex + 1);
                 }
 
-                var isVideoThumbnailExist = uploadVideosThumbnail.Where(x => x.FileName.Substring(0,x.FileName.LastIndexOf(".") + 1) == videoThumbnailName).FirstOrDefault();
+                var isVideoThumbnailExist = uploadVideosThumbnail.Where(x => x.FileName.Substring(0, x.FileName.LastIndexOf(".") + 1) == videoThumbnailName).FirstOrDefault();
 
 
 
                 var postAttachment = new PostAttachmentViewModel();
-                postAttachment.FileUrl = await _blobService.UploadFileAsync(video, containerName,true);
+                postAttachment.FileUrl = await _blobService.UploadFileAsync(video, containerName, true);
 
                 if (isVideoThumbnailExist != null)
                 {
-                    postAttachment.FileThumbnail = await _blobService.UploadFileAsync(isVideoThumbnailExist, containerName,false);
+                    postAttachment.FileThumbnail = await _blobService.UploadFileAsync(isVideoThumbnailExist, containerName, false);
 
                 }
 
@@ -263,9 +291,18 @@ namespace LMS.Services
                 .Where(x => x.Id == id).FirstOrDefaultAsync();
 
             var result = _mapper.Map<PostAttachmentViewModel>(postAttachment);
+
+                int lastSlashIndex = result.FileUrl.LastIndexOf('/');
+                var fileName = result.FileUrl.Substring(lastSlashIndex + 1);
+
+            result.ByteArray = await _blobService.GetFileContentAsync(this._config.GetValue<string>("Container:PostContainer"), fileName);
+
             result.Post.Likes = await _userService.GetLikesOnPost(postAttachment.Post.Id);
             result.Post.Views = await _userService.GetViewsOnPost(postAttachment.Post.Id);
             result.Post.Comments = await _chatService.GetComments(id, userId, 1);
+            result.Post.PostSharedCount = await _userSharedPostRepository.GetAll().Where(x => x.PostId == postAttachment.Post.Id).CountAsync();
+            result.Post.SavedPostsCount = await _savedPostRepository.GetAll().Where(x => x.PostId == postAttachment.Post.Id).CountAsync();
+            result.Post.IsPostSavedByCurrentUser = await _savedPostRepository.GetAll().AnyAsync(x => x.PostId == postAttachment.Post.Id && x.UserId == userId);
 
             if (result.Post.Likes.Any(x => x.UserId == userId && x.PostId == postAttachment.Post.Id))
             {
@@ -307,12 +344,30 @@ namespace LMS.Services
             var postResult = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.Id == id).FirstOrDefaultAsync();
 
             var post = _mapper.Map<PostDetailsViewModel>(postResult);
-
+            if (post.PostAuthorType == (int)PostAuthorTypeEnum.Class)
+            {
+                var classes = await _classRepository.GetAll().Include(x => x.ServiceType).Include(x => x.Accessibility).Where(x => x.ClassId == post.ParentId).FirstOrDefaultAsync();
+                if (classes.ServiceType.Type == "Paid" || classes.Accessibility.Name == "Private")
+                {
+                    post.IsClassPrivateOrPaid = true;
+                }
+            }
 
             post.PostAttachments = await GetAttachmentsByPostId(post.Id);
+            foreach (var item in post.PostAttachments)
+            {
+                int lastSlashIndex = item.FileUrl.LastIndexOf('/');
+                var fileName = item.FileUrl.Substring(lastSlashIndex + 1);
+
+                item.ByteArray = await _blobService.GetFileContentAsync(this._config.GetValue<string>("Container:PostContainer"), fileName);
+
+            }
             post.Likes = await _userService.GetLikesOnPost(post.Id);
             post.Views = await _userService.GetViewsOnPost(post.Id);
             post.CommentsCount = await _userService.GetCommentsCountOnPost(post.Id);
+            post.PostSharedCount = await _userSharedPostRepository.GetAll().Where(x => x.PostId == post.Id).CountAsync();
+            post.SavedPostsCount = await _savedPostRepository.GetAll().Where(x => x.PostId == post.Id).CountAsync();
+            post.IsPostSavedByCurrentUser = await _savedPostRepository.GetAll().AnyAsync(x => x.PostId == post.Id && x.UserId == userId);
             if (post.Likes.Any(x => x.UserId == userId && x.PostId == post.Id))
             {
                 post.IsPostLikedByCurrentUser = true;
@@ -330,7 +385,7 @@ namespace LMS.Services
 
         public async Task<IEnumerable<PostAttachmentViewModel>> GetAttachmentsByPostId(Guid postId)
         {
-            var attacchmentList = await _postAttachmentRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.PostId == postId).OrderByDescending(x => x.IsPinned).ToListAsync();    
+            var attacchmentList = await _postAttachmentRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.PostId == postId).OrderByDescending(x => x.IsPinned).ToListAsync();
 
             var result = _mapper.Map<List<PostAttachmentViewModel>>(attacchmentList);
             return result;
@@ -468,16 +523,17 @@ namespace LMS.Services
         {
             var isUserSharedPostExist = await _userSharedPostRepository.GetAll().Where(x => x.UserId == userId && x.PostId == postId).FirstOrDefaultAsync();
 
-            if (isUserSharedPostExist != null)
-            {
-                _userSharedPostRepository.Delete(isUserSharedPostExist.Id);
-                _userSharedPostRepository.Save();
-            }
+            //if (isUserSharedPostExist != null)
+            //{
+            //    _userSharedPostRepository.Delete(isUserSharedPostExist.Id);UserShared
+            //    _userSharedPostRepository.Save();
+            //}
 
             var userSharedPost = new UserSharedPost
             {
                 UserId = userId,
-                PostId = postId
+                PostId = postId,
+                CreatedOn = DateTime.UtcNow
             };
 
             _userSharedPostRepository.Insert(userSharedPost);
@@ -501,7 +557,8 @@ namespace LMS.Services
                 {
                     UserId = userId,
                     PostId = postId,
-                    CreatedOn = DateTime.UtcNow
+                    CreatedOn = DateTime.UtcNow,
+                    IsPinned = false
                 };
 
                 _savedPostRepository.Insert(savedPost);
@@ -509,24 +566,35 @@ namespace LMS.Services
             }
         }
 
-        public async Task<List<PostDetailsViewModel>> GetSavedPostsByUser(string userId, int pageNumber)
+        public async Task<List<PostDetailsViewModel>> GetSavedPostsByUser(string userId, int pageNumber, PostTypeEnum type)
         {
-            int pageSize = 6;
-            var savedPostList = await _savedPostRepository.GetAll().Include(x => x.Post).Where(x => x.UserId == userId).OrderByDescending(x => x.CreatedOn).Select(x => x.Post).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+            int pageSize = 0;
+            if (type == PostTypeEnum.Post)
+            {
+                pageSize = 9;
 
-            var result = _mapper.Map<List<PostDetailsViewModel>>(savedPostList);
+            }
+            else
+            {
+                pageSize = 8;
+            }
+            var savedPostList = await _savedPostRepository.GetAll().Include(x => x.Post).Where(x => x.UserId == userId && x.Post.PostType == (int)type).OrderByDescending(x => x.IsPinned).ThenByDescending(x => x.CreatedOn).Select(x => x.Post).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            var result = _mapper.Map<List<PostDetailsViewModel>>(savedPostList).ToList();
             var savedPosts = await _savedPostRepository.GetAll().ToListAsync();
+            var sharedPosts = await _userSharedPostRepository.GetAll().ToListAsync();
 
             foreach (var post in result)
             {
-                
+                post.IsSavedPostPinned = savedPosts.Any(x => x.PostId == post.Id && x.IsPinned);
                 post.PostAttachments = await GetAttachmentsByPostId(post.Id);
                 post.Likes = await _userService.GetLikesOnPost(post.Id);
                 post.Views = await _userService.GetViewsOnPost(post.Id);
                 post.CommentsCount = await _userService.GetCommentsCountOnPost(post.Id);
-                post.PostSharedCount = await _userSharedPostRepository.GetAll().Where(x => x.PostId == post.Id).CountAsync();
                 post.IsPostSavedByCurrentUser = savedPosts.Any(x => x.PostId == post.Id && x.UserId == userId);
-                post.SavedPostsCount = savedPosts.Where(x => x.PostId == post.Id && x.UserId == userId).Count();
+                post.SavedPostsCount = savedPosts.Where(x => x.PostId == post.Id).Count();
+                post.IsPostSharedByCurrentUser = sharedPosts.Any(x => x.PostId == post.Id && x.UserId == userId);
+                post.PostSharedCount = sharedPosts.Where(x => x.PostId == post.Id).Count();
                 if (post.Likes.Any(x => x.UserId == userId && x.PostId == post.Id))
                 {
                     post.IsPostLikedByCurrentUser = true;
@@ -534,6 +602,43 @@ namespace LMS.Services
                 else
                 {
                     post.IsPostLikedByCurrentUser = false;
+                }
+
+                if (post.PostAuthorType == (int)PostAuthorTypeEnum.School)
+                {
+                    var school = _schoolRepository.GetById(post.ParentId);
+                    post.ParentName = school.SchoolName;
+                    post.ParentImageUrl = school.Avatar;
+                    post.PostAuthorType = (int)PostAuthorTypeEnum.School;
+                    post.SchoolName = "";
+                    post.ParentId = school.SchoolId;
+                }
+                if (post.PostAuthorType == (int)PostAuthorTypeEnum.Class)
+                {
+                    var classes = await _classRepository.GetAll().Where(x => x.ClassId == post.ParentId).Include(x => x.School).FirstOrDefaultAsync();
+                    post.ParentName = classes.ClassName;
+                    post.ParentImageUrl = classes.Avatar;
+                    post.PostAuthorType = (int)PostAuthorTypeEnum.Class;
+                    post.SchoolName = classes.School.SchoolName;
+                    post.ParentId = classes.ClassId;
+                }
+                if (post.PostAuthorType == (int)PostAuthorTypeEnum.Course)
+                {
+                    var course = await _courseRepository.GetAll().Where(x => x.CourseId == post.ParentId).Include(x => x.School).FirstOrDefaultAsync();
+                    post.ParentName = course.CourseName;
+                    post.ParentImageUrl = course.Avatar;
+                    post.PostAuthorType = (int)PostAuthorTypeEnum.Course;
+                    post.SchoolName = course.School.SchoolName;
+                    post.ParentId = course.CourseId;
+                }
+                if (post.PostAuthorType == (int)PostAuthorTypeEnum.User)
+                {
+                    var user = _userRepository.GetById(post.ParentId.ToString());
+                    post.ParentName = user.FirstName + " " + user.LastName;
+                    post.ParentImageUrl = user.Avatar;
+                    post.PostAuthorType = (int)PostAuthorTypeEnum.User;
+                    post.SchoolName = "";
+                    post.ParentId = new Guid(user.Id);
                 }
 
             }
@@ -546,6 +651,262 @@ namespace LMS.Services
 
             return result;
         }
+
+        public async Task<List<PostDetailsViewModel>> GetSharedPostsByUser(string userId, int pageNumber, PostTypeEnum type)
+        {
+            int pageSize = 0;
+            if (type == PostTypeEnum.Post)
+            {
+                pageSize = 9;
+
+            }
+            else
+            {
+                pageSize = 8;
+            }
+            var sharedPostList = await _userSharedPostRepository.GetAll().Include(x => x.Post).Where(x => x.UserId == userId && x.Post.PostType == (int)type).OrderByDescending(x => x.CreatedOn).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+
+
+            var result = _mapper.Map<List<PostDetailsViewModel>>(sharedPostList.Select(x => x.Post)).OrderByDescending(x => x.IsPinned).ThenByDescending(x => x.CreatedOn).ToList();
+            var sharedPosts = await _userSharedPostRepository.GetAll().ToListAsync();
+            var savedPosts = await _savedPostRepository.GetAll().ToListAsync();
+
+
+
+
+
+            foreach (var post in result)
+            {
+
+                //post.IsSharedPostPinned = sharedPostList.Any()
+                post.PostAttachments = await GetAttachmentsByPostId(post.Id);
+                post.Likes = await _userService.GetLikesOnPost(post.Id);
+                post.Views = await _userService.GetViewsOnPost(post.Id);
+                post.CommentsCount = await _userService.GetCommentsCountOnPost(post.Id);
+                post.PostSharedCount = await _userSharedPostRepository.GetAll().Where(x => x.PostId == post.Id).CountAsync();
+                post.IsPostSharedByCurrentUser = sharedPosts.Any(x => x.PostId == post.Id && x.UserId == userId);
+                post.PostSharedCount = sharedPosts.Where(x => x.PostId == post.Id).Count();
+                post.IsPostSavedByCurrentUser = savedPosts.Any(x => x.PostId == post.Id && x.UserId == userId);
+                post.SavedPostsCount = savedPosts.Where(x => x.PostId == post.Id).Count();
+                if (post.Likes.Any(x => x.UserId == userId && x.PostId == post.Id))
+                {
+                    post.IsPostLikedByCurrentUser = true;
+                }
+                else
+                {
+                    post.IsPostLikedByCurrentUser = false;
+                }
+
+                if (post.PostAuthorType == (int)PostAuthorTypeEnum.School)
+                {
+                    var school = _schoolRepository.GetById(post.ParentId);
+                    post.ParentName = school.SchoolName;
+                    post.ParentImageUrl = school.Avatar;
+                    post.PostAuthorType = (int)PostAuthorTypeEnum.School;
+                    post.SchoolName = "";
+                    post.ParentId = school.SchoolId;
+                }
+                if (post.PostAuthorType == (int)PostAuthorTypeEnum.Class)
+                {
+                    var classes = await _classRepository.GetAll().Where(x => x.ClassId == post.ParentId).Include(x => x.School).FirstOrDefaultAsync();
+                    post.ParentName = classes.ClassName;
+                    post.ParentImageUrl = classes.Avatar;
+                    post.PostAuthorType = (int)PostAuthorTypeEnum.Class;
+                    post.SchoolName = classes.School.SchoolName;
+                    post.ParentId = classes.ClassId;
+                }
+                if (post.PostAuthorType == (int)PostAuthorTypeEnum.Course)
+                {
+                    var course = await _courseRepository.GetAll().Where(x => x.CourseId == post.ParentId).Include(x => x.School).FirstOrDefaultAsync();
+                    post.ParentName = course.CourseName;
+                    post.ParentImageUrl = course.Avatar;
+                    post.PostAuthorType = (int)PostAuthorTypeEnum.Course;
+                    post.SchoolName = course.School.SchoolName;
+                    post.ParentId = course.CourseId;
+                }
+                if (post.PostAuthorType == (int)PostAuthorTypeEnum.User)
+                {
+                    var user = _userRepository.GetById(post.ParentId.ToString());
+                    post.ParentName = user.FirstName + " " + user.LastName;
+                    post.ParentImageUrl = user.Avatar;
+                    post.PostAuthorType = (int)PostAuthorTypeEnum.User;
+                    post.SchoolName = "";
+                    post.ParentId = new Guid(user.Id);
+                }
+
+            }
+
+            foreach (var post in result)
+            {
+                var tags = await GetTagsByPostId(post.Id);
+                post.PostTags = tags;
+            }
+
+            return result;
+        }
+
+        public async Task<List<PostDetailsViewModel>> GetLikedPostsByUser(string userId, int pageNumber, PostTypeEnum type)
+        {
+            int pageSize = 0;
+            if (type == PostTypeEnum.Post)
+            {
+                pageSize = 9;
+
+            }
+            else
+            {
+                pageSize = 8;
+            }
+            var likedPostList = await _likeRepository.GetAll().Include(x => x.Post).Where(x => x.UserId == userId && x.Post.PostType == (int)type).OrderByDescending(x => x.DateTime).Select(x => x.Post).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            var result = _mapper.Map<List<PostDetailsViewModel>>(likedPostList).OrderByDescending(x => x.IsPinned).ThenByDescending(x => x.CreatedOn).ToList();
+            var sharedPosts = await _userSharedPostRepository.GetAll().ToListAsync();
+            var savedPosts = await _savedPostRepository.GetAll().ToListAsync();
+            var likedPosts = await _likeRepository.GetAll().ToListAsync();
+
+            foreach (var post in result)
+            {
+                post.IsLikedPostPinned = likedPosts.Any(x => x.PostId == post.Id && x.IsPinned);
+                post.PostAttachments = await GetAttachmentsByPostId(post.Id);
+                post.Likes = await _userService.GetLikesOnPost(post.Id);
+                post.Views = await _userService.GetViewsOnPost(post.Id);
+                post.CommentsCount = await _userService.GetCommentsCountOnPost(post.Id);
+                post.PostSharedCount = await _userSharedPostRepository.GetAll().Where(x => x.PostId == post.Id).CountAsync();
+                post.IsPostSharedByCurrentUser = sharedPosts.Any(x => x.PostId == post.Id && x.UserId == userId);
+                post.IsPostSavedByCurrentUser = savedPosts.Any(x => x.PostId == post.Id && x.UserId == userId);
+                post.SavedPostsCount = savedPosts.Where(x => x.PostId == post.Id).Count();
+                if (post.Likes.Any(x => x.UserId == userId && x.PostId == post.Id))
+                {
+                    post.IsPostLikedByCurrentUser = true;
+                }
+                else
+                {
+                    post.IsPostLikedByCurrentUser = false;
+                }
+
+                if (post.PostAuthorType == (int)PostAuthorTypeEnum.School)
+                {
+                    var school = _schoolRepository.GetById(post.ParentId);
+                    post.ParentName = school.SchoolName;
+                    post.ParentImageUrl = school.Avatar;
+                    post.PostAuthorType = (int)PostAuthorTypeEnum.School;
+                    post.SchoolName = "";
+                    post.ParentId = school.SchoolId;
+                }
+                if (post.PostAuthorType == (int)PostAuthorTypeEnum.Class)
+                {
+                    var classes = await _classRepository.GetAll().Where(x => x.ClassId == post.ParentId).Include(x => x.School).FirstOrDefaultAsync();
+                    post.ParentName = classes.ClassName;
+                    post.ParentImageUrl = classes.Avatar;
+                    post.PostAuthorType = (int)PostAuthorTypeEnum.Class;
+                    post.SchoolName = classes.School.SchoolName;
+                    post.ParentId = classes.ClassId;
+                }
+                if (post.PostAuthorType == (int)PostAuthorTypeEnum.Course)
+                {
+                    var course = await _courseRepository.GetAll().Where(x => x.CourseId == post.ParentId).Include(x => x.School).FirstOrDefaultAsync();
+                    post.ParentName = course.CourseName;
+                    post.ParentImageUrl = course.Avatar;
+                    post.PostAuthorType = (int)PostAuthorTypeEnum.Course;
+                    post.SchoolName = course.School.SchoolName;
+                    post.ParentId = course.CourseId;
+                }
+                if (post.PostAuthorType == (int)PostAuthorTypeEnum.User)
+                {
+                    var user = _userRepository.GetById(post.ParentId.ToString());
+                    post.ParentName = user.FirstName + " " + user.LastName;
+                    post.ParentImageUrl = user.Avatar;
+                    post.PostAuthorType = (int)PostAuthorTypeEnum.User;
+                    post.SchoolName = "";
+                    post.ParentId = new Guid(user.Id);
+                }
+
+            }
+
+            foreach (var post in result)
+            {
+                var tags = await GetTagsByPostId(post.Id);
+                post.PostTags = tags;
+            }
+
+            return result;
+        }
+
+        public async Task<bool> PinUnpinSavedPost(Guid attachmentId, bool isPinned, string userId)
+        {
+            var savedPost = await _savedPostRepository.GetAll().Where(x => x.PostId == attachmentId && x.UserId == userId).FirstOrDefaultAsync();
+
+            if (savedPost != null)
+            {
+                savedPost.IsPinned = isPinned;
+                _savedPostRepository.Update(savedPost);
+                _savedPostRepository.Save();
+                return true;
+            }
+
+            return false;
+
+
+        }
+
+        public async Task<bool> PinUnpinLikedPost(Guid attachmentId, bool isPinned, string userId)
+        {
+            var likedPost = await _likeRepository.GetAll().Where(x => x.PostId == attachmentId && x.UserId == userId).FirstOrDefaultAsync();
+
+            if (likedPost != null)
+            {
+                likedPost.IsPinned = isPinned;
+                _likeRepository.Update(likedPost);
+                _likeRepository.Save();
+                return true;
+            }
+
+            return false;
+
+        }
+
+        public async Task DeletePost(Guid id)
+        {
+            var post = _postRepository.GetById(id);
+            var postAttachments = await _postAttachmentRepository.GetAll().Where(x => x.PostId == id).ToListAsync();
+            if (postAttachments.Count() != 0)
+            {
+                _postAttachmentRepository.DeleteAll(postAttachments);
+                //_postAttachmentRepository.Save();
+            }
+
+            var postTags = await _postTagRepository.GetAll().Where(x => x.PostId == id).ToListAsync();
+            if (postTags.Count() != 0)
+            {
+                _postTagRepository.DeleteAll(postTags);
+                //_postTagRepository.Save();
+            }
+
+            var postLikes = await _likeRepository.GetAll().Where(x => x.PostId == id).ToListAsync();
+            if (postLikes.Count() != 0)
+            {
+                _likeRepository.DeleteAll(postLikes);
+                //_postTagRepository.Save();
+            }
+
+            var postSaved = await _savedPostRepository.GetAll().Where(x => x.PostId == id).ToListAsync();
+            if (postSaved.Count() != 0)
+            {
+                _savedPostRepository.DeleteAll(postSaved);
+                //_postTagRepository.Save();
+            }
+
+            var postShared = await _userSharedPostRepository.GetAll().Where(x => x.PostId == id).ToListAsync();
+            if (postShared.Count() != 0)
+            {
+                _userSharedPostRepository.DeleteAll(postShared);
+                //_postTagRepository.Save();
+            }
+            _postRepository.Delete(post.Id);
+            _postRepository.Save();
+        }
+
+
 
     }
 }

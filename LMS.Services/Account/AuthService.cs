@@ -88,7 +88,8 @@ namespace LMS.Services.Account
             new Claim(JwtRegisteredClaimNames.Sub, userInfo.Email),
             new Claim(JwtRegisteredClaimNames.Jti, userInfo.Id),
             new Claim(JwtRegisteredClaimNames.UniqueName, userInfo.UserName),
-            new Claim(JwtRegisteredClaimNames.Name,userInfo.FirstName + " " + userInfo.LastName)
+            new Claim(JwtRegisteredClaimNames.Gender, userInfo.Gender.ToString()),
+            new Claim(JwtRegisteredClaimNames.Name,userInfo.FirstName + " " + userInfo.LastName),
             };
 
             foreach (var role in roles)
@@ -122,7 +123,7 @@ namespace LMS.Services.Account
 
             user.UniqueToken = String.Format("{0}-{1}", Guid.NewGuid(), Guid.NewGuid());
             user.TokenCreatedOn = DateTime.UtcNow;
-            user.ResetTokenExirationTime = DateTime.UtcNow.AddHours(3);
+            user.ResetTokenExirationTime = DateTime.UtcNow.AddHours(1);
 
             var response = await _userManager.UpdateAsync(user);
             if (response.Succeeded)

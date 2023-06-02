@@ -44,8 +44,11 @@ namespace LMS.Common.ViewModels.Post
         public int SavedPostsCount { get; set; }
         public bool IsSavedPostPinned { get; set; }
         public bool IsSharedPostPinned { get; set; }
+        public Guid UserSharedPostId { get; set; }
         public bool IsLikedPostPinned { get; set; }
-
+        public int? CommentsPerMinute { get; set; }
+        public bool? IsLive { get; set; }
+        public bool? IsClassPrivateOrPaid { get; set; }
 
     }
 }

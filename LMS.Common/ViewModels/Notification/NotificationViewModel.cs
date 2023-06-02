@@ -27,5 +27,7 @@ namespace LMS.Common.ViewModels.Notification
         public string? ReelId { get; set; }
         public ChatType? ChatType { get; set; }
         public Guid? ChatTypeId { get; set; }
+        public string? MeetingId { get; set; }
+        public List<string>? FollowersIds { get; set; }
     }
 }

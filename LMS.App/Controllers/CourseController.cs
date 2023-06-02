@@ -174,7 +174,7 @@ namespace LMS.App.Controllers
 
         [Route("getPostsByCourse")]
         [HttpGet]
-        public async Task<IActionResult> GetPostsByCourse(Guid courseId, int pageNumber, int pageSize = 4)
+        public async Task<IActionResult> GetPostsByCourse(Guid courseId, int pageNumber, int pageSize = 6)
         {
             var userId = await GetUserIdAsync(this._userManager);
             var response = await _courseService.GetPostsByCourseId(courseId, userId, pageNumber, pageSize);
@@ -213,6 +213,14 @@ namespace LMS.App.Controllers
         {
             var response = await _courseService.GetCourseInfoForCertificate(courseId);
             return Ok(response);
+        }
+
+        [Route("enableDisableCourse")]
+        [HttpPost]
+        public async Task<IActionResult> EnableDisableCourse(Guid courseId)
+        {
+            await _courseService.EnableDisableCourse(courseId);
+            return Ok();
         }
 
     }

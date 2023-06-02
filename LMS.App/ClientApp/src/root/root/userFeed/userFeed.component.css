@@ -29,3 +29,27 @@
 .video-js{
   height: 300px;
 }
+
+.routeLink{
+  cursor: pointer;
+  color: inherit;
+  text-decoration: none;
+}
+
+.search_ul{
+  border: 1px solid orange;
+  width: 500px !important;
+  list-style: none;
+}
+
+.search_li{
+  border: 1px solid orange;
+}
+
+.img_style{
+  background-color: #7C8DA7;
+}
+
+.cursor_pointer{
+  cursor: pointer;
+}

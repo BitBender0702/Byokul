@@ -2,6 +2,7 @@
 using LMS.Common.ViewModels.Common;
 using LMS.Common.ViewModels.Post;
 using LMS.Common.ViewModels.School;
+using LMS.Common.ViewModels.Student;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,6 +45,9 @@ namespace LMS.Services
         Task SaveClassCourse(string userId, Guid id, ClassCourseEnum type);
         Task<IEnumerable<CombineClassCourseViewModel>> GetSavedClassCourse(string userId, int pageNumber);
         Task<bool> PinUnpinSavedClassCourse(Guid id, bool isPinned,ClassCourseEnum type, string userId);
+        Task<IEnumerable<StudentViewModel>> GetClassStudentsBySchoolId(Guid schoolId);
+        Task<IEnumerable<StudentViewModel>> GetCourseStudentsBySchoolId(Guid schoolId);
+        Task EnableDisableSchool(Guid schoolId);
 
     }
 }

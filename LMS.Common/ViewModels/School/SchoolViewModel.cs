@@ -34,5 +34,7 @@ namespace LMS.Common.ViewModels.School
         public bool IsBan { get; set; }
         public int? Status { get; set; }
         public DateTime? Founded { get; set; }
+        public bool? IsDisableByOwner { get; set; }
+
     }
 }

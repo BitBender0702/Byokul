@@ -1,4 +1,4 @@
-<div *ngIf="isDataLoaded">
+<!-- <div *ngIf="isDataLoaded"> -->
   <section class="container">
     <div class="logo mb-3 pt-5">
       <img src="../../../../../assets/images/logo.svg" alt="logo" />
@@ -30,15 +30,21 @@
           </div>
           <div class="col-md-6">
             <div class="form-group">
-              <input type="date" class="form-control rounded-8" min="1903-12-31" [max]="registrationForm.controls.dob.value" formControlName="dob" placeholder="Test">
+              <input #licenceDate autocomplete="off" type="text" class="form-control rounded-8 date_calendar" name="dob" formControlName="dob" id="licence_date" (click)="getSelectedLanguage()">
+              <!-- <input type="date" lang="tr" class="form-control rounded-8" min="1903-12-31" placeholder="test" [max]="registrationForm.controls.dob.value" formControlName="dob" placeholder="Test"> -->
               <small class="p-error" style="color: orange;"
               *ngIf="(isSubmitted && registrationForm.controls.dob.errors)">{{'DOBRequired'| translate }} 
             </small>
-            <small class="p-error" style="color: orange;" *ngIf="isSubmitted && registrationForm.errors">
+            <!-- <small class="p-error" style="color: orange;" *ngIf="isSubmitted && registrationForm.errors">
               {{ registrationForm.errors.dates}}
-            </small>
+            </small> -->
             </div>
           </div>
+          <!-- <div class="col-md-6">
+            <div class="form-group">
+<input #licenceDate type="text" class="form-control rounded-8 date_calendar" name="licence_date" id="licence_date" (click)="getSelectedLanguage()">
+</div> -->
+          <!-- </div> -->
           <div class="col-md-6">
             <div class="form-group">
               <select class="form-select rounded-8" formControlName="gender" aria-label="Default select example">
@@ -88,17 +94,25 @@
               <button class="eye_button_style" type="button" (click)="passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password'"><i class="fa fa-eye-slash" (click)="onPasswordShow()" *ngIf="!isPasswordVisible"></i><i class="fa fa-eye" (click)="onPasswordHide()" *ngIf="isPasswordVisible"></i></button>
               <small style="color: rgb(17, 17, 17);">*{{'PasswordLengthInfo'| translate }} </small>
               <br>
-              <small class="p-error" style="color: orange;" *ngIf="isSubmitted && registrationForm.controls.password.errors">
-                {{'PasswordRequired'| translate }}</small>
+              <small class="p-error" style="color: orange;" *ngIf="isSubmitted && registrationForm.get('password')?.errors?.required">
+                  {{'PasswordRequired'| translate }}</small>
+              <div *ngIf="isSubmitted && registrationForm.get('password')?.errors?.minlength">
+                <small class="p-error" style="color: orange;" *ngIf="isSubmitted && registrationForm.get('password')?.errors?.minlength">
+                   {{'PasswordLengthRequired'| translate }}
+                </small><br>          
+               </div>         
+              <small class="p-error" style="color: orange;" *ngIf="isSubmitted && registrationForm.get('password')?.errors?.pattern">
+                  {{'PasswordPatternRequired'| translate }}</small>
             </div>
           </div>
           <div class="col-md-12">
             <div class="form-group input-container">
               <input #confirmPasswordInput type="password" class="form-control rounded-8" formControlName="confirmPassword" placeholder="{{'RepeatPassword'| translate }}">
               <button class="eye_button_style" type="button" (click)="confirmPasswordInput.type = confirmPasswordInput.type === 'password' ? 'text' : 'password'"><i class="fa fa-eye-slash" (click)="onConfirmPasswordShow()" *ngIf="!isConfirmPasswordVisible"></i><i class="fa fa-eye" (click)="onConfirmPasswordHide()" *ngIf="isConfirmPasswordVisible"></i></button>
-              <small class="p-error" style="color: orange;"
-              *ngIf="isSubmitted && registrationForm.controls.confirmPassword.errors">{{'ConfirmPasswordRequired'| translate }}</small>
-
+              <small class="p-error" style="color: orange;" *ngIf="isSubmitted && registrationForm.get('confirmPassword')?.errors?.required">
+                {{'ConfirmPasswordRequired'| translate }}</small>    
+            <small class="p-error" style="color: orange;" *ngIf="isSubmitted && (registrationForm.get('confirmPassword')?.errors?.pattern || registrationForm.get('confirmPassword')?.errors?.minlength)">
+                {{'PasswordDoesNotMatch'| translate }}</small>
               <small class="p-error" style="color: orange;"
               *ngIf=" isSubmitted && matchPassword() && registrationForm.controls.confirmPassword.touched && !registrationForm.controls.confirmPassword.errors">
                {{'PasswordDoesNotMatch'| translate }}
@@ -121,5 +135,5 @@
       </form>
     </div>
   </section>
-</div>
+<!-- </div> -->
 <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>

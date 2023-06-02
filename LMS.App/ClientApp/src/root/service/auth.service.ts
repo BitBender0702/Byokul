@@ -27,6 +27,8 @@ export class AuthService{
     role: string[] = [];
 
     loginState$ = new BehaviorSubject<boolean>(true);
+    loginAdminState$ = new BehaviorSubject<boolean>(false);
+
     get apiUrl(): string {
       return environment.apiUrl;
     }

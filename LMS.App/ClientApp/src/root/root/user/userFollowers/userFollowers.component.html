@@ -31,8 +31,8 @@
             <div class="d-flex align-items-center justify-content-between"><span class="followers-name font_16 text_sec1 fw_600">
               <img [src]="userfollower.follower.avatar" class="rounded-circle me-2" style="max-height: 30px;"/>
                  <a style="cursor:pointer;" (click)="getSelectedFollower(userfollower.follower.id)">{{userfollower.follower.firstName + ' ' + userfollower.follower.lastName}}</a></span>
-                  <span *ngIf="isOwner" class="followe_report">
-                    <button type="button" class="border-0 bg-transparent font_14 text_dark fw_400 me-3">{{'Report'| translate }}</button> 
+                  <span *ngIf="isOwner" class="report_follower">
+                    <button (click)="getReportFollower(userfollower.follower.id,userfollower.follower.firstName + ' ' + userfollower.follower.lastName)" type="button" data-bs-toggle="modal" data-bs-target="#report-follower" class="border-0 bg-transparent font_14 text_dark fw_400 me-3">{{'Report'| translate }}</button> 
                     <button (click)="banFollower(userfollower.follower.id)" type="button" class="border-0 bg-transparent font_14 text_dark fw_400 ">{{'Ban'| translate }}</button>
                   </span>
             </div>
@@ -40,8 +40,44 @@
         </ul>
       </div>
     </div>
+
+<div class="modal fade edit-school-modal" id="report-follower" tabindex="-1"
+aria-labelledby="report-follower" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered">
+  <div class="modal-content">
+    <div class="modal-header border-0 justify-content-center position-relative">
+      <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">{{'Report'| translate }}</h1>
+      <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"><img
+          src="../../../../assets/images/cross.svg" /></button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="reportFollowerForm">
+        <div class="form-group">
+          <label class="font_10">{{'ReportContent'| translate }}</label><br>
+          <textarea formControlName="reportContent" placeholder="{{'ReportContent'| translate }}" type="email" name="contactEmail" class="form-control w-100" style="max-height: 125px;height: 125px;"></textarea>
+        </div>
+        <br>
+        <small class="p-error" style="color: orange;margin-left: 222px;"
+        *ngIf="(isSubmitted && reportFollowerForm.controls.reportContent.errors)">{{'ReportContentRequired'| translate }}
+      </small>
+        <div
+        class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4">
+        <button #closeReportModal type="button"
+          class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+          data-bs-dismiss="modal">{{'DiscardChanges'| translate }}</button>
+        <button (click)="reportFollower()" type="button"
+          class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step">{{'Submit'| translate }}</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+</div>
+
   </section>
   </div>
   <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
   <post-loading-spinner [postLoadingIcon]="postLoadingIcon"></post-loading-spinner>
+  <p-toast></p-toast>
+
 

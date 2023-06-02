@@ -4,6 +4,7 @@ import { Router } from "@angular/router";
 import { Observable, Subject } from "rxjs";
 import { environment } from "src/environments/environment";
 import { FollowUnfollow } from "../interfaces/FollowUnfollow";
+import { ReportFollowerViewModel } from "../interfaces/user/reportFollowerViewModel";
 
 
 @Injectable({providedIn: 'root'})
@@ -95,6 +96,7 @@ export class UserService{
     }
 
     saveUserPreference(preferenceString:string): Observable<any> {
+        debugger
         return this.http.post(`${this.apiUrl}/users/saveUserPreference` + '?preferenceString=' + preferenceString,'',{headers: this.headers});
     }
 
@@ -116,6 +118,11 @@ export class UserService{
 
     getNotificationSettings(userId:string):Observable<any>{
         return this.http.get(`${this.apiUrl}/notifications/getNotificationSettings` + '?userId=' + userId, {headers: this.headers});
+    }
+
+    getFollowersNotificationSettings(followersIds:any):Observable<any>{
+        debugger
+        return this.http.get(`${this.apiUrl}/notifications/getFollowersNotificationSettings` + '?followersIds=' + followersIds, {headers: this.headers});
     }
     
     getCertificatePdf(certificateName:string,from:number){
@@ -145,6 +152,19 @@ export class UserService{
 
     deleteSchoolStudent(schoolId:string):Observable<any>{
         return this.http.post(`${this.apiUrl}/users/deleteSchoolStudent` + '?schoolId=' + schoolId,'',{headers: this.headers});
+    }
+
+    reportFollower(reportFollowerViewModel:ReportFollowerViewModel):Observable<any>{
+        return this.http.post(`${this.apiUrl}/users/reportFollower`,reportFollowerViewModel,{headers: this.headers});
+    }
+
+    globalSearch(searchString:string,pageNumber:number,pageSize:number){
+        let queryParams = new HttpParams().append("searchString",searchString).append("pageNumber",pageNumber).append("pageSize",pageSize);
+        return this.http.get(`${this.apiUrl}/users/globalSearch`, {params:queryParams,headers: this.headers}
+        );
+        
+
+        
     }
 
 }

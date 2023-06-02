@@ -134,4 +134,13 @@ export class ClassService{
         return this.http.get(`${this.apiUrl}/class/getClassInfoForCertificate` + '?classId=' + classId,{headers: this.headers});
     }
 
+    deleteClass(classId:any): Observable<any> {
+        return this.http.post(`${this.apiUrl}/class/deleteClassById` + '?classId=' + classId,'',{headers: this.headers});
+    }
+
+    enableDisableClass(classId:string):Observable<any>{
+        debugger
+        return this.http.post(`${this.apiUrl}/class/enableDisableClass`+ '?classId=' + classId,'',{headers: this.headers});
+    }
+
 }

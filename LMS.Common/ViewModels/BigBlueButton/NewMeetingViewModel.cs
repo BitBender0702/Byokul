@@ -9,5 +9,7 @@ namespace LMS.Common.ViewModels.BigBlueButton
     public class NewMeetingViewModel
     {
         public string meetingName { get; set; }
+        public bool IsMicrophoneOpen { get; set; }
+        public string ModeratorName { get; set; }
     }
 }

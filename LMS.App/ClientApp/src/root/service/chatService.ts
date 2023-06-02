@@ -31,9 +31,7 @@ export class ChatService{
     }
 
     saveChatAttachments(saveChatAttachments:any) : Observable<FileUploadResult>{
-        
         return this.http.post<FileUploadResult>(`${this.apiUrl}/users/saveChatAttachments`, saveChatAttachments,{headers: this.headers});
-
     }
 
     removeChatAttachment(fileUrl:string) : Observable<any>{

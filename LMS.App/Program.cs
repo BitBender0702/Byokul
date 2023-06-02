@@ -31,6 +31,7 @@ using System.Text;
 using Microsoft.Extensions.Azure;
 using Azure.Storage.Blobs;
 using LMS.Services.FileStorage;
+using Hangfire;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -196,6 +197,12 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
+builder.Services.AddHangfire(config =>
+{
+    config.UseSqlServerStorage(configuration.GetConnectionString("DataContext"));
+});
+
+
 builder.Services.AddSignalR(options =>
 {
     options.EnableDetailedErrors = true;
@@ -218,6 +225,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseSwagger();
 app.UseSwaggerUI();
+app.UseHangfireDashboard();
+
 
 
 app.MapControllerRoute(

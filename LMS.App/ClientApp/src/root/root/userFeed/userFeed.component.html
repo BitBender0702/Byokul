@@ -4,9 +4,42 @@
 
       <div class="create-post-header d-flex justify-content-between d-none d-xl-flex">
         <div class="search-header position-relative">
-          <input [(ngModel)]="searchString" class="form-control h_44" type="search" #searchInput (input)="feedSearch()">
-
-          <!-- <input (keyup)="feedSearch()" [(ngModel)]="searchString" type="search" class="form-control h_44"> -->
+          <input [(ngModel)]="searchString" class="form-control h_44" type="search" #searchInput (input)="globalSearch()">
+          <ul *ngIf="showSearchResults" class="search_ul">
+            <ng-container *ngFor="let item of globalSearchResult">
+            <li *ngIf="item.type == 4" class="search_li">
+              <div class="d-flex align-items-center justify-content-between"><span class="followers-name font_16 text_sec1 fw_600">
+                <img [src]="item.avatar" class="rounded-circle me-2 img_style" style="max-height: 30px;"/>
+                   <a class="routeLink" [routerLink]="['/user/userProfile', item.id]">{{item.name}}</a></span>
+              </div>
+            </li>
+            <li *ngIf="item.type == 1" class="search_li">
+              <div class="d-flex align-items-center justify-content-between"><span class="followers-name font_16 text_sec1 fw_600">
+                <img [src]="item.avatar" class="rounded-circle me-2 img_style" style="max-height: 30px;"/>
+                   <a class="routeLink" [routerLink]="['/profile/school', item.name]">{{item.name}}</a></span>
+              </div>
+            </li>
+            <li *ngIf="item.type == 2" class="search_li">
+              <div class="d-flex align-items-center justify-content-between"><span class="followers-name font_16 text_sec1 fw_600">
+                <img [src]="item.avatar" class="rounded-circle me-2 img_style" style="max-height: 30px;"/>
+                   <a class="routeLink" [routerLink]="['/profile/class', item.schoolName,item.name]">{{item.name}}</a></span>
+              </div>
+            </li>
+            <li *ngIf="item.type == 3" class="search_li">
+              <div class="d-flex align-items-center justify-content-between"><span class="followers-name font_16 text_sec1 fw_600">
+                <img [src]="item.avatar" class="rounded-circle me-2 img_style" style="max-height: 30px;"/>
+                   <a class="routeLink" [routerLink]="['/profile/course', item.schoolName,item.name]">{{item.name}}</a></span>
+              </div>
+            </li>
+          </ng-container>
+          <li *ngIf="showSearchResults && !searchNotFound && globalSearchResult.length > 4">
+            <a class="routeLink" [routerLink]="['/user/globalSearch', searchString]">{{'ShowMore'| translate }}</a>
+          </li>
+          <li *ngIf="searchNotFound">
+            {{'NoReultsFound'| translate }}
+          </li>
+          </ul>
+          
           <button type="button" class="btn search-icon"><img src="../../../assets/images/school/search-gray.svg"></button>
         </div>
         <button (click)="openPostModal()" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44">{{'CreatePost'| translate }}</button>
@@ -29,12 +62,12 @@
         <div class="custom-tabs profile-custom-tabs">
           <ul class="nav nav-tabs border-0 before-none" id="myTab" role="tablist">
             <li class="nav-item ps-0 mb-0" role="presentation">
-              <button (click)="getMyFeeds()" [ngClass]="myFeeds?.length > 0 || myFeedsReels?.length > 0 ? 'nav-link active':'nav-link'" id="school-tab" data-bs-toggle="tab"
+              <button (click)="getMyFeeds()" [ngClass]="(myFeeds?.length > 0 || myFeedsReels?.length > 0) && (feedTab == 'myFeed' || feedTab == '') ? 'nav-link active':'nav-link'" id="school-tab" data-bs-toggle="tab"
                 data-bs-target="#school-feed-tab-pane" type="button" role="tab" aria-controls="school-feed-tab-pane"
                 aria-selected="true">{{'MyFeed'| translate }}</button>
             </li>
             <li class="nav-item ps-0 mb-0" role="presentation">
-              <button (click)="getGlobalFeeds()" [ngClass]="myFeeds?.length == 0 && myFeedsReels?.length == 0 ? 'nav-link active':'nav-link'" class="nav-link" id="classes-tab" data-bs-toggle="tab" data-bs-target="#classes-tab-pane"
+              <button (click)="getGlobalFeeds()" [ngClass]="(myFeeds?.length == 0 && myFeedsReels?.length == 0) || feedTab == 'globalFeed' ? 'nav-link active':'nav-link'" class="nav-link" id="classes-tab" data-bs-toggle="tab" data-bs-target="#classes-tab-pane"
                 type="button" role="tab" aria-controls="classes-tab-pane" aria-selected="false" tabindex="-1">{{'GlobalFeed'| translate }}</button>
             </li>
           </ul>
@@ -43,7 +76,7 @@
       </div>
 
       <div class="tab-content position-relative active" id="pills-tabContent">
-        <div [ngClass]="myFeeds?.length > 0 || myFeedsReels?.length > 0 ? 'tab-pane fade show active':'tab-pane fade show'" id="school-feed-tab-pane" role="tabpanel"
+        <div [ngClass]="(myFeeds?.length > 0 || myFeedsReels?.length > 0) || (feedTab == 'myFeed' || feedTab == '') ? 'tab-pane fade show active':'tab-pane fade show'" id="school-feed-tab-pane" role="tabpanel"
           aria-labelledby="school-feed-tab" tabindex="0">
           <div class="button-list-grid">
             <button [ngClass]="isProfileGrid ? 'btn border-btn active d-inline-flex align-items-center justify-content-center' : 'btn border-btn d-inline-flex align-items-center justify-content-center'" (click)="profileGrid()" type="button" >
@@ -72,15 +105,9 @@
                       <img style="height: 300px;" [src]="postAttachment.fileThumbnail">
                     </div>
                   </a>
-                  <!-- <iframe width="100%" height="300" src="https://www.youtube.com/embed/hAP2QF--2Dg" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen></iframe> -->
                   <div class="pinned-view d-flex  justify-content-between align-items-start">
                     <button type="button" class="view font_12 bg-transparent border-0 text-light cursor_auto">
                       <img src="../../../assets/images/eye-light.svg" /> {{post.views.length}}
-                    </button>
-                    <button type="button" class="pinned bg-transparent border-0">
-                      <img src="../../../assets/images/pinned-orange.svg" />
                     </button>
                   </div>
                   <div class="feed-name font_14 text_sec1">
@@ -94,7 +121,10 @@
                         <img [src]="post.parentImageUrl"/> {{post.parentName}}
                       </a>
                       <a *ngIf="post.postAuthorType == 4" (click)="getUserDetails(post.parentId)" class="routeLink">
-                        <img [src]="post.parentImageUrl"/> {{post.parentName}}
+                        <img *ngIf="post.parentImageUrl != null" [src]="post.parentImageUrl"/> 
+                        <img *ngIf="post.parentImageUrl == null && gender =='1'" src="../../../assets/images/maleProfile.jfif"/>
+                        <img *ngIf="post.parentImageUrl == null && (gender =='2' || gender =='3')" src="../../../assets/images/femaleProfile.jfif"/>
+                        {{post.parentName}}
                       </a>
                     <!-- <img [src]="school.avatar"/> {{school.schoolName}} -->
                   </div>
@@ -112,8 +142,9 @@
               </div>
             </div>
           </div>
+
           <div class="school-grid-view grid-active" *ngIf="isProfileGrid">
-            <div *ngIf="myFeeds?.length == 0 && myFeedsReels?.length == 0" style="font-weight: 500;color: orange; margin-top: 40px;font-size: 40px" class="text-center font-34">Posts from your friends and schools you follow will appear here</div>
+            <div *ngIf="myFeeds?.length == 0 && myFeedsReels?.length == 0 && feedTab =='myFeed' " style="font-weight: 500;color: orange; margin-top: 40px;font-size: 40px" class="text-center font-34">Posts from your friends and schools you follow will appear here</div>
             <ng-container *ngFor="let post of myFeeds">
               <div *ngIf="post.postType == 1" class="school-grid-box position-relative">
               <div class="schoolgrid-header d-flex align-items-center position-relative">
@@ -129,11 +160,12 @@
                     <img [src]="post.parentImageUrl"/>
                   </a>
                   <a *ngIf="post.postAuthorType == 4" (click)="getUserDetails(post.parentId)" class="routeLink">
-                    <img [src]="post.parentImageUrl"/>
+                    <img *ngIf="post.parentImageUrl != null" [src]="post.parentImageUrl"/>
+                    <img *ngIf="post.parentImageUrl == null && gender =='1'" src="../../../assets/images/maleProfile.jfif"/>
+                    <img *ngIf="post.parentImageUrl == null && (gender =='2' || gender =='3')" src="../../../assets/images/femaleProfile.jfif"/>
                   </a>
                 </div>
                 <h2 class="d-inline-block font_20 fw_600 text_sec1 mb-0">
-                  <!-- {{post.title}} -->
                   <a *ngIf="post.postAuthorType == 1" (click)="getSelectedSchool(post.parentName)" class="routeLink">
                     {{post.title}}
                   </a>
@@ -159,8 +191,13 @@
                     </button>    -->
               </div>
               
-              <div class="school-grid-body" (click)="openPostsViewModal(post)">
+              <div class="school-grid-body" (click)="openPostsViewModal(post,'myFeeds')">
                 <p class="text_sec1 font_14" style="cursor: pointer;">{{post.description}}</p>
+                 <div class="teacher-tags tag-box hashtag_box">
+                    <ng-container *ngFor="let attachment of filteredMyFeedAttachments">
+                    <span *ngIf="attachment.postId == post.id" class="custom-tag cursor_pointer" (click)="openCertificateViewModal(attachment.fileUrl,attachment.fileName,5,$event)">{{attachment.fileName}}</span>
+                    </ng-container>
+                </div>
                 <div class="teacher-tags tag-box hashtag_box">
                   <span *ngFor="let tag of post.postTags" class="custom-tag">#{{tag.postTagValue}}</span>
                 </div>
@@ -177,8 +214,12 @@
                   <div *ngIf="post.postAttachments.length == 2"  class="col-md-12 h-100">
                     <div class="school-large-thumbnail shadow-thumnail position-relative">
                         <ng-container *ngFor="let attachment of post.postAttachments">
+                          <div *ngIf="attachment?.fileType==2" style="width: 50%;">
                       <img *ngIf="attachment?.fileType==2" preload="metadata" class="w-100" style="cursor: pointer;" [src]="attachment?.fileThumbnail">
+                    </div>
+                    <div style="width: 50%;">
                       <img style="cursor: pointer;" *ngIf="attachment?.fileType==1" class="w-100" [src]="attachment?.fileUrl" />
+                    </div>
                        </ng-container>
                     </div>
                   </div>
@@ -218,7 +259,7 @@
                          </div>
                       <div class="medium-thumnail">
                         <img *ngIf="post.postAttachments[1]?.fileType==2" preload="metadata" class="w-100" style="cursor: pointer;" [src]="post.postAttachments[1]?.fileThumbnail">
-                        <img *ngIf="post.postAttachments[1]?.fileType==1" [src]="post.postAttachments[1]?.fileUrl" style="cursor: pointer;"/>                                        </div>
+                        <img *ngIf="post.postAttachments[1]?.fileType==1" [src]="post.postAttachments[1]?.fileUrl" class="w-100" style="cursor: pointer;"/>                                        </div>
                   </div>
               </div>
                   </div>
@@ -236,7 +277,7 @@
                   <span *ngIf="likesLength != undefined && currentLikedPostId== post.id">{{likesLength}}</span>
                   <span *ngIf="currentLikedPostId!= post.id">{{post.likes.length}}</span>
                 </button>
-                <button (click)="openPostsViewModal(post)" type="button" class="bg-transparent border-0 function-btns text-light">
+                <button (click)="openPostsViewModal(post,'myFeeds')" type="button" class="bg-transparent border-0 function-btns text-light">
                   <img src="../../../../assets/images/Chat-light.svg" class="d-block mx-auto" />
                   {{post.commentsCount}}
                 </button>
@@ -263,7 +304,7 @@
                   <span class="textBlack" *ngIf="likesLength != undefined && currentLikedPostId== post.id">{{likesLength}}</span>
                   <span class="textBlack" *ngIf="currentLikedPostId!= post.id">{{post.likes.length}}</span>
                 </button>
-                <button (click)="openPostsViewModal(post)" type="button" class="bg-transparent border-0 function-btns text-light">
+                <button (click)="openPostsViewModal(post,'myFeeds')" type="button" class="bg-transparent border-0 function-btns text-light">
                   <img src="../../../../assets/images/Chat-dark.svg" class="d-block mx-auto" />
                   <span class="textBlack"> {{post.commentsCount}}</span>
                 </button>
@@ -283,6 +324,7 @@
           </div>
 
           <div class="list-schol-profile" *ngIf="!isProfileGrid">
+            <p>Test 5</p>
             <div [ngClass]="isGridItemInfo ? 'd-block school-grid-box position-relative school-list-box h-100':'d-none school-grid-box position-relative school-list-box h-100'" *ngIf="gridItemInfo!=undefined">
               <div class="row post-list-preview-sec">
                 <div [ngClass]="gridItemInfo.postAttachments.length>0 ? 'd-block col-lg-6':'d-none'">
@@ -319,7 +361,9 @@
                             <img [src]="gridItemInfo.parentImageUrl">
                           </a>
                           <a *ngIf="gridItemInfo.postAuthorType == 4" (click)="getUserDetails(gridItemInfo.parentId)" class="routeLink">
-                            <img [src]="gridItemInfo.parentImageUrl">
+                            <img *ngIf="gridItemInfo.parentImageUrl != null" [src]="gridItemInfo.parentImageUrl">
+                            <img *ngIf="gridItemInfo.parentImageUrl == null && gender =='1'" src="../../../assets/images/maleProfile.jfif"/>
+                            <img *ngIf="gridItemInfo.parentImageUrl == null && (gender =='2' || gender =='3')" src="../../../assets/images/femaleProfile.jfif"/>
                           </a>
                         </div>
                         <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">
@@ -343,6 +387,11 @@
                       </p> -->
                     </div>
                     <p class="text_sec1 font_14 pt-3">{{gridItemInfo.description}}</p>
+                    <div class="teacher-tags tag-box hashtag_box">
+                      <ng-container *ngFor="let attachment of filteredMyFeedAttachments">
+                      <span *ngIf="attachment.postId == gridItemInfo.id" class="custom-tag cursor_pointer" (click)="openCertificateViewModal(attachment.fileUrl,attachment.fileName,5,$event)">{{attachment.fileName}}</span>
+                      </ng-container>
+                    </div>
                     <div *ngIf="gridItemInfo.postTags.length != 0" class="teacher-tags tag-box hashtag_box">
                       <span *ngFor="let tag of gridItemInfo.postTags" class="custom-tag">{{tag.postTagValue}}</span>
                     </div>
@@ -358,7 +407,7 @@
                         <span class="textBlack" *ngIf="likesLength != undefined && currentLikedPostId== gridItemInfo.id">{{likesLength}}</span>
                         <span class="textBlack" *ngIf="currentLikedPostId!= gridItemInfo.id">{{gridItemInfo.likes.length}}</span>
                       </button>
-                      <button (click)="openPostsViewModal(gridItemInfo)" type="button" class="bg-transparent border-0 function-btns">
+                      <button (click)="openPostsViewModal(gridItemInfo,'myFeeds')" type="button" class="bg-transparent border-0 function-btns">
                         <img src="../../../../assets/images/Chat-dark.svg" class="d-block mx-auto">
                         {{gridItemInfo.commentsCount}}
                       </button>
@@ -393,7 +442,9 @@
                           <img [src]="post.parentImageUrl" />
                         </a>
                         <a *ngIf="post.postAuthorType == 4" (click)="getUserDetails(post.parentId)" class="routeLink">
-                          <img [src]="post.parentImageUrl" />
+                          <img *ngIf="post.parentImageUrl != null" [src]="post.parentImageUrl" />
+                          <img *ngIf="post.parentImageUrl == null && gender =='1'" src="../../../assets/images/maleProfile.jfif"/>
+                          <img *ngIf="post.parentImageUrl == null && (gender =='2' || gender =='3')" src="../../../assets/images/femaleProfile.jfif"/>
                         </a>
                       </div>
                       <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">
@@ -450,7 +501,7 @@
 
 
         </div>
-        <div [ngClass]="myFeeds?.length == 0 && myFeedsReels?.length == 0 ? 'tab-pane fade show active':'tab-pane fade show'" class="tab-pane fade show" id="classes-tab-pane" role="tabpanel" aria-labelledby="school-feed-tab"
+        <div [ngClass]="(myFeeds?.length == 0 && myFeedsReels?.length == 0) || feedTab == 'globalFeed' ? 'tab-pane fade show active':'tab-pane fade show'" class="tab-pane fade show" id="classes-tab-pane" role="tabpanel" aria-labelledby="school-feed-tab"
           tabindex="0">
           <div class="button-list-grid">
             <button [ngClass]="isProfileGrid ? 'btn border-btn active d-inline-flex align-items-center justify-content-center' : 'btn border-btn d-inline-flex align-items-center justify-content-center'" (click)="profileGrid()" type="button" >
@@ -463,8 +514,6 @@
           <div class="feed-section mt-0">
             <div class="feed-box position-relative">
               <reels-loading-spinner [reelsLoadingIcon]="reelsLoadingIcon" class="position-absolute translate-middle reel_spinner_position"></reels-loading-spinner>
-              <!-- <button type="button" class="bg-transparent border-0 next-feed"><img
-                  src="../../../assets/images/chevron-right-circle.svg" /></button> -->
               <div class="feedbox-inner d-flex ">
                 <carousel #globalReelCarousel id="globalReels-carousel"
                 [itemsPerSlide]="itemsPerSlide"
@@ -497,7 +546,9 @@
                         <img [src]="post.parentImageUrl"/> {{post.parentName}}
                       </a>
                       <a *ngIf="post.postAuthorType == 4" (click)="getUserDetails(post.parentId)" class="routeLink">
-                        <img [src]="post.parentImageUrl"/> {{post.parentName}}
+                        <img *ngIf="post.parentImageUrl != null" [src]="post.parentImageUrl"/> {{post.parentName}}
+                        <img *ngIf="post.parentImageUrl == null && gender =='1'" src="../../../assets/images/maleProfile.jfif"/>
+                        <img *ngIf="post.parentImageUrl == null && (gender =='2' || gender =='3')" src="../../../assets/images/femaleProfile.jfif"/>
                       </a>
                   </div>
                   <div class="feed-title font_14 text_sec1 d-flex align-content-center fw_600">
@@ -505,9 +556,6 @@
                     <span class="fw-light ms-2" *ngFor="let item of post.postTags; let isLast=last">#{{item.postTagValue}}{{isLast ? '' : ', '}}</span>
                   </div>
                 </div>
-              
-   
-              
                 </div>
                 </slide>
            </div>
@@ -532,7 +580,9 @@
                     <img [src]="post.parentImageUrl"/> 
                   </a>
                   <a *ngIf="post.postAuthorType == 4" (click)="getUserDetails(post.parentId)" class="routeLink">
-                    <img [src]="post.parentImageUrl"/>
+                    <img *ngIf="post.parentImageUrl != null" [src]="post.parentImageUrl"/>
+                    <img *ngIf="post.parentImageUrl == null && gender =='1'" src="../../../assets/images/maleProfile.jfif"/>
+                    <img *ngIf="post.parentImageUrl == null && (gender =='2' || gender =='3')" src="../../../assets/images/femaleProfile.jfif"/>
                   </a>
                 </div>
                 <h2 class="d-inline-block font_20 fw_600 text_sec1 mb-0">
@@ -551,18 +601,15 @@
                 </h2>
                 <p *ngIf="post.dateTime != null" class="font_14 school-grid-date d-inline-block mb-0">
                   {{post.dateTime | date : "MMMM d"}} - {{post.dateTime | date : "hh mm"}}
-                   <!-- <span class="fw_600 ">11:30 - 13:50</span> -->
-                  </p>
-                    <!-- <button *ngIf="post.isPinned && isOwner" (click)="pinUnpinPost(post.id,false)" type="button" class="bg-transparent border-0 pinned-grid-chat">
-                      <img class="w-auto h-auto" src="../../../../assets/images/pinned-orange.svg" />
-                    </button>
-                    <button *ngIf="!post.isPinned && isOwner" (click)="pinUnpinPost(post.id,true)" type="button" class="bg-transparent border-0 pinned-grid-chat">
-                     <img class="w-auto h-auto" src="../../../../assets/images/pinned-gray.svg" />
-                    </button>    -->
               </div>
               
-              <div class="school-grid-body" (click)="openPostsViewModal(post)">
+              <div class="school-grid-body" (click)="openPostsViewModal(post,'globalFeed')">
                 <p class="text_sec1 font_14" style="cursor: pointer;">{{post.description}}</p>
+                <div class="teacher-tags tag-box hashtag_box">
+                  <ng-container *ngFor="let attachment of filteredGlobalFeedAttachments">
+                  <span *ngIf="attachment.postId == post.id" class="custom-tag cursor_pointer" (click)="openCertificateViewModal(attachment.fileUrl,attachment.fileName,5,$event)">{{attachment.fileName}}</span>
+                  </ng-container>
+                </div>
                 <div class="teacher-tags tag-box hashtag_box">
                   <span *ngFor="let tag of post.postTags" class="custom-tag">{{tag.postTagValue}}</span>
                 </div>
@@ -639,7 +686,7 @@
                   <span *ngIf="likesLength != undefined && currentLikedPostId== post.id">{{likesLength}}</span>
                   <span *ngIf="currentLikedPostId!= post.id">{{post.likes.length}}</span>
                 </button>
-                <button (click)="openPostsViewModal(post)" type="button" class="bg-transparent border-0 function-btns text-light">
+                <button (click)="openPostsViewModal(post,'globalFeed')" type="button" class="bg-transparent border-0 function-btns text-light">
                   <img src="../../../../assets/images/Chat-light.svg" class="d-block mx-auto" />
                   {{post.commentsCount}}
                 </button>
@@ -666,7 +713,7 @@
                   <span class="textBlack" *ngIf="likesLength != undefined && currentLikedPostId== post.id">{{likesLength}}</span>
                   <span class="textBlack" *ngIf="currentLikedPostId!= post.id">{{post.likes.length}}</span>
                 </button>
-                <button (click)="openPostsViewModal(post)" type="button" class="bg-transparent border-0 function-btns text-light">
+                <button (click)="openPostsViewModal(post,'globalFeed')" type="button" class="bg-transparent border-0 function-btns text-light">
                   <img src="../../../../assets/images/Chat-dark.svg" class="d-block mx-auto" />
                   <span class="textBlack">{{post.commentsCount}}</span>
                 </button>
@@ -721,7 +768,9 @@
                             <img [src]="gridItemInfoForGlobal.parentImageUrl">
                           </a>
                           <a *ngIf="gridItemInfoForGlobal.postAuthorType == 4" (click)="getUserDetails(gridItemInfoForGlobal.parentId)" class="routeLink">
-                            <img [src]="gridItemInfoForGlobal.parentImageUrl">
+                            <img *ngIf="gridItemInfoForGlobal.parentImageUrl != null" [src]="gridItemInfoForGlobal.parentImageUrl">
+                            <img *ngIf="gridItemInfoForGlobal.parentImageUrl == null && gender =='1'" src="../../../assets/images/maleProfile.jfif"/>
+                            <img *ngIf="gridItemInfoForGlobal.parentImageUrl == null && (gender =='2' || gender =='3')" src="../../../assets/images/femaleProfile.jfif"/>
                           </a>
                         </div>
                         <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">
@@ -745,6 +794,11 @@
                       </p>
                     </div>
                     <p class="text_sec1 font_14 pt-3">{{gridItemInfoForGlobal.description}}</p>
+                    <div class="teacher-tags tag-box hashtag_box">
+                      <ng-container *ngFor="let attachment of filteredGlobalFeedAttachments">
+                      <span *ngIf="attachment.postId == gridItemInfoForGlobal.id" class="custom-tag cursor_pointer" (click)="openCertificateViewModal(attachment.fileUrl,attachment.fileName,5,$event)">{{attachment.fileName}}</span>
+                      </ng-container>
+                    </div>
                     <div *ngIf="gridItemInfoForGlobal.postTags.length != 0" class="teacher-tags tag-box hashtag_box">
                       <span *ngFor="let tag of gridItemInfoForGlobal.postTags" class="custom-tag">{{tag.postTagValue}}</span>
                     </div>
@@ -760,7 +814,7 @@
                         <span class="textBlack" *ngIf="likesLength != undefined && currentLikedPostId== gridItemInfoForGlobal.id">{{likesLength}}</span>
                         <span class="textBlack" *ngIf="currentLikedPostId!= gridItemInfoForGlobal.id">{{gridItemInfoForGlobal.likes.length}}</span>
                       </button>
-                      <button (click)="openPostsViewModal(gridItemInfoForGlobal)" type="button" class="bg-transparent border-0 function-btns">
+                      <button (click)="openPostsViewModal(gridItemInfoForGlobal,'globalFeed')" type="button" class="bg-transparent border-0 function-btns">
                         <img src="../../../../assets/images/Chat-dark.svg" class="d-block mx-auto">
                         {{gridItemInfoForGlobal.commentsCount}}
                       </button>
@@ -795,7 +849,9 @@
                           <img [src]="post.parentImageUrl" />
                         </a>
                         <a *ngIf="post.postAuthorType == 4" (click)="getUserDetails(post.parentId)" class="routeLink">
-                          <img [src]="post.parentImageUrl" />
+                          <img *ngIf="post.parentImageUrl != null" [src]="post.parentImageUrl" />
+                          <img *ngIf="post.parentImageUrl == null && gender =='1'" src="../../../assets/images/maleProfile.jfif"/>
+                          <img *ngIf="post.parentImageUrl == null && (gender =='2' || gender =='3')" src="../../../assets/images/femaleProfile.jfif"/>
                         </a>
                       </div>
                       <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">
@@ -812,12 +868,6 @@
                           {{post.title}}
                         </a>
                       </h2>
-                      <!-- <button *ngIf="post.isPinned && isOwner" (click)="pinUnpinPost(post.id,false)" type="button" class="bg-transparent border-0 pinned-grid-chat">
-                            <img src="../../../../assets/images/pinned-orange.svg" />
-                      </button>
-                      <button *ngIf="!post.isPinned && isOwner" (click)="pinUnpinPost(post.id,true)" type="button" class="bg-transparent border-0 pinned-grid-chat">
-                          <img src="../../../../assets/images/pinned-gray.svg" />
-                      </button>    -->
                     </div>
                     <div class="school-grid-body">
                       <div class="d-flex justify-content-between date-view-list">
@@ -847,107 +897,13 @@
                   </div>
                 </div>
               </ng-container>
-
-
             </div>
           </div>
-          
           </div>
-
-
         </div>
-
       </div>
-
-
-
   </section>
 
-  <!-- Modal -->
-  <div class="modal fade edit-school-modal" id="editschool" tabindex="-1" aria-labelledby="editschool"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header border-0 justify-content-center position-relative">
-          <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center" id="editschool">Edit School Profile</h1>
-          <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"><img
-              src="images/cross.svg" /></button>
-        </div>
-        <div class="modal-body">
-          <div class="edit-profile-header text-center mb-4">
-            <div class="rounded-circle modal-school-icon text-center mb-2">
-              <img src="images/school-profile-image.jpg">
-            </div>
-            <button class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins position-static opacity-100"> Edit
-              Picture</button>
-          </div>
-          <div class="text-line-border position-relative text-center mb-4">
-            <span class="line-text font_12 text_ltgray fw_400 text-center">General Information</span>
-          </div>
-          <form>
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <input type="text" value="School Name" name="schoolname" class="form-control w-100">
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <input type="text" placeholder="" value="School Slogan" name="schoolslogan"
-                    class="form-control w-100">
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group position-relative student-input date-input">
-                  <label>Founded:</label>
-                  <input type="text" placeholder="10/10/2022" name="Founded" class="form-control w-100">
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <select class="form-select rounded-8 w-100">
-                    <option value="1">Private</option>
-                    <option value="2">Public</option>
-                  </select>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <input type="text" value="school@email.com" name="schoolmail" class="form-control w-100">
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group position-relative student-input date-input owner-input">
-                  <label>Owner:</label>
-                  <select class="form-select rounded-8 w-100">
-                    <option value="1">User 1</option>
-                    <option value="2">User 2</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-            <div class="text-line-border position-relative text-center mb-4">
-              <span class="line-text font_12 text_ltgray fw_400 text-center">School Bio</span>
-            </div>
-            <div class="form-group ">
-              <textarea class="form-control resize-none ht_96"
-                value="">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labo et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex.</textarea>
-            </div>
-          </form>
-
-        </div>
-        <div
-          class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4">
-          <button type="button"
-            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
-            data-bs-dismiss="modal">Discard Changes</button>
-          <button type="button"
-            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step">Save</button>
-
-        </div>
-      </div>
-    </div>
-  </div>
   <post-loading-spinner [postLoadingIcon]="postLoadingIcon"></post-loading-spinner>
   </div>
   <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>

@@ -35,6 +35,9 @@ namespace LMS.Common.ViewModels.Post
         public Boolean IsCommentsDisabled { get; set; }
         public List<IFormFile> UploadVideosThumbnail { get; set; }
         public IEnumerable<string> UploadFromFileStorage { get; set; }
+        public string? StreamUrl { get; set; }
+        public int? CommentsPerMinute { get; set; }
+        public bool? IsMicroPhoneOpen { get; set; }
 
     }
 }

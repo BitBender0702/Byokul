@@ -234,11 +234,16 @@ namespace LMS.Services.Chat
                     }
                 }
 
-                foreach (var chatHead in chatHeads)
+                var userChatHeads = chatHeads.Where(x => x.ChatType == ChatType.Personal).ToList();
+                foreach (var chatHead in userChatHeads)
                 {
                     if (chatHead.ChatType == ChatType.Personal)
                     {
-                        var user = await _userRepository.GetAll().Where(x => x.Id == chatHead.SenderId || x.Id == chatHead.ReceiverId).FirstAsync();
+                        //var user = await _userRepository.GetAll().Where(x => x.Id == chatHead.SenderId || x.Id == chatHead.ReceiverId).FirstAsync();
+                        var user = await _userRepository.GetAll()
+    .Where(x => (x.Id == chatHead.SenderId && chatHead.SenderId != userId.ToString() && chatHead.ChatType == ChatType.Personal) || (x.Id == chatHead.ReceiverId && chatHead.ReceiverId != userId.ToString() && chatHead.ChatType == ChatType.Personal))
+    .FirstAsync();
+
                         userList.Add(user);
                     }
                 }
@@ -247,7 +252,37 @@ namespace LMS.Services.Chat
 
                 try
                 {
-                    chatHeads = _chatHeadRepository.GetAll().Include(x => x.Receiver).AsEnumerable().Where(x => (x.SenderId == userId.ToString() || x.ReceiverId == userId.ToString()) && ((string.IsNullOrEmpty(searchString)) || (schoolList.Any(y => y.SchoolId == x.ChatTypeId) && schoolList.Any(z => z.SchoolName.Contains(searchString))) || (classList.Any(c => c.ClassId == x.ChatTypeId) && classList.Any(z => z.ClassName.Contains(searchString)))  || (courseList.Any(c => c.CourseId == x.ChatTypeId) && courseList.Any(z => z.CourseName.Contains(searchString))) || userList.Any(z => z.FirstName.Contains(searchString)) || userList.Any(z => z.LastName.Contains(searchString)))).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+                    //chatHeads = _chatHeadRepository.GetAll().Include(x => x.Receiver).AsEnumerable().Where(x => (x.SenderId == userId.ToString() || x.ReceiverId == userId.ToString()) && ((string.IsNullOrEmpty(searchString)) || (schoolList.Any(y => y.SchoolId == x.ChatTypeId) && schoolList.Any(z => z.SchoolName.Contains(searchString))) || (classList.Any(c => c.ClassId == x.ChatTypeId) && classList.Any(z => z.ClassName.Contains(searchString)))  || (courseList.Any(c => c.CourseId == x.ChatTypeId) && courseList.Any(z => z.CourseName.Contains(searchString))) || userList.Any(z => z.FirstName.Contains(searchString)) || userList.Any(z => z.LastName.Contains(searchString)))).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+
+                    //chatHeads = _chatHeadRepository.GetAll()
+                    //    .Include(x => x.Receiver)
+                    //    .AsEnumerable()
+                    //    .Where(x => (x.SenderId == userId.ToString() || x.ReceiverId == userId.ToString())
+                    //    && (string.IsNullOrEmpty(searchString)  || userList.Any(z => z.FirstName.ToLower().Contains(searchString.ToLower())) || userList.Any(z => z.LastName.ToLower().Contains(searchString.ToLower()))))
+                    //    .Skip((pageNumber - 1) * pageSize)
+                    //    .Take(pageSize)
+                    //    .ToList();
+
+                    chatHeads = _chatHeadRepository.GetAll()
+                      .Include(x => x.Receiver)
+                      .AsEnumerable()
+                      .Where(x => (x.SenderId == userId.ToString() || x.ReceiverId == userId.ToString())
+                      && (string.IsNullOrEmpty(searchString) || (userList.Any(u => (u.Id == x.SenderId || u.Id == x.ReceiverId) && (u.FirstName.ToLower().Contains(searchString.ToLower()))) && x.ChatType == ChatType.Personal)))
+                      .Skip((pageNumber - 1) * pageSize)
+                      .Take(pageSize)
+                      .ToList();
+
+    //                chatHeads = _chatHeadRepository.GetAll()
+    //.Include(x => x.Receiver)
+    //.AsEnumerable()
+    //.Where(x => (x.SenderId == userId.ToString() || x.ReceiverId == userId.ToString())
+    //            && (string.IsNullOrEmpty(searchString) || userList.Any(u => u.Id == x.SenderId || u.Id == x.ReceiverId)
+    //                                                     && (u => u.FirstName.ToLower().Contains(searchString.ToLower()) || u.LastName.ToLower().Contains(searchString.ToLower()))))
+    //.Skip((pageNumber - 1) * pageSize)
+    //.Take(pageSize)
+    //.ToList();
+
+
                 }
                 catch (Exception ex)
                 {
@@ -261,12 +296,16 @@ namespace LMS.Services.Chat
                 LastMessage = x.LastMessage,
                 ChatHeadId = x.Id,
                 ChatType = x.ChatType,
+                ChatTypeId = x.ChatTypeId,
                 UnreadMessageCount = x.UnreadMessageCount
             }).ToList();
 
             users = users.Concat(first).ToList();
 
-            var second = chatHeads.Where(x => x.SenderId == userId.ToString() && x.ChatType == ChatType.Personal).Select(x => new ChatUsersViewModel { UserID = new Guid(x.ReceiverId), User2ID = new Guid(x.SenderId), LastMessage = x.LastMessage, ChatHeadId = x.Id, ChatType = x.ChatType/*, UnreadMessageCount = x.UnreadMessageCount */}).ToList();
+            var second = chatHeads.Where(x => x.SenderId == userId.ToString() && x.ChatType == ChatType.Personal).Select(x => new ChatUsersViewModel { UserID = new Guid(x.ReceiverId), User2ID = new Guid(x.SenderId), LastMessage = x.LastMessage, ChatHeadId = x.Id, ChatType = x.ChatType,
+                ChatTypeId = x.ChatTypeId,
+                /*, UnreadMessageCount = x.UnreadMessageCount */
+            }).ToList();
 
             users = users.Concat(second).ToList();
 
@@ -278,6 +317,8 @@ namespace LMS.Services.Chat
                 ChatHeadId = x.Id,
                 School = GetSchoolInfo(x.ChatTypeId),
                 ChatType = x.ChatType,
+                ChatTypeId = x.ChatTypeId,
+
                 UnreadMessageCount = x.UnreadMessageCount
             }).ToList();
 
@@ -291,6 +332,8 @@ namespace LMS.Services.Chat
                 ChatHeadId = x.Id,
                 School = GetSchoolInfo(x.ChatTypeId),
                 ChatType = x.ChatType,
+                ChatTypeId = x.ChatTypeId,
+
                 //UnreadMessageCount = x.UnreadMessageCount
             }).ToList();
 
@@ -304,6 +347,8 @@ namespace LMS.Services.Chat
                 ChatHeadId = x.Id,
                 Class = GetClassInfo(x.ChatTypeId),
                 ChatType = x.ChatType,
+                ChatTypeId = x.ChatTypeId,
+
                 UnreadMessageCount = x.UnreadMessageCount
             }).ToList();
 
@@ -317,6 +362,8 @@ namespace LMS.Services.Chat
                 ChatHeadId = x.Id,
                 Class = GetClassInfo(x.ChatTypeId),
                 ChatType = x.ChatType,
+                ChatTypeId = x.ChatTypeId,
+
                 //UnreadMessageCount = x.UnreadMessageCount
             }).ToList();
 
@@ -330,6 +377,8 @@ namespace LMS.Services.Chat
                 ChatHeadId = x.Id,
                 Course = GetCourseInfo(x.ChatTypeId),
                 ChatType = x.ChatType,
+                ChatTypeId = x.ChatTypeId,
+
                 UnreadMessageCount = x.UnreadMessageCount
             }).ToList();
 
@@ -343,6 +392,8 @@ namespace LMS.Services.Chat
                 ChatHeadId = x.Id,
                 Course = GetCourseInfo(x.ChatTypeId),
                 ChatType = x.ChatType,
+                ChatTypeId = x.ChatTypeId,
+
                 //UnreadMessageCount = x.UnreadMessageCount
             }).ToList();
 

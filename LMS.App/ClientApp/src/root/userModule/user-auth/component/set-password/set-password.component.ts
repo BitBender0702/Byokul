@@ -23,6 +23,7 @@ export class SetPasswordComponent extends MultilingualComponent implements OnIni
   email!:string;
   isNewPasswordVisible:boolean=false;
   isConfirmPasswordVisible:boolean=false;
+  PASSWORD_PATTERN = '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-=[\\]{};:\'\"\\|,.<>/?])[A-Za-z\\d!@#$%^&*()_+\\-=[\\]{};:\'\"\\|,.<>/?]+$';
   @ViewChild('newPasswordInput') newPasswordInput!: ElementRef<HTMLInputElement>;
   @ViewChild('confirmPasswordInput') confirmPasswordInput!: ElementRef<HTMLInputElement>;
 
@@ -38,6 +39,7 @@ export class SetPasswordComponent extends MultilingualComponent implements OnIni
     const passwordValidators = [
         Validators.minLength(6),
         Validators.required,
+        Validators.pattern(this.PASSWORD_PATTERN)
       ];
 
       this.setPasswordForm = this.fb.group({

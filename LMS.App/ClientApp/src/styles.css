@@ -1,3 +1,7 @@
+/* In styles.css */
+@import '~@fortawesome/fontawesome-free/css/all.css';
+@import '@ctrl/ngx-emoji-mart/picker';
+
 html {
 	overflow-x: hidden;
 }
@@ -1655,6 +1659,17 @@ body .liv-postbtn .post-attch-btn.active,
   top: 12px;
 }
 
+.dl-school-img {
+	background: rgba(159, 159, 159, 0.6) !important;
+	width: 25px;
+	height: 10px;
+	min-width: 25px;
+	color: #fff !important;
+	font-size: 13px;
+	right: 5px;
+	top: 5px;
+  }
+
 .hashtag_post .custom-tag {
 	border: 1px solid #FAFAFA;
 	background: #fff;
@@ -2599,12 +2614,36 @@ button.delete-tag img {
 	z-index: 999;
   }
 
+  .postlds-chatUpload-ring {
+	bottom: -92px;
+	display: inline-block;
+	position: absolute;
+	width: 80px;
+	height: 107px;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	z-index: 999;
+  }
+
 .postlds-chat-ring div{
 	box-sizing: border-box;
     display: block;
     position: absolute;
     width: 40px;
     height: 40px;
+    margin: 8px;
+    border: 5px solid #fff;
+    border-radius: 50%;
+    animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    border-color: #ababab transparent transparent transparent;
+}
+
+.postlds-chatUpload-ring div{
+	box-sizing: border-box;
+    display: block;
+    position: absolute;
+    width: 20px;
+    height: 20px;
     margin: 8px;
     border: 5px solid #fff;
     border-radius: 50%;
@@ -2619,6 +2658,16 @@ button.delete-tag img {
 	animation-delay: -0.3s;
   }
   .postlds-chat-ring div:nth-child(3) {
+	animation-delay: -0.15s;
+  }
+
+  .postlds-chatUpload-ring div:nth-child(1) {
+	animation-delay: -0.45s;
+  }
+  .postlds-chatUpload-ring div:nth-child(2) {
+	animation-delay: -0.3s;
+  }
+  .postlds-chatUpload-ring div:nth-child(3) {
 	animation-delay: -0.15s;
   }
 

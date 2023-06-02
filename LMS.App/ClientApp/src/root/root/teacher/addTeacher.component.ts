@@ -44,7 +44,7 @@ export class AddTeacherComponent extends MultilingualComponent implements OnInit
     addTeacherViewmodel!:AddTeacherViewModel;
     schoolPermissions:string[]=[];
     schoolIds:string[]=[];
-    EMAIL_PATTERN = '^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$';
+    EMAIL_PATTERN = '[a-zA-Z0-9]+?(\\.[a-zA-Z0-9]+)*@[a-zA-Z]+\\.[a-zA-Z]{2,3}';
     classPermissions:string[]=[];
     coursePermissions:string[]=[];
     hideClassSection!:boolean;

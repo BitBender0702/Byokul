@@ -26,6 +26,7 @@ namespace LMS.Data.Entity
         public Guid? ReelId { get; set; }
         public ChatType? ChatType { get; set; }
         public Guid? ChatTypeId { get; set; }
+        public string? MeetingId { get; set; }
     }
 
     public enum NotificationTypeEnum

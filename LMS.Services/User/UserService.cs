@@ -99,9 +99,20 @@ namespace LMS.Services
         }
         public async Task<UserDetailsViewModel> GetUserById(string userId)
         {
-            var user = await _userRepository.GetAll().Where(x => x.Id == userId).FirstOrDefaultAsync();
+            var user = await _userRepository.GetAll().Include(x => x.UserLanguage).ThenInclude(x => x.Language).Where(x => x.Id == userId).FirstOrDefaultAsync();
             var result = _mapper.Map<UserDetailsViewModel>(user);
             result.Followers = await GetFollowers(userId);
+
+            var item = user.UserLanguage.Select(x => x.Language);
+
+
+
+
+
+
+
+
+
             result.Languages = await GetLanguages(userId);
             result.Followings = await GetFollowings(userId);
             result.Posts = await GetPostsByUserId(userId);
@@ -222,7 +233,7 @@ namespace LMS.Services
 
             var requiredSchools = _mapper.Map<List<SchoolViewModel>>(schools);
 
-           
+
             return requiredSchools;
 
         }
@@ -351,7 +362,7 @@ namespace LMS.Services
             }
 
             User user = _userRepository.GetById(userUpdateViewModel.Id);
-            user.Avatar = userUpdateViewModel.Avatar;
+            user.Avatar = userUpdateViewModel.Avatar == "null" ? null : userUpdateViewModel.Avatar;
             user.FirstName = userUpdateViewModel.FirstName;
             user.LastName = userUpdateViewModel.LastName;
             user.DOB = userUpdateViewModel.DOB;
@@ -392,7 +403,7 @@ namespace LMS.Services
             int pageSize = 0;
             if (postType == PostTypeEnum.Post)
             {
-                pageSize = 6;
+                pageSize = 12;
             }
 
             if (postType == PostTypeEnum.Reel)
@@ -507,10 +518,10 @@ namespace LMS.Services
 
         }
 
-        public async Task<IEnumerable<PostDetailsViewModel>> GetPostsByUserId(string userId, int pageNumber = 1, int pageSize = 4)
+        public async Task<IEnumerable<PostDetailsViewModel>> GetPostsByUserId(string userId, int pageNumber = 1, int pageSize = 12)
         {
 
-            var postList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == new Guid(userId) && x.PostType == (int)PostTypeEnum.Post && x.PostAuthorType == (int)PostAuthorTypeEnum.User).OrderByDescending(x => x.IsPinned).ToListAsync();
+            var postList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == new Guid(userId) && (x.PostType == (int)PostTypeEnum.Post || (x.PostType == (int)PostTypeEnum.Stream)) && x.PostAuthorType == (int)PostAuthorTypeEnum.User).OrderByDescending(x => x.IsPinned).ToListAsync();
 
             var requiredPostList = postList.OrderByDescending(x => x.IsPinned).ThenByDescending(x => x.CreatedOn).ToList();
 
@@ -711,7 +722,7 @@ namespace LMS.Services
             int pageSize = 0;
             if (postType == PostTypeEnum.Post)
             {
-                pageSize = 6;
+                pageSize = 12;
             }
 
             if (postType == PostTypeEnum.Reel)
@@ -1250,18 +1261,62 @@ namespace LMS.Services
             text = text.Replace("[UserName]", model.UserName);
             text = text.Replace("[ReportReason]", model.ReportReason);
 
-            string callBackUrl = $"{_config["AppUrl"]}/user/userProfile?userId={model.FollowerId}";
+            string callBackUrl = $"{_config["AppUrl"]}/user/userProfile/{model.FollowerId}";
             text = text.Replace("[URL]", callBackUrl);
             await _commonService.SendEmail(new List<string> { user.Result.First().Email }, null, null, "Report User", body: text, null, null);
         }
 
+        public async Task<IEnumerable<GlobalSearchViewModel>> GlobalSearch(string searchString, int pageNumber, int pageSize)
+        {
+            var users = await _userRepository.GetAll().Where(x => x.FirstName.Contains(searchString) || x.LastName.Contains(searchString) || (x.FirstName + " " + x.LastName).Contains(searchString)).Select(x => new GlobalSearchViewModel() { 
+                Id = new Guid(x.Id),
+                Name = x.FirstName + " " + x.LastName,
+                Type = (int)PostAuthorTypeEnum.User,
+                Avatar = x.Avatar
+
+            }).ToListAsync();
+
+            var schools = await _schoolRepository.GetAll().Where(x => x.SchoolName.Contains(searchString)).Select(x => new GlobalSearchViewModel
+            {
+                Id = x.SchoolId,
+                Name = x.SchoolName,
+                Type = (int)PostAuthorTypeEnum.School,
+                Avatar = x.Avatar
+            }).ToListAsync();
+
+            var classes = await _classRepository.GetAll().Include(x => x.School).Where(x => x.ClassName.Contains(searchString)).Select(x => new GlobalSearchViewModel
+            {
+                Id = x.ClassId,
+                Name = x.ClassName,
+                SchoolName = x.School.SchoolName,
+                Type = (int)PostAuthorTypeEnum.Class,
+                Avatar = x.Avatar
+            }).ToListAsync();
 
 
-            //public async Task<UserDetailsViewModel> SearchUserFollowers(string searchString)
-            //{
+            var courses = await _courseRepository.GetAll().Where(x => x.CourseName.Contains(searchString)).Select(x => new GlobalSearchViewModel
+            {
+                Id = x.CourseId,
+                Name = x.CourseName,
+                SchoolName = x.School.SchoolName,
+                Type = (int)PostAuthorTypeEnum.Course,
+                Avatar = x.Avatar
+            }).ToListAsync();
 
-            //}
+            var result = schools.Concat(classes).Concat(courses).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+
+            return result;
+
 
         }
+
+
+
+        //public async Task<UserDetailsViewModel> SearchUserFollowers(string searchString)
+        //{
+
+        //}
+
+    }
 
 }

@@ -360,15 +360,18 @@ namespace LMS.Services
 
             if (courseName != null)
             {
-                var course = await _courseRepository.GetAll()
+                courseName = System.Web.HttpUtility.UrlEncode(courseName, Encoding.GetEncoding("iso-8859-7")).Replace("%3f", "").ToLower();
+
+                var courseList = await _courseRepository.GetAll()
                     .Include(x => x.ServiceType)
                     .Include(x => x.School)
                     .ThenInclude(x => x.Country)
                     .Include(x => x.School)
                     .ThenInclude(x => x.Specialization)
                     .Include(x => x.Accessibility)
-                    .Include(x => x.CreatedBy)
-                    .Where(x => x.CourseName.Replace(" ", "").ToLower() == courseName.Replace(" ", "").ToLower()).FirstOrDefaultAsync();
+                    .Include(x => x.CreatedBy).ToListAsync();
+
+                var course = courseList.Where(x => (System.Web.HttpUtility.UrlEncode(x.CourseName.Replace(" ", "").ToLower(), Encoding.GetEncoding("iso-8859-7")) == courseName) && !x.IsDeleted).First();
 
                 if (course == null)
                 {
@@ -472,6 +475,19 @@ namespace LMS.Services
 
         public async Task DeleteCourseById(Guid courseId, string deletedByid)
         {
+            var courseStudents = await _courseStudentRepository.GetAll().Where(x => x.CourseId == courseId).ToListAsync();
+            if (courseStudents.Count > 0)
+            {
+                _courseStudentRepository.DeleteAll(courseStudents);
+                _courseStudentRepository.Save();
+            }
+
+            var courseTeachers = await _courseTeacherRepository.GetAll().Where(x => x.CourseId == courseId).ToListAsync();
+            if (courseTeachers.Count > 0)
+            {
+                _courseTeacherRepository.DeleteAll(courseTeachers);
+                _courseTeacherRepository.Save();
+            }
             Course course = _courseRepository.GetById(courseId);
             course.IsDeleted = true;
             course.DeletedById = deletedByid;
@@ -491,7 +507,7 @@ namespace LMS.Services
             return model;
         }
 
-        public async Task<IEnumerable<PostDetailsViewModel>> GetPostsByCourseId(Guid courseId, string loginUserId, int pageNumber = 1, int pageSize = 6)
+        public async Task<IEnumerable<PostDetailsViewModel>> GetPostsByCourseId(Guid courseId, string loginUserId, int pageNumber = 1, int pageSize = 12)
         {
             var courseList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == courseId && x.PostType == (int)PostTypeEnum.Post).OrderByDescending(x => x.IsPinned).ThenByDescending(x => x.CreatedOn).ToListAsync();
             var sharedPost = await _userSharedPostRepository.GetAll().ToListAsync();
@@ -618,6 +634,15 @@ namespace LMS.Services
             var attacchmentList = await _postAttachmentRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.PostId == postId).ToListAsync();
 
             var result = _mapper.Map<List<PostAttachmentViewModel>>(attacchmentList);
+
+            foreach (var item in result)
+            {
+                int lastSlashIndex = item.FileUrl.LastIndexOf('/');
+                var fileName = item.FileUrl.Substring(lastSlashIndex + 1);
+
+                item.ByteArray = await _blobService.GetFileContentAsync(this._config.GetValue<string>("Container:PostContainer"), fileName);
+
+            }
             return result;
         }
 
@@ -804,6 +829,7 @@ namespace LMS.Services
 
             }
 
+            result.First().NoOfAppliedFilters = userClassCourseFilters.Where(x => x.ClassCourseFilterType == ClassCourseFilterEnum.Course && x.IsActive).Count();
             return result;
 
         }
@@ -813,7 +839,7 @@ namespace LMS.Services
             var result = await _userClassCourseFilterRepository.GetAll().ToListAsync();
             foreach (var item in model)
             {
-                var isUserClassCourseFilterExist = result.Where(x => x.UserId == userId && x.ClassCourseFilterId == item.Id && x.ClassCourseFilterType == ClassCourseFilterEnum.Course).FirstOrDefault();
+                var isUserClassCourseFilterExist = result.Where(x => x.UserId == userId && x.ClassCourseFilterId == item.Id && x.ClassCourseFilterType == ClassCourseFilterEnum.Course && x.SchoolId == item.SchoolId).FirstOrDefault();
 
                 if (isUserClassCourseFilterExist != null)
                 {
@@ -864,6 +890,15 @@ namespace LMS.Services
 
             var result = _mapper.Map<List<StudentViewModel>>(courseStudents.Select(x => x.Student));
             return result;
+        }
+
+        public async Task EnableDisableCourse(Guid courseId)
+        {
+            var course = _courseRepository.GetById(courseId);
+            course.IsDisableByOwner = !course.IsDisableByOwner;
+            _courseRepository.Update(course);
+            _courseRepository.Save();
+
         }
 
 

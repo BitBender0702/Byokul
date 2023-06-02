@@ -16,6 +16,7 @@ using LMS.Services.Common;
 
 namespace LMS.App.Controllers
 {
+    [Authorize]
     [Route("bigBlueButton")]
     public class BigBlueButtonController : ControllerBase
     {
@@ -42,12 +43,20 @@ namespace LMS.App.Controllers
             return Ok(new { url = url });
         }
 
-        [Route("join")]
+        [Route("joinMeeting")]
         [HttpPost]
         public async Task<ActionResult> Join([FromBody] JoinMeetingViewModel model)
         {
             string url = await _bigBlueButtonService.Join(model);
             return Ok(new { url = url });
+        }
+
+        [Route("endMeeting")]
+        [HttpPost]
+        public async Task<ActionResult> EndMeeting([FromBody] EndMeetingViewModel model)
+        {
+            await _bigBlueButtonService.EndMeeting(model);
+            return Ok();
         }
 
         [Route("callBack")]

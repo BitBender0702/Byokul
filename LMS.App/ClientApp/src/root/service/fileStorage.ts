@@ -40,7 +40,19 @@ export class FileStorageService{
     }
 
     getFileStorageAttachments():Observable<any>{
-        debugger
         return this.http.get(`${this.apiUrl}/fileStorage/getAttachments`, {headers: this.headers})
+    }
+
+    isFolderNameExist(folderName:string,parentId:string,parentFolderId:string){
+        let queryParams = new HttpParams().append("folderName",folderName).append("parentId",parentId).append("parentFolderId",parentFolderId);
+        return this.http.get(`${this.apiUrl}/fileStorage/isFolderNameExist`, {params:queryParams,headers: this.headers})
+    }
+
+    deleteFolder(folderId:string):Observable<any>{
+        return this.http.get(`${this.apiUrl}/fileStorage/deleteFolder`  + '?folderId=' + folderId, {headers: this.headers})
+    }
+
+    deleteFile(fileId:string):Observable<any>{
+        return this.http.get(`${this.apiUrl}/fileStorage/deleteFile`  + '?fileId=' + fileId, {headers: this.headers})
     }
 }

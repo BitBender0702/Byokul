@@ -31,6 +31,9 @@ import { AuthGuard } from '../service/auth.guard';
 import { EarningsComponent } from '../root/earnings/earnings.component';
 import { FileStorageComponent } from '../root/fileStorage/fileStorage.component';
 import { UserFollowingsComponent } from '../root/user/userFollowings/userFollowings.component';
+import { Subject } from 'rxjs';
+import { GlobalSearchComponent } from '../root/globalSearch/globalSearch.component';
+import { StudentListComponent } from '../root/students/studentList.componant';
 
 
 const routes: Routes = [
@@ -128,7 +131,13 @@ const routes: Routes = [
     path: 'post/:id',component:PostViewComponent, canActivate: [AuthGuard]
   },
   {
-    path: 'fileStorage/:id/:type',component:FileStorageComponent, canActivate: [AuthGuard]
+    path: 'fileStorage/:id/:ownerId/:type',component:FileStorageComponent, canActivate: [AuthGuard]
+  },
+  {
+    path: 'globalSearch/:searchString',component:GlobalSearchComponent, canActivate: [AuthGuard]
+  },
+  {
+    path: 'studentList/:id/:type',component:StudentListComponent, canActivate: [AuthGuard]
   },
 ];
 

@@ -39,5 +39,7 @@ namespace LMS.Common.ViewModels.Course
         public IEnumerable<PostDetailsViewModel> Reels { get; set; }
         public IEnumerable<CourseCertificateViewModel> CourseCertificates { get; set; }
         public bool IsConvertable { get; set; }
+        public bool? IsDisableByOwner { get; set; }
+
     }
 }

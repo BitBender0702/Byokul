@@ -8,6 +8,7 @@ using LMS.Data.Entity;
 using AutoMapper;
 using LMS.Common.ViewModels.Notification;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace LMS.Services
 {
@@ -16,13 +17,33 @@ namespace LMS.Services
         private readonly IGenericRepository<Notification> _notificationRepository;
         private readonly IGenericRepository<NotificationSeeting> _notificationSettingRepository;
         private readonly IGenericRepository<UserNotificationSetting> _userNotificationSettingRepository;
+        private readonly IGenericRepository<UserFollower> _userFollowerRepository;
+        private readonly IGenericRepository<SchoolFollower> _schoolFollowerRepository;
+        private readonly IGenericRepository<SchoolTeacher> _schoolTeacherRepository;
+        private readonly IGenericRepository<ClassStudent> _classStudentRepository;
+        private readonly IGenericRepository<CourseStudent> _courseStudentRepository;
+        private readonly IGenericRepository<ClassTeacher> _classTeacherRepository;
+        private readonly IGenericRepository<CourseTeacher> _courseTeacherRepository;
+        private readonly IGenericRepository<Class> _classRepository;
+        private readonly IGenericRepository<Course> _courseRepository;
+
+
         private readonly IMapper _mapper;
-        public NotificationService(IMapper mapper, IGenericRepository<NotificationSeeting> notificationSettingRepository, IGenericRepository<Notification> notificationRepository, IGenericRepository<UserNotificationSetting> userNotificationSettingRepository)
+        public NotificationService(IMapper mapper, IGenericRepository<NotificationSeeting> notificationSettingRepository, IGenericRepository<Notification> notificationRepository, IGenericRepository<UserNotificationSetting> userNotificationSettingRepository, IGenericRepository<UserFollower> userFollowerRepository, IGenericRepository<SchoolFollower> schoolFollowerRepository, IGenericRepository<SchoolTeacher> schoolTeacherRepository, IGenericRepository<Class> classRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<Course> courseRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<CourseTeacher> courseTeacherRepository)
         {
             _notificationSettingRepository = notificationSettingRepository;
             _notificationRepository = notificationRepository;
             _mapper = mapper;
             _userNotificationSettingRepository = userNotificationSettingRepository;
+            _userFollowerRepository = userFollowerRepository;
+            _schoolFollowerRepository = schoolFollowerRepository;
+            _schoolTeacherRepository = schoolTeacherRepository;
+            _classRepository = classRepository;
+            _classStudentRepository = classStudentRepository;
+            _courseStudentRepository = courseStudentRepository;
+            _courseRepository = courseRepository;
+            _classTeacherRepository = classTeacherRepository;
+            _courseTeacherRepository = courseTeacherRepository;
         }
 
 
@@ -50,6 +71,21 @@ namespace LMS.Services
 
             return result;
         }
+
+        public async Task<List<FollowerNotificationSettingViewModel>> GetFollowersNotificationSettings(string followersIds)
+        {
+            var followersIdsList = JsonConvert.DeserializeObject<List<string>>(followersIds);
+
+
+            var lectureStartSetting = await _userNotificationSettingRepository.GetAll().Where(x => followersIdsList.Contains(x.UserId) && x.NotificationSetting.Name == "Lecture Start" && !x.IsActive).Select(x => new FollowerNotificationSettingViewModel
+            {
+                UserId = x.UserId,
+                IsNotificationActive = x.IsActive
+            }).ToListAsync();
+
+            return lectureStartSetting;
+        }
+
 
         public async Task<List<NotificationViewModel>> GetNotifications(string userId, int pageNumber)
         {
@@ -149,6 +185,53 @@ namespace LMS.Services
 
             _notificationRepository.Insert(notification);
             _notificationRepository.Save();
+        }
+
+        public async Task<List<string>> GetUserFollowersIds(string userId)
+        {
+            var userFollwers = await _userFollowerRepository.GetAll().Where(x => x.UserId == userId).Select(x => x.FollowerId).ToListAsync();
+            return userFollwers;
+        }
+
+        public async Task<List<string>> GetSchoolFollowersIds(Guid schoolId)
+        {
+            var schoolFollowers = await _schoolFollowerRepository.GetAll().Where(x => x.SchoolId == schoolId).Select(x => x.UserId).ToListAsync();
+
+            var schoolTeachers = await _schoolTeacherRepository.GetAll().Include(x => x.Teacher).Where(x => x.SchoolId == schoolId).Select(x => x.Teacher.UserId).ToListAsync();
+
+            // class students
+            var classList = await _classRepository.GetAll().Where(x => x.SchoolId == schoolId).ToListAsync();
+            var classStudentsList = await _classStudentRepository.GetAll().Include(x => x.Student).Distinct().ToListAsync();
+            var classStudents = classStudentsList.Where(x => classList.Any(y => y.ClassId == x.ClassId)).DistinctBy(x => x.StudentId).Select(x => x.Student.UserId);
+
+
+            //course students
+            var courseList = await _courseRepository.GetAll().Where(x => x.SchoolId == schoolId).ToListAsync();
+            var courseStudentsList = await _courseStudentRepository.GetAll().Include(x => x.Student).Distinct().ToListAsync();
+            var courseStudents = courseStudentsList.Where(x => courseList.Any(y => y.CourseId == x.CourseId)).DistinctBy(x => x.StudentId).Select(x => x.Student.UserId);
+
+            //class teachers
+            var classTeachersList = await _classTeacherRepository.GetAll().Include(x => x.Teacher).Distinct().ToListAsync();
+            var classTeachers = classTeachersList.Where(x => classList.Any(y => y.ClassId == x.ClassId)).DistinctBy(x => x.TeacherId).Select(x => x.Teacher.UserId);
+
+            //course teachers
+            var courseTeachersList = await _courseTeacherRepository.GetAll().Include(x => x.Teacher).Distinct().ToListAsync();
+            var courseTeachers = courseTeachersList.Where(x => courseList.Any(y => y.CourseId == x.CourseId)).DistinctBy(x => x.TeacherId).Select(x => x.Teacher.UserId);
+
+            var combinedList = schoolFollowers.Union(schoolTeachers).Union(classStudents).Union(classTeachers).Union(courseStudents).Union(courseTeachers).Distinct().ToList();
+
+            return combinedList;
+        }
+
+        public async Task<List<string>> GetClassFollowersIds(Guid classId)
+        {
+            //class students
+            var classStudents = await _classStudentRepository.GetAll().Include(x => x.Student).Where(x => x.ClassId == classId).Distinct().Select(x => x.Student.UserId).ToListAsync();
+
+            var classTeachers = await _classTeacherRepository.GetAll().Include(x => x.Teacher).Where(x => x.ClassId == classId).Distinct().Select(x => x.Teacher.UserId).ToListAsync();
+
+            var combinedList = classStudents.Union(classTeachers).ToList();
+            return combinedList;
         }
     }
 }

@@ -1,4 +1,4 @@
-import { Component, Injector, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Injector, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { unreadChatResponse } from 'src/root/root/chat/chat.component';
@@ -25,10 +25,11 @@ export class SideBarComponent extends MultilingualComponent implements OnInit {
   validUser!:Boolean;
   loadingIcon:boolean = false;
   isDataLoaded:boolean = false;
+  loginUserId!:string;
 
   @Input() isOpenSidebar!:boolean;
 
-  constructor(injector: Injector,userService: UserService,private router: Router) {
+  constructor(injector: Injector,userService: UserService,private router: Router,private cd: ChangeDetectorRef) {
     super(injector);
     this._userService = userService;
     
@@ -39,6 +40,10 @@ export class SideBarComponent extends MultilingualComponent implements OnInit {
       var validToken = localStorage.getItem("jwt");
         if (validToken != null) {
           this.validUser = true;
+          let jwtData = validToken.split('.')[1];
+          let decodedJwtJsonData = window.atob(jwtData);
+          let decodedJwtData = JSON.parse(decodedJwtJsonData);
+          this.loginUserId = decodedJwtData.jti;
         }
         else{
         this.validUser = false;
@@ -72,18 +77,19 @@ export class SideBarComponent extends MultilingualComponent implements OnInit {
     });
 
     unreadNotificationResponse.subscribe(response => {
-      debugger
       if(response.type =="remove"){
       this.sidebarInfo.unreadNotificationCount = 0;
       }
       else{
         this.sidebarInfo.unreadNotificationCount += 1;
       }
-    });
+    });   
 
 
     userImageResponse.subscribe(response => {
+      this.sidebarInfo.user.gender = response.gender;
       this.sidebarInfo.user.avatar = response.userAvatar;
+      this.cd.detectChanges();
     });
 
     ownedSchoolResponse.subscribe(response => {
@@ -97,6 +103,13 @@ export class SideBarComponent extends MultilingualComponent implements OnInit {
         this.sidebarInfo.ownedSchools.push(schoolObj);
     }
     else{
+      if(response.action== "delete"){
+        var indexToRemove = this.sidebarInfo.ownedSchools.findIndex((x: { schoolId: string; })=> x.schoolId == response.schoolId);
+        if (indexToRemove !== -1) {
+          this.sidebarInfo.ownedSchools.splice(indexToRemove, 1);
+        }
+      }
+      else{
       var ownedSchools: any[] = this.sidebarInfo.ownedSchools;
       var reqSchool = ownedSchools.find(x=> x.schoolId == response.schoolId);
       reqSchool.schoolName = response.schoolName;
@@ -105,6 +118,7 @@ export class SideBarComponent extends MultilingualComponent implements OnInit {
         this.router.navigateByUrl(`profile/school/${response.schoolName.replace(" ","").toLowerCase()}`);
       }, 3000);
     }
+  }
       // this.ngOnInit();
     });
 
@@ -122,6 +136,13 @@ export class SideBarComponent extends MultilingualComponent implements OnInit {
         this.sidebarInfo.ownedClasses.push(classObj);
     }
     else{
+      if(response.action== "delete"){
+        var indexToRemove = this.sidebarInfo.ownedClasses.findIndex((x: { classId: string; })=> x.classId == response.classId);
+        if (indexToRemove !== -1) {
+          this.sidebarInfo.ownedClasses.splice(indexToRemove, 1);
+        }
+      }
+      else{
       var ownedClasses: any[] = this.sidebarInfo.ownedClasses;
       var reqClass = ownedClasses.find(x=> x.classId == response.classId);
       reqClass.className = response.className;
@@ -134,6 +155,7 @@ export class SideBarComponent extends MultilingualComponent implements OnInit {
         this.router.navigateByUrl(`profile/class/${reqClass.school.schoolName.replace(" ","").toLowerCase()}/${response.className.replace(" ","").toLowerCase()}`); 
       }, 3000);
      }
+    }
     });
 
     ownedCourseResponse.subscribe(response => {
@@ -150,6 +172,13 @@ export class SideBarComponent extends MultilingualComponent implements OnInit {
         this.sidebarInfo.ownedCourses.push(courseObj);
     }
     else{
+      if(response.action== "delete"){
+        var indexToRemove = this.sidebarInfo.ownedCourses.findIndex((x: { courseId: string; })=> x.courseId == response.courseId);
+        if (indexToRemove !== -1) {
+          this.sidebarInfo.ownedCourses.splice(indexToRemove, 1);
+        }
+      }
+      else{
       var ownedCourses: any[] = this.sidebarInfo.ownedCourses;
       var reqClass = ownedCourses.find(x=> x.courseId == response.courseId);
       reqClass.courseName = response.courseName;
@@ -160,6 +189,7 @@ export class SideBarComponent extends MultilingualComponent implements OnInit {
         this.router.navigateByUrl(`profile/course/${reqClass.school.schoolName.replace(" ","").toLowerCase()}/${response.courseName.replace(" ","").toLowerCase()}`);
       }, 3000);
     }
+  }
     });
 
     convertIntoCourseResponse.subscribe(response => {
@@ -200,15 +230,15 @@ export class SideBarComponent extends MultilingualComponent implements OnInit {
   }
 
   getSelectedSchool(schoolName:string){
-    this.router.navigateByUrl(`profile/school/${schoolName.replace(" ","").toLowerCase()}`);
+    this.router.navigateByUrl(`profile/school/${schoolName.split(" ").join("").toLowerCase()}`);
   }
 
   getSelectedClass(className:string,schoolName:string){
-    this.router.navigateByUrl(`profile/class/${schoolName.replace(" ","").toLowerCase()}/${className.replace(" ","").toLowerCase()}`);
+    this.router.navigateByUrl(`profile/class/${schoolName.split(" ").join("").toLowerCase()}/${className.split(" ").join("").toLowerCase()}`);
   }
 
   getSelectedCourse(courseName:string,schoolName:string){
-    this.router.navigateByUrl(`profile/course/${schoolName.replace(" ","").toLowerCase()}/${courseName.replace(" ","").toLowerCase()}`);
+    this.router.navigateByUrl(`profile/course/${schoolName.split(" ").join("").toLowerCase()}/${courseName.split(" ").join("").toLowerCase()}`);
   }
 
   getUserDetails(userId:string){

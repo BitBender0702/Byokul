@@ -1,4 +1,5 @@
-﻿using LMS.Common.ViewModels.Post;
+﻿using LMS.Common.Enums;
+using LMS.Common.ViewModels.Post;
 using LMS.Data.Entity;
 using System;
 using System.Collections.Generic;
@@ -20,7 +21,14 @@ namespace LMS.Services
         Task EnableDisableComments(Guid postId, bool isHideComments);
         Task SaveUserSharedPost(string userId, Guid postId);
         Task SavePostByUser(string userId, Guid postId);
-        Task<List<PostDetailsViewModel>> GetSavedPostsByUser(string userId, int pageNumber);
+        Task<List<PostDetailsViewModel>> GetSavedPostsByUser(string userId, int pageNumber, PostTypeEnum type);
+        Task<List<PostDetailsViewModel>> GetSharedPostsByUser(string userId, int pageNumber, PostTypeEnum type);
+        Task<List<PostDetailsViewModel>> GetLikedPostsByUser(string userId, int pageNumber, PostTypeEnum type);
+        Task<bool> PinUnpinSavedPost(Guid attachmentId, bool isPinned, string userId);
+        //Task<bool> PinUnpinSharedPost(Guid attachmentId, bool isPinned);
+        Task<bool> PinUnpinLikedPost(Guid attachmentId, bool isPinned, string userId);
+        Task DeletePost(Guid id);
+
 
     }
 }

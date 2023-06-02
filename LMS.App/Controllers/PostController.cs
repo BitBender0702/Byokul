@@ -1,4 +1,5 @@
-﻿using LMS.Common.Enums;
+﻿using Hangfire;
+using LMS.Common.Enums;
 using LMS.Common.ViewModels.Post;
 using LMS.Data.Entity;
 using LMS.Services;
@@ -27,17 +28,40 @@ namespace LMS.App.Controllers
         [HttpPost]
         public async Task<IActionResult> SavePost(PostViewModel postViewModel)
         {
+            var response = new PostViewModel();
             var userId = await GetUserIdAsync(this._userManager);
-            if (postViewModel.PostAuthorType == (int)PostAuthorTypeEnum.School)
-            {
-                postViewModel.OwnerId = new Guid(userId);
-            }
 
-            if (postViewModel.PostAuthorType == (int)PostAuthorTypeEnum.Class || postViewModel.PostAuthorType == (int)PostAuthorTypeEnum.Course)
+            if (postViewModel.DateTime != null)
             {
-                postViewModel.AuthorId = new Guid(userId);
+                DateTimeOffset scheduledTime = new DateTimeOffset(postViewModel.DateTime.Value);
+                //var jobId = BackgroundJob.Enqueue(() => _postService.SavePost(postViewModel, userId));
+
+                var scheduleJobId = BackgroundJob.Schedule(() => _postService.SavePost(postViewModel, userId), scheduledTime);
+
+                //var jobId = BackgroundJob.Schedule(() => _postService.SavePost(postViewModel, userId), new TimeSpan(120));
+
+                var monitoringApi = JobStorage.Current.GetMonitoringApi();
+
+                // Get the job details
+                var jobDetails = monitoringApi.JobDetails(scheduleJobId);
+
+                // Get the return value type of the job
+                //Type returnType = Type.GetType(jobDetails.ResultType);
+
             }
-            var response = await _postService.SavePost(postViewModel, userId);
+            else
+            {
+                if (postViewModel.PostAuthorType == (int)PostAuthorTypeEnum.School)
+                {
+                    postViewModel.OwnerId = new Guid(userId);
+                }
+
+                if (postViewModel.PostAuthorType == (int)PostAuthorTypeEnum.Class || postViewModel.PostAuthorType == (int)PostAuthorTypeEnum.Course)
+                {
+                    postViewModel.AuthorId = new Guid(userId);
+                }
+                response = await _postService.SavePost(postViewModel, userId);
+            }
             return Ok(response);
         }
         [Route("getReelById")]
@@ -122,10 +146,60 @@ namespace LMS.App.Controllers
 
         [Route("getSavedPostsByUser")]
         [HttpPost]
-        public async Task<IActionResult> GetSavedPostsByUser(string userId, int pageNumber)
+        public async Task<IActionResult> GetSavedPostsByUser(string userId, int pageNumber,PostTypeEnum type)
         {
-            var response = await _postService.GetSavedPostsByUser(userId, pageNumber);
+            var response = await _postService.GetSavedPostsByUser(userId, pageNumber, type);
             return Ok(response);
+        }
+
+        [Route("getSharedPostsByUser")]
+        [HttpPost]
+        public async Task<IActionResult> GetSharedPostsByUser(string userId, int pageNumber, PostTypeEnum type)
+        {
+            var response = await _postService.GetSharedPostsByUser(userId, pageNumber, type);
+            return Ok(response);
+        }
+
+        [Route("getLikedPostsByUser")]
+        [HttpPost]
+        public async Task<IActionResult> GetLikedPostsByUser(string userId, int pageNumber, PostTypeEnum type)
+        {
+            var response = await _postService.GetLikedPostsByUser(userId, pageNumber, type);
+            return Ok(response);
+        }
+
+        [Route("pinUnpinSavedPost")]
+        [HttpPost]
+        public async Task<IActionResult> PinUnpinSavedPost(Guid attachmentId, bool isPinned)
+        {
+            var userId = await GetUserIdAsync(this._userManager);
+            var response = await _postService.PinUnpinSavedPost(attachmentId, isPinned, userId);
+            return Ok(response);
+        }
+
+        //[Route("pinUnpinSharedPost")]
+        //[HttpPost]
+        //public async Task<IActionResult> PinUnpinSharedPost(Guid attachmentId, bool isPinned)
+        //{
+        //    var response = await _postService.PinUnpinSharedPost(attachmentId, isPinned);
+        //    return Ok(response);
+        //}
+
+        [Route("pinUnpinLikedPost")]
+        [HttpPost]
+        public async Task<IActionResult> PinUnpinLikedPost(Guid attachmentId, bool isPinned)
+        {
+            var userId = await GetUserIdAsync(this._userManager);
+            var response = await _postService.PinUnpinLikedPost(attachmentId, isPinned, userId);
+            return Ok(response);
+        }
+
+        [Route("deletePost")]
+        [HttpPost]
+        public async Task<IActionResult> DeletePost(Guid id)
+        {
+            await _postService.DeletePost(id);
+            return Ok();
         }
 
     }

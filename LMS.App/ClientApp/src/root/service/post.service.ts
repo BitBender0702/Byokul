@@ -4,16 +4,21 @@ import { Router } from "@angular/router";
 import { Observable } from "rxjs";
 import { environment } from "src/environments/environment";
 import { LikeUnlikePost } from "../interfaces/post/likeUnlikePost";
+import { JoinMeetingModel } from "../interfaces/bigBlueButton/joinMeeting";
+import { BigBlueButtonService } from "./bigBlueButton";
 
 @Injectable({providedIn: 'root'})
 
 export class PostService{
     token:string = localStorage.getItem("jwt")?? '';
+    joinMeetingViewModel!:JoinMeetingModel;
+    private _bigBlueButtonService;
     private headers!: HttpHeaders;
     get apiUrl(): string {
         return environment.apiUrl;
       }
-    constructor(private router: Router, private http: HttpClient) { 
+    constructor(private router: Router, private http: HttpClient, bigBlueButtonService:BigBlueButtonService) { 
+        this._bigBlueButtonService = bigBlueButtonService;
         this.headers = new HttpHeaders().set("Authorization", "Bearer " + this.token);
     }
     
@@ -113,5 +118,32 @@ export class PostService{
         let queryParams = new HttpParams().append("id",id).append("isPinned",isPinned).append("type",type);
         return this.http.post(`${this.apiUrl}/school/pinUnpinSavedClassCourse`,null, {params:queryParams,headers: this.headers});
     }
+
+    deletePost(id:string):Observable<any>{
+        debugger
+        return this.http.post(`${this.apiUrl}/posts/deletePost` + '?id=' + id, '',{headers: this.headers});
+    }
+
+    joinMeeting(name:string,meetingId:string,postId:string):Observable<any>{
+        this.initializeJoinMeetingViewModel();
+        this.joinMeetingViewModel.name = name;
+        this.joinMeetingViewModel.meetingId = meetingId;
+        this._bigBlueButtonService.joinMeeting(this.joinMeetingViewModel).subscribe((response) => {
+         debugger
+         const fullNameIndex = response.url.indexOf('fullName='); // find the index of "fullName="
+         const newUrl = response.url.slice(fullNameIndex);
+         this.router.navigate(
+          [`liveStream`,postId,newUrl,false],
+          { state: { stream: {streamUrl: response.url, meetingId: meetingId, isOwner:false} } });
+      });
+      return new Observable<void>();
+      }
+  
+      initializeJoinMeetingViewModel(){
+        this.joinMeetingViewModel = {
+          name:'',
+          meetingId:''
+        }
+      }
 
 }

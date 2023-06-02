@@ -213,6 +213,9 @@ namespace LMS.Data.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<bool?>("IsDisableByOwner")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsEnable")
                         .HasColumnType("bit");
 
@@ -595,6 +598,9 @@ namespace LMS.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("IsDisableByOwner")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsEnable")
@@ -1306,6 +1312,9 @@ namespace LMS.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("IsDisableByOwner")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsVarified")

@@ -42,5 +42,7 @@ namespace LMS.Common.ViewModels.Class
         public Double? Rating { get; set; }
         public string? Avatar { get; set; }
         public string? ThumbnailUrl { get; set; }
+        public bool? IsDisableByOwner { get; set; }
+
     }
 }

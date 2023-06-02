@@ -21,5 +21,7 @@ namespace LMS.Data.Entity
         public string? CoverLetter { get; set; }
         public bool IsPinned { get; set; }
         public Boolean IsCommentsDisabled { get; set; }
+        public int? CommentsPerMinute { get; set; }
+        public bool? IsLive { get; set; }
     }
 }

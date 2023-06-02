@@ -195,7 +195,7 @@ namespace LMS.App.Controllers
 
         [Route("getPostsByClass")]
         [HttpGet]
-        public async Task<IActionResult> GetPostsByClass(Guid classId, int pageNumber, int pageSize = 4)
+        public async Task<IActionResult> GetPostsByClass(Guid classId, int pageNumber, int pageSize = 6)
         {
             var userId = await GetUserIdAsync(this._userManager);
             var response = await _classService.GetPostsByClassId(classId, userId, pageNumber, pageSize);
@@ -234,6 +234,14 @@ namespace LMS.App.Controllers
         {
             var response = await _classService.GetClassInfoForCertificate(classId);
             return Ok(response);
+        }
+
+        [Route("enableDisableClass")]
+        [HttpPost]
+        public async Task<IActionResult> EnableDisableClass(Guid classId)
+        {
+            await _classService.EnableDisableClass(classId);
+            return Ok();
         }
 
     }

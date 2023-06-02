@@ -56,5 +56,37 @@ namespace LMS.App.Controllers
             return Ok();
         }
 
+        [Route("getUserFollowersIds")]
+        [HttpGet]
+        public async Task<IActionResult> GetUserFollowersIds(string userId)
+        {
+            var response = await _notificationService.GetUserFollowersIds(userId);
+            return Ok(response);
+        }
+
+        [Route("getSchoolFollowersIds")]
+        [HttpGet]
+        public async Task<IActionResult> GetSchoolFollowersIds(Guid schoolId)
+        {
+            var response = await _notificationService.GetSchoolFollowersIds(schoolId);
+            return Ok(response);
+        }
+
+        [Route("getClassFollowersIds")]
+        [HttpGet]
+        public async Task<IActionResult> GetClassFollowersIds(Guid classId)
+        {
+            var response = await _notificationService.GetClassFollowersIds(classId);
+            return Ok(response);
+        }
+
+        [Route("getFollowersNotificationSettings")]
+        [HttpGet]
+        public async Task<IActionResult> GetFollowersNotificationSettings(string followersIds)
+        {
+            var response = await _notificationService.GetFollowersNotificationSettings(followersIds);
+            return Ok(response);
+        }
+
     }
 }

@@ -189,7 +189,7 @@ namespace LMS.App.Controllers
 
         [Route("getPostsByUserId")]
         [HttpGet]
-        public async Task<IActionResult> GetPostsByUserId(string userId, int pageNumber, int pageSize = 4)
+        public async Task<IActionResult> GetPostsByUserId(string userId, int pageNumber, int pageSize = 6)
         {
             var response = await _userService.GetPostsByUserId(userId, pageNumber, pageSize);
             return Ok(response);
@@ -212,13 +212,17 @@ namespace LMS.App.Controllers
             {
                 containerName = this._config.GetValue<string>("Container:SchoolContainer");
             }
-            if (from == (int)PostAuthorTypeEnum.Class)
+            if (from == (int)PostAuthorTypeEnum.Class || from == (int)PostAuthorTypeEnum.Course)
             {
-                containerName = this._config.GetValue<string>("Container:ClassContainer");
+                containerName = this._config.GetValue<string>("Container:ClassCourseContainer");
             }
-            if (from == (int)PostAuthorTypeEnum.Course)
+            if (from == 5)
             {
-                containerName = this._config.GetValue<string>("Container:CourseContainer");
+                containerName = this._config.GetValue<string>("Container:PostContainer");
+            }
+            if (from == 6)
+            {
+                containerName = this._config.GetValue<string>("Container:ChatAttachments");
             }
             var response = await _blobService.GetFileContentAsync(containerName, certificateName);
             return Ok(response);
@@ -305,6 +309,16 @@ namespace LMS.App.Controllers
             await _userService.ReportFollower(model);
             return Ok();
         }
+
+        [Route("globalSearch")]
+        [HttpGet]
+        public async Task<IActionResult> GlobalSearch(string searchString, int pageNumber, int pageSize)
+        {
+            var user = await _userService.GlobalSearch(searchString, pageNumber, pageSize);
+            return Ok(user);
+        }
+
+
 
     }
 }

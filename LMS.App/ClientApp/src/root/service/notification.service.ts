@@ -9,6 +9,7 @@ import { FileUploadResult } from "../interfaces/chat/uploadFiles";
 import { NotificationType, NotificationViewModel } from "../interfaces/notification/notificationViewModel";
 import { SignalrService } from "./signalr.service";
 import { UserService } from "./user.service";
+import { Constant } from "../interfaces/constant";
 
 @Injectable({providedIn: 'root'})
 
@@ -50,7 +51,7 @@ export class NotificationService{
     initializeNotificationViewModel(userid:string,notificationType:NotificationType,notificationContent:string,loginUserId:string,postId?:string | null,postType?:number,post?:any,reelId?:string | null,chatType?:number,chatTypeId?:string| null):Observable<any>{
         this._userService.getUser(loginUserId).subscribe((response) => {
           this.notificationViewModel = {
-            id:'00000000-0000-0000-0000-000000000000',
+            id: Constant.defaultGuid,
             userId: userid,
             actionDoneBy: loginUserId,
             avatar: response.avatar,
@@ -72,6 +73,19 @@ export class NotificationService{
         });
      return new Observable<void>();
       }
+
+
+  getUserFollowersIds(userId:string):Observable<any>{
+      return this.http.get(`${this.apiUrl}/notifications/getUserFollowersIds` + '?userId=' + userId, {headers: this.headers});
+  }
+
+  getSchoolFollowersIds(schoolId:string):Observable<any>{
+      return this.http.get(`${this.apiUrl}/notifications/getSchoolFollowersIds` + '?schoolId=' + schoolId, {headers: this.headers});
+  }
+
+  getClassFollowersIds(classId:string):Observable<any>{
+      return this.http.get(`${this.apiUrl}/notifications/getClassFollowersIds` + '?classId=' + classId, {headers: this.headers});
+  }
 
 
 }

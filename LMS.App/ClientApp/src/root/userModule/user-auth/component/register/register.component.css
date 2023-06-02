@@ -1,3 +1,9 @@
+@import '~flatpickr/dist/flatpickr.css';
+
+.flatpickr-calendar {
+    z-index: 9999;
+  }
+
 .input-container {
     position: relative;
   }
@@ -19,4 +25,10 @@
     color: #2F6463;
     margin-top: 5px;
     background-color: white;
+}
+
+.date_calendar {
+	background-image: url(../../../../../assets/images/Calendar.svg);
+	background-repeat: no-repeat;
+	background-position: center right 16px;
 }

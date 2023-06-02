@@ -68,6 +68,16 @@ import { EarningsComponent } from './root/earnings/earnings.component';
 import { FileStorageComponent } from './root/fileStorage/fileStorage.component';
 import { PaginatorModule } from 'primeng/paginator';
 import { UserFollowingsComponent } from './root/user/userFollowings/userFollowings.component';
+import { LiveStreamComponent } from './root/liveStream/liveStream.component';
+import { AuthGuard } from './service/auth.guard';
+import { GlobalSearchComponent } from './root/globalSearch/globalSearch.component';
+import { PickerModule } from '@ctrl/ngx-emoji-mart'
+import { StudentListComponent } from './root/students/studentList.componant';
+import { ChatVideoComponent } from './root/chatVideo/chatVideo.component';
+// import { MetaModule } from '@ngx-meta/core';
+// import { PickerComponent } from '@ctrl/ngx-emoji-mart';
+
+// import { AdminSideBarComponent } from './admin/admin-template/side-bar/adminSide-bar.component';
 
 
 const routes: Routes = [
@@ -91,7 +101,11 @@ const routes: Routes = [
     path: 'profile',data: { preload: true },
     loadChildren: () => import('./root/urlRoutes.module')
       .then(m => m.UrlRoutesModule)
-  }
+  },
+  {
+    path: 'liveStream/:postId/:streamUrl/:from',component:LiveStreamComponent, canActivate: [AuthGuard]
+  },
+  
 
 
 ];
@@ -128,8 +142,11 @@ const routes: Routes = [
     AddTeacherComponent,
     SharePostComponent,
     EarningsComponent,
-    FileStorageComponent
-
+    FileStorageComponent,
+    LiveStreamComponent,
+    GlobalSearchComponent,
+    StudentListComponent,
+    ChatVideoComponent
   ],
   imports: [
     CommonModule,
@@ -154,6 +171,9 @@ const routes: Routes = [
     PdfViewerModule,
     PaginatorModule,
     NgbModule,
+    PickerModule,
+    // MetaModule.forRoot(),
+    // PickerComponent,
     // PdfJsViewerModule,
     TranslateModule.forRoot({
       loader:{

@@ -42,7 +42,7 @@ namespace LMS.Services.FileStorage
                 ParentId = model.ParentId,
                 ParentFolderId = model.ParentFolderId,
                 CreatedById = createdById,
-                CreatedOn = DateTime.UtcNow
+                CreatedOn = DateTime.UtcNow 
             };
 
             _folderRepository.Insert(folder);
@@ -61,7 +61,7 @@ namespace LMS.Services.FileStorage
         public async Task<List<FileViewModel>> SaveFiles(SaveFilesViewModel model, string createdById)
         {
             var requiredFiles = new List<File>();
-            string containerName = this._config.GetValue<string>("Container:SchoolContainer");
+            string containerName = this._config.GetValue<string>("Container:PostContainer");
 
             foreach (var file in model.Files)
             {
@@ -151,6 +151,65 @@ namespace LMS.Services.FileStorage
             }).ToListAsync();
 
             return attachments;
+        }
+
+        public async Task<bool> IsFolderNameExist(string folderName, Guid parentId, Guid? parentFolderId)
+        {
+            if (parentFolderId == new Guid())
+            {
+                parentFolderId = null;
+            }
+            var result = await _folderRepository.GetAll().Where(x => x.FolderName.ToLower() == folderName.ToLower() && x.ParentId == parentId && x.ParentFolderId == parentFolderId).ToListAsync();
+
+            if (result.Count == 1)
+            {
+                return true;
+            }
+            bool hasDuplicateProperty = result.GroupBy(x => x.ParentFolderId)
+                                              .Any(g => g.Count() > 1);
+
+            if (hasDuplicateProperty)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+
+            //foreach (var item in result)
+            //{
+            //   var isFolderExist = result.Any(x => x.ParentFolderId == result.First().ParentId);
+
+            //}
+            //if (result != null)
+            //{
+            //    return true;
+            //}
+            //return false;
+        }
+
+        public async Task<string> DeleteFolder(Guid folderId)
+        {
+            var isFolderParent = await _folderRepository.GetAll().AnyAsync(x => x.ParentFolderId == folderId);
+            var isFileParent = await _fileRepository.GetAll().AnyAsync(x => x.FolderId == folderId);
+            if (isFolderParent || isFileParent)
+            {
+                return Constants.FolderCantDeleted;
+            }
+            var folder = await _folderRepository.GetAll().Where(x => x.Id == folderId).FirstOrDefaultAsync();
+            _folderRepository.Delete(folder.Id);
+            _folderRepository.Save();
+            return Constants.FolderDeleted;
+        }
+
+        public async Task<bool> DeleteFile(Guid fileId)
+        {
+            var file = await _fileRepository.GetAll().Where(x => x.Id == fileId).FirstOrDefaultAsync();
+            _fileRepository.Delete(file.Id);
+            _fileRepository.Save();
+            return true;
         }
 
 

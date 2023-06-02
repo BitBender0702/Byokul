@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using System.Text;
 using Country = LMS.Data.Entity.Country;
 
 namespace LMS.Services
@@ -308,15 +309,18 @@ namespace LMS.Services
 
             if (schoolName != null)
             {
-                var schoolLanguages = _schoolLanguageRepository.GetAll()
-                    .Include(x => x.Language)
-                    .Include(x => x.School)
-                    .ThenInclude(x => x.Country)
-                    .Include(x => x.School)
-                    .ThenInclude(x => x.Specialization)
-                    .Include(x => x.School)
-                    .ThenInclude(x => x.CreatedBy)
-                    .Where(x => x.School.SchoolName.Replace(" ", "").ToLower() == schoolName.Replace(" ", "").ToLower()).ToList();
+                schoolName = System.Web.HttpUtility.UrlEncode(schoolName, Encoding.GetEncoding("iso-8859-7")).Replace("%3f", "").ToLower();
+
+                var schoolLanguages = await _schoolLanguageRepository.GetAll()
+                .Include(x => x.Language)
+                .Include(x => x.School)
+                .ThenInclude(x => x.Country)
+                .Include(x => x.School)
+                .ThenInclude(x => x.Specialization)
+                .Include(x => x.School)
+                .ThenInclude(x => x.CreatedBy).ToListAsync();
+
+                schoolLanguages = schoolLanguages.Where(x => (System.Web.HttpUtility.UrlEncode(x.School.SchoolName.Replace(" ", "").ToLower(), Encoding.GetEncoding("iso-8859-7")) == schoolName) && !x.School.IsDeleted).ToList();
 
                 var response = _mapper.Map<SchoolDetailsViewModel>(schoolLanguages.First().School);
 
@@ -353,9 +357,9 @@ namespace LMS.Services
                 response.Teachers = schoolTeachers;
                 response.Students = schoolStudents.Count();
 
-                response.NoOfAppliedClassFilters = await _userClassCourseFilterRepository.GetAll().Where(x => x.UserId == loginUserId && x.ClassCourseFilterType == ClassCourseFilterEnum.Class && x.IsActive).CountAsync();
+                response.NoOfAppliedClassFilters = await _userClassCourseFilterRepository.GetAll().Where(x => x.UserId == loginUserId && x.ClassCourseFilterType == ClassCourseFilterEnum.Class && x.SchoolId == response.SchoolId && x.IsActive).CountAsync();
 
-                response.NoOfAppliedCourseFilters = await _userClassCourseFilterRepository.GetAll().Where(x => x.UserId == loginUserId && x.ClassCourseFilterType == ClassCourseFilterEnum.Course && x.IsActive).CountAsync();
+                response.NoOfAppliedCourseFilters = await _userClassCourseFilterRepository.GetAll().Where(x => x.UserId == loginUserId && x.ClassCourseFilterType == ClassCourseFilterEnum.Course && x.SchoolId == response.SchoolId && x.IsActive).CountAsync();
 
                 return response;
             }
@@ -478,7 +482,7 @@ namespace LMS.Services
 
         public async Task<IEnumerable<ClassViewModel>> GetClassesBySchoolId(Guid? schoolId, string loginUserId)
         {
-            var classList = await _classRepository.GetAll().Include(x => x.Accessibility).Include(x => x.ServiceType).Where(x => x.SchoolId == schoolId && !x.IsEnable && !x.IsDeleted).ToListAsync();
+            var classList = await _classRepository.GetAll().Include(x => x.School).Include(x => x.Accessibility).Include(x => x.ServiceType).Where(x => x.SchoolId == schoolId && !x.IsEnable && !x.IsDeleted).ToListAsync();
             try
             {
                 var result = _mapper.Map<List<ClassViewModel>>(classList);
@@ -512,7 +516,7 @@ namespace LMS.Services
 
         public async Task<IEnumerable<CourseViewModel>> GetCoursesBySchoolId(Guid? schoolId, string loginUserId)
         {
-            var courseList = await _courseRepository.GetAll().Where(x => x.SchoolId == schoolId && !x.IsEnable && !x.IsDeleted).ToListAsync();
+            var courseList = await _courseRepository.GetAll().Include(x => x.School).Include(x => x.Accessibility).Include(x => x.ServiceType).Where(x => x.SchoolId == schoolId && !x.IsEnable && !x.IsDeleted).ToListAsync();
 
             var result = _mapper.Map<List<CourseViewModel>>(courseList);
             var tagList = await _classTagRepository.GetAll().ToListAsync();
@@ -598,7 +602,7 @@ namespace LMS.Services
         {
             var classList = await _classRepository.GetAll().Where(x => x.SchoolId == schoolId).ToListAsync();
 
-            var classStudentsList = await _classStudentRepository.GetAll().Include(x => x.Student).Distinct().ToListAsync();
+            var classStudentsList = await _classStudentRepository.GetAll().Include(x => x.Student).ThenInclude(y => y.User).Distinct().ToListAsync();
 
             var requiredClassList = classStudentsList.Where(x => classList.Any(y => y.ClassId == x.ClassId)).DistinctBy(x => x.StudentId);
 
@@ -617,7 +621,7 @@ namespace LMS.Services
         {
             var courseList = await _courseRepository.GetAll().Where(x => x.SchoolId == schoolId).ToListAsync();
 
-            var courseStudentsList = await _courseStudentRepository.GetAll().Include(x => x.Student).Distinct().ToListAsync();
+            var courseStudentsList = await _courseStudentRepository.GetAll().Include(x => x.Student).ThenInclude(y => y.User).Distinct().ToListAsync();
 
             var requiredCourseList = courseStudentsList.Where(x => courseList.Any(y => y.CourseId == x.CourseId)).DistinctBy(x => x.StudentId);
 
@@ -632,7 +636,7 @@ namespace LMS.Services
 
         }
 
-        public async Task<IEnumerable<PostDetailsViewModel>> GetPostsBySchool(Guid schoolId, string loginUserId, int pageNumber = 1, int pageSize = 6)
+        public async Task<IEnumerable<PostDetailsViewModel>> GetPostsBySchool(Guid schoolId, string loginUserId, int pageNumber = 1, int pageSize = 12)
         {
             var courseList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == schoolId && x.PostType == (int)PostTypeEnum.Post).OrderByDescending(x => x.IsPinned).ThenByDescending(x => x.CreatedOn).ToListAsync();
 
@@ -875,6 +879,7 @@ namespace LMS.Services
                 item.ServiceType = classDetails.ServiceType;
                 item.Description = classDetails.Description;
                 item.Name = classDetails.ClassName;
+                item.SchoolName = classDetails.School.SchoolName;
                 item.Price = classDetails.Price;
                 item.Rating = classDetails.Rating;
                 item.CreatedOn = classDetails.CreatedOn;
@@ -906,6 +911,7 @@ namespace LMS.Services
                 item.ServiceType = courseDetails.ServiceType;
                 item.Description = courseDetails.Description;
                 item.Name = courseDetails.CourseName;
+                item.SchoolName = courseDetails.School.SchoolName;
                 item.Price = courseDetails.Price;
                 item.Rating = courseDetails.Rating;
                 item.CreatedOn = courseDetails.CreatedOn;
@@ -934,6 +940,12 @@ namespace LMS.Services
                 {
                     if (filter.ClassCourseFilterType == ClassCourseFilterEnum.Class)
                     {
+                        //if (filter.ClassCourseFilter.FilterType == FilterTypeEnum.Live)
+                        //{
+                        //    var liveClassResult = model.Where(x => x.IsLive == "Free" && x.Type == ClassCourseEnum.Class).ToList();
+                        //    appliedFilterResult.AddRange(freeClassResult);
+                        //}
+
                         if (filter.ClassCourseFilter.FilterType == FilterTypeEnum.Free)
                         {
                             var freeClassResult = model.Where(x => x.ServiceType.Type == "Free" && x.Type == ClassCourseEnum.Class).ToList();
@@ -1234,7 +1246,7 @@ namespace LMS.Services
 
         public async Task<IEnumerable<CombineClassCourseViewModel>> GetSavedClassCourse(string userId, int pageNumber)
         {
-            int pageSize = 6;
+            int pageSize = 9;
             var classList = await _savedClassCourseRepository.GetAll()
                 .Include(x => x.Class).ThenInclude(x => x.Accessibility)
                 .Include(x => x.Class).ThenInclude(x => x.ServiceType)
@@ -1364,6 +1376,15 @@ namespace LMS.Services
 
             return false;
 
+
+        }
+
+        public async Task EnableDisableSchool(Guid schoolId)
+        {
+            var school = _schoolRepository.GetById(schoolId);
+            school.IsDisableByOwner = !school.IsDisableByOwner;
+            _schoolRepository.Update(school);
+            _schoolRepository.Save();
 
         }
 
