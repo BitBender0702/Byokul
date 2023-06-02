@@ -8,6 +8,8 @@ import { CreateCourseModel } from 'src/root/interfaces/course/createCourseModel'
 import { CourseService } from 'src/root/service/course.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { SharePostComponent } from '../../sharePost/sharePost.component';
 
 export const ownedCourseResponse =new Subject<{courseId: string, courseAvatar : string,courseName:string,schoolName:string, action:string}>(); 
 
@@ -62,10 +64,11 @@ export class CreateCourseComponent extends MultilingualComponent implements OnIn
   uploadImageName!:string;
   tagList!: string[];
   isTagsValid: boolean = true;
+  tagCountExceeded:boolean = false;
 
 
 
-  constructor(injector: Injector,public messageService:MessageService,private router: Router,private route: ActivatedRoute,private fb: FormBuilder,courseService: CourseService,private http: HttpClient) {
+  constructor(injector: Injector,private bsModalService: BsModalService,public messageService:MessageService,private router: Router,private route: ActivatedRoute,private fb: FormBuilder,courseService: CourseService,private http: HttpClient) {
     super(injector);
     this._courseService = courseService;
   }
@@ -230,6 +233,11 @@ captureTeacherId(event: any) {
       return;
     }
 
+    if(this.tagList.length > 7){
+      this.tagCountExceeded = true;
+      return; 
+    }
+
     // var schoolId = this.createCourseForm1.get('schoolId')?.value;
     this.course=this.createCourseForm1.value;
     this.courseName = this.course.courseName.split(' ').join('');
@@ -340,10 +348,11 @@ captureTeacherId(event: any) {
   }
 
   filterDisciplines(event:any) {
+    var disciplines = this.disciplines.filter((x: { id: any; }) => !this.disciplineIds.find(y => y == x.id));
     let filtered: any[] = [];
     let query = event.query;
-    for (let i = 0; i < this.disciplines.length; i++) {
-      let discipline = this.disciplines[i];
+    for (let i = 0; i < disciplines.length; i++) {
+      let discipline = disciplines[i];
       if (discipline.name.toLowerCase().indexOf(query.toLowerCase()) == 0) {
         filtered.push(discipline);
       }
@@ -352,10 +361,11 @@ captureTeacherId(event: any) {
   }
 
   filterStudents(event:any) {
+    var students = this.students.filter((x: { studentId: any; }) => !this.studentIds.find(y => y == x.studentId));
     let filteredStudents: any[] = [];
     let query = event.query;
-    for (let i = 0; i < this.students.length; i++) {
-      let student = this.students[i];
+    for (let i = 0; i < students.length; i++) {
+      let student = students[i];
       if (student.studentName.toLowerCase().indexOf(query.toLowerCase()) == 0) {
         filteredStudents.push(student);
       }
@@ -364,10 +374,11 @@ captureTeacherId(event: any) {
   }
 
   filterTeachers(event:any) {
+    var teachers = this.teachers.filter((x: { teacherId: any; }) => !this.teacherIds.find(y => y == x.teacherId));
     let filteredTeachers: any[] = [];
     let query = event.query;
-    for (let i = 0; i < this.teachers.length; i++) {
-      let teacher = this.teachers[i];
+    for (let i = 0; i < teachers.length; i++) {
+      let teacher = teachers[i];
       if (teacher.firstName.toLowerCase().indexOf(query.toLowerCase()) == 0) {
         filteredTeachers.push(teacher);
       }
@@ -399,6 +410,11 @@ captureTeacherId(event: any) {
     if (teacherIndex > -1) {
       this.teacherInfo.splice(teacherIndex, 1);
     }
+
+    const index = this.teacherIds.findIndex((item) => item === event.teacherId);
+    if (index > -1) {
+      this.teacherIds.splice(teacherIndex, 1);
+    }
   }
 
   removeStudent(event: any){
@@ -406,12 +422,21 @@ captureTeacherId(event: any) {
     if (studentIndex > -1) {
       this.studentInfo.splice(studentIndex, 1);
     }
+
+    const index = this.studentIds.findIndex((item) => item === event.studentId);
+    if (index > -1) {
+      this.studentIds.splice(index, 1);
+    }
   }
 
   removeDiscipline(event: any){
     const disciplineIndex = this.disciplineInfo.findIndex((item) => item.id === event.id);
     if (disciplineIndex > -1) {
       this.disciplineInfo.splice(disciplineIndex, 1);
+    }
+    const index = this.disciplineIds.findIndex((item) => item === event.id);
+    if (index > -1) {
+      this.disciplineIds.splice(index, 1);
     }
   }
 
@@ -426,6 +451,17 @@ captureTeacherId(event: any) {
   }
 
   onEnter(event:any) {
+    const isBlank = /^\s*$/.test(event.target.value);
+    if(isBlank){
+      return;
+    }
+
+    if(this.tagList.includes('#' + event.target.value)){
+      event.target.value = '';
+      return;
+    }
+
+    event.target.value = event.target.value.replace(/^\s+|\s+$/g, "").replace(/\s+/g, " ");
     if(event.target.value.indexOf('#') > -1){
       this.tagList.push(event.target.value);
     }
@@ -435,6 +471,14 @@ captureTeacherId(event: any) {
     }
     
     event.target.value = '';
+
+    if(this.tagList.length > 7){
+      this.tagCountExceeded = true;
+      return; 
+    }
+    else{
+      this.tagCountExceeded = false;
+    }
   }
 
     removeTag(tag:any){
@@ -442,6 +486,31 @@ captureTeacherId(event: any) {
     if (tagIndex > -1) {
       this.tagList.splice(tagIndex, 1);
     }
+
+    if(this.tagList.length > 7){
+      this.tagCountExceeded = true;
+      return; 
+    }
+    else{
+      this.tagCountExceeded = false;
+    }
    }
+
+   openSharePostModal(): void {
+    debugger
+    if(this.fromSchoolProfile != ''){
+      var schoolName = this.createCourseForm1.controls['schoolName'].value;
+    }
+    if(this.fromSchoolProfile == ''){
+      var schoolId = this.createCourseForm1.controls['schoolId'].value;
+      var school = this.schools.find((x: { schoolId: any; })=> x.schoolId == schoolId);
+      var schoolName = school.schoolName;
+    }
+    const initialState = {
+      courseName: this.courseName,
+      schoolName: schoolName
+    };
+    this.bsModalService.show(SharePostComponent,{initialState});
+  }
 
 }

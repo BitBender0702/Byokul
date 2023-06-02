@@ -27,11 +27,9 @@
                     </li>
                   </ul>
                 </div>
-                
               </div>
   
-          <div class="chat-channel-header">
-            <!-- Example single danger button -->
+          <!-- <div class="chat-channel-header">
             <div class="btn-group">
               <button type="button" class="btn dropdown-toggle chat-channel-button px-3" data-bs-toggle="dropdown"
                 aria-expanded="false">
@@ -42,9 +40,10 @@
                 <li class="ps-0 mb-0"><a class="dropdown-item py-2" href="#">Guest School 2</a></li>
               </ul>
             </div>
-          </div>
+          </div> -->
           <div class="search-header position-relative">
-            <input (keyup)="chatHeadsSearch()" [(ngModel)]="searchString" type="search" class="form-control h_44" />
+            <input [(ngModel)]="searchString" type="search" class="form-control h_44" #searchInput (input)="chatHeadsSearch()">
+            <!-- <input (keyup)="chatHeadsSearch()" [(ngModel)]="searchString" type="search" class="form-control h_44" /> -->
             <button type="button" class="btn search-icon border-0"><img src="../../../assets/images/school/search-gray.svg" /></button>
           </div>
         </div>
@@ -65,7 +64,7 @@
                     <h2 class="mb-0">{{item?.userName}}</h2> &nbsp;
                     <span *ngIf="item?.unreadMessageCount!=0 && item?.unreadMessageCount!=null" class="badge rounded-circle d-inline-flex align-items-center justify-content-center fw_700 font_12 badgeBackground">{{item?.unreadMessageCount}}</span>                  </div>
                   <p *ngIf="item.lastMessage !=''" class="font_12 text_sec1 text-truncate mb-0">{{item.lastMessage}}</p>
-                      <p *ngIf="item.lastMessage ==''" class="font_12 text_sec1 text-truncate mb-0">📂{{item?.chats[0]?.attachment[0]?.fileName}}</p>
+                      <p *ngIf="item.lastMessage =='' && item.chats != null" class="font_12 text_sec1 text-truncate mb-0">📂{{item?.chats[0]?.attachment[0]?.fileName}}</p>
                 </div>
                 <div class="text-end">
                 <button *ngIf="!isPinned && !item.isPinned" (click)="pinUnpinChat(item.userID,item.chatType,true)" type="button" class="bg-transparent border-0">
@@ -88,12 +87,12 @@
                 <div class="postlds-ring" style="margin-left: 547px;margin-bottom: 270px;"><div></div><div></div><div></div><div></div></div>
               </div>
               <li [ngClass]="this.userChat.sendByMe ? 'me':'you'" *ngFor="let userChat of firstuserChats">
-                <div class="chat-username d-flex align-items-center mb-2">
+                <!-- <div class="chat-username d-flex align-items-center mb-2">
                   <img *ngIf="userChat.sendByMe" [src]="profileURL" alt="" class="rounded-circle me-2" style="max-width: 35px;">
                   <img *ngIf="!userChat.sendByMe" [src]="receiverAvatar" alt="" class="rounded-circle me-2" style="max-width: 35px;">
                   <h2 *ngIf="userChat.sendByMe" class="mb-0 font_16 fw_600 text_sec1">{{sender.firstName + "  " + sender.lastName}}</h2>
                   <h2 *ngIf="!userChat.sendByMe" class="mb-0 font_16 fw_600 text_sec1">{{userName}}</h2>
-                </div>
+                </div> -->
                 <div class="message">
                   <span *ngIf="userChat.text != null">{{userChat.text}}</span>
                 </div>
@@ -106,7 +105,7 @@
                 </div>
   
                 <div *ngIf="item.fileType ==2">
-                    <div class="videofile">
+                    <div class="videofile cursor-pointer"  (click)="showFullChatVideo(item.fileName,item.fileURL)">
                       <video preload="metadata" style="height: 300px;">
                         <source [src]="item.fileURL" type="video/mp4"/>
                       </video>
@@ -114,22 +113,21 @@
                 </div>
   
                 <div *ngIf="item.fileType ==3">
-  
                   <div class="teacher-tags hashtag_post tag-boxattachment-outer mt-1 mb-0 hover-tags">
-                    <span class="custom-tag"><img src="../../../assets/images/Paper-gray.svg" class="me-1 dark-svg">
+                    <span class="custom-tag" (click)="openCertificateViewModal(item.fileURL,item.fileName)"><img src="../../../assets/images/Paper-gray.svg" class="me-1 dark-svg">
                       <img src="../../../assets/images/Paper-light.svg" class="me-1 light-svg">{{item.fileName}}
                       </span>
                   </div>
                 </div>
               </div>
-                <div class="message-time text-end text_ltgray font_12">
+                <div [ngClass]="this.userChat.sendByMe ? 'message-time text-end text_ltgray font_12':'message-time text-start text_ltgray font_12'">
                   {{userChat.time | date : "HH:MM"}}              
                 </div>
   
                 <div class="forward-reply">
-                  <button type="button" class="forward-btn">Answer <img src="../../../assets/images/answer-forward-icon.svg"
+                  <button type="button" class="forward-btn">{{'Answer'| translate }} <img src="../../../assets/images/answer-forward-icon.svg"
                       class="ms-2" /></button><br />
-                  <button type="button" class="forward-btn">Forward <img src="../../../assets/images/forward-icon.svg"
+                  <button type="button" class="forward-btn">{{'Forward'| translate }} <img src="../../../assets/images/forward-icon.svg"
                       class="ms-2" /></button>
                 </div>
               </li>
@@ -139,6 +137,11 @@
             </ul>
   
             <div class="chat-footer">
+              <div class="d-flex justify-content-center">
+              <small class="p-error" style="color: orange;"
+              *ngIf="(exceedUploadFileSize)">{{'FileSizeExceed'| translate }}
+            </small>
+          </div>
               <div class="add-comment d-flex align-items-center justify-content-between pt-0">
                 <span class="bg-transparent rounded-circle comment-post-user rounded-circle"><img style="max-height: 160%;" [src]="sender.avatar">
                 </span>
@@ -152,18 +155,17 @@
                       <button (click)="removeUploadFile(item.fileURL)" type="button"
                        class="btn dl-post-img d-flex align-items-center justify-content-center rounded-circle position-absolute"><i
                          class="fa-solid fa-xmark"></i></button>
-                       
-                        
                     </span>
                   </div>
-                    <div *ngIf="(uploadVideos != undefined)">
-                    <span *ngFor="let item of uploadVideos">
+                    <div *ngIf="(uploadVideo != undefined)">
+                    <span *ngFor="let item of uploadVideo" class="position-relative d-inline-block">
                       <div class="videofile">
-                        <video preload="metadata" style="height: 300px;">
+                        <img [src]="item.videoUrl" style="height: 150px; max-width: 100%;">
+                        <!-- <video preload="metadata" style="height: 300px;">
                           <source [src]="item.fileURL" type="video/mp4"/>
-                        </video>
+                        </video> -->
                       </div>
-                      <button (click)="removeUploadFile(item.fileURL)" type="button"
+                      <button (click)="removeUploadFile(item.name)" type="button"
                         class="btn dl-post-img d-flex align-items-center justify-content-center rounded-circle position-absolute"><i
                           class="fa-solid fa-xmark"></i></button>
                     </span>
@@ -198,8 +200,16 @@
                         class="light-attach" />
                       </label>
                 </div>
-                <button *ngIf="invalidMessage" disabled (click)="sendToUser(recieverId)" type="button" class="comment-btn border-0"><img src="../../../assets/images/school/arrowup.svg"></button>
-                <button *ngIf="!invalidMessage" (click)="sendToUser(recieverId)" type="button" class="comment-btn border-0"><img src="../../../assets/images/school/arrowup.svg"></button>
+                <div>
+                  <button *ngIf="invalidMessage || disabledSendButton" disabled (click)="sendToUser(recieverId)" type="button" class="comment-btn border-0"><img *ngIf="!disabledSendButton" src="../../../assets/images/school/arrowup.svg"></button>
+                  <div *ngIf="disabledSendButton" class="postloader-main position-relative">
+                    <div class="postlds-chatUpload-ring" style="top: 18px;left: 34px;"><div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div></div>
+                  </div>
+                </div>
+                <button *ngIf="!invalidMessage && !disabledSendButton" (click)="sendToUser(recieverId)" type="button" class="comment-btn border-0"><img src="../../../assets/images/school/arrowup.svg"></button>
               </div>
             </div>
   
@@ -246,24 +256,12 @@
                 <div class="postlds-ring" style="margin-left: 547px;margin-bottom: 270px;"><div></div><div></div><div></div><div></div></div>
               </div>
               <li [ngClass]="this.userChat.sendByMe ? 'me':'you'" *ngFor="let userChat of schoolInboxList[0]?.chats">
-                <div class="chat-username d-flex align-items-center mb-2">
+                <!-- <div class="chat-username d-flex align-items-center mb-2">
                   <img *ngIf="!userChat.sendByMe" [src]="schoolInboxUserAvatar" alt="" class="rounded-circle me-2" style="max-width: 35px;">
                   <img *ngIf="userChat.sendByMe" [src]="senderAvatar" alt="" class="rounded-circle me-2" style="max-width: 35px;">
                     <h2 *ngIf="userChat.sendByMe" class="mb-0 font_16 fw_600 text_sec1">{{senderName}}</h2>
-                  <!-- <div *ngIf="schoolInboxList[0]?.school!=null">
-                    <img *ngIf="userChat.sendByMe" [src]="schoolInboxList[0]?.school.avatar" alt="" class="rounded-circle me-2" style="max-width: 35px;">
-                    <h2 *ngIf="userChat.sendByMe" class="mb-0 font_16 fw_600 text_sec1">{{schoolInboxList[0]?.school.schoolName}}</h2>
-                  </div>
-                  <div *ngIf="schoolInboxList[0]?.class!=null">
-                    <img *ngIf="userChat.sendByMe" [src]="schoolInboxList[0]?.class.avatar" alt="" class="rounded-circle me-2" style="max-width: 35px;">
-                    <h2 *ngIf="userChat.sendByMe" class="mb-0 font_16 fw_600 text_sec1">{{schoolInboxList[0]?.class.className}}</h2>
-                  </div>
-                  <div *ngIf="schoolInboxList[0]?.course!=null">
-                    <img *ngIf="userChat.sendByMe" [src]="schoolInboxList[0]?.course.avatar" alt="" class="rounded-circle me-2" style="max-width: 35px;">
-                    <h2 *ngIf="userChat.sendByMe" class="mb-0 font_16 fw_600 text_sec1">{{schoolInboxList[0]?.course.courseName}}</h2>
-                  </div> -->
                   <h2 *ngIf="!userChat.sendByMe" class="mb-0 font_16 fw_600 text_sec1">{{schoolInboxUserName}}</h2>
-                </div>
+                </div> -->
                 <div class="message">
                   <span *ngIf="userChat.text != null">{{userChat.text}}</span>
                 </div>
@@ -276,7 +274,8 @@
                 </div>
   
                 <div *ngIf="item.fileType ==2">
-                    <div class="videofile">
+                    <div class="videofile cursor-pointer" data-bs-toggle="modal"
+                    data-bs-target="#chat-video" (click)="showFullChatVideo(item.fileName,item.fileURL)">
                       <video preload="metadata" style="height: 300px;">
                         <source [src]="item.fileURL" type="video/mp4"/>
                       </video>
@@ -284,22 +283,21 @@
                 </div>
   
                 <div *ngIf="item.fileType ==3">
-  
                   <div class="teacher-tags hashtag_post tag-boxattachment-outer mt-1 mb-0 hover-tags">
-                    <span class="custom-tag"><img src="../../../assets/images/Paper-gray.svg" class="me-1 dark-svg">
+                    <span class="custom-tag" (click)="openCertificateViewModal(item.fileURL,item.fileName)"><img src="../../../assets/images/Paper-gray.svg" class="me-1 dark-svg">
                       <img src="../../../assets/images/Paper-light.svg" class="me-1 light-svg">{{item.fileName}}
                       </span>
                   </div>
                 </div>
               </div>
-                <div class="message-time text-end text_ltgray font_12">
+                <div [ngClass]="this.userChat.sendByMe ? 'message-time text-end text_ltgray font_12':'message-time text-start text_ltgray font_12'">
                   {{userChat.time | date : "HH:MM"}}              
                 </div>
   
                 <div class="forward-reply">
-                  <button type="button" class="forward-btn">Answer <img src="../../../assets/images/answer-forward-icon.svg"
+                  <button type="button" class="forward-btn">{{'Answer'| translate }} <img src="../../../assets/images/answer-forward-icon.svg"
                       class="ms-2" /></button><br />
-                  <button type="button" class="forward-btn">Forward <img src="../../../assets/images/forward-icon.svg"
+                  <button type="button" class="forward-btn">{{'Forward'| translate }} <img src="../../../assets/images/forward-icon.svg"
                       class="ms-2" /></button>
                 </div>
               </li>
@@ -309,10 +307,14 @@
             </ul>
   
             <div class="chat-footer">
+              <div class="d-flex justify-content-center">
+                <small class="p-error" style="color: orange;"
+                *ngIf="(exceedUploadFileSize)">{{'FileSizeExceed'| translate }}
+              </small>
+            </div>
               <div class="add-comment d-flex align-items-center justify-content-between pt-0">
                 <span class="bg-transparent rounded-circle comment-post-user rounded-circle"><img style="max-height: 160%;" [src]="sender.avatar">
                 </span>
-                
                   <input (keyup)="getTextMessage($event,schoolInboxReceiverId)" [(ngModel)]="messageToUser" type="text" class="form-control rounded-8 font_14 fw_400" placeholder="Your message">
                   <br>
                   <div *ngIf="(uploadImage != undefined)">
@@ -326,14 +328,16 @@
                         
                     </span>
                   </div>
-                    <div *ngIf="(uploadVideos != undefined)">
-                    <span *ngFor="let item of uploadVideos">
+
+                    <div *ngIf="(uploadVideo != undefined)">
+                    <span *ngFor="let item of uploadVideo" class="position-relative d-inline-block">
                       <div class="videofile">
-                        <video preload="metadata" style="height: 300px;">
+                        <img [src]="item.videoUrl" style="height: 150px; max-width: 100%;">
+                        <!-- <video preload="metadata" style="height: 300px;">
                           <source [src]="item.fileURL" type="video/mp4"/>
-                        </video>
+                        </video> -->
                       </div>
-                      <button (click)="removeUploadFile(item.fileURL)" type="button"
+                      <button (click)="removeUploadFile(item.name)" type="button"
                         class="btn dl-post-img d-flex align-items-center justify-content-center rounded-circle position-absolute"><i
                           class="fa-solid fa-xmark"></i></button>
                     </span>
@@ -350,27 +354,35 @@
                 
                 <div class="post-bot-left d-flex">
                       <label class="custom-file-upload post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center">
-                        <input id="hideFileType" type="file" multiple="multiple" (change)="handleImages($event)" accept="image/*"/>
+                        <input id="hideFileType" class="invisible" type="file" multiple="multiple" (change)="handleImages($event)" accept="image/*"/>
                         <img src="../../../assets/images/forward-icon.svg"
                         src="../../../assets/images/gallery-dark.svg" class="dark-attach" /><img src="../../../assets/images/Video-light.svg"
                         class="light-attach" />
                       </label>
                       <label class="custom-file-upload post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center">
-                        <input id="hideFileType" type="file" (change)="handleVideos($event)" accept="video/*"/>
+                        <input id="hideFileType" class="invisible" type="file" (change)="handleVideos($event)" accept="video/*"/>
                         <img
                         src="../../../assets/images/Video-dark.svg" class="dark-attach" /><img src="../../../assets/images/Video-light.svg"
                         class="light-attach" />
                       </label>
                       <label class="custom-file-upload post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center">
-                        <input id="hideFileType" type="file" (change)="handleAttachments($event)" accept="application/pdf"/>
+                        <input id="hideFileType" class="invisible" type="file" (change)="handleAttachments($event)" accept="application/pdf"/>
                         <img
                         src="../../../assets/images/Paper-Plus-dark.svg" class="dark-attach" /><img src="../../../assets/images/Paper-Plus-light.svg"
                         class="light-attach" />
                       </label>
-  
                 </div>
-                <button *ngIf="invalidMessage" disabled (click)="sendToUser(schoolInboxReceiverId)" type="button" class="comment-btn border-0"><img src="../../../assets/images/school/arrowup.svg"></button>
-                <button *ngIf="!invalidMessage" (click)="sendToUser(schoolInboxReceiverId)" type="button" class="comment-btn border-0"><img src="../../../assets/images/school/arrowup.svg"></button>
+
+                <div>
+                <button *ngIf="invalidMessage || disabledSendButton" disabled (click)="sendToUser(schoolInboxReceiverId)" type="button" class="comment-btn border-0"><img *ngIf="!disabledSendButton" src="../../../assets/images/school/arrowup.svg"></button>
+                <div *ngIf="disabledSendButton" class="postloader-main position-relative">
+                  <div class="postlds-chatUpload-ring" style="top: 18px;left: 34px;"><div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div></div>
+                </div>
+                </div>
+                <button *ngIf="!invalidMessage && !disabledSendButton" (click)="sendToUser(schoolInboxReceiverId)" type="button" class="comment-btn border-0"><img src="../../../assets/images/school/arrowup.svg"></button>
               </div>
             </div>
   
@@ -413,6 +425,28 @@
         </div>
       </div>
     </div>
+
+    <div class="modal fade edit-school-modal post-view-large" id="chat-video" tabindex="-1" aria-labelledby="chat-video"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header border-0 justify-content-center position-relative">
+          <h1 *ngIf="fullSizeVideoName != undefined" class="modal-title font_22 text_dark fw_700 border-0 text-center">{{fullSizeVideoName}}</h1>
+          <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"><img
+              src="../../../assets/images/cross.svg" /></button>
+        </div>
+        <div class="modal-body px-3">
+          <div class="attach-img-full">
+            <video #videoPlayer width="100%" height="700" controls class="video-js vjs-big-play-centered" preload="metadata">
+                  <source [src]="fullSizeVideoUrl" type="video/mp4"/>
+            </video>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
     </div>
   
     <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>

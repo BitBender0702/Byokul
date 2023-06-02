@@ -39,44 +39,37 @@
             </div>
 
               <div class="text-line-border position-relative text-center mb-2">
-                <span class="line-text font_12 text_ltgray fw_400 text-center">Time</span>
+                <span class="line-text font_12 text_ltgray fw_400 text-center">{{'Time'| translate }}</span>
               </div>   
              <form [formGroup]="filterDateForm">
               <div class="form-group position-relative">
                 <div class="form-check form-check-inline font_14 fw_500 d-flex align-items-center">
-                  Start Date:
+                  {{'StartDate'| translate }}:
                   <button type="button" class="btn custom-btn earning-btn fw_400 delay-btn post-delay-btn position-relative clock_style"> 
                     <img src="../../../assets/images/clock-orange.svg" />                     
-                      <p-calendar formControlName="startDate"></p-calendar>
+                      <p-calendar [maxDate]="maxDate" formControlName="startDate"></p-calendar>
                   </button>
                   <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 lg_btn">
                     {{filterDateForm.get('startDate')?.value | date : "MMMM d, y"}}</button>
                 </div>
                 <small class="p-error" style="color: orange; margin-left: 100px;"
-                  *ngIf="(isSubmitted && filterDateForm.controls.startDate.errors)">Start date is required
+                  *ngIf="(isSubmitted && filterDateForm.controls.startDate.errors)">{{'StartDateRequired'| translate }}
                 </small>
               </div> 
                  <div class="form-group position-relative">
                 <div class="form-check form-check-inline font_14 fw_500 d-flex align-items-center">
-                  End Date:
+                  {{'EndDate'| translate }}:
                   <button type="button" class="btn custom-btn earning-btn fw_400 delay-btn post-delay-btn position-relative clock_style"> 
                     <img src="../../../assets/images/clock-orange.svg" />                     
-                      <p-calendar formControlName="endDate"></p-calendar>
+                      <p-calendar [maxDate]="maxDate" formControlName="endDate"></p-calendar>
                   </button>
                   <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 lg_btn">
                     {{filterDateForm.get('endDate')?.value | date : "MMMM d, y"}}</button>
                 </div>
                 <small class="p-error" style="color: orange; margin-left: 100px;"
-                  *ngIf="(isSubmitted && filterDateForm.controls.endDate.errors)">End date is required
+                  *ngIf="(isSubmitted && filterDateForm.controls.endDate.errors)">{{'EndDateRequired'| translate }}
                 </small>
               </div> 
-              <!-- <div class="form-group position-relative">
-                <div class="form-check form-check-inline font_14 fw_500 d-flex align-items-center">
-                  <input class="form-check-input" checked="" type="checkbox" id="inlineCheckbox1" value="option1">
-                  Scheduled
-                </div>
-              </div>  -->
-              
               <small class="p-error" style="color: orange; margin-left: 100px;" *ngIf="isSubmitted && filterDateForm.errors">
                 {{ filterDateForm.errors.dates}}
               </small>
@@ -150,10 +143,7 @@
 
 <div class="mt-4 pt-1 d-flex align-content-center">
   <div class="search-header position-relative earning-search ">
-    <!-- <input type="search" class="form-control h_44 shadow-none"> -->
-    <!-- <input (keyup)="Search()" [(ngModel)]="searchString" type="search" class="form-control h_44"> -->
     <input [(ngModel)]="searchString" type="search" class="form-control h_44" (input)="Search()">
-
     <button type="button" class="btn search-icon"><img src="../../../assets/images/school/search-gray.svg"></button>
   </div>
   <div class="school-profile-tabs d-flex align-content-center justify-content-center earnings-tabs">
@@ -191,17 +181,17 @@
   <div class="wht_newbox followers_box earning-transactions">
     <div *ngIf="!transactionDetails.isUserHasOwnedSchool">
      <div class="text-center mt-5">
-       For create a school, click on:
+      {{'ForCreateSchoolClickOn'| translate }}:
        <button [routerLink]="['/user/createSchool']" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 me-2 ms-4">Create School</button>
      </div>
     </div>
     <ul class="list-unstyled before-none mb-0">
       <li class="mb-0" *ngFor="let item of allTransactionDetails?.transactions">
         <div class="d-flex align-items-center justify-content-between"><span class="followers-name font_16 text_sec1">
-          <img *ngIf="item.user != null" [src]="item.user?.avatar" class="rounded-circle me-2 image_style">
+          <img [routerLink]="['/user/userProfile', item.user?.id]" *ngIf="item.user != null" [src]="item.user?.avatar" class="rounded-circle me-2 image_style">
           <span [innerHTML]="item.message"></span>
-          <span *ngIf="item.class == null && item.course?.avatar != 'null'"><img *ngIf="item.course != null" [src]="item.course?.avatar" class="rounded-circle ms-2 image_style"></span>
-          <span *ngIf="item.course == null && item.class?.avatar != 'null'"><img *ngIf="item.class != null" [src]="item.class?.avatar" class="rounded-circle ms-2 image_style"></span>
+          <span *ngIf="item.class == null && item.course?.avatar != 'null'"><img [routerLink]="['/profile/course', item.course?.school.schoolName,item.course?.courseName]" *ngIf="item.course != null" [src]="item.course?.avatar" class="rounded-circle ms-2 image_style"></span>
+          <span *ngIf="item.course == null && item.class?.avatar != 'null'"><img [routerLink]="['/profile/class', item.class?.school.schoolName,item.class?.className]" *ngIf="item.class != null" [src]="item.class?.avatar" class="rounded-circle ms-2 image_style"></span>
          </span>
         <span class="followe_report d-inline-flex align-items-center"><p class="font_12 text_ltgray fw_400 me-3 mb-0">
           <p class="font_12 text_ltgray fw_400 me-3 mb-0">{{ item.createdOn | date:'dd/MM/yyyy'}}</p>
@@ -217,26 +207,18 @@
           <div class="wht_newbox followers_box earning-transactions">
             <div *ngIf="!transactionDetails.isUserHasOwnedSchool">
              <div class="text-center mt-5">
-               For create a school, click on:
+              {{'ForCreateSchoolClickOn'| translate }}:
                <button [routerLink]="['/user/createSchool']" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 me-2 ms-4">Create School</button>
              </div>
             </div>
             <ul class="list-unstyled before-none mb-0">
               <li class="mb-0" *ngFor="let item of transactionDetails.transactions">
                 <div class="d-flex align-items-center justify-content-between"><span class="followers-name font_16 text_sec1">
-                  <img [src]="item.user?.avatar" class="rounded-circle me-2 image_style">
+                  <img [routerLink]="['/user/userProfile', item.user?.id]" [src]="item.user?.avatar" class="rounded-circle me-2 image_style">
                   <span [innerHTML]="item.message"></span>
 
-                  <span *ngIf="item.class == null && item.course?.avatar != 'null'"><img [src]="item.course?.avatar" class="rounded-circle ms-2 image_style"></span>
-                  <span *ngIf="item.course == null && item.class?.avatar != 'null'"><img [src]="item.class?.avatar" class="rounded-circle ms-2 image_style"></span>
-
-
-
-                  <!-- <span [innerHTML]="item.message.replace('[img]','<img [src]="item.class.avatar">')"></span> -->
-
-
-
-
+                  <span *ngIf="item.class == null && item.course?.avatar != 'null'"><img [routerLink]="['/profile/course', item.course?.school.schoolName,item.course?.courseName]" [src]="item.course?.avatar" class="rounded-circle ms-2 image_style"></span>
+                  <span *ngIf="item.course == null && item.class?.avatar != 'null'"><img [routerLink]="['/profile/class', item.class?.school.schoolName,item.class?.className]" [src]="item.class?.avatar" class="rounded-circle ms-2 image_style"></span>
                  </span>
                 <span class="followe_report d-inline-flex align-items-center"><p class="font_12 text_ltgray fw_400 me-3 mb-0">
                   <p class="font_12 text_ltgray fw_400 me-3 mb-0">{{ item.createdOn | date:'dd/MM/yyyy'}}</p>
@@ -244,18 +226,6 @@
                 </span>
                 </div>
               </li>
-              <!-- <li class="mb-0">
-                <div class="d-flex align-items-center justify-content-between"><span class="followers-name font_16 text_sec1 fw_600">
-                  <img src="images/user.jpg" class="rounded-circle me-2"> School (Yours) <p class="font_16 ms-2 d-inline-block fw_400 mb-0">  sent you <b>$500</b> (Dividents) for</p> <img src="images/user.jpg" class="rounded-circle mx-2"> <b>Course</b> <p class="font_16 text_sec1 d-inline-block mb-0 fw_400">(12 Lections)</p> </span>
-                <span class="followe_report d-inline-flex align-items-center"><p class="font_12 text_ltgray fw_400 me-3 mb-0">12/06/2022</p> <p class="font_12 text_ltgray fw_400 mb-0">12:24</p></span>
-                </div>
-              </li>
-              <li class="mb-0">
-                <div class="d-flex align-items-center justify-content-between"><span class="followers-name font_16 text_sec1 fw_600">
-                  <img src="images/user.jpg" class="rounded-circle me-2"> School (Yours) <p class="font_16 ms-2 d-inline-block fw_400 mb-0">  sent you <b>$500</b> (Dividents) for</p> <img src="images/user.jpg" class="rounded-circle mx-2"> <b>Course</b> <p class="font_16 text_sec1 d-inline-block mb-0 fw_400">(12 Lections)</p> </span>
-                <span class="followe_report d-inline-flex align-items-center"><p class="font_12 text_ltgray fw_400 me-3 mb-0">12/06/2022</p> <p class="font_12 text_ltgray fw_400 mb-0">12:24</p></span>
-                </div>
-              </li> -->
             </ul>
           </div>
         </div>
@@ -264,24 +234,6 @@
       
         <div class="wht_newbox followers_box earning-transactions">
           <ul class="list-unstyled before-none mb-0">
-            <!-- <li class="mb-0">
-              <div class="d-flex align-items-center justify-content-between"><span class="followers-name font_16 text_sec1 fw_600">
-                <img src="images/feed-school3.jpg" class="rounded-circle me-2"> School <p class="font_16 ms-2 d-inline-block fw_400 mb-0">  sent you <b>$500</b> for</p> <img src="images/feed-school2.jpg" class="rounded-circle mx-2"> <b>class</b> <p class="font_16 text_sec1 d-inline-block mb-0 fw_400">(12 Lections)</p> </span>
-              <span class="followe_report d-inline-flex align-items-center"><p class="font_12 text_ltgray fw_400 me-3 mb-0">12/06/2022</p> <p class="font_12 text_ltgray fw_400 mb-0">12:24</p></span>
-              </div>
-            </li>
-            <li class="mb-0">
-              <div class="d-flex align-items-center justify-content-between"><span class="followers-name font_16 text_sec1 fw_600">
-                <img src="images/feed-school3.jpg" class="rounded-circle me-2"> School <p class="font_16 ms-2 d-inline-block fw_400 mb-0">  sent you <b>$500</b> for</p> <img src="images/feed-school2.jpg" class="rounded-circle mx-2"> <b>class</b> <p class="font_16 text_sec1 d-inline-block mb-0 fw_400">(12 Lections)</p> </span>
-              <span class="followe_report d-inline-flex align-items-center"><p class="font_12 text_ltgray fw_400 me-3 mb-0">12/06/2022</p> <p class="font_12 text_ltgray fw_400 mb-0">12:24</p></span>
-              </div>
-            </li>
-            <li class="mb-0">
-              <div class="d-flex align-items-center justify-content-between"><span class="followers-name font_16 text_sec1 fw_600">
-                <img src="images/feed-school3.jpg" class="rounded-circle me-2"> School <p class="font_16 ms-2 d-inline-block fw_400 mb-0">  sent you <b>$500</b> for</p> <img src="images/feed-school2.jpg" class="rounded-circle mx-2"> <b>class</b> <p class="font_16 text_sec1 d-inline-block mb-0 fw_400">(12 Lections)</p> </span>
-              <span class="followe_report d-inline-flex align-items-center"><p class="font_12 text_ltgray fw_400 me-3 mb-0">12/06/2022</p> <p class="font_12 text_ltgray fw_400 mb-0">12:24</p></span>
-              </div>
-            </li> -->
           </ul>
         </div>
       </div>
@@ -299,21 +251,8 @@
                 <p class="font_12 text_ltgray fw_400 me-3 mb-0">{{ item.createdOn | date:'dd/MM/yyyy'}}</p>
                 <p class="font_12 text_ltgray fw_400 mb-0">{{ item.createdOn | date:'HH:mm' }}</p>
               </span>
-            <!-- <span class="followe_report d-inline-flex align-items-center"><p class="font_12 text_ltgray fw_400 me-3 mb-0">12/06/2022</p> <p class="font_12 text_ltgray fw_400 mb-0">12:24</p></span> -->
             </div>
           </li>
-          <!-- <li class="mb-0">
-            <div class="d-flex align-items-center justify-content-between"><span class="followers-name font_16 text_sec1 ">
-              <p class="font_16 ms-2 d-inline-block fw_400 mb-0">  You have withdrawn <b>$500</b> to <b>Credit Card</b> (**** 5067) </p> </span>
-            <span class="followe_report d-inline-flex align-items-center"><p class="font_12 text_ltgray fw_400 me-3 mb-0">12/06/2022</p> <p class="font_12 text_ltgray fw_400 mb-0">12:24</p></span>
-            </div>
-          </li>
-          <li class="mb-0">
-            <div class="d-flex align-items-center justify-content-between"><span class="followers-name font_16 text_sec1 ">
-              <p class="font_16 ms-2 d-inline-block fw_400 mb-0">  You have withdrawn <b>$500</b> to <b>Credit Card</b> (**** 5067) </p> </span>
-            <span class="followe_report d-inline-flex align-items-center"><p class="font_12 text_ltgray fw_400 me-3 mb-0">12/06/2022</p> <p class="font_12 text_ltgray fw_400 mb-0">12:24</p></span>
-            </div>
-          </li> -->
         </ul>
       </div>
     </div>
@@ -351,7 +290,7 @@ aria-labelledby="open-payoutModal" aria-hidden="true">
              <label class="font_10">{{'AccountHolderName'| translate }}</label>
              <input formControlName="accountHolderName" type="text" placeholder="" name="accountHolderName" class="form-control w-100">
              <small class="p-error" style="color: orange;"
-                *ngIf="(isSubmitted && payoutForm.controls.accountHolderName.errors)"> This field is required
+                *ngIf="(isSubmitted && payoutForm.controls.accountHolderName.errors)">{{'ThisFieldRequired'| translate }}
              </small>
             </div>
            </div>
@@ -361,7 +300,7 @@ aria-labelledby="open-payoutModal" aria-hidden="true">
            <label class="font_10">{{'AccountNumber'| translate }}</label>
            <input formControlName="accountNumber" type="text" placeholder="" name="accountNumber" class="form-control w-100">
            <small class="p-error" style="color: orange;"
-              *ngIf="(isSubmitted && payoutForm.controls.accountNumber.errors)"> This field is required
+              *ngIf="(isSubmitted && payoutForm.controls.accountNumber.errors)"> {{'ThisFieldRequired'| translate }}
            </small>
           </div>
          </div>
@@ -373,7 +312,7 @@ aria-labelledby="open-payoutModal" aria-hidden="true">
          <label class="font_10">{{'RoutingNumber'| translate }}</label>
          <input formControlName="routingNumber" type="text" placeholder="" name="routingNumber" class="form-control w-100">
          <small class="p-error" style="color: orange;"
-            *ngIf="(isSubmitted && payoutForm.controls.routingNumber.errors)"> This field is required
+            *ngIf="(isSubmitted && payoutForm.controls.routingNumber.errors)"> {{'ThisFieldRequired'| translate }}
          </small>
         </div>
        </div>
@@ -383,7 +322,7 @@ aria-labelledby="open-payoutModal" aria-hidden="true">
        <label class="font_10">{{'Amount'| translate }}</label>
        <input formControlName="amount" type="text" placeholder="" name="amount" min="1" class="form-control w-100">
        <small class="p-error" style="color: orange;"
-          *ngIf="(isSubmitted && payoutForm.controls.amount.errors)"> This field is required
+          *ngIf="(isSubmitted && payoutForm.controls.amount.errors)"> {{'ThisFieldRequired'| translate }}
       </small>
       </div>
      </div>
@@ -395,7 +334,7 @@ aria-labelledby="open-payoutModal" aria-hidden="true">
           <option *ngFor="let country of countries;" [value]="country.countryCode">{{country.countryName}}</option>
        </select>
        <small class="p-error" style="color: orange;"
-       *ngIf="(isSubmitted && payoutForm.controls.country.errors)">This Field is required
+       *ngIf="(isSubmitted && payoutForm.controls.country.errors)">{{'ThisFieldRequired'| translate }}
        </small>
       </div>
     </div>
@@ -408,7 +347,7 @@ aria-labelledby="open-payoutModal" aria-hidden="true">
           <option value="2">{{'Company'| translate }}</option>
         </select>
         <small class="p-error" style="color: orange;"
-           *ngIf="(isSubmitted && payoutForm.controls.accountHolderType.errors)">Account Holder Type is required
+           *ngIf="(isSubmitted && payoutForm.controls.accountHolderType.errors)">{{'AccountHolderTypeRequired'| translate }}
         </small>
       </div>
     </div>

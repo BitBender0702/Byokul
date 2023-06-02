@@ -27,3 +27,13 @@
   .video-js{
     height: 300px;
   }
+
+  .routeLink{
+    cursor: pointer;
+    color: inherit;
+    text-decoration: none;
+}
+
+.cursor_pointer{
+  cursor: pointer;
+}

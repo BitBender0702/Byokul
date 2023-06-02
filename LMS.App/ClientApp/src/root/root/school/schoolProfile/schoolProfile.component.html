@@ -36,7 +36,7 @@
           <div class="followers_name d-inline-block font_16 mr-_24"><img src="../../../../assets/images/followers.svg" /> {{'Followers'| translate }}: <b
               class="fw_700"><a style="text-decoration: none;cursor: pointer;color: black;" [routerLink]="['/user/schoolFollowers', school.schoolId]">{{followersLength}}</a></b></div>
           <div class="followers_name d-inline-block font_16 mr-_24"><img src="../../../../assets/images/students-icon.svg" /> {{'Students'| translate }}: <b
-              class="fw_700">{{school.students}}</b></div>
+              class="fw_700"><a style="text-decoration: none;cursor: pointer;color: black;" [routerLink]="['/user/studentList', school.schoolId,1]">{{school.students}}</a></b></div>
           <div class="followers_name d-inline-block font_16 mr-_24"><img src="../../../../assets/images/Edit-dark.svg" /> {{'Post'| translate }}: <b
               class="fw_700">{{school.posts.length}}</b></div>
           <button *ngIf="!isOwner && !isFollowed" (click)="followSchool(school.schoolId,'Follow')" type="button"
@@ -47,9 +47,17 @@
             class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn me-0">{{'MessageSchool'| translate }}
             </button>
           <p class="font_16 mt-4">{{school.description}}</p>
-          <button *ngIf="isOwner || hasUpdateSchoolPermission" (click)="getSchoolDetails(school.schoolId)" class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins" data-bs-toggle="modal"
+          <button *ngIf="isOwner || hasUpdateSchoolPermission" (click)="getSchoolDetails(school.schoolId)" class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins" style="margin-right: 243px;" data-bs-toggle="modal"
               data-bs-target="#editschool"><img src="../../../../assets/images/Setting-solid-dark.svg" class="me-2" /> {{'EditProfile'| translate }}
-              </button>
+          </button>
+          <button *ngIf="isOwner" class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins" style="margin-right: 122px;" data-bs-toggle="modal"
+              data-bs-target="#deleteschool"> {{'DeleteSchool'| translate }}
+          </button>
+          <button *ngIf="isOwner" class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins" data-bs-toggle="modal"
+          data-bs-target="#enableDisableSchool"> 
+          <span *ngIf="!school.isDisableByOwner">{{'DisableSchool'| translate }}</span>
+          <span *ngIf="school.isDisableByOwner">{{'EnableSchool'| translate }}</span>
+         </button>
         </div>
       </div>
       </div>
@@ -135,7 +143,7 @@
                   <path fill-rule="evenodd" clip-rule="evenodd" d="M5.19424 13.6654L8.37844 12.1666V8.23893L13.3716 3.17507C13.5597 2.98533 13.6654 2.72492 13.6654 2.45221V1.34373C13.6654 0.78449 13.2265 0.332031 12.685 0.332031H1.31236C0.770872 0.332031 0.332031 0.78449 0.332031 1.34373V2.47756C0.332031 2.7349 0.426494 2.98226 0.596824 3.1697L5.19424 8.23893V13.6654Z" fill="white"/>
                   </svg>
                   <button type="button" class="btn btn-default dropdown-toggle after-none border-0 py-0 h-auto" data-bs-toggle="dropdown" aria-haspopup="true"
-              aria-expanded="false">Classes  <span class="position-absolute start-100 translate-middle border border-light rounded-circle filter-badge">
+              aria-expanded="false">{{'Classes'| translate }}  <span class="position-absolute start-100 translate-middle border border-light rounded-circle filter-badge">
                 {{noOfAppliedClassFilters}}
               </span></button>
               </div>
@@ -147,7 +155,7 @@
             </div>
   
               <div class="text-line-border position-relative text-center mb-2">
-                <span class="line-text font_12 text_ltgray fw_400 text-center">Time</span>
+                <span class="line-text font_12 text_ltgray fw_400 text-center">{{'Time'| translate }}</span>
               </div>   
               <ng-container *ngFor="let classFilter of classFilters">
                 <div *ngIf="classFilter.type == 1" class="form-group position-relative">
@@ -160,7 +168,7 @@
               </ng-container>
 
               <div class="text-line-border position-relative text-center mb-2">
-                <span class="line-text font_12 text_ltgray fw_400 text-center">Pricing</span>
+                <span class="line-text font_12 text_ltgray fw_400 text-center">{{'Pricing'| translate }}</span>
               </div>   
               <ng-container *ngFor="let classFilter of classFilters">
                 <div *ngIf="classFilter.type == 2" class="form-group position-relative">
@@ -173,7 +181,7 @@
               </ng-container>
 
               <div class="text-line-border position-relative text-center mb-2">
-                <span class="line-text font_12 text_ltgray fw_400 text-center">Sorting</span>
+                <span class="line-text font_12 text_ltgray fw_400 text-center">{{'Sorting'| translate }}</span>
               </div>  
               <ng-container *ngFor="let classFilter of classFilters">
                 <div *ngIf="classFilter.type == 3" class="form-group position-relative">
@@ -186,7 +194,7 @@
               </ng-container>
 
               <div class=" d-flex align-items-center justify-content-between flex-sm-nowrap border-0">
-                <button type="button" class="btn custom-btn primary_btn earning-btn fw_500 h_44 w-100 font_14 prev-step-btn prev-step me-2" data-bs-dismiss="modal">Clear All</button>
+                <button (click)="clearAllClassFilters($event)" type="button" class="btn custom-btn primary_btn earning-btn fw_500 h_44 w-100 font_14 prev-step-btn prev-step me-2">Clear All</button>
                 <button (click)="saveClassFilters()" type="button" class="btn custom-btn primary_btn earning-btn fw_500 h_44 w-100 font_14  next-step m-0">Apply</button>
               </div>       
             </div>
@@ -195,7 +203,7 @@
           <span class="divider">|</span>
           <div class="btn-group dropdown-filter">
             <button (click)="getCourseFilters()" type="button" class="btn btn-default dropdown-toggle after-none border-0 py-0 h-auto" data-bs-toggle="dropdown" aria-haspopup="true"
-              aria-expanded="false">Courses <span class="position-absolute start-100 translate-middle border border-light rounded-circle filter-badge">
+              aria-expanded="false">{{'Courses'| translate }} <span class="position-absolute start-100 translate-middle border border-light rounded-circle filter-badge">
                 {{noOfAppliedCourseFilters}}
               </span></button>
             <div class="dropdown-menu px-4 py-3">
@@ -205,7 +213,7 @@
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M5.19424 13.6654L8.37844 12.1666V8.23893L13.3716 3.17507C13.5597 2.98533 13.6654 2.72492 13.6654 2.45221V1.34373C13.6654 0.78449 13.2265 0.332031 12.685 0.332031H1.31236C0.770872 0.332031 0.332031 0.78449 0.332031 1.34373V2.47756C0.332031 2.7349 0.426494 2.98226 0.596824 3.1697L5.19424 8.23893V13.6654Z" fill="white"/>
                     </svg>
                     <button type="button" class="btn btn-default dropdown-toggle after-none border-0 py-0 h-auto" data-bs-toggle="dropdown" aria-haspopup="true"
-                aria-expanded="false">Courses  <span class="position-absolute start-100 translate-middle border border-light rounded-circle filter-badge">
+                aria-expanded="false">{{'Courses'| translate }}  <span class="position-absolute start-100 translate-middle border border-light rounded-circle filter-badge">
                   {{noOfAppliedCourseFilters}}
                 </span></button>
                 </div>
@@ -216,7 +224,7 @@
                   </button>
               </div>
               <div class="text-line-border position-relative text-center mb-2">
-                <span class="line-text font_12 text_ltgray fw_400 text-center">Time</span>
+                <span class="line-text font_12 text_ltgray fw_400 text-center">{{'Time'| translate }}</span>
               </div>   
               <ng-container *ngFor="let courseFilter of courseFilters">
                 <div *ngIf="courseFilter.type == 1" class="form-group position-relative">
@@ -230,7 +238,7 @@
 
              
               <div class="text-line-border position-relative text-center mb-2">
-                <span class="line-text font_12 text_ltgray fw_400 text-center">Pricing</span>
+                <span class="line-text font_12 text_ltgray fw_400 text-center">{{'Pricing'| translate }}</span>
               </div>   
 
               <ng-container *ngFor="let courseFilter of courseFilters">
@@ -244,7 +252,7 @@
               </ng-container>
 
               <div class="text-line-border position-relative text-center mb-2">
-                <span class="line-text font_12 text_ltgray fw_400 text-center">Sorting</span>
+                <span class="line-text font_12 text_ltgray fw_400 text-center">{{'Sorting'| translate }}</span>
               </div>   
 
               <ng-container *ngFor="let courseFilter of courseFilters">
@@ -258,7 +266,7 @@
               </ng-container>
 
               <div class=" d-flex align-items-center justify-content-between flex-sm-nowrap border-0">
-                <button type="button" class="btn custom-btn primary_btn earning-btn fw_500 h_44 w-100 font_14 prev-step-btn prev-step me-2" data-bs-dismiss="modal">Clear All</button>
+                <button (click)="clearAllCourseFilters($event)" type="button" class="btn custom-btn primary_btn earning-btn fw_500 h_44 w-100 font_14 prev-step-btn prev-step me-2">Clear All</button>
                 <button (click)="saveCourseFilters()" type="button" class="btn custom-btn primary_btn earning-btn fw_500 h_44 w-100 font_14  next-step m-0">Apply</button>
               </div>       
             </div>
@@ -340,23 +348,26 @@
                             {{post.description}}
                         </p>
                         <div class="teacher-tags tag-box hashtag_box">
+                          <ng-container *ngFor="let attachment of filteredAttachments">
+                          <span *ngIf="attachment.postId == post.id" class="custom-tag cursor_pointer" (click)="openCertificateViewModal(attachment.fileUrl,attachment.fileName,5,$event)">{{attachment.fileName}}</span>
+                          </ng-container>
+                        </div>
+                        <div class="teacher-tags tag-box hashtag_box">
                             <span *ngFor="let tag of post.postTags" class="custom-tag">#{{tag.postTagValue}}</span>
                         </div>
-                        <div *ngIf="post.postAttachments.length && post.postAttachments.fileType != 3" class="school-grid-thumbnail new-school-grid-thumbnail" style="cursor: pointer;">
+                        <div *ngIf="post.postAttachments.length" class="school-grid-thumbnail new-school-grid-thumbnail" style="cursor: pointer;">
                           <div  class="row gx-1 h-100">
-                              
                                 <div *ngIf="post.postAttachments.length == 1"  class="col-md-12 h-100">
                                     <div class="school-large-thumbnail shadow-thumnail position-relative">
                                        <img *ngIf="post.postAttachments.length == 1 && post.postAttachments[0]?.fileType==2" class="w-100" style="cursor: pointer;" [src]="post.postAttachments[0]?.fileThumbnail">
                                         <img *ngIf="post.postAttachments[0]?.fileType==1" class="w-100" [src]="post.postAttachments[0]?.fileUrl" />
                                     </div>
                                 </div>
-
                                 <div *ngIf="post.postAttachments.length == 2"  class="col-md-12 h-100">
                                   <div class="school-large-thumbnail shadow-thumnail position-relative">
                                     <ng-container *ngFor="let attachment of post.postAttachments">
                                       <img *ngIf="attachment?.fileType==2" class="w-100" style="cursor: pointer;" [src]="attachment?.fileThumbnail">
-                                      <img style="height: 598px;" *ngIf="attachment?.fileType==1" class="w-100" [src]="attachment?.fileUrl" />
+                                      <img style="height: 598px; width:50% !important" *ngIf="attachment?.fileType==1" class="w-100" [src]="attachment?.fileUrl" />
                                     </ng-container>
                                   </div>
                                 </div>
@@ -424,12 +435,11 @@
                             <img *ngIf="post.isPostSavedByCurrentUser" src="../../../../assets/images/Bookmark-light.svg" class="d-block mx-auto">
                             {{post.savedPostsCount}}
                         </button>
-                        <button (click)="openSharePostModal(post.id,post.postType)" type="button" class="bg-transparent border-0 function-btns text-light">
+                        <button (click)="openSharePostModal(post.id,post.postType,post.title,post.description)" type="button" class="bg-transparent border-0 function-btns text-light">
                             <img src="../../../../assets/images/Upload-light.svg" class="d-block mx-auto" />
                             {{post.postSharedCount}}
                         </button>
                     </div>
-
                     <div *ngIf="post.postAttachments.length == 0" class="school-grid-footer">
                       <button type="button" class="bg-transparent border-0 function-btns text-light cursor_auto">
                         <img src="../../../../assets/images/eye.svg" class="d-block mx-auto" />
@@ -451,7 +461,7 @@
                         <img *ngIf="post.isPostSavedByCurrentUser" src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto">
                         <span class="textBlack">{{post.savedPostsCount}}</span>
                       </button>
-                      <button (click)="openSharePostModal(post.id,post.postType)" type="button" class="bg-transparent border-0 function-btns text-light">
+                      <button (click)="openSharePostModal(post.id,post.postType,post.title,post.description)" type="button" class="bg-transparent border-0 function-btns text-light">
                         <img src="../../../../assets/images/Upload-dark.svg" class="d-block mx-auto" />
                         <span class="textBlack">{{post.postSharedCount}}</span>
                       </button>
@@ -500,6 +510,11 @@
                 </p>
               </div>
               <p class="text_sec1 font_14 pt-3">{{gridItemInfo.description}}</p>
+              <div class="teacher-tags tag-box hashtag_box">
+                <ng-container *ngFor="let attachment of filteredAttachments">
+                <span *ngIf="attachment.postId == gridItemInfo.id" class="custom-tag cursor_pointer" (click)="openCertificateViewModal(attachment.fileUrl,attachment.fileName,5,$event)">{{attachment.fileName}}</span>
+                </ng-container>
+              </div>
               <div *ngIf="gridItemInfo.postTags.length != 0" class="teacher-tags tag-box hashtag_box">
                 <span *ngFor="let tag of gridItemInfo.postTags" class="custom-tag">{{tag.postTagValue}}</span>
               </div>
@@ -524,7 +539,7 @@
                   <img *ngIf="gridItemInfo.isPostSavedByCurrentUser" src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto">
                   {{gridItemInfo.savedPostsCount}}
                 </button>
-                <button (click)="openSharePostModal(gridItemInfo.id,gridItemInfo.postType)" type="button" class="bg-transparent border-0 function-btns">
+                <button (click)="openSharePostModal(gridItemInfo.id,gridItemInfo.postType,gridItemInfo.title,gridItemInfo.description)" type="button" class="bg-transparent border-0 function-btns">
                   <img src="../../../../assets/images/Upload-dark.svg" class="d-block mx-auto">
                   {{gridItemInfo.postSharedCount}}
                 </button>
@@ -565,7 +580,7 @@
                                     <div class="row gx-1">
                                         <div class="col-md-12">
                                             <div class="school-large-thumbnail shadow-thumnail position-relative">
-                                                <div *ngIf="post.postAttachments[0]?.fileUrl == null" class="description_scroll">{{post.description}}</div>
+                                                <div *ngIf="post.postAttachments[0]?.fileType == null || post.postAttachments[0]?.fileType == 3" class="description_scroll">{{post.description}}</div>
                                               <div *ngIf="post.postAttachments[0]?.fileType==2" class="videofile">
                                                 <img preload="metadata" style="height: 300px;" [src]="post.postAttachments[0]?.fileThumbnail">
                                               </div>
@@ -594,10 +609,32 @@
                   <div class="school-grid-box position-relative school-list-box h-100 mb-0">
                     <div class="schoolgrid-header pe-0">
                       <div class="d-flex align-items-center position-relative">
-                        <div class="school-gridprofile-icon ">
-                          <img [src]="item.avatar" />
+                        <div *ngIf="item.type == 1" [routerLink]="['/profile/class', item.schoolName,item.name]" class="school-gridprofile-icon ">
+                          <!-- <a *ngIf="item.type == 1" [routerLink]="['/profile/class', item.schoolName,item.name]" class="routeLink">
+                            <img [src]="item.avatar" />                          
+                          </a>
+                          <a *ngIf="item.type == 2" [routerLink]="['/profile/course', item.schoolName,item.name]" class="routeLink">
+                                                    
+                          </a> -->
+                          <img [src]="item.avatar" />  
                         </div>
-                        <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">{{item.name}}</h2>
+                        <div *ngIf="item.type == 2" [routerLink]="['/profile/course', item.schoolName,item.name]" class="school-gridprofile-icon ">
+                          <!-- <a *ngIf="item.type == 1" [routerLink]="['/profile/class', item.schoolName,item.name]" class="routeLink">
+                            <img [src]="item.avatar" />                          
+                          </a>
+                          <a *ngIf="item.type == 2" [routerLink]="['/profile/course', item.schoolName,item.name]" class="routeLink">
+                                                    
+                          </a> -->
+                          <img [src]="item.avatar" />  
+                        </div>
+                        <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">
+                          <a *ngIf="item.type == 1" [routerLink]="['/profile/class', item.schoolName,item.name]" class="routeLink">
+                            {{item.name}}                          
+                          </a>
+                          <a *ngIf="item.type == 2" [routerLink]="['/profile/course', item.schoolName,item.name]" class="routeLink">
+                            {{item.name}}                          
+                          </a>
+                          </h2>
                         <div class="d-flex align-items-center post-right-action">
                           <ul class="list-unstyled d-flex more-action-btn before-none pe-2 me-1 mb-0">
                             <li class="d-inline-block ps-0 mb-0">
@@ -608,7 +645,7 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                   <li><a style="cursor: pointer;" class="dropdown-item"
-                                    (click)="getDeletedId(item.id,item.type)" data-bs-toggle="modal" data-bs-target="#delete-Class">{{'Delete'| translate }}
+                                    (click)="getDeletedId(item.id,item.type,item.noOfStudents)" data-bs-toggle="modal" data-bs-target="#delete-Class">{{'Delete'| translate }}
                                   </a>
                                   </li>
                                 </ul>
@@ -630,7 +667,7 @@
                           <span *ngIf="item.rating != null" class="font_14 fw_600 text_sec1 d-inline-flex align-items-center"><img
                               src="../../../../assets/images/Star-solid-dark.svg" class="me-1" />{{item.rating}}</span>
                           <span *ngIf="item.price != null && item.price != 0" class="payment-profile font_12 text_ltgray ms-2"><strong
-                              class="cost_theme font_14">${{item.price}}</strong> One Payment</span>
+                              class="cost_theme font_14">${{item.price}}</strong>{{'OnePayment'| translate }}</span>
                         </div>
                       </div>  
                     </div>
@@ -679,7 +716,7 @@
                             <img *ngIf="item.isClassCourseSavedByCurrentUser" src="../../../../assets/images/Bookmark-light.svg" class="d-block mx-auto">
                             {{item.savedClassCourseCount}}
                           </button>
-                          <button type="button" class="bg-transparent border-0 function-btns text-light">
+                          <button (click)="openShareClassCourseModal(item.schoolName,item.name,item.type)" type="button" class="bg-transparent border-0 function-btns text-light">
                             <img src="../../../../assets/images/Upload-light.svg" class="d-block mx-auto">
                             0
                           </button>
@@ -711,11 +748,14 @@
                 <img [src]="uploadImage">
               </div>
               <div *ngIf="uploadImage == ''">
-                <img src={{editSchool?.avatar}} style="scale: 1.2;">
+                <img src={{schoolAvatar}} style="scale: 1.2;">
               </div>
               </div>
             </div>
             <input #imageFile class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins position-static opacity-100" type="file" name="Edit Picture" id="avatar" (change)="handleImageInput($event)" accept="image/*"/>
+            <button *ngIf="(uploadImage != '' && uploadImage != undefined) || (schoolAvatar != '' && schoolAvatar != null)" (click)="removeLogo()" class="btn border-0 font_12 text_dark f-poppins">
+              {{'DeletePhoto'| translate }}
+           </button>
           </div>
           <div class="text-line-border position-relative text-center mb-4">
             <span class="line-text font_12 text_ltgray fw_400 text-center">{{'GeneralInformation'| translate }}</span>
@@ -725,9 +765,9 @@
               <div class="col-md-6">
                 <div class="form-group">
                   <label class="font_10">{{'SchoolName'| translate }}*</label>
-                  <input type="text" formControlName="schoolName" name="schoolName" class="form-control w-100" placeholder="{{'SchoolName'| translate }}">
+                  <input type="text" formControlName="schoolName" name="schoolName" maxlength="60" class="form-control w-100" placeholder="{{'SchoolName'| translate }}">
                   <small class="p-error" style="color: orange;"
-                  *ngIf="(isSubmitted && editSchoolForm.controls.schoolName.errors)">School Name is required
+                  *ngIf="(isSubmitted && editSchoolForm.controls.schoolName.errors)">{{'SchoolNameRequired'| translate }}
                 </small>
                 </div>
               </div>
@@ -740,10 +780,10 @@
               </div>
               <div class="col-md-6">
                 <div class="form-group">
-                  <label class="font_10">Founded*</label>
+                  <label class="font_10">{{'Founded'| translate }}*</label>
                   <input type="date" formControlName="founded" placeholder="10/10/2022" name="Founded" class="form-control w-100">
                   <small class="p-error" style="color: orange;"
-                  *ngIf="(isSubmitted && editSchoolForm.controls.founded.errors)">Founded Year is required
+                  *ngIf="(isSubmitted && editSchoolForm.controls.founded.errors)">{{'FoundedYearRequired'| translate }}
                 </small>
                 <small class="p-error" style="color: orange;" *ngIf="isSubmitted && editSchoolForm.errors">
                   {{ editSchoolForm.errors.dates}}
@@ -752,18 +792,18 @@
               </div>
               <div class="col-md-6">
                 <div class="form-group">
-                  <label class="font_10">Visibility*</label>
+                  <label class="font_10">{{'Visibility'| translate }}*</label>
                   <select class="form-select rounded-8 w-100" formControlName="accessibilityId">
                     <option *ngFor="let item of accessibility; let i = index" [value]="item.id" [selected]="i">{{item.name}}</option>
                     <small class="p-error" style="color: orange;"
-                  *ngIf="(isSubmitted && editSchoolForm.controls.accessibilityId.errors)">This Field is required
+                  *ngIf="(isSubmitted && editSchoolForm.controls.accessibilityId.errors)">{{'ThisFieldRequired'| translate }}
                 </small>
                  </select>
                 </div>
               </div>
               <div class="col-md-12">
               <div class="form-group ">
-                <label class="font_10">School Bio</label>
+                <label class="font_10">{{'SchoolBio'| translate }}</label>
                 <input  type="text" formControlName="description" class="form-control resize-none ht_96" />
               </div>
             </div>
@@ -794,6 +834,59 @@
     </div>
   </div>
 
+  <div class="modal fade edit-school-modal delete-modal" id="deleteschool" tabindex="-1"
+  aria-labelledby="deleteschool" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header border-0 justify-content-center position-relative">
+        <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">{{'DeleteSchool'| translate }}</h1>
+        <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"><img
+            src="../../../../assets/images/cross.svg" /></button>
+      </div>
+      <div class="modal-body">
+          <div class="form-group">
+            <h2 class="text-center font_16 f-poppins">{{'DoYouWantToDelete'| translate }}</h2>
+          </div>
+          <div
+          class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-2 mt-4">
+          <button type="button"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+            data-bs-dismiss="modal">{{'No'| translate }}</button>
+          <button (click)="deleteSchool()" type="button"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step" data-bs-dismiss="modal">{{'Yes'| translate }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade edit-school-modal delete-modal" id="enableDisableSchool" tabindex="-1"
+aria-labelledby="enableDisableSchool" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered">
+  <div class="modal-content">
+    <div class="modal-header border-0 justify-content-center position-relative">
+      <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">{{'Enable/DisableSchool'| translate }}</h1>
+      <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"><img
+          src="../../../../assets/images/cross.svg" /></button>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+          <h2 *ngIf="!school.isDisableByOwner" class="text-center font_16 f-poppins">{{'DoYouWantToDisableSchool'| translate }} ?</h2>
+          <h2 *ngIf="school.isDisableByOwner" class="text-center font_16 f-poppins">{{'DoYouWantToUnableSchool'| translate }} ?</h2>
+        </div>
+        <div
+        class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-2 mt-4">
+        <button type="button"
+          class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+          data-bs-dismiss="modal">{{'No'| translate }}</button>
+        <button (click)="unableDisableSchool()" type="button"
+          class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step" data-bs-dismiss="modal">{{'Yes'| translate }}</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
      <div class="modal fade edit-school-modal" id="add-language" tabindex="-1"
         aria-labelledby="add-language" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -814,7 +907,7 @@
                 </span>
                 </div>
                 <small class="p-error" style="color: orange;" class="text-center d-block"
-                *ngIf="(isSubmitted && languageForm.controls.languages.errors)"> Please select atleast one language
+                *ngIf="(isSubmitted && languageForm.controls.languages.errors)"> {{'SelectAtleastOneLanguage'| translate }}
               </small>
                 <div
                 class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 mt-4">
@@ -841,7 +934,7 @@
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                  <h2 class="text-center font_16 f-poppins">Do you really want to delete this?</h2>
+                  <h2 class="text-center font_16 f-poppins">{{'DoYouWantToDelete'| translate }}</h2>
                 </div>
                 <div
                 class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-2 mt-4">
@@ -876,7 +969,7 @@
               </span>
               </div>
               <small class="p-error" style="color: orange;" class="text-center d-block"
-              *ngIf="(isSubmitted && teacherForm.controls.teachers.errors)"> Please select atleast one teacher
+              *ngIf="(isSubmitted && teacherForm.controls.teachers.errors)"> {{'SelectAtLeastOneTeacher'| translate }}
             </small>
               <div
               class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 mt-4">
@@ -903,7 +996,7 @@
         </div>
         <div class="modal-body">
             <div class="form-group">
-              <h2 class="text-center font_16 f-poppins ">Do you really want to delete this?</h2>
+              <h2 class="text-center font_16 f-poppins ">{{'DoYouWantToDelete'| translate }}</h2>
             </div>
             <div
             class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-2 mt-4">
@@ -942,7 +1035,7 @@
             <button *ngFor="let certificate of this.schoolCertificate.certificates" type="button" class="custom-tag border-0">{{certificate.name}}</button>
           </div>
           <small class="p-error" style="color: orange;"class="text-center d-block"
-          *ngIf="(isSubmitted && certificateForm.controls.certificates.errors)"> Please select atleast one certificate
+          *ngIf="(isSubmitted && certificateForm.controls.certificates.errors)"> {{'SelectAtLeastOneCertificate'| translate }}
         </small>
           <div
           class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 mt-4">
@@ -969,7 +1062,7 @@ aria-labelledby="delete-certificate" aria-hidden="true">
     </div>
     <div class="modal-body">
         <div class="form-group">
-          <h2 class="text-center font_16 f-poppins">Do you really want to delete this?</h2>
+          <h2 class="text-center font_16 f-poppins">{{'DoYouWantToDelete'| translate }}</h2>
         </div>
         <div
         class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-2 mt-4">
@@ -995,7 +1088,7 @@ aria-labelledby="delete-class" aria-hidden="true">
     </div>
     <div class="modal-body">
         <div class="form-group">
-          <h2 class="text-center font_16 f-poppins">Do you really want to delete this?</h2>
+          <h2 class="text-center font_16 f-poppins">{{'DoYouWantToDelete'| translate }}</h2>
         </div>
         <div
         class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-2 mt-4">

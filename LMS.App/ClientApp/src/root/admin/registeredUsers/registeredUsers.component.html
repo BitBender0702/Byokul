@@ -24,14 +24,21 @@
        </div>
 
 <div class="card table">
-  <p-table #dt [value]="registeredUsers" [resizableColumns]="true" columnResizeMode="expand" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]" [globalFilterFields]="['firstName']"
+  <p-table #dt [value]="registeredUsers" [resizableColumns]="true" columnResizeMode="expand" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]" [globalFilterFields]="['firstName','lastName']"
       [(selection)]="selectedUsers" [rowHover]="true" dataKey="id"
       currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
-      <!-- <ng-template pTemplate="caption">
-          <div class="p-d-flex p-ai-center p-jc-between">
-              <h5 class="p-m-0">{{'ManageUsers'| translate }}</h5>
-          </div>
-      </ng-template> -->
+      <ng-template pTemplate="caption">
+        <div class="d-flex justify-content-between p-ai-center p-jc-between">
+          <div class="d-flex w-100 justify-content-between">
+            <h5 class="p-m-0">Users</h5>
+            <button type="button" (click)="resetSorting()" class="btn custom-btn primary_btn earning-btn fw_400 h_44 me-3">Reset Table</button>
+            </div>
+            <span class="p-input-icon-left">
+                <i class="pi pi-search"></i>
+                <input pInputText type="text" (input)="search($event)" placeholder="Search...">
+            </span>
+        </div>
+    </ng-template>
       <ng-template pTemplate="header">
           <tr>
               <th>{{'Avatar'| translate }}</th>
@@ -39,9 +46,9 @@
               <th pSortableColumn="lastName">{{'LastName'| translate }} <p-sortIcon field="lastName"></p-sortIcon></th>
               <th pSortableColumn="email">{{'Email'| translate }} <p-sortIcon field="email"></p-sortIcon></th>
               <th pSortableColumn="contactEmail">{{'ContactEmail'| translate }} <p-sortIcon field="contactEmail"></p-sortIcon></th>
-              <th>{{'RegisteredOn'| translate }}</th>
-              <th>{{'IsBan'| translate }}</th>
-              <th>{{'IsVerify'| translate }}</th>
+              <th pSortableColumn="createdOn">{{'RegisteredOn'| translate }} <p-sortIcon field="createdOn"></p-sortIcon></th>
+              <th pSortableColumn="isBan">{{'IsBan'| translate }}<p-sortIcon field="isBan"></p-sortIcon></th>
+              <th pSortableColumn="isVarified">{{'IsVerify'| translate }}<p-sortIcon field="isVarified"></p-sortIcon></th>
               <th></th>
           </tr>
       </ng-template>
@@ -53,8 +60,8 @@
               <img *ngIf="user.avatar == null" class="school-profile-icon user-profile-header image" src="../../../assets/images/userLogo2.png"/>
             </div>
               </td>
-              <td>{{user.firstName}}</td>
-              <td>{{user.lastName}}</td>
+              <td [routerLink]="['/user/userProfile', user.id]" style="cursor: pointer;">{{user.firstName}}</td>
+              <td [routerLink]="['/user/userProfile', user.id]" style="cursor: pointer;">{{user.lastName}}</td>
               <td>{{user.email}}</td>
               <td>{{user.contactEmail}}</td>
               <td>{{user.createdOn | date : "MMMM d, y"}} {{'at'| translate }}  {{user.createdOn | date : "H:mm"}}</td>

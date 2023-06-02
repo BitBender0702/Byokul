@@ -22,24 +22,20 @@
           <div [ngClass]="showCommentsField? 'live-content' : 'live-content full-widthreel'"  class="live-content" id="reel_content">
             <div class="live-inner w-100">
               <div class="live-image overflow-hidden position-relative">
-                <!-- <video *ngIf="classCourseDetails.classCourseItem != undefined" width="100%" height="700" controls>
-                    <source [src]="classCourseDetails.classCourseItem.thumbnailUrl" type="video/mp4"/>
-                  </video> -->
                   <img *ngIf="classCourseDetails.classCourseItem.thumbnailType == 1" [src]="classCourseDetails.classCourseItem.thumbnailUrl" class="me-2"/>
                   <video *ngIf="classCourseDetails.classCourseItem.thumbnailType == 2" width="100%" height="700" controls>
                     <source [src]="classCourseDetails.classCourseItem.thumbnailUrl" type="video/mp4"/>
                   </video>
                 <div class="live-bottom-text p-3">
-                  <h5 class="font_14 mb-0 fw_600 text_sec1">{{classCourseDetails.classCourseItem?.name}} 
+                  <h5 *ngIf="classCourseDetails.classCourseItem?.type == 1" [routerLink]="['/profile/class', classCourseDetails.classCourseItem?.schoolName,classCourseDetails.classCourseItem?.name]" (click)="hideModal()" class="font_14 mb-0 fw_600 text_sec1 cursor_pointer">{{classCourseDetails.classCourseItem?.name}} 
+                  </h5>
+                  <h5 *ngIf="classCourseDetails.classCourseItem?.type == 2" [routerLink]="['/profile/course', classCourseDetails.classCourseItem?.schoolName,classCourseDetails.classCourseItem?.name]" (click)="hideModal()" class="font_14 mb-0 fw_600 text_sec1 cursor_pointer">{{classCourseDetails.classCourseItem?.name}} 
                   </h5>
                 </div>
                 <div class="reel-username font_16 white_text">
                     <div *ngIf="classCourseDetails.classCourseItem.avatar != null">
                       <img [src]="classCourseDetails.classCourseItem.avatar" class="me-2"/> {{classCourseDetails.classCourseItem.name}}
                     </div>
-                    <!-- <div *ngIf="reels.class != null">
-                        <img [src]="reels.class.avatar" class="me-2"/> {{reels.class.className}}
-                    </div> -->
                 </div>
               </div>
              
@@ -66,7 +62,7 @@
                       <img *ngIf="classCourseDetails.classCourseItem.isClassCourseSavedByCurrentUser" src="../../../../assets/images/Bookmark-dark.svg" class="d-block rightImagesWidth">
                       {{classCourseDetails.classCourseItem.savedClassCourseCount}}
                     </button>
-                <button type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Upload.svg"
+                <button (click)="openShareClassCourseModal(classCourseDetails.classCourseItem.schoolName, classCourseDetails.classCourseItem.name, classCourseDetails.classCourseItem.type)" type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Upload.svg"
                     class="d-block rightImagesWidth" /> 0</button>
               </div>
               <div class="live-chat-box text-center">

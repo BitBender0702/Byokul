@@ -78,7 +78,8 @@ namespace LMS.Services
                 PostType = model.PostType,
                 ReelId = model.ReelId == null ? null : new Guid(model.ReelId),
                 ChatType = model.ChatType,
-                ChatTypeId = model.ChatTypeId
+                ChatTypeId = model.ChatTypeId,
+                MeetingId = model.MeetingId
             };
 
             _notificationRepository.Insert(notification);

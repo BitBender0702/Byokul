@@ -35,7 +35,7 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
               <label class="font_10">{{'CardNumber'| translate }}*</label>
               <input (keypress)="omit_special_char($event)" formControlName="cardNumber" type="text" placeholder="XXXX-XXXX-XXXX-XXXX" maxlength="19" name="cardNumber" class="form-control w-100" (input)="formatCardNumber($event)">
               <small class="p-error" style="color: orange;"
-              *ngIf="(isSubmitted && paymentForm.controls.cardNumber.errors)">Card Number is required
+              *ngIf="(isSubmitted && paymentForm.controls.cardNumber.errors)">{{'CardNumberRequired'| translate }}
             </small>
             </div>
           </div>
@@ -44,7 +44,7 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
               <label class="font_10">{{'ExpiresOn'| translate }}*</label>
               <input (keypress)="omit_special_char($event)" formControlName="expiresOn" type="text" placeholder="XX-XX" maxlength="5" name="expiresOn" class="form-control w-100" (input)="formatMonthYear($event)">
               <small class="p-error" style="color: orange;"
-              *ngIf="(isSubmitted && paymentForm.controls.expiresOn.errors)">Expires On is required
+              *ngIf="(isSubmitted && paymentForm.controls.expiresOn.errors)">{{'ExpiresOnRequired'| translate }}
             </small>
             <small class="p-error" style="color: orange;" *ngIf="paymentForm.errors">
               {{paymentForm.errors.dates}}
@@ -56,7 +56,7 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
               <label class="font_10">{{'SecurityCode'| translate }}*</label>
               <input formControlName="securityCode" type="text" name="securityCode" class="form-control w-100">
               <small class="p-error" style="color: orange;"
-              *ngIf="(isSubmitted && paymentForm.controls.securityCode.errors)">Security Code is required
+              *ngIf="(isSubmitted && paymentForm.controls.securityCode.errors)">{{'SecurityCodeRequired'| translate }}
             </small>
             </div>
           </div>
@@ -65,7 +65,7 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
               <label class="font_10">{{'FirstName'| translate }}*</label>
               <input formControlName="firstName" type="text" name="firstName" class="form-control w-100">
               <small class="p-error" style="color: orange;"
-              *ngIf="(isSubmitted && paymentForm.controls.firstName.errors)">First Name is required
+              *ngIf="(isSubmitted && paymentForm.controls.firstName.errors)">{{'FirstNameRequired'| translate }}
             </small>
             </div>
           </div>
@@ -75,7 +75,7 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
               <label class="font_10">{{'LastName'| translate }}*</label>
               <input formControlName="lastName" type="text" name="lastName" class="form-control w-100">
               <small class="p-error" style="color: orange;"
-              *ngIf="(isSubmitted && paymentForm.controls.firstName.errors)">Last Name is required
+              *ngIf="(isSubmitted && paymentForm.controls.firstName.errors)">{{'LastNameRequired'| translate }}
             </small>
             </div>
           </div>

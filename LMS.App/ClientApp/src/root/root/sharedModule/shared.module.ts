@@ -9,15 +9,19 @@ import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.compo
 import { CommonModule } from '@angular/common';
 import { PostLoadingSpinnerComponent } from './post-loading-spinner/post-loading-spinner.component';
 import { ReelsLoadingSpinnerComponent } from './reels-loading-spinner/reels-loading-spinner.component';
+import { AdminSideBarComponent } from 'src/root/admin/admin-template/side-bar/adminSide-bar.component';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
     declarations: [
       MultilingualComponent,
       LoadingSpinnerComponent,
       PostLoadingSpinnerComponent,
-      ReelsLoadingSpinnerComponent
+      ReelsLoadingSpinnerComponent,
+      AdminSideBarComponent
     ],
     imports: [
+      RouterModule,
       CommonModule,
         TranslateModule.forRoot({
             loader:{
@@ -27,7 +31,7 @@ import { ReelsLoadingSpinnerComponent } from './reels-loading-spinner/reels-load
             }
           })
     ],
-    exports:[MultilingualComponent,LoadingSpinnerComponent,PostLoadingSpinnerComponent,ReelsLoadingSpinnerComponent],
+    exports:[MultilingualComponent,LoadingSpinnerComponent,PostLoadingSpinnerComponent,ReelsLoadingSpinnerComponent,AdminSideBarComponent],
     providers: [TranslateService]
   })
 

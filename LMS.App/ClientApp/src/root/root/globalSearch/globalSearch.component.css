@@ -1,0 +1,11 @@
+.routeLink{
+    cursor: pointer;
+    color: inherit;
+    text-decoration: none;
+}
+
+.img_style{
+    width: 28px;
+    background-color: #7C8DA7;
+    max-height: 44px;
+}

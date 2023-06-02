@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
+import { Subject } from 'rxjs';
 import { CertificateTemplateEnum } from 'src/root/Enums/certificateTemplateEnum';
 import { PostAuthorTypeEnum } from 'src/root/Enums/postAuthorTypeEnum';
 import { NotificationType } from 'src/root/interfaces/notification/notificationViewModel';
@@ -11,6 +12,7 @@ import { ClassService } from 'src/root/service/class.service';
 import { CourseService } from 'src/root/service/course.service';
 import { NotificationService } from 'src/root/service/notification.service';
 import { StudentService } from 'src/root/service/student.service';
+export const generateCertificateResponse =new Subject<{isCertificateSendToAll: boolean,studentName:string}>(); 
 
 @Component({
     selector: 'payment',
@@ -55,7 +57,7 @@ import { StudentService } from 'src/root/service/student.service';
 
 
 
-    constructor(private fb: FormBuilder,private route: ActivatedRoute,private router: Router,public messageService:MessageService,classService:ClassService,courseService:CourseService,studentService:StudentService,notificationService:NotificationService,private domSanitizer: DomSanitizer) {
+    constructor(private fb: FormBuilder,private route: ActivatedRoute,private router: Router,public messageService:MessageService,classService:ClassService,courseService:CourseService,studentService:StudentService,notificationService:NotificationService,private domSanitizer: DomSanitizer,private cd: ChangeDetectorRef) {
         this._classService = classService;
         this._courseService = courseService;
         this._studentService = studentService;
@@ -189,6 +191,8 @@ import { StudentService } from 'src/root/service/student.service';
 
 
     createCertificate(){
+      debugger
+      this.loadingIcon = true;
         this.InitializeSaveStudentCertificate();
         this.certificateHtml = document.getElementById('finalCertificate')?.innerHTML??'';
         this.saveStudentCertificate.certificateHtml = this.certificateHtml;
@@ -207,8 +211,12 @@ import { StudentService } from 'src/root/service/student.service';
         this.saveStudentCertificate.certificateTitle = this.certificateTitle;
         this.saveStudentCertificate.certificateReason = this.certificateReason;
         this.saveStudentCertificate.date = this.createdDate;
-        this.saveStudentCertificate.uploadSignatureImage = this.uploadSignatureImage.changingThisBreaksApplicationSecurity;
-        this.saveStudentCertificate.uploadQrImage = this.uploadQrImage.changingThisBreaksApplicationSecurity;
+        if(this.uploadSignatureImage != undefined){
+          this.saveStudentCertificate.uploadSignatureImage = this.uploadSignatureImage.changingThisBreaksApplicationSecurity;
+        }
+        if(this.uploadQrImage != undefined){
+          this.saveStudentCertificate.uploadQrImage = this.uploadQrImage.changingThisBreaksApplicationSecurity;
+        }
         this.saveStudentCertificate.schoolAvatar = this.certificateInfo.school.avatar;
 
         if(this.certificateId == CertificateTemplateEnum.Certificate1Id){
@@ -231,21 +239,34 @@ import { StudentService } from 'src/root/service/student.service';
         }
  
 
+        if(this.from == 1){
+          this.router.navigateByUrl(`profile/class/${this.certificateInfo.school.schoolName.replace(" ","").toLowerCase()}/${this.certificateInfo.className.replace(" ","").toLowerCase()}`)
+         }
+         if(this.from == 2){
+          this.router.navigateByUrl(`profile/course/${this.certificateInfo.school.schoolName.replace(" ","").toLowerCase()}/${this.certificateInfo.courseName.replace(" ","").toLowerCase()}`)
+         }
 
+         if(!this.isSendCertificateToAll){
+          setTimeout(() => {
+            generateCertificateResponse.next({isCertificateSendToAll:false,studentName:this.studentName});
+          }, 2500);          
+         }
+         else{
+          setTimeout(() => {
+            generateCertificateResponse.next({isCertificateSendToAll:true,studentName:''});
+          }, 2500);         
+         }
 
-      
-        if(!this.isSendCertificateToAll){
-          this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:`Certificate successfully sent to the ${this.studentName}`});
-        }
-        else{
-          this.messageService.add({severity:'info', summary:'Info',life: 3000, detail:'We will notify you, when certificate will be sent to all the students'});
-        }
+    
 
         this._studentService.saveStudentCertificates(this.saveStudentCertificate).subscribe((response) => {
+          debugger
           if(this.isSendCertificateToAll){
              var notificationContent = `Certificates created for ${this.classOrCourseName} students are successfully sent`;
              this._notificationService.initializeNotificationViewModel(this.loginUserId,NotificationType.CertificateSent,notificationContent,this.loginUserId,null,0,null,null).subscribe((response) => {});
+                    //registrationResponse.next(true); 
           }
+           
         });
     }
 
@@ -309,5 +330,15 @@ import { StudentService } from 'src/root/service/student.service';
         var res = document.getElementById('certificate1')?.innerHTML;
        }
       }
+
+  back() {
+    debugger
+   if(this. step == 0){
+    window.history.back();
+   }
+   else{
+    this. step = this.step -1;
+   }
+  }
  
 }

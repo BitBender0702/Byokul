@@ -8,11 +8,11 @@
             src="../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
             <h2 class="font_22 fw_700 f-monteserrat mb-md-0">{{'Notifications'| translate }}  <button type="button" (click)="getNotificationSettings()" class="border-0 ms-2 notification-sett-btn" data-bs-toggle="modal" data-bs-target="#notifi-settingpopup"><img src="../../../assets/images/Setting-solid-dark.svg" /></button></h2>
         <button type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 invisible" data-bs-toggle="modal"
-          data-bs-target="#create-post">Create Post</button>
+          data-bs-target="#create-post">{{'CreatePost'| translate }}</button>
       </div>
       <div class="live-header d-flex align-items-center justify-content-between">
         <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark  d-xl-none"><img
-            src="../../../assets/images/arrow-left.svg" /> Back</button>
+            src="../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
         <span class="logo_mobile d-xl-none">
           <img src="../../../assets/images/logo.svg" />
         </span>
@@ -47,6 +47,12 @@
             </span>
             </div>
 
+            <div *ngIf="item.notificationType == 4" style="cursor: pointer;" (click)="joinMeeting(item.user.firstName + ' ' + item.user.lastName,item.meetingId,item.postId)" class="d-flex align-items-center justify-content-between"><span class="followers-name font_16 text_sec1 fw_600">
+              <img [src]="item.avatar" class="rounded-circle me-2" style="width: 38px;height: 35px;"/> 
+              <p class="font_16 ms-2 d-inline-block fw_400 mb-0"> {{item.notificationContent}}</p>
+            </span>
+            </div>
+
             <div *ngIf="item.notificationType == 5" style="cursor: pointer;" (click)="openChat(item.actionDoneBy,item.chatType,item.chatTypeId)" class="d-flex align-items-center justify-content-between"><span class="followers-name font_16 text_sec1 fw_600">
               <img [src]="item.avatar" class="rounded-circle me-2" style="width: 38px;height: 35px;"/> 
               <p class="font_16 ms-2 d-inline-block fw_400 mb-0"> {{item.notificationContent}}</p>
@@ -58,7 +64,7 @@
             </span>
             </div>
 
-            <div *ngIf="item.notificationType == 8" style="cursor: pointer;" class="d-flex align-items-center justify-content-between"><span class="followers-name font_16 text_sec1 fw_600">
+            <div *ngIf="item.notificationType == 8" style="cursor: pointer;" [routerLink]="['/user/earnings']" class="d-flex align-items-center justify-content-between"><span class="followers-name font_16 text_sec1 fw_600">
               <img [src]="item.avatar" class="rounded-circle me-2" style="width: 38px;height: 35px;"/> 
               <p class="font_16 ms-2 d-inline-block fw_400 mb-0"> {{item.notificationContent}}</p>
             </span>
@@ -75,14 +81,14 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header border-0 justify-content-center position-relative">
-        <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">Notifications Settings</h1>
+        <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">{{'NotificationsSettings'| translate }}</h1>
         <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"><img
             src="../../../assets/images/cross.svg" /></button>
       </div>
       <div class="modal-body">
         <form>
         <div class="text-line-border position-relative text-center mb-4">
-          <span class="line-text font_12 text_ltgray fw_400 text-center">Direct Messages</span>
+          <span class="line-text font_12 text_ltgray fw_400 text-center">{{'DirectMessages'| translate }}</span>
         </div>
         <div *ngIf="notificationSettings!=undefined">
     <ng-container *ngFor="let item of notificationSettings">
@@ -96,7 +102,7 @@
     </ng-container>
 </div>
           <div class="text-line-border position-relative text-center mb-4">
-            <span class="line-text font_12 text_ltgray fw_400 text-center">Notifications</span>
+            <span class="line-text font_12 text_ltgray fw_400 text-center">{{'Notifications'| translate }}</span>
           </div>
           <div *ngIf="notificationSettings!=undefined">
           <ng-container *ngFor="let item of notificationSettings">
@@ -113,93 +119,13 @@
       <div
         class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4">
         <button type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
-          data-bs-dismiss="modal">Discard Changes</button>
+          data-bs-dismiss="modal">{{'DiscardChanges'| translate }}</button>
         <button (click)="saveNotificationSettings()" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step"
-          data-bs-dismiss="modal">Save</button>
+          data-bs-dismiss="modal">{{'Save'| translate }}</button>
       </div>
     </div>
   </div>
 </div>
-
-  <div class="modal fade edit-school-modal" id="editschool" tabindex="-1" aria-labelledby="editschool"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header border-0 justify-content-center position-relative">
-          <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center" id="editschool">Edit Your Profile</h1>
-          <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"><img
-              src="images/cross.svg" /></button>
-        </div>
-        <div class="modal-body">
-          <div class="edit-profile-header text-center mb-4">
-            <div class="rounded-circle modal-school-icon text-center mb-2">
-              <img src="images/school-profile-image.jpg">
-            </div>
-            <button class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins position-static opacity-100"> Edit
-              Photo</button>
-          </div>
-          <div class="text-line-border position-relative text-center mb-4">
-            <span class="line-text font_12 text_ltgray fw_400 text-center">Personal Information</span>
-          </div>
-          <form>
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <input type="text" value="John" name="fname" class="form-control w-100">
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <input type="text" value="Smith" name="lname" class="form-control w-100">
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <input type="text" value="10/10/2022" name="" class="form-control w-100">
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <select class="form-select rounded-8 w-100">
-                    <option value="1">Male</option>
-                    <option value="2">Female</option>
-                  </select>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <input type="text" value="Male" name="userail" class="form-control w-100">
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <input type="password" value="Password" name="Password" class="form-control w-100">
-                </div>
-              </div>
-
-            </div>
-            <div class="text-line-border position-relative text-center mb-4">
-              <span class="line-text font_12 text_ltgray fw_400 text-center">User Bio</span>
-            </div>
-            <div class="form-group ">
-              <textarea class="form-control resize-none ht_96"
-                value="">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labo et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex.</textarea>
-            </div>
-          </form>
-
-        </div>
-        <div
-          class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4">
-          <button type="button"
-            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
-            data-bs-dismiss="modal">Discard Changes</button>
-          <button type="button"
-            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step">Save</button>
-
-        </div>
-      </div>
-    </div>
-  </div>
 </body>
 </div>
 <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>

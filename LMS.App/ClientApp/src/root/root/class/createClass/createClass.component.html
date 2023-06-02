@@ -22,10 +22,10 @@
             <p class="text-center font_16 fw_600 step-desc">{{'CreateClassStep1'| translate }}</p>
             <form id="regForm" [formGroup]="createClassForm1" class="latest-form">
             <div class="form-group">
-              <label class="font_10">School Name</label>
+              <label class="font_10">{{'SchoolName'| translate }}</label>
             <div *ngIf="fromSchoolProfile != ''">
-              <input formControlName="schoolId" hidden type="text" placeholder="School Name" name="schoolId" class="form-control w-100">
-              <input formControlName="schoolName" readonly type="text" placeholder="School Name" name="schoolId" class="form-control w-100">
+              <input formControlName="schoolId" hidden type="text" placeholder="{{'SchoolName'| translate }}" name="schoolId" class="form-control w-100">
+              <input formControlName="schoolName" readonly type="text" placeholder="{{'SchoolName'| translate }}" name="schoolId" class="form-control w-100">
             </div>
             <div *ngIf="fromSchoolProfile == ''">
               <select class="form-select rounded-8 w-100" formControlName="schoolId">
@@ -35,9 +35,9 @@
             </div>
             <div class="form-group">
               <label class="font_10">{{'ClassName'| translate }}</label>
-              <input formControlName="className" type="text" placeholder="{{'ClassName'| translate }}" name="classname" class="form-control w-100">
+              <input formControlName="className" type="text" placeholder="{{'ClassName'| translate }}" name="classname" maxlength="60" class="form-control w-100">
               <small class="p-error" style="color: orange;"
-              *ngIf="(isStepCompleted && createClassForm1.controls.className.errors)">Class Name is required
+              *ngIf="(isStepCompleted && createClassForm1.controls.className.errors)">{{'ClassNameRequired'| translate }}
             </small>
             </div>
             <div class="form-group">              
@@ -48,33 +48,32 @@
               <label class="font_10">{{'Number Of Students'| translate }}</label>
               <input formControlName="noOfStudents" type="number" placeholder="" name="students" min="1" max="999" class="form-control w-100">
               <small class="p-error" style="color: orange;"
-              *ngIf="(isStepCompleted && createClassForm1.controls.noOfStudents.errors)">No of students is required
+              *ngIf="(isStepCompleted && createClassForm1.controls.noOfStudents.errors)">{{'NoOfStudentsRequired'| translate }}
             </small>
             </div>
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group position-relative">
                   <label class="font_10">{{'Start'| translate }}:</label>
-                  <input formControlName="startDate" type="date" placeholder="10/10/2022" name="start" class="form-control w-100">
+                  <input formControlName="startDate" type="date" [min]="minDate" placeholder="10/10/2022" name="start" class="form-control w-100">
                   <small class="p-error" style="color: orange;"
-              *ngIf="(isStepCompleted && createClassForm1.controls.startDate.errors)">Start date is required
+              *ngIf="(isStepCompleted && createClassForm1.controls.startDate.errors)">{{'StartDateRequired'| translate }}
             </small>
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="form-group ">
                   <label class="font_10">{{'Finish'| translate }}:</label>
-                  <input formControlName="endDate" type="date" placeholder="01/01/2023" name="finish" class="form-control w-100">
+                  <input formControlName="endDate" type="date" [min]="minDate" placeholder="01/01/2023" name="finish" class="form-control w-100">
                   <small class="p-error" style="color: orange;"
-                  *ngIf="(isStepCompleted && createClassForm1.controls.endDate.errors)">End date is required
-                </small>
-                </div>
+                  *ngIf="(isStepCompleted && createClassForm1.controls.endDate.errors)">{{'EndDateRequired'| translate }}
+                  </small>
+                  </div>
               </div>
               <small class="p-error" style="color: orange;" *ngIf="isStepCompleted && createClassForm1.errors">
                 {{ createClassForm1.errors.dates}}
               </small>
             </div>
-
             <div class="row mb-4">
                 <div class="col-md-6">
                   <div class="row">
@@ -94,7 +93,7 @@
                   <label class="font_10">{{'Price'| translate }}</label>
                   <input formControlName="price" type="number" min="1" placeholder="{{'Price'| translate }}" name="price" class="form-control w-100">
                   <small class="p-error" style="color: orange;" *ngIf="isStepCompleted && createClassForm1.controls.price.errors">
-                    Price is required
+                    {{'PriceRequired'| translate }}
                   </small>
                 </div><br>
             </div>
@@ -103,9 +102,9 @@
               <div class="col-md-12">
                  <div *ngIf="!isClassPaid">
                   <small class="p-error" style="color: orange;"
-               *ngIf="(isStepCompleted && createClassForm1.controls.serviceTypeId.errors)">Service type is required
+               *ngIf="(isStepCompleted && createClassForm1.controls.serviceTypeId.errors)">{{'ServiceTypeRequired'| translate }}
              </small>
-                    <label class="ms-0">*Please note that certificate creation is not available for free classes</label>
+                    <label class="ms-0">*{{'CertificateCreationmessage'| translate }}</label>
                  </div><br>
               </div>
             </div>
@@ -113,7 +112,7 @@
             <div class="row">
               <div class="col-md-12">
                 <div class="form-group">
-                  <label class="font_10">Visibility</label>
+                  <label class="font_10">{{'Visibility'| translate }}</label>
                   <select class="form-select rounded-8 w-100" formControlName="accessibilityId">
                     <option *ngFor="let accessibility of accessibility; let i = index" [value]="accessibility.id" [ngValue]="accessibility.id">{{accessibility.name}}</option>
                  </select>
@@ -122,20 +121,21 @@
             </div>
             <div class="form-group">
               <div class="custom-language-select">
-                <label class="font_10">Language</label>
+                <label class="font_10">{{'Language'| translate }}</label>
                 <p-multiSelect  [defaultLabel]="'Select Languages'" [panelStyle]="{'width':'100%'}" [filter]="false" [showToggleAll]="false" [options]="languages" optionLabel="name" optionValue="id" name="languageSelect[]" class="form-control" multiple id="languageSelect" formControlName="languageIds">
                   <option *ngFor="let language of languages; let i = index" [value]="language.id" [selected]="i">{{language.name}}</option>
                </p-multiSelect>
                <small class="p-error" style="color: orange;"
-               *ngIf="(isStepCompleted && createClassForm1.controls.languageIds.errors)">Atleat one language is required
+               *ngIf="(isStepCompleted && createClassForm1.controls.languageIds.errors)">{{'AtLeastOneLanguageRequired'| translate }}
              </small>
               </div>
             </div>
             <div >
               <div class="form-group latest-form">
-                <label class="font_10">{{'Tags'| translate }}</label>                <input formControlName="tags" (keyup.enter)="onEnter($event)" type="text" class="form-control" placeholder="{{'TypeToAdd'| translate }}">
+                <label class="font_10">{{'Tags'| translate }}</label>               
+                <input formControlName="tags" (keyup.enter)="onEnter($event)" maxlength="30" type="text" class="form-control" placeholder="{{'TypeToAdd'| translate }}">
                 <small class="p-error" style="color: orange;"
-                *ngIf="(isStepCompleted && createClassForm1.controls.tags.errors)">Please add atleast one tag
+                *ngIf="(isStepCompleted && createClassForm1.controls.tags.errors)">{{'AddAtLeastOneTag'| translate }}
               </small>
               </div>
               <div class="teacher-tags tag-box hashtag_post mt-4 mb-2 hover-tags">
@@ -157,11 +157,14 @@
             <div>
               <p class="text-center">{{uploadImageName}}</p>
               <small class="p-error" style="color: orange;margin-left: 144px;"
-              *ngIf="(isStepCompleted && this.uploadImageName == undefined)">Image/Video thumbnail is required
+              *ngIf="(isStepCompleted && this.uploadImageName == undefined)">{{'ImageOrVideoThumbnailRequired'| translate }}
             </small>
             </div>
             <small class="p-error" style="color: orange;margin-left: 148px;" *ngIf="createClassForm1.errors?.unauthenticated">
-              Class name is already exists!
+              {{'ClassNameAlreadyExist'| translate }}
+            </small>
+            <small class="p-error" style="color: orange;margin-left: 177px;" *ngIf="this.tagCountExceeded">
+              You can add max 7 tags
             </small>
             <div class="steps_btns d-flex align-items-center justify-content-center">
               <button (click)="forwardStep()" type="button"
@@ -204,6 +207,9 @@
               <span *ngFor="let student of studentInfo" class="custom-tag">{{student?.studentName}}</span>
             </div>
             </div>
+            <small class="p-error" style="color: orange;margin-left: 10px;" *ngIf="createClassForm2.errors?.studentLimitExceeds">
+              {{'MoreStudentsThenSelected'| translate }}
+            </small>
             
             <div class="steps_btns d-flex align-items-center justify-content-between">
               <button (click)="backStep()" type="button"
@@ -222,15 +228,15 @@
             <p class="font_16 text_dark fw_600 text-center mb-0">{{'ClassLinkInfo'| translate }}</p>
             <form id="regForm" [formGroup]="createClassForm3" class="latest-form">
             <div class="school-link  my_32">
-              <label class="font_10">Link to your School</label>
+              <label class="font_10">{{'LinkToYourSchool'| translate }}</label>
 <div class="position-relative">
               <input readonly formControlName = "classUrl" type="text" class="form-control" placeholder="byokul.com/" #userinput/>
               <small class="p-error" style="color: orange;"
-        *ngIf="(isSubmitted && createClassForm3.controls.classUrl.errors)">Class Url is required
+        *ngIf="(isSubmitted && createClassForm3.controls.classUrl.errors)">{{'ClassUrlRequired'| translate }}
       </small>
               <button (click)="copyMessage(userinput)" type="button" class="border-0 bg-transparent shadow-none p-0 copy-link"><img
                   src="../../../../assets/images/school/copy.svg" /></button>
-              <button (click)="classProfile()" type="button" class="border-0 bg-transparent shadow-none p-0 upload-link"><img
+              <button (click)="openSharePostModal()" type="button" class="border-0 bg-transparent shadow-none p-0 upload-link"><img
                   src="../../../../assets/images/school/Upload-small.svg" /></button>
             </div>
           </div>
@@ -242,10 +248,7 @@
             </form>
           </div>
         </div>
-        <!-- Circles which indicates the steps of the form: -->
         </div>
-
-      <!-- </form> -->
       <div class="d-flex justify-content-end mt-5 d-md-none" >
          <button type="button" class="step-edit-button btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase next-step"><img src="../../../../assets/images/Edit-light.svg" alt="edit"/></button>
       </div>

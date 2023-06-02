@@ -23,6 +23,7 @@ export class ResetPasswordComponent extends MultilingualComponent implements OnI
     loadingIcon:boolean = false;
     isNewPasswordVisible:boolean=false;
     isConfirmPasswordVisible:boolean = false;
+    PASSWORD_PATTERN = '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-=[\\]{};:\'\"\\|,.<>/?])[A-Za-z\\d!@#$%^&*()_+\\-=[\\]{};:\'\"\\|,.<>/?]+$';
     @ViewChild('newPasswordInput') passwordInput!: ElementRef<HTMLInputElement>;
     @ViewChild('confirmPasswordInput') confirmPasswordInput!: ElementRef<HTMLInputElement>;
     
@@ -41,11 +42,12 @@ export class ResetPasswordComponent extends MultilingualComponent implements OnI
       const passwordValidators = [
         Validators.minLength(6),
         Validators.required,
+        Validators.pattern(this.PASSWORD_PATTERN)
       ];
 
       this.resetPasswordForm = this.fb.group({
         newPassword: this.fb.control('', [...passwordValidators]),
-        confirmPassword: this.fb.control('', [...passwordValidators])
+        confirmPassword: this.fb.control('', [...passwordValidators]),
       });
 
     }
@@ -79,6 +81,7 @@ export class ResetPasswordComponent extends MultilingualComponent implements OnI
     }
 
     resetPassword(){
+      debugger
       this.isSubmitted = true;
       if (!this.resetPasswordForm.valid) {
         return;}

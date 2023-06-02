@@ -8,12 +8,13 @@ import {
   OnChanges,
   OnDestroy,
   OnInit,
+  Renderer2,
   ViewChild,
 } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { finalize, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, finalize, Subject, Subscription } from 'rxjs';
 import { EditSchoolModel } from 'src/root/interfaces/school/editSchoolModel';
 import { AddSchoolLanguage } from 'src/root/interfaces/school/addSchoolLanguage';
 import { SchoolService } from 'src/root/service/school.service';
@@ -34,12 +35,12 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { FollowUnfollow } from 'src/root/interfaces/FollowUnfollow';
 import { FollowUnFollowEnum } from 'src/root/Enums/FollowUnFollowEnum';
 import { PostService } from 'src/root/service/post.service';
-import { PostViewComponent, savedPostResponse } from '../../postView/postView.component';
+import { PostViewComponent, deletePostResponse, savedPostResponse } from '../../postView/postView.component';
 import { LikeUnlikePost } from 'src/root/interfaces/post/likeUnlikePost';
 import { PostView } from 'src/root/interfaces/post/postView';
 import { LikeUnlikeClassCourse } from 'src/root/interfaces/school/likeUnlikeClassCourse';
 import { MessageService } from 'primeng/api';
-import { ReelsViewComponent, savedReelResponse } from '../../reels/reelsView.component';
+import { ReelsViewComponent, deleteReelResponse, savedReelResponse } from '../../reels/reelsView.component';
 import { ownedSchoolResponse } from '../createSchool/createSchool.component';
 import * as $ from 'jquery';
 import { ClassCourseModalComponent, savedClassCourseResponse } from '../../ClassCourseModal/classCourseModal.component';
@@ -56,6 +57,13 @@ import { SharePostComponent, sharedPostResponse } from '../../sharePost/sharePos
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
 import { AuthService } from 'src/root/service/auth.service';
+import { RolesEnum } from 'src/root/RolesEnum/rolesEnum';
+import { ownedClassResponse } from '../../class/createClass/createClass.component';
+import { ownedCourseResponse } from '../../course/createCourse/createCourse.component';
+
+export const deleteSchoolResponse =new BehaviorSubject <string>('');  
+
+
 
 
 @Component({
@@ -106,7 +114,7 @@ export class SchoolProfileComponent
   deleteLanguage!: DeleteSchoolLanguage;
   deleteTeacher!: DeleteSchoolTeacher;
   deleteCertificate!: DeleteSchoolCertificate;
-  EMAIL_PATTERN = '^[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$';
+  EMAIL_PATTERN = '[a-zA-Z0-9]+?(\\.[a-zA-Z0-9]+)*@[a-zA-Z]+\\.[a-zA-Z]{2,3}';
   selectedCertificates: any;
   isOwner!: boolean;
   teacherInfo: any[] = [];
@@ -144,7 +152,9 @@ export class SchoolProfileComponent
   noOfAppliedCourseFilters!:number;
   classFilterList:any[] = [];
   courseFilterList:any[] = [];
+  filteredAttachments:any[] = [];
   isOnInitInitialize:boolean = false;
+  schoolAvatar:string = '';
   
 
   @ViewChild('closeEditModal') closeEditModal!: ElementRef;
@@ -154,6 +164,8 @@ export class SchoolProfileComponent
   @ViewChild('imageFile') imageFile!: ElementRef;
   @ViewChild('carousel') carousel!: ElementRef;
   @ViewChild('videoPlayer') videoPlayer!: ElementRef;
+  @ViewChild('schoolTabButton') schoolTabButton!: ElementRef;
+
   @ViewChild('createPostModal', { static: true })
   createPostModal!: CreatePostComponent;
   Certificates!: string[];
@@ -176,6 +188,8 @@ export class SchoolProfileComponent
   addPostSubscription!: Subscription;
   sharedPostSubscription!: Subscription;
   savedClassCourseSubscription!: Subscription;
+  deletePostSubscription!: Subscription;
+  deleteReelSubscription!: Subscription;
   savedMessage!:string;
   removedMessage!:string;
 
@@ -196,7 +210,9 @@ export class SchoolProfileComponent
     notificationService:NotificationService,
     classService:ClassService,
     courseService:CourseService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private renderer: Renderer2, 
+    private el: ElementRef
   ) {
     super(injector);
     this._schoolService = schoolService;
@@ -228,6 +244,12 @@ export class SchoolProfileComponent
     if(this.savedClassCourseSubscription){
       this.savedClassCourseSubscription.unsubscribe();
     }
+    if(this.deletePostSubscription){
+      this.deletePostSubscription.unsubscribe();
+    }
+    if(this.deleteReelSubscription){
+      this.deleteReelSubscription.unsubscribe();
+    }
     if (this.schoolParamsData$) {
         this.schoolParamsData$.unsubscribe();
     }
@@ -236,9 +258,16 @@ export class SchoolProfileComponent
     
   }
   ngOnInit(): void {
+    this.classCourseList = undefined;
+    if(this._authService.roleUser(RolesEnum.SchoolAdmin)){
+      this._authService.loginState$.next(false);
+      this._authService.loginAdminState$.next(true);
+    }
+    else{
+      this._authService.loginState$.next(true);
+    }
    this.isOnInitInitialize = true;
    this.postLoadingIcon = false;
-   this._authService.loginState$.next(true);
     this.loadingIcon = true;
     this.validToken = localStorage.getItem('jwt') ?? '';
     var selectedLang = localStorage.getItem('selectedLanguage');
@@ -247,10 +276,10 @@ export class SchoolProfileComponent
     
 
     this._schoolService.getSchoolById(this.schoolName.replace(' ', '').toLowerCase()).subscribe(async (response) => {
-      debugger
         this.frontEndPageNumber = 1;
         this.reelsPageNumber = 1;
         this.school = response;
+        this.schoolAvatar = this.school.avatar;
         this.followersLength = this.school.schoolFollowers.length;
         this.isOwnerOrNot();
         this.loadingIcon = false;
@@ -261,6 +290,17 @@ export class SchoolProfileComponent
         this.noOfAppliedClassFilters = this.school.noOfAppliedClassFilters;
         this.noOfAppliedCourseFilters = this.school.noOfAppliedCourseFilters;
         this.addEventListnerOnCarousel();
+        // const schoolTabButtonElement = this.el.nativeElement.querySelector('#school-tab');
+        // this.renderer.addClass(schoolTabButtonElement, 'active');
+        const ClassCourseButtonElement = this.el.nativeElement.querySelector('#classes-tab');
+        const hasActiveClass = ClassCourseButtonElement.classList.contains('active');
+        if(hasActiveClass){
+          this.GetSchoolClassCourseList(this.school.schoolId,undefined,1);
+        }
+
+        // this.renderer.removeClass(ClassCourseButtonElement, 'active');
+        this.cd.detectChanges();
+        this.school.posts = this.getFilteredAttachments(this.school.posts);     
       });
 
     this._schoolService.getAccessibility().subscribe((response) => {
@@ -347,7 +387,8 @@ export class SchoolProfileComponent
            this.isOwnerOrNot();
            this.loadingIcon = false;
            this.isDataLoaded = true;
-        });
+           this.school.posts = this.getFilteredAttachments(this.school.posts);     
+          });
      });
     }
 
@@ -375,7 +416,7 @@ export class SchoolProfileComponent
 
    this.sharedPostSubscription = sharedPostResponse.subscribe( response => {
     if(response.postType == 1){
-      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'{}Post shared successfully'});
+      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post shared successfully'});
       var post = this.school.posts.find((x: { id: string; }) => x.id == response.postId);  
       post.postSharedCount++;
     }
@@ -397,6 +438,28 @@ export class SchoolProfileComponent
         if(!response.isSaved){
           this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:`${response.type} removed successfully`});
         }
+      });
+    }
+
+    if(!this.deletePostSubscription){
+      this.deletePostSubscription = deletePostResponse.subscribe(response => {
+          this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post deleted successfully'});
+          var deletedPost = this.school.posts.find((x: { id: string; }) => x.id == response.postId);
+          const index = this.school.posts.indexOf(deletedPost);
+          if (index > -1) {
+            this.school.posts.splice(index, 1);
+          }
+      });
+    }
+
+    if(!this.deleteReelSubscription){
+      this.deleteReelSubscription = deleteReelResponse.subscribe(response => {
+          this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Reel deleted successfully'});
+          var deletedPost = this.school.reels.find((x: { id: string; }) => x.id == response.postId);
+          const index = this.school.reels.indexOf(deletedPost);
+          if (index > -1) {
+            this.school.reels.splice(index, 1);
+          }
       });
     }
    
@@ -466,7 +529,8 @@ export class SchoolProfileComponent
       return;
     }
     this._schoolService.getPostsBySchoolId(this.school.schoolId, this.frontEndPageNumber).subscribe((response) => {
-        this.school.posts = [...this.school.posts, ...response];
+        var result = this.getFilteredAttachments(response);    
+        this.school.posts = [...this.school.posts, ...result]; 
         this.postLoadingIcon = false;
         this.scrollFeedResponseCount = response.length;
         this.scrolled = false;
@@ -595,6 +659,7 @@ export class SchoolProfileComponent
   }
 
   initializeEditFormControls() {
+    this.schoolAvatar = this.school.avatar;
     this.uploadImage = '';
     this.imageFile.nativeElement.value = '';
     this.fileToUpload.set('avatarImage', '');
@@ -652,7 +717,7 @@ export class SchoolProfileComponent
 
     this.loadingIcon = true;
     if (!this.uploadImage) {
-      this.fileToUpload.append('avatar', this.editSchool.avatar);
+      this.fileToUpload.append('avatar', this.schoolAvatar);
     }
 
     this.updateSchoolDetails = this.editSchoolForm.value;
@@ -679,7 +744,6 @@ export class SchoolProfileComponent
     this._schoolService
       .editSchool(this.fileToUpload)
       .subscribe((response: any) => {
-        debugger
         this.closeModal();
         this.isSubmitted = false;
         this.schoolName = this.updateSchoolDetails.schoolName;
@@ -977,9 +1041,11 @@ export class SchoolProfileComponent
       });
   }
 
-  openPostsViewModal(posts: string): void {
+  openPostsViewModal(posts: any): void {
+    var postAttachments = this.filteredAttachments.filter(x => x.postId == posts.id);
     const initialState = {
       posts: posts,
+      postAttachments: postAttachments
     };
     this.bsModalService.show(PostViewComponent, { initialState });
   }
@@ -1003,12 +1069,12 @@ export class SchoolProfileComponent
   GetSchoolClassCourseList(schoolId: string,appliedFilters?:boolean,pageNumber?:number) {
     var school = this.school;
     this.isFeedHide = true;
+    this.hideFeedFilters = false;
     if(pageNumber != undefined){
       this.classCoursePageNumber = pageNumber;
     }
     if (this.classCourseList == undefined || appliedFilters) {
       this.loadingIcon = true;
-      this.hideFeedFilters = false;
       this._schoolService.getSchoolClassCourseList(schoolId,this.classCoursePageNumber).subscribe((response) => {
           this.classCourseList = response;
           this.loadingIcon = false;
@@ -1036,16 +1102,28 @@ export class SchoolProfileComponent
     }
   }
 
-  getDeletedId(id: string, type: any) {
+  getDeletedId(id: string, type: any, noOfStudents:number) {
     if (type == 1) {
+      if(noOfStudents > 0){
+        this.messageService.add({severity: 'info',summary: 'Info',life: 3000,detail: 'Class with registered users can not be automatically deleted. Please contact site administration for deletion request.'});
+      }
+      else{
       this._schoolService.deleteClass(id).subscribe((response) => {
+        ownedClassResponse.next({classId:id, classAvatar:"", className:"",schoolName:"",action:"delete"});
+        this.ngOnInit();
+      });          
+    }
+    }
+    if (type == 2) {
+      if(noOfStudents > 0){
+        this.messageService.add({severity: 'info',summary: 'Info',life: 3000,detail: 'Course with registered users can not be automatically deleted. Please contact site administration for deletion request.'});
+      }
+      else{
+      this._schoolService.deleteCourse(id).subscribe((response) => {
+        ownedCourseResponse.next({courseId:id, courseAvatar:"", courseName:"",schoolName:"",action:"delete"});
         this.ngOnInit();
       });
     }
-    if (type == 2) {
-      this._schoolService.deleteCourse(id).subscribe((response) => {
-        this.ngOnInit();
-      });
     }
   }
 
@@ -1288,19 +1366,36 @@ export class SchoolProfileComponent
     });
   }
 
-  openCertificateViewModal(certificateUrl:string,certificateName:string){
+  openCertificateViewModal(certificateUrl:string,certificateName:string,from?:number,event?:Event){
+    var fromValue = PostAuthorTypeEnum.School;
+    if(from != undefined){
+      fromValue = from;
+      event?.stopPropagation();
+    }
     const initialState = {
       certificateUrl: certificateUrl,
       certificateName:certificateName,
-      from:PostAuthorTypeEnum.School
+      from:fromValue
     };
     this.bsModalService.show(CertificateViewComponent, { initialState });
   }
 
-  openSharePostModal(postId:string, postType:number): void {
+  openSharePostModal(postId:string, postType:number,title:string,description:string): void {
+    debugger
+    var image:string = '';
+    if(postType == 1){
+      var post = this.school.posts.find((x: { id: string; }) => x.id == postId);
+      var postAttachments = post.postAttachments.find((x: { fileType: number; }) => x.fileType == 1);
+      if(postAttachments != undefined){
+        image = postAttachments[0].fileUrl;
+      }
+    }
     const initialState = {
       postId: postId,
-      postType: postType
+      postType: postType,
+      title: title,
+      description: description,
+      image: image
     };
     this.bsModalService.show(SharePostComponent,{initialState});
   }
@@ -1349,6 +1444,100 @@ export class SchoolProfileComponent
   
     this._schoolService.saveClassCourse(id,this.userId,type).subscribe((result) => {
     });
+  }
+
+  getFilteredAttachments(feeds:any):any{
+    const allAttachments = feeds.flatMap((post: { postAttachments: any; }) => post.postAttachments);
+    var result = allAttachments.filter((attachment: { fileType: number; }) => attachment.fileType === 3);
+    this.filteredAttachments = [...this.filteredAttachments, ...result];
+    feeds = feeds.map((post: { postAttachments: any[]; }) => {
+    const filteredPostAttachments = post.postAttachments.filter(postAttachment => postAttachment.fileType !== 3);
+    return { ...post, postAttachments: filteredPostAttachments };
+    });
+    return feeds;
+  }
+
+  clearAllClassFilters(event:any){
+    event.stopPropagation();
+    this.classFilters.forEach((element: any) => {
+      if(element.isFilterActive){
+        this.noOfAppliedClassFilters -=1;
+      }
+      element.isFilterActive = false;
+      element.schoolId = this.school.schoolId;
+      element.id = element.id;
+   });
+
+   this.classFilterList = this.classFilters;
+  }
+
+  clearAllCourseFilters(event:any){
+    event.stopPropagation();
+    this.courseFilters.forEach((element: any) => {
+      if(element.isFilterActive){
+        this.noOfAppliedCourseFilters -=1;
+      }
+      element.isFilterActive = false;
+      element.schoolId = this.school.schoolId;
+      element.id = element.id;
+   });
+
+   this.courseFilterList = this.courseFilters;
+  }
+
+  deleteSchool(){
+    if(this.school.students > 0){
+      this.messageService.add({severity: 'info',summary: 'Info',life: 3000,detail: 'School with registered users can not be automatically deleted. Please contact site administration for deletion request.'});
+    }
+    else{
+      this._schoolService.deleteSchool(this.school.schoolId).subscribe((response) => {
+        ownedSchoolResponse.next({schoolId:this.school.schoolId, schoolAvatar:"", schoolName:"",action:"delete"});
+        this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'School deleted successfully'});
+        setTimeout(() => {
+          this.router.navigateByUrl(`user/userProfile/${this.userId}`);
+        }, 3000);
+        // deleteSchoolResponse.next('delete');
+      });
+    }
+  }
+
+  removeLogo(){
+    if(this.school.avatar != null){
+      this.schoolAvatar = '';
+    }
+    this.uploadImage = '';
+    this.fileToUpload.set('avatarImage','');
+  }
+
+  unableDisableSchool(){
+    this.loadingIcon = true;
+    this._schoolService.enableDisableSchool(this.school.schoolId).subscribe((response) => {
+      if(this.school.isDisableByOwner){
+      this.messageService.add({severity: 'success',summary: 'Success',life: 3000,detail: 'School enabled successfully'});
+      }
+      else{
+        this.messageService.add({severity: 'success',summary: 'Success',life: 3000,detail: 'School disabled successfully'});
+      }
+      this.ngOnInit();
+    });  
+
+  }
+
+  openShareClassCourseModal(schoolName:string,name:string,type:number){
+    var initialState:any;
+    if(type == 1){
+        initialState = {
+        className: name,
+        schoolName: schoolName
+      };
+    }
+    else{
+        initialState = {
+        courseName: name,
+        schoolName: schoolName
+      };
+    }
+    this.bsModalService.show(SharePostComponent,{initialState});
   }
 
 }

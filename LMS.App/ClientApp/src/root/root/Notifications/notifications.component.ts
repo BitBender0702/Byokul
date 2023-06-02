@@ -9,6 +9,8 @@ import { ReelsViewComponent } from '../reels/reelsView.component';
 import { Subject, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { MultilingualComponent, changeLanguage } from '../sharedModule/Multilingual/multilingual.component';
+import { JoinMeetingModel } from 'src/root/interfaces/bigBlueButton/joinMeeting';
+import { BigBlueButtonService } from 'src/root/service/bigBlueButton';
 
 export const unreadNotificationResponse =new Subject<{type:string}>(); 
 
@@ -22,6 +24,7 @@ export const unreadNotificationResponse =new Subject<{type:string}>();
   export class NotificationsComponent extends MultilingualComponent implements OnInit, OnDestroy {
     private _notificationService;
     private _postService;
+    private _bigBlueButtonService;
     notifications:any;
     notificationSettings:any;
     loadingIcon:boolean = false;
@@ -34,12 +37,14 @@ export const unreadNotificationResponse =new Subject<{type:string}>();
     scrolled:boolean = false;
     scrollNotificationResponseCount:number = 1;
     notificationLoadingIcon: boolean = false;
+    joinMeetingViewModel!:JoinMeetingModel;
 
 
-    constructor(injector: Injector,private fb: FormBuilder,notificationService:NotificationService,private router: Router,postService:PostService,private bsModalService: BsModalService) {
+    constructor(injector: Injector,private fb: FormBuilder,notificationService:NotificationService,private router: Router,postService:PostService,private bsModalService: BsModalService,bigBlueButtonService:BigBlueButtonService) {
        super(injector);
        this._notificationService = notificationService;
        this._postService = postService;
+       this._bigBlueButtonService = bigBlueButtonService;
     }
 
     ngOnInit(): void {
@@ -173,6 +178,27 @@ export const unreadNotificationResponse =new Subject<{type:string}>();
        this.scrollNotificationResponseCount = notificationsResponse.length; 
        this.scrolled = false;
      });
+    }
+
+    joinMeeting(name:string,meetingId:string,postId:string){
+      this.initializeJoinMeetingViewModel();
+      this.joinMeetingViewModel.name = name;
+      this.joinMeetingViewModel.meetingId = meetingId;
+      this._bigBlueButtonService.joinMeeting(this.joinMeetingViewModel).subscribe((response) => {
+       debugger
+       const fullNameIndex = response.url.indexOf('fullName='); // find the index of "fullName="
+       const newUrl = response.url.slice(fullNameIndex);
+       this.router.navigate(
+        [`liveStream`,postId,newUrl,false],
+        { state: { stream: {streamUrl: response.url, userId:this.userId, meetingId: meetingId, isOwner:false} } });
+    });
+    }
+
+    initializeJoinMeetingViewModel(){
+      this.joinMeetingViewModel = {
+        name:'',
+        meetingId:''
+      }
     }
 
 }

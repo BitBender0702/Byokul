@@ -7,11 +7,26 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
       <div class="custom-language-select liv-postbtn">
       </div>
       <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center"></h1>
+      <ul *ngIf="post?.createdBy == userId" class="list-unstyled d-flex more-action-btn before-none pe-2 me-1 mb-0" style="position: absolute;right: 50px;top: 10px;">
+        <li class="d-inline-block ps-0 mb-0">
+          <div class="dropdown">
+            <button class="bg-transparent dropdown-toggle border-0 action-more-btn after-none pt-1" type="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              <i class="fa-solid fa-ellipsis"></i>
+            </button>
+            <ul class="dropdown-menu">
+              <li><a style="cursor: pointer;" class="dropdown-item"
+                (click)="getDeletedPostId(post?.id)" data-bs-toggle="modal" data-bs-target="#delete-Class">{{'Delete'| translate }}
+              </a>
+              </li>
+            </ul>
+          </div>
+        </li>
+      </ul>  
       <button (click)="close()" type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"><img
           src="../../../assets/images/cross.svg" /></button>
     </div>
     <div class="modal-body">
-
   <section class="f-poppins">
     <div>
       <div [ngClass]="showCommentsField? '' : 'full-widthreel'" id="reel_content">
@@ -45,9 +60,21 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
             </div>
         </carousel>
     </div>
-    <p *ngIf="post.description != null && post.postAttachments.length>0" class="text_sec1 font_14 pt-3 overflow_paragraph">{{post.description}}</p>
     <div *ngIf="post.postAttachments.length==0">
       <h2>{{post.title}}</h2>
+      <!-- <p *ngIf="post.description != null" class="text_sec1 font_14 pt-3 overflow_paragraph" style="height:400px">{{post.description}}</p> -->
+    </div>
+    <div class="teacher-tags tag-box hashtag_box mb-0">
+      <ng-container *ngFor="let attachment of posts.postAttachments">
+      <span class="custom-tag cursor_pointer">{{attachment.fileName}}</span>
+      </ng-container>
+    </div>
+    <div class="teacher-tags tag-box hashtag_box mt-0">
+        <span *ngFor="let tag of post.postTags" class="custom-tag">#{{tag.postTagValue}}</span>
+    </div>
+    <p *ngIf="post.description != null && post.postAttachments.length>0" class="text_sec1 font_14 pt-3 overflow_paragraph">{{post.description}}</p>
+    <div *ngIf="post.postAttachments.length==0">
+      <!-- <h2>{{post.title}}</h2> -->
       <p *ngIf="post.description != null" class="text_sec1 font_14 pt-3 overflow_paragraph" style="height:400px">{{post.description}}</p>
     </div>
   </div>
@@ -56,7 +83,7 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
       <div [ngClass]="showCommentsField? 'accordion-open d-block' : 'accordion-open d-none'" id="live-chat-open" style="display:none;">
       <div class="live-action-buttons d-flex justify-content-between">
         <button type="button" class="btn bg-transparent text_ltgray font_12 cursor_auto"><img src="../../../assets/images/chat-icon.svg"
-            class="d-block" /> {{post.commentsCount}}</button>
+            class="d-block" /> {{post.comments.length}}</button>
         <button type="button" class="btn bg-transparent text_ltgray font_12 cursor_auto"><img src="../../../assets/images/eye.svg"
             class="d-block" /> {{post.views.length}}</button>
             <button (click)="likeUnlikePosts(post.id,true,post.postType,post)" type="button" class="btn bg-transparent text_ltgray font_12">
@@ -80,14 +107,16 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
         <div *ngIf="post.createdBy == userId && !isCommentsDisabled" (click)="showCommentsDiv(false)" class="chat-enabled d-inline-flex align-items-center cursor_pointer"><img src="../../../assets/images/Unlock.svg" />{{'ChatDisabled'| translate }}
         </div>
         <div>
-          <span *ngIf="post.createdBy != userId && isCommentsDisabled">Comments are disabled</span>
+          <span *ngIf="post.createdBy != userId && isCommentsDisabled">{{'CommentsAreDisabled'| translate }}</span>
         </div>
         <div *ngIf="!isCommentsDisabled" #groupChatList id="groupChat" class="live-chat-outer position-relative" (scroll)="scrollHandler($event)">
           <div *ngIf="commentsLoadingIcon" class="postloader-main position-absolute translate-middle">
             <div class="postlds-ring" style="margin-left: 200px;margin-bottom: 214px;"><div></div><div></div><div></div><div></div></div>
           </div>
         <div *ngFor="let item of post.comments" class="live-message d-flex position-relative align-items-start">
-          <img [src]="item.userAvatar" class="comment-user">
+          <img *ngIf="item.userAvatar != null" [src]="item.userAvatar" class="comment-user">
+          <img *ngIf="item.userAvatar == null && gender =='1'" src="../../../assets/images/maleProfile.jfif" class="comment-user"/>
+          <img *ngIf="(item.userAvatar == null) && (gender =='2' || gender =='3')" src="../../../assets/images/femaleProfile.jfif" class="comment-user"/>
           <p class="text_sec1 font_12 fw_400 text-start mb-0">{{item.content}}</p>
           <button (click)="likeUnlikeComments(item.id,true,item.isCommentLikedByCurrentUser,item.likeCount)" type="button" class="btn bg-transparent text_ltgray font_12 p-0 border-0 reel-like-chat">
             <img *ngIf="item.isCommentLikedByCurrentUser" src="../../../assets/images/heart-red.svg" class="d-block" />
@@ -103,7 +132,6 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
           <button (click)="sendToGroup()" type="button" class="comment-btn border-0"><img src="../../../assets/images/arrowup.svg" /></button>
         </div>
       </div>
-
     </div>
     </div>
   </div>
@@ -123,8 +151,22 @@ margin-top: 30px;">
       <button (click)="back()" type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
           src="../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
       <h1 class="font_22 text_dark fw-bold text-center mb-md-0" style="margin-left:-100px">{{'Post'| translate }}</h1>
-      <button (click)="back()" type="button" class="back-button bg-transparent border-0 invisible"><img src="../../../assets/images/cross.svg" /></button>
-    </div>
+      <ul *ngIf="post?.createdBy == userId" class="list-unstyled d-flex more-action-btn before-none pe-2 me-1 mb-0" style="position: absolute;right: 50px;top: 13px;">
+        <li class="d-inline-block ps-0 mb-0">
+          <div class="dropdown">
+            <button class="bg-transparent dropdown-toggle border-0 action-more-btn after-none pt-1" type="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              <i class="fa-solid fa-ellipsis"></i>
+            </button>
+            <ul class="dropdown-menu">
+              <li><a style="cursor: pointer;" class="dropdown-item"
+                (click)="getDeletedPostId(post?.id)" data-bs-toggle="modal" data-bs-target="#delete-Class">{{'Delete'| translate }}
+              </a>
+              </li>
+            </ul>
+          </div>
+        </li>
+      </ul>      </div>
     <div [ngClass]="showCommentsField? '' : 'full-widthreel'" id="reel_content">
       <div class="row">
       <div class="col-md-8">
@@ -195,14 +237,16 @@ margin-top: 30px;">
       <div *ngIf="post.createdBy == userId && !isCommentsDisabled" (click)="showCommentsDiv(false)" class="chat-enabled d-inline-flex align-items-center cursor_pointer"><img src="../../../assets/images/Unlock.svg" />{{'ChatDisabled'| translate }}
       </div>
       <div>
-        <span *ngIf="post.createdBy != userId && isCommentsDisabled">Comments are disabled</span>
+        <span *ngIf="post.createdBy != userId && isCommentsDisabled">{{'CommentsAreDisabled'| translate }}</span>
       </div>
       <div *ngIf="!isCommentsDisabled" #groupChatList id="groupChat" class="live-chat-outer position-relative" (scroll)="scrollHandler($event)">
         <div *ngIf="commentsLoadingIcon" class="postloader-main position-absolute translate-middle">
           <div class="postlds-ring" style="margin-left: 200px;margin-bottom: 214px;"><div></div><div></div><div></div><div></div></div>
         </div>
       <div *ngFor="let item of post.comments" class="live-message d-flex position-relative align-items-start">
-        <img [src]="item.userAvatar" class="comment-user">
+        <img *ngIf="item.userAvatar != null" [src]="item.userAvatar" class="comment-user">
+        <img *ngIf="item.userAvatar == null && gender =='1'" src="../../../assets/images/maleProfile.jfif" class="comment-user"/>
+        <img *ngIf="(item.userAvatar == null) && (gender =='2' || gender =='3')" src="../../../assets/images/femaleProfile.jfif" class="comment-user"/>
         <p class="text_sec1 font_12 fw_400 text-start mb-0">{{item.content}}</p>
         <button (click)="likeUnlikeComments(item.id,true,item.isCommentLikedByCurrentUser,item.likeCount)" type="button" class="btn bg-transparent text_ltgray font_12 p-0 border-0 reel-like-chat">
           <img *ngIf="item.isCommentLikedByCurrentUser" src="../../../assets/images/heart-red.svg" class="d-block" />
@@ -218,14 +262,13 @@ margin-top: 30px;">
         <button (click)="sendToGroup()" type="button" class="comment-btn border-0"><img src="../../../assets/images/arrowup.svg" /></button>
       </div>
     </div>
-
   </div>
   </div>
 </div>
 </div>
-      
-
     </div>
   </div>
 </section>
 </div>
+<loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
+

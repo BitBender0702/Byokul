@@ -1,0 +1,10 @@
+.cover_thumbnail{
+    filter: blur(2px);
+}
+
+.emoji_btn{
+    position: relative;
+    border: none;
+    background: none;
+    right: 9%;
+}

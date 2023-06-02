@@ -9,6 +9,9 @@ import { ClassService } from 'src/root/service/class.service';
 import { FilterService } from "primeng/api";
 import { IfStmt } from '@angular/compiler';
 import { Subject } from 'rxjs';
+import { DatePipe } from '@angular/common';
+import { SharePostComponent } from '../../sharePost/sharePost.component';
+import { BsModalService } from 'ngx-bootstrap/modal';
 
 export const ownedClassResponse =new Subject<{classId: string, classAvatar : string,className:string,schoolName:string, action:string}>(); 
 
@@ -66,9 +69,11 @@ export class CreateClassComponent extends MultilingualComponent implements OnIni
   tags!:string;
   tagList!: string[];
   isTagsValid: boolean = true;
+  minDate:any;
+  tagCountExceeded:boolean = false;
 
 
-  constructor(injector: Injector,public messageService:MessageService,private route: ActivatedRoute,private router: Router,private fb: FormBuilder,classService: ClassService,private http: HttpClient) {
+  constructor(injector: Injector,private bsModalService: BsModalService,private datePipe: DatePipe,public messageService:MessageService,private route: ActivatedRoute,private router: Router,private fb: FormBuilder,classService: ClassService,private http: HttpClient) {
     super(injector);
     this._classService = classService;
   }
@@ -77,6 +82,7 @@ export class CreateClassComponent extends MultilingualComponent implements OnIni
     this.loadingIcon = true;
     var id = this.route.snapshot.paramMap.get('id');
     this.fromSchoolProfile = id ?? '';
+    this.minDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
 
     if(this.fromSchoolProfile == ''){
       this.getSchoolsForDropdown();
@@ -198,6 +204,11 @@ var today = new Date();
 
 
 captureStudentId(event: any) {
+  debugger
+  var noOfStudents = Number(this.class.noOfStudents);
+  if(this.studentIds.length >= noOfStudents){
+    this.createClassForm2.setErrors({ studentLimitExceeds: true });
+  }
   var studentId = event.studentId;
   this.studentIds.push(studentId);
   this.studentInfo.push(event);
@@ -249,6 +260,7 @@ captureTeacherId(event: any) {
   }
 
   forwardStep() {
+    debugger
     this.isStepCompleted = true;
     this.class=this.createClassForm1.value;
 
@@ -261,22 +273,27 @@ captureTeacherId(event: any) {
       return;
     }
 
+    if(this.tagList.length > 7){
+      this.tagCountExceeded = true;
+      return; 
+    }
+
 
     // var schoolId = this.createClassForm1.get('schoolId')?.value;
     //this.class=this.createClassForm1.value;
     this.className = this.class.className.split(' ').join('');
 
-    if (this.class.tags.startsWith("#")){
-      if(!this.tagList.includes(this.class.tags)) {
-      this.tagList.push(this.class.tags);
-      }
-    }
-    else{
-      this.class.tags = '#' + this.class.tags;
-      if(!this.tagList.includes(this.class.tags)) {
-      this.tagList.push(this.class.tags);
-      }
-    }
+    // if (this.class.tags.startsWith("#")){
+    //   if(!this.tagList.includes(this.class.tags)) {
+    //   this.tagList.push(this.class.tags);
+    //   }
+    // }
+    // else{
+    //   this.class.tags = '#' + this.class.tags;
+    //   if(!this.tagList.includes(this.class.tags)) {
+    //   this.tagList.push(this.class.tags);
+    //   }
+    // }
 
     this.fileToUpload.append('classTags', JSON.stringify(this.tagList))
     // this.schoolName = this.class.schoolId.schoolName.split(' ').join('');
@@ -369,6 +386,9 @@ captureTeacherId(event: any) {
   }
 
   forwardStep2() {
+    if(!this.createClassForm2.valid){
+      return;
+    }
     // var classes = this.createClassForm1.value;
     // var schoolName = classes.schoolName;
     // var a = this.selectedSchool.schooName;
@@ -395,10 +415,11 @@ captureTeacherId(event: any) {
   }
 
   filterDisciplines(event:any) {
+    var disciplines = this.disciplines.filter((x: { id: any; }) => !this.disciplineIds.find(y => y == x.id));
     let filtered: any[] = [];
     let query = event.query;
-    for (let i = 0; i < this.disciplines.length; i++) {
-      let discipline = this.disciplines[i];
+    for (let i = 0; i < disciplines.length; i++) {
+      let discipline = disciplines[i];
       if (discipline.name.toLowerCase().indexOf(query.toLowerCase()) == 0) {
         filtered.push(discipline);
       }
@@ -407,10 +428,12 @@ captureTeacherId(event: any) {
   }
 
   filterStudents(event:any) {
+    debugger
+    var students = this.students.filter((x: { studentId: any; }) => !this.studentIds.find(y => y == x.studentId));
     let filteredStudents: any[] = [];
     let query = event.query;
-    for (let i = 0; i < this.students.length; i++) {
-      let student = this.students[i];
+    for (let i = 0; i < students.length; i++) {
+      let student = students[i];
       if (student.studentName.toLowerCase().indexOf(query.toLowerCase()) == 0) {
         filteredStudents.push(student);
       }
@@ -419,10 +442,12 @@ captureTeacherId(event: any) {
   }
 
   filterTeachers(event:any) {
+    debugger
+    var teachers = this.teachers.filter((x: { teacherId: any; }) => !this.teacherIds.find(y => y == x.teacherId));
     let filteredTeachers: any[] = [];
     let query = event.query;
-    for (let i = 0; i < this.teachers.length; i++) {
-      let teacher = this.teachers[i];
+    for (let i = 0; i < teachers.length; i++) {
+      let teacher = teachers[i];
       if (teacher.firstName.toLowerCase().indexOf(query.toLowerCase()) == 0) {
         filteredTeachers.push(teacher);
       }
@@ -502,6 +527,17 @@ captureTeacherId(event: any) {
   }
 
   onEnter(event:any) {
+    const isBlank = /^\s*$/.test(event.target.value);
+    if(isBlank){
+      return;
+    }
+
+    if(this.tagList.includes('#' + event.target.value)){
+      event.target.value = '';
+      return;
+    }
+
+    event.target.value = event.target.value.replace(/^\s+|\s+$/g, "").replace(/\s+/g, " ");
     if(event.target.value.indexOf('#') > -1){
       this.tagList.push(event.target.value);
     }
@@ -510,15 +546,48 @@ captureTeacherId(event: any) {
       this.tagList.push(event.target.value);
     }
     event.target.value = '';
+
+    if(this.tagList.length > 7){
+      this.tagCountExceeded = true;
+      return; 
+    }
+    else{
+      this.tagCountExceeded = false;
+    }
     // this.createClassForm1.controls['tags'].setValue('');
   }
 
   removeTag(tag:any){
+    debugger
     const tagIndex = this.tagList.findIndex((item) => item ===tag);
     if (tagIndex > -1) {
       this.tagList.splice(tagIndex, 1);
     }
+
+    if(this.tagList.length > 7){
+      this.tagCountExceeded = true;
+      return; 
+    }
+    else{
+      this.tagCountExceeded = false;
+    }
    }
+
+   openSharePostModal(): void {
+    if(this.fromSchoolProfile != ''){
+      var schoolName = this.createClassForm1.controls['schoolName'].value;
+    }
+    if(this.fromSchoolProfile == ''){
+      var schoolId = this.createClassForm1.controls['schoolId'].value;
+      var school = this.schools.find((x: { schoolId: any; })=> x.schoolId == schoolId);
+      var schoolName = school.schoolName;
+    }
+    const initialState = {
+      className: this.className,
+      schoolName: schoolName
+    };
+    this.bsModalService.show(SharePostComponent,{initialState});
+  }
 
 
 }

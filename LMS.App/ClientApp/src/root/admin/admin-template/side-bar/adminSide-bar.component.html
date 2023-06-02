@@ -1,40 +1,9 @@
- <!-- <div  [ngClass]="{'sidemenu d-xl-block d-block':isOpenSidebar === true,'sidemenu d-xl-block d-none':isOpenSidebar === false}" id="side-bar"> -->
     <div  [ngClass]="isOpenSidebar ? 'sidemenu d-xl-block d-block ' : 'sidemenu d-xl-block d-none'" id="side-bar">
         <span class="closebtn d-xl-none" (click)="closeSidebar()" title="Close Side Menu">×</span>
         <div class="text-center">
-          <a href="" class="main-logo"><img src="../../../assets/images/logo.svg" /></a>
+          <a class="main-logo"><img src="../../../assets/images/logo.svg" /></a>
         </div>
-        <!-- <div class="d-flex text-center notification-box justify-content-center">
-          <ul class="list-unstyled d-flex "> -->
-            <!-- <li class="d-inline-block">
-              <div class="dropdown">
-                <button class="bg-transparent dropdown-toggle rounded-circle" type="button" data-bs-toggle="dropdown"
-                  aria-expanded="false">
-                  <img *ngIf="sidebarInfo !== undefined && sidebarInfo.user!== undefined" [src]="sidebarInfo.user?.avatar"/>
-                </button>
-                <ul class="dropdown-menu">
-                  <li><a *ngIf="sidebarInfo !== undefined && sidebarInfo.user!== undefined" (click)="getUserDetails(sidebarInfo.user.id)" class="dropdown-item" style="cursor:pointer;">My Profile</a></li>
-                  <li><a class="dropdown-item" [routerLink]="['/user/auth/change-password']">ChangePassword</a></li>
-                </ul>
-              </div>
-            </li>
-            <li class="d-inline-block"><button type="button "
-                class="notification-btn position-relative border-0 bg-transparent"><img src="../../../assets/images/school/chat-icon.svg" />
-                <span
-                  class="badge rounded-circle d-inline-flex align-items-center justify-content-center fw_700 font_12">3</span></button>
-            </li>
-            <li class="d-inline-block"><button type="button "
-                class="notification-btn position-relative border-0 bg-transparent"><img src="../../../assets/images/school/Notification.svg" />
-                <span
-                  class="badge rounded-circle d-inline-flex align-items-center justify-content-center fw_700 font_12">3</span></button>
-            </li> -->
-      
-      
-          <!-- </ul>
-        </div> -->
-        <!-- <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400">{{'MyEarnings'| translate }} $ </button> -->
         <hr class="earning-hr" />
-
         <div style="margin-left: 10px;">
           <div class="school-name d-flex align-items-center font_16">
             <span class="bg-transparent rounded-circle comment-post-user rounded-circle image"><img src="../../../../assets/images/dashboardLogo.png" style="max-height: 100%;"/>
@@ -62,28 +31,6 @@
           <a [routerLink]="['/administration/registeredCourses']" class="routeLink">{{'Courses'| translate }}</a>
         </div>
       </div>
-
-      <div class="d-flex justify-content-between flex-wrap mt-4">
-        <div class="language-btn">
-          <input [attr.checked]="selectedLanguage == 'en' ? true : null" (click)="switchLanguage('en')" type="radio" class="btn-check" name="btnradio" id="lang1" autocomplete="off">
-          <label class="btn btn-outline-primary font_12 rounded-8" for="lang1">English</label>
-        </div>
-        <div class="language-btn">
-          <input [attr.checked]="selectedLanguage == 'ar' ? true : null" (click)="switchLanguage('ar')" type="radio" class="btn-check" name="btnradio" id="lang2" autocomplete="off">
-          <label class="btn btn-outline-primary font_12 rounded-8" for="lang2">اللغة العربية</label>
-        </div>
-        <div class="language-btn">
-          <input [attr.checked]="selectedLanguage == 'tr' ? true : null" (click)="switchLanguage('tr')" type="radio" class="btn-check" name="btnradio" id="lang3" autocomplete="off">
-          <label class="btn btn-outline-primary font_12 rounded-8" for="lang3">Türkçe</label>
-        </div><br><br>
-        <div class="language-btn">
-          <input [attr.checked]="selectedLanguage == 'sp' ? true : null" (click)="switchLanguage('sp')" type="radio" class="btn-check" name="btnradio" id="lang4" autocomplete="off">
-          <label class="btn btn-outline-primary font_12 rounded-8" for="lang4">Spanish</label>
-        </div>
-      </div>
-
-        
-
-      
+      <multi-lingual></multi-lingual>
       </div>
       

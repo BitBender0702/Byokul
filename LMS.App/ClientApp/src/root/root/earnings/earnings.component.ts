@@ -56,6 +56,7 @@ export class EarningsComponent extends MultilingualComponent implements OnInit, 
     isOpenWithdrawTab!:boolean;
     isOpenAllTab!:boolean;
     isApplieDateFilter!:boolean;
+    maxDate:Date = new Date();
     changeLanguageSubscription!: Subscription;
     transactionParamViewModel!: TransactionParamViewModel;
     @ViewChild('dropdownMenu') dropdownMenu!: ElementRef;
@@ -188,6 +189,9 @@ export class EarningsComponent extends MultilingualComponent implements OnInit, 
     }
 
     showFilterDropdown(){
+      this.filterDateForm.get('startDate')?.setValue(new Date());  
+      this.filterDateForm.get('endDate')?.setValue(new Date());  
+      this.filterDateForm.setErrors(null);
       var display = this.dropdownMenu.nativeElement.style.display;
       if(display == ""){
         display = "none";
@@ -218,12 +222,22 @@ this.dropdownMenu.nativeElement.style.display = (display === 'none') ? 'block' :
       if(this.searchString.length >2 || this.searchString == ""){
         this.transactionParamViewModel.pageNumber = this.pageNumber;
         this.transactionParamViewModel.searchString = this.searchString;
-        //this.transactionParamViewModel.StartDate = this.startDate;
-        //this.transactionParamViewModel.endDate = this.endDate;
-        //this.transactionParamViewModel.TransactionType = this.isOpenOwnedSchoolTab ? TransactionTypeEnum.OwnedSchoolPayment : this.isOpenWithdrawTab ? TransactionTypeEnum.Withdraw : null;
-        this._paymentService.transactionDetails(this.transactionParamViewModel).subscribe((response) => {
-          this.transactionDetails = response;
-        });
+        if(this.isOpenOwnedSchoolTab){
+          this._paymentService.transactionDetails(this.transactionParamViewModel).subscribe((response) => {
+            this.transactionDetails = response;
+          });
+        }
+
+        if(this.isOpenAllTab){
+          this._paymentService.allTransactionDetails(this.transactionParamViewModel).subscribe((response) => {
+            this.allTransactionDetails = response;
+          });
+        }
+        if(this.isOpenWithdrawTab){
+          this._paymentService.withdrawDetails(this.transactionParamViewModel).subscribe((response) => {
+            this.withdrawDetails = response;
+          });
+        }
       }
     }
 
@@ -313,12 +327,11 @@ this.dropdownMenu.nativeElement.style.display = (display === 'none') ? 'block' :
 
   applyDateFilter(){
     debugger
-    this.loadingIcon = true;
     this.isSubmitted=true;
     if (!this.filterDateForm.valid) {
       return;
     }
-
+    this.loadingIcon = true;
     this.isApplieDateFilter = true;
     var dates = this.filterDateForm.value;
     this.dropdownMenu.nativeElement.style.display = 'none';

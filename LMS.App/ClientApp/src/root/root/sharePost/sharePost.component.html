@@ -1,6 +1,6 @@
 
         <button hidden #openAttachmentModal type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44" data-bs-toggle="modal"
-        data-bs-target="#add-attachment">Create Post</button>
+        data-bs-target="#add-attachment">{{'CreatePost'| translate }}</button>
         <!-- <div *ngIf="isDataLoaded"> -->
         <div appBsModal  bsModal #createPostModal="bs-modal" class="modal fade edit-school-modal show d-block" id="create-post" tabindex="-1"
           aria-labelledby="create-post" aria-hidden="true" [config]="{backdrop: 'static'}" area-modal="true">
@@ -14,19 +14,17 @@
               </div>
               <div class="modal-body">
                 <div class="share_div">
-                <button (click)="saveUserSharedPost()" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 share_btn">{{'MyWall'| translate }}</button>
-                <button type="button" data-href="https://byokul.com/user/auth/login" class="btn custom-btn primary_btn earning-btn fw_400 h_44 share_btn">
+                <button *ngIf="post.postId!= undefined" (click)="saveUserSharedPost()" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 share_btn">{{'MyWall'| translate }}</button>
+                <button (click)="shareStream()" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 share_btn">
                     <a class="social_icon" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u={{websiteUrl}}&amp;src=sdkpreparse">Facebook</a>
                 </button> 
                 <!-- <button type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 share_btn">{{'Facebook'| translate }}</button> -->
                 <!-- <button type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 share_btn">{{'Twitter'| translate }}</button> -->
 
-                <button class="btn custom-btn primary_btn earning-btn fw_400 h_44 share_btn"><a class="social_icon" href="https://twitter.com/intent/tweet?text=Here is the Link {{websiteUrl}}" target="_blank">Twitter</a>
+                <button (click)="shareStream()" class="btn custom-btn primary_btn earning-btn fw_400 h_44 share_btn"><a class="social_icon" href="https://twitter.com/intent/tweet?text=Here is the Link {{websiteUrl}}" target="_blank">Twitter</a>
                 </button>                                           
-           
                 <!-- <button><a href="http://twitter.com/share?text=text goes here&url={{websiteUrl}}&hashtags=hashtag1,hashtag2,hashtag3" target="_blank">Twitter</a>
                 </button> -->
-
                 </div>
               </div>
             </div>

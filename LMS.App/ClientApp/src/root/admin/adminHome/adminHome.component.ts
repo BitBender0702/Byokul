@@ -15,7 +15,6 @@ export class AdminHomeComponent implements OnInit {
   private _adminService;
   private _authService;
   isSubmitted: boolean = false;
-
   dashboardDetails:any;
   loadingIcon:boolean = false;
   isDataLoaded:boolean = false;
@@ -28,6 +27,7 @@ export class AdminHomeComponent implements OnInit {
 
   ngOnInit(): void {
     this._authService.loginState$.next(false);
+    this._authService.loginAdminState$.next(true);
     this.loadingIcon = true;
     this._adminService.getDashboardDetails().subscribe((response) => {
       this.dashboardDetails = response;

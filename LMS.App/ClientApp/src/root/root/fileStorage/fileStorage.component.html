@@ -12,7 +12,7 @@
       </div>
       <div class="live-header d-flex align-items-center justify-content-between">
         <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark  d-xl-none"><img
-            src="../../../assets/images/arrow-left.svg" /> Back</button>
+            src="../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
         <span class="logo_mobile d-xl-none">
           <img src="../../../assets/images/logo.svg" />
         </span>
@@ -28,21 +28,40 @@
 
       <!---- folder html start ------>
       <div class="text-line-border position-relative text-center mb-5 mt-0">
-        <span class="line-text font_12 text_ltgray fw_400 text-center">Folders</span>
+        <span class="line-text font_12 text_ltgray fw_400 text-center">{{'Folders'| translate }}</span>
       </div>
 
-      <div *ngIf="isClassTeacher || isCourseTeacher">
-        <button type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 me-2" (click)="resetFolderModal()" data-bs-toggle="modal" data-bs-target="#add-folder">Create Folder</button>
+      <div *ngIf="isClassTeacher || isCourseTeacher || isOwner">
+        <button type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 me-2" (click)="resetFolderModal()" data-bs-toggle="modal" data-bs-target="#add-folder">{{'CreateFolder'| translate }}</button>
       </div>
       <br>
 
       <div class="folder-sec">
         <div class="row">
-          <div *ngFor="let item of folderRecords" class="col-md-3" (click)="getNestedFolders(item.id,item.folderName)">
+          <div *ngFor="let item of folderRecords" class="col-md-3">
             <div class="folder-box" style="cursor:pointer">
-              <h3 class="foldername font_14 fw_400 text_sec1 mb-0">
+              <div class="d-flex justify-content-between">
+              <h3 class="foldername font_14 fw_400 text_sec1 mb-0" (click)="getNestedFolders(item.id,item.folderName)">
                 {{item.folderName}}
               </h3>
+                <div *ngIf="isClassTeacher || isCourseTeacher || isOwner">
+                  <ul class="list-unstyled d-flex more-action-btn before-none pe-2 me-1 mb-0">
+                    <li class="d-inline-block ps-0 mb-0">
+                      <div class="dropdown">
+                        <button class="bg-transparent dropdown-toggle border-0 action-more-btn after-none pt-1" type="button" data-bs-toggle="dropdown"
+                          aria-expanded="false">
+                          <i class="fa-solid fa-ellipsis"></i>
+                        </button>
+                        <ul class="dropdown-menu">
+                          <li><a style="cursor: pointer;" class="dropdown-item" (click)="deleteFolder(item.id)" data-bs-toggle="modal" data-bs-target="#delete-Class">{{'Delete'| translate }}
+                          </a>
+                          </li>
+                        </ul>
+                      </div>
+                    </li>
+                  </ul>   
+                </div>
+              </div>
               <div class="foldericon d-flex align-items-center justify-content-between">
                 <img src="../../../assets/images/folder-regular.svg" />               
               </div>
@@ -58,20 +77,39 @@
 
       <!------file html start ---->
       <div class="text-line-border position-relative text-center mb-5 mt-4">
-        <span class="line-text font_12 text_ltgray fw_400 text-center">Files</span>
+        <span class="line-text font_12 text_ltgray fw_400 text-center">{{'Files'| translate }}</span>
       </div>
 
-      <div *ngIf="isClassTeacher || isCourseTeacher">
-        <button (click)="resetFilesModal()" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 me-2" data-bs-toggle="modal" data-bs-target="#add-file">Create File</button>
+      <div *ngIf="isClassTeacher || isCourseTeacher || isOwner">
+        <button (click)="resetFilesModal()" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 me-2" data-bs-toggle="modal" data-bs-target="#add-file">{{'CreateFile'| translate }}</button>
       </div>
       <br>
       
       <div class="folder-sec">
         <div class="d-flex files-sec flex-wrap">
             <div *ngFor="let file of fileRecords" class="folder-box">
+              <div class="d-flex justify-content-between">
                 <h3 class="foldername font_14 fw_400 text_sec1 mb-0 text-break">
                   {{file.fileName}}
                 </h3>
+                <div *ngIf="isClassTeacher || isCourseTeacher || isOwner">
+                  <ul class="list-unstyled d-flex more-action-btn before-none pe-2 me-1 mb-0">
+                    <li class="d-inline-block ps-0 mb-0">
+                      <div class="dropdown">
+                        <button class="bg-transparent dropdown-toggle border-0 action-more-btn after-none pt-1" type="button" data-bs-toggle="dropdown"
+                          aria-expanded="false">
+                          <i class="fa-solid fa-ellipsis"></i>
+                        </button>
+                        <ul class="dropdown-menu">
+                          <li><a style="cursor: pointer;" class="dropdown-item" (click)="deleteFile(file.id)" data-bs-toggle="modal" data-bs-target="#delete-Class">{{'Delete'| translate }}
+                          </a>
+                          </li>
+                        </ul>
+                      </div>
+                    </li>
+                  </ul>   
+                </div>
+              </div>
               <div class="foldericon d-flex align-items-center justify-content-between">
                 <img *ngIf="file.fileType == 1" src="../../../assets/images/gallery-dark.svg" />
                 <img *ngIf="file.fileType == 2" src="../../../assets/images/Video-dark.svg" />
@@ -94,14 +132,12 @@
     </div>
       <div [ngClass]="isOpenCommentsSection ? 'd-block':'d-none'" class="accordion-open" id="live-chat-open" style="min-width: 600px;">
         <div class="live-action-buttons d-flex justify-content-center pb-4">
-           <div class="text-center w-100 font_20 fw-bold">Comments</div>
+           <div class="text-center w-100 font_20 fw-bold">{{'Comments'| translate }}</div>
           <div>
             <button (click)="closeCommentsSection()" type="button" class="back-button bg-transparent border-0"><img src="../../../assets/images/cross.svg" style="width: 25px;" /></button>
           </div>
         </div>
         <div class="live-chat-box text-center">
-          <!-- <div class="chat-enabled d-inline-flex align-items-center"><img src="images/Unlock.svg" /> Chat Enabled
-          </div> -->
           <div #groupChatList class="live-chat-outer position-relative" (scroll)="scrollHandler($event)">
             <div *ngIf="commentsLoadingIcon" class="postloader-main position-absolute translate-middle">
               <div class="postlds-chat-ring" style="margin-left: 287px;margin-bottom: 214px;"><div></div><div></div><div></div><div></div></div>
@@ -145,12 +181,15 @@
       </div>
       <div class="modal-body">
         <form [formGroup]="saveFolderForm" class="latest-form add-tag-step">
-          <label class="font_10">{{'Folder Name'| translate }}</label>
+          <label class="font_10">{{'FolderName'| translate }}</label>
           <div class="form-group">
-            <input type="text" formControlName="folderName" name="folderName" class="form-control w-100" placeholder="{{'Folder Name'| translate }}">
+            <input type="text" formControlName="folderName" name="folderName" maxlength="40" class="form-control w-100" placeholder="{{'Folder Name'| translate }}">
           </div>
           <small class="p-error" style="color: orange;" class="text-center d-block"
-          *ngIf="(isSubmitted && saveFolderForm.controls.folderName.errors)"> Folder name is required!
+          *ngIf="(isSubmitted && saveFolderForm.controls.folderName.errors)">{{'FolderNameRequired'| translate }}
+        </small>
+        <small class="p-error" style="color: orange;margin-left: 210px;" *ngIf="saveFolderForm.errors?.folderNameAlreadyExist">
+          {{'FolderNameAlreadyExists'| translate }}
         </small>
           <div class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 mt-4">
           <button #closeFolderModal type="button"
@@ -170,7 +209,7 @@ aria-labelledby="add-certificate" aria-hidden="true">
 <div class="modal-dialog modal-dialog-centered">
   <div class="modal-content">
     <div class="modal-header border-0 justify-content-center position-relative">
-      <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">{{'Add Files'| translate }}</h1>
+      <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">{{'AddFiles'| translate }}</h1>
       <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"><img
           src="../../../../assets/images/cross.svg" /></button>
     </div>
@@ -183,7 +222,7 @@ aria-labelledby="add-certificate" aria-hidden="true">
               <i class="glyphicon glyphicon-download-alt"></i>
               <p class="text-center fw_400">{{'ChooseImageFile'| translate }} <b>{{'DragItHere'| translate }}</b></p>
             </div>
-            <input formControlName="files" type="file" id="file" (change)="handleFiles($event)" class="dropzone"/>
+            <input formControlName="files" type="file" id="file" multiple="multiple" (change)="handleFiles($event)" class="dropzone"/>
           </div>
           <div *ngIf="isSubmitted && saveFileViewModel.files.length>0">
               <p class="mb-0 mt-4">{{fileCount + '/' + saveFileViewModel.files.length}}</p>
@@ -200,7 +239,7 @@ aria-labelledby="add-certificate" aria-hidden="true">
         </div>
 
         <small class="p-error" style="color: orange;"class="text-center d-block"
-        *ngIf="(isSubmitted && filesForm.controls.files.errors)"> Please select atleast one file
+        *ngIf="(isSubmitted && filesForm.controls.files.errors)">{{'selectAtleastOneFile'| translate }}
       </small>
         <div
         class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 mt-4">
@@ -209,7 +248,6 @@ aria-labelledby="add-certificate" aria-hidden="true">
           data-bs-dismiss="modal">{{'DiscardChanges'| translate }}</button>
         <button [ngClass]="isSubmitted ? 'btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step disabled':'btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step'" (click)="saveFiles()" type="button"
           class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step">{{'Save'| translate }}</button>
-
       </div>
       </form>
     </div>

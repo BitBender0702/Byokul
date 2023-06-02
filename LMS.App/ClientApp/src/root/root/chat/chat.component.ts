@@ -20,6 +20,12 @@ import { Subject, Subscription } from 'rxjs';
 import { NotificationService } from 'src/root/service/notification.service';
 import { NotificationType } from 'src/root/interfaces/notification/notificationViewModel';
 import { MultilingualComponent, changeLanguage } from '../sharedModule/Multilingual/multilingual.component';
+import { CertificateViewComponent } from '../certificateView/certificateView.component';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import videojs from 'video.js';
+import 'video.js/dist/video-js.css';
+import { ChatVideoComponent } from '../chatVideo/chatVideo.component';
+import { UploadVideo } from 'src/root/interfaces/post/uploadVideo';
 
 export const unreadChatResponse =new Subject<{readMessagesCount: number,type:string}>(); 
 
@@ -45,6 +51,8 @@ export class ChatComponent extends MultilingualComponent implements OnInit, Afte
   SaveChatAttachment!:SaveChatAttachment;
   @ViewChild('chatList') chatList!: ElementRef;
   @ViewChild('schoolChatList') schoolChatList!: ElementRef;
+  @ViewChild('videoPlayer',{ static: false }) videoPlayer!: ElementRef;
+
 
   chartOptions: ChartConfiguration['options'] = {
     responsive: true,
@@ -86,7 +94,9 @@ export class ChatComponent extends MultilingualComponent implements OnInit, Afte
   userName!:string;
   invalidMessage!:boolean;
   fullSizeImageName!:string;
+  fullSizeVideoName!:string;
   fullSizeImageUrl!:string;
+  fullSizeVideoUrl!:string;
   profileURL!:string;
   showMyInbox!:boolean;
   showMySchoolInbox!:boolean;
@@ -126,15 +136,23 @@ export class ChatComponent extends MultilingualComponent implements OnInit, Afte
   schoolChatsScrolled:boolean = false;
   schoolChatsLoadingIcon: boolean = false;
   scrollSchoolChatsResponseCount:number = 1;
+  schoolInboxes:any;
+  exceedUploadFileSize!:boolean;
+
+  videoLoad:boolean = false;
+  private player: videojs.Player | null = null;
 
   searchString:string = "";
   changeLanguageSubscription!: Subscription;
+  videoObject!:UploadVideo;
+  disabledSendButton!:boolean;
+  uploadVideo:any[] = [];
   @ViewChild('chatHeadsScrollList') chatHeadsScrollList!: ElementRef;
   // @ViewChild('chatScrollList') chatScrollList!: ElementRef;
 
 
 
-  constructor(@Inject(DOCUMENT) document: Document,injector: Injector,notificationService:NotificationService,schoolService:SchoolService,classService:ClassService,courseService:CourseService, chatService:ChatService,private renderer: Renderer2,public signalRService: SignalrService, private http: HttpClient,private route: ActivatedRoute,private userService: UserService,private cd: ChangeDetectorRef) { 
+  constructor(@Inject(DOCUMENT) document: Document,injector: Injector,private bsModalService: BsModalService,notificationService:NotificationService,schoolService:SchoolService,classService:ClassService,courseService:CourseService, chatService:ChatService,private renderer: Renderer2,public signalRService: SignalrService, private http: HttpClient,private route: ActivatedRoute,private userService: UserService,private cd: ChangeDetectorRef) { 
     super(injector);
     this._userService = userService;
     this._schoolService = schoolService;
@@ -723,6 +741,7 @@ this.addChatAttachments = {
       this.classInboxList = chatUsers.filter(x => x.chatType == 4 && x.class.createdById == this.sender.id);
       this.courseInboxList = chatUsers.filter(x => x.chatType == 5 && x.course.createdById == this.sender.id);
       this.schoolInboxList = [ ...this.schoolInboxList, ...this.classInboxList,...this.courseInboxList];
+      this.schoolInboxes = this.schoolInboxList;
       
        if(this.userId!= null && this.chatType == "3"){
         var chatUsers: any[] = this.allChatUsers;
@@ -853,6 +872,7 @@ this.addChatAttachments = {
   }
 
     getSelectedSchoolInbox(schoolId?:string){
+      this.schoolInboxList = this.schoolInboxes;
       this.showMySchoolInbox = true;
       this.showMyInbox = false;
       var inboxList: any[] = this.schoolInboxList;
@@ -861,8 +881,10 @@ this.addChatAttachments = {
       inboxList = inboxList.filter(x => x.school?.schoolId == schoolId);
       classInboxList = classInboxList.filter(x => x.class?.schoolId == schoolId);
       courseInboxList = courseInboxList.filter(x => x.course?.schoolId == schoolId);
-      this.schoolInboxList = [ ...inboxList, ...classInboxList,...courseInboxList];
+      var inboxList = [ ...inboxList, ...classInboxList,...courseInboxList];
 
+      // if(inboxList.length > 0){
+      this.schoolInboxList = inboxList;
       let newList:any[] = [];
       var schoolIbList: any[] = this.schoolInboxList;
 
@@ -911,15 +933,22 @@ this.addChatAttachments = {
       this.chatType = this.schoolInboxList[0].chatType;
       this.loadingIcon = false;
 
-      this.cd.detectChanges();
-      this.schoolChatList.nativeElement.scrollTop = this.schoolChatList.nativeElement.scrollHeight;
+      // this.schoolChatList.nativeElement.scrollTop = this.schoolChatList.nativeElement.scrollHeight;
+      this._chatService.getUsersChat(this.senderId,this.schoolInboxList[0].userID,this.schoolInboxList[0].chatType,10,1).subscribe((response) => {
+        this.schoolInboxList[0].chats = response;
+        this.cd.detectChanges();
+        this.schoolChatList.nativeElement.scrollTop = this.schoolChatList.nativeElement.scrollHeight;
+      });
+    // }
+    // else{
+    //   this.schoolInboxList[0].chats = null;
+    // }
 
     }
 
     getUsersChat(chatHeadId:string,recieverId:string,receiverAvatar:string,username:string,chatType:string,From:string,pageSize:number,pageNumber:number,school?:any){
       this.loadingIcon = true;
       this.selectedChatHeadDiv = true;
-      
       //var previousChatHeadId = localStorage.getItem("chatHead");
       this.chatHeadId = chatHeadId;
       //localStorage.setItem("chatHead", chatHeadId); 
@@ -967,10 +996,10 @@ this.addChatAttachments = {
        }
        else{
        if(chatType == "3" && From=="FromSchoolInbox"){
-        if(school.ownerId == this.senderId){
-        this.getSelectedSchoolInbox(school.schoolId);
-       }
-       else{
+      //   if(school.ownerId == this.senderId){
+      //   this.getSelectedSchoolInbox(school.schoolId);
+      //  }
+      //  else{
         this.schoolInboxChatType = "3";
         this.chatType = "3";
         this.schoolInboxList[0].chats = response;
@@ -980,7 +1009,7 @@ this.addChatAttachments = {
         this.schoolInboxUserName = currentChatHead.userName;
         this.schoolInboxUserAvatar = currentChatHead.profileURL;
         this.schoolInboxReceiverId = currentChatHead.userID;
-      }
+      // }
        }
        else{
         if(chatType == "5" && From=="FromSchoolInbox"){
@@ -1014,6 +1043,9 @@ this.addChatAttachments = {
             this.firstuserChats = this.userChats.concat(this.firstuserChats);
           this.firstuserChats = this.userChats;
          }
+         this.cd.detectChanges();
+         this.chatList.nativeElement.scrollTop = this.chatList.nativeElement.scrollHeight;
+         
        }
       }
 
@@ -1064,51 +1096,170 @@ this.addChatAttachments = {
   }
 
   handleImages(event: any) {
+    this.exceedUploadFileSize = false;
     this.selectedFile = event.target.files;
     var formData = new FormData(); 
     for(var i=0; i<this.selectedFile.length; i++){
+      const maxSizeInBytes: number = 25 * 1024 * 1024;
+
+  if (this.selectedFile[i].size > maxSizeInBytes) {
+    this.exceedUploadFileSize = true;
+    return;
+  }
       formData.append('file', this.selectedFile[i]);
    }
-
+    this.disabledSendButton = true;
     formData.append('fileType', '1');
-    
-      this._chatService.saveChatAttachments(formData).subscribe((response : FileUploadResult) => {
-        this.uploadImage = response
+      this._chatService.saveChatAttachments(formData).subscribe((response : any) => {
+        response.forEach((item: any) => {
+          this.uploadImage.push(item); 
+        });
+        this.disabledSendButton = false;
         formData = new FormData();
         this.selectedFile = [];
         this.invalidMessage = false;
   });
 }
 
+// handleVideos(event: any) {
+//   this.selectedFile = event.target.files;
+//   var formData = new FormData(); 
+//   for(var i=0; i<this.selectedFile.length; i++){
+//     formData.append('file', this.selectedFile[i]);
+//  }
+
+//   formData.append('fileType', '2');
+  
+//     this._chatService.saveChatAttachments(formData).subscribe((response : any) => {
+//       response.forEach((item: any) => {
+//         this.uploadVideos.push(item);
+//       });
+//       formData = new FormData();
+//       this.selectedFile = [];
+//       this.invalidMessage = false;
+// });
+
+// }
+
 handleVideos(event: any) {
-  this.selectedFile = event.target.files;
+  debugger
+  this.exceedUploadFileSize = false;
+  this.initializeVideoObject();
+  this.selectedFile = event.target.files; 
   var formData = new FormData(); 
-  for(var i=0; i<this.selectedFile.length; i++){
+   for (let i = 0; i < this.selectedFile.length; i++) {
+    // this.videos.push(selectedFiles[i]);
+    const file = this.selectedFile[i];
+    const maxSizeInBytes: number = 25 * 1024 * 1024;
+
+  if (file.size > maxSizeInBytes) {
+    // File size exceeds the limit, handle the error as per your requirement
+    this.exceedUploadFileSize = true;
+    return;
+    // Reset the file input field
+  }
+    this.disabledSendButton = true;
     formData.append('file', this.selectedFile[i]);
+    const videoUrl = URL.createObjectURL(file);
+    this.getVideoThumbnail(videoUrl,file.name, (thumbnailUrl) => {
+      this.videoObject.videoUrl = thumbnailUrl;
+      this.videoObject.name = file.name;
+      this.videoObject.type = file.type;
+      this.uploadVideo.push(this.videoObject); 
+      this.initializeVideoObject();
+    });
+  }
+  formData.append('fileType', '2');
+
+  this._chatService.saveChatAttachments(formData).subscribe((response : any) => {
+    response.forEach((item: any) => {
+      this.uploadVideos.push(item);
+    });
+    formData = new FormData();
+    this.selectedFile = [];
+    this.invalidMessage = false;
+    this.disabledSendButton = false;
+});
+}
+
+initializeVideoObject(){
+  this.videoObject = {
+    videoUrl: '',
+    name: '',
+    type:''
+   };
+
  }
 
-  formData.append('fileType', '2');
-  
-    this._chatService.saveChatAttachments(formData).subscribe((response : FileUploadResult) => {
-      this.uploadVideos = response
-      formData = new FormData();
-      this.selectedFile = [];
-      this.invalidMessage = false;
-});
+getVideoThumbnail(videoUrl: string,fileName:string, callback: (thumbnailUrl: string) => void) {
+  const video = document.createElement('video');
+  video.preload = 'metadata';
+  video.src = videoUrl;
+  video.currentTime = 4;
+  video.addEventListener('loadedmetadata', () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const ctx = canvas.getContext('2d');
+    video.addEventListener('seeked', () => {
+      ctx?.drawImage(video, 0, 0, canvas.width, canvas.height);
+      const thumbnailUrl = canvas.toDataURL();
 
+  this.saveCanvasToFile(canvas,fileName);
+      callback(thumbnailUrl);
+    });
+    video.currentTime = 4;
+  });
+}
+
+async saveCanvasToFile(canvas: HTMLCanvasElement, fileName: string) {
+  const blob = await this.canvasToBlob(canvas);
+
+  let lastSlashIndex = blob.type.lastIndexOf("/");
+if (lastSlashIndex !== -1) {
+  var thumbnailType = blob.type.substring(lastSlashIndex + 1);
+} 
+
+
+let lastDotIndex = fileName.lastIndexOf(".");
+if (lastDotIndex !== -1) {
+  fileName = fileName.substring(0, lastDotIndex + 1);
+} 
+
+fileName = fileName + thumbnailType;
+
+  const file = new File([blob], fileName, { type: blob.type });
+  // this.videoThumbnails.push(file);
+}
+
+canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
+  return new Promise((resolve) => {
+    canvas.toBlob((blob) => {
+      resolve(blob);
+    });
+  });
 }
 
 handleAttachments(event: any) {
+  this.exceedUploadFileSize = false;
   this.selectedFile = event.target.files;
   var formData = new FormData(); 
   for(var i=0; i<this.selectedFile.length; i++){
+    const maxSizeInBytes: number = 25 * 1024 * 1024;
+    if (this.selectedFile[i].size > maxSizeInBytes) {
+      this.exceedUploadFileSize = true;
+      return;
+    }
     formData.append('file', this.selectedFile[i]);
  }
-
+  this.disabledSendButton = true;
   formData.append('fileType', '3');
   
-    this._chatService.saveChatAttachments(formData).subscribe((response : FileUploadResult) => {
-      this.uploadAttachments = response
+    this._chatService.saveChatAttachments(formData).subscribe((response : any) => {
+      response.forEach((item: any) => {
+        this.uploadAttachments.push(item);
+      });
+      this.disabledSendButton = false;
       formData = new FormData();
       this.selectedFile = [];
       this.invalidMessage = false;
@@ -1116,6 +1267,7 @@ handleAttachments(event: any) {
 }
 
 removeUploadFile(fileURL:any){
+  this.disabledSendButton = false;
   if(this.uploadImage != undefined){
   const index = this.uploadImage.findIndex((item:any) => item.fileURL === fileURL);
   if (index > -1) {
@@ -1125,10 +1277,17 @@ removeUploadFile(fileURL:any){
 }
 
 if(this.uploadVideos != undefined){
-  const videoIndex = this.uploadVideos.findIndex((item:any) => item.fileURL === fileURL);
+  const videoIndex = this.uploadVideos.findIndex((item:any) => item.fileName === fileURL);
+  const uploadVideoIndex = this.uploadVideo.findIndex((item:any) => item.name === fileURL);
+  if (uploadVideoIndex > -1) {
+    this.uploadVideo.splice(videoIndex, 1);
+    }
   if (videoIndex > -1) {
+    const existVideo = this.uploadVideos.find((item:any) => item.fileName === fileURL);
+    fileURL = existVideo.fileURL;
     this.uploadVideos.splice(videoIndex, 1);
     this.invalidMessage = true;
+  
   }
 }
 
@@ -1140,8 +1299,6 @@ if(this.uploadAttachments != undefined){
   }
 }
   this._chatService.removeChatAttachment(fileURL).subscribe((response : any) => {
-    this.uploadImage = response
-
 });
 }
 
@@ -1158,7 +1315,6 @@ getTextMessage(evant:any,receiverId:string){
 }
 
   sendToUser(receiverId:string){
-
     this.InitializeChatViewModel();
     if(receiverId == undefined){
       receiverId = this.senderID;
@@ -1319,6 +1475,7 @@ getTextMessage(evant:any,receiverId:string){
     }
      this.uploadImage = [];
      this.uploadVideos = [];
+     this.uploadAttachments = [];
      this.messageToUser = "";
 
     });
@@ -1335,39 +1492,87 @@ getTextMessage(evant:any,receiverId:string){
      if(!response.isTest){
       isFromReciever = 'me'
      }
-     
+          
+     var userChat = {
+      sendByMe: isFromReciever == 'me'?true : false,
+      text:response.message,
+      time:new Date(),
+      attachment: []
+    }
+if(chatType == "1" || (chatType == "3" && !response.isSchoolOwner)){
+
+    this.firstuserChats.push(userChat);
+    var attachments = this.firstuserChats.slice(-1)[0];
+  }
+
+  else{
+var a = this.schoolInboxList;
+// this.schoolInboxList.find(x => x.)
+    this.schoolInboxList[0].chats.push(userChat);
+    var attachments = this.firstuserChats.slice(-1)[0];
+  }
 
      var imageHtml = '';
      if(this.uploadImage != undefined){
      for (var i = 0; i < this.uploadImage.length; i++) {
+      // var obj = {
+      //   sendByMe: isFromReciever == 'me'?true : false,
+      //   text:response.message,
+      //   time:new Date(),
+      //   attachment: [{fileType:1,fileName:this.uploadImage[i].fileName, fileURL:this.uploadImage[i].fileURL}]
+      // }
 
-      imageHtml += `<div class="img-attach me-2 d-inline-block cursor-pointer" data-bs-toggle="modal"
-      data-bs-target="#full-chat-image">
-      <img src="${this.uploadImage[i].fileURL}" />
-      </div>`;          
+      // this.firstuserChats.push(obj);
+
+      // imageHtml += `<div class="img-attach me-2 d-inline-block cursor-pointer"
+      //  >
+      // <img (click)="showFullChatImage('${this.uploadImage[i].fileName}', '${this.uploadImage[i].fileURL}')" src="${this.uploadImage[i].fileURL}" />
+      // </div>`;  
+      
+      var objImage = {
+        fileType:1,
+        fileName:this.uploadImage[i].fileName, 
+        fileURL:this.uploadImage[i].fileURL
+      }
+      attachments.attachment.push(objImage);    
      }
     }
 
      var videoHtml = '';
      if(this.uploadVideos != undefined){
-     for (var i = 0; i < this.uploadVideos.length; i++) {
-      videoHtml += `<span>
-     <div class="videofile">
-       <video preload="metadata" style="height: 300px;">
-         <source src="${this.uploadVideos[i].fileURL}" type="video/mp4"/>
-       </video>
-     </div>
-   </span>`
+      for (var i = 0; i < this.uploadVideos.length; i++) {
+  //     videoHtml += `<span>
+  //    <div class="videofile cursor-pointer" data-bs-toggle="modal"
+  //    data-bs-target="#chat-video" (click)="showFullChatVideo('${this.uploadVideos[i].fileName}', '${this.uploadVideos[i].fileURL}')">
+  //      <video preload="metadata" style="height: 300px;">
+  //        <source src="${this.uploadVideos[i].fileURL}" type="video/mp4"/>
+  //      </video>
+  //    </div>
+  //  </span>`
+  var objVideo = {
+    fileType:2,
+    fileName:this.uploadVideos[i].fileName, 
+    fileURL:this.uploadVideos[i].fileURL
+  }
+  attachments.attachment.push(objVideo); 
      }
+  
     }
 
     var attachmentHtml = '';
     if(this.uploadAttachments != undefined){
       for (var i = 0; i < this.uploadAttachments.length; i++) {
-        attachmentHtml += `<div class="teacher-tags hashtag_post tag-boxattachment-outer mt-1 mb-0 hover-tags">
-       <span class="custom-tag"><img src="../../../assets/images/Paper-gray.svg" class="me-1 dark-svg"> <img
-           src="../../../assets/images/Paper-light.svg" class="me-1 light-svg"> ${this.uploadAttachments[i].fileName}</span>
-     </div>`
+    //     attachmentHtml += `<div class="teacher-tags hashtag_post tag-boxattachment-outer mt-1 mb-0 hover-tags">
+    //    <span class="custom-tag"><img src="../../../assets/images/Paper-gray.svg" class="me-1 dark-svg"> <img
+    //        src="../../../assets/images/Paper-light.svg" class="me-1 light-svg"> ${this.uploadAttachments[i].fileName}</span>
+    //  </div>`
+
+    var objAttachment = {
+      fileType:3,
+      fileName:this.uploadAttachments[i].fileName, 
+      fileURL:this.uploadAttachments[i].fileURL
+    }
+    attachments.attachment.push(objAttachment);
       }
 
     var li=`<li class="${isFromReciever}">
@@ -1384,8 +1589,7 @@ getTextMessage(evant:any,receiverId:string){
     </div>
 
     <div class="gallery-attch mt-2">
-    <div class="img-attach me-2 d-inline-block cursor-pointer" data-bs-toggle="modal"
-      data-bs-target="#full-chat-image">`
+    <div class="img-attach me-2 d-inline-block cursor-pointer">`
       + imageHtml + videoHtml +
       `</div>
     </div>
@@ -1400,7 +1604,7 @@ getTextMessage(evant:any,receiverId:string){
   <div class="text-line-border position-relative text-center">
   <span class="line-text font_12 text_ltgray fw_400 text-center"></span>
 </div>`
-  p.innerHTML =li;
+  // p.innerHTML =li;
     this.recieverMessageInfo = response;
     this.renderer.appendChild(this.chatList.nativeElement, p)
     if(chatType=="3" && response.isSchoolOwner){
@@ -1435,9 +1639,20 @@ getTextMessage(evant:any,receiverId:string){
   }
 
 
-  showFullChatImage(fileName:string,fileUrl:string){
+  showFullChatImage(fileName:string,fileUrl:string):any{
     this.fullSizeImageName = fileName;
     this.fullSizeImageUrl = fileUrl;
+    this.cd.detectChanges();
+    return fileUrl
+
+  }
+
+  showFullChatVideo(fileName:string,fileUrl:string){
+    const initialState = {
+    fileUrl: fileUrl,
+    fileName:fileName
+  };
+  this.bsModalService.show(ChatVideoComponent, { initialState });
 
   }
 
@@ -1496,8 +1711,17 @@ chatHeadsSearch(){
   this.chatHeadsPageNumber = 1;
       if(this.searchString.length >2 || this.searchString == ""){
         this._chatService.getAllChatUsers(this.senderId,this.chatHeadsPageNumber,this.searchString).subscribe((response) => {
+          // this.filteredList = this.mainList.filter((item: { property: any; }) => this.filterList.includes(item.property));
+          // response = response.filter( (x: { chatHeadId: any; }) => !this.schoolInboxList.includes(x.chatHeadId));
+
+
+          response = response.filter((item: { chatHeadId: any }) => {
+            const isMatch = this.schoolInboxList.some((filterItem: { chatHeadId: any }) => filterItem.chatHeadId === item.chatHeadId);
+            return !isMatch;
+          });
+
           this.allChatUsers = response;
-          this.firstuserChats = this.allChatUsers[0]?.chats;
+          this.firstuserChats = response[0].chats;
         });
       }
 }
@@ -1544,7 +1768,7 @@ getNextChats(){
   scrollSchoolChatHandler(event: any) {
    const element = event.target;
    if (element.scrollTop === 0) {
-    if(!this.schoolChatsScrolled && this.scrollSchoolChatsResponseCount != 0){
+    if(!this.schoolChatsScrolled && this.scrollSchoolChatsResponseCount != 0 && this.schoolInboxList[0].chats != null){
         this.schoolChatsScrolled = true;
         this.schoolChatsLoadingIcon = true;
         this.schoolChatsPageNumber++;
@@ -1555,7 +1779,7 @@ getNextChats(){
 }
 
 getNextSchoolChats(){
-  this._chatService.getUsersChat(this.senderId,this.recieverId,Number(this.chatType),7,this.schoolChatsPageNumber).subscribe((response) => {
+  this._chatService.getUsersChat(this.senderId,this.schoolInboxList[0].userID,Number(this.chatType),7,this.schoolChatsPageNumber).subscribe((response) => {
    this.schoolInboxList[0].chats = response.concat(this.schoolInboxList[0].chats);
    this.cd.detectChanges();
    this.schoolChatsLoadingIcon = false;
@@ -1577,10 +1801,14 @@ getNextSchoolChats(){
  });
 }
 
-
-
-
-
+openCertificateViewModal(fileUrl:string,fileName:string){
+  const initialState = {
+    certificateUrl: fileUrl,
+    certificateName:fileName,
+    from:6
+  };
+  this.bsModalService.show(CertificateViewComponent, { initialState });
+}
 }
 
 

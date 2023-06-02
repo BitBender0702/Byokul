@@ -3,3 +3,9 @@
     overflow-x: clip;
     max-height: 800px;
 }
+
+.delete_button{
+    position: relative;
+    justify-content: end;
+    top: -38px;
+}

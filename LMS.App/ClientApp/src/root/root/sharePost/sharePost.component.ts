@@ -10,6 +10,8 @@ import 'video.js/dist/video-js.css'
 import 'videojs-contrib-quality-levels';
 import 'videojs-hls-quality-selector';
 import { addPostResponse } from '../createPost/createPost.component';
+import { SignalrService } from 'src/root/service/signalr.service';
+import { Meta } from '@angular/platform-browser';
 
 export const sharedPostResponse =new Subject<{postType:number,postId:string}>();  
 
@@ -27,23 +29,58 @@ require('videojs-hls-quality-selector');
 
 export class SharePostComponent implements OnInit {
 
+   get apiUrl(): string {
+     return environment.apiUrl;
+   }
     postId!:string;
     postType!:number;
+    schoolName!:string;
+    className!:string;
+    coursename!:string;
     userId!:string;
     private _postService;
+    private _signalrService;
     post!:any;
     websiteUrl:any;
+    streamUrl!:any;
+    streamId!:string;
 
 
-  constructor(private bsModalService: BsModalService,private options: ModalOptions,public messageService: MessageService,postService: PostService,private router: Router) {
+  constructor(private bsModalService: BsModalService,private meta: Meta,private options: ModalOptions,public messageService: MessageService,postService: PostService,signalrService:SignalrService,private router: Router) {
     this._postService = postService;
+    this._signalrService = signalrService;
   }
 
   ngOnInit(): void {
     debugger
     this.post = this.options.initialState;
-    //this.websiteUrl = `${environment.apiUrl}/user/post/${post?.postId}`;
-    this.websiteUrl = "https://byokul.com/user/auth/login"
+    if(this.post.schoolName != undefined && this.post.className == undefined && this.post.courseName == undefined){
+        // this.meta.addTag({ property: 'og:title', content: 'test' });
+        // this.meta.addTag({ property: 'og:type', content: 'profile' });
+        // this.meta.addTag({ property: 'og:description', content: 'desc...' });
+        // this.meta.addTag({ property: 'og:image', content: '' });
+        // this.meta.addTag({ property: 'og:url', content: 'https://byokul.com' });
+      this.websiteUrl = `${this.apiUrl}/profile/school/` + this.post.schoolName;
+    }
+    if(this.post.postId != undefined){
+    this.websiteUrl = `${this.apiUrl}/user/post/` + this.post.postId;
+        this.meta.addTag({ property: 'og:title', content: 'test' });
+        this.meta.addTag({ property: 'og:type', content: 'profile' });
+        this.meta.addTag({ property: 'og:description', content: 'desc...' });
+        this.meta.addTag({ property: 'og:image', content: '' });
+        this.meta.addTag({ property: 'og:url', content: 'https://byokul.com' });
+    }
+    if(this.post.className != undefined){
+      this.websiteUrl = `${this.apiUrl}/profile/class/` + this.post.schoolName + '/' + this.post.className;
+    }
+    if(this.post.courseName != undefined){
+      this.websiteUrl = `${this.apiUrl}/profile/course/` + this.post.schoolName + '/' + this.post.courseName;
+    }
+
+    if(this.streamUrl != undefined){
+      this.websiteUrl = this.streamUrl;
+    }
+
     var validToken = localStorage.getItem('jwt');
     if (validToken != null) {
       let jwtData = validToken.split('.')[1];
@@ -64,8 +101,17 @@ saveUserSharedPost(){
 }
 
   close(): void {
-    this.bsModalService.hide();
+    this.bsModalService.hide(this.bsModalService.config.id);
   }
+
+  shareStream(){
+    debugger
+    if(this.streamUrl != undefined){
+      this._signalrService.notifyShareStream(this.streamId + "_group");
+      this._postService.saveUserSharedPost(this.userId,this.streamId).subscribe((result) => {
+    });
+  }
+}
   
 
 }

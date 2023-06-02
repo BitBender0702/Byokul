@@ -67,6 +67,7 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
     teachers:any;
     isClassTeacher!:boolean;
     isCourseTeacher!:boolean;
+    isOwner!:boolean;
     foldersPageNumber:number = 1;
     filesPageNumber:number = 1;
     totalFolderRecords!:number;
@@ -79,6 +80,7 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
     fileSize:number = 0;
     filesModalInterval:any;
     progressFileName!:string;
+    ownerId!:string;
     fileCount:number = 1;
     progressSubscription!: Subscription;
     changeLanguageSubscription!: Subscription;
@@ -104,6 +106,7 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
       var selectedLang = localStorage.getItem('selectedLanguage');
       this.translate.use(selectedLang ?? '');
       this.parentId = this.activatedRoute.snapshot.paramMap.get('id')??'';
+      this.ownerId = this.activatedRoute.snapshot.paramMap.get('ownerId')??'';
       this.fileStorageType = this.activatedRoute.snapshot.paramMap.get('type')??'';
 
       if(this.fileStorageType == "1"){
@@ -143,6 +146,8 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
           this.translate.use(response.language);
         })
       }
+
+      this.isOwnerOrNot();
     }
 
     ngOnDestroy() {
@@ -151,6 +156,21 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
       }
       if(this.progressSubscription){
         this.progressSubscription.unsubscribe();
+      }
+    }
+
+    isOwnerOrNot() {
+      var validToken = localStorage.getItem('jwt');
+      if (validToken != null) {
+        let jwtData = validToken.split('.')[1];
+        let decodedJwtJsonData = window.atob(jwtData);
+        let decodedJwtData = JSON.parse(decodedJwtJsonData);
+        var loginUserId = decodedJwtData.jti;
+        if (loginUserId == this.ownerId) {
+          this.isOwner = true;
+        } else {
+          this.isOwner = false;
+        }
       }
     }
 
@@ -182,7 +202,9 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
 
     getFolders(pageNumber?: number){
       this._fileStorageService.getFolders(this.parentId,this.searchString).subscribe((response: any) => {
+        debugger
         this.folders = response;
+        this.parentFolderId = this.folders[0].parentFolderId;
         this.isFoldersEmpty = false;
         this.totalFolderRecords = this.folders.length;
         this.getFoldersSelectedPage();
@@ -244,39 +266,68 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
     }
 
     saveFolder(){
+      debugger
         this.isSubmitted = true;
         if (!this.saveFolderForm.valid) {
           return;
         }
-        this.loadingIcon = true;
-        this.saveFolderForm.controls.parentId.setValue(this.parentId);
-        if(this.parentFolderId == ""){
-          this.saveFolderForm.controls.parentFolderId.setValue(null);
+
+        var folderName = this.saveFolderForm.get('folderName')?.value;
+        this._fileStorageService.isFolderNameExist(folderName,this.parentId,this.parentFolderId).subscribe((response) => {
+          debugger
+        if(response){
+          this.saveFolderForm.setErrors({ folderNameAlreadyExist: true });
+          return;
         }
         else{
-          this.saveFolderForm.controls.parentFolderId.setValue(this.parentFolderId);
-        }
-        var formValues =this.saveFolderForm.value;
-        this._fileStorageService.saveFolder(formValues).subscribe((response: any) => {
+          this.loadingIcon = true;
+          this.saveFolderForm.controls.parentId.setValue(this.parentId);
+          if(this.parentFolderId == ""){
+            this.saveFolderForm.controls.parentFolderId.setValue(null);
+          }
+          else{
+            this.saveFolderForm.controls.parentFolderId.setValue(this.parentFolderId);
+          }
+          var formValues = this.saveFolderForm.value;
+          this._fileStorageService.saveFolder(formValues).subscribe((response: any) => {
           this.closeFoldersModal();
-        this.isSubmitted = false;
-        this.folders.unshift(response);
-        this.getFoldersSelectedPage();
-        this.totalFolderRecords = this.folders.length;
-
-        this.loadingIcon = false;
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Success',
-          life: 3000,
-          detail: 'Folder added successfully',
+          this.isSubmitted = false;
+          this.folders.unshift(response);
+          this.getFoldersSelectedPage();
+          this.totalFolderRecords = this.folders.length;
+          this.loadingIcon = false;
+          this.messageService.add({severity: 'success',summary: 'Success',life: 3000,detail: 'Folder added successfully',});
         });
+        }
       });
+
+      //   this.loadingIcon = true;
+      //   this.saveFolderForm.controls.parentId.setValue(this.parentId);
+      //   if(this.parentFolderId == ""){
+      //     this.saveFolderForm.controls.parentFolderId.setValue(null);
+      //   }
+      //   else{
+      //     this.saveFolderForm.controls.parentFolderId.setValue(this.parentFolderId);
+      //   }
+      //   var formValues = this.saveFolderForm.value;
+      //   this._fileStorageService.saveFolder(formValues).subscribe((response: any) => {
+      //     this.closeFoldersModal();
+      //   this.isSubmitted = false;
+      //   this.folders.unshift(response);
+      //   this.getFoldersSelectedPage();
+      //   this.totalFolderRecords = this.folders.length;
+      //   this.loadingIcon = false;
+      //   this.messageService.add({severity: 'success',summary: 'Success',life: 3000,detail: 'Folder added successfully',});
+      // });
     }
 
     handleFiles(event: any) {
+      debugger
+      var selectedFiles = event.target.files;
       this.isSubmitted = false;
-      this.saveFileViewModel.files.push(event.target.files[0]);
+      for (let i = 0; i < selectedFiles.length; i++) {
+        this.saveFileViewModel.files.push(selectedFiles[i]);
+      }
     }
 
     initializeSaveFileViewModel(){
@@ -503,6 +554,7 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
   }
 
   back(){
+    debugger
    this.isOpenCommentsSection = false;
    if(this.isFirstPage){
     window.history.back();
@@ -521,6 +573,7 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
     else{
       this.loadingIcon = true;
       this.folders = this.previousFolders;
+      this.parentFolderId = this.folders[0].parentFolderId;
       this.getFoldersSelectedPage();
       this.totalFolderRecords = this.folders.length;
       this.files = this.previousFiles;
@@ -560,6 +613,33 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
             });
           }
     }
+  }
+
+  deleteFolder(folderId:string){
+    debugger
+    this.loadingIcon = true;
+    this._fileStorageService.deleteFolder(folderId).subscribe((response: any) => {
+      debugger
+      this.loadingIcon = false;
+      if(response.result == Constant.FolderCantDeleted){
+        this.messageService.add({severity: 'info',summary: 'Info',life: 3000,detail: 'You cant delete folder without deleting the folders/files under it',});
+      }
+      else{
+        this.folders = this.folders.filter((x: { id: any; }) => x.id !== folderId);
+        this.folderRecords = this.folderRecords.filter((x: { id: any; }) => x.id !== folderId);
+        this.messageService.add({severity: 'success',summary: 'Success',life: 3000,detail: 'Folder deleted successfully',});
+      }
+    });
+  }
+
+  deleteFile(fileId:string){
+    debugger
+    this._fileStorageService.deleteFile(fileId).subscribe((response: any) => {
+      debugger
+      this.files = this.files.filter((x: { id: any; }) => x.id !== fileId);
+      this.fileRecords = this.fileRecords.filter((x: { id: any; }) => x.id !== fileId);
+      this.messageService.add({severity: 'success',summary: 'Success',life: 3000,detail: 'File deleted successfully',});
+    });
   }
 
 }

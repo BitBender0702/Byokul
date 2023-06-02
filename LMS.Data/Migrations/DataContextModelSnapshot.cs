@@ -1008,6 +1008,9 @@ namespace LMS.Data.Migrations
                     b.Property<bool>("IsRead")
                         .HasColumnType("bit");
 
+                    b.Property<string>("MeetingId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("NotificationContent")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -1097,6 +1100,9 @@ namespace LMS.Data.Migrations
                     b.Property<Guid>("AuthorId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int?>("CommentsPerMinute")
+                        .HasColumnType("int");
+
                     b.Property<string>("CoverLetter")
                         .HasColumnType("nvarchar(max)");
 
@@ -1122,6 +1128,9 @@ namespace LMS.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("IsLive")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsPinned")
@@ -3000,7 +3009,7 @@ namespace LMS.Data.Migrations
                         .HasForeignKey("LanguageId");
 
                     b.HasOne("LMS.Data.Entity.User", "User")
-                        .WithMany()
+                        .WithMany("UserLanguage")
                         .HasForeignKey("UserId");
 
                     b.Navigation("Language");
@@ -3142,6 +3151,11 @@ namespace LMS.Data.Migrations
             modelBuilder.Entity("LMS.Data.Entity.Chat.ChatMessage", b =>
                 {
                     b.Navigation("Attachments");
+                });
+
+            modelBuilder.Entity("LMS.Data.Entity.User", b =>
+                {
+                    b.Navigation("UserLanguage");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Component, ElementRef, HostListener, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, Meta } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { MessageService } from 'primeng/api';
@@ -24,8 +24,8 @@ import { NotificationService } from 'src/root/service/notification.service';
 import { PostService } from 'src/root/service/post.service';
 import { CertificateViewComponent } from '../../certificateView/certificateView.component';
 import { addPostResponse, CreatePostComponent } from '../../createPost/createPost.component';
-import { PostViewComponent, savedPostResponse } from '../../postView/postView.component';
-import { ReelsViewComponent, savedReelResponse } from '../../reels/reelsView.component';
+import { PostViewComponent, deletePostResponse, savedPostResponse } from '../../postView/postView.component';
+import { ReelsViewComponent, deleteReelResponse, savedReelResponse } from '../../reels/reelsView.component';
 import { MultilingualComponent, changeLanguage } from '../../sharedModule/Multilingual/multilingual.component';
 import { SharePostComponent, sharedPostResponse } from '../../sharePost/sharePost.component';
 import { ownedCourseResponse } from '../createCourse/createCourse.component';
@@ -34,8 +34,11 @@ import 'video.js/dist/video-js.css';
 import { PaymentComponent, paymentStatusResponse } from '../../payment/payment.component';
 import { AuthService } from 'src/root/service/auth.service';
 import { commentLikeResponse } from 'src/root/service/signalr.service';
-import { Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, Subject, Subscription } from 'rxjs';
+import { RolesEnum } from 'src/root/RolesEnum/rolesEnum';
+import { generateCertificateResponse } from '../../generateCertificate/generateCertificate.component';
 export const convertIntoClassResponse =new Subject<{classId: string, className : string,school:any,avatar:string}>(); 
+export const deleteCourseResponse =new BehaviorSubject <string>('');  
 
 @Component({
     selector: 'courseProfile-root',
@@ -119,6 +122,11 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     changeLanguageSubscription!:Subscription;
     paymentStatusSubscription!:Subscription;
     sharedPostSubscription!:Subscription;
+    deletePostSubscription!: Subscription;
+    deleteReelSubscription!: Subscription;
+    generateCertificateSubscription!: Subscription;
+    filteredAttachments:any[] = [];
+    courseAvatar:string = '';
 
 
     @ViewChild('closeEditModal') closeEditModal!: ElementRef;
@@ -132,7 +140,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     @ViewChild('createPostModal', { static: true }) createPostModal!: CreatePostComponent;
 
     isDataLoaded:boolean = false;
-    constructor(injector: Injector,authService:AuthService,notificationService:NotificationService,public messageService:MessageService,postService:PostService,private bsModalService: BsModalService,courseService: CourseService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,private cd: ChangeDetectorRef) { 
+    constructor(injector: Injector,private meta: Meta,authService:AuthService,notificationService:NotificationService,public messageService:MessageService,postService:PostService,private bsModalService: BsModalService,courseService: CourseService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,private cd: ChangeDetectorRef) { 
       super(injector);
         this._courseService = courseService;
          this._postService = postService;
@@ -149,9 +157,16 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
 
   
     ngOnInit(): void {
+      // this.meta.addTag({ rel: 'canonical', href: 'https://www.byokul.com/course' });
+      if(this._authService.roleUser(RolesEnum.SchoolAdmin)){
+        this._authService.loginState$.next(false);
+        this._authService.loginAdminState$.next(true);
+      }
+      else{
+        this._authService.loginState$.next(true);
+      }
       this.isOnInitInitialize = true;
       this.postLoadingIcon = false;
-      this._authService.loginState$.next(true);
       this.validToken = localStorage.getItem("jwt")?? '';
       this.loadingIcon = true;
       var selectedLang = localStorage.getItem("selectedLanguage");
@@ -161,6 +176,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
         this.postsPageNumber = 1;
         this.reelsPageNumber = 1;
         this.course = response;
+        this.courseAvatar = this.course.avatar;
         this.isOwnerOrNot();
         this.loadingIcon = false;
         this.isDataLoaded = true;
@@ -169,7 +185,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
         this.postLoadingIcon = false;
         this.addCourseView(this.course.courseId);
         this.addEventListnerOnCarousel();
-       
+        this.course.posts = this.getFilteredAttachments(this.course.posts);     
       });
 
       this.editCourseForm = this.fb.group({
@@ -248,12 +264,14 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
           this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post created successfully'});
           this._courseService.getCourseById(this.courseName.replace(" ","").toLowerCase()).subscribe((response) => {
             this.course = response;
+            this.courseAvatar = this.course.avatar;
             this.isOwnerOrNot();
             this.loadingIcon = false;
             this.isDataLoaded = true;
             this.scrolled = false;
             this.postLoadingIcon = false;
             this.addCourseView(this.course.courseId);
+            this.course.posts = this.getFilteredAttachments(this.course.posts);     
           });
         });
       }
@@ -306,6 +324,39 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       this.messageService.add({severity:'info', summary:'Info',life: 3000, detail:'We will notify when payment will be successful'});
      });
 
+     if(!this.deletePostSubscription){
+      this.deletePostSubscription = deletePostResponse.subscribe(response => {
+          this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post deleted successfully'});
+          var deletedPost = this.course.posts.find((x: { id: string; }) => x.id == response.postId);
+          const index = this.course.posts.indexOf(deletedPost);
+          if (index > -1) {
+            this.course.posts.splice(index, 1);
+          }
+      });
+    }
+
+    if(!this.deleteReelSubscription){
+      this.deleteReelSubscription = deleteReelResponse.subscribe(response => {
+          this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Reel deleted successfully'});
+          var deletedPost = this.course.reels.find((x: { id: string; }) => x.id == response.postId);
+          const index = this.course.reels.indexOf(deletedPost);
+          if (index > -1) {
+            this.course.reels.splice(index, 1);
+          }
+      });
+    }
+
+    if(!this.generateCertificateSubscription){
+      this.generateCertificateSubscription = generateCertificateResponse.subscribe(response => {
+        if(response.isCertificateSendToAll){
+          this.messageService.add({severity:'info', summary:'Info',life: 3000, detail:'We will notify you, when certificate will be sent to all the students'});
+        }
+        else{
+          this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:`Certificate successfully sent to the ${response.studentName}`});
+        }
+      });
+    }
+
     }
 
     addEventListnerOnCarousel(){
@@ -357,6 +408,15 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       if(this.courseParamsData$){
          this.courseParamsData$.unsubscribe();
       }
+      if(this.deletePostSubscription){
+        this.deletePostSubscription.unsubscribe();
+      }
+      if(this.deleteReelSubscription){
+        this.deleteReelSubscription.unsubscribe();
+      }
+      if(this.generateCertificateSubscription){
+        this.generateCertificateSubscription.unsubscribe();
+      }
     }
 
     @HostListener("window:scroll", [])
@@ -398,7 +458,8 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
         return;
       }
       this._courseService.getPostsByCourseId(this.course.courseId, this.postsPageNumber).subscribe((response) => {
-          this.course.posts = [...this.course.posts, ...response];
+          var result = this.getFilteredAttachments(response);    
+          this.course.posts = [...this.course.posts, ...result]; 
           this.postLoadingIcon = false;
           this.scrolled = false;
           this.scrollFeedResponseCount = response.length;  
@@ -450,6 +511,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
   
 
     initializeEditFormControls(){
+      this.courseAvatar = this.course.avatar;
       this.uploadImage = '';
       this.imageFile.nativeElement.value = "";
       this.fileToUpload.set('avatarImage','');
@@ -467,7 +529,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
         price: this.fb.control(this.course.price),
         description: this.fb.control(this.course.description),
         languageIds:this.fb.control(selectedLanguages,[Validators.required]),
-        serviceTypeId:this.fb.control(this.course.serviceTypeId,[Validators.required])
+        serviceTypeId:this.fb.control(this.course.serviceTypeId,[Validators.required]),
 
       });
 
@@ -667,7 +729,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
           this.loadingIcon = true;
       
           if(!this.uploadImage){
-            this.fileToUpload.append('avatar', this.course.avatar);
+            this.fileToUpload.append('avatar', this.courseAvatar);
           }
       
            this.updateCourseDetails=this.editCourseForm.value;
@@ -806,9 +868,11 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     }
 
     
-    openPostsViewModal(posts:string): void {
+    openPostsViewModal(posts:any): void {
+      var postAttachments = this.filteredAttachments.filter(x => x.postId == posts.id);
       const initialState = {
-        posts: posts
+        posts: posts,
+        postAttachments: postAttachments
       };
       this.bsModalService.show(PostViewComponent,{initialState});
     }
@@ -874,9 +938,9 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     }
 
     showPostDiv(postId:string){
-      
       var posts: any[] = this.course.posts;
       this.gridItemInfo = posts.find(x => x.id == postId);
+      // this.gridItemInfo.postAttachments = this.gridItemInfo.postAttachments.filter((x: { fileType: number; }) => x.fileType !=3);
       this.isGridItemInfo = true;
       this.cd.detectChanges();
       const player = videojs(this.videoPlayer.nativeElement, { autoplay: false });
@@ -927,6 +991,10 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       }
     }
 
+    back(): void {
+      window.history.back();
+    }
+
     openReelsViewModal(postAttachmentId:string): void {
       
       const initialState = {
@@ -935,11 +1003,16 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       this.bsModalService.show(ReelsViewComponent,{initialState});
     }
 
-    openCertificateViewModal(certificateUrl:string,certificateName:string){
+    openCertificateViewModal(certificateUrl:string,certificateName:string,from?:number,event?:Event){
+      var fromValue = PostAuthorTypeEnum.Course;
+      if(from != undefined){
+        fromValue = from;
+        event?.stopPropagation();
+      }
       const initialState = {
         certificateUrl: certificateUrl,
         certificateName:certificateName,
-        from:PostAuthorTypeEnum.Course
+        from:fromValue
       };
       this.bsModalService.show(CertificateViewComponent, { initialState });
     }
@@ -995,5 +1068,54 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
         }
       });
     }
-  
+
+    getFilteredAttachments(feeds:any):any{
+      const allAttachments = feeds.flatMap((post: { postAttachments: any; }) => post.postAttachments);
+      var result = allAttachments.filter((attachment: { fileType: number; }) => attachment.fileType === 3);
+      this.filteredAttachments = [...this.filteredAttachments, ...result];
+      feeds = feeds.map((post: { postAttachments: any[]; }) => {
+      const filteredPostAttachments = post.postAttachments.filter(postAttachment => postAttachment.fileType !== 3);
+      return { ...post, postAttachments: filteredPostAttachments };
+      });
+      return feeds;
+    }
+
+    removeLogo(){
+      if(this.course.avatar != null){
+        this.courseAvatar = '';
+      }
+      this.uploadImage = '';
+      this.fileToUpload.set('avatarImage','');
+    }
+
+    deleteCourse(){
+      if(this.course.students > 0){
+        this.messageService.add({severity: 'info',summary: 'Info',life: 3000,detail: 'Course with registered users can not be automatically deleted. Please contact site administration for deletion request.'});
+      }
+      else{
+        this._courseService.deleteCourse(this.course.courseId).subscribe((response) => {
+          ownedCourseResponse.next({courseId:this.course.courseId, courseAvatar:"", courseName:"",schoolName:"",action:"delete"});
+          this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Course deleted successfully'});
+          setTimeout(() => {
+            this.router.navigateByUrl(`user/userProfile/${this.userId}`);
+          }, 3000);
+          // this.router.navigateByUrl(`user/userProfile/${this.userId}`)
+          // deleteCourseResponse.next('delete');
+        });
+      }
+    }
+
+    unableDisableCourse(){
+      this.loadingIcon = true;
+      this._courseService.enableDisableCourse(this.course.courseId).subscribe((response) => {
+        if(this.course.isDisableByOwner){
+          this.messageService.add({severity: 'success',summary: 'Success',life: 3000,detail: 'Course enabled successfully'});
+          }
+          else{
+            this.messageService.add({severity: 'success',summary: 'Success',life: 3000,detail: 'Course disabled successfully'});
+          }
+        this.ngOnInit();
+      });  
+    }
+
 }

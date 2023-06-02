@@ -13,6 +13,7 @@ import { ReelsService } from 'src/root/service/reels.service';
 import { SchoolService } from 'src/root/service/school.service';
 import { commentLikeResponse, commentResponse, signalRResponse, SignalrService } from 'src/root/service/signalr.service';
 import { UserService } from 'src/root/service/user.service';
+import { SharePostComponent } from '../sharePost/sharePost.component';
 export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,type:string}>();  
 
 
@@ -273,5 +274,26 @@ export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,ty
      }
     this._schoolService.saveClassCourse(this.classCourseDetails.classCourseItem,this.userId,type).subscribe((result) => {
     });
+  }
+
+  hideModal(){
+    this.bsModalService.hide();
+  }
+
+  openShareClassCourseModal(schoolName:string,name:string,type:number){
+    var initialState:any;
+    if(type == 1){
+        initialState = {
+        className: name,
+        schoolName: schoolName
+      };
+    }
+    else{
+        initialState = {
+        courseName: name,
+        schoolName: schoolName
+      };
+    }
+    this.bsModalService.show(SharePostComponent,{initialState});
   }
 }

@@ -1,0 +1,21 @@
+<div appBsModal bsModal class="modal fade edit-school-modal show d-block post-view-large" id="videoChat-modal" tabindex="-1"
+aria-labelledby="create-post" aria-hidden="true" area-modal="true">
+<div class="modal-dialog modal-dialog-centered">
+  <div class="modal-content">
+    <div class="modal-header border-0 justify-content-center position-relative">
+      <div class="custom-language-select liv-postbtn">
+      </div>
+      <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center"></h1>
+      <button (click)="close()" type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"><img
+          src="../../../assets/images/cross.svg" /></button>
+    </div>
+    <div class="modal-body">
+        <div class="attach-img-full">
+            <video #videoPlayer width="100%" height="700" controls class="video-js vjs-big-play-centered" preload="metadata">
+                  <source [src]="fileUrl" type="video/mp4"/>
+            </video>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

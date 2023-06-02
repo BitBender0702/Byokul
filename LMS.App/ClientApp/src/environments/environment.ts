@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'https://byokul-stage.azurewebsites.net',
+  apiUrl: 'https://byokul.com',
 };
 
 /*

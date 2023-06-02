@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { HttpClient } from "@angular/common/http";
 import { AdminService } from 'src/root/service/admin/admin.service';
@@ -6,6 +6,8 @@ import { BanUnbanEnum } from 'src/root/Enums/BanUnbanEnum';
 import { BanUnbanSchools } from 'src/root/interfaces/admin/banUnbanSchools';
 import { RegisteredSchools } from 'src/root/interfaces/admin/registeredSchools';
 import { VerifySchools } from 'src/root/interfaces/admin/verifySchools';
+import { Table } from 'primeng/table';
+import { AuthService } from 'src/root/service/auth.service';
 
 @Component({
   selector: 'registered-schools',
@@ -15,6 +17,7 @@ import { VerifySchools } from 'src/root/interfaces/admin/verifySchools';
 export class RegisteredSchoolsComponent implements OnInit {
 
   private _adminService;
+  private _authService;
   isSubmitted: boolean = false;
   registeredSchools!:RegisteredSchools[];
   selectedSchools!: RegisteredSchools[];
@@ -23,25 +26,26 @@ export class RegisteredSchoolsComponent implements OnInit {
   loadingIcon:boolean = false;
   isDataLoaded:boolean = false;
   myPaginationString!:string;
-
-
+  cloned!:any;
+  @ViewChild('dt') table!: Table;
   
-  constructor(private fb: FormBuilder,private http: HttpClient,adminService: AdminService) {
+  constructor(private fb: FormBuilder,private http: HttpClient,adminService: AdminService,authService: AuthService) {
     this._adminService = adminService;
+    this._authService = authService;
   }
 
   ngOnInit(): void {
+    this._authService.loginAdminState$.next(true);
     this.loadingIcon = true;
         this._adminService.getRegSchools().subscribe((response) => {
           this.registeredSchools = response;
+          this.cloned = response.slice(0);
           this.loadingIcon = false;
           this.isDataLoaded = true;
         });  
 
         this.InitializeBanUnbanSchool();
         this.InitializeVerifySchool();
-
-
       }
 
       InitializeBanUnbanSchool(){
@@ -49,7 +53,6 @@ export class RegisteredSchoolsComponent implements OnInit {
             schoolId: '',
             isBan: false
            };
-
       }
 
       InitializeVerifySchool(){
@@ -66,7 +69,6 @@ export class RegisteredSchoolsComponent implements OnInit {
         }
         else{
           this.banUnbanSchool.isBan = false;
-
         }
       }
 
@@ -76,7 +78,6 @@ export class RegisteredSchoolsComponent implements OnInit {
           this.InitializeBanUnbanSchool();
           this.ngOnInit();
         });  
-
       }
 
       getVarifySchoolDetails(schoolid:string,from:string){
@@ -86,9 +87,7 @@ export class RegisteredSchoolsComponent implements OnInit {
         }
         else{
           this.verifySchool.isVerify = false;
-
         }
-        
       }
 
       verifySchools(){
@@ -97,12 +96,19 @@ export class RegisteredSchoolsComponent implements OnInit {
           this.InitializeVerifySchool();
           this.ngOnInit();
         }); 
-
       }
      
       viewSchoolProfile(schoolId:string){
         window.location.href=`user/schoolProfile/${schoolId}`;
+      }
 
+      search(event: any) {
+        this.table.filterGlobal(event.target.value, 'contains');
+      }
+
+      resetSorting(): void {
+        this.table.reset();
+        this.registeredSchools = this.cloned.slice(0);
       }
     }
     

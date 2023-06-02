@@ -9,6 +9,9 @@ import { Router } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MultilingualComponent } from '../../sharedModule/Multilingual/multilingual.component';
 import { Subject } from 'rxjs';
+import { environment } from "src/environments/environment";
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { SharePostComponent } from '../../sharePost/sharePost.component';
 
 export const ownedSchoolResponse =new Subject<{schoolId: string, schoolAvatar : string,schoolName:string,action:string}>(); 
 
@@ -20,6 +23,11 @@ export const ownedSchoolResponse =new Subject<{schoolId: string, schoolAvatar : 
 })
 
 export class CreateSchoolComponent extends MultilingualComponent implements OnInit {
+
+  get apiUrl(): string {
+    return environment.apiUrl;
+  }
+
   private _schoolService;
   countries:any;
   specializations:any;
@@ -50,7 +58,7 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
   schoolName!:string;
 
   
-  constructor(injector: Injector,public messageService:MessageService,private domSanitizer: DomSanitizer,private router: Router,private fb: FormBuilder,schoolService: SchoolService,private http: HttpClient) {
+  constructor(injector: Injector,private bsModalService: BsModalService,public messageService:MessageService,private domSanitizer: DomSanitizer,private router: Router,private fb: FormBuilder,schoolService: SchoolService,private http: HttpClient) {
     super(injector);
     this._schoolService = schoolService;
   }
@@ -108,6 +116,7 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
   }
 
   handleImageInput(event: any) {
+    debugger
     this.fileToUpload.append("avatarImage", event.target.files[0], event.target.files[0].name);
     this.uploadImageName = event.target.files[0].name;
     const reader = new FileReader();
@@ -160,24 +169,24 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
     this.fileToUpload.append('countryName',form1Value.countryName);
     this.fileToUpload.append('specializationId',form1Value.specializationId); 
     this.fileToUpload.append('languageIds',JSON.stringify(form1Value.selectedLanguages));
-    this.schoolUrl = 'byokul.com/profile/school/' + form1Value.schoolName.replace(" ","").toLowerCase();
-    
+    this.schoolUrl = `${this.apiUrl}/profile/school`+ form1Value.schoolName.replace(" ","").toLowerCase();
         this.step += 1;
         this.isStepCompleted = false;
       }
     });
     
     this.createSchoolForm3.patchValue({
-      schoolUrl: 'byokul.com/profile/school/' + form1Value.schoolName.split(' ').join('').toLowerCase(),
+      schoolUrl: `${this.apiUrl}/profile/school/` + form1Value.schoolName.split(' ').join('').toLowerCase(),
     });
   }
 
   forwardStep2() {
-    this.loadingIcon = true;
+    debugger
     this.isStepCompleted = true;
     if(this.logoUrl == undefined && this.avatarImage == undefined){
       return;
     }
+    this.loadingIcon = true;
     var form2Value =this.createSchoolForm2.value;
     this.fileToUpload.append('avatar',this.logoUrl);
 
@@ -211,6 +220,21 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
 
   schoolProfile(){
     window.open(`profile/school/${this.schoolName.replace(" ","").toLowerCase()}`, '_blank');
+  }
+
+  removeUploadImage(){
+    this.uploadImage = null;
+    this.fileToUpload.set('avatarImage','');
+    this.avatarImage = undefined;
+
+  }
+
+  openSharePostModal(): void {
+    debugger
+    const initialState = {
+      schoolName: this.schoolName
+    };
+    this.bsModalService.show(SharePostComponent,{initialState});
   }
   
 }

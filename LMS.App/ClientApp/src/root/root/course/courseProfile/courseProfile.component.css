@@ -28,3 +28,7 @@
   .video-js{
     height: 300px;
   }
+
+  .cursor_pointer{
+    cursor: pointer;
+  }

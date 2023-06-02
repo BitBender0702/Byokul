@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, ViewChild, inject, Inject, TemplateRef, EventEmitter, AfterViewInit, ChangeDetectorRef, QueryList, OnDestroy } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild, inject, Inject, TemplateRef, EventEmitter, AfterViewInit, ChangeDetectorRef, QueryList, OnDestroy, Output } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { HttpClient, HttpEventType, HttpHeaders } from "@angular/common/http";
 import {MenuItem} from 'primeng/api';
@@ -23,6 +23,8 @@ import { progressResponse } from 'src/root/service/signalr.service';
 import { stringify } from 'querystring';
 import { FileStorageService } from 'src/root/service/fileStorage';
 import { AutoComplete } from 'primeng/autocomplete';
+import { Router } from '@angular/router';
+import { DatePipe } from '@angular/common';
 export const addPostResponse =new Subject<{}>();  
 
 
@@ -105,20 +107,30 @@ export class CreatePostComponent implements OnInit,OnDestroy {
   filesLength!:number;
   totalFilesLength!:number;
   isOpenReelsTab:boolean = false;
+  tagCountExceeded:boolean = false;
   reelsTagLists!: string[];
   fileStorageAttachments:any;
   fileAttachmentsForm!:FormGroup;
   filteredFileAttachments!: any[];
   uploadFromFileStorage!:any[];
+  isShowingProgressBar!:boolean;
+  minDate:any;
+  isMicroPhoneOpen:boolean = true;
+  scheduleVideoRequired: boolean = false;
+  from!:any;
+
+  @Output() onClose: EventEmitter<any> = new EventEmitter<any>();
 
 
-  constructor(private bsModalRef: BsModalRef,private domSanitizer: DomSanitizer,fileStorageService:FileStorageService, public messageService:MessageService,private bsModalService: BsModalService,public options: ModalOptions,private fb: FormBuilder,postService: PostService,private http: HttpClient,private cd: ChangeDetectorRef) {
+  constructor(private bsModalRef: BsModalRef,private datePipe: DatePipe,private router: Router,private domSanitizer: DomSanitizer,fileStorageService:FileStorageService, public messageService:MessageService,private bsModalService: BsModalService,public options: ModalOptions,private fb: FormBuilder,postService: PostService,private http: HttpClient,private cd: ChangeDetectorRef) {
     this._postService = postService;
     this._fileStorageService = fileStorageService;
   }
 
   ngOnInit(): void {
+    debugger
     var initialValue = this.options.initialState;
+    this.from = initialValue?.from;
     if(initialValue?.from == "school"){
     this.schoolId = initialValue.schoolId;
     this._postService.getSchool(this.schoolId).subscribe((response) => {
@@ -160,9 +172,12 @@ export class CreatePostComponent implements OnInit,OnDestroy {
     });
 
     this.createLiveForm = this.fb.group({
-      title: this.fb.control(''),
-      bodyText: this.fb.control(''),
-      coverLetter: this.fb.control('')
+      title: this.fb.control('',[Validators.required]),
+      bodyText: this.fb.control('',[Validators.required]),
+      coverLetter: this.fb.control('',[Validators.required]),
+      commentPerMinute: this.fb.control('0'),
+      scheduleTime: this.fb.control('')
+      // discuss which more fields we need to add there
 
     })
 
@@ -177,7 +192,6 @@ export class CreatePostComponent implements OnInit,OnDestroy {
     });
 
     this._fileStorageService.getFileStorageAttachments().subscribe((response) => {
-      debugger
       this.fileStorageAttachments = response;
     });
 
@@ -188,6 +202,7 @@ export class CreatePostComponent implements OnInit,OnDestroy {
 
     this.initializeImageObject();
     this.initializeVideoObject();
+    this.minDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
 
      this.progressSubscription = progressResponse.subscribe(response => {
       this.progressBarValue = response.progressCount;
@@ -248,18 +263,22 @@ export class CreatePostComponent implements OnInit,OnDestroy {
 
    }
 
-
    handleImageInput(event: any) {
-      this.images.push(event.target.files[0]);
+    var selectedFiles = event.target.files;
+    for (let i = 0; i < selectedFiles.length; i++) {
+      this.images.push(selectedFiles[i]);
       const reader = new FileReader();
-      reader.onload = (_event) => { 
-        this.imageObject.imageUrl = _event.target?.result;
-        this.imageObject.name = event.target.files[0].name;
-          this.uploadImage.push(this.imageObject); 
-          this.initializeImageObject();
-      }
-      reader.readAsDataURL(event.target.files[0]); 
-   }
+      reader.onload = ((fileIndex) => {
+        return () => {
+          const imageUrl = reader.result?.toString();
+          const imageName = selectedFiles[fileIndex].name;
+          const imageObject = { imageUrl, name: imageName };
+          this.uploadImage.push(imageObject);
+        };
+      })(i);
+      reader.readAsDataURL(selectedFiles[i]);
+    }
+}
 
    removeUploadImage(image:any){
     const index = this.images.findIndex((item:any) => item.name === image.name);
@@ -275,16 +294,20 @@ export class CreatePostComponent implements OnInit,OnDestroy {
    }
 
 handleVideoInput(event: any) {
-  this.videos.push(event.target.files[0]);
-  const file = event.target.files[0];
-  const videoUrl = URL.createObjectURL(file);
-  this.getVideoThumbnail(videoUrl,file.name, (thumbnailUrl) => {
-    this.videoObject.videoUrl = thumbnailUrl;
-    this.videoObject.name = file.name;
-    this.videoObject.type = file.type;
-    this.uploadVideo.push(this.videoObject); 
-    this.initializeVideoObject();
-  });
+  var selectedFiles = event.target.files;
+  for (let i = 0; i < selectedFiles.length; i++) {
+    this.videos.push(selectedFiles[i]);
+    const file = selectedFiles[i];
+    const videoUrl = URL.createObjectURL(file);
+    this.getVideoThumbnail(videoUrl,file.name, (thumbnailUrl) => {
+      this.videoObject.videoUrl = thumbnailUrl;
+      this.videoObject.name = file.name;
+      this.videoObject.type = file.type;
+      this.uploadVideo.push(this.videoObject); 
+      this.initializeVideoObject();
+    });
+  }
+  this.scheduleVideoRequired = false;
 }
 
 getVideoThumbnail(videoUrl: string,fileName:string, callback: (thumbnailUrl: string) => void) {
@@ -351,7 +374,10 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
 
  handleAttachmentInput(event: any) {
   debugger
-    this.initialAttachment.push(event.target.files[0]);
+  var selectedFiles = event.target.files;
+  for (let i = 0; i < selectedFiles.length; i++) {
+    this.initialAttachment.push(selectedFiles[i]);
+  }
  }
 
  removeAttachment(attachment:any){
@@ -416,20 +442,21 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
  }
 
    savePost(){
-    debugger
     this.isSubmitted=true;
     if (!this.createPostForm.valid) {
       return;
     }
 
     if(this.scheduleTime != undefined){
-     if(this.scheduleTime < new Date()){
-       this.createPostForm.setErrors({ unauthenticated: true });
-       return;
-
+      if(this.scheduleTime < new Date()){
+        this.createPostForm.setErrors({ unauthenticated: true });
+        return;
+      }
+      else{
+        this.postToUpload.append('scheduleTime', JSON.stringify(this.scheduleTime));
+      }
     }
-  }
-
+    this.loadingIcon = true;
   this.totalFilesLength = this.images.length + this.videos.length + this.attachment.length;
     // for images
     for(var i=0; i<this.images.length; i++){
@@ -465,13 +492,13 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
     }
     this.postToUpload.append('postTags', JSON.stringify(this.tagLists))
     this._postService.createPost(this.postToUpload).subscribe((response:any) => {  
-      
+      this.close();
+      this.onClose.emit(response);
       this.isSubmitted=false;
       this.loadingIcon = false;
       addPostResponse.next({response}); 
       this.postToUpload = new FormData();
-      this.close();
-      this.ngOnInit();
+      // this.ngOnInit();
     });
    }
 
@@ -508,8 +535,9 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
 
    saveReels(){
     this.isSubmitted = true;
-    this.loadingIcon = true;
+    this.isShowingProgressBar = true;
     if (!this.createReelForm.valid) {
+      this.isShowingProgressBar = false;
       return;
     }
 
@@ -519,7 +547,7 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
         return;
      }
     }
-
+    this.loadingIcon = true;
     var reel =this.createReelForm.value;
     this.postFrom();
     for(var i=0; i<this.videoThumbnails.length; i++){
@@ -547,6 +575,7 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
    }
 
    removeTags(tag:any){
+    debugger
     if(this.isOpenReelsTab){
       const reelsTagIndex = this.reelsTagLists.findIndex((item) => item ===tag);
       if (reelsTagIndex > -1) {
@@ -565,6 +594,14 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
     const tagIndex = this.initialTagList.findIndex((item) => item ===tag);
     if (tagIndex > -1) {
       this.initialTagList.splice(tagIndex, 1);
+      var tagCount = this.tagLists.length + this.initialTagList.length;
+      if(tagCount > 7){
+        this.tagCountExceeded = true;
+        return; 
+      }
+      else{
+        this.tagCountExceeded = false;
+      }
     }
    }
 
@@ -572,6 +609,12 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
     if(this.initialTagList == undefined || this.initialTagList.length == 0){
       this.isTagsValid = false;
       return;
+    }
+
+    var tagCount = this.tagLists.length + this.initialTagList.length;
+    if(tagCount > 7){
+      this.tagCountExceeded = true;
+      return; 
     }
     if(this.isOpenReelsTab){
       this.reelsTagLists = [ ...this.reelsTagLists, ...this.initialTagList];
@@ -587,9 +630,36 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
     this.openFirst.nativeElement.click();
   }
 
+  onInputChange() {
+    debugger
+    if (this.tags.length > 10) {
+      this.tags = this.tags.slice(0, 10);
+    }
+  }
+
   onEnter(tags:any) {
+    const isBlank = /^\s*$/.test(tags);
+    if(isBlank){
+      return;
+    }
+
+    tags = tags.replace(/^\s+|\s+$/g, "").replace(/\s+/g, " ");
+    var tagLists = [ ...this.tagLists, ...this.initialTagList];
+    if(tagLists.includes(tags)){
+      this.tags = '';
+      return;
+    }
     this.initialTagList.push(tags);
     this.tags = '';
+    var tagCount = this.tagLists.length + this.initialTagList.length;
+    this.isTagsValid = true;
+    if(tagCount > 7){
+      this.tagCountExceeded = true;
+      return; 
+    }
+    else{
+      this.tagCountExceeded = false;
+    }
   }
 
   openAttachmentModal(){
@@ -616,6 +686,10 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
    }
 
    AttachmentModalOpen(template: TemplateRef<any>) {
+    this.uploadFromFileStorage = [];
+    this.fileAttachmentsForm.setValue({
+      fileAttachments: [],
+    });
     this.initialAttachment = [];
     this.attachmentModalRef = this.bsModalService.show(template);
   }
@@ -630,6 +704,8 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
 
   openTagModal(template: TemplateRef<any>) {
     this.initialTagList = [];
+    this.tagCountExceeded = false;
+    this.isTagsValid = true;
     this.tagModalRef = this.bsModalService.show(template);
   }
 
@@ -680,23 +756,80 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
    }
 
    filterFileAttachments(event:any){
-    debugger
     var fileStorageAttachments: any[] = this.fileStorageAttachments;
-      //var attachments: any[] = this.languages;
-      // this.languages = languages.filter(x => !userLanguages.find(y => y.id == x.id));
-      
+      fileStorageAttachments = fileStorageAttachments.filter(x => !this.uploadFromFileStorage.find(y => y.fileName == x.fileName));
       let filtered: any[] = [];
       let query = event.query;
-      for (let i = 0; i < this.fileStorageAttachments.length; i++) {
-        let attachment = this.fileStorageAttachments[i];
+      for (let i = 0; i < fileStorageAttachments.length; i++) {
+        let attachment = fileStorageAttachments[i];
         if (attachment.fileName.toLowerCase().indexOf(query.toLowerCase()) == 0) {
           filtered.push(attachment);
         }
       }
       this.filteredFileAttachments = filtered;
    }
-  
 
+   liveStream(){
+    debugger
+    this.isSubmitted=true;
+
+    if(this.scheduleTime != undefined){
+      if(this.scheduleTime < new Date()){
+        this.createLiveForm.setErrors({ unauthenticated: true });
+        return;
+      }
+      if(this.videos.length == 0){
+        this.scheduleVideoRequired = true;
+        return;
+      }
+    }
+
+    if (!this.createLiveForm.valid) {
+      return;
+    }
+
+        // for videoes
+        for(var i=0; i<this.videos.length; i++){
+          this.postToUpload.append('uploadVideos', this.videos[i]);
+        }
+
+    this.loadingIcon = true;
+    var post =this.createLiveForm.value;
+    this.postFrom();
+
+    this.postToUpload.append('title', post.title);
+    this.postToUpload.append('description', post.bodyText);
+    this.postToUpload.append('coverLetter', post.coverLetter);
+    this.postToUpload.append('postType', PostTypeEnum.Stream.toString());
+    this.postToUpload.append('postTags', JSON.stringify(this.tagLists));
+    this.postToUpload.append('commentsPerMinute', post.commentPerMinute);
+    this.postToUpload.append('isMicroPhoneOpen', this.isMicroPhoneOpen.toString());
+
+    
+    for(var i=0; i<this.images.length; i++){
+      this.postToUpload.append('uploadImages', this.images[i]);
+    }
+
+    this._postService.createPost(this.postToUpload).subscribe((response:any) => { 
+      this.isSubmitted=false;
+      this.loadingIcon = false;
+      //addPostResponse.next({response}); 
+      this.postToUpload = new FormData();
+      this.close();
+      const fullNameIndex = response.streamUrl.indexOf('fullName='); // find the index of "fullName="
+      const newUrl = response.streamUrl.slice(fullNameIndex);
+      // here we need to send schoolId/classId if stream from those.
+      this.router.navigate(
+          [`liveStream`,response.id,newUrl,this.from],
+          { state: { stream: {streamUrl: response.streamUrl, userId:this.userId, meetingId: post.title,from:"user"} } });
+
+      });
+
+}
+
+openMicroPhone(){
+  this.isMicroPhoneOpen = !this.isMicroPhoneOpen;
+}
 }
 
    

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { HttpClient } from "@angular/common/http";
 import { AdminService } from 'src/root/service/admin/admin.service';
@@ -6,6 +6,7 @@ import { RegisteredUsers } from 'src/root/interfaces/admin/registeredUsers';
 import { BanUnbanUsers } from 'src/root/interfaces/admin/banUnbanUser';
 import { BanUnbanEnum } from 'src/root/Enums/BanUnbanEnum';
 import { VarifyUsers } from 'src/root/interfaces/admin/verifyUser';
+import { Table } from 'primeng/table';
 
 @Component({
   selector: 'registered-users',
@@ -22,6 +23,9 @@ export class RegisteredUsersComponent implements OnInit {
   verifyUser!: VarifyUsers;
   loadingIcon:boolean = false;
   isDataLoaded:boolean = false;
+  sortOrder = 'asc';
+  cloned!:any;
+  @ViewChild('dt') table!: Table;
 
 
   
@@ -33,12 +37,12 @@ export class RegisteredUsersComponent implements OnInit {
     this.loadingIcon = true;
         this._adminService.getRegUsers().subscribe((response) => {
           this.registeredUsers = response;
+          this.cloned = response.slice(0);
           this.loadingIcon = false;
           this.isDataLoaded = true;
         });  
-
-              this.InitializeBanUnbanUser();
-              this.InitializeVerifyUser();
+        this.InitializeBanUnbanUser();
+        this.InitializeVerifyUser();
       
       }
 
@@ -102,6 +106,37 @@ export class RegisteredUsersComponent implements OnInit {
         window.location.href=`user/userProfile/${userId}`;
 
       }
+
+      // Rest of your component code...
+    
+      search(event: any) {
+        this.table.filterGlobal(event.target.value, 'contains');
+      }
+
+      compareIsBan(a: boolean, b: boolean): number {
+        if (a && !b) {
+          return 1;
+        } else if (!a && b) {
+          return -1;
+        } else {
+          return 0;
+        }
+      }
+
+      sort(column: any) {
+        this.registeredUsers = this.registeredUsers.sort((a:any, b:any) => {
+          const aValue = a[column] ? 1 : 0;
+          const bValue = b[column] ? 1 : 0;
+          return this.sortOrder === 'asc' ? aValue - bValue : bValue - aValue;
+        });
+        this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
+      }
+
+      resetSorting(): void {
+        this.table.reset();
+        this.registeredUsers = this.cloned.slice(0);
+      }
+
     }
     
   

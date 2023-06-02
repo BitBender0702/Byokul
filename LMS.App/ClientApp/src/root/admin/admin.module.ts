@@ -15,6 +15,8 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AuthGuard } from '../service/auth.guard';
+import { InputTextModule } from 'primeng/inputtext';
+import { SideBarComponent } from '../user-template/side-bar/side-bar.component';
 
 const routes: Routes = [
   {
@@ -49,7 +51,6 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     AdminHomeComponent,
-    AdminSideBarComponent,
     RegisteredUsersComponent,
     RegisteredSchoolsComponent,
     RegisteredClassesComponent,
@@ -62,6 +63,7 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     TableModule,
+    InputTextModule,
     TranslateModule.forRoot({
       loader:{
         provide:TranslateLoader,

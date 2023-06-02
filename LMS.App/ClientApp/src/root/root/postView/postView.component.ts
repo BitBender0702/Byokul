@@ -20,8 +20,10 @@ import { SharePostComponent } from '../sharePost/sharePost.component';
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
 import { MessageService } from 'primeng/api';
+import { CertificateViewComponent } from '../certificateView/certificateView.component';
 
 export const sharePostResponse =new Subject<{}>();  
+export const deletePostResponse =new Subject<{postId:string}>();  
 export const savedPostResponse =new Subject<{isPostSaved:boolean,postId:string}>();  
 
 
@@ -64,6 +66,12 @@ export class PostViewComponent implements OnInit,AfterViewInit {
     commentsLoadingIcon: boolean = false;
     commentsPageNumber:number = 1;
     isPlayerLoad:boolean = false;
+    gender!:string;
+    loadingIcon: boolean = false;
+
+    base64String!:Uint8Array;
+    base64String2!:any;
+    imageSource!:any;
 
     constructor(private bsModalService: BsModalService,public messageService:MessageService,notificationService:NotificationService,chatService: ChatService,public signalRService: SignalrService,public postService:PostService, public options: ModalOptions,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,userService:UserService,private cd: ChangeDetectorRef) { 
          this._postService = postService;
@@ -74,6 +82,7 @@ export class PostViewComponent implements OnInit,AfterViewInit {
     }
   
     ngOnInit(): void {
+      debugger
       var id = this.activatedRoute.snapshot.paramMap.get('id');
       if(id != null){
         this.postId = id;
@@ -83,18 +92,46 @@ export class PostViewComponent implements OnInit,AfterViewInit {
       else{
       this.posts = this.options.initialState;
       this.post = this.posts.posts;
+    //   if(this.post.postAuthorType == 2 || this.post.postAuthorType == 3){
+    //   this.post.postAttachments.forEach((item: any) => {
+    //     debugger
+    //   const byteArray = new Uint8Array(atob(item.byteArray).split('').map(char => char.charCodeAt(0)));
+    //   if(item.fileType == 1){
+    //     var type = 'image/png';
+    //   }
+    //   else{
+    //     var type = 'video/mp4';
+    //   }
+    //   const blob = new Blob([byteArray], { type: type });
+    //   const reader = new FileReader();
+    //   reader.onloadend = () => {
+    //     debugger
+    //     item.fileUrl = reader.result as string;
+    //   };
+    //   reader.readAsDataURL(blob);      
+    // });
+    
+    //   }
+
+      // this.base64String = Uint8Array.from(window.atob(this.post.postAttachments[0].byteArrayUrl), (c) => c.charCodeAt(0)) 
+      // const base64String = btoa(String.fromCharCode.apply(null, this.post.postAttachments[0].byteArrayUrl));
+      // this.imageSource = `data:image/png;base64,${base64String}`;
+      //this.base64String2 = atob(this.post.postAttachments[0].byteArrayUrl);
+      // this.base64String = btoa(String.fromCharCode.apply(null, this.post.postAttachments[0].byteArrayUrl));
       this.postId = this.post.id;
       this.getComments();
       }
 
       this._postService.getPostById(this.postId).subscribe((response) => {
+        debugger
         if(id != null){
           this.post = response;
+          // this.base64String = btoa(String.fromCharCode.apply(null, this.post.postAttachments[0].base64String));
           this.getComments();
         }
         this.isCommentsDisabled = response.isCommentsDisabled
         this.createGroupName();
-        this.commentResponse();
+        this.commentResponse();       
         this.commentLikeResponse();
         if(this.post.postId != null){
           this.addPostView(this.post.postId);
@@ -102,9 +139,32 @@ export class PostViewComponent implements OnInit,AfterViewInit {
         else{
         this.addPostView(this.post.id);
         }
-        this.isDataLoaded = true;
-        this.cd.detectChanges();
+
+        if(this.post.postAuthorType == 2 || this.post.postAuthorType == 3){
+          this.post.postAttachments.forEach((item: any) => {
+            debugger
+          const byteArray = new Uint8Array(atob(item.byteArray).split('').map(char => char.charCodeAt(0)));
+          if(item.fileType == 1){
+            var type = 'image/png';
+          }
+          else{
+            var type = 'video/mp4';
+          }
+          const blob = new Blob([byteArray], { type: type });
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            debugger
+            item.fileUrl = reader.result as string;
+            this.isDataLoaded = true;
+            this.initializeVideoPlayer();
+          };
+          reader.readAsDataURL(blob);      
+        });
         
+          }
+          else{
+            this.isDataLoaded = true;
+            this.initializeVideoPlayer();          }        
 
         var modal = document.getElementById('modal-post');
         window.onclick = (event) => {
@@ -114,12 +174,11 @@ export class PostViewComponent implements OnInit,AfterViewInit {
           }
         } 
        }
-
-        const player = videojs(this.videoPlayer.nativeElement, {autoplay: false,});
         this.isPlayerLoad = true;
         this.cd.detectChanges();
         });
 
+        this.gender = localStorage.getItem("gender")??'';
         this.InitializeLikeUnlikePost();
         this.getSenderInfo();
         this.cd.detectChanges();
@@ -131,14 +190,20 @@ export class PostViewComponent implements OnInit,AfterViewInit {
       setTimeout(() => this.scrollToBottom());
     } 
 
+    initializeVideoPlayer(){
+      this.cd.detectChanges();
+      const player = videojs(this.videoPlayer.nativeElement, {autoplay: false,});
+    }
+
     savePreferences(title:string,description:string,postTags:any){
+      debugger
       var tagString = '';
       postTags.forEach(function (item:any) {
         tagString = tagString + item.postTagValue
       }); 
 
       var preferenceString = (title??'') + ' ' + (description??'') + ' ' + tagString??'';
-      this._userService.saveUserPreference(preferenceString).subscribe((response) => {
+      this._userService.saveUserPreference(preferenceString).subscribe((_response) => {
       });
     }
 
@@ -198,7 +263,7 @@ export class PostViewComponent implements OnInit,AfterViewInit {
        userId:''
       }
     }
-
+    
     InitializeLikeUnlikePost(){
       this.likeUnlikePost = {
         postId: '',
@@ -214,6 +279,7 @@ export class PostViewComponent implements OnInit,AfterViewInit {
      }
 
      close(): void {
+      debugger
       this.bsModalService.hide();
     }
   
@@ -241,7 +307,7 @@ export class PostViewComponent implements OnInit,AfterViewInit {
       this.likesLength = this.post.likes.length + 1;
       this.post.isPostLikedByCurrentUser = true;
       var notificationContent = `liked your post(${post.title})`;
-      this._notificationService.initializeNotificationViewModel(post.createdBy,NotificationType.Likes,notificationContent,this.userId,postId,postType,post,null).subscribe((response) => { 
+      this._notificationService.initializeNotificationViewModel(post.createdBy,NotificationType.Likes,notificationContent,this.userId,postId,postType,post,null).subscribe((_response) => { 
       });
     }
 
@@ -271,6 +337,7 @@ export class PostViewComponent implements OnInit,AfterViewInit {
   }
 
   sendToGroup(){
+    debugger
     var comment: any[] = this.post.comments;
     this.InitializeCommentViewModel();
     this.commentViewModel.userId = this.sender.id;
@@ -280,7 +347,9 @@ export class PostViewComponent implements OnInit,AfterViewInit {
     this.messageToGroup = "";
     this.commentViewModel.id = '00000000-0000-0000-0000-000000000000';
     this._chatService.addComments(this.commentViewModel).subscribe((response) => {
+      debugger
       comment.push(response);
+      this.post.commentsCount = comment.length;
       this.cd.detectChanges();
       this.groupChatList.nativeElement.scrollTop = this.groupChatList.nativeElement.scrollHeight;
       this.commentViewModel.id = response.id;
@@ -300,7 +369,7 @@ export class PostViewComponent implements OnInit,AfterViewInit {
        };
     }
 
-    likeUnlikeComments(commentId:string, isLike:boolean,isCommentLikedByCurrentUser:boolean,likeCount:number){
+    likeUnlikeComments(commentId:string, _isLike:boolean,_isCommentLikedByCurrentUser:boolean,_likeCount:number){
       var comment: any[] = this.post.comments;
       var isCommentLiked = comment.find(x => x.id == commentId);
       this.initializeCommentLikeUnlike();
@@ -342,7 +411,7 @@ export class PostViewComponent implements OnInit,AfterViewInit {
         this.isCommentsDisabled = true;
       }
 
-      this._postService.enableDisableComments(this.post.id,this.isCommentsDisabled).subscribe((response) => {
+      this._postService.enableDisableComments(this.post.id,this.isCommentsDisabled).subscribe((_response) => {
         
        }); 
     }
@@ -412,8 +481,31 @@ export class PostViewComponent implements OnInit,AfterViewInit {
       this.post.isPostSavedByCurrentUser = true;
       savedPostResponse.next({isPostSaved:true,postId:postId}); 
      }
-     this._postService.savePost(postId,this.userId).subscribe((result) => {
+     this._postService.savePost(postId,this.userId).subscribe((_result) => {
     });
+  }
+
+  getDeletedPostId(id: string) {
+    debugger
+    this.loadingIcon = true;
+    this._postService.deletePost(id).subscribe((_response) => {
+      this.close();
+      this.loadingIcon = false;
+      deletePostResponse.next({postId:id});
+
+    });
+  }
+
+  openCertificateViewModal(certificateUrl:string,certificateName:string,from?:number,event?:Event){
+    if(from != undefined){
+      event?.stopPropagation();
+    }
+    const initialState = {
+      certificateUrl: certificateUrl,
+      certificateName:certificateName,
+      from:from
+    };
+    this.bsModalService.show(CertificateViewComponent, { initialState });
   }
 
 }

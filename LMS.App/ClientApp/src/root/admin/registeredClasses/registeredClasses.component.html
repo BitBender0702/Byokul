@@ -26,11 +26,18 @@
      <p-table #dt [value]="registeredClasses" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]" [globalFilterFields]="['className']"
          [(selection)]="selectedClasses" [rowHover]="true" dataKey="id"
          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
-         <!-- <ng-template pTemplate="caption">
-             <div class="p-d-flex p-ai-center p-jc-between">
-                 <h5 class="p-m-0">{{'ManageClasses'| translate }}</h5>
-             </div>
-         </ng-template> -->
+         <ng-template pTemplate="caption">
+          <div class="d-flex justify-content-between p-ai-center p-jc-between">
+            <div class="d-flex w-100 justify-content-between">
+              <h5 class="p-m-0">{{'Classes'| translate }}</h5>
+              <button type="button" (click)="resetSorting()" class="btn custom-btn primary_btn earning-btn fw_400 h_44 me-3">Reset Table</button>
+            </div>
+              <span class="p-input-icon-left">
+                  <i class="pi pi-search"></i>
+                  <input pInputText type="text" (input)="search($event)" placeholder="Search...">
+              </span>
+          </div>
+        </ng-template>
          <ng-template pTemplate="header">
              <tr>
                  <th>{{'Avatar'| translate }}</th>
@@ -38,14 +45,14 @@
                  <th pSortableColumn="startDate">{{'StartDate'| translate }} <p-sortIcon field="startDate"></p-sortIcon></th>
                  <th pSortableColumn="endDate">{{'EndDate'| translate }} <p-sortIcon field="endDate"></p-sortIcon></th>
                  <th pSortableColumn="noOfStudents">{{'NoOfStudents'| translate }} <p-sortIcon field="noOfStudents"></p-sortIcon></th>
-                 <th pSortableColumn="school?.schoolName">{{'SchoolName'| translate }} <p-sortIcon field="school?.schoolName"></p-sortIcon></th>
-                 <th pSortableColumn="serviceType?.type">{{'ServiceType'| translate }} <p-sortIcon field="serviceType?.type"></p-sortIcon></th>
-                 <th pSortableColumn="accessibility?.name">{{'Accessibility'| translate }} <p-sortIcon field="accessibility?.name"></p-sortIcon></th>
+                 <th pSortableColumn="school.schoolName">{{'SchoolName'| translate }} <p-sortIcon field="school.schoolName"></p-sortIcon></th>
+                 <th pSortableColumn="serviceType.type">{{'ServiceType'| translate }} <p-sortIcon field="serviceType.type"></p-sortIcon></th>
+                 <th pSortableColumn="accessibility.name">{{'Accessibility'| translate }} <p-sortIcon field="accessibility.name"></p-sortIcon></th>
                  <th pSortableColumn="price">{{'Price'| translate }} <p-sortIcon field="price"></p-sortIcon></th>
                  <th pSortableColumn="classUrl">{{'ClassUrl'| translate }} <p-sortIcon field="classUrl"></p-sortIcon></th>
                  <th pSortableColumn="createdOn">{{'CreatedOn'| translate }} <p-sortIcon field="createdOn"></p-sortIcon></th>
                  <th pSortableColumn="createdBy">{{'Owner'| translate }} <p-sortIcon field="createdBy"></p-sortIcon></th>
-                 <th>{{'IsEnable'| translate }}</th>
+                 <th pSortableColumn="isEnable">{{'IsEnable'| translate }}<p-sortIcon field="isEnable"></p-sortIcon></th>
                  <th></th>
              </tr>
          </ng-template>
@@ -57,11 +64,11 @@
                   <img *ngIf="class.avatar == null" class="school-profile-icon user-profile-header" src="../../../assets/images/classLogo.png"/>
                 </div>
                  </td>
-                 <td>{{class.className}}</td>
+                 <td [routerLink]="['/profile/class', class.school.schoolName,class.className]" style="cursor: pointer;">{{class.className}}</td>
                  <td>{{class.startDate | date : "MMMM d, y"}}</td>
                  <td>{{class.endDate | date : "MMMM d, y"}}</td>
                  <td>{{class.noOfStudents}}</td>
-                 <td [routerLink]="['/user/schoolProfile', class.school.schoolId]" class="cursorPointer">{{class.school?.schoolName}}</td>
+                 <td [routerLink]="['/profile/school', class.school.schoolName]" class="cursorPointer">{{class.school?.schoolName}}</td>
                  <td>{{class.serviceType?.type}}</td>
                  <td>{{class.accessibility?.name}}</td>
                  <td>{{class.price}}</td>

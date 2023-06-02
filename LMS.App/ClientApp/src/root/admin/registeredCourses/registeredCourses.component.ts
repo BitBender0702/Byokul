@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { HttpClient } from "@angular/common/http";
 import { AdminService } from 'src/root/service/admin/admin.service';
 import { EnableDisableClassCourse } from 'src/root/interfaces/admin/enableDisableClassCourse';
 import { RegisteredCourses } from 'src/root/interfaces/admin/registeredCourses';
+import { Table } from 'primeng/table';
 
 @Component({
   selector: 'registered-courses',
@@ -19,6 +20,9 @@ export class RegisteredCoursesComponent implements OnInit {
   enableDisableCourse!: EnableDisableClassCourse;
   loadingIcon:boolean = false;
   isDataLoaded:boolean = false;
+  cloned!:any;
+  @ViewChild('dt') table!: Table;
+  
 
 
   constructor(private fb: FormBuilder,private http: HttpClient,adminService: AdminService) {
@@ -29,6 +33,7 @@ export class RegisteredCoursesComponent implements OnInit {
     this.loadingIcon = true;
         this._adminService.getRegCourses().subscribe((response) => {
           this.registeredCourses = response;
+          this.cloned = response.slice(0);
           this.loadingIcon = false;
           this.isDataLoaded = true;
         });  
@@ -63,10 +68,14 @@ export class RegisteredCoursesComponent implements OnInit {
 
       }
 
-      // viewCourseProfile(courseId:string){
-      //   window.location.href=`user/courseProfile/${courseId}`;
+      search(event: any) {
+        this.table.filterGlobal(event.target.value, 'contains');
+      }
 
-      // }
+      resetSorting(): void {
+        this.table.reset();
+        this.registeredCourses = this.cloned.slice(0);
+      }
     }
     
   

@@ -1,7 +1,8 @@
-import { Component, Injector, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Injector, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { MultilingualComponent } from 'src/root/root/sharedModule/Multilingual/multilingual.component';
+import { AuthService } from 'src/root/service/auth.service';
 import { UserService } from 'src/root/service/user.service';
 
 @Component({
@@ -12,18 +13,23 @@ import { UserService } from 'src/root/service/user.service';
 export class AdminSideBarComponent extends MultilingualComponent implements OnInit {
   items!: MenuItem[];
   private _userService;
+  private _authService;
   sidebarInfo:any;
+  displaySideBar:boolean = false;
 
   @Input() isOpenSidebar!:boolean;
 
-  constructor(injector: Injector,userService: UserService,private router: Router) {
+  constructor(injector: Injector,userService: UserService,authService: AuthService,private router: Router,private cd: ChangeDetectorRef) {
     super(injector);
     this._userService = userService;
+    this._authService = authService;
   }
 
   ngOnInit(): void {
-
+    this._authService.loginState$.next(false);
+    this.cd.detectChanges();
     this.selectedLanguage = localStorage.getItem("selectedLanguage");
+    this.translate.use(this.selectedLanguage ?? '');
     this._userService.getSidebarInfo().subscribe((response) => {
       this.sidebarInfo = response;
     });

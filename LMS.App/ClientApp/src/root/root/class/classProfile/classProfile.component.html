@@ -3,9 +3,9 @@
     <div *ngIf="isOpenModal"><create-post [isOpenModal]="isOpenModal" [classId]="classId"></create-post></div>
     <div class="main_content">
       <div class="create-post-header d-flex justify-content-between d-none d-xl-flex">
-        <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
+        <button (click)="back()" type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
             src="../../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
-        <button *ngIf="isOwner || hasIssueCertificatePermission" (click)="createCertificate(class.classId,'1')" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44">{{'CreateCertificate'| translate }}</button>
+        <button *ngIf="(isOwner || hasIssueCertificatePermission) && class.serviceType.type == 'Paid'" (click)="createCertificate(class.classId,'1')" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44">{{'CreateCertificate'| translate }}</button>
         <button *ngIf="isOwner || hasPostPermission" (click)="openPostModal()" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44">{{'CreatePost'| translate }}</button>
         <button *ngIf="!isOwner && class.price != null && class.price != 0" (click)="openPaymentModal()" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44">{{'Buyfor'| translate }} ${{class.price}}</button>
       </div>
@@ -42,7 +42,7 @@
               <div class="d-flex flex-wrap course-date-head">
               <span class="date-class text_ltgray font_14">{{class.startDate | date : "MMMM d, y"}} - {{class.endDate | date : "MMMM d, y"}}</span>
               <span class="sepearator mx-4">|</span>
-              <span class="date-class text_ltgray font_14">{{class.posts.length}} Lections</span>
+              <span class="date-class text_ltgray font_14">{{class.posts.length}} {{'Lectures'| translate }}</span>
             </div>
           </div>
           
@@ -52,7 +52,7 @@
             <div class="followers_name d-inline-block font_16 mr-_24"><img src="../../../../assets/images/Star-solid-dark.svg" />{{'Rating'| translate }}: <b
                 class="fw_700">{{class.rating}}</b></div>
             <div class="followers_name d-inline-block font_16 mr-_24"><img src="../../../../assets/images/students-icon.svg" />{{'Students'| translate }}:
-              <b class="fw_700">{{class.students}}</b>
+              <b class="fw_700"><a style="text-decoration: none;cursor: pointer;color: black;" [routerLink]="['/user/studentList', class.classId,2]">{{class.students}}</a></b>
             </div>
             <div class="followers_name d-inline-block font_16 mr-_24"><img src="../../../../assets/images/Edit-dark.svg" />{{'Post'| translate }}: <b
                 class="fw_700">{{class.posts.length}}</b></div>
@@ -66,6 +66,14 @@
             <button *ngIf="isOwner || hasUpdateClassPermission" (click)="getClassDetails(class.classId)" class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins ms-1" data-bs-toggle="modal"
               data-bs-target="#editClass"><img src="../../../../assets/images/Setting-solid-dark.svg" class="me-2" /> {{'EditProfile'| translate }}
               </button>
+              <button *ngIf="isOwner" class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins" data-bs-toggle="modal"
+                data-bs-target="#deleteclass"> {{'DeleteClass'| translate }}
+             </button>
+             <button *ngIf="isOwner" class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins" data-bs-toggle="modal"
+             data-bs-target="#enableDisableClass"> 
+             <span *ngIf="!class.isDisableByOwner">{{'DisableClass'| translate }}</span>
+             <span *ngIf="class.isDisableByOwner">{{'EnableClass'| translate }}</span>
+            </button>
             </div>
           </div>
         </div>
@@ -79,7 +87,7 @@
           <span *ngFor="let item of class.classCertificates;" class="custom-tag"><span (click)="openCertificateViewModal(item.certificateUrl,item.name)">{{item.name}}</span><button (click)="getDeletedCertificate(item.certificateId)" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#delete-classCertificate">
             <img *ngIf="isOwner || hasAddClassCertificatesPermission" src="../../../../assets/images/cross-sm-light.svg" /></button></span>
 
-            <span *ngIf="isOwner || hasAddClassCertificatesPermission" class="custom-tag" (click)="resetCertificateModal()">Add Certificates<button (click)="resetCertificateModal()" data-bs-toggle="modal" data-bs-target="#add-certificate" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#add-certificate"><img
+            <span *ngIf="isOwner || hasAddClassCertificatesPermission" class="custom-tag" (click)="resetCertificateModal()">{{'AddCertificates'| translate }}<button (click)="resetCertificateModal()" data-bs-toggle="modal" data-bs-target="#add-certificate" class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal" data-bs-target="#add-certificate"><img
               src="../../../../assets/images/school/plus-light.svg" /></button>
             </span>
         </div>
@@ -118,7 +126,7 @@
       <hr class="hr-gray" />
       <div class="school-profile-tabs d-flex align-content-center justify-content-center">
         <div></div>
-        <button type="button" class="btn button-stroage font_16 fw_600 text_dark d-inline-flex align-items-center justify-content-center" [routerLink]="['/user/fileStorage', class.classId,1]"><img src="../../../../assets/images/Folder.svg" class="me-2" />{{' FileStorage'| translate }}</button>
+        <button type="button" class="btn button-stroage font_16 fw_600 text_dark d-inline-flex align-items-center justify-content-center" [routerLink]="['/user/fileStorage', class.classId,class.createdById,1]"><img src="../../../../assets/images/Folder.svg" class="me-2" />{{' FileStorage'| translate }}</button>
         <div class="button-list-grid-filter">
           <button (click)="profileGrid()" type="button" [ngClass]="isProfileGrid ? 'btn border-btn active d-inline-flex align-items-center justify-content-center' : 'btn border-btn d-inline-flex align-items-center justify-content-center'"
             id="list-btn">
@@ -188,11 +196,8 @@
                   <img [src]="class.avatar" />
                 </div>
                 <h2 class="d-inline-block font_20 fw_600 text_sec1 mb-0">{{post.title}}</h2>
-                <!-- <span class="prog-count font_14 fw_500 text_ltgray">15/15</span>
-                <span class="live-soon font_20 text_ltgray fw_600">Soon</span> -->
                 <p *ngIf="post.dateTime != null" class="font_14 school-grid-date d-inline-block mb-0">
                   {{post.dateTime | date : "MMMM d"}} - {{post.dateTime | date : "hh mm"}}
-                  <!-- <span class="fw_600 ">11:30 -13:50</span> -->
                 </p>
                 <button *ngIf="post.isPinned && isOwner" (click)="pinUnpinPost(post.id,false)" type="button" class="bg-transparent border-0 pinned-grid-chat">
                   <img src="../../../../assets/images/pinned-orange.svg" />
@@ -204,6 +209,11 @@
               
               <div class="school-grid-body" (click)="openPostsViewModal(post)">
                 <p class="text_sec1 font_14" style="cursor: pointer;">{{post.description}}</p>
+                <div class="teacher-tags tag-box hashtag_box">
+                  <ng-container *ngFor="let attachment of filteredAttachments">
+                  <span *ngIf="attachment.postId == post.id" class="custom-tag cursor_pointer" (click)="openCertificateViewModal(attachment.fileUrl,attachment.fileName,5,$event)">{{attachment.fileName}}</span>
+                </ng-container>
+                </div>
                 <div class="teacher-tags tag-box hashtag_box">
                   <span *ngFor="let tag of post.postTags" class="custom-tag">#{{tag.postTagValue}}</span>
                 </div>
@@ -221,7 +231,7 @@
                       <div class="school-large-thumbnail shadow-thumnail position-relative">
                         <ng-container *ngFor="let attachment of post.postAttachments">
                          <img *ngIf="attachment?.fileType==2" preload="metadata" class="w-100" style="cursor: pointer;" [src]="attachment?.fileThumbnail">
-                          <img style="height: 598px;" *ngIf="attachment?.fileType==1" class="w-100" [src]="attachment?.fileUrl" />
+                          <img style="height: 598px; width:50% !important" *ngIf="attachment?.fileType==1" class="w-100" [src]="attachment?.fileUrl" />
                         </ng-container>
                       </div>
                     </div>
@@ -332,9 +342,6 @@
             <div *ngFor="let postAttachment of gridItemInfo.postAttachments" class="school-grid-thumbnail ">
               <slide *ngIf="postAttachment.fileType==2">
               <div *ngIf="postAttachment?.fileType==2" class="videofile">
-                <!-- <video style="height: 300px;" controls>
-                  <source [src]="postAttachment?.fileUrl" type="video/mp4"/>
-                </video> -->
                 <video #videoPlayer controls class="video-js vjs-big-play-centered" preload="metadata">
                   <source [src]="postAttachment?.fileUrl" type="video/mp4"/>
                 </video>
@@ -363,6 +370,11 @@
                 </p>
               </div>
               <p class="text_sec1 font_14 pt-3">{{gridItemInfo.description}}</p>
+              <div class="teacher-tags tag-box hashtag_box">
+                <ng-container *ngFor="let attachment of filteredAttachments">
+                <span *ngIf="attachment.postId == gridItemInfo.id" class="custom-tag cursor_pointer" (click)="openCertificateViewModal(attachment.fileUrl,attachment.fileName,5,$event)">{{attachment.fileName}}</span>
+                </ng-container>
+              </div>
               <div *ngIf="gridItemInfo.postTags.length != 0" class="teacher-tags tag-box hashtag_box">
                 <span *ngFor="let tag of gridItemInfo.postTags" class="custom-tag">{{tag.postTagValue}}</span>
               </div>
@@ -459,12 +471,14 @@
                   <img [src]="uploadImage">
                 </div>
                 <div *ngIf="uploadImage == ''">
-                  <img *ngIf="editClass?.avatar != 'null'" src={{editClass?.avatar}} style="scale: 1.8;">
+                  <img *ngIf="classAvatar != 'null'" src={{classAvatar}} style="scale: 1.8;">
                 </div>
           </div>
 
           <input #imageFile class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins position-static opacity-100" type="file" name="Edit Picture" id="avatar" (change)="handleImageInput($event)" accept="image/*"/>
-
+          <button *ngIf="(uploadImage != '' && uploadImage != undefined) || (classAvatar != '' && classAvatar != null)" (click)="removeLogo()" class="btn border-0 font_12 text_dark f-poppins">
+            {{'DeletePhoto'| translate }}
+         </button>
           <!-- <button class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins position-static opacity-100">{{'EditPicture'| translate }}</button> -->
         </div>
         <div class="text-line-border position-relative text-center mb-4">
@@ -481,9 +495,9 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label class="font_10">{{'ClassName'| translate }}*</label>
-                <input formControlName="className" type="text" placeholder="Class Name" name="classname" class="form-control w-100">
+                <input formControlName="className" type="text" placeholder="Class Name" name="classname" maxlength="60" class="form-control w-100">
                 <small class="p-error" style="color: orange;"
-                *ngIf="(isSubmitted && editClassForm.controls.className.errors)">Class Name is required
+                *ngIf="(isSubmitted && editClassForm.controls.className.errors)">{{'ClassNameRequired'| translate }}
               </small>
               </div>
             </div>
@@ -492,16 +506,16 @@
                 <label class="font_10">{{'NumberofStudents'| translate }}*</label>
                 <input formControlName="noOfStudents" type="number" placeholder="" name="noOfStudents" min="1" max="999" class="form-control w-100">
                 <small class="p-error" style="color: orange;"
-                *ngIf="(isSubmitted && editClassForm.controls.noOfStudents.errors)">No. of students is required
+                *ngIf="(isSubmitted && editClassForm.controls.noOfStudents.errors)">{{'NoOfStudentsRequired'| translate }}
               </small>
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-group">
                 <label class="font_10">{{'Start'| translate }}*</label>
-                <input formControlName="startDate" type="date" max="9999-12-31" name="start" class="form-control w-100">
+                <input formControlName="startDate" type="date" [min]="minDate" max="9999-12-31" name="start" class="form-control w-100">
                 <small class="p-error" style="color: orange;"
-                *ngIf="(isSubmitted && editClassForm.controls.startDate.errors)">Start date is required
+                *ngIf="(isSubmitted && editClassForm.controls.startDate.errors)">{{'StartDateRequired'| translate }}
               </small>
               <small class="p-error" style="color: orange;margin-left: 0px;" *ngIf="isSubmitted && editClassForm.errors">
                 {{ editClassForm.errors.dates}}
@@ -511,9 +525,9 @@
             <div class="col-md-6">
               <div class="form-group">
                 <label class="font_10">{{'Finish'| translate }}*</label>
-                <input formControlName="endDate" type="date" max="9999-12-31" name="start" class="form-control w-100">
+                <input formControlName="endDate" type="date" [min]="minDate" max="9999-12-31" name="start" class="form-control w-100">
                 <small class="p-error" style="color: orange;"
-                *ngIf="(isSubmitted && editClassForm.controls.endDate.errors)">End date is required
+                *ngIf="(isSubmitted && editClassForm.controls.endDate.errors)">{{'EndDateRequired'| translate }}
               </small>
               </div>
             </div>
@@ -536,10 +550,10 @@
 
             <div *ngIf="isClassPaid" class="col-md-6">
               <div class="form-group">
-                <label class="font_10">Price*</label>
+                <label class="font_10">{{'Price'| translate }}*</label>
                 <input formControlName="price" type="number" min="1" placeholder="{{'Price'| translate }}" name="price" class="form-control w-100">
                 <small class="p-error" style="color: orange;" *ngIf="isSubmitted && editClassForm.controls.price.errors">
-                  Price is required
+                  {{'PriceRequired'| translate }}
                 </small>
               </div>
             </div>
@@ -550,7 +564,7 @@
                   <option *ngFor="let item of accessibility; let i = index" [value]="item.id" [selected]="i">{{item.name}}</option>
                </select>
                <small class="p-error" style="color: orange;"
-               *ngIf="(isSubmitted && editClassForm.controls.accessibilityId.errors)">This field is required
+               *ngIf="(isSubmitted && editClassForm.controls.accessibilityId.errors)">{{'ThisFieldRequired'| translate }}
              </small>
               </div>
             </div>
@@ -562,7 +576,7 @@
                           <option *ngFor="let language of languages; let i = index" [value]="language.id" [selected]="i">{{language.name}}</option>
                        </p-multiSelect>
                        <small class="p-error" style="color: orange;"
-               *ngIf="(isSubmitted && editClassForm.controls.languageIds.errors)">Atleast one language is required
+               *ngIf="(isSubmitted && editClassForm.controls.languageIds.errors)">{{'AtLeastOneLanguageRequired'| translate }}
              </small>
                   </div>
               </div>
@@ -592,6 +606,59 @@
   </div>
 </div>
 
+<div class="modal fade edit-school-modal delete-modal" id="enableDisableClass" tabindex="-1"
+aria-labelledby="enableDisableClass" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered">
+  <div class="modal-content">
+    <div class="modal-header border-0 justify-content-center position-relative">
+      <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">{{'Enable/DisableClass'| translate }}</h1>
+      <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"><img
+          src="../../../../assets/images/cross.svg" /></button>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+          <h2 *ngIf="!class.isDisableByOwner" class="text-center font_16 f-poppins">{{'DoYouWantToDisableClass'| translate }} ?</h2>
+          <h2 *ngIf="class.isDisableByOwner" class="text-center font_16 f-poppins">{{'DoYouWantToUnableClass'| translate }} ?</h2>
+        </div>
+        <div
+        class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-2 mt-4">
+        <button type="button"
+          class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+          data-bs-dismiss="modal">{{'No'| translate }}</button>
+        <button (click)="unableDisableClass()" type="button"
+          class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step" data-bs-dismiss="modal">{{'Yes'| translate }}</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="modal fade edit-school-modal delete-modal" id="deleteclass" tabindex="-1"
+aria-labelledby="deleteclass" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered">
+  <div class="modal-content">
+    <div class="modal-header border-0 justify-content-center position-relative">
+      <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">{{'DeleteClass'| translate }}</h1>
+      <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"><img
+          src="../../../../assets/images/cross.svg" /></button>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+          <h2 class="text-center font_16 f-poppins">Do you really want to delete this?</h2>
+        </div>
+        <div
+        class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-2 mt-4">
+        <button type="button"
+          class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+          data-bs-dismiss="modal">{{'No'| translate }}</button>
+        <button (click)="deleteClass()" type="button"
+          class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step" data-bs-dismiss="modal">{{'Yes'| translate }}</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
 <div class="modal fade edit-school-modal" id="add-language" tabindex="-1"
 aria-labelledby="add-language" aria-hidden="true">
 <div class="modal-dialog modal-dialog-centered">
@@ -614,7 +681,7 @@ aria-labelledby="add-language" aria-hidden="true">
         </div>
 
         <small class="p-error" style="color: orange;margin-left: 200px;"
-        *ngIf="(isSubmitted && languageForm.controls.languages.errors)"> Please select atleast one language
+        *ngIf="(isSubmitted && languageForm.controls.languages.errors)">{{'AtLeastOneLanguageRequired'| translate }}
       </small>
         <div
         class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 mt-4">
@@ -623,32 +690,9 @@ aria-labelledby="add-language" aria-hidden="true">
           data-bs-dismiss="modal">{{'DiscardChanges'| translate }}</button>
         <button (click)="saveClassLanguages()" type="button"
           class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step">{{'Save'| translate }}</button>
-
       </div>
       </form>
-      <!-- <div class="teacher-tags tag-box language-tag my-0">
-        <button type="button" class="custom-tag border-0">English</button>
-        <button type="button" class="custom-tag border-0">Türkçe</button>
-        <button type="button" class="custom-tag border-0">#للغة العربية</button>
-        <button type="button" class="custom-tag border-0">Français</button>
-        <button type="button" class="custom-tag border-0">Español </button>
-        <button type="button" class="custom-tag border-0">Italiano</button>
-        <button type="button" class="custom-tag border-0">Polski</button>
-        <button type="button" class="custom-tag border-0">Deutsch</button>
-        <button type="button" class="custom-tag border-0">Português</button>
-        <button type="button" class="custom-tag border-0">Русский</button>
-      </div> -->
-
     </div>
-    <!-- <div
-      class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4">
-      <button type="button"
-        class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
-        data-bs-dismiss="modal">Discard Changes</button>
-      <button type="button"
-        class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step">Save</button>
-
-    </div> -->
   </div>
 </div>
 </div>
@@ -663,15 +707,9 @@ aria-labelledby="delete-language" aria-hidden="true">
         src="../../../../assets/images/cross.svg" /></button>
   </div>
   <div class="modal-body">
-    <!-- <form [formGroup]="languageForm"> -->
-
       <div class="form-group">
-        <h2 class="text-center font_16 f-poppins ">Do you really want to delete this?</h2>
+        <h2 class="text-center font_16 f-poppins ">{{'DoYouWantToDelete'| translate }}</h2>
       </div>
-
-      <!-- <div class="form-group">
-        <input type="text" placeholder="{{'TypeLanguageToAdd'| translate }}" name="schoolname" class="form-control w-100">
-      </div> -->
       <div
       class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-2 mt-4">
       <button type="button"
@@ -679,10 +717,7 @@ aria-labelledby="delete-language" aria-hidden="true">
         data-bs-dismiss="modal">{{'No'| translate }}</button>
       <button (click)="deleteClassLanguage()" type="button"
         class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step" data-bs-dismiss="modal">{{'Yes'| translate }}</button>
-
     </div>
-    <!-- </form> -->
-
   </div>
 </div>
 </div>
@@ -711,7 +746,7 @@ aria-labelledby="delete-language" aria-hidden="true">
             </div>
 
             <small class="p-error" style="color: orange;margin-left: 200px;"
-            *ngIf="(isSubmitted && teacherForm.controls.teachers.errors)"> Please select atleast one teacher
+            *ngIf="(isSubmitted && teacherForm.controls.teachers.errors)">{{'SelectAtLeastOneTeacher'| translate }}
           </small>
             <div
             class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 mt-4">
@@ -720,11 +755,9 @@ aria-labelledby="delete-language" aria-hidden="true">
               data-bs-dismiss="modal">{{'DiscardChanges'| translate }}</button>
             <button (click)="saveClassTeachers()" type="button"
               class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step">{{'Save'| translate }}</button>
-
           </div>
           </form>
         </div>
-
       </div>
     </div>
 </div>
@@ -739,10 +772,8 @@ aria-labelledby="delete-teacher" aria-hidden="true">
           src="../../../../assets/images/cross.svg" /></button>
     </div>
     <div class="modal-body">
-      <!-- <form [formGroup]="languageForm"> -->
-
         <div class="form-group">
-          <h2 class="text-center font_16 f-poppins ">Do you really want to delete this?</h2>
+          <h2 class="text-center font_16 f-poppins ">{{'DoYouWantToDelete'| translate }}</h2>
         </div>
         <div
         class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-2 mt-4">
@@ -751,10 +782,7 @@ aria-labelledby="delete-teacher" aria-hidden="true">
           data-bs-dismiss="modal">{{'No'| translate }}</button>
         <button (click)="deleteClassTeacher()" type="button"
           class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step" data-bs-dismiss="modal">{{'Yes'| translate }}</button>
-
       </div>
-      <!-- </form> -->
-  
     </div>
   </div>
 </div>
@@ -781,15 +809,12 @@ aria-labelledby="add-certificate" aria-hidden="true">
           <input type="file" formControlName="certificates" id="certificate" (change)="handleCertificates($event)" class="dropzone" accept="application/pdf"/>
         </div>
       </div>
-
       <div class="teacher-tags tag-box language-tag my-0">
         <button *ngFor="let certificate of this.classCertificate.certificates" type="button" class="custom-tag border-0">{{certificate.name}}</button>
       </div>
-
       <small class="p-error" style="color: orange;margin-left: 200px;"
-      *ngIf="(isSubmitted && certificateForm.controls.certificates.errors)"> Please select atleast one certificate
+      *ngIf="(isSubmitted && certificateForm.controls.certificates.errors)"> {{'SelectAtLeastOneCertificate'| translate }}
     </small>
-
       <div
       class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 mt-4">
       <button #closeCertificateModal type="button"
@@ -797,10 +822,8 @@ aria-labelledby="add-certificate" aria-hidden="true">
         data-bs-dismiss="modal">{{'DiscardChanges'| translate }}</button>
       <button (click)="saveClassCertificates()" type="button"
         class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step">{{'Save'| translate }}</button>
-
     </div>
     </form>
-
   </div>
 </div>
 </div>
@@ -816,10 +839,8 @@ aria-labelledby="delete-certificate" aria-hidden="true">
         src="../../../../assets/images/cross.svg" /></button>
   </div>
   <div class="modal-body">
-    <!-- <form [formGroup]="languageForm"> -->
-
       <div class="form-group">
-        <h2 class="text-center font_16 f-poppins">Do you really want to delete this?</h2>
+        <h2 class="text-center font_16 f-poppins">{{'DoYouWantToDelete'| translate }}</h2>
       </div>
       <div
       class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-2 mt-4">
@@ -828,17 +849,12 @@ aria-labelledby="delete-certificate" aria-hidden="true">
         data-bs-dismiss="modal">{{'No'| translate }}</button>
       <button (click)="deleteClassCertificate()" type="button"
         class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step" data-bs-dismiss="modal">{{'Yes'| translate }}</button>
-
     </div>
-    <!-- </form> -->
-
   </div>
 </div>
 </div>
 </div>
-
     </div>
-
   </section>
   <post-loading-spinner [postLoadingIcon]="postLoadingIcon"></post-loading-spinner>
 </div>

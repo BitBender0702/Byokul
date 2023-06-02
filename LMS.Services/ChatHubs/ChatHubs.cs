@@ -3,13 +3,14 @@ using LMS.Common.ViewModels.Notification;
 using LMS.Common.ViewModels.Post;
 using LMS.Data.Entity;
 using LMS.Data.Entity.Chat;
+using LMS.DataAccess.Repository;
 using LMS.Services;
 using LMS.Services.Chat;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
-
+using Microsoft.EntityFrameworkCore;
 
 [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class ChatHubs : Hub
@@ -17,11 +18,19 @@ public class ChatHubs : Hub
     private readonly UserManager<User> _userManager;
     private readonly IChatService _chatService;
     private readonly INotificationService _notificationService;
-    public ChatHubs(UserManager<User> userManager, IChatService chatService, INotificationService notificationService)
+    private IGenericRepository<UserFollower> _userFollowerRepository;
+    private IGenericRepository<User> _userRepository;
+    private IGenericRepository<View> _viewRepository;
+
+
+    public ChatHubs(UserManager<User> userManager, IChatService chatService, IGenericRepository<View> viewRepository, INotificationService notificationService, IGenericRepository<UserFollower> userFollowerRepository, IGenericRepository<User> userRepository)
     {
         _userManager = userManager;
         _chatService = chatService;
+        _viewRepository = viewRepository;
         _notificationService = notificationService;
+        _userFollowerRepository = userFollowerRepository;
+        _userRepository = userRepository;
     }
 
     static Dictionary<string, string> UserIDConnectionID = new Dictionary<string, string>();
@@ -104,14 +113,75 @@ public class ChatHubs : Hub
         await Clients.GroupExcept(model.GroupName, currentUserConnectionId).SendAsync("NotifyCommentLikeToReceiver", reposnseMessage);
     }
 
+    public async Task NotifyPostLike(string groupName, string userId, bool isLiked)
+    {
+
+        var currentUserConnectionId = UserIDConnectionID[userId];
+
+        await Clients.GroupExcept(groupName, currentUserConnectionId).SendAsync("NotifyPostLikeToReceiver", isLiked);
+    }
+
+    public async Task NotifyPostView(string groupName, string userId)
+    {
+        bool isAddView = false;
+        int index = groupName.LastIndexOf('_'); // finds the index of the last space character
+        string postId = groupName.Substring(0, index); // gets the substring from the start to the index
+
+        //var currentUserConnectionId = UserIDConnectionID[userId];
+        var isUserViewExist = await _viewRepository.GetAll().Where(x => x.UserId == userId && x.PostId == new Guid(postId)).FirstOrDefaultAsync();
+        if (isUserViewExist == null)
+        {
+            isAddView = true;
+        }
+        await Clients.Group(groupName).SendAsync("NotifyPostViewToReceiver",isAddView);
+    }
+
+    public async Task NotifyLiveUsersCount(string groupName, bool isLeaveStream)
+    {
+
+        //var currentUserConnectionId = UserIDConnectionID[userId];
+
+        await Clients.Group(groupName).SendAsync("NotifyLiveUsersCountToReceiver", isLeaveStream);
+    }
+
+    public async Task NotifyEndMeeting(string groupName)
+    {
+
+        await Clients.Group(groupName).SendAsync("NotifyEndMeetingToReceiver");
+    }
+
     public async Task SendNotification(NotificationViewModel model)
     {
-        var responseNotification = await _notificationService.AddNotification(model);
 
-        var a = UserIDConnectionID[model.UserId.ToString()];
+        // if notification type live stream so here we will find all.
+        if (model.NotificationType == NotificationTypeEnum.LectureStart)
+        {
+            var notificationViewModel = new NotificationViewModel();
+            var user = _userRepository.GetById(model.ActionDoneBy);
+            model.Avatar = user.Avatar;
+            model.MeetingId = model.NotificationContent + "meetings";
+            model.NotificationContent = $"{user.FirstName + ' '} {user.LastName} start a live {model.NotificationContent}";
+            var userFollwers = await _userFollowerRepository.GetAll().Where(x => x.UserId == model.ActionDoneBy).Select(x => x.FollowerId).ToListAsync();
 
-        if (a is not null)
-            await Clients.Client(a).SendAsync("ReceiveNotification", responseNotification);
+            foreach (var userFollower in userFollwers)
+            {
+                model.UserId = userFollower;
+                notificationViewModel = await _notificationService.AddNotification(model);
+            }
+
+            
+            await Clients.Clients(userFollwers).SendAsync("ReceiveNotification", notificationViewModel);
+
+        }
+        else
+        {
+            var responseNotification = await _notificationService.AddNotification(model);
+
+            var a = UserIDConnectionID[model.UserId.ToString()];
+
+            if (a is not null)
+                await Clients.Client(a).SendAsync("ReceiveNotification", responseNotification);
+        }
 
     }
 

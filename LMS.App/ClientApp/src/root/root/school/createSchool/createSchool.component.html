@@ -27,29 +27,29 @@
               <p class="text-center font_16 fw_600 step-desc">{{'Step1'| translate }}</p>
               <form id="regForm" [formGroup]="createSchoolForm1">
               <div class="form-group">
-                <input placeholder="{{'SchoolName'| translate }}" formControlName="schoolName" name="schoolname" class="form-control w-100">
+                <input placeholder="{{'SchoolName'| translate }}" formControlName="schoolName" name="schoolname" maxlength="60" class="form-control w-100">
                 <small class="p-error" style="color: orange;"
-                *ngIf="(isStepCompleted && createSchoolForm1.controls.schoolName.errors)">School Name is required
+                *ngIf="(isStepCompleted && createSchoolForm1.controls.schoolName.errors)">{{'SchoolNameRequired'| translate }}
               </small>
               </div>
               <div class="form-group">
                 <select class="form-select rounded-8 w-100" formControlName="specializationId" aria-label="Default select example">
-                  <option value="" disabled selected hidden>Specialization</option>
+                  <option value="" disabled selected hidden>{{'Specialization'| translate }}</option>
                   <option *ngFor="let specialization of specializations;" [value]="specialization.id">{{specialization.name}}</option>
                </select>
                <small class="p-error" style="color: orange;"
-               *ngIf="(isStepCompleted && createSchoolForm1.controls.specializationId.errors)">This Field is required
+               *ngIf="(isStepCompleted && createSchoolForm1.controls.specializationId.errors)">{{'ThisFieldRequired'| translate }}
              </small>
               </div>
 
               
               <div class="form-group">
                 <select class="form-select rounded-8 w-100" formControlName="countryName" aria-label="Default select example">
-                  <option value="" disabled selected hidden>Location</option>
+                  <option value="" disabled selected hidden>{{'Location'| translate }}</option>
                   <option *ngFor="let country of countries;" [value]="country.countryName">{{country.countryName}}</option>
                </select>
                <small class="p-error" style="color: orange;"
-               *ngIf="(isStepCompleted && createSchoolForm1.controls.countryName.errors)">This Field is required
+               *ngIf="(isStepCompleted && createSchoolForm1.controls.countryName.errors)">{{'ThisFieldRequired'| translate }}
              </small>
               </div>
 
@@ -59,7 +59,7 @@
                     <option *ngFor="let language of languages; let i = index" [value]="language.id" [selected]="i">{{language.name}}</option>
                  </p-multiSelect>
                  <small class="p-error" style="color: orange;"
-               *ngIf="(isStepCompleted && createSchoolForm1.controls.selectedLanguages.errors)">At least one language is required
+               *ngIf="(isStepCompleted && createSchoolForm1.controls.selectedLanguages.errors)">{{'AtLeastOneLanguageRequired'| translate }}
              </small>
               </div>
               </div>
@@ -67,7 +67,7 @@
                 <textarea formControlName="description" class="form-control resize-none" placeholder="{{'TellUsAboutSchool'| translate }}"></textarea>
               </div>
               <small class="p-error" style="color: orange;margin-left: 148px;" *ngIf="createSchoolForm1.errors?.unauthenticated">
-                School name is already exists!
+                {{'SchoolNameAlreadyExists'| translate }}
               </small>
 				<div class="steps_btns d-flex align-items-center justify-content-center">
 					<button (click)="forwardStep()" type="button"
@@ -85,19 +85,24 @@
                   <div class="box box-solid">
                     <div class="box-header with-border">
                     </div>
-                    <div class="box-body">
+                    <div *ngIf="uploadImage != null" class="box-body">
+                      <span class="position-relative d-inline-block">
                       <img style="width: 200px;" class="mb-3" [src]="uploadImage">
+                      <button *ngIf="uploadImage != undefined && uploadImage != null" (click)="removeUploadImage()" type="button"
+                       class="btn dl-school-img d-flex align-items-center justify-content-center rounded-circle position-absolute" style="height:27px !important"><i
+                         class="fa-solid fa-xmark"></i></button>
+                      </span>
                       <br>
                       <p>{{uploadImageName}}</p>
                     </div>
                   </div>
                 </div>
-                <div class="dropzone-wrapper">
+                <div *ngIf="uploadImage == null || uploadImage == undefined" class="dropzone-wrapper">
                   <div class="dropzone-desc">
                     <i class="glyphicon glyphicon-download-alt"></i>
                     <p class="text-center fw_400">{{'ChooseImageFile'| translate }} <b>{{'DragItHere'| translate }}</b></p>
                   </div>
-                  <input type="file" id="avatar" (change)="handleImageInput($event)" class="dropzone"/>
+                  <input type="file" id="avatar" (change)="handleImageInput($event)" class="dropzone" accept="image/*"/>
                 </div>
               </div>
               <h4 class="font_16 fw_700 text_dark text-center my_32">{{'ChooseDefaultLogo'| translate }}</h4>
@@ -120,7 +125,7 @@
                   </li>
                 </ul>
                 <small class="p-error" style="color: orange;margin-left: 180px;"
-                *ngIf="(isStepCompleted && this.logoUrl == undefined && this.avatarImage == undefined)">School Logo is required
+                *ngIf="(isStepCompleted && this.logoUrl == undefined && this.avatarImage == undefined)"> {{'SchoolLogoRequired'| translate }}
               </small>
               </div>
 			  <div class="steps_btns d-flex align-items-center justify-content-center">
@@ -142,11 +147,11 @@
 
 				<input readonly type="text" formControlName = "schoolUrl" class="form-control" placeholder="byokul.com/schoolname1" #userinput/>
         <small class="p-error" style="color: orange;"
-        *ngIf="(isSubmitted && createSchoolForm3.controls.schoolUrl.errors)">School Url is required
+        *ngIf="(isSubmitted && createSchoolForm3.controls.schoolUrl.errors)">{{'SchoolUrlRequired'| translate }}
       </small>
 
 				<button type="button" (click)="copyMessage(userinput)" class="border-0 bg-transparent shadow-none p-0 copy-link"><img src="../../../../assets/images/school/copy.svg" /></button>
-				<button type="button" (click)="schoolProfile()"  class="border-0 bg-transparent shadow-none p-0 upload-link"><img src="../../../../assets/images/school/Upload-small.svg" /></button>
+        <button type="button" (click)="openSharePostModal()"  class="border-0 bg-transparent shadow-none p-0 upload-link"><img src="../../../../assets/images/school/Upload-small.svg" /></button>
 			  </div>
 				<div class="steps_btns">
 				  <input (click)="createSchool()" type="submit" id="nextBtn" class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 text-uppercase" value="Finish" />
@@ -160,7 +165,6 @@
             <button type="button" class="step-edit-button btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase next-step"><img src="../../../../assets/images/Edit-light.svg" alt="edit"/></button>
          </div>
         </div>
-        
   </section>
 
   <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>

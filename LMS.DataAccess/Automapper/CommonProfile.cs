@@ -4,6 +4,7 @@ using LMS.Common.ViewModels.Common;
 using LMS.Common.ViewModels.FileStorage;
 using LMS.Common.ViewModels.Permission;
 using LMS.Common.ViewModels.Post;
+using LMS.Common.ViewModels.Stripe;
 using LMS.Common.ViewModels.User;
 using LMS.Data.Entity;
 using System;
@@ -22,6 +23,7 @@ namespace LMS.DataAccess.Automapper
             CreateMap<City, CityViewModel>();
             CreateMap<User, UserDetailsViewModel>();
             CreateMap<UserFollower, UserFollowerViewModel>();
+            CreateMap<UserFollower, UserFollowingViewModel>();
             CreateMap<User, UserUpdateViewModel>();
             CreateMap<Discipline, DisciplineViewModel>();
             CreateMap<User, RegisteredUsersViewModel>();
@@ -34,7 +36,9 @@ namespace LMS.DataAccess.Automapper
             CreateMap<UserPermission, UserPermissionViewModel>();
             CreateMap<Folder, FolderViewModel>();
             CreateMap<File, FileViewModel>();
-
+            CreateMap<Transaction, TransactionViewModel>();
+            CreateMap<UserSharedPost, PostDetailsViewModel>()
+              .ForMember(x => x.IsSharedPostPinned, opt => opt.MapFrom(o => o.IsPinned));
 
         }
     }

@@ -36,8 +36,13 @@ export const commentLikeResponse = new Subject<{
   isLike: boolean;
 }>();
 
+export const postLikeResponse = new Subject<{isLiked: boolean;}>();
+export const saveStreamResponse = new Subject<{isSaved: boolean;}>();
+export const postViewResponse = new Subject<{isAddView: boolean;}>();
+export const liveUsersCountResponse = new Subject<{isLeaveStream: boolean;}>();
+export const endMeetingResponse = new Subject<{}>();
+export const shareStreamResponse = new Subject<{}>();
 export const notificationResponse = new Subject<NotificationViewModel>();
-
 export const progressResponse = new Subject<{
   progressCount: number;
   fileName: string;
@@ -131,6 +136,32 @@ export class SignalrService {
       console.log(`this ${model.commentId}`);
     });
 
+    this.hubConnection?.on('NotifyPostLikeToReceiver',
+    (isLiked) => {
+      postLikeResponse.next({
+        isLiked:isLiked
+      });
+    });
+
+    this.hubConnection?.on('NotifyPostViewToReceiver',
+    (isAddView) => {
+      postViewResponse.next({
+        isAddView:isAddView
+      });
+    });
+
+    this.hubConnection?.on('NotifyLiveUsersCountToReceiver',
+    (isLeaveStream) => {
+      liveUsersCountResponse.next({
+        isLeaveStream:isLeaveStream
+      });
+    });
+
+    this.hubConnection?.on('NotifyEndMeetingToReceiver',
+    (response) => {
+      endMeetingResponse.next({});         
+    });
+
     
     this.hubConnection?.on('ReceiveNotification',
     (model) => {
@@ -142,6 +173,18 @@ export class SignalrService {
         progressCount:progress,
         fileName:fileName
       });
+    });
+
+    this.hubConnection?.on('NotifySaveStreamToReceiver',
+    (isSaved) => {
+      saveStreamResponse.next({
+        isSaved:isSaved
+      });
+    });
+
+    this.hubConnection?.on('NotifyShareStreamToReceiver',
+    () => {
+      shareStreamResponse.next({});
     });
   }
 
@@ -161,8 +204,51 @@ export class SignalrService {
       .catch((err) => console.error(err));
   }
 
+  notifyPostLike(groupName:string,userId:string,isLiked:boolean) {
+    this.hubConnection?.invoke('NotifyPostLike', groupName,userId,isLiked)
+      .catch((err) => console.error(err));
+  }
+
+  notifyEndMeeting(groupName:string) {
+    this.hubConnection?.invoke('NotifyEndMeeting', groupName)
+      .catch((err) => console.error(err));
+  }
+
+  notifyPostView(groupName:string,userId:string) {
+    this.hubConnection?.invoke('notifyPostView', groupName,userId)
+  }
+
+  notifyShareStream(groupName:string) {
+    this.hubConnection?.invoke('notifyShareStream', groupName)
+  }
+
+  notifyLiveUsers(groupName:string,isLeaveStream:boolean) {
+    this.hubConnection?.invoke('notifyLiveUsersCount', groupName,isLeaveStream)
+  }
+
+  notifySaveStream(groupName:string,userId:string,isSaved:boolean) {
+    debugger
+    this.hubConnection?.invoke('notifySaveStream', groupName,userId,isSaved)
+      .catch((err) => console.error(err));
+  }
+
   sendNotification(model:NotificationViewModel){
+    debugger
+    if(model.followersIds != null){
+      this._userService.getFollowersNotificationSettings(JSON.stringify(model.followersIds)).subscribe((response) => {
+        debugger
+        model.followersIds = model.followersIds?.filter((item: string) =>
+        !response.some((obj: { userId: string }) => obj.userId === item)
+      );
+
+      this.hubConnection?.invoke('SendNotification', model)
+      .catch((err) => console.error(err));
+        
+      });
+    }
+    else{
     this._userService.getNotificationSettings(model.userId).subscribe((response) => {
+      debugger
       this.notificationSettings = response;
       var notificationSettings: any[] = this.notificationSettings;
       var notificationInfo = notificationSettings.find(x => x.notificationType == model.notificationType);
@@ -180,5 +266,11 @@ export class SignalrService {
         .catch((err) => console.error(err));
     }
   })
+}
+
+
+  // for testing live stream only i can remove this after testing;
+  // this.hubConnection?.invoke('SendNotification', model)
+  //       .catch((err) => console.error(err));
   }
 }

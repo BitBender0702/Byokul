@@ -13,7 +13,8 @@ import { ReelsService } from 'src/root/service/reels.service';
 import { commentLikeResponse, commentResponse, signalRResponse, SignalrService } from 'src/root/service/signalr.service';
 import { UserService } from 'src/root/service/user.service';
 import { SharePostComponent } from '../sharePost/sharePost.component';
-export const savedReelResponse =new Subject<{isReelSaved:boolean,id:string}>();  
+export const savedReelResponse =new Subject<{isReelSaved:boolean,id:string}>();
+export const deleteReelResponse =new Subject<{postId:string}>();  
 
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
@@ -38,7 +39,7 @@ import { Subject } from 'rxjs';
     reels:any;
     isOpenSidebar:boolean = false;
     isDataLoaded:boolean = false;
-    showCommentsField:boolean = true;
+    showCommentsField:boolean = false;
     senderId!:string;
     sender:any;
     messageToGroup!:string;
@@ -65,6 +66,8 @@ import { Subject } from 'rxjs';
     scrollCommentsResponseCount:number = 1;
     commentsLoadingIcon: boolean = false;
     commentsPageNumber:number = 1;
+    gender!:string;
+    loadingIcon: boolean = false;
 
     constructor(private bsModalService: BsModalService,notificationService:NotificationService,chatService:ChatService,private renderer: Renderer2,public options: ModalOptions,private userService: UserService,postService: PostService,public signalRService: SignalrService,private route: ActivatedRoute,reelsService: ReelsService,private activatedRoute: ActivatedRoute,private cd: ChangeDetectorRef) { 
           this._reelsService = reelsService;
@@ -90,24 +93,34 @@ import { Subject } from 'rxjs';
         }
 
         this._reelsService.getReelById( this.attachmentId).subscribe((response) => {
+          debugger
             this.reels = response;
+            debugger
+            if(this.reels.post.postAuthorType == 2 || this.reels.post.postAuthorType == 3){
+              
+              const byteArray = new Uint8Array(atob(this.reels.byteArray).split('').map(char => char.charCodeAt(0)));
+              if(this.reels.fileType == 1){
+                var type = 'image/png';
+              }
+              else{
+                var type = 'video/mp4';
+              }
+              const blob = new Blob([byteArray], { type: type });
+              const reader = new FileReader();
+              reader.onloadend = () => {
+                debugger
+                this.reels.fileUrl = reader.result as string;
+                this.initializeVideoPlayer();
+                this.cd.detectChanges();
+              };
+              reader.readAsDataURL(blob);      
+            
+              }
+              else{
+                this.initializeVideoPlayer();
+              }
             this.isDataLoaded = true;
             this.cd.detectChanges();
-            const player = videojs(this.videoPlayer.nativeElement, {autoplay: false,plugins: {
-              qualityLevels: {}
-            }});
-
-            player.hlsQualitySelector();
-            this.addPostView(this.reels.post.id);
-            this._signalRService.createGroupName(this.reels.id);
-            var modal = document.getElementById('modal-reel');
-          window.onclick = (event) => {
-           if (event.target == modal) {
-            if (modal != null) {
-             this.bsModalService.hide();
-            }
-          } 
-         }
           });
 
           var validToken = localStorage.getItem("jwt");
@@ -146,6 +159,7 @@ import { Subject } from 'rxjs';
             }
           });
           
+          this.gender = localStorage.getItem("gender")??'';
           this.cd.detectChanges();
           
     }
@@ -154,6 +168,75 @@ import { Subject } from 'rxjs';
       setTimeout(() => this.scrollToBottom());
     } 
 
+    initializeVideoPlayer(){
+      debugger
+      this.cd.detectChanges();
+      const player = videojs(this.videoPlayer.nativeElement, {autoplay: true,controls:false,plugins: {
+        qualityLevels: {}
+  }});
+
+  const playButton = document.createElement('button');
+  playButton.classList.add('vjs-control', 'vjs-button', 'vjs-play-button');
+  playButton.innerHTML = '<span class="vjs-icon-play"></span>';
+
+  playButton.style.position = 'absolute';
+  playButton.style.left = '50%';
+  playButton.style.top = '50%';
+  playButton.style.display = 'none';
+  playButton.style.transform = 'translate(-50%, -50%)';
+  playButton.style.zIndex = '1';
+  // Add click event listener to the button
+  playButton.onclick = () => {
+    if (player.paused()) {
+     player.play();
+     playButton.innerHTML = '<span class="vjs-icon-pause"></span>';
+      } else {
+      player.pause();
+       playButton.innerHTML = '<span class="vjs-icon-play"></span>';
+     }
+ };
+
+  const videoContainer = this.videoPlayer.nativeElement.parentNode;
+ videoContainer.insertBefore(playButton, this.videoPlayer.nativeElement);
+
+// Add click event listener to the player's element
+player.el().addEventListener('click', () => {
+if (player.paused()) {
+player.play();
+playButton.style.display = 'block';
+playButton.innerHTML = '<span class="vjs-icon-pause"></span>';
+setTimeout(() => {
+  playButton.style.display = 'none';
+}, 1000);
+} else {
+player.pause();
+playButton.style.display = 'block';
+playButton.innerHTML = '<span class="vjs-icon-play"></span>';
+setTimeout(() => {
+  playButton.style.display = 'none';
+}, 1000);
+}
+});
+
+player.on('ended', () => {
+player.currentTime(0); // Reset the video to the beginning
+player.play(); // Start playing the video again
+});
+
+
+      player.hlsQualitySelector();
+      this.addPostView(this.reels.post.id);
+      this._signalRService.createGroupName(this.reels.id);
+      var modal = document.getElementById('modal-reel');
+    window.onclick = (event) => {
+     if (event.target == modal) {
+      if (modal != null) {
+       this.bsModalService.hide();
+      }
+    } 
+   }
+    }
+
   scrollToBottom(): void {
       try {
           this.groupChatList.nativeElement.scrollTop = this.groupChatList.nativeElement.scrollHeight;
@@ -161,6 +244,7 @@ import { Subject } from 'rxjs';
   }
 
     getLoginUserId(){
+      debugger
       var validToken = localStorage.getItem("jwt");
       if (validToken != null) {
         let jwtData = validToken.split('.')[1]
@@ -413,6 +497,16 @@ import { Subject } from 'rxjs';
           savedReelResponse.next({isReelSaved:true,id:postId}); 
          }
          this._postService.savePost(postId,this.loginUserId).subscribe((result) => {
+        });
+      }
+
+      getDeletedPostId(id: string) {
+        this.loadingIcon = true;
+        this._postService.deletePost(id).subscribe((response) => {
+          debugger
+          this.close();
+          this.loadingIcon = false;
+          deleteReelResponse.next({postId:id});
         });
       }
 
