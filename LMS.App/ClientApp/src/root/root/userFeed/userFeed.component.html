@@ -39,7 +39,7 @@
             {{'NoReultsFound'| translate }}
           </li>
           </ul>
-          
+
           <button type="button" class="btn search-icon"><img src="../../../assets/images/school/search-gray.svg"></button>
         </div>
         <button (click)="openPostModal()" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44">{{'CreatePost'| translate }}</button>
@@ -57,7 +57,7 @@
               src="../../../assets/images/menu.svg" /></button>
         </div>
       </div>
-      
+
       <div class="school-profile-tabs d-flex align-content-center justify-content-center">
         <div class="custom-tabs profile-custom-tabs">
           <ul class="nav nav-tabs border-0 before-none" id="myTab" role="tablist">
@@ -72,7 +72,7 @@
             </li>
           </ul>
         </div>
-        
+
       </div>
 
       <div class="tab-content position-relative active" id="pills-tabContent">
@@ -121,7 +121,7 @@
                         <img [src]="post.parentImageUrl"/> {{post.parentName}}
                       </a>
                       <a *ngIf="post.postAuthorType == 4" (click)="getUserDetails(post.parentId)" class="routeLink">
-                        <img *ngIf="post.parentImageUrl != null" [src]="post.parentImageUrl"/> 
+                        <img *ngIf="post.parentImageUrl != null" [src]="post.parentImageUrl"/>
                         <img *ngIf="post.parentImageUrl == null && gender =='1'" src="../../../assets/images/maleProfile.jfif"/>
                         <img *ngIf="post.parentImageUrl == null && (gender =='2' || gender =='3')" src="../../../assets/images/femaleProfile.jfif"/>
                         {{post.parentName}}
@@ -190,9 +190,9 @@
                      <img class="w-auto h-auto" src="../../../../assets/images/pinned-gray.svg" />
                     </button>    -->
               </div>
-              
+
               <div class="school-grid-body" (click)="openPostsViewModal(post,'myFeeds')">
-                <p class="text_sec1 font_14" style="cursor: pointer;">{{post.description}}</p>
+                <p class="text_sec1 word-break font_14" style="cursor: pointer;">{{post.description}}</p>
                  <div class="teacher-tags tag-box hashtag_box">
                     <ng-container *ngFor="let attachment of filteredMyFeedAttachments">
                     <span *ngIf="attachment.postId == post.id" class="custom-tag cursor_pointer" (click)="openCertificateViewModal(attachment.fileUrl,attachment.fileName,5,$event)">{{attachment.fileName}}</span>
@@ -253,9 +253,9 @@
                  <div *ngIf="post.postAttachments.length > 3" class="col-md-4 h-100">
                   <div class="h-100 medium_thumbox d-flex">
                       <div class="medium-thumnail">
-                          <img class="w-100 position-relative" src="../../../../assets/images/blurImage.jfif" style="cursor: pointer;" />   
+                          <img class="w-100 position-relative" src="../../../../assets/images/blurImage.jfif" style="cursor: pointer;" />
                           <div class="position-absolute" style="margin-top: 55px; margin-left: 200px; font-size: 52px; font-weight: 600;">
-                            +{{post.postAttachments.length - 3}}</div>                                    
+                            +{{post.postAttachments.length - 3}}</div>
                          </div>
                       <div class="medium-thumnail">
                         <img *ngIf="post.postAttachments[1]?.fileType==2" preload="metadata" class="w-100" style="cursor: pointer;" [src]="post.postAttachments[1]?.fileThumbnail">
@@ -381,9 +381,9 @@
                           </a>
                         </h2>
                       </div>
-      
+
                       <!-- <p class="font_14 school-grid-date d-inline-block mb-0">
-                        {{gridItemInfo.dateTime | date : "MMMM d"}} - {{gridItemInfo.dateTime | date : "hh mm"}}  
+                        {{gridItemInfo.dateTime | date : "MMMM d"}} - {{gridItemInfo.dateTime | date : "hh mm"}}
                       </p> -->
                     </div>
                     <p class="text_sec1 font_14 pt-3">{{gridItemInfo.description}}</p>
@@ -403,7 +403,7 @@
                       <button (click)="likeUnlikePosts(gridItemInfo.id,true,gridItemInfo.postType,gridItemInfo)" type="button" class="bg-transparent border-0 function-btns text-light">
                         <img *ngIf="gridItemInfo.isPostLikedByCurrentUser" src="../../../assets/images/heart-red.svg" class="d-block mx-auto" />
                         <img *ngIf="!gridItemInfo.isPostLikedByCurrentUser" src="../../../../assets/images/Heart-dark.svg" class="d-block mx-auto" />
-      
+
                         <span class="textBlack" *ngIf="likesLength != undefined && currentLikedPostId== gridItemInfo.id">{{likesLength}}</span>
                         <span class="textBlack" *ngIf="currentLikedPostId!= gridItemInfo.id">{{gridItemInfo.likes.length}}</span>
                       </button>
@@ -424,7 +424,7 @@
                   </div>
                 </div>
               </div>
-            </div> 
+            </div>
             <div *ngIf="myFeeds?.length == 0 && myFeedsReels?.length == 0" style="font-weight: 500;color: orange; margin-top: 40px;font-size: 40px" class="text-center font-34">Posts from your friends and schools you follow will appear here</div>
             <div class="row">
               <ng-container *ngFor="let post of myFeeds">
@@ -577,7 +577,7 @@
                     <img [src]="post.parentImageUrl"/>
                   </a>
                   <a *ngIf="post.postAuthorType == 3" (click)="getSelectedCourse(post.parentName,post.schoolName)" class="routeLink">
-                    <img [src]="post.parentImageUrl"/> 
+                    <img [src]="post.parentImageUrl"/>
                   </a>
                   <a *ngIf="post.postAuthorType == 4" (click)="getUserDetails(post.parentId)" class="routeLink">
                     <img *ngIf="post.parentImageUrl != null" [src]="post.parentImageUrl"/>
@@ -602,7 +602,7 @@
                 <p *ngIf="post.dateTime != null" class="font_14 school-grid-date d-inline-block mb-0">
                   {{post.dateTime | date : "MMMM d"}} - {{post.dateTime | date : "hh mm"}}
               </div>
-              
+
               <div class="school-grid-body" (click)="openPostsViewModal(post,'globalFeed')">
                 <p class="text_sec1 font_14" style="cursor: pointer;">{{post.description}}</p>
                 <div class="teacher-tags tag-box hashtag_box">
@@ -662,9 +662,9 @@
                  <div *ngIf="post.postAttachments.length > 3" class="col-md-4 h-100">
                   <div class="h-100 medium_thumbox d-flex">
                       <div class="medium-thumnail position-relative">
-                          <img class="w-100 position-relative" src="../../../../assets/images/blurImage.jfif" style="cursor: pointer;" />   
+                          <img class="w-100 position-relative" src="../../../../assets/images/blurImage.jfif" style="cursor: pointer;" />
                           <div class="position-absolute" style="top: 50%;left:50%;transform:translate(-50%, -50%);">
-                            +{{post.postAttachments.length - 3}}</div>                                    
+                            +{{post.postAttachments.length - 3}}</div>
                          </div>
                       <div class="medium-thumnail">
                         <img *ngIf="post.postAttachments[1]?.fileType==2" class="w-100" style="cursor: pointer;" [src]="post.postAttachments[1]?.fileThumbnail">
@@ -788,9 +788,9 @@
                           </a>
                         </h2>
                       </div>
-      
+
                       <p class="font_14 school-grid-date d-inline-block mb-0">
-                        {{gridItemInfoForGlobal.dateTime | date : "MMMM d"}} - {{gridItemInfoForGlobal.dateTime | date : "hh mm"}}  
+                        {{gridItemInfoForGlobal.dateTime | date : "MMMM d"}} - {{gridItemInfoForGlobal.dateTime | date : "hh mm"}}
                       </p>
                     </div>
                     <p class="text_sec1 font_14 pt-3">{{gridItemInfoForGlobal.description}}</p>
@@ -810,7 +810,7 @@
                       <button (click)="likeUnlikeGlobalPosts(gridItemInfoForGlobal.id,true,gridItemInfoForGlobal.postType,gridItemInfoForGlobal)" type="button" class="bg-transparent border-0 function-btns text-light">
                         <img *ngIf="gridItemInfoForGlobal.isPostLikedByCurrentUser" src="../../../assets/images/heart-red.svg" class="d-block mx-auto" />
                         <img *ngIf="!gridItemInfoForGlobal.isPostLikedByCurrentUser" src="../../../../assets/images/Heart-dark.svg" class="d-block mx-auto" />
-      
+
                         <span class="textBlack" *ngIf="likesLength != undefined && currentLikedPostId== gridItemInfoForGlobal.id">{{likesLength}}</span>
                         <span class="textBlack" *ngIf="currentLikedPostId!= gridItemInfoForGlobal.id">{{gridItemInfoForGlobal.likes.length}}</span>
                       </button>
@@ -831,7 +831,7 @@
                   </div>
                 </div>
               </div>
-            </div> 
+            </div>
 
             <div class="row">
               <ng-container *ngFor="let post of globalFeeds">
