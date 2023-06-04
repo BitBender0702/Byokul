@@ -1855,8 +1855,11 @@ div#notifi-settingpopup .modal-dialog {
   box-shadow: 0px 4px 20px rgb(0 0 0 / 10%);
   border-radius: 8px;
   border: none;
-  top: -50px !important;
   background: #fff;
+  top: auto !important;
+  left: auto !important;
+  right: 0 !important;
+  bottom: 0 !important;
 }
 .dropdown-filter .custom-btn {
   height: 33px !important;
