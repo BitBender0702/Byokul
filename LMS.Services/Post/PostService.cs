@@ -292,8 +292,8 @@ namespace LMS.Services
 
             var result = _mapper.Map<PostAttachmentViewModel>(postAttachment);
 
-                int lastSlashIndex = result.FileUrl.LastIndexOf('/');
-                var fileName = result.FileUrl.Substring(lastSlashIndex + 1);
+            int lastSlashIndex = result.FileUrl.LastIndexOf('/');
+            var fileName = result.FileUrl.Substring(lastSlashIndex + 1);
 
             result.ByteArray = await _blobService.GetFileContentAsync(this._config.GetValue<string>("Container:PostContainer"), fileName);
 
@@ -904,6 +904,18 @@ namespace LMS.Services
             }
             _postRepository.Delete(post.Id);
             _postRepository.Save();
+        }
+
+        public async Task UpdateCommentThrottling(Guid postId, int noOfComments)
+        {
+            var post = _postRepository.GetById(postId);
+
+            if (post != null)
+            {
+                post.CommentsPerMinute = noOfComments;
+                _postRepository.Update(post);
+                _postRepository.Save();
+            }
         }
 
 

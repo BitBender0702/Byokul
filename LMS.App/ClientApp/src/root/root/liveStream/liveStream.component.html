@@ -7,14 +7,14 @@
         <h2 class="invisible"></h2>
   </div>
     <div>
-      <div [ngClass]="showCommentsField? '' : 'full-widthreel'" id="reel_content">
+      <div id="reel_content">
         <div class="row">
           <div class="col-md-4">
             <div>
               <div [ngClass]="showCommentsField? 'accordion-open d-block' : 'accordion-open d-none'" id="live-chat-open" style="display:none;">
               <div class="live-action-buttons d-flex justify-content-between">
                 <button type="button" class="btn bg-transparent text_ltgray font_12 cursor_auto"><img src="../../../assets/images/chat-icon.svg"
-                    class="d-block" /> {{post.comments.length}}</button>
+                    class="d-block" /> {{post.comments?.length}}</button>
                 <button type="button" class="btn bg-transparent text_ltgray font_12 cursor_auto"><img src="../../../assets/images/eye.svg"
                     class="d-block" /> {{post.views.length}}</button>
                     <button (click)="likeUnlikePosts(post.id,true,post.postType,post)" type="button" class="btn bg-transparent text_ltgray font_12">        
@@ -58,7 +58,10 @@
                   </div>
               </div>
                 <div *ngIf="!isCommentsDisabled" class="add-comment d-flex align-items-center justify-content-between"  style="margin-left:-40px">
-                  <span class="bg-transparent rounded-circle comment-post-user rounded-circle"><img [src]="sender.avatar" style="max-height: 100%;"/>
+                  <span class="bg-transparent rounded-circle comment-post-user rounded-circle">
+                    <img *ngIf="sender.avatar != null" [src]="sender.avatar" style="max-height: 100%;"/>
+                    <img *ngIf="sender.avatar == null && gender =='1'" src="../../../assets/images/maleProfile.jfif" style="max-height: 100%;"/>
+                    <img *ngIf="(sender.avatar == null) && (gender =='2' || gender =='3')" src="../../../assets/images/femaleProfile.jfif" [src]="sender.avatar" style="max-height: 100%;"/>
                   </span>
                   <input (keyup.enter)="sendToGroup()" [(ngModel)]="messageToGroup" type="text" class="form-control rounded-8 font_14 fw_400" placeholder="{{'YourMessage'| translate }}">
                   <button (click) ="toggleEmojiPicker()" class="emoji_btn"> 😀</button>
@@ -71,7 +74,7 @@
             </div>
             </div>
           </div>
-        <div class="col-md-7">
+        <div [ngClass]="showCommentsField? '' : 'col-md-12'" class="col-md-7">
         <div class="live-inner w-100">
           <div>
             <div class="live-image overflow-hidden position-relative">
@@ -116,8 +119,18 @@
                     class="mx-auto mb-2 light-attach" />{{'ScreenShare'| translate }}</span></button>
             </div> -->
 
-            <div class="modal-footer steps_btns d-flex align-items-center justify-content-center flex-sm-nowrap border-0 pb-0 cr-postfooter pt-0 mt-3 px-0">
-              <div class="post-bot-right d-flex justify-content-end">
+            <div class="modal-footer steps_btns flex-sm-nowrap border-0 pb-0 cr-postfooter pt-0 mt-3 px-0">
+              <div class="post-bot-right d-flex justify-content-between w-100">
+                <h3>{{post.title}}</h3>
+                <div class="dropdown">
+                  <!-- <div class="dropdown"> -->
+                    <button class="dropdown-button btn custom-btn primary_btn w-100 earning-btn fw_400 lg_btn" style="width: 32% !important;" (click)="toggleDropdown()">Comment Throttling</button>
+                    <div class="dropdown-menu" [ngClass]="{ 'show': dropdownOpen }">
+                      <button class="dropdown-item" value="1" (click)="selectOption(1)">{{'OneCommentPerMinute'| translate }}</button>
+                      <button class="dropdown-item" value="2" (click)="selectOption(2)">{{'TwoCommentPerMinute'| translate }}</button>
+                      <button class="dropdown-item" value="3" (click)="selectOption(3)">{{'ThreeCommentPerMinute'| translate }}</button>
+                    </div>
+                  <!-- </div> -->
                 <button (click)="openSharePostModal()" type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 delay-btn post-delay-btn position-relative"> 
                   <img src="../../../assets/images/school/Upload-small.svg" />                     
                     <p-calendar></p-calendar>
@@ -125,7 +138,11 @@
                 <button *ngIf="isOwner" (click)="endLiveStream()" type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 lg_btn">End Live Stream
                 </button>
               </div>
+              </div>
 
+            </div>
+            <div>
+              <p>{{post.description}}</p>
             </div>
     </div>
   </div>

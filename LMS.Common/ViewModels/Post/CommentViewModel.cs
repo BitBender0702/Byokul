@@ -19,5 +19,6 @@ namespace LMS.Common.ViewModels.Post
         public bool isCommentLikedByCurrentUser { get; set; }
         public DateTime? CreatedOn { get; set; }
         public string? UserName { get; set; }
+        public string? Gender { get; set; }
     }
 }

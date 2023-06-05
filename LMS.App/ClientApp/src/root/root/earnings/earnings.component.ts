@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Component, ElementRef, HostListener, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, HostListener, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SchoolService } from 'src/root/service/school.service';
@@ -60,9 +60,10 @@ export class EarningsComponent extends MultilingualComponent implements OnInit, 
     changeLanguageSubscription!: Subscription;
     transactionParamViewModel!: TransactionParamViewModel;
     @ViewChild('dropdownMenu') dropdownMenu!: ElementRef;
+    @ViewChild('filterBtn') filterBtn!: ElementRef;
 
 
-    constructor(injector: Injector,private datePipe: DatePipe,userService:UserService,paymentService:PaymentService,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
+    constructor(injector: Injector,private datePipe: DatePipe,userService:UserService,paymentService:PaymentService,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,private cd: ChangeDetectorRef) { 
       super(injector);
       this._userService = userService;
       this._paymentService = paymentService;
@@ -116,7 +117,25 @@ export class EarningsComponent extends MultilingualComponent implements OnInit, 
         })
       }
 
+    //   window.onclick = (event) => {
+    //     debugger
+    //     this.cd.detectChanges();
+    //     var filterDropdown = document.getElementById('dropdown-earningFilter');
+    //     if (event.target == filterDropdown) {
+    //      if (filterDropdown != null) {
+    //       this.dropdownMenu.nativeElement.style.display = "none";
+    //      }
+    //    } 
+    // }
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    if (!this.dropdownMenu.nativeElement.contains(event.target) && !this.filterBtn.nativeElement.contains(event.target)) {
+      this.dropdownMenu.nativeElement.style.display = 'none';
+      this.cd.detectChanges();
     }
+  }
 
     ngOnDestroy(): void {
       if(this.changeLanguageSubscription){

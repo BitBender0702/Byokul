@@ -202,5 +202,15 @@ namespace LMS.App.Controllers
             return Ok();
         }
 
+        [Route("updateCommentThrottling")]
+        [HttpPost]
+        public async Task<IActionResult> UpdateCommentThrottling(Guid postId, int noOfComments)
+        {
+            await _postService.UpdateCommentThrottling(postId, noOfComments);
+            return Ok();
+        }
+
+
+
     }
 }

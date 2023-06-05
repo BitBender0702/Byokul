@@ -12,13 +12,14 @@
               <path fill-rule="evenodd" clip-rule="evenodd" d="M5.19424 13.6654L8.37844 12.1666V8.23893L13.3716 3.17507C13.5597 2.98533 13.6654 2.72492 13.6654 2.45221V1.34373C13.6654 0.78449 13.2265 0.332031 12.685 0.332031H1.31236C0.770872 0.332031 0.332031 0.78449 0.332031 1.34373V2.47756C0.332031 2.7349 0.426494 2.98226 0.596824 3.1697L5.19424 8.23893V13.6654Z" fill="white"/>
             </svg> 
           <div class="btn-group dropdown-filter">
-            <button (click)="showFilterDropdown()" type="button" class="btn btn-default dropdown-toggle after-none border-0 py-0 h-auto" aria-haspopup="true"
+            <button #filterBtn (click)="showFilterDropdown()" type="button" class="btn btn-default dropdown-toggle after-none border-0 py-0 h-auto" aria-haspopup="true"
               aria-expanded="false">{{'Filter'| translate }}  
               <span *ngIf="isApplieDateFilter" class="position-absolute start-100 translate-middle border border-light rounded-circle filter-badge">
                 1
               </span>
             </button>
-            <div #dropdownMenu  class="dropdown-menu px-4 py-3" style="width: 400px;right: 15px;max-width: 400px;display: none;">
+            <div id="dropdown-earningFilter">
+            <div #dropdownMenu class="dropdown-earningFilter-menu px-4 py-3" style="width: 400px;right: 15px;max-width: 400px;display: none;">
               <div class="d-flex align-items-center justify-content-between mb-3">
               <div class="btn-filter align-items-center dropdown-filter filter-menu-btn position-relative">
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" class="me-1">
@@ -79,6 +80,7 @@
               </div>   
              </form>    
             </div>
+          </div>
           </div>
         </div>
       </div>

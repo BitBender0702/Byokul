@@ -146,4 +146,9 @@ export class PostService{
         }
       }
 
+    updateCommentThrottling(postId:string, noOfComments:number):Observable<any>{
+        debugger
+      let queryParams = new HttpParams().append("postId",postId).append("noOfComments",noOfComments);
+      return this.http.post(`${this.apiUrl}/posts/updateCommentThrottling`,null, {params:queryParams,headers: this.headers});    
+    }
 }

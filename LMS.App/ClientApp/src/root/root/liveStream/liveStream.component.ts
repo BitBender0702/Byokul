@@ -75,12 +75,10 @@ import { MessageService } from 'primeng/api';
     currentTime:any;
     postCreatedDate:any;
     timeDifferenceInSeconds:any;
-    @ViewChild('groupChatList') groupChatList!: ElementRef;
-
-
-
+    dropdownOpen = false;
+    selectedOption = '';
     streamCountDown: any;
-
+    @ViewChild('groupChatList') groupChatList!: ElementRef;
 
 
     constructor( injector: Injector,private modalService: NgbModal,private bsModalService: BsModalService,
@@ -307,6 +305,7 @@ if(this.timeDifferenceInSeconds<60){
               };
                localStorage.setItem('lastCommentTime', JSON.stringify(lastComment));
                this.isCommentsEnabled = true;
+               return;
             }
             else{
                 this.isCommentsEnabled = false;
@@ -322,6 +321,7 @@ if(this.timeDifferenceInSeconds<60){
       this.commentViewModel.groupName = this.post.id + "_group";
       this.commentViewModel.content = this.messageToGroup;
       this.commentViewModel.userAvatar = this.sender.avatar;
+      this.commentViewModel.gender = this.gender;
       this.messageToGroup = "";
       this.commentViewModel.id = Constant.defaultGuid;
       this._chatService.addComments(this.commentViewModel).subscribe((response) => {
@@ -342,7 +342,8 @@ if(this.timeDifferenceInSeconds<60){
           groupName:'',
           userAvatar:'',
           createdOn:new Date(),
-          userName:''
+          userName:'',
+          gender:''
          };
       }
 
@@ -356,6 +357,10 @@ if(this.timeDifferenceInSeconds<60){
         this._userService.getUser(this.userId).subscribe((response) => {
           this.sender = response;
         });
+        if(this.gender == undefined){
+          localStorage.setItem('gender',decodedJwtData.gender);
+          this.gender = decodedJwtData.gender;
+        }
        }
       }
 
@@ -420,7 +425,16 @@ if(this.timeDifferenceInSeconds<60){
 
     commentResponse(){
       commentResponse.subscribe(response => {
+        debugger
         var comment: any[] = this.post.comments;
+        if(response.senderAvatar == ""){
+          if(response.gender == "1"){
+            response.senderAvatar = "../../../assets/images/maleProfile.jfif";
+          }
+          else{
+            response.senderAvatar = "../../../assets/images/femaleProfile.jfif"
+          }
+        }
         var commentObj = {id:response.id,content:response.message,likeCount:0,isCommentLikedByCurrentUser:false,userAvatar:response.senderAvatar};
         comment.push(commentObj);
         this.cd.detectChanges();
@@ -666,6 +680,26 @@ if(this.timeDifferenceInSeconds<60){
        }
        this._signalrService.notifySaveStream(this.post.id + "_group",this.userId,this.post.isPostSavedByCurrentUser);
        this._postService.savePost(postId,this.userId).subscribe((result) => {
+      });
+    }
+
+    toggleDropdown(): void {
+      this.dropdownOpen = !this.dropdownOpen;
+    }
+  
+    selectOption(noOfComments: number): void {
+      debugger
+      this.toggleDropdown();
+      this.post.commentsPerMinute = noOfComments;
+      this.lastCommentTime = localStorage.getItem('lastCommentTime');
+        this.lastCommentTime = JSON.parse(this.lastCommentTime);
+        const currentTime = Date.now();
+        const lastComment = {
+          commentsCount:noOfComments,
+          lastCommentTime: currentTime
+        };
+        localStorage.setItem('lastCommentTime', JSON.stringify(lastComment));
+      this._postService.updateCommentThrottling(this.post.id,noOfComments).subscribe((response) => {
       });
     }
 }

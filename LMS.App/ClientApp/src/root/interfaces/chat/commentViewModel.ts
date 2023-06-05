@@ -6,4 +6,5 @@ export interface CommentViewModel {
     userAvatar:string,
     createdOn?:Date,
     userName?:string;
+    gender?: string | null
   }

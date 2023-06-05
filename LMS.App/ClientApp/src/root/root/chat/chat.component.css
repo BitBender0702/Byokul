@@ -1,12 +1,25 @@
-.chatImage{
-    max-height: 35px;
+.chat-upload {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
 }
 
-.selectedChatHead{
-    background-color: #EAEAEA;
-    border-color: #FF821C;
+.chat-upload-img img {
+  width: 150px;
+  height: 100px;
+  object-fit: cover;
 }
 
-.badgeBackground{
-    background: red;
+.chatImage {
+  max-height: 35px;
+}
+
+.selectedChatHead {
+  background-color: #eaeaea;
+  border-color: #ff821c;
+}
+
+.badgeBackground {
+  background: red;
 }

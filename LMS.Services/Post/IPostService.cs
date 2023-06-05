@@ -28,6 +28,7 @@ namespace LMS.Services
         //Task<bool> PinUnpinSharedPost(Guid attachmentId, bool isPinned);
         Task<bool> PinUnpinLikedPost(Guid attachmentId, bool isPinned, string userId);
         Task DeletePost(Guid id);
+        Task UpdateCommentThrottling(Guid postId, int noOfComments);
 
 
     }
