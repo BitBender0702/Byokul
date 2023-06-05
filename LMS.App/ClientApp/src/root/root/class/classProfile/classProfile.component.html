@@ -811,7 +811,7 @@
                     {{ post.savedPostsCount }}
                   </button>
                   <button
-                    (click)="openSharePostModal(post.id, post.postType)"
+                    (click)="openSharePostModal(post.id, post.postType,post.title,post.description)"
                     type="button"
                     class="bg-transparent border-0 function-btns text-light"
                   >
@@ -898,7 +898,7 @@
                     <span class="textBlack">{{ post.savedPostsCount }}</span>
                   </button>
                   <button
-                    (click)="openSharePostModal(post.id, post.postType)"
+                    (click)="openSharePostModal(post.id, post.postType,post.title,post.description)"
                     type="button"
                     class="bg-transparent border-0 function-btns text-light"
                   >
@@ -1111,7 +1111,9 @@
                         (click)="
                           openSharePostModal(
                             gridItemInfo.id,
-                            gridItemInfo.postType
+                            gridItemInfo.postType,
+                            gridItemInfo.title,
+                            gridItemInfo.description
                           )
                         "
                         type="button"
