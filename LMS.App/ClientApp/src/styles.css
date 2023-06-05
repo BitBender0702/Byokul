@@ -1241,10 +1241,10 @@ input[type="number"]::-webkit-outer-spin-button {
   margin-bottom: 5px;
 }
 
-.schoolgrid-header .pinned-grid-chat {
+/* .schoolgrid-header .pinned-grid-chat {
   position: absolute;
   right: 0;
-}
+} */
 
 .school-grid-thumbnail .school-large-thumbnail {
   height: 100%;
