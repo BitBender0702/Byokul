@@ -39,6 +39,10 @@ import { takeUntil } from 'rxjs/operators';
 import { RolesEnum } from 'src/root/RolesEnum/rolesEnum';
 import { DatePipe } from '@angular/common';
 import { generateCertificateResponse } from '../../generateCertificate/generateCertificate.component';
+import { Arabic } from 'flatpickr/dist/l10n/ar';
+import { Spanish } from 'flatpickr/dist/l10n/es';
+import { Turkish } from 'flatpickr/dist/l10n/tr';
+import flatpickr from 'flatpickr';
 
 
 export const deleteClassResponse =new BehaviorSubject <string>('');  
@@ -147,7 +151,8 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     @ViewChild('imageFile') imageFile!: ElementRef;
     @ViewChild('carousel') carousel!: ElementRef;
     @ViewChild('videoPlayer') videoPlayer!: ElementRef;
-
+    @ViewChild('startDate') startDateRef!: ElementRef;
+    @ViewChild('endDate') endDateRef!: ElementRef;
     @ViewChild('createPostModal', { static: true }) createPostModal!: CreatePostComponent;
 
     isDataLoaded:boolean = false;
@@ -535,6 +540,8 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   
 
     initializeEditFormControls(){
+
+
       this.classAvatar = this.class.avatar;
       this.uploadImage = '';
       this.imageFile.nativeElement.value = "";
@@ -542,9 +549,11 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
 
       var startDate = this.editClass.startDate;
       startDate = startDate.substring(0, startDate.indexOf('T'));
+      startDate = this.datePipe.transform(startDate, 'MM/dd/yyyy');
 
       var endDate = this.editClass.endDate;
       endDate = endDate.substring(0, endDate.indexOf('T'));
+      endDate = this.datePipe.transform(endDate, 'MM/dd/yyyy');
 
       var selectedLanguages:string[] = [];
 
@@ -554,6 +563,17 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
 
       this.currentDate = this.getCurrentDate();
 
+      flatpickr('#start_date',{
+        minDate:new Date(),
+        dateFormat: "m/d/Y",
+        defaultDate: startDate
+      });
+      
+      flatpickr('#end_date',{
+        minDate:new Date(),
+        dateFormat: "m/d/Y",
+        defaultDate: endDate
+      });
 
       this.editClassForm = this.fb.group({
         schoolName: this.fb.control(this.editClass.school.schoolName),
@@ -580,7 +600,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       return (group: FormGroup): {[key: string]: any} => {
        let f = group.controls[from];
        let t = group.controls[to];
-       if (f.value > t.value || f.value < currentDate) {
+       if ((f.value > t.value && t.value != "" && f.value != "") || f.value < currentDate) {
          return {
            dates: `Please enter valid date`
          };
@@ -594,7 +614,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
         var dd = String(today. getDate()). padStart(2, '0');
         var mm = String(today. getMonth() + 1). padStart(2, '0');
         var yyyy = today. getFullYear();
-      ​  var currentDate = yyyy + '-' + mm + '-' + dd;
+      ​  var currentDate = mm + '/' + dd + '/' + yyyy;
         return currentDate;
       }
 
@@ -1075,14 +1095,25 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       this.bsModalService.show(CertificateViewComponent, { initialState });
     }
 
-    openSharePostModal(postId:string,postType:number): void {
+    openSharePostModal(postId:string,postType:number,title:string,description:string): void {
       if(this.class.accessibility.name == Constant.Private || this.class.serviceType.type == Constant.Paid){
         this.messageService.add({severity:'info', summary:'Info',life: 3000, detail:'This class is private/paid, you cant share the post!'});
       }
       else{
+        var image:string = '';
+        if(postType == 1){
+          var post = this.class.posts.find((x: { id: string; }) => x.id == postId);
+          var postAttachments = post.postAttachments.find((x: { fileType: number; }) => x.fileType == 1);
+          if(postAttachments != undefined){
+            image = postAttachments.fileUrl;
+          }
+        }
       const initialState = {
         postId: postId,
-        postType: postType
+        postType: postType,
+        title: title,
+        description: description,
+        image: image
       };
       this.bsModalService.show(SharePostComponent,{initialState});
     }
@@ -1166,5 +1197,15 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
           }
         this.ngOnInit();
       });  
+    }
+
+    getSelectedLanguage(){
+      var selectedLanguage = localStorage.getItem("selectedLanguage");
+      this.translate.use(selectedLanguage ?? '');
+      var locale = selectedLanguage == "ar" ? Arabic: selectedLanguage == "sp"? Spanish : selectedLanguage == "tr"? Turkish : null
+      const startDateElement = this.startDateRef.nativeElement;
+      startDateElement._flatpickr.set("locale", locale); 
+      const endDateElement = this.endDateRef.nativeElement;
+      endDateElement._flatpickr.set("locale", locale); 
     }
 }

@@ -55,25 +55,22 @@ export class SharePostComponent implements OnInit {
     debugger
     this.post = this.options.initialState;
     if(this.post.schoolName != undefined && this.post.className == undefined && this.post.courseName == undefined){
-        // this.meta.addTag({ property: 'og:title', content: 'test' });
-        // this.meta.addTag({ property: 'og:type', content: 'profile' });
-        // this.meta.addTag({ property: 'og:description', content: 'desc...' });
-        // this.meta.addTag({ property: 'og:image', content: '' });
-        // this.meta.addTag({ property: 'og:url', content: 'https://byokul.com' });
       this.websiteUrl = `${this.apiUrl}/profile/school/` + this.post.schoolName;
     }
     if(this.post.postId != undefined){
-    this.websiteUrl = `${this.apiUrl}/user/post/` + this.post.postId;
-        this.meta.addTag({ property: 'og:title', content: 'test' });
-        this.meta.addTag({ property: 'og:type', content: 'profile' });
-        this.meta.addTag({ property: 'og:description', content: 'desc...' });
-        this.meta.addTag({ property: 'og:image', content: '' });
-        this.meta.addTag({ property: 'og:url', content: 'https://byokul.com' });
+      this.addFbMetaTags(this.post.title,this.post.description,this.post.image,`${this.apiUrl}/user/post/` + this.post.postId,"profile");
+      this.addTwitterMetaTags(this.post.title,this.post.description,this.post.image);
+      this.websiteUrl = `${this.apiUrl}/user/post/` + this.post.postId;
     }
+
     if(this.post.className != undefined){
+      this.addFbMetaTags(this.post.title,this.post.description,this.post.image,`${this.apiUrl}/profile/class/` + this.post.schoolName + '/' + this.post.className,"profile");
+      this.addTwitterMetaTags(this.post.title,this.post.description,this.post.image);
       this.websiteUrl = `${this.apiUrl}/profile/class/` + this.post.schoolName + '/' + this.post.className;
     }
     if(this.post.courseName != undefined){
+      this.addFbMetaTags(this.post.title,this.post.description,this.post.image,`${this.apiUrl}/profile/course/` + this.post.schoolName + '/' + this.post.courseName,"profile");
+      this.addTwitterMetaTags(this.post.title,this.post.description,this.post.image);
       this.websiteUrl = `${this.apiUrl}/profile/course/` + this.post.schoolName + '/' + this.post.courseName;
     }
 
@@ -88,6 +85,42 @@ export class SharePostComponent implements OnInit {
       let decodedJwtData = JSON.parse(decodedJwtJsonData);
       this.userId = decodedJwtData.jti;
     }
+}
+
+addFbMetaTags(title:string, description:string, image:string,url:string,type:string){
+  const tagsExists = this.meta.getTag('property="og:title"');
+  if(tagsExists){
+    this.meta.updateTag({ property: 'og:title', content: title });
+    this.meta.updateTag({ property: 'og:type', content: type });
+    this.meta.updateTag({ property: 'og:description', content: description });
+    this.meta.updateTag({ property: 'og:image', content: image });
+    this.meta.updateTag({ property: 'og:url', content:  url });
+}
+else{
+  this.meta.addTag({ property: 'og:title', content: title });
+  this.meta.addTag({ property: 'og:type', content: type });
+  this.meta.addTag({ property: 'og:description', content: description });
+  this.meta.addTag({ property: 'og:image', content: image });
+  this.meta.addTag({ property: 'og:url', content: url });
+}
+}
+
+addTwitterMetaTags(title:string,description:string,image:string){
+  const tagsExists = this.meta.getTag('property="og:title"');
+  if(tagsExists){
+    this.meta.updateTag({ name: 'twitter:card', content: "summary_large_image" });
+    this.meta.updateTag({ name: 'twitter:title', content: title });
+    this.meta.updateTag({ name: 'twitter:description', content: description });
+    this.meta.updateTag({ name: 'twitter:site', content: "@byokul" });
+    this.meta.updateTag({ name: 'twitter:image', content:  image });
+  }
+  else{
+    this.meta.addTag({ name: 'twitter:card', content: "summary_large_image" });
+    this.meta.addTag({ name: 'twitter:title', content: title });
+    this.meta.addTag({ name: 'twitter:description', content: description });
+    this.meta.addTag({ name: 'twitter:site', content: "@byokul" });
+    this.meta.addTag({ name: 'twitter:image', content: image });
+  }
 }
 
 saveUserSharedPost(){

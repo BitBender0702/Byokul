@@ -30,21 +30,12 @@
           </div>
           <div class="col-md-6">
             <div class="form-group">
-              <input #licenceDate autocomplete="off" type="text" class="form-control rounded-8 date_calendar" name="dob" formControlName="dob" id="licence_date" (click)="getSelectedLanguage()">
-              <!-- <input type="date" lang="tr" class="form-control rounded-8" min="1903-12-31" placeholder="test" [max]="registrationForm.controls.dob.value" formControlName="dob" placeholder="Test"> -->
+              <input #dateOfBirth autocomplete="off" type="text" class="form-control rounded-8 date_calendar" name="dob" formControlName="dob" id="date_of_birth" (click)="getSelectedLanguage()">
               <small class="p-error" style="color: orange;"
               *ngIf="(isSubmitted && registrationForm.controls.dob.errors)">{{'DOBRequired'| translate }} 
             </small>
-            <!-- <small class="p-error" style="color: orange;" *ngIf="isSubmitted && registrationForm.errors">
-              {{ registrationForm.errors.dates}}
-            </small> -->
             </div>
           </div>
-          <!-- <div class="col-md-6">
-            <div class="form-group">
-<input #licenceDate type="text" class="form-control rounded-8 date_calendar" name="licence_date" id="licence_date" (click)="getSelectedLanguage()">
-</div> -->
-          <!-- </div> -->
           <div class="col-md-6">
             <div class="form-group">
               <select class="form-select rounded-8" formControlName="gender" aria-label="Default select example">

@@ -442,10 +442,20 @@ player.play(); // Start playing the video again
          }); 
       }
 
-      openSharePostModal(postId:string, postType:number): void {
+      openSharePostModal(postId:string, postType:number,title:string,description:string): void {
+        var image:string = '';
+        if(postType == 1){
+          var postAttachments = this.reels.post.postAttachments.find((x: { fileType: number; }) => x.fileType == 1);
+          if(postAttachments != undefined){
+            image = postAttachments.fileUrl;
+          }
+        }
         const initialState = {
           postId: postId,
-          postType: postType
+          postType: postType,
+          title: title,
+          description: description,
+          image: image
         };
         this.bsModalService.show(SharePostComponent,{initialState});
       }

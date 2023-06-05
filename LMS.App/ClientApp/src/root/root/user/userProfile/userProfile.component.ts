@@ -38,6 +38,11 @@ import { RolesEnum } from 'src/root/RolesEnum/rolesEnum';
 import { deleteSchoolResponse } from '../../school/schoolProfile/schoolProfile.component';
 import { deleteClassResponse } from '../../class/classProfile/classProfile.component';
 import { deleteCourseResponse } from '../../course/courseProfile/courseProfile.component';
+import flatpickr from 'flatpickr';
+import { Arabic } from 'flatpickr/dist/l10n/ar';
+import { Spanish } from 'flatpickr/dist/l10n/es';
+import { Turkish } from 'flatpickr/dist/l10n/tr';
+import { DatePipe } from '@angular/common';
 export const userImageResponse =new Subject<{userAvatar : string,gender : number}>();  
 export const chatResponse =new Subject<{receiverId : string , type: string,chatTypeId:string}>();  
 
@@ -121,6 +126,7 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
     @ViewChild('carousel') carousel!: ElementRef;
     @ViewChild('videoPlayer') videoPlayer!: ElementRef;
     @ViewChild('createPostModal', { static: true }) createPostModal!: CreatePostComponent;
+    @ViewChild('dateOfBirth') dateOfBirthRef!: ElementRef;
     uploadImage!:any;
     fileToUpload= new FormData();
     translate!: TranslateService;
@@ -177,7 +183,7 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
     userAvatar:string = '';
 
 
-    constructor(injector: Injector,authService:AuthService,signalrservice:SignalrService,public messageService:MessageService, private bsModalService: BsModalService,userService: UserService,postService: PostService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,private cd: ChangeDetectorRef,private schoolService:SchoolService) { 
+    constructor(injector: Injector,private datePipe: DatePipe,authService:AuthService,signalrservice:SignalrService,public messageService:MessageService, private bsModalService: BsModalService,userService: UserService,postService: PostService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,private cd: ChangeDetectorRef,private schoolService:SchoolService) { 
       super(injector);
         this._userService = userService;
         this._authService = authService;
@@ -378,59 +384,6 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
         });
       }
 
-      // if(!this.deleteSchoolSubscription){        
-      //   // if(this.deleteClassSubscription){
-      //   // this.deleteClassSubscription.unsubscribe();
-      //   // }
-      //   // if(this.deleteCourseSubscription){
-      //   // this.deleteCourseSubscription.unsubscribe();
-      //   // }
-      //   this.deleteSchoolSubscription = deleteSchoolResponse.subscribe(response => {
-      //     debugger
-      //     this.cd.detectChanges();
-      //     if(response != ''){
-      //       // this.messageService.clear();
-      //       this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'School deleted successfully'});
-      //       // this.deleteSchoolSubscription.unsubscribe();
-      //       // this.ngOnDestroy();
-      //     }
-      //   });
-      // }
-
-      // if(!this.deleteClassSubscription){
-      //   // if(this.deleteSchoolSubscription){
-      //   // this.deleteSchoolSubscription.unsubscribe();
-      //   // }
-      //   // if(this.deleteCourseSubscription){
-      //   // this.deleteCourseSubscription.unsubscribe();
-      //   // }
-      //   this.deleteClassSubscription = deleteClassResponse.subscribe(response => {
-      //     debugger
-      //     this.cd.detectChanges();
-      //     if(response != ''){
-      //       // this.messageService.clear();
-      //       this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Class deleted successfully'});
-      //     }
-      //   });
-      // }
-
-      // if(!this.deleteCourseSubscription){
-      //   // if(this.deleteSchoolSubscription){
-      //   // this.deleteSchoolSubscription.unsubscribe();
-      //   // }
-      //   // if(this.deleteClassSubscription){
-      //   // this.deleteClassSubscription.unsubscribe();
-      //   // }
-      //   this.deleteCourseSubscription = deleteCourseResponse.subscribe(response => {
-      //     debugger
-      //     this.cd.detectChanges();
-      //     if(response != ''){
-      //       // this.messageService.clear();
-      //       this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Course deleted successfully'});
-      //     }
-      //   });
-      // }
-
       addTeacherResponse.subscribe(response => {
         this.cd.detectChanges();
         if(response){
@@ -478,15 +431,6 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
       if(this.deleteReelSubscription){
         this.deleteReelSubscription.unsubscribe();
       }
-      // if(this.deleteSchoolSubscription){
-      //   this.deleteSchoolSubscription.unsubscribe();
-      // }
-      // if(this.deleteClassSubscription){
-      //   this.deleteClassSubscription.unsubscribe();
-      // }
-      // if(this.deleteCourseSubscription){
-      //   this.deleteCourseSubscription.unsubscribe();
-      // }
       if(this.userParamsData$){
         this.userParamsData$.unsubscribe();
       }
@@ -783,15 +727,29 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
     })
   }
 
-  initializeEditFormControls(){
+  initializeEditFormControls(){    
     this.uploadImage = '';
     this.imageFile.nativeElement.value = "";
     this.fileToUpload.set('avatarImage','');
     
     var dob = this.editUser.dob;
     if(dob!=null){
-      dob = dob.substring(0, dob.indexOf('T'));
+      dob = dob.substring(0, dob.indexOf('T'));     
+      dob = this.datePipe.transform(dob, 'MM/dd/yyyy');
     }
+
+    const currentDate = new Date().toLocaleDateString('en-US', {
+      month: '2-digit',
+      day: '2-digit',
+      year: 'numeric'
+    });
+
+    flatpickr('#date_of_birth',{
+      minDate:"1903-12-31",
+      maxDate:new Date(),
+      dateFormat: "m/d/Y",
+      defaultDate: dob
+      });
 
     this.editUserForm = this.fb.group({
       firstName: this.fb.control(this.editUser.firstName,[Validators.required]),
@@ -1559,6 +1517,14 @@ openShareClassCourseModal(schoolName:string,name:string,type:number){
   }
  
   this.bsModalService.show(SharePostComponent,{initialState});
+}
+
+getSelectedLanguage(){
+  var selectedLanguage = localStorage.getItem("selectedLanguage");
+  this.translate.use(selectedLanguage ?? '');
+  var locale = selectedLanguage == "ar" ? Arabic: selectedLanguage == "sp"? Spanish : selectedLanguage == "tr"? Turkish : null
+  const dateOfBirthElement = this.dateOfBirthRef.nativeElement;
+  dateOfBirthElement._flatpickr.set("locale", locale); 
 }
 
 }

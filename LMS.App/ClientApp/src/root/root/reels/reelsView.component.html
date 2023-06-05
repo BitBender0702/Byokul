@@ -90,7 +90,7 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
               <img *ngIf="reels.post.isPostSavedByCurrentUser" src="../../../../assets/images/Bookmark-dark.svg" class="d-block rightImagesWidth">
               {{reels.post.savedPostsCount}}
             </button>
-            <button (click)="openSharePostModal(reels.post.id, reels.post.postType)" type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Upload.svg"
+            <button (click)="openSharePostModal(reels.post.id, reels.post.postType,reels.post.title,reels.post.description)" type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Upload.svg"
                 class="d-block rightImagesWidth" /> {{reels.post.postSharedCount}}</button>
           </div>
           <div class="live-chat-box text-center">
@@ -300,7 +300,7 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
                 <img *ngIf="reels.post.isPostSavedByCurrentUser" src="../../../../assets/images/Bookmark-dark.svg" class="d-block rightImagesWidth">
                 {{reels.post.savedPostsCount}}
               </button>
-              <button (click)="openSharePostModal(reels.post.id, reels.post.postType)" type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Upload.svg"
+              <button (click)="openSharePostModal(reels.post.id, reels.post.postType,reels.post.title,reels.post.description)" type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Upload.svg"
                   class="d-block rightImagesWidth" /> {{reels.post.postSharedCount}}</button>
         </div>
         <div class="live-chat-box text-center">

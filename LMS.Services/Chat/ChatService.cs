@@ -248,40 +248,18 @@ namespace LMS.Services.Chat
                     }
                 }
 
-               var a = schoolList.Any(z => z.SchoolName.Contains("Test"));
+                var a = schoolList.Any(z => z.SchoolName.Contains("Test"));
 
                 try
                 {
-                    //chatHeads = _chatHeadRepository.GetAll().Include(x => x.Receiver).AsEnumerable().Where(x => (x.SenderId == userId.ToString() || x.ReceiverId == userId.ToString()) && ((string.IsNullOrEmpty(searchString)) || (schoolList.Any(y => y.SchoolId == x.ChatTypeId) && schoolList.Any(z => z.SchoolName.Contains(searchString))) || (classList.Any(c => c.ClassId == x.ChatTypeId) && classList.Any(z => z.ClassName.Contains(searchString)))  || (courseList.Any(c => c.CourseId == x.ChatTypeId) && courseList.Any(z => z.CourseName.Contains(searchString))) || userList.Any(z => z.FirstName.Contains(searchString)) || userList.Any(z => z.LastName.Contains(searchString)))).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
-
-                    //chatHeads = _chatHeadRepository.GetAll()
-                    //    .Include(x => x.Receiver)
-                    //    .AsEnumerable()
-                    //    .Where(x => (x.SenderId == userId.ToString() || x.ReceiverId == userId.ToString())
-                    //    && (string.IsNullOrEmpty(searchString)  || userList.Any(z => z.FirstName.ToLower().Contains(searchString.ToLower())) || userList.Any(z => z.LastName.ToLower().Contains(searchString.ToLower()))))
-                    //    .Skip((pageNumber - 1) * pageSize)
-                    //    .Take(pageSize)
-                    //    .ToList();
-
                     chatHeads = _chatHeadRepository.GetAll()
                       .Include(x => x.Receiver)
                       .AsEnumerable()
                       .Where(x => (x.SenderId == userId.ToString() || x.ReceiverId == userId.ToString())
-                      && (string.IsNullOrEmpty(searchString) || (userList.Any(u => (u.Id == x.SenderId || u.Id == x.ReceiverId) && (u.FirstName.ToLower().Contains(searchString.ToLower()))) && x.ChatType == ChatType.Personal)))
+                      && (string.IsNullOrEmpty(searchString) || (userList.Any(u => (u.Id == x.SenderId || u.Id == x.ReceiverId) && ((u.FirstName.ToLower().Contains(searchString.ToLower())) || (u.LastName.ToLower().Contains(searchString.ToLower())) || ((u.FirstName.ToLower() + " " + u.LastName.ToLower()).Contains(searchString.ToLower())))) && x.ChatType == ChatType.Personal)))
                       .Skip((pageNumber - 1) * pageSize)
                       .Take(pageSize)
                       .ToList();
-
-    //                chatHeads = _chatHeadRepository.GetAll()
-    //.Include(x => x.Receiver)
-    //.AsEnumerable()
-    //.Where(x => (x.SenderId == userId.ToString() || x.ReceiverId == userId.ToString())
-    //            && (string.IsNullOrEmpty(searchString) || userList.Any(u => u.Id == x.SenderId || u.Id == x.ReceiverId)
-    //                                                     && (u => u.FirstName.ToLower().Contains(searchString.ToLower()) || u.LastName.ToLower().Contains(searchString.ToLower()))))
-    //.Skip((pageNumber - 1) * pageSize)
-    //.Take(pageSize)
-    //.ToList();
-
 
                 }
                 catch (Exception ex)
@@ -302,7 +280,13 @@ namespace LMS.Services.Chat
 
             users = users.Concat(first).ToList();
 
-            var second = chatHeads.Where(x => x.SenderId == userId.ToString() && x.ChatType == ChatType.Personal).Select(x => new ChatUsersViewModel { UserID = new Guid(x.ReceiverId), User2ID = new Guid(x.SenderId), LastMessage = x.LastMessage, ChatHeadId = x.Id, ChatType = x.ChatType,
+            var second = chatHeads.Where(x => x.SenderId == userId.ToString() && x.ChatType == ChatType.Personal).Select(x => new ChatUsersViewModel
+            {
+                UserID = new Guid(x.ReceiverId),
+                User2ID = new Guid(x.SenderId),
+                LastMessage = x.LastMessage,
+                ChatHeadId = x.Id,
+                ChatType = x.ChatType,
                 ChatTypeId = x.ChatTypeId,
                 /*, UnreadMessageCount = x.UnreadMessageCount */
             }).ToList();
@@ -503,7 +487,7 @@ namespace LMS.Services.Chat
             //  if (chatrepo.count() < minimumpagesize)
             //chatRepo = chatRepo.OrderByDescending(x => x.CreatedOn);
             //else
-             //chatRepo = chatRepo.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+            //chatRepo = chatRepo.Skip((pageNumber - 1) * pageSize).Take(pageSize);
 
 
             List<ParticularChat> chatList = new List<ParticularChat>();
@@ -587,7 +571,7 @@ namespace LMS.Services.Chat
 
         }
 
-        public async Task<List<CommentViewModel>> GetComments(Guid id,string userid,int pageNumber)
+        public async Task<List<CommentViewModel>> GetComments(Guid id, string userid, int pageNumber)
         {
             int pageSize = 15;
             var comments = await _commentRepository.GetAll().Include(x => x.User).Where(x => x.GroupName == id + "_group").OrderByDescending(x => x.CreatedOn).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
@@ -612,7 +596,7 @@ namespace LMS.Services.Chat
         public async Task<CommentLikeUnlikeViiewModel> LikeUnlikeComment(CommentLikeUnlikeViiewModel model)
         {
 
-            var commentLike = await _commentLikeRepository.GetAll().Where(x => x.CommentId == new  Guid(model.CommentId) && x.UserId == model.UserId).FirstOrDefaultAsync();
+            var commentLike = await _commentLikeRepository.GetAll().Where(x => x.CommentId == new Guid(model.CommentId) && x.UserId == model.UserId).FirstOrDefaultAsync();
 
             if (commentLike != null)
             {

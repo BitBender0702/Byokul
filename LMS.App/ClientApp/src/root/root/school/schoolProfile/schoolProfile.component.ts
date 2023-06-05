@@ -1387,7 +1387,7 @@ export class SchoolProfileComponent
       var post = this.school.posts.find((x: { id: string; }) => x.id == postId);
       var postAttachments = post.postAttachments.find((x: { fileType: number; }) => x.fileType == 1);
       if(postAttachments != undefined){
-        image = postAttachments[0].fileUrl;
+        image = postAttachments.fileUrl;
       }
     }
     const initialState = {
@@ -1523,18 +1523,25 @@ export class SchoolProfileComponent
 
   }
 
-  openShareClassCourseModal(schoolName:string,name:string,type:number){
+  openShareClassCourseModal(schoolName:string,name:string,type:number,description:string,image:string){
+    debugger
     var initialState:any;
     if(type == 1){
         initialState = {
         className: name,
-        schoolName: schoolName
+        schoolName: schoolName,
+        title:name,
+        description: description,
+        image: image
       };
     }
     else{
         initialState = {
         courseName: name,
-        schoolName: schoolName
+        schoolName: schoolName,
+        title: name,
+        description: description,
+        image: image
       };
     }
     this.bsModalService.show(SharePostComponent,{initialState});

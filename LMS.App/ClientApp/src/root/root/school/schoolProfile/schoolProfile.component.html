@@ -716,7 +716,7 @@
                             <img *ngIf="item.isClassCourseSavedByCurrentUser" src="../../../../assets/images/Bookmark-light.svg" class="d-block mx-auto">
                             {{item.savedClassCourseCount}}
                           </button>
-                          <button (click)="openShareClassCourseModal(item.schoolName,item.name,item.type)" type="button" class="bg-transparent border-0 function-btns text-light">
+                          <button (click)="openShareClassCourseModal(item.schoolName,item.name,item.type,item.description,item.thumbnailUrl)" type="button" class="bg-transparent border-0 function-btns text-light">
                             <img src="../../../../assets/images/Upload-light.svg" class="d-block mx-auto">
                             0
                           </button>

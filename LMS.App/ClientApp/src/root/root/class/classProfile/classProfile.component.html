@@ -298,7 +298,7 @@
                   <img *ngIf="post.isPostSavedByCurrentUser" src="../../../../assets/images/Bookmark-light.svg" class="d-block mx-auto">
                   {{post.savedPostsCount}}
                 </button>
-                <button (click)="openSharePostModal(post.id,post.postType)" type="button" class="bg-transparent border-0 function-btns text-light">
+                <button (click)="openSharePostModal(post.id,post.postType,post.title,post.description)" type="button" class="bg-transparent border-0 function-btns text-light">
                   <img src="../../../../assets/images/Upload-light.svg" class="d-block mx-auto" />
                   {{post.postSharedCount}}
                 </button>
@@ -325,7 +325,7 @@
                   <img *ngIf="post.isPostSavedByCurrentUser" src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto">
                   <span class="textBlack">{{post.savedPostsCount}}</span>
                 </button>
-                <button (click)="openSharePostModal(post.id,post.postType)" type="button" class="bg-transparent border-0 function-btns text-light">
+                <button (click)="openSharePostModal(post.id,post.postType,post.title,post.description)" type="button" class="bg-transparent border-0 function-btns text-light">
                   <img src="../../../../assets/images/Upload-dark.svg" class="d-block mx-auto" />
                   <span class="textBlack">{{post.postSharedCount}}</span>
                 </button>
@@ -399,7 +399,7 @@
                   <img *ngIf="gridItemInfo.isPostSavedByCurrentUser" src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto">
                   {{gridItemInfo.savedPostsCount}}
                 </button>
-                <button (click)="openSharePostModal(gridItemInfo.id,gridItemInfo.postType)" type="button" class="bg-transparent border-0 function-btns">
+                <button (click)="openSharePostModal(gridItemInfo.id,gridItemInfo.postType,gridItemInfo.title,gridItemInfo.description)" type="button" class="bg-transparent border-0 function-btns">
                   <img src="../../../../assets/images/Upload-dark.svg" class="d-block mx-auto">
                   {{gridItemInfo.postSharedCount}}
                 </button>
@@ -513,7 +513,8 @@
             <div class="col-md-6">
               <div class="form-group">
                 <label class="font_10">{{'Start'| translate }}*</label>
-                <input formControlName="startDate" type="date" [min]="minDate" max="9999-12-31" name="start" class="form-control w-100">
+                <input #startDate autocomplete="off" type="text" placeholder="mm/dd/yyyy" class="form-control w-100 date_calendar" name="startDate" formControlName="startDate" id="start_date" (click)="getSelectedLanguage()">
+                <!-- <input formControlName="startDate" type="date" [min]="minDate" max="9999-12-31" name="start" class="form-control w-100"> -->
                 <small class="p-error" style="color: orange;"
                 *ngIf="(isSubmitted && editClassForm.controls.startDate.errors)">{{'StartDateRequired'| translate }}
               </small>
@@ -525,7 +526,8 @@
             <div class="col-md-6">
               <div class="form-group">
                 <label class="font_10">{{'Finish'| translate }}*</label>
-                <input formControlName="endDate" type="date" [min]="minDate" max="9999-12-31" name="start" class="form-control w-100">
+                <input #endDate autocomplete="off" type="text" placeholder="mm/dd/yyyy" class="form-control w-100 date_calendar" name="endDate" formControlName="endDate" id="end_date" (click)="getSelectedLanguage()">
+                <!-- <input formControlName="endDate" type="date" [min]="minDate" max="9999-12-31" name="start" class="form-control w-100"> -->
                 <small class="p-error" style="color: orange;"
                 *ngIf="(isSubmitted && editClassForm.controls.endDate.errors)">{{'EndDateRequired'| translate }}
               </small>

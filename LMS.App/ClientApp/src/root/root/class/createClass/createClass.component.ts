@@ -1,4 +1,4 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, ElementRef, Injector, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { HttpClient, HttpEventType, HttpHeaders } from "@angular/common/http";
 import {MenuItem, MessageService} from 'primeng/api';
@@ -12,6 +12,10 @@ import { Subject } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { SharePostComponent } from '../../sharePost/sharePost.component';
 import { BsModalService } from 'ngx-bootstrap/modal';
+import { Spanish } from 'flatpickr/dist/l10n/es';
+import { Arabic } from 'flatpickr/dist/l10n/ar';
+import { Turkish } from 'flatpickr/dist/l10n/tr';
+import flatpickr from 'flatpickr';
 
 export const ownedClassResponse =new Subject<{classId: string, classAvatar : string,className:string,schoolName:string, action:string}>(); 
 
@@ -71,6 +75,8 @@ export class CreateClassComponent extends MultilingualComponent implements OnIni
   isTagsValid: boolean = true;
   minDate:any;
   tagCountExceeded:boolean = false;
+  @ViewChild('startDate') startDateRef!: ElementRef;
+  @ViewChild('endDate') endDateRef!: ElementRef;
 
 
   constructor(injector: Injector,private bsModalService: BsModalService,private datePipe: DatePipe,public messageService:MessageService,private route: ActivatedRoute,private router: Router,private fb: FormBuilder,classService: ClassService,private http: HttpClient) {
@@ -160,6 +166,16 @@ this.createClassForm3 = this.fb.group({
 });
 
 this.tagList = [];
+
+flatpickr('#start_date',{
+  minDate:new Date(),
+  dateFormat: "m/d/Y"
+});
+
+flatpickr('#end_date',{
+  minDate:new Date(),
+  dateFormat: "m/d/Y"
+});
 }
 
 getSchoolsForDropdown(){
@@ -184,7 +200,7 @@ dateLessThan(from: string, to: string, currentDate:string) {
   return (group: FormGroup): {[key: string]: any} => {
    let f = group.controls[from];
    let t = group.controls[to];
-   if (f.value > t.value || f.value < currentDate) {
+   if ((f.value > t.value && t.value != "" && f.value != "") || f.value < currentDate) {
      return {
        dates: `Please enter valid date`
      };
@@ -198,7 +214,7 @@ var today = new Date();
   var dd = String(today. getDate()). padStart(2, '0');
   var mm = String(today. getMonth() + 1). padStart(2, '0');
   var yyyy = today. getFullYear();
-​  var currentDate = yyyy + '-' + mm + '-' + dd;
+​  var currentDate = mm + '/' + dd + '/' + yyyy;
   return currentDate;
 }
 
@@ -587,6 +603,16 @@ captureTeacherId(event: any) {
       schoolName: schoolName
     };
     this.bsModalService.show(SharePostComponent,{initialState});
+  }
+
+  getSelectedLanguage(){
+    var selectedLanguage = localStorage.getItem("selectedLanguage");
+    this.translate.use(selectedLanguage ?? '');
+    var locale = selectedLanguage == "ar" ? Arabic: selectedLanguage == "sp"? Spanish : selectedLanguage == "tr"? Turkish : null
+    const startDateElement = this.startDateRef.nativeElement;
+    startDateElement._flatpickr.set("locale", locale); 
+    const endDateElement = this.endDateRef.nativeElement;
+    endDateElement._flatpickr.set("locale", locale); 
   }
 
 

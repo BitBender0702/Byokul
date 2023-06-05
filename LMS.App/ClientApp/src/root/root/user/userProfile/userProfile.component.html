@@ -2575,7 +2575,8 @@
             <div class="col-md-6">
               <div class="form-group">
                 <label class="font_10">{{'DateOfBirth'| translate }}*</label>
-                <input formControlName="dob" type="date" name="dob" [max]="editUserForm.controls.dob.value" class="form-control w-100">
+                <input #dateOfBirth autocomplete="off" type="text" class="form-control w-100 date_calendar" name="dob" formControlName="dob" id="date_of_birth" (click)="getSelectedLanguage()">
+                <!-- <input formControlName="dob" type="date" name="dob" [max]="editUserForm.controls.dob.value" class="form-control w-100"> -->
                 <small class="p-error" style="color: orange;"
                 *ngIf="(isSubmitted && editUserForm.controls.dob.errors)">{{'DateRequired'| translate }}
               </small>

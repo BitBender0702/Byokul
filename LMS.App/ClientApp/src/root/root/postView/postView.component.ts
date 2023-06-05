@@ -416,14 +416,24 @@ export class PostViewComponent implements OnInit,AfterViewInit {
        }); 
     }
 
-    openSharePostModal(postId:string, postType:number): void {
+    openSharePostModal(postId:string, postType:number,title:string,description:string): void {
       if(this.posts?.name == Constant.Private || this.posts?.serviceType == Constant.Paid){
         sharePostResponse.next({}); 
       }
       else{
+        var image:string = '';
+        if(postType == 1){
+          var postAttachments = this.post.postAttachments.find((x: { fileType: number; }) => x.fileType == 1);
+          if(postAttachments != undefined){
+            image = postAttachments.fileUrl;
+          }
+        }
       const initialState = {
         postId: postId,
-        postType: postType
+        postType: postType,
+        title: title,
+        description: description,
+        image: image
       };
       this.bsModalService.show(SharePostComponent,{initialState});
     }

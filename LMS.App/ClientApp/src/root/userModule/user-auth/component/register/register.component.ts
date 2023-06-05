@@ -61,7 +61,7 @@ export class RegisterComponent extends MultilingualComponent implements OnInit,A
     isConfirmPasswordVisible:boolean = false;
     @ViewChild('passwordInput') passwordInput!: ElementRef<HTMLInputElement>;
     @ViewChild('confirmPasswordInput') confirmPasswordInput!: ElementRef<HTMLInputElement>;
-    @ViewChild('licenceDate') licenceDateRef!: ElementRef;
+    @ViewChild('dateOfBirth') dateOfBirthRef!: ElementRef;
 
 
     date = new Date();
@@ -112,7 +112,7 @@ export class RegisterComponent extends MultilingualComponent implements OnInit,A
           year: 'numeric'
         });
 
-        flatpickr('#licence_date',{
+        flatpickr('#date_of_birth',{
           minDate:"1903-12-31",
           maxDate:this.registrationForm.controls.dob.value,
           dateFormat: "m/d/Y",
@@ -253,7 +253,7 @@ export class RegisterComponent extends MultilingualComponent implements OnInit,A
         var selectedLanguage = localStorage.getItem("selectedLanguage");
         this.translate.use(selectedLanguage ?? '');
         var locale = selectedLanguage == "ar" ? Arabic: selectedLanguage == "sp"? Spanish : selectedLanguage == "tr"? Turkish : null
-        const licenceDateElement = this.licenceDateRef.nativeElement;
-        licenceDateElement._flatpickr.set("locale", locale); 
+        const dateOfBirthElement = this.dateOfBirthRef.nativeElement;
+        dateOfBirthElement._flatpickr.set("locale", locale); 
       }
   }
