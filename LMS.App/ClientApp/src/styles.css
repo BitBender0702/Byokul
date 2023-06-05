@@ -513,8 +513,12 @@ hr.earning-hr {
   margin: 32px 0 44px;
 }
 
+.custom-tabs .nav {
+  gap: 10px;
+}
+
 .custom-tabs ul .nav-item button {
-  font-size: 14px;
+  font-size: 12px;
   color: #313131 !important;
   font-weight: 500;
   border-radius: 8px;
@@ -1237,10 +1241,10 @@ input[type="number"]::-webkit-outer-spin-button {
   margin-bottom: 5px;
 }
 
-.schoolgrid-header .pinned-grid-chat {
+/* .schoolgrid-header .pinned-grid-chat {
   position: absolute;
   right: 0;
-}
+} */
 
 .school-grid-thumbnail .school-large-thumbnail {
   height: 100%;
