@@ -482,6 +482,13 @@ h3.subhead-btn {
   border: 2px solid #ffffff;
 }
 
+.notification-box .dropdown .dropdown-toggle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 9999px;
+}
+
 .sidemenu .accordion-button::after {
   position: absolute;
   background: url(../src/assets/images/school/chevron-down.svg) no-repeat;

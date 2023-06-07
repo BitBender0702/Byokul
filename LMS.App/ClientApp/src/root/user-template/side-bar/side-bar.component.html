@@ -158,7 +158,7 @@
             <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
               data-bs-parent="#accordionExample">
               <div class="accordion-body p-0">
-               
+
                 <div *ngIf="sidebarInfo !== undefined && sidebarInfo.ownedSchools && sidebarInfo.ownedSchools?.length">
                 <div  *ngFor="let item of sidebarInfo.ownedSchools;">
                   <div *ngIf="!item.isBan" class="school-name d-flex align-items-center font_16">
@@ -216,7 +216,7 @@
             <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
               data-bs-parent="#accordionExample">
               <div class="accordion-body p-0">
-                
+
                 <div *ngIf="sidebarInfo !== undefined && sidebarInfo != undefined && sidebarInfo.ownedCourses?.length">
                 <div  *ngFor="let item of sidebarInfo.ownedCourses;">
                   <div *ngIf="!item.isEnable" class="school-name d-flex align-items-center font_16">
@@ -227,7 +227,7 @@
                   </div>
                 </div>
               </div>
-                
+
               </div>
             </div>
           </div>
