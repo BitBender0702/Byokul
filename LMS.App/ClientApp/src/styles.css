@@ -1873,10 +1873,10 @@ div#notifi-settingpopup .modal-dialog {
   border-radius: 8px;
   border: none;
   background: #fff;
-  top: auto !important;
+  top: 0 !important;
   left: auto !important;
   right: 0 !important;
-  bottom: 0 !important;
+  bottom: auto !important;
 }
 
 .dropdown-filter .dropdown-earningFilter-menu {
