@@ -1591,9 +1591,22 @@ textarea.ht_96 {
   min-width: 40px;
   border: 1px solid #fafafa;
   background: #fff;
+  color: #7c8da7;
   transition: 0.3s all;
   margin-right: 16px;
   font-size: 12px;
+  cursor: pointer;
+}
+
+.post-attch-btn svg {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 auto;
+}
+
+.post-attch-btn input {
+  width: 0;
+  margin: 0;
 }
 
 .media-sourcebtn button img {
@@ -1876,7 +1889,6 @@ div#notifi-settingpopup .modal-dialog {
   background: #fff;
   z-index: 9999;
 }
-
 
 .dropdown-filter .custom-btn {
   height: 33px !important;
