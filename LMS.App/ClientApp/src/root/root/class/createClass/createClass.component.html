@@ -1,260 +1,617 @@
-
-  <section class="f-poppins">
-    <div class="main_content">
-
-      <div class="live-header d-flex align-items-center justify-content-between">
-        <button (click)="back()" type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
-            src="../../../../assets/images/school/arrow-left.svg" /> {{'Back'| translate }}</button>
-            <span class="logo_mobile d-xl-none">
-              <img src="../../../../assets/images/logo.svg" />
-            </span>
-            <div class="d-xl-none">
-              <button type="button" class="mobile-search border_btn" (click)="openSearch()"><img src="../../../../assets/images/search-lg.svg" /></button>
-              <button type="button" class="mobile-search border_btn" (click)="openSidebar()"><img src="../../../../assets/images/menu.svg" /></button>
-            </div>     
-           </div>
-        <div id="regForm" class="step-form mx-auto f-monteserrat">
-        <h3 *ngIf="step!=2" id="create_school" class="font_24 text_dark fw-bold text-center">{{'CreateClass'| translate }}</h3>
-        <p-steps *ngIf="step<2" [model]="items" [(activeIndex)]="step" [readonly]="true">
-        </p-steps>
-        <div class="tab-content registerTabs">
-          <div [ngClass]="step == 0 ? 'tab tab-pane active' : 'tab tab-pane'">
-            <p class="text-center font_16 fw_600 step-desc">{{'CreateClassStep1'| translate }}</p>
-            <form id="regForm" [formGroup]="createClassForm1" class="latest-form">
+<section class="f-poppins">
+  <div class="main_content">
+    <div class="live-header d-flex align-items-center justify-content-between">
+      <button
+        (click)="back()"
+        type="button"
+        class="back-button bg-transparent border-0 font_16 fw_400 text_dark"
+      >
+        <img src="../../../../assets/images/school/arrow-left.svg" />
+        {{ "Back" | translate }}
+      </button>
+      <span class="logo_mobile d-xl-none">
+        <img src="../../../../assets/images/logo.svg" />
+      </span>
+      <div class="d-xl-none">
+        <button
+          type="button"
+          class="mobile-search border_btn"
+          (click)="openSearch()"
+        >
+          <img src="../../../../assets/images/search-lg.svg" />
+        </button>
+        <button
+          type="button"
+          class="mobile-search border_btn"
+          (click)="openSidebar()"
+        >
+          <img src="../../../../assets/images/menu.svg" />
+        </button>
+      </div>
+    </div>
+    <div id="regForm" class="step-form mx-auto f-monteserrat">
+      <h3
+        *ngIf="step != 2"
+        id="create_school"
+        class="font_24 text_dark fw-bold text-center"
+      >
+        {{ "CreateClass" | translate }}
+      </h3>
+      <p-steps
+        *ngIf="step < 2"
+        [model]="items"
+        [(activeIndex)]="step"
+        [readonly]="true"
+      >
+      </p-steps>
+      <div class="tab-content registerTabs">
+        <div [ngClass]="step == 0 ? 'tab tab-pane active' : 'tab tab-pane'">
+          <p class="text-center font_16 fw_600 step-desc">
+            {{ "CreateClassStep1" | translate }}
+          </p>
+          <form id="regForm" [formGroup]="createClassForm1" class="latest-form">
             <div class="form-group">
-              <label class="font_10">{{'SchoolName'| translate }}</label>
-            <div *ngIf="fromSchoolProfile != ''">
-              <input formControlName="schoolId" hidden type="text" placeholder="{{'SchoolName'| translate }}" name="schoolId" class="form-control w-100">
-              <input formControlName="schoolName" readonly type="text" placeholder="{{'SchoolName'| translate }}" name="schoolId" class="form-control w-100">
-            </div>
-            <div *ngIf="fromSchoolProfile == ''">
-              <select class="form-select rounded-8 w-100" formControlName="schoolId">
-                <option *ngFor="let school of schools;" [value]="school.schoolId" [ngValue]="school.schoolId">{{school.schoolName}}</option>
-             </select>
-            </div>
+              <label class="font_10">{{ "SchoolName" | translate }}</label>
+              <div *ngIf="fromSchoolProfile != ''">
+                <input
+                  formControlName="schoolId"
+                  hidden
+                  type="text"
+                  placeholder="{{ 'SchoolName' | translate }}"
+                  name="schoolId"
+                  class="form-control w-100"
+                />
+                <input
+                  formControlName="schoolName"
+                  readonly
+                  type="text"
+                  placeholder="{{ 'SchoolName' | translate }}"
+                  name="schoolId"
+                  class="form-control w-100"
+                />
+              </div>
+              <div *ngIf="fromSchoolProfile == ''">
+                <select
+                  class="form-select rounded-8 w-100"
+                  formControlName="schoolId"
+                >
+                  <option
+                    *ngFor="let school of schools"
+                    [value]="school.schoolId"
+                    [ngValue]="school.schoolId"
+                  >
+                    {{ school.schoolName }}
+                  </option>
+                </select>
+              </div>
             </div>
             <div class="form-group">
-              <label class="font_10">{{'ClassName'| translate }}</label>
-              <input formControlName="className" type="text" placeholder="{{'ClassName'| translate }}" name="classname" maxlength="60" class="form-control w-100">
-              <small class="p-error" style="color: orange;"
-              *ngIf="(isStepCompleted && createClassForm1.controls.className.errors)">{{'ClassNameRequired'| translate }}
-            </small>
-            </div>
-            <div class="form-group">              
-              <label class="font_10">{{'TellUsAboutClass'| translate }}</label>
-              <input formControlName="description" type="text" placeholder="{{'TellUsAboutClass'| translate }}" name="aboutclass" class="form-control w-100">
+              <label class="font_10">{{ "ClassName" | translate }}</label>
+              <input
+                formControlName="className"
+                type="text"
+                placeholder="{{ 'ClassName' | translate }}"
+                name="classname"
+                maxlength="60"
+                class="form-control w-100"
+              />
+              <small
+                class="p-error"
+                style="color: orange"
+                *ngIf="
+                  isStepCompleted && createClassForm1.controls.className.errors
+                "
+                >{{ "ClassNameRequired" | translate }}
+              </small>
             </div>
             <div class="form-group">
-              <label class="font_10">{{'Number Of Students'| translate }}</label>
-              <input formControlName="noOfStudents" type="number" placeholder="" name="students" min="1" max="999" class="form-control w-100">
-              <small class="p-error" style="color: orange;"
-              *ngIf="(isStepCompleted && createClassForm1.controls.noOfStudents.errors)">{{'NoOfStudentsRequired'| translate }}
-            </small>
+              <label class="font_10">{{
+                "TellUsAboutClass" | translate
+              }}</label>
+              <input
+                formControlName="description"
+                type="text"
+                placeholder="{{ 'TellUsAboutClass' | translate }}"
+                name="aboutclass"
+                class="form-control w-100"
+              />
+            </div>
+            <div class="form-group">
+              <label class="font_10">{{
+                "Number Of Students" | translate
+              }}</label>
+              <input
+                formControlName="noOfStudents"
+                type="number"
+                placeholder=""
+                name="students"
+                min="1"
+                max="999"
+                class="form-control w-100"
+              />
+              <small
+                class="p-error"
+                style="color: orange"
+                *ngIf="
+                  isStepCompleted &&
+                  createClassForm1.controls.noOfStudents.errors
+                "
+                >{{ "NoOfStudentsRequired" | translate }}
+              </small>
             </div>
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group position-relative">
-                  <label class="font_10">{{'Start'| translate }}:</label>
-                  <input #startDate autocomplete="off" type="text" placeholder="mm/dd/yyyy" class="form-control w-100 date_calendar" name="startDate" formControlName="startDate" id="start_date" (click)="getSelectedLanguage()">
-                  <small class="p-error" style="color: orange;"
-              *ngIf="(isStepCompleted && createClassForm1.controls.startDate.errors)">{{'StartDateRequired'| translate }}
-            </small>
+                  <label class="font_10">{{ "Start" | translate }}:</label>
+                  <input
+                    #startDate
+                    autocomplete="off"
+                    type="text"
+                    placeholder="mm/dd/yyyy"
+                    class="form-control w-100 date_calendar"
+                    name="startDate"
+                    formControlName="startDate"
+                    id="start_date"
+                    (click)="getSelectedLanguage()"
+                  />
+                  <small
+                    class="p-error"
+                    style="color: orange"
+                    *ngIf="
+                      isStepCompleted &&
+                      createClassForm1.controls.startDate.errors
+                    "
+                    >{{ "StartDateRequired" | translate }}
+                  </small>
                 </div>
               </div>
               <div class="col-md-6">
-                <div class="form-group ">
-                  <label class="font_10">{{'Finish'| translate }}:</label>
-                  <input #endDate autocomplete="off" type="text" placeholder="mm/dd/yyyy" class="form-control w-100 date_calendar" name="endDate" formControlName="endDate" id="end_date" (click)="getSelectedLanguage()">
-                  <small class="p-error" style="color: orange;"
-                  *ngIf="(isStepCompleted && createClassForm1.controls.endDate.errors)">{{'EndDateRequired'| translate }}
+                <div class="form-group">
+                  <label class="font_10">{{ "Finish" | translate }}:</label>
+                  <input
+                    #endDate
+                    autocomplete="off"
+                    type="text"
+                    placeholder="mm/dd/yyyy"
+                    class="form-control w-100 date_calendar"
+                    name="endDate"
+                    formControlName="endDate"
+                    id="end_date"
+                    (click)="getSelectedLanguage()"
+                  />
+                  <small
+                    class="p-error"
+                    style="color: orange"
+                    *ngIf="
+                      isStepCompleted &&
+                      createClassForm1.controls.endDate.errors
+                    "
+                    >{{ "EndDateRequired" | translate }}
                   </small>
-                  </div>
+                </div>
               </div>
-              <small class="p-error" style="color: orange;" *ngIf="isStepCompleted && createClassForm1.errors">
-                {{ createClassForm1.errors.dates}}
+              <small
+                class="p-error"
+                style="color: orange"
+                *ngIf="isStepCompleted && createClassForm1.errors"
+              >
+                {{ createClassForm1.errors.dates }}
               </small>
             </div>
             <div class="row mb-4">
-                <div class="col-md-6">
-                  <div class="row">
-                    <div class="col mt-3 mb-2">
-                      <input (click)="getFreeClass()" formControlName="serviceTypeId" type="radio" id="forFree" name="serviceTypeId" value="704FEDC6-834C-4921-A63B-7E53C5276B31">
-                      <label for="forFree"> {{'Free'| translate }} </label>
-                    </div>
-  
-                    <div class="col mt-3 mb-2">
-                      <input (click)="getPaidClass()" formControlName="serviceTypeId" type="radio" id="forPaid" name="serviceTypeId" value="0D846894-CAA4-42F3-8E8A-9DBA6467672B">
-                      <label for="forPaid"> {{'Paid'| translate }} </label>
-                    </div>
+              <div class="col-md-6">
+                <div class="row">
+                  <div class="col mt-3 mb-2">
+                    <input
+                      (click)="getFreeClass()"
+                      formControlName="serviceTypeId"
+                      type="radio"
+                      id="forFree"
+                      name="serviceTypeId"
+                      value="704FEDC6-834C-4921-A63B-7E53C5276B31"
+                    />
+                    <label for="forFree"> {{ "Free" | translate }} </label>
                   </div>
-                </div><br>
-               
-                <div *ngIf="isClassPaid" class="col-md-6">
-                  <label class="font_10">{{'Price'| translate }}</label>
-                  <input formControlName="price" type="number" min="1" placeholder="{{'Price'| translate }}" name="price" class="form-control w-100">
-                  <small class="p-error" style="color: orange;" *ngIf="isStepCompleted && createClassForm1.controls.price.errors">
-                    {{'PriceRequired'| translate }}
-                  </small>
-                </div><br>
+
+                  <div class="col mt-3 mb-2">
+                    <input
+                      (click)="getPaidClass()"
+                      formControlName="serviceTypeId"
+                      type="radio"
+                      id="forPaid"
+                      name="serviceTypeId"
+                      value="0D846894-CAA4-42F3-8E8A-9DBA6467672B"
+                    />
+                    <label for="forPaid"> {{ "Paid" | translate }} </label>
+                  </div>
+                </div>
+              </div>
+              <br />
+
+              <div *ngIf="isClassPaid" class="col-md-6">
+                <label class="font_10">{{ "Price" | translate }}</label>
+                <input
+                  formControlName="price"
+                  type="number"
+                  min="1"
+                  placeholder="{{ 'Price' | translate }}"
+                  name="price"
+                  class="form-control w-100"
+                />
+                <small
+                  class="p-error"
+                  style="color: orange"
+                  *ngIf="
+                    isStepCompleted && createClassForm1.controls.price.errors
+                  "
+                >
+                  {{ "PriceRequired" | translate }}
+                </small>
+              </div>
+              <br />
             </div>
 
-            <div class="row" style="margin-top:-25px;">
+            <div class="row" style="margin-top: -25px">
               <div class="col-md-12">
-                 <div *ngIf="!isClassPaid">
-                  <small class="p-error" style="color: orange;"
-               *ngIf="(isStepCompleted && createClassForm1.controls.serviceTypeId.errors)">{{'ServiceTypeRequired'| translate }}
-             </small>
-                    <label class="ms-0">*{{'CertificateCreationmessage'| translate }}</label>
-                 </div><br>
+                <div *ngIf="!isClassPaid">
+                  <small
+                    class="p-error"
+                    style="color: orange"
+                    *ngIf="
+                      isStepCompleted &&
+                      createClassForm1.controls.serviceTypeId.errors
+                    "
+                    >{{ "ServiceTypeRequired" | translate }}
+                  </small>
+                  <label class="ms-0"
+                    >*{{ "CertificateCreationmessage" | translate }}</label
+                  >
+                </div>
+                <br />
               </div>
             </div>
 
             <div class="row">
               <div class="col-md-12">
                 <div class="form-group">
-                  <label class="font_10">{{'Visibility'| translate }}</label>
-                  <select class="form-select rounded-8 w-100" formControlName="accessibilityId">
-                    <option *ngFor="let accessibility of accessibility; let i = index" [value]="accessibility.id" [ngValue]="accessibility.id">{{accessibility.name}}</option>
-                 </select>
+                  <label class="font_10">{{ "Visibility" | translate }}</label>
+                  <select
+                    class="form-select rounded-8 w-100"
+                    formControlName="accessibilityId"
+                  >
+                    <option
+                      *ngFor="let accessibility of accessibility; let i = index"
+                      [value]="accessibility.id"
+                      [ngValue]="accessibility.id"
+                    >
+                      {{ accessibility.name }}
+                    </option>
+                  </select>
                 </div>
-            </div>
+              </div>
             </div>
             <div class="form-group">
               <div class="custom-language-select">
-                <label class="font_10">{{'Language'| translate }}</label>
-                <p-multiSelect  [defaultLabel]="'Select Languages'" [panelStyle]="{'width':'100%'}" [filter]="false" [showToggleAll]="false" [options]="languages" optionLabel="name" optionValue="id" name="languageSelect[]" class="form-control" multiple id="languageSelect" formControlName="languageIds">
-                  <option *ngFor="let language of languages; let i = index" [value]="language.id" [selected]="i">{{language.name}}</option>
-               </p-multiSelect>
-               <small class="p-error" style="color: orange;"
-               *ngIf="(isStepCompleted && createClassForm1.controls.languageIds.errors)">{{'AtLeastOneLanguageRequired'| translate }}
-             </small>
+                <label class="font_10">{{ "Language" | translate }}</label>
+                <p-multiSelect
+                  [defaultLabel]="'Select Languages'"
+                  [panelStyle]="{ width: '100%' }"
+                  [filter]="false"
+                  [showToggleAll]="false"
+                  [options]="languages"
+                  optionLabel="name"
+                  optionValue="id"
+                  name="languageSelect[]"
+                  class="form-control"
+                  multiple
+                  id="languageSelect"
+                  formControlName="languageIds"
+                >
+                  <option
+                    *ngFor="let language of languages; let i = index"
+                    [value]="language.id"
+                    [selected]="i"
+                  >
+                    {{ language.name }}
+                  </option>
+                </p-multiSelect>
+                <small
+                  class="p-error"
+                  style="color: orange"
+                  *ngIf="
+                    isStepCompleted &&
+                    createClassForm1.controls.languageIds.errors
+                  "
+                  >{{ "AtLeastOneLanguageRequired" | translate }}
+                </small>
               </div>
             </div>
-            <div >
+            <div>
               <div class="form-group latest-form">
-                <label class="font_10">{{'Tags'| translate }}</label>               
-                <input formControlName="tags" (keyup.enter)="onEnter($event)" maxlength="30" type="text" class="form-control" placeholder="{{'TypeToAdd'| translate }}">
-                <small class="p-error" style="color: orange;"
-                *ngIf="(isStepCompleted && createClassForm1.controls.tags.errors)">{{'AddAtLeastOneTag'| translate }}
-              </small>
+                <label class="font_10">{{ "Tags" | translate }}</label>
+                <input
+                  formControlName="tags"
+                  (keyup.enter)="onEnter($event)"
+                  maxlength="30"
+                  type="text"
+                  class="form-control"
+                  placeholder="{{ 'TypeToAdd' | translate }}"
+                />
+                <small
+                  class="p-error"
+                  style="color: orange"
+                  *ngIf="
+                    isStepCompleted && createClassForm1.controls.tags.errors
+                  "
+                  >{{ "AddAtLeastOneTag" | translate }}
+                </small>
               </div>
-              <div class="teacher-tags tag-box hashtag_post mt-4 mb-2 hover-tags">
-                <span *ngFor="let tag of tagList" class="custom-tag">{{tag}} 
-                  <span (click)="removeTag(tag)" class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
-                      src="../../../assets/images/cross-sm-light.svg"></span>
+              <div
+                class="teacher-tags tag-box hashtag_post mt-4 mb-2 hover-tags"
+              >
+                <span *ngFor="let tag of tagList" class="custom-tag"
+                  >{{ tag }}
+                  <span
+                    (click)="removeTag(tag)"
+                    class="border-0 bg-transparent p-0 position-absolute delete-tag"
+                    ><img src="../../../assets/images/cross-sm-light.svg"
+                  /></span>
                 </span>
-    
-            </div>
-
+              </div>
             </div>
             <div class="dropzone-wrapper my-4">
               <div class="dropzone-desc">
                 <i class="glyphicon glyphicon-download-alt"></i>
-                <p class="text-center fw_400">{{'ChooseThumbnail'| translate }} <b>{{'DragItHere'| translate }}</b></p>
+                <p class="text-center fw_400">
+                  {{ "ChooseThumbnail" | translate }}
+                  <b>{{ "DragItHere" | translate }}</b>
+                </p>
               </div>
-              <input type="file" name="img_logo" (change)="handleImageInput($event)"  class="dropzone" accept="image/*, video/*">
+              <input
+                type="file"
+                name="img_logo"
+                (change)="handleImageInput($event)"
+                class="dropzone"
+                accept="image/*, video/*"
+              />
             </div>
             <div>
-              <p class="text-center">{{uploadImageName}}</p>
-              <small class="p-error" style="color: orange;margin-left: 144px;"
-              *ngIf="(isStepCompleted && this.uploadImageName == undefined)">{{'ImageOrVideoThumbnailRequired'| translate }}
-            </small>
+              <p class="text-center">{{ uploadImageName }}</p>
+              <small
+                class="p-error"
+                style="color: orange; margin-left: 144px"
+                *ngIf="isStepCompleted && this.uploadImageName == undefined"
+                >{{ "ImageOrVideoThumbnailRequired" | translate }}
+              </small>
             </div>
-            <small class="p-error" style="color: orange;margin-left: 148px;" *ngIf="createClassForm1.errors?.unauthenticated">
-              {{'ClassNameAlreadyExist'| translate }}
+            <small
+              class="p-error"
+              style="color: orange; margin-left: 148px"
+              *ngIf="createClassForm1.errors?.unauthenticated"
+            >
+              {{ "ClassNameAlreadyExist" | translate }}
             </small>
-            <small class="p-error" style="color: orange;margin-left: 177px;" *ngIf="this.tagCountExceeded">
+            <small
+              class="p-error"
+              style="color: orange; margin-left: 177px"
+              *ngIf="this.tagCountExceeded"
+            >
               You can add max 7 tags
             </small>
-            <div class="steps_btns d-flex align-items-center justify-content-center">
-              <button (click)="forwardStep()" type="button"
-                class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 text-uppercase next-step">{{'Next'| translate }}</button>
+            <div
+              class="steps_btns d-flex align-items-center justify-content-center"
+            >
+              <button
+                (click)="forwardStep()"
+                type="button"
+                class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 text-uppercase next-step"
+              >
+                {{ "Next" | translate }}
+              </button>
             </div>
-            </form>
-          </div>
-          <div [ngClass]="step == 1 ? 'tab tab-pane active' : 'tab tab-pane'">
-            <p class="text-center font_16 fw_600 step-desc">{{'CreateClassStep2'| translate }}</p>
-            <form id="regForm" [formGroup]="createClassForm2" class="latest-form add-tag-step">
+          </form>
+        </div>
+        <div [ngClass]="step == 1 ? 'tab tab-pane active' : 'tab tab-pane'">
+          <p class="text-center font_16 fw_600 step-desc">
+            {{ "CreateClassStep2" | translate }}
+          </p>
+          <form
+            id="regForm"
+            [formGroup]="createClassForm2"
+            class="latest-form add-tag-step"
+          >
             <div class="tag-form-group">
-              <label class="font_10">{{'TypeDisciplineNameToAdd'| translate }}</label>
+              <label class="font_10">{{
+                "TypeDisciplineNameToAdd" | translate
+              }}</label>
               <span class="p-fluid">
-                <p-autoComplete (onSelect)="captureDisciplineId($event)" (onUnselect)="removeDiscipline($event)" placeholder="{{'TypeDisciplineNameToAdd'| translate }}" class="form-control w-100" formControlName="disciplineIds" [suggestions]="filteredDisciplines" (completeMethod)="filterDisciplines($event)" field="name" [multiple]="true">
+                <p-autoComplete
+                  (onSelect)="captureDisciplineId($event)"
+                  (onUnselect)="removeDiscipline($event)"
+                  placeholder="{{ 'TypeDisciplineNameToAdd' | translate }}"
+                  class="form-control w-100"
+                  formControlName="disciplineIds"
+                  [suggestions]="filteredDisciplines"
+                  (completeMethod)="filterDisciplines($event)"
+                  field="name"
+                  [multiple]="true"
+                >
                 </p-autoComplete>
               </span>
-            <div class="tag-box">
-              <span *ngFor="let discipline of disciplineInfo" class="custom-tag">{{discipline?.name}}</span>
-            </div>
-            </div>
-
-            <div class="tag-form-group">
-              <label class="font_10">{{'TypeTeacherNameToAdd'| translate }}</label>
-              <span class="p-fluid">
-              <p-autoComplete [size]="200" (onSelect)="captureTeacherId($event)" (onUnselect)="removeTeacher($event)" placeholder="{{'TypeTeacherNameToAdd'| translate }}" class="form-control w-100" formControlName="teacherIds" [suggestions]="filteredTeachers" (completeMethod)="filterTeachers($event)" field="firstName" [multiple]="true">
-              </p-autoComplete>
-            </span>
-            <div class="tag-box">
-              <span *ngFor="let teacher of teacherInfo" class="custom-tag">{{teacher.firstName + ' ' + teacher.lastName}}</span>
-            </div>
+              <div class="tag-box">
+                <span
+                  *ngFor="let discipline of disciplineInfo"
+                  class="custom-tag"
+                  >{{ discipline?.name }}</span
+                >
+              </div>
             </div>
 
             <div class="tag-form-group">
-              <label class="font_10">{{'TypeStudentNameToAdd'| translate }}</label>
+              <label class="font_10">{{
+                "TypeTeacherNameToAdd" | translate
+              }}</label>
               <span class="p-fluid">
-              <p-autoComplete (onSelect)="captureStudentId($event)" (onUnselect)="removeStudent($event)" placeholder="{{'TypeStudentNameToAdd'| translate }}" class="form-control w-100" formControlName="studentIds" dataKey="studentId" [suggestions]="filteredStudents" (completeMethod)="filterStudents($event)" field="studentName" [multiple]="true">
-              </p-autoComplete>
-            </span>
-            <div class="tag-box">
-              <span *ngFor="let student of studentInfo" class="custom-tag">{{student?.studentName}}</span>
+                <p-autoComplete
+                  [size]="200"
+                  (onSelect)="captureTeacherId($event)"
+                  (onUnselect)="removeTeacher($event)"
+                  placeholder="{{ 'TypeTeacherNameToAdd' | translate }}"
+                  class="form-control w-100"
+                  formControlName="teacherIds"
+                  [suggestions]="filteredTeachers"
+                  (completeMethod)="filterTeachers($event)"
+                  field="firstName"
+                  [multiple]="true"
+                >
+                </p-autoComplete>
+              </span>
+              <div class="tag-box">
+                <span *ngFor="let teacher of teacherInfo" class="custom-tag">{{
+                  teacher.firstName + " " + teacher.lastName
+                }}</span>
+              </div>
             </div>
+
+            <div class="tag-form-group">
+              <label class="font_10">{{
+                "TypeStudentNameToAdd" | translate
+              }}</label>
+              <span class="p-fluid">
+                <p-autoComplete
+                  (onSelect)="captureStudentId($event)"
+                  (onUnselect)="removeStudent($event)"
+                  placeholder="{{ 'TypeStudentNameToAdd' | translate }}"
+                  class="form-control w-100"
+                  formControlName="studentIds"
+                  dataKey="studentId"
+                  [suggestions]="filteredStudents"
+                  (completeMethod)="filterStudents($event)"
+                  field="studentName"
+                  [multiple]="true"
+                >
+                </p-autoComplete>
+              </span>
+              <div class="tag-box">
+                <span *ngFor="let student of studentInfo" class="custom-tag">{{
+                  student?.studentName
+                }}</span>
+              </div>
             </div>
-            <small class="p-error" style="color: orange;margin-left: 10px;" *ngIf="createClassForm2.errors?.studentLimitExceeds">
-              {{'MoreStudentsThenSelected'| translate }}
+            <small
+              class="p-error"
+              style="color: orange; margin-left: 10px"
+              *ngIf="createClassForm2.errors?.studentLimitExceeds"
+            >
+              {{ "MoreStudentsThenSelected" | translate }}
             </small>
-            
-            <div class="steps_btns d-flex align-items-center justify-content-between">
-              <button (click)="backStep()" type="button"
+
+            <div
+              class="steps_btns d-flex align-items-center justify-content-between"
+            >
+              <button
+                (click)="backStep()"
+                type="button"
                 class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 text-uppercase prev-step-btn prev-step"
-                id="prevBtn">{{'Back'| translate }}</button>
-                <button (click)="forwardStep2()" type="button"
+                id="prevBtn"
+              >
+                {{ "Back" | translate }}
+              </button>
+              <button
+                (click)="forwardStep2()"
+                type="button"
                 class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 text-uppercase prev-step-btn prev-step"
-                id="step2_btn">{{'AddLater'| translate }}</button>
-              <button (click)="forwardStep2()" type="button" id="step2_btn"
-                class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 text-uppercase next-step">{{'Continue'| translate }}</button>
+                id="step2_btn"
+              >
+                {{ "AddLater" | translate }}
+              </button>
+              <button
+                (click)="forwardStep2()"
+                type="button"
+                id="step2_btn"
+                class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 text-uppercase next-step"
+              >
+                {{ "Continue" | translate }}
+              </button>
             </div>
-            </form>
-          </div>
-          <div [ngClass]="step == 2 ? 'tab tab-pane active final-multiple-step' : 'tab tab-pane final-multiple-step'">
-            <h2 class="font_24 fw-bold text_dark text-center my_32 mt-1">{{'YouCreatedNewClass'| translate }}</h2>
-            <p class="font_16 text_dark fw_600 text-center mb-0">{{'ClassLinkInfo'| translate }}</p>
-            <form id="regForm" [formGroup]="createClassForm3" class="latest-form">
-            <div class="school-link  my_32">
-              <label class="font_10">{{'LinkToYourSchool'| translate }}</label>
-<div class="position-relative">
-              <input readonly formControlName = "classUrl" type="text" class="form-control" placeholder="byokul.com/" #userinput/>
-              <small class="p-error" style="color: orange;"
-        *ngIf="(isSubmitted && createClassForm3.controls.classUrl.errors)">{{'ClassUrlRequired'| translate }}
-      </small>
-              <button (click)="copyMessage(userinput)" type="button" class="border-0 bg-transparent shadow-none p-0 copy-link"><img
-                  src="../../../../assets/images/school/copy.svg" /></button>
-              <button (click)="openSharePostModal()" type="button" class="border-0 bg-transparent shadow-none p-0 upload-link"><img
-                  src="../../../../assets/images/school/Upload-small.svg" /></button>
+          </form>
+        </div>
+        <div
+          [ngClass]="
+            step == 2
+              ? 'tab tab-pane active final-multiple-step'
+              : 'tab tab-pane final-multiple-step'
+          "
+        >
+          <h2 class="font_24 fw-bold text_dark text-center my_32 mt-1">
+            {{ "YouCreatedNewClass" | translate }}
+          </h2>
+          <p class="font_16 text_dark fw_600 text-center mb-0">
+            {{ "ClassLinkInfo" | translate }}
+          </p>
+          <form id="regForm" [formGroup]="createClassForm3" class="latest-form">
+            <div class="school-link my_32">
+              <label class="font_10">{{
+                "LinkToYourSchool" | translate
+              }}</label>
+              <div class="position-relative copy-link">
+                <input
+                  readonly
+                  formControlName="classUrl"
+                  type="text"
+                  class="form-control"
+                  placeholder="byokul.com/"
+                  #userinput
+                />
+                <small
+                  class="p-error"
+                  style="color: orange"
+                  *ngIf="
+                    isSubmitted && createClassForm3.controls.classUrl.errors
+                  "
+                  >{{ "ClassUrlRequired" | translate }}
+                </small>
+                <button
+                  (click)="copyMessage(userinput)"
+                  type="button"
+                  class="border-0 bg-transparent shadow-none p-0 copy-link"
+                >
+                  <img src="../../../../assets/images/school/copy.svg" />
+                </button>
+                <button
+                  (click)="openSharePostModal()"
+                  type="button"
+                  class="border-0 bg-transparent shadow-none p-0 upload-link"
+                >
+                  <img
+                    src="../../../../assets/images/school/Upload-small.svg"
+                  />
+                </button>
+              </div>
             </div>
-          </div>
             <div class="steps_btns">
-              <input (click)="createClass()" type="submit" id="nextBtn"
+              <input
+                (click)="createClass()"
+                type="submit"
+                id="nextBtn"
                 class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 text-uppercase"
-                value="{{'Finish'| translate }}" />
+                value="{{ 'Finish' | translate }}"
+              />
             </div>
-            </form>
-          </div>
+          </form>
         </div>
-        </div>
-      <div class="d-flex justify-content-end mt-5 d-md-none" >
-         <button type="button" class="step-edit-button btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase next-step"><img src="../../../../assets/images/Edit-light.svg" alt="edit"/></button>
       </div>
     </div>
-  </section>
+    <div class="d-flex justify-content-end mt-5 d-md-none">
+      <button
+        type="button"
+        class="step-edit-button btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase next-step"
+      >
+        <img src="../../../../assets/images/Edit-light.svg" alt="edit" />
+      </button>
+    </div>
+  </div>
+</section>
 
-  <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
-  <p-toast></p-toast>
-
+<loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
+<p-toast></p-toast>
