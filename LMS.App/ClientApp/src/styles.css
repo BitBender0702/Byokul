@@ -524,6 +524,11 @@ hr.earning-hr {
   gap: 10px;
 }
 
+.profile-custom-tabs ul .nav-item button {
+  font-size: 14px !important;
+  font-weight: bold !important;
+}
+
 .custom-tabs ul .nav-item button {
   font-size: 12px;
   color: #313131 !important;
