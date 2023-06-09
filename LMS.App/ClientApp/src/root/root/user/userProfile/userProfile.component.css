@@ -3,6 +3,24 @@
   z-index: 100000;
 }
 
+.orange-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff0e5;
+  color: #ff801c;
+  margin-right: 24px;
+  padding: 8px 50px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 8px;
+}
+
+.orange-button:focus {
+  background-color: #fff0e5;
+  color: #ff801c;
+}
+
 .profile-name {
   display: flex;
 }

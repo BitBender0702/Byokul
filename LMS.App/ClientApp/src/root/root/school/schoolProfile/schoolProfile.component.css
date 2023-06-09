@@ -1,39 +1,57 @@
-.videofile:hover::after {
-    cursor: pointer;
-  }
-
-  .heightForText{
-    height: 300px;
-  }
-
-  .cursor_auto{
-    cursor: auto;
-  }
-
-  .reel_spinner_position{
-    top: 114px;
-    right: 92px;
-    z-index: 999;
-  }
-
-  .description_scroll{
-    overflow-y: auto;
-  }
-
-  .description_scroll::-webkit-scrollbar {
-    width: 2px;
-  }
-
-  .video-js{
-    height: 300px;
-  }
-
-  .routeLink{
-    cursor: pointer;
-    color: inherit;
-    text-decoration: none;
+.orange-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff0e5;
+  color: #ff801c;
+  margin-right: 24px;
+  padding: 8px 50px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 8px;
 }
 
-.cursor_pointer{
+.orange-button:focus {
+  background-color: #fff0e5;
+  color: #ff801c;
+}
+
+.videofile:hover::after {
+  cursor: pointer;
+}
+
+.heightForText {
+  height: 300px;
+}
+
+.cursor_auto {
+  cursor: auto;
+}
+
+.reel_spinner_position {
+  top: 114px;
+  right: 92px;
+  z-index: 999;
+}
+
+.description_scroll {
+  overflow-y: auto;
+}
+
+.description_scroll::-webkit-scrollbar {
+  width: 2px;
+}
+
+.video-js {
+  height: 300px;
+}
+
+.routeLink {
+  cursor: pointer;
+  color: inherit;
+  text-decoration: none;
+}
+
+.cursor_pointer {
   cursor: pointer;
 }

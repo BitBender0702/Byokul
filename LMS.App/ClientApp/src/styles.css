@@ -3100,6 +3100,18 @@ p-autocomplete li:before {
     font-size: 15px;
   }
 
+  .orange-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff0e5;
+    color: #ff801c;
+    padding: 8px 50px;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 8px;
+  }
+
   .primary_btn {
     height: 48px;
   }

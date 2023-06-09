@@ -99,7 +99,7 @@
                 *ngIf="!isOwner && !isFollowed"
                 (click)="followUser(user.id, 'Follow')"
                 type="button"
-                class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn follow-btn"
+                class="btn orange-button"
               >
                 {{ "Follow" | translate }}
               </button>
@@ -107,7 +107,7 @@
                 *ngIf="!isOwner && isFollowed"
                 (click)="followUser(user.id, 'UnFollow')"
                 type="button"
-                class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn follow-btn"
+                class="btn orange-button"
               >
                 {{ "UnFollow" | translate }}
               </button>
@@ -116,7 +116,7 @@
                 *ngIf="!isOwner"
                 type="button"
                 (click)="openChat(user.id, '1')"
-                class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn me-0 minw-142"
+                class="btn orange-button"
               >
                 {{ "Message" | translate }}
               </button>
