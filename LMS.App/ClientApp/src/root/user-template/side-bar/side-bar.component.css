@@ -1,0 +1,17 @@
+.footer-menu {
+  margin-top: 30px;
+}
+
+.footer-menu__menu {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.footer-menu__menu-item {
+  color: #313131;
+  font-size: 14px;
+  text-decoration: none;
+  cursor: pointer;
+}
