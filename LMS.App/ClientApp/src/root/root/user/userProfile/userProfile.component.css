@@ -3,6 +3,14 @@
   z-index: 100000;
 }
 
+.profile-name {
+  display: flex;
+}
+
+.profile-name img {
+  flex: 0 0 auto;
+}
+
 .p-toast {
   z-index: 999;
 }
