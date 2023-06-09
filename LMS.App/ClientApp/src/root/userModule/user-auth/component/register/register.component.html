@@ -1,130 +1,321 @@
 <!-- <div *ngIf="isDataLoaded"> -->
-  <section class="container">
-    <div class="logo mb-3 pt-5">
-      <img src="../../../../../assets/images/logo.svg" alt="logo" />
+<section class="container">
+  <div class="logo mb-3 pt-5">
+    <img src="../../../../../assets/images/logo.svg" alt="logo" />
+  </div>
+  <div class="bg-gray-gradient register-section rounded-8">
+    <button
+      [routerLink]="['/user/auth/login']"
+      type="button"
+      class="back-button bg-transparent border-0 font_16 fw_400 text_dark"
+    >
+      <img src="../../../../assets/images/arrow-left.svg" />
+      {{ "Back" | translate }}
+    </button>
+    <div
+      *ngIf="isRegister"
+      class="alert alert-info text-center register-form mx-auto ng-dirty ng-touched ng-valid ng-submitted"
+      role="alert"
+    >
+      An Email has been sent to you.Please confirm the email to login!
     </div>
-    <div class="bg-gray-gradient register-section rounded-8">
-      <button [routerLink]="['/user/auth/login']" type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
-        src="../../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
-      <div *ngIf="isRegister" class="alert alert-info text-center register-form mx-auto ng-dirty ng-touched ng-valid ng-submitted" role="alert">
-       An Email has been sent to you.Please confirm the email to login!
-      </div>
-      <form class="register-form mx-auto" [formGroup]="registrationForm">
-        <h2 class="font_34 fw_700 text-center">{{'NewAccount'| translate }} <span class="text_secondary">{{'Okul'| translate }}</span></h2>
-        <div class="row">
-          <div class="col-md-6">
-            <div class="form-group">
-              <input (keypress)="omit_special_char($event)" type="text" class="form-control rounded-8" formControlName="firstName" placeholder="{{'Name'| translate }}">
-              <small class="p-error" style="color: orange;"
-                *ngIf="(isSubmitted && registrationForm.controls.firstName.errors)">{{'FirstNameRequired'| translate }}
-              </small>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="form-group">
-              <input (keypress)="omit_special_char($event)" type="text" class="form-control rounded-8" formControlName="lastName" placeholder="{{'SurName'| translate }}">
-              <small class="p-error" style="color: orange;"
-                *ngIf="(isSubmitted && registrationForm.controls.lastName.errors)">{{'LastNameRequired'| translate }}    
-              </small>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="form-group">
-              <input #dateOfBirth autocomplete="off" type="text" class="form-control rounded-8 date_calendar" name="dob" formControlName="dob" id="date_of_birth" (click)="getSelectedLanguage()">
-              <small class="p-error" style="color: orange;"
-              *ngIf="(isSubmitted && registrationForm.controls.dob.errors)">{{'DOBRequired'| translate }} 
+    <form class="register-form mx-auto" [formGroup]="registrationForm">
+      <h2 class="font_34 fw_700 text-center">
+        {{ "NewAccount" | translate }}
+        <span class="text_secondary">{{ "Okul" | translate }}</span>
+      </h2>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <input
+              (keypress)="omit_special_char($event)"
+              type="text"
+              class="form-control rounded-8"
+              formControlName="firstName"
+              placeholder="{{ 'Name' | translate }}"
+            />
+            <small
+              class="p-error"
+              style="color: orange"
+              *ngIf="isSubmitted && registrationForm.controls.firstName.errors"
+              >{{ "FirstNameRequired" | translate }}
             </small>
-            </div>
           </div>
-          <div class="col-md-6">
-            <div class="form-group">
-              <select class="form-select rounded-8" formControlName="gender" aria-label="Default select example">
-                <option value="" disabled selected hidden>{{'Gender'| translate }}</option>
-                <option value="1">{{'Male'| translate }}</option>
-                <option value="2">{{'Female'| translate }}</option>
-                <option value="3">{{'Other'| translate }}</option>
-              </select>
-              <small class="p-error" style="color: orange;"
-              *ngIf="(isSubmitted && registrationForm.controls.gender.errors)">{{'GenderRequired'| translate }}
-            </small>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="form-group">
-              <select class="form-select rounded-8 w-100" formControlName="countryName" aria-label="Default select example" (change)="getCityByCountry($event.target)">
-                <option value="" disabled selected hidden>{{'Country'| translate }}</option>
-                <option *ngFor="let country of countries;" [value]="country.countryName">{{country.countryName}}</option>
-             </select>
-             <small class="p-error" style="color: orange;"
-             *ngIf="(isSubmitted && registrationForm.controls.countryName.errors)">{{'ThisFieldRequired'| translate }}
-             </small>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="form-group">
-              <select class="form-select rounded-8 w-100" formControlName="cityName" aria-label="Default select example">
-                <option value="" disabled selected hidden>{{'City'| translate }}</option>
-                 <option *ngFor="let city of cities;" [value]="city">{{city}}</option>
-             </select>
-             <small class="p-error" style="color: orange;"
-             *ngIf="(isSubmitted && registrationForm.controls.cityName.errors)">{{'ThisFieldRequired'| translate }}
-             </small>
-            </div>
-          </div>
-          <div class="col-md-12">
-            <div class="form-group">
-              <input type="email" class="form-control rounded-8" formControlName="email" placeholder="{{'Email'| translate }}">
-              <small class="p-error" style="color: orange;"
-              *ngIf="(isSubmitted && registrationForm.controls.email.errors)">{{'ValidEmailRequired'| translate }}
-            </small>
-            </div>
-          </div>
-          <div class="col-md-12">
-            <div class="form-group input-container">
-              <input #passwordInput type="password" class="form-control rounded-8" formControlName="password" placeholder="{{'Password'| translate }}">
-              <button class="eye_button_style" type="button" (click)="passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password'"><i class="fa fa-eye-slash" (click)="onPasswordShow()" *ngIf="!isPasswordVisible"></i><i class="fa fa-eye" (click)="onPasswordHide()" *ngIf="isPasswordVisible"></i></button>
-              <small style="color: rgb(17, 17, 17);">*{{'PasswordLengthInfo'| translate }} </small>
-              <br>
-              <small class="p-error" style="color: orange;" *ngIf="isSubmitted && registrationForm.get('password')?.errors?.required">
-                  {{'PasswordRequired'| translate }}</small>
-              <div *ngIf="isSubmitted && registrationForm.get('password')?.errors?.minlength">
-                <small class="p-error" style="color: orange;" *ngIf="isSubmitted && registrationForm.get('password')?.errors?.minlength">
-                   {{'PasswordLengthRequired'| translate }}
-                </small><br>          
-               </div>         
-              <small class="p-error" style="color: orange;" *ngIf="isSubmitted && registrationForm.get('password')?.errors?.pattern">
-                  {{'PasswordPatternRequired'| translate }}</small>
-            </div>
-          </div>
-          <div class="col-md-12">
-            <div class="form-group input-container">
-              <input #confirmPasswordInput type="password" class="form-control rounded-8" formControlName="confirmPassword" placeholder="{{'RepeatPassword'| translate }}">
-              <button class="eye_button_style" type="button" (click)="confirmPasswordInput.type = confirmPasswordInput.type === 'password' ? 'text' : 'password'"><i class="fa fa-eye-slash" (click)="onConfirmPasswordShow()" *ngIf="!isConfirmPasswordVisible"></i><i class="fa fa-eye" (click)="onConfirmPasswordHide()" *ngIf="isConfirmPasswordVisible"></i></button>
-              <small class="p-error" style="color: orange;" *ngIf="isSubmitted && registrationForm.get('confirmPassword')?.errors?.required">
-                {{'ConfirmPasswordRequired'| translate }}</small>    
-            <small class="p-error" style="color: orange;" *ngIf="isSubmitted && (registrationForm.get('confirmPassword')?.errors?.pattern || registrationForm.get('confirmPassword')?.errors?.minlength)">
-                {{'PasswordDoesNotMatch'| translate }}</small>
-              <small class="p-error" style="color: orange;"
-              *ngIf=" isSubmitted && matchPassword() && registrationForm.controls.confirmPassword.touched && !registrationForm.controls.confirmPassword.errors">
-               {{'PasswordDoesNotMatch'| translate }}
-              </small>
-            </div>
-          </div>
-
-          <small class="p-error" style="color: orange;margin-left: 127px;" *ngIf="registrationForm.errors?.unauthenticated">
-            {{'EmailAlreadyTaken'| translate }}
-          </small>
-
-          <div class="col-md-12">
-            <button type="submit" (click)="register()" class="btn primary_btn w-100 rounded-8 text-uppercase">{{'Register'| translate }}</button>
-          </div>
-
         </div>
-        <p class="font_14 fw_300 text-center al-account">{{'AlreadyAccount'| translate }} <a [routerLink]="['/user/auth/login']"
-            class="fw_700 text_dark text-decoration-none">{{'Login'| translate }}</a></p>
-        <multi-lingual></multi-lingual>
-      </form>
-    </div>
-  </section>
+        <div class="col-md-6">
+          <div class="form-group">
+            <input
+              (keypress)="omit_special_char($event)"
+              type="text"
+              class="form-control rounded-8"
+              formControlName="lastName"
+              placeholder="{{ 'SurName' | translate }}"
+            />
+            <small
+              class="p-error"
+              style="color: orange"
+              *ngIf="isSubmitted && registrationForm.controls.lastName.errors"
+              >{{ "LastNameRequired" | translate }}
+            </small>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <input
+              #dateOfBirth
+              autocomplete="off"
+              type="text"
+              class="form-control rounded-8 date_calendar"
+              name="dob"
+              formControlName="dob"
+              id="date_of_birth"
+              (click)="getSelectedLanguage()"
+            />
+            <small
+              class="p-error"
+              style="color: orange"
+              *ngIf="isSubmitted && registrationForm.controls.dob.errors"
+              >{{ "DOBRequired" | translate }}
+            </small>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <select
+              class="form-select rounded-8"
+              formControlName="gender"
+              aria-label="Default select example"
+            >
+              <option value="" disabled selected hidden>
+                {{ "Gender" | translate }}
+              </option>
+              <option value="1">{{ "Male" | translate }}</option>
+              <option value="2">{{ "Female" | translate }}</option>
+              <option value="3">{{ "Other" | translate }}</option>
+            </select>
+            <small
+              class="p-error"
+              style="color: orange"
+              *ngIf="isSubmitted && registrationForm.controls.gender.errors"
+              >{{ "GenderRequired" | translate }}
+            </small>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <select
+              class="form-select rounded-8 w-100"
+              formControlName="countryName"
+              aria-label="Default select example"
+              (change)="getCityByCountry($event.target)"
+            >
+              <option value="" disabled selected hidden>
+                {{ "Country" | translate }}
+              </option>
+              <option
+                *ngFor="let country of countries"
+                [value]="country.countryName"
+              >
+                {{ country.countryName }}
+              </option>
+            </select>
+            <small
+              class="p-error"
+              style="color: orange"
+              *ngIf="
+                isSubmitted && registrationForm.controls.countryName.errors
+              "
+              >{{ "ThisFieldRequired" | translate }}
+            </small>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <select
+              class="form-select rounded-8 w-100"
+              formControlName="cityName"
+              aria-label="Default select example"
+            >
+              <option value="" disabled selected hidden>
+                {{ "City" | translate }}
+              </option>
+              <option *ngFor="let city of cities" [value]="city">
+                {{ city }}
+              </option>
+            </select>
+            <small
+              class="p-error"
+              style="color: orange"
+              *ngIf="isSubmitted && registrationForm.controls.cityName.errors"
+              >{{ "ThisFieldRequired" | translate }}
+            </small>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="form-group">
+            <input
+              type="email"
+              class="form-control rounded-8"
+              formControlName="email"
+              placeholder="{{ 'Email' | translate }}"
+            />
+            <small
+              class="p-error"
+              style="color: orange"
+              *ngIf="isSubmitted && registrationForm.controls.email.errors"
+              >{{ "ValidEmailRequired" | translate }}
+            </small>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="form-group input-container">
+            <input
+              #passwordInput
+              type="password"
+              class="form-control rounded-8"
+              formControlName="password"
+              placeholder="{{ 'Password' | translate }}"
+            />
+            <button
+              class="eye_button_style"
+              type="button"
+              (click)="
+                passwordInput.type =
+                  passwordInput.type === 'password' ? 'text' : 'password'
+              "
+            >
+              <i
+                class="fa fa-eye-slash"
+                (click)="onPasswordShow()"
+                *ngIf="!isPasswordVisible"
+              ></i
+              ><i
+                class="fa fa-eye"
+                (click)="onPasswordHide()"
+                *ngIf="isPasswordVisible"
+              ></i>
+            </button>
+            <div
+              *ngIf="
+                isSubmitted &&
+                registrationForm.get('password')?.errors?.minlength
+              "
+            >
+              <small
+                class="p-error"
+                style="color: orange"
+                *ngIf="
+                  isSubmitted &&
+                  registrationForm.get('password')?.errors?.minlength
+                "
+              >
+                {{ "PasswordLengthRequired" | translate }} </small
+              ><br />
+            </div>
+            <small
+              class="p-error"
+              style="color: orange"
+              *ngIf="
+                isSubmitted && registrationForm.get('password')?.errors?.pattern
+              "
+            >
+              {{ "PasswordPatternRequired" | translate }}</small
+            >
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="form-group input-container">
+            <input
+              #confirmPasswordInput
+              type="password"
+              class="form-control rounded-8"
+              formControlName="confirmPassword"
+              placeholder="{{ 'RepeatPassword' | translate }}"
+            />
+            <button
+              class="eye_button_style"
+              type="button"
+              (click)="
+                confirmPasswordInput.type =
+                  confirmPasswordInput.type === 'password' ? 'text' : 'password'
+              "
+            >
+              <i
+                class="fa fa-eye-slash"
+                (click)="onConfirmPasswordShow()"
+                *ngIf="!isConfirmPasswordVisible"
+              ></i
+              ><i
+                class="fa fa-eye"
+                (click)="onConfirmPasswordHide()"
+                *ngIf="isConfirmPasswordVisible"
+              ></i>
+            </button>
+            <small
+              class="p-error"
+              style="color: orange"
+              *ngIf="
+                isSubmitted &&
+                registrationForm.get('confirmPassword')?.errors?.required
+              "
+            >
+              {{ "ConfirmPasswordRequired" | translate }}</small
+            >
+            <small
+              class="p-error"
+              style="color: orange"
+              *ngIf="
+                isSubmitted &&
+                (registrationForm.get('confirmPassword')?.errors?.pattern ||
+                  registrationForm.get('confirmPassword')?.errors?.minlength)
+              "
+            >
+              {{ "PasswordDoesNotMatch" | translate }}</small
+            >
+            <small
+              class="p-error"
+              style="color: orange"
+              *ngIf="
+                isSubmitted &&
+                matchPassword() &&
+                registrationForm.controls.confirmPassword.touched &&
+                !registrationForm.controls.confirmPassword.errors
+              "
+            >
+              {{ "PasswordDoesNotMatch" | translate }}
+            </small>
+          </div>
+        </div>
+
+        <small
+          class="p-error"
+          style="color: orange; margin-left: 127px"
+          *ngIf="registrationForm.errors?.unauthenticated"
+        >
+          {{ "EmailAlreadyTaken" | translate }}
+        </small>
+
+        <div class="col-md-12">
+          <button
+            type="submit"
+            (click)="register()"
+            class="btn primary_btn w-100 rounded-8 text-uppercase"
+          >
+            {{ "Register" | translate }}
+          </button>
+        </div>
+      </div>
+      <p class="font_14 fw_300 text-center al-account">
+        {{ "AlreadyAccount" | translate }}
+        <a
+          [routerLink]="['/user/auth/login']"
+          class="fw_700 text_dark text-decoration-none"
+          >{{ "Login" | translate }}</a
+        >
+      </p>
+      <multi-lingual></multi-lingual>
+    </form>
+  </div>
+</section>
 <!-- </div> -->
 <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
