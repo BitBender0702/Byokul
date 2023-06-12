@@ -674,7 +674,13 @@ button.comment-btn {
 }
 
 .comment-post-user {
-  min-width: 32px;
+  flex: 0 0 auto;
+  width: 32px;
+  height: 32px;
+}
+
+.comment-post-user img {
+  width: 32px;
   height: 32px;
 }
 
