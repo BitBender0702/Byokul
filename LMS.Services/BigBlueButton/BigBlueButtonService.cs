@@ -34,7 +34,7 @@ namespace LMS.Services.BigBlueButton
                 string attendeePW = "ap";
                 string logoutURL = _config["MeetingLogoutUrl"];
                 bool isMicroPhoneOpen = false;
-                string meetingId = newMeetingViewModel.meetingName + "meetings";
+                string meetingId = Guid.NewGuid().ToString();
                 meetingId = await EncodeUrl(meetingId);
                 string meetingName = newMeetingViewModel.meetingName;
                 meetingName = await EncodeUrl(meetingName);
@@ -44,11 +44,11 @@ namespace LMS.Services.BigBlueButton
                     isMicroPhoneOpen = true;
                 }
 
-                string createChecksum = "createname=" + meetingName + "&meetingID=" + meetingId + "&welcome=" + welcome + "&attendeePW=" + attendeePW + "&freeJoin=false" + "&record=true" + "&muteOnStart=" + isMicroPhoneOpen + "&autoStartRecording=true" + "&logoutURL=" + logoutURL + "&guestPolicy=ASK_MODERATOR" + "&moderatorPW=" + moderatorPW + secretKey;
+                string createChecksum = "createname=" + meetingName + "&meetingID=" + meetingId + "&welcome=" + welcome + "&attendeePW=" + attendeePW + "&freeJoin=false" + "&record=true" + "&muteOnStart=" + isMicroPhoneOpen + "&autoStartRecording=true" + "&logoutURL=" + logoutURL + "&guestPolicy=ALWAYS_ACCEPT" + "&moderatorPW=" + moderatorPW + secretKey;
 
                 string checksum = Hash(createChecksum);
 
-                string finalurl = "create?name=" + meetingName + "&meetingID=" + meetingId + "&welcome=" + welcome + "&attendeePW=" + attendeePW + "&freeJoin=false" + "&record=true" + "&muteOnStart=" + isMicroPhoneOpen + "&autoStartRecording=true" + "&logoutURL=" + logoutURL + "&guestPolicy=ASK_MODERATOR" + "&moderatorPW=" + moderatorPW + "&checksum=" + checksum;
+                string finalurl = "create?name=" + meetingName + "&meetingID=" + meetingId + "&welcome=" + welcome + "&attendeePW=" + attendeePW + "&freeJoin=false" + "&record=true" + "&muteOnStart=" + isMicroPhoneOpen + "&autoStartRecording=true" + "&logoutURL=" + logoutURL + "&guestPolicy=ALWAYS_ACCEPT" + "&moderatorPW=" + moderatorPW + "&checksum=" + checksum;
 
                 var clients = new HttpClient();
                 clients.BaseAddress = new Uri(baseUrl);
@@ -72,6 +72,15 @@ namespace LMS.Services.BigBlueButton
 
                 string joinFinalUrl = baseUrl + joinModeratorUrl;
                 //var res = await RegisterWebHook(meetingId);
+
+                var post = _postRepository.GetById(newMeetingViewModel.PostId);
+                post.StreamUrl = joinFinalUrl;
+                post.ExternalMeetingId = new Guid(meetingId);
+                int hyphenIndex = result.InternalMeetingID.IndexOf('-');
+                result.InternalMeetingID = result.InternalMeetingID.Substring(0, hyphenIndex);
+                post.InternalMeetingId = result.InternalMeetingID;
+                _postRepository.Update(post);
+                _postRepository.Save();
 
                 return joinFinalUrl;
             }
@@ -176,19 +185,28 @@ namespace LMS.Services.BigBlueButton
                 }
             }
 
+            // remove pass from this
+
             var res = XmlDocumentToString(doc);
             string json = JsonConvert.SerializeXmlNode(doc, formatting: Newtonsoft.Json.Formatting.None, omitRootObject: true);
             try
             {
                 var result = JsonConvert.DeserializeObject<GetMeetingInfo>(json);
 
-                string joinChecksum = "joinfullName=" + model.Name + "&meetingID=" + model.MeetingId + "&guest=false" + "&password=" + result.attendeePW + "&redirect=true" + secretKey;
+                //string joinChecksum = "joinfullName=" + model.Name + "&meetingID=" + model.MeetingId + "&role=VIEWER" + "&redirect=true" + secretKey;
+
+                string joinChecksum = "joinfullName=" + model.Name + "&meetingID=" + model.MeetingId + "&waitModerator=false" + "&password=" + result.attendeePW + "&redirect=true" + secretKey;
+
 
                 string joinchecksum = Hash(joinChecksum);
 
-                string joinAttendeeUrl = "join?fullName=" + model.Name + "&meetingID=" + model.MeetingId + "&guest=false" + "&password=" + result.attendeePW + "&redirect=true" + "&checksum=" + joinchecksum;
+                string joinAttendeeUrl = "join?fullName=" + model.Name + "&meetingID=" + model.MeetingId + "&waitModerator=false" + "&password=" + result.attendeePW + "&redirect=true" + "&checksum=" + joinchecksum;
 
                 string joinFinalUrl = baseUrl + joinAttendeeUrl;
+                var post = _postRepository.GetById(model.PostId);
+                post.StreamJoinUrl = joinFinalUrl;
+                _postRepository.Update(post);
+                _postRepository.Save();
                 return joinFinalUrl;
             }
             catch (Exception ex)

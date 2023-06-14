@@ -16,6 +16,8 @@ namespace LMS.Data.Entity
         public int FileType { get; set; }
         public bool IsPinned { get; set; }
         public string? FileThumbnail { get; set; }
+        public float? VideoTotalTime { get; set; }
+        public float?  VideoLiveTime { get; set; }
 
-    }
+}
 }

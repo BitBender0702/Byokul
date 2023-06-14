@@ -23,5 +23,10 @@ namespace LMS.Data.Entity
         public Boolean IsCommentsDisabled { get; set; }
         public int? CommentsPerMinute { get; set; }
         public bool? IsLive { get; set; }
+        public string? StreamUrl { get; set; }
+        public string? StreamJoinUrl { get; set; }
+        public string? InternalMeetingId { get; set; }
+        public Guid? ExternalMeetingId { get; set; }
+
     }
 }

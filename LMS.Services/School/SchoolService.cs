@@ -303,7 +303,7 @@ namespace LMS.Services
 
 
 
-        public async Task<SchoolDetailsViewModel> GetSchoolById(string schoolName, string loginUserId)
+        public async Task<SchoolDetailsViewModel> GetSchoolByName(string schoolName, string loginUserId)
         {
             SchoolDetailsViewModel model = new SchoolDetailsViewModel();
 
@@ -365,6 +365,70 @@ namespace LMS.Services
             }
             return null;
         }
+
+        public async Task<SchoolDetailsViewModel> GetSchoolById(Guid schoolId, string loginUserId)
+        {
+            SchoolDetailsViewModel model = new SchoolDetailsViewModel();
+
+            //if (schoolName != null)
+            //{
+            //    schoolName = System.Web.HttpUtility.UrlEncode(schoolName, Encoding.GetEncoding("iso-8859-7")).Replace("%3f", "").ToLower();
+
+            var schoolLanguages = await _schoolLanguageRepository.GetAll()
+            .Include(x => x.Language)
+            .Include(x => x.School)
+            .ThenInclude(x => x.Country)
+            .Include(x => x.School)
+            .ThenInclude(x => x.Specialization)
+            .Include(x => x.School)
+            .ThenInclude(x => x.CreatedBy)
+            .Where(x => x.School.SchoolId == schoolId).ToListAsync();
+
+
+            var response = _mapper.Map<SchoolDetailsViewModel>(schoolLanguages.First().School);
+
+            var languageViewModel = new List<LanguageViewModel>();
+
+            foreach (var res in schoolLanguages)
+            {
+                languageViewModel.Add(_mapper.Map<LanguageViewModel>(res.Language));
+            }
+
+            response.Languages = languageViewModel;
+            response.SchoolCertificates = await GetCertificateBySchoolId(response.SchoolId);
+            response.SchoolFollowers = await FollowerList(response.SchoolId);
+            //response.Classes = await GetClassesBySchoolId(response.SchoolId,loginUserId);
+            //response.Courses = await GetCoursesBySchoolId(response.SchoolId,loginUserId);
+            response.Posts = await GetPostsBySchool(response.SchoolId, loginUserId);
+            response.Reels = await GetReelsBySchool(response.SchoolId, loginUserId);
+
+            var classTeachers = await GetClassTeachersBySchoolId(response.SchoolId);
+            var courseTeachers = await GetCourseTeachersBySchoolId(response.SchoolId);
+            var schoolTeacher = await GetSchoolTeachersBySchoolId(response.SchoolId);
+
+            var classCourseTeachers = classTeachers.Union(courseTeachers).DistinctBy(x => x.TeacherId).ToList();
+
+            var schoolTeachers = classCourseTeachers.Union(schoolTeacher).DistinctBy(x => x.TeacherId).ToList();
+
+
+
+            var classStudents = await GetClassStudentsBySchoolId(response.SchoolId);
+            var courseStudents = await GetCourseStudentsBySchoolId(response.SchoolId);
+
+            var schoolStudents = classStudents.Union(courseStudents).DistinctBy(x => x.StudentId).ToList();
+
+            response.Teachers = schoolTeachers;
+            response.Students = schoolStudents.Count();
+
+            response.NoOfAppliedClassFilters = await _userClassCourseFilterRepository.GetAll().Where(x => x.UserId == loginUserId && x.ClassCourseFilterType == ClassCourseFilterEnum.Class && x.SchoolId == response.SchoolId && x.IsActive).CountAsync();
+
+            response.NoOfAppliedCourseFilters = await _userClassCourseFilterRepository.GetAll().Where(x => x.UserId == loginUserId && x.ClassCourseFilterType == ClassCourseFilterEnum.Course && x.SchoolId == response.SchoolId && x.IsActive).CountAsync();
+
+            return response;
+            //}
+            //return null;
+        }
+
 
         async Task<IEnumerable<SchoolCertificateViewModel>> GetCertificateBySchoolId(Guid schoolId)
         {
@@ -848,15 +912,15 @@ namespace LMS.Services
             return true;
         }
 
-        public async Task<SchoolViewModel> GetSchoolByName(string schoolName)
-        {
-            var school = await _schoolRepository.GetAll().Where(x => x.SchoolName.Replace(" ", "").ToLower() == schoolName.Replace(" ", "").ToLower()).FirstOrDefaultAsync();
-            if (school != null)
-            {
-                return _mapper.Map<SchoolViewModel>(school);
-            }
-            return null;
-        }
+        //public async Task<SchoolViewModel> GetSchoolByName(string schoolName)
+        //{
+        //    var school = await _schoolRepository.GetAll().Where(x => x.SchoolName.Replace(" ", "").ToLower() == schoolName.Replace(" ", "").ToLower()).FirstOrDefaultAsync();
+        //    if (school != null)
+        //    {
+        //        return _mapper.Map<SchoolViewModel>(school);
+        //    }
+        //    return null;
+        //}
 
         public async Task<IEnumerable<CombineClassCourseViewModel>> GetSchoolClassCourse(Guid? schoolId, string userId, int pageNumber)
         {

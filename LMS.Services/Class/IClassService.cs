@@ -16,7 +16,8 @@ namespace LMS.Services
         Task<ClassUpdateViewModel> GetClassEditDetails(Guid classId);
         Task<ClassUpdateViewModel> UpdateClass(ClassUpdateViewModel classUpdateViewModel);
         Task DeleteClassById(Guid classId, string deletedById);
-        Task<ClassDetailsViewModel> GetClassById(string className, string loginUserId);
+        Task<ClassDetailsViewModel> GetClassByName(string className, string loginUserId);
+        Task<ClassDetailsViewModel> GetClassById(Guid classId, string loginUserId);
         Task<IEnumerable<ClassViewModel>> GetAllClasses();
         Task SaveClassLanguages(IEnumerable<string> languageIds, Guid classId);
         Task DeleteClassLanguage(ClassLanguageViewModel model);
@@ -25,7 +26,7 @@ namespace LMS.Services
         Task SaveClassCertificates(SaveClassCertificateViewModel model);
         Task DeleteClassCertificate(ClassCertificateViewModel model);
         Task<ClassViewModel> GetBasicClassInfo(Guid classId);
-        Task<ClassViewModel> GetClassByName(string className, string schoolName);
+        //Task<ClassViewModel> GetClassByName(string className, string schoolName);
         Task<bool> IsClassNameExist(string className);
         Task<ClassViewModel> ConvertToCourse(string className);
         Task<List<ClassLikeViewModel>> GetLikesOnClass(Guid classId);

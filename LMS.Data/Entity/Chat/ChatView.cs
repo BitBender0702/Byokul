@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,6 +24,14 @@ namespace LMS.Data.Entity.Chat
         public DateTime? DeletedOn { get; set; }
         public Guid SenderId { get; set; }
         public Guid ReceiverId { get; set; }
+
+        //[ForeignKey("ReplyMessageId")]
+        //public ChatMessage? ChatMessages { get; set; }
+
+        //[ForeignKey("ReplyAttachmentId")]
+        //public Attachment ReplyAttachments { get; set; }
+        public Guid? ReplyMessageId { get; set; }
+        public bool? IsForwarded { get; set; }
         public List<Attachment> Attachments { get; set; }
         
     }
@@ -36,6 +45,8 @@ namespace LMS.Data.Entity.Chat
         public FileTypeEnum FileType { get; set; }    
         public string FileName { get; set; }
         public string FileURL{ get; set; }
+        public bool? IsForwarded { get; set; }
+
     }
 
     public enum FileTypeEnum

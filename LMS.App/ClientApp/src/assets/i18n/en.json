@@ -410,5 +410,9 @@
   "ShowMore": "show more",
   "NoReultsFound": "No reults found",
 
-  "FileSizeExceed": "File size exceeds the limit of 25MB"
+  "FileSizeExceed": "File size exceeds the limit of 25MB",
+  "ThumbnailRequired": "Please select an image for thumbnail",
+  "RemoveThrottling": "Remove Throttling",
+  "ForwardMessage": "Forward Message",
+  "Done": "Done"
 }

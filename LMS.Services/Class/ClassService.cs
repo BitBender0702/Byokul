@@ -265,7 +265,7 @@ namespace LMS.Services
             var containerName = "classlogo";
             if (classUpdateViewModel.AvatarImage != null)
             {
-                classUpdateViewModel.Avatar = await _blobService.UploadFileAsync(classUpdateViewModel.AvatarImage, containerName,false);
+                classUpdateViewModel.Avatar = await _blobService.UploadFileAsync(classUpdateViewModel.AvatarImage, containerName, false);
             }
 
             classUpdateViewModel.LanguageIds = JsonConvert.DeserializeObject<string[]>(classUpdateViewModel.LanguageIds.First());
@@ -348,7 +348,7 @@ namespace LMS.Services
             await SaveClassTeachers(teacherIds, classId);
         }
 
-        public async Task<ClassDetailsViewModel> GetClassById(string className, string loginUserId)
+        public async Task<ClassDetailsViewModel> GetClassByName(string className, string loginUserId)
         {
             ClassDetailsViewModel model = new ClassDetailsViewModel();
             if (className != null)
@@ -386,6 +386,40 @@ namespace LMS.Services
             }
             return null;
         }
+
+        public async Task<ClassDetailsViewModel> GetClassById(Guid classId, string loginUserId)
+        {
+            ClassDetailsViewModel model = new ClassDetailsViewModel();
+            var classes = await _classRepository.GetAll()
+                     .Include(x => x.ServiceType)
+                     .Include(x => x.School)
+                     .ThenInclude(x => x.Country)
+                     .Include(x => x.School)
+                     .ThenInclude(x => x.Specialization)
+                     .Include(x => x.Accessibility)
+                     .Include(x => x.CreatedBy)
+                     .Where(x => x.ClassId == classId).FirstOrDefaultAsync();
+
+            try
+            {
+                model = _mapper.Map<ClassDetailsViewModel>(classes);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            model.Languages = await GetLanguages(classes.ClassId);
+            model.Disciplines = await GetDisciplines(classes.ClassId);
+            model.Students = await GetStudents(classes.ClassId);
+            model.Teachers = await GetTeachers(classes.ClassId);
+            model.Posts = await GetPostsByClassId(classes.ClassId, loginUserId);
+            model.Reels = await GetReelsByClassId(classes.ClassId, loginUserId);
+            model.ClassCertificates = await GetCertificateByClassId(classes.ClassId);
+
+            return model;
+        }
+
 
         async Task<IEnumerable<LanguageViewModel>> GetLanguages(Guid classId)
         {
@@ -649,15 +683,15 @@ namespace LMS.Services
 
         }
 
-        public async Task<ClassViewModel> GetClassByName(string className, string schoolName)
-        {
-            var classes = await _classRepository.GetAll().Include(x => x.School).Where(x => x.ClassName.Replace(" ", "").ToLower() == className.Replace(" ", "").ToLower() && x.School.SchoolName.Replace(" ", "").ToLower() == schoolName.Replace(" ", "").ToLower()).FirstOrDefaultAsync();
-            if (classes != null)
-            {
-                return _mapper.Map<ClassViewModel>(classes);
-            }
-            return null;
-        }
+        //public async Task<ClassViewModel> GetClassByName(string className, string schoolName)
+        //{
+        //    var classes = await _classRepository.GetAll().Include(x => x.School).Where(x => x.ClassName.Replace(" ", "").ToLower() == className.Replace(" ", "").ToLower() && x.School.SchoolName.Replace(" ", "").ToLower() == schoolName.Replace(" ", "").ToLower()).FirstOrDefaultAsync();
+        //    if (classes != null)
+        //    {
+        //        return _mapper.Map<ClassViewModel>(classes);
+        //    }
+        //    return null;
+        //}
 
         public async Task<bool> IsClassNameExist(string className)
         {
@@ -815,21 +849,21 @@ namespace LMS.Services
             }
 
             //await _schoolService.GetSchoolClassCourse(model.First().SchoolId,userId,1);
-            
+
         }
 
         public async Task<ClassInfoForCertificateViewModel> GetClassInfoForCertificate(Guid classId)
         {
             ClassInfoForCertificateViewModel model = new ClassInfoForCertificateViewModel();
 
-                var classes = await _classRepository.GetAll()
-                    .Include(x => x.School)
-                    .Include(x => x.CreatedBy)
-                    .Where(x => x.ClassId == classId).FirstOrDefaultAsync();
+            var classes = await _classRepository.GetAll()
+                .Include(x => x.School)
+                .Include(x => x.CreatedBy)
+                .Where(x => x.ClassId == classId).FirstOrDefaultAsync();
 
-                    model = _mapper.Map<ClassInfoForCertificateViewModel>(classes);
+            model = _mapper.Map<ClassInfoForCertificateViewModel>(classes);
 
-                    model.Students = await GetClassStudents(classes.ClassId);
+            model.Students = await GetClassStudents(classes.ClassId);
             return model;
 
         }

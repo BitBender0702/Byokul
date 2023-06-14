@@ -23,6 +23,38 @@ namespace LMS.Data
             _dataContext.Database.EnsureCreated();
             await SeedRoles();
             await SeedUsers();
+            await SeedPermissions();
+        }
+
+        public async Task SeedPermissions()
+        {
+            var permissions = await _dataContext.PermissionMaster.CountAsync();
+            if (permissions == 0)
+            {
+                _dataContext.PermissionMaster.Add(new PermissionMaster { Id = Guid.NewGuid(), Name = "Post",DisplayName = "Post",PermissionType = PermissionTypeEnum.School });
+                _dataContext.PermissionMaster.Add(new PermissionMaster { Id = Guid.NewGuid(), Name = "UpdateSchool", DisplayName = "Update School", PermissionType = PermissionTypeEnum.School });
+                _dataContext.PermissionMaster.Add(new PermissionMaster { Id = Guid.NewGuid(), Name = "CreateEditClass", DisplayName = "Edit/Create Class", PermissionType = PermissionTypeEnum.School });
+                _dataContext.PermissionMaster.Add(new PermissionMaster { Id = Guid.NewGuid(), Name = "CreateEditCourse", DisplayName = "Edit/Create Course", PermissionType = PermissionTypeEnum.School });
+                _dataContext.PermissionMaster.Add(new PermissionMaster { Id = Guid.NewGuid(), Name = "ManageTeachers", DisplayName = "Manage Teachers", PermissionType = PermissionTypeEnum.School });
+                await _dataContext.SaveChangesAsync();
+                _dataContext.PermissionMaster.Add(new PermissionMaster { Id = Guid.NewGuid(), Name = "AddSchoolCertificates", DisplayName = "Add School Certificates", PermissionType = PermissionTypeEnum.School });
+                _dataContext.PermissionMaster.Add(new PermissionMaster { Id = Guid.NewGuid(), Name = "AddLanguages", DisplayName = "Add Languages", PermissionType = PermissionTypeEnum.School });
+
+                _dataContext.PermissionMaster.Add(new PermissionMaster { Id = Guid.NewGuid(), Name = "Post", DisplayName = "Post", PermissionType = PermissionTypeEnum.Class });
+                _dataContext.PermissionMaster.Add(new PermissionMaster { Id = Guid.NewGuid(), Name = "UpdateClass", DisplayName = "Update Class", PermissionType = PermissionTypeEnum.Class });
+                _dataContext.PermissionMaster.Add(new PermissionMaster { Id = Guid.NewGuid(), Name = "IssueCertificate", DisplayName = "Issue Certificate", PermissionType = PermissionTypeEnum.Class });
+                await _dataContext.SaveChangesAsync();
+                _dataContext.PermissionMaster.Add(new PermissionMaster { Id = Guid.NewGuid(), Name = "AddClassCertificates", DisplayName = "Add Class Certificates", PermissionType = PermissionTypeEnum.Class });
+                _dataContext.PermissionMaster.Add(new PermissionMaster { Id = Guid.NewGuid(), Name = "AddLanguages", DisplayName = "Add Languages", PermissionType = PermissionTypeEnum.Class });
+
+                _dataContext.PermissionMaster.Add(new PermissionMaster { Id = Guid.NewGuid(), Name = "Post", DisplayName = "Post", PermissionType = PermissionTypeEnum.Course });
+                _dataContext.PermissionMaster.Add(new PermissionMaster { Id = Guid.NewGuid(), Name = "UpdateCourse", DisplayName = "Update Course", PermissionType = PermissionTypeEnum.Course });
+                _dataContext.PermissionMaster.Add(new PermissionMaster { Id = Guid.NewGuid(), Name = "IssueCertificate", DisplayName = "Issue Certificate", PermissionType = PermissionTypeEnum.Class });
+                await _dataContext.SaveChangesAsync();
+                _dataContext.PermissionMaster.Add(new PermissionMaster { Id = Guid.NewGuid(), Name = "AddCourseCertificates", DisplayName = "Add Course Certificates", PermissionType = PermissionTypeEnum.Class });
+                _dataContext.PermissionMaster.Add(new PermissionMaster { Id = Guid.NewGuid(), Name = "AddLanguages", DisplayName = "Add Languages", PermissionType = PermissionTypeEnum.Class });
+                await _dataContext.SaveChangesAsync();
+            }
         }
 
         public async Task SeedRoles()

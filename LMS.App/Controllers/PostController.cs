@@ -210,6 +210,22 @@ namespace LMS.App.Controllers
             return Ok();
         }
 
+        [Route("saveStreamAsPost")]
+        [HttpPost]
+        public async Task<IActionResult> SaveStreamAsPost(Guid postId)
+        {
+            await _postService.SaveStreamAsPost(postId);
+            return Ok();
+        }
+
+        [Route("saveLiveVideoTime")]
+        [HttpPost]
+        public async Task<IActionResult> SaveLiveVideoTime(Guid postId, float videoTotalTime, float videoLiveTime)
+        {
+            await _postService.SaveLiveVideoTime(postId, videoTotalTime, videoLiveTime);
+            return Ok();
+        }
+
 
 
     }

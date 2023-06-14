@@ -11,5 +11,6 @@ namespace LMS.Common.ViewModels.BigBlueButton
         public string meetingName { get; set; }
         public bool IsMicrophoneOpen { get; set; }
         public string ModeratorName { get; set; }
+        public Guid PostId { get; set; }
     }
 }

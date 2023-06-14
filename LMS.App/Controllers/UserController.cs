@@ -203,6 +203,15 @@ namespace LMS.App.Controllers
             return Ok(response);
         }
 
+        [Route("getMyReels")]
+        [HttpGet]
+        public async Task<IActionResult> getMyReels(int pageNumber, int pageSize = 4)
+        {
+            var userId = await GetUserIdAsync(this._userManager);
+            var response = await _userService.GetReelsByUserId(userId, pageNumber, pageSize);
+            return Ok(response);
+        }
+
         [Route("getCertificatePdf")]
         [HttpGet]
         public async Task<IActionResult> GetCertificatePdf(string certificateName, int from)

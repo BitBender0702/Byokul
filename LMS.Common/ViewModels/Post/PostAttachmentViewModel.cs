@@ -28,6 +28,8 @@ namespace LMS.Common.ViewModels.Post
         public bool IsPinned { get; set; }
         public string? FileThumbnail { get; set; }
         public byte[]? ByteArray { get; set; }
+        public float? VideoTotalTime { get; set; }
+        public float? VideoLiveTime { get; set; }
 
     }
 }

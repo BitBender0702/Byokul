@@ -1,0 +1,518 @@
+<Events><Event><System><Provider Name=".NET Runtime"/><EventID>1000</EventID><Level>1</Level><Task>0</Task><Keywords>Keywords</Keywords><TimeCreated SystemTime="2023-02-27T06:15:30Z"/><EventRecordID>344702610</EventRecordID><Channel>Application</Channel><Computer>RD0003FF7BE2D8</Computer><Security/></System><EventData><Data>Category: Microsoft.AspNetCore.Server.IIS.Core.IISHttpServer
+EventId: 2
+SpanId: c7d6cd6c8fd0356d
+TraceId: 28f49daa6315a41e7f13546e456f23fb
+ParentId: 0000000000000000
+RequestId: 800027b7-0002-df00-b63f-84710c7967bb
+RequestPath: /students/uploadStudentCertificates
+
+Connection ID "16068843480658487209", Request ID "800027b7-0002-df00-b63f-84710c7967bb": An unhandled exception was thrown by the application.
+
+Exception: 
+System.IO.DirectoryNotFoundException: Could not find a part of the path 'D:\home\site\wwwroot\AssignedCertificates\742ad167-b317-4c7f-bc08-a23f2474432f.pdf'.
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at LMS.Services.Students.StudentsService.UploadStudentCertificates(UploadStudentCertificateViewModel model, String userId) in D:\Projects\BYOkulLatest\Code\LMS.Services\Students\StudentsService.cs:line 155
+   at LMS.App.Controllers.StudentsController.UploadStudentCertificates(UploadStudentCertificateViewModel model) in D:\Projects\BYOkulLatest\Code\LMS.App\Controllers\StudentsController.cs:line 43
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.&lt;InvokeActionMethodAsync&gt;g__Logged|12_1(ControllerActionInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.&lt;InvokeNextActionFilterAsync&gt;g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State&amp; next, Scope&amp; scope, Object&amp; state, Boolean&amp; isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.&lt;InvokeFilterPipelineAsync&gt;g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.&lt;InvokeAsync&gt;g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.&lt;InvokeAsync&gt;g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.&lt;Invoke&gt;g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Server.IIS.Core.IISHttpContextOfT`1.ProcessRequestAsync()
+</Data></EventData></Event><Event><System><Provider Name="IIS AspNetCore Module V2"/><EventID>1012</EventID><Level>4</Level><Task>0</Task><Keywords>Keywords</Keywords><TimeCreated SystemTime="2023-02-27T06:27:11Z"/><EventRecordID>345403282</EventRecordID><Channel>Application</Channel><Computer>RD0003FF7BE2D8</Computer><Security/></System><EventData><Data>Application 'D:\home\site\wwwroot\' was recycled after detecting app_offline.htm.</Data><Data>Process Id: 12768.</Data><Data>File Version: 16.0.22335.13. Description: IIS ASP.NET Core Module V2 Request Handler. Commit: 50b7e9c661453874aa7a54a3985d5120564bb2e5</Data></EventData></Event><Event><System><Provider Name="IIS AspNetCore Module V2"/><EventID>1033</EventID><Level>4</Level><Task>0</Task><Keywords>Keywords</Keywords><TimeCreated SystemTime="2023-02-27T06:27:11Z"/><EventRecordID>345403360</EventRecordID><Channel>Application</Channel><Computer>RD0003FF7BE2D8</Computer><Security/></System><EventData><Data>Application 'MACHINE/WEBROOT/APPHOST/BYOKUL-DEV' has shutdown.</Data><Data>Process Id: 12768.</Data><Data>File Version: 16.0.22335.13. Description: IIS ASP.NET Core Module V2 Request Handler. Commit: 50b7e9c661453874aa7a54a3985d5120564bb2e5</Data></EventData></Event><Event><System><Provider Name="IIS AspNetCore Module V2"/><EventID>1032</EventID><Level>4</Level><Task>0</Task><Keywords>Keywords</Keywords><TimeCreated SystemTime="2023-02-27T06:27:20Z"/><EventRecordID>345411985</EventRecordID><Channel>Application</Channel><Computer>RD0003FF7BE2D8</Computer><Security/></System><EventData><Data>Application 'D:\home\site\wwwroot\' started successfully.</Data><Data>Process Id: 13040.</Data><Data>File Version: 16.0.22335.13. Description: IIS ASP.NET Core Module V2 Request Handler. Commit: 50b7e9c661453874aa7a54a3985d5120564bb2e5</Data></EventData></Event><Event><System><Provider Name=".NET Runtime"/><EventID>1000</EventID><Level>1</Level><Task>0</Task><Keywords>Keywords</Keywords><TimeCreated SystemTime="2023-02-27T06:27:30Z"/><EventRecordID>345421688</EventRecordID><Channel>Application</Channel><Computer>RD0003FF7BE2D8</Computer><Security/></System><EventData><Data>Category: Microsoft.AspNetCore.SignalR.HubConnectionHandler
+EventId: 1
+SpanId: 0c41573441412d29
+TraceId: 22306a4a7af10d4fc4dc5130efd3266b
+ParentId: 0000000000000000
+RequestId: 80006422-0000-f300-b63f-84710c7967bb
+RequestPath: /chatHub
+TransportConnectionId: J4Ix_bP6hlnXeY2fUrU35Q
+
+Error when dispatching 'OnConnectedAsync' on hub.
+
+Exception: 
+System.ArgumentException: An item with the same key has already been added. Key: e08083b4-8b2e-4390-92e6-b270dc05e720
+   at System.Collections.Generic.Dictionary`2.TryInsert(TKey key, TValue value, InsertionBehavior behavior)
+   at System.Collections.Generic.Dictionary`2.Add(TKey key, TValue value)
+   at ChatHub.OnConnectedAsync() in D:\Projects\BYOkulLatest\Code\LMS.App\ChatHub\ChatHub.cs:line 44
+   at Microsoft.AspNetCore.SignalR.Internal.DefaultHubDispatcher`1.OnConnectedAsync(HubConnectionContext connection)
+   at Microsoft.AspNetCore.SignalR.Internal.DefaultHubDispatcher`1.OnConnectedAsync(HubConnectionContext connection)
+   at Microsoft.AspNetCore.SignalR.HubConnectionHandler`1.RunHubAsync(HubConnectionContext connection)
+</Data></EventData></Event><Event><System><Provider Name=".NET Runtime"/><EventID>1000</EventID><Level>1</Level><Task>0</Task><Keywords>Keywords</Keywords><TimeCreated SystemTime="2023-02-27T06:28:45Z"/><EventRecordID>345497204</EventRecordID><Channel>Application</Channel><Computer>RD0003FF7BE2D8</Computer><Security/></System><EventData><Data>Category: Microsoft.AspNetCore.Server.IIS.Core.IISHttpServer
+EventId: 2
+SpanId: 72d748955cfad2ed
+TraceId: 95254cd3765ebf0c6a97e426f42271cf
+ParentId: 0000000000000000
+RequestId: 8002232a-0000-e900-b63f-84710c7967bb
+RequestPath: /students/uploadStudentCertificates
+
+Connection ID "16789419412447961664", Request ID "8002232a-0000-e900-b63f-84710c7967bb": An unhandled exception was thrown by the application.
+
+Exception: 
+System.IO.DirectoryNotFoundException: Could not find a part of the path 'D:\home\site\wwwroot\AssignedCertificates\3d971f4d-26ae-44f4-9deb-e7acfe89a082.pdf'.
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at LMS.Services.Students.StudentsService.UploadStudentCertificates(UploadStudentCertificateViewModel model, String userId) in D:\Projects\BYOkulLatest\Code\LMS.Services\Students\StudentsService.cs:line 155
+   at LMS.App.Controllers.StudentsController.UploadStudentCertificates(UploadStudentCertificateViewModel model) in D:\Projects\BYOkulLatest\Code\LMS.App\Controllers\StudentsController.cs:line 43
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.&lt;InvokeActionMethodAsync&gt;g__Logged|12_1(ControllerActionInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.&lt;InvokeNextActionFilterAsync&gt;g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State&amp; next, Scope&amp; scope, Object&amp; state, Boolean&amp; isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.&lt;InvokeInnerFilterAsync&gt;g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.&lt;InvokeFilterPipelineAsync&gt;g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.&lt;InvokeAsync&gt;g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.&lt;InvokeAsync&gt;g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.&lt;Invoke&gt;g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Server.IIS.Core.IISHttpContextOfT`1.ProcessRequestAsync()
+</Data></EventData></Event><Event><System><Provider Name=".NET Runtime"/><EventID>1000</EventID><Level>1</Level><Task>0</Task><Keywords>Keywords</Keywords><TimeCreated SystemTime="2023-02-27T06:37:14Z"/><EventRecordID>346006532</EventRecordID><Channel>Application</Channel><Computer>RD0003FF7BE2D8</Computer><Security/></System><EventData><Data>Category: Microsoft.AspNetCore.Server.IIS.Core.IISHttpServer
+EventId: 2
+SpanId: 5ccc323773c7898b
+TraceId: 52acabebb8d2ca23809478b819995e96
+ParentId: 0000000000000000
+RequestId: 80001aa9-0000-9700-b63f-84710c7967bb
+RequestPath: /students/uploadStudentCertificates
+
+Connection ID "10880696701337737887", Request ID "80001aa9-0000-9700-b63f-84710c7967bb": An unhandled exception was thrown by the application.
+
+Exception: 
+System.IO.DirectoryNotFoundException: Could not find a part of the path 'D:\home\site\wwwroot\AssignedCertificates\eed7e371-5956-4547-aec5-562737fe0bff.pdf'.
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at LMS.Services.Students.StudentsService.UploadStudentCertificates(UploadStudentCertificateViewModel model, String userId) in D:\Projects\BYOkulLatest\Code\LMS.Services\Students\StudentsService.cs:line 155
+   at LMS.App.Controllers.StudentsController.UploadStudentCertificates(UploadStudentCertificateViewModel model) in D:\Projects\BYOkulLatest\Code\LMS.App\Controllers\StudentsController.cs:line 43
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.&lt;InvokeActionMethodAsync&gt;g__Logged|12_1(ControllerActionInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.&lt;InvokeNextActionFilterAsync&gt;g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State&amp; next, Scope&amp; scope, Object&amp; state, Boolean&amp; isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.&lt;InvokeInnerFilterAsync&gt;g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.&lt;InvokeFilterPipelineAsync&gt;g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.&lt;InvokeAsync&gt;g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.&lt;InvokeAsync&gt;g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.&lt;Invoke&gt;g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Server.IIS.Core.IISHttpContextOfT`1.ProcessRequestAsync()
+</Data></EventData></Event><Event><System><Provider Name=".NET Runtime"/><EventID>1000</EventID><Level>1</Level><Task>0</Task><Keywords>Keywords</Keywords><TimeCreated SystemTime="2023-02-27T06:43:57Z"/><EventRecordID>346408672</EventRecordID><Channel>Application</Channel><Computer>RD0003FF7BE2D8</Computer><Security/></System><EventData><Data>Category: Microsoft.AspNetCore.Server.IIS.Core.IISHttpServer
+EventId: 2
+SpanId: c7a1f6ff09afa8f4
+TraceId: 5d9e9c1639e87ed0728dcec8817a4cd6
+ParentId: 0000000000000000
+RequestId: 8001c6e0-0000-e100-b63f-84710c7967bb
+RequestPath: /students/uploadStudentCertificates
+
+Connection ID "16212958660144514778", Request ID "8001c6e0-0000-e100-b63f-84710c7967bb": An unhandled exception was thrown by the application.
+
+Exception: 
+System.IO.DirectoryNotFoundException: Could not find a part of the path 'D:\home\site\wwwroot\AssignedCertificates\f626aea5-8431-4de5-8e9e-be1f7f2e7651.pdf'.
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at LMS.Services.Students.StudentsService.UploadStudentCertificates(UploadStudentCertificateViewModel model, String userId) in D:\Projects\BYOkulLatest\Code\LMS.Services\Students\StudentsService.cs:line 155
+   at LMS.App.Controllers.StudentsController.UploadStudentCertificates(UploadStudentCertificateViewModel model) in D:\Projects\BYOkulLatest\Code\LMS.App\Controllers\StudentsController.cs:line 43
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.&lt;InvokeActionMethodAsync&gt;g__Logged|12_1(ControllerActionInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.&lt;InvokeNextActionFilterAsync&gt;g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State&amp; next, Scope&amp; scope, Object&amp; state, Boolean&amp; isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.&lt;InvokeInnerFilterAsync&gt;g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.&lt;InvokeFilterPipelineAsync&gt;g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.&lt;InvokeAsync&gt;g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.&lt;InvokeAsync&gt;g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.&lt;Invoke&gt;g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Server.IIS.Core.IISHttpContextOfT`1.ProcessRequestAsync()
+</Data></EventData></Event><Event><System><Provider Name=".NET Runtime"/><EventID>1000</EventID><Level>1</Level><Task>0</Task><Keywords>Keywords</Keywords><TimeCreated SystemTime="2023-02-27T06:44:05Z"/><EventRecordID>346417532</EventRecordID><Channel>Application</Channel><Computer>RD0003FF7BE2D8</Computer><Security/></System><EventData><Data>Category: Microsoft.AspNetCore.Server.IIS.Core.IISHttpServer
+EventId: 2
+SpanId: f2af522183bc3d67
+TraceId: d7638f2c565e4d83305322a5b68ecd3c
+ParentId: 0000000000000000
+RequestId: 80006451-0000-f300-b63f-84710c7967bb
+RequestPath: /students/uploadStudentCertificates
+
+Connection ID "17509995352827126853", Request ID "80006451-0000-f300-b63f-84710c7967bb": An unhandled exception was thrown by the application.
+
+Exception: 
+System.IO.DirectoryNotFoundException: Could not find a part of the path 'D:\home\site\wwwroot\AssignedCertificates\7bd94394-fb9e-4f63-a88f-bff7d32cfe38.pdf'.
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at LMS.Services.Students.StudentsService.UploadStudentCertificates(UploadStudentCertificateViewModel model, String userId) in D:\Projects\BYOkulLatest\Code\LMS.Services\Students\StudentsService.cs:line 155
+   at LMS.App.Controllers.StudentsController.UploadStudentCertificates(UploadStudentCertificateViewModel model) in D:\Projects\BYOkulLatest\Code\LMS.App\Controllers\StudentsController.cs:line 43
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.&lt;InvokeActionMethodAsync&gt;g__Logged|12_1(ControllerActionInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.&lt;InvokeNextActionFilterAsync&gt;g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State&amp; next, Scope&amp; scope, Object&amp; state, Boolean&amp; isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.&lt;InvokeInnerFilterAsync&gt;g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.&lt;InvokeFilterPipelineAsync&gt;g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.&lt;InvokeAsync&gt;g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.&lt;InvokeAsync&gt;g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.&lt;Invoke&gt;g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Server.IIS.Core.IISHttpContextOfT`1.ProcessRequestAsync()
+</Data></EventData></Event><Event><System><Provider Name=".NET Runtime"/><EventID>1000</EventID><Level>1</Level><Task>0</Task><Keywords>Keywords</Keywords><TimeCreated SystemTime="2023-02-27T06:50:13Z"/><EventRecordID>346785516</EventRecordID><Channel>Application</Channel><Computer>RD0003FF7BE2D8</Computer><Security/></System><EventData><Data>Category: Microsoft.AspNetCore.Server.IIS.Core.IISHttpServer
+EventId: 2
+SpanId: 5c524addb015ec56
+TraceId: 106cb91f8527593e685d06772ca3570d
+ParentId: 0000000000000000
+RequestId: 800181ab-0001-d900-b63f-84710c7967bb
+RequestPath: /students/uploadStudentCertificates
+
+Connection ID "15636497912136040861", Request ID "800181ab-0001-d900-b63f-84710c7967bb": An unhandled exception was thrown by the application.
+
+Exception: 
+System.IO.DirectoryNotFoundException: Could not find a part of the path 'D:\home\site\wwwroot\AssignedCertificates\209ce453-8aaf-4d62-a16d-556d2b269721.pdf'.
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at LMS.Services.Students.StudentsService.UploadStudentCertificates(UploadStudentCertificateViewModel model, String userId) in D:\Projects\BYOkulLatest\Code\LMS.Services\Students\StudentsService.cs:line 155
+   at LMS.App.Controllers.StudentsController.UploadStudentCertificates(UploadStudentCertificateViewModel model) in D:\Projects\BYOkulLatest\Code\LMS.App\Controllers\StudentsController.cs:line 43
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.&lt;InvokeActionMethodAsync&gt;g__Logged|12_1(ControllerActionInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.&lt;InvokeNextActionFilterAsync&gt;g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State&amp; next, Scope&amp; scope, Object&amp; state, Boolean&amp; isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.&lt;InvokeInnerFilterAsync&gt;g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.&lt;InvokeFilterPipelineAsync&gt;g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.&lt;InvokeAsync&gt;g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.&lt;InvokeAsync&gt;g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.&lt;Invoke&gt;g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Server.IIS.Core.IISHttpContextOfT`1.ProcessRequestAsync()
+</Data></EventData></Event><Event><System><Provider Name=".NET Runtime"/><EventID>1000</EventID><Level>1</Level><Task>0</Task><Keywords>Keywords</Keywords><TimeCreated SystemTime="2023-02-27T06:56:36Z"/><EventRecordID>347167625</EventRecordID><Channel>Application</Channel><Computer>RD0003FF7BE2D8</Computer><Security/></System><EventData><Data>Category: Microsoft.AspNetCore.Server.IIS.Core.IISHttpServer
+EventId: 2
+SpanId: 6169e671483d9860
+TraceId: 4ef13ca607ebac63d5bc367809e466df
+ParentId: 0000000000000000
+RequestId: 800015f4-0003-c300-b63f-84710c7967bb
+RequestPath: /students/uploadStudentCertificates
+
+Connection ID "14051230851891467762", Request ID "800015f4-0003-c300-b63f-84710c7967bb": An unhandled exception was thrown by the application.
+
+Exception: 
+System.IO.DirectoryNotFoundException: Could not find a part of the path 'D:\home\site\wwwroot\AssignedCertificates\b79de259-149a-45b2-9909-4acd4a58f0dd.pdf'.
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at LMS.Services.Students.StudentsService.UploadStudentCertificates(UploadStudentCertificateViewModel model, String userId) in D:\Projects\BYOkulLatest\Code\LMS.Services\Students\StudentsService.cs:line 155
+   at LMS.App.Controllers.StudentsController.UploadStudentCertificates(UploadStudentCertificateViewModel model) in D:\Projects\BYOkulLatest\Code\LMS.App\Controllers\StudentsController.cs:line 43
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.&lt;InvokeActionMethodAsync&gt;g__Logged|12_1(ControllerActionInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.&lt;InvokeNextActionFilterAsync&gt;g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State&amp; next, Scope&amp; scope, Object&amp; state, Boolean&amp; isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.&lt;InvokeInnerFilterAsync&gt;g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.&lt;InvokeFilterPipelineAsync&gt;g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.&lt;InvokeAsync&gt;g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.&lt;InvokeAsync&gt;g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.&lt;Invoke&gt;g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Server.IIS.Core.IISHttpContextOfT`1.ProcessRequestAsync()
+</Data></EventData></Event><Event><System><Provider Name=".NET Runtime"/><EventID>1000</EventID><Level>1</Level><Task>0</Task><Keywords>Keywords</Keywords><TimeCreated SystemTime="2023-02-27T07:02:56Z"/><EventRecordID>347548454</EventRecordID><Channel>Application</Channel><Computer>RD0003FF7BE2D8</Computer><Security/></System><EventData><Data>Category: Microsoft.AspNetCore.Server.IIS.Core.IISHttpServer
+EventId: 2
+SpanId: a08405aa3a925939
+TraceId: 36cf31e50277637b956045e496e776fb
+ParentId: 0000000000000000
+RequestId: 80001936-0001-c000-b63f-84710c7967bb
+RequestPath: /students/uploadStudentCertificates
+
+Connection ID "13835058061187750196", Request ID "80001936-0001-c000-b63f-84710c7967bb": An unhandled exception was thrown by the application.
+
+Exception: 
+System.IO.DirectoryNotFoundException: Could not find a part of the path 'D:\home\site\wwwroot\AssignedCertificates\3124346e-e073-404a-be42-1187471cbb01.pdf'.
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at LMS.Services.Students.StudentsService.UploadStudentCertificates(UploadStudentCertificateViewModel model, String userId) in D:\Projects\BYOkulLatest\Code\LMS.Services\Students\StudentsService.cs:line 155
+   at LMS.App.Controllers.StudentsController.UploadStudentCertificates(UploadStudentCertificateViewModel model) in D:\Projects\BYOkulLatest\Code\LMS.App\Controllers\StudentsController.cs:line 43
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.&lt;InvokeActionMethodAsync&gt;g__Logged|12_1(ControllerActionInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.&lt;InvokeNextActionFilterAsync&gt;g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State&amp; next, Scope&amp; scope, Object&amp; state, Boolean&amp; isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.&lt;InvokeInnerFilterAsync&gt;g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.&lt;InvokeFilterPipelineAsync&gt;g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.&lt;InvokeAsync&gt;g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.&lt;InvokeAsync&gt;g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.&lt;Invoke&gt;g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Server.IIS.Core.IISHttpContextOfT`1.ProcessRequestAsync()
+</Data></EventData></Event><Event><System><Provider Name="IIS AspNetCore Module V2"/><EventID>1033</EventID><Level>4</Level><Task>0</Task><Keywords>Keywords</Keywords><TimeCreated SystemTime="2023-02-27T07:28:14Z"/><EventRecordID>349066563</EventRecordID><Channel>Application</Channel><Computer>RD0003FF7BE2D8</Computer><Security/></System><EventData><Data>Application 'MACHINE/WEBROOT/APPHOST/BYOKUL-DEV' has shutdown.</Data><Data>Process Id: 13040.</Data><Data>File Version: 16.0.22335.13. Description: IIS ASP.NET Core Module V2 Request Handler. Commit: 50b7e9c661453874aa7a54a3985d5120564bb2e5</Data></EventData></Event><Event><System><Provider Name="IIS AspNetCore Module V2"/><EventID>1032</EventID><Level>4</Level><Task>0</Task><Keywords>Keywords</Keywords><TimeCreated SystemTime="2023-02-27T07:28:24Z"/><EventRecordID>349075641</EventRecordID><Channel>Application</Channel><Computer>RD0003FF7BE2D8</Computer><Security/></System><EventData><Data>Application 'D:\home\site\wwwroot\' started successfully.</Data><Data>Process Id: 14176.</Data><Data>File Version: 16.0.22335.13. Description: IIS ASP.NET Core Module V2 Request Handler. Commit: 50b7e9c661453874aa7a54a3985d5120564bb2e5</Data></EventData></Event><Event><System><Provider Name=".NET Runtime"/><EventID>1000</EventID><Level>1</Level><Task>0</Task><Keywords>Keywords</Keywords><TimeCreated SystemTime="2023-02-27T07:31:22Z"/><EventRecordID>349253954</EventRecordID><Channel>Application</Channel><Computer>RD0003FF7BE2D8</Computer><Security/></System><EventData><Data>Category: Microsoft.AspNetCore.Server.IIS.Core.IISHttpServer
+EventId: 2
+SpanId: d0f0cbede94b0d56
+TraceId: dfae7fdc9dcb19e1fddab0b6ceee37c5
+ParentId: 0000000000000000
+RequestId: 80018d5d-0002-f900-b63f-84710c7967bb
+RequestPath: /students/uploadStudentCertificates
+
+Connection ID "17942340925644705116", Request ID "80018d5d-0002-f900-b63f-84710c7967bb": An unhandled exception was thrown by the application.
+
+Exception: 
+System.IO.DirectoryNotFoundException: Could not find a part of the path 'D:\home\site\wwwroot\AssignedCertificates\b8f7b28e-d2ce-48af-8314-d54130c5b5d1.pdf'.
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at LMS.Services.Students.StudentsService.UploadStudentCertificates(UploadStudentCertificateViewModel model, String userId) in D:\Projects\BYOkulLatest\Code\LMS.Services\Students\StudentsService.cs:line 155
+   at LMS.App.Controllers.StudentsController.UploadStudentCertificates(UploadStudentCertificateViewModel model) in D:\Projects\BYOkulLatest\Code\LMS.App\Controllers\StudentsController.cs:line 43
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.&lt;InvokeActionMethodAsync&gt;g__Logged|12_1(ControllerActionInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.&lt;InvokeNextActionFilterAsync&gt;g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State&amp; next, Scope&amp; scope, Object&amp; state, Boolean&amp; isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.&lt;InvokeInnerFilterAsync&gt;g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.&lt;InvokeFilterPipelineAsync&gt;g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.&lt;InvokeAsync&gt;g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.&lt;InvokeAsync&gt;g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.&lt;Invoke&gt;g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Server.IIS.Core.IISHttpContextOfT`1.ProcessRequestAsync()
+</Data></EventData></Event><Event><System><Provider Name=".NET Runtime"/><EventID>1000</EventID><Level>1</Level><Task>0</Task><Keywords>Keywords</Keywords><TimeCreated SystemTime="2023-02-27T07:36:41Z"/><EventRecordID>349573375</EventRecordID><Channel>Application</Channel><Computer>RD0003FF7BE2D8</Computer><Security/></System><EventData><Data>Category: Microsoft.AspNetCore.Server.IIS.Core.IISHttpServer
+EventId: 2
+SpanId: f7cddee020c8b249
+TraceId: b98518a28101a7ff27ed0d8f6aaa774a
+ParentId: 0000000000000000
+RequestId: 80009890-0003-e300-b63f-84710c7967bb
+RequestPath: /students/uploadStudentCertificates
+
+Connection ID "16357073861105195148", Request ID "80009890-0003-e300-b63f-84710c7967bb": An unhandled exception was thrown by the application.
+
+Exception: 
+System.IO.DirectoryNotFoundException: Could not find a part of the path 'D:\home\site\wwwroot\AssignedCertificates\4a479e9e-f08d-4cdf-8294-5a6acda3aee3.pdf'.
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at LMS.Services.Students.StudentsService.UploadStudentCertificates(UploadStudentCertificateViewModel model, String userId) in D:\Projects\BYOkulLatest\Code\LMS.Services\Students\StudentsService.cs:line 155
+   at LMS.App.Controllers.StudentsController.UploadStudentCertificates(UploadStudentCertificateViewModel model) in D:\Projects\BYOkulLatest\Code\LMS.App\Controllers\StudentsController.cs:line 43
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.&lt;InvokeActionMethodAsync&gt;g__Logged|12_1(ControllerActionInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.&lt;InvokeNextActionFilterAsync&gt;g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State&amp; next, Scope&amp; scope, Object&amp; state, Boolean&amp; isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.&lt;InvokeInnerFilterAsync&gt;g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.&lt;InvokeFilterPipelineAsync&gt;g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.&lt;InvokeAsync&gt;g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.&lt;InvokeAsync&gt;g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.&lt;Invoke&gt;g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Server.IIS.Core.IISHttpContextOfT`1.ProcessRequestAsync()
+</Data></EventData></Event><Event><System><Provider Name=".NET Runtime"/><EventID>1000</EventID><Level>1</Level><Task>0</Task><Keywords>Keywords</Keywords><TimeCreated SystemTime="2023-02-27T07:36:53Z"/><EventRecordID>349584922</EventRecordID><Channel>Application</Channel><Computer>RD0003FF7BE2D8</Computer><Security/></System><EventData><Data>Category: Microsoft.AspNetCore.Server.IIS.Core.IISHttpServer
+EventId: 2
+SpanId: 912b09eb22a22242
+TraceId: 8b73c007d4f81fab3848c812a2b32b85
+ParentId: 0000000000000000
+RequestId: 80003433-0003-f900-b63f-84710c7967bb
+RequestPath: /students/uploadStudentCertificates
+
+Connection ID "17942340929939584046", Request ID "80003433-0003-f900-b63f-84710c7967bb": An unhandled exception was thrown by the application.
+
+Exception: 
+System.IO.DirectoryNotFoundException: Could not find a part of the path 'D:\home\site\wwwroot\AssignedCertificates\0685f217-40bd-4359-a42b-11ce7fdedfc9.pdf'.
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at LMS.Services.Students.StudentsService.UploadStudentCertificates(UploadStudentCertificateViewModel model, String userId) in D:\Projects\BYOkulLatest\Code\LMS.Services\Students\StudentsService.cs:line 155
+   at LMS.App.Controllers.StudentsController.UploadStudentCertificates(UploadStudentCertificateViewModel model) in D:\Projects\BYOkulLatest\Code\LMS.App\Controllers\StudentsController.cs:line 43
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.&lt;InvokeActionMethodAsync&gt;g__Logged|12_1(ControllerActionInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.&lt;InvokeNextActionFilterAsync&gt;g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State&amp; next, Scope&amp; scope, Object&amp; state, Boolean&amp; isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.&lt;InvokeInnerFilterAsync&gt;g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.&lt;InvokeFilterPipelineAsync&gt;g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.&lt;InvokeAsync&gt;g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.&lt;InvokeAsync&gt;g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.&lt;Invoke&gt;g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Server.IIS.Core.IISHttpContextOfT`1.ProcessRequestAsync()
+</Data></EventData></Event><Event><System><Provider Name=".NET Runtime"/><EventID>1000</EventID><Level>1</Level><Task>0</Task><Keywords>Keywords</Keywords><TimeCreated SystemTime="2023-02-27T07:41:33Z"/><EventRecordID>349864704</EventRecordID><Channel>Application</Channel><Computer>RD0003FF7BE2D8</Computer><Security/></System><EventData><Data>Category: Microsoft.AspNetCore.Server.IIS.Core.IISHttpServer
+EventId: 2
+SpanId: bd422d24798057a0
+TraceId: 3213f839c9cd9530f62d99e560a800a4
+ParentId: 0000000000000000
+RequestId: 80001966-0002-d800-b63f-84710c7967bb
+RequestPath: /students/uploadStudentCertificates
+
+Connection ID "15564440322392988005", Request ID "80001966-0002-d800-b63f-84710c7967bb": An unhandled exception was thrown by the application.
+
+Exception: 
+System.IO.DirectoryNotFoundException: Could not find a part of the path 'D:\home\site\wwwroot\AssignedCertificates\7bb29ec5-ca17-4abb-9255-a37c5280544d.pdf'.
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)
+   at LMS.Services.Students.StudentsService.UploadStudentCertificates(UploadStudentCertificateViewModel model, String userId) in D:\Projects\BYOkulLatest\Code\LMS.Services\Students\StudentsService.cs:line 155
+   at LMS.App.Controllers.StudentsController.UploadStudentCertificates(UploadStudentCertificateViewModel model) in D:\Projects\BYOkulLatest\Code\LMS.App\Controllers\StudentsController.cs:line 43
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.&lt;InvokeActionMethodAsync&gt;g__Logged|12_1(ControllerActionInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.&lt;InvokeNextActionFilterAsync&gt;g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State&amp; next, Scope&amp; scope, Object&amp; state, Boolean&amp; isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.&lt;InvokeInnerFilterAsync&gt;g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.&lt;InvokeFilterPipelineAsync&gt;g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.&lt;InvokeAsync&gt;g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.&lt;InvokeAsync&gt;g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.&lt;Invoke&gt;g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Server.IIS.Core.IISHttpContextOfT`1.ProcessRequestAsync()
+</Data></EventData></Event><Event><System><Provider Name="IIS AspNetCore Module V2"/><EventID>1012</EventID><Level>4</Level><Task>0</Task><Keywords>Keywords</Keywords><TimeCreated SystemTime="2023-02-27T07:55:12Z"/><EventRecordID>350684469</EventRecordID><Channel>Application</Channel><Computer>RD0003FF7BE2D8</Computer><Security/></System><EventData><Data>Application 'D:\home\site\wwwroot\' was recycled after detecting app_offline.htm.</Data><Data>Process Id: 14176.</Data><Data>File Version: 16.0.22335.13. Description: IIS ASP.NET Core Module V2 Request Handler. Commit: 50b7e9c661453874aa7a54a3985d5120564bb2e5</Data></EventData></Event><Event><System><Provider Name="IIS AspNetCore Module V2"/><EventID>1033</EventID><Level>4</Level><Task>0</Task><Keywords>Keywords</Keywords><TimeCreated SystemTime="2023-02-27T07:55:12Z"/><EventRecordID>350684579</EventRecordID><Channel>Application</Channel><Computer>RD0003FF7BE2D8</Computer><Security/></System><EventData><Data>Application 'MACHINE/WEBROOT/APPHOST/BYOKUL-DEV' has shutdown.</Data><Data>Process Id: 14176.</Data><Data>File Version: 16.0.22335.13. Description: IIS ASP.NET Core Module V2 Request Handler. Commit: 50b7e9c661453874aa7a54a3985d5120564bb2e5</Data></EventData></Event><Event><System><Provider Name="IIS AspNetCore Module V2"/><EventID>1032</EventID><Level>4</Level><Task>0</Task><Keywords>Keywords</Keywords><TimeCreated SystemTime="2023-02-27T07:55:21Z"/><EventRecordID>350693454</EventRecordID><Channel>Application</Channel><Computer>RD0003FF7BE2D8</Computer><Security/></System><EventData><Data>Application 'D:\home\site\wwwroot\' started successfully.</Data><Data>Process Id: 13824.</Data><Data>File Version: 16.0.22335.13. Description: IIS ASP.NET Core Module V2 Request Handler. Commit: 50b7e9c661453874aa7a54a3985d5120564bb2e5</Data></EventData></Event><Event><System><Provider Name=".NET Runtime"/><EventID>1000</EventID><Level>1</Level><Task>0</Task><Keywords>Keywords</Keywords><TimeCreated SystemTime="2023-02-27T07:56:29Z"/><EventRecordID>350760969</EventRecordID><Channel>Application</Channel><Computer>RD0003FF7BE2D8</Computer><Security/></System><EventData><Data>Category: Microsoft.AspNetCore.Server.IIS.Core.IISHttpServer
+EventId: 2
+SpanId: 9d08332c4e163ddc
+TraceId: 1f8c1bb70726b1331792f19e35739de7
+ParentId: 0000000000000000
+RequestId: 8002247d-0000-e900-b63f-84710c7967bb
+RequestPath: /students/uploadStudentCertificates
+
+Connection ID "16789419412447962232", Request ID "8002247d-0000-e900-b63f-84710c7967bb": An unhandled exception was thrown by the application.
+
+Exception: 
+System.IO.DirectoryNotFoundException: Could not find a part of the path 'D:\home\site\wwwroot\AssignedCertificates\0e3f4f81-9ee1-4162-8667-cd9bab5cc093.pdf'.
+   at LMS.Services.Students.StudentsService.UploadStudentCertificates(UploadStudentCertificateViewModel model, String userId) in D:\Projects\BYOkulLatest\Code\LMS.Services\Students\StudentsService.cs:line 180
+   at LMS.App.Controllers.StudentsController.UploadStudentCertificates(UploadStudentCertificateViewModel model) in D:\Projects\BYOkulLatest\Code\LMS.App\Controllers\StudentsController.cs:line 43
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.&lt;InvokeActionMethodAsync&gt;g__Logged|12_1(ControllerActionInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.&lt;InvokeNextActionFilterAsync&gt;g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State&amp; next, Scope&amp; scope, Object&amp; state, Boolean&amp; isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.&lt;InvokeInnerFilterAsync&gt;g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.&lt;InvokeFilterPipelineAsync&gt;g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.&lt;InvokeAsync&gt;g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.&lt;InvokeAsync&gt;g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.&lt;Invoke&gt;g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Server.IIS.Core.IISHttpContextOfT`1.ProcessRequestAsync()
+</Data></EventData></Event><Event><System><Provider Name="IIS AspNetCore Module V2"/><EventID>1012</EventID><Level>4</Level><Task>0</Task><Keywords>Keywords</Keywords><TimeCreated SystemTime="2023-02-27T08:08:27Z"/><EventRecordID>351479375</EventRecordID><Channel>Application</Channel><Computer>RD0003FF7BE2D8</Computer><Security/></System><EventData><Data>Application 'D:\home\site\wwwroot\' was recycled after detecting app_offline.htm.</Data><Data>Process Id: 13824.</Data><Data>File Version: 16.0.22335.13. Description: IIS ASP.NET Core Module V2 Request Handler. Commit: 50b7e9c661453874aa7a54a3985d5120564bb2e5</Data></EventData></Event><Event><System><Provider Name="IIS AspNetCore Module V2"/><EventID>1033</EventID><Level>4</Level><Task>0</Task><Keywords>Keywords</Keywords><TimeCreated SystemTime="2023-02-27T08:08:27Z"/><EventRecordID>351479438</EventRecordID><Channel>Application</Channel><Computer>RD0003FF7BE2D8</Computer><Security/></System><EventData><Data>Application 'MACHINE/WEBROOT/APPHOST/BYOKUL-DEV' has shutdown.</Data><Data>Process Id: 13824.</Data><Data>File Version: 16.0.22335.13. Description: IIS ASP.NET Core Module V2 Request Handler. Commit: 50b7e9c661453874aa7a54a3985d5120564bb2e5</Data></EventData></Event><Event><System><Provider Name="IIS AspNetCore Module V2"/><EventID>1032</EventID><Level>4</Level><Task>0</Task><Keywords>Keywords</Keywords><TimeCreated SystemTime="2023-02-27T08:08:41Z"/><EventRecordID>351492875</EventRecordID><Channel>Application</Channel><Computer>RD0003FF7BE2D8</Computer><Security/></System><EventData><Data>Application 'D:\home\site\wwwroot\' started successfully.</Data><Data>Process Id: 7880.</Data><Data>File Version: 16.0.22335.13. Description: IIS ASP.NET Core Module V2 Request Handler. Commit: 50b7e9c661453874aa7a54a3985d5120564bb2e5</Data></EventData></Event><Event><System><Provider Name=".NET Runtime"/><EventID>1000</EventID><Level>2</Level><Task>0</Task><Keywords>Keywords</Keywords><TimeCreated SystemTime="2023-02-27T09:42:06Z"/><EventRecordID>357097625</EventRecordID><Channel>Application</Channel><Computer>RD0003FF7BE2D8</Computer><Security/></System><EventData><Data>Category: Microsoft.EntityFrameworkCore.Query
+EventId: 10102
+SpanId: 622a450dfdaf9b8a
+TraceId: 66279071ea60d054869fdf54d498ea54
+ParentId: 0000000000000000
+RequestId: 800224b4-0000-e900-b63f-84710c7967bb
+RequestPath: /posts/getReelById
+ActionId: a6e67ddc-4b03-430c-a497-5940d2bc49c6
+ActionName: LMS.App.Controllers.PostController.GetReelById (LMS.App)
+
+The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. If the 'Distinct' operator is used after 'OrderBy', then make sure to use the 'OrderBy' operator after 'Distinct' as the ordering would otherwise get erased.
+</Data></EventData></Event><Event><System><Provider Name=".NET Runtime"/><EventID>1000</EventID><Level>2</Level><Task>0</Task><Keywords>Keywords</Keywords><TimeCreated SystemTime="2023-02-27T09:42:06Z"/><EventRecordID>357097641</EventRecordID><Channel>Application</Channel><Computer>RD0003FF7BE2D8</Computer><Security/></System><EventData><Data>Category: Microsoft.EntityFrameworkCore.Query
+EventId: 10102
+SpanId: 622a450dfdaf9b8a
+TraceId: 66279071ea60d054869fdf54d498ea54
+ParentId: 0000000000000000
+RequestId: 800224b4-0000-e900-b63f-84710c7967bb
+RequestPath: /posts/getReelById
+ActionId: a6e67ddc-4b03-430c-a497-5940d2bc49c6
+ActionName: LMS.App.Controllers.PostController.GetReelById (LMS.App)
+
+The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. If the 'Distinct' operator is used after 'OrderBy', then make sure to use the 'OrderBy' operator after 'Distinct' as the ordering would otherwise get erased.
+</Data></EventData></Event><Event><System><Provider Name=".NET Runtime"/><EventID>1000</EventID><Level>1</Level><Task>0</Task><Keywords>Keywords</Keywords><TimeCreated SystemTime="2023-02-27T17:27:35Z"/><EventRecordID>385027204</EventRecordID><Channel>Application</Channel><Computer>RD0003FF7BE2D8</Computer><Security/></System><EventData><Data>Category: Microsoft.AspNetCore.Server.IIS.Core.IISHttpServer
+EventId: 2
+SpanId: a0f0ae09a7865abe
+TraceId: 91f9fae726cee4dbff948b7ac5ee5461
+ParentId: 0000000000000000
+RequestId: 80013701-0001-fb00-b63f-84710c7967bb
+RequestPath: /school/getSchoolById
+
+Connection ID "18086456109425571578", Request ID "80013701-0001-fb00-b63f-84710c7967bb": An unhandled exception was thrown by the application.
+
+Exception: 
+System.InvalidOperationException: Sequence contains no elements
+   at System.Linq.ThrowHelper.ThrowNoElementsException()
+   at System.Linq.Enumerable.First[TSource](IEnumerable`1 source)
+   at LMS.Services.SchoolService.GetSchoolById(String schoolName, String loginUserId) in D:\Projects\BYOkulLatest\Code\LMS.Services\School\SchoolService.cs:line 311
+   at LMS.App.Controllers.SchoolController.GetSchoolById(String schoolName) in D:\Projects\BYOkulLatest\Code\LMS.App\Controllers\SchoolController.cs:line 75
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.&lt;InvokeActionMethodAsync&gt;g__Logged|12_1(ControllerActionInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.&lt;InvokeNextActionFilterAsync&gt;g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State&amp; next, Scope&amp; scope, Object&amp; state, Boolean&amp; isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.&lt;InvokeInnerFilterAsync&gt;g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.&lt;InvokeFilterPipelineAsync&gt;g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.&lt;InvokeAsync&gt;g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.&lt;InvokeAsync&gt;g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.&lt;Invoke&gt;g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Server.IIS.Core.IISHttpContextOfT`1.ProcessRequestAsync()
+</Data></EventData></Event><Event><System><Provider Name=".NET Runtime"/><EventID>1000</EventID><Level>1</Level><Task>0</Task><Keywords>Keywords</Keywords><TimeCreated SystemTime="2023-02-27T17:27:36Z"/><EventRecordID>385027547</EventRecordID><Channel>Application</Channel><Computer>RD0003FF7BE2D8</Computer><Security/></System><EventData><Data>Category: Microsoft.AspNetCore.Server.IIS.Core.IISHttpServer
+EventId: 2
+SpanId: 072d7c3aa8cee17b
+TraceId: d452ec8b690f71f76402761be1e1ce5d
+ParentId: 0000000000000000
+RequestId: 80001343-0000-d600-b63f-84710c7967bb
+RequestPath: /school/getSchoolById
+
+Connection ID "15420325125727195964", Request ID "80001343-0000-d600-b63f-84710c7967bb": An unhandled exception was thrown by the application.
+
+Exception: 
+System.InvalidOperationException: Sequence contains no elements
+   at System.Linq.ThrowHelper.ThrowNoElementsException()
+   at System.Linq.Enumerable.First[TSource](IEnumerable`1 source)
+   at LMS.Services.SchoolService.GetSchoolById(String schoolName, String loginUserId) in D:\Projects\BYOkulLatest\Code\LMS.Services\School\SchoolService.cs:line 311
+   at LMS.App.Controllers.SchoolController.GetSchoolById(String schoolName) in D:\Projects\BYOkulLatest\Code\LMS.App\Controllers\SchoolController.cs:line 75
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.&lt;InvokeActionMethodAsync&gt;g__Logged|12_1(ControllerActionInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.&lt;InvokeNextActionFilterAsync&gt;g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State&amp; next, Scope&amp; scope, Object&amp; state, Boolean&amp; isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.&lt;InvokeInnerFilterAsync&gt;g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.&lt;InvokeFilterPipelineAsync&gt;g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.&lt;InvokeAsync&gt;g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.&lt;InvokeAsync&gt;g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.&lt;Invoke&gt;g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Server.IIS.Core.IISHttpContextOfT`1.ProcessRequestAsync()
+</Data></EventData></Event><Event><System><Provider Name="IIS AspNetCore Module V2"/><EventID>1033</EventID><Level>4</Level><Task>0</Task><Keywords>Keywords</Keywords><TimeCreated SystemTime="2023-02-27T18:27:36Z"/><EventRecordID>388628079</EventRecordID><Channel>Application</Channel><Computer>RD0003FF7BE2D8</Computer><Security/></System><EventData><Data>Application 'MACHINE/WEBROOT/APPHOST/BYOKUL-DEV' has shutdown.</Data><Data>Process Id: 7880.</Data><Data>File Version: 16.0.22335.13. Description: IIS ASP.NET Core Module V2 Request Handler. Commit: 50b7e9c661453874aa7a54a3985d5120564bb2e5</Data></EventData></Event><Event><System><Provider Name="IIS AspNetCore Module V2"/><EventID>1032</EventID><Level>4</Level><Task>0</Task><Keywords>Keywords</Keywords><TimeCreated SystemTime="2023-02-27T18:45:58Z"/><EventRecordID>389730407</EventRecordID><Channel>Application</Channel><Computer>RD0003FF7BE2D8</Computer><Security/></System><EventData><Data>Application 'D:\home\site\wwwroot\' started successfully.</Data><Data>Process Id: 11980.</Data><Data>File Version: 16.0.22335.13. Description: IIS ASP.NET Core Module V2 Request Handler. Commit: 50b7e9c661453874aa7a54a3985d5120564bb2e5</Data></EventData></Event><Event><System><Provider Name="IIS AspNetCore Module V2"/><EventID>1033</EventID><Level>4</Level><Task>0</Task><Keywords>Keywords</Keywords><TimeCreated SystemTime="2023-02-27T21:10:53Z"/><EventRecordID>398425329</EventRecordID><Channel>Application</Channel><Computer>RD0003FF7BE2D8</Computer><Security/></System><EventData><Data>Application 'MACHINE/WEBROOT/APPHOST/BYOKUL-DEV' has shutdown.</Data><Data>Process Id: 11980.</Data><Data>File Version: 16.0.22335.13. Description: IIS ASP.NET Core Module V2 Request Handler. Commit: 50b7e9c661453874aa7a54a3985d5120564bb2e5</Data></EventData></Event><Event><System><Provider Name="IIS AspNetCore Module V2"/><EventID>1032</EventID><Level>4</Level><Task>0</Task><Keywords>Keywords</Keywords><TimeCreated SystemTime="2023-02-27T21:43:11Z"/><EventRecordID>400363047</EventRecordID><Channel>Application</Channel><Computer>RD0003FF7BE2D8</Computer><Security/></System><EventData><Data>Application 'D:\home\site\wwwroot\' started successfully.</Data><Data>Process Id: 13832.</Data><Data>File Version: 16.0.22335.13. Description: IIS ASP.NET Core Module V2 Request Handler. Commit: 50b7e9c661453874aa7a54a3985d5120564bb2e5</Data></EventData></Event><Event><System><Provider Name="IIS AspNetCore Module V2"/><EventID>1033</EventID><Level>4</Level><Task>0</Task><Keywords>Keywords</Keywords><TimeCreated SystemTime="2023-02-28T00:40:06Z"/><EventRecordID>410978204</EventRecordID><Channel>Application</Channel><Computer>RD0003FF7BE2D8</Computer><Security/></System><EventData><Data>Application 'MACHINE/WEBROOT/APPHOST/BYOKUL-DEV' has shutdown.</Data><Data>Process Id: 13832.</Data><Data>File Version: 16.0.22335.13. Description: IIS ASP.NET Core Module V2 Request Handler. Commit: 50b7e9c661453874aa7a54a3985d5120564bb2e5</Data></EventData></Event><Event><System><Provider Name="IIS AspNetCore Module V2"/><EventID>1032</EventID><Level>4</Level><Task>0</Task><Keywords>Keywords</Keywords><TimeCreated SystemTime="2023-02-28T00:40:16Z"/><EventRecordID>410988250</EventRecordID><Channel>Application</Channel><Computer>RD0003FF7BE2D8</Computer><Security/></System><EventData><Data>Application 'D:\home\site\wwwroot\' started successfully.</Data><Data>Process Id: 5424.</Data><Data>File Version: 16.0.22335.13. Description: IIS ASP.NET Core Module V2 Request Handler. Commit: 50b7e9c661453874aa7a54a3985d5120564bb2e5</Data></EventData></Event><Event><System><Provider Name="IIS AspNetCore Module V2"/><EventID>1033</EventID><Level>4</Level><Task>0</Task><Keywords>Keywords</Keywords><TimeCreated SystemTime="2023-02-28T01:41:11Z"/><EventRecordID>414643032</EventRecordID><Channel>Application</Channel><Computer>RD0003FF7BE2D8</Computer><Security/></System><EventData><Data>Application 'MACHINE/WEBROOT/APPHOST/BYOKUL-DEV' has shutdown.</Data><Data>Process Id: 5424.</Data><Data>File Version: 16.0.22335.13. Description: IIS ASP.NET Core Module V2 Request Handler. Commit: 50b7e9c661453874aa7a54a3985d5120564bb2e5</Data></EventData></Event><Event><System><Provider Name="IIS AspNetCore Module V2"/><EventID>1032</EventID><Level>4</Level><Task>0</Task><Keywords>Keywords</Keywords><TimeCreated SystemTime="2023-02-28T02:29:58Z"/><EventRecordID>417569813</EventRecordID><Channel>Application</Channel><Computer>RD0003FF7BE2D8</Computer><Security/></System><EventData><Data>Application 'D:\home\site\wwwroot\' started successfully.</Data><Data>Process Id: 15332.</Data><Data>File Version: 16.0.22335.13. Description: IIS ASP.NET Core Module V2 Request Handler. Commit: 50b7e9c661453874aa7a54a3985d5120564bb2e5</Data></EventData></Event><Event><System><Provider Name="IIS AspNetCore Module V2"/><EventID>1033</EventID><Level>4</Level><Task>0</Task><Keywords>Keywords</Keywords><TimeCreated SystemTime="2023-02-28T03:32:53Z"/><EventRecordID>421344985</EventRecordID><Channel>Application</Channel><Computer>RD0003FF7BE2D8</Computer><Security/></System><EventData><Data>Application 'MACHINE/WEBROOT/APPHOST/BYOKUL-DEV' has shutdown.</Data><Data>Process Id: 15332.</Data><Data>File Version: 16.0.22335.13. Description: IIS ASP.NET Core Module V2 Request Handler. Commit: 50b7e9c661453874aa7a54a3985d5120564bb2e5</Data></EventData></Event><Event><System><Provider Name="IIS AspNetCore Module V2"/><EventID>1032</EventID><Level>4</Level><Task>0</Task><Keywords>Keywords</Keywords><TimeCreated SystemTime="2023-02-28T03:47:30Z"/><EventRecordID>422221657</EventRecordID><Channel>Application</Channel><Computer>RD0003FF7BE2D8</Computer><Security/></System><EventData><Data>Application 'D:\home\site\wwwroot\' started successfully.</Data><Data>Process Id: 7840.</Data><Data>File Version: 16.0.22335.13. Description: IIS ASP.NET Core Module V2 Request Handler. Commit: 50b7e9c661453874aa7a54a3985d5120564bb2e5</Data></EventData></Event><Event><System><Provider Name="IIS AspNetCore Module V2"/><EventID>1033</EventID><Level>4</Level><Task>0</Task><Keywords>Keywords</Keywords><TimeCreated SystemTime="2023-02-28T05:39:25Z"/><EventRecordID>428936766</EventRecordID><Channel>Application</Channel><Computer>RD0003FF7BE2D8</Computer><Security/></System><EventData><Data>Application 'MACHINE/WEBROOT/APPHOST/BYOKUL-DEV' has shutdown.</Data><Data>Process Id: 7840.</Data><Data>File Version: 16.0.22335.13. Description: IIS ASP.NET Core Module V2 Request Handler. Commit: 50b7e9c661453874aa7a54a3985d5120564bb2e5</Data></EventData></Event><Event><System><Provider Name="IIS AspNetCore Module V2"/><EventID>1032</EventID><Level>4</Level><Task>0</Task><Keywords>Keywords</Keywords><TimeCreated SystemTime="2023-02-28T05:49:59Z"/><EventRecordID>429570875</EventRecordID><Channel>Application</Channel><Computer>RD0003FF7BE2D8</Computer><Security/></System><EventData><Data>Application 'D:\home\site\wwwroot\' started successfully.</Data><Data>Process Id: 14616.</Data><Data>File Version: 16.0.22335.13. Description: IIS ASP.NET Core Module V2 Request Handler. Commit: 50b7e9c661453874aa7a54a3985d5120564bb2e5</Data></EventData></Event><Event><System><Provider Name="IIS AspNetCore Module V2"/><EventID>1012</EventID><Level>4</Level><Task>0</Task><Keywords>Keywords</Keywords><TimeCreated SystemTime="2023-02-28T10:22:42Z"/><EventRecordID>445934032</EventRecordID><Channel>Application</Channel><Computer>RD0003FF7BE2D8</Computer><Security/></System><EventData><Data>Application 'D:\home\site\wwwroot\' was recycled after detecting app_offline.htm.</Data><Data>Process Id: 14616.</Data><Data>File Version: 16.0.22335.13. Description: IIS ASP.NET Core Module V2 Request Handler. Commit: 50b7e9c661453874aa7a54a3985d5120564bb2e5</Data></EventData></Event><Event><System><Provider Name="IIS AspNetCore Module V2"/><EventID>1033</EventID><Level>4</Level><Task>0</Task><Keywords>Keywords</Keywords><TimeCreated SystemTime="2023-02-28T10:22:43Z"/><EventRecordID>445934188</EventRecordID><Channel>Application</Channel><Computer>RD0003FF7BE2D8</Computer><Security/></System><EventData><Data>Application 'MACHINE/WEBROOT/APPHOST/BYOKUL-DEV' has shutdown.</Data><Data>Process Id: 14616.</Data><Data>File Version: 16.0.22335.13. Description: IIS ASP.NET Core Module V2 Request Handler. Commit: 50b7e9c661453874aa7a54a3985d5120564bb2e5</Data></EventData></Event><Event><System><Provider Name="IIS AspNetCore Module V2"/><EventID>1032</EventID><Level>4</Level><Task>0</Task><Keywords>Keywords</Keywords><TimeCreated SystemTime="2023-02-28T10:22:58Z"/><EventRecordID>445949266</EventRecordID><Channel>Application</Channel><Computer>RD0003FF7BE2D8</Computer><Security/></System><EventData><Data>Application 'D:\home\site\wwwroot\' started successfully.</Data><Data>Process Id: 11884.</Data><Data>File Version: 16.0.22335.13. Description: IIS ASP.NET Core Module V2 Request Handler. Commit: 50b7e9c661453874aa7a54a3985d5120564bb2e5</Data></EventData></Event></Events>

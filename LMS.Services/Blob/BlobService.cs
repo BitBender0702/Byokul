@@ -25,7 +25,7 @@ namespace LMS.Services.Blob
 
         public async Task<string> UploadFileAsync(IFormFile asset, string containerName, bool showProgress)
         {
-
+            var fileType = Path.GetExtension(asset.FileName);
             byte[] buffer = new byte[2000000];
             int bytesRead;
             IProgress<float> progress = null;
@@ -46,7 +46,7 @@ namespace LMS.Services.Blob
                     {
                         PublicAccess = BlobContainerPublicAccessType.Blob
                     });
-                    var filename = Guid.NewGuid() + asset.FileName;
+                    var filename = Guid.NewGuid() + fileType;
                     CloudBlockBlob blockBlob = cloudBlobContainer.GetBlockBlobReference(filename);
 
                     using (var stream = asset.OpenReadStream())

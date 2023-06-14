@@ -53,6 +53,7 @@ namespace LMS.Services.Account
             var user = await _userManager.FindByNameAsync(loginViewModel.Email);
             if (user != null)
             {
+                jwtResponse.UserId = user.Id;
                 var permissions = await _userPermissionRepository.GetAll().Include(x => x.Permission).Where(x => x.UserId == user.Id).ToListAsync();
                 var userPermissions = _mapper.Map<List<UserPermissionViewModel>>(permissions);
                 var result = await _signInManager.PasswordSignInAsync(loginViewModel.Email, loginViewModel.Password, false, false);

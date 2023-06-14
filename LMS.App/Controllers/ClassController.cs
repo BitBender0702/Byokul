@@ -58,12 +58,21 @@ namespace LMS.App.Controllers
             return Ok();
         }
 
-        [Route("getClassById")]
+        [Route("getClassByName")]
         [HttpGet]
-        public async Task<IActionResult> GetClassById(string className)
+        public async Task<IActionResult> GetClassByName(string className)
         {
             var userId = await GetUserIdAsync(this._userManager);
-            var response = await _classService.GetClassById(className, userId);
+            var response = await _classService.GetClassByName(className, userId);
+            return Ok(response);
+        }
+
+        [Route("getClassById")]
+        [HttpGet]
+        public async Task<IActionResult> GetClassById(Guid classId)
+        {
+            var userId = await GetUserIdAsync(this._userManager);
+            var response = await _classService.GetClassById(classId, userId);
             return Ok(response);
         }
 
@@ -167,13 +176,13 @@ namespace LMS.App.Controllers
             return Ok(await _classService.IsClassNameExist(className));
         }
 
-        [Route("getClassByName")]
-        [HttpGet]
-        public async Task<IActionResult> GetClassByName(string className,string schoolName)
-        {
-            var response = await _classService.GetClassByName(className,schoolName);
-            return Ok(response);
-        }
+        //[Route("getClassByName")]
+        //[HttpGet]
+        //public async Task<IActionResult> GetClassByName(string className,string schoolName)
+        //{
+        //    var response = await _classService.GetClassByName(className,schoolName);
+        //    return Ok(response);
+        //}
 
         [Route("convertToCourse")]
         [HttpPost]

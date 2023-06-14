@@ -49,6 +49,11 @@ namespace LMS.Common.ViewModels.Post
         public int? CommentsPerMinute { get; set; }
         public bool? IsLive { get; set; }
         public bool? IsClassPrivateOrPaid { get; set; }
+        public string? StreamUrl { get; set; }
+        public string? StreamJoinUrl { get; set; }
+        public string? InternalMeetingId { get; set; }
+        public Guid? ExternalMeetingId { get; set; }
+
 
     }
 }

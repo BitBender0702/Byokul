@@ -1,4 +1,5 @@
-﻿using LMS.Common.ViewModels.Chat;
+﻿using LMS.Common.Enums;
+using LMS.Common.ViewModels.Chat;
 using LMS.Common.ViewModels.Notification;
 using LMS.Common.ViewModels.Post;
 using LMS.Data.Entity;
@@ -80,6 +81,7 @@ public class ChatHubs : Hub
 
 
         var reposnseMessage = await _chatService.AddChatMessage(chatMessageViewModel);
+        chatMessageViewModel.Id = reposnseMessage.Id;
         var a = UserIDConnectionID[chatMessageViewModel.Receiver.ToString()];
         if (a is not null)
             await Clients.Client(a).SendAsync("ReceiveMessage", chatMessageViewModel, "test");
@@ -133,6 +135,11 @@ public class ChatHubs : Hub
         await Clients.GroupExcept(groupName, currentUserConnectionId).SendAsync("NotifySaveStreamToReceiver", isSaved);
     }
 
+    public async Task NotifyCommentThrotlling(string groupName, int noOfComments)
+    {
+        await Clients.Group(groupName).SendAsync("NotifyCommentThrotllingToReceiver", noOfComments);
+    }
+
     public async Task NotifyPostView(string groupName, string userId)
     {
         bool isAddView = false;
@@ -141,7 +148,7 @@ public class ChatHubs : Hub
 
         //var currentUserConnectionId = UserIDConnectionID[userId];
         var isUserViewExist = await _viewRepository.GetAll().Where(x => x.UserId == userId && x.PostId == new Guid(postId)).FirstOrDefaultAsync();
-        if (isUserViewExist == null)
+        if (isUserViewExist != null)
         {
             isAddView = true;
         }
@@ -184,24 +191,27 @@ public class ChatHubs : Hub
         else
         {
             var notificationViewModel = new NotificationViewModel();
-            model.MeetingId = model.NotificationContent + "meetings";
+            //model.MeetingId = model.NotificationContent;
             if (model.ChatType == ChatType.Personal)
             {
                 var user = _userRepository.GetById(model.ActionDoneBy);
                 model.Avatar = user.Avatar;
                 model.NotificationContent = $"{user.FirstName + ' '} {user.LastName} start a live {model.NotificationContent}";
+                model.PostType = (int)PostAuthorTypeEnum.User;
             }
             if (model.ChatType == ChatType.School)
             {
                 var school = _schoolRepository.GetById(model.ChatTypeId);
                 model.Avatar = school.Avatar;
                 model.NotificationContent = $"{school.SchoolName + ' '} start a lecture {model.NotificationContent}";
+                model.PostType = (int)PostAuthorTypeEnum.School;
             }
             if (model.ChatType == ChatType.Class)
             {
                 var classes = _classRepository.GetById(model.ChatTypeId);
                 model.Avatar = classes.Avatar;
                 model.NotificationContent = $"{classes.ClassName + ' '} start a lecture {model.NotificationContent}";
+                model.PostType = (int)PostAuthorTypeEnum.Class;
             }
 
             foreach (var follower in model.FollowersIds)

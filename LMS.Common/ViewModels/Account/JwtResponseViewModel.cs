@@ -12,5 +12,6 @@ namespace LMS.Common.ViewModels.Account
         public string Token { get; set; }
         public List<UserPermissionViewModel> UserPermissions { get; set; }
         public string ErrorMessage { get; set; }
+        public string UserId { get; set; }
     }
 }

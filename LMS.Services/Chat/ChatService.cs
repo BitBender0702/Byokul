@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Linq;
 using LMS.Common.ViewModels.Post;
 using LMS.Common.ViewModels.User;
+using LMS.Common.Enums;
 
 namespace LMS.Services.Chat
 {
@@ -80,7 +81,24 @@ namespace LMS.Services.Chat
             chatModel.IsRead = false;
             chatModel.SenderId = chatViewModel.Sender;
             chatModel.ReceiverId = chatViewModel.Receiver;
+            chatModel.IsForwarded = chatViewModel.ForwardedFileURL != null ? null : chatViewModel.IsForwarded;
+            chatModel.ReplyMessageId = chatViewModel.ReplyMessageId == null ? null : chatViewModel.ReplyMessageId;
             _chatMessageRepository.Insert(chatModel);
+
+            if (chatViewModel.IsForwarded == true && chatViewModel.ForwardedFileURL != null)
+            {
+                var attachment = new Attachment
+                {
+                    FileName = chatViewModel.ForwardedFileName,
+                    FileType = (Data.Entity.Chat.FileTypeEnum)chatViewModel.ForwardedFileType,
+                    FileURL = chatViewModel.ForwardedFileURL,
+                    ChatMessageId = chatModel.Id,
+                    IsForwarded = chatViewModel.IsForwarded
+                };
+
+                _attachmentRepository.Insert(attachment);
+
+            }
             try
             {
                 _chatMessageRepository.Save();
@@ -91,6 +109,7 @@ namespace LMS.Services.Chat
 
                 throw ex;
             }
+            chatViewModel.Id = chatModel.Id;
             return chatViewModel;
         }
 
@@ -184,7 +203,7 @@ namespace LMS.Services.Chat
             foreach (var attachment in model.File)
             {
                 var chatAttach = new ChatAttachmentResponse();
-                chatAttach.FileURL = await _blobService.UploadFileAsync(attachment, containerName,false);
+                chatAttach.FileURL = await _blobService.UploadFileAsync(attachment, containerName, false);
                 chatAttach.FileName = attachment.FileName;
                 chatAttach.FileType = model.FileType;
                 response.Add(chatAttach);
@@ -507,6 +526,28 @@ namespace LMS.Services.Chat
                 //else
                 //{
                 partChat.Text = item.Message;
+                partChat.Id = item.Id;
+                partChat.IsForwarded = item.IsForwarded;
+
+                // here we will add reply message content
+                var replyTextMessage = _chatMessageRepository.GetById(item.ReplyMessageId);
+                if (replyTextMessage != null)
+                {
+                    partChat.ReplyChatId = replyTextMessage.Id;
+                    partChat.ReplyChatContent = replyTextMessage.Message;
+                    partChat.ReplyMessageType = (int)ReplyMessageTypeEnum.Text;
+                }
+                else
+                {
+                    var replyAttachmentMessage = _attachmentRepository.GetById(item.ReplyMessageId);
+                    if (replyAttachmentMessage != null)
+                    {
+                        partChat.ReplyChatId = replyAttachmentMessage.Id;
+                        partChat.ReplyChatContent = replyAttachmentMessage.FileURL;
+                        partChat.ReplyMessageType = replyAttachmentMessage.FileType == Data.Entity.Chat.FileTypeEnum.Image ? (int)ReplyMessageTypeEnum.Image : replyAttachmentMessage.FileType == Data.Entity.Chat.FileTypeEnum.Video ? (int)ReplyMessageTypeEnum.Video : replyAttachmentMessage.FileType == Data.Entity.Chat.FileTypeEnum.Attachment ? (int)ReplyMessageTypeEnum.Attachment : null;
+                        partChat.FileName = replyAttachmentMessage.FileName;
+                    }
+                }
                 //}
                 if (item.SenderId == SenderId)
                     partChat.SendByMe = true;

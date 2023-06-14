@@ -57,6 +57,9 @@ namespace LMS.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool?>("IsForwarded")
+                        .HasColumnType("bit");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ChatMessageId");
@@ -127,6 +130,9 @@ namespace LMS.Data.Migrations
                     b.Property<bool>("IsEdited")
                         .HasColumnType("bit");
 
+                    b.Property<bool?>("IsForwarded")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsRead")
                         .HasColumnType("bit");
 
@@ -137,6 +143,9 @@ namespace LMS.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("ReceiverId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("ReplyMessageId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("SenderId")
@@ -1130,6 +1139,12 @@ namespace LMS.Data.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid?>("ExternalMeetingId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("InternalMeetingId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsCommentsDisabled")
                         .HasColumnType("bit");
 
@@ -1156,6 +1171,12 @@ namespace LMS.Data.Migrations
 
                     b.Property<int?>("Status")
                         .HasColumnType("int");
+
+                    b.Property<string>("StreamJoinUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StreamUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
@@ -1209,6 +1230,12 @@ namespace LMS.Data.Migrations
 
                     b.Property<Guid?>("PostId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<float?>("VideoLiveTime")
+                        .HasColumnType("real");
+
+                    b.Property<float?>("VideoTotalTime")
+                        .HasColumnType("real");
 
                     b.HasKey("Id");
 

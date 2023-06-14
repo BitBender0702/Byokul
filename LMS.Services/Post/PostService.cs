@@ -68,6 +68,7 @@ namespace LMS.Services
         }
         public async Task<PostViewModel> SavePost(PostViewModel postViewModel, string createdById)
         {
+            var blobVideoUrls = new List<string>();
             IEnumerable<FileAttachmentViewModel> uploadFromFileStorage = null;
             postViewModel.PostTags = JsonConvert.DeserializeObject<string[]>(postViewModel.PostTags.First());
 
@@ -112,7 +113,7 @@ namespace LMS.Services
 
             if (postViewModel.UploadVideos != null)
             {
-                await SaveUploadVideos(postViewModel.UploadVideos, postViewModel.UploadVideosThumbnail, postViewModel.Id, createdById);
+                blobVideoUrls = await SaveUploadVideos(postViewModel.UploadVideos, postViewModel.UploadVideosThumbnail, postViewModel.Id, createdById);
             }
 
             if (postViewModel.UploadAttachments != null)
@@ -132,21 +133,32 @@ namespace LMS.Services
 
             if (postViewModel.PostType == (int)PostTypeEnum.Stream)
             {
-
-                var user = _userRepository.GetById(createdById);
-                var model = new NewMeetingViewModel();
-                model.meetingName = postViewModel.Title;
-                model.IsMicrophoneOpen = (bool)postViewModel.IsMicroPhoneOpen;
-                model.ModeratorName = user.FirstName;
-                var url = await _bigBlueButtonService.Create(model);
-                postViewModel.StreamUrl = url;
-                //await SendNotifications(postViewModel.Title,post.Id, createdById);
+                if (postViewModel.UploadVideos != null)
+                {
+                    post.StreamUrl = blobVideoUrls[0];
+                    _postRepository.Update(post);
+                    _postRepository.Save();
+                }
+                else
+                {
+                    var user = _userRepository.GetById(createdById);
+                    var model = new NewMeetingViewModel();
+                    model.meetingName = postViewModel.Title;
+                    model.IsMicrophoneOpen = (bool)postViewModel.IsMicroPhoneOpen;
+                    model.ModeratorName = user.FirstName;
+                    model.PostId = post.Id;
+                    var url = await _bigBlueButtonService.Create(model);
+                    postViewModel.StreamUrl = url;
+                    post.StreamUrl = url;
+                    _postRepository.Update(post);
+                    _postRepository.Save();
+                }
             }
             postViewModel.Id = post.Id;
             return postViewModel;
         }
 
-        async Task SendNotifications(string postTitle,Guid postId, string actionDoneBy)
+        async Task SendNotifications(string postTitle, Guid postId, string actionDoneBy)
         {
             var notificationViewModel = new NotificationViewModel();
             var user = _userRepository.GetById(actionDoneBy);
@@ -182,8 +194,9 @@ namespace LMS.Services
             }
         }
 
-        async Task SaveUploadVideos(IEnumerable<IFormFile> uploadVideos, IEnumerable<IFormFile> uploadVideosThumbnail, Guid postId, string createdById)
+        async Task<List<string>> SaveUploadVideos(IEnumerable<IFormFile> uploadVideos, IEnumerable<IFormFile> uploadVideosThumbnail, Guid postId, string createdById)
         {
+            var uploadBlobUrls = new List<string>();
             string containerName = "posts";
             string videoThumbnailName = "";
             foreach (var video in uploadVideos)
@@ -220,7 +233,10 @@ namespace LMS.Services
 
                 _postAttachmentRepository.Insert(postAttach);
                 _postAttachmentRepository.Save();
+                uploadBlobUrls.Add(postAttach.FileUrl);
             }
+            return uploadBlobUrls;
+
         }
 
         async Task SaveUploadAttachments(IEnumerable<IFormFile> uploadAttachments, Guid postId, string createdById)
@@ -342,6 +358,10 @@ namespace LMS.Services
         public async Task<PostDetailsViewModel> GetPostById(Guid id, string userId)
         {
             var postResult = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.Id == id).FirstOrDefaultAsync();
+
+            postResult.CreatedOn = postResult.CreatedOn.AddHours(5);
+            postResult.CreatedOn = postResult.CreatedOn.AddMinutes(30);
+            //postResult.CreatedOn = postResult.CreatedOn.ToLocalTime();
 
             var post = _mapper.Map<PostDetailsViewModel>(postResult);
             if (post.PostAuthorType == (int)PostAuthorTypeEnum.Class)
@@ -916,6 +936,42 @@ namespace LMS.Services
                 _postRepository.Update(post);
                 _postRepository.Save();
             }
+        }
+
+        public async Task SaveStreamAsPost(Guid postId)
+        {
+            var post = _postRepository.GetById(postId);
+            post.PostType = (int)PostTypeEnum.Post;
+            post.IsLive = false;
+            _postRepository.Update(post);
+            _postRepository.Save();
+
+            var postAttachment = await _postAttachmentRepository.GetAll().Where(x => x.PostId == post.Id).ToListAsync();
+
+            var postAttachmentImage = postAttachment.Where(x => x.FileType == (int)FileTypeEnum.Image).First();
+            var postAttachmentVideo = postAttachment.Where(x => x.FileType == (int)FileTypeEnum.Video).First();
+
+
+            postAttachmentVideo.FileThumbnail = postAttachmentImage.FileUrl;
+            _postAttachmentRepository.Update(postAttachmentVideo);
+            _postAttachmentRepository.Save();
+
+            _postAttachmentRepository.Delete(postAttachmentImage.Id);
+            _postAttachmentRepository.Save();
+        }
+
+        public async Task SaveLiveVideoTime(Guid postId, float videoTotalTime, float videoLiveTime)
+        {
+            var postAttachment = _postAttachmentRepository.GetAll().Where(x => x.FileType == (int)FileTypeEnum.Video && x.PostId == postId).First();
+            postAttachment.VideoLiveTime = videoLiveTime;
+            if (postAttachment.VideoTotalTime == null)
+            {
+                postAttachment.VideoTotalTime = videoTotalTime;
+            }
+
+            _postAttachmentRepository.Update(postAttachment);
+            _postAttachmentRepository.Save();
+
         }
 
 

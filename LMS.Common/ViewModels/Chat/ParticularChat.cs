@@ -1,4 +1,5 @@
-﻿using LMS.Data.Entity.Chat;
+﻿using LMS.Common.Enums;
+using LMS.Data.Entity.Chat;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,14 +10,16 @@ namespace LMS.Common.ViewModels.Chat
 {
     public class ParticularChat
     {
-        //public string? FileName { get; set; }
-        //public string? FileUrl { get; set; }
-        //public FileTypeEnum? FileType { get; set; }
         public List<AttachmentViewModel> Attachment { get; set; }
         public string? Text { get; set; }
         public DateTime Time { get; set; }
         public bool SendByMe { get; set; }
-        public string MyProperty { get; set; }
+        public Guid Id { get; set; }
+        public Guid? ReplyChatId { get; set; }
+        public string ReplyChatContent { get; set; }
+        public int? ReplyMessageType { get; set; }
+        public string FileName { get; set; }
+        public bool? IsForwarded { get; set; }
 
     }
 }

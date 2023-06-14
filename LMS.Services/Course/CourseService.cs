@@ -354,7 +354,7 @@ namespace LMS.Services
             await SaveCourseTeachers(teacherIds, courseId);
         }
 
-        public async Task<CourseDetailsViewModel> GetCourseById(string courseName, string loginUserid)
+        public async Task<CourseDetailsViewModel> GetCourseByName(string courseName, string loginUserid)
         {
             CourseDetailsViewModel model = new CourseDetailsViewModel();
 
@@ -376,7 +376,7 @@ namespace LMS.Services
                 if (course == null)
                 {
 
-                    var classDetails = await _classService.GetClassById(courseName, loginUserid);
+                    var classDetails = await _classService.GetClassByName(courseName, loginUserid);
 
                     var courses = new CourseDetailsViewModel();
                     courses.CourseId = classDetails.ClassId;
@@ -420,6 +420,67 @@ namespace LMS.Services
             }
             return null;
         }
+
+        public async Task<CourseDetailsViewModel> GetCourseById(Guid courseId, string loginUserid)
+        {
+            CourseDetailsViewModel model = new CourseDetailsViewModel();
+
+            var course = await _courseRepository.GetAll()
+                 .Include(x => x.ServiceType)
+                 .Include(x => x.School)
+                 .ThenInclude(x => x.Country)
+                 .Include(x => x.School)
+                 .ThenInclude(x => x.Specialization)
+                 .Include(x => x.Accessibility)
+                 .Include(x => x.CreatedBy)
+                 .Where(x => x.CourseId == courseId).FirstOrDefaultAsync();
+
+            if (course == null)
+            {
+
+                var classDetails = await _classService.GetClassById(courseId, loginUserid);
+
+                var courses = new CourseDetailsViewModel();
+                courses.CourseId = classDetails.ClassId;
+                courses.CourseName = classDetails.ClassName;
+                courses.School = classDetails.School;
+                courses.ServiceType = classDetails.ServiceType;
+                courses.Accessibility = classDetails.Accessibility;
+                courses.School.Country = classDetails.School.Country;
+                courses.School.Specialization = classDetails.School.Specialization;
+                courses.CreatedBy = classDetails.CreatedBy;
+                courses.Avatar = classDetails.Avatar;
+                courses.CourseUrl = classDetails.ClassUrl;
+                courses.Languages = classDetails.Languages;
+                courses.Disciplines = classDetails.Disciplines;
+                courses.Students = classDetails.Students;
+                courses.Teachers = classDetails.Teachers;
+                courses.Posts = classDetails.Posts;
+                courses.Reels = classDetails.Reels;
+                courses.IsConvertable = true;
+
+
+                courses.CourseCertificates = _mapper.Map<IEnumerable<CourseCertificateViewModel>>(classDetails.ClassCertificates);
+
+                return courses;
+
+
+
+            }
+            model = _mapper.Map<CourseDetailsViewModel>(course);
+
+            model.Languages = await GetLanguages(course.CourseId);
+            model.Disciplines = await GetDisciplines(course.CourseId);
+            model.Students = await GetStudents(course.CourseId);
+            model.Teachers = await GetTeachers(course.CourseId);
+            model.Posts = await GetPostsByCourseId(course.CourseId, loginUserid);
+            model.Reels = await GetReelsByCourseId(course.CourseId, loginUserid);
+            model.CourseCertificates = await GetCertificateByCourseId(course.CourseId);
+
+
+            return model;
+        }
+
 
         async Task<IEnumerable<LanguageViewModel>> GetLanguages(Guid courseId)
         {
@@ -713,15 +774,15 @@ namespace LMS.Services
             return _mapper.Map<ClassViewModel>(classes);
         }
 
-        public async Task<CourseViewModel> GetCourseByName(string courseName, string schoolName)
-        {
-            var course = await _courseRepository.GetAll().Include(x => x.School).Where(x => x.CourseName.Replace(" ", "").ToLower() == courseName.Replace(" ", "").ToLower() && x.School.SchoolName.Replace(" ", "").ToLower() == schoolName.Replace(" ", "").ToLower()).FirstOrDefaultAsync();
-            if (course != null)
-            {
-                return _mapper.Map<CourseViewModel>(course);
-            }
-            return null;
-        }
+        //public async Task<CourseViewModel> GetCourseByName(string courseName, string schoolName)
+        //{
+        //    var course = await _courseRepository.GetAll().Include(x => x.School).Where(x => x.CourseName.Replace(" ", "").ToLower() == courseName.Replace(" ", "").ToLower() && x.School.SchoolName.Replace(" ", "").ToLower() == schoolName.Replace(" ", "").ToLower()).FirstOrDefaultAsync();
+        //    if (course != null)
+        //    {
+        //        return _mapper.Map<CourseViewModel>(course);
+        //    }
+        //    return null;
+        //}
 
         public async Task<bool> IsCourseNameExist(string courseName)
         {

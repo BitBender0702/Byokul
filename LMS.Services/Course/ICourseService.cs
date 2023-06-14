@@ -16,7 +16,8 @@ namespace LMS.Services
         Task<CourseViewModel> SaveNewCourse(CourseViewModel courseViewModel, string createdById);
         Task<CourseViewModel> UpdateCourse(CourseViewModel courseViewModel);
         Task DeleteCourseById(Guid classId, string deletedById);
-        Task<CourseDetailsViewModel> GetCourseById(string courseName,string loginUserid);
+        Task<CourseDetailsViewModel> GetCourseByName(string courseName,string loginUserid);
+        Task<CourseDetailsViewModel> GetCourseById(Guid courseId, string loginUserid);
         Task<IEnumerable<CourseViewModel>> GetAllCourses();
         Task<CourseViewModel> GetBasicCourseInfo(Guid courseId);
         Task SaveCourseLanguages(IEnumerable<string> languageIds, Guid courseId);
@@ -26,7 +27,7 @@ namespace LMS.Services
         Task SaveCourseCertificates(SaveCourseCertificateViewModel model);
         Task DeleteCourseCertificate(CourseCertificateViewModel model);
         Task<ClassViewModel> ConvertToClass(string courseName);
-        Task<CourseViewModel> GetCourseByName(string courseName, string schoolName);
+        //Task<CourseViewModel> GetCourseByName(string courseName, string schoolName);
         Task<bool> IsCourseNameExist(string className);
         Task<List<CourseLikeViewModel>> GetLikesOnCourse(Guid courseId);
         Task<List<CourseViewsViewModel>> GetViewsOnCourse(Guid courseId);
