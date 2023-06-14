@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, Injector, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
-import { DomSanitizer, Meta } from '@angular/platform-browser';
+import { DomSanitizer, Meta, Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { AddClassCertificate } from 'src/root/interfaces/class/addClassCertificate';
@@ -43,6 +43,7 @@ import { Arabic } from 'flatpickr/dist/l10n/ar';
 import { Spanish } from 'flatpickr/dist/l10n/es';
 import { Turkish } from 'flatpickr/dist/l10n/tr';
 import flatpickr from 'flatpickr';
+import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
 
 
 export const deleteClassResponse =new BehaviorSubject <string>('');  
@@ -156,7 +157,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     @ViewChild('createPostModal', { static: true }) createPostModal!: CreatePostComponent;
 
     isDataLoaded:boolean = false;
-    constructor(injector: Injector,private meta: Meta,private datePipe: DatePipe,authService:AuthService,notificationService:NotificationService,public messageService:MessageService,postService:PostService,private bsModalService: BsModalService,classService: ClassService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,private cd: ChangeDetectorRef) { 
+    constructor(injector: Injector,private titleService: Title,private meta: Meta,private datePipe: DatePipe,authService:AuthService,notificationService:NotificationService,public messageService:MessageService,postService:PostService,private bsModalService: BsModalService,classService: ClassService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,private cd: ChangeDetectorRef) { 
       super(injector);
         this._classService = classService;
         this._postService = postService;
@@ -234,6 +235,8 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
         this.postsEndPageNumber = 1;
         this.reelsPageNumber = 1;
         this.class = response;
+        this.titleService.setTitle(this.class.className);
+        this.addDescriptionMetaTag(this.class.description);
         this.classAvatar = this.class.avatar;
         this.isOwnerOrNot();
         this.loadingIcon = false;
@@ -324,6 +327,8 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
           this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post created successfully'});
           this._classService.getClassById(this.className.replace(" ","").toLowerCase()).subscribe((response) => {
             this.class = response;
+            this.titleService.setTitle(this.class.className);
+            this.addDescriptionMetaTag(this.class.description);
             this.classAvatar = this.class.avatar;
             this.isOwnerOrNot();
             this.loadingIcon = false;
@@ -482,6 +487,20 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   }
   }
 
+  openSidebar(){
+    OpenSideBar.next({isOpenSideBar:true})
+  }
+
+  addDescriptionMetaTag(description:string){
+    debugger
+    const existingTag = this.meta.getTag('name="description"');
+    if (existingTag) {
+      this.meta.updateTag({ name: 'description', content: description });
+    }
+    else{
+      this.meta.addTag({ name: 'description', content: description });
+    }
+  }
 
   getPostsByClassId() {
     if(this.class?.classId == undefined){

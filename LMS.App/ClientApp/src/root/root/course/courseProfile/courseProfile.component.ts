@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Component, ElementRef, HostListener, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
-import { DomSanitizer, Meta } from '@angular/platform-browser';
+import { DomSanitizer, Meta, Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { MessageService } from 'primeng/api';
@@ -37,6 +37,7 @@ import { commentLikeResponse } from 'src/root/service/signalr.service';
 import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 import { RolesEnum } from 'src/root/RolesEnum/rolesEnum';
 import { generateCertificateResponse } from '../../generateCertificate/generateCertificate.component';
+import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
 export const convertIntoClassResponse =new Subject<{classId: string, className : string,school:any,avatar:string}>(); 
 export const deleteCourseResponse =new BehaviorSubject <string>('');  
 
@@ -140,7 +141,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     @ViewChild('createPostModal', { static: true }) createPostModal!: CreatePostComponent;
 
     isDataLoaded:boolean = false;
-    constructor(injector: Injector,private meta: Meta,authService:AuthService,notificationService:NotificationService,public messageService:MessageService,postService:PostService,private bsModalService: BsModalService,courseService: CourseService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,private cd: ChangeDetectorRef) { 
+    constructor(injector: Injector,private titleService: Title,private meta: Meta,authService:AuthService,notificationService:NotificationService,public messageService:MessageService,postService:PostService,private bsModalService: BsModalService,courseService: CourseService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,private cd: ChangeDetectorRef) { 
       super(injector);
         this._courseService = courseService;
          this._postService = postService;
@@ -176,6 +177,8 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
         this.postsPageNumber = 1;
         this.reelsPageNumber = 1;
         this.course = response;
+        this.titleService.setTitle(this.course.courseName);
+        this.addDescriptionMetaTag(this.course.description);
         this.courseAvatar = this.course.avatar;
         this.isOwnerOrNot();
         this.loadingIcon = false;
@@ -264,6 +267,8 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
           this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post created successfully'});
           this._courseService.getCourseById(this.courseName.replace(" ","").toLowerCase()).subscribe((response) => {
             this.course = response;
+            this.titleService.setTitle(this.course.courseName);
+            this.addDescriptionMetaTag(this.course.description);
             this.courseAvatar = this.course.avatar;
             this.isOwnerOrNot();
             this.loadingIcon = false;
@@ -434,23 +439,21 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       }
     }
     }
-    // myScrollFunction = (ev: any): void => {
-    //   this.postLoadingIcon = true;
-    //   this.postsPageNumber++;
-    //   this.getPostsByCourseId();
 
-    //   // if(this.postResponse == undefined){
-    //   //   this.postLoadingIcon = true;
-    //   //   this.postsPageNumber++;
-    //   //   this.getPostsByCourseId();
-    //   // }
-    //   //   else{
-    //   //     if(this.postResponse.length != 0){
-    //   //       this.postsPageNumber++;
-    //   //       this.getPostsByCourseId();
-    //   //     }
-    //   //   }
-    // };
+    openSidebar(){
+      OpenSideBar.next({isOpenSideBar:true})
+    }
+
+    addDescriptionMetaTag(description:string){
+      debugger
+      const existingTag = this.meta.getTag('name="description"');
+      if (existingTag) {
+        this.meta.updateTag({ name: 'description', content: description });
+      }
+      else{
+        this.meta.addTag({ name: 'description', content: description });
+      }
+    }
   
     getPostsByCourseId() {
       if(this.course?.courseId == undefined){

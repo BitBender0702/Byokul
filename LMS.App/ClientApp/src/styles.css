@@ -3334,3 +3334,16 @@ p-autocomplete li:before {
 .word-break {
   word-break: break-all;
 }
+
+.create_post_btn { left: 87%;
+top: 86%;
+position: fixed;
+z-index: 999;
+display: none !important;
+}
+
+@media (max-width: 768px) {
+  .create_post_btn {
+    display: block !important;
+  }
+}

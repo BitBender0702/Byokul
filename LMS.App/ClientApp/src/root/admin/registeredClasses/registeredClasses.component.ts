@@ -6,6 +6,7 @@ import { RegisteredClasses } from 'src/root/interfaces/admin/registeredClasses';
 import { EnableDisableClassCourse } from 'src/root/interfaces/admin/enableDisableClassCourse';
 import { Table } from 'primeng/table';
 import { AuthService } from 'src/root/service/auth.service';
+import { OpenAdminSideBar } from '../admin-template/side-bar/adminSide-bar.component';
 
 @Component({
   selector: 'registered-classes',
@@ -82,6 +83,10 @@ export class RegisteredClassesComponent implements OnInit {
       resetSorting(): void {
         this.table.reset();
         this.registeredClasses = this.cloned.slice(0);
+      }
+
+      openAdminSideBar(){
+        OpenAdminSideBar.next({isOpenSideBar:true})
       }
     }
     

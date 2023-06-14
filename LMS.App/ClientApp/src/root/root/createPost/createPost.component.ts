@@ -117,6 +117,9 @@ export class CreatePostComponent implements OnInit,OnDestroy {
   minDate:any;
   isMicroPhoneOpen:boolean = true;
   scheduleVideoRequired: boolean = false;
+  thumbnailRequired: boolean = false;
+  isThumbnailUpload: boolean = false;
+  isVideoUpload: boolean = false;
   from!:any;
 
   @Output() onClose: EventEmitter<any> = new EventEmitter<any>();
@@ -174,7 +177,7 @@ export class CreatePostComponent implements OnInit,OnDestroy {
     this.createLiveForm = this.fb.group({
       title: this.fb.control('',[Validators.required]),
       bodyText: this.fb.control('',[Validators.required]),
-      coverLetter: this.fb.control('',[Validators.required]),
+      // coverLetter: this.fb.control('',[Validators.required]),
       commentPerMinute: this.fb.control('0'),
       scheduleTime: this.fb.control('')
       // discuss which more fields we need to add there
@@ -278,6 +281,8 @@ export class CreatePostComponent implements OnInit,OnDestroy {
       })(i);
       reader.readAsDataURL(selectedFiles[i]);
     }
+    this.thumbnailRequired = false;
+    this.isThumbnailUpload = true;
 }
 
    removeUploadImage(image:any){
@@ -291,6 +296,7 @@ export class CreatePostComponent implements OnInit,OnDestroy {
           this.uploadImage.splice(imageIndex, 1);
         }
 
+        this.isThumbnailUpload = false;
    }
 
 handleVideoInput(event: any) {
@@ -308,6 +314,7 @@ handleVideoInput(event: any) {
     });
   }
   this.scheduleVideoRequired = false;
+  this.isVideoUpload = true;
 }
 
 getVideoThumbnail(videoUrl: string,fileName:string, callback: (thumbnailUrl: string) => void) {
@@ -369,7 +376,7 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
       if (imageIndex > -1) {
         this.uploadVideo.splice(imageIndex, 1);
       }
-
+      this.isVideoUpload = false;
  }
 
  handleAttachmentInput(event: any) {
@@ -784,6 +791,11 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
       }
     }
 
+    if(this.images.length < 1){
+      this.thumbnailRequired = true;
+      return;
+    }
+
     if (!this.createLiveForm.valid) {
       return;
     }
@@ -793,13 +805,17 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
           this.postToUpload.append('uploadVideos', this.videos[i]);
         }
 
+        for(var i=0; i<this.videoThumbnails.length; i++){
+          this.postToUpload.append('uploadVideosThumbnail', this.videoThumbnails[i]);
+        }
+
     this.loadingIcon = true;
     var post =this.createLiveForm.value;
     this.postFrom();
 
     this.postToUpload.append('title', post.title);
     this.postToUpload.append('description', post.bodyText);
-    this.postToUpload.append('coverLetter', post.coverLetter);
+    // this.postToUpload.append('coverLetter', post.coverLetter);
     this.postToUpload.append('postType', PostTypeEnum.Stream.toString());
     this.postToUpload.append('postTags', JSON.stringify(this.tagLists));
     this.postToUpload.append('commentsPerMinute', post.commentPerMinute);
@@ -811,18 +827,21 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
     }
 
     this._postService.createPost(this.postToUpload).subscribe((response:any) => { 
+      debugger
       this.isSubmitted=false;
       this.loadingIcon = false;
       //addPostResponse.next({response}); 
       this.postToUpload = new FormData();
       this.close();
-      const fullNameIndex = response.streamUrl.indexOf('fullName='); // find the index of "fullName="
-      const newUrl = response.streamUrl.slice(fullNameIndex);
+      // const fullNameIndex = response.streamUrl.indexOf('fullName='); // find the index of "fullName="
+      // const newUrl = response.streamUrl.slice(fullNameIndex);
       // here we need to send schoolId/classId if stream from those.
       this.router.navigate(
-          [`liveStream`,response.id,newUrl,this.from],
-          { state: { stream: {streamUrl: response.streamUrl, userId:this.userId, meetingId: post.title,from:"user"} } });
+          [`liveStream`,response.id,this.from]
+          // { state: { stream: {streamUrl: response.streamUrl, userId:this.userId, meetingId: post.title,from:"user"} } });
 
+      // }
+      );
       });
 
 }

@@ -12,6 +12,7 @@ import { UserService } from 'src/root/service/user.service';
 import { TransactionParamViewModel } from 'src/root/interfaces/payment/transactionParamViewModel';
 import { TransactionTypeEnum } from 'src/root/Enums/transactionTypeEnum';
 import { Subscription } from 'rxjs';
+import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
 
 @Component({
     selector: 'earnings',
@@ -431,8 +432,7 @@ this.dropdownMenu.nativeElement.style.display = (display === 'none') ? 'block' :
  
 
     openSidebar(){
-      this.isOpenSidebar = true;
-  
+      OpenSideBar.next({isOpenSideBar:true})
     }
   
     resetPayoutModal(){

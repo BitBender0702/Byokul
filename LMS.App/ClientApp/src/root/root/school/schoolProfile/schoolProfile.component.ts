@@ -12,7 +12,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, Meta, Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, finalize, Subject, Subscription } from 'rxjs';
 import { EditSchoolModel } from 'src/root/interfaces/school/editSchoolModel';
@@ -60,6 +60,7 @@ import { AuthService } from 'src/root/service/auth.service';
 import { RolesEnum } from 'src/root/RolesEnum/rolesEnum';
 import { ownedClassResponse } from '../../class/createClass/createClass.component';
 import { ownedCourseResponse } from '../../course/createCourse/createCourse.component';
+import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
 
 export const deleteSchoolResponse =new BehaviorSubject <string>('');  
 
@@ -212,7 +213,9 @@ export class SchoolProfileComponent
     courseService:CourseService,
     private cd: ChangeDetectorRef,
     private renderer: Renderer2, 
-    private el: ElementRef
+    private el: ElementRef,
+    private meta: Meta,
+    private titleService: Title
   ) {
     super(injector);
     this._schoolService = schoolService;
@@ -279,6 +282,8 @@ export class SchoolProfileComponent
         this.frontEndPageNumber = 1;
         this.reelsPageNumber = 1;
         this.school = response;
+        this.titleService.setTitle(this.school.schoolName);
+        this.addDescriptionMetaTag(this.school.description);
         this.schoolAvatar = this.school.avatar;
         this.followersLength = this.school.schoolFollowers.length;
         this.isOwnerOrNot();
@@ -380,6 +385,8 @@ export class SchoolProfileComponent
         this.messageService.add({severity: 'success',summary: 'Success',life: 3000,detail: 'Post created successfully',});
         this._schoolService.getSchoolById(this.schoolName.replace(' ', '').toLowerCase()).subscribe((response) => {
            this.school = response;
+           this.titleService.setTitle(this.school.schoolName);
+           this.addDescriptionMetaTag(this.school.description);
            this.loadingIcon = false;
            this.postLoadingIcon = false;
            this.scrolled = false;
@@ -462,6 +469,12 @@ export class SchoolProfileComponent
           }
       });
     }
+
+    // const existingTag = this.meta.getTag(`title =(${this.school.schoolName})`);
+    //       if (!existingTag) {
+    //         this.meta.addTag({ name: 'robots', content: 'nofollow' });
+    //       }
+
    
   }
 
@@ -521,6 +534,17 @@ export class SchoolProfileComponent
     this.getPostsBySchoolId();
     }
   }
+  }
+
+  addDescriptionMetaTag(description:string){
+    debugger
+    const existingTag = this.meta.getTag('name="description"');
+    if (existingTag) {
+      this.meta.updateTag({ name: 'description', content: description });
+    }
+    else{
+      this.meta.addTag({ name: 'description', content: description });
+    }
   }
 
   getPostsBySchoolId() {
@@ -648,7 +672,7 @@ export class SchoolProfileComponent
   }
 
   openSidebar() {
-    this.isOpenSidebar = true;
+    OpenSideBar.next({isOpenSideBar:true})
   }
 
   getSchoolDetails(schoolId: string) {

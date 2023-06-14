@@ -71,13 +71,13 @@
                       *ngIf="(isSubmitted && createLiveForm.controls.bodyText.errors)">Body text is required
                     </small>
                     </div>
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                       <label class="font_10">{{'CoverLetter'| translate }}</label>
                       <input formControlName="coverLetter" type="text" class="form-control" placeholder="Cover Letter before Stream start" />
                       <small class="p-error" style="color: orange;"
                       *ngIf="(isSubmitted && createLiveForm.controls.coverLetter.errors)">Cover letter is required
                     </small>
-                    </div>
+                    </div> -->
                     <div class="form-group">
                       <label class="font_10">{{'CommentThrottling'| translate }}</label>
                       <select formControlName="commentPerMinute" class="form-select rounded-8 w-100">
@@ -158,14 +158,13 @@
                    <div
                    class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 cr-postfooter pt-0">
                    <div class="post-bot-left d-flex">
- 
-                     <label class="custom-file-upload post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center">
+                     <label *ngIf="!isThumbnailUpload" class="custom-file-upload post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center">
                        <input id="hideFileType" type="file" (change)="handleImageInput($event)" accept="image/*"/>
                        <img
                          src="../../../assets/images/gallery-dark.svg" class="dark-attach" /><img src="../../../assets/images/gallery-light.svg"
                          class="light-attach" />
                      </label>
-                     <div *ngIf="scheduleTime!= undefined">
+                     <div *ngIf="!isVideoUpload">
                       <label class="custom-file-upload post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center">
                         <input id="hideFileType" type="file" (change)="handleVideoInput($event)" accept="video/*"/>
                         <img
@@ -192,6 +191,9 @@
                  </small>
                  <small class="p-error" style="color: orange;margin-left: 350px;" *ngIf="scheduleVideoRequired">
                   {{'AddVideoForScheduleStream'| translate }}
+                </small>
+                <small class="p-error" style="color: orange;margin-left: 350px;" *ngIf="thumbnailRequired">
+                  {{'ThumbnailRequired'| translate }}
                 </small>
                  <small class="p-error" style="color: orange;margin-left: 350px;" *ngIf="createLiveForm.errors?.tagsLengthExceeded">
                    {{'AddMax7Tags'| translate }}

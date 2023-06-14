@@ -1,7 +1,6 @@
 
 <div *ngIf="isDataLoaded">
     <section class="f-poppins">
-        <adminSide-bar></adminSide-bar> 
         <div class="main_content">
           <div class="create-post-header d-flex justify-content-between d-none d-xl-flex align-items-center">
             <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark invisible"><img
@@ -19,7 +18,7 @@
             <div class="d-xl-none">
               <button type="button" class="mobile-search border_btn"><img
                   src="../../../../assets/images/search-lg.svg" /></button>
-              <button type="button" class="mobile-search border_btn"><img
+              <button (click)="openAdminSideBar()" type="button" class="mobile-search border_btn"><img
                   src="../../../../assets/images/menu.svg" /></button>
             </div>
           </div>

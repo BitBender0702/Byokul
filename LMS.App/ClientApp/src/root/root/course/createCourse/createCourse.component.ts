@@ -10,6 +10,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { SharePostComponent } from '../../sharePost/sharePost.component';
+import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
 
 export const ownedCourseResponse =new Subject<{courseId: string, courseAvatar : string,courseName:string,schoolName:string, action:string}>(); 
 
@@ -401,8 +402,7 @@ captureTeacherId(event: any) {
   }
 
   openSidebar(){
-    this.isOpenSidebar = true;
-
+    OpenSideBar.next({isOpenSideBar:true})
   }
 
   removeTeacher(event: any){

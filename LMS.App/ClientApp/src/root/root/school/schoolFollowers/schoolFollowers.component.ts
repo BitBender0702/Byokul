@@ -4,6 +4,7 @@ import { Subscription } from "rxjs";
 import { SchoolService } from "src/root/service/school.service";
 import { UserService } from "src/root/service/user.service";
 import { MultilingualComponent, changeLanguage } from "../../sharedModule/Multilingual/multilingual.component";
+import { OpenSideBar } from "src/root/user-template/side-bar/side-bar.component";
 
 @Component({
   selector: 'user-Followers',
@@ -67,6 +68,10 @@ export class SchoolFollowersComponent extends MultilingualComponent implements O
 
     back(): void {
       window.history.back();
+    }
+
+    openSidebar(){
+      OpenSideBar.next({isOpenSideBar:true})
     }
 
     schoolFollowersSearch(){

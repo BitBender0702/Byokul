@@ -1,21 +1,24 @@
-import { ChangeDetectorRef, Component, Injector, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Injector, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
+import { Subject, Subscription } from 'rxjs';
 import { MultilingualComponent } from 'src/root/root/sharedModule/Multilingual/multilingual.component';
 import { AuthService } from 'src/root/service/auth.service';
 import { UserService } from 'src/root/service/user.service';
+export const OpenAdminSideBar =new Subject<{isOpenSideBar:boolean}>(); 
 
 @Component({
   selector: 'adminSide-bar',
   templateUrl: 'adminSide-bar.component.html',
   styleUrls: ['adminSide-bar.component.css']
 })
-export class AdminSideBarComponent extends MultilingualComponent implements OnInit {
+export class AdminSideBarComponent extends MultilingualComponent implements OnInit,OnDestroy {
   items!: MenuItem[];
   private _userService;
   private _authService;
   sidebarInfo:any;
   displaySideBar:boolean = false;
+  openAdminSideBarSubscription!: Subscription;
 
   @Input() isOpenSidebar!:boolean;
 
@@ -34,6 +37,18 @@ export class AdminSideBarComponent extends MultilingualComponent implements OnIn
       this.sidebarInfo = response;
     });
 
+    if(!this.openAdminSideBarSubscription){
+      this.openAdminSideBarSubscription = OpenAdminSideBar.subscribe(response => {
+      this.isOpenSidebar = response.isOpenSideBar;
+      });
+    }
+
+  }
+
+  ngOnDestroy(): void {
+    if(this.openAdminSideBarSubscription){
+      this.openAdminSideBarSubscription.unsubscribe();
+    }
   }
 
   closeSidebar(){

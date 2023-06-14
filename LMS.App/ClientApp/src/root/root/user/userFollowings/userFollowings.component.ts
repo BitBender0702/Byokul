@@ -5,6 +5,7 @@ import { MultilingualComponent, changeLanguage } from "../../sharedModule/Multil
 import { Subscription } from "rxjs";
 import { FollowUnfollow } from "src/root/interfaces/FollowUnfollow";
 import { FollowUnFollowEnum } from "src/root/Enums/FollowUnFollowEnum";
+import { OpenSideBar } from "src/root/user-template/side-bar/side-bar.component";
 
 @Component({
   selector: 'user-Followers',
@@ -87,6 +88,10 @@ export class UserFollowingsComponent extends MultilingualComponent implements On
 
     back(): void {
       window.history.back();
+    }
+
+    openSidebar() {
+      OpenSideBar.next({isOpenSideBar:true})
     }
 
     userFollowingsSearch(){

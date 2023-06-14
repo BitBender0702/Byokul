@@ -26,6 +26,7 @@ import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
 import { ChatVideoComponent } from '../chatVideo/chatVideo.component';
 import { UploadVideo } from 'src/root/interfaces/post/uploadVideo';
+import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
 
 export const unreadChatResponse =new Subject<{readMessagesCount: number,type:string}>(); 
 
@@ -147,6 +148,19 @@ export class ChatComponent extends MultilingualComponent implements OnInit, Afte
   videoObject!:UploadVideo;
   disabledSendButton!:boolean;
   uploadVideo:any[] = [];
+  gender!:string;
+  replyChat:string = "";
+  replyMessageId:string | null = "";
+  fileName:string = "";
+  fileURL:string = "";
+  isSubmitted: boolean = false;
+  replyMessageType:number | null = null;
+  forwardMessagePageNumber:number = 1;
+  forwardUsersList:any;
+  isForwarded:boolean = false;
+  forwardedFileName!:string;
+  forwardedFileURL!:string;
+  forwardedFileType!:number;
   @ViewChild('chatHeadsScrollList') chatHeadsScrollList!: ElementRef;
   // @ViewChild('chatScrollList') chatScrollList!: ElementRef;
 
@@ -171,6 +185,7 @@ export class ChatComponent extends MultilingualComponent implements OnInit, Afte
   ngOnInit() {
     this.loadingIcon = true;
     var selectedLang = localStorage.getItem('selectedLanguage');
+    this.gender = localStorage.getItem("gender")??'';
     this.translate.use(selectedLang ?? '');
     let chatHeadObj = history.state.chatHead;
     if(chatHeadObj!= undefined){
@@ -341,10 +356,15 @@ if(response.chatType =="1"){
                 user.lastMessage = response.message;
                }
                else{
+                if(response.forwardedFileName != undefined){
+                  user.lastMessage =  response.forwardedFileName;       
+                }
+                else{
                 user.lastMessage = response.attachments[0].fileName;
+                }
                }
           
-                var senderDetails ={receiver:result.firstName + " " + result.lastName,message:response.message,isTest:true,receiverId:response.receiverId,isSchoolOwner:this.isSchoolOwner};
+                var senderDetails ={id:response.id, receiver:result.firstName + " " + result.lastName,message:response.message,isTest:true,receiverId:response.receiverId,isSchoolOwner:this.isSchoolOwner,replyChatContent:response.replyChatContent,replyMessageType:response.replyMessageType,fileName:response.fileName,fileURL:response.fileURL,isForwarded:response.isForwarded,forwardedFileName:response.forwardedFileName,forwardedFileURL:response.forwardedFileURL,forwardedFileType:response.forwardedFileType};
                 this.generateChatLi(senderDetails,result.avatar,"1");
 
                
@@ -370,10 +390,15 @@ if(response.chatType =="1"){
       user.lastMessage = response.message;
      }
      else{
+      if(response.forwardedFileName != undefined){
+        user.lastMessage =  response.forwardedFileName;       
+      }
+      else{
       user.lastMessage = response.attachments[0].fileName;
+      }
      }
 
-      var result ={receiver:this.receiverName,message:response.message,isTest:true,receiverId:response.receiverId,isSchoolOwner:this.isSchoolOwner};
+      var result ={id:response.id,receiver:this.receiverName,message:response.message,isTest:true,receiverId:response.receiverId,isSchoolOwner:this.isSchoolOwner,replyChatContent:response.replyChatContent,replyMessageType:response.replyMessageType,fileName:response.fileName,fileURL:response.fileURL,isForwarded:response.isForwarded,forwardedFileName:response.forwardedFileName,forwardedFileURL:response.forwardedFileURL,forwardedFileType:response.forwardedFileType};
       this.generateChatLi(result,this.receiverAvatar,"1");
     }
   }
@@ -422,25 +447,30 @@ if(response.chatType =="1"){
                  if(user.school.ownerId == this.sender.id || user.school?.createdById == this.sender.id){
                   this.isSchoolOwner = true;
                   user.lastMessage = response.message;
-                  var senderDetails ={receiver:result.firstName + " " + result.lastName + "(" + user.school.schoolName + ")",message:response.message,isTest:true,receiverId:response.receiverId,isSchoolOwner:this.isSchoolOwner};
+                  var senderDetails ={id:response.id,receiver:result.firstName + " " + result.lastName + "(" + user.school.schoolName + ")",message:response.message,isTest:true,receiverId:response.receiverId,isSchoolOwner:this.isSchoolOwner,replyChatContent:response.replyChatContent,replyMessageType:response.replyMessageType,fileName:response.fileName,fileURL:response.fileURL,isForwarded:response.isForwarded,forwardedFileName:response.forwardedFileName,forwardedFileURL:response.forwardedFileURL,forwardedFileType:response.forwardedFileType};
                   this.generateChatLi(senderDetails,result.avatar,"3");
                  }
                  else{
                   this.isSchoolOwner = false;
-                  var senderDetailss ={receiver:user.school.schoolName,message:response.message,isTest:true,receiverId:response.receiverId,isSchoolOwner:this.isSchoolOwner};
+                  var senderDetailss ={id:response.id,receiver:user.school.schoolName,message:response.message,isTest:true,receiverId:response.receiverId,isSchoolOwner:this.isSchoolOwner,replyChatContent:response.replyChatContent,replyMessageType:response.replyMessageType,fileName:response.fileName,fileURL:response.fileURL,isForwarded:response.isForwarded,forwardedFileName:response.forwardedFileName,forwardedFileURL:response.forwardedFileURL,forwardedFileType:response.forwardedFileType};
                   this.generateChatLi(senderDetailss,user.school.avatar,"3");
                  }
                 }
                 else{
                   this.isSchoolOwner = false;
-                  var senderDetailsss ={receiver:user.school.schoolName ,message:response.message,isTest:true,receiverId:response.receiverId,isSchoolOwner:this.isSchoolOwner};
+                  var senderDetailsss ={id:response.id,receiver:user.school.schoolName ,message:response.message,isTest:true,receiverId:response.receiverId,isSchoolOwner:this.isSchoolOwner,replyChatContent:response.replyChatContent,replyMessageType:response.replyMessageType,fileName:response.fileName,fileURL:response.fileURL,isForwarded:response.isForwarded,forwardedFileName:response.forwardedFileName,forwardedFileURL:response.forwardedFileURL,forwardedFileType:response.forwardedFileType};
                   this.generateChatLi(senderDetailsss,user.school.avatar,"3");
                 }
                  if(response.message != ""){
                   user.lastMessage = response.message;
                  }
                  else{
+                  if(response.forwardedFileName != undefined){
+                    user.lastMessage =  response.forwardedFileName;       
+                  }
+                  else{
                   user.lastMessage = response.attachments[0].fileName;
+                  }
                  }
                 });
               });
@@ -465,10 +495,15 @@ if(response.chatType =="1"){
         user.lastMessage = response.message;
        }
        else{
+        if(response.forwardedFileName != undefined){
+          user.lastMessage =  response.forwardedFileName;       
+        }
+        else{
         user.lastMessage = response.attachments[0].fileName;
+        }
        }
   
-        var senderDeatail ={receiver:this.receiverName,message:response.message,isTest:true,receiverId:response.receiverId,isSchoolOwner:this.isSchoolOwner};
+        var senderDeatail ={id:response.id,receiver:this.receiverName,message:response.message,isTest:true,receiverId:response.receiverId,isSchoolOwner:this.isSchoolOwner,replyChatContent:response.replyChatContent,replyMessageType:response.replyMessageType,fileName:response.fileName,fileURL:response.fileURL,isForwarded:response.isForwarded,forwardedFileName:response.forwardedFileName,forwardedFileURL:response.forwardedFileURL,forwardedFileType:response.forwardedFileType};
         this.generateChatLi(senderDeatail,this.receiverAvatar,"3");
       }
   }
@@ -530,18 +565,18 @@ if(response.chatType =="1"){
                  if(user.class.ownerId == this.sender.id || user.class?.createdById == this.sender.id){
                   this.isSchoolOwner = true;
                   user.lastMessage = response.message;
-                  var senderDetails ={receiver:result.firstName + " " + result.lastName ,message:response.message,isTest:true,receiverId:response.receiverId,isSchoolOwner:this.isSchoolOwner};
+                  var senderDetails ={id:response.id,receiver:result.firstName + " " + result.lastName ,message:response.message,isTest:true,receiverId:response.receiverId,isSchoolOwner:this.isSchoolOwner,replyChatContent:response.replyChatContent,replyMessageType:response.replyMessageType,fileName:response.fileName,fileURL:response.fileURL,isForwarded:response.isForwarded,forwardedFileName:response.forwardedFileName,forwardedFileURL:response.forwardedFileURL,forwardedFileType:response.forwardedFileType};
                   this.generateChatLi(senderDetails,result.avatar,"4");
                  }
                  else{
                   this.isSchoolOwner = false;
-                  var senderDetailss ={receiver:user.class.className,message:response.message,isTest:true,receiverId:response.receiverId,isSchoolOwner:this.isSchoolOwner};
+                  var senderDetailss ={id:response.id,receiver:user.class.className,message:response.message,isTest:true,receiverId:response.receiverId,isSchoolOwner:this.isSchoolOwner,replyChatContent:response.replyChatContent,replyMessageType:response.replyMessageType,fileName:response.fileName,fileURL:response.fileURL,isForwarded:response.isForwarded,forwardedFileName:response.forwardedFileName,forwardedFileURL:response.forwardedFileURL,forwardedFileType:response.forwardedFileType};
                   this.generateChatLi(senderDetailss,user.class.avatar,"4");
                  }
                 }
                 else{
                   this.isSchoolOwner = false;
-                  var senderDetailsss ={receiver:user.class.className ,message:response.message,isTest:true,receiverId:response.receiverId,isSchoolOwner:this.isSchoolOwner};
+                  var senderDetailsss ={id:response.id,receiver:user.class.className ,message:response.message,isTest:true,receiverId:response.receiverId,isSchoolOwner:this.isSchoolOwner,replyChatContent:response.replyChatContent,replyMessageType:response.replyMessageType,fileName:response.fileName,fileURL:response.fileURL,isForwarded:response.isForwarded,forwardedFileName:response.forwardedFileName,forwardedFileURL:response.forwardedFileURL,forwardedFileType:response.forwardedFileType};
                   this.generateChatLi(senderDetailsss,user.class.avatar,"4");
                 }
                 });
@@ -581,10 +616,15 @@ if(response.chatType =="1"){
         user.lastMessage = response.message;
        }
        else{
+        if(response.forwardedFileName != undefined){
+          user.lastMessage =  response.forwardedFileName;       
+        }
+        else{
         user.lastMessage = response.attachments[0].fileName;
+        }
        }
   
-        var senderDeatail ={receiver:this.receiverName ,message:response.message,isTest:true,receiverId:response.receiverId,isSchoolOwner:this.isSchoolOwner};
+        var senderDeatail ={id:response.id,receiver:this.receiverName ,message:response.message,isTest:true,receiverId:response.receiverId,isSchoolOwner:this.isSchoolOwner,replyChatContent:response.replyChatContent,replyMessageType:response.replyMessageType,fileName:response.fileName,fileURL:response.fileURL,isForwarded:response.isForwarded,forwardedFileName:response.forwardedFileName,forwardedFileURL:response.forwardedFileURL,forwardedFileType:response.forwardedFileType};
         this.generateChatLi(senderDeatail,this.receiverAvatar,"4");
       }
   }
@@ -647,18 +687,18 @@ if(response.chatType =="1"){
                  if(user.course.ownerId == this.sender.id || user.course?.createdById == this.sender.id){
                   this.isSchoolOwner = true;
                   user.lastMessage = response.message;
-                  var senderDetails ={receiver:result.firstName + " " + result.lastName ,message:response.message,isTest:true,receiverId:response.receiverId,isSchoolOwner:this.isSchoolOwner};
+                  var senderDetails ={id:response.id,receiver:result.firstName + " " + result.lastName ,message:response.message,isTest:true,receiverId:response.receiverId,isSchoolOwner:this.isSchoolOwner,replyChatContent:response.replyChatContent,replyMessageType:response.replyMessageType,fileName:response.fileName,fileURL:response.fileURL,isForwarded:response.isForwarded,forwardedFileName:response.forwardedFileName,forwardedFileURL:response.forwardedFileURL,forwardedFileType:response.forwardedFileType};
                   this.generateChatLi(senderDetails,result.avatar,"5");
                  }
                  else{
                   this.isSchoolOwner = false;
-                  var senderDetailss ={receiver:user.course.courseName,message:response.message,isTest:true,receiverId:response.receiverId,isSchoolOwner:this.isSchoolOwner};
+                  var senderDetailss ={id:response.id,receiver:user.course.courseName,message:response.message,isTest:true,receiverId:response.receiverId,isSchoolOwner:this.isSchoolOwner,replyChatContent:response.replyChatContent,replyMessageType:response.replyMessageType,fileName:response.fileName,fileURL:response.fileURL,isForwarded:response.isForwarded,forwardedFileName:response.forwardedFileName,forwardedFileURL:response.forwardedFileURL,forwardedFileType:response.forwardedFileType};
                   this.generateChatLi(senderDetailss,user.course.avatar,"5");
                  }
                 }
                 else{
                   this.isSchoolOwner = false;
-                  var senderDetailsss ={receiver:user.course.courseName ,message:response.message,isTest:true,receiverId:response.receiverId,isSchoolOwner:this.isSchoolOwner};
+                  var senderDetailsss ={id:response.id,receiver:user.course.courseName ,message:response.message,isTest:true,receiverId:response.receiverId,isSchoolOwner:this.isSchoolOwner,replyChatContent:response.replyChatContent,replyMessageType:response.replyMessageType,fileName:response.fileName,fileURL:response.fileURL,isForwarded:response.isForwarded,forwardedFileName:response.forwardedFileName,forwardedFileURL:response.forwardedFileURL,forwardedFileType:response.forwardedFileType};
                   this.generateChatLi(senderDetailsss,user.course.avatar,"5");
                 }
                 });
@@ -689,10 +729,15 @@ if(response.chatType =="1"){
         user.lastMessage = response.message;
        }
        else{
+        if(response.forwardedFileName != undefined){
+          user.lastMessage =  response.forwardedFileName;       
+        }
+        else{
         user.lastMessage = response.attachments[0].fileName;
+        }
        }
   
-        var senderDeatail ={receiver:this.receiverName ,message:response.message,isTest:true,receiverId:response.receiverId,isSchoolOwner:this.isSchoolOwner};
+        var senderDeatail ={id:response.id,receiver:this.receiverName ,message:response.message,isTest:true,receiverId:response.receiverId,isSchoolOwner:this.isSchoolOwner,replyChatContent:response.replyChatContent,replyMessageType:response.replyMessageType,fileName:response.fileName,fileURL:response.fileURL,isForwarded:response.isForwarded,forwardedFileName:response.forwardedFileName,forwardedFileURL:response.forwardedFileURL,forwardedFileType:response.forwardedFileType};
         this.generateChatLi(senderDeatail,this.receiverAvatar,"4");
       }
   }
@@ -1090,6 +1135,15 @@ this.addChatAttachments = {
       chatType:0,
       chatTypeId:'',
       message:'',
+      replyMessageId:'',
+      replyChatContent:'',
+      replyMessageType:0,
+      fileName: '',
+      fileURL:'',
+      isForwarded:false,
+      forwardedFileName:null,
+      forwardedFileURL:null,
+      forwardedFileType:null,
       attachments:[]
   
      };
@@ -1315,6 +1369,8 @@ getTextMessage(evant:any,receiverId:string){
 }
 
   sendToUser(receiverId:string){
+    debugger
+    this.isSubmitted = false;
     this.InitializeChatViewModel();
     if(receiverId == undefined){
       receiverId = this.senderID;
@@ -1322,9 +1378,20 @@ getTextMessage(evant:any,receiverId:string){
 
     var users: any[] = this.allChatUsers;
     var user = users.find(x => x.userID == receiverId && x.chatType == this.chatType);
-
+    if(this.isForwarded == true){
+      this.chatViewModel.isForwarded = this.isForwarded;
+      this.chatViewModel.forwardedFileName = this.forwardedFileName;
+      this.chatViewModel.forwardedFileURL = this.forwardedFileURL;
+      this.chatViewModel.forwardedFileType = this.forwardedFileType;
+    }
     if(user!= undefined){
     this.receiverInfo = user;
+    if(this.replyMessageId != ""){
+      this.chatViewModel.replyMessageId = this.replyMessageId; 
+    }
+    else{
+      this.chatViewModel.replyMessageId = null; 
+    }
     if(this.receiverInfo.school!= null){
       this.chatViewModel.chatTypeId = this.receiverInfo?.school.schoolId;
     }
@@ -1358,6 +1425,12 @@ getTextMessage(evant:any,receiverId:string){
   }
 
     if(user == undefined){
+      if(this.replyMessageId != ""){
+        this.chatViewModel.replyMessageId = this.replyMessageId; 
+      }
+      else{
+        this.chatViewModel.replyMessageId = null; 
+      }
       var schoolUsers: any[] = this.schoolInboxList;
       if(schoolUsers!=undefined && this.chatType== "3"){
       user = schoolUsers.find(x => x.userID == receiverId && x.chatType == this.chatType);
@@ -1404,8 +1477,13 @@ getTextMessage(evant:any,receiverId:string){
       user.lastMessage = this.messageToUser;
     }
     else{
+      if(this.forwardedFileName != undefined){
+        user.lastMessage =  this.forwardedFileName;       
+      }
+      else{
       var attachments  = [ ...this.uploadImage, ...this.uploadVideos,...this.uploadAttachments];
-      user.lastMessage =  attachments[0].fileName;
+      user.lastMessage =  attachments[0].fileName;       
+    }
     }
     
 
@@ -1418,7 +1496,7 @@ getTextMessage(evant:any,receiverId:string){
 
         this.chatViewModel.attachments  = [ ...this.uploadImage, ...this.uploadVideos,...this.uploadAttachments];
 
-        if(this.chatViewModel.attachments.length == 0 && this.messageToUser == ""){
+        if(this.chatViewModel.attachments.length == 0 && this.messageToUser == "" && this.forwardedFileName == undefined){
           this.invalidMessage = true;
           return
         }
@@ -1449,6 +1527,10 @@ getTextMessage(evant:any,receiverId:string){
       this._notificationService.initializeNotificationViewModel(receiverId,NotificationType.Messages,notificationContent,this.senderId,null,0,null,null, this.chatViewModel.chatType,this.chatViewModel.chatTypeId).subscribe((response) => {
       });    
 
+      this.chatViewModel.fileName = this.fileName;
+      this.chatViewModel.replyMessageType = this.replyMessageType;
+      this.chatViewModel.replyChatContent = this.replyChat;
+      this.chatViewModel.fileURL = this.fileURL;
       this._signalRService.sendToUser(this.chatViewModel);
       console.log(this.chatViewModel);
       this.chatViewModel = new Object as ChatViewModel;
@@ -1474,10 +1556,18 @@ getTextMessage(evant:any,receiverId:string){
       }
     }
      this.uploadImage = [];
+     this.uploadVideo = [];
      this.uploadVideos = [];
      this.uploadAttachments = [];
-     this.messageToUser = "";
-
+     if(!this.isForwarded){
+      this.messageToUser = "";
+     }
+     this.isSubmitted = true;
+     this.replyMessageType = null;
+     this.isForwarded = false;
+    //  setTimeout(() => {
+    //   this.replyChat =  "";
+    // }, 5000);
     });
 
   }
@@ -1487,6 +1577,7 @@ getTextMessage(evant:any,receiverId:string){
   }
 
   generateChatLi(response:any,profileImage:string,chatType:string){
+    debugger
     var isFromReciever='you';
     const p: HTMLParagraphElement = this.renderer.createElement('p');
      if(!response.isTest){
@@ -1494,10 +1585,18 @@ getTextMessage(evant:any,receiverId:string){
      }
           
      var userChat = {
+      id: response.id != null ? response.id : null, 
       sendByMe: isFromReciever == 'me'?true : false,
       text:response.message,
       time:new Date(),
-      attachment: []
+      attachment: [],
+      replyMessageType:this.replyMessageType == null ? response.replyMessageType:this.replyMessageType,
+      replyChatContent:this.replyChat == "" ? response.replyChatContent:this.replyChat,
+      fileName:this.fileName == "" ? response.replyChatContent:this.replyChat,
+      isForwarded:response.isForwarded != undefined ? response.isForwarded : this.isForwarded,
+      forwardedFileName: response.forwardedFileName != undefined ? response.forwardedFileName:this.forwardedFileName,
+      forwardedFileURL: response.forwardedFileURL != undefined ? response.forwardedFileURL:this.forwardedFileURL,
+      forwardedFileType: response.forwardedFileType != undefined ? response.forwardedFileType :this.forwardedFileType
     }
 if(chatType == "1" || (chatType == "3" && !response.isSchoolOwner)){
 
@@ -1670,6 +1769,10 @@ var a = this.schoolInboxList;
     window.history.back();
   }
 
+  openSidebar() {
+    OpenSideBar.next({isOpenSideBar:true})
+  }
+
   @HostListener('scroll', ['$event']) 
   scrollHandler(event:any) {
     const element = event.target; // get the scrolled element
@@ -1809,7 +1912,86 @@ openCertificateViewModal(fileUrl:string,fileName:string){
   };
   this.bsModalService.show(CertificateViewComponent, { initialState });
 }
+
+chatReply(userChat:any){
+  debugger
+  this.replyChat =  userChat.text;
+  this.replyMessageId = userChat.id;
+  this.replyMessageType = 0;
+  this.cd.detectChanges();
 }
+
+chatAttachmentReply(replyMessageId:string,fileName:string,fileURL:string,fileType:number){
+  debugger
+  this.fileName = fileName;
+  this.fileURL = fileURL;
+  this.replyMessageId = replyMessageId;
+  this.replyMessageType = fileType;
+  this.replyChat = fileURL;
+  this.cd.detectChanges();
+
+}
+
+removeReplyFile(){
+  debugger
+  this.fileURL = "";
+  this.fileName = "";
+}
+
+openForwardModal(chatMessage?:string, fileName?:string, fileURL?:string,fileTYpe?:number){
+  if(chatMessage != null){
+    this.messageToUser = chatMessage;
+  }
+  if(fileName != null && fileURL != null && fileTYpe != null){
+    this.forwardedFileName = fileName;
+    this.forwardedFileURL = fileURL;
+    this.forwardedFileType = fileTYpe;
+  }
+  this._chatService.getAllChatUsers(this.senderId,this.forwardMessagePageNumber,'').subscribe((response) => {
+    debugger
+    this.forwardUsersList = response;
+    var chatUsers: any[] = this.forwardUsersList;
+      var schoolInboxList = chatUsers.filter(x => x.chatType == 3 && x.school.ownerId == this.sender.id);
+      var classInboxList = chatUsers.filter(x => x.chatType == 4 && x.class.createdById == this.sender.id);
+      var courseInboxList = chatUsers.filter(x => x.chatType == 5 && x.course.createdById == this.sender.id);
+      schoolInboxList = [ ...schoolInboxList, ...classInboxList,...courseInboxList];
+    
+      schoolInboxList.forEach((item: any) => {
+        this._userService.getUser(item.userID).subscribe((result) => {
+          debugger
+          item.userName = result.firstName + result.lastName;
+          item.profileURL = result.avatar;  
+
+          if(item.school != null && !(item.userName.indexOf('(') >= 0)){
+            item.userName = item.userName + "(" + item.school.schoolName + ")";
+         }
+         if(item.class != null && !(item.userName.indexOf('(') >= 0)){
+           item.userName = item.userName + "(" + item.class.className + ")";
+         }
+         if(item.course != null && !(item.userName.indexOf('(') >= 0)){
+           item.userName = item.userName + "(" + item.course.courseName + ")";
+         }
+        });
+      });
+  });
+}
+
+forwardToUser(receiverId:string,chatType:number){
+  debugger
+  this.chatType = chatType.toString();
+  this.isForwarded = true;
+  this.sendToUser(receiverId);
+}
+
+forwardAttachmentToUser(receiverId:string,chatType:number){
+  debugger
+  this.chatType = chatType.toString();
+  this.isForwarded = true;
+  this.sendToUser(receiverId);
+}
+}
+
+
 
 
   export enum ChartTypeEnum {

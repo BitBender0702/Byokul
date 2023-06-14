@@ -11,7 +11,7 @@
           data-bs-target="#create-post">{{'CreatePost'| translate }}</button>
       </div>
       <div class="live-header d-flex align-items-center justify-content-between">
-        <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark  d-xl-none"><img
+        <button (click)="back()" type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark  d-xl-none"><img
             src="../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
         <span class="logo_mobile d-xl-none">
           <img src="../../../assets/images/logo.svg" />
@@ -19,7 +19,7 @@
         <div class="d-xl-none">
           <button type="button" class="mobile-search border_btn" onclick="openSearch()"><img
               src="../../../assets/images/search-lg.svg" /></button>
-          <button type="button" class="mobile-search border_btn" onclick="openSidebar()"><img
+          <button  (click)="openSidebar()" type="button" class="mobile-search border_btn" onclick="openSidebar()"><img
               src="../../../assets/images/menu.svg" /></button>
         </div>
       </div>
@@ -47,7 +47,7 @@
             </span>
             </div>
 
-            <div *ngIf="item.notificationType == 4" style="cursor: pointer;" (click)="joinMeeting(item.user.firstName + ' ' + item.user.lastName,item.meetingId,item.postId)" class="d-flex align-items-center justify-content-between"><span class="followers-name font_16 text_sec1 fw_600">
+            <div *ngIf="item.notificationType == 4" style="cursor: pointer;" (click)="joinMeeting(item.userId,item.meetingId,item.postId)" class="d-flex align-items-center justify-content-between"><span class="followers-name font_16 text_sec1 fw_600">
               <img [src]="item.avatar" class="rounded-circle me-2" style="width: 38px;height: 35px;"/> 
               <p class="font_16 ms-2 d-inline-block fw_400 mb-0"> {{item.notificationContent}}</p>
             </span>

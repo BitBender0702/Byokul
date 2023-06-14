@@ -12,6 +12,7 @@ import { Subject } from 'rxjs';
 import { environment } from "src/environments/environment";
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { SharePostComponent } from '../../sharePost/sharePost.component';
+import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
 
 export const ownedSchoolResponse =new Subject<{schoolId: string, schoolAvatar : string,schoolName:string,action:string}>(); 
 
@@ -210,7 +211,7 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
   }
 
   openSidebar(){
-    this.isOpenSidebar = true;
+    OpenSideBar.next({isOpenSideBar:true})
   }
 
   createPost(){

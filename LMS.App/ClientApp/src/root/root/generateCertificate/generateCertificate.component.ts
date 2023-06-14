@@ -12,6 +12,7 @@ import { ClassService } from 'src/root/service/class.service';
 import { CourseService } from 'src/root/service/course.service';
 import { NotificationService } from 'src/root/service/notification.service';
 import { StudentService } from 'src/root/service/student.service';
+import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
 export const generateCertificateResponse =new Subject<{isCertificateSendToAll: boolean,studentName:string}>(); 
 
 @Component({
@@ -339,6 +340,10 @@ export const generateCertificateResponse =new Subject<{isCertificateSendToAll: b
    else{
     this. step = this.step -1;
    }
+  }
+
+  openSidebar(){
+    OpenSideBar.next({isOpenSideBar:true})
   }
  
 }

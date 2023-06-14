@@ -49,7 +49,7 @@ export class SchoolService{
     }
 
     getSchoolById(schoolName:string):Observable<any>{
-        return this.http.get(`${this.apiUrl}/school/getSchoolById` + '?schoolName=' + schoolName,{headers: this.headers});
+        return this.http.get(`${this.apiUrl}/school/getSchoolByName` + '?schoolName=' + schoolName,{headers: this.headers});
     }
 
     saveSchoolFollower(followUnfollowUser:FollowUnfollow):Observable<any>{

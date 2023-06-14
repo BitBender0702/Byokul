@@ -16,6 +16,7 @@ import { Spanish } from 'flatpickr/dist/l10n/es';
 import { Arabic } from 'flatpickr/dist/l10n/ar';
 import { Turkish } from 'flatpickr/dist/l10n/tr';
 import flatpickr from 'flatpickr';
+import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
 
 export const ownedClassResponse =new Subject<{classId: string, classAvatar : string,className:string,schoolName:string, action:string}>(); 
 
@@ -493,8 +494,7 @@ captureTeacherId(event: any) {
   }
 
   openSidebar(){
-    this.isOpenSidebar = true;
-
+    OpenSideBar.next({isOpenSideBar:true})
   }
 
   removeTeacher(event: any){

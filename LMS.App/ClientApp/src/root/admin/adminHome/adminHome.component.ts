@@ -4,6 +4,7 @@ import { HttpClient, HttpEventType, HttpHeaders } from "@angular/common/http";
 import {MenuItem} from 'primeng/api';
 import { AdminService } from 'src/root/service/admin/admin.service';
 import { AuthService } from 'src/root/service/auth.service';
+import { OpenAdminSideBar } from '../admin-template/side-bar/adminSide-bar.component';
 
 @Component({
   selector: 'adminHome-class',
@@ -35,6 +36,10 @@ export class AdminHomeComponent implements OnInit {
       this.isDataLoaded = true;
     });  
      
+    }
+
+    openAdminSideBar(){
+      OpenAdminSideBar.next({isOpenSideBar:true})
     }
     
   }

@@ -12,6 +12,8 @@ import { MultilingualComponent } from 'src/root/root/sharedModule/Multilingual/m
 import { userImageResponse } from 'src/root/root/user/userProfile/userProfile.component';
 import { UserService } from 'src/root/service/user.service';
 import { dashboardResponse } from 'src/root/userModule/user-auth/component/login/login.component';
+import { Subject } from 'rxjs';
+export const OpenSideBar =new Subject<{isOpenSideBar:boolean}>(); 
 
 @Component({
   selector: 'side-bar',
@@ -26,8 +28,8 @@ export class SideBarComponent extends MultilingualComponent implements OnInit {
   loadingIcon:boolean = false;
   isDataLoaded:boolean = false;
   loginUserId!:string;
-
-  @Input() isOpenSidebar!:boolean;
+  isOpenSidebar: boolean = false;
+  // @Input() isOpenSidebar!:boolean;
 
   constructor(injector: Injector,userService: UserService,private router: Router,private cd: ChangeDetectorRef) {
     super(injector);
@@ -57,6 +59,9 @@ export class SideBarComponent extends MultilingualComponent implements OnInit {
       this.isDataLoaded = true;
     });
 
+    OpenSideBar.subscribe(response => {
+      this.isOpenSidebar = response.isOpenSideBar;
+    });
     dashboardResponse.subscribe(response => {
       if(response.token != ''){
       this._userService.getSidebarInfo(response.token).subscribe((response) => {

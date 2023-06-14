@@ -8,6 +8,7 @@ import { UserService } from 'src/root/service/user.service';
 import { MultilingualComponent } from '../sharedModule/Multilingual/multilingual.component';
 import { ActivatedRoute } from '@angular/router';
 import { MessageService } from 'primeng/api';
+import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
 
 @Component({
     selector: 'globalSearch',
@@ -51,6 +52,10 @@ import { MessageService } from 'primeng/api';
 
     back(): void {
       window.history.back();
+    }
+
+    openSidebar(){
+      OpenSideBar.next({isOpenSideBar:true})
     }
 
     globalSearch(){

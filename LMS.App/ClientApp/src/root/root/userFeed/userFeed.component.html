@@ -12,100 +12,8 @@
             #searchInput
             (input)="globalSearch()"
           />
-          <ul *ngIf="showSearchResults" class="search-results">
-            <ng-container *ngFor="let item of globalSearchResult">
-              <li *ngIf="item.type == 4" class="search-results__item">
-                <div class="d-flex align-items-center justify-content-between">
-                  <span class="followers-name font_16 text_sec1 fw_600">
-                    <img
-                      [src]="item.avatar"
-                      class="rounded-circle me-2 img_style"
-                      style="max-height: 30px"
-                    />
-                    <a
-                      class="routeLink"
-                      [routerLink]="['/user/userProfile', item.id]"
-                      >{{ item.name }}</a
-                    ></span
-                  >
-                </div>
-              </li>
-              <li *ngIf="item.type == 1" class="search-results__item">
-                <div class="d-flex align-items-center justify-content-between">
-                  <span class="followers-name font_16 text_sec1 fw_600">
-                    <img
-                      [src]="item.avatar"
-                      class="rounded-circle me-2 img_style"
-                      style="max-height: 30px"
-                    />
-                    <a
-                      class="routeLink"
-                      [routerLink]="['/profile/school', item.name]"
-                      >{{ item.name }}</a
-                    ></span
-                  >
-                </div>
-              </li>
-              <li *ngIf="item.type == 2" class="search-results__item">
-                <div class="d-flex align-items-center justify-content-between">
-                  <span class="followers-name font_16 text_sec1 fw_600">
-                    <img
-                      [src]="item.avatar"
-                      class="rounded-circle me-2 img_style"
-                      style="max-height: 30px"
-                    />
-                    <a
-                      class="routeLink"
-                      [routerLink]="[
-                        '/profile/class',
-                        item.schoolName,
-                        item.name
-                      ]"
-                      >{{ item.name }}</a
-                    ></span
-                  >
-                </div>
-              </li>
-              <li *ngIf="item.type == 3" class="search-results__item">
-                <div class="d-flex align-items-center justify-content-between">
-                  <span class="followers-name font_16 text_sec1 fw_600">
-                    <img
-                      [src]="item.avatar"
-                      class="rounded-circle me-2 img_style"
-                      style="max-height: 30px"
-                    />
-                    <a
-                      class="routeLink"
-                      [routerLink]="[
-                        '/profile/course',
-                        item.schoolName,
-                        item.name
-                      ]"
-                      >{{ item.name }}</a
-                    ></span
-                  >
-                </div>
-              </li>
-            </ng-container>
-            <li
-              *ngIf="
-                showSearchResults &&
-                !searchNotFound &&
-                globalSearchResult.length > 4
-              "
-              class="search-results__item"
-            >
-              <a
-                class="btn custom-btn primary_btn w-100"
-                [routerLink]="['/user/globalSearch', searchString]"
-                >{{ "ShowMore" | translate }}</a
-              >
-            </li>
-            <li *ngIf="searchNotFound">
-              {{ "NoReultsFound" | translate }}
-            </li>
-          </ul>
-
+          
+          <ng-container *ngTemplateOutlet="globalSearchResults"></ng-container>
           <button type="button" class="btn search-icon">
             <img src="../../../assets/images/school/search-gray.svg" />
           </button>
@@ -121,33 +29,44 @@
       <div
         class="live-header d-flex align-items-center justify-content-between"
       >
-        <button
-          type="button"
-          class="back-button bg-transparent border-0 font_16 fw_400 text_dark d-xl-none"
-        >
-          <img src="images/arrow-left.svg" /> {{ "Back" | translate }}
-        </button>
         <span class="logo_mobile d-xl-none">
           <img src="../../../assets/images/logo.svg" />
         </span>
-        <div class="d-xl-none">
-          <button
+        <div class="d-xl-none d-flex">
+          <!-- <button
             type="button"
             class="mobile-search border_btn"
             onclick="openSearch()"
           >
             <img src="../../../assets/images/search-lg.svg" />
-          </button>
+          </button> -->
+          <div class="search-header position-relative me-2">
+            <input
+              [(ngModel)]="searchString"
+              class="form-control h_44"
+              type="search"
+              #searchInput
+              (input)="globalSearch()"
+            />
+            <ng-container *ngTemplateOutlet="globalSearchResults"></ng-container>
+            <button type="button" class="btn search-icon">
+              <img src="../../../assets/images/school/search-gray.svg" />
+            </button>
+          </div>
           <button
             type="button"
             class="mobile-search border_btn"
-            onclick="openSidebar()"
+            (click)="openSidebar()"
           >
             <img src="../../../assets/images/menu.svg" />
           </button>
         </div>
       </div>
-
+      <div class="d-flex justify-content-end mt-5 create_post_btn">
+        <button (click)="openPostModal()" type="button"
+          class="step-edit-button btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase next-step"><img
+            src="../../../assets/images/Edit-light.svg" alt="edit" /></button>
+      </div>
       <div
         class="school-profile-tabs d-flex align-content-center justify-content-center"
       >
@@ -2527,6 +2446,104 @@
       </div>
     </div>
   </section>
+
+  
+  <ng-template #globalSearchResults>
+    <ul *ngIf="showSearchResults" class="search-results">
+      <ng-container *ngFor="let item of globalSearchResult">
+        <li *ngIf="item.type == 4" class="search-results__item">
+          <div class="d-flex align-items-center justify-content-between">
+            <span class="followers-name font_16 text_sec1 fw_600">
+              <img
+                [src]="item.avatar"
+                class="rounded-circle me-2 img_style"
+                style="max-height: 30px"
+              />
+              <a
+                class="routeLink"
+                [routerLink]="['/user/userProfile', item.id]"
+                >{{ item.name }}</a
+              ></span
+            >
+          </div>
+        </li>
+        <li *ngIf="item.type == 1" class="search-results__item">
+          <div class="d-flex align-items-center justify-content-between">
+            <span class="followers-name font_16 text_sec1 fw_600">
+              <img
+                [src]="item.avatar"
+                class="rounded-circle me-2 img_style"
+                style="max-height: 30px"
+              />
+              <a
+                class="routeLink"
+                [routerLink]="['/profile/school', item.name]"
+                >{{ item.name }}</a
+              ></span
+            >
+          </div>
+        </li>
+        <li *ngIf="item.type == 2" class="search-results__item">
+          <div class="d-flex align-items-center justify-content-between">
+            <span class="followers-name font_16 text_sec1 fw_600">
+              <img
+                [src]="item.avatar"
+                class="rounded-circle me-2 img_style"
+                style="max-height: 30px"
+              />
+              <a
+                class="routeLink"
+                [routerLink]="[
+                  '/profile/class',
+                  item.schoolName,
+                  item.name
+                ]"
+                >{{ item.name }}</a
+              ></span
+            >
+          </div>
+        </li>
+        <li *ngIf="item.type == 3" class="search-results__item">
+          <div class="d-flex align-items-center justify-content-between">
+            <span class="followers-name font_16 text_sec1 fw_600">
+              <img
+                [src]="item.avatar"
+                class="rounded-circle me-2 img_style"
+                style="max-height: 30px"
+              />
+              <a
+                class="routeLink"
+                [routerLink]="[
+                  '/profile/course',
+                  item.schoolName,
+                  item.name
+                ]"
+                >{{ item.name }}</a
+              ></span
+            >
+          </div>
+        </li>
+      </ng-container>
+      <li
+        *ngIf="
+          showSearchResults &&
+          !searchNotFound &&
+          globalSearchResult.length > 4
+        "
+        class="search-results__item"
+      >
+        <a
+          class="btn custom-btn primary_btn w-100"
+          [routerLink]="['/user/globalSearch', searchString]"
+          >{{ "ShowMore" | translate }}</a
+        >
+      </li>
+      <li *ngIf="searchNotFound">
+        {{ "NoReultsFound" | translate }}
+      </li>
+    </ul>
+
+  </ng-template>
 
   <post-loading-spinner
     [postLoadingIcon]="postLoadingIcon"

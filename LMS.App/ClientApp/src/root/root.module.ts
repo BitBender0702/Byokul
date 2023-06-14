@@ -6,7 +6,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { RootComponent } from './root/root.component';
 import { ResetPasswordComponent } from './root/sharedModule/reset-password.component';
 import { NewMeetingComponent } from './root/bigBlueButton/newMeeting/newMeeting.component';
-import { JoinMeetingComponent } from './root/bigBlueButton/joinMeeting/joinMeeting.component';
 import { CreateSchoolComponent } from './root/school/createSchool/createSchool.component';
 import { SchoolProfileComponent } from './root/school/schoolProfile/schoolProfile.component';
 import { ClassProfileComponent } from './root/class/classProfile/classProfile.component';
@@ -103,7 +102,7 @@ const routes: Routes = [
       .then(m => m.UrlRoutesModule)
   },
   {
-    path: 'liveStream/:postId/:streamUrl/:from',component:LiveStreamComponent, canActivate: [AuthGuard]
+    path: 'liveStream/:postId/:from',component:LiveStreamComponent, canActivate: [AuthGuard]
   },
   
 
@@ -115,7 +114,6 @@ const routes: Routes = [
     RootComponent,
     ResetPasswordComponent,
     NewMeetingComponent,
-    JoinMeetingComponent,
     CreateSchoolComponent,
     SchoolProfileComponent,
     CreateClassComponent,

@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { NewMeetingComponent } from '../root/bigBlueButton/newMeeting/newMeeting.component';
-import { JoinMeetingComponent } from '../root/bigBlueButton/joinMeeting/joinMeeting.component';
 import { UserHomeComponent } from './pages/userHome/userHome.component';
 import { CreateSchoolComponent } from '../root/school/createSchool/createSchool.component';
 import { VideoPlayerComponent } from '../root/videoPlayer/video-player.component';
@@ -57,9 +56,6 @@ const routes: Routes = [
   },
   {
     path: 'newMeeting',component:NewMeetingComponent
-  },
-  {
-    path: 'joinMeeting/:meetingId',component:JoinMeetingComponent
   },
   {
     path: 'createSchool',component:CreateSchoolComponent, canActivate: [AuthGuard]

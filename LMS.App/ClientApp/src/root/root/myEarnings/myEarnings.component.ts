@@ -3,6 +3,7 @@ import { Component, Injector, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SchoolService } from 'src/root/service/school.service';
+import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
 
 @Component({
     selector: 'schoolProfile-root',
@@ -41,8 +42,7 @@ export class MyEarningsComponent implements OnInit {
  
 
     openSidebar(){
-      this.isOpenSidebar = true;
-  
+      OpenSideBar.next({isOpenSideBar:true})
     }
   
 }

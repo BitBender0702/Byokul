@@ -24,6 +24,7 @@ import { BehaviorSubject, Subscribable, Subscription } from 'rxjs';
 import { feedState } from 'src/root/userModule/user-auth/component/login/login.component';
 import { PostAuthorTypeEnum } from 'src/root/Enums/postAuthorTypeEnum';
 import { CertificateViewComponent } from '../certificateView/certificateView.component';
+import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
 
 @Component({
     selector: 'post-view',
@@ -441,7 +442,7 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
       }
 
       openSidebar(){
-        this.isOpenSidebar = true;
+        OpenSideBar.next({isOpenSideBar:true})
       }
 
       openPostsViewModal(posts:any,postType?:string): void {
@@ -506,6 +507,10 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
             let decodedJwtJsonData = window.atob(jwtData)
             let decodedJwtData = JSON.parse(decodedJwtJsonData);
             this.userId = decodedJwtData.jti;
+            this.gender = localStorage.getItem("gender")??"";
+            if(this.gender == ""){
+              localStorage.setItem("gender",decodedJwtData.gender);
+            }
           }
       }
 

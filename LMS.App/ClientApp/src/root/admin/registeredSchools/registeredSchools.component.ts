@@ -8,6 +8,8 @@ import { RegisteredSchools } from 'src/root/interfaces/admin/registeredSchools';
 import { VerifySchools } from 'src/root/interfaces/admin/verifySchools';
 import { Table } from 'primeng/table';
 import { AuthService } from 'src/root/service/auth.service';
+import { OpenAdminSideBar } from '../admin-template/side-bar/adminSide-bar.component';
+
 
 @Component({
   selector: 'registered-schools',
@@ -109,6 +111,10 @@ export class RegisteredSchoolsComponent implements OnInit {
       resetSorting(): void {
         this.table.reset();
         this.registeredSchools = this.cloned.slice(0);
+      }
+
+      openAdminSideBar(){
+        OpenAdminSideBar.next({isOpenSideBar:true})
       }
     }
     

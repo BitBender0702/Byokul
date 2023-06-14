@@ -8,6 +8,15 @@ export interface ChatViewModel {
     chatType:number,
     chatTypeId:string | null,
     message:string,
+    replyMessageId:string | null,
+    replyChatContent:string | null,
+    replyMessageType:number | null,
+    fileName:string | null,
+    fileURL:string | null,
+    isForwarded:boolean,
+    forwardedFileName:string | null,
+    forwardedFileURL:string | null,
+    forwardedFileType:number | null,
     attachments: FileUploadResult[];
 
   }

@@ -13,6 +13,7 @@ export interface NotificationViewModel
     reelId?:string | null,
     chatType?:number | null,
     chatTypeId?:string| null,
+    meetingId?:string | null,
     followersIds?:string[] | null
 
 }

@@ -10,6 +10,7 @@ import { NotificationType, NotificationViewModel } from "src/root/interfaces/not
 import { SignalrService } from "src/root/service/signalr.service";
 import { ReportFollowerViewModel } from "src/root/interfaces/user/reportFollowerViewModel";
 import { MessageService } from "primeng/api";
+import { OpenSideBar } from "src/root/user-template/side-bar/side-bar.component";
 
 @Component({
   selector: 'user-Followers',
@@ -115,6 +116,10 @@ export class UserFollowersComponent extends MultilingualComponent implements OnI
 
     back(): void {
       window.history.back();
+    }
+
+    openSidebar() {
+      OpenSideBar.next({isOpenSideBar:true})
     }
 
     banFollower(userId:string){

@@ -94,9 +94,9 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
                 class="d-block rightImagesWidth" /> {{reels.post.postSharedCount}}</button>
           </div>
           <div class="live-chat-box text-center">
-            <div *ngIf="reels.post.createdBy == loginUserId && reels.post.isCommentsDisabled" (click)="showCommentsDiv(true)" class="chat-enabled d-inline-flex align-items-center cursorPointer"><img src="../../../assets/images/Unlock.svg" />{{'ChatEnabled'| translate }}
+            <div *ngIf="reels.post.createdBy == loginUserId && reels.post.isCommentsDisabled" (click)="showCommentsDiv(true)" class="chat-enabled d-inline-flex align-items-center cursorPointer"><img src="../../../assets/images/Unlock.svg" />{{'ChatDisabled'| translate }}
             </div>
-            <div *ngIf="reels.post.createdBy == loginUserId && !reels.post.isCommentsDisabled" (click)="showCommentsDiv(false)" class="chat-enabled d-inline-flex align-items-center cursorPointer"><img src="../../../assets/images/Unlock.svg" />{{'ChatDisabled'| translate }}
+            <div *ngIf="reels.post.createdBy == loginUserId && !reels.post.isCommentsDisabled" (click)="showCommentsDiv(false)" class="chat-enabled d-inline-flex align-items-center cursorPointer"><img src="../../../assets/images/Unlock.svg" />{{'ChatEnabled'| translate }}
             </div>
             <div>
               <span *ngIf="reels.post.createdBy != loginUserId && reels.post.isCommentsDisabled">{{'CommentsAreDisabled'| translate }}</span>
@@ -304,9 +304,9 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
                   class="d-block rightImagesWidth" /> {{reels.post.postSharedCount}}</button>
         </div>
         <div class="live-chat-box text-center">
-          <div *ngIf="reels.post.createdBy == loginUserId && reels.post.isCommentsDisabled" (click)="showCommentsDiv(true)" class="chat-enabled d-inline-flex align-items-center cursorPointer"><img src="../../../assets/images/Unlock.svg" />{{'ChatEnabled'| translate }}
+          <div *ngIf="reels.post.createdBy == loginUserId && reels.post.isCommentsDisabled" (click)="showCommentsDiv(true)" class="chat-enabled d-inline-flex align-items-center cursorPointer"><img src="../../../assets/images/Unlock.svg" />{{'ChatDisabled'| translate }}
           </div>
-          <div *ngIf="reels.post.createdBy == loginUserId && !reels.post.isCommentsDisabled" (click)="showCommentsDiv(false)" class="chat-enabled d-inline-flex align-items-center cursorPointer"><img src="../../../assets/images/Unlock.svg" />{{'ChatDisabled'| translate }}
+          <div *ngIf="reels.post.createdBy == loginUserId && !reels.post.isCommentsDisabled" (click)="showCommentsDiv(false)" class="chat-enabled d-inline-flex align-items-center cursorPointer"><img src="../../../assets/images/Unlock.svg" />{{'ChatEnabled'| translate }}
           </div>
           <div>
             <span *ngIf="reels.post.createdBy != loginUserId && reels.post.isCommentsDisabled">Comments are disabled</span>

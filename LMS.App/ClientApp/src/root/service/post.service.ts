@@ -142,7 +142,8 @@ export class PostService{
       initializeJoinMeetingViewModel(){
         this.joinMeetingViewModel = {
           name:'',
-          meetingId:''
+          meetingId:'',
+          postId:''
         }
       }
 
@@ -150,5 +151,15 @@ export class PostService{
         debugger
       let queryParams = new HttpParams().append("postId",postId).append("noOfComments",noOfComments);
       return this.http.post(`${this.apiUrl}/posts/updateCommentThrottling`,null, {params:queryParams,headers: this.headers});    
+    }
+
+    saveStreamAsPost(postId:string):Observable<any>{
+        debugger
+      return this.http.post(`${this.apiUrl}/posts/saveStreamAsPost` + '?postId=' + postId, '',{headers: this.headers});
+    }
+
+    saveLiveVideoTime(postId:string,videoTotalTime:number,videoLiveTime:number):Observable<any>{
+        let queryParams = new HttpParams().append("postId",postId).append("videoTotalTime",videoTotalTime).append("videoLiveTime",videoLiveTime);
+        return this.http.post(`${this.apiUrl}/posts/saveLiveVideoTime`,null, {params:queryParams,headers: this.headers});
     }
 }

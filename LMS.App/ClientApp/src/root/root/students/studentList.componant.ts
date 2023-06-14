@@ -6,6 +6,7 @@ import { FollowUnfollow } from "src/root/interfaces/FollowUnfollow";
 import { FollowUnFollowEnum } from "src/root/Enums/FollowUnFollowEnum";
 import { MultilingualComponent, changeLanguage } from "../sharedModule/Multilingual/multilingual.component";
 import { StudentService } from "src/root/service/student.service";
+import { OpenSideBar } from "src/root/user-template/side-bar/side-bar.component";
 
 @Component({
   selector: 'user-Followers',
@@ -111,6 +112,10 @@ export class StudentListComponent extends MultilingualComponent implements OnIni
 
     back(): void {
       window.history.back();
+    }
+
+    openSidebar() {
+      OpenSideBar.next({isOpenSideBar:true})
     }
 
     studentsSearch(){

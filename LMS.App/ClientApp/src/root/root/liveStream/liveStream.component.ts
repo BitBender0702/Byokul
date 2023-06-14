@@ -8,7 +8,7 @@ import { UserService } from 'src/root/service/user.service';
 import { MultilingualComponent } from '../sharedModule/Multilingual/multilingual.component';
 import { NotificationType, NotificationViewModel } from 'src/root/interfaces/notification/notificationViewModel';
 import { Constant } from 'src/root/interfaces/constant';
-import { SignalrService, commentLikeResponse, commentResponse, endMeetingResponse, liveUsersCountResponse, postLikeResponse, postViewResponse, saveStreamResponse, shareStreamResponse } from 'src/root/service/signalr.service';
+import { SignalrService, commentLikeResponse, commentResponse, endMeetingResponse, liveUsersCountResponse, notifyCommentThrotllingResponse, postLikeResponse, postViewResponse, saveStreamResponse, shareStreamResponse } from 'src/root/service/signalr.service';
 import { ActivatedRoute } from '@angular/router';
 import { PostService } from 'src/root/service/post.service';
 import { ChatService } from 'src/root/service/chatService';
@@ -22,6 +22,7 @@ import { BigBlueButtonService } from 'src/root/service/bigBlueButton';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SharePostComponent } from '../sharePost/sharePost.component';
 import { MessageService } from 'primeng/api';
+import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
 
 @Component({
     selector: 'live-stream',
@@ -78,7 +79,13 @@ import { MessageService } from 'primeng/api';
     dropdownOpen = false;
     selectedOption = '';
     streamCountDown: any;
+    isUpdateAllowed:boolean = true;
+    videoTotalTime:any;
+    startVideoTime:any;
+    cacheBuster: number = Math.random();
     @ViewChild('groupChatList') groupChatList!: ElementRef;
+    @ViewChild('startButton') startButton!: ElementRef;
+    @ViewChild('videoPlayer') videoPlayer!: ElementRef<HTMLVideoElement>;
 
 
     constructor( injector: Injector,private modalService: NgbModal,private bsModalService: BsModalService,
@@ -97,21 +104,35 @@ import { MessageService } from 'primeng/api';
       // this.loadingIcon = true;
       this.getSenderInfo();
       this.postId = this.route.snapshot.paramMap.get('postId')??'';
-      this.streamUrl = this.route.snapshot.paramMap.get('streamUrl')??'';
-      const url = 'https://byokulstream.northeurope.cloudapp.azure.com/bigbluebutton/api/join?';
-      this.streamUrl = url + this.streamUrl;
-      this.from = this.route.snapshot.paramMap.get('from')??'';
-      //this.isOwner = Boolean(isOwner);
-      const params = new URLSearchParams(this.streamUrl.split('?')[1]);
-      this.meetingId = params.get('meetingID')?.replace("meetings","")??'';
-      this.streamPassword = params.get('password')??'';
+      // this.streamUrl = this.route.snapshot.paramMap.get('streamUrl')??'';
+      // const url = 'https://byokulstream.northeurope.cloudapp.azure.com/bigbluebutton/api/join?';
+      // this.streamUrl = url + this.streamUrl;
+      // this.from = this.route.snapshot.paramMap.get('from')??'';
+      // //this.isOwner = Boolean(isOwner);
+      // const params = new URLSearchParams(this.streamUrl.split('?')[1]);
+      // this.meetingId = params.get('meetingID')?.replace("meetings","")??'';
+      // this.streamPassword = params.get('password')??'';
       this._postService.getPostById(this.postId).subscribe((response) => {
         debugger
         this.post = response;
+        // this.streamUrl = this.route.snapshot.paramMap.get('streamUrl')??'';
+        // const url = 'https://byokulstream.northeurope.cloudapp.azure.com/bigbluebutton/api/join?';
+        // this.streamUrl = url + this.streamUrl;
+        this.from = this.route.snapshot.paramMap.get('from')??'';
+        //this.isOwner = Boolean(isOwner);
+        if(this.userId == this.post.createdBy){
+          var params = new URLSearchParams(this.post.streamUrl.split('?')[1]);
+        }
+        else{
+          var params = new URLSearchParams(this.post.streamJoinUrl.split('?')[1]);
+        }
+        this.meetingId = params.get('meetingID')?.replace("meetings","")??'';
+        this.streamPassword = params.get('password')??'';
         this.postCreatedDate = new Date(this.post.createdOn);
+        this.createGroupName();
+        this.addPostView(this.post.id);
         this.getComments();
         this.isCommentsDisabled = response.isCommentsDisabled
-        this.createGroupName();
         this.commentResponse();
         this.commentLikeResponse();
         this.postLikeResponse();
@@ -120,31 +141,91 @@ import { MessageService } from 'primeng/api';
         this.endMeetingResponse();
         this.shareStreamResponse();
         this.liveUsersCountResponse();
+        this.notifyCommentThrottlingResponse();
         response.postAttachments.forEach((element: any) => {
           if(element.fileType == 1){
             this.post.coverThumbnail = element.fileUrl;
           }
         });
+        // debugger
+        // var a = new Date();
+        // const utcDate: Date = new Date(this.postCreatedDate);
+        // const b: string = utcDate.toLocaleString();
+
+        // const currentTime: number = new Date(a).getTime();
+        // // new Date( year,month,day,hours,minutes,seconds,ms)
+        // const date : Date = new Date(this.postCreatedDate);
+        
+
+        // const createdDate = new Date(date.getFullYear(), date.getMonth(), date.getDay(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()).getTime();
+        // const timeDiff = currentTime - createdDate;
+        // this.timeDifferenceInSeconds = Math.floor((timeDiff / 1000) % 60);
+        // var timeDifferenceInMinutes: number = Math.floor(timeDiff / (1000 * 60));
+
+
+        var b = new Date(this.postCreatedDate);
         this.currentTime = new Date().getTime();
         this.postCreatedDate = this.postCreatedDate.getTime();
 debugger
+
         const differenceInMilliseconds = this.currentTime - this.postCreatedDate;
+        const differenceInSeconds: number = Math.floor(differenceInMilliseconds / 1000);
+        var timeDifferenceInMinutes = differenceInSeconds / 60.0;
+this.timeDifferenceInSeconds = differenceInSeconds % 60;
+
         const timeDifferenceInMiliSeconds = Math.floor(differenceInMilliseconds / 1000);
 
-this.timeDifferenceInSeconds = Math.floor(timeDifferenceInMiliSeconds / 1000);
-var timeDifferenceInMinutes = this.timeDifferenceInSeconds / 60.0;
+// this.timeDifferenceInSeconds = Math.floor((differenceInMilliseconds / 1000) % 60);
+// var timeDifferenceInMinutes = Math.floor(differenceInMilliseconds / (1000 * 60));
 
 if(this.timeDifferenceInSeconds<60){
   this.timeDifferenceInSeconds = 60 - this.timeDifferenceInSeconds;
 }
 
-        setTimeout(() => {
-          debugger
-          this.streamUrl2 = this.domSanitizer.bypassSecurityTrustResourceUrl(this.streamUrl);
-        }, this.timeDifferenceInSeconds);
-        this.timer(timeDifferenceInMinutes);
+if(this.meetingId == ''){
+  debugger
+  this.isDataLoaded = true;
+  this.cd.detectChanges();
+  // setTimeout(() => {
+  const videoElement: HTMLVideoElement = this.videoPlayer.nativeElement;
+  var postAttachment = this.post.postAttachments.find((x: { fileType: number; }) => x.fileType == 2);
+  if(postAttachment.videoLiveTime != null){
+    // const buttonElement: HTMLDivElement = this.startButton.nativeElement;
+    //   buttonElement.click();
+      // this.startVideoTime = postAttachment.videoLiveTime;
+      // this.startVideoTime = 15;
 
-        this.addPostView(this.post.id);
+  // setTimeout(() => {
+    // videoElement.addEventListener('loadedmetadata', () => {
+    //   debugger
+    //   videoElement.currentTime = 15;
+    //   // videoElement.play();
+    // });
+
+
+    videoElement.currentTime = postAttachment.videoLiveTime;
+    this.cd.detectChanges();
+    var a = 10;
+    // videoElement.play();
+  //  }, 500);
+  
+}
+// }, 100);
+}
+else{
+      // setTimeout(() => {
+        //   debugger
+        if(this.userId == this.post.createdBy){
+          this.streamUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(this.post.streamUrl);
+        }
+        else{
+          this.streamUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(this.post.streamJoinUrl);
+        }
+       
+  
+        // }, this.timeDifferenceInSeconds * 1000);
+        // this.timer(timeDifferenceInMinutes);
+      }
         this._signalrService.notifyLiveUsers(this.post.id + "_group",false);
         this.gender = localStorage.getItem("gender")??'';
         this.isDataLoaded = true;
@@ -186,6 +267,13 @@ if(this.timeDifferenceInSeconds<60){
       this._signalrService.notifyLiveUsers(this.post.id + "_group",true);
     }
 
+    // startVideo() {
+    //   debugger
+    //   const videoElement: HTMLVideoElement = this.videoPlayer.nativeElement;
+    //   videoElement.currentTime = 15;
+    //     videoElement.play();
+    // }
+
     getFollowers(parentId:string){
       debugger
       if(this.from == "user"){
@@ -221,7 +309,8 @@ if(this.timeDifferenceInSeconds<60){
         isRead:false,
         userId:'',
         avatar:'',
-        notificationContent:this.meetingId,
+        meetingId:this.meetingId,
+        notificationContent:this.post.title,
         postId:this.postId,
         notificationType:NotificationType.LectureStart,
         followersIds:this.followersIds,
@@ -245,10 +334,11 @@ if(this.timeDifferenceInSeconds<60){
     }
 
     timer(minute:any) {
+      debugger
       // let minute = 1;
       let seconds: number = minute * 60;
       let textSec: any = "0";
-      let statSec: number = 60;
+      let statSec: number = 60 - (minute * 60);
   
       const prefix = minute < 10 ? "0" : "";
   
@@ -281,6 +371,7 @@ if(this.timeDifferenceInSeconds<60){
         this.lastCommentTime = localStorage.getItem('lastCommentTime');
         this.lastCommentTime = JSON.parse(this.lastCommentTime);
         const currentTime = Date.now();
+        if(this.post.commentsPerMinute != 0){
         if (this.lastCommentTime == null) {
           const lastComment = {
             commentsCount:1,
@@ -305,7 +396,6 @@ if(this.timeDifferenceInSeconds<60){
               };
                localStorage.setItem('lastCommentTime', JSON.stringify(lastComment));
                this.isCommentsEnabled = true;
-               return;
             }
             else{
                 this.isCommentsEnabled = false;
@@ -313,6 +403,7 @@ if(this.timeDifferenceInSeconds<60){
             }
              }
           }
+        }
 
       
       var comment: any[] = this.post.comments;
@@ -523,15 +614,30 @@ if(this.timeDifferenceInSeconds<60){
 
     addViewResponse(){
       postViewResponse.subscribe(response => {
+        debugger
         if(response.isAddView){
+          debugger
           // if(this.currentLikedPostId!= this.post.id){
           // this.post.likes.length = this.post.likes.length + 1;
           // }
           // if(this.likesLength != undefined && this.currentLikedPostId == this.post.id){
             this.post.views.length = this.post.views.length + 1;
+            this.liveUsersCount = this.post.views.length;
           // }
         }
-        this.liveUsersCount = this.post.views.length;
+      });
+    }
+
+    notifyCommentThrottlingResponse(){
+      notifyCommentThrotllingResponse.subscribe(noOfComments => {
+        debugger
+        const currentTime = Date.now();
+        this.post.commentsPerMinute = noOfComments.noOfComments;
+        const lastComment = {
+          commentsCount:noOfComments.noOfComments,
+          lastCommentTime: currentTime
+        };
+         localStorage.setItem('lastCommentTime', JSON.stringify(lastComment));
       });
     }
 
@@ -558,18 +664,15 @@ if(this.timeDifferenceInSeconds<60){
     }
 
     addPostView(postId:string){
-    
       if(this.userId != undefined){
       this.postView.postId = postId;
+      this.postView.userId = this.userId;
       this._postService.postView(this.postView).subscribe((response) => {
-        
-        console.log('success');
-        this.post.views.length = response;
+        // this.post.views.length = response;
+        // this.liveUsersCount = response;
+        this._signalrService.notifyPostView(postId + "_group",this.userId);
        }); 
       }
-
-      this._signalrService.notifyPostView(postId + "_group",this.userId);
-
 
 
     }
@@ -617,23 +720,26 @@ if(this.timeDifferenceInSeconds<60){
 
     endLiveStream(){
       debugger
+      if(this.meetingId != ""){
+
       var endMeetingViewModel = {
-        meetingId:this.meetingId + "meetings",
+        meetingId:this.meetingId,
         password:this.streamPassword,
         postId:this.postId
       }
       this._bigBlueButtonService.endMeeting(endMeetingViewModel).subscribe((response) => {
        debugger
-      //  this.modalService.open('endMeeting-Modal');
-      //  setTimeout(() => {
-      //   // this.activeModal.close();
-      //   window.history.back();
-      // }, 10000);
       this._signalrService.notifyEndMeeting(this.post.id + "_group");
-
-      
-
       });
+    }
+    else{
+      this._signalrService.notifyEndMeeting(this.post.id + "_group");
+      this._postService.saveLiveVideoTime(this.post.id,this.videoTotalTime,this.videoTotalTime).subscribe((result) => {
+       });
+      this._postService.saveStreamAsPost(this.post.id).subscribe((response) => {
+        debugger
+       });
+    }
     }
 
     toggleEmojiPicker(){
@@ -700,6 +806,72 @@ if(this.timeDifferenceInSeconds<60){
         };
         localStorage.setItem('lastCommentTime', JSON.stringify(lastComment));
       this._postService.updateCommentThrottling(this.post.id,noOfComments).subscribe((response) => {
+        this._signalrService.notifyCommentThrotlling(this.post.id + "_group",noOfComments);
       });
     }
+
+    onVideoEnded(){
+      debugger
+      this._signalrService.notifyEndMeeting(this.post.id + "_group");
+      this._postService.saveLiveVideoTime(this.post.id,this.videoTotalTime,this.videoTotalTime).subscribe((result) => {
+       });
+       if(this.isOwner){
+      this._postService.saveStreamAsPost(this.post.id).subscribe((response) => {
+        debugger
+       });
+               
+      }
+    }
+
+    onVideoTimeUpdate(event: any) {
+      if (!this.isUpdateAllowed) {
+        return; // Skip execution if update is not allowed
+      }
+
+      this.isUpdateAllowed = false;
+      setTimeout(() => {
+      const videoElement: HTMLVideoElement = event.target as HTMLVideoElement;
+      const currentTime = videoElement.currentTime;
+      const roundedTime = Math.floor(currentTime);
+      // console.log('Current time:', currentTime);
+      this.videoTotalTime = videoElement.duration;
+      // console.log('total duration:', duration);
+      
+      // const currentTime = this.videoPlayer.currentTime;
+      if (roundedTime % 5 === 0) {
+      let isLogged = false;
+       console.log('after 5', currentTime);
+       this._postService.saveLiveVideoTime(this.post.id,this.videoTotalTime,currentTime).subscribe((result) => {
+       });
+       isLogged = true;
+      }
+      this.isUpdateAllowed = true;
+    }, 1000);
+      //   debugger
+      // const videoElement: HTMLVideoElement = this.videoPlayer.nativeElement;
+      // const totalDuration = videoElement.duration;
+      // // const currentTime = videoElement.currentTime;
+      // console.log('Current time:', currentTime);
+      // console.log('Total time:', totalDuration);
+      // }
+
+      // const currentTime = videoPlayer.currentTime;
+      // if (currentTime % 5 === 0) {
+      //   debugger
+      //   const file = videoPlayer.currentSrc;
+      //   const fileSize = this.getFileSize(file);
+      //   console.log('File size:', fileSize);
+      // }
+    }
+    
+    getFileSize(url: string): Promise<number> {
+      return fetch(url)
+        .then(response => response.headers.get('content-length'))
+        .then(size => Number(size));
+    }
+
+    openSidebar(){
+      OpenSideBar.next({isOpenSideBar:true})  
+    }
+    
 }

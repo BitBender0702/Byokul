@@ -11,6 +11,8 @@ import { Router } from '@angular/router';
 import { MultilingualComponent, changeLanguage } from '../sharedModule/Multilingual/multilingual.component';
 import { JoinMeetingModel } from 'src/root/interfaces/bigBlueButton/joinMeeting';
 import { BigBlueButtonService } from 'src/root/service/bigBlueButton';
+import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
+import { UserService } from 'src/root/service/user.service';
 
 export const unreadNotificationResponse =new Subject<{type:string}>(); 
 
@@ -25,6 +27,7 @@ export const unreadNotificationResponse =new Subject<{type:string}>();
     private _notificationService;
     private _postService;
     private _bigBlueButtonService;
+    private _userService;
     notifications:any;
     notificationSettings:any;
     loadingIcon:boolean = false;
@@ -40,11 +43,12 @@ export const unreadNotificationResponse =new Subject<{type:string}>();
     joinMeetingViewModel!:JoinMeetingModel;
 
 
-    constructor(injector: Injector,private fb: FormBuilder,notificationService:NotificationService,private router: Router,postService:PostService,private bsModalService: BsModalService,bigBlueButtonService:BigBlueButtonService) {
+    constructor(injector: Injector,userService:UserService,private fb: FormBuilder,notificationService:NotificationService,private router: Router,postService:PostService,private bsModalService: BsModalService,bigBlueButtonService:BigBlueButtonService) {
        super(injector);
        this._notificationService = notificationService;
        this._postService = postService;
        this._bigBlueButtonService = bigBlueButtonService;
+       this._userService = userService;
     }
 
     ngOnInit(): void {
@@ -180,25 +184,37 @@ export const unreadNotificationResponse =new Subject<{type:string}>();
      });
     }
 
-    joinMeeting(name:string,meetingId:string,postId:string){
+    joinMeeting(userId:string,meetingId:string,postId:string){
+      debugger
       this.initializeJoinMeetingViewModel();
-      this.joinMeetingViewModel.name = name;
+      this._userService.getUser(userId).subscribe((result) => {
+        debugger
+      this.joinMeetingViewModel.name = result.firstName + " " + result.lastName;
       this.joinMeetingViewModel.meetingId = meetingId;
+      this.joinMeetingViewModel.postId = postId;
       this._bigBlueButtonService.joinMeeting(this.joinMeetingViewModel).subscribe((response) => {
-       debugger
-       const fullNameIndex = response.url.indexOf('fullName='); // find the index of "fullName="
-       const newUrl = response.url.slice(fullNameIndex);
+      //  const fullNameIndex = response.url.indexOf('fullName='); // find the index of "fullName="
+      //  const newUrl = response.url.slice(fullNameIndex);
        this.router.navigate(
-        [`liveStream`,postId,newUrl,false],
-        { state: { stream: {streamUrl: response.url, userId:this.userId, meetingId: meetingId, isOwner:false} } });
-    });
+        [`liveStream`,postId,false]
+    //     { state: { stream: {streamUrl: response.url, userId:this.userId, meetingId: meetingId, isOwner:false} } });
+    // });
+       );
+      });
+              
+    })
     }
 
     initializeJoinMeetingViewModel(){
       this.joinMeetingViewModel = {
         name:'',
-        meetingId:''
+        meetingId:'',
+        postId:''
       }
+    }
+
+    openSidebar(){
+      OpenSideBar.next({isOpenSideBar:true})
     }
 
 }

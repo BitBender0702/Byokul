@@ -45,7 +45,7 @@ export class ClassService{
     }
 
     getClassById(className:string):Observable<any>{
-        return this.http.get(`${this.apiUrl}/class/getClassById` + '?className=' + className,{headers: this.headers});
+        return this.http.get(`${this.apiUrl}/class/getClassByName` + '?className=' + className,{headers: this.headers});
     }
 
     getClassEditDetails(classId:string):Observable<any>{

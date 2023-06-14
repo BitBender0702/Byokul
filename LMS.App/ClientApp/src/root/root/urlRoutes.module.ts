@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { NewMeetingComponent } from '../root/bigBlueButton/newMeeting/newMeeting.component';
-import { JoinMeetingComponent } from '../root/bigBlueButton/joinMeeting/joinMeeting.component';
 import { CreateSchoolComponent } from '../root/school/createSchool/createSchool.component';
 import { VideoPlayerComponent } from '../root/videoPlayer/video-player.component';
 import { SharedModule } from '../root/sharedModule/shared.module';

@@ -53,7 +53,7 @@ export class CourseService{
     }
 
     getCourseById(courseName:string):Observable<any>{
-        return this.http.get(`${this.apiUrl}/course/getCourseById` + '?courseName=' + courseName,{headers: this.headers});
+        return this.http.get(`${this.apiUrl}/course/getCourseByName` + '?courseName=' + courseName,{headers: this.headers});
     }
 
     saveCourseLanguages(addLanguages:any):Observable<any>{
@@ -88,7 +88,6 @@ export class CourseService{
         let queryParams = new HttpParams().append("courseName",courseName).append("schoolName",schoolName);
         return this.http.get(`${this.apiUrl}/course/getCourseByName`, {params:queryParams,headers: this.headers});
     }
-
     isCourseNameExist(courseName:string){
         return this.http.get(`${this.apiUrl}/course/isCourseNameExist` + '?courseName=' + courseName,{headers: this.headers});
     }

@@ -42,7 +42,6 @@
                 <option value="" disabled selected hidden>{{'Gender'| translate }}</option>
                 <option value="1">{{'Male'| translate }}</option>
                 <option value="2">{{'Female'| translate }}</option>
-                <option value="3">{{'Other'| translate }}</option>
               </select>
               <small class="p-error" style="color: orange;"
               *ngIf="(isSubmitted && registrationForm.controls.gender.errors)">{{'GenderRequired'| translate }}

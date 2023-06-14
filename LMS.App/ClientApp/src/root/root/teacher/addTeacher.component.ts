@@ -12,6 +12,7 @@ import { TeacherService } from 'src/root/service/teacher.service';
 import { UserService } from 'src/root/service/user.service';
 import { MultilingualComponent, changeLanguage } from '../sharedModule/Multilingual/multilingual.component';
 import { BehaviorSubject, Subject, Subscription } from 'rxjs';
+import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
 export const addTeacherResponse =new BehaviorSubject <boolean>(false);  
 
 @Component({
@@ -106,6 +107,10 @@ export class AddTeacherComponent extends MultilingualComponent implements OnInit
 
     back(): void {
       window.history.back();
+    }
+
+    openSidebar() {
+      OpenSideBar.next({isOpenSideBar:true})
     }
 
     hideUnhideClassCourse(event:any){

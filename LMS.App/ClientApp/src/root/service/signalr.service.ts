@@ -12,6 +12,7 @@ import { CustomXhrHttpClient } from './signalr.httpclient';
 import { UserService } from './user.service';
 
 export const signalRResponse = new Subject<{
+  id:string;
   receiver: any;
   message: string;
   attachments: any;
@@ -21,6 +22,15 @@ export const signalRResponse = new Subject<{
   receiverId: string;
   chatTypeId: string;
   chatHeadId: string;
+  replyChatContent: string;
+  replyMessageType: number;
+  fileName: string;
+  fileURL: string;
+  isForwarded: boolean | null;
+  forwardedFileName: string | null;
+  forwardedFileURL: string | null;
+  forwardedFileType: number | null;
+
 }>();
 export const commentResponse = new Subject<{
   id:string;
@@ -40,6 +50,7 @@ export const commentLikeResponse = new Subject<{
 export const postLikeResponse = new Subject<{isLiked: boolean;}>();
 export const saveStreamResponse = new Subject<{isSaved: boolean;}>();
 export const postViewResponse = new Subject<{isAddView: boolean;}>();
+export const notifyCommentThrotllingResponse = new Subject<{noOfComments: boolean;}>();
 export const liveUsersCountResponse = new Subject<{isLeaveStream: boolean;}>();
 export const endMeetingResponse = new Subject<{}>();
 export const shareStreamResponse = new Subject<{}>();
@@ -95,6 +106,7 @@ export class SignalrService {
   }
 
   sendToUser(model: any) {
+    debugger
     this.hubConnection?.invoke('SendToUser', model)
       .catch((err) => console.error(err));
   }
@@ -102,6 +114,7 @@ export class SignalrService {
   askServerListener() {
     this.hubConnection?.on('ReceiveMessage', (user, message) => {
       signalRResponse.next({
+        id: user.id,
         receiver: 'test',
         message: user.message,
         attachments: user.attachments,
@@ -111,6 +124,15 @@ export class SignalrService {
         receiverId: user.receiver,
         chatTypeId: user.chatTypeId,
         chatHeadId: user.chatHeadId,
+        replyMessageType: user.replyMessageType,
+        replyChatContent: user.replyChatContent,
+        fileName: user.fileName,
+        fileURL: user.fileURL,
+        isForwarded: user.isForwarded,
+        forwardedFileName: user.forwardedFileName,
+        forwardedFileURL:user.forwardedFileURL,
+        forwardedFileType: user.forwardedFileType
+
       });
       console.log(`this ${user} send ${message}`);
     });
@@ -177,6 +199,12 @@ export class SignalrService {
       });
     });
 
+    this.hubConnection?.on('NotifyCommentThrotllingToReceiver', (noOfComments) => {
+      notifyCommentThrotllingResponse.next({
+        noOfComments:noOfComments
+      });
+    });
+
     this.hubConnection?.on('NotifySaveStreamToReceiver',
     (isSaved) => {
       saveStreamResponse.next({
@@ -231,6 +259,12 @@ export class SignalrService {
   notifySaveStream(groupName:string,userId:string,isSaved:boolean) {
     debugger
     this.hubConnection?.invoke('notifySaveStream', groupName,userId,isSaved)
+      .catch((err) => console.error(err));
+  }
+
+  notifyCommentThrotlling(groupName:string,noOfComments:number) {
+    debugger
+    this.hubConnection?.invoke('notifyCommentThrotlling', groupName,noOfComments)
       .catch((err) => console.error(err));
   }
 

@@ -1,10 +1,21 @@
 <div *ngIf="isDataLoaded">
-<section class="f-poppins" style="margin-left: 300px;margin-top: 27px;">
+<section class="f-poppins" style="margin-left: 300px;margin-top: 27px;height:800px">
   <div class="create-post-header d-flex justify-content-between d-none d-xl-flex">
     <button (click)="back()" mat-mini-fab type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
         src="../../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
         <h1 class="font_22 text_dark fw-bold text-center mb-md-0">{{'LiveStream'| translate }}</h1>
         <h2 class="invisible"></h2>
+  </div>
+  <div class="live-header d-flex align-items-center justify-content-between">
+    <button (click)="back()" type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark  d-xl-none"><img
+        src="../../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
+    <span class="logo_mobile d-xl-none">
+      <img src="../../../../assets/images/logo.svg" />
+    </span>
+    <div class="d-xl-none">
+      <button type="button" class="mobile-search border_btn" (click)="openSidebar()"><img
+          src="../../../../assets/images/menu.svg" /></button>
+    </div>
   </div>
     <div>
       <div id="reel_content">
@@ -34,9 +45,9 @@
                     class="d-block" /> {{post.postSharedCount}}</button>
               </div>
               <div class="live-chat-box text-center">
-                <div *ngIf="post.createdBy == userId && isCommentsDisabled" (click)="showCommentsDiv(true)" class="chat-enabled d-inline-flex align-items-center cursor_pointer"><img src="../../../assets/images/Unlock.svg" />{{'ChatEnabled'| translate }}
+                <div *ngIf="post.createdBy == userId && isCommentsDisabled" (click)="showCommentsDiv(true)" class="chat-enabled d-inline-flex align-items-center cursor_pointer"><img src="../../../assets/images/Unlock.svg" />{{'ChatDisabled'| translate }}
                 </div>
-                <div *ngIf="post.createdBy == userId && !isCommentsDisabled" (click)="showCommentsDiv(false)" class="chat-enabled d-inline-flex align-items-center cursor_pointer"><img src="../../../assets/images/Unlock.svg" />{{'ChatDisabled'| translate }}
+                <div *ngIf="post.createdBy == userId && !isCommentsDisabled" (click)="showCommentsDiv(false)" class="chat-enabled d-inline-flex align-items-center cursor_pointer"><img src="../../../assets/images/Unlock.svg" />{{'ChatEnabled'| translate }}
                 </div>
                 <div>
                   <span *ngIf="post.createdBy != userId && isCommentsDisabled">{{'CommentsAreDisabled'| translate }}</span>
@@ -78,14 +89,20 @@
         <div class="live-inner w-100">
           <div>
             <div class="live-image overflow-hidden position-relative">
-              <div *ngIf="(streamUrl2 == undefined || streamUrl2 == null) && (post.coverThumbnail != undefined)" style="align-items: center;
+              <div *ngIf="(streamUrl == undefined || streamUrl == null) && (post.coverThumbnail != undefined)" style="align-items: center;
               flex-direction: column;
               display: flex;">
-                 <img class="cover_thumbnail" [src]="post.coverThumbnail"/>
-                 <h3 style="position: relative;bottom: 467px;">{{'StreamStartingIn'| translate }} {{streamCountDown}}</h3>
-                 <p style="position: relative;bottom: 467px;">{{post.coverLetter}}</p>
+                 <!-- <img class="cover_thumbnail" [src]="post.coverThumbnail"/> -->
+                 <!-- <h3 style="position: relative;bottom: 467px;">{{'StreamStartingIn'| translate }} {{streamCountDown}}</h3> -->
+                 <!-- <p style="position: relative;bottom: 467px;">{{post.coverLetter}}</p> -->
               </div>
-              <iframe *ngIf="streamUrl2 != undefined && streamUrl2 != null" width="840" height="500" [src]="streamUrl2" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share;camera;microphone;display-capture" allowfullscreen></iframe>
+              <iframe *ngIf="streamUrl != undefined && streamUrl != null && meetingId != ''" width="840" height="500" [src]="streamUrl" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share;camera;microphone;display-capture" allowfullscreen></iframe>
+              <video #videoPlayer id="test12" *ngIf="meetingId == ''" width="840" height="500" autoplay (ended)="onVideoEnded()" (timeupdate)="onVideoTimeUpdate($event)">
+                <source [src]="post.streamUrl + '?cache=' + cacheBuster" type="video/mp4" />
+              </video>
+              <!-- <div class="overlay" (click)="startVideo()" #startButton>
+                <span>Click to Play</span>
+              </div> -->
             </div>
             <div style="margin-left: 15px;position: absolute;top: 92px;">
             <button (click)="showComments()" type="button" id="live-chat" class="live_chats">
@@ -124,8 +141,9 @@
                 <h3>{{post.title}}</h3>
                 <div class="dropdown">
                   <!-- <div class="dropdown"> -->
-                    <button class="dropdown-button btn custom-btn primary_btn w-100 earning-btn fw_400 lg_btn" style="width: 32% !important;" (click)="toggleDropdown()">Comment Throttling</button>
-                    <div class="dropdown-menu" [ngClass]="{ 'show': dropdownOpen }">
+                    <button *ngIf="isOwner" class="dropdown-button btn custom-btn primary_btn w-100 earning-btn fw_400 lg_btn" style="width: 32% !important;" (click)="toggleDropdown()">Comment Throttling</button>
+                    <div *ngIf="isOwner" class="dropdown-menu" [ngClass]="{ 'show': dropdownOpen }">
+                      <button class="dropdown-item" value="0" (click)="selectOption(0)">{{'RemoveThrottling'| translate }}</button>
                       <button class="dropdown-item" value="1" (click)="selectOption(1)">{{'OneCommentPerMinute'| translate }}</button>
                       <button class="dropdown-item" value="2" (click)="selectOption(2)">{{'TwoCommentPerMinute'| translate }}</button>
                       <button class="dropdown-item" value="3" (click)="selectOption(3)">{{'ThreeCommentPerMinute'| translate }}</button>

@@ -7,6 +7,7 @@ import { BanUnbanUsers } from 'src/root/interfaces/admin/banUnbanUser';
 import { BanUnbanEnum } from 'src/root/Enums/BanUnbanEnum';
 import { VarifyUsers } from 'src/root/interfaces/admin/verifyUser';
 import { Table } from 'primeng/table';
+import { OpenAdminSideBar } from '../admin-template/side-bar/adminSide-bar.component';
 
 @Component({
   selector: 'registered-users',
@@ -135,6 +136,10 @@ export class RegisteredUsersComponent implements OnInit {
       resetSorting(): void {
         this.table.reset();
         this.registeredUsers = this.cloned.slice(0);
+      }
+
+      openAdminSideBar(){
+        OpenAdminSideBar.next({isOpenSideBar:true})
       }
 
     }

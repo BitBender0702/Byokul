@@ -18,43 +18,20 @@ export class RootComponent implements OnInit {
   constructor( private signalRService: SignalrService, private meta: Meta,authService: AuthService,private router: Router,private route: ActivatedRoute) { 
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
-
-
-        // for facebook
-        // this.meta.addTag({ property: 'og:title', content: 'test' });
-        // this.meta.addTag({ property: 'og:type', content: 'profile' });
-        // this.meta.addTag({ property: 'og:description', content: 'desc...' });
-        // this.meta.addTag({ property: 'og:image', content: '' });
-        // this.meta.addTag({ property: 'og:url', content: 'https://byokul.com' });
-
-
-        
-
-
-        // const urlWithoutParams = this.getUrlWithoutParams();
-        // const containsParams = this.checkForParams(urlWithoutParams);
         event.urlAfterRedirects = event.urlAfterRedirects.split('/').slice(0, 3).join('/');
-        // if(event.urlAfterRedirects.includes("/profile/school")){
-        //   // event.urlAfterRedirects = event.urlAfterRedirects.split('/')[2];
-        //   event.urlAfterRedirects = event.urlAfterRedirects.substring(0, event.urlAfterRedirects.indexOf('/school') + '/school'.length);
-        // }
+        if(event.urlAfterRedirects.includes("/user/userProfile")){
+          const existingTag = this.meta.getTag('content="noindex,nofollow"');
+          if (!existingTag) {
+            this.meta.addTag({ name: 'robots', content: 'noindex,nofollow' });
+          }
+        }
 
-        // if(event.urlAfterRedirects.includes("/profile/class")){
-        //   // event.urlAfterRedirects = event.urlAfterRedirects.split('/')[2];
-        //   event.urlAfterRedirects = event.urlAfterRedirects.substring(0, event.urlAfterRedirects.indexOf('/class') + '/class'.length);
-        // }
-
-        // if(event.urlAfterRedirects.includes("/profile/course")){
-        //   // event.urlAfterRedirects = event.urlAfterRedirects.split('/')[2];
-        //   event.urlAfterRedirects = event.urlAfterRedirects.substring(0, event.urlAfterRedirects.indexOf('/course') + '/course'.length);
-        // }
-
-        // if(event.urlAfterRedirects.includes("/user/userProfile")){
-        //   // event.urlAfterRedirects = event.urlAfterRedirects.split('/')[2];
-        //   event.urlAfterRedirects = event.urlAfterRedirects.substring(0, event.urlAfterRedirects.indexOf('/userProfile') + '/userProfile'.length);
-        // }
-
-
+        if(event.urlAfterRedirects.includes("/profile/school") || event.urlAfterRedirects.includes("/profile/school") || event.urlAfterRedirects.includes("/profile/class") || event.urlAfterRedirects.includes("/profile/course")){
+          const existingTag = this.meta.getTag('content="nofollow"');
+          if (!existingTag) {
+            this.meta.addTag({ name: 'robots', content: 'nofollow' });
+          }
+        }
 
         const canonicalUrl = Constant.WwwAppUrl + event.urlAfterRedirects;
         const existingCanonicalTag = this.meta.getTag('name="canonical"');
@@ -71,44 +48,7 @@ export class RootComponent implements OnInit {
    authService.loginAdminState$.asObservable().subscribe(x => { this.displayAdminSideBar = x;});
   }
 
-  // private getUrlWithoutParams(): string {
-  //   const navigationExtras: NavigationExtras = {
-  //     queryParamsHandling: 'ignore',
-  //     preserveFragment: true
-  //   };
-
-  //   const urlTree = this.router.createUrlTree([], navigationExtras);
-  //   const urlWithoutParams = urlTree.toString();
-  //   return urlWithoutParams;
-  // }
-
-  // private getUrlWithoutParams(url: string): string {
-  //   debugger
-  //   const segments = url.split('/');
-
-  //   // Remove the route parameters
-  //   const filteredSegments = segments.filter(segment => !segment.startsWith(':'));
-    
-  //   const urlWithoutParams = filteredSegments.join('/');
-  //   return urlWithoutParams;
-  // }
-
-  private checkForParams(url: string): boolean {
-    debugger
-    const params: Params = this.route.snapshot.params;
-
-    // Check if any route parameter is present in the URL
-    return Object.keys(params).some(param => url.includes(params[param]));
-  }
-
-  private getPathWithoutParams(url: string): string {
-    debugger
-    const routeSegments = this.router.parseUrl(url).root.children.primary.segments;
-    const pathSegments = routeSegments.map(segment => segment.path);
-    return '/' + pathSegments.join('/');
-  }
   ngOnInit(): void {
-    // this.meta.addTag({ rel: 'canonical', href: 'https://www.byokul.com' });
     this.connectSignalR();
   }
 

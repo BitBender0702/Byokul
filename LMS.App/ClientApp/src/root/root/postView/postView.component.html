@@ -102,9 +102,9 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
             class="d-block" /> {{post.postSharedCount}}</button>
       </div>
       <div class="live-chat-box text-center">
-        <div *ngIf="post.createdBy == userId && isCommentsDisabled" (click)="showCommentsDiv(true)" class="chat-enabled d-inline-flex align-items-center cursor_pointer"><img src="../../../assets/images/Unlock.svg" />{{'ChatEnabled'| translate }}
+        <div *ngIf="post.createdBy == userId && isCommentsDisabled" (click)="showCommentsDiv(true)" class="chat-enabled d-inline-flex align-items-center cursor_pointer"><img src="../../../assets/images/Unlock.svg" />{{'ChatDisabled'| translate }}
         </div>
-        <div *ngIf="post.createdBy == userId && !isCommentsDisabled" (click)="showCommentsDiv(false)" class="chat-enabled d-inline-flex align-items-center cursor_pointer"><img src="../../../assets/images/Unlock.svg" />{{'ChatDisabled'| translate }}
+        <div *ngIf="post.createdBy == userId && !isCommentsDisabled" (click)="showCommentsDiv(false)" class="chat-enabled d-inline-flex align-items-center cursor_pointer"><img src="../../../assets/images/Unlock.svg" />{{'ChatEnabled'| translate }}
         </div>
         <div>
           <span *ngIf="post.createdBy != userId && isCommentsDisabled">{{'CommentsAreDisabled'| translate }}</span>
@@ -232,9 +232,9 @@ margin-top: 30px;">
           class="d-block" /> 0</button> -->
     </div>
     <div class="live-chat-box text-center">
-      <div *ngIf="post.createdBy == userId && isCommentsDisabled" (click)="showCommentsDiv(true)" class="chat-enabled d-inline-flex align-items-center cursor_pointer"><img src="../../../assets/images/Unlock.svg" />{{'ChatEnabled'| translate }}
+      <div *ngIf="post.createdBy == userId && isCommentsDisabled" (click)="showCommentsDiv(true)" class="chat-enabled d-inline-flex align-items-center cursor_pointer"><img src="../../../assets/images/Unlock.svg" />{{'ChatDisabled'| translate }}
       </div>
-      <div *ngIf="post.createdBy == userId && !isCommentsDisabled" (click)="showCommentsDiv(false)" class="chat-enabled d-inline-flex align-items-center cursor_pointer"><img src="../../../assets/images/Unlock.svg" />{{'ChatDisabled'| translate }}
+      <div *ngIf="post.createdBy == userId && !isCommentsDisabled" (click)="showCommentsDiv(false)" class="chat-enabled d-inline-flex align-items-center cursor_pointer"><img src="../../../assets/images/Unlock.svg" />{{'ChatEnabled'| translate }}
       </div>
       <div>
         <span *ngIf="post.createdBy != userId && isCommentsDisabled">{{'CommentsAreDisabled'| translate }}</span>

@@ -14,6 +14,7 @@ import { commentResponse, progressResponse, SignalrService } from 'src/root/serv
 import { TeacherService } from 'src/root/service/teacher.service';
 import { UserService } from 'src/root/service/user.service';
 import { MultilingualComponent, changeLanguage } from '../sharedModule/Multilingual/multilingual.component';
+import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
 
 @Component({
     selector: 'fileStorage',
@@ -470,8 +471,7 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
     }
  
     openSidebar(){
-      this.isOpenSidebar = true;
-  
+      OpenSideBar.next({isOpenSideBar:true})  
     }
 
     sendToGroup(){

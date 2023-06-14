@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectorRef, Component, ElementRef, HostListener, Injector, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, Meta, Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { AddUserLanguage } from 'src/root/interfaces/user/addUserLanguage';
@@ -43,6 +43,7 @@ import { Arabic } from 'flatpickr/dist/l10n/ar';
 import { Spanish } from 'flatpickr/dist/l10n/es';
 import { Turkish } from 'flatpickr/dist/l10n/tr';
 import { DatePipe } from '@angular/common';
+import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
 export const userImageResponse =new Subject<{userAvatar : string,gender : number}>();  
 export const chatResponse =new Subject<{receiverId : string , type: string,chatTypeId:string}>();  
 
@@ -183,7 +184,7 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
     userAvatar:string = '';
 
 
-    constructor(injector: Injector,private datePipe: DatePipe,authService:AuthService,signalrservice:SignalrService,public messageService:MessageService, private bsModalService: BsModalService,userService: UserService,postService: PostService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,private cd: ChangeDetectorRef,private schoolService:SchoolService) { 
+    constructor(injector: Injector,private titleService:Title,private meta: Meta, private datePipe: DatePipe,authService:AuthService,signalrservice:SignalrService,public messageService:MessageService, private bsModalService: BsModalService,userService: UserService,postService: PostService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,private cd: ChangeDetectorRef,private schoolService:SchoolService) { 
       super(injector);
         this._userService = userService;
         this._authService = authService;
@@ -217,9 +218,12 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
       this.userId = id ?? '';
 
       this._userService.getUserById(this.userId).subscribe((response) => {
+        debugger
         this.frontEndPageNumber = 1;
         this.reelsPageNumber = 1;
         this.user = response;
+        this.titleService.setTitle(this.user.firstName + " " + this.user.lastName);
+        this.addDescriptionMetaTag(this.user.description);
         this.followersLength = this.user.followers.length;
         this.isOwnerOrNot();
         this.loadingIcon = false;
@@ -271,7 +275,10 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
         this.loadingIcon = true;
         this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post created successfully'});
         this._userService.getUserById(this.userId).subscribe((response) => {
+          debugger
           this.user = response;
+          this.titleService.setTitle(this.user.firstName + " " + this.user.lastName);
+          this.addDescriptionMetaTag(this.user.description);
           this.cd.detectChanges();
           this.followersLength = this.user.followers.length;
           this.isOwnerOrNot();
@@ -391,7 +398,19 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
           });        
         }
       });
+     
 
+    }
+
+    addDescriptionMetaTag(description:string){
+      debugger
+      const existingTag = this.meta.getTag('name="description"');
+      if (existingTag) {
+        this.meta.updateTag({ name: 'description', content: description });
+      }
+      else{
+        this.meta.addTag({ name: 'description', content: description });
+      }
     }
 
     getByUserId(){
@@ -406,6 +425,10 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
         this.scrollFeedResponseCount = response.length; 
         this.scrolled = false;
       });
+    }
+
+    openSidebar() {
+      OpenSideBar.next({isOpenSideBar:true})
     }
 
     ngOnDestroy(): void {

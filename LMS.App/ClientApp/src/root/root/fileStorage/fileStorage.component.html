@@ -11,15 +11,17 @@
             </div>
       </div>
       <div class="live-header d-flex align-items-center justify-content-between">
-        <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark  d-xl-none"><img
+        <button (click)="back()" type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark  d-xl-none"><img
             src="../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
         <span class="logo_mobile d-xl-none">
           <img src="../../../assets/images/logo.svg" />
         </span>
-        <div class="d-xl-none">
-          <button type="button" class="mobile-search border_btn" onclick="openSearch()"><img
-              src="../../../assets/images/search-lg.svg" /></button>
-          <button type="button" class="mobile-search border_btn" onclick="openSidebar()"><img
+        <div class="d-xl-none d-flex">
+          <div class="search-header position-relative me-2">
+            <input [(ngModel)]="searchString" class="form-control h_44" type="search" #searchInput (input)="FoldersAndFilesSearch(searchInput.value)">
+            <button type="button" class="btn search-icon"><img src="../../../assets/images/school/search-gray.svg"></button>
+          </div>
+          <button (click)="openSidebar()" type="button" class="mobile-search border_btn" onclick="openSidebar()"><img
               src="../../../assets/images/menu.svg" /></button>
         </div>
       </div>
