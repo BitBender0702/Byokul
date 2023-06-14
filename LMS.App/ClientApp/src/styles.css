@@ -482,6 +482,13 @@ h3.subhead-btn {
   border: 2px solid #ffffff;
 }
 
+.notification-box .dropdown .dropdown-toggle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 9999px;
+}
+
 .sidemenu .accordion-button::after {
   position: absolute;
   background: url(../src/assets/images/school/chevron-down.svg) no-repeat;
@@ -515,6 +522,11 @@ hr.earning-hr {
 
 .custom-tabs .nav {
   gap: 10px;
+}
+
+.profile-custom-tabs ul .nav-item button {
+  font-size: 14px !important;
+  font-weight: bold !important;
 }
 
 .custom-tabs ul .nav-item button {
@@ -662,7 +674,13 @@ button.comment-btn {
 }
 
 .comment-post-user {
-  min-width: 32px;
+  flex: 0 0 auto;
+  width: 32px;
+  height: 32px;
+}
+
+.comment-post-user img {
+  width: 32px;
   height: 32px;
 }
 
@@ -1591,9 +1609,22 @@ textarea.ht_96 {
   min-width: 40px;
   border: 1px solid #fafafa;
   background: #fff;
+  color: #7c8da7;
   transition: 0.3s all;
   margin-right: 16px;
   font-size: 12px;
+  cursor: pointer;
+}
+
+.post-attch-btn svg {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 auto;
+}
+
+.post-attch-btn input {
+  width: 0;
+  margin: 0;
 }
 
 .media-sourcebtn button img {
@@ -1860,10 +1891,10 @@ div#notifi-settingpopup .modal-dialog {
   border-radius: 8px;
   border: none;
   background: #fff;
-  top: auto !important;
+  top: 0 !important;
   left: auto !important;
   right: 0 !important;
-  bottom: 0 !important;
+  bottom: auto !important;
 }
 
 .dropdown-filter .dropdown-earningFilter-menu {
@@ -1876,7 +1907,6 @@ div#notifi-settingpopup .modal-dialog {
   background: #fff;
   z-index: 9999;
 }
-
 
 .dropdown-filter .custom-btn {
   height: 33px !important;
@@ -3074,6 +3104,18 @@ p-autocomplete li:before {
   select.form-select {
     height: 45px;
     font-size: 15px;
+  }
+
+  .orange-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff0e5;
+    color: #ff801c;
+    padding: 8px 50px;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 8px;
   }
 
   .primary_btn {

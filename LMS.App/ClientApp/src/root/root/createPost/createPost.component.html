@@ -1,68 +1,180 @@
-<div appBsModal  bsModal #createPostModal="bs-modal" class="modal fade edit-school-modal show d-block" id="create-post" tabindex="-1"
-        aria-labelledby="create-post" aria-hidden="true" [config]="{backdrop: 'static'}" area-modal="true">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header border-0 justify-content-center position-relative">
-              <div class="custom-language-select liv-postbtn">
-                <ul class="nav nav-tabs border-0" id="myTab" role="tablist">
-                  <li class="nav-item p-0">
-                    <button *ngIf="courseId == undefined"
-                      class="nav-link post-attch-btn d-inline-flex justify-content-center align-items-center"
-                      id="live-tab" data-bs-toggle="tab" data-bs-target="#live-tab-pane" type="button" role="tab"
-                      aria-controls="live-tab-pane" aria-selected="true"><img src="../../../assets/images/Play-dark.svg"
-                        class="dark-attach" /><img src="../../../assets/images/Play-light.svg" class="light-attach" />{{'Live'| translate }}</button>
-                  </li>
-                  <li class="nav-item p-0">
-                    <button (click)="postTab()" class="nav-link active post-attch-btn d-inline-flex justify-content-center align-items-center"
-                      id="Post-tab" data-bs-toggle="tab" data-bs-target="#Post-tab-pane" type="button" role="tab"
-                      aria-controls="Post-tab-pane" aria-selected="false"><img src="../../../assets/images/Edit-grey.svg"
-                        class="dark-attach" /><img src="../../../assets/images/Edit-light.svg" class="light-attach" /> {{'Post'| translate }}</button>
-                  </li>
-                  <li class="nav-item p-0">
-                    <button (click)="reelsTab()" class="nav-link post-attch-btn d-inline-flex justify-content-center align-items-center"
-                      id="reels-tab" data-bs-toggle="tab" data-bs-target="#reels-tab-pane" type="button" role="tab"
-                      aria-controls="reels-tab-pane" aria-selected="false"><img src="../../../assets/images/category-grey.svg"
-                        class="dark-attach" /><img src="../../../assets/images/category-light.svg" class="light-attach" />
-                        {{'Reels'| translate }}</button>
-                  </li>
-
-                </ul>
+<div
+  appBsModal
+  bsModal
+  #createPostModal="bs-modal"
+  class="modal fade edit-school-modal show d-block"
+  id="create-post"
+  tabindex="-1"
+  aria-labelledby="create-post"
+  aria-hidden="true"
+  [config]="{ backdrop: 'static' }"
+  area-modal="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div
+        class="modal-header border-0 justify-content-center position-relative"
+      >
+        <div class="custom-language-select liv-postbtn">
+          <ul class="nav nav-tabs border-0" id="myTab" role="tablist">
+            <li class="nav-item p-0">
+              <button
+                *ngIf="courseId == undefined"
+                class="nav-link post-attch-btn d-inline-flex justify-content-center align-items-center"
+                id="live-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#live-tab-pane"
+                type="button"
+                role="tab"
+                aria-controls="live-tab-pane"
+                aria-selected="true"
+              >
+                <img
+                  src="../../../assets/images/Play-dark.svg"
+                  class="dark-attach"
+                /><img
+                  src="../../../assets/images/Play-light.svg"
+                  class="light-attach"
+                />{{ "Live" | translate }}
+              </button>
+            </li>
+            <li class="nav-item p-0">
+              <button
+                (click)="postTab()"
+                class="nav-link active post-attch-btn d-inline-flex justify-content-center align-items-center"
+                id="Post-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#Post-tab-pane"
+                type="button"
+                role="tab"
+                aria-controls="Post-tab-pane"
+                aria-selected="false"
+              >
+                <img
+                  src="../../../assets/images/Edit-grey.svg"
+                  class="dark-attach"
+                /><img
+                  src="../../../assets/images/Edit-light.svg"
+                  class="light-attach"
+                />
+                {{ "Post" | translate }}
+              </button>
+            </li>
+            <li class="nav-item p-0">
+              <button
+                (click)="reelsTab()"
+                class="nav-link post-attch-btn d-inline-flex justify-content-center align-items-center"
+                id="reels-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#reels-tab-pane"
+                type="button"
+                role="tab"
+                aria-controls="reels-tab-pane"
+                aria-selected="false"
+              >
+                <img
+                  src="../../../assets/images/category-grey.svg"
+                  class="dark-attach"
+                /><img
+                  src="../../../assets/images/category-light.svg"
+                  class="light-attach"
+                />
+                {{ "Reels" | translate }}
+              </button>
+            </li>
+          </ul>
+        </div>
+        <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">
+          {{ "CreatePost" | translate }}
+        </h1>
+        <div></div>
+        <button
+          (click)="close()"
+          type="button"
+          class="btn-close shadow-none"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        >
+          <img src="../../../assets/images/cross.svg" />
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="tab-content" id="myTabContent">
+          <div
+            class="tab-pane fade"
+            id="live-tab-pane"
+            role="tabpanel"
+            aria-labelledby="live-tab"
+            tabindex="0"
+          >
+            <form class="latest-form" [formGroup]="createLiveForm">
+              <div *ngIf="this.schoolId != undefined" class="form-group">
+                <label class="font_10">{{ "SchoolName" | translate }}</label>
+                <input
+                  hidden
+                  type="text"
+                  name="schoolId"
+                  class="form-control w-100"
+                />
+                <input
+                  readonly
+                  type="text"
+                  [placeholder]="parentDetails?.schoolName"
+                  name="className"
+                  class="form-control w-100"
+                />
               </div>
-              <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">{{'CreatePost'| translate }}</h1>
-              <div></div>
-              <button (click)="close()" type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"><img
-                  src="../../../assets/images/cross.svg" /></button>
-            </div>
-            <div class="modal-body">
-              <div class="tab-content" id="myTabContent">
-                <div class="tab-pane fade" id="live-tab-pane" role="tabpanel" aria-labelledby="live-tab"
-                  tabindex="0">
-                  <form class="latest-form" [formGroup]="createLiveForm">
-                    <div *ngIf="this.schoolId != undefined" class="form-group">
-                      <label class="font_10">{{'SchoolName'| translate }}</label>
-                      <input hidden type="text" name="schoolId" class="form-control w-100">
-                      <input readonly type="text" [placeholder]="parentDetails?.schoolName" name="className" class="form-control w-100">
-                    </div>
 
-                    <div *ngIf="this.classId != undefined" class="form-group">
-                      <label class="font_10">{{'ClassName'| translate }}</label>
-                      <input hidden type="text" name="classId" class="form-control w-100">
-                      <input readonly type="text" [placeholder]="parentDetails?.className" name="schoolName" class="form-control w-100">
-                    </div>
+              <div *ngIf="this.classId != undefined" class="form-group">
+                <label class="font_10">{{ "ClassName" | translate }}</label>
+                <input
+                  hidden
+                  type="text"
+                  name="classId"
+                  class="form-control w-100"
+                />
+                <input
+                  readonly
+                  type="text"
+                  [placeholder]="parentDetails?.className"
+                  name="schoolName"
+                  class="form-control w-100"
+                />
+              </div>
 
-                    <div *ngIf="this.courseId != undefined" class="form-group">
-                      <label class="font_10">{{'CourseName'| translate }}</label>
-                      <input hidden type="text" name="courseId" class="form-control w-100">
-                      <input readonly type="text" [placeholder]="parentDetails?.courseName" name="schoolName" class="form-control w-100">
-                    </div>
+              <div *ngIf="this.courseId != undefined" class="form-group">
+                <label class="font_10">{{ "CourseName" | translate }}</label>
+                <input
+                  hidden
+                  type="text"
+                  name="courseId"
+                  class="form-control w-100"
+                />
+                <input
+                  readonly
+                  type="text"
+                  [placeholder]="parentDetails?.courseName"
+                  name="schoolName"
+                  class="form-control w-100"
+                />
+              </div>
 
-                    <div class="form-group">
-                      <label class="font_10">{{'Title'| translate }}</label>
-                      <input formControlName="title" maxlength="50" type="text" placeholder="Title" class="form-control w-100">
-                      <small class="p-error" style="color: orange;"
-                      *ngIf="(isSubmitted && createLiveForm.controls.title.errors)">Title is required
-                    </small>
-                    </div>
+              <div class="form-group">
+                <label class="font_10">{{ "Title" | translate }}</label>
+                <input
+                  formControlName="title"
+                  maxlength="50"
+                  type="text"
+                  placeholder="Title"
+                  class="form-control w-100"
+                />
+                <small
+                  class="p-error"
+                  style="color: orange"
+                  *ngIf="isSubmitted && createLiveForm.controls.title.errors"
+                  >Title is required
+                </small>
+              </div>
 
                     <div class="form-group">
                       <label class="font_10">{{'BodyText'| translate }}</label>
@@ -208,236 +320,520 @@
                       <input readonly type="text" [placeholder]="parentDetails?.schoolName" name="className" class="form-control w-100">
                     </div>
 
-                    <div *ngIf="this.classId != undefined" class="form-group">
-                      <label class="font_10">{{'ClassName'| translate }}</label>
-                      <input hidden type="text" name="classId" class="form-control w-100">
-                      <input readonly type="text" [placeholder]="parentDetails?.className" name="schoolName" class="form-control w-100">
-                    </div>
-
-                    <div *ngIf="this.courseId != undefined" class="form-group">
-                      <label class="font_10">{{'CourseName'| translate }}</label>
-                      <input hidden type="text" name="courseId" class="form-control w-100">
-                      <input readonly type="text" [placeholder]="parentDetails?.courseName" name="schoolName" class="form-control w-100">
-                    </div>
-
-                    <div class="form-group">
-                      <label class="font_10">{{'Title'| translate }}</label>
-                      <input formControlName="title" maxlength="50" type="text" placeholder="Title" class="form-control w-100">
-                      <small class="p-error" style="color: orange;"
-                      *ngIf="(isSubmitted && createPostForm.controls.title.errors)">{{'TitleRequired'| translate }}
-                    </small>
-                    </div>
-
-                    <div class="form-group">
-                      <label class="font_10">{{'BodyText'| translate }}</label>
-                      <textarea formControlName="bodyText" class="form-control" placeholder="Body Text" style="max-height: 125px;height: 125px;"></textarea>
-                      <small class="p-error" style="color: orange;"
-                      *ngIf="(isSubmitted && createPostForm.controls.bodyText.errors)">{{'BodyRequired'| translate }}
-                    </small>
-                    </div>
-
-
-                  <div class="img-upl-result pt-4">
-                     <span *ngFor="let image of uploadImage" class="position-relative d-inline-block">
-                       <img [src]="image.imageUrl" style="height: 150px; max-width: 100%;">
-                       <button (click)="removeUploadImage(image)" type="button"
-                        class="btn dl-post-img d-flex align-items-center justify-content-center rounded-circle position-absolute"><i
-                          class="fa-solid fa-xmark"></i></button>
-                     </span>
-                    <span *ngFor="let video of uploadVideo" class="position-relative d-inline-block">
-                      <div class="videofile">
-                        <img [src]="video.videoUrl" style="height: 150px; max-width: 100%;">
-                      </div>
-                      <button (click)="removeUploadVideo(video)" type="button"
-                        class="btn dl-post-img d-flex align-items-center justify-content-center rounded-circle position-absolute"><i
-                          class="fa-solid fa-xmark"></i></button>
-                    </span>
-                    </div>
-                    <div *ngIf="isSubmitted && totalFilesLength>0">
-                      <p class="mb-0 mt-4">{{fileCount + '/' + totalFilesLength}}</p>
-                      <div class="progress">
-                        <div class="progress-bar bg-success" role="progressbar" [style.width.%]="progressBarValue">
-                          {{ progressBarValue }}%
-                        </div>
-                        <br>
-                      </div> 
-                  </div> 
-                  <div class="teacher-tags tag-box hashtag_post mt-4 mb-2 hover-tags">
-                    <span *ngFor="let tag of tagLists" class="custom-tag">{{tag}}
-                      <button (click)="removeTags(tag)" class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
-                        src="../../../assets/images/cross-sm-light.svg"></button></span>
-                  </div>
-
-                  <div class="teacher-tags hashtag_post tag-boxattachment-outer mt-1 mb-0 hover-tags">
-                    <span *ngFor="let item of this.attachment" class="custom-tag"><img src="../../../assets/images/Paper-gray.svg" class="me-1 dark-svg"> <img
-                     src="../../../assets/images/Paper-light.svg" class="me-1 light-svg"> 
-                     <span *ngIf="item?.name"> {{item.name}} </span>
-                     <span *ngIf="!item?.name"> {{item.fileName}} </span>
-                    <button (click)="removeAttachment(item)" class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
-                       src="../../../assets/images/cross-sm-light.svg">
-                    </button>
-                  </span>
-                  </div>
-                  <small class="p-error" style="color: orange;margin-left: 330px;" *ngIf="createPostForm.errors?.unauthenticated">
-                   {{'SelectValidDate'| translate }}
-                  </small>
-                  <small class="p-error" style="color: orange;margin-left: 330px;" *ngIf="createPostForm.errors?.tagsLengthExceeded">
-                    {{'AddMax7Tags'| translate }}
-                  </small>
-                  <div
-                  class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 cr-postfooter pt-0">
-                  <div class="post-bot-left d-flex">
-
-                    <label class="custom-file-upload post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center">
-                      <input id="hideFileType" type="file" multiple="multiple" (change)="handleImageInput($event)" accept="image/*"/>
-                      <img
-                        src="../../../assets/images/gallery-dark.svg" class="dark-attach" /><img src="../../../assets/images/gallery-light.svg"
-                        class="light-attach" />
-                    </label>
-                        <label class="custom-file-upload post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center">
-                          <input id="hideFileType" type="file" multiple="multiple" (change)="handleVideoInput($event)" accept="video/*"/>
-                          <img
-                          src="../../../assets/images/Video-dark.svg" class="dark-attach" /><img src="../../../assets/images/Video-light.svg"
-                          class="light-attach" />
-                        </label>
-                    <button (click)="AttachmentModalOpen(attachmentTemplate)" type="button"     
-                    class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"
-                    ><img src="../../../assets/images/Paper-Plus-dark.svg"
-                      class="dark-attach" /><img src="../../../assets/images/Paper-Plus-light.svg" class="light-attach" /></button>
-                    <button (click)="openTagModal(tagTemplate)" type="button"
-                      class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center"><img
-                        src="../../../assets/images/hashtag-dark.svg" class="dark-attach" /><img src="../../../assets/images/hashtag-light.svg"
-                        class="light-attach" /></button>
-                  </div>
-                  <div class="post-bot-right d-flex justify-content-end">
-                    <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 delay-btn post-delay-btn position-relative"> 
-                      <img src="../../../assets/images/clock-orange.svg" />                     
-                        <p-calendar formControlName="scheduleTime" [(ngModel)]="scheduleTime" [showTime]="true"></p-calendar>
-                      </button>
-                      
-                    <button *ngIf="scheduleTime != undefined" (click)="savePost()" type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 lg_btn"><img
-                        src="../../../assets/images/Send-light.svg" class="me-2" />{{scheduleTime | date : "MMMM d, y"}} at {{scheduleTime | date : "H:mm"}}</button>
-                    <button *ngIf="scheduleTime == undefined" (click)="savePost()" type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 lg_btn"><img
-                        src="../../../assets/images/Send-light.svg" class="me-2" />{{'Post'| translate }}</button>
-                  </div>
-    
-                </div>
-                <small class="p-error" style="color: orange;margin-left: 350px;" *ngIf="createPostForm.errors?.unauthenticated">
-                  {{'SelectValidDate'| translate }}
-                </small>
-                <small class="p-error" style="color: orange;margin-left: 350px;" *ngIf="createPostForm.errors?.tagsLengthExceeded">
-                  {{'AddMax7Tags'| translate }}
-                </small>
-                </form>
-                </div>
-
-                <div class="tab-pane fade" id="reels-tab-pane" role="tabpanel" aria-labelledby="reels-tab" tabindex="0">
-                  <form [formGroup]="createReelForm">
-                  <div *ngIf="this.schoolId != undefined" class="form-group">
-                    <label class="font_10">{{'SchoolName'| translate }}</label>
-                    <input hidden type="text" name="schoolId" class="form-control w-100">
-                    <input readonly type="text" [placeholder]="parentDetails?.schoolName" name="className" class="form-control w-100">
-                  </div>
-
-                  <div *ngIf="this.classId != undefined" class="form-group">
-                    <label class="font_10">{{'ClassName'| translate }}</label>
-                    <input hidden type="text" name="classId" class="form-control w-100">
-                    <input readonly type="text" [placeholder]="parentDetails?.className" name="schoolName" class="form-control w-100">
-                  </div>
-
-                  <div *ngIf="this.courseId != undefined" class="form-group">
-                    <label class="font_10">{{'CourseName'| translate }}</label>
-                    <input hidden type="text" name="courseId" class="form-control w-100">
-                    <input readonly type="text" [placeholder]="parentDetails?.courseName" name="courseName" class="form-control w-100">
-                  </div>
-
-                  <div class="form-group">
-                    <label class="font_10">{{'Title'| translate }}</label>
-                    <input formControlName="title" maxlength="50" type="text" placeholder="Title" class="form-control w-100">
-                    <small class="p-error" style="color: orange;"
-                    *ngIf="(isSubmitted && createReelForm.controls.title.errors)">{{'TitleRequired'| translate }}
-                  </small>
-                  </div>
-
-                  <div class="preview-zone hidden rel-post">
-                    <div class="box box-solid">
-                      <div class="box-header with-border">
-                      </div>
-                      <div class="box-body">
-                        <div *ngIf ="uploadReel!= null">
-                        <span class="position-relative d-inline-block">
-                          <div class="videofile">
-                            <img [src]="uploadReel.videoUrl">
-                          </div>
-                          <button (click)="removeUploadReel(uploadReel)" type="button"
-                            class="btn dl-post-img d-flex align-items-center justify-content-center rounded-circle position-absolute"><i
-                              class="fa-solid fa-xmark"></i></button>
-                        </span>
-                      </div>
- 
-                      </div>
-                    </div>
-                  </div>
-
-                  <div *ngIf ="uploadReel == null">
-                  <div class="dropzone-wrapper mb-4 reels-uploader-img">
-                    <div class="dropzone-desc">
-                      <i class="glyphicon glyphicon-download-alt"></i>
-                      <p class="text-center fw_400">{{'DropImageOr'| translate }} <b>{{'ClickToBrowse'| translate }}</b> </p>
-                    </div>
-                    <input formControlName="reelsVideo" type="file" name="img_logo" (change)="handleReels($event)" class="dropzone" accept="video/*">
-                  </div>
-                  <small class="p-error" style="color: orange;margin-left: 200px;"
-                  *ngIf="(isSubmitted && createReelForm.controls.reelsVideo.errors)"> {{'SelectAtleastOneVideo'| translate }}
-                </small>
-                  </div>
-                  <hr class="mb-0 sepearator mx-0 mt-3 opacity-100" />
-                  <div *ngIf="isSubmitted && createReelForm.valid && isShowingProgressBar">
-                    <div class="progress">
-                      <div class="progress-bar bg-success" role="progressbar" [style.width.%]="progressBarValue">
-                        {{ progressBarValue }}%
-                      </div>
-                      <br>
-                    </div> 
-                </div> 
-
-                <div class="teacher-tags tag-box hashtag_post mt-4 mb-2 hover-tags">
-                  <span *ngFor="let tag of reelsTagLists" class="custom-tag">{{tag}}
-                    <button (click)="removeTags(tag)" class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
-                      src="../../../assets/images/cross-sm-light.svg"></button></span>
-                </div>
-
-                  <div class="modal-footer steps_btns d-flex align-items-center justify-content-center flex-sm-nowrap border-0 pb-0 cr-postfooter pt-0 mt-3 px-0">
-                    <div class="post-bot-right d-flex justify-content-end">
-                      <button (click)="openTagModal(tagTemplate)" type="button"
-                      class="post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center mt-2"><img
-                        src="../../../assets/images/hashtag-dark.svg" class="dark-attach" /><img src="../../../assets/images/hashtag-light.svg"
-                        class="light-attach" /></button>
-                      <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 delay-btn post-delay-btn position-relative"> 
-                        <img src="../../../assets/images/clock-orange.svg" />                     
-                          <p-calendar formControlName="scheduleTime" [(ngModel)]="scheduleTime" [showTime]="true"></p-calendar>
-                        </button>
-                      <button *ngIf="scheduleTime != undefined" (click)="saveReels()" type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 lg_btn">
-                        {{scheduleTime | date : "MMMM d, y"}} at {{scheduleTime | date : "H:mm"}}
-                      </button>
-                      <button *ngIf="scheduleTime == undefined" (click)="saveReels()" type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 lg_btn">Post Reels
-                      </button>
-                    </div>
-    
-                  </div>
-                  <small class="p-error" style="color: orange;margin-left: 223px;" *ngIf="createReelForm.errors?.unauthenticated">
-                    {{'SelectValidDate'| translate }}
-                  </small>
-                  </form>
-                </div>   
+              <div *ngIf="this.classId != undefined" class="form-group">
+                <label class="font_10">{{ "ClassName" | translate }}</label>
+                <input
+                  hidden
+                  type="text"
+                  name="classId"
+                  class="form-control w-100"
+                />
+                <input
+                  readonly
+                  type="text"
+                  [placeholder]="parentDetails?.className"
+                  name="schoolName"
+                  class="form-control w-100"
+                />
               </div>
-            </div>
+
+              <div *ngIf="this.courseId != undefined" class="form-group">
+                <label class="font_10">{{ "CourseName" | translate }}</label>
+                <input
+                  hidden
+                  type="text"
+                  name="courseId"
+                  class="form-control w-100"
+                />
+                <input
+                  readonly
+                  type="text"
+                  [placeholder]="parentDetails?.courseName"
+                  name="schoolName"
+                  class="form-control w-100"
+                />
+              </div>
+
+              <div class="form-group">
+                <label class="font_10">{{ "Title" | translate }}</label>
+                <input
+                  formControlName="title"
+                  maxlength="50"
+                  type="text"
+                  placeholder="Title"
+                  class="form-control w-100"
+                />
+                <small
+                  class="p-error"
+                  style="color: orange"
+                  *ngIf="isSubmitted && createPostForm.controls.title.errors"
+                  >{{ "TitleRequired" | translate }}
+                </small>
+              </div>
+
+              <div class="form-group">
+                <label class="font_10">{{ "BodyText" | translate }}</label>
+                <textarea
+                  formControlName="bodyText"
+                  class="form-control"
+                  placeholder="Body Text"
+                  style="max-height: 125px; height: 125px"
+                ></textarea>
+                <small
+                  class="p-error"
+                  style="color: orange"
+                  *ngIf="isSubmitted && createPostForm.controls.bodyText.errors"
+                  >{{ "BodyRequired" | translate }}
+                </small>
+              </div>
+
+              <div class="img-upl-result pt-4">
+                <span
+                  *ngFor="let image of uploadImage"
+                  class="position-relative d-inline-block"
+                >
+                  <img
+                    [src]="image.imageUrl"
+                    style="height: 150px; max-width: 100%"
+                  />
+                  <button
+                    (click)="removeUploadImage(image)"
+                    type="button"
+                    class="btn dl-post-img d-flex align-items-center justify-content-center rounded-circle position-absolute"
+                  >
+                    <i class="fa-solid fa-xmark"></i>
+                  </button>
+                </span>
+                <span
+                  *ngFor="let video of uploadVideo"
+                  class="position-relative d-inline-block"
+                >
+                  <div class="videofile">
+                    <img
+                      [src]="video.videoUrl"
+                      style="height: 150px; max-width: 100%"
+                    />
+                  </div>
+                  <button
+                    (click)="removeUploadVideo(video)"
+                    type="button"
+                    class="btn dl-post-img d-flex align-items-center justify-content-center rounded-circle position-absolute"
+                  >
+                    <i class="fa-solid fa-xmark"></i>
+                  </button>
+                </span>
+              </div>
+              <div *ngIf="isSubmitted && totalFilesLength > 0">
+                <p class="mb-0 mt-4">
+                  {{ fileCount + "/" + totalFilesLength }}
+                </p>
+                <div class="progress">
+                  <div
+                    class="progress-bar bg-success"
+                    role="progressbar"
+                    [style.width.%]="progressBarValue"
+                  >
+                    {{ progressBarValue }}%
+                  </div>
+                  <br />
+                </div>
+              </div>
+              <div
+                class="teacher-tags tag-box hashtag_post mt-4 mb-2 hover-tags"
+              >
+                <span *ngFor="let tag of tagLists" class="custom-tag"
+                  >{{ tag }}
+                  <button
+                    (click)="removeTags(tag)"
+                    class="border-0 bg-transparent p-0 position-absolute delete-tag"
+                  >
+                    <img
+                      src="../../../assets/images/cross-sm-light.svg"
+                    /></button
+                ></span>
+              </div>
+
+              <div
+                class="teacher-tags hashtag_post tag-boxattachment-outer mt-1 mb-0 hover-tags"
+              >
+                <span *ngFor="let item of this.attachment" class="custom-tag"
+                  ><img
+                    src="../../../assets/images/Paper-gray.svg"
+                    class="me-1 dark-svg"
+                  />
+                  <img
+                    src="../../../assets/images/Paper-light.svg"
+                    class="me-1 light-svg"
+                  />
+                  <span *ngIf="item?.name"> {{ item.name }} </span>
+                  <span *ngIf="!item?.name"> {{ item.fileName }} </span>
+                  <button
+                    (click)="removeAttachment(item)"
+                    class="border-0 bg-transparent p-0 position-absolute delete-tag"
+                  >
+                    <img src="../../../assets/images/cross-sm-light.svg" />
+                  </button>
+                </span>
+              </div>
+              <small
+                class="p-error"
+                style="color: orange; margin-left: 330px"
+                *ngIf="createPostForm.errors?.unauthenticated"
+              >
+                {{ "SelectValidDate" | translate }}
+              </small>
+              <small
+                class="p-error"
+                style="color: orange; margin-left: 330px"
+                *ngIf="createPostForm.errors?.tagsLengthExceeded"
+              >
+                {{ "AddMax7Tags" | translate }}
+              </small>
+              <div
+                class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 cr-postfooter pt-0"
+              >
+                <div class="post-bot-left d-flex">
+                  <label
+                    class="custom-file-upload post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center"
+                  >
+                    <input
+                      id="hideFileType"
+                      type="file"
+                      multiple="multiple"
+                      (change)="handleImageInput($event)"
+                      accept="image/*"
+                    />
+                    <img
+                      src="../../../assets/images/gallery-dark.svg"
+                      class="dark-attach"
+                    /><img
+                      src="../../../assets/images/gallery-light.svg"
+                      class="light-attach"
+                    />
+                  </label>
+                  <label
+                    class="custom-file-upload post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center"
+                  >
+                    <input
+                      id="hideFileType"
+                      type="file"
+                      multiple="multiple"
+                      (change)="handleVideoInput($event)"
+                      accept="video/*"
+                    />
+                    <img
+                      src="../../../assets/images/Video-dark.svg"
+                      class="dark-attach"
+                    /><img
+                      src="../../../assets/images/Video-light.svg"
+                      class="light-attach"
+                    />
+                  </label>
+                  <button
+                    (click)="AttachmentModalOpen(attachmentTemplate)"
+                    type="button"
+                    class="post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center"
+                  >
+                    <img
+                      src="../../../assets/images/Paper-Plus-dark.svg"
+                      class="dark-attach"
+                    /><img
+                      src="../../../assets/images/Paper-Plus-light.svg"
+                      class="light-attach"
+                    />
+                  </button>
+                  <button
+                    (click)="openTagModal(tagTemplate)"
+                    type="button"
+                    class="post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center"
+                  >
+                    <img
+                      src="../../../assets/images/hashtag-dark.svg"
+                      class="dark-attach"
+                    /><img
+                      src="../../../assets/images/hashtag-light.svg"
+                      class="light-attach"
+                    />
+                  </button>
+                </div>
+                <div class="post-bot-right d-flex justify-content-end">
+                  <button
+                    type="button"
+                    class="btn custom-btn primary_btn w-100 earning-btn fw_400 delay-btn post-delay-btn position-relative"
+                  >
+                    <img src="../../../assets/images/clock-orange.svg" />
+                    <p-calendar
+                      formControlName="scheduleTime"
+                      [(ngModel)]="scheduleTime"
+                      [showTime]="true"
+                    ></p-calendar>
+                  </button>
+
+                  <button
+                    *ngIf="scheduleTime != undefined"
+                    (click)="savePost()"
+                    type="button"
+                    class="btn custom-btn primary_btn w-100 earning-btn fw_400 lg_btn"
+                  >
+                    <img
+                      src="../../../assets/images/Send-light.svg"
+                      class="me-2"
+                    />{{ scheduleTime | date : "MMMM d, y" }} at
+                    {{ scheduleTime | date : "H:mm" }}
+                  </button>
+                  <button
+                    *ngIf="scheduleTime == undefined"
+                    (click)="savePost()"
+                    type="button"
+                    class="btn custom-btn primary_btn w-100 earning-btn fw_400 lg_btn"
+                  >
+                    <img
+                      src="../../../assets/images/Send-light.svg"
+                      class="me-2"
+                    />{{ "Post" | translate }}
+                  </button>
+                </div>
+              </div>
+              <small
+                class="p-error"
+                style="color: orange; margin-left: 350px"
+                *ngIf="createPostForm.errors?.unauthenticated"
+              >
+                {{ "SelectValidDate" | translate }}
+              </small>
+              <small
+                class="p-error"
+                style="color: orange; margin-left: 350px"
+                *ngIf="createPostForm.errors?.tagsLengthExceeded"
+              >
+                {{ "AddMax7Tags" | translate }}
+              </small>
+            </form>
+          </div>
+
+          <div
+            class="tab-pane fade"
+            id="reels-tab-pane"
+            role="tabpanel"
+            aria-labelledby="reels-tab"
+            tabindex="0"
+          >
+            <form [formGroup]="createReelForm">
+              <div *ngIf="this.schoolId != undefined" class="form-group">
+                <label class="font_10">{{ "SchoolName" | translate }}</label>
+                <input
+                  hidden
+                  type="text"
+                  name="schoolId"
+                  class="form-control w-100"
+                />
+                <input
+                  readonly
+                  type="text"
+                  [placeholder]="parentDetails?.schoolName"
+                  name="className"
+                  class="form-control w-100"
+                />
+              </div>
+
+              <div *ngIf="this.classId != undefined" class="form-group">
+                <label class="font_10">{{ "ClassName" | translate }}</label>
+                <input
+                  hidden
+                  type="text"
+                  name="classId"
+                  class="form-control w-100"
+                />
+                <input
+                  readonly
+                  type="text"
+                  [placeholder]="parentDetails?.className"
+                  name="schoolName"
+                  class="form-control w-100"
+                />
+              </div>
+
+              <div *ngIf="this.courseId != undefined" class="form-group">
+                <label class="font_10">{{ "CourseName" | translate }}</label>
+                <input
+                  hidden
+                  type="text"
+                  name="courseId"
+                  class="form-control w-100"
+                />
+                <input
+                  readonly
+                  type="text"
+                  [placeholder]="parentDetails?.courseName"
+                  name="courseName"
+                  class="form-control w-100"
+                />
+              </div>
+
+              <div class="form-group">
+                <label class="font_10">{{ "Title" | translate }}</label>
+                <input
+                  formControlName="title"
+                  maxlength="50"
+                  type="text"
+                  placeholder="Title"
+                  class="form-control w-100"
+                />
+                <small
+                  class="p-error"
+                  style="color: orange"
+                  *ngIf="isSubmitted && createReelForm.controls.title.errors"
+                  >{{ "TitleRequired" | translate }}
+                </small>
+              </div>
+
+              <div class="preview-zone hidden rel-post">
+                <div class="box box-solid">
+                  <div class="box-header with-border"></div>
+                  <div class="box-body">
+                    <div *ngIf="uploadReel != null">
+                      <span class="position-relative d-inline-block">
+                        <div class="videofile">
+                          <img [src]="uploadReel.videoUrl" />
+                        </div>
+                        <button
+                          (click)="removeUploadReel(uploadReel)"
+                          type="button"
+                          class="btn dl-post-img d-flex align-items-center justify-content-center rounded-circle position-absolute"
+                        >
+                          <i class="fa-solid fa-xmark"></i>
+                        </button>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div *ngIf="uploadReel == null">
+                <div class="dropzone-wrapper mb-4 reels-uploader-img">
+                  <div class="dropzone-desc">
+                    <i class="glyphicon glyphicon-download-alt"></i>
+                    <p class="text-center fw_400">
+                      {{ "DropImageOr" | translate }}
+                      <b>{{ "ClickToBrowse" | translate }}</b>
+                    </p>
+                  </div>
+                  <input
+                    formControlName="reelsVideo"
+                    type="file"
+                    name="img_logo"
+                    (change)="handleReels($event)"
+                    class="dropzone"
+                    accept="video/*"
+                  />
+                </div>
+                <small
+                  class="p-error"
+                  style="color: orange; margin-left: 200px"
+                  *ngIf="
+                    isSubmitted && createReelForm.controls.reelsVideo.errors
+                  "
+                >
+                  {{ "SelectAtleastOneVideo" | translate }}
+                </small>
+              </div>
+              <hr class="mb-0 sepearator mx-0 mt-3 opacity-100" />
+              <div
+                *ngIf="
+                  isSubmitted && createReelForm.valid && isShowingProgressBar
+                "
+              >
+                <div class="progress">
+                  <div
+                    class="progress-bar bg-success"
+                    role="progressbar"
+                    [style.width.%]="progressBarValue"
+                  >
+                    {{ progressBarValue }}%
+                  </div>
+                  <br />
+                </div>
+              </div>
+
+              <div
+                class="teacher-tags tag-box hashtag_post mt-4 mb-2 hover-tags"
+              >
+                <span *ngFor="let tag of reelsTagLists" class="custom-tag"
+                  >{{ tag }}
+                  <button
+                    (click)="removeTags(tag)"
+                    class="border-0 bg-transparent p-0 position-absolute delete-tag"
+                  >
+                    <img
+                      src="../../../assets/images/cross-sm-light.svg"
+                    /></button
+                ></span>
+              </div>
+
+              <div
+                class="modal-footer steps_btns d-flex align-items-center justify-content-center flex-sm-nowrap border-0 pb-0 cr-postfooter pt-0 mt-3 px-0"
+              >
+                <div class="post-bot-right d-flex justify-content-end">
+                  <button
+                    (click)="openTagModal(tagTemplate)"
+                    type="button"
+                    class="post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center mt-2"
+                  >
+                    <img
+                      src="../../../assets/images/hashtag-dark.svg"
+                      class="dark-attach"
+                    /><img
+                      src="../../../assets/images/hashtag-light.svg"
+                      class="light-attach"
+                    />
+                  </button>
+                  <button
+                    type="button"
+                    class="btn custom-btn primary_btn w-100 earning-btn fw_400 delay-btn post-delay-btn position-relative"
+                  >
+                    <img src="../../../assets/images/clock-orange.svg" />
+                    <p-calendar
+                      formControlName="scheduleTime"
+                      [(ngModel)]="scheduleTime"
+                      [showTime]="true"
+                    ></p-calendar>
+                  </button>
+                  <button
+                    *ngIf="scheduleTime != undefined"
+                    (click)="saveReels()"
+                    type="button"
+                    class="btn custom-btn primary_btn w-100 earning-btn fw_400 lg_btn"
+                  >
+                    {{ scheduleTime | date : "MMMM d, y" }} at
+                    {{ scheduleTime | date : "H:mm" }}
+                  </button>
+                  <button
+                    *ngIf="scheduleTime == undefined"
+                    (click)="saveReels()"
+                    type="button"
+                    class="btn custom-btn primary_btn w-100 earning-btn fw_400 lg_btn"
+                  >
+                    Post Reels
+                  </button>
+                </div>
+              </div>
+              <small
+                class="p-error"
+                style="color: orange; margin-left: 223px"
+                *ngIf="createReelForm.errors?.unauthenticated"
+              >
+                {{ "SelectValidDate" | translate }}
+              </small>
+            </form>
           </div>
         </div>
       </div>
+    </div>
+  </div>
+</div>
 
-  <!---- add tag Modal -->
-  <!-- <div class="modal fade edit-school-modal" id="add-tag" tabindex="-1" aria-labelledby="add-tag" aria-hidden="true">
+<!---- add tag Modal -->
+<!-- <div class="modal fade edit-school-modal" id="add-tag" tabindex="-1" aria-labelledby="add-tag" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header border-0 justify-content-center position-relative">
@@ -451,7 +847,7 @@
             <input [(ngModel)]="tags" (keyup.enter)="onEnter(tags)" type="text" class="form-control" placeholder="{{'TypeToAdd'| translate }}">
           </div>
           <div class="teacher-tags tag-box hashtag_post mt-4 mb-2 hover-tags">
-            <span *ngFor="let tag of tagLists" class="custom-tag">{{'#' + tag}} 
+            <span *ngFor="let tag of tagLists" class="custom-tag">{{'#' + tag}}
               <button (click)="removeInitialTags(tag)" class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
                   src="../../../assets/images/cross-sm-light.svg"></button>
             </span>
@@ -473,16 +869,15 @@
   </div>
   </div> -->
 
-
-   <!---- Add attachgment Modal-->
-   <!-- <div class="modal fade edit-school-modal" id="add-attachment" tabindex="-1" aria-labelledby="add-attachment"
+<!---- Add attachgment Modal-->
+<!-- <div class="modal fade edit-school-modal" id="add-attachment" tabindex="-1" aria-labelledby="add-attachment"
    aria-hidden="true">
    <div class="modal-dialog modal-dialog-centered">
      <div class="modal-content">
        <div class="modal-header border-0 justify-content-center position-relative">
          <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">{{'AttachFile'| translate }}</h1>
          <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"><img
-             src="../../../assets/images/cross.svg" /></button>     
+             src="../../../assets/images/cross.svg" /></button>
        </div>
        <div class="modal-body">
          <div class="dropzone-wrapper mb-4">
@@ -518,92 +913,196 @@
    </div>
    </div> -->
 
-  <ng-template #attachmentTemplate style="max-width: 700px;">
-   <div>
-     <div class="modal-content">
-       <div class="modal-header border-0 justify-content-center position-relative">
-         <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">{{'AttachFile'| translate }}</h1>
-         <button (click)="closeAttachmentModal()" type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"><img
-             src="../../../assets/images/cross.svg" /></button>     
-       </div>
-       <div class="modal-body">
-         <div class="dropzone-wrapper mb-4">
+<ng-template #attachmentTemplate style="max-width: 700px">
+  <div>
+    <div class="modal-content">
+      <div
+        class="modal-header border-0 justify-content-center position-relative"
+      >
+        <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">
+          {{ "AttachFile" | translate }}
+        </h1>
+        <button
+          (click)="closeAttachmentModal()"
+          type="button"
+          class="btn-close shadow-none"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        >
+          <img src="../../../assets/images/cross.svg" />
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="dropzone-wrapper mb-4">
           <div class="dropzone-desc">
             <i class="glyphicon glyphicon-download-alt"></i>
-            <p class="text-center fw_400"><b>{{'ClickToBrowse'| translate }}</b></p>
+            <p class="text-center fw_400">
+              <b>{{ "ClickToBrowse" | translate }}</b>
+            </p>
           </div>
-          <input type="file" name="img_logo" multiple="multiple" class="dropzone" (change)="handleAttachmentInput($event)" accept="application/pdf">
-         </div>
-         <p class="font_16 text_dark text-center my-4 fw_600">{{'FindInFileStorage'| translate }}</p>
-         <div class="form-group latest-form add-tag-step">
-           <label class="font_10">{{'Files'| translate }}</label>
-           <form [formGroup]="fileAttachmentsForm">
+          <input
+            type="file"
+            name="img_logo"
+            multiple="multiple"
+            class="dropzone"
+            (change)="handleAttachmentInput($event)"
+            accept="application/pdf"
+          />
+        </div>
+        <p class="font_16 text_dark text-center my-4 fw_600">
+          {{ "FindInFileStorage" | translate }}
+        </p>
+        <div class="form-group latest-form add-tag-step">
+          <label class="font_10">{{ "Files" | translate }}</label>
+          <form [formGroup]="fileAttachmentsForm">
             <div class="form-group">
               <span class="p-fluid">
-              <p-autoComplete #autoComplete formControlName="fileAttachments" [showEmptyMessage]="true" [emptyMessage]="'NoResultFound' | translate" [forceSelection]="true" [size]="200" (onSelect)="captureAttachmentUrl($event)" (onUnselect)="removeFileAttachment($event)" placeholder="{{'TypeToAdd'| translate }}" class="form-control w-100" 
-               [suggestions]="filteredFileAttachments" (completeMethod)="filterFileAttachments($event)" field="fileName" [multiple]="true">
-              </p-autoComplete>
-            </span>
+                <p-autoComplete
+                  #autoComplete
+                  formControlName="fileAttachments"
+                  [showEmptyMessage]="true"
+                  [emptyMessage]="'NoResultFound' | translate"
+                  [forceSelection]="true"
+                  [size]="200"
+                  (onSelect)="captureAttachmentUrl($event)"
+                  (onUnselect)="removeFileAttachment($event)"
+                  placeholder="{{ 'TypeToAdd' | translate }}"
+                  class="form-control w-100"
+                  [suggestions]="filteredFileAttachments"
+                  (completeMethod)="filterFileAttachments($event)"
+                  field="fileName"
+                  [multiple]="true"
+                >
+                </p-autoComplete>
+              </span>
             </div>
           </form>
-         </div>
-         <div class="teacher-tags hashtag_post tag-boxattachment-outer mt-1 mb-0 hover-tags">
-                 <span *ngFor="let item of this.initialAttachment" class="custom-tag"><img src="../../../assets/images/Paper-gray.svg" class="me-1 dark-svg"> <img
-                  src="../../../assets/images/Paper-light.svg" class="me-1 light-svg">
-                  <span *ngIf="item?.name"> {{item.name}} </span>
-                  <span *ngIf="!item?.name"> {{item.fileName}} </span>
-                 <button (click)="removeAttachment(item)" class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
-                    src="../../../assets/images/cross-sm-light.svg">
-                 </button>
-               </span>
-         </div>
-       </div>
-       <small class="p-error" style="color: orange;margin-left: 200px;"
-         *ngIf="(!isAttachmentsValid)">{{'SelectAtleastOneAttachment'| translate }}
+        </div>
+        <div
+          class="teacher-tags hashtag_post tag-boxattachment-outer mt-1 mb-0 hover-tags"
+        >
+          <span *ngFor="let item of this.initialAttachment" class="custom-tag"
+            ><img
+              src="../../../assets/images/Paper-gray.svg"
+              class="me-1 dark-svg"
+            />
+            <img
+              src="../../../assets/images/Paper-light.svg"
+              class="me-1 light-svg"
+            />
+            <span *ngIf="item?.name"> {{ item.name }} </span>
+            <span *ngIf="!item?.name"> {{ item.fileName }} </span>
+            <button
+              (click)="removeAttachment(item)"
+              class="border-0 bg-transparent p-0 position-absolute delete-tag"
+            >
+              <img src="../../../assets/images/cross-sm-light.svg" />
+            </button>
+          </span>
+        </div>
+      </div>
+      <small class="p-error" style="color: orange" *ngIf="!isAttachmentsValid"
+        >{{ "SelectAtleastOneAttachment" | translate }}
       </small>
-       <div
-         class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4">
-         <button (click)="closeAttachmentModal()" type="button"
-           class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
-           data-bs-toggle="modal" data-bs-target="#create-post">{{'DiscardChanges'| translate }}</button>
-         <button (click)="isValidAttachments()" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step"
-           data-bs-toggle="modal" data-bs-target="#create-post">{{'Save'| translate }}</button>
-           <!-- <button (click)="deselectAutocomplete()">avv</button> -->
-       </div>
-     </div>
-   </div>
+      <div
+        class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4"
+      >
+        <button
+          (click)="closeAttachmentModal()"
+          type="button"
+          class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+          data-bs-toggle="modal"
+          data-bs-target="#create-post"
+        >
+          {{ "DiscardChanges" | translate }}
+        </button>
+        <button
+          (click)="isValidAttachments()"
+          type="button"
+          class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
+          data-bs-toggle="modal"
+          data-bs-target="#create-post"
+        >
+          {{ "Save" | translate }}
+        </button>
+        <!-- <button (click)="deselectAutocomplete()">avv</button> -->
+      </div>
+    </div>
+  </div>
 </ng-template>
 
 <ng-template #tagTemplate>
-    <div class="modal-content">
-      <div class="modal-header border-0 justify-content-center position-relative">
-        <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">{{'AddTag'| translate }}</h1>
-        <button (click)="closeTagsModal()" type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"><img
-            src="../../../assets/images/cross.svg" /></button>
+  <div class="modal-content">
+    <div class="modal-header border-0 justify-content-center position-relative">
+      <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">
+        {{ "AddTag" | translate }}
+      </h1>
+      <button
+        (click)="closeTagsModal()"
+        type="button"
+        class="btn-close shadow-none"
+        data-bs-dismiss="modal"
+        aria-label="Close"
+      >
+        <img src="../../../assets/images/cross.svg" />
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group latest-form">
+        <label class="font_10">{{ "Tags" | translate }}</label>
+        <input
+          [(ngModel)]="tags"
+          maxlength="30"
+          (keyup.enter)="onEnter(tags)"
+          type="text"
+          class="form-control"
+          placeholder="{{ 'TypeToAdd' | translate }}"
+        />
       </div>
-      <div class="modal-body">
-        <div class="form-group latest-form">
-          <label class="font_10">{{'Tags'| translate }}</label>
-          <input [(ngModel)]="tags" maxlength="30" (keyup.enter)="onEnter(tags)" type="text" class="form-control" placeholder="{{'TypeToAdd'| translate }}">
-        </div>
-        <div class="teacher-tags tag-box hashtag_post mt-4 mb-2 hover-tags">
-          <span *ngFor="let tag of initialTagList" class="custom-tag">{{'#' + tag}} 
-            <button (click)="removeInitialTags(tag)" class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
-                src="../../../assets/images/cross-sm-light.svg"></button>
-          </span>
+      <div class="teacher-tags tag-box hashtag_post mt-4 mb-2 hover-tags">
+        <span *ngFor="let tag of initialTagList" class="custom-tag"
+          >{{ "#" + tag }}
+          <button
+            (click)="removeInitialTags(tag)"
+            class="border-0 bg-transparent p-0 position-absolute delete-tag"
+          >
+            <img src="../../../assets/images/cross-sm-light.svg" />
+          </button>
+        </span>
       </div>
-      <small class="p-error" style="color: orange;margin-left: 145px;"
-         *ngIf="(!isTagsValid)">{{'AddAtLeastOneTag'| translate }}
+      <small
+        class="p-error"
+        style="color: orange; margin-left: 145px"
+        *ngIf="!isTagsValid"
+        >{{ "AddAtLeastOneTag" | translate }}
       </small>
-      <small class="p-error" style="color: orange;margin-left: 142px;" *ngIf="this.tagCountExceeded">
-        {{'AddMax7Tags'| translate }}
+      <small
+        class="p-error"
+        style="color: orange; margin-left: 142px"
+        *ngIf="this.tagCountExceeded"
+      >
+        {{ "AddMax7Tags" | translate }}
       </small>
-      <div class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4">
-        <button (click)="closeTagsModal()" type="button"
+      <div
+        class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4"
+      >
+        <button
+          (click)="closeTagsModal()"
+          type="button"
           class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
-          data-bs-toggle="modal" data-bs-target="#create-post">{{'DiscardChanges'| translate }}</button>
-        <button (click)="isValidTags()" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step"
-          data-bs-toggle="modal">{{'Save'| translate }}</button>
+          data-bs-toggle="modal"
+          data-bs-target="#create-post"
+        >
+          {{ "DiscardChanges" | translate }}
+        </button>
+        <button
+          (click)="isValidTags()"
+          type="button"
+          class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
+          data-bs-toggle="modal"
+        >
+          {{ "Save" | translate }}
+        </button>
       </div>
     </div>
   </div>

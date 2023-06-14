@@ -1,79 +1,170 @@
-  <section class="container pt-3 pt-lg-4">
-    <div class="logo mb-3">
-      <img src="../../../../../assets/images/logo.svg" alt="logo" />
-    </div>
-    <div class="bg-gray-gradient register-section rounded-8 landing-section">
-      <form class="register-form mx-auto mw-100" [formGroup]="loginForm">
-        <div class="row align-items-center">
-          <div class="col-lg-6 col-xl-7 order-lg-2">
-            <div class="landing-right">
-              <img src="../../../../../assets/images/landing-screen-vector.svg" alt="icon" />
-            </div>
-          </div>
-          <div class="col-lg-6 col-xl-5">
-            <div class="landing-left">
-              <h2 class="font_39 fw_700 text-left">{{'TeachAndLearn'| translate }} <br />{{'With'| translate }} {{'BY'| translate }} <span class="text_secondary">{{'Okul'| translate }}</span>
-              </h2>
-              <ul class="list-unstyled pb-3 mb-0">
-                <li class="font_14">{{'LoginInfo1'| translate }}</li>
-                <li class="font_14">{{'LoginInfo2'| translate }}</li>
-                <li class="font_14">{{'LoginInfo3'| translate }}</li>
-                <li class="font_14">{{'LoginInfo4'| translate }}</li>
-              </ul>
-
-              <div *ngIf="isRegister" class="alert alert-info text-center register-form mx-auto ng-dirty ng-touched ng-valid ng-submitted" role="alert"
-                   style="background-color: #FFFFE0;max-width: 468px;border: 2px solid #f3eded;">
-                {{'ConfirmEmailSentMessage'| translate }}
-               </div>
-
-               <div *ngIf="isForgotPassSent" class="alert alert-info text-center register-form mx-auto ng-dirty ng-touched ng-valid ng-submitted" role="alert"
-                   style="background-color: #FFFFE0;max-width: 468px;border: 2px solid #f3eded;">
-                {{'ResetEmailSentMessage'| translate }}
-               </div>
-
-              <div class="form-group">
-                <input type="email" formControlName="email" class="form-control rounded-8 " placeholder="{{'Email'| translate }}">
-                <small class="p-error" style="color: orange;"
-                *ngIf="(isSubmitted && loginForm.controls.email.errors)">{{'ValidEmailRequired'| translate }}</small>
-              </div>
-              <div class="form-group mb-3 input-container">
-                <input #passwordInput type="password" formControlName="password" class="form-control rounded-8" placeholder="{{'Password'| translate }}">
-                <button class="eye_button_style" type="button" (click)="passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password'"><i class="fa fa-eye-slash" (click)="onPasswordShow()" *ngIf="!isPasswordVisible"></i><i class="fa fa-eye" (click)="onPasswordHide()" *ngIf="isPasswordVisible"></i></button>
-                <small class="p-error" style="color: orange;"
-                *ngIf="isSubmitted && loginForm.controls.password.errors">{{'PasswordRequired'| translate }}</small>
-              </div>
-
-              <p class="font_14 fw_300 text-center al-account mt-0"><a [routerLink]="['/user/auth/request-password']"
-                  class="text_dark text-decoration-none">{{'ForgotPassword'| translate }}</a></p>
-
-                  <small class="p-error" style="color: orange;margin-left: 123px;" *ngIf="loginForm.errors?.unauthenticated">
-                    {{'EmailNotRegistered'| translate }}
-                  </small>
-
-                  <small class="p-error" style="color: orange;margin-left: 150px;" *ngIf="loginForm.errors?.incorrectPassword">
-                    {{'IncorrectPassword'| translate }}
-                  </small>
-
-                  <small class="p-error" style="color: orange;margin-left: 102px;" *ngIf="loginForm.errors?.banUserMessage">
-                    {{'AccountBanned'| translate }}
-                  </small>
-                  <small class="p-error" style="color: orange;margin-left: 138px;" *ngIf="loginForm.errors?.emailNotConfirmed">
-                    {{'ConfirmYourEmail'| translate }}
-                  </small>
-
-              <button type="submit" (click)="login()" class="btn primary_btn w-100 rounded-8 text-uppercase">{{'Login'| translate }}</button>
-
-              <p class="font_14 fw_300 text-center al-account">{{'DontHaveAccount'| translate }} <a [routerLink]="['/user/auth/register']"
-                 class="fw_700 text_dark text-decoration-none">{{'CreateForFree'| translate }}</a></p>
-
-              <multi-lingual></multi-lingual>
-            </div>
+<section class="container pt-3 pt-lg-4">
+  <div class="logo mb-3">
+    <img src="../../../../../assets/images/logo.svg" alt="logo" />
+  </div>
+  <div class="bg-gray-gradient register-section rounded-8 landing-section">
+    <form class="register-form mx-auto mw-100" [formGroup]="loginForm">
+      <div class="row align-items-center">
+        <div class="col-lg-6 col-xl-7 order-lg-2">
+          <div class="landing-right">
+            <img
+              src="../../../../../assets/images/landing-screen-vector.svg"
+              alt="icon"
+            />
           </div>
         </div>
-      </form>
-    </div>
-  </section>
+        <div class="col-lg-6 col-xl-5">
+          <div class="landing-left">
+            <h2 class="font_39 fw_700 text-left">
+              {{ "TeachAndLearn" | translate }} <br />{{ "With" | translate }}
+              {{ "BY" | translate }}
+              <span class="text_secondary">{{ "Okul" | translate }}</span>
+            </h2>
+            <ul class="list-unstyled pb-3 mb-0">
+              <li class="font_14">{{ "LoginInfo1" | translate }}</li>
+              <li class="font_14">{{ "LoginInfo2" | translate }}</li>
+              <li class="font_14">{{ "LoginInfo3" | translate }}</li>
+              <li class="font_14">{{ "LoginInfo4" | translate }}</li>
+            </ul>
+
+            <div
+              *ngIf="isRegister"
+              class="alert alert-info text-center register-form mx-auto ng-dirty ng-touched ng-valid ng-submitted"
+              role="alert"
+              style="
+                background-color: #ffffe0;
+                max-width: 468px;
+                border: 2px solid #f3eded;
+              "
+            >
+              {{ "ConfirmEmailSentMessage" | translate }}
+            </div>
+
+            <div
+              *ngIf="isForgotPassSent"
+              class="alert alert-info text-center register-form mx-auto ng-dirty ng-touched ng-valid ng-submitted"
+              role="alert"
+              style="
+                background-color: #ffffe0;
+                max-width: 468px;
+                border: 2px solid #f3eded;
+              "
+            >
+              {{ "ResetEmailSentMessage" | translate }}
+            </div>
+
+            <div class="form-group">
+              <input
+                type="email"
+                formControlName="email"
+                class="form-control rounded-8"
+                placeholder="{{ 'Email' | translate }}"
+              />
+              <small
+                class="p-error"
+                style="color: orange"
+                *ngIf="isSubmitted && loginForm.controls.email.errors"
+                >{{ "ValidEmailRequired" | translate }}</small
+              >
+            </div>
+            <div class="form-group mb-3 input-container">
+              <input
+                #passwordInput
+                type="password"
+                formControlName="password"
+                class="form-control rounded-8"
+                placeholder="{{ 'Password' | translate }}"
+              />
+              <button
+                class="eye_button_style"
+                type="button"
+                (click)="
+                  passwordInput.type =
+                    passwordInput.type === 'password' ? 'text' : 'password'
+                "
+              >
+                <i
+                  class="fa fa-eye-slash"
+                  (click)="onPasswordShow()"
+                  *ngIf="!isPasswordVisible"
+                ></i
+                ><i
+                  class="fa fa-eye"
+                  (click)="onPasswordHide()"
+                  *ngIf="isPasswordVisible"
+                ></i>
+              </button>
+              <small
+                class="p-error"
+                style="color: orange"
+                *ngIf="isSubmitted && loginForm.controls.password.errors"
+                >{{ "PasswordRequired" | translate }}</small
+              >
+            </div>
+
+            <p class="font_14 fw_300 text-center al-account mt-0">
+              <a
+                [routerLink]="['/user/auth/request-password']"
+                class="text_dark text-decoration-none"
+                >{{ "ForgotPassword" | translate }}</a
+              >
+            </p>
+
+            <small
+              class="p-error d-flex align-items-center justify-content-center"
+              style="color: orange"
+              *ngIf="loginForm.errors?.unauthenticated"
+            >
+              {{ "EmailNotRegistered" | translate }}
+            </small>
+
+            <small
+              class="p-error d-flex align-items-center justify-content-center"
+              style="color: orange"
+              *ngIf="loginForm.errors?.incorrectPassword"
+            >
+              {{ "IncorrectPassword" | translate }}
+            </small>
+
+            <small
+              class="p-error d-flex align-items-center justify-content-center"
+              style="color: orange"
+              *ngIf="loginForm.errors?.banUserMessage"
+            >
+              {{ "AccountBanned" | translate }}
+            </small>
+            <small
+              class="p-error d-flex align-items-center justify-content-center"
+              style="color: orange"
+              *ngIf="loginForm.errors?.emailNotConfirmed"
+            >
+              {{ "ConfirmYourEmail" | translate }}
+            </small>
+
+            <button
+              type="submit"
+              (click)="login()"
+              class="btn primary_btn w-100 rounded-8 text-uppercase"
+            >
+              {{ "Login" | translate }}
+            </button>
+
+            <p class="font_14 fw_300 text-center al-account">
+              {{ "DontHaveAccount" | translate }}
+              <a
+                [routerLink]="['/user/auth/register']"
+                class="fw_700 text_dark text-decoration-none"
+                >{{ "CreateForFree" | translate }}</a
+              >
+            </p>
+
+            <multi-lingual></multi-lingual>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
 
 <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
 <p-toast></p-toast>
-

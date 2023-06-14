@@ -461,7 +461,7 @@
                                 />
                               </button>
                             </div>
-                            <div class="feed-name font_14 text_sec1">
+                            <div class="feed-name font_14 text_sec1 s">
                               <img [src]="class.avatar" /> {{ class.className }}
                             </div>
                             <div
@@ -809,7 +809,14 @@
                     {{ post.savedPostsCount }}
                   </button>
                   <button
-                    (click)="openSharePostModal(post.id, post.postType,post.title,post.description)"
+                    (click)="
+                      openSharePostModal(
+                        post.id,
+                        post.postType,
+                        post.title,
+                        post.description
+                      )
+                    "
                     type="button"
                     class="bg-transparent border-0 function-btns text-light"
                   >
@@ -896,7 +903,14 @@
                     <span class="textBlack">{{ post.savedPostsCount }}</span>
                   </button>
                   <button
-                    (click)="openSharePostModal(post.id, post.postType,post.title,post.description)"
+                    (click)="
+                      openSharePostModal(
+                        post.id,
+                        post.postType,
+                        post.title,
+                        post.description
+                      )
+                    "
                     type="button"
                     class="bg-transparent border-0 function-btns text-light"
                   >
@@ -1146,7 +1160,7 @@
                       <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">
                         {{ post.title }}
                       </h2>
-                      <div class=right-action>
+                      <div class="right-action">
                         <button
                           type="button"
                           class="view font_12 bg-transparent border-0 cursor_auto"

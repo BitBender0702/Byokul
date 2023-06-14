@@ -108,7 +108,7 @@
                 *ngIf="!isOwner && !isFollowed"
                 (click)="followUser(user.id, 'Follow')"
                 type="button"
-                class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn follow-btn"
+                class="btn orange-button"
               >
                 {{ "Follow" | translate }}
               </button>
@@ -116,7 +116,7 @@
                 *ngIf="!isOwner && isFollowed"
                 (click)="followUser(user.id, 'UnFollow')"
                 type="button"
-                class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn follow-btn"
+                class="btn orange-button"
               >
                 {{ "UnFollow" | translate }}
               </button>
@@ -125,7 +125,7 @@
                 *ngIf="!isOwner"
                 type="button"
                 (click)="openChat(user.id, '1')"
-                class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn me-0 minw-142"
+                class="btn orange-button"
               >
                 {{ "Message" | translate }}
               </button>
@@ -3082,9 +3082,7 @@
                   </div>
 
                   <p class="font_14 school-grid-date d-inline-block mb-0 mt-4">
-                    {{
-                      savedClassCourseGridInfo?.startDate | date : "MMMM d"
-                    }}
+                    {{ savedClassCourseGridInfo?.startDate | date : "MMMM d" }}
                     - {{ savedClassCourseGridInfo?.endDate | date : "MMMM d" }}
                   </p>
                 </div>
@@ -5900,7 +5898,7 @@
                               />
                             </button>
                           </div>
-                          <div class="feed-name font_14 text_sec1">
+                          <div class="profile-name feed-name font_14 text_sec1">
                             <img
                               *ngIf="post.parentImageUrl != null"
                               [src]="post.parentImageUrl"
@@ -6419,8 +6417,19 @@
                   </div>
                   <div class="col-md-6">
                     <div class="form-group">
-                      <label class="font_10">{{ "DateOfBirth" | translate }}*</label>
-                      <input #dateOfBirth autocomplete="off" type="text" class="form-control w-100 date_calendar" name="dob" formControlName="dob" id="date_of_birth" (click)="getSelectedLanguage()">
+                      <label class="font_10"
+                        >{{ "DateOfBirth" | translate }}*</label
+                      >
+                      <input
+                        #dateOfBirth
+                        autocomplete="off"
+                        type="text"
+                        class="form-control w-100 date_calendar"
+                        name="dob"
+                        formControlName="dob"
+                        id="date_of_birth"
+                        (click)="getSelectedLanguage()"
+                      />
                       <small
                         class="p-error"
                         style="color: orange"

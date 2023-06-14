@@ -1,260 +1,600 @@
 <!-- <div  [ngClass]="{'sidemenu d-xl-block d-block':isOpenSidebar === true,'sidemenu d-xl-block d-none':isOpenSidebar === false}" id="side-bar"> -->
-  <div  [ngClass]="isOpenSidebar ? 'sidemenu d-xl-block d-block ' : 'sidemenu d-xl-block d-none'" id="side-bar">
-  <span class="closebtn d-xl-none" (click)="closeSidebar()" title="Close Side Menu">×</span>
+<div
+  [ngClass]="
+    isOpenSidebar
+      ? 'sidemenu d-xl-block d-block '
+      : 'sidemenu d-xl-block d-none'
+  "
+  id="side-bar"
+>
+  <span
+    class="closebtn d-xl-none"
+    (click)="closeSidebar()"
+    title="Close Side Menu"
+    >×</span
+  >
   <div class="text-center">
     <a [routerLink]="['/user/userFeed']" class="main-logo">
       <img src="../../../assets/images/logo.svg" />
     </a>
   </div>
-  <div *ngIf="!validUser" style="margin-top:40px;">
-    <button [routerLink]="['/user/auth/register']" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 me-2" style="width:100px;">Register</button>
-    <button [routerLink]="['/user/auth/login']" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 me-2" style="width:100px;">Login</button>
-
-
+  <div *ngIf="!validUser" style="margin-top: 40px">
+    <button
+      [routerLink]="['/user/auth/register']"
+      type="button"
+      class="btn custom-btn primary_btn earning-btn fw_400 h_44 me-2"
+      style="width: 100px"
+    >
+      Register
+    </button>
+    <button
+      [routerLink]="['/user/auth/login']"
+      type="button"
+      class="btn custom-btn primary_btn earning-btn fw_400 h_44 me-2"
+      style="width: 100px"
+    >
+      Login
+    </button>
   </div>
   <div *ngIf="validUser">
-  <div class="d-flex text-center notification-box justify-content-center">
-    <ul class="list-unstyled d-flex ">
-      <li class="d-inline-block">
-        <div class="dropdown">
-          <button class="bg-transparent dropdown-toggle rounded-circle" type="button" data-bs-toggle="dropdown"
-            aria-expanded="false">
-            <img *ngIf="sidebarInfo !== undefined && sidebarInfo.user!== undefined && sidebarInfo.user?.avatar !=null" [src]="sidebarInfo.user?.avatar"/>
-            <img *ngIf="sidebarInfo !== undefined && sidebarInfo.user!== undefined && sidebarInfo.user.avatar ==null && sidebarInfo.user.gender ==1" src="../../../assets/images/maleProfile.jfif"/>
-            <img *ngIf="sidebarInfo !== undefined && sidebarInfo.user!== undefined && sidebarInfo.user.avatar ==null && (sidebarInfo.user.gender ==2 ||  sidebarInfo.user.gender ==3)" src="../../../assets/images/femaleProfile.jfif"/>
+    <div class="d-flex text-center notification-box justify-content-center">
+      <ul class="list-unstyled d-flex">
+        <li class="d-inline-block">
+          <div class="dropdown">
+            <button
+              class="bg-transparent dropdown-toggle rounded-circle"
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <img
+                *ngIf="
+                  sidebarInfo !== undefined &&
+                  sidebarInfo.user !== undefined &&
+                  sidebarInfo.user?.avatar != null
+                "
+                [src]="sidebarInfo.user?.avatar"
+              />
+              <img
+                *ngIf="
+                  sidebarInfo !== undefined &&
+                  sidebarInfo.user !== undefined &&
+                  sidebarInfo.user.avatar == null &&
+                  sidebarInfo.user.gender == 1
+                "
+                src="../../../assets/images/maleProfile.jfif"
+              />
+              <img
+                *ngIf="
+                  sidebarInfo !== undefined &&
+                  sidebarInfo.user !== undefined &&
+                  sidebarInfo.user.avatar == null &&
+                  (sidebarInfo.user.gender == 2 || sidebarInfo.user.gender == 3)
+                "
+                src="../../../assets/images/femaleProfile.jfif"
+              />
+            </button>
+            <ul class="dropdown-menu">
+              <li>
+                <a
+                  *ngIf="
+                    sidebarInfo !== undefined && sidebarInfo.user !== undefined
+                  "
+                  (click)="getUserDetails(sidebarInfo.user.id)"
+                  class="dropdown-item"
+                  style="cursor: pointer"
+                  >{{ "MyProfile" | translate }}</a
+                >
+              </li>
+              <li>
+                <a
+                  class="dropdown-item"
+                  [routerLink]="['/user/auth/change-password']"
+                  >{{ "ChangePassword" | translate }}</a
+                >
+              </li>
+              <li>
+                <a class="dropdown-item" [routerLink]="['/user/auth/logout']">{{
+                  "Logout" | translate
+                }}</a>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li class="d-inline-block">
+          <button
+            [routerLink]="['/user/chats']"
+            type="button"
+            class="notification-btn position-relative border-0 bg-transparent"
+          >
+            <img src="../../../assets/images/school/chat-icon.svg" />
+            <span
+              *ngIf="
+                sidebarInfo?.unreadMessageCount != null &&
+                sidebarInfo?.unreadMessageCount != 0
+              "
+              class="badge rounded-circle d-inline-flex align-items-center justify-content-center fw_700 font_12"
+              >{{ sidebarInfo?.unreadMessageCount }}</span
+            >
           </button>
-          <ul class="dropdown-menu">
-            <li><a *ngIf="sidebarInfo !== undefined && sidebarInfo.user!== undefined" (click)="getUserDetails(sidebarInfo.user.id)" class="dropdown-item" style="cursor:pointer;">{{'MyProfile'| translate }}</a></li>
-            <li><a class="dropdown-item" [routerLink]="['/user/auth/change-password']">{{'ChangePassword'| translate }}</a></li>
-            <li><a class="dropdown-item" [routerLink]="['/user/auth/logout']">{{'Logout'| translate }}</a></li>
-          </ul>
+        </li>
+        <li class="d-inline-block">
+          <button
+            [routerLink]="['/user/notifications']"
+            type="button"
+            class="notification-btn position-relative border-0 bg-transparent"
+          >
+            <img src="../../../assets/images/school/Notification.svg" />
+            <span
+              *ngIf="sidebarInfo?.unreadNotificationCount != 0"
+              class="badge rounded-circle d-inline-flex align-items-center justify-content-center fw_700 font_12"
+              >{{ sidebarInfo?.unreadNotificationCount }}</span
+            >
+          </button>
+        </li>
+      </ul>
+    </div>
+    <button
+      [routerLink]="['/user/earnings']"
+      type="button"
+      class="btn custom-btn primary_btn w-100 earning-btn fw_400"
+    >
+      {{ "MyEarnings" | translate }}<span class="ms-2">$</span>
+    </button>
+    <hr class="earning-hr" />
+    <div class="custom-tabs">
+      <ul class="nav nav-tabs mb-3 border-0" id="myTab" role="tablist">
+        <li class="nav-item ps-0 mb-0" role="presentation">
+          <button
+            class="nav-link active"
+            id="subscriptions-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#subscriptions-tab-pane"
+            type="button"
+            role="tab"
+            aria-controls="subscriptions-tab-pane"
+            aria-selected="true"
+          >
+            {{ "Subscriptions" | translate }}
+          </button>
+        </li>
+        <li class="nav-item ps-0 mb-0" role="presentation">
+          <button
+            class="nav-link"
+            id="owned-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#owned-tab-pane"
+            type="button"
+            role="tab"
+            aria-controls="owned-tab-pane"
+            aria-selected="false"
+          >
+            {{ "Owned" | translate }}
+          </button>
+        </li>
+      </ul>
+      <div class="tab-content" id="pills-tabContent">
+        <div
+          class="tab-pane fade show active"
+          id="subscriptions-tab-pane"
+          role="tabpanel"
+          aria-labelledby="subscriptions-tab"
+          tabindex="0"
+        >
+          <div class="accordion" id="accordionPanelsStayOpenExample">
+            <div class="accordion-item border-0 bg-transparent">
+              <h2 class="accordion-header" id="headingOne">
+                <button
+                  class="accordion-button bg-transparent font_14 text_ltgray fw_400 d-flex align-items-center justify-content-between"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseOne"
+                  aria-expanded="true"
+                  aria-controls="collapseOne"
+                >
+                  <span>{{ "Schools" | translate }} </span>
+                </button>
+              </h2>
+              <div
+                id="collapseOne"
+                class="accordion-collapse collapse show"
+                aria-labelledby="headingOne"
+                data-bs-parent="#accordionExample"
+              >
+                <div class="accordion-body p-0">
+                  <div
+                    *ngIf="
+                      sidebarInfo !== undefined &&
+                      sidebarInfo.followedSchools &&
+                      sidebarInfo.followedSchools?.length > 0
+                    "
+                  >
+                    <div *ngFor="let item of sidebarInfo.followedSchools">
+                      <div
+                        *ngIf="
+                          (!item.isBan && !item.isDisableByOwner) ||
+                          loginUserId == item.createdById
+                        "
+                        class="school-name d-flex align-items-center font_16"
+                      >
+                        <div class="school-img rounded-circle me-3">
+                          <img [src]="item.avatar" />
+                        </div>
+                        <a
+                          style="cursor: pointer"
+                          (click)="getSelectedSchool(item.schoolName)"
+                          >{{ item.schoolName }}</a
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item border-0 bg-transparent">
+              <h2 class="accordion-header" id="headingTwo">
+                <button
+                  class="accordion-button bg-transparent font_14 text_ltgray fw_400 d-flex align-items-center justify-content-between"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseTwo"
+                  aria-expanded="true"
+                  aria-controls="collapseTwo"
+                >
+                  <span>{{ "Classes" | translate }} </span>
+                </button>
+              </h2>
+              <div
+                id="collapseTwo"
+                class="accordion-collapse collapse"
+                aria-labelledby="headingTwo"
+                data-bs-parent="#accordionExample"
+              >
+                <div class="accordion-body p-0">
+                  <div
+                    *ngIf="
+                      sidebarInfo !== undefined &&
+                      sidebarInfo.followedClasses &&
+                      sidebarInfo.followedClasses?.length
+                    "
+                  >
+                    <div *ngFor="let item of sidebarInfo.followedClasses">
+                      <div
+                        *ngIf="
+                          (!item.isEnable && !item.isDisableByOwner) ||
+                          loginUserId == item.createdById
+                        "
+                        class="school-name d-flex align-items-center font_16"
+                      >
+                        <div class="school-img rounded-circle me-3">
+                          <img [src]="item.avatar" />
+                        </div>
+                        <a
+                          style="cursor: pointer"
+                          (click)="
+                            getSelectedClass(
+                              item.className,
+                              item.school.schoolName
+                            )
+                          "
+                          >{{ item.className }}</a
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item border-0 bg-transparent">
+              <h2 class="accordion-header" id="headingThree">
+                <button
+                  class="accordion-button bg-transparent font_14 text_ltgray fw_400 d-flex align-items-center justify-content-between"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseThree"
+                  aria-expanded="true"
+                  aria-controls="collapseThree"
+                >
+                  <span>{{ "Courses" | translate }} </span>
+                </button>
+              </h2>
+              <div
+                id="collapseThree"
+                class="accordion-collapse collapse"
+                aria-labelledby="headingThree"
+                data-bs-parent="#accordionExample"
+              >
+                <div class="accordion-body p-0">
+                  <div
+                    *ngIf="
+                      sidebarInfo !== undefined &&
+                      sidebarInfo.followedCourses &&
+                      sidebarInfo.followedCourses?.length
+                    "
+                  >
+                    <div *ngFor="let item of sidebarInfo.followedCourses">
+                      <div
+                        *ngIf="
+                          (!item.isEnable && !item.isDisableByOwner) ||
+                          loginUserId == item.createdById
+                        "
+                        class="school-name d-flex align-items-center font_16"
+                      >
+                        <div class="school-img rounded-circle me-3">
+                          <img [src]="item.avatar" />
+                        </div>
+                        <a
+                          style="cursor: pointer"
+                          (click)="
+                            getSelectedCourse(
+                              item.courseName,
+                              item.school.schoolName
+                            )
+                          "
+                          >{{ item.courseName }}</a
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </li>
-      <li class="d-inline-block"><button [routerLink]="['/user/chats']" type="button"
-          class="notification-btn position-relative border-0 bg-transparent"><img src="../../../assets/images/school/chat-icon.svg" />
-          <span *ngIf="sidebarInfo?.unreadMessageCount!=null && sidebarInfo?.unreadMessageCount!=0" class="badge rounded-circle d-inline-flex align-items-center justify-content-center fw_700 font_12">{{sidebarInfo?.unreadMessageCount}}</span></button>
-      </li>
-      <li class="d-inline-block"><button [routerLink]="['/user/notifications']" type="button"
-          class="notification-btn position-relative border-0 bg-transparent"><img src="../../../assets/images/school/Notification.svg" />
-          <span *ngIf="sidebarInfo?.unreadNotificationCount!=0" class="badge rounded-circle d-inline-flex align-items-center justify-content-center fw_700 font_12">{{sidebarInfo?.unreadNotificationCount}}</span></button>
-      </li>
-
-
-    </ul>
-  </div>
-  <button [routerLink]="['/user/earnings']" type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400">{{'MyEarnings'| translate }}<span class="ms-2">$</span> </button>
-  <hr class="earning-hr" />
-  <div class="custom-tabs">
-    <ul class="nav nav-tabs mb-3 border-0" id="myTab" role="tablist">
-      <li class="nav-item ps-0 mb-0" role="presentation">
-        <button class="nav-link active" id="subscriptions-tab" data-bs-toggle="tab"
-          data-bs-target="#subscriptions-tab-pane" type="button" role="tab" aria-controls="subscriptions-tab-pane"
-          aria-selected="true">{{'Subscriptions'| translate }}</button>
-      </li>
-      <li class="nav-item ps-0 mb-0" role="presentation">
-        <button class="nav-link" id="owned-tab" data-bs-toggle="tab" data-bs-target="#owned-tab-pane" type="button"
-          role="tab" aria-controls="owned-tab-pane" aria-selected="false">{{'Owned'| translate }}</button>
-      </li>
-    </ul>
-    <div class="tab-content" id="pills-tabContent">
-      <div class="tab-pane fade show active" id="subscriptions-tab-pane" role="tabpanel"
-        aria-labelledby="subscriptions-tab" tabindex="0">
-        <div class="accordion" id="accordionPanelsStayOpenExample">
-          <div class="accordion-item border-0 bg-transparent">
-            <h2 class="accordion-header" id="headingOne">
-              <button
-                class="accordion-button  bg-transparent font_14 text_ltgray fw_400 d-flex align-items-center justify-content-between"
-                type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true"
-                aria-controls="collapseOne">
-                <span>{{'Schools'| translate }} </span>
-              </button>
-            </h2>
-            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
-              data-bs-parent="#accordionExample">
-              <div class="accordion-body p-0">
-
-                <div *ngIf="sidebarInfo !== undefined && sidebarInfo.followedSchools && sidebarInfo.followedSchools?.length > 0">
-                 <div  *ngFor="let item of sidebarInfo.followedSchools;">
-                   <div *ngIf="(!item.isBan && !item.isDisableByOwner) || (loginUserId == item.createdById)" class="school-name d-flex align-items-center font_16">
-                     <div class="school-img rounded-circle me-3">
-                      <img [src]="item.avatar" />
-                     </div>
-                     <a style="cursor:pointer;" (click)="getSelectedSchool(item.schoolName)">{{item.schoolName}}</a>
-                   </div>
+        <div
+          class="tab-pane fade"
+          id="owned-tab-pane"
+          role="tabpanel"
+          aria-labelledby="owned-tab"
+          tabindex="0"
+        >
+          <div class="accordion" id="accordionPanelsStayOpenExample">
+            <div class="accordion-item border-0 bg-transparent">
+              <h2 class="accordion-header" id="headingOne">
+                <button
+                  class="accordion-button bg-transparent font_14 text_ltgray fw_400 d-flex align-items-center justify-content-between"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseOne"
+                  aria-expanded="true"
+                  aria-controls="collapseOne"
+                >
+                  <span>{{ "Schools" | translate }} </span>
+                </button>
+                <a
+                  [routerLink]="['/user/createSchool']"
+                  class="add-btn d-inline-flex align-items-center justify-content-center rounded-circle"
+                  ><img src="../../../assets/images/school/plus-light.svg"
+                /></a>
+              </h2>
+              <div
+                id="collapseOne"
+                class="accordion-collapse collapse show"
+                aria-labelledby="headingOne"
+                data-bs-parent="#accordionExample"
+              >
+                <div class="accordion-body p-0">
+                  <div
+                    *ngIf="
+                      sidebarInfo !== undefined &&
+                      sidebarInfo.ownedSchools &&
+                      sidebarInfo.ownedSchools?.length
+                    "
+                  >
+                    <div *ngFor="let item of sidebarInfo.ownedSchools">
+                      <div
+                        *ngIf="!item.isBan"
+                        class="school-name d-flex align-items-center font_16"
+                      >
+                        <div class="school-img rounded-circle me-3">
+                          <img
+                            *ngIf="item.avatar != null"
+                            [src]="item.avatar"
+                          />
+                        </div>
+                        <a
+                          style="cursor: pointer"
+                          (click)="getSelectedSchool(item.schoolName)"
+                          >{{ item.schoolName }}</a
+                        >
+                      </div>
+                    </div>
                   </div>
                 </div>
-
               </div>
             </div>
-          </div>
-          <div class="accordion-item border-0 bg-transparent">
-            <h2 class="accordion-header" id="headingTwo">
-              <button
-                class="accordion-button  bg-transparent font_14 text_ltgray fw_400 d-flex align-items-center justify-content-between"
-                type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true"
-                aria-controls="collapseTwo">
-                <span>{{'Classes'| translate }} </span>
-              </button>
-            </h2>
-            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
-              data-bs-parent="#accordionExample">
-              <div class="accordion-body p-0">
-
-                <div *ngIf="sidebarInfo !== undefined && sidebarInfo.followedClasses && sidebarInfo.followedClasses?.length">
-                <div  *ngFor="let item of sidebarInfo.followedClasses;">
-                  <div *ngIf="(!item.isEnable && !item.isDisableByOwner) || (loginUserId == item.createdById)" class="school-name d-flex align-items-center font_16">
-                    <div class="school-img rounded-circle me-3">
-                      <img [src]="item.avatar" />
+            <div class="accordion-item border-0 bg-transparent">
+              <h2 class="accordion-header" id="headingTwo">
+                <button
+                  class="accordion-button bg-transparent font_14 text_ltgray fw_400 d-flex align-items-center justify-content-between"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseTwo"
+                  aria-expanded="true"
+                  aria-controls="collapseTwo"
+                >
+                  <span>{{ "Classes" | translate }} </span>
+                </button>
+                <a
+                  [routerLink]="['/user/createClass']"
+                  class="add-btn d-inline-flex align-items-center justify-content-center rounded-circle"
+                  ><img src="../../../assets/images/school/plus-light.svg"
+                /></a>
+              </h2>
+              <div
+                id="collapseTwo"
+                class="accordion-collapse collapse"
+                aria-labelledby="headingTwo"
+                data-bs-parent="#accordionExample"
+              >
+                <div class="accordion-body p-0">
+                  <div
+                    *ngIf="
+                      sidebarInfo !== undefined &&
+                      sidebarInfo.ownedClasses &&
+                      sidebarInfo.ownedClasses?.length
+                    "
+                  >
+                    <div *ngFor="let item of sidebarInfo.ownedClasses">
+                      <div
+                        *ngIf="!item.isEnable"
+                        class="school-name d-flex align-items-center font_16"
+                      >
+                        <div class="school-img rounded-circle me-3">
+                          <img
+                            *ngIf="item.avatar != null && item.avatar != 'null'"
+                            [src]="item.avatar"
+                          />
+                        </div>
+                        <a
+                          style="cursor: pointer"
+                          (click)="
+                            getSelectedClass(
+                              item.className,
+                              item.school.schoolName
+                            )
+                          "
+                          >{{ item.className }}</a
+                        >
+                      </div>
                     </div>
-                    <a style="cursor:pointer;" (click)="getSelectedClass(item.className,item.school.schoolName)">{{item.className}}</a>
                   </div>
                 </div>
-              </div>
               </div>
             </div>
-          </div>
-          <div class="accordion-item border-0 bg-transparent">
-            <h2 class="accordion-header" id="headingThree">
-              <button
-                class="accordion-button  bg-transparent font_14 text_ltgray fw_400 d-flex align-items-center justify-content-between"
-                type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="true"
-                aria-controls="collapseThree">
-                <span>{{'Courses'| translate }} </span>
-              </button>
-            </h2>
-            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
-              data-bs-parent="#accordionExample">
-              <div class="accordion-body p-0">
-
-                <div *ngIf="sidebarInfo !== undefined && sidebarInfo.followedCourses && sidebarInfo.followedCourses?.length">
-                <div *ngFor="let item of sidebarInfo.followedCourses;">
-                  <div *ngIf="(!item.isEnable && !item.isDisableByOwner) || (loginUserId == item.createdById)" class="school-name d-flex align-items-center font_16">
-                    <div class="school-img rounded-circle me-3">
-                      <img [src]="item.avatar" />
+            <div class="accordion-item border-0 bg-transparent">
+              <h2 class="accordion-header" id="headingThree">
+                <button
+                  class="accordion-button bg-transparent font_14 text_ltgray fw_400 d-flex align-items-center justify-content-between"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseThree"
+                  aria-expanded="true"
+                  aria-controls="collapseThree"
+                >
+                  <span>{{ "Courses" | translate }} </span>
+                </button>
+                <a
+                  [routerLink]="['/user/createCourse']"
+                  class="add-btn d-inline-flex align-items-center justify-content-center rounded-circle"
+                  ><img src="../../../assets/images/school/plus-light.svg"
+                /></a>
+              </h2>
+              <div
+                id="collapseThree"
+                class="accordion-collapse collapse"
+                aria-labelledby="headingThree"
+                data-bs-parent="#accordionExample"
+              >
+                <div class="accordion-body p-0">
+                  <div
+                    *ngIf="
+                      sidebarInfo !== undefined &&
+                      sidebarInfo != undefined &&
+                      sidebarInfo.ownedCourses?.length
+                    "
+                  >
+                    <div *ngFor="let item of sidebarInfo.ownedCourses">
+                      <div
+                        *ngIf="!item.isEnable"
+                        class="school-name d-flex align-items-center font_16"
+                      >
+                        <div class="school-img rounded-circle me-3">
+                          <img
+                            *ngIf="item.avatar != null && item.avatar != 'null'"
+                            [src]="item.avatar"
+                          />
+                        </div>
+                        <a
+                          style="cursor: pointer"
+                          (click)="
+                            getSelectedCourse(
+                              item.courseName,
+                              item.school.schoolName
+                            )
+                          "
+                          >{{ item.courseName }}</a
+                        >
+                      </div>
                     </div>
-                    <a style="cursor:pointer;" (click)="getSelectedCourse(item.courseName,item.school.schoolName)">{{item.courseName}}</a>
                   </div>
-                </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="tab-pane fade" id="owned-tab-pane" role="tabpanel" aria-labelledby="owned-tab" tabindex="0">
-        <div class="accordion" id="accordionPanelsStayOpenExample">
-          <div class="accordion-item border-0 bg-transparent">
-            <h2 class="accordion-header" id="headingOne">
-              <button
-                class="accordion-button  bg-transparent font_14 text_ltgray fw_400 d-flex align-items-center justify-content-between"
-                type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true"
-                aria-controls="collapseOne">
-                <span>{{'Schools'| translate }} </span>
-              </button>
-              <a [routerLink]="['/user/createSchool']"
-                class="add-btn d-inline-flex align-items-center justify-content-center rounded-circle"><img
-                  src="../../../assets/images/school/plus-light.svg" /></a>
-            </h2>
-            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
-              data-bs-parent="#accordionExample">
-              <div class="accordion-body p-0">
-               
-                <div *ngIf="sidebarInfo !== undefined && sidebarInfo.ownedSchools && sidebarInfo.ownedSchools?.length">
-                <div  *ngFor="let item of sidebarInfo.ownedSchools;">
-                  <div *ngIf="!item.isBan" class="school-name d-flex align-items-center font_16">
-                    <div class="school-img rounded-circle me-3">
-                      <img *ngIf="item.avatar!= null" [src]="item.avatar" />
-                    </div>
-                    <a style="cursor:pointer;" (click)="getSelectedSchool(item.schoolName)">{{item.schoolName}}</a>
-                  </div>
-                </div>
-              </div>
-
-              </div>
-            </div>
-          </div>
-          <div class="accordion-item border-0 bg-transparent">
-            <h2 class="accordion-header" id="headingTwo">
-              <button
-                class="accordion-button  bg-transparent font_14 text_ltgray fw_400 d-flex align-items-center justify-content-between"
-                type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true"
-                aria-controls="collapseTwo">
-                <span>{{'Classes'| translate }} </span>
-              </button>
-              <a [routerLink]="['/user/createClass']"
-                class="add-btn d-inline-flex align-items-center justify-content-center rounded-circle"><img
-                  src="../../../assets/images/school/plus-light.svg" /></a>
-            </h2>
-            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
-              data-bs-parent="#accordionExample">
-              <div class="accordion-body p-0">
-                <div *ngIf="sidebarInfo !== undefined && sidebarInfo.ownedClasses && sidebarInfo.ownedClasses?.length">
-                <div  *ngFor="let item of sidebarInfo.ownedClasses;">
-                  <div *ngIf="!item.isEnable" class="school-name d-flex align-items-center font_16">
-                    <div class="school-img rounded-circle me-3">
-                      <img *ngIf="item.avatar!= null && item.avatar!= 'null'" [src]="item.avatar" />
-                    </div>
-                    <a style="cursor:pointer;" (click)="getSelectedClass(item.className,item.school.schoolName)">{{item.className}}</a>
-                  </div>
-                </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="accordion-item border-0 bg-transparent">
-            <h2 class="accordion-header" id="headingThree">
-              <button
-                class="accordion-button bg-transparent font_14 text_ltgray fw_400 d-flex align-items-center justify-content-between"
-                type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="true"
-                aria-controls="collapseThree">
-                <span>{{'Courses'| translate }} </span>
-              </button>
-              <a [routerLink]="['/user/createCourse']"
-                class="add-btn d-inline-flex align-items-center justify-content-center rounded-circle"><img
-                  src="../../../assets/images/school/plus-light.svg" /></a>
-            </h2>
-            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
-              data-bs-parent="#accordionExample">
-              <div class="accordion-body p-0">
-                
-                <div *ngIf="sidebarInfo !== undefined && sidebarInfo != undefined && sidebarInfo.ownedCourses?.length">
-                <div  *ngFor="let item of sidebarInfo.ownedCourses;">
-                  <div *ngIf="!item.isEnable" class="school-name d-flex align-items-center font_16">
-                    <div class="school-img rounded-circle me-3">
-                      <img *ngIf="item.avatar!= null && item.avatar!= 'null'" [src]="item.avatar" />
-                    </div>
-                    <a style="cursor:pointer;" (click)="getSelectedCourse(item.courseName,item.school.schoolName)">{{item.courseName}}</a>
-                  </div>
-                </div>
-              </div>
-                
-              </div>
-            </div>
-          </div>
+      <div class="d-flex justify-content-between flex-wrap mt-4">
+        <div class="language-btn">
+          <input
+            [attr.checked]="selectedLanguage == 'en' ? true : null"
+            (click)="switchLanguage('en')"
+            type="radio"
+            class="btn-check"
+            name="btnradio"
+            id="lang1"
+            autocomplete="off"
+          />
+          <label class="btn btn-outline-primary font_12 rounded-8" for="lang1"
+            >English</label
+          >
         </div>
+        <div class="language-btn">
+          <input
+            [attr.checked]="selectedLanguage == 'ar' ? true : null"
+            (click)="switchLanguage('ar')"
+            type="radio"
+            class="btn-check"
+            name="btnradio"
+            id="lang2"
+            autocomplete="off"
+          />
+          <label class="btn btn-outline-primary font_12 rounded-8" for="lang2"
+            >اللغة العربية</label
+          >
+        </div>
+        <div class="language-btn">
+          <input
+            [attr.checked]="selectedLanguage == 'tr' ? true : null"
+            (click)="switchLanguage('tr')"
+            type="radio"
+            class="btn-check"
+            name="btnradio"
+            id="lang3"
+            autocomplete="off"
+          />
+          <label class="btn btn-outline-primary font_12 rounded-8" for="lang3"
+            >Türkçe</label
+          >
+        </div>
+        <div class="language-btn">
+          <input
+            [attr.checked]="selectedLanguage == 'sp' ? true : null"
+            (click)="switchLanguage('sp')"
+            type="radio"
+            class="btn-check"
+            name="btnradio"
+            id="lang4"
+            autocomplete="off"
+          />
+          <label class="btn btn-outline-primary font_12 rounded-8" for="lang4"
+            >Spanish</label
+          >
+        </div>
+      </div>
+      <div class="footer-menu">
+        <div class="footer-menu__menu">
+          <a href="#" class="footer-menu__menu-item">Privacy Policy</a>
+          <a href="#" class="footer-menu__menu-item">About Us</a>
+          <a href="#" class="footer-menu__menu-item">Contact</a>
+          <a href="#" class="footer-menu__menu-item">Delivery & Return</a>
+          <a href="#" class="footer-menu__menu-item"
+            >Distance Sales Agreement</a
+          >
+        </div>
+        <img src="../../../assets/images/logo_band_colored.svg" />
       </div>
     </div>
-    <div class="d-flex justify-content-between flex-wrap mt-4">
-      <div class="language-btn">
-        <input [attr.checked]="selectedLanguage == 'en' ? true : null" (click)="switchLanguage('en')" type="radio" class="btn-check" name="btnradio" id="lang1" autocomplete="off">
-        <label class="btn btn-outline-primary font_12 rounded-8" for="lang1">English</label>
-      </div>
-      <div class="language-btn">
-        <input [attr.checked]="selectedLanguage == 'ar' ? true : null" (click)="switchLanguage('ar')" type="radio" class="btn-check" name="btnradio" id="lang2" autocomplete="off">
-        <label class="btn btn-outline-primary font_12 rounded-8" for="lang2">اللغة العربية</label>
-      </div>
-      <div class="language-btn">
-        <input [attr.checked]="selectedLanguage == 'tr' ? true : null" (click)="switchLanguage('tr')" type="radio" class="btn-check" name="btnradio" id="lang3" autocomplete="off">
-        <label class="btn btn-outline-primary font_12 rounded-8" for="lang3">Türkçe</label>
-      </div>
-      <div class="language-btn">
-        <input [attr.checked]="selectedLanguage == 'sp' ? true : null" (click)="switchLanguage('sp')" type="radio" class="btn-check" name="btnradio" id="lang4" autocomplete="off">
-        <label class="btn btn-outline-primary font_12 rounded-8" for="lang4">Spanish</label>
-      </div>
-    </div>
   </div>
-  </div>
-
 </div>
 <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
-
