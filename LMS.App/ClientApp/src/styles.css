@@ -3026,6 +3026,11 @@ p-autocomplete li:before {
   .main_content {
     padding-left: 330px !important;
   }
+
+  .main_content-max-width {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
 }
 @media screen and (max-width: 1199px) {
   .font_39 {
@@ -3377,11 +3382,12 @@ p-autocomplete li:before {
   word-break: break-all;
 }
 
-.create_post_btn { left: 87%;
-top: 86%;
-position: fixed;
-z-index: 999;
-display: none !important;
+.create_post_btn {
+  left: 87%;
+  top: 86%;
+  position: fixed;
+  z-index: 999;
+  display: none !important;
 }
 
 @media (max-width: 768px) {

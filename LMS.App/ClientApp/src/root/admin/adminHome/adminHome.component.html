@@ -1,70 +1,110 @@
 <div *ngIf="isDataLoaded">
-    <section class="f-poppins">
-       <div class="main_content">
-         <div class="create-post-header d-flex justify-content-between d-none d-xl-flex align-items-center">
-           <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark invisible"><img
-               src="../../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
-               <h2 class="font_22 fw_700 f-monteserrat mb-md-0">{{'Dashboard'| translate }}</h2>
-           <button [routerLink]="['/user/auth/logout']" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44" data-bs-toggle="modal"
-             data-bs-target="#create-post">{{'Logout'| translate }}</button>
-         </div>
-         <div class="live-header d-flex align-items-center justify-content-between">
-           <button type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark  d-xl-none"><img
-               src="../../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
-           <span class="logo_mobile d-xl-none">
-             <img src="../../../../assets/images/logo.svg" />
-           </span>
-           <div class="d-xl-none">
-             <button type="button" class="mobile-search border_btn"><img
-                 src="../../../../assets/images/search-lg.svg" /></button>
-             <button (click)="openAdminSideBar()" type="button" class="mobile-search border_btn"><img
-                 src="../../../../assets/images/menu.svg" /></button>
-           </div>
-         </div>
-
-         <div class="container">
-            <div class="row">
-                <div class="col-md-4 col-xl-3">
-                    <div class="card bg-c-blue order-card">
-                        <div class="card-block">
-                            <h6 class="m-b-20">{{'Users'| translate }}</h6>
-                            <h2 class="text-right d-flex align-items-center"><i class="fa fa-cart-plus f-left me-2"></i><span>{{dashboardDetails.noOfRegUsers}}</span></h2>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-md-4 col-xl-3">
-                    <div class="card bg-c-green order-card">
-                        <div class="card-block">
-                            <h6 class="m-b-20">{{'Schools'| translate }}</h6>
-                            <h2 class="text-right d-flex align-items-center"><i class="fa fa-rocket f-left me-2"></i><span>{{dashboardDetails.noOfRegSchools}}</span></h2>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-md-4 col-xl-3">
-                    <div class="card bg-c-yellow order-card">
-                        <div class="card-block">
-                            <h6 class="m-b-20">{{'Classes'| translate }}</h6>
-                            <h2 class="text-right d-flex align-items-center"><i class="fa fa-refresh f-left me-2"></i><span>{{dashboardDetails.noOfClasses}}</span></h2>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-md-4 col-xl-3">
-                    <div class="card bg-c-pink order-card">
-                        <div class="card-block">
-                            <h6 class="m-b-20">{{'Courses'| translate }}</h6>
-                            <h2 class="text-right d-flex align-items-center"><i class="fa fa-credit-card f-left me-2"></i><span>{{dashboardDetails.noOfCourses}}</span></h2>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  <section class="f-poppins">
+    <div class="main_content">
+      <div class="main_content-max-width">
+        <div
+          class="create-post-header d-flex justify-content-between d-none d-xl-flex align-items-center"
+        >
+          <button
+            type="button"
+            class="back-button bg-transparent border-0 font_16 fw_400 text_dark invisible"
+          >
+            <img src="../../../../assets/images/arrow-left.svg" />
+            {{ "Back" | translate }}
+          </button>
+          <h2 class="font_22 fw_700 f-monteserrat mb-md-0">
+            {{ "Dashboard" | translate }}
+          </h2>
+          <button
+            [routerLink]="['/user/auth/logout']"
+            type="button"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44"
+            data-bs-toggle="modal"
+            data-bs-target="#create-post"
+          >
+            {{ "Logout" | translate }}
+          </button>
         </div>
-       </div>
-     </section>
-     </div>
-     <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
-   
-  
-  
+        <div
+          class="live-header d-flex align-items-center justify-content-between"
+        >
+          <button
+            type="button"
+            class="back-button bg-transparent border-0 font_16 fw_400 text_dark d-xl-none"
+          >
+            <img src="../../../../assets/images/arrow-left.svg" />
+            {{ "Back" | translate }}
+          </button>
+          <span class="logo_mobile d-xl-none">
+            <img src="../../../../assets/images/logo.svg" />
+          </span>
+          <div class="d-xl-none">
+            <button type="button" class="mobile-search border_btn">
+              <img src="../../../../assets/images/search-lg.svg" />
+            </button>
+            <button
+              (click)="openAdminSideBar()"
+              type="button"
+              class="mobile-search border_btn"
+            >
+              <img src="../../../../assets/images/menu.svg" />
+            </button>
+          </div>
+        </div>
+
+        <div class="container">
+          <div class="row">
+            <div class="col-md-4 col-xl-3">
+              <div class="card bg-c-blue order-card">
+                <div class="card-block">
+                  <h6 class="m-b-20">{{ "Users" | translate }}</h6>
+                  <h2 class="text-right d-flex align-items-center">
+                    <i class="fa fa-cart-plus f-left me-2"></i
+                    ><span>{{ dashboardDetails.noOfRegUsers }}</span>
+                  </h2>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4 col-xl-3">
+              <div class="card bg-c-green order-card">
+                <div class="card-block">
+                  <h6 class="m-b-20">{{ "Schools" | translate }}</h6>
+                  <h2 class="text-right d-flex align-items-center">
+                    <i class="fa fa-rocket f-left me-2"></i
+                    ><span>{{ dashboardDetails.noOfRegSchools }}</span>
+                  </h2>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4 col-xl-3">
+              <div class="card bg-c-yellow order-card">
+                <div class="card-block">
+                  <h6 class="m-b-20">{{ "Classes" | translate }}</h6>
+                  <h2 class="text-right d-flex align-items-center">
+                    <i class="fa fa-refresh f-left me-2"></i
+                    ><span>{{ dashboardDetails.noOfClasses }}</span>
+                  </h2>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4 col-xl-3">
+              <div class="card bg-c-pink order-card">
+                <div class="card-block">
+                  <h6 class="m-b-20">{{ "Courses" | translate }}</h6>
+                  <h2 class="text-right d-flex align-items-center">
+                    <i class="fa fa-credit-card f-left me-2"></i
+                    ><span>{{ dashboardDetails.noOfCourses }}</span>
+                  </h2>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+<loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>

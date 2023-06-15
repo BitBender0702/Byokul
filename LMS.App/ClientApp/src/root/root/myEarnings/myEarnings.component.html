@@ -1,54 +1,102 @@
-
 <body>
   <section class="f-poppins">
     <!-- <side-bar [isOpenSidebar]="isOpenSidebar"></side-bar>  -->
     <div class="main_content">
-      <div class="create-post-header d-flex justify-content-between d-none d-xl-flex">
-        <div class="search-header position-relative">
-          <input type="search" class="form-control h_44" />
-          <button type="button" class="btn search-icon"><img src="../../../assets/images/school/search-gray.svg" /></button>
+      <div class="main_content-max-width">
+        <div
+          class="create-post-header d-flex justify-content-between d-none d-xl-flex"
+        >
+          <div class="search-header position-relative">
+            <input type="search" class="form-control h_44" />
+            <button type="button" class="btn search-icon">
+              <img src="../../../assets/images/school/search-gray.svg" />
+            </button>
+          </div>
+          <button
+            type="button"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44"
+          >
+            {{ "CreatePost" | translate }}
+          </button>
         </div>
-        <button type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44">{{'CreatePost'| translate }}</button>
-      </div>
-      <div class="live-header d-flex align-items-center justify-content-between">
-        <button (click)="back()" type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
-            src="../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
-        <span class="logo_mobile d-xl-none">
-          <img src="../../../assets/images/logo.svg" />
-        </span>
-        <div class="d-xl-none">
-          <button *ngIf="!isOpenSearch" type="button" class="mobile-search border_btn" (click)="openSearch()"><img
-              src="../../../assets/images/search-lg.svg" /></button>
-          <button  (click)="openSidebar()" type="button" class="mobile-search border_btn" (click)="openSidebar()"><img
-              src="../../../assets/images/menu.svg" /></button>
+        <div
+          class="live-header d-flex align-items-center justify-content-between"
+        >
+          <button
+            (click)="back()"
+            type="button"
+            class="back-button bg-transparent border-0 font_16 fw_400 text_dark"
+          >
+            <img src="../../../assets/images/arrow-left.svg" />
+            {{ "Back" | translate }}
+          </button>
+          <span class="logo_mobile d-xl-none">
+            <img src="../../../assets/images/logo.svg" />
+          </span>
+          <div class="d-xl-none">
+            <button
+              *ngIf="!isOpenSearch"
+              type="button"
+              class="mobile-search border_btn"
+              (click)="openSearch()"
+            >
+              <img src="../../../assets/images/search-lg.svg" />
+            </button>
+            <button
+              (click)="openSidebar()"
+              type="button"
+              class="mobile-search border_btn"
+              (click)="openSidebar()"
+            >
+              <img src="../../../assets/images/menu.svg" />
+            </button>
+          </div>
         </div>
-      </div>
 
-      <section class="my_earningbox wht_box mx-auto">
-        <h2 class="font_24 text_dark fw-bold text-center mb-0">{{'MyEarnings'| translate }}</h2>
-        <p class="text-center font_16 fw_600 step-desc my_32">{{'StartEarningCreateSchool'| translate }}</p>
-        <div class="earning-video rounded-8 my_32">
-          <iframe width="100%" height="299" src="https://www.youtube.com/embed/hAP2QF--2Dg"
-            title="Product Explainer Video | UpSend |  Best SaaS Explainer Video" frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen></iframe>
-        </div>
-        <button [routerLink]="['/user/createSchool']" type="button"
-          class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase w-100">{{'CreateSchool'| translate }}</button>
-      </section>
-
+        <section class="my_earningbox wht_box mx-auto">
+          <h2 class="font_24 text_dark fw-bold text-center mb-0">
+            {{ "MyEarnings" | translate }}
+          </h2>
+          <p class="text-center font_16 fw_600 step-desc my_32">
+            {{ "StartEarningCreateSchool" | translate }}
+          </p>
+          <div class="earning-video rounded-8 my_32">
+            <iframe
+              width="100%"
+              height="299"
+              src="https://www.youtube.com/embed/hAP2QF--2Dg"
+              title="Product Explainer Video | UpSend |  Best SaaS Explainer Video"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            ></iframe>
+          </div>
+          <button
+            [routerLink]="['/user/createSchool']"
+            type="button"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase w-100"
+          >
+            {{ "CreateSchool" | translate }}
+          </button>
+        </section>
+      </div>
     </div>
-
   </section>
 
-  <div [ngClass]="isOpenSearch ? 'overlay d-block' : 'overlay d-none'" id="search-overlay">
-    <span class="closebtn" (click)="closeSearch()" title="Close Overlay">×</span>
+  <div
+    [ngClass]="isOpenSearch ? 'overlay d-block' : 'overlay d-none'"
+    id="search-overlay"
+  >
+    <span class="closebtn" (click)="closeSearch()" title="Close Overlay"
+      >×</span
+    >
     <div class="overlay-content">
       <form action="">
-        <input type="text" placeholder="Search.." name="search">
-        <button type="submit"><img src="../../../assets/images/school/search-gray.svg" /></button>
+        <input type="text" placeholder="Search.." name="search" />
+        <button type="submit">
+          <img src="../../../assets/images/school/search-gray.svg" />
+        </button>
       </form>
     </div>
   </div>
 </body>
-

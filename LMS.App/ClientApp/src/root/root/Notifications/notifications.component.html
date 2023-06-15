@@ -1,134 +1,342 @@
-
 <div *ngIf="isDataLoaded">
-<body>
-  <section class="f-poppins">
-    <div class="main_content">
-      <div class="create-post-header d-flex justify-content-between d-none d-xl-flex align-items-center">
-        <button (click)="back()" type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
-            src="../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
-            <h2 class="font_22 fw_700 f-monteserrat mb-md-0">{{'Notifications'| translate }}  <button type="button" (click)="getNotificationSettings()" class="border-0 ms-2 notification-sett-btn" data-bs-toggle="modal" data-bs-target="#notifi-settingpopup"><img src="../../../assets/images/Setting-solid-dark.svg" /></button></h2>
-        <button type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 invisible" data-bs-toggle="modal"
-          data-bs-target="#create-post">{{'CreatePost'| translate }}</button>
-      </div>
-      <div class="live-header d-flex align-items-center justify-content-between">
-        <button (click)="back()" type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark  d-xl-none"><img
-            src="../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
-        <span class="logo_mobile d-xl-none">
-          <img src="../../../assets/images/logo.svg" />
-        </span>
-        <div class="d-xl-none">
-          <button type="button" class="mobile-search border_btn" onclick="openSearch()"><img
-              src="../../../assets/images/search-lg.svg" /></button>
-          <button  (click)="openSidebar()" type="button" class="mobile-search border_btn" onclick="openSidebar()"><img
-              src="../../../assets/images/menu.svg" /></button>
+  <body>
+    <section class="f-poppins">
+      <div class="main_content">
+        <div class="main_content-max-width">
+          <div
+            class="create-post-header d-flex justify-content-between d-none d-xl-flex align-items-center"
+          >
+            <button
+              (click)="back()"
+              type="button"
+              class="back-button bg-transparent border-0 font_16 fw_400 text_dark"
+            >
+              <img src="../../../assets/images/arrow-left.svg" />
+              {{ "Back" | translate }}
+            </button>
+            <h2 class="font_22 fw_700 f-monteserrat mb-md-0">
+              {{ "Notifications" | translate }}
+              <button
+                type="button"
+                (click)="getNotificationSettings()"
+                class="border-0 ms-2 notification-sett-btn"
+                data-bs-toggle="modal"
+                data-bs-target="#notifi-settingpopup"
+              >
+                <img src="../../../assets/images/Setting-solid-dark.svg" />
+              </button>
+            </h2>
+            <button
+              type="button"
+              class="btn custom-btn primary_btn earning-btn fw_400 h_44 invisible"
+              data-bs-toggle="modal"
+              data-bs-target="#create-post"
+            >
+              {{ "CreatePost" | translate }}
+            </button>
+          </div>
+          <div
+            class="live-header d-flex align-items-center justify-content-between"
+          >
+            <button
+              (click)="back()"
+              type="button"
+              class="back-button bg-transparent border-0 font_16 fw_400 text_dark d-xl-none"
+            >
+              <img src="../../../assets/images/arrow-left.svg" />
+              {{ "Back" | translate }}
+            </button>
+            <span class="logo_mobile d-xl-none">
+              <img src="../../../assets/images/logo.svg" />
+            </span>
+            <div class="d-xl-none">
+              <button
+                type="button"
+                class="mobile-search border_btn"
+                onclick="openSearch()"
+              >
+                <img src="../../../assets/images/search-lg.svg" />
+              </button>
+              <button
+                (click)="openSidebar()"
+                type="button"
+                class="mobile-search border_btn"
+                onclick="openSidebar()"
+              >
+                <img src="../../../assets/images/menu.svg" />
+              </button>
+            </div>
+          </div>
+
+          <!---- Followers list html start ------>
+          <div class="wht_newbox followers_box notification-settingbox">
+            <ul class="list-unstyled before-none mb-0">
+              <li *ngFor="let item of notifications" class="mb-0">
+                <div
+                  *ngIf="item.notificationType == 2"
+                  style="cursor: pointer"
+                  [routerLink]="['/user/userProfile', item.actionDoneBy]"
+                  class="d-flex align-items-center justify-content-between"
+                >
+                  <span class="followers-name font_16 text_sec1 fw_600">
+                    <!-- <span class="new-notidot"><i class="fa-solid fa-circle"></i></span> -->
+                    <img
+                      [src]="item.avatar"
+                      class="rounded-circle me-2"
+                      style="width: 38px; height: 35px"
+                    />
+                    <p class="font_16 ms-2 d-inline-block fw_400 mb-0">
+                      {{ item.notificationContent }}
+                    </p>
+                  </span>
+                </div>
+
+                <div
+                  *ngIf="item.notificationType == 1 && item.reelId == null"
+                  style="cursor: pointer"
+                  (click)="openPostsViewModel(item.post.id, item.postType)"
+                  class="d-flex align-items-center justify-content-between"
+                >
+                  <span class="followers-name font_16 text_sec1 fw_600">
+                    <img
+                      [src]="item.avatar"
+                      class="rounded-circle me-2"
+                      style="width: 38px; height: 35px"
+                    />
+                    <p class="font_16 ms-2 d-inline-block fw_400 mb-0">
+                      {{ item.notificationContent }}
+                    </p>
+                  </span>
+                </div>
+
+                <div
+                  *ngIf="item.notificationType == 1 && item.reelId != null"
+                  style="cursor: pointer"
+                  (click)="openReelsViewModel(item.postType, item.reelId)"
+                  class="d-flex align-items-center justify-content-between"
+                >
+                  <span class="followers-name font_16 text_sec1 fw_600">
+                    <img
+                      [src]="item.avatar"
+                      class="rounded-circle me-2"
+                      style="width: 38px; height: 35px"
+                    />
+                    <p class="font_16 ms-2 d-inline-block fw_400 mb-0">
+                      {{ item.notificationContent }}
+                    </p>
+                  </span>
+                </div>
+
+                <div
+                  *ngIf="item.notificationType == 4"
+                  style="cursor: pointer"
+                  (click)="
+                    joinMeeting(item.userId, item.meetingId, item.postId)
+                  "
+                  class="d-flex align-items-center justify-content-between"
+                >
+                  <span class="followers-name font_16 text_sec1 fw_600">
+                    <img
+                      [src]="item.avatar"
+                      class="rounded-circle me-2"
+                      style="width: 38px; height: 35px"
+                    />
+                    <p class="font_16 ms-2 d-inline-block fw_400 mb-0">
+                      {{ item.notificationContent }}
+                    </p>
+                  </span>
+                </div>
+
+                <div
+                  *ngIf="item.notificationType == 5"
+                  style="cursor: pointer"
+                  (click)="
+                    openChat(item.actionDoneBy, item.chatType, item.chatTypeId)
+                  "
+                  class="d-flex align-items-center justify-content-between"
+                >
+                  <span class="followers-name font_16 text_sec1 fw_600">
+                    <img
+                      [src]="item.avatar"
+                      class="rounded-circle me-2"
+                      style="width: 38px; height: 35px"
+                    />
+                    <p class="font_16 ms-2 d-inline-block fw_400 mb-0">
+                      {{ item.notificationContent }}
+                    </p>
+                  </span>
+                </div>
+
+                <div
+                  *ngIf="item.notificationType == 7"
+                  style="cursor: pointer"
+                  class="d-flex align-items-center justify-content-between"
+                >
+                  <span class="followers-name font_16 text_sec1 fw_600">
+                    <p class="font_16 ms-2 d-inline-block fw_400 mb-0">
+                      {{ item.notificationContent }}
+                    </p>
+                  </span>
+                </div>
+
+                <div
+                  *ngIf="item.notificationType == 8"
+                  style="cursor: pointer"
+                  [routerLink]="['/user/earnings']"
+                  class="d-flex align-items-center justify-content-between"
+                >
+                  <span class="followers-name font_16 text_sec1 fw_600">
+                    <img
+                      [src]="item.avatar"
+                      class="rounded-circle me-2"
+                      style="width: 38px; height: 35px"
+                    />
+                    <p class="font_16 ms-2 d-inline-block fw_400 mb-0">
+                      {{ item.notificationContent }}
+                    </p>
+                  </span>
+                </div>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
+    </section>
 
-      <!---- Followers list html start ------>
-      <div class="wht_newbox followers_box notification-settingbox">
-        <ul class="list-unstyled before-none mb-0">
-          <li *ngFor="let item of notifications" class="mb-0">
-            <div *ngIf="item.notificationType == 2" style="cursor: pointer;" [routerLink]="['/user/userProfile', item.actionDoneBy]" class="d-flex align-items-center justify-content-between"><span class="followers-name font_16 text_sec1 fw_600">
-              <!-- <span class="new-notidot"><i class="fa-solid fa-circle"></i></span> -->
-              <img [src]="item.avatar" class="rounded-circle me-2" style="width: 38px;height: 35px;"/> 
-              <p class="font_16 ms-2 d-inline-block fw_400 mb-0"> {{item.notificationContent}}</p>
-            </span>
-            </div>
-
-            <div *ngIf="item.notificationType == 1 && item.reelId == null" style="cursor: pointer;" (click)="openPostsViewModel(item.post.id,item.postType)" class="d-flex align-items-center justify-content-between"><span class="followers-name font_16 text_sec1 fw_600">
-              <img [src]="item.avatar" class="rounded-circle me-2" style="width: 38px;height: 35px;"/> 
-              <p class="font_16 ms-2 d-inline-block fw_400 mb-0"> {{item.notificationContent}}</p>
-            </span>
-            </div>
-
-            <div *ngIf="item.notificationType == 1 && item.reelId != null" style="cursor: pointer;" (click)="openReelsViewModel(item.postType,item.reelId)" class="d-flex align-items-center justify-content-between"><span class="followers-name font_16 text_sec1 fw_600">
-              <img [src]="item.avatar" class="rounded-circle me-2" style="width: 38px;height: 35px;"/> 
-              <p class="font_16 ms-2 d-inline-block fw_400 mb-0"> {{item.notificationContent}}</p>
-            </span>
-            </div>
-
-            <div *ngIf="item.notificationType == 4" style="cursor: pointer;" (click)="joinMeeting(item.userId,item.meetingId,item.postId)" class="d-flex align-items-center justify-content-between"><span class="followers-name font_16 text_sec1 fw_600">
-              <img [src]="item.avatar" class="rounded-circle me-2" style="width: 38px;height: 35px;"/> 
-              <p class="font_16 ms-2 d-inline-block fw_400 mb-0"> {{item.notificationContent}}</p>
-            </span>
-            </div>
-
-            <div *ngIf="item.notificationType == 5" style="cursor: pointer;" (click)="openChat(item.actionDoneBy,item.chatType,item.chatTypeId)" class="d-flex align-items-center justify-content-between"><span class="followers-name font_16 text_sec1 fw_600">
-              <img [src]="item.avatar" class="rounded-circle me-2" style="width: 38px;height: 35px;"/> 
-              <p class="font_16 ms-2 d-inline-block fw_400 mb-0"> {{item.notificationContent}}</p>
-            </span>
-            </div>
-
-            <div *ngIf="item.notificationType == 7" style="cursor: pointer;" class="d-flex align-items-center justify-content-between"><span class="followers-name font_16 text_sec1 fw_600">
-              <p class="font_16 ms-2 d-inline-block fw_400 mb-0"> {{item.notificationContent}}</p>
-            </span>
-            </div>
-
-            <div *ngIf="item.notificationType == 8" style="cursor: pointer;" [routerLink]="['/user/earnings']" class="d-flex align-items-center justify-content-between"><span class="followers-name font_16 text_sec1 fw_600">
-              <img [src]="item.avatar" class="rounded-circle me-2" style="width: 38px;height: 35px;"/> 
-              <p class="font_16 ms-2 d-inline-block fw_400 mb-0"> {{item.notificationContent}}</p>
-            </span>
-            </div>
-          </li>
-        </ul>
+    <!-- Modal -->
+    <div
+      class="modal fade edit-school-modal"
+      id="notifi-settingpopup"
+      tabindex="-1"
+      aria-labelledby="notifi-settingpopup"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div
+            class="modal-header border-0 justify-content-center position-relative"
+          >
+            <h1
+              class="modal-title font_22 text_dark fw_700 border-0 text-center"
+            >
+              {{ "NotificationsSettings" | translate }}
+            </h1>
+            <button
+              type="button"
+              class="btn-close shadow-none"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            >
+              <img src="../../../assets/images/cross.svg" />
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="text-line-border position-relative text-center mb-4">
+                <span
+                  class="line-text font_12 text_ltgray fw_400 text-center"
+                  >{{ "DirectMessages" | translate }}</span
+                >
+              </div>
+              <div *ngIf="notificationSettings != undefined">
+                <ng-container *ngFor="let item of notificationSettings">
+                  <div
+                    *ngIf="item.type == 1"
+                    class="form-group position-relative"
+                  >
+                    <input
+                      type="text"
+                      class="form-control pe-none"
+                      [value]="item.name"
+                    />
+                    <div class="form-check form-check-inline">
+                      <input
+                        *ngIf="item.isSettingActive"
+                        (change)="changeNotificationSettings(item.id, false)"
+                        class="form-check-input"
+                        checked
+                        type="checkbox"
+                        id="inlineCheckbox1"
+                        value="option1"
+                      />
+                      <input
+                        *ngIf="!item.isSettingActive"
+                        (change)="changeNotificationSettings(item.id, true)"
+                        class="form-check-input"
+                        type="checkbox"
+                        id="inlineCheckbox1"
+                        value="option1"
+                      />
+                    </div>
+                  </div>
+                </ng-container>
+              </div>
+              <div class="text-line-border position-relative text-center mb-4">
+                <span
+                  class="line-text font_12 text_ltgray fw_400 text-center"
+                  >{{ "Notifications" | translate }}</span
+                >
+              </div>
+              <div *ngIf="notificationSettings != undefined">
+                <ng-container *ngFor="let item of notificationSettings">
+                  <div
+                    *ngIf="item.type == 2"
+                    class="form-group position-relative"
+                  >
+                    <input
+                      type="text"
+                      class="form-control pe-none"
+                      [value]="item.name"
+                    />
+                    <div class="form-check form-check-inline">
+                      <input
+                        *ngIf="item.isSettingActive"
+                        (change)="changeNotificationSettings(item.id, false)"
+                        class="form-check-input"
+                        checked
+                        type="checkbox"
+                        id="inlineCheckbox1"
+                        value="option1"
+                      />
+                      <input
+                        *ngIf="!item.isSettingActive"
+                        (change)="changeNotificationSettings(item.id, true)"
+                        class="form-check-input"
+                        type="checkbox"
+                        id="inlineCheckbox1"
+                        value="option1"
+                      />
+                    </div>
+                  </div>
+                </ng-container>
+              </div>
+            </form>
+          </div>
+          <div
+            class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4"
+          >
+            <button
+              type="button"
+              class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+              data-bs-dismiss="modal"
+            >
+              {{ "DiscardChanges" | translate }}
+            </button>
+            <button
+              (click)="saveNotificationSettings()"
+              type="button"
+              class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
+              data-bs-dismiss="modal"
+            >
+              {{ "Save" | translate }}
+            </button>
+          </div>
+        </div>
       </div>
     </div>
-  </section>
-
-  <!-- Modal -->
-  <div class="modal fade edit-school-modal" id="notifi-settingpopup" tabindex="-1" aria-labelledby="notifi-settingpopup"
-  aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header border-0 justify-content-center position-relative">
-        <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">{{'NotificationsSettings'| translate }}</h1>
-        <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"><img
-            src="../../../assets/images/cross.svg" /></button>
-      </div>
-      <div class="modal-body">
-        <form>
-        <div class="text-line-border position-relative text-center mb-4">
-          <span class="line-text font_12 text_ltgray fw_400 text-center">{{'DirectMessages'| translate }}</span>
-        </div>
-        <div *ngIf="notificationSettings!=undefined">
-    <ng-container *ngFor="let item of notificationSettings">
-        <div *ngIf="item.type == 1" class="form-group position-relative">
-          <input type="text" class="form-control pe-none" [value]="item.name">
-          <div class="form-check form-check-inline">
-            <input *ngIf="item.isSettingActive" (change)="changeNotificationSettings(item.id,false)" class="form-check-input" checked type="checkbox" id="inlineCheckbox1" value="option1">
-            <input *ngIf="!item.isSettingActive" (change)="changeNotificationSettings(item.id,true)" class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
-          </div>
-        </div>
-    </ng-container>
-</div>
-          <div class="text-line-border position-relative text-center mb-4">
-            <span class="line-text font_12 text_ltgray fw_400 text-center">{{'Notifications'| translate }}</span>
-          </div>
-          <div *ngIf="notificationSettings!=undefined">
-          <ng-container *ngFor="let item of notificationSettings">
-          <div *ngIf="item.type == 2" class="form-group position-relative">
-            <input type="text" class="form-control pe-none" [value]="item.name">
-            <div class="form-check form-check-inline">
-              <input *ngIf="item.isSettingActive" (change)="changeNotificationSettings(item.id,false)" class="form-check-input" checked type="checkbox" id="inlineCheckbox1" value="option1">
-              <input *ngIf="!item.isSettingActive" (change)="changeNotificationSettings(item.id,true)" class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">            </div>
-          </div>
-          </ng-container>
-          </div>
-        </form>
-      </div>
-      <div
-        class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4">
-        <button type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
-          data-bs-dismiss="modal">{{'DiscardChanges'| translate }}</button>
-        <button (click)="saveNotificationSettings()" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16  next-step"
-          data-bs-dismiss="modal">{{'Save'| translate }}</button>
-      </div>
-    </div>
-  </div>
-</div>
-</body>
+  </body>
 </div>
 <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
-<post-loading-spinner [postLoadingIcon]="notificationLoadingIcon"></post-loading-spinner>
-
-
+<post-loading-spinner
+  [postLoadingIcon]="notificationLoadingIcon"
+></post-loading-spinner>
