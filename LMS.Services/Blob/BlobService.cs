@@ -23,12 +23,75 @@ namespace LMS.Services.Blob
             _hubContext = hubContext;
         }
 
+        //public async Task<string> UploadFileAsync(IFormFile asset, string containerName, bool showProgress)
+        //{
+        //    var fileType = Path.GetExtension(asset.FileName);
+        //    byte[] buffer = new byte[2000000];
+        //    int bytesRead;
+        //    IProgress<float> progress = null;
+        //    string imageFullPath = null;
+        //    if (asset == null)
+        //    {
+        //        return null;
+        //    }
+        //    try
+        //    {
+        //        if (CloudStorageAccount.TryParse(config.Value.StorageConnection, out CloudStorageAccount cloudStorageAccount))
+        //        {
+        //            CloudBlobClient cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
+
+        //            CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference(containerName);
+        //            await cloudBlobContainer.CreateIfNotExistsAsync();
+        //            await cloudBlobContainer.SetPermissionsAsync(new BlobContainerPermissions
+        //            {
+        //                PublicAccess = BlobContainerPublicAccessType.Blob
+        //            });
+        //            var filename = Guid.NewGuid() + fileType;
+        //            CloudBlockBlob blockBlob = cloudBlobContainer.GetBlockBlobReference(filename);
+
+        //            using (var stream = asset.OpenReadStream())
+        //            {
+        //                float totalBytes = stream.Length;
+        //                float uploadedBytes = 0;
+        //                float lastProgress = 0;
+
+        //                var options = new BlobRequestOptions()
+        //                {
+        //                    ParallelOperationThreadCount = 1,
+        //                    DisableContentMD5Validation = true,
+        //                    StoreBlobContentMD5 = false,
+        //                    MaximumExecutionTime = TimeSpan.FromMinutes(10)
+        //                };
+
+        //                while ((bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length)) > 0)
+        //                {
+        //                    await blockBlob.UploadFromByteArrayAsync(buffer, 0, bytesRead);
+        //                    uploadedBytes += bytesRead;
+
+        //                    if (showProgress)
+        //                    {
+        //                        var currentProgress = (uploadedBytes * 100 / totalBytes);
+        //                        if (currentProgress != lastProgress)
+        //                        {
+        //                            await _hubContext.Clients.All.SendAsync("UpdateProgress", (int)currentProgress, asset.FileName);
+        //                            lastProgress = currentProgress;
+        //                        }
+        //                    }
+        //                }
+        //            }
+
+        //            imageFullPath = blockBlob.Uri.ToString();
+        //               }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //    return imageFullPath;
+        //}
+
         public async Task<string> UploadFileAsync(IFormFile asset, string containerName, bool showProgress)
         {
-            var fileType = Path.GetExtension(asset.FileName);
-            byte[] buffer = new byte[2000000];
-            int bytesRead;
-            IProgress<float> progress = null;
             string imageFullPath = null;
             if (asset == null)
             {
@@ -46,42 +109,11 @@ namespace LMS.Services.Blob
                     {
                         PublicAccess = BlobContainerPublicAccessType.Blob
                     });
-                    var filename = Guid.NewGuid() + fileType;
+                    var filename = Guid.NewGuid() + asset.FileName;
                     CloudBlockBlob blockBlob = cloudBlobContainer.GetBlockBlobReference(filename);
-
-                    using (var stream = asset.OpenReadStream())
-                    {
-                        float totalBytes = stream.Length;
-                        float uploadedBytes = 0;
-                        float lastProgress = 0;
-
-                        var options = new BlobRequestOptions()
-                        {
-                            ParallelOperationThreadCount = 1,
-                            DisableContentMD5Validation = true,
-                            StoreBlobContentMD5 = false,
-                            MaximumExecutionTime = TimeSpan.FromMinutes(10)
-                        };
-
-                        while ((bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length)) > 0)
-                        {
-                            await blockBlob.UploadFromByteArrayAsync(buffer, 0, bytesRead);
-                            uploadedBytes += bytesRead;
-
-                            if (showProgress)
-                            {
-                                var currentProgress = (uploadedBytes * 100 / totalBytes);
-                                if (currentProgress != lastProgress)
-                                {
-                                    await _hubContext.Clients.All.SendAsync("UpdateProgress", (int)currentProgress, asset.FileName);
-                                    lastProgress = currentProgress;
-                                }
-                            }
-                        }
-                    }
-
+                    await blockBlob.UploadFromStreamAsync(asset.OpenReadStream());
                     imageFullPath = blockBlob.Uri.ToString();
-                       }
+                }
             }
             catch (Exception ex)
             {
@@ -89,6 +121,7 @@ namespace LMS.Services.Blob
             }
             return imageFullPath;
         }
+
 
         public async Task<string> UploadVideoAsync(Stream stream, string containerName,
             string fileName, string fileType)

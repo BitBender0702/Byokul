@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { ChangeDetectorRef, Component, ElementRef, HostListener, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, HostListener, Injector, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
@@ -88,7 +88,7 @@ import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component'
     @ViewChild('videoPlayer') videoPlayer!: ElementRef<HTMLVideoElement>;
 
 
-    constructor( injector: Injector,private modalService: NgbModal,private bsModalService: BsModalService,
+    constructor( injector: Injector,private renderer: Renderer2,private modalService: NgbModal,private bsModalService: BsModalService,
       private cd: ChangeDetectorRef,public messageService: MessageService,private route: ActivatedRoute,private domSanitizer: DomSanitizer, signalrService:SignalrService,postService:PostService,chatService:ChatService,userService:UserService,notificationService:NotificationService,bigBlueButtonService:BigBlueButtonService) {
         super(injector);
         this._signalrService = signalrService;
@@ -202,8 +202,14 @@ if(this.meetingId == ''){
     //   // videoElement.play();
     // });
 
-
-    videoElement.currentTime = postAttachment.videoLiveTime;
+    this.cd.detectChanges();
+    var video = document.getElementById("test12");
+    videoElement.addEventListener('loadedmetadata', () => {
+      debugger
+      videoElement.currentTime = postAttachment.videoLiveTime; 
+      this.cd.detectChanges();
+    });
+    // videoElement.currentTime = postAttachment.videoLiveTime;
     this.cd.detectChanges();
     var a = 10;
     // videoElement.play();

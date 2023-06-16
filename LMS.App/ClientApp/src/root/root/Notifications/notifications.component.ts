@@ -52,18 +52,15 @@ export const unreadNotificationResponse =new Subject<{type:string}>();
     }
 
     ngOnInit(): void {
-      debugger
         this.loadingIcon = true;
         var selectedLang = localStorage.getItem('selectedLanguage');
         this.translate.use(selectedLang ?? '');
         this._notificationService.getNotifications(this.notificationPageNumber).subscribe((notificationsResponse) => {
-          debugger
             this.notifications = notificationsResponse;
             var notifications: any[] = this.notifications;
             var unreadNotifications = notifications.filter(x => !x.isRead);
             if(unreadNotifications.length > 0){
                 this._notificationService.removeUnreadNotifications().subscribe((response) => {
-                  debugger
                     unreadNotificationResponse.next({type:"remove"});
                 });
             }

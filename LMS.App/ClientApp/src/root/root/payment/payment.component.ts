@@ -30,7 +30,6 @@ export const paymentStatusResponse =new Subject();
     }
 
     ngOnInit(): void {
-      debugger
       this.parentInfo = this.options.initialState;
       this.isDataLoaded = true;
 
@@ -38,18 +37,15 @@ export const paymentStatusResponse =new Subject();
       this.InitializePaymentForm();
 
       // this._paymentService.stripeWebhook().subscribe((response: any) => {
-      //   debugger
   
       //  });
 
       // this._paymentService.webhookSubject.asObservable().subscribe(response => {
-      //   debugger
       //   // Handle the webhook response here
       // });
 
       // this.http.post('https://66c8-122-160-143-16.ngrok-free.app/stripe/webhook', {}).subscribe(
       //   (response) => {
-      //     debugger
       //     console.log(response);
       //     // Handle success response
       //   },
@@ -146,7 +142,6 @@ export const paymentStatusResponse =new Subject();
     }
 
     getCurrentDate(){
-      debugger
       var today = new Date();
         var dd = String(today. getDate()). padStart(2, '0');
         var mm = String(today. getMonth() + 1). padStart(2, '0');

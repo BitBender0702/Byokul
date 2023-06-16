@@ -31,7 +31,7 @@ namespace LMS.App.Controllers
             var response = new PostViewModel();
             var userId = await GetUserIdAsync(this._userManager);
 
-            if (postViewModel.DateTime != null)
+            if (postViewModel.DateTime != null && postViewModel.PostType != (int)PostTypeEnum.Stream)
             {
                 DateTimeOffset scheduledTime = new DateTimeOffset(postViewModel.DateTime.Value);
                 //var jobId = BackgroundJob.Enqueue(() => _postService.SavePost(postViewModel, userId));

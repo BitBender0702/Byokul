@@ -218,7 +218,6 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
       this.userId = id ?? '';
 
       this._userService.getUserById(this.userId).subscribe((response) => {
-        debugger
         this.frontEndPageNumber = 1;
         this.reelsPageNumber = 1;
         this.user = response;
@@ -275,7 +274,6 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
         this.loadingIcon = true;
         this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post created successfully'});
         this._userService.getUserById(this.userId).subscribe((response) => {
-          debugger
           this.user = response;
           this.titleService.setTitle(this.user.firstName + " " + this.user.lastName);
           this.addDescriptionMetaTag(this.user.description);
@@ -403,7 +401,6 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
     }
 
     addDescriptionMetaTag(description:string){
-      debugger
       const existingTag = this.meta.getTag('name="description"');
       if (existingTag) {
         this.meta.updateTag({ name: 'description', content: description });
@@ -432,7 +429,6 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
     }
 
     ngOnDestroy(): void {
-      debugger
       if(this.savedPostSubscription){
         this.savedPostSubscription.unsubscribe();
       }
@@ -743,7 +739,6 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
 
     getUserDetails(userId:string){
       this._userService.getUserEditDetails(userId).subscribe((response) => {
-        debugger
         this.editUser = response;
         this.userAvatar = this.editUser.avatar;
         this.initializeEditFormControls();
@@ -819,7 +814,6 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
     this.fileToUpload.append('contactEmail',this.updateUserDetails.contactEmail);
 
     this._userService.editUser(this.fileToUpload).subscribe((response:any) => {
-      debugger
       this.closeModal();
       this.isSubmitted=true;
       this.user.avatar = response.avatar;
@@ -981,7 +975,6 @@ pinUnpinPost(attachmentId:string,isPinned:boolean,type?:number){
 
 
 openPostsViewModal(posts:any): void {
-  debugger
   if(posts.isLive){
     this._postService.joinMeeting(posts.parentName,posts.title + "meetings",posts.id).subscribe((response) => {
     });  
@@ -1013,7 +1006,6 @@ userChat(){
 }
 
 likeUnlikePosts(postId:string, isLike:boolean,postType:number,post:any,from:number){
-  debugger
   this.currentLikedPostId = postId;
   if(this.isPostTab){
     var posts = this.user.posts;
@@ -1028,7 +1020,6 @@ likeUnlikePosts(postId:string, isLike:boolean,postType:number,post:any,from:numb
     var posts = this.likedPostsList;
   }
   posts.filter((p : any) => p.id == postId).forEach( (item : any) => {
-    debugger
     var likes: any[] = item.likes;
     var isLiked = likes.filter(x => x.userId == this.loginUserId && x.postId == postId);
   if(isLiked.length != 0){
@@ -1180,7 +1171,6 @@ openSharePostModal(postId:string,postType:number): void {
 }
 
 GetSavedPostsByUser(userId:string, isSavedPostList?:boolean){
-  debugger
   this.loadingIcon = true;
   this.isPostTab = false;
   this.isSavedClassCourseTab = false;
@@ -1196,12 +1186,10 @@ GetSavedPostsByUser(userId:string, isSavedPostList?:boolean){
   this.savedPostsPageNumber = 1;
   this.reelsPageNumber = 1;
   this._postService.getSavedPostsByUser(userId,this.savedPostsPageNumber,1).subscribe((response) => {
-    debugger
     this.savedPostsList = response;
     const allAttachments = this.savedPostsList.flatMap((x: { postAttachments: any; }) => x.postAttachments);
         this.filteredSavedPostAttachments = allAttachments.filter((x: { fileType: number; }) => x.fileType == 3);
         this.savedPostsList = this.savedPostsList.map((post: { postAttachments: any[]; }) => {
-          debugger
         const filteredPostAttachments = post.postAttachments.filter(x => x.fileType != 3);
         return {...post,postAttachments: filteredPostAttachments };
         }); 
@@ -1209,7 +1197,6 @@ GetSavedPostsByUser(userId:string, isSavedPostList?:boolean){
    }); 
 
    this._postService.getSavedPostsByUser(userId,this.savedPostsPageNumber,3).subscribe((response) => {
-    debugger
     this.savedReelsList = response;
     this.cd.detectChanges();
     this.addEventListnerOnCarousel();
@@ -1227,7 +1214,6 @@ isPostsTab(){
 }
 
 savePost(postId:string,from:number){
-  debugger
   if(this.isPostTab){
     var posts: any[] = this.user.posts;
     var isSavedPost = posts.find(x => x.id == postId);
@@ -1441,7 +1427,6 @@ deleteSchoolStudent() {
 }
 
 getSharedPostsByUser(userId:string, isSharedPostList?:boolean){
-  debugger
   this.loadingIcon = true;
   this.isPostTab = false;
   this.isSavedClassCourseTab = false;
@@ -1457,13 +1442,11 @@ getSharedPostsByUser(userId:string, isSharedPostList?:boolean){
   this.sharedPostsPageNumber = 1;
   this.reelsPageNumber = 1;
   this._postService.getSharedPostsByUser(userId,this.sharedPostsPageNumber,1).subscribe((response) => {
-    debugger
     this.sharedPostsList = response;
     this.loadingIcon = false;
    }); 
 
    this._postService.getSharedPostsByUser(userId,this.sharedPostsPageNumber,3).subscribe((response) => {
-    debugger
     this.sharedReelsList = response;
     this.cd.detectChanges();
     this.addEventListnerOnCarousel();
@@ -1472,8 +1455,6 @@ getSharedPostsByUser(userId:string, isSharedPostList?:boolean){
 }
 
 getLikedPostsByUser(userId:string, isLikedPostList?:boolean){
-
-  debugger
   this.loadingIcon = true;
   this.isPostTab = false;
   this.isSavedClassCourseTab = false;
@@ -1489,13 +1470,11 @@ getLikedPostsByUser(userId:string, isLikedPostList?:boolean){
   this.likedPostsPageNumber = 1;
   this.reelsPageNumber = 1;
   this._postService.getLikedPostsByUser(userId,this.likedPostsPageNumber,1).subscribe((response) => {
-    debugger
     this.likedPostsList = response;
     this.loadingIcon = false;
    }); 
 
    this._postService.getLikedPostsByUser(userId,this.likedPostsPageNumber,3).subscribe((response) => {
-    debugger
     this.likedReelsList = response;
     this.cd.detectChanges();
     this.addEventListnerOnCarousel();
@@ -1504,7 +1483,6 @@ getLikedPostsByUser(userId:string, isLikedPostList?:boolean){
 }
 
 getFilteredAttachments(feeds:any):any{
-  debugger
   const allAttachments = feeds.flatMap((post: { postAttachments: any; }) => post.postAttachments);
   var result = allAttachments.filter((attachment: { fileType: number; }) => attachment.fileType === 3);
   this.filteredAttachments = [...this.filteredAttachments, ...result];
@@ -1516,7 +1494,6 @@ getFilteredAttachments(feeds:any):any{
 }
 
 removeLogo(){
-  debugger
   if(this.user.avatar != null){
     this.userAvatar = '';
   }

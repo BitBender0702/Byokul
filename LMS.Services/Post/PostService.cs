@@ -17,6 +17,7 @@ using LMS.Common.ViewModels.Course;
 using LMS.Services.Chat;
 using LMS.Common.ViewModels.FileStorage;
 using LMS.Common.ViewModels.Notification;
+using Hangfire;
 
 namespace LMS.Services
 {
@@ -90,7 +91,7 @@ namespace LMS.Services
                 ParentId = postViewModel.ParentId,
                 CoverLetter = postViewModel.CoverLetter,
                 CommentsPerMinute = postViewModel.CommentsPerMinute == 0 ? null : postViewModel.CommentsPerMinute,
-                IsLive = (postViewModel.DateTime == null && postViewModel.PostType == 2) ? true : false,
+                //IsLive = (postViewModel.DateTime == null && postViewModel.PostType == 2) ? true : false,
                 CreatedById = createdById,
                 CreatedOn = DateTime.UtcNow
             };
@@ -131,32 +132,78 @@ namespace LMS.Services
                 await SaveFileStorageAttachments(uploadFromFileStorage, postViewModel.Id, createdById);
             }
 
-            if (postViewModel.PostType == (int)PostTypeEnum.Stream)
+            if (postViewModel.PostType == (int)PostTypeEnum.Stream && postViewModel.DateTime != null)
             {
-                if (postViewModel.UploadVideos != null)
+                DateTimeOffset scheduledTime = new DateTimeOffset(postViewModel.DateTime.Value);
+                await ScheduleLiveStream(postViewModel, createdById, scheduledTime);
+            }
+            else
+            {
+                if (postViewModel.PostType == (int)PostTypeEnum.Stream)
                 {
-                    post.StreamUrl = blobVideoUrls[0];
-                    _postRepository.Update(post);
-                    _postRepository.Save();
-                }
-                else
-                {
-                    var user = _userRepository.GetById(createdById);
-                    var model = new NewMeetingViewModel();
-                    model.meetingName = postViewModel.Title;
-                    model.IsMicrophoneOpen = (bool)postViewModel.IsMicroPhoneOpen;
-                    model.ModeratorName = user.FirstName;
-                    model.PostId = post.Id;
-                    var url = await _bigBlueButtonService.Create(model);
-                    postViewModel.StreamUrl = url;
-                    post.StreamUrl = url;
-                    _postRepository.Update(post);
-                    _postRepository.Save();
+                    if (postViewModel.UploadVideos != null)
+                    {
+                        post.StreamUrl = blobVideoUrls[0];
+                        post.IsLive = true;
+                        _postRepository.Update(post);
+                        _postRepository.Save();
+                    }
+                    else
+                    {
+                        var user = _userRepository.GetById(createdById);
+                        var model = new NewMeetingViewModel();
+                        model.meetingName = postViewModel.Title;
+                        model.IsMicrophoneOpen = (bool)postViewModel.IsMicroPhoneOpen;
+                        model.ModeratorName = user.FirstName;
+                        model.PostId = post.Id;
+                        var url = await _bigBlueButtonService.Create(model);
+                        postViewModel.StreamUrl = url;
+                        post.StreamUrl = url;
+                        post.IsLive = true;
+                        _postRepository.Update(post);
+                        _postRepository.Save();
+                    }
                 }
             }
             postViewModel.Id = post.Id;
             return postViewModel;
         }
+
+        async Task ScheduleLiveStream(PostViewModel postViewModel, string userId, DateTimeOffset scheduledTime)
+        {
+            postViewModel.DateTime = null;
+            var scheduleJobId = BackgroundJob.Schedule(() => SaveLiveStreamInfo(postViewModel, userId), scheduledTime);
+
+        }
+
+        async Task SaveLiveStreamInfo(PostViewModel postViewModel, string userId)
+        {
+            var post = _postRepository.GetById(postViewModel.Id);
+            var postAttachment = await _postAttachmentRepository.GetAll().Where(x => x.PostId == postViewModel.Id).FirstAsync();
+            if (postViewModel.UploadVideos != null)
+            {
+                post.StreamUrl = postAttachment.FileUrl;
+                post.IsLive = true;
+                _postRepository.Update(post);
+                _postRepository.Save();
+            }
+            else
+            {
+                var user = _userRepository.GetById(userId);
+                var model = new NewMeetingViewModel();
+                model.meetingName = postViewModel.Title;
+                model.IsMicrophoneOpen = (bool)postViewModel.IsMicroPhoneOpen;
+                model.ModeratorName = user.FirstName;
+                model.PostId = post.Id;
+                var url = await _bigBlueButtonService.Create(model);
+                postViewModel.StreamUrl = url;
+                post.StreamUrl = url;
+                post.IsLive = true;
+                _postRepository.Update(post);
+                _postRepository.Save();
+            }
+        }
+
 
         async Task SendNotifications(string postTitle, Guid postId, string actionDoneBy)
         {

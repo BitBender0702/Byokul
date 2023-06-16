@@ -21,6 +21,8 @@ import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
 import { MessageService } from 'primeng/api';
 import { CertificateViewComponent } from '../certificateView/certificateView.component';
+import { JoinMeetingModel } from 'src/root/interfaces/bigBlueButton/joinMeeting';
+import { BigBlueButtonService } from 'src/root/service/bigBlueButton';
 
 export const sharePostResponse =new Subject<{}>();  
 export const deletePostResponse =new Subject<{postId:string}>();  
@@ -43,6 +45,7 @@ export class PostViewComponent implements OnInit,AfterViewInit {
     private _userService;
     private _chatService;
     private _notificationService;
+    private _bigBlueButtonService;
     showCommentsField:boolean = true;
     messageToGroup!:string;
     private _postService;
@@ -72,17 +75,21 @@ export class PostViewComponent implements OnInit,AfterViewInit {
     base64String!:Uint8Array;
     base64String2!:any;
     imageSource!:any;
+    joinMeetingViewModel!:JoinMeetingModel;
 
-    constructor(private bsModalService: BsModalService,public messageService:MessageService,notificationService:NotificationService,chatService: ChatService,public signalRService: SignalrService,public postService:PostService, public options: ModalOptions,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,userService:UserService,private cd: ChangeDetectorRef) { 
+
+    constructor(private bsModalService: BsModalService,bigBlueButtonService:BigBlueButtonService,public messageService:MessageService,notificationService:NotificationService,chatService: ChatService,public signalRService: SignalrService,public postService:PostService, public options: ModalOptions,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,userService:UserService,private cd: ChangeDetectorRef) { 
          this._postService = postService;
          this._signalRService = signalRService;
          this._userService = userService;
          this._chatService = chatService;
          this._notificationService = notificationService;
+         this._bigBlueButtonService = bigBlueButtonService;
     }
   
     ngOnInit(): void {
       debugger
+      this.getSenderInfo();
       var id = this.activatedRoute.snapshot.paramMap.get('id');
       if(id != null){
         this.postId = id;
@@ -94,7 +101,6 @@ export class PostViewComponent implements OnInit,AfterViewInit {
       this.post = this.posts.posts;
     //   if(this.post.postAuthorType == 2 || this.post.postAuthorType == 3){
     //   this.post.postAttachments.forEach((item: any) => {
-    //     debugger
     //   const byteArray = new Uint8Array(atob(item.byteArray).split('').map(char => char.charCodeAt(0)));
     //   if(item.fileType == 1){
     //     var type = 'image/png';
@@ -105,7 +111,6 @@ export class PostViewComponent implements OnInit,AfterViewInit {
     //   const blob = new Blob([byteArray], { type: type });
     //   const reader = new FileReader();
     //   reader.onloadend = () => {
-    //     debugger
     //     item.fileUrl = reader.result as string;
     //   };
     //   reader.readAsDataURL(blob);      
@@ -129,16 +134,51 @@ export class PostViewComponent implements OnInit,AfterViewInit {
           // this.base64String = btoa(String.fromCharCode.apply(null, this.post.postAttachments[0].base64String));
           this.getComments();
         }
+
+        if(this.post.isLive){
+           if(this.post.createdBy == this.userId){
+            this.router.navigate(
+              [`liveStream`,this.post.id,false]
+             );
+           }
+
+           else{
+            this.initializeJoinMeetingViewModel();
+      this._userService.getUser(this.userId).subscribe((result) => {
+        debugger
+      this.joinMeetingViewModel.name = result.firstName + " " + result.lastName;
+      var params = new URLSearchParams(this.post.streamUrl.split('?')[1]);
+      this.joinMeetingViewModel.meetingId = params.get('meetingID')?.replace("meetings","")??'';
+      this.joinMeetingViewModel.postId = this.post.id;
+      this._bigBlueButtonService.joinMeeting(this.joinMeetingViewModel).subscribe((response) => {
+      //  const fullNameIndex = response.url.indexOf('fullName='); // find the index of "fullName="
+      //  const newUrl = response.url.slice(fullNameIndex);
+       this.router.navigate(
+        [`liveStream`,this.post.id,false]
+    //     { state: { stream: {streamUrl: response.url, userId:this.userId, meetingId: meetingId, isOwner:false} } });
+    // });
+       );
+      });
+           });
+        }
+      }
+
+      else{
+
+
+
         this.isCommentsDisabled = response.isCommentsDisabled
         this.createGroupName();
         this.commentResponse();       
         this.commentLikeResponse();
+        
         if(this.post.postId != null){
           this.addPostView(this.post.postId);
         }
         else{
         this.addPostView(this.post.id);
         }
+        
 
         if(this.post.postAuthorType == 2 || this.post.postAuthorType == 3){
           this.post.postAttachments.forEach((item: any) => {
@@ -164,7 +204,8 @@ export class PostViewComponent implements OnInit,AfterViewInit {
           }
           else{
             this.isDataLoaded = true;
-            this.initializeVideoPlayer();          }        
+            this.initializeVideoPlayer();   
+                 }        
 
         var modal = document.getElementById('modal-post');
         window.onclick = (event) => {
@@ -174,13 +215,16 @@ export class PostViewComponent implements OnInit,AfterViewInit {
           }
         } 
        }
+       
         this.isPlayerLoad = true;
         this.cd.detectChanges();
+      }
         });
+        
 
         this.gender = localStorage.getItem("gender")??'';
         this.InitializeLikeUnlikePost();
-        this.getSenderInfo();
+        // this.getSenderInfo();
         this.cd.detectChanges();
 
         this.savePreferences(this.post.title,this.post.description,this.post.postTags);
@@ -189,6 +233,14 @@ export class PostViewComponent implements OnInit,AfterViewInit {
     ngAfterViewInit() {        
       setTimeout(() => this.scrollToBottom());
     } 
+
+    initializeJoinMeetingViewModel(){
+      this.joinMeetingViewModel = {
+        name:'',
+        meetingId:'',
+        postId:''
+      }
+    }
 
     initializeVideoPlayer(){
       this.cd.detectChanges();
