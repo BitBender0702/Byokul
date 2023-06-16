@@ -255,7 +255,6 @@ export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,ty
   }
 
   saveClassCourse(id:string,type:number){
-    debugger
     if(type == 1){
       var typeString = "Class";
     }

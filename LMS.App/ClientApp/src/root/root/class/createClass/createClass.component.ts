@@ -221,7 +221,6 @@ var today = new Date();
 
 
 captureStudentId(event: any) {
-  debugger
   var noOfStudents = Number(this.class.noOfStudents);
   if(this.studentIds.length >= noOfStudents){
     this.createClassForm2.setErrors({ studentLimitExceeds: true });
@@ -277,7 +276,6 @@ captureTeacherId(event: any) {
   }
 
   forwardStep() {
-    debugger
     this.isStepCompleted = true;
     this.class=this.createClassForm1.value;
 
@@ -445,7 +443,6 @@ captureTeacherId(event: any) {
   }
 
   filterStudents(event:any) {
-    debugger
     var students = this.students.filter((x: { studentId: any; }) => !this.studentIds.find(y => y == x.studentId));
     let filteredStudents: any[] = [];
     let query = event.query;
@@ -459,7 +456,6 @@ captureTeacherId(event: any) {
   }
 
   filterTeachers(event:any) {
-    debugger
     var teachers = this.teachers.filter((x: { teacherId: any; }) => !this.teacherIds.find(y => y == x.teacherId));
     let filteredTeachers: any[] = [];
     let query = event.query;
@@ -574,7 +570,6 @@ captureTeacherId(event: any) {
   }
 
   removeTag(tag:any){
-    debugger
     const tagIndex = this.tagList.findIndex((item) => item ===tag);
     if (tagIndex > -1) {
       this.tagList.splice(tagIndex, 1);

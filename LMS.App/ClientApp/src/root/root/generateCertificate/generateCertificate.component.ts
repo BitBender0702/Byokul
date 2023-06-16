@@ -192,7 +192,6 @@ export const generateCertificateResponse =new Subject<{isCertificateSendToAll: b
 
 
     createCertificate(){
-      debugger
       this.loadingIcon = true;
         this.InitializeSaveStudentCertificate();
         this.certificateHtml = document.getElementById('finalCertificate')?.innerHTML??'';
@@ -261,7 +260,6 @@ export const generateCertificateResponse =new Subject<{isCertificateSendToAll: b
     
 
         this._studentService.saveStudentCertificates(this.saveStudentCertificate).subscribe((response) => {
-          debugger
           if(this.isSendCertificateToAll){
              var notificationContent = `Certificates created for ${this.classOrCourseName} students are successfully sent`;
              this._notificationService.initializeNotificationViewModel(this.loginUserId,NotificationType.CertificateSent,notificationContent,this.loginUserId,null,0,null,null).subscribe((response) => {});
@@ -333,7 +331,6 @@ export const generateCertificateResponse =new Subject<{isCertificateSendToAll: b
       }
 
   back() {
-    debugger
    if(this. step == 0){
     window.history.back();
    }

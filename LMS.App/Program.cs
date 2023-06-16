@@ -202,6 +202,8 @@ builder.Services.AddHangfire(config =>
     config.UseSqlServerStorage(configuration.GetConnectionString("DataContext"));
 });
 
+builder.Services.AddHangfireServer();
+
 
 builder.Services.AddSignalR(options =>
 {

@@ -23,7 +23,6 @@ export class ChatVideoComponent implements OnInit {
     @ViewChild('videoPlayer') videoPlayer!: ElementRef;
   
     ngOnInit(): void {
-        debugger
         this.cd.detectChanges();
         videojs(this.videoPlayer.nativeElement, {autoplay: true});
         var modal = document.getElementById('videoChat-modal');

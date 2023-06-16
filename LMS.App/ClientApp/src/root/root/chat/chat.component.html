@@ -273,7 +273,7 @@
                 <div class="message">
 
                   <!-- for reply -->
-                  <span style="background-color: rgb(148, 131, 131);" *ngIf="userChat.replyMessageType == 0">{{userChat.replyChatContent}}
+                  <span *ngIf="userChat.replyMessageType == 0">{{userChat.replyChatContent}}
                   </span>
                   <span *ngIf="userChat.replyMessageType == 1">
                     <div
@@ -341,6 +341,10 @@
                   <span *ngIf="userChat.isForwarded && userChat.text != null">
                     <i class="fa-sharp fa-solid fa-share fa-rotate-180 font_16"></i>
                   </span>
+
+                  <span *ngIf="userChat.replyMessageType != null">
+                    <i class="fa-sharp fa-solid fa-share fa-rotate-180 font_16"></i>
+                  </span>
                   <br>
                   <span *ngIf="userChat.text != null">{{ userChat.text }}</span>
                   <br>
@@ -349,7 +353,6 @@
                 <div *ngFor="let item of userChat.attachment">
                   <div *ngIf="item.fileType == 1" class="position-relative">
                     <div class="forward-reply">
-                      TESTTTTT
                       <button (click)="chatAttachmentReply(item.id,item.fileName,item.fileURL,item.fileType)" type="button" class="forward-btn">
                         {{ "Answer" | translate }}
                         <img
@@ -380,7 +383,6 @@
 
                   <div *ngIf="item.fileType == 2" class="position-relative">
                     <div class="forward-reply">
-                      TESTTTTT
                       <button (click)="chatAttachmentReply(item.id,item.fileName,item.fileURL,item.fileType)" type="button" class="forward-btn">
                         {{ "Answer" | translate }}
                         <img
@@ -415,7 +417,6 @@
                       class="teacher-tags hashtag_post tag-boxattachment-outer mt-1 mb-0 hover-tags"
                     >
                     <div class="forward-reply">
-                      TESTTTTT
                       <button (click)="chatAttachmentReply(item.id,item.fileName,item.fileURL,item.fileType)" type="button" class="forward-btn">
                         {{ "Answer" | translate }}
                         <img
@@ -453,7 +454,6 @@
                     </div>
                   </div>
                   <!-- <div class="forward-reply">
-                    TESTTTTT
                     <button (click)="chatAttachmentReply(item.id,item.fileName,item.fileURL,item.fileType)" type="button" class="forward-btn">
                       {{ "Answer" | translate }}
                       <img
@@ -509,7 +509,15 @@
                 </small>
               </div>
               <div *ngIf="replyChat != '' && replyMessageType == 0" id="chat-reply">
-                 {{replyChat}}
+                <span class="chat-upload-img position-relative d-inline-block w-100">
+                 <span>{{replyChat}}</span>
+                 <button
+                (click)="removeReplyText()"
+                type="button"
+                class="btn dl-post-img d-flex align-items-center justify-content-center rounded-circle position-absolute">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </span>
               </div>
 
               <div *ngIf="fileName != '' && fileURL != '' && replyMessageType == 1" id="chat-reply">
@@ -788,10 +796,8 @@
                     >
                       {{ item.lastMessage }}
                     </p>
-                    <p
-                      *ngIf="item.lastMessage == ''"
-                      class="font_12 text_sec1 text-truncate mb-0"
-                    >
+                    <p *ngIf="item.lastMessage == '' && item.chats != null"
+                      class="font_12 text_sec1 text-truncate mb-0">
                       📂{{ item?.chats[0]?.attachment[0]?.fileName }}
                     </p>
                   </div>
@@ -865,7 +871,7 @@
                 </div> -->
                 <div class="message">
                     <!-- for reply -->
-                    <span style="background-color: rgb(148, 131, 131);" *ngIf="userChat.replyMessageType == 0">{{userChat.replyChatContent}}
+                    <span *ngIf="userChat.replyMessageType == 0">{{userChat.replyChatContent}}
                     </span>
                     <span *ngIf="userChat.replyMessageType == 1">
                       <div
@@ -931,6 +937,10 @@
   
   
                     <span *ngIf="userChat.isForwarded && userChat.text != null">
+                      <i class="fa-sharp fa-solid fa-share fa-rotate-180 font_16"></i>
+                    </span>
+  
+                    <span *ngIf="userChat.replyMessageType != null">
                       <i class="fa-sharp fa-solid fa-share fa-rotate-180 font_16"></i>
                     </span>
                     <br>
@@ -1043,15 +1053,16 @@
                   {{ userChat.time | date : "HH:MM" }}
                 </div>
 
-                <div class="forward-reply">
-                  <button type="button" class="forward-btn">
+                <div class="forward-reply" *ngIf="userChat.text != null && userChat.text != ''">
+                  <button (click)="chatReply(userChat)" type="button" class="forward-btn">
                     {{ "Answer" | translate }}
                     <img
                       src="../../../assets/images/answer-forward-icon.svg"
                       class="ms-2"
                     /></button
                   ><br />
-                  <button type="button" class="forward-btn">
+                  <button (click)="openForwardModal(userChat.text)" type="button" class="forward-btn"  data-bs-toggle="modal"
+                  data-bs-target="#open-forwardModal">
                     {{ "Forward" | translate }}
                     <img
                       src="../../../assets/images/forward-icon.svg"
@@ -1076,6 +1087,55 @@
                   >{{ "FileSizeExceed" | translate }}
                 </small>
               </div>
+              <div *ngIf="replyChat != '' && replyMessageType == 0" id="chat-reply">
+                <span class="chat-upload-img position-relative d-inline-block w-100">
+                 <span>{{replyChat}}</span>
+                 <button
+                (click)="removeReplyText()"
+                type="button"
+                class="btn dl-post-img d-flex align-items-center justify-content-center rounded-circle position-absolute">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </span>
+              </div>
+
+              <div *ngIf="fileName != '' && fileURL != '' && replyMessageType == 1" id="chat-reply">
+              <span class="chat-upload-img position-relative d-inline-block">
+              <img [src]="fileURL" />
+              <button
+                (click)="removeReplyFile()"
+                type="button"
+                class="btn dl-post-img d-flex align-items-center justify-content-center rounded-circle position-absolute">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </span>
+             </div>
+             <div *ngIf="fileName != '' && fileURL != '' && replyMessageType == 2" id="chat-reply">
+            <span class="chat-upload-img position-relative d-inline-block">
+            <div class="videofile">
+              <video preload="metadata">
+                  <source [src]="fileURL" type="video/mp4"/>
+                </video>
+            </div>
+            <button
+              (click)="removeReplyFile()"
+              type="button"
+              class="btn dl-post-img d-flex align-items-center justify-content-center rounded-circle position-absolute"
+            >
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </span>
+           </div>
+
+           <div *ngIf="fileName != '' && fileURL != '' && replyMessageType == 3" id="chat-reply">
+            <div class="teacher-tags tag-box hashtag_post mt-4 mb-2 hover-tags">
+            <span class="custom-tag">{{ fileName }}
+              <button
+                (click)="removeReplyFile()"
+                class="border-0 bg-transparent p-0 position-absolute delete-tag">
+                <img src="../../../assets/images/cross-sm-light.svg"/></button></span>
+          </div>
+           </div>
               <div
                 class="add-comment d-flex align-items-center justify-content-between pt-0"
               >

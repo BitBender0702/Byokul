@@ -131,7 +131,6 @@ export class CreatePostComponent implements OnInit,OnDestroy {
   }
 
   ngOnInit(): void {
-    debugger
     var initialValue = this.options.initialState;
     this.from = initialValue?.from;
     if(initialValue?.from == "school"){
@@ -306,6 +305,7 @@ handleVideoInput(event: any) {
     const file = selectedFiles[i];
     const videoUrl = URL.createObjectURL(file);
     this.getVideoThumbnail(videoUrl,file.name, (thumbnailUrl) => {
+      debugger
       this.videoObject.videoUrl = thumbnailUrl;
       this.videoObject.name = file.name;
       this.videoObject.type = file.type;
@@ -380,7 +380,6 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
  }
 
  handleAttachmentInput(event: any) {
-  debugger
   var selectedFiles = event.target.files;
   for (let i = 0; i < selectedFiles.length; i++) {
     this.initialAttachment.push(selectedFiles[i]);
@@ -388,7 +387,6 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
  }
 
  removeAttachment(attachment:any){
-  debugger
   const attachmentIndex = this.attachment.findIndex((item) => item.name ===attachment.name);
   if (attachmentIndex > -1) {
     this.attachment.splice(attachmentIndex, 1);
@@ -421,7 +419,6 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
  }
 
  deselectAutocomplete() {
-  debugger
   this.cd.detectChanges();
   const input = this.autoComplete.inputEL.nativeElement;
   input.blur();
@@ -449,6 +446,7 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
  }
 
    savePost(){
+    debugger
     this.isSubmitted=true;
     if (!this.createPostForm.valid) {
       return;
@@ -460,7 +458,8 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
         return;
       }
       else{
-        this.postToUpload.append('scheduleTime', JSON.stringify(this.scheduleTime));
+        const date = new Date(this.scheduleTime);
+        this.postToUpload.append('dateTime', date.toISOString());
       }
     }
     this.loadingIcon = true;
@@ -494,9 +493,11 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
     if(this.uploadFromFileStorage != undefined){
     this.postToUpload.append('UploadFromFileStorage', JSON.stringify(this.uploadFromFileStorage));
     }
-    if(post.scheduleTime != undefined){
-      this.postToUpload.append('dateTime',post.scheduleTime.toISOString());
-    }
+    // if(post.scheduleTime != undefined){
+    //   const dateUtc = new Date(post.scheduleTime);
+    //   const localTime = dateUtc.toLocaleString();
+    //   this.postToUpload.append('dateTime',localTime);
+    // }
     this.postToUpload.append('postTags', JSON.stringify(this.tagLists))
     this._postService.createPost(this.postToUpload).subscribe((response:any) => {  
       this.close();
@@ -582,7 +583,6 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
    }
 
    removeTags(tag:any){
-    debugger
     if(this.isOpenReelsTab){
       const reelsTagIndex = this.reelsTagLists.findIndex((item) => item ===tag);
       if (reelsTagIndex > -1) {
@@ -638,7 +638,6 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
   }
 
   onInputChange() {
-    debugger
     if (this.tags.length > 10) {
       this.tags = this.tags.slice(0, 10);
     }
@@ -717,7 +716,6 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
   }
 
   isValidAttachments(){
-    debugger
    if(this.uploadFromFileStorage.length == 0 && (this.initialAttachment == undefined || this.initialAttachment.length == 0)){
     this.isAttachmentsValid = false;
       return;
@@ -738,7 +736,6 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
    }
 
    captureAttachmentUrl(event:any){
-    debugger
     var fileStorageAttachment = {
       fileName:event.fileName,
       fileUrl:event.fileUrl
@@ -750,7 +747,6 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
    }
 
    removeFileAttachment(event:any){
-    debugger
     const attachmentIndex = this.uploadFromFileStorage.findIndex((item) => item.fileName === event.fileName);
     if (attachmentIndex > -1) {
        this.uploadFromFileStorage.splice(attachmentIndex, 1);
@@ -777,7 +773,6 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
    }
 
    liveStream(){
-    debugger
     this.isSubmitted=true;
 
     if(this.scheduleTime != undefined){
@@ -827,7 +822,6 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
     }
 
     this._postService.createPost(this.postToUpload).subscribe((response:any) => { 
-      debugger
       this.isSubmitted=false;
       this.loadingIcon = false;
       //addPostResponse.next({response}); 

@@ -203,7 +203,6 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
 
     getFolders(pageNumber?: number){
       this._fileStorageService.getFolders(this.parentId,this.searchString).subscribe((response: any) => {
-        debugger
         this.folders = response;
         this.parentFolderId = this.folders[0].parentFolderId;
         this.isFoldersEmpty = false;
@@ -267,7 +266,6 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
     }
 
     saveFolder(){
-      debugger
         this.isSubmitted = true;
         if (!this.saveFolderForm.valid) {
           return;
@@ -275,7 +273,6 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
 
         var folderName = this.saveFolderForm.get('folderName')?.value;
         this._fileStorageService.isFolderNameExist(folderName,this.parentId,this.parentFolderId).subscribe((response) => {
-          debugger
         if(response){
           this.saveFolderForm.setErrors({ folderNameAlreadyExist: true });
           return;
@@ -323,7 +320,6 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
     }
 
     handleFiles(event: any) {
-      debugger
       var selectedFiles = event.target.files;
       this.isSubmitted = false;
       for (let i = 0; i < selectedFiles.length; i++) {
@@ -554,7 +550,6 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
   }
 
   back(){
-    debugger
    this.isOpenCommentsSection = false;
    if(this.isFirstPage){
     window.history.back();
@@ -616,10 +611,8 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
   }
 
   deleteFolder(folderId:string){
-    debugger
     this.loadingIcon = true;
     this._fileStorageService.deleteFolder(folderId).subscribe((response: any) => {
-      debugger
       this.loadingIcon = false;
       if(response.result == Constant.FolderCantDeleted){
         this.messageService.add({severity: 'info',summary: 'Info',life: 3000,detail: 'You cant delete folder without deleting the folders/files under it',});
@@ -633,9 +626,7 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
   }
 
   deleteFile(fileId:string){
-    debugger
     this._fileStorageService.deleteFile(fileId).subscribe((response: any) => {
-      debugger
       this.files = this.files.filter((x: { id: any; }) => x.id !== fileId);
       this.fileRecords = this.fileRecords.filter((x: { id: any; }) => x.id !== fileId);
       this.messageService.add({severity: 'success',summary: 'Success',life: 3000,detail: 'File deleted successfully',});

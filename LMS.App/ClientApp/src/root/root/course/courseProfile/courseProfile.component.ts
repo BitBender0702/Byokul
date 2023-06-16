@@ -445,7 +445,6 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     }
 
     addDescriptionMetaTag(description:string){
-      debugger
       const existingTag = this.meta.getTag('name="description"');
       if (existingTag) {
         this.meta.updateTag({ name: 'description', content: description });

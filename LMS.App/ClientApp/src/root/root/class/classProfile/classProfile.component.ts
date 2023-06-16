@@ -492,7 +492,6 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   }
 
   addDescriptionMetaTag(description:string){
-    debugger
     const existingTag = this.meta.getTag('name="description"');
     if (existingTag) {
       this.meta.updateTag({ name: 'description', content: description });

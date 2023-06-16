@@ -71,7 +71,6 @@ export class EarningsComponent extends MultilingualComponent implements OnInit, 
     }
   
     ngOnInit(): void {
-      debugger
       this.loadingIcon = true;
       this.isOpenOwnedSchoolTab = true;
       var selectedLang = localStorage.getItem('selectedLanguage');
@@ -119,7 +118,6 @@ export class EarningsComponent extends MultilingualComponent implements OnInit, 
       }
 
     //   window.onclick = (event) => {
-    //     debugger
     //     this.cd.detectChanges();
     //     var filterDropdown = document.getElementById('dropdown-earningFilter');
     //     if (event.target == filterDropdown) {
@@ -155,7 +153,6 @@ export class EarningsComponent extends MultilingualComponent implements OnInit, 
 
     initialWithdrawDetails(transactionParamViewModel:TransactionParamViewModel){
       this._paymentService.withdrawDetails(transactionParamViewModel).subscribe((response) => {
-        debugger
         this.withdrawDetails = response;
         this.loadingIcon = false;
         this.isSubmitted = false;
@@ -164,7 +161,6 @@ export class EarningsComponent extends MultilingualComponent implements OnInit, 
 
     initialAllTransactionDetails(transactionParamViewModel:TransactionParamViewModel){
       this._paymentService.allTransactionDetails(this.transactionParamViewModel).subscribe((response) => {
-        debugger
         this.allTransactionDetails = response;
         this.loadingIcon = false;
         this.isSubmitted = false;
@@ -298,14 +294,12 @@ this.dropdownMenu.nativeElement.style.display = (display === 'none') ? 'block' :
   }
 
   getTransactionDetails(){
-    debugger
     this.transactionParamViewModel.pageNumber = this.pageNumber;
     this.transactionParamViewModel.searchString = this.searchString;
     // this.transactionParamViewModel.StartDate = this.startDate;
     // this.transactionParamViewModel.endDate = this.endDate;
 
     this._paymentService.transactionDetails(this.transactionParamViewModel).subscribe((response) => {
-      debugger
       this.transactionDetails.transactions =[...this.transactionDetails.transactions, ...response.transactions];
       this.scrollLoadingIcon = false;
       this.transactionsResponseCount = response.length; 
@@ -314,14 +308,12 @@ this.dropdownMenu.nativeElement.style.display = (display === 'none') ? 'block' :
   }
 
   getWithdrawDetails(){
-    debugger
     this.transactionParamViewModel.pageNumber = this.withdrawPageNumber;
     this.transactionParamViewModel.searchString = this.searchString;
     //this.transactionParamViewModel.StartDate = this.startDate;
     //this.transactionParamViewModel.endDate = this.endDate;
 
     this._paymentService.withdrawDetails(this.transactionParamViewModel).subscribe((response) => {
-      debugger
       this.withdrawDetails.transactions =[...this.withdrawDetails.transactions, ...response.transactions];
       this.scrollLoadingIcon = false;
       this.withdrawResponseCount = response.length; 
@@ -330,14 +322,12 @@ this.dropdownMenu.nativeElement.style.display = (display === 'none') ? 'block' :
   }
 
   getAllTransactionDetails(){
-    debugger
     this.transactionParamViewModel.pageNumber = this.allTransactionPageNumber;
     this.transactionParamViewModel.searchString = this.searchString;
     // this.transactionParamViewModel.StartDate = this.startDate;
     // this.transactionParamViewModel.endDate = this.endDate;
 
     this._paymentService.allTransactionDetails(this.transactionParamViewModel).subscribe((response) => {
-      debugger
       this.allTransactionDetails.transactions =[...this.allTransactionDetails.transactions, ...response.transactions];
       this.scrollLoadingIcon = false;
       this.allTransactionsResponseCount = response.length; 
@@ -346,7 +336,6 @@ this.dropdownMenu.nativeElement.style.display = (display === 'none') ? 'block' :
   }
 
   applyDateFilter(){
-    debugger
     this.isSubmitted=true;
     if (!this.filterDateForm.valid) {
       return;
@@ -367,7 +356,6 @@ this.dropdownMenu.nativeElement.style.display = (display === 'none') ? 'block' :
     this.transactionParamViewModel.pageNumber = 1;
     this.initialTransactionDetails(this.transactionParamViewModel);
     // this._paymentService.transactionDetails(this.transactionParamViewModel).subscribe((response) => {
-    //   debugger
     //   this.transactionDetails = response;
     //   this.isSubmitted = false;
     // });
@@ -378,7 +366,6 @@ this.dropdownMenu.nativeElement.style.display = (display === 'none') ? 'block' :
     this.initialWithdrawDetails(this.transactionParamViewModel);
 
     // this._paymentService.withdrawDetails(this.transactionParamViewModel).subscribe((response) => {
-    //   debugger
     //   this.withdrawDetails = response;
     //   this.isSubmitted = false;
     // });
@@ -389,7 +376,6 @@ this.dropdownMenu.nativeElement.style.display = (display === 'none') ? 'block' :
     this.initialAllTransactionDetails(this.transactionParamViewModel);
 
     // this._paymentService.allTransactionDetails(this.transactionParamViewModel).subscribe((response) => {
-    //   debugger
     //   this.allTransactionDetails = response;
     //   this.isSubmitted = false;
     // });
@@ -436,15 +422,12 @@ this.dropdownMenu.nativeElement.style.display = (display === 'none') ? 'block' :
     }
   
     resetPayoutModal(){
-      debugger
       this._userService.getCountryList().subscribe((response) => {
-        debugger
         this.countries = response;
       });    
     }
 
     payout(){
-      debugger
       this.isSubmitted = true;
       if (!this.payoutForm.valid) {
         return;
@@ -458,7 +441,6 @@ this.dropdownMenu.nativeElement.style.display = (display === 'none') ? 'block' :
       this.payoutViewModel.country = payout.country;
 
       this._paymentService.payout(this.payoutViewModel).subscribe((response) => {
-        debugger
         this.isSubmitted = false;
       });
 
@@ -487,7 +469,6 @@ this.dropdownMenu.nativeElement.style.display = (display === 'none') ? 'block' :
     }
 
     isWithdarwTab(){
-      debugger
       this.loadingIcon = true;
       this.isOpenOwnedSchoolTab = false;
       this.isOpenAllTab = false;
@@ -507,14 +488,12 @@ this.dropdownMenu.nativeElement.style.display = (display === 'none') ? 'block' :
       //this.transactionParamViewModel.TransactionType = TransactionTypeEnum.OwnedSchoolPayment;
       this.initialWithdrawDetails(this.transactionParamViewModel);
       // this._paymentService.withdrawDetails().subscribe((response) => {
-      //   debugger
       //   this.withdrawDetails = response;
       //   this.loadingIcon = false;
       // });
     }
 
     isAllTab(){
-      debugger
       this.loadingIcon = true;
       this.isOpenOwnedSchoolTab = false;
       this.isOpenAllTab = true;
@@ -534,7 +513,6 @@ this.dropdownMenu.nativeElement.style.display = (display === 'none') ? 'block' :
       //this.transactionParamViewModel.TransactionType = TransactionTypeEnum.OwnedSchoolPayment;
       this.initialAllTransactionDetails(this.transactionParamViewModel);
       // this._paymentService.allTransactionDetails(this.transactionParamViewModel).subscribe((response) => {
-      //   debugger
       //   this.allTransactionDetails = response;
       //   this.loadingIcon = false;
       // });

@@ -75,7 +75,6 @@ export class RegisterComponent extends MultilingualComponent implements OnInit,A
     }
 
     ngAfterViewInit() {
-      // debugger
       // this.cd.detectChanges();
       // const options = {
       //   locale: Turkish, // Set the Turkish language for the calendar
@@ -93,7 +92,6 @@ export class RegisterComponent extends MultilingualComponent implements OnInit,A
         Validators.pattern(this.PASSWORD_PATTERN)
       ];
       this._userService.getCountryList().subscribe((response) => {
-        debugger
         this.countries = response;
         this.isDataLoaded = true;
         this.loadingIcon = false;
@@ -199,7 +197,6 @@ export class RegisterComponent extends MultilingualComponent implements OnInit,A
   get confirmPassword() { return this.registrationForm.get('confirmPassword'); }
 
     register(){
-      debugger
       this.user = this.registrationForm.value;
 
       const str = "example-string";

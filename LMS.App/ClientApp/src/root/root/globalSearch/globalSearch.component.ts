@@ -35,7 +35,6 @@ import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component'
     }
 
     ngOnInit(): void {
-        debugger
         this.loadingIcon = true;
         this.searchString = this.route.snapshot.paramMap.get('searchString')??'';
         this.getGlobalSearch(this.searchString,this.globalSearchPageNumber,this.globalSearchPageSize);

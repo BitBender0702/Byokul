@@ -161,6 +161,9 @@ export class ChatComponent extends MultilingualComponent implements OnInit, Afte
   forwardedFileName!:string;
   forwardedFileURL!:string;
   forwardedFileType!:number;
+  selectedChatHeadId!:string;
+  forwardedId:string = "";
+  isGenerateChatLi:boolean = false;
   @ViewChild('chatHeadsScrollList') chatHeadsScrollList!: ElementRef;
   // @ViewChild('chatScrollList') chatScrollList!: ElementRef;
 
@@ -900,6 +903,23 @@ this.addChatAttachments = {
         this.chatHeadId = this.allChatUsers[0].chatHeadId;
         this.cd.detectChanges();
         this.chatList.nativeElement.scrollTop = this.chatList.nativeElement.scrollHeight;
+
+        var dynamicMessages = localStorage.getItem("messages")??'';
+        if(dynamicMessages != ""){
+          var dynamicMessagesArray = JSON.parse(dynamicMessages);
+          var isChatHeadExist = dynamicMessagesArray.find((x: { chatHeadId: any; }) => x.chatHeadId == this.allChatUsers[0].chatHeadId);
+          if(isChatHeadExist != null){
+             this.messageToUser = isChatHeadExist.messageToUser;
+          }
+        }
+        if(dynamicMessages == ""){
+           var messageList:any = [];
+           localStorage.setItem("messages",JSON.stringify(messageList));
+        }
+        
+
+        this.selectedChatHeadId = this.allChatUsers[0].chatHeadId;
+
       });
     }
 
@@ -983,6 +1003,23 @@ this.addChatAttachments = {
         this.schoolInboxList[0].chats = response;
         this.cd.detectChanges();
         this.schoolChatList.nativeElement.scrollTop = this.schoolChatList.nativeElement.scrollHeight;
+
+        var dynamicMessages = localStorage.getItem("messages")??'';
+        if(dynamicMessages != ""){
+          var dynamicMessagesArray = JSON.parse(dynamicMessages);
+          var isChatHeadExist = dynamicMessagesArray.find((x: { chatHeadId: any; }) => x.chatHeadId == this.schoolInboxList[0].chatHeadId);
+          if(isChatHeadExist != null){
+             this.messageToUser = isChatHeadExist.messageToUser;
+          }
+          else{
+            this.messageToUser = "";
+           }
+        }
+        if(dynamicMessages == ""){
+           var messageList:any = [];
+           localStorage.setItem("messages",JSON.stringify(messageList));
+        }
+        this.selectedChatHeadId = this.schoolInboxList[0].chatHeadId;
       });
     // }
     // else{
@@ -992,6 +1029,53 @@ this.addChatAttachments = {
     }
 
     getUsersChat(chatHeadId:string,recieverId:string,receiverAvatar:string,username:string,chatType:string,From:string,pageSize:number,pageNumber:number,school?:any){
+      if(this.messageToUser != ""){
+        var dynamicMessages = localStorage.getItem("messages")??'';
+        if(dynamicMessages != ""){
+          dynamicMessages = JSON.parse(dynamicMessages);
+        }
+
+        var dynamicMessages = localStorage.getItem("messages")??'';
+        var dynamicMessagesArray = JSON.parse(dynamicMessages);
+        var message = {
+          chatHeadId:this.selectedChatHeadId,
+          messageToUser:this.messageToUser
+         }
+
+         var index = dynamicMessagesArray.findIndex((x: { chatHeadId: string; }) => x.chatHeadId == this.selectedChatHeadId);
+         if(index > - 1){
+            dynamicMessagesArray.splice(index, 1);
+         }
+         dynamicMessagesArray.push(message);
+         localStorage.setItem("messages",JSON.stringify(dynamicMessagesArray));
+      }
+      else{
+        var dynamicMessages = localStorage.getItem("messages")??'';
+      if(dynamicMessages != ""){
+         var dynamicMessagesArray = JSON.parse(dynamicMessages);
+         var index = dynamicMessagesArray.findIndex((x: { chatHeadId: string; }) => x.chatHeadId == chatHeadId);
+         if(index > 1){
+            dynamicMessagesArray.splice(index, 1);
+            localStorage.setItem("messages",JSON.stringify(dynamicMessagesArray));
+         }
+      }
+    }
+
+      var dynamicMessages = localStorage.getItem("messages")??'';
+      if(dynamicMessages != ""){
+         var dynamicMessagesArray = JSON.parse(dynamicMessages);
+         var isChatHeadExist = dynamicMessagesArray.find((x: { chatHeadId: string; }) => x.chatHeadId == chatHeadId);
+         if(isChatHeadExist != null){
+            this.messageToUser = isChatHeadExist.messageToUser;
+         }
+         else{
+          this.messageToUser = "";
+         }
+      }
+
+      this.selectedChatHeadId = chatHeadId;
+
+
       this.loadingIcon = true;
       this.selectedChatHeadDiv = true;
       //var previousChatHeadId = localStorage.getItem("chatHead");
@@ -1196,7 +1280,6 @@ this.addChatAttachments = {
 // }
 
 handleVideos(event: any) {
-  debugger
   this.exceedUploadFileSize = false;
   this.initializeVideoObject();
   this.selectedFile = event.target.files; 
@@ -1501,9 +1584,11 @@ getTextMessage(evant:any,receiverId:string){
           return
         }
     }
-    if(this.userId ==""){
+    // if(this.userId ==""){
+    //   this.userId = receiverId;
+    // }
+
       this.userId = receiverId;
-    }
 
     this.chatheadSub = this._chatService.getChatHead(this.senderId,this.userId,Number(this.chatType)).subscribe((response) => {
       this.chatViewModel.sender = this.senderId;
@@ -1561,6 +1646,13 @@ getTextMessage(evant:any,receiverId:string){
      this.uploadAttachments = [];
      if(!this.isForwarded){
       this.messageToUser = "";
+      var dynamicMessages = localStorage.getItem("messages")??'';
+      var dynamicMessagesArray = JSON.parse(dynamicMessages);
+      var index = dynamicMessagesArray.findIndex((x: { chatHeadId: string; }) => x.chatHeadId == this.chatHeadId);
+      if(index > -1){
+        dynamicMessagesArray.splice(index,1);
+        localStorage.setItem("messages",JSON.stringify(dynamicMessagesArray));
+      }
      }
      this.isSubmitted = true;
      this.replyMessageType = null;
@@ -1578,6 +1670,19 @@ getTextMessage(evant:any,receiverId:string){
 
   generateChatLi(response:any,profileImage:string,chatType:string){
     debugger
+    if(this.forwardedId != ""){
+       if(this.forwardedId == response.receiverName){
+         this.isGenerateChatLi = true;
+       }
+       else{
+        this.isGenerateChatLi = false;
+       }
+    }
+    else{
+      this.isGenerateChatLi = true;
+    }
+
+    if(this.isGenerateChatLi){
     var isFromReciever='you';
     const p: HTMLParagraphElement = this.renderer.createElement('p');
      if(!response.isTest){
@@ -1731,9 +1836,11 @@ var a = this.schoolInboxList;
     
     console.log(response)   
   }
+}
 
   this.cd.detectChanges();
   this.chatList.nativeElement.scrollTop = this.chatList.nativeElement.scrollHeight;
+  this.forwardedId = "";
 
   }
 
@@ -1922,7 +2029,6 @@ chatReply(userChat:any){
 }
 
 chatAttachmentReply(replyMessageId:string,fileName:string,fileURL:string,fileType:number){
-  debugger
   this.fileName = fileName;
   this.fileURL = fileURL;
   this.replyMessageId = replyMessageId;
@@ -1933,9 +2039,13 @@ chatAttachmentReply(replyMessageId:string,fileName:string,fileURL:string,fileTyp
 }
 
 removeReplyFile(){
-  debugger
   this.fileURL = "";
   this.fileName = "";
+}
+
+removeReplyText(){
+  this.replyChat = "";
+  
 }
 
 openForwardModal(chatMessage?:string, fileName?:string, fileURL?:string,fileTYpe?:number){
@@ -1948,7 +2058,6 @@ openForwardModal(chatMessage?:string, fileName?:string, fileURL?:string,fileTYpe
     this.forwardedFileType = fileTYpe;
   }
   this._chatService.getAllChatUsers(this.senderId,this.forwardMessagePageNumber,'').subscribe((response) => {
-    debugger
     this.forwardUsersList = response;
     var chatUsers: any[] = this.forwardUsersList;
       var schoolInboxList = chatUsers.filter(x => x.chatType == 3 && x.school.ownerId == this.sender.id);
@@ -1958,7 +2067,6 @@ openForwardModal(chatMessage?:string, fileName?:string, fileURL?:string,fileTYpe
     
       schoolInboxList.forEach((item: any) => {
         this._userService.getUser(item.userID).subscribe((result) => {
-          debugger
           item.userName = result.firstName + result.lastName;
           item.profileURL = result.avatar;  
 
@@ -1978,13 +2086,14 @@ openForwardModal(chatMessage?:string, fileName?:string, fileURL?:string,fileTYpe
 
 forwardToUser(receiverId:string,chatType:number){
   debugger
+  this.forwardedId = receiverId;
   this.chatType = chatType.toString();
   this.isForwarded = true;
   this.sendToUser(receiverId);
 }
 
 forwardAttachmentToUser(receiverId:string,chatType:number){
-  debugger
+  this.forwardedId = receiverId;
   this.chatType = chatType.toString();
   this.isForwarded = true;
   this.sendToUser(receiverId);

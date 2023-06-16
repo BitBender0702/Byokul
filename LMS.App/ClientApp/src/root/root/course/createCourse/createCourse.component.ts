@@ -497,7 +497,6 @@ captureTeacherId(event: any) {
    }
 
    openSharePostModal(): void {
-    debugger
     if(this.fromSchoolProfile != ''){
       var schoolName = this.createCourseForm1.controls['schoolName'].value;
     }
