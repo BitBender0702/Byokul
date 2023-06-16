@@ -1,75 +1,78 @@
 <div *ngIf="isDataLoaded">
   <section class="f-poppins">
     <div class="main_content">
-      <div class="create-post-header d-flex justify-content-between d-none d-xl-flex">
-        <button
-          (click)="back()"
-          type="button"
-          class="back-button bg-transparent border-0 font_16 fw_400 text_dark"
-        >
-          <img src="../../../assets/images/arrow-left.svg" />
-          {{ "Back" | translate }}
-        </button>
+      <div class="main_content-max-width">
         <div
-          class="school-profile-tabs d-flex align-content-center justify-content-center"
+          class="create-post-header d-flex justify-content-between d-none d-xl-flex"
         >
-          <div class="custom-tabs profile-custom-tabs">
-            <ul
-              class="nav nav-tabs border-0 before-none"
-              id="myTab"
-              role="tablist"
-            >
-              <li class="nav-item ps-0 mb-0" role="presentation">
-                <button
-                  class="nav-link active"
-                  id="myInbox-tab"
-                  data-bs-toggle="tab"
-                  data-bs-target="#myInbox-tab-pane"
-                  type="button"
-                  role="tab"
-                  aria-controls="myInbox-tab-pane"
-                  aria-selected="true"
-                  (click)="showMyInboxDiv()"
-                >
-                  {{ "MyInbox" | translate }}
-                </button>
-              </li>
-              <li class="nav-item ps-0 mb-0" role="presentation">
-                <div class="dropdown">
+          <button
+            (click)="back()"
+            type="button"
+            class="back-button bg-transparent border-0 font_16 fw_400 text_dark"
+          >
+            <img src="../../../assets/images/arrow-left.svg" />
+            {{ "Back" | translate }}
+          </button>
+          <div
+            class="school-profile-tabs d-flex align-content-center justify-content-center"
+          >
+            <div class="custom-tabs profile-custom-tabs">
+              <ul
+                class="nav nav-tabs border-0 before-none"
+                id="myTab"
+                role="tablist"
+              >
+                <li class="nav-item ps-0 mb-0" role="presentation">
                   <button
-                    class="bg-transparent dropdown-toggle rounded-circle"
+                    class="nav-link active"
+                    id="myInbox-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#myInbox-tab-pane"
                     type="button"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                    (click)="showSchoolInboxDiv()"
+                    role="tab"
+                    aria-controls="myInbox-tab-pane"
+                    aria-selected="true"
+                    (click)="showMyInboxDiv()"
                   >
-                    {{ "MySchoolInbox" | translate }}
+                    {{ "MyInbox" | translate }}
                   </button>
-                  <ul class="dropdown-menu">
-                    <li *ngFor="let item of userSchoolsList">
-                      <a
-                        (click)="getSelectedSchoolInbox(item.schoolId)"
-                        class="ps-0 mb-0 dropdown-item nav-link btn chat-channel-button px-3"
-                        id="mySchoolInbox-tab"
-                        data-bs-toggle="tab"
-                        data-bs-target="#mySchoolInbox-tab-pane"
-                        type="button"
-                        role="tab"
-                        aria-controls="mySchoolInbox-tab-pane"
-                        aria-selected="false"
-                        tabindex="-1"
-                        style="cursor: pointer"
-                        >{{ item.schoolName }}</a
-                      >
-                    </li>
-                  </ul>
-                </div>
-              </li>
-            </ul>
+                </li>
+                <li class="nav-item ps-0 mb-0" role="presentation">
+                  <div class="dropdown">
+                    <button
+                      class="bg-transparent dropdown-toggle rounded-circle"
+                      type="button"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                      (click)="showSchoolInboxDiv()"
+                    >
+                      {{ "MySchoolInbox" | translate }}
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li *ngFor="let item of userSchoolsList">
+                        <a
+                          (click)="getSelectedSchoolInbox(item.schoolId)"
+                          class="ps-0 mb-0 dropdown-item nav-link btn chat-channel-button px-3"
+                          id="mySchoolInbox-tab"
+                          data-bs-toggle="tab"
+                          data-bs-target="#mySchoolInbox-tab-pane"
+                          type="button"
+                          role="tab"
+                          aria-controls="mySchoolInbox-tab-pane"
+                          aria-selected="false"
+                          tabindex="-1"
+                          style="cursor: pointer"
+                          >{{ item.schoolName }}</a
+                        >
+                      </li>
+                    </ul>
+                  </div>
+                </li>
+              </ul>
+            </div>
           </div>
-        </div>
 
-        <!-- <div class="chat-channel-header">
+          <!-- <div class="chat-channel-header">
             <div class="btn-group">
               <button type="button" class="btn dropdown-toggle chat-channel-button px-3" data-bs-toggle="dropdown"
                 aria-expanded="false">
@@ -81,27 +84,7 @@
               </ul>
             </div>
           </div> -->
-        <div class="search-header position-relative">
-          <input
-            [(ngModel)]="searchString"
-            type="search"
-            class="form-control h_44"
-            #searchInput
-            (input)="chatHeadsSearch()"
-          />
-          <button type="button" class="btn search-icon border-0">
-            <img src="../../../assets/images/school/search-gray.svg" />
-          </button>
-        </div>
-      </div>
-      <div class="live-header d-flex align-items-center justify-content-between">
-        <button (click)="back()" type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark  d-xl-none"><img
-            src="../../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
-        <span class="logo_mobile d-xl-none">
-          <img src="../../../../assets/images/logo.svg" />
-        </span>
-        <div class="d-xl-none d-flex">
-          <div class="search-header position-relative me-2">
+          <div class="search-header position-relative">
             <input
               [(ngModel)]="searchString"
               type="search"
@@ -113,158 +96,193 @@
               <img src="../../../assets/images/school/search-gray.svg" />
             </button>
           </div>
-          <button type="button" class="mobile-search border_btn" (click)="openSidebar()"><img
-              src="../../../../assets/images/menu.svg" /></button>
         </div>
-      </div>
+        <div
+          class="live-header d-flex align-items-center justify-content-between"
+        >
+          <button
+            (click)="back()"
+            type="button"
+            class="back-button bg-transparent border-0 font_16 fw_400 text_dark d-xl-none"
+          >
+            <img src="../../../../assets/images/arrow-left.svg" />
+            {{ "Back" | translate }}
+          </button>
+          <span class="logo_mobile d-xl-none">
+            <img src="../../../../assets/images/logo.svg" />
+          </span>
+          <div class="d-xl-none d-flex">
+            <div class="search-header position-relative me-2">
+              <input
+                [(ngModel)]="searchString"
+                type="search"
+                class="form-control h_44"
+                #searchInput
+                (input)="chatHeadsSearch()"
+              />
+              <button type="button" class="btn search-icon border-0">
+                <img src="../../../assets/images/school/search-gray.svg" />
+              </button>
+            </div>
+            <button
+              type="button"
+              class="mobile-search border_btn"
+              (click)="openSidebar()"
+            >
+              <img src="../../../../assets/images/menu.svg" />
+            </button>
+          </div>
+        </div>
 
-      <div
-        [ngClass]="showMyInbox ? 'tab-pane fade show active d-block' : 'd-none'"
-        class="tab-pane fade show active"
-        id="myInbox-tab-pane"
-        role="tabpanel"
-        aria-labelledby="school-feed-tab"
-        aria-selected="false"
-        tabindex="0"
-      >
-        <div class="message-box">
-          <aside class="chat-aside">
-            <ul
-              class="before-none position-relative"
-              #chatHeadsScrollList
-              (scroll)="scrollHandler($event)"
-            >
-              <div
-                *ngIf="chatHeadsLoadingIcon"
-                class="postloader-main position-absolute translate-middle"
+        <div
+          [ngClass]="
+            showMyInbox ? 'tab-pane fade show active d-block' : 'd-none'
+          "
+          class="tab-pane fade show active"
+          id="myInbox-tab-pane"
+          role="tabpanel"
+          aria-labelledby="school-feed-tab"
+          aria-selected="false"
+          tabindex="0"
+        >
+          <div class="message-box">
+            <aside class="chat-aside">
+              <ul
+                class="before-none position-relative"
+                #chatHeadsScrollList
+                (scroll)="scrollHandler($event)"
               >
                 <div
-                  class="postlds-ring"
-                  style="margin-left: 177px; margin-bottom: -344px"
+                  *ngIf="chatHeadsLoadingIcon"
+                  class="postloader-main position-absolute translate-middle"
                 >
-                  <div></div>
-                  <div></div>
-                  <div></div>
-                  <div></div>
+                  <div
+                    class="postlds-ring"
+                    style="margin-left: 177px; margin-bottom: -344px"
+                  >
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                  </div>
                 </div>
-              </div>
-              <li
-                *ngFor="let item of allChatUsers"
-                [ngClass]="
-                  selectedChatHeadDiv &&
-                  item.userID == recieverId &&
-                  item.chatType == chatType
-                    ? 'd-flex justify-content-between align-items-end selectedChatHead'
-                    : 'd-flex justify-content-between align-items-end'
-                "
-                class="d-flex justify-content-between align-items-end"
-                (click)="
-                  getUsersChat(
-                    item.chatHeadId,
-                    item.userID,
-                    item.profileURL,
-                    item.userName,
-                    item.chatType,
-                    'FromMyInbox',
-                    10,
-                    1
-                  )
-                "
-              >
-                <input [value]="item.userID" hidden />
-                <div class="chat-userleft">
-                  <div class="chat-username d-flex align-items-center mb-2">
-                    <img [src]="item?.profileURL" alt="" />
-                    <h2 class="mb-0">{{ item?.userName }}</h2>
-                    &nbsp;
-                    <span
-                      *ngIf="
-                        item?.unreadMessageCount != 0 &&
-                        item?.unreadMessageCount != null
-                      "
-                      class="badge rounded-circle d-inline-flex align-items-center justify-content-center fw_700 font_12 badgeBackground"
-                      >{{ item?.unreadMessageCount }}</span
+                <li
+                  *ngFor="let item of allChatUsers"
+                  [ngClass]="
+                    selectedChatHeadDiv &&
+                    item.userID == recieverId &&
+                    item.chatType == chatType
+                      ? 'd-flex justify-content-between align-items-end selectedChatHead'
+                      : 'd-flex justify-content-between align-items-end'
+                  "
+                  class="d-flex justify-content-between align-items-end"
+                  (click)="
+                    getUsersChat(
+                      item.chatHeadId,
+                      item.userID,
+                      item.profileURL,
+                      item.userName,
+                      item.chatType,
+                      'FromMyInbox',
+                      10,
+                      1
+                    )
+                  "
+                >
+                  <input [value]="item.userID" hidden />
+                  <div class="chat-userleft">
+                    <div class="chat-username d-flex align-items-center mb-2">
+                      <img [src]="item?.profileURL" alt="" />
+                      <h2 class="mb-0">{{ item?.userName }}</h2>
+                      &nbsp;
+                      <span
+                        *ngIf="
+                          item?.unreadMessageCount != 0 &&
+                          item?.unreadMessageCount != null
+                        "
+                        class="badge rounded-circle d-inline-flex align-items-center justify-content-center fw_700 font_12 badgeBackground"
+                        >{{ item?.unreadMessageCount }}</span
+                      >
+                    </div>
+                    <p
+                      *ngIf="item.lastMessage != ''"
+                      class="font_12 text_sec1 text-truncate mb-0"
                     >
+                      {{ item.lastMessage }}
+                    </p>
+                    <p
+                      *ngIf="item.lastMessage == '' && item.chats != null"
+                      class="font_12 text_sec1 text-truncate mb-0"
+                    >
+                      📂{{ item?.chats[0]?.attachment[0]?.fileName }}
+                    </p>
                   </div>
-                  <p
-                    *ngIf="item.lastMessage != ''"
-                    class="font_12 text_sec1 text-truncate mb-0"
-                  >
-                    {{ item.lastMessage }}
-                  </p>
-                  <p
-                    *ngIf="item.lastMessage == '' && item.chats != null"
-                    class="font_12 text_sec1 text-truncate mb-0"
-                  >
-                    📂{{ item?.chats[0]?.attachment[0]?.fileName }}
-                  </p>
-                </div>
-                <div class="text-end">
-                  <button
-                    *ngIf="!isPinned && !item.isPinned"
-                    (click)="pinUnpinChat(item.userID, item.chatType, true)"
-                    type="button"
-                    class="bg-transparent border-0"
-                  >
-                    <img
-                      style="height: 20px"
-                      src="../../../../assets/images/pinned-gray.svg"
-                    />
-                  </button>
-                  <button
-                    *ngIf="
-                      (isPinned &&
-                        item.userID == recieverId &&
-                        chatType == item.chatType) ||
-                      item.isPinned
-                    "
-                    (click)="pinUnpinChat(item.userID, item.chatType, false)"
-                    type="button"
-                    class="bg-transparent border-0"
-                  >
-                    <img
-                      style="height: 20px"
-                      src="../../../../assets/images/pinned-orange.svg"
-                    />
-                  </button>
-                  <div class="chat-timedate d-block">
-                    <span class="font_12 text_ltgray d-block">{{
-                      item.time | date : "HH:MM"
-                    }}</span>
-                    <span class="font_12 text_ltgray d-block">{{
-                      item.time | date : "dd/MM/yyyy"
-                    }}</span>
+                  <div class="text-end">
+                    <button
+                      *ngIf="!isPinned && !item.isPinned"
+                      (click)="pinUnpinChat(item.userID, item.chatType, true)"
+                      type="button"
+                      class="bg-transparent border-0"
+                    >
+                      <img
+                        style="height: 20px"
+                        src="../../../../assets/images/pinned-gray.svg"
+                      />
+                    </button>
+                    <button
+                      *ngIf="
+                        (isPinned &&
+                          item.userID == recieverId &&
+                          chatType == item.chatType) ||
+                        item.isPinned
+                      "
+                      (click)="pinUnpinChat(item.userID, item.chatType, false)"
+                      type="button"
+                      class="bg-transparent border-0"
+                    >
+                      <img
+                        style="height: 20px"
+                        src="../../../../assets/images/pinned-orange.svg"
+                      />
+                    </button>
+                    <div class="chat-timedate d-block">
+                      <span class="font_12 text_ltgray d-block">{{
+                        item.time | date : "HH:MM"
+                      }}</span>
+                      <span class="font_12 text_ltgray d-block">{{
+                        item.time | date : "dd/MM/yyyy"
+                      }}</span>
+                    </div>
                   </div>
-                </div>
-              </li>
-            </ul>
-          </aside>
-          <main>
-            <ul
-              #chatList
-              id="chat"
-              class="before-none position-relative"
-              (scroll)="scrollChatHandler($event)"
-            >
-              <div
-                *ngIf="chatsLoadingIcon"
-                class="postloader-main position-absolute translate-middle"
+                </li>
+              </ul>
+            </aside>
+            <main>
+              <ul
+                #chatList
+                id="chat"
+                class="before-none position-relative"
+                (scroll)="scrollChatHandler($event)"
               >
                 <div
-                  class="postlds-ring"
-                  style="margin-left: 547px; margin-bottom: 270px"
+                  *ngIf="chatsLoadingIcon"
+                  class="postloader-main position-absolute translate-middle"
                 >
-                  <div></div>
-                  <div></div>
-                  <div></div>
-                  <div></div>
+                  <div
+                    class="postlds-ring"
+                    style="margin-left: 547px; margin-bottom: 270px"
+                  >
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                  </div>
                 </div>
-              </div>
-              <li
-                [ngClass]="this.userChat.sendByMe ? 'me' : 'you'"
-                *ngFor="let userChat of firstuserChats; let last = last"
-              >
-                <!-- <div class="chat-username d-flex align-items-center mb-2">
+                <li
+                  [ngClass]="this.userChat.sendByMe ? 'me' : 'you'"
+                  *ngFor="let userChat of firstuserChats; let last = last"
+                >
+                  <!-- <div class="chat-username d-flex align-items-center mb-2">
                   <img *ngIf="userChat.sendByMe" [src]="profileURL" alt="" class="rounded-circle me-2" style="max-width: 35px;">
                   <img *ngIf="!userChat.sendByMe" [src]="receiverAvatar" alt="" class="rounded-circle me-2" style="max-width: 35px;">
                   <h2 *ngIf="userChat.sendByMe" class="mb-0 font_16 fw_600 text_sec1">{{sender.firstName + "  " + sender.lastName}}</h2>
@@ -304,38 +322,81 @@
                     </div>
                   </span>
 
-                  <!-- for forwarded -->
-                  <span *ngIf="userChat.isForwarded && userChat.text == null">
-                    <i class="fa-sharp fa-solid fa-share fa-rotate-180 font_16"></i>
-                  </span>
-                  <span *ngIf="userChat.isForwarded && userChat.forwardedFileType == 1">
-                    <div
-                    class="img-attach me-2 d-inline-block cursor-pointer"
-                    data-bs-toggle="modal"
-                    data-bs-target="#full-chat-image"
-                    (click)="showFullChatImage(userChat.forwardedFileName, userChat.forwardedFileURL)">
-                    <img [src]="userChat.forwardedFileURL" />
-                  </div>
-                  </span>
-                  <span *ngIf="userChat.isForwarded && userChat.forwardedFileType == 2">
-                    <div class="videofile cursor-pointer" (click)="showFullChatVideo(userChat.forwardedFileName, userChat.forwardedFileURL)">
-                    <video preload="metadata" style="height: 300px">
-                      <source [src]="userChat.forwardedFileURL" type="video/mp4" />
-                    </video>
-                  </div>
-                  </span>
+                    <!-- for forwarded -->
+                    <span *ngIf="userChat.isForwarded && userChat.text == null">
+                      <i
+                        class="fa-sharp fa-solid fa-share fa-rotate-180 font_16"
+                      ></i>
+                    </span>
+                    <span
+                      *ngIf="
+                        userChat.isForwarded && userChat.forwardedFileType == 1
+                      "
+                    >
+                      <div
+                        class="img-attach me-2 d-inline-block cursor-pointer"
+                        data-bs-toggle="modal"
+                        data-bs-target="#full-chat-image"
+                        (click)="
+                          showFullChatImage(
+                            userChat.forwardedFileName,
+                            userChat.forwardedFileURL
+                          )
+                        "
+                      >
+                        <img [src]="userChat.forwardedFileURL" />
+                      </div>
+                    </span>
+                    <span
+                      *ngIf="
+                        userChat.isForwarded && userChat.forwardedFileType == 2
+                      "
+                    >
+                      <div
+                        class="videofile cursor-pointer"
+                        (click)="
+                          showFullChatVideo(
+                            userChat.forwardedFileName,
+                            userChat.forwardedFileURL
+                          )
+                        "
+                      >
+                        <video preload="metadata" style="height: 300px">
+                          <source
+                            [src]="userChat.forwardedFileURL"
+                            type="video/mp4"
+                          />
+                        </video>
+                      </div>
+                    </span>
 
-                  <span *ngIf="userChat.isForwarded && userChat.forwardedFileType == 3">
-                    <div class="teacher-tags hashtag_post tag-boxattachment-outer mt-1 mb-0 hover-tags">
-                      <span class="custom-tag" (click)="openCertificateViewModal(userChat.forwardedFileURL, userChat.forwardedFileName)"><img
-                          src="../../../assets/images/Paper-gray.svg"
-                          class="me-1 dark-svg"/>
-                        <img
-                          src="../../../assets/images/Paper-light.svg"
-                          class="me-1 light-svg"/>{{ userChat.forwardedFileName }}
-                      </span>
-                    </div>
-                  </span>
+                    <span
+                      *ngIf="
+                        userChat.isForwarded && userChat.forwardedFileType == 3
+                      "
+                    >
+                      <div
+                        class="teacher-tags hashtag_post tag-boxattachment-outer mt-1 mb-0 hover-tags"
+                      >
+                        <span
+                          class="custom-tag"
+                          (click)="
+                            openCertificateViewModal(
+                              userChat.forwardedFileURL,
+                              userChat.forwardedFileName
+                            )
+                          "
+                          ><img
+                            src="../../../assets/images/Paper-gray.svg"
+                            class="me-1 dark-svg"
+                          />
+                          <img
+                            src="../../../assets/images/Paper-light.svg"
+                            class="me-1 light-svg"
+                          />{{ userChat.forwardedFileName }}
+                        </span>
+                      </div>
+                    </span>
 
 
                   <span *ngIf="userChat.isForwarded && userChat.text != null">
@@ -469,35 +530,53 @@
                       />
                     </button>
                   </div> -->
-                </div>
-                <div [ngClass]="this.userChat.sendByMe ? 'message-time text-end text_ltgray font_12' : 'message-time text-start text_ltgray font_12'">
-                  {{ userChat.time | date : "HH:MM" }}
-                </div>
+                  </div>
+                  <div
+                    [ngClass]="
+                      this.userChat.sendByMe
+                        ? 'message-time text-end text_ltgray font_12'
+                        : 'message-time text-start text_ltgray font_12'
+                    "
+                  >
+                    {{ userChat.time | date : "HH:MM" }}
+                  </div>
 
-                <div class="forward-reply" *ngIf="userChat.text != null && userChat.text != ''">
-                  <button (click)="chatReply(userChat)" type="button" class="forward-btn">
-                    {{ "Answer" | translate }}
-                    <img
-                      src="../../../assets/images/answer-forward-icon.svg"
-                      class="ms-2"
-                    /></button
-                  ><br />
-                  <button (click)="openForwardModal(userChat.text)" type="button" class="forward-btn"  data-bs-toggle="modal"
-                  data-bs-target="#open-forwardModal">
-                    {{ "Forward" | translate }}
-                    <img
-                      src="../../../assets/images/forward-icon.svg"
-                      class="ms-2"
-                    />
-                  </button>
+                  <div
+                    class="forward-reply"
+                    *ngIf="userChat.text != null && userChat.text != ''"
+                  >
+                    <button
+                      (click)="chatReply(userChat)"
+                      type="button"
+                      class="forward-btn"
+                    >
+                      {{ "Answer" | translate }}
+                      <img
+                        src="../../../assets/images/answer-forward-icon.svg"
+                        class="ms-2"
+                      /></button
+                    ><br />
+                    <button
+                      (click)="openForwardModal(userChat.text)"
+                      type="button"
+                      class="forward-btn"
+                      data-bs-toggle="modal"
+                      data-bs-target="#open-forwardModal"
+                    >
+                      {{ "Forward" | translate }}
+                      <img
+                        src="../../../assets/images/forward-icon.svg"
+                        class="ms-2"
+                      />
+                    </button>
+                  </div>
+                </li>
+                <div class="text-line-border position-relative text-center">
+                  <span
+                    class="line-text font_12 text_ltgray fw_400 text-center"
+                  ></span>
                 </div>
-              </li>
-              <div class="text-line-border position-relative text-center">
-                <span
-                  class="line-text font_12 text_ltgray fw_400 text-center"
-                ></span>
-              </div>
-            </ul>
+              </ul>
 
             <div class="chat-footer">
               <div class="d-flex justify-content-center">
@@ -520,54 +599,18 @@
             </span>
               </div>
 
-              <div *ngIf="fileName != '' && fileURL != '' && replyMessageType == 1" id="chat-reply">
-              <span class="chat-upload-img position-relative d-inline-block">
-              <img [src]="fileURL" />
-              <button
-                (click)="removeReplyFile()"
-                type="button"
-                class="btn dl-post-img d-flex align-items-center justify-content-center rounded-circle position-absolute">
-                <i class="fa-solid fa-xmark"></i>
-              </button>
-            </span>
-             </div>
-             <div *ngIf="fileName != '' && fileURL != '' && replyMessageType == 2" id="chat-reply">
-            <span class="chat-upload-img position-relative d-inline-block">
-            <div class="videofile">
-              <video preload="metadata">
-                  <source [src]="fileURL" type="video/mp4"/>
-                </video>
-            </div>
-            <button
-              (click)="removeReplyFile()"
-              type="button"
-              class="btn dl-post-img d-flex align-items-center justify-content-center rounded-circle position-absolute"
-            >
-              <i class="fa-solid fa-xmark"></i>
-            </button>
-          </span>
-           </div>
-
-           <div *ngIf="fileName != '' && fileURL != '' && replyMessageType == 3" id="chat-reply">
-            <div class="teacher-tags tag-box hashtag_post mt-4 mb-2 hover-tags">
-            <span class="custom-tag">{{ fileName }}
-              <button
-                (click)="removeReplyFile()"
-                class="border-0 bg-transparent p-0 position-absolute delete-tag">
-                <img src="../../../assets/images/cross-sm-light.svg"/></button></span>
-          </div>
-           </div>
-
-
-              <div class="chat-upload">
-                <div *ngIf="uploadImage != undefined">
+                <div
+                  *ngIf="
+                    fileName != '' && fileURL != '' && replyMessageType == 1
+                  "
+                  id="chat-reply"
+                >
                   <span
-                    *ngFor="let item of uploadImage"
                     class="chat-upload-img position-relative d-inline-block"
                   >
-                    <img [src]="item.fileURL" />
+                    <img [src]="fileURL" />
                     <button
-                      (click)="removeUploadFile(item.fileURL)"
+                      (click)="removeReplyFile()"
                       type="button"
                       class="btn dl-post-img d-flex align-items-center justify-content-center rounded-circle position-absolute"
                     >
@@ -575,19 +618,22 @@
                     </button>
                   </span>
                 </div>
-                <div *ngIf="uploadVideo != undefined">
+                <div
+                  *ngIf="
+                    fileName != '' && fileURL != '' && replyMessageType == 2
+                  "
+                  id="chat-reply"
+                >
                   <span
-                    *ngFor="let item of uploadVideo"
                     class="chat-upload-img position-relative d-inline-block"
                   >
                     <div class="videofile">
-                      <img [src]="item.videoUrl" />
-                      <!-- <video preload="metadata" style="height: 300px;">
-                          <source [src]="item.fileURL" type="video/mp4"/>
-                        </video> -->
+                      <video preload="metadata">
+                        <source [src]="fileURL" type="video/mp4" />
+                      </video>
                     </div>
                     <button
-                      (click)="removeUploadFile(item.name)"
+                      (click)="removeReplyFile()"
                       type="button"
                       class="btn dl-post-img d-flex align-items-center justify-content-center rounded-circle position-absolute"
                     >
@@ -596,16 +642,19 @@
                   </span>
                 </div>
 
-                <div *ngIf="uploadAttachments != undefined">
+                <div
+                  *ngIf="
+                    fileName != '' && fileURL != '' && replyMessageType == 3
+                  "
+                  id="chat-reply"
+                >
                   <div
                     class="teacher-tags tag-box hashtag_post mt-4 mb-2 hover-tags"
                   >
-                    <span
-                      *ngFor="let item of uploadAttachments"
-                      class="custom-tag"
-                      >{{ item.fileName }}
+                    <span class="custom-tag"
+                      >{{ fileName }}
                       <button
-                        (click)="removeUploadFile(item.fileURL)"
+                        (click)="removeReplyFile()"
                         class="border-0 bg-transparent p-0 position-absolute delete-tag"
                       >
                         <img
@@ -614,133 +663,206 @@
                     ></span>
                   </div>
                 </div>
-              </div>
-              <div class="add-comment d-flex align-items-center justify-content-between pt-0">
-                <span
-                  class="bg-transparent rounded-circle comment-post-user rounded-circle"
-                  ><img *ngIf="sender.avatar != null" style="max-height: 160%" [src]="sender.avatar" />
-                  <img *ngIf="sender.avatar == null && gender =='1'" style="max-height: 160%" src="../../../assets/images/maleProfile.jfif" />
-                  <img *ngIf="(sender.avatar == null) && (gender =='2' || gender =='3')" style="max-height: 160%" src="../../../assets/images/femaleProfile.jfif" />
-                </span>
 
-                <input
-                  (keyup)="getTextMessage($event, recieverId)"
-                  [(ngModel)]="messageToUser"
-                  type="text"
-                  class="form-control rounded-8 font_14 fw_400"
-                  placeholder="Your message"
-                />
-                <br />
+                <div class="chat-upload">
+                  <div *ngIf="uploadImage != undefined">
+                    <span
+                      *ngFor="let item of uploadImage"
+                      class="chat-upload-img position-relative d-inline-block"
+                    >
+                      <img [src]="item.fileURL" />
+                      <button
+                        (click)="removeUploadFile(item.fileURL)"
+                        type="button"
+                        class="btn dl-post-img d-flex align-items-center justify-content-center rounded-circle position-absolute"
+                      >
+                        <i class="fa-solid fa-xmark"></i>
+                      </button>
+                    </span>
+                  </div>
+                  <div *ngIf="uploadVideo != undefined">
+                    <span
+                      *ngFor="let item of uploadVideo"
+                      class="chat-upload-img position-relative d-inline-block"
+                    >
+                      <div class="videofile">
+                        <img [src]="item.videoUrl" />
+                        <!-- <video preload="metadata" style="height: 300px;">
+                          <source [src]="item.fileURL" type="video/mp4"/>
+                        </video> -->
+                      </div>
+                      <button
+                        (click)="removeUploadFile(item.name)"
+                        type="button"
+                        class="btn dl-post-img d-flex align-items-center justify-content-center rounded-circle position-absolute"
+                      >
+                        <i class="fa-solid fa-xmark"></i>
+                      </button>
+                    </span>
+                  </div>
 
-                <div class="post-bot-left d-flex">
-                  <label
-                    class="custom-file-upload post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center"
-                  >
-                    <input
-                      class="invisible"
-                      id="hideFileType"
-                      type="file"
-                      multiple="multiple"
-                      (change)="handleImages($event)"
-                      accept="image/*"
-                    />
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke-width="1.5"
-                      stroke="currentColor"
+                  <div *ngIf="uploadAttachments != undefined">
+                    <div
+                      class="teacher-tags tag-box hashtag_post mt-4 mb-2 hover-tags"
                     >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
-                      />
-                    </svg>
-                  </label>
-                  <label
-                    class="custom-file-upload post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center"
-                  >
-                    <input
-                      class="invisible"
-                      id="hideFileType"
-                      type="file"
-                      (change)="handleVideos($event)"
-                      accept="video/*"
-                    />
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke-width="1.5"
-                      stroke="currentColor"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        d="M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25h-9A2.25 2.25 0 002.25 7.5v9a2.25 2.25 0 002.25 2.25z"
-                      />
-                    </svg>
-                  </label>
-                  <label
-                    class="custom-file-upload post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center"
-                  >
-                    <input
-                      class="invisible"
-                      id="hideFileType"
-                      type="file"
-                      (change)="handleAttachments($event)"
-                      accept="application/pdf"
+                      <span
+                        *ngFor="let item of uploadAttachments"
+                        class="custom-tag"
+                        >{{ item.fileName }}
+                        <button
+                          (click)="removeUploadFile(item.fileURL)"
+                          class="border-0 bg-transparent p-0 position-absolute delete-tag"
+                        >
+                          <img
+                            src="../../../assets/images/cross-sm-light.svg"
+                          /></button
+                      ></span>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="add-comment d-flex align-items-center justify-content-between pt-0"
+                >
+                  <span
+                    class="bg-transparent rounded-circle comment-post-user rounded-circle"
+                    ><img
+                      *ngIf="sender.avatar != null"
+                      style="max-height: 160%"
+                      [src]="sender.avatar"
                     />
                     <img
-                      src="../../../assets/images/Paper-Plus-dark.svg"
-                      class="dark-attach"
-                    /><img
-                      src="../../../assets/images/Paper-Plus-light.svg"
-                      class="light-attach"
+                      *ngIf="sender.avatar == null && gender == '1'"
+                      style="max-height: 160%"
+                      src="../../../assets/images/maleProfile.jfif"
                     />
-                  </label>
-                </div>
-                <div>
+                    <img
+                      *ngIf="
+                        sender.avatar == null &&
+                        (gender == '2' || gender == '3')
+                      "
+                      style="max-height: 160%"
+                      src="../../../assets/images/femaleProfile.jfif"
+                    />
+                  </span>
+
+                  <input
+                    (keyup)="getTextMessage($event, recieverId)"
+                    [(ngModel)]="messageToUser"
+                    type="text"
+                    class="form-control rounded-8 font_14 fw_400"
+                    placeholder="Your message"
+                  />
+                  <br />
+
+                  <div class="post-bot-left d-flex">
+                    <label
+                      class="custom-file-upload post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center"
+                    >
+                      <input
+                        class="invisible"
+                        id="hideFileType"
+                        type="file"
+                        multiple="multiple"
+                        (change)="handleImages($event)"
+                        accept="image/*"
+                      />
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
+                        />
+                      </svg>
+                    </label>
+                    <label
+                      class="custom-file-upload post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center"
+                    >
+                      <input
+                        class="invisible"
+                        id="hideFileType"
+                        type="file"
+                        (change)="handleVideos($event)"
+                        accept="video/*"
+                      />
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          d="M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25h-9A2.25 2.25 0 002.25 7.5v9a2.25 2.25 0 002.25 2.25z"
+                        />
+                      </svg>
+                    </label>
+                    <label
+                      class="custom-file-upload post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center"
+                    >
+                      <input
+                        class="invisible"
+                        id="hideFileType"
+                        type="file"
+                        (change)="handleAttachments($event)"
+                        accept="application/pdf"
+                      />
+                      <img
+                        src="../../../assets/images/Paper-Plus-dark.svg"
+                        class="dark-attach"
+                      /><img
+                        src="../../../assets/images/Paper-Plus-light.svg"
+                        class="light-attach"
+                      />
+                    </label>
+                  </div>
+                  <div>
+                    <button
+                      *ngIf="invalidMessage || disabledSendButton"
+                      disabled
+                      (click)="sendToUser(recieverId)"
+                      type="button"
+                      class="comment-btn border-0"
+                    >
+                      <img
+                        *ngIf="!disabledSendButton"
+                        src="../../../assets/images/school/arrowup.svg"
+                      />
+                    </button>
+                    <div
+                      *ngIf="disabledSendButton"
+                      class="postloader-main position-relative"
+                    >
+                      <div
+                        class="postlds-chatUpload-ring"
+                        style="top: 18px; left: 34px"
+                      >
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                      </div>
+                    </div>
+                  </div>
                   <button
-                    *ngIf="invalidMessage || disabledSendButton"
-                    disabled
+                    *ngIf="!invalidMessage && !disabledSendButton"
                     (click)="sendToUser(recieverId)"
                     type="button"
                     class="comment-btn border-0"
                   >
-                    <img
-                      *ngIf="!disabledSendButton"
-                      src="../../../assets/images/school/arrowup.svg"
-                    />
+                    <img src="../../../assets/images/school/arrowup.svg" />
                   </button>
-                  <div
-                    *ngIf="disabledSendButton"
-                    class="postloader-main position-relative"
-                  >
-                    <div
-                      class="postlds-chatUpload-ring"
-                      style="top: 18px; left: 34px"
-                    >
-                      <div></div>
-                      <div></div>
-                      <div></div>
-                      <div></div>
-                    </div>
-                  </div>
                 </div>
-                <button
-                  *ngIf="!invalidMessage && !disabledSendButton"
-                  (click)="sendToUser(recieverId)"
-                  type="button"
-                  class="comment-btn border-0"
-                >
-                  <img src="../../../assets/images/school/arrowup.svg" />
-                </button>
               </div>
-            </div>
-          </main>
+            </main>
+          </div>
         </div>
-      </div>
 
       <div
         [ngClass]="showMySchoolInbox ? 'tab-pane fade show d-block' : 'd-none'"
@@ -869,75 +991,147 @@
                     <h2 *ngIf="userChat.sendByMe" class="mb-0 font_16 fw_600 text_sec1">{{senderName}}</h2>
                   <h2 *ngIf="!userChat.sendByMe" class="mb-0 font_16 fw_600 text_sec1">{{schoolInboxUserName}}</h2>
                 </div> -->
-                <div class="message">
+                  <div class="message">
                     <!-- for reply -->
                     <span *ngIf="userChat.replyMessageType == 0">{{userChat.replyChatContent}}
                     </span>
                     <span *ngIf="userChat.replyMessageType == 1">
                       <div
-                      class="img-attach me-2 d-inline-block cursor-pointer"
-                      data-bs-toggle="modal"
-                      data-bs-target="#full-chat-image"
-                      (click)="showFullChatImage(userChat.fileName, userChat.replyChatContent)"
-                    >
-                      <img [src]="userChat.replyChatContent" />
-                    </div>
+                        class="img-attach me-2 d-inline-block cursor-pointer"
+                        data-bs-toggle="modal"
+                        data-bs-target="#full-chat-image"
+                        (click)="
+                          showFullChatImage(
+                            userChat.fileName,
+                            userChat.replyChatContent
+                          )
+                        "
+                      >
+                        <img [src]="userChat.replyChatContent" />
+                      </div>
                     </span>
                     <span *ngIf="userChat.replyMessageType == 2">
-                      <div class="videofile cursor-pointer" (click)="showFullChatVideo(userChat.fileName, userChat.replyChatContent)">
-                      <video preload="metadata" style="height: 300px">
-                        <source [src]="userChat.replyChatContent" type="video/mp4" />
-                      </video>
-                    </div>
+                      <div
+                        class="videofile cursor-pointer"
+                        (click)="
+                          showFullChatVideo(
+                            userChat.fileName,
+                            userChat.replyChatContent
+                          )
+                        "
+                      >
+                        <video preload="metadata" style="height: 300px">
+                          <source
+                            [src]="userChat.replyChatContent"
+                            type="video/mp4"
+                          />
+                        </video>
+                      </div>
                     </span>
                     <span *ngIf="userChat.replyMessageType == 3">
-                      <div class="teacher-tags hashtag_post tag-boxattachment-outer mt-1 mb-0 hover-tags">
-                        <span class="custom-tag" (click)="openCertificateViewModal(userChat.replyChatContent, userChat.fileName)"><img
+                      <div
+                        class="teacher-tags hashtag_post tag-boxattachment-outer mt-1 mb-0 hover-tags"
+                      >
+                        <span
+                          class="custom-tag"
+                          (click)="
+                            openCertificateViewModal(
+                              userChat.replyChatContent,
+                              userChat.fileName
+                            )
+                          "
+                          ><img
                             src="../../../assets/images/Paper-gray.svg"
-                            class="me-1 dark-svg"/>
+                            class="me-1 dark-svg"
+                          />
                           <img
                             src="../../../assets/images/Paper-light.svg"
-                            class="me-1 light-svg"/>{{ userChat.fileName }}
+                            class="me-1 light-svg"
+                          />{{ userChat.fileName }}
                         </span>
                       </div>
                     </span>
-  
+
                     <!-- for forwarded -->
                     <span *ngIf="userChat.isForwarded && userChat.text == null">
-                      <i class="fa-sharp fa-solid fa-share fa-rotate-180 font_16"></i>
+                      <i
+                        class="fa-sharp fa-solid fa-share fa-rotate-180 font_16"
+                      ></i>
                     </span>
-                    <span *ngIf="userChat.isForwarded && userChat.forwardedFileType == 1">
+                    <span
+                      *ngIf="
+                        userChat.isForwarded && userChat.forwardedFileType == 1
+                      "
+                    >
                       <div
-                      class="img-attach me-2 d-inline-block cursor-pointer"
-                      data-bs-toggle="modal"
-                      data-bs-target="#full-chat-image"
-                      (click)="showFullChatImage(userChat.forwardedFileName, userChat.forwardedFileURL)">
-                      <img [src]="userChat.forwardedFileURL" />
-                    </div>
+                        class="img-attach me-2 d-inline-block cursor-pointer"
+                        data-bs-toggle="modal"
+                        data-bs-target="#full-chat-image"
+                        (click)="
+                          showFullChatImage(
+                            userChat.forwardedFileName,
+                            userChat.forwardedFileURL
+                          )
+                        "
+                      >
+                        <img [src]="userChat.forwardedFileURL" />
+                      </div>
                     </span>
-                    <span *ngIf="userChat.isForwarded && userChat.forwardedFileType == 2">
-                      <div class="videofile cursor-pointer" (click)="showFullChatVideo(userChat.forwardedFileName, userChat.forwardedFileURL)">
-                      <video preload="metadata" style="height: 300px">
-                        <source [src]="userChat.forwardedFileURL" type="video/mp4" />
-                      </video>
-                    </div>
+                    <span
+                      *ngIf="
+                        userChat.isForwarded && userChat.forwardedFileType == 2
+                      "
+                    >
+                      <div
+                        class="videofile cursor-pointer"
+                        (click)="
+                          showFullChatVideo(
+                            userChat.forwardedFileName,
+                            userChat.forwardedFileURL
+                          )
+                        "
+                      >
+                        <video preload="metadata" style="height: 300px">
+                          <source
+                            [src]="userChat.forwardedFileURL"
+                            type="video/mp4"
+                          />
+                        </video>
+                      </div>
                     </span>
-  
-                    <span *ngIf="userChat.isForwarded && userChat.forwardedFileType == 3">
-                      <div class="teacher-tags hashtag_post tag-boxattachment-outer mt-1 mb-0 hover-tags">
-                        <span class="custom-tag" (click)="openCertificateViewModal(userChat.forwardedFileURL, userChat.forwardedFileName)"><img
+
+                    <span
+                      *ngIf="
+                        userChat.isForwarded && userChat.forwardedFileType == 3
+                      "
+                    >
+                      <div
+                        class="teacher-tags hashtag_post tag-boxattachment-outer mt-1 mb-0 hover-tags"
+                      >
+                        <span
+                          class="custom-tag"
+                          (click)="
+                            openCertificateViewModal(
+                              userChat.forwardedFileURL,
+                              userChat.forwardedFileName
+                            )
+                          "
+                          ><img
                             src="../../../assets/images/Paper-gray.svg"
-                            class="me-1 dark-svg"/>
+                            class="me-1 dark-svg"
+                          />
                           <img
                             src="../../../assets/images/Paper-light.svg"
-                            class="me-1 light-svg"/>{{ userChat.forwardedFileName }}
+                            class="me-1 light-svg"
+                          />{{ userChat.forwardedFileName }}
                         </span>
                       </div>
                     </span>
-  
-  
+
                     <span *ngIf="userChat.isForwarded && userChat.text != null">
-                      <i class="fa-sharp fa-solid fa-share fa-rotate-180 font_16"></i>
+                      <i
+                        class="fa-sharp fa-solid fa-share fa-rotate-180 font_16"
+                      ></i>
                     </span>
   
                     <span *ngIf="userChat.replyMessageType != null">
@@ -975,83 +1169,132 @@
                     </div>
                   </div>
 
-                  <div *ngIf="item.fileType == 2" class="position-relative">
-                    <div class="forward-reply">
-                      <button (click)="chatAttachmentReply(item.id,item.fileName,item.fileURL,item.fileType)" type="button" class="forward-btn">
-                        {{ "Answer" | translate }}
-                        <img
-                          src="../../../assets/images/answer-forward-icon.svg"
-                          class="ms-2"
-                        /></button
-                      ><br />
-                      <button (click)="openForwardModal(userChat.text,item.fileName,item.fileURL,item.fileType)" type="button" class="forward-btn" data-bs-toggle="modal"
-                      data-bs-target="#open-forwardModal">
-                        {{ "Forward" | translate }}
-                        <img
-                          src="../../../assets/images/forward-icon.svg"
-                          class="ms-2"
-                        />
-                      </button>
+                    <div *ngIf="item.fileType == 2" class="position-relative">
+                      <div class="forward-reply">
+                        <button
+                          (click)="
+                            chatAttachmentReply(
+                              item.id,
+                              item.fileName,
+                              item.fileURL,
+                              item.fileType
+                            )
+                          "
+                          type="button"
+                          class="forward-btn"
+                        >
+                          {{ "Answer" | translate }}
+                          <img
+                            src="../../../assets/images/answer-forward-icon.svg"
+                            class="ms-2"
+                          /></button
+                        ><br />
+                        <button
+                          (click)="
+                            openForwardModal(
+                              userChat.text,
+                              item.fileName,
+                              item.fileURL,
+                              item.fileType
+                            )
+                          "
+                          type="button"
+                          class="forward-btn"
+                          data-bs-toggle="modal"
+                          data-bs-target="#open-forwardModal"
+                        >
+                          {{ "Forward" | translate }}
+                          <img
+                            src="../../../assets/images/forward-icon.svg"
+                            class="ms-2"
+                          />
+                        </button>
+                      </div>
+                      <div
+                        class="videofile cursor-pointer"
+                        data-bs-toggle="modal"
+                        data-bs-target="#chat-video"
+                        (click)="showFullChatVideo(item.fileName, item.fileURL)"
+                      >
+                        <video preload="metadata" style="height: 300px">
+                          <source [src]="item.fileURL" type="video/mp4" />
+                        </video>
+                      </div>
                     </div>
-                    <div
-                      class="videofile cursor-pointer"
-                      data-bs-toggle="modal"
-                      data-bs-target="#chat-video"
-                      (click)="showFullChatVideo(item.fileName, item.fileURL)"
-                    >
-                      <video preload="metadata" style="height: 300px">
-                        <source [src]="item.fileURL" type="video/mp4" />
-                      </video>
-                    </div>
-                  </div>
 
-                  <div *ngIf="item.fileType == 3">
-                    <div
-                      class="teacher-tags hashtag_post tag-boxattachment-outer mt-1 mb-0 hover-tags"
-                    >
-                    <div class="forward-reply">
-                      <button (click)="chatAttachmentReply(item.id,item.fileName,item.fileURL,item.fileType)" type="button" class="forward-btn">
-                        {{ "Answer" | translate }}
-                        <img
-                          src="../../../assets/images/answer-forward-icon.svg"
-                          class="ms-2"
-                        /></button
-                      ><br />
-                      <button (click)="openForwardModal(userChat.text,item.fileName,item.fileURL,item.fileType)" type="button" class="forward-btn" data-bs-toggle="modal"
-                      data-bs-target="#open-forwardModal">
-                        {{ "Forward" | translate }}
-                        <img
-                          src="../../../assets/images/forward-icon.svg"
-                          class="ms-2"
-                        />
-                      </button>
-                    </div>
-                      <span
-                        class="custom-tag"
-                        (click)="
-                          openCertificateViewModal(item.fileURL, item.fileName)
-                        "
-                        ><img
-                          src="../../../assets/images/Paper-gray.svg"
-                          class="me-1 dark-svg"
-                        />
-                        <img
-                          src="../../../assets/images/Paper-light.svg"
-                          class="me-1 light-svg"
-                        />{{ item.fileName }}
-                      </span>
+                    <div *ngIf="item.fileType == 3">
+                      <div
+                        class="teacher-tags hashtag_post tag-boxattachment-outer mt-1 mb-0 hover-tags"
+                      >
+                        <div class="forward-reply">
+                          <button
+                            (click)="
+                              chatAttachmentReply(
+                                item.id,
+                                item.fileName,
+                                item.fileURL,
+                                item.fileType
+                              )
+                            "
+                            type="button"
+                            class="forward-btn"
+                          >
+                            {{ "Answer" | translate }}
+                            <img
+                              src="../../../assets/images/answer-forward-icon.svg"
+                              class="ms-2"
+                            /></button
+                          ><br />
+                          <button
+                            (click)="
+                              openForwardModal(
+                                userChat.text,
+                                item.fileName,
+                                item.fileURL,
+                                item.fileType
+                              )
+                            "
+                            type="button"
+                            class="forward-btn"
+                            data-bs-toggle="modal"
+                            data-bs-target="#open-forwardModal"
+                          >
+                            {{ "Forward" | translate }}
+                            <img
+                              src="../../../assets/images/forward-icon.svg"
+                              class="ms-2"
+                            />
+                          </button>
+                        </div>
+                        <span
+                          class="custom-tag"
+                          (click)="
+                            openCertificateViewModal(
+                              item.fileURL,
+                              item.fileName
+                            )
+                          "
+                          ><img
+                            src="../../../assets/images/Paper-gray.svg"
+                            class="me-1 dark-svg"
+                          />
+                          <img
+                            src="../../../assets/images/Paper-light.svg"
+                            class="me-1 light-svg"
+                          />{{ item.fileName }}
+                        </span>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div
-                  [ngClass]="
-                    this.userChat.sendByMe
-                      ? 'message-time text-end text_ltgray font_12'
-                      : 'message-time text-start text_ltgray font_12'
-                  "
-                >
-                  {{ userChat.time | date : "HH:MM" }}
-                </div>
+                  <div
+                    [ngClass]="
+                      this.userChat.sendByMe
+                        ? 'message-time text-end text_ltgray font_12'
+                        : 'message-time text-start text_ltgray font_12'
+                    "
+                  >
+                    {{ userChat.time | date : "HH:MM" }}
+                  </div>
 
                 <div class="forward-reply" *ngIf="userChat.text != null && userChat.text != ''">
                   <button (click)="chatReply(userChat)" type="button" class="forward-btn">
@@ -1170,147 +1413,148 @@
                   </span>
                 </div>
 
-                <div *ngIf="uploadVideo != undefined">
-                  <span
-                    *ngFor="let item of uploadVideo"
-                    class="position-relative d-inline-block"
-                  >
-                    <div class="videofile">
-                      <img
-                        [src]="item.videoUrl"
-                        style="height: 150px; max-width: 100%"
-                      />
-                      <!-- <video preload="metadata" style="height: 300px;">
+                  <div *ngIf="uploadVideo != undefined">
+                    <span
+                      *ngFor="let item of uploadVideo"
+                      class="position-relative d-inline-block"
+                    >
+                      <div class="videofile">
+                        <img
+                          [src]="item.videoUrl"
+                          style="height: 150px; max-width: 100%"
+                        />
+                        <!-- <video preload="metadata" style="height: 300px;">
                           <source [src]="item.fileURL" type="video/mp4"/>
                         </video> -->
-                    </div>
-                    <button
-                      (click)="removeUploadFile(item.name)"
-                      type="button"
-                      class="btn dl-post-img d-flex align-items-center justify-content-center rounded-circle position-absolute"
-                    >
-                      <i class="fa-solid fa-xmark"></i>
-                    </button>
-                  </span>
-                </div>
-
-                <div *ngIf="uploadAttachments != undefined">
-                  <div
-                    class="teacher-tags tag-box hashtag_post mt-4 mb-2 hover-tags"
-                  >
-                    <span
-                      *ngFor="let item of uploadAttachments"
-                      class="custom-tag"
-                      >{{ item.fileName }}
+                      </div>
                       <button
-                        (click)="removeUploadFile(item.fileURL)"
-                        class="border-0 bg-transparent p-0 position-absolute delete-tag"
+                        (click)="removeUploadFile(item.name)"
+                        type="button"
+                        class="btn dl-post-img d-flex align-items-center justify-content-center rounded-circle position-absolute"
                       >
-                        <img
-                          src="../../../assets/images/cross-sm-light.svg"
-                        /></button
-                    ></span>
+                        <i class="fa-solid fa-xmark"></i>
+                      </button>
+                    </span>
                   </div>
-                </div>
 
-                <div class="post-bot-left d-flex">
-                  <label
-                    class="custom-file-upload post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center"
-                  >
-                    <input
-                      id="hideFileType"
-                      class="invisible"
-                      type="file"
-                      multiple="multiple"
-                      (change)="handleImages($event)"
-                      accept="image/*"
-                    />
-                    <img
-                      src="../../../assets/images/forward-icon.svg"
-                      src="../../../assets/images/gallery-dark.svg"
-                      class="dark-attach"
-                    /><img
-                      src="../../../assets/images/Video-light.svg"
-                      class="light-attach"
-                    />
-                  </label>
-                  <label
-                    class="custom-file-upload post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center"
-                  >
-                    <input
-                      id="hideFileType"
-                      class="invisible"
-                      type="file"
-                      (change)="handleVideos($event)"
-                      accept="video/*"
-                    />
-                    <img
-                      src="../../../assets/images/Video-dark.svg"
-                      class="dark-attach"
-                    /><img
-                      src="../../../assets/images/Video-light.svg"
-                      class="light-attach"
-                    />
-                  </label>
-                  <label
-                    class="custom-file-upload post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center"
-                  >
-                    <input
-                      id="hideFileType"
-                      class="invisible"
-                      type="file"
-                      (change)="handleAttachments($event)"
-                      accept="application/pdf"
-                    />
-                    <img
-                      src="../../../assets/images/Paper-Plus-dark.svg"
-                      class="dark-attach"
-                    /><img
-                      src="../../../assets/images/Paper-Plus-light.svg"
-                      class="light-attach"
-                    />
-                  </label>
-                </div>
+                  <div *ngIf="uploadAttachments != undefined">
+                    <div
+                      class="teacher-tags tag-box hashtag_post mt-4 mb-2 hover-tags"
+                    >
+                      <span
+                        *ngFor="let item of uploadAttachments"
+                        class="custom-tag"
+                        >{{ item.fileName }}
+                        <button
+                          (click)="removeUploadFile(item.fileURL)"
+                          class="border-0 bg-transparent p-0 position-absolute delete-tag"
+                        >
+                          <img
+                            src="../../../assets/images/cross-sm-light.svg"
+                          /></button
+                      ></span>
+                    </div>
+                  </div>
 
-                <div>
+                  <div class="post-bot-left d-flex">
+                    <label
+                      class="custom-file-upload post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center"
+                    >
+                      <input
+                        id="hideFileType"
+                        class="invisible"
+                        type="file"
+                        multiple="multiple"
+                        (change)="handleImages($event)"
+                        accept="image/*"
+                      />
+                      <img
+                        src="../../../assets/images/forward-icon.svg"
+                        src="../../../assets/images/gallery-dark.svg"
+                        class="dark-attach"
+                      /><img
+                        src="../../../assets/images/Video-light.svg"
+                        class="light-attach"
+                      />
+                    </label>
+                    <label
+                      class="custom-file-upload post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center"
+                    >
+                      <input
+                        id="hideFileType"
+                        class="invisible"
+                        type="file"
+                        (change)="handleVideos($event)"
+                        accept="video/*"
+                      />
+                      <img
+                        src="../../../assets/images/Video-dark.svg"
+                        class="dark-attach"
+                      /><img
+                        src="../../../assets/images/Video-light.svg"
+                        class="light-attach"
+                      />
+                    </label>
+                    <label
+                      class="custom-file-upload post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center"
+                    >
+                      <input
+                        id="hideFileType"
+                        class="invisible"
+                        type="file"
+                        (change)="handleAttachments($event)"
+                        accept="application/pdf"
+                      />
+                      <img
+                        src="../../../assets/images/Paper-Plus-dark.svg"
+                        class="dark-attach"
+                      /><img
+                        src="../../../assets/images/Paper-Plus-light.svg"
+                        class="light-attach"
+                      />
+                    </label>
+                  </div>
+
+                  <div>
+                    <button
+                      *ngIf="invalidMessage || disabledSendButton"
+                      disabled
+                      (click)="sendToUser(schoolInboxReceiverId)"
+                      type="button"
+                      class="comment-btn border-0"
+                    >
+                      <img
+                        *ngIf="!disabledSendButton"
+                        src="../../../assets/images/school/arrowup.svg"
+                      />
+                    </button>
+                    <div
+                      *ngIf="disabledSendButton"
+                      class="postloader-main position-relative"
+                    >
+                      <div
+                        class="postlds-chatUpload-ring"
+                        style="top: 18px; left: 34px"
+                      >
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                      </div>
+                    </div>
+                  </div>
                   <button
-                    *ngIf="invalidMessage || disabledSendButton"
-                    disabled
+                    *ngIf="!invalidMessage && !disabledSendButton"
                     (click)="sendToUser(schoolInboxReceiverId)"
                     type="button"
                     class="comment-btn border-0"
                   >
-                    <img
-                      *ngIf="!disabledSendButton"
-                      src="../../../assets/images/school/arrowup.svg"
-                    />
+                    <img src="../../../assets/images/school/arrowup.svg" />
                   </button>
-                  <div
-                    *ngIf="disabledSendButton"
-                    class="postloader-main position-relative"
-                  >
-                    <div
-                      class="postlds-chatUpload-ring"
-                      style="top: 18px; left: 34px"
-                    >
-                      <div></div>
-                      <div></div>
-                      <div></div>
-                      <div></div>
-                    </div>
-                  </div>
                 </div>
-                <button
-                  *ngIf="!invalidMessage && !disabledSendButton"
-                  (click)="sendToUser(schoolInboxReceiverId)"
-                  type="button"
-                  class="comment-btn border-0"
-                >
-                  <img src="../../../assets/images/school/arrowup.svg" />
-                </button>
               </div>
-            </div>
-          </main>
+            </main>
+          </div>
         </div>
       </div>
     </div>
@@ -1415,47 +1659,63 @@
   </div>
 </div>
 
-<div class="modal fade edit-school-modal delete-modal" id="open-forwardModal" tabindex="-1" aria-labelledby="open-forwardModal" aria-hidden="true">
-<div class="modal-dialog modal-dialog-centered">
-  <div class="modal-content">
-    <div
-      class="modal-header border-0 justify-content-center position-relative">
-      <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">
-        {{ "ForwardMessage" | translate }}
-      </h1>
-      <button
-        type="button"
-        class="btn-close shadow-none"
-        data-bs-dismiss="modal"
-        aria-label="Close">
-        <img src="../../../../assets/images/cross.svg" />
-      </button>
-    </div>
-    <div class="modal-body">
-        <div *ngFor="let item of forwardUsersList" class="d-flex justify-content-between pb-3">
-          <div>
-          <div class="school-img rounded-circle me-3">
-            <img [src]="item?.profileURL" alt="" />
-          </div>
-          <span>{{item.userName}}</span>
-          </div>
-          <button (click)="forwardToUser(item.userID,item.chatType)"
-          type="button"
-          class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step" style="width: 70px !important;">
-          {{ "Send" | translate }}
-        </button>
-        </div>
-      <div class="text-center">
+<div
+  class="modal fade edit-school-modal delete-modal"
+  id="open-forwardModal"
+  tabindex="-1"
+  aria-labelledby="open-forwardModal"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div
+        class="modal-header border-0 justify-content-center position-relative"
+      >
+        <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">
+          {{ "ForwardMessage" | translate }}
+        </h1>
         <button
           type="button"
-          class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
-          data-bs-dismiss="modal" style="width: 70px !important;">
-          {{ "Done" | translate }}
+          class="btn-close shadow-none"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        >
+          <img src="../../../../assets/images/cross.svg" />
         </button>
+      </div>
+      <div class="modal-body">
+        <div
+          *ngFor="let item of forwardUsersList"
+          class="d-flex justify-content-between pb-3"
+        >
+          <div>
+            <div class="school-img rounded-circle me-3">
+              <img [src]="item?.profileURL" alt="" />
+            </div>
+            <span>{{ item.userName }}</span>
+          </div>
+          <button
+            (click)="forwardToUser(item.userID, item.chatType)"
+            type="button"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
+            style="width: 70px !important"
+          >
+            {{ "Send" | translate }}
+          </button>
+        </div>
+        <div class="text-center">
+          <button
+            type="button"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
+            data-bs-dismiss="modal"
+            style="width: 70px !important"
+          >
+            {{ "Done" | translate }}
+          </button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 </div>
 
 <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>

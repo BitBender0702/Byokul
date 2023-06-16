@@ -1,45 +1,109 @@
 <div *ngIf="isDataLoaded">
-    <section class="f-poppins">
-       <div class="main_content">
-         <div class="create-post-header d-flex justify-content-between d-none d-xl-flex align-items-center">
-           <button (click)="back()" type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
-               src="../../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
-               <h2 class="font_22 fw_700 f-monteserrat mb-md-0">{{'Followers'| translate }}</h2>
-             <div class="search-header position-relative">
-              <input (keyup)="schoolFollowersSearch()" [(ngModel)]="searchString" type="search" class="form-control h_44">
-              <button type="button" class="btn search-icon"><img src="../../../assets/images/school/search-gray.svg"></button>
-            </div>
-         </div>
-         <div class="live-header d-flex align-items-center justify-content-between">
-           <button (click)="back()" type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark  d-xl-none"><img
-               src="../../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
-           <span class="logo_mobile d-xl-none">
-             <img src="../../../../assets/images/logo.svg" />
-           </span>
-           <div class="d-xl-none">
-             <button type="button" class="mobile-search border_btn" onclick="openSearch()"><img
-                 src="../../../../assets/images/search-lg.svg" /></button>
-             <button (click)="openSidebar()" type="button" class="mobile-search border_btn"><img
-                 src="../../../../assets/images/menu.svg" /></button>
-           </div>
-         </div>
-   
-         <!---- Followers list html start ------>
-         <div class="wht_newbox followers_box">
-           <ul class="list-unstyled before-none mb-0">
-             <li *ngFor="let schoolfollower of schoolFollowers" class="mb-0">
-               <div class="d-flex align-items-center justify-content-between"><span class="followers-name font_16 text_sec1 fw_600">
-                 <img [src]="schoolfollower.user.avatar" class="rounded-circle me-2" style="max-height: 30px;"/>
-                    <a style="cursor:pointer;" (click)="getSelectedFollower(schoolfollower.user.id)">{{schoolfollower.user.firstName + ' ' + schoolfollower.user.lastName}}</a></span>
-                     <span class="followe_report"><button type="button" class="border-0 bg-transparent font_14 text_dark fw_400 me-3">{{'Report'| translate }}</button> 
-                    <button type="button" class="border-0 bg-transparent font_14 text_dark fw_400 ">{{'Ban'| translate }}</button></span>
-               </div>
-             </li>
-           </ul>
-         </div>
-       </div>
-     </section>
-     </div>
+  <section class="f-poppins">
+    <div class="main_content">
+      <div class="main_content-max-width">
+        <div
+          class="create-post-header d-flex justify-content-between d-none d-xl-flex align-items-center"
+        >
+          <button
+            (click)="back()"
+            type="button"
+            class="back-button bg-transparent border-0 font_16 fw_400 text_dark"
+          >
+            <img src="../../../../assets/images/arrow-left.svg" />
+            {{ "Back" | translate }}
+          </button>
+          <h2 class="font_22 fw_700 f-monteserrat mb-md-0">
+            {{ "Followers" | translate }}
+          </h2>
+          <div class="search-header position-relative">
+            <input
+              (keyup)="schoolFollowersSearch()"
+              [(ngModel)]="searchString"
+              type="search"
+              class="form-control h_44"
+            />
+            <button type="button" class="btn search-icon">
+              <img src="../../../assets/images/school/search-gray.svg" />
+            </button>
+          </div>
+        </div>
+        <div
+          class="live-header d-flex align-items-center justify-content-between"
+        >
+          <button
+            (click)="back()"
+            type="button"
+            class="back-button bg-transparent border-0 font_16 fw_400 text_dark d-xl-none"
+          >
+            <img src="../../../../assets/images/arrow-left.svg" />
+            {{ "Back" | translate }}
+          </button>
+          <span class="logo_mobile d-xl-none">
+            <img src="../../../../assets/images/logo.svg" />
+          </span>
+          <div class="d-xl-none">
+            <button
+              type="button"
+              class="mobile-search border_btn"
+              onclick="openSearch()"
+            >
+              <img src="../../../../assets/images/search-lg.svg" />
+            </button>
+            <button
+              (click)="openSidebar()"
+              type="button"
+              class="mobile-search border_btn"
+            >
+              <img src="../../../../assets/images/menu.svg" />
+            </button>
+          </div>
+        </div>
 
-     <post-loading-spinner [postLoadingIcon]="postLoadingIcon"></post-loading-spinner>
+        <!---- Followers list html start ------>
+        <div class="wht_newbox followers_box">
+          <ul class="list-unstyled before-none mb-0">
+            <li *ngFor="let schoolfollower of schoolFollowers" class="mb-0">
+              <div class="d-flex align-items-center justify-content-between">
+                <span class="followers-name font_16 text_sec1 fw_600">
+                  <img
+                    [src]="schoolfollower.user.avatar"
+                    class="rounded-circle me-2"
+                    style="max-height: 30px"
+                  />
+                  <a
+                    style="cursor: pointer"
+                    (click)="getSelectedFollower(schoolfollower.user.id)"
+                    >{{
+                      schoolfollower.user.firstName +
+                        " " +
+                        schoolfollower.user.lastName
+                    }}</a
+                  ></span
+                >
+                <span class="followe_report"
+                  ><button
+                    type="button"
+                    class="border-0 bg-transparent font_14 text_dark fw_400 me-3"
+                  >
+                    {{ "Report" | translate }}
+                  </button>
+                  <button
+                    type="button"
+                    class="border-0 bg-transparent font_14 text_dark fw_400"
+                  >
+                    {{ "Ban" | translate }}
+                  </button></span
+                >
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
 
+<post-loading-spinner
+  [postLoadingIcon]="postLoadingIcon"
+></post-loading-spinner>
