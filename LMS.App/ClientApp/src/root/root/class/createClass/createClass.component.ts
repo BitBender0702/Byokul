@@ -1,14 +1,14 @@
-import { Component, ElementRef, Injector, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { HttpClient, HttpEventType, HttpHeaders } from "@angular/common/http";
 import {MenuItem, MessageService} from 'primeng/api';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MultilingualComponent } from '../../sharedModule/Multilingual/multilingual.component';
+import { MultilingualComponent, changeLanguage } from '../../sharedModule/Multilingual/multilingual.component';
 import { CreateClassModel } from 'src/root/interfaces/class/createClassModel';
 import { ClassService } from 'src/root/service/class.service';
 import { FilterService } from "primeng/api";
 import { IfStmt } from '@angular/compiler';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { SharePostComponent } from '../../sharePost/sharePost.component';
 import { BsModalService } from 'ngx-bootstrap/modal';
@@ -28,7 +28,7 @@ export const ownedClassResponse =new Subject<{classId: string, classAvatar : str
   providers: [FilterService,MessageService]
 })
 
-export class CreateClassComponent extends MultilingualComponent implements OnInit {
+export class CreateClassComponent extends MultilingualComponent implements OnInit, OnDestroy {
   private _classService;
 
   languages:any;
@@ -78,6 +78,7 @@ export class CreateClassComponent extends MultilingualComponent implements OnIni
   tagCountExceeded:boolean = false;
   @ViewChild('startDate') startDateRef!: ElementRef;
   @ViewChild('endDate') endDateRef!: ElementRef;
+  changeLanguageSubscription!: Subscription;
 
 
   constructor(injector: Injector,private bsModalService: BsModalService,private datePipe: DatePipe,public messageService:MessageService,private route: ActivatedRoute,private router: Router,private fb: FormBuilder,classService: ClassService,private http: HttpClient) {
@@ -177,6 +178,18 @@ flatpickr('#end_date',{
   minDate:new Date(),
   dateFormat: "m/d/Y"
 });
+
+if(!this.changeLanguageSubscription){
+  this.changeLanguageSubscription = changeLanguage.subscribe(response => {
+    this.translate.use(response.language);
+  })
+}
+}
+
+ngOnDestroy(): void {
+  if(this.changeLanguageSubscription){
+    this.changeLanguageSubscription.unsubscribe();
+  }
 }
 
 getSchoolsForDropdown(){

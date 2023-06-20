@@ -613,11 +613,7 @@
               <ng-container *ngFor="let post of user.posts">
                 <div
                   *ngIf="
-                    post.postType == 1 ||
-                    (post.postType == 2 &&
-                      (post.isLive ||
-                        post.postAttachments[0]?.fileType == 2 ||
-                        post.postAttachments[1]?.fileType == 2))
+                    (post.postType == 1  && post.postAuthorType == 4) || post.isLive
                   "
                   class="school-grid-box position-relative"
                 >
@@ -1347,7 +1343,7 @@
 
           <div class="row">
             <ng-container *ngFor="let post of user.posts">
-              <div *ngIf="post.postType == 1" class="col-md-6 col-xl-4">
+              <div *ngIf="(post.postType == 1 && post.postAuthorType == 4) || post.isLive" class="col-md-6 col-xl-4">
                 <div
                   class="school-grid-box position-relative school-list-box h-100 mb-0"
                 >
@@ -1371,6 +1367,12 @@
                     <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">
                       {{ post.title }}
                     </h2>
+                    <div *ngIf="post.isLive">
+                      <img
+                        src="../../../../assets/images/live_img.png"
+                        style="height: 76px"
+                      />
+                    </div>
                     <button
                       *ngIf="post.isPinned && isOwner"
                       (click)="pinUnpinPost(post.id, false)"

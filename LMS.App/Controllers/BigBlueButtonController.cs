@@ -176,6 +176,7 @@ namespace LMS.App.Controllers
         }
 
         [HttpPost, Route("GetMeetingVideo"), AllowAnonymous]
+        [DisableRequestSizeLimit, RequestFormLimits(MultipartBodyLengthLimit = int.MaxValue, ValueLengthLimit = int.MaxValue)]
         public async Task GetMeetingVideo(IFormFile file, string meetingIds)
         {
             var fileUrl = await _blobService.UploadFileAsync(file, this._config.GetValue<string>("Container:PostContainer"), true);

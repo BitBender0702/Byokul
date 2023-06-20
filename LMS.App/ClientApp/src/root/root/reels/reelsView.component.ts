@@ -121,6 +121,7 @@ import { Subject } from 'rxjs';
               }
             this.isDataLoaded = true;
             this.cd.detectChanges();
+            this.savePreferences(this.reels.post.title,this.reels.post.description,this.reels.post.postTags);
           });
 
           var validToken = localStorage.getItem("jwt");
@@ -160,8 +161,7 @@ import { Subject } from 'rxjs';
           });
           
           this.gender = localStorage.getItem("gender")??'';
-          this.cd.detectChanges();
-          
+          this.cd.detectChanges();          
     }
 
     ngAfterViewInit() {        
@@ -252,6 +252,20 @@ player.play(); // Start playing the video again
         let decodedJwtData = JSON.parse(decodedJwtJsonData);
         this.loginUserId = decodedJwtData.jti;
       }
+    }
+
+    savePreferences(title:string,description:string,postTags:any){
+      debugger
+      var tagString = '';
+      if(postTags != null){
+      postTags.forEach(function (item:any) {
+        debugger
+        tagString = tagString + item.postTagValue
+      }); 
+    }
+      var preferenceString = (title??'') + ' ' + (description??'') + ' ' + tagString??'';
+      this._userService.saveUserPreference(preferenceString).subscribe((_response) => {
+      });
     }
 
     InitializeCommentViewModel(){

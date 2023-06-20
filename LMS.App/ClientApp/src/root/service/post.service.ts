@@ -6,6 +6,7 @@ import { environment } from "src/environments/environment";
 import { LikeUnlikePost } from "../interfaces/post/likeUnlikePost";
 import { JoinMeetingModel } from "../interfaces/bigBlueButton/joinMeeting";
 import { BigBlueButtonService } from "./bigBlueButton";
+import { UserService } from "./user.service";
 
 @Injectable({providedIn: 'root'})
 
@@ -13,12 +14,14 @@ export class PostService{
     token:string = localStorage.getItem("jwt")?? '';
     joinMeetingViewModel!:JoinMeetingModel;
     private _bigBlueButtonService;
+    private _userService;
     private headers!: HttpHeaders;
     get apiUrl(): string {
         return environment.apiUrl;
       }
-    constructor(private router: Router, private http: HttpClient, bigBlueButtonService:BigBlueButtonService) { 
+    constructor(private router: Router, private http: HttpClient, bigBlueButtonService:BigBlueButtonService, userService:UserService) { 
         this._bigBlueButtonService = bigBlueButtonService;
+        this._userService = userService;
         this.headers = new HttpHeaders().set("Authorization", "Bearer " + this.token);
     }
     
@@ -138,6 +141,31 @@ export class PostService{
       });
       return new Observable<void>();
       }
+
+      openLiveStream(post:any,userId:string):Observable<any>{
+      if(post.isLive){
+        if(post.createdBy == userId){
+         this.router.navigate(
+           [`liveStream`,post.id,false]
+          );
+        }
+        else{
+         this.initializeJoinMeetingViewModel();
+   this._userService.getUser(userId).subscribe((result) => {
+   this.joinMeetingViewModel.name = result.firstName + " " + result.lastName;
+   var params = new URLSearchParams(post.streamUrl.split('?')[1]);
+   this.joinMeetingViewModel.meetingId = params.get('meetingID')?.replace("meetings","")??'';
+   this.joinMeetingViewModel.postId = post.id;
+   this._bigBlueButtonService.joinMeeting(this.joinMeetingViewModel).subscribe((response) => {
+    this.router.navigate(
+     [`liveStream`,post.id,false]
+    );
+   });
+        });
+     }
+   }
+   return new Observable<void>();
+}
   
       initializeJoinMeetingViewModel(){
         this.joinMeetingViewModel = {

@@ -1,13 +1,13 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, Injector, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { HttpClient, HttpEventType, HttpHeaders } from "@angular/common/http";
 import {MenuItem, MessageService} from 'primeng/api';
-import { MultilingualComponent } from '../../sharedModule/Multilingual/multilingual.component';
+import { MultilingualComponent, changeLanguage } from '../../sharedModule/Multilingual/multilingual.component';
 import { FilterService } from "primeng/api";
 import { CreateCourseModel } from 'src/root/interfaces/course/createCourseModel';
 import { CourseService } from 'src/root/service/course.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { SharePostComponent } from '../../sharePost/sharePost.component';
 import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
@@ -25,7 +25,7 @@ export const ownedCourseResponse =new Subject<{courseId: string, courseAvatar : 
   providers: [FilterService,MessageService]
 })
 
-export class CreateCourseComponent extends MultilingualComponent implements OnInit {
+export class CreateCourseComponent extends MultilingualComponent implements OnInit, OnDestroy {
   private _courseService;
   languages:any;
   students:any;
@@ -66,6 +66,7 @@ export class CreateCourseComponent extends MultilingualComponent implements OnIn
   tagList!: string[];
   isTagsValid: boolean = true;
   tagCountExceeded:boolean = false;
+  changeLanguageSubscription!: Subscription;
 
 
 
@@ -162,6 +163,18 @@ export class CreateCourseComponent extends MultilingualComponent implements OnIn
   });
 
   this.tagList = [];
+
+  if(!this.changeLanguageSubscription){
+    this.changeLanguageSubscription = changeLanguage.subscribe(response => {
+      this.translate.use(response.language);
+    })
+  }
+}
+
+ngOnDestroy(): void {
+  if(this.changeLanguageSubscription){
+    this.changeLanguageSubscription.unsubscribe();
+  }
 }
 
 getSchoolsForDropdown(){

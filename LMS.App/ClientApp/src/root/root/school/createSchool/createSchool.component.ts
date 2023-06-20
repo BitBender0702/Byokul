@@ -1,4 +1,4 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, Injector, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { CreateSchoolModel } from 'src/root/interfaces/school/createSchoolModel';
 import { SchoolService } from 'src/root/service/school.service';
@@ -7,8 +7,8 @@ import {StepsModule} from 'primeng/steps';
 import {MenuItem, MessageService} from 'primeng/api';
 import { Router } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
-import { MultilingualComponent } from '../../sharedModule/Multilingual/multilingual.component';
-import { Subject } from 'rxjs';
+import { MultilingualComponent, changeLanguage } from '../../sharedModule/Multilingual/multilingual.component';
+import { Subject, Subscription } from 'rxjs';
 import { environment } from "src/environments/environment";
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { SharePostComponent } from '../../sharePost/sharePost.component';
@@ -23,7 +23,7 @@ export const ownedSchoolResponse =new Subject<{schoolId: string, schoolAvatar : 
   providers: [MessageService]
 })
 
-export class CreateSchoolComponent extends MultilingualComponent implements OnInit {
+export class CreateSchoolComponent extends MultilingualComponent implements OnInit, OnDestroy {
 
   get apiUrl(): string {
     return environment.apiUrl;
@@ -57,6 +57,7 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
   schoolUrl!:string;
   schoolId!:string;
   schoolName!:string;
+  changeLanguageSubscription!: Subscription;
 
   
   constructor(injector: Injector,private bsModalService: BsModalService,public messageService:MessageService,private domSanitizer: DomSanitizer,private router: Router,private fb: FormBuilder,schoolService: SchoolService,private http: HttpClient) {
@@ -65,6 +66,7 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
   }
 
   ngOnInit(): void {
+    debugger
     this.step = 0;
     this.selectedLanguage = localStorage.getItem("selectedLanguage");
     this.translate.use(this.selectedLanguage);
@@ -104,6 +106,18 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
   this.createSchoolForm2 = this.fb.group({
     defaultAvatar: this.fb.control(''),
   });
+
+  if(!this.changeLanguageSubscription){
+    this.changeLanguageSubscription = changeLanguage.subscribe(response => {
+      this.translate.use(response.language);
+    })
+  }
+}
+
+ngOnDestroy(): void {
+  if(this.changeLanguageSubscription){
+    this.changeLanguageSubscription.unsubscribe();
+  }
 }
 
   copyMessage(inputElement:any){

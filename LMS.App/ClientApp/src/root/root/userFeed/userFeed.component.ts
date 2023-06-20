@@ -162,6 +162,7 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
                this.isMyFeedsEmpty = true;
                this.getGlobalFeedsData()
             }
+            this.addListenerToNextButton();
               // this.isDataLoaded = true;
           });
 
@@ -281,9 +282,11 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
     }
 
     checkMyFeedExist(){
+      debugger
       if(this.isMyFeedPostsExist && this.isMyFeedReelsExist){
         this.isDataLoaded = true;
         this.loadingIcon = false;
+        this.cd.detectChanges();
         localStorage.setItem('feedTab','myFeed');
       }
   }
@@ -313,17 +316,20 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
     }
 
   addListenerToNextButton() {
+    debugger
     if(this.carousel != undefined){
       
       setTimeout(() => {
         if($('#reels-carousel')[0].querySelectorAll('a.carousel-control-next')[0])
         {
           $('#reels-carousel')[0].querySelectorAll('a.carousel-control-next')[0].addEventListener('click', () => {
+            debugger
             this.reelsPageNumber++;
             if(this.reelsPageNumber == 2){
               this.reelsLoadingIcon = true;
             }
             this._userService.getMyFeed(3, this.reelsPageNumber,this.searchString).subscribe((response) => {
+              debugger
                this.myFeedsReels = [...this.myFeedsReels, ...response];
                this.reelsLoadingIcon = false;
           });
@@ -481,6 +487,7 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
           });
         }
         this._userService.getGlobalFeed(3, this.globalReelsPageNumber,this.searchString).subscribe((result) => {
+          debugger
             this.globalFeedReels = result;
             // this.loadingIcon = false;
             // this.isDataLoaded = true;

@@ -13,6 +13,7 @@ import { JoinMeetingModel } from 'src/root/interfaces/bigBlueButton/joinMeeting'
 import { BigBlueButtonService } from 'src/root/service/bigBlueButton';
 import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
 import { UserService } from 'src/root/service/user.service';
+import { MessageService } from 'primeng/api';
 
 export const unreadNotificationResponse =new Subject<{type:string}>(); 
 
@@ -20,7 +21,8 @@ export const unreadNotificationResponse =new Subject<{type:string}>();
 @Component({
     selector: 'payment',
     templateUrl: './notifications.component.html',
-    styleUrls: ['./notifications.component.css']
+    styleUrls: ['./notifications.component.css'],
+    providers: [MessageService],
   })
 
   export class NotificationsComponent extends MultilingualComponent implements OnInit, OnDestroy {
@@ -43,7 +45,7 @@ export const unreadNotificationResponse =new Subject<{type:string}>();
     joinMeetingViewModel!:JoinMeetingModel;
 
 
-    constructor(injector: Injector,userService:UserService,private fb: FormBuilder,notificationService:NotificationService,private router: Router,postService:PostService,private bsModalService: BsModalService,bigBlueButtonService:BigBlueButtonService) {
+    constructor(injector: Injector,public messageService: MessageService,userService:UserService,private fb: FormBuilder,notificationService:NotificationService,private router: Router,postService:PostService,private bsModalService: BsModalService,bigBlueButtonService:BigBlueButtonService) {
        super(injector);
        this._notificationService = notificationService;
        this._postService = postService;
@@ -56,6 +58,7 @@ export const unreadNotificationResponse =new Subject<{type:string}>();
         var selectedLang = localStorage.getItem('selectedLanguage');
         this.translate.use(selectedLang ?? '');
         this._notificationService.getNotifications(this.notificationPageNumber).subscribe((notificationsResponse) => {
+          debugger
             this.notifications = notificationsResponse;
             var notifications: any[] = this.notifications;
             var unreadNotifications = notifications.filter(x => !x.isRead);
@@ -183,23 +186,33 @@ export const unreadNotificationResponse =new Subject<{type:string}>();
 
     joinMeeting(userId:string,meetingId:string,postId:string){
       debugger
-      this.initializeJoinMeetingViewModel();
-      this._userService.getUser(userId).subscribe((result) => {
+      this._postService.getPostById(postId).subscribe((response) => {
         debugger
-      this.joinMeetingViewModel.name = result.firstName + " " + result.lastName;
-      this.joinMeetingViewModel.meetingId = meetingId;
-      this.joinMeetingViewModel.postId = postId;
-      this._bigBlueButtonService.joinMeeting(this.joinMeetingViewModel).subscribe((response) => {
-      //  const fullNameIndex = response.url.indexOf('fullName='); // find the index of "fullName="
-      //  const newUrl = response.url.slice(fullNameIndex);
-       this.router.navigate(
-        [`liveStream`,postId,false]
-    //     { state: { stream: {streamUrl: response.url, userId:this.userId, meetingId: meetingId, isOwner:false} } });
-    // });
-       );
+        if(response.isLive){
+          this.initializeJoinMeetingViewModel();
+          this._userService.getUser(userId).subscribe((result) => {
+            debugger
+          this.joinMeetingViewModel.name = result.firstName + " " + result.lastName;
+          this.joinMeetingViewModel.meetingId = meetingId;
+          this.joinMeetingViewModel.postId = postId;
+          this._bigBlueButtonService.joinMeeting(this.joinMeetingViewModel).subscribe((response) => {
+          //  const fullNameIndex = response.url.indexOf('fullName='); // find the index of "fullName="
+          //  const newUrl = response.url.slice(fullNameIndex);
+           this.router.navigate(
+            [`liveStream`,postId,false]
+        //     { state: { stream: {streamUrl: response.url, userId:this.userId, meetingId: meetingId, isOwner:false} } });
+        // });
+           );
+          });
+                  
+        })
+        }
+        else{
+          this.messageService.add({severity: 'info',summary: 'Info',life: 3000,detail: 'This live has ended!',});
+        }
+
       });
-              
-    })
+     
     }
 
     initializeJoinMeetingViewModel(){

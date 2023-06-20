@@ -960,7 +960,7 @@
             <div class="accordion" id="accordionPanelsStayOpenExample">
               <ng-container *ngFor="let post of school.posts">
                 <div
-                  *ngIf="post.postType == 1 && post.postAuthorType == 1"
+                  *ngIf="(post.postType == 1 && post.postAuthorType == 1) || post.isLive"
                   class="school-grid-box position-relative"
                 >
                   <div
@@ -972,6 +972,12 @@
                     <h2 class="d-inline-block font_20 fw_600 text_sec1 mb-0">
                       {{ post.title }}
                     </h2>
+                    <div *ngIf="post.isLive">
+                      <img
+                        src="../../../../assets/images/live_img.png"
+                        style="height: 76px"
+                      />
+                    </div>
                     <p
                       *ngIf="post.dateTime != null"
                       class="font_14 school-grid-date d-inline-block mb-0"
@@ -1478,6 +1484,12 @@
                       <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">
                         {{ gridItemInfo.title }}
                       </h2>
+                      <div *ngIf="gridItemInfo.isLive">
+                        <img
+                          src="../../../../assets/images/live_img.png"
+                          style="height: 76px"
+                        />
+                      </div>
                     </div>
 
                     <p class="font_14 school-grid-date d-inline-block mb-0">
@@ -1632,7 +1644,7 @@
               <div class="row">
                 <ng-container *ngFor="let post of school.posts">
                   <div
-                    *ngIf="post.postType == 1 && post.postAuthorType == 1"
+                    *ngIf="(post.postType == 1 && post.postAuthorType == 1) || post.isLive"
                     class="col-md-6 col-xl-4"
                   >
                     <div
@@ -1649,6 +1661,12 @@
                         >
                           {{ post.title }}
                         </h2>
+                        <div *ngIf="post.isLive">
+                          <img
+                            src="../../../../assets/images/live_img.png"
+                            style="height: 76px"
+                          />
+                        </div>
                         <button
                           *ngIf="post.isPinned && isOwner"
                           (click)="pinUnpinPost(post.id, false)"

@@ -1066,6 +1066,11 @@ export class SchoolProfileComponent
   }
 
   openPostsViewModal(posts: any): void {
+     if(posts.isLive){
+        this._postService.openLiveStream(posts,this.userId).subscribe((response) => {
+        });
+      }
+      else{
     var postAttachments = this.filteredAttachments.filter(x => x.postId == posts.id);
     const initialState = {
       posts: posts,
@@ -1073,6 +1078,7 @@ export class SchoolProfileComponent
     };
     this.bsModalService.show(PostViewComponent, { initialState });
   }
+}
 
   openClassCourseViewModal(item: string): void {
     const initialState = {
@@ -1203,10 +1209,17 @@ export class SchoolProfileComponent
   showPostDiv(postId: string) {
     var posts: any[] = this.school.posts;
     this.gridItemInfo = posts.find((x) => x.id == postId);
+    if(this.gridItemInfo.isLive){
+      this.isGridItemInfo = true;
+      this._postService.openLiveStream(this.gridItemInfo,this.userId).subscribe((response) => {
+      });
+    }
+    else{
     this.isGridItemInfo = true;
     this.cd.detectChanges();
     const player = videojs(this.videoPlayer.nativeElement, {autoplay: false});
-    this.addPostView(this.gridItemInfo.id);
+    this.addPostView(this.gridItemInfo.id);     
+  }
   }
 
   addPostView(postId: string) {

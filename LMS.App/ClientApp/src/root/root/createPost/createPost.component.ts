@@ -777,8 +777,23 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
 
     if(this.scheduleTime != undefined){
       if(this.scheduleTime < new Date()){
+        this.createPostForm.setErrors({ unauthenticated: true });
+        return;
+      }
+      else{
+        const date = new Date(this.scheduleTime);
+        this.postToUpload.append('dateTime', date.toISOString());
+      }
+    }
+
+    if(this.scheduleTime != undefined){
+      if(this.scheduleTime < new Date()){
         this.createLiveForm.setErrors({ unauthenticated: true });
         return;
+      }
+      else{
+        const date = new Date(this.scheduleTime);
+        this.postToUpload.append('dateTime', date.toISOString());
       }
       if(this.videos.length == 0){
         this.scheduleVideoRequired = true;
@@ -822,6 +837,7 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
     }
 
     this._postService.createPost(this.postToUpload).subscribe((response:any) => { 
+      debugger
       this.isSubmitted=false;
       this.loadingIcon = false;
       //addPostResponse.next({response}); 
@@ -830,12 +846,15 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
       // const fullNameIndex = response.streamUrl.indexOf('fullName='); // find the index of "fullName="
       // const newUrl = response.streamUrl.slice(fullNameIndex);
       // here we need to send schoolId/classId if stream from those.
+      if(!response.isPostSchedule){
       this.router.navigate(
           [`liveStream`,response.id,this.from]
           // { state: { stream: {streamUrl: response.streamUrl, userId:this.userId, meetingId: post.title,from:"user"} } });
 
       // }
       );
+      
+    }
       });
 
 }

@@ -949,6 +949,12 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     }
 
     openPostsViewModal(posts:any): void {
+      debugger
+      if(posts.isLive){
+        this._postService.openLiveStream(posts,this.userId).subscribe((response) => {
+        });
+      }
+      else{
       var postAttachments = this.filteredAttachments.filter(x => x.postId == posts.id);
       const initialState = {
         posts: posts,
@@ -963,6 +969,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       var a = res.data;
       //this.itemList.push(res.data);
     });
+  }
     }
 
 
@@ -1028,12 +1035,21 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     }
 
     showPostDiv(postId:string){
+      debugger
       var posts: any[] = this.class.posts;
       this.gridItemInfo = posts.find(x => x.id == postId);
+      if(this.gridItemInfo.isLive){
+        this.isGridItemInfo = true;
+        this._postService.openLiveStream(this.gridItemInfo,this.userId).subscribe((response) => {
+        });
+      }
+      else{
+        debugger
       this.isGridItemInfo = true;
       this.cd.detectChanges();
       const player = videojs(this.videoPlayer.nativeElement, { autoplay: false });
       this.addPostView(this.gridItemInfo.id);
+      }
     }
 
     addPostView(postId:string){

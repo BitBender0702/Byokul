@@ -9,7 +9,7 @@ import { MultilingualComponent } from '../sharedModule/Multilingual/multilingual
 import { NotificationType, NotificationViewModel } from 'src/root/interfaces/notification/notificationViewModel';
 import { Constant } from 'src/root/interfaces/constant';
 import { SignalrService, commentLikeResponse, commentResponse, endMeetingResponse, liveUsersCountResponse, notifyCommentThrotllingResponse, postLikeResponse, postViewResponse, saveStreamResponse, shareStreamResponse } from 'src/root/service/signalr.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { PostService } from 'src/root/service/post.service';
 import { ChatService } from 'src/root/service/chatService';
 import { CommentViewModel } from 'src/root/interfaces/chat/commentViewModel';
@@ -237,8 +237,35 @@ else{
         this.isDataLoaded = true;
 
         if(this.post.createdBy == this.userId){
-           this.isOwner = true;
+          this.isOwner = true;
+          var isSendNotificationInfoExist = sessionStorage.getItem('sendNotificationInfo') !== null;
+          var notificationInfoArray;
+          if (!isSendNotificationInfoExist) {
+            notificationInfoArray = [];
+           var sendNotificationInfo = {
+              postId: this.post.id,
+             isSendNotifications: true,
+           };
+           notificationInfoArray.push(sendNotificationInfo);
+          sessionStorage.setItem('sendNotificationInfo', JSON.stringify(notificationInfoArray));   
+          this.getFollowers(this.post.parentId);
+         }
+         else{
+          var notificationInfo = sessionStorage.getItem('sendNotificationInfo')??'';
+          notificationInfoArray = JSON.parse(notificationInfo);
+          var isPostIdExist = notificationInfoArray.find((x: { postId: any; }) => x.postId == this.post.id);
+
+          if(isPostIdExist == null){
+            var sendNotificationInfo = {
+              postId: this.post.id,
+             isSendNotifications: true,
+           };
+           notificationInfoArray.push(sendNotificationInfo);
+           sessionStorage.setItem('sendNotificationInfo', JSON.stringify(notificationInfoArray));   
            this.getFollowers(this.post.parentId);
+          }
+
+         }
         }
         else{
           this.isOwner = false;

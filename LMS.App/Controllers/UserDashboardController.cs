@@ -1,4 +1,5 @@
-﻿using LMS.Data.Entity;
+﻿using LMS.Common.Enums;
+using LMS.Data.Entity;
 using LMS.Services.UserDashboard;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -16,19 +17,71 @@ namespace LMS.App.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly IUserDashboardService _userDashboardService;
-        public UserDashboardController(UserManager<User> userManager, IUserDashboardService userDashboardService)
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        public UserDashboardController(UserManager<User> userManager, IUserDashboardService userDashboardService, IWebHostEnvironment webHostEnvironment)
         {
             _userManager = userManager;
             _userDashboardService = userDashboardService;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         [Route("dashboardDetails")]
         [HttpGet]
         public async Task<IActionResult> DashboardDetails()
-                {
+        {
             var userId = await GetUserIdAsync(this._userManager);
             var response = await _userDashboardService.UserDashboard(userId);
             return Ok(response);
+        }
+
+        [Route("getLanguageJson")]
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<IActionResult> GetLanguageJson(LanguageEnum language)
+        {
+            var path = _webHostEnvironment.ContentRootPath;
+            var imagePath = Path.Combine(path, "ClientApp");
+            if (language == LanguageEnum.English)
+            {
+                string filePath = Path.Combine(imagePath, "src/assets/i18n", "en.json");
+                if (System.IO.File.Exists(filePath))
+                {
+                    string jsonContent = System.IO.File.ReadAllText(filePath);
+                    return Content(jsonContent, "application/json");
+                }
+            }
+
+            if (language == LanguageEnum.Turkish)
+            {
+                string filePath = Path.Combine(imagePath, "src/assets/i18n", "tr.json");
+                if (System.IO.File.Exists(filePath))
+                {
+                    string jsonContent = System.IO.File.ReadAllText(filePath);
+                    return Content(jsonContent, "application/json");
+                }
+            }
+
+            if (language == LanguageEnum.Arabic)
+            {
+                string filePath = Path.Combine(imagePath, "src/assets/i18n", "ar.json");
+                if (System.IO.File.Exists(filePath))
+                {
+                    string jsonContent = System.IO.File.ReadAllText(filePath);
+                    return Content(jsonContent, "application/json");
+                }
+            }
+
+            if (language == LanguageEnum.Spanish)
+            {
+                string filePath = Path.Combine(imagePath, "src/assets/i18n", "sp.json");
+                if (System.IO.File.Exists(filePath))
+                {
+                    string jsonContent = System.IO.File.ReadAllText(filePath);
+                    return Content(jsonContent, "application/json");
+                }
+            }
+
+            return null;
         }
     }
 }

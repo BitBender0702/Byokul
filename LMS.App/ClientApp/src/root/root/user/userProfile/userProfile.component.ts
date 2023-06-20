@@ -976,8 +976,8 @@ pinUnpinPost(attachmentId:string,isPinned:boolean,type?:number){
 
 openPostsViewModal(posts:any): void {
   if(posts.isLive){
-    this._postService.joinMeeting(posts.parentName,posts.title + "meetings",posts.id).subscribe((response) => {
-    });  
+    this._postService.openLiveStream(posts,this.loginUserId).subscribe((response) => {
+    }); 
   }
   else{
   var postAttachments = this.filteredAttachments.filter(x => x.postId == posts.id);
@@ -1070,10 +1070,17 @@ likeUnlikePosts(postId:string, isLike:boolean,postType:number,post:any,from:numb
 showPostDiv(postId:string){
   var posts: any[] = this.user.posts;
   this.gridItemInfo = posts.find(x => x.id == postId);
+  if(this.gridItemInfo.isLive){
+    this.isGridItemInfo = true;
+    this._postService.openLiveStream(this.gridItemInfo,this.loginUserId).subscribe((response) => {
+    });
+  }
+  else{
   this.isGridItemInfo = true;
   this.cd.detectChanges();
   videojs(this.videoPlayer.nativeElement, {autoplay: false});
   this.addPostView(this.gridItemInfo.id);
+  }
 }
 
 showSavedPostDiv(postId:string){
