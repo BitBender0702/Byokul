@@ -595,6 +595,7 @@ button.live_chats {
   position: absolute;
   top: 25px;
   left: 25px;
+  cursor: pointer;
 }
 button.live_chats .chat-gray-icon {
   margin-right: 13px;
@@ -678,6 +679,8 @@ button.comment-btn {
   flex: 0 0 auto;
   width: 32px;
   height: 32px;
+  min-width: 32px;
+  overflow: hidden;
 }
 
 .comment-post-user img {
@@ -1188,7 +1191,7 @@ input[type="number"]::-webkit-outer-spin-button {
   overflow: hidden;
   height: 300px;
   margin-right: 15px;
-  width: 210px;
+  width: 228px;
 }
 
 /* .feedbox-inner {
@@ -3021,18 +3024,64 @@ p-autocomplete li:before {
   overflow-y: auto;
   padding-right: 5px;
 }
+.addCommentBox .form-control {
+  margin: 0;
+  padding-right: 36px;
+}
+.addCommentBox .emoji_btn {
+  position: absolute;
+  right: 16px;
+  top: 8px;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+.addCommentBox {
+  padding: 0 9px;
+  width: 100% ;
+}
+.main_content {
+  padding-left: 330px !important;
+}
+.throttling_dropdown .dropdown-menu {
+  bottom: 100%;
+  top: auto;
+  margin-bottom: 5px;
+}
+.dropdown .dropdown-item.active, .dropdown .dropdown-item:active {
+  color: #fff;
+  background: linear-gradient(90.02deg, #ff7b1c 0.02%, #ffa41c 99.98%);
+}
 
 @media screen and (min-width: 1200px) {
-  .main_content {
-    padding-left: 330px !important;
-  }
-
   .main_content-max-width {
     max-width: 1200px;
     margin: 0 auto;
   }
 }
-@media screen and (max-width: 1199px) {
+
+@media screen and (min-width: 1281px) {
+  .sidemenu.d-xl-block {
+    display: block !important;
+  }
+}
+
+@media (max-width: 1440px) {
+  .main_content {
+      padding-left: 315px !important;
+  }
+  .main_content {
+    padding: 40px 25px;
+  }
+  .livechat-box {
+      margin: 0 5px 0 0;
+  }
+  .live-chat-box {
+      padding: 29px 25px;
+  }
+}
+
+@media screen and (max-width: 1280px) {
   .font_39 {
     font-size: 36px;
   }
@@ -3056,8 +3105,32 @@ p-autocomplete li:before {
     font-size: 15px !important;
   }
   .post-bot-right .lg_btn {
-    width: 210px !important;
-}
+      width: 210px !important;
+  }
+  .sidemenu.d-none {
+    display: none !important;
+  }
+  .logo_mobile.d-xl-none {
+      display: block !important;
+  }
+  .logo_mobile.d-xl-none ~ .d-xl-none.d-flex {
+      display: flex !important;
+  }
+  .create-post-header.d-xl-flex {
+      display: none !important;
+  }
+  button.back-button.d-xl-none {
+      display: block !important;
+  }
+  .sidemenu .closebtn.d-xl-none {
+      display: inline-block !important;
+  }
+  .main_content {
+      padding-left: 25px !important;
+  }
+  .main_content {
+    padding: 40px 25px;
+  }
 }
 
 @media screen and (max-width: 991px) {
@@ -3165,7 +3238,7 @@ p-autocomplete li:before {
   .main_content {
     width: 100%;
     transition: ease-in-out 0.5s;
-    padding: 40px 15px 40px 15px !important;
+    padding: 25px 15px 40px 15px !important;
   }
 
   .step-desc {
@@ -3307,18 +3380,15 @@ p-autocomplete li:before {
     padding: 20px 10px 10px 10px;
     background: #fcfcfc;
 }
-.live-chat-outer{
-
-}
 .add-comment {
   padding-bottom: 10px;
 }
-.emoji_btn[_ngcontent-ng-cli-universal-c215] {
-  position: absolute !important;
-  right: 80px !important;
+.feedbox-inner{
+  padding: 0 20px;
 }
 
 }
+
 @media (max-width: 575px) {
   .steps_btns button {
     margin-right: 10px;
@@ -3329,7 +3399,32 @@ p-autocomplete li:before {
   .certi-template-select li {
     width: 100%;
   }
+  .logo_mobile img {
+      max-width: 110px;
+  }
+  .live-header .search-header .btn.search-icon {
+    position: static;
+    height: 40px;
+    width: 40px;
+    border: 1px solid #e1e1e1 !important;
+  }
+  .live-header .search-header input.form-control[type="search"] {
+    padding-left: 14px !important;
+    position: absolute;
+    right: 0;
+    left: auto;
+    min-width: 190px;
+    top: 100%;
+    margin-top: 5px;
+    display: none;
 }
+.logo_mobile.d-xl-none ~ .d-xl-none.d-flex .search-header {
+  width: auto;
+  margin-bottom: 0;
+}
+  
+}
+
 @media (max-width: 451px) {
   .create-post-header {
     flex-wrap: wrap;
@@ -3346,6 +3441,21 @@ p-autocomplete li:before {
   .d-flex {
     flex-wrap: wrap;
   }
+  .feedimg-box {
+    min-width: 210px;
+    height: 305px;
+      width: 295px;
+  }
+}
+
+@media (max-width: 370px) {
+  .feedimg-box {
+      height: 290px;
+      width: 255px;
+  }
+  .feedbox-inner {
+    padding: 0 15px;
+}
 }
 
 .textBlack {

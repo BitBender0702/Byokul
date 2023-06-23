@@ -76,12 +76,12 @@
                         src="../../../assets/images/chat-gray-icon.svg"
                       />
                       <img
-                        *ngIf="showCommentsField"
+                        *ngIf="!showCommentsField"
                         src="../../../assets/images/chevron-right-light.svg"
                         class="live-chat-back"
                       />
                       <img
-                        *ngIf="!showCommentsField"
+                        *ngIf="showCommentsField"
                         src="../../../assets/images/cross.svg"
                         class="live-chat-back"
                       />
@@ -122,7 +122,7 @@
               >
                 <div class="post-bot-right d-flex justify-content-md-end w-100"
                 >
-                  <div class="dropdown me-3">
+                  <div class="dropdown me-3 throttling_dropdown">
                     <!-- <div class="dropdown"> -->
                     <button
                       *ngIf="isOwner"
@@ -397,7 +397,8 @@
                         style="max-height: 100%"
                       />
                     </span>
-                    <input
+                    <div class="position-relative addCommentBox">
+                      <input
                       (keyup.enter)="sendToGroup()"
                       [(ngModel)]="messageToGroup"
                       type="text"
@@ -407,6 +408,8 @@
                     <button (click)="toggleEmojiPicker()" class="emoji_btn">
                       😀
                     </button>
+                    </div>
+                    
                     <button
                       (click)="sendToGroup()"
                       type="button"
