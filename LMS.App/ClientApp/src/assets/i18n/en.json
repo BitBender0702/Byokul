@@ -357,7 +357,7 @@
   "AddVideoForScheduleStream": "Please add a video for schedule stream",
   "TitleRequired": "Title is required",
   "BodyRequired": "Body text is required",
-  "DropImageOr": "Drop image to drop video or",
+  "DropImageOr": "Drop video or",
   "SelectAtleastOneVideo": "Please select at least one video",
   "SelectAtleastOneAttachment": "Please select at least one attachment",
   "Time": "Time",
