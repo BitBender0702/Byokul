@@ -45,7 +45,7 @@
     <div>
       <div id="reel_content">
         <div class="row">
-          <div class="col-md-4">
+          <div class="col-12 col-lg-4">
             <div>
               <div
                 [ngClass]="
@@ -284,22 +284,60 @@
               </div>
             </div>
           </div>
-        <div [ngClass]="showCommentsField? '' : 'col-md-12'" class="col-md-7">
-        <div class="live-inner w-100">
-          <div>
-            <div class="live-image overflow-hidden position-relative">
-              <div *ngIf="(streamUrl == undefined || streamUrl == null) && (post.coverThumbnail != undefined)" style="align-items: center;
-              flex-direction: column;
-              display: flex;">
-                 <!-- <img class="cover_thumbnail" [src]="post.coverThumbnail"/> -->
-                 <!-- <h3 style="position: relative;bottom: 467px;">{{'StreamStartingIn'| translate }} {{streamCountDown}}</h3> -->
-                 <!-- <p style="position: relative;bottom: 467px;">{{post.coverLetter}}</p> -->
-              </div>
-              <iframe *ngIf="streamUrl != undefined && streamUrl != null && meetingId != ''" width="840" height="500" [src]="streamUrl" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share;camera;microphone;display-capture" allowfullscreen></iframe>
-              <video #videoPlayer id="test12" *ngIf="meetingId == ''" width="840" height="500" autoplay (ended)="onVideoEnded()" (timeupdate)="onVideoTimeUpdate($event)" controls preload="auto">
-                <source [src]="post.streamUrl + '?cache=' + cacheBuster" type="video/mp4" />
-              </video>
-              <!-- <div class="overlay" (click)="startVideo()" #startButton>
+          <div
+            [ngClass]="showCommentsField ? '' : 'col-lg-12'"
+            class="col-12 col-lg-8"
+          >
+            <div class="live-inner w-100">
+              <div>
+                <div class="live-image overflow-hidden position-relative">
+                  <div
+                    *ngIf="
+                      (streamUrl == undefined || streamUrl == null) &&
+                      post.coverThumbnail != undefined
+                    "
+                    style="
+                      align-items: center;
+                      flex-direction: column;
+                      display: flex;
+                    "
+                  >
+                    <!-- <img class="cover_thumbnail" [src]="post.coverThumbnail"/> -->
+                    <!-- <h3 style="position: relative;bottom: 467px;">{{'StreamStartingIn'| translate }} {{streamCountDown}}</h3> -->
+                    <!-- <p style="position: relative;bottom: 467px;">{{post.coverLetter}}</p> -->
+                  </div>
+                  <iframe
+                    *ngIf="
+                      streamUrl != undefined &&
+                      streamUrl != null &&
+                      meetingId != ''
+                    "
+                    width="840"
+                    height="500"
+                    [src]="streamUrl"
+                    title="YouTube video player"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share;camera;microphone;display-capture"
+                    allowfullscreen
+                  ></iframe>
+                  <video
+                    #videoPlayer
+                    id="test12"
+                    *ngIf="meetingId == ''"
+                    width="840"
+                    height="500"
+                    autoplay
+                    (ended)="onVideoEnded()"
+                    (timeupdate)="onVideoTimeUpdate($event)"
+                    controls
+                    preload="auto"
+                  >
+                    <source
+                      [src]="post.streamUrl + '?cache=' + cacheBuster"
+                      type="video/mp4"
+                    />
+                  </video>
+                  <!-- <div class="overlay" (click)="startVideo()" #startButton>
                 <span>Click to Play</span>
               </div> -->
                 </div>

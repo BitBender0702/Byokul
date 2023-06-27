@@ -1764,6 +1764,14 @@ body .liv-postbtn .post-attch-btn.active,
   max-width: 860px;
 }
 
+.live-inner {
+  padding: 0 16px;
+}
+
+.live-inner iframe {
+  width: 100%;
+}
+
 .live-image {
   box-shadow: 0px 4px 20px rgb(0 0 0 / 5%);
   margin: 0 auto 26px;
