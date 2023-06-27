@@ -1,0 +1,159 @@
+.static-main {
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+.header {
+  padding: 65px 16px;
+}
+
+.header__content {
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+.static-content {
+  position: relative;
+  background: linear-gradient(
+    180deg,
+    rgba(207, 207, 207, 0.1) 0%,
+    rgba(227, 227, 227, 0.065) 100%
+  );
+  padding: 32px;
+  border-radius: 8px;
+}
+
+.static-back-button {
+  position: absolute;
+  top: 32px;
+  left: 32px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: transparent;
+  color: #313131;
+  padding: 0;
+  border: 0;
+}
+
+.static-back-button svg {
+  width: 16px;
+  height: 16px;
+}
+
+.static-content h1 {
+  font-size: 24px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.static-content h2 {
+  color: #ffa41c;
+  margin-bottom: 32px;
+  font-size: 20px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.static-content p {
+  color: #313131;
+  margin-bottom: 32px;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.static-content ul {
+  padding-left: 0;
+}
+
+.static-content ul li {
+  display: flex;
+  gap: 16px;
+}
+
+.static-content ul li span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 32px;
+  height: 32px;
+  background-color: #ffa41c;
+  color: #fff;
+  border-radius: 9999px;
+}
+
+.static-content hr {
+  border-color: #f4f4f4;
+  margin: 24px 0;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 16px;
+  box-shadow: 0px -4px 20px 0px #0000000d;
+}
+
+@media screen and (min-width: 1024px) {
+  .footer {
+    padding: 56px 16px;
+  }
+}
+
+.footer nav {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+@media screen and (min-width: 1024px) {
+  .footer nev {
+    margin-top: 0;
+  }
+}
+
+.footer nav a {
+  color: #393935;
+  font-size: 16px;
+  line-height: 24px;
+  text-decoration: none;
+}
+
+.footer__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1300px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+@media screen and (min-width: 1024px) {
+  .footer__content {
+    flex-direction: row;
+  }
+}
+
+.static-content .accordion-item {
+  border: 0;
+  background-color: transparent;
+}
+
+.static-content .accordion-button {
+  box-shadow: none;
+  background-color: transparent;
+  color: #ffa41c;
+  text-align: center !important;
+}
+
+.static-content .accordion-button {
+  box-shadow: none;
+}
+
+.static-content .accordion-button:not(.collapsed) {
+  background-color: transparent;
+}
