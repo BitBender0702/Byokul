@@ -1158,6 +1158,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .feed-name img {
+  flex: 0 0 auto;
   width: 32px;
   height: 32px;
   border-radius: 50%;
@@ -1166,6 +1167,8 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .feed-name {
+  display: flex;
+  align-items: center;
   position: absolute;
   bottom: 55px;
   background: rgba(255, 255, 255, 0.9);
