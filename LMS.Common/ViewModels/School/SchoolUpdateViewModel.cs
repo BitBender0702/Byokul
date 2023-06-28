@@ -23,5 +23,6 @@ namespace LMS.Common.ViewModels.School
         public string OwnerId { get; set; }
         public string? Description { get; set; }
         public UserViewModel? User { get; set; }
+        public string? CountryName { get; set; }
     }
 }

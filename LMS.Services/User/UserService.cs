@@ -207,7 +207,7 @@ namespace LMS.Services
 
         public async Task<IEnumerable<UserFollowerViewModel>> GetFollowers(string userId)
         {
-            var followerList = await _userFollowerRepository.GetAll().Where(x => x.UserId == userId).ToListAsync();
+            var followerList = await _userFollowerRepository.GetAll().Where(x => x.UserId == userId && !x.IsBan).Distinct().ToListAsync();
             return _mapper.Map<IEnumerable<UserFollowerViewModel>>(followerList);
         }
 
@@ -369,7 +369,8 @@ namespace LMS.Services
             user.Gender = userUpdateViewModel.Gender;
             user.Description = userUpdateViewModel.Description;
             user.ContactEmail = userUpdateViewModel.ContactEmail;
-
+            user.CountryName = userUpdateViewModel.CountryName;
+            user.CityName = userUpdateViewModel.CityName;
             _userRepository.Update(user);
             _userRepository.Save();
             return _mapper.Map<UserUpdateViewModel>(user);
@@ -521,7 +522,7 @@ namespace LMS.Services
         public async Task<IEnumerable<PostDetailsViewModel>> GetPostsByUserId(string userId, int pageNumber = 1, int pageSize = 12)
         {
 
-            var postList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == new Guid(userId) && (x.PostType == (int)PostTypeEnum.Post || (x.PostType == (int)PostTypeEnum.Stream)) && x.PostAuthorType == (int)PostAuthorTypeEnum.User).OrderByDescending(x => x.IsPinned).ToListAsync();
+            var postList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == new Guid(userId) && (x.PostType == (int)PostTypeEnum.Post || (x.PostType == (int)PostTypeEnum.Stream)) && x.PostAuthorType == (int)PostAuthorTypeEnum.User && x.IsPostSchedule != true).OrderByDescending(x => x.IsPinned).ToListAsync();
 
             var requiredPostList = postList.OrderByDescending(x => x.IsPinned).ThenByDescending(x => x.CreatedOn).ToList();
 
@@ -586,7 +587,7 @@ namespace LMS.Services
 
         public async Task<IEnumerable<PostDetailsViewModel>> GetReelsByUserId(string userId, int pageNumber = 1, int pageSize = 8)
         {
-            var reelList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == new Guid(userId) && x.PostType == (int)PostTypeEnum.Reel && x.PostAuthorType == (int)PostAuthorTypeEnum.User).OrderByDescending(x => x.IsPinned).ToListAsync();
+            var reelList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == new Guid(userId) && x.PostType == (int)PostTypeEnum.Reel && x.PostAuthorType == (int)PostAuthorTypeEnum.User && x.IsPostSchedule != true).OrderByDescending(x => x.IsPinned).ToListAsync();
 
             var result = _mapper.Map<List<PostDetailsViewModel>>(reelList).Skip((pageNumber - 1) * pageSize).Take(pageSize);
 
@@ -671,9 +672,9 @@ namespace LMS.Services
 
         }
 
-        public async Task<bool> BanFollower(string followerId)
+        public async Task<bool> BanFollower(string followerId,string userId)
         {
-            var follower = await _userFollowerRepository.GetAll().Where(x => x.FollowerId == followerId).FirstOrDefaultAsync();
+            var follower = await _userFollowerRepository.GetAll().Where(x => x.FollowerId == followerId && x.UserId == userId).FirstOrDefaultAsync();
 
             if (follower != null)
             {
@@ -1156,27 +1157,29 @@ namespace LMS.Services
             }
 
 
-            var userPreference = new UserPreference
-            {
-                UserId = userId,
-                PreferenceTokens = preferenceString
-
-            };
-
             if (isUserPreferenceExist == null)
             {
+                var userPreference = new UserPreference
+                {
+                    UserId = userId,
+                    PreferenceTokens = preferenceString
+
+                };
                 _userPreferenceRepository.Insert(userPreference);
                 _userPreferenceRepository.Save();
+                return userPreference.Id;
             }
             else
             {
-                userPreference.Id = isUserPreferenceExist.Id;
+                isUserPreferenceExist.PreferenceTokens = preferenceString;
+                //userPreference.Id = isUserPreferenceExist.Id;
                 // no update here
-                _userPreferenceRepository.Update(userPreference);
+                _userPreferenceRepository.Update(isUserPreferenceExist);
                 _userPreferenceRepository.Save();
+                return isUserPreferenceExist.Id;
 
             }
-            return userPreference.Id;
+            return new Guid();
         }
 
         public async Task<int> GetCommentsCountOnPost(Guid postId)
@@ -1233,21 +1236,21 @@ namespace LMS.Services
 
 
 
-            var classStudent = await _classStudentRepository.GetAll().Include(x => x.Class).ThenInclude(y => y.School).Where(y => y.Class.School.SchoolId == schoolId && y.StudentId == student.StudentId).FirstOrDefaultAsync();
+            var classStudent = await _classStudentRepository.GetAll().Include(x => x.Class).ThenInclude(y => y.School).Where(y => y.Class.School.SchoolId == schoolId && y.StudentId == student.StudentId).ToListAsync();
 
 
-            if (classStudent != null)
+            if (classStudent.Count() != 0)
             {
-                _classStudentRepository.Delete(classStudent.Id);
+                _classStudentRepository.DeleteAll(classStudent);
                 _classStudentRepository.Save();
             }
 
-            var courseStudent = await _courseStudentRepository.GetAll().Include(x => x.Course).ThenInclude(y => y.School).Where(y => y.Course.School.SchoolId == schoolId && y.StudentId == student.StudentId).FirstOrDefaultAsync();
+            var courseStudent = await _courseStudentRepository.GetAll().Include(x => x.Course).ThenInclude(y => y.School).Where(y => y.Course.School.SchoolId == schoolId && y.StudentId == student.StudentId).ToListAsync();
 
 
-            if (courseStudent != null)
+            if (courseStudent.Count() != 0)
             {
-                _courseStudentRepository.Delete(courseStudent.Id);
+                _courseStudentRepository.DeleteAll(courseStudent);
                 _courseStudentRepository.Save();
             }
         }

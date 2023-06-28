@@ -196,7 +196,7 @@
             (click)="resetTeacherModal()"
             data-bs-toggle="modal"
             data-bs-target="#add-schoolTeacher"
-            >Add Teachers<button
+            >{{ "AddTeacher" | translate }}<button
               (click)="resetTeacherModal()"
               class="border-0 bg-transparent p-0 position-absolute delete-tag"
               data-bs-toggle="modal"
@@ -237,7 +237,7 @@
             (click)="resetCertificateModal()"
             data-bs-toggle="modal"
             data-bs-target="#add-certificate"
-            >Add Certificates<button
+            >{{ "AddCertificates" | translate }}<button
               (click)="resetCertificateModal()"
               class="border-0 bg-transparent p-0 position-absolute delete-tag"
               data-bs-toggle="modal"
@@ -275,7 +275,7 @@
             (click)="resetLanguageModal()"
             data-bs-toggle="modal"
             data-bs-target="#add-language"
-            >Add Languages<button
+            >{{ "AddLanguage" | translate }}<button
               (click)="resetLanguageModal()"
               class="border-0 bg-transparent p-0 position-absolute delete-tag"
               data-bs-toggle="modal"
@@ -333,7 +333,7 @@
                   aria-selected="false"
                   tabindex="-1"
                 >
-                  Classes & Courses
+                {{ "Classes&Courses" | translate }}
                 </button>
               </li>
             </ul>
@@ -346,7 +346,7 @@
                 type="button"
                 class="btn custom-btn primary_btn earning-btn fw_400 h_44 me-2"
               >
-                Create Class
+              {{ "CreateClass" | translate }}
               </button>
               <button
                 *ngIf="isOwner || hasCreateEditCoursePermission"
@@ -354,7 +354,7 @@
                 type="button"
                 class="btn custom-btn primary_btn earning-btn fw_400 h_44 me-2"
               >
-                Create Course
+              {{ "CreateCourse" | translate }}
               </button>
 
               <button
@@ -410,7 +410,7 @@
                   aria-haspopup="true"
                   aria-expanded="false"
                 >
-                  Classes
+                  {{ "Classes" | translate }}
                   <span
                     class="position-absolute start-100 translate-middle border border-light rounded-circle filter-badge"
                   >
@@ -515,7 +515,7 @@
                           id="inlineCheckbox1"
                           value="option1"
                         />
-                        {{ classFilter.name }}
+                        {{ classFilter.name | translate }}
                       </div>
                     </div>
                   </ng-container>
@@ -557,7 +557,7 @@
                           id="inlineCheckbox1"
                           value="option1"
                         />
-                        {{ classFilter.name }}
+                        {{ classFilter.name | translate }}
                       </div>
                     </div>
                   </ng-container>
@@ -599,7 +599,7 @@
                           id="inlineCheckbox1"
                           value="option1"
                         />
-                        {{ classFilter.name }}
+                        {{ classFilter.name | translate }}
                       </div>
                     </div>
                   </ng-container>
@@ -612,14 +612,14 @@
                       type="button"
                       class="btn custom-btn primary_btn earning-btn fw_500 h_44 w-100 font_14 prev-step-btn prev-step me-2"
                     >
-                      Clear All
+                      {{ "ClearAll" | translate }}
                     </button>
                     <button
                       (click)="saveClassFilters()"
                       type="button"
                       class="btn custom-btn primary_btn earning-btn fw_500 h_44 w-100 font_14 next-step m-0"
                     >
-                      Apply
+                      {{ "Apply" | translate }}
                     </button>
                   </div>
                 </div>
@@ -738,7 +738,7 @@
                           id="inlineCheckbox1"
                           value="option1"
                         />
-                        {{ courseFilter.name }}
+                        {{ courseFilter.name | translate }}
                       </div>
                     </div>
                   </ng-container>
@@ -781,7 +781,7 @@
                           id="inlineCheckbox1"
                           value="option1"
                         />
-                        {{ courseFilter.name }}
+                        {{ courseFilter.name | translate }}
                       </div>
                     </div>
                   </ng-container>
@@ -824,7 +824,7 @@
                           id="inlineCheckbox1"
                           value="option1"
                         />
-                        {{ courseFilter.name }}
+                        {{ courseFilter.name | translate }}
                       </div>
                     </div>
                   </ng-container>
@@ -837,14 +837,14 @@
                       type="button"
                       class="btn custom-btn primary_btn earning-btn fw_500 h_44 w-100 font_14 prev-step-btn prev-step me-2"
                     >
-                      Clear All
+                      {{ "ClearAll" | translate }}
                     </button>
                     <button
                       (click)="saveCourseFilters()"
                       type="button"
                       class="btn custom-btn primary_btn earning-btn fw_500 h_44 w-100 font_14 next-step m-0"
                     >
-                      Apply
+                      {{ "Apply" | translate }}
                     </button>
                   </div>
                 </div>
@@ -2277,6 +2277,35 @@
                     </div>
                     <div class="col-md-12">
                       <div class="form-group">
+                        <label class="font_10">{{ "Country" | translate }}*</label>
+                        <select
+                          class="form-select rounded-8 w-100"
+                          formControlName="country"
+                          aria-label="Default select example"
+                        >
+                          <option value="" disabled selected hidden>
+                            {{ "Country" | translate }}
+                          </option>
+                          <option
+                            *ngFor="let country of countries"
+                            [value]="country.countryName"
+                          >
+                            {{ country.countryName }}
+                          </option>
+                        </select>
+                        <!-- <small
+                          class="p-error"
+                          style="color: orange"
+                          *ngIf="
+                            isStepCompleted &&
+                            createSchoolForm1.controls.countryName.errors
+                          "
+                          >{{ "ThisFieldRequired" | translate }}
+                        </small> -->
+                      </div>
+                      </div>
+                    <div class="col-md-12">
+                      <div class="form-group">
                         <label class="font_10">{{
                           "SchoolBio" | translate
                         }}</label>
@@ -2430,13 +2459,13 @@
                     *ngIf="!school.isDisableByOwner"
                     class="text-center font_16 f-poppins"
                   >
-                    {{ "DoYouWantToDisableSchool" | translate }} ?
+                    {{ "DoYouWantToDisableSchool" | translate }} 
                   </h2>
                   <h2
                     *ngIf="school.isDisableByOwner"
                     class="text-center font_16 f-poppins"
                   >
-                    {{ "DoYouWantToUnableSchool" | translate }} ?
+                    {{ "DoYouWantToUnableSchool" | translate }} 
                   </h2>
                 </div>
                 <div

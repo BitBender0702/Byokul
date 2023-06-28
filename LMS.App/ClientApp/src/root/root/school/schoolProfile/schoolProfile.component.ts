@@ -61,6 +61,8 @@ import { RolesEnum } from 'src/root/RolesEnum/rolesEnum';
 import { ownedClassResponse } from '../../class/createClass/createClass.component';
 import { ownedCourseResponse } from '../../course/createCourse/createCourse.component';
 import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
+import { TranslateService } from '@ngx-translate/core';
+import { UserService } from 'src/root/service/user.service';
 
 export const deleteSchoolResponse =new BehaviorSubject <string>('');  
 
@@ -83,6 +85,7 @@ export class SchoolProfileComponent
   private _classService;
   private _courseService;
   private _authService;
+  private _userService;
   school: any;
   isProfileGrid: boolean = true;
   isOpenSidebar: boolean = false;
@@ -191,11 +194,17 @@ export class SchoolProfileComponent
   savedClassCourseSubscription!: Subscription;
   deletePostSubscription!: Subscription;
   deleteReelSubscription!: Subscription;
+  getCountriesSubscription!: Subscription;
   savedMessage!:string;
   removedMessage!:string;
+  requiredCountry:any;
+  countries:any;
+  iseditDataLoaded!:boolean;
+  
 
   constructor(
     injector: Injector,
+    private translateService: TranslateService,
     public messageService: MessageService,
     postService: PostService,
     private bsModalService: BsModalService,
@@ -205,6 +214,7 @@ export class SchoolProfileComponent
     private domSanitizer: DomSanitizer,
     schoolService: SchoolService,
     authService:AuthService,
+    userService:UserService,
     private fb: FormBuilder,
     private router: Router,
     private http: HttpClient,
@@ -215,7 +225,8 @@ export class SchoolProfileComponent
     private renderer: Renderer2, 
     private el: ElementRef,
     private meta: Meta,
-    private titleService: Title
+    private titleService: Title,
+    
   ) {
     super(injector);
     this._schoolService = schoolService;
@@ -224,6 +235,7 @@ export class SchoolProfileComponent
     this._classService = classService,
     this._courseService = courseService
     this._authService = authService;
+    this._userService = userService;
     this.schoolParamsData$ = this.route.params.subscribe((routeParams) => {
       this.schoolName = routeParams.schoolName;
       if (!this.loadingIcon && this.isOnInitInitialize){
@@ -256,6 +268,9 @@ export class SchoolProfileComponent
     if (this.schoolParamsData$) {
         this.schoolParamsData$.unsubscribe();
     }
+    if (this.getCountriesSubscription) {
+      this.getCountriesSubscription.unsubscribe();
+  }
   }
   ngOnChanges(): void {
     
@@ -328,6 +343,7 @@ export class SchoolProfileComponent
       schoolEmail: this.fb.control(''),
       description: this.fb.control(''),
       owner: this.fb.control(''),
+      country: this.fb.control('')
     });
 
     this.languageForm = this.fb.group({
@@ -382,7 +398,9 @@ export class SchoolProfileComponent
     if(!this.addPostSubscription){
       this.addPostSubscription = addPostResponse.subscribe((response) => {
         this.loadingIcon = true;
-        this.messageService.add({severity: 'success',summary: 'Success',life: 3000,detail: 'Post created successfully',});
+        const translatedMessage = this.translateService.instant('PostCreatedSuccessfully');
+        const translatedSummary = this.translateService.instant('Success');
+        this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage,});
         this._schoolService.getSchoolById(this.schoolName.replace(' ', '').toLowerCase()).subscribe((response) => {
            this.school = response;
            this.titleService.setTitle(this.school.schoolName);
@@ -401,34 +419,44 @@ export class SchoolProfileComponent
 
     if(!this.savedPostSubscription){
       this.savedPostSubscription = savedPostResponse.subscribe(response => {
+        const translatedSummary = this.translateService.instant('Success');
         if(response.isPostSaved){
-          this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post saved successfully'});
+          const translatedMessage = this.translateService.instant('PostSavedSuccessfully');
+          this.messageService.add({severity:'success', summary:translatedSummary,life: 3000, detail:translatedMessage});
         }
         if(!response.isPostSaved){
-          this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post removed successfully'});
+          const translatedMessage = this.translateService.instant('PostRemovedSuccessfully');
+          this.messageService.add({severity:'success', summary:translatedSummary,life: 3000, detail:translatedMessage});
         }
       });
     }
 
     if(!this.savedReelSubscription){
       this.savedReelSubscription = savedReelResponse.subscribe(response => {
+        const translatedSummary = this.translateService.instant('Success');
         if(response.isReelSaved){
-          this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Reel saved successfully'});
+          const translatedMessage = this.translateService.instant('ReelSavedSuccessfully');
+          this.messageService.add({severity:'success', summary:translatedSummary,life: 3000, detail:translatedMessage});
         }
         if(!response.isReelSaved){
-          this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Reel removed successfully'});
+          const translatedMessage = this.translateService.instant('ReelRemovedSuccessfully');
+          this.messageService.add({severity:'success', summary:translatedSummary,life: 3000, detail:translatedMessage});
         }
       });
     }
 
    this.sharedPostSubscription = sharedPostResponse.subscribe( response => {
+    const translatedSummary = this.translateService.instant('Success');
     if(response.postType == 1){
-      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post shared successfully'});
+      const translatedMessage = this.translateService.instant('PostSharedSuccessfully');
+      this.messageService.add({severity:'success', summary:translatedSummary,life: 3000, detail:translatedMessage});
       var post = this.school.posts.find((x: { id: string; }) => x.id == response.postId);  
       post.postSharedCount++;
     }
-    else
-      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Reel shared successfully'});
+    else{
+      const translatedMessage = this.translateService.instant('ReelSharedSuccessfully');
+      this.messageService.add({severity:'success', summary:translatedSummary,life: 3000, detail:translatedMessage});
+    }
     });
 
     if(!this.changeLanguageSubscription){
@@ -439,18 +467,22 @@ export class SchoolProfileComponent
 
     if(!this.savedClassCourseSubscription){
       this.savedClassCourseSubscription = savedClassCourseResponse.subscribe(response => {
+        const translatedSummary = this.translateService.instant('Success');
         if(response.isSaved){
-          this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:`${response.type} saved successfully`});
+          this.messageService.add({severity:'success', summary:translatedSummary,life: 3000, detail:`${response.type} saved successfully`});
         }
         if(!response.isSaved){
-          this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:`${response.type} removed successfully`});
+          this.messageService.add({severity:'success', summary:translatedSummary,life: 3000, detail:`${response.type} removed successfully`});
         }
       });
     }
 
     if(!this.deletePostSubscription){
       this.deletePostSubscription = deletePostResponse.subscribe(response => {
-          this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post deleted successfully'});
+        const translatedSummary = this.translateService.instant('Success');
+        const translatedMessage = this.translateService.instant('PostDeletedSuccessfully');
+
+          this.messageService.add({severity:'success', summary:translatedSummary,life: 3000, detail:translatedMessage});
           var deletedPost = this.school.posts.find((x: { id: string; }) => x.id == response.postId);
           const index = this.school.posts.indexOf(deletedPost);
           if (index > -1) {
@@ -461,7 +493,9 @@ export class SchoolProfileComponent
 
     if(!this.deleteReelSubscription){
       this.deleteReelSubscription = deleteReelResponse.subscribe(response => {
-          this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Reel deleted successfully'});
+        const translatedSummary = this.translateService.instant('Success');
+        const translatedMessage = this.translateService.instant('ReelDeletedSuccessfully');
+          this.messageService.add({severity:'success', summary:translatedSummary,life: 3000, detail:translatedMessage});
           var deletedPost = this.school.reels.find((x: { id: string; }) => x.id == response.postId);
           const index = this.school.reels.indexOf(deletedPost);
           if (index > -1) {
@@ -677,14 +711,21 @@ export class SchoolProfileComponent
 
   getSchoolDetails(schoolId: string) {
     this._schoolService.getSchoolEditDetails(schoolId).subscribe((response) => {
+      debugger
       this.editSchool = response;
       this.initializeEditFormControls();
     });
   }
 
   initializeEditFormControls() {
+    // if(this.getCountriesSubscription == null){
+    this.getCountriesSubscription = this._userService.getCountryList().subscribe((response) => {
+      debugger
+      this.countries = response;
+      this.requiredCountry = this.countries.find((x: { countryName: string; }) => x.countryName == this.school.countryName);
     this.schoolAvatar = this.school.avatar;
     this.uploadImage = '';
+    this.cd.detectChanges();
     this.imageFile.nativeElement.value = '';
     this.fileToUpload.set('avatarImage', '');
     var today = new Date();
@@ -713,10 +754,13 @@ export class SchoolProfileComponent
         ]),
         description: this.fb.control(this.editSchool.description ?? ''),
         owner: this.fb.control(this.editSchool.user.email),
+        country: this.fb.control(this.requiredCountry.countryName)
       },
       { validator: this.dateLessThan('founded', currentDate) }
     );
     this.editSchoolForm.updateValueAndValidity();
+  });
+// }
   }
 
   dateLessThan(from: string, to: string) {
@@ -734,6 +778,7 @@ export class SchoolProfileComponent
 
   resetImage() {}
   updateSchool() {
+    debugger
     this.isSubmitted = true;
     if (!this.editSchoolForm.valid) {
       return;
@@ -764,6 +809,7 @@ export class SchoolProfileComponent
       'description',
       this.updateSchoolDetails.description
     );
+    this.fileToUpload.append('countryName',this.updateSchoolDetails.country);
 
     this._schoolService
       .editSchool(this.fileToUpload)
@@ -778,7 +824,9 @@ export class SchoolProfileComponent
           action: 'update',
         });
         this.fileToUpload = new FormData();
-        this.messageService.add({severity: 'success',summary: 'Success',life: 3000,detail: 'School updated successfully',});
+        const translatedSummary = this.translateService.instant('Success');
+        const translatedMessage = this.translateService.instant('ReelDeletedSuccessfully');
+        this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage,});
         this.ngOnInit();
       });
   }
@@ -856,11 +904,13 @@ export class SchoolProfileComponent
       .subscribe((response: any) => {
         this.closeLanguagesModal();
         this.isSubmitted = false;
+        const translatedSummary = this.translateService.instant('Success');
+        const translatedMessage = this.translateService.instant('LanguageAddedSuccessfully');
         this.messageService.add({
           severity: 'success',
-          summary: 'Success',
+          summary: translatedSummary,
           life: 3000,
-          detail: 'Language added successfully',
+          detail: translatedMessage,
         });
         this.ngOnInit();
       });
@@ -876,11 +926,13 @@ export class SchoolProfileComponent
     this._schoolService
       .deleteSchoolLanguage(this.deleteLanguage)
       .subscribe((response: any) => {
+        const translatedSummary = this.translateService.instant('Success');
+        const translatedMessage = this.translateService.instant('LanguageDeletedSuccessfully');
         this.messageService.add({
           severity: 'success',
-          summary: 'Success',
+          summary: translatedSummary,
           life: 3000,
-          detail: 'Language deleted successfully',
+          detail: translatedMessage,
         });
         this.ngOnInit();
       });
@@ -925,11 +977,13 @@ export class SchoolProfileComponent
         this.teachers = [];
         this.closeTeachersModal();
         this.isSubmitted = false;
+        const translatedSummary = this.translateService.instant('Success');
+        const translatedMessage = this.translateService.instant('TeacherAddedSuccessfully');
         this.messageService.add({
           severity: 'success',
-          summary: 'Success',
+          summary: translatedSummary,
           life: 3000,
-          detail: 'Teacher added successfully',
+          detail: translatedMessage,
         });
         this.ngOnInit();
       });
@@ -945,11 +999,13 @@ export class SchoolProfileComponent
     this._schoolService
       .deleteSchoolTeacher(this.deleteTeacher)
       .subscribe((response: any) => {
+        const translatedSummary = this.translateService.instant('Success');
+        const translatedMessage = this.translateService.instant('TeacherDeletedSuccessfully');
         this.messageService.add({
           severity: 'success',
-          summary: 'Success',
+          summary: translatedSummary,
           life: 3000,
-          detail: 'Teacher deleted successfully',
+          detail: translatedMessage,
         });
         this.ngOnInit();
       });
@@ -975,11 +1031,13 @@ export class SchoolProfileComponent
         this.isSubmitted = false;
         this.schoolCertificate.certificates = [];
         this.certificateToUpload.set('certificates', '');
+        const translatedSummary = this.translateService.instant('Success');
+        const translatedMessage = this.translateService.instant('CertificateAddedSuccessfully');
         this.messageService.add({
           severity: 'success',
-          summary: 'Success',
+          summary: translatedSummary,
           life: 3000,
-          detail: 'Certificate added successfully',
+          detail: translatedMessage,
         });
         this.ngOnInit();
         console.log(response);
@@ -996,11 +1054,13 @@ export class SchoolProfileComponent
     this._schoolService
       .deleteSchoolCertificate(this.deleteCertificate)
       .subscribe((response: any) => {
+        const translatedSummary = this.translateService.instant('Success');
+        const translatedMessage = this.translateService.instant('CertificateDeletedSuccessfully');
         this.messageService.add({
           severity: 'success',
-          summary: 'Success',
+          summary: translatedSummary,
           life: 3000,
-          detail: 'Certificate deleted successfully',
+          detail: translatedMessage,
         });
         this.ngOnInit();
       });
@@ -1133,9 +1193,11 @@ export class SchoolProfileComponent
   }
 
   getDeletedId(id: string, type: any, noOfStudents:number) {
+    const translatedSummary = this.translateService.instant('Info');
     if (type == 1) {
       if(noOfStudents > 0){
-        this.messageService.add({severity: 'info',summary: 'Info',life: 3000,detail: 'Class with registered users can not be automatically deleted. Please contact site administration for deletion request.'});
+        const translatedMessage = this.translateService.instant('ClassNotAutomaticallyDeleted');
+        this.messageService.add({severity: 'info',summary: translatedSummary,life: 3000,detail: translatedMessage});
       }
       else{
       this._schoolService.deleteClass(id).subscribe((response) => {
@@ -1146,7 +1208,8 @@ export class SchoolProfileComponent
     }
     if (type == 2) {
       if(noOfStudents > 0){
-        this.messageService.add({severity: 'info',summary: 'Info',life: 3000,detail: 'Course with registered users can not be automatically deleted. Please contact site administration for deletion request.'});
+        const translatedMessage = this.translateService.instant('CourseNotAutomaticallyDeleted');
+        this.messageService.add({severity: 'info',summary: translatedSummary,life: 3000,detail: translatedMessage});
       }
       else{
       this._schoolService.deleteCourse(id).subscribe((response) => {
@@ -1438,18 +1501,21 @@ export class SchoolProfileComponent
   }
 
   savePost(postId:string){
+    const translatedMessage = this.translateService.instant('Success');
     var posts: any[] = this.school.posts;
     var isSavedPost = posts.find(x => x.id == postId);
   
     if(isSavedPost.isPostSavedByCurrentUser){
       isSavedPost.savedPostsCount -= 1;
       isSavedPost.isPostSavedByCurrentUser = false;
-      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post removed successfully'});
+      const translatedMessage = this.translateService.instant('PostRemovedSuccessfully');
+      this.messageService.add({severity:'success', summary:translatedMessage,life: 3000, detail:translatedMessage});
      }
      else{
       isSavedPost.savedPostsCount += 1;
       isSavedPost.isPostSavedByCurrentUser = true;
-      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post saved successfully'});
+      const translatedMessage = this.translateService.instant('PostSavedSuccessfully');
+      this.messageService.add({severity:'success', summary:translatedMessage,life: 3000, detail:translatedMessage});
      }
   
     this._postService.savePost(postId,this.userId).subscribe((result) => {
@@ -1457,6 +1523,7 @@ export class SchoolProfileComponent
   }
 
   saveClassCourse(id:string,type:number){
+    const translatedMessage = this.translateService.instant('Success');
     var classCourseList: any[] = this.classCourseList;
     var isSavedClassCourse = classCourseList.find(x => x.id == id);
   
@@ -1464,19 +1531,19 @@ export class SchoolProfileComponent
       isSavedClassCourse.savedClassCourseCount -= 1;
       isSavedClassCourse.isClassCourseSavedByCurrentUser = false;
       if(type == 1){
-        this.savedMessage = 'Class saved successfully';
-        this.removedMessage = 'Class removed successfully'
+        this.savedMessage = this.translateService.instant('ClassSavedSuccessfully');
+        this.removedMessage = this.translateService.instant('ClassRemovedSuccessfully');
       }
       if(type == 2){
-        this.savedMessage = 'Course saved successfully';
-        this.removedMessage = 'Course removed successfully'
+        this.savedMessage = this.translateService.instant('CourseSavedSuccessfully');
+        this.removedMessage = this.translateService.instant('CourseRemovedSuccessfully');
       }
-      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:this.removedMessage});
+      this.messageService.add({severity:'success', summary:translatedMessage,life: 3000, detail:this.removedMessage});
      }
      else{
       isSavedClassCourse.savedClassCourseCount += 1;
       isSavedClassCourse.isClassCourseSavedByCurrentUser = true;
-      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:this.savedMessage});
+      this.messageService.add({severity:'success', summary:translatedMessage,life: 3000, detail:this.savedMessage});
      }
   
     this._schoolService.saveClassCourse(id,this.userId,type).subscribe((result) => {
@@ -1524,12 +1591,16 @@ export class SchoolProfileComponent
 
   deleteSchool(){
     if(this.school.students > 0){
-      this.messageService.add({severity: 'info',summary: 'Info',life: 3000,detail: 'School with registered users can not be automatically deleted. Please contact site administration for deletion request.'});
+      const translatedInfoSummary = this.translateService.instant('Info');
+      const translatedMessage = this.translateService.instant('SchoolNotAutomaticallyDeleted');
+      this.messageService.add({severity: 'info',summary: translatedInfoSummary,life: 3000,detail: translatedMessage});
     }
     else{
       this._schoolService.deleteSchool(this.school.schoolId).subscribe((response) => {
         ownedSchoolResponse.next({schoolId:this.school.schoolId, schoolAvatar:"", schoolName:"",action:"delete"});
-        this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'School deleted successfully'});
+        const translatedSuccessSummary = this.translateService.instant('Success');
+        const translatedMessage = this.translateService.instant('SchoolDeletedSuccessfully');
+        this.messageService.add({severity:'success', summary:translatedSuccessSummary,life: 3000, detail:translatedMessage});
         setTimeout(() => {
           this.router.navigateByUrl(`user/userProfile/${this.userId}`);
         }, 3000);
@@ -1549,11 +1620,16 @@ export class SchoolProfileComponent
   unableDisableSchool(){
     this.loadingIcon = true;
     this._schoolService.enableDisableSchool(this.school.schoolId).subscribe((response) => {
+      const translatedInfoSummary = this.translateService.instant('Success');
       if(this.school.isDisableByOwner){
-      this.messageService.add({severity: 'success',summary: 'Success',life: 3000,detail: 'School enabled successfully'});
+        const translatedMessage = this.translateService.instant('SchoolEnabledSuccessfully');
+
+      this.messageService.add({severity: 'success',summary: translatedInfoSummary,life: 3000,detail: translatedMessage});
       }
       else{
-        this.messageService.add({severity: 'success',summary: 'Success',life: 3000,detail: 'School disabled successfully'});
+        const translatedMessage = this.translateService.instant('SchoolDisabledSuccessfully');
+
+        this.messageService.add({severity: 'success',summary: translatedInfoSummary,life: 3000,detail: translatedMessage});
       }
       this.ngOnInit();
     });  

@@ -21,7 +21,7 @@ namespace LMS.Services
         Task<UserDetailsViewModel> GetBasicUserInfo(string userId);
         Task<List<UserFollowerViewModel>> GetUserFollowers(string userId, int pageNumber, string? searchString);
         Task<List<UserFollowingViewModel>> GetUserFollowings(string userId, int pageNumber, string? searchString);
-        Task<bool> BanFollower(string followerId);
+        Task<bool> BanFollower(string followerId,string userId);
         Task<IEnumerable<GlobalFeedViewModel>> GetGlobalFeed(string userId, PostTypeEnum postType, int pageNumber, string? searchString);
         Task<Guid> SaveUserPreference(string userId, string preferenceString);
         Task<List<LikeViewModel>> GetLikesOnPost(Guid postId);

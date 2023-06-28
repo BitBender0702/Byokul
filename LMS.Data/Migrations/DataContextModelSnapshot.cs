@@ -1157,6 +1157,9 @@ namespace LMS.Data.Migrations
                     b.Property<bool>("IsPinned")
                         .HasColumnType("bit");
 
+                    b.Property<bool?>("IsPostSchedule")
+                        .HasColumnType("bit");
+
                     b.Property<Guid>("OwnerId")
                         .HasColumnType("uniqueidentifier");
 

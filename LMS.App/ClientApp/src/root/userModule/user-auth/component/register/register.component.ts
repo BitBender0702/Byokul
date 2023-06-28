@@ -46,7 +46,10 @@ export class RegisterComponent extends MultilingualComponent implements OnInit,A
     EMAIL_PATTERN = '[a-zA-Z0-9]+?(\\.[a-zA-Z0-9]+)*@[a-zA-Z]+\\.[a-zA-Z]{2,3}';
 
     // PASSWORD_PATTERN = '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]+$';
-    PASSWORD_PATTERN = '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-=[\\]{};:\'\"\\|,.<>/?])[A-Za-z\\d!@#$%^&*()_+\\-=[\\]{};:\'\"\\|,.<>/?]+$';
+    //PASSWORD_PATTERN = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/;
+
+    PASSWORD_PATTERN = '^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).*';
+    // PASSWORD_PATTERN = '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-=[\\]{};:\'\"\\|,.<>/?])[A-Za-z\\d!@#$%^&*()_+\\-=[\\]{};:\'\"\\|,.<>/?]+$';
 
     selectedLanguage: any;
     loadingIcon:boolean = false;

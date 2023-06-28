@@ -18,5 +18,7 @@ namespace LMS.Common.ViewModels.User
         public int? Gender { get; set; }
         public string? Description { get; set; }
         public string? ContactEmail { get; set; }
+        public string? CountryName { get; set; }
+        public string? CityName { get; set; }
     }
 }

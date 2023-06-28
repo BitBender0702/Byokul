@@ -39,11 +39,10 @@ namespace LMS.App.Controllers
         [HttpGet]
         public async Task<IActionResult> GetLanguageJson(LanguageEnum language)
         {
-            var path = _webHostEnvironment.ContentRootPath;
-            var imagePath = Path.Combine(path, "ClientApp");
+            var directorypath = Path.Combine(_webHostEnvironment.ContentRootPath, "wwwroot", "assets", "i18n");
             if (language == LanguageEnum.English)
             {
-                string filePath = Path.Combine(imagePath, "src/assets/i18n", "en.json");
+                string filePath = Path.Combine(directorypath, "en.json");
                 if (System.IO.File.Exists(filePath))
                 {
                     string jsonContent = System.IO.File.ReadAllText(filePath);
@@ -53,7 +52,7 @@ namespace LMS.App.Controllers
 
             if (language == LanguageEnum.Turkish)
             {
-                string filePath = Path.Combine(imagePath, "src/assets/i18n", "tr.json");
+                string filePath = Path.Combine(directorypath, "tr.json");
                 if (System.IO.File.Exists(filePath))
                 {
                     string jsonContent = System.IO.File.ReadAllText(filePath);
@@ -63,7 +62,7 @@ namespace LMS.App.Controllers
 
             if (language == LanguageEnum.Arabic)
             {
-                string filePath = Path.Combine(imagePath, "src/assets/i18n", "ar.json");
+                string filePath = Path.Combine(directorypath, "ar.json");
                 if (System.IO.File.Exists(filePath))
                 {
                     string jsonContent = System.IO.File.ReadAllText(filePath);
@@ -73,7 +72,7 @@ namespace LMS.App.Controllers
 
             if (language == LanguageEnum.Spanish)
             {
-                string filePath = Path.Combine(imagePath, "src/assets/i18n", "sp.json");
+                string filePath = Path.Combine(directorypath, "sp.json");
                 if (System.IO.File.Exists(filePath))
                 {
                     string jsonContent = System.IO.File.ReadAllText(filePath);

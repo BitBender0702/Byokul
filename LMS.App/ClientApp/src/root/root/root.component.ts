@@ -50,6 +50,11 @@ export class RootComponent implements OnInit {
 
   ngOnInit(): void {
     this.connectSignalR();
+    this.meta.addTag({ property: 'og:title', content: "test" });
+    this.meta.addTag({ property: 'og:type', content: "profile" });
+    this.meta.addTag({ property: 'og:description', content: "description" });
+    // this.meta.addTag({ property: 'og:image', content: "../../assets/images/logo.svg" });
+    this.meta.addTag({ property: 'og:url', content: "byokul.com" });
   }
 
   connectSignalR() : void {

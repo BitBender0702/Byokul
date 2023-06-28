@@ -1,20 +1,30 @@
-import { Component, HostListener, Injectable, Injector, OnDestroy, OnInit } from "@angular/core"; 
+import { Component, ElementRef, HostListener, Injectable, Injector, OnDestroy, OnInit, ViewChild } from "@angular/core"; 
 import { ActivatedRoute, Router } from "@angular/router";
 import { Subscription } from "rxjs";
 import { SchoolService } from "src/root/service/school.service";
 import { UserService } from "src/root/service/user.service";
 import { MultilingualComponent, changeLanguage } from "../../sharedModule/Multilingual/multilingual.component";
 import { OpenSideBar } from "src/root/user-template/side-bar/side-bar.component";
+import { TranslateService } from "@ngx-translate/core";
+import { MessageService } from "primeng/api";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { Constant } from "src/root/interfaces/constant";
+import { NotificationType, NotificationViewModel } from "src/root/interfaces/notification/notificationViewModel";
+import { ReportFollowerViewModel } from "src/root/interfaces/user/reportFollowerViewModel";
+import { SignalrService } from "src/root/service/signalr.service";
 
 @Component({
   selector: 'user-Followers',
   templateUrl: './schoolFollowers.component.html',
-  styleUrls: ['./schoolFollowers.component.css']
+  styleUrls: ['./schoolFollowers.component.css'],
+  providers: [MessageService]
 })
 
 export class SchoolFollowersComponent extends MultilingualComponent implements OnInit, OnDestroy{
 
     private _schoolService;
+    private _userService;
+    private _signalrService;
     schoolId!:string;
     isOpenSidebar:boolean = false;
     loadingIcon:boolean = false;
@@ -26,13 +36,26 @@ export class SchoolFollowersComponent extends MultilingualComponent implements O
     scrolled:boolean = false;
     postLoadingIcon: boolean = false;
     scrollFollowersResponseCount:number = 1;
+    reportedFollowerId!:string;
+    followerName!: string;
+    isSubmitted: boolean = false;
+    reportFollowerForm!:FormGroup;
+    loginUserName!: string;
+    loginUserId!:string;
+    isOwner:boolean = false;
+    reportFollowerViewModel!:ReportFollowerViewModel;
+    notificationViewModel!:NotificationViewModel;
     changeLanguageSubscription!: Subscription;
+    @ViewChild('closeReportModal') closeReportModal!: ElementRef;
 
     
+    
 
-    constructor(injector: Injector,schoolService: SchoolService,private route: ActivatedRoute,) { 
+    constructor(injector: Injector,userService: UserService,signalrService:SignalrService,private translateService: TranslateService,public messageService:MessageService,schoolService: SchoolService,private route: ActivatedRoute,private fb: FormBuilder) { 
       super(injector);
       this._schoolService = schoolService;
+      this._userService = userService;
+      this._signalrService = signalrService;
     }
 
     ngOnInit(): void {
@@ -43,9 +66,12 @@ export class SchoolFollowersComponent extends MultilingualComponent implements O
       this.schoolId = this.route.snapshot.paramMap.get('schoolId') ?? '';
 
       this._schoolService.getSchoolFollowers(this.schoolId,this.schoolFollowersPageNumber,this.searchString).subscribe((response) => {
+        debugger
         this.schoolFollowers = response;
         this.loadingIcon = false;
         this.isDataLoaded = true;
+        this.isOwnerOrNot(this.schoolFollowers[0].school.createdById);
+        this.initializeReportFollowerViewModel();
       });
 
       if(!this.changeLanguageSubscription){
@@ -53,6 +79,11 @@ export class SchoolFollowersComponent extends MultilingualComponent implements O
           this.translate.use(response.language);
         })
       }
+
+      this.reportFollowerForm = this.fb.group({
+        reportContent:this.fb.control([],[Validators.required]),
+        followerId:this.fb.control('')
+      });
 
     }
 
@@ -107,4 +138,100 @@ export class SchoolFollowersComponent extends MultilingualComponent implements O
       this.scrolled = false;
     });
   }
+
+  banFollower(userId:string,schoolId:string){
+    debugger
+    this.loadingIcon = true;
+    this._schoolService.banFollower(userId,schoolId).subscribe((response) => {
+      debugger
+      this.ngOnInit();
+      const translatedMessage = this.translateService.instant('BannedSuccessfully');
+      const translatedSummary = this.translateService.instant('Success');
+        this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage});
+    });
+
+  }
+
+  getReportFollower(id:string,followerName:string){
+    debugger
+    this.reportedFollowerId = id;
+    this.followerName = followerName;
+    this.isSubmitted = false;
+    this.reportFollowerForm.patchValue({
+      reportContent: ''
+    });
+  }
+
+  reportFollower(){
+    debugger
+    this.isSubmitted = true;
+    if (!this.reportFollowerForm.valid) {
+      return;
+    }
+    var notificationContent = `${this.schoolFollowers[0].school.schoolName} report a user - ${this.followerName}`
+    var postId = Constant.defaultGuid;
+    var post = null;
+    this.initializeNotificationViewModel(this.reportedFollowerId,NotificationType.Report,notificationContent,postId);
+    
+    this.reportFollowerViewModel.followerId = this.reportedFollowerId;
+    this.reportFollowerViewModel.userName = this.schoolFollowers[0].school.schoolName;
+    this.reportFollowerViewModel.followerName = this.followerName;
+    this.reportFollowerViewModel.reportReason = this.reportFollowerForm.get('reportContent')?.value;
+    this._userService.reportFollower(this.reportFollowerViewModel).subscribe((response) => {
+      debugger
+      this.closeReportsModal();
+      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Report submitted successfully'});
+    });
+  }
+
+  initializeNotificationViewModel(userid:string,notificationType:NotificationType,notificationContent:string,postId:string,postType?:number,post?:any){
+    this._userService.getUser(this.loginUserId).subscribe((response) => {
+      this.notificationViewModel = {
+        id:Constant.defaultGuid,
+        userId: userid,
+        actionDoneBy: this.loginUserId,
+        avatar: response.avatar,
+        isRead:false,
+        notificationContent:`${response.firstName + ' ' + response.lastName + ' ' + notificationContent}`,
+        notificationType:notificationType,
+        postId:postId,
+        postType:postType,
+        post:post
+      }
+      this._signalrService.sendNotification(this.notificationViewModel);
+    });
+  }
+
+  isOwnerOrNot(ownerId:string){
+    debugger
+    var validToken = localStorage.getItem("jwt");
+      if (validToken != null) {
+        let jwtData = validToken.split('.')[1]
+        let decodedJwtJsonData = window.atob(jwtData)
+        let decodedJwtData = JSON.parse(decodedJwtJsonData);
+        this.loginUserId = decodedJwtData.jti;
+        this.loginUserName = decodedJwtData.name;
+        if(this.loginUserId == ownerId){
+          this.isOwner = true;
+        }
+        else{
+          this.isOwner = false;
+        }
+      }
+  }
+
+  private closeReportsModal(): void {
+    this.closeReportModal.nativeElement.click();
+  }
+
+  initializeReportFollowerViewModel(){
+    this.reportFollowerViewModel = {
+      followerId:'',
+      followerName:'',
+      userName:'',
+      reportReason:''
+    }
+  }
+
+
 }

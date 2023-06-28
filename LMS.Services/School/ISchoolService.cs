@@ -49,6 +49,7 @@ namespace LMS.Services
         Task<IEnumerable<StudentViewModel>> GetClassStudentsBySchoolId(Guid schoolId);
         Task<IEnumerable<StudentViewModel>> GetCourseStudentsBySchoolId(Guid schoolId);
         Task EnableDisableSchool(Guid schoolId);
+        Task<bool> BanFollower(string followerId,Guid schoolId);
 
     }
 }

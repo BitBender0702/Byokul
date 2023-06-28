@@ -11,6 +11,7 @@ import { SignalrService } from "src/root/service/signalr.service";
 import { ReportFollowerViewModel } from "src/root/interfaces/user/reportFollowerViewModel";
 import { MessageService } from "primeng/api";
 import { OpenSideBar } from "src/root/user-template/side-bar/side-bar.component";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
   selector: 'user-Followers',
@@ -45,7 +46,7 @@ export class UserFollowersComponent extends MultilingualComponent implements OnI
     reportFollowerViewModel!:ReportFollowerViewModel
     @ViewChild('closeReportModal') closeReportModal!: ElementRef;
 
-    constructor(injector: Injector,public messageService:MessageService,userService: UserService,signalrService:SignalrService,private route: ActivatedRoute,private fb: FormBuilder) { 
+    constructor(injector: Injector,private translateService: TranslateService,public messageService:MessageService,userService: UserService,signalrService:SignalrService,private route: ActivatedRoute,private fb: FormBuilder) { 
       super(injector);
       this._userService = userService;
       this._signalrService = signalrService;
@@ -59,6 +60,7 @@ export class UserFollowersComponent extends MultilingualComponent implements OnI
       this.userId = this.route.snapshot.paramMap.get('userId') ?? '';
 
       this._userService.getUserFollowers(this.userId,this.userFollowersPageNumber,this.searchString).subscribe((response) => {
+        debugger
         this.userFollowers = response;
         this.loadingIcon = false;
         this.isDataLoaded = true;
@@ -122,10 +124,15 @@ export class UserFollowersComponent extends MultilingualComponent implements OnI
       OpenSideBar.next({isOpenSideBar:true})
     }
 
-    banFollower(userId:string){
+    banFollower(folloerId:string,userId:string){
+      debugger
       this.loadingIcon = true;
-      this._userService.banFollower(userId).subscribe((response) => {
+      this._userService.banFollower(folloerId,userId).subscribe((response) => {
+        debugger
         this.ngOnInit();
+        const translatedMessage = this.translateService.instant('BannedSuccessfully');
+        const translatedSummary = this.translateService.instant('Success');
+          this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage});
       });
 
     }

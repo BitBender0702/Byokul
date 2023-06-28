@@ -584,12 +584,12 @@
       </div>
       <div class="footer-menu">
         <div class="footer-menu__menu">
-          <a href="#" class="footer-menu__menu-item">Privacy Policy</a>
-          <a href="#" class="footer-menu__menu-item">About Us</a>
-          <a href="#" class="footer-menu__menu-item">Contact</a>
-          <a href="#" class="footer-menu__menu-item">Delivery & Return</a>
+          <a [routerLink]="['/privacyPolicy']" class="footer-menu__menu-item">{{ "PrivacyPolicy" | translate }}</a>
+          <a [routerLink]="['/aboutUs']" class="footer-menu__menu-item">{{ "AboutUs" | translate }}</a>
+          <a href="#" class="footer-menu__menu-item">{{ "Contact" | translate }}</a>
+          <a href="#" class="footer-menu__menu-item">{{ "Delivery&Return" | translate }}</a>
           <a href="#" class="footer-menu__menu-item"
-            >Distance Sales Agreement</a
+            >{{ "DistanceSalesAgreement" | translate }}</a
           >
         </div>
         <img src="../../../assets/images/logo_band_colored.svg" />

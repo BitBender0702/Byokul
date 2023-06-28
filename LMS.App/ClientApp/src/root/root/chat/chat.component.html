@@ -278,9 +278,15 @@
                     <div></div>
                   </div>
                 </div>
+                <div *ngFor="let key of getObjectKeys(firstuserChats)">
+                  <div style="text-align: center;">
+                    <hr style="width: 40%; display: inline-block; margin-right: 10px;">
+                    <span>{{ key | date:'MMMM d' }}</span>
+                    <hr style="width: 40%; display: inline-block; margin-left: 10px;">
+                  </div>
                 <li
                   [ngClass]="this.userChat.sendByMe ? 'me' : 'you'"
-                  *ngFor="let userChat of firstuserChats; let last = last"
+                  *ngFor="let userChat of firstuserChats[key];"
                 >
                   <!-- <div class="chat-username d-flex align-items-center mb-2">
                   <img *ngIf="userChat.sendByMe" [src]="profileURL" alt="" class="rounded-circle me-2" style="max-width: 35px;">
@@ -571,6 +577,16 @@
                     </button>
                   </div>
                 </li>
+                </div>
+<!-- <div *ngIf="groupedMessages != undefined">
+                <div *ngFor="let key of getObjectKeys(groupedMessages)">
+                  {{ key }}
+                  <div *ngFor="let message of groupedMessages[key]">
+                    {{ message.text }}
+                  </div>
+                </div>
+                </div> -->
+
                 <div class="text-line-border position-relative text-center">
                   <span
                     class="line-text font_12 text_ltgray fw_400 text-center"
@@ -981,9 +997,15 @@
                   <div></div>
                 </div>
               </div>
+              <div *ngFor="let key of getObjectKeys(schoolInboxList[0]?.chats)">
+                <div style="text-align: center;">
+                  <hr style="width: 40%; display: inline-block; margin-right: 10px;">
+                  <span>{{ key | date:'MMMM d' }}</span>
+                  <hr style="width: 40%; display: inline-block; margin-left: 10px;">
+                </div>
               <li
                 [ngClass]="this.userChat.sendByMe ? 'me' : 'you'"
-                *ngFor="let userChat of schoolInboxList[0]?.chats"
+                *ngFor="let userChat of schoolInboxList[0]?.chats[key]"
               >
                 <!-- <div class="chat-username d-flex align-items-center mb-2">
                   <img *ngIf="!userChat.sendByMe" [src]="schoolInboxUserAvatar" alt="" class="rounded-circle me-2" style="max-width: 35px;">
@@ -1314,6 +1336,7 @@
                   </button>
                 </div>
               </li>
+              </div>
               <div class="text-line-border position-relative text-center">
                 <span
                   class="line-text font_12 text_ltgray fw_400 text-center"
@@ -1703,7 +1726,7 @@
             {{ "Send" | translate }}
           </button>
         </div>
-        <div class="text-center">
+        <!-- <div class="text-center">
           <button
             type="button"
             class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
@@ -1712,10 +1735,11 @@
           >
             {{ "Done" | translate }}
           </button>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
 </div>
 
 <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
+<p-toast></p-toast>

@@ -35,6 +35,9 @@ namespace LMS.Common.ViewModels.School
         public int? Status { get; set; }
         public DateTime? Founded { get; set; }
         public bool? IsDisableByOwner { get; set; }
+        public Guid? ClassStudentId { get; set; }
+        public Guid? CourseStudentId { get; set; }
+
 
     }
 }

@@ -363,7 +363,7 @@ namespace LMS.Services
                     .Include(x => x.Accessibility)
                     .Include(x => x.CreatedBy).ToListAsync();
 
-                var classes = classesList.Where(x => (System.Web.HttpUtility.UrlEncode(x.ClassName.Replace(" ", "").ToLower(), Encoding.GetEncoding("iso-8859-7")) == className) && !x.IsDeleted).First();
+                var classes = classesList.Where(x => (System.Web.HttpUtility.UrlEncode(x.ClassName.Replace(" ", "").ToLower(), Encoding.GetEncoding("iso-8859-7")) == className) && !x.IsDeleted).FirstOrDefault();
 
                 try
                 {
@@ -506,7 +506,7 @@ namespace LMS.Services
 
         public async Task<IEnumerable<PostDetailsViewModel>> GetPostsByClassId(Guid classId, string loginUserId, int pageNumber = 1, int pageSize = 12)
         {
-            var courseList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == classId && (x.PostType == (int)PostTypeEnum.Post || x.PostType == (int)PostTypeEnum.Stream) && x.PostAuthorType == (int)PostAuthorTypeEnum.Class).OrderByDescending(x => x.IsPinned).ThenByDescending(x => x.CreatedOn).ToListAsync();
+            var courseList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == classId && (x.PostType == (int)PostTypeEnum.Post || x.PostType == (int)PostTypeEnum.Stream) && x.PostAuthorType == (int)PostAuthorTypeEnum.Class && x.IsPostSchedule != true).OrderByDescending(x => x.IsPinned).ThenByDescending(x => x.CreatedOn).ToListAsync();
 
             var sharedPost = await _userSharedPostRepository.GetAll().ToListAsync();
             var savedPost = await _savedPostRepository.GetAll().ToListAsync();
@@ -542,7 +542,7 @@ namespace LMS.Services
 
         public async Task<IEnumerable<PostDetailsViewModel>> GetReelsByClassId(Guid classId, string loginUserId, int pageNumber = 1, int pageSize = 8)
         {
-            var courseList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == classId && x.PostType == (int)PostTypeEnum.Reel).OrderByDescending(x => x.IsPinned).ThenByDescending(x => x.CreatedOn).ToListAsync();
+            var courseList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == classId && x.PostType == (int)PostTypeEnum.Reel && x.IsPostSchedule != true).OrderByDescending(x => x.IsPinned).ThenByDescending(x => x.CreatedOn).ToListAsync();
             var result = _mapper.Map<List<PostDetailsViewModel>>(courseList).Skip((pageNumber - 1) * pageSize).Take(pageSize);
 
             foreach (var post in result)

@@ -9,5 +9,6 @@ export interface EditSchoolModel{
     schoolEmail:string;
     ownerId: string;      // is this editable or not.
     description:string;
+    country: string;
     
 }

@@ -188,7 +188,7 @@
                         [value]="accessibility.id"
                         [ngValue]="accessibility.id"
                       >
-                        {{ accessibility.name }}
+                        {{ accessibility.name | translate}}
                       </option>
                     </select>
                     <small
@@ -207,7 +207,7 @@
                 <label class="font_10">{{ "Language" | translate }}</label>
                 <div class="custom-language-select">
                   <p-multiSelect
-                    [defaultLabel]="'Select Languages'"
+                    defaultLabel="{{ 'SelectLanguages' | translate }}"
                     [panelStyle]="{ width: '100%' }"
                     [filter]="false"
                     [showToggleAll]="false"

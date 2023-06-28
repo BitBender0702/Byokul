@@ -6591,6 +6591,59 @@
                         </small>
                       </div>
                     </div>
+                    <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="font_10">{{ "Country" | translate }}*</label>
+                      <select
+                        class="form-select rounded-8 w-100"
+                        formControlName="country"
+                        aria-label="Default select example"
+                        (change)="getCityByCountry($event.target)"
+                      >
+                        <option value="" disabled selected hidden>
+                          {{ "Country" | translate }}
+                        </option>
+                        <option
+                          *ngFor="let country of countries"
+                          [value]="country.countryName"
+                        >
+                          {{ country.countryName }}
+                        </option>
+                      </select>
+                      <!-- <small
+                        class="p-error"
+                        style="color: orange"
+                        *ngIf="
+                          isStepCompleted &&
+                          createSchoolForm1.controls.countryName.errors
+                        "
+                        >{{ "ThisFieldRequired" | translate }}
+                      </small> -->
+                    </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label class="font_10">{{ "City" | translate }}*</label>
+                        <select
+                          class="form-select rounded-8 w-100"
+                          formControlName="city"
+                          aria-label="Default select example"
+                        >
+                          <option value="" disabled selected hidden>
+                            {{ "City" | translate }}
+                          </option>
+                          <option *ngFor="let city of cities" [value]="city">
+                            {{ city }}
+                          </option>
+                        </select>
+                        <!-- <small
+                          class="p-error"
+                          style="color: orange"
+                          *ngIf="isSubmitted && registrationForm.controls.cityName.errors"
+                          >{{ "ThisFieldRequired" | translate }}
+                        </small> -->
+                      </div>
+                    </div>
                   </div>
                   <div class="form-group">
                     <label class="font_10">{{ "UserBio" | translate }}</label>

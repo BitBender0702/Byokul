@@ -33,6 +33,7 @@ import { UserFollowingsComponent } from '../root/user/userFollowings/userFollowi
 import { Subject } from 'rxjs';
 import { GlobalSearchComponent } from '../root/globalSearch/globalSearch.component';
 import { StudentListComponent } from '../root/students/studentList.componant';
+import { ReelsSliderComponent } from '../root/reelsSlider/reelsSlider.component';
 
 
 const routes: Routes = [
@@ -119,6 +120,9 @@ const routes: Routes = [
   },
   {
     path: 'reels/:id',component:ReelsViewComponent, canActivate: [AuthGuard]
+  },
+  {
+    path: 'reelsView/:userId',component:ReelsSliderComponent, canActivate: [AuthGuard]
   },
   {
     path: 'addTeacher/:userId',component:AddTeacherComponent, canActivate: [AuthGuard]

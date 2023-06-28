@@ -182,9 +182,12 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
     filteredAttachments:any[] = [];
     filteredSavedPostAttachments!:any;
     userAvatar:string = '';
+    countries:any;
+    cities:any;
+    requiredCountry:any;
 
 
-    constructor(injector: Injector,private titleService:Title,private meta: Meta, private datePipe: DatePipe,authService:AuthService,signalrservice:SignalrService,public messageService:MessageService, private bsModalService: BsModalService,userService: UserService,postService: PostService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,private cd: ChangeDetectorRef,private schoolService:SchoolService) { 
+    constructor(injector: Injector,private translateService: TranslateService,private titleService:Title,private meta: Meta, private datePipe: DatePipe,authService:AuthService,signalrservice:SignalrService,public messageService:MessageService, private bsModalService: BsModalService,userService: UserService,postService: PostService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,private cd: ChangeDetectorRef,private schoolService:SchoolService) { 
       super(injector);
         this._userService = userService;
         this._authService = authService;
@@ -258,7 +261,9 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
         dob: this.fb.control(new Date().toISOString().substring(0, 10)),
         gender: this.fb.control(''),
         description: this.fb.control(''),
-        contactEmail: this.fb.control('')
+        contactEmail: this.fb.control(''),
+        country: this.fb.control(''),
+        city: this.fb.control('')
       });
 
       this.InitializeFollowUnfollowUser();
@@ -272,7 +277,9 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
       if(!this.addPostSubscription){
       this.addPostSubscription = addPostResponse.subscribe(response => {
         this.loadingIcon = true;
-        this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post created successfully'});
+        const translatedMessage = this.translateService.instant('PostCreatedSuccessfully');
+        const translatedSummary = this.translateService.instant('Success');
+        this.messageService.add({severity:'success', summary:translatedSummary,life: 3000, detail:translatedMessage});
         this._userService.getUserById(this.userId).subscribe((response) => {
           this.user = response;
           this.titleService.setTitle(this.user.firstName + " " + this.user.lastName);
@@ -294,10 +301,14 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
       if(!this.savedPostSubscription){
         this.savedPostSubscription = savedPostResponse.subscribe(response => {
           if(response.isPostSaved){
-            this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post saved successfully'});
+            const translatedMessage = this.translateService.instant('PostSavedSuccessfully');
+            const translatedSummary = this.translateService.instant('Success');
+            this.messageService.add({severity:'success', summary:translatedSummary,life: 3000, detail:translatedMessage});
           }
           if(!response.isPostSaved){
-              this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post removed successfully'});
+            const translatedMessage = this.translateService.instant('PostRemovedSuccessfully');
+            const translatedSummary = this.translateService.instant('Success');
+              this.messageService.add({severity:'success', summary:translatedSummary,life: 3000, detail:translatedMessage});
               if(this.savedPostsList != undefined){
                 var isSavedPost = this.savedPostsList.find((x: { id: any; }) => x.id == response.postId);
                 let indexToRemove = this.savedPostsList.findIndex((x: { id: any; }) => x.id == isSavedPost.id);
@@ -312,10 +323,14 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
       if(!this.savedReelSubscription){
         this.savedReelSubscription = savedReelResponse.subscribe(response => {
           if(response.isReelSaved){
-            this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Reel saved successfully'});
+            const translatedMessage = this.translateService.instant('ReelSavedSuccessfully');
+            const translatedSummary = this.translateService.instant('Success');
+            this.messageService.add({severity:'success', summary:translatedSummary,life: 3000, detail:translatedMessage});
           }
           if(!response.isReelSaved){
-            this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Reel removed successfully'});
+            const translatedMessage = this.translateService.instant('ReelRemovedSuccessfully');
+            const translatedSummary = this.translateService.instant('Success');
+            this.messageService.add({severity:'success', summary:translatedSummary,life: 3000, detail:translatedMessage});
             if(this.savedReelsList != undefined){
               var isSavedReel = this.savedReelsList.find((x: { id: any; }) => x.id == response.id);
               let indexToRemove = this.savedReelsList.findIndex((x: { id: any; }) => x.id == isSavedReel.id);
@@ -329,7 +344,9 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
 
       this.sharedPostSubscription = sharedPostResponse.subscribe( response => {
         if(response.postType == 1){
-          this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post shared successfully'});
+          const translatedMessage = this.translateService.instant('PostSharedSuccessfully');
+          const translatedSummary = this.translateService.instant('Success');
+          this.messageService.add({severity:'success', summary:translatedSummary,life: 3000, detail:translatedMessage});
           var post = this.user.posts.find((x: { id: string; }) => x.id == response.postId); 
           if(post == undefined || null){
             var post = this.savedPostsList.find((x: { id: string; }) => x.id == response.postId); 
@@ -339,8 +356,11 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
             post.postSharedCount++;
           }
         }
-        else
-          this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Reel shared successfully'});
+        else{
+          const translatedMessage = this.translateService.instant('ReelSharedSuccessfully');
+          const translatedSummary = this.translateService.instant('Success');
+          this.messageService.add({severity:'success', summary:translatedSummary,life: 3000, detail:translatedMessage});
+        }
         });
 
       if(!this.changeLanguageSubscription){
@@ -369,7 +389,9 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
 
       if(!this.deletePostSubscription){
         this.deletePostSubscription = deletePostResponse.subscribe(response => {
-            this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post deleted successfully'});
+          const translatedMessage = this.translateService.instant('PostDeletedSuccessfully');
+          const translatedSummary = this.translateService.instant('Success');
+            this.messageService.add({severity:'success', summary:translatedSummary,life: 3000, detail:translatedMessage});
             var deletedPost = this.user.posts.find((x: { id: string; }) => x.id == response.postId);
             const index = this.user.posts.indexOf(deletedPost);
             if (index > -1) {
@@ -380,7 +402,9 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
   
       if(!this.deleteReelSubscription){
         this.deleteReelSubscription = deleteReelResponse.subscribe(response => {
-            this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Reel deleted successfully'});
+          const translatedMessage = this.translateService.instant('ReelDeletedSuccessfully');
+          const translatedSummary = this.translateService.instant('Success');
+            this.messageService.add({severity:'success', summary:translatedSummary,life: 3000, detail:translatedMessage});
             var deletedPost = this.user.reels.find((x: { id: string; }) => x.id == response.postId);
             const index = this.user.reels.indexOf(deletedPost);
             if (index > -1) {
@@ -392,7 +416,9 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
       addTeacherResponse.subscribe(response => {
         this.cd.detectChanges();
         if(response){
-          this.messageService.add({severity: 'success',summary: 'Success',life: 3000,detail: 'Teacher added successfully',
+          const translatedMessage = this.translateService.instant('TeacherAddedSuccessfully');
+          const translatedSummary = this.translateService.instant('Success');
+          this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage,
           });        
         }
       });
@@ -670,8 +696,9 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
       this.loadingIcon = true;
       this.userLanguage.userId = this.user.id;
       this._userService.saveUserLanguages(this.userLanguage).subscribe((response:any) => {
-        
-        this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Language added successfully'});
+        const translatedMessage = this.translateService.instant('LanguageAddedSuccessfully');
+        const translatedSummary = this.translateService.instant('Success');
+        this.messageService.add({severity:'success', summary:translatedSummary,life: 3000, detail:translatedMessage});
         this.closeLanguagesModal();
         this.isSubmitted = true;
         this.ngOnInit();     
@@ -683,7 +710,9 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
       this.loadingIcon = true;
       this.deleteLanguage.userId = this.user.id;
       this._userService.deleteUserLanguage(this.deleteLanguage).subscribe((response:any) => {
-        this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Language deleted successfully'});
+        const translatedMessage = this.translateService.instant('LanguageDeletedSuccessfully');
+        const translatedSummary = this.translateService.instant('Success');
+        this.messageService.add({severity:'success', summary:translatedSummary,life: 3000, detail:translatedMessage});
         this.ngOnInit();
       });
     }
@@ -745,7 +774,8 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
     })
   }
 
-  initializeEditFormControls(){    
+  initializeEditFormControls(){   
+    debugger 
     this.uploadImage = '';
     this.imageFile.nativeElement.value = "";
     this.fileToUpload.set('avatarImage','');
@@ -769,15 +799,38 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
       defaultDate: dob
       });
 
-    this.editUserForm = this.fb.group({
-      firstName: this.fb.control(this.editUser.firstName,[Validators.required]),
-      lastName: this.fb.control(this.editUser.lastName,[Validators.required]),
-      dob: this.fb.control(dob,[Validators.required]),
-      gender: this.fb.control(this.editUser.gender,[Validators.required]),
-      description: this.fb.control(this.editUser.description??''),
-      contactEmail: this.fb.control(this.editUser.contactEmail??'',[Validators.pattern(this.EMAIL_PATTERN)])
-    });
-    this.editUserForm.updateValueAndValidity();
+      this._userService.getCountryList().subscribe((response) => {
+        debugger
+        this.countries = response;
+        this._userService.getCityList(this.user.countryName).subscribe((response) => {
+          this.cities = response;
+          this.requiredCountry = this.countries.find((x: { countryName: string; }) => x.countryName == this.user.countryName);
+          // var requiredCity = this.cities.find((x: { cityName: string; }) => x.cityName == this.user.cityName);
+          this.editUserForm = this.fb.group({
+          firstName: this.fb.control(this.editUser.firstName,[Validators.required]),
+          lastName: this.fb.control(this.editUser.lastName,[Validators.required]),
+          dob: this.fb.control(dob,[Validators.required]),
+          gender: this.fb.control(this.editUser.gender,[Validators.required]),
+          description: this.fb.control(this.editUser.description??''),
+          contactEmail: this.fb.control(this.editUser.contactEmail??'',[Validators.pattern(this.EMAIL_PATTERN)]),
+          country: this.fb.control(this.requiredCountry.countryName),
+          city: this.fb.control(this.user.cityName)
+
+        });
+        this.editUserForm.updateValueAndValidity();
+      });
+      });
+      
+
+    // this.editUserForm = this.fb.group({
+    //   firstName: this.fb.control(this.editUser.firstName,[Validators.required]),
+    //   lastName: this.fb.control(this.editUser.lastName,[Validators.required]),
+    //   dob: this.fb.control(dob,[Validators.required]),
+    //   gender: this.fb.control(this.editUser.gender,[Validators.required]),
+    //   description: this.fb.control(this.editUser.description??''),
+    //   contactEmail: this.fb.control(this.editUser.contactEmail??'',[Validators.pattern(this.EMAIL_PATTERN)])
+    // });
+    // this.editUserForm.updateValueAndValidity();
   }
 
   handleImageInput(event: any) {
@@ -812,14 +865,22 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
     this.fileToUpload.append('gender',this.updateUserDetails.gender.toString());
     this.fileToUpload.append('description',this.updateUserDetails.description);
     this.fileToUpload.append('contactEmail',this.updateUserDetails.contactEmail);
+    this.fileToUpload.append('countryName',this.updateUserDetails.country);
+    this.fileToUpload.append('cityName',this.updateUserDetails.city);
 
+    // this.user.countryName = this.updateUserDetails.country;
+    // this.user.cityName = this.updateUserDetails.city;
     this._userService.editUser(this.fileToUpload).subscribe((response:any) => {
+      debugger
       this.closeModal();
       this.isSubmitted=true;
       this.user.avatar = response.avatar;
       userImageResponse.next({userAvatar: response.avatar,gender: response.gender}); 
       this.fileToUpload = new FormData();
-      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Profile updated successfully'});
+      
+      const translatedMessage = this.translateService.instant('ProfileUpdatedSuccessfully');
+      const translatedSummary = this.translateService.instant('Success');
+      this.messageService.add({severity:'success', summary:translatedSummary,life: 3000, detail:translatedMessage});
       var gender = localStorage.getItem('gender');
       gender = this.updateUserDetails.gender.toString();
       localStorage.setItem('gender',gender);
@@ -990,10 +1051,17 @@ openPostsViewModal(posts:any): void {
 }
 
 openReelsViewModal(postAttachmentId:string): void {
+  debugger
+  const screenWidthThreshold = 768;
+  const isMobileOrTab = window.innerWidth < screenWidthThreshold;
+  if (isMobileOrTab) {
+    this.router.navigateByUrl(`user/reelsView/${this.user.id}`);
+  } else {
   const initialState = {
     postAttachmentId: postAttachmentId
   };
   this.bsModalService.show(ReelsViewComponent,{initialState});
+}
 }
 
 userChat(){
@@ -1245,12 +1313,16 @@ savePost(postId:string,from:number){
   if(isSavedPost.isPostSavedByCurrentUser){
     isSavedPost.savedPostsCount -= 1;
     isSavedPost.isPostSavedByCurrentUser = false;
-    this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post removed successfully'});
+    const translatedMessage = this.translateService.instant('PostRemovedSuccessfully');
+    const translatedSummary = this.translateService.instant('Success');
+    this.messageService.add({severity:'success', summary:translatedSummary,life: 3000, detail:translatedMessage});
    }
    else{
     isSavedPost.savedPostsCount += 1;
     isSavedPost.isPostSavedByCurrentUser = true;
-    this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post saved successfully'});
+    const translatedMessage = this.translateService.instant('PostSavedSuccessfully');
+    const translatedSummary = this.translateService.instant('Success');
+    this.messageService.add({severity:'success', summary:translatedSummary,life: 3000, detail:translatedMessage});
    }
 
   this._postService.savePost(postId,this.userId).subscribe((result) => {
@@ -1382,14 +1454,15 @@ InitializeLikeUnlikeClassCourse() {
 
 saveClassCourse(id:string,type:number){
   var classCourseList: any[] = this.savedClassCourseList;
+  const translatedSummary = this.translateService.instant('Success');
   var isSavedClassCourse = classCourseList.find(x => x.id == id);
   if(type == 1){
-    this.savedMessage = 'Class saved successfully';
-    this.removedMessage = 'Class removed successfully'
+    this.savedMessage = this.translateService.instant('ClassSavedSuccessfully');
+    this.removedMessage = this.translateService.instant('ClassRemovedSuccessfully');
   }
   if(type == 2){
-    this.savedMessage = 'Course saved successfully';
-    this.removedMessage = 'Course removed successfully'
+    this.savedMessage = this.translateService.instant('CourseSavedSuccessfully');
+    this.removedMessage = this.translateService.instant('CourseRemovedSuccessfully');
   }
 
     var isSavedClassCourse = this.savedClassCourseList.find((x: { id: any; }) => x.id == id);
@@ -1401,12 +1474,12 @@ saveClassCourse(id:string,type:number){
   if(isSavedClassCourse.isClassCourseSavedByCurrentUser){
     isSavedClassCourse.savedClassCourseCount -= 1;
     isSavedClassCourse.isClassCourseSavedByCurrentUser = false;
-    this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:this.removedMessage});
+    this.messageService.add({severity:'success', summary:translatedSummary,life: 3000, detail:this.removedMessage});
    }
    else{
     isSavedClassCourse.savedClassCourseCount += 1;
     isSavedClassCourse.isClassCourseSavedByCurrentUser = true;
-    this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:this.savedMessage});
+    this.messageService.add({severity:'success', summary:translatedSummary,life: 3000, detail:this.savedMessage});
    }
 
   this._schoolService.saveClassCourse(id,this.userId,type).subscribe((result) => {
@@ -1420,7 +1493,9 @@ getDeletedSchool(schoolId:string){[
 deleteSchoolTeacher() {
   this.loadingIcon = true;
   this._userService.deleteSchoolTeacher(this.schoolId).subscribe((response: any) => {
-      this.messageService.add({severity: 'success',summary: 'Success',life: 3000,detail: 'You have left the school successfully'});
+    const translatedMessage = this.translateService.instant('YouLeftSchoolSuccessfully');
+    const translatedSummary = this.translateService.instant('Success');
+      this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage});
       this.ngOnInit();
     });
 }
@@ -1428,7 +1503,9 @@ deleteSchoolTeacher() {
 deleteSchoolStudent() {
   this.loadingIcon = true;
   this._userService.deleteSchoolStudent(this.schoolId).subscribe((response: any) => {
-      this.messageService.add({severity: 'success',summary: 'Success',life: 3000,detail: 'You have left the school successfully'});
+    const translatedMessage = this.translateService.instant('YouLeftSchoolSuccessfully');
+    const translatedSummary = this.translateService.instant('Success');
+      this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage});
       this.ngOnInit();
     });
 }
@@ -1532,6 +1609,16 @@ getSelectedLanguage(){
   var locale = selectedLanguage == "ar" ? Arabic: selectedLanguage == "sp"? Spanish : selectedLanguage == "tr"? Turkish : null
   const dateOfBirthElement = this.dateOfBirthRef.nativeElement;
   dateOfBirthElement._flatpickr.set("locale", locale); 
+}
+
+getCityByCountry(event:any){
+  debugger
+  var countryName = event.value;
+  this._userService.getCityList(countryName).subscribe((response) => {
+    debugger
+    this.cities = response;
+    // this.editUserForm.get('city')?.setValue('');
+  });
 }
 
 }

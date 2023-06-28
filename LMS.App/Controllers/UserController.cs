@@ -148,9 +148,9 @@ namespace LMS.App.Controllers
 
         [Route("banFollower")]
         [HttpPost]
-        public async Task<IActionResult> BanFollower(string followerId)
+        public async Task<IActionResult> BanFollower(string followerId,string userId)
         {
-            var reponse = await _userService.BanFollower(followerId);
+            var reponse = await _userService.BanFollower(followerId, userId);
             return Ok(reponse);
         }
 

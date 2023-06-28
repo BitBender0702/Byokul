@@ -20,6 +20,7 @@ import { confirmEmailResponse } from '../confirmEmail/confirmEmail.component';
 import { resetPassResponse } from 'src/root/root/sharedModule/reset-password.component';
 import { changePassResponse } from '../change-password/change-password.component';
 import { setPassResponse } from '../set-password/set-password.component';
+import { TranslateService } from '@ngx-translate/core';
 
 export const dashboardResponse =new Subject<{token:string}>(); 
 export const feedState =new BehaviorSubject <string>('myFeed');  
@@ -52,7 +53,7 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
     @ViewChild('passwordInput') passwordInput!: ElementRef<HTMLInputElement>;
 
     
-    constructor(injector: Injector, public messageService:MessageService,private fb: FormBuilder,private router: Router,private signalRService: SignalrService, 
+    constructor(injector: Injector, private translateService: TranslateService, public messageService:MessageService,private fb: FormBuilder,private router: Router,private signalRService: SignalrService, 
       private userService: UserService,
       private http: HttpClient,authService:AuthService,private route: ActivatedRoute,private cd: ChangeDetectorRef) { 
       super(injector);
@@ -86,7 +87,9 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
         this.cd.detectChanges();
         this.isResetpassword = response;
         if(this.isResetpassword){
-          this.messageService.add({severity: 'success',summary: 'Success',life: 3000,detail: 'Password reset successfully',
+          const translatedMessage = this.translateService.instant('PasswordResetSuccessfully');
+          const translatedSummary = this.translateService.instant('Success');
+          this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage,
           });        
         }
       });
@@ -95,7 +98,9 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
         this.cd.detectChanges();
         this.isChangePassword = response;
         if(this.isChangePassword){
-          this.messageService.add({severity: 'success',summary: 'Success',life: 3000,detail: 'Password changed successfully',
+          const translatedMessage = this.translateService.instant('PasswordChangedSuccessfully');
+          const translatedSummary = this.translateService.instant('Success');
+          this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage,
           });        
         }
       });
@@ -104,8 +109,10 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
         this.cd.detectChanges();
         this.isSetPassword = response;
         if(this.isSetPassword){
-          this.messageService.add({severity: 'success',summary: 'Success',life: 3000,detail: 'Password set successfully',
-          });        
+          const translatedMessage = this.translateService.instant('PasswordSetSuccessfully');
+          const translatedSummary = this.translateService.instant('Success');
+          this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage,
+          });       
         }
       });
 
@@ -119,8 +126,10 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
           this.isConfirmEmail = false;
         }
         if(this.isConfirmEmail){
-          this.messageService.add({severity: 'success',summary: 'Success',life: 3000,detail: 'Email confirmed successfully',
-          });        
+          const translatedMessage = this.translateService.instant('EmailConfirmedSuccessfully');
+          const translatedSummary = this.translateService.instant('Success');
+          this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage,
+          });     
         }
       });
     }

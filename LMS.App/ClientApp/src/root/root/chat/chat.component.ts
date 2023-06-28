@@ -27,6 +27,8 @@ import 'video.js/dist/video-js.css';
 import { ChatVideoComponent } from '../chatVideo/chatVideo.component';
 import { UploadVideo } from 'src/root/interfaces/post/uploadVideo';
 import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
+import { MessageService } from 'primeng/api';
+import { TranslateService } from '@ngx-translate/core';
 
 export const unreadChatResponse =new Subject<{readMessagesCount: number,type:string}>(); 
 
@@ -35,7 +37,8 @@ export const unreadChatResponse =new Subject<{readMessagesCount: number,type:str
 @Component({
   selector: 'chat-root',
   templateUrl: './chat.component.html',
-  styleUrls: ['./chat.component.css']
+  styleUrls: ['./chat.component.css'],
+  providers: [MessageService]
 })
 export class ChatComponent extends MultilingualComponent implements OnInit, AfterViewInit, OnDestroy {
 
@@ -164,12 +167,13 @@ export class ChatComponent extends MultilingualComponent implements OnInit, Afte
   selectedChatHeadId!:string;
   forwardedId:string = "";
   isGenerateChatLi:boolean = false;
+  groupedMessages:any;
   @ViewChild('chatHeadsScrollList') chatHeadsScrollList!: ElementRef;
   // @ViewChild('chatScrollList') chatScrollList!: ElementRef;
 
 
 
-  constructor(@Inject(DOCUMENT) document: Document,injector: Injector,private bsModalService: BsModalService,notificationService:NotificationService,schoolService:SchoolService,classService:ClassService,courseService:CourseService, chatService:ChatService,private renderer: Renderer2,public signalRService: SignalrService, private http: HttpClient,private route: ActivatedRoute,private userService: UserService,private cd: ChangeDetectorRef) { 
+  constructor(@Inject(DOCUMENT) document: Document,injector: Injector,private translateService: TranslateService,public messageService:MessageService,private bsModalService: BsModalService,notificationService:NotificationService,schoolService:SchoolService,classService:ClassService,courseService:CourseService, chatService:ChatService,private renderer: Renderer2,public signalRService: SignalrService, private http: HttpClient,private route: ActivatedRoute,private userService: UserService,private cd: ChangeDetectorRef) { 
     super(injector);
     this._userService = userService;
     this._schoolService = schoolService;
@@ -831,11 +835,21 @@ this.addChatAttachments = {
   }
 
       this.schoolInboxList.forEach((item: any) => {
+        var chats:any = {};
+        const dateTime = new Date(item.time);
+        const date = dateTime.toISOString().split('T')[0]; 
+        if (chats[date]) {
+          chats[date].push(item);
+        } else {
+          chats[date] = [item];
+        }
+
+        item.chats = chats;
+
         this._userService.getUser(item.userID).subscribe((result) => {
           item.userName = result.firstName + result.lastName;
           item.profileURL = result.avatar;  
         });
-
         if(item.chatType == 3){
         const index = this.allChatUsers.indexOf(item);
          if (index > -1) {
@@ -890,6 +904,21 @@ this.addChatAttachments = {
 
         this.selectedChatHeadDiv = true;
         this.firstuserChats = this.allChatUsers[0]?.chats;
+        if (this.firstuserChats) {
+          this.firstuserChats = this.firstuserChats.reduce((groupedChats: any, chat: any) => {
+            const dateTime = new Date(chat.time);
+            const date = dateTime.toISOString().split('T')[0]; // Extracting the date portion
+        
+            if (groupedChats[date]) {
+              groupedChats[date].push(chat);
+            } else {
+              groupedChats[date] = [chat];
+            }
+        
+            return groupedChats;
+          }, {});
+        }
+        var a = 10;
         this.userName = this.allChatUsers[0].userName;
         this.recieverId = this.allChatUsers[0]?.userID;
         this.receiverAvatar = this.allChatUsers[0]?.profileURL;
@@ -1000,7 +1029,8 @@ this.addChatAttachments = {
 
       // this.schoolChatList.nativeElement.scrollTop = this.schoolChatList.nativeElement.scrollHeight;
       this._chatService.getUsersChat(this.senderId,this.schoolInboxList[0].userID,this.schoolInboxList[0].chatType,10,1).subscribe((response) => {
-        this.schoolInboxList[0].chats = response;
+        var schoolChats = this.groupBySchoolChat(response);
+        this.schoolInboxList[0].chats = schoolChats;
         this.cd.detectChanges();
         this.schoolChatList.nativeElement.scrollTop = this.schoolChatList.nativeElement.scrollHeight;
 
@@ -1106,13 +1136,28 @@ this.addChatAttachments = {
     // })
      this.clearChat();
       this.usersChatSub = this._chatService.getUsersChat(this.senderId,recieverId,Number(chatType),pageSize,pageNumber).subscribe((response) => {
+        const groupedItems = response.reduce((acc: any, curr: any) => {
+          const dateTime = new Date(curr.time);
+          const date = dateTime.toISOString().split('T')[0]; // Extracting the date portion
+          if (acc[date]) {
+            acc[date].push(curr);
+          } else {
+            acc[date] = [curr];
+          }
+          return acc;
+        }, {});
+        var test = groupedItems;
+        this.groupedMessages = groupedItems;
+        // this.groupedMessages.push(test);
+        this.cd.detectChanges();
+        console.log(this.groupedMessages);
        if(chatType == "4" && From=="FromSchoolInbox"){
         this.schoolInboxChatType = "4";
         this.chatType = "4";
         var chatUsers: any[] = this.schoolInboxList;
         let currentChatHead = chatUsers.find(x => x.user2ID == this.sender.id && x.userID == recieverId && x.chatType == 4);
-        
-        this.schoolInboxList[0].chats = response;
+        var schoolChats = this.groupBySchoolChat(response);
+        this.schoolInboxList[0].chats = schoolChats;
         this.senderAvatar = currentChatHead.class.avatar;
         this.senderName = currentChatHead.class.className;
         this.loadingIcon = false;
@@ -1131,7 +1176,8 @@ this.addChatAttachments = {
       //  else{
         this.schoolInboxChatType = "3";
         this.chatType = "3";
-        this.schoolInboxList[0].chats = response;
+        var schoolChats = this.groupBySchoolChat(response);
+        this.schoolInboxList[0].chats = schoolChats;
         this.senderAvatar = currentChatHead.school.avatar;
         this.senderName = currentChatHead.school.schoolName;
         this.loadingIcon = false;
@@ -1144,7 +1190,8 @@ this.addChatAttachments = {
         if(chatType == "5" && From=="FromSchoolInbox"){
           this.schoolInboxChatType = "5";
           this.chatType = "5";
-          this.schoolInboxList[0].chats = response;
+          var schoolChats = this.groupBySchoolChat(response);
+          this.schoolInboxList[0].chats = schoolChats;
           this.senderAvatar = currentChatHead.course.avatar;
           this.senderName = currentChatHead.course.courseName;
           this.loadingIcon = false;
@@ -1169,8 +1216,20 @@ this.addChatAttachments = {
           if(!this.firstuserChats || this.firstuserChats.length==0)
             this.firstuserChats = response;
           else
-            this.firstuserChats = this.userChats.concat(this.firstuserChats);
-          this.firstuserChats = this.userChats;
+          // her from grouping
+          this.firstuserChats = {};
+          response.forEach((item:any) => {
+            const dateTime = new Date(item.time);
+            const date = dateTime.toISOString().split('T')[0]; 
+            if (this.firstuserChats[date]) {
+              this.firstuserChats[date].push(item);
+            } else {
+              this.firstuserChats[date] = [item];
+            }
+          });
+
+            // this.firstuserChats = this.userChats.concat(this.firstuserChats);
+          // this.firstuserChats = this.userChats;
          }
          this.cd.detectChanges();
          this.chatList.nativeElement.scrollTop = this.chatList.nativeElement.scrollHeight;
@@ -1452,7 +1511,6 @@ getTextMessage(evant:any,receiverId:string){
 }
 
   sendToUser(receiverId:string){
-    debugger
     this.isSubmitted = false;
     this.InitializeChatViewModel();
     if(receiverId == undefined){
@@ -1617,7 +1675,11 @@ getTextMessage(evant:any,receiverId:string){
       this.chatViewModel.replyChatContent = this.replyChat;
       this.chatViewModel.fileURL = this.fileURL;
       this._signalRService.sendToUser(this.chatViewModel);
-      console.log(this.chatViewModel);
+      if(this.isForwarded){
+        const translatedInfoSummary = this.translateService.instant('Success');
+        const translatedMessage = this.translateService.instant('MessageForwardedSuccessfully');
+        this.messageService.add({severity: 'success',summary: translatedInfoSummary,life: 3000,detail: translatedMessage});
+      }
       this.chatViewModel = new Object as ChatViewModel;
      
     var result ={receiver:this.sender.firstName + " " + this.sender.lastName,message:this.messageToUser,isTest:false,receiverId:this.sender.id,isSchoolOwner:this.isSchoolOwner,receiverName:this.recieverId};
@@ -1669,7 +1731,7 @@ getTextMessage(evant:any,receiverId:string){
   }
 
   generateChatLi(response:any,profileImage:string,chatType:string){
-    debugger
+    const today = new Date().toISOString().split('T')[0];
     if(this.forwardedId != ""){
        if(this.forwardedId == response.receiverName){
          this.isGenerateChatLi = true;
@@ -1704,16 +1766,38 @@ getTextMessage(evant:any,receiverId:string){
       forwardedFileType: response.forwardedFileType != undefined ? response.forwardedFileType :this.forwardedFileType
     }
 if(chatType == "1" || (chatType == "3" && !response.isSchoolOwner)){
+  const chatExists = this.firstuserChats.hasOwnProperty(today);
+  if (chatExists) {
+    this.firstuserChats[today].push(userChat);
+  } else {
+    this.firstuserChats[today] = [userChat];
+  }
 
-    this.firstuserChats.push(userChat);
-    var attachments = this.firstuserChats.slice(-1)[0];
+    // this.firstuserChats.push(userChat);
+    var attachments = this.firstuserChats[today].slice(-1)[0];
   }
 
   else{
 var a = this.schoolInboxList;
 // this.schoolInboxList.find(x => x.)
-    this.schoolInboxList[0].chats.push(userChat);
-    var attachments = this.firstuserChats.slice(-1)[0];
+
+
+const chatExists = this.schoolInboxList[0].chats.hasOwnProperty(today);
+  if (chatExists) {
+    this.schoolInboxList[0].chats[today].push(userChat);
+  } else {
+    this.schoolInboxList[0].chats[today] = [userChat];
+  }
+
+    // this.firstuserChats.push(userChat);
+    var attachments = this.schoolInboxList[0].chats[today].slice(-1)[0];
+
+
+
+
+
+    // this.schoolInboxList[0].chats.push(userChat);
+    // var attachments = this.firstuserChats.slice(-1)[0];
   }
 
      var imageHtml = '';
@@ -1931,7 +2015,18 @@ chatHeadsSearch(){
           });
 
           this.allChatUsers = response;
-          this.firstuserChats = response[0].chats;
+          // here i will 
+          this.firstuserChats = {};
+          response[0].chats.forEach((item:any) => {
+            const dateTime = new Date(item.time);
+            const date = dateTime.toISOString().split('T')[0]; 
+            if (this.firstuserChats[date]) {
+              this.firstuserChats[date].push(item);
+            } else {
+              this.firstuserChats[date] = [item];
+            }
+          });
+          // this.firstuserChats = response[0].chats;
         });
       }
 }
@@ -1952,7 +2047,17 @@ scrollChatHandler(event: any) {
 
 getNextChats(){
      this._chatService.getUsersChat(this.senderId,this.recieverId,Number(this.chatType),7,this.chatsPageNumber).subscribe((response) => {
-      this.firstuserChats = response.concat(this.firstuserChats);
+      response.forEach((item:any) => {
+        const dateTime = new Date(item.time);
+        const date = dateTime.toISOString().split('T')[0]; 
+        if (this.firstuserChats[date]) {
+          this.firstuserChats[date].push(item);
+        } else {
+          this.firstuserChats[date] = [item];
+        }
+      });
+      var a = this.firstuserChats;
+      // this.firstuserChats = response.concat(this.firstuserChats);
       this.cd.detectChanges();
       this.chatsLoadingIcon = false;
       this.scrollChatsResponseCount = response.length; 
@@ -1990,7 +2095,9 @@ getNextChats(){
 
 getNextSchoolChats(){
   this._chatService.getUsersChat(this.senderId,this.schoolInboxList[0].userID,Number(this.chatType),7,this.schoolChatsPageNumber).subscribe((response) => {
-   this.schoolInboxList[0].chats = response.concat(this.schoolInboxList[0].chats);
+    var schoolChats = this.groupBySchoolChat(response);
+  //  this.schoolInboxList[0].chats = response.concat(this.schoolInboxList[0].chats);
+  this.schoolInboxList[0].chats = schoolChats;
    this.cd.detectChanges();
    this.schoolChatsLoadingIcon = false;
    this.scrollSchoolChatsResponseCount = response.length; 
@@ -2021,7 +2128,6 @@ openCertificateViewModal(fileUrl:string,fileName:string){
 }
 
 chatReply(userChat:any){
-  debugger
   this.replyChat =  userChat.text;
   this.replyMessageId = userChat.id;
   this.replyMessageType = 0;
@@ -2085,7 +2191,6 @@ openForwardModal(chatMessage?:string, fileName?:string, fileURL?:string,fileTYpe
 }
 
 forwardToUser(receiverId:string,chatType:number){
-  debugger
   this.forwardedId = receiverId;
   this.chatType = chatType.toString();
   this.isForwarded = true;
@@ -2097,6 +2202,30 @@ forwardAttachmentToUser(receiverId:string,chatType:number){
   this.chatType = chatType.toString();
   this.isForwarded = true;
   this.sendToUser(receiverId);
+}
+
+getObjectKeys(obj: any): string[] {
+  if(obj != null){
+  console.log(Object.keys(obj));
+  return Object.keys(obj).sort();
+}
+return [];
+}
+
+groupBySchoolChat(response:any){
+  if(this.schoolInboxList[0].chats == null){
+    this.schoolInboxList[0].chats = {};
+  }
+  response.forEach((item:any) => {
+    const dateTime = new Date(item.time);
+    const date = dateTime.toISOString().split('T')[0]; 
+    if (this.schoolInboxList[0].chats[date]) {
+      this.schoolInboxList[0].chats[date].push(item);
+    } else {
+      this.schoolInboxList[0].chats[date] = [item];
+    }
+  });
+  return this.schoolInboxList[0].chats;
 }
 }
 

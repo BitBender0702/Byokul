@@ -53,6 +53,7 @@ namespace LMS.Common.ViewModels.Post
         public string? StreamJoinUrl { get; set; }
         public string? InternalMeetingId { get; set; }
         public Guid? ExternalMeetingId { get; set; }
+        public bool? IsPostSchedule { get; set; }
 
 
     }

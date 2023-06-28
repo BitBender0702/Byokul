@@ -18,6 +18,7 @@ using LMS.Services.Chat;
 using LMS.Common.ViewModels.FileStorage;
 using LMS.Common.ViewModels.Notification;
 using Hangfire;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace LMS.Services
 {
@@ -44,7 +45,9 @@ namespace LMS.Services
         private readonly IBigBlueButtonService _bigBlueButtonService;
         private IConfiguration _config;
 
-        public PostService(IMapper mapper, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<User> userRepository, IGenericRepository<Like> likeRpository, IGenericRepository<View> viewRepository, IGenericRepository<Comment> commentRepository, IGenericRepository<CommentLike> commentLikeRepository, IGenericRepository<SavedPost> savedPostRepository, IBlobService blobService, IUserService userService, IChatService chatService, IBigBlueButtonService bigBlueButtonService, IConfiguration config, IGenericRepository<UserSharedPost> userSharedPostRepository, INotificationService notificationService)
+        private readonly IDistributedCache _cache;
+
+        public PostService(IMapper mapper, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<User> userRepository, IGenericRepository<Like> likeRpository, IGenericRepository<View> viewRepository, IGenericRepository<Comment> commentRepository, IGenericRepository<CommentLike> commentLikeRepository, IGenericRepository<SavedPost> savedPostRepository, IBlobService blobService, IUserService userService, IChatService chatService, IBigBlueButtonService bigBlueButtonService, IConfiguration config, IGenericRepository<UserSharedPost> userSharedPostRepository, INotificationService notificationService, IDistributedCache cache)
         {
             _mapper = mapper;
             _postRepository = postRepository;
@@ -66,9 +69,22 @@ namespace LMS.Services
             _config = config;
             _userSharedPostRepository = userSharedPostRepository;
             _notificationService = notificationService;
+            _cache = cache;
         }
         public async Task<PostViewModel> SavePost(PostViewModel postViewModel, string createdById)
         {
+            //if (postViewModel.PostAuthorType == (int)PostAuthorTypeEnum.School)
+            //{
+            //    await SavePostsInCache(postViewModel);
+            //}
+
+
+            // Store a value in cache
+            await _cache.SetStringAsync("postTitle", postViewModel.Title);
+
+            // Retrieve a value from cache
+            string cachedValue = await _cache.GetStringAsync("postTitle");
+
             var blobVideoUrls = new List<string>();
             IEnumerable<FileAttachmentViewModel> uploadFromFileStorage = null;
             postViewModel.PostTags = JsonConvert.DeserializeObject<string[]>(postViewModel.PostTags.First());
@@ -90,6 +106,7 @@ namespace LMS.Services
                 PostAuthorType = postViewModel.PostAuthorType,
                 ParentId = postViewModel.ParentId,
                 CoverLetter = postViewModel.CoverLetter,
+                IsPostSchedule = false,
                 CommentsPerMinute = postViewModel.CommentsPerMinute == 0 ? null : postViewModel.CommentsPerMinute,
                 //IsLive = (postViewModel.DateTime == null && postViewModel.PostType == 2) ? true : false,
                 CreatedById = createdById,
@@ -134,6 +151,10 @@ namespace LMS.Services
 
             if (postViewModel.PostType == (int)PostTypeEnum.Stream && postViewModel.DateTime != null)
             {
+                post.StreamUrl = blobVideoUrls[0];
+                post.IsPostSchedule = true;
+                _postRepository.Update(post);
+                _postRepository.Save();
                 DateTimeOffset scheduledTime = new DateTimeOffset(postViewModel.DateTime.Value);
                 await ScheduleLiveStream(postViewModel, createdById, scheduledTime);
             }
@@ -164,44 +185,69 @@ namespace LMS.Services
                         _postRepository.Save();
                     }
                 }
+
+                if ((postViewModel.PostType == (int)PostTypeEnum.Post || postViewModel.PostType == (int)PostTypeEnum.Reel) && postViewModel.DateTime != null)
+                {
+                    post.IsPostSchedule = true;
+                    _postRepository.Update(post);
+                    _postRepository.Save();
+                    DateTimeOffset scheduledTime = new DateTimeOffset(postViewModel.DateTime.Value);
+                    var scheduleJobId = BackgroundJob.Schedule(() => SaveSchedulePostInfo(postViewModel.Id), scheduledTime);
+                }
+
             }
             postViewModel.Id = post.Id;
             return postViewModel;
         }
 
-        async Task ScheduleLiveStream(PostViewModel postViewModel, string userId, DateTimeOffset scheduledTime)
+        //public async Task SavePostsInCache(PostViewModel postViewModel)
+        //{
+        //    var model = new PostDetailsViewModel();
+
+        //}
+
+        public async Task SaveSchedulePostInfo(Guid postId)
+        {
+            var post = _postRepository.GetById(postId);
+            post.IsPostSchedule = false;
+            _postRepository.Update(post);
+            _postRepository.Save();
+        }
+
+        public async Task ScheduleLiveStream(PostViewModel postViewModel, string userId, DateTimeOffset scheduledTime)
         {
             postViewModel.DateTime = null;
-            var scheduleJobId = BackgroundJob.Schedule(() => SaveLiveStreamInfo(postViewModel, userId), scheduledTime);
+            var scheduleJobId = BackgroundJob.Schedule(() => SaveLiveStreamInfo(postViewModel.Id, userId), scheduledTime);
 
         }
 
-        async Task SaveLiveStreamInfo(PostViewModel postViewModel, string userId)
+        public async Task SaveLiveStreamInfo(Guid id, string userId)
         {
-            var post = _postRepository.GetById(postViewModel.Id);
-            var postAttachment = await _postAttachmentRepository.GetAll().Where(x => x.PostId == postViewModel.Id).FirstAsync();
-            if (postViewModel.UploadVideos != null)
-            {
-                post.StreamUrl = postAttachment.FileUrl;
-                post.IsLive = true;
-                _postRepository.Update(post);
-                _postRepository.Save();
-            }
-            else
-            {
-                var user = _userRepository.GetById(userId);
-                var model = new NewMeetingViewModel();
-                model.meetingName = postViewModel.Title;
-                model.IsMicrophoneOpen = (bool)postViewModel.IsMicroPhoneOpen;
-                model.ModeratorName = user.FirstName;
-                model.PostId = post.Id;
-                var url = await _bigBlueButtonService.Create(model);
-                postViewModel.StreamUrl = url;
-                post.StreamUrl = url;
-                post.IsLive = true;
-                _postRepository.Update(post);
-                _postRepository.Save();
-            }
+            var post = _postRepository.GetById(id);
+            //var postAttachment = await _postAttachmentRepository.GetAll().Where(x => x.PostId == postViewModel.Id).FirstAsync();
+            //if (postViewModel.UploadVideos != null)
+            //{
+            //post.StreamUrl = postAttachment.FileUrl;
+            post.IsLive = true;
+            post.IsPostSchedule = false;
+            _postRepository.Update(post);
+            _postRepository.Save();
+            //}
+            //else
+            //{
+            //    var user = _userRepository.GetById(userId);
+            //    var model = new NewMeetingViewModel();
+            //    model.meetingName = postViewModel.Title;
+            //    model.IsMicrophoneOpen = (bool)postViewModel.IsMicroPhoneOpen;
+            //    model.ModeratorName = user.FirstName;
+            //    model.PostId = post.Id;
+            //    var url = await _bigBlueButtonService.Create(model);
+            //    postViewModel.StreamUrl = url;
+            //    post.StreamUrl = url;
+            //    post.IsLive = true;
+            //    _postRepository.Update(post);
+            //    _postRepository.Save();
+            //}
         }
 
 

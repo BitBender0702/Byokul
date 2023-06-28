@@ -37,13 +37,14 @@ import { AuthService } from 'src/root/service/auth.service';
 import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { RolesEnum } from 'src/root/RolesEnum/rolesEnum';
-import { DatePipe } from '@angular/common';
+import { DatePipe, formatDate } from '@angular/common';
 import { generateCertificateResponse } from '../../generateCertificate/generateCertificate.component';
 import { Arabic } from 'flatpickr/dist/l10n/ar';
 import { Spanish } from 'flatpickr/dist/l10n/es';
 import { Turkish } from 'flatpickr/dist/l10n/tr';
 import flatpickr from 'flatpickr';
 import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
+import { TranslateService } from '@ngx-translate/core';
 
 
 export const deleteClassResponse =new BehaviorSubject <string>('');  
@@ -131,6 +132,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     hasManageTeachersPermission!:boolean;
     classAvatar:string = '';
     isOnInitInitialize:boolean = false;
+    selectedLang:any;
     savedPostSubscription!: Subscription;
     savedReelSubscription!: Subscription;
     addPostSubscription!: Subscription;
@@ -157,7 +159,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     @ViewChild('createPostModal', { static: true }) createPostModal!: CreatePostComponent;
 
     isDataLoaded:boolean = false;
-    constructor(injector: Injector,private titleService: Title,private meta: Meta,private datePipe: DatePipe,authService:AuthService,notificationService:NotificationService,public messageService:MessageService,postService:PostService,private bsModalService: BsModalService,classService: ClassService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,private cd: ChangeDetectorRef) { 
+    constructor(injector: Injector,private translateService: TranslateService,private titleService: Title,private meta: Meta,private datePipe: DatePipe,authService:AuthService,notificationService:NotificationService,public messageService:MessageService,postService:PostService,private bsModalService: BsModalService,classService: ClassService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,private cd: ChangeDetectorRef) { 
       super(injector);
         this._classService = classService;
         this._postService = postService;
@@ -213,6 +215,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     }
   
     ngOnInit(): void {
+      debugger
       // this.meta.addTag({ rel: 'canonical', href: 'https://www.byokul.com' });
       if(this._authService.roleUser(RolesEnum.SchoolAdmin)){
         this._authService.loginState$.next(false);
@@ -225,8 +228,8 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       this.postLoadingIcon = false;
       this.validToken = localStorage.getItem("jwt")?? '';
       this.loadingIcon = true;
-      var selectedLang = localStorage.getItem("selectedLanguage");
-      this.translate.use(selectedLang?? '');
+      this.selectedLang = localStorage.getItem("selectedLanguage");
+      this.translate.use(this.selectedLang?? '');
       this.minDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
 
       // this.className = this.route.snapshot.paramMap.get('className')??'';
@@ -248,6 +251,12 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
         this.addEventListnerOnCarousel();
         this.class.posts = this.getFilteredAttachments(this.class.posts);      
        
+    //     this.translateService.get(['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'])
+    // .subscribe(translations => {
+    //   debugger
+    //   // Store the translated month names
+    //   this.translateService.set('months', translations);
+    // });
       });
 
       this.editClassForm = this.fb.group({
@@ -440,6 +449,13 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
         this.initializeEditFormControls();
     })
     
+  }
+
+  translateDate(date: Date): any {
+    debugger
+    var formatteddate = this.datePipe.transform(date, 'MMMM d, y','','es');
+    const formattedDate = formatDate(date, 'MMMM d, y', 'ar');
+    return formatteddate;
   }
 
   addEventListnerOnCarousel(){
@@ -1241,5 +1257,12 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       startDateElement._flatpickr.set("locale", locale); 
       const endDateElement = this.endDateRef.nativeElement;
       endDateElement._flatpickr.set("locale", locale); 
+    }
+
+    formatLocalizedDate(date: any): string {
+      debugger
+      var locale = this.translate.currentLang;
+      const formattedDate = this.datePipe.transform(date, 'MMMM d, y','',locale)??'';
+      return this.translate.instant(formattedDate);
     }
 }

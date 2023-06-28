@@ -31,26 +31,26 @@ namespace LMS.App.Controllers
             var response = new PostViewModel();
             var userId = await GetUserIdAsync(this._userManager);
 
-            if (postViewModel.DateTime != null && postViewModel.PostType != (int)PostTypeEnum.Stream)
-            {
-                DateTimeOffset scheduledTime = new DateTimeOffset(postViewModel.DateTime.Value);
-                //var jobId = BackgroundJob.Enqueue(() => _postService.SavePost(postViewModel, userId));
+            //if (postViewModel.DateTime != null && postViewModel.PostType != (int)PostTypeEnum.Stream)
+            //{
+            //    DateTimeOffset scheduledTime = new DateTimeOffset(postViewModel.DateTime.Value);
+            //    //var jobId = BackgroundJob.Enqueue(() => _postService.SavePost(postViewModel, userId));
 
-                var scheduleJobId = BackgroundJob.Schedule(() => _postService.SavePost(postViewModel, userId), scheduledTime);
+            //    var scheduleJobId = BackgroundJob.Schedule(() => _postService.SavePost(postViewModel, userId), scheduledTime);
 
-                //var jobId = BackgroundJob.Schedule(() => _postService.SavePost(postViewModel, userId), new TimeSpan(120));
+            //    //var jobId = BackgroundJob.Schedule(() => _postService.SavePost(postViewModel, userId), new TimeSpan(120));
 
-                var monitoringApi = JobStorage.Current.GetMonitoringApi();
+            //    var monitoringApi = JobStorage.Current.GetMonitoringApi();
 
-                // Get the job details
-                var jobDetails = monitoringApi.JobDetails(scheduleJobId);
+            //    // Get the job details
+            //    var jobDetails = monitoringApi.JobDetails(scheduleJobId);
 
-                // Get the return value type of the job
-                //Type returnType = Type.GetType(jobDetails.ResultType);
+            //    // Get the return value type of the job
+            //    //Type returnType = Type.GetType(jobDetails.ResultType);
 
-            }
-            else
-            {
+            //}
+            //else
+            //{
                 if (postViewModel.PostAuthorType == (int)PostAuthorTypeEnum.School)
                 {
                     postViewModel.OwnerId = new Guid(userId);
@@ -61,7 +61,7 @@ namespace LMS.App.Controllers
                     postViewModel.AuthorId = new Guid(userId);
                 }
                 response = await _postService.SavePost(postViewModel, userId);
-            }
+            //}
             return Ok(response);
         }
         [Route("getReelById")]

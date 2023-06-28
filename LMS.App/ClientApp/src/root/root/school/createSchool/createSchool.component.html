@@ -136,7 +136,7 @@
               <div class="form-group">
                 <div class="custom-language-select">
                   <p-multiSelect
-                    [defaultLabel]="'Select Languages'"
+                    defaultLabel="{{ 'SelectLanguages' | translate }}"
                     [panelStyle]="{ width: '100%' }"
                     [filter]="false"
                     [showToggleAll]="false"
@@ -378,7 +378,7 @@
                   type="submit"
                   id="nextBtn"
                   class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 text-uppercase"
-                  value="Finish"
+                  [value]="'Finish' | translate"
                 />
               </div>
             </form>

@@ -72,8 +72,9 @@ export class UserService{
         return this.http.get(`${this.apiUrl}/users/userFollowings`, {params:queryParams,headers: this.headers})
     }
 
-    banFollower(followerId:any): Observable<any> {
-        return this.http.post(`${this.apiUrl}/users/banFollower` + '?followerId=' + followerId,'',{headers: this.headers});
+    banFollower(followerId:any,userId:string): Observable<any> {
+        let queryParams = new HttpParams().append("followerId",followerId).append("userId",userId);
+        return this.http.post(`${this.apiUrl}/users/banFollower`,null, {params:queryParams,headers: this.headers});
     }
 
     getUser(userId:string):Observable<any>{

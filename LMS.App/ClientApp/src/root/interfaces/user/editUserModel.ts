@@ -7,4 +7,6 @@ export interface EditUserModel{
     gender:number;
     description:string;
     contactEmail:string;
+    country:string;
+    city:string;
 }

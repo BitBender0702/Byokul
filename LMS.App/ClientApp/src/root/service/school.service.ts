@@ -172,4 +172,9 @@ export class SchoolService{
         return this.http.post(`${this.apiUrl}/school/enableDisableSchool`+ '?schoolId=' + schoolId,'',{headers: this.headers});
     }
 
+    banFollower(followerId:any,schoolId:string): Observable<any> {
+        let queryParams = new HttpParams().append("followerId",followerId).append("schoolId",schoolId);
+        return this.http.post(`${this.apiUrl}/school/banFollower`,null, {params:queryParams,headers: this.headers});
+    }
+
 }

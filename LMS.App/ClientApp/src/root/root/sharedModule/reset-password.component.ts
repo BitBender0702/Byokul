@@ -23,7 +23,7 @@ export class ResetPasswordComponent extends MultilingualComponent implements OnI
     loadingIcon:boolean = false;
     isNewPasswordVisible:boolean=false;
     isConfirmPasswordVisible:boolean = false;
-    PASSWORD_PATTERN = '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-=[\\]{};:\'\"\\|,.<>/?])[A-Za-z\\d!@#$%^&*()_+\\-=[\\]{};:\'\"\\|,.<>/?]+$';
+    PASSWORD_PATTERN = '^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).*';
     @ViewChild('newPasswordInput') passwordInput!: ElementRef<HTMLInputElement>;
     @ViewChild('confirmPasswordInput') confirmPasswordInput!: ElementRef<HTMLInputElement>;
     

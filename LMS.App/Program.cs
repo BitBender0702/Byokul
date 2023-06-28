@@ -32,6 +32,8 @@ using Microsoft.Extensions.Azure;
 using Azure.Storage.Blobs;
 using LMS.Services.FileStorage;
 using Hangfire;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.AspNetCore.Http.Features;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -172,6 +174,13 @@ builder.Services.AddAutoMapper(config =>
     config.AddProfile<NotificationProfile>();
 });
 
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    IConfigurationSection cacheConfiguration = configuration.GetSection("Caching:Redis");
+    options.Configuration = cacheConfiguration["ConnectionString"];
+    options.InstanceName = "SampleInstance";
+});
+
 
 builder.Services.AddSwaggerGen(options =>
 {
@@ -202,7 +211,24 @@ builder.Services.AddHangfire(config =>
     config.UseSqlServerStorage(configuration.GetConnectionString("DataContext"));
 });
 
-builder.Services.AddHangfireServer();
+builder.Services.Configure<IISServerOptions>(options =>
+{
+    options.MaxRequestBodySize = int.MaxValue;
+});
+
+builder.Services.Configure<KestrelServerOptions>(options =>
+{
+    options.Limits.MaxRequestBodySize = int.MaxValue;
+});
+
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.ValueLengthLimit = int.MaxValue;
+    options.MultipartBodyLengthLimit = int.MaxValue;
+    options.MultipartHeadersLengthLimit = int.MaxValue;
+});
+
+//builder.Services.AddHangfireServer();
 
 
 builder.Services.AddSignalR(options =>

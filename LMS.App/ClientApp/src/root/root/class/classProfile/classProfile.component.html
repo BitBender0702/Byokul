@@ -108,8 +108,14 @@
                 </h2>
                 <div class="d-flex flex-wrap course-date-head">
                   <span class="date-class text_ltgray font_14"
-                    >{{ class.startDate | date : "MMMM d, y" }} -
-                    {{ class.endDate | date : "MMMM d, y" }}</span
+                    >
+                    <!-- {{ translateDate(class.startDate) }} -->
+                    <!-- {{ formatLocalizedDate(class.startDate) }} -->
+
+                    {{ class.startDate | date : "MMMM d, y"}} -
+                    {{ class.endDate | date : "MMMM d, y" }}
+                    
+                    </span
                   >
                   <span class="sepearator mx-4">|</span>
                   <span class="date-class text_ltgray font_14"
@@ -288,7 +294,7 @@
             (click)="resetLanguageModal()"
             data-bs-toggle="modal"
             data-bs-target="#add-language"
-            >Add Languages<button
+            >{{ "AddLanguage" | translate }}<button
               (click)="resetLanguageModal()"
               class="border-0 bg-transparent p-0 position-absolute delete-tag"
               data-bs-toggle="modal"
@@ -327,7 +333,7 @@
               (click)="resetTeacherModal()"
               data-bs-toggle="modal"
               data-bs-target="#add-classTeacher"
-              >Add Teacher<button
+              >{{ "AddTeacher" | translate }}<button
                 (click)="resetTeacherModal()"
                 class="border-0 bg-transparent p-0 position-absolute delete-tag"
                 data-bs-toggle="modal"
@@ -363,9 +369,7 @@
               1
             ]"
           >
-            <img src="../../../../assets/images/Folder.svg" class="me-2" />{{
-              " FileStorage" | translate
-            }}
+            <img src="../../../../assets/images/Folder.svg" class="me-2" />{{"FileStorage" | translate}}
           </button>
           <div class="button-list-grid-filter">
             <button
@@ -1668,13 +1672,13 @@
                     *ngIf="!class.isDisableByOwner"
                     class="text-center font_16 f-poppins"
                   >
-                    {{ "DoYouWantToDisableClass" | translate }} ?
+                    {{ "DoYouWantToDisableClass" | translate }} 
                   </h2>
                   <h2
                     *ngIf="class.isDisableByOwner"
                     class="text-center font_16 f-poppins"
                   >
-                    {{ "DoYouWantToUnableClass" | translate }} ?
+                    {{ "DoYouWantToUnableClass" | translate }} 
                   </h2>
                 </div>
                 <div
@@ -1730,7 +1734,7 @@
               <div class="modal-body">
                 <div class="form-group">
                   <h2 class="text-center font_16 f-poppins">
-                    Do you really want to delete this?
+                    {{ "DoYouWantToDelete" | translate }}
                   </h2>
                 </div>
                 <div

@@ -20,7 +20,7 @@ export class ChangePasswordComponent extends MultilingualComponent implements On
     invalidPasswordChange!: boolean;
     changePasswordForm!:FormGroup;
     EMAIL_PATTERN = '[a-zA-Z0-9]+?(\\.[a-zA-Z0-9]+)*@[a-zA-Z]+\\.[a-zA-Z]{2,3}';
-    PASSWORD_PATTERN = '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-=[\\]{};:\'\"\\|,.<>/?])[A-Za-z\\d!@#$%^&*()_+\\-=[\\]{};:\'\"\\|,.<>/?]+$';
+    PASSWORD_PATTERN = '^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).*';
     isSubmitted: boolean = false;
     user: any = {};
     loadingIcon:boolean = false;

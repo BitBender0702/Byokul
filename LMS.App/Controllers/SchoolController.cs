@@ -322,6 +322,14 @@ namespace LMS.App.Controllers
             return Ok();
         }
 
+        [Route("banFollower")]
+        [HttpPost]
+        public async Task<IActionResult> BanFollower(string followerId,Guid schoolId)
+        {
+            var reponse = await _schoolService.BanFollower(followerId, schoolId);
+            return Ok(reponse);
+        }
+
 
     }
 }

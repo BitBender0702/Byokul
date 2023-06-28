@@ -280,6 +280,7 @@ namespace LMS.Services
             school.SchoolEmail = schoolUpdateViewModel.SchoolEmail;
             school.AccessibilityId = schoolUpdateViewModel.AccessibilityId;
             school.Description = schoolUpdateViewModel.Description;
+            school.CountryName = schoolUpdateViewModel.CountryName;
 
             _schoolRepository.Update(school);
             _schoolRepository.Save();
@@ -309,7 +310,7 @@ namespace LMS.Services
 
             if (schoolName != null)
             {
-                schoolName = System.Web.HttpUtility.UrlEncode(schoolName, Encoding.GetEncoding("iso-8859-7")).Replace("%3f", "").ToLower();
+                schoolName = System.Web.HttpUtility.UrlEncode(schoolName, Encoding.GetEncoding("iso-8859-7")).Replace("%3f", "").Replace("+", "").ToLower();
 
                 var schoolLanguages = await _schoolLanguageRepository.GetAll()
                 .Include(x => x.Language)
@@ -320,7 +321,7 @@ namespace LMS.Services
                 .Include(x => x.School)
                 .ThenInclude(x => x.CreatedBy).ToListAsync();
 
-                schoolLanguages = schoolLanguages.Where(x => (System.Web.HttpUtility.UrlEncode(x.School.SchoolName.Replace(" ", "").ToLower(), Encoding.GetEncoding("iso-8859-7")) == schoolName) && !x.School.IsDeleted).ToList();
+                schoolLanguages = schoolLanguages.Where(x => (System.Web.HttpUtility.UrlEncode(x.School.SchoolName.Replace(" ", "").Replace("+", "").ToLower(), Encoding.GetEncoding("iso-8859-7")) == schoolName) && !x.School.IsDeleted).ToList();
 
                 var response = _mapper.Map<SchoolDetailsViewModel>(schoolLanguages.First().School);
 
@@ -524,7 +525,7 @@ namespace LMS.Services
 
         public async Task<IEnumerable<SchoolFollowerViewModel>> FollowerList(Guid schoolId)
         {
-            var followerList = await _schoolFollowerRepository.GetAll().Where(x => x.SchoolId == schoolId).ToListAsync();
+            var followerList = await _schoolFollowerRepository.GetAll().Where(x => x.SchoolId == schoolId && !x.IsBan).ToListAsync();
             return _mapper.Map<IEnumerable<SchoolFollowerViewModel>>(followerList);
 
         }
@@ -702,7 +703,7 @@ namespace LMS.Services
 
         public async Task<IEnumerable<PostDetailsViewModel>> GetPostsBySchool(Guid schoolId, string loginUserId, int pageNumber = 1, int pageSize = 12)
         {
-            var courseList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == schoolId && x.PostType == (int)PostTypeEnum.Post).OrderByDescending(x => x.IsPinned).ThenByDescending(x => x.CreatedOn).ToListAsync();
+            var courseList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == schoolId && (x.PostType == (int)PostTypeEnum.Post || x.PostType == (int)PostTypeEnum.Stream) && x.PostAuthorType == (int)PostAuthorTypeEnum.School && x.IsPostSchedule != true).OrderByDescending(x => x.IsPinned).ThenByDescending(x => x.CreatedOn).ToListAsync();
 
             var sharedPost = await _userSharedPostRepository.GetAll().ToListAsync();
             var savedPost = await _savedPostRepository.GetAll().ToListAsync();
@@ -740,7 +741,7 @@ namespace LMS.Services
 
         public async Task<IEnumerable<PostDetailsViewModel>> GetReelsBySchool(Guid schoolId, string loginUserId, int pageNumber = 1, int pageSize = 8)
         {
-            var courseList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == schoolId && x.PostType == (int)PostTypeEnum.Reel).OrderByDescending(x => x.IsPinned).ThenByDescending(x => x.CreatedOn).ToListAsync();
+            var courseList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == schoolId && x.PostType == (int)PostTypeEnum.Reel && x.IsPostSchedule != true).OrderByDescending(x => x.IsPinned).ThenByDescending(x => x.CreatedOn).ToListAsync();
 
             var result = _mapper.Map<List<PostDetailsViewModel>>(courseList).Skip((pageNumber - 1) * pageSize).Take(pageSize);
 
@@ -893,7 +894,7 @@ namespace LMS.Services
         public async Task<List<SchoolFollowerViewModel>> GetSchoolFollowers(Guid schoolId, int pageNumber, string? searchString)
         {
             int pageSize = 13;
-            var followerList = await _schoolFollowerRepository.GetAll().Include(x => x.User)
+            var followerList = await _schoolFollowerRepository.GetAll().Include(x => x.User).Include(x => x.School)
              .Where(x => x.SchoolId == schoolId && !x.IsBan && ((string.IsNullOrEmpty(searchString)) || (x.User.FirstName.Contains(searchString) || x.User.LastName.Contains(searchString)))).Skip((pageNumber - 1) * pageSize)
              .Take(pageSize).ToListAsync();
 
@@ -1449,6 +1450,24 @@ namespace LMS.Services
             school.IsDisableByOwner = !school.IsDisableByOwner;
             _schoolRepository.Update(school);
             _schoolRepository.Save();
+
+        }
+
+        public async Task<bool> BanFollower(string followerId,Guid schoolId)
+        {
+            var follower = await _schoolFollowerRepository.GetAll().Where(x => x.UserId == followerId && x.SchoolId == schoolId).FirstOrDefaultAsync();
+
+            if (follower != null)
+            {
+                follower.IsBan = true;
+                _schoolFollowerRepository.Update(follower);
+                _schoolFollowerRepository.Save();
+                return true;
+            }
+
+            return false;
+
+
 
         }
 

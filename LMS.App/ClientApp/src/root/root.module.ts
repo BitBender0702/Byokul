@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule, Routes } from '@angular/router';
@@ -73,11 +73,24 @@ import { GlobalSearchComponent } from './root/globalSearch/globalSearch.componen
 import { PickerModule } from '@ctrl/ngx-emoji-mart'
 import { StudentListComponent } from './root/students/studentList.componant';
 import { ChatVideoComponent } from './root/chatVideo/chatVideo.component';
+import { registerLocaleData } from '@angular/common';
+import localeTr from '@angular/common/locales/tr';
+import localeEs from '@angular/common/locales/es';
+import localeAr from '@angular/common/locales/ar';
+import { FaqComponent } from './root/faq/faq.component';
+import { AboutUsComponent } from './root/aboutUs/aboutUs.component';
+import { PrivecyPolicyComponent } from './root/privacyPolicy/privacyPolicy.component';
+import { TermsOfServiceComponent } from './root/termsOfService/termsOfService.component';
+import { ReelsSliderComponent } from './root/reelsSlider/reelsSlider.component';
+
+
 // import { MetaModule } from '@ngx-meta/core';
 // import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 
 // import { AdminSideBarComponent } from './admin/admin-template/side-bar/adminSide-bar.component';
-
+// registerLocaleData(localeEs, 'es');
+// registerLocaleData(localeTr, 'tr');
+// registerLocaleData(localeAr, 'ar');
 
 const routes: Routes = [
 
@@ -103,6 +116,18 @@ const routes: Routes = [
   },
   {
     path: 'liveStream/:postId/:from',component:LiveStreamComponent, canActivate: [AuthGuard]
+  },
+  {
+    path: 'aboutUs',component:AboutUsComponent, canActivate: [AuthGuard]
+  },
+  {
+    path: 'faq',component:FaqComponent, canActivate: [AuthGuard]
+  },
+  {
+    path: 'privacyPolicy',component:PrivecyPolicyComponent, canActivate: [AuthGuard]
+  },
+  {
+    path: 'termsOfServices',component:TermsOfServiceComponent, canActivate: [AuthGuard]
   },
   
 
@@ -144,7 +169,13 @@ const routes: Routes = [
     LiveStreamComponent,
     GlobalSearchComponent,
     StudentListComponent,
-    ChatVideoComponent
+    ChatVideoComponent,
+    AboutUsComponent,
+    FaqComponent,
+    PrivecyPolicyComponent,
+    TermsOfServiceComponent,
+    ReelsSliderComponent
+    
   ],
   imports: [
     CommonModule,
@@ -189,7 +220,7 @@ const routes: Routes = [
   ],
 
   exports: [RouterModule,SharedModule,ModalModule],
-  providers: [DatePipe ],
+  providers: [DatePipe],
   bootstrap: [RootComponent]
 })
 export class RootModule { }
