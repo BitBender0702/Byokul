@@ -1,5 +1,7 @@
 <div *ngIf="isDataLoaded">
-  <section class="f-poppins liveStream">
+  <section
+    class="f-poppins main_content"
+  >
     <div
       class="create-post-header d-flex justify-content-between d-none d-xl-flex"
     >
@@ -42,12 +44,159 @@
     <div>
       <div id="reel_content">
         <div class="row">
-          <div class="col-12 col-lg-4">
+        <div [ngClass]="showCommentsField? '' : 'col-md-12 col-lg-12'" class="col-lg-8 order-lg-2">
+        <div class="live-inner w-100 position-relative">
+          <div>
+            <div class="live-image overflow-hidden position-relative">
+              <div *ngIf="(streamUrl == undefined || streamUrl == null) && (post.coverThumbnail != undefined)" style="align-items: center;
+              flex-direction: column;
+              display: flex;">
+                 <!-- <img class="cover_thumbnail" [src]="post.coverThumbnail"/> -->
+                 <!-- <h3 style="position: relative;bottom: 467px;">{{'StreamStartingIn'| translate }} {{streamCountDown}}</h3> -->
+                 <!-- <p style="position: relative;bottom: 467px;">{{post.coverLetter}}</p> -->
+              </div>
+              <iframe *ngIf="streamUrl != undefined && streamUrl != null && meetingId != ''" width="100%" height="500" [src]="streamUrl" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share;camera;microphone;display-capture" allowfullscreen></iframe>
+              <video #videoPlayer id="test12" *ngIf="meetingId == ''" width="100%" height="500" autoplay (ended)="onVideoEnded()" (timeupdate)="onVideoTimeUpdate($event)" controls preload="auto">
+                <source [src]="post.streamUrl + '?cache=' + cacheBuster" type="video/mp4" />
+              </video>
+              <!-- <div class="overlay" (click)="startVideo()" #startButton>
+                <span>Click to Play</span>
+              </div> -->
+              <div class="font_14 p-3 p-md-4"><strong>{{ post.title }}</strong> {{ post.description }}</div>
+            </div>
+                  <button
+                    (click)="showComments()"
+                    type="button"
+                    id="live-chat"
+                    class="live_chats"
+                  >
+                      <img
+                        style="padding-top: 5px"
+                        class="chat-gray-icon"
+                        src="../../../assets/images/chat-gray-icon.svg"
+                      />
+                      <img
+                        *ngIf="!showCommentsField"
+                        src="../../../assets/images/chevron-right-light.svg"
+                        class="live-chat-back"
+                      />
+                      <img
+                        *ngIf="showCommentsField"
+                        src="../../../assets/images/cross.svg"
+                        class="live-chat-back"
+                      />
+                  
+                  </button>
+               
+                <div
+                  class="d-flex"
+                  style="margin-left: 120px; position: absolute; top: 575px"
+                >
+                  <img
+                    src="../../../assets/images/eye-light.svg"
+                    class="d-block"
+                  />
+                  <span class="ms-1 text-white">{{ liveUsersCount }}</span>
+                </div>
+              </div>
+              <!-- <div class="text-line-border position-relative text-center my-4">
+              <span class="line-text font_12 text_ltgray fw_400 text-center">{{'SelectMediaSources'| translate }}</span>
+            </div>
+            <div class="media-sourcebtn d-flex gap-2 f-monteserrat">
+              <button type="button" class="post-attch-btn btn web-cmbtn font_12 text_dark m-0"><span
+                  class="text-center"><img src="../../../assets/images/webkam.svg" class=" mx-auto mb-2 dark-attach" /> <img
+                    src="../../../assets/images/webkam-light.svg" class="mx-auto mb-2 light-attach" />{{'Webcam'| translate }}</span></button>
+              <button type="button" class="post-attch-btn btn web-cmbtn font_12 text_dark m-0"><span
+                  class="text-center"><i class="fa-solid fa-gear d-block mx-auto mb-2 font_20"></i> {{'StreamingSoftware'| translate }}</span></button>
+              <button type="button" class="post-attch-btn btn web-cmbtn font_12 text_dark m-0"><span
+                  class="text-center"><i class="fa-solid fa-microphone d-block mx-auto mb-2 font_20"></i>
+                  {{'Microphone'| translate }}</span></button>
+              <button type="button" class="post-attch-btn btn web-cmbtn font_12 text_dark m-0">
+                <span class="text-center"><img src="../../../assets/images/screen-share.svg"
+                    class=" mx-auto mb-2 dark-attach" /> <img src="../../../assets/images/screen-share-light.svg"
+                    class="mx-auto mb-2 light-attach" />{{'ScreenShare'| translate }}</span></button>
+            </div> -->
+
+              <div
+                class="modal-footer steps_btns flex-sm-nowrap border-0 pb-0 cr-postfooter pt-0 mt-3 px-0"
+              >
+                <div class="post-bot-right d-flex justify-content-md-end w-100"
+                >
+                  <div class="dropdown me-3 throttling_dropdown">
+                    <!-- <div class="dropdown"> -->
+                    <button
+                      *ngIf="isOwner"
+                      class="dropdown-button btn custom-btn primary_btn w-100 earning-btn fw_400 lg_btn"
+                      (click)="toggleDropdown()"
+                    >
+                      {{ "CommentThrottling" | translate }}
+                    </button>
+                    <div
+                      *ngIf="isOwner"
+                      class="dropdown-menu"
+                      [ngClass]="{ show: dropdownOpen }"
+                    >
+                      <button
+                        class="dropdown-item"
+                        value="0"
+                        (click)="selectOption(0)"
+                      >
+                        {{ "RemoveThrottling" | translate }}
+                      </button>
+                      <button
+                        class="dropdown-item"
+                        value="1"
+                        (click)="selectOption(1)"
+                      >
+                        {{ "OneCommentPerMinute" | translate }}
+                      </button>
+                      <button
+                        class="dropdown-item"
+                        value="2"
+                        (click)="selectOption(2)"
+                      >
+                        {{ "TwoCommentPerMinute" | translate }}
+                      </button>
+                      <button
+                        class="dropdown-item"
+                        value="3"
+                        (click)="selectOption(3)"
+                      >
+                        {{ "ThreeCommentPerMinute" | translate }}
+                      </button>
+                    </div>
+                  </div>
+                    <!-- </div> -->
+                    <div class="post-bot-right d-flex">
+                    <button
+                      (click)="openSharePostModal()"
+                      type="button"
+                      class="btn custom-btn primary_btn w-100 earning-btn fw_400 delay-btn post-delay-btn position-relative"
+                    >
+                      <img
+                        src="../../../assets/images/school/Upload-small.svg"
+                      />
+                      <p-calendar></p-calendar>
+                    </button>
+                    <button
+                      *ngIf="isOwner"
+                      (click)="endLiveStream()"
+                      type="button"
+                      class="btn custom-btn primary_btn w-100 earning-btn fw_400 lg_btn"
+                    >
+                      {{ "EndLiveStream" | translate }}
+                    </button>
+                  </div>
+                  </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 order-lg-1">
             <div>
               <div
                 [ngClass]="
                   showCommentsField
-                    ? 'accordion-open d-block'
+                    ? 'accordion-open d-block livechat-box p-0'
                     : 'accordion-open d-none'
                 "
                 id="live-chat-open"
@@ -224,9 +373,7 @@
                   </div>
                   <div
                     *ngIf="!isCommentsDisabled"
-                    class="add-comment d-flex align-items-center justify-content-between"
-                    style="margin-left: -40px"
-                  >
+                    class="add-comment d-flex align-items-center justify-content-between flex-nowrap"   >
                     <span
                       class="bg-transparent rounded-circle comment-post-user rounded-circle"
                     >
@@ -250,7 +397,8 @@
                         style="max-height: 100%"
                       />
                     </span>
-                    <input
+                    <div class="position-relative addCommentBox">
+                      <input
                       (keyup.enter)="sendToGroup()"
                       [(ngModel)]="messageToGroup"
                       type="text"
@@ -260,6 +408,8 @@
                     <button (click)="toggleEmojiPicker()" class="emoji_btn">
                       😀
                     </button>
+                    </div>
+                    
                     <button
                       (click)="sendToGroup()"
                       type="button"
@@ -278,198 +428,6 @@
                     ></emoji-mart>
                   </div>
                 </div>
-              </div>
-            </div>
-          </div>
-          <div
-            [ngClass]="showCommentsField ? '' : 'col-lg-12'"
-            class="col-12 col-lg-8"
-          >
-            <div class="live-inner w-100">
-              <div>
-                <div class="live-image overflow-hidden position-relative">
-                  <div
-                    *ngIf="
-                      (streamUrl == undefined || streamUrl == null) &&
-                      post.coverThumbnail != undefined
-                    "
-                    style="
-                      align-items: center;
-                      flex-direction: column;
-                      display: flex;
-                    "
-                  >
-                    <!-- <img class="cover_thumbnail" [src]="post.coverThumbnail"/> -->
-                    <!-- <h3 style="position: relative;bottom: 467px;">{{'StreamStartingIn'| translate }} {{streamCountDown}}</h3> -->
-                    <!-- <p style="position: relative;bottom: 467px;">{{post.coverLetter}}</p> -->
-                  </div>
-                  <iframe
-                    *ngIf="
-                      streamUrl != undefined &&
-                      streamUrl != null &&
-                      meetingId != ''
-                    "
-                    width="840"
-                    height="500"
-                    [src]="streamUrl"
-                    title="YouTube video player"
-                    frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share;camera;microphone;display-capture"
-                    allowfullscreen
-                  ></iframe>
-                  <video
-                    #videoPlayer
-                    id="test12"
-                    *ngIf="meetingId == ''"
-                    width="840"
-                    height="500"
-                    autoplay
-                    (ended)="onVideoEnded()"
-                    (timeupdate)="onVideoTimeUpdate($event)"
-                    controls
-                    preload="auto"
-                  >
-                    <source
-                      [src]="post.streamUrl + '?cache=' + cacheBuster"
-                      type="video/mp4"
-                    />
-                  </video>
-                  <!-- <div class="overlay" (click)="startVideo()" #startButton>
-                <span>Click to Play</span>
-              </div> -->
-                </div>
-                <div style="margin-left: 15px; position: absolute; top: 92px">
-                  <button
-                    (click)="showComments()"
-                    type="button"
-                    id="live-chat"
-                    class="live_chats"
-                  >
-                    <div style="padding: 6px">
-                      <img
-                        style="padding-top: 5px"
-                        class="chat-gray-icon"
-                        src="../../../assets/images/chat-gray-icon.svg"
-                      />
-                      <img
-                        style="padding-right: 20px"
-                        *ngIf="showCommentsField"
-                        src="../../../assets/images/chevron-right-light.svg"
-                        class="live-chat-back"
-                      />
-                      <img
-                        style="padding-right: 15px"
-                        *ngIf="!showCommentsField"
-                        src="../../../assets/images/cross.svg"
-                        class="live-chat-back"
-                      />
-                    </div>
-                  </button>
-                </div>
-                <div
-                  class="d-flex"
-                  style="margin-left: 120px; position: absolute; top: 575px"
-                >
-                  <img
-                    src="../../../assets/images/eye-light.svg"
-                    class="d-block"
-                  />
-                  <span class="ms-1 text-white">{{ liveUsersCount }}</span>
-                </div>
-              </div>
-              <!-- <div class="text-line-border position-relative text-center my-4">
-              <span class="line-text font_12 text_ltgray fw_400 text-center">{{'SelectMediaSources'| translate }}</span>
-            </div>
-            <div class="media-sourcebtn d-flex gap-2 f-monteserrat">
-              <button type="button" class="post-attch-btn btn web-cmbtn font_12 text_dark m-0"><span
-                  class="text-center"><img src="../../../assets/images/webkam.svg" class=" mx-auto mb-2 dark-attach" /> <img
-                    src="../../../assets/images/webkam-light.svg" class="mx-auto mb-2 light-attach" />{{'Webcam'| translate }}</span></button>
-              <button type="button" class="post-attch-btn btn web-cmbtn font_12 text_dark m-0"><span
-                  class="text-center"><i class="fa-solid fa-gear d-block mx-auto mb-2 font_20"></i> {{'StreamingSoftware'| translate }}</span></button>
-              <button type="button" class="post-attch-btn btn web-cmbtn font_12 text_dark m-0"><span
-                  class="text-center"><i class="fa-solid fa-microphone d-block mx-auto mb-2 font_20"></i>
-                  {{'Microphone'| translate }}</span></button>
-              <button type="button" class="post-attch-btn btn web-cmbtn font_12 text_dark m-0">
-                <span class="text-center"><img src="../../../assets/images/screen-share.svg"
-                    class=" mx-auto mb-2 dark-attach" /> <img src="../../../assets/images/screen-share-light.svg"
-                    class="mx-auto mb-2 light-attach" />{{'ScreenShare'| translate }}</span></button>
-            </div> -->
-
-              <div
-                class="modal-footer steps_btns flex-sm-nowrap border-0 pb-0 cr-postfooter pt-0 mt-3 px-0"
-              >
-                <div
-                  class="post-bot-right d-flex justify-content-between w-100"
-                >
-                  <h3>{{ post.title }}</h3>
-                  <div class="dropdown">
-                    <!-- <div class="dropdown"> -->
-                    <button
-                      *ngIf="isOwner"
-                      class="dropdown-button btn custom-btn primary_btn w-100 earning-btn fw_400 lg_btn"
-                      style="width: 32% !important"
-                      (click)="toggleDropdown()"
-                    >
-                      {{ "CommentThrottling" | translate }}
-                    </button>
-                    <div
-                      *ngIf="isOwner"
-                      class="dropdown-menu"
-                      [ngClass]="{ show: dropdownOpen }"
-                    >
-                      <button
-                        class="dropdown-item"
-                        value="0"
-                        (click)="selectOption(0)"
-                      >
-                        {{ "RemoveThrottling" | translate }}
-                      </button>
-                      <button
-                        class="dropdown-item"
-                        value="1"
-                        (click)="selectOption(1)"
-                      >
-                        {{ "OneCommentPerMinute" | translate }}
-                      </button>
-                      <button
-                        class="dropdown-item"
-                        value="2"
-                        (click)="selectOption(2)"
-                      >
-                        {{ "TwoCommentPerMinute" | translate }}
-                      </button>
-                      <button
-                        class="dropdown-item"
-                        value="3"
-                        (click)="selectOption(3)"
-                      >
-                        {{ "ThreeCommentPerMinute" | translate }}
-                      </button>
-                    </div>
-                    <!-- </div> -->
-                    <button
-                      (click)="openSharePostModal()"
-                      type="button"
-                      class="btn custom-btn primary_btn w-100 earning-btn fw_400 delay-btn post-delay-btn position-relative"
-                    >
-                      <img
-                        src="../../../assets/images/school/Upload-small.svg"
-                      />
-                      <p-calendar></p-calendar>
-                    </button>
-                    <button
-                      *ngIf="isOwner"
-                      (click)="endLiveStream()"
-                      type="button"
-                      class="btn custom-btn primary_btn w-100 earning-btn fw_400 lg_btn"
-                    >
-                      {{ "EndLiveStream" | translate }}
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <div>
-                <p>{{ post.description }}</p>
               </div>
             </div>
           </div>

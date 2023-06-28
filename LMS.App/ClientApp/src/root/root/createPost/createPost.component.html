@@ -180,7 +180,6 @@
                 <textarea
                   formControlName="bodyText"
                   class="form-control"
-                  placeholder="Body Text"
                   style="max-height: 125px; height: 125px"
                 ></textarea>
                 <small
@@ -225,16 +224,16 @@
                     isSubmitted &&
                     createLiveForm.controls.commentPerMinute.errors
                   "
-                  >Body text is required
+                  >{{ "BodyRequired" | translate }}
                 </small>
               </div>
-              <div class="text-line-border position-relative text-center my-4">
+              <!-- <div class="text-line-border position-relative text-center my-4">
                 <span
                   class="line-text font_12 text_ltgray fw_400 text-center"
                   >{{ "SelectMediaSources" | translate }}</span
                 >
-              </div>
-              <div class="media-sourcebtn d-flex gap-2 f-monteserrat">
+              </div> -->
+              <!-- <div class="media-sourcebtn d-flex gap-2 f-monteserrat">
                 <button
                   type="button"
                   class="post-attch-btn btn web-cmbtn font_12 text_dark m-0"
@@ -293,7 +292,7 @@
                     />{{ "ScreenShare" | translate }}</span
                   >
                 </button>
-              </div>
+              </div> -->
               <div class="img-upl-result pt-4">
                 <span
                   *ngFor="let image of uploadImage"

@@ -75,4 +75,13 @@ export class ReelsSliderComponent implements OnInit {
     back(): void {
        window.history.back();
     }
+
+    toggleVideoPlayback(event: Event) {
+        const video = event.target as HTMLVideoElement;
+        if (video.paused) {
+          video.play();
+        } else {
+          video.pause();
+        }
+      }
 }

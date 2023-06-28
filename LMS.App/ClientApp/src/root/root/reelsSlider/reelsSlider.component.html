@@ -12,20 +12,6 @@
             <video controls *ngFor="let video of item.postAttachments">
 				<source [src]="video.fileUrl" type="video/mp4">
 			</video>
-
-
-
-            <!-- <video
-            *ngIf="reels != undefined"
-            id="videoPlayer"
-            class="video-js vjs-big-play-centered"
-            preload="metadata"
-            width="100%"
-            height="700"
-          >
-            <source src="https://byokulstorage.blob.core.windows.net/posts/d22e23a8-d5af-4d9c-90f5-1d1bddb39f51movie.mp4" type="video/mp4" />
-
-          </video> -->
 			</div>
 			 <div class="reel-username font_16 white_text d-flex">
                 <img [src]="item.parentImageUrl" class="me-2"/> {{item.parentName}}

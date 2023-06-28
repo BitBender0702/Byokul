@@ -818,7 +818,9 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
           this._postService.savePost(postId,this.userId).subscribe((result) => {
           });
         }
-
+        back(): void {
+          window.history.back();
+        }
         openCertificateViewModal(certificateUrl:string,certificateName:string,from?:number,event?:Event){
           var fromValue = PostAuthorTypeEnum.School;
           if(from != undefined){
