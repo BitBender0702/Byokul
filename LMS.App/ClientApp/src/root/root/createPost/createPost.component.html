@@ -175,149 +175,361 @@
                 </small>
               </div>
 
-                    <div class="form-group">
-                      <label class="font_10">{{'BodyText'| translate }}</label>
-                      <textarea formControlName="bodyText" class="form-control" style="max-height: 125px;height: 125px;"></textarea>
-                      <small class="p-error" style="color: orange;"
-                      *ngIf="(isSubmitted && createLiveForm.controls.bodyText.errors)">{{ "BodyRequired" | translate }}
-                    </small>
-                    </div>
-                    <!-- <div class="form-group">
+              <div class="form-group">
+                <label class="font_10">{{ "BodyText" | translate }}</label>
+                <textarea
+                  formControlName="bodyText"
+                  class="form-control"
+                  placeholder="Body Text"
+                  style="max-height: 125px; height: 125px"
+                ></textarea>
+                <small
+                  class="p-error"
+                  style="color: orange"
+                  *ngIf="isSubmitted && createLiveForm.controls.bodyText.errors"
+                  >Body text is required
+                </small>
+              </div>
+              <!-- <div class="form-group">
                       <label class="font_10">{{'CoverLetter'| translate }}</label>
                       <input formControlName="coverLetter" type="text" class="form-control" placeholder="Cover Letter before Stream start" />
                       <small class="p-error" style="color: orange;"
                       *ngIf="(isSubmitted && createLiveForm.controls.coverLetter.errors)">Cover letter is required
                     </small>
                     </div> -->
-                    <div class="form-group">
-                      <label class="font_10">{{'CommentThrottling'| translate }}</label>
-                      <select formControlName="commentPerMinute" class="form-select rounded-8 w-100">
-                        <option value="0" selected>{{'PleaseSelect' | translate }}</option>
-                        <option value="1">{{'OneCommentPerMinute'| translate }}</option>
-                        <option value="2">{{'TwoCommentPerMinute'| translate }}</option>
-                        <option value="3">{{'ThreeCommentPerMinute'| translate }}</option>
-                      </select>
-                      <!-- <small class="p-error" style="color: orange;"
-                      *ngIf="(isSubmitted && createLiveForm.controls.commentPerMinute.errors)">Body text is required BodyRequired
-                    </small> -->
-                    </div>
-                    <!-- <div class="text-line-border position-relative text-center my-4">
-                      <span class="line-text font_12 text_ltgray fw_400 text-center">{{'SelectMediaSources'| translate }}</span>
-                    </div> -->
-                    <!-- <div class="media-sourcebtn d-flex gap-2 f-monteserrat">
-                      <button type="button" class="post-attch-btn btn web-cmbtn font_12 text_dark m-0"><span
-                          class="text-center"><img src="../../../assets/images/webkam.svg" class=" mx-auto mb-2 dark-attach" /> <img
-                            src="../../../assets/images/webkam-light.svg" class="mx-auto mb-2 light-attach" />{{'Webcam'| translate }}</span></button>
-                      <button type="button" class="post-attch-btn btn web-cmbtn font_12 text_dark m-0"><span
-                          class="text-center"><i class="fa-solid fa-gear d-block mx-auto mb-2 font_20"></i> {{'StreamingSoftware'| translate }}</span></button>
-                      <button (click)="openMicroPhone()" type="button" class="post-attch-btn btn web-cmbtn font_12 text_dark m-0"><span
-                          class="text-center"><i *ngIf="isMicroPhoneOpen" class="fa-solid fa-microphone d-block mx-auto mb-2 font_20"></i>
-                          <i *ngIf="!isMicroPhoneOpen" class="fa-solid fa-microphone-slash d-block mx-auto mb-2 font_20"></i>
-                          {{'Microphone'| translate }}</span></button>
-                      <button type="button" class="post-attch-btn btn web-cmbtn font_12 text_dark m-0">
-                        <span class="text-center"><img src="../../../assets/images/screen-share.svg"
-                            class=" mx-auto mb-2 dark-attach" /> <img src="../../../assets/images/screen-share-light.svg"
-                            class="mx-auto mb-2 light-attach" />{{'ScreenShare'| translate }}</span></button>
-                    </div> -->
-                    <div class="img-upl-result pt-4">
-                      <span *ngFor="let image of uploadImage" class="position-relative d-inline-block">
-                        <img [src]="image.imageUrl" style="height: 150px; max-width: 100%;">
-                        <button (click)="removeUploadImage(image)" type="button"
-                         class="btn dl-post-img d-flex align-items-center justify-content-center rounded-circle position-absolute"><i
-                           class="fa-solid fa-xmark"></i></button>
-                      </span>
-                     <span *ngFor="let video of uploadVideo" class="position-relative d-inline-block">
-                       <div class="videofile">
-                         <img [src]="video.videoUrl" style="height: 150px; max-width: 100%;">
-                       </div>
-                       <button (click)="removeUploadVideo(video)" type="button"
-                         class="btn dl-post-img d-flex align-items-center justify-content-center rounded-circle position-absolute"><i
-                           class="fa-solid fa-xmark"></i></button>
-                     </span>
-                     </div>
-                     <div *ngIf="isSubmitted && totalFilesLength>0">
-                       <p class="mb-0 mt-4">{{fileCount + '/' + totalFilesLength}}</p>
-                       <div class="progress">
-                         <div class="progress-bar bg-success" role="progressbar" [style.width.%]="progressBarValue">
-                           {{ progressBarValue }}%
-                         </div>
-                         <br>
-                       </div> 
-                   </div> 
-                   <div class="teacher-tags tag-box hashtag_post mt-4 mb-2 hover-tags">
-                     <span *ngFor="let tag of tagLists" class="custom-tag">{{tag}}
-                       <button (click)="removeTags(tag)" class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
-                         src="../../../assets/images/cross-sm-light.svg"></button></span>
-                   </div>
- 
-                   <div class="teacher-tags hashtag_post tag-boxattachment-outer mt-1 mb-0 hover-tags">
-                     <span *ngFor="let item of this.attachment" class="custom-tag"><img src="../../../assets/images/Paper-gray.svg" class="me-1 dark-svg"> <img
-                      src="../../../assets/images/Paper-light.svg" class="me-1 light-svg"> 
-                      <span *ngIf="item?.name"> {{item.name}} </span>
-                      <span *ngIf="!item?.name"> {{item.fileName}} </span>
-                     <button (click)="removeAttachment(item)" class="border-0 bg-transparent p-0 position-absolute delete-tag"><img
-                        src="../../../assets/images/cross-sm-light.svg">
-                     </button>
-                   </span>
-                   </div>
-                   <small class="p-error" style="color: orange;margin-left: 330px;" *ngIf="createPostForm.errors?.unauthenticated">
-                     {{'SelectValidDate'| translate }}
-                   </small>
-                   <small class="p-error" style="color: orange;margin-left: 330px;" *ngIf="createPostForm.errors?.tagsLengthExceeded">
-                      {{'AddMax7Tags'| translate }}
-                   </small>
-                   <div
-                   class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 cr-postfooter pt-0">
-                   <div class="post-bot-left d-flex">
-                     <label *ngIf="!isThumbnailUpload" class="custom-file-upload post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center">
-                       <input id="hideFileType" type="file" (change)="handleImageInput($event)" accept="image/*"/>
-                       <img
-                         src="../../../assets/images/gallery-dark.svg" class="dark-attach" /><img src="../../../assets/images/gallery-light.svg"
-                         class="light-attach" />
-                     </label>
-                     <div *ngIf="!isVideoUpload">
-                      <label class="custom-file-upload post-attch-btn rounded-circle  d-inline-flex justify-content-center align-items-center">
-                        <input id="hideFileType" type="file" (change)="handleVideoInput($event)" accept="video/*"/>
-                        <img
-                          src="../../../assets/images/Video-dark.svg" class="dark-attach" /><img src="../../../assets/images/Video-light.svg"
-                          class="light-attach" />
-                      </label>
-                    </div>
-                   </div>
-                   <div class="post-bot-right d-flex justify-content-end">
-                     <button type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 delay-btn post-delay-btn position-relative"> 
-                       <img src="../../../assets/images/clock-orange.svg" />                     
-                         <p-calendar formControlName="scheduleTime" [(ngModel)]="scheduleTime" [showTime]="true"></p-calendar>
-                       </button>
-                       
-                     <button *ngIf="scheduleTime != undefined" (click)="liveStream()" type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 lg_btn"><img
-                         src="../../../assets/images/Send-light.svg" class="me-2" />{{scheduleTime | date : "MMMM d, y"}} at {{scheduleTime | date : "H:mm"}}</button>
-                     <button *ngIf="scheduleTime == undefined" (click)="liveStream()" type="button" class="btn custom-btn primary_btn w-100 earning-btn fw_400 lg_btn"><img
-                         src="../../../assets/images/Send-light.svg" class="me-2" />Go Live</button>
-                   </div>
-     
-                 </div>
-                 <small class="p-error" style="color: orange;margin-left: 350px;" *ngIf="createLiveForm.errors?.unauthenticated">
-                   {{'SelectValidDate'| translate }}
-                 </small>
-                 <small class="p-error" style="color: orange;margin-left: 350px;" *ngIf="scheduleVideoRequired">
-                  {{'AddVideoForScheduleStream'| translate }}
+              <div class="form-group">
+                <label class="font_10">{{
+                  "CommentThrottling" | translate
+                }}</label>
+                <select
+                  formControlName="commentPerMinute"
+                  class="form-select rounded-8 w-100"
+                >
+                  <option value="0" selected>
+                    {{ "PleaseSelect" | translate }}
+                  </option>
+                  <option value="1">
+                    {{ "OneCommentPerMinute" | translate }}
+                  </option>
+                  <option value="2">
+                    {{ "TwoCommentPerMinute" | translate }}
+                  </option>
+                  <option value="3">
+                    {{ "ThreeCommentPerMinute" | translate }}
+                  </option>
+                </select>
+                <small
+                  class="p-error"
+                  style="color: orange"
+                  *ngIf="
+                    isSubmitted &&
+                    createLiveForm.controls.commentPerMinute.errors
+                  "
+                  >Body text is required
                 </small>
-                <small class="p-error" style="color: orange;margin-left: 350px;" *ngIf="thumbnailRequired">
-                  {{'ThumbnailRequired'| translate }}
-                </small>
-                 <small class="p-error" style="color: orange;margin-left: 350px;" *ngIf="createLiveForm.errors?.tagsLengthExceeded">
-                   {{'AddMax7Tags'| translate }}
-                 </small>
-                  </form>
+              </div>
+              <div class="text-line-border position-relative text-center my-4">
+                <span
+                  class="line-text font_12 text_ltgray fw_400 text-center"
+                  >{{ "SelectMediaSources" | translate }}</span
+                >
+              </div>
+              <div class="media-sourcebtn d-flex gap-2 f-monteserrat">
+                <button
+                  type="button"
+                  class="post-attch-btn btn web-cmbtn font_12 text_dark m-0"
+                >
+                  <span class="text-center"
+                    ><img
+                      src="../../../assets/images/webkam.svg"
+                      class="mx-auto mb-2 dark-attach"
+                    />
+                    <img
+                      src="../../../assets/images/webkam-light.svg"
+                      class="mx-auto mb-2 light-attach"
+                    />{{ "Webcam" | translate }}</span
+                  >
+                </button>
+                <button
+                  type="button"
+                  class="post-attch-btn btn web-cmbtn font_12 text_dark m-0"
+                >
+                  <span class="text-center"
+                    ><i
+                      class="fa-solid fa-gear d-block mx-auto mb-2 font_20"
+                    ></i>
+                    {{ "StreamingSoftware" | translate }}</span
+                  >
+                </button>
+                <button
+                  (click)="openMicroPhone()"
+                  type="button"
+                  class="post-attch-btn btn web-cmbtn font_12 text_dark m-0"
+                >
+                  <span class="text-center"
+                    ><i
+                      *ngIf="isMicroPhoneOpen"
+                      class="fa-solid fa-microphone d-block mx-auto mb-2 font_20"
+                    ></i>
+                    <i
+                      *ngIf="!isMicroPhoneOpen"
+                      class="fa-solid fa-microphone-slash d-block mx-auto mb-2 font_20"
+                    ></i>
+                    {{ "Microphone" | translate }}</span
+                  >
+                </button>
+                <button
+                  type="button"
+                  class="post-attch-btn btn web-cmbtn font_12 text_dark m-0"
+                >
+                  <span class="text-center"
+                    ><img
+                      src="../../../assets/images/screen-share.svg"
+                      class="mx-auto mb-2 dark-attach"
+                    />
+                    <img
+                      src="../../../assets/images/screen-share-light.svg"
+                      class="mx-auto mb-2 light-attach"
+                    />{{ "ScreenShare" | translate }}</span
+                  >
+                </button>
+              </div>
+              <div class="img-upl-result pt-4">
+                <span
+                  *ngFor="let image of uploadImage"
+                  class="position-relative d-inline-block"
+                >
+                  <img
+                    [src]="image.imageUrl"
+                    style="height: 150px; max-width: 100%"
+                  />
+                  <button
+                    (click)="removeUploadImage(image)"
+                    type="button"
+                    class="btn dl-post-img d-flex align-items-center justify-content-center rounded-circle position-absolute"
+                  >
+                    <i class="fa-solid fa-xmark"></i>
+                  </button>
+                </span>
+                <span
+                  *ngFor="let video of uploadVideo"
+                  class="position-relative d-inline-block"
+                >
+                  <div class="videofile">
+                    <img
+                      [src]="video.videoUrl"
+                      style="height: 150px; max-width: 100%"
+                    />
+                  </div>
+                  <button
+                    (click)="removeUploadVideo(video)"
+                    type="button"
+                    class="btn dl-post-img d-flex align-items-center justify-content-center rounded-circle position-absolute"
+                  >
+                    <i class="fa-solid fa-xmark"></i>
+                  </button>
+                </span>
+              </div>
+              <div *ngIf="isSubmitted && totalFilesLength > 0">
+                <p class="mb-0 mt-4">
+                  {{ fileCount + "/" + totalFilesLength }}
+                </p>
+                <div class="progress">
+                  <div
+                    class="progress-bar bg-success"
+                    role="progressbar"
+                    [style.width.%]="progressBarValue"
+                  >
+                    {{ progressBarValue }}%
+                  </div>
+                  <br />
                 </div>
-                <div class="tab-pane fade show active" id="Post-tab-pane" role="tabpanel" aria-labelledby="Post-tab" tabindex="0">
-                  <form [formGroup]="createPostForm">
-                    <div *ngIf="this.schoolId != undefined" class="form-group">
-                      <label class="font_10">{{'SchoolName'| translate }}</label>
-                      <input hidden type="text" name="schoolId" class="form-control w-100">
-                      <input readonly type="text" [placeholder]="parentDetails?.schoolName" name="className" class="form-control w-100">
-                    </div>
+              </div>
+              <div
+                class="teacher-tags tag-box hashtag_post mt-4 mb-2 hover-tags"
+              >
+                <span *ngFor="let tag of tagLists" class="custom-tag"
+                  >{{ tag }}
+                  <button
+                    (click)="removeTags(tag)"
+                    class="border-0 bg-transparent p-0 position-absolute delete-tag"
+                  >
+                    <img
+                      src="../../../assets/images/cross-sm-light.svg"
+                    /></button
+                ></span>
+              </div>
+
+              <div
+                class="teacher-tags hashtag_post tag-boxattachment-outer mt-1 mb-0 hover-tags"
+              >
+                <span *ngFor="let item of this.attachment" class="custom-tag"
+                  ><img
+                    src="../../../assets/images/Paper-gray.svg"
+                    class="me-1 dark-svg"
+                  />
+                  <img
+                    src="../../../assets/images/Paper-light.svg"
+                    class="me-1 light-svg"
+                  />
+                  <span *ngIf="item?.name"> {{ item.name }} </span>
+                  <span *ngIf="!item?.name"> {{ item.fileName }} </span>
+                  <button
+                    (click)="removeAttachment(item)"
+                    class="border-0 bg-transparent p-0 position-absolute delete-tag"
+                  >
+                    <img src="../../../assets/images/cross-sm-light.svg" />
+                  </button>
+                </span>
+              </div>
+              <small
+                class="p-error"
+                style="color: orange; margin-left: 330px"
+                *ngIf="createPostForm.errors?.unauthenticated"
+              >
+                {{ "SelectValidDate" | translate }}
+              </small>
+              <small
+                class="p-error"
+                style="color: orange; margin-left: 330px"
+                *ngIf="createPostForm.errors?.tagsLengthExceeded"
+              >
+                {{ "AddMax7Tags" | translate }}
+              </small>
+              <div
+                class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 cr-postfooter pt-0"
+              >
+                <div class="post-bot-left d-flex">
+                  <label
+                    *ngIf="!isThumbnailUpload"
+                    class="custom-file-upload post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center"
+                  >
+                    <input
+                      id="hideFileType"
+                      type="file"
+                      (change)="handleImageInput($event)"
+                      accept="image/*"
+                    />
+                    <img
+                      src="../../../assets/images/gallery-dark.svg"
+                      class="dark-attach"
+                    /><img
+                      src="../../../assets/images/gallery-light.svg"
+                      class="light-attach"
+                    />
+                  </label>
+                  <div *ngIf="!isVideoUpload">
+                    <label
+                      class="custom-file-upload post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center"
+                    >
+                      <input
+                        id="hideFileType"
+                        type="file"
+                        (change)="handleVideoInput($event)"
+                        accept="video/*"
+                      />
+                      <img
+                        src="../../../assets/images/Video-dark.svg"
+                        class="dark-attach"
+                      /><img
+                        src="../../../assets/images/Video-light.svg"
+                        class="light-attach"
+                      />
+                    </label>
+                  </div>
+                </div>
+                <div class="post-bot-right d-flex justify-content-end">
+                  <button
+                    type="button"
+                    class="btn custom-btn primary_btn w-100 earning-btn fw_400 delay-btn post-delay-btn position-relative"
+                  >
+                    <img src="../../../assets/images/clock-orange.svg" />
+                    <p-calendar
+                      formControlName="scheduleTime"
+                      [(ngModel)]="scheduleTime"
+                      [showTime]="true"
+                    ></p-calendar>
+                  </button>
+
+                  <button
+                    *ngIf="scheduleTime != undefined"
+                    (click)="liveStream()"
+                    type="button"
+                    class="btn custom-btn primary_btn w-100 earning-btn fw_400 lg_btn"
+                  >
+                    <img
+                      src="../../../assets/images/Send-light.svg"
+                      class="me-2"
+                    />{{ scheduleTime | date : "MMMM d, y" }} at
+                    {{ scheduleTime | date : "H:mm" }}
+                  </button>
+                  <button
+                    *ngIf="scheduleTime == undefined"
+                    (click)="liveStream()"
+                    type="button"
+                    class="btn custom-btn primary_btn w-100 earning-btn fw_400 lg_btn"
+                  >
+                    <img
+                      src="../../../assets/images/Send-light.svg"
+                      class="me-2"
+                    />Go Live
+                  </button>
+                </div>
+              </div>
+              <small
+                class="p-error"
+                style="color: orange; margin-left: 350px"
+                *ngIf="createLiveForm.errors?.unauthenticated"
+              >
+                {{ "SelectValidDate" | translate }}
+              </small>
+              <small
+                class="p-error"
+                style="color: orange; margin-left: 350px"
+                *ngIf="scheduleVideoRequired"
+              >
+                {{ "AddVideoForScheduleStream" | translate }}
+              </small>
+              <small
+                class="p-error"
+                style="color: orange; margin-left: 350px"
+                *ngIf="thumbnailRequired"
+              >
+                {{ "ThumbnailRequired" | translate }}
+              </small>
+              <small
+                class="p-error"
+                style="color: orange; margin-left: 350px"
+                *ngIf="createLiveForm.errors?.tagsLengthExceeded"
+              >
+                {{ "AddMax7Tags" | translate }}
+              </small>
+            </form>
+          </div>
+          <div
+            class="tab-pane fade show active"
+            id="Post-tab-pane"
+            role="tabpanel"
+            aria-labelledby="Post-tab"
+            tabindex="0"
+          >
+            <form [formGroup]="createPostForm">
+              <div *ngIf="this.schoolId != undefined" class="form-group">
+                <label class="font_10">{{ "SchoolName" | translate }}</label>
+                <input
+                  hidden
+                  type="text"
+                  name="schoolId"
+                  class="form-control w-100"
+                />
+                <input
+                  readonly
+                  type="text"
+                  [placeholder]="parentDetails?.schoolName"
+                  name="className"
+                  class="form-control w-100"
+                />
+              </div>
 
               <div *ngIf="this.classId != undefined" class="form-group">
                 <label class="font_10">{{ "ClassName" | translate }}</label>
@@ -997,7 +1209,10 @@
           </span>
         </div>
       </div>
-      <small class="p-error" style="color: orange" *ngIf="!isAttachmentsValid"
+      <small
+        class="p-error"
+        style="color: orange; text-align: center"
+        *ngIf="!isAttachmentsValid"
         >{{ "SelectAtleastOneAttachment" | translate }}
       </small>
       <div
