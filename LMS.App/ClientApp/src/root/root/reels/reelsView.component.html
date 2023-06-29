@@ -50,7 +50,7 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
               <h5 *ngIf="reels.post?.title != null" class="font_14 mb-0 fw_600 text_sec1">{{reels.post?.title}} 
               </h5>
             </div>
-            <div class="reel-username font_16 white_text" style="justify-content: space-between;width: 94%;display: flex;">
+            <div class="reel-username reel-view font_16 white_text" style="justify-content: space-between;width: 94%;display: flex;">
                 <div *ngIf="reels.school != null">
                   <img [src]="reels.school.avatar" class="me-2"/> {{reels.school.schoolName}}
                 </div>

@@ -596,6 +596,7 @@ button.live_chats {
   top: 25px;
   left: 25px;
   cursor: pointer;
+  z-index: 99;
 }
 button.live_chats .chat-gray-icon {
   margin-right: 13px;
@@ -2146,14 +2147,15 @@ main {
   right: auto;
 }
 .forward-btn {
-  border: 1px solid #f5f5f5;
-  border-radius: 4px;
-  background: #fff;
-  color: #7c8da7;
-  padding: 11px 16.5px;
-  font-size: 12px;
-  min-width: 112px;
-  margin-bottom: 8px;
+    border: 1px solid #f5f5f5;
+    border-radius: 8px;
+    background: #f9f9f9;
+    color: #767676;
+    padding: 11px 16.5px;
+    font-size: 12px;
+    min-width: 112px;
+    margin-bottom: 8px;
+    box-shadow: 0px 0px 8px rgb(0 0 0 / 3%);
 }
 .img-attach {
   max-width: 218px;
@@ -3051,6 +3053,10 @@ p-autocomplete li:before {
 .dropdown .dropdown-item.active, .dropdown .dropdown-item:active {
   color: #fff;
   background: linear-gradient(90.02deg, #ff7b1c 0.02%, #ffa41c 99.98%);
+}
+.reel-view button.live_chats {
+  right: 25px;
+  left: auto;
 }
 
 @media screen and (min-width: 1200px) {
