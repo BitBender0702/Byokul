@@ -77,33 +77,47 @@
                 ><img src="../../../../assets/images/verified-badge.svg"
               /></span>
             </h2>
-            <div class="position-relative">
-              <div class="followers_name d-inline-block font_16 mr-_24">
-                <img src="../../../../assets/images/followers.svg" />
-                {{ "Followers" | translate }}:
-                <b class="fw_700"
-                  ><a
-                    style="text-decoration: none; cursor: pointer; color: black"
-                    [routerLink]="['/user/schoolFollowers', school.schoolId]"
-                    >{{ followersLength }}</a
-                  ></b
-                >
-              </div>
-              <div class="followers_name d-inline-block font_16 mr-_24">
-                <img src="../../../../assets/images/students-icon.svg" />
-                {{ "Students" | translate }}:
-                <b class="fw_700"
-                  ><a
-                    style="text-decoration: none; cursor: pointer; color: black"
-                    [routerLink]="['/user/studentList', school.schoolId, 1]"
-                    >{{ school.students }}</a
-                  ></b
-                >
-              </div>
-              <div class="followers_name d-inline-block font_16 mr-_24">
-                <img src="../../../../assets/images/Edit-dark.svg" />
-                {{ "Post" | translate }}:
-                <b class="fw_700">{{ school.posts.length }}</b>
+            <div
+              class="position-relative d-flex align-items-center justify-content-between gap-3 flex-xl-row flex-column"
+            >
+              <div
+                class="d-flex align-items-start align-items-xxl-center flex-lg-column flex-xxl-row gap-2"
+              >
+                <div class="followers_name d-inline-block font_16">
+                  <img src="../../../../assets/images/followers.svg" />
+                  {{ "Followers" | translate }}:
+                  <b class="fw_700"
+                    ><a
+                      style="
+                        text-decoration: none;
+                        cursor: pointer;
+                        color: black;
+                      "
+                      [routerLink]="['/user/schoolFollowers', school.schoolId]"
+                      >{{ followersLength }}</a
+                    ></b
+                  >
+                </div>
+                <div class="followers_name d-inline-block font_16">
+                  <img src="../../../../assets/images/students-icon.svg" />
+                  {{ "Students" | translate }}:
+                  <b class="fw_700"
+                    ><a
+                      style="
+                        text-decoration: none;
+                        cursor: pointer;
+                        color: black;
+                      "
+                      [routerLink]="['/user/studentList', school.schoolId, 1]"
+                      >{{ school.students }}</a
+                    ></b
+                  >
+                </div>
+                <div class="followers_name d-inline-block font_16">
+                  <img src="../../../../assets/images/Edit-dark.svg" />
+                  {{ "Post" | translate }}:
+                  <b class="fw_700">{{ school.posts.length }}</b>
+                </div>
               </div>
               <button
                 *ngIf="!isOwner && !isFollowed"
@@ -129,44 +143,44 @@
               >
                 {{ "MessageSchool" | translate }}
               </button>
-              <p class="font_16 mt-4">{{ school.description }}</p>
-              <button
-                *ngIf="isOwner || hasUpdateSchoolPermission"
-                (click)="getSchoolDetails(school.schoolId)"
-                class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins"
-                style="margin-right: 243px"
-                data-bs-toggle="modal"
-                data-bs-target="#editschool"
-              >
-                <img
-                  src="../../../../assets/images/Setting-solid-dark.svg"
-                  class="me-2"
-                />
-                {{ "EditProfile" | translate }}
-              </button>
-              <button
-                *ngIf="isOwner"
-                class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins"
-                style="margin-right: 122px"
-                data-bs-toggle="modal"
-                data-bs-target="#deleteschool"
-              >
-                {{ "DeleteSchool" | translate }}
-              </button>
-              <button
-                *ngIf="isOwner"
-                class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins"
-                data-bs-toggle="modal"
-                data-bs-target="#enableDisableSchool"
-              >
-                <span *ngIf="!school.isDisableByOwner">{{
-                  "DisableSchool" | translate
-                }}</span>
-                <span *ngIf="school.isDisableByOwner">{{
-                  "EnableSchool" | translate
-                }}</span>
-              </button>
+              <div class="d-flex align-items-center gap-3">
+                <button
+                  *ngIf="isOwner || hasUpdateSchoolPermission"
+                  (click)="getSchoolDetails(school.schoolId)"
+                  class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins"
+                  data-bs-toggle="modal"
+                  data-bs-target="#editschool"
+                >
+                  <img
+                    src="../../../../assets/images/Setting-solid-dark.svg"
+                    class="me-2"
+                  />
+                  {{ "EditProfile" | translate }}
+                </button>
+                <button
+                  *ngIf="isOwner"
+                  class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins"
+                  data-bs-toggle="modal"
+                  data-bs-target="#deleteschool"
+                >
+                  {{ "DeleteSchool" | translate }}
+                </button>
+                <button
+                  *ngIf="isOwner"
+                  class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins"
+                  data-bs-toggle="modal"
+                  data-bs-target="#enableDisableSchool"
+                >
+                  <span *ngIf="!school.isDisableByOwner">{{
+                    "DisableSchool" | translate
+                  }}</span>
+                  <span *ngIf="school.isDisableByOwner">{{
+                    "EnableSchool" | translate
+                  }}</span>
+                </button>
+              </div>
             </div>
+            <p class="font_16 mt-4">{{ school.description }}</p>
           </div>
         </div>
         <div class="teacher-tags tag-box hover-tags">
