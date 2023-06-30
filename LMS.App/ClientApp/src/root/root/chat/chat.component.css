@@ -24,3 +24,7 @@
   background: red;
 }
 
+.message span {
+  color: #64748b;
+  font-size: 16px;
+}
