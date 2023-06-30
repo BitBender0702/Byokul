@@ -77,7 +77,7 @@
           </button>
         </div>
         <div
-          class="school-profile-tabs d-flex align-content-center justify-content-center"
+          class="school-profile-tabs d-flex align-content-center justify-content-center position-relative"
         >
           <div class="custom-tabs profile-custom-tabs">
             <ul
@@ -311,7 +311,11 @@
 
             <div class="school-grid-view grid-active" *ngIf="isProfileGrid">
               <div
-                *ngIf="(myFeeds?.length == 0 && myFeedsReels?.length == 0) && feedTab == 'myFeed'"
+                *ngIf="
+                  myFeeds?.length == 0 &&
+                  myFeedsReels?.length == 0 &&
+                  feedTab == 'myFeed'
+                "
                 style="
                   font-weight: 500;
                   color: orange;
@@ -1138,7 +1142,11 @@
                 </div>
               </div>
               <div
-                *ngIf="(myFeeds?.length == 0 && myFeedsReels?.length == 0) && feedTab == 'myFeed'"
+                *ngIf="
+                  myFeeds?.length == 0 &&
+                  myFeedsReels?.length == 0 &&
+                  feedTab == 'myFeed'
+                "
                 style="
                   font-weight: 500;
                   color: orange;

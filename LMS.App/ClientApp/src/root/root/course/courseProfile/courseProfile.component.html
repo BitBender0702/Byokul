@@ -248,7 +248,7 @@
               (click)="resetCertificateModal()"
               data-bs-toggle="modal"
               data-bs-target="#add-certificate"
-              >{{"AddCertificates" | translate}}
+              >{{ "AddCertificates" | translate }}
               <button
                 (click)="resetCertificateModal()"
                 class="border-0 bg-transparent p-0 position-absolute delete-tag"
@@ -351,7 +351,7 @@
         </div>
         <hr class="hr-gray" />
         <div
-          class="school-profile-tabs d-flex align-content-center justify-content-center"
+          class="school-profile-tabs d-flex align-content-center justify-content-center position-relative"
         >
           <div></div>
           <button
@@ -364,7 +364,9 @@
               2
             ]"
           >
-            <img src="../../../../assets/images/Folder.svg" class="me-2" />{{"FileStorage" | translate}}
+            <img src="../../../../assets/images/Folder.svg" class="me-2" />{{
+              "FileStorage" | translate
+            }}
           </button>
           <div class="button-list-grid-filter">
             <button
@@ -1588,13 +1590,13 @@
                     *ngIf="!course.isDisableByOwner"
                     class="text-center font_16 f-poppins"
                   >
-                    {{ "DoYouWantToDisableCourse" | translate }} 
+                    {{ "DoYouWantToDisableCourse" | translate }}
                   </h2>
                   <h2
                     *ngIf="course.isDisableByOwner"
                     class="text-center font_16 f-poppins"
                   >
-                    {{ "DoYouWantToUnableCourse" | translate }} 
+                    {{ "DoYouWantToUnableCourse" | translate }}
                   </h2>
                 </div>
                 <div

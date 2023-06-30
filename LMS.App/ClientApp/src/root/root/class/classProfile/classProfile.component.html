@@ -107,16 +107,13 @@
                   {{ class.className }}
                 </h2>
                 <div class="d-flex flex-wrap course-date-head">
-                  <span class="date-class text_ltgray font_14"
-                    >
+                  <span class="date-class text_ltgray font_14">
                     <!-- {{ translateDate(class.startDate) }} -->
                     <!-- {{ formatLocalizedDate(class.startDate) }} -->
 
-                    {{ class.startDate | date : "MMMM d, y"}} -
+                    {{ class.startDate | date : "MMMM d, y" }} -
                     {{ class.endDate | date : "MMMM d, y" }}
-                    
-                    </span
-                  >
+                  </span>
                   <span class="sepearator mx-4">|</span>
                   <span class="date-class text_ltgray font_14"
                     >{{ class.posts.length }} {{ "Lectures" | translate }}</span
@@ -294,7 +291,8 @@
             (click)="resetLanguageModal()"
             data-bs-toggle="modal"
             data-bs-target="#add-language"
-            >{{ "AddLanguage" | translate }}<button
+            >{{ "AddLanguage" | translate
+            }}<button
               (click)="resetLanguageModal()"
               class="border-0 bg-transparent p-0 position-absolute delete-tag"
               data-bs-toggle="modal"
@@ -333,7 +331,8 @@
               (click)="resetTeacherModal()"
               data-bs-toggle="modal"
               data-bs-target="#add-classTeacher"
-              >{{ "AddTeacher" | translate }}<button
+              >{{ "AddTeacher" | translate
+              }}<button
                 (click)="resetTeacherModal()"
                 class="border-0 bg-transparent p-0 position-absolute delete-tag"
                 data-bs-toggle="modal"
@@ -356,7 +355,7 @@
         </div>
         <hr class="hr-gray" />
         <div
-          class="school-profile-tabs d-flex align-content-center justify-content-center"
+          class="school-profile-tabs d-flex align-content-center justify-content-center position-relative"
         >
           <div></div>
           <button
@@ -369,7 +368,9 @@
               1
             ]"
           >
-            <img src="../../../../assets/images/Folder.svg" class="me-2" />{{"FileStorage" | translate}}
+            <img src="../../../../assets/images/Folder.svg" class="me-2" />{{
+              "FileStorage" | translate
+            }}
           </button>
           <div class="button-list-grid-filter">
             <button
@@ -399,156 +400,166 @@
           </div>
         </div>
 
-      <div class="tab-content" id="pills-tabContent">
-        <div
-          class="tab-pane fade show active"
-          id="school-feed-tab-pane"
-          role="tabpanel"
-          aria-labelledby="school-feed-tab"
-          tabindex="0"
-        >
-          <div class="feed-section">
-            <div class="feed-box position-relative">
-              <reels-loading-spinner
-                [reelsLoadingIcon]="reelsLoadingIcon"
-                class="position-absolute translate-middle reel_spinner_position"
-              ></reels-loading-spinner>
-              <div class="feedbox-inner d-flex">
-                <carousel
-                  #carousel
-                  [itemsPerSlide]="itemsPerSlide"
-                  [singleSlideOffset]="singleSlideOffset"
-                  [interval]="0"
-                  [noWrap]="noWrap"
-                >
-                  <div *ngFor="let post of class.reels">
-                    <div *ngIf="post.postType == 3 && post.postAuthorType == 2">
-                      <slide
-                        *ngFor="let postAttachment of post.postAttachments"
+        <div class="tab-content" id="pills-tabContent">
+          <div
+            class="tab-pane fade show active"
+            id="school-feed-tab-pane"
+            role="tabpanel"
+            aria-labelledby="school-feed-tab"
+            tabindex="0"
+          >
+            <div class="feed-section">
+              <div class="feed-box position-relative">
+                <reels-loading-spinner
+                  [reelsLoadingIcon]="reelsLoadingIcon"
+                  class="position-absolute translate-middle reel_spinner_position"
+                ></reels-loading-spinner>
+                <div class="feedbox-inner d-flex">
+                  <carousel
+                    #carousel
+                    [itemsPerSlide]="itemsPerSlide"
+                    [singleSlideOffset]="singleSlideOffset"
+                    [interval]="0"
+                    [noWrap]="noWrap"
+                  >
+                    <div *ngFor="let post of class.reels">
+                      <div
+                        *ngIf="post.postType == 3 && post.postAuthorType == 2"
                       >
-                        <div *ngIf="postAttachment.fileType == 2">
-                          <div
-                            class="feedimg-box position-relative text-light position-relative"
-                          >
-                            <a
-                              (click)="openReelsViewModal(postAttachment.id)"
-                              style="cursor: pointer"
+                        <slide
+                          *ngFor="let postAttachment of post.postAttachments"
+                        >
+                          <div *ngIf="postAttachment.fileType == 2">
+                            <div
+                              class="feedimg-box position-relative text-light position-relative"
                             >
-                              <div class="videofile">
-                                <img
-                                  style="height: 300px"
-                                  [src]="postAttachment.fileThumbnail"
-                                />
+                              <a
+                                (click)="openReelsViewModal(postAttachment.id)"
+                                style="cursor: pointer"
+                              >
+                                <div class="videofile">
+                                  <img
+                                    style="height: 300px"
+                                    [src]="postAttachment.fileThumbnail"
+                                  />
+                                </div>
+                              </a>
+                              <div
+                                class="pinned-view d-flex justify-content-between align-items-start"
+                              >
+                                <button
+                                  type="button"
+                                  class="view font_12 bg-transparent border-0 text-light cursor_auto"
+                                >
+                                  <img
+                                    src="../../../../assets/images/eye-light.svg"
+                                  />
+                                  {{ post.views.length }}
+                                </button>
+                                <button
+                                  *ngIf="
+                                    postAttachment.post.isPinned && isOwner
+                                  "
+                                  (click)="
+                                    pinUnpinPost(postAttachment.post.id, false)
+                                  "
+                                  type="button"
+                                  class="pinned bg-transparent border-0"
+                                >
+                                  <img
+                                    src="../../../../assets/images/pinned-orange.svg"
+                                  />
+                                </button>
+                                <button
+                                  *ngIf="
+                                    !postAttachment.post.isPinned && isOwner
+                                  "
+                                  (click)="
+                                    pinUnpinPost(postAttachment.post.id, true)
+                                  "
+                                  type="button"
+                                  class="pinned bg-transparent border-0"
+                                >
+                                  <img
+                                    src="../../../../assets/images/pinned-gray.svg"
+                                  />
+                                </button>
                               </div>
-                            </a>
-                            <div
-                              class="pinned-view d-flex justify-content-between align-items-start"
-                            >
-                              <button
-                                type="button"
-                                class="view font_12 bg-transparent border-0 text-light cursor_auto"
+                              <div class="feed-name font_14 text_sec1 s">
+                                <img [src]="class.avatar" />
+                                {{ class.className }}
+                              </div>
+                              <div
+                                class="feed-title font_14 text_sec1 d-flex align-content-center fw_600"
                               >
-                                <img
-                                  src="../../../../assets/images/eye-light.svg"
-                                />
-                                {{ post.views.length }}
-                              </button>
-                              <button
-                                *ngIf="postAttachment.post.isPinned && isOwner"
-                                (click)="
-                                  pinUnpinPost(postAttachment.post.id, false)
-                                "
-                                type="button"
-                                class="pinned bg-transparent border-0"
-                              >
-                                <img
-                                  src="../../../../assets/images/pinned-orange.svg"
-                                />
-                              </button>
-                              <button
-                                *ngIf="!postAttachment.post.isPinned && isOwner"
-                                (click)="
-                                  pinUnpinPost(postAttachment.post.id, true)
-                                "
-                                type="button"
-                                class="pinned bg-transparent border-0"
-                              >
-                                <img
-                                  src="../../../../assets/images/pinned-gray.svg"
-                                />
-                              </button>
-                            </div>
-                            <div class="feed-name font_14 text_sec1 s">
-                              <img [src]="class.avatar" /> {{ class.className }}
-                            </div>
-                            <div
-                              class="feed-title font_14 text_sec1 d-flex align-content-center fw_600"
-                            >
-                              {{ post.title }}
-                              <span
-                                class="fw-light ms-2"
-                                *ngFor="
-                                  let item of post.postTags;
-                                  let isLast = last
-                                "
-                                >#{{ item.postTagValue
-                                }}{{ isLast ? "" : ", " }}</span
-                              >
+                                {{ post.title }}
+                                <span
+                                  class="fw-light ms-2"
+                                  *ngFor="
+                                    let item of post.postTags;
+                                    let isLast = last
+                                  "
+                                  >#{{ item.postTagValue
+                                  }}{{ isLast ? "" : ", " }}</span
+                                >
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      </slide>
+                        </slide>
+                      </div>
                     </div>
-                  </div>
-                </carousel>
+                  </carousel>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="school-grid-view grid-active" *ngIf="isProfileGrid">
-            <ng-container *ngFor="let post of class.posts">
-              <div
-                *ngIf="(post.postType == 1 && post.postAuthorType == 2) || post.isLive"
-                class="school-grid-box position-relative"
-              >
+            <div class="school-grid-view grid-active" *ngIf="isProfileGrid">
+              <ng-container *ngFor="let post of class.posts">
                 <div
-                  class="schoolgrid-header d-flex align-items-center position-relative"
+                  *ngIf="
+                    (post.postType == 1 && post.postAuthorType == 2) ||
+                    post.isLive
+                  "
+                  class="school-grid-box position-relative"
                 >
-                  <div class="school-gridprofile-icon">
-                    <img [src]="class.avatar" />
+                  <div
+                    class="schoolgrid-header d-flex align-items-center position-relative"
+                  >
+                    <div class="school-gridprofile-icon">
+                      <img [src]="class.avatar" />
+                    </div>
+                    <h2 class="d-inline-block font_20 fw_600 text_sec1 mb-0">
+                      {{ post.title }}
+                    </h2>
+                    <div *ngIf="post.isLive">
+                      <img
+                        src="../../../../assets/images/live_img.png"
+                        style="height: 76px"
+                      />
+                    </div>
+                    <p
+                      *ngIf="post.dateTime != null"
+                      class="font_14 school-grid-date d-inline-block mb-0"
+                    >
+                      {{ post.dateTime | date : "MMMM d" }} -
+                      {{ post.dateTime | date : "hh mm" }}
+                    </p>
+                    <button
+                      *ngIf="post.isPinned && isOwner"
+                      (click)="pinUnpinPost(post.id, false)"
+                      type="button"
+                      class="bg-transparent border-0 pinned-grid-chat"
+                    >
+                      <img src="../../../../assets/images/pinned-orange.svg" />
+                    </button>
+                    <button
+                      *ngIf="!post.isPinned && isOwner"
+                      (click)="pinUnpinPost(post.id, true)"
+                      type="button"
+                      class="bg-transparent border-0 pinned-grid-chat"
+                    >
+                      <img src="../../../../assets/images/pinned-gray.svg" />
+                    </button>
                   </div>
-                  <h2 class="d-inline-block font_20 fw_600 text_sec1 mb-0">
-                    {{ post.title }}
-                  </h2>
-                  <div *ngIf="post.isLive">
-                    <img
-                      src="../../../../assets/images/live_img.png"
-                      style="height: 76px"
-                    />
-                  </div>
-                  <p
-                    *ngIf="post.dateTime != null"
-                    class="font_14 school-grid-date d-inline-block mb-0"
-                  >
-                    {{ post.dateTime | date : "MMMM d" }} -
-                    {{ post.dateTime | date : "hh mm" }}
-                  </p>
-                  <button
-                    *ngIf="post.isPinned && isOwner"
-                    (click)="pinUnpinPost(post.id, false)"
-                    type="button"
-                    class="bg-transparent border-0 pinned-grid-chat"
-                  >
-                    <img src="../../../../assets/images/pinned-orange.svg" />
-                  </button>
-                  <button
-                    *ngIf="!post.isPinned && isOwner"
-                    (click)="pinUnpinPost(post.id, true)"
-                    type="button"
-                    class="bg-transparent border-0 pinned-grid-chat"
-                  >
-                    <img src="../../../../assets/images/pinned-gray.svg" />
-                  </button>
-                </div>
 
                   <div
                     class="school-grid-body"
@@ -948,90 +959,92 @@
               </ng-container>
             </div>
 
-          <div class="list-schol-profile" *ngIf="!isProfileGrid">
-            <div
-              [ngClass]="
-                isGridItemInfo
-                  ? 'd-block school-grid-box position-relative school-list-box h-100'
-                  : 'd-none school-grid-box position-relative school-list-box h-100'
-              "
-              *ngIf="gridItemInfo != undefined"
-            >
-              <div class="row post-list-preview-sec">
-                <div
-                  [ngClass]="
-                    gridItemInfo.postAttachments.length > 0
-                      ? 'd-block col-lg-6'
-                      : 'd-none'
-                  "
-                >
-                  <carousel>
-                    <div
-                      *ngFor="
-                        let postAttachment of gridItemInfo.postAttachments
-                      "
-                      class="school-grid-thumbnail"
-                    >
-                      <slide *ngIf="postAttachment.fileType == 2">
-                        <div
-                          *ngIf="postAttachment?.fileType == 2"
-                          class="videofile"
-                        >
-                          <video
-                            #videoPlayer
-                            controls
-                            class="video-js vjs-big-play-centered"
-                            preload="metadata"
+            <div class="list-schol-profile" *ngIf="!isProfileGrid">
+              <div
+                [ngClass]="
+                  isGridItemInfo
+                    ? 'd-block school-grid-box position-relative school-list-box h-100'
+                    : 'd-none school-grid-box position-relative school-list-box h-100'
+                "
+                *ngIf="gridItemInfo != undefined"
+              >
+                <div class="row post-list-preview-sec">
+                  <div
+                    [ngClass]="
+                      gridItemInfo.postAttachments.length > 0
+                        ? 'd-block col-lg-6'
+                        : 'd-none'
+                    "
+                  >
+                    <carousel>
+                      <div
+                        *ngFor="
+                          let postAttachment of gridItemInfo.postAttachments
+                        "
+                        class="school-grid-thumbnail"
+                      >
+                        <slide *ngIf="postAttachment.fileType == 2">
+                          <div
+                            *ngIf="postAttachment?.fileType == 2"
+                            class="videofile"
                           >
-                            <source
-                              [src]="postAttachment?.fileUrl"
-                              type="video/mp4"
-                            />
-                          </video>
-                        </div>
-                      </slide>
-                      <slide *ngIf="postAttachment?.fileType == 1">
-                        <img
-                          *ngIf="postAttachment?.fileType == 1"
-                          class="w-100"
-                          [src]="postAttachment?.fileUrl"
-                        />
-                      </slide>
-                    </div>
-                  </carousel>
-                </div>
-                <div
-                  [ngClass]="
-                    gridItemInfo.postAttachments.length > 0
-                      ? 'col-lg-6'
-                      : 'col-lg-12 heightForText'
-                  "
-                >
-                  <div class="class-preview-right position-relative h-100">
-                    <button
-                      (click)="hideGridItemInfo()"
-                      type="button"
-                      class="bg-transparent border-0 close-preview"
-                    >
-                      <img src="../../../../assets/images/cross.svg" />
-                    </button>
-                    <div class="schoolgrid-header">
-                      <div class="d-flex align-items-center position-relative">
-                        <div class="school-gridprofile-icon">
-                          <img [src]="class.avatar" />
-                        </div>
-                        <h2
-                          class="d-inline-block font_16 fw_600 text_sec1 mb-0"
-                        >
-                          {{ gridItemInfo.title }}
-                        </h2>
-                        <div *ngIf="gridItemInfo.isLive">
+                            <video
+                              #videoPlayer
+                              controls
+                              class="video-js vjs-big-play-centered"
+                              preload="metadata"
+                            >
+                              <source
+                                [src]="postAttachment?.fileUrl"
+                                type="video/mp4"
+                              />
+                            </video>
+                          </div>
+                        </slide>
+                        <slide *ngIf="postAttachment?.fileType == 1">
                           <img
-                            src="../../../../assets/images/live_img.png"
-                            style="height: 76px"
+                            *ngIf="postAttachment?.fileType == 1"
+                            class="w-100"
+                            [src]="postAttachment?.fileUrl"
                           />
-                        </div>
+                        </slide>
                       </div>
+                    </carousel>
+                  </div>
+                  <div
+                    [ngClass]="
+                      gridItemInfo.postAttachments.length > 0
+                        ? 'col-lg-6'
+                        : 'col-lg-12 heightForText'
+                    "
+                  >
+                    <div class="class-preview-right position-relative h-100">
+                      <button
+                        (click)="hideGridItemInfo()"
+                        type="button"
+                        class="bg-transparent border-0 close-preview"
+                      >
+                        <img src="../../../../assets/images/cross.svg" />
+                      </button>
+                      <div class="schoolgrid-header">
+                        <div
+                          class="d-flex align-items-center position-relative"
+                        >
+                          <div class="school-gridprofile-icon">
+                            <img [src]="class.avatar" />
+                          </div>
+                          <h2
+                            class="d-inline-block font_16 fw_600 text_sec1 mb-0"
+                          >
+                            {{ gridItemInfo.title }}
+                          </h2>
+                          <div *ngIf="gridItemInfo.isLive">
+                            <img
+                              src="../../../../assets/images/live_img.png"
+                              style="height: 76px"
+                            />
+                          </div>
+                        </div>
 
                         <p class="font_14 school-grid-date d-inline-block mb-0">
                           {{ gridItemInfo.dateTime | date : "MMMM d" }} -
@@ -1106,226 +1119,235 @@
                             class="d-block mx-auto"
                           />
 
-                        <span
-                          class="textBlack"
-                          *ngIf="
-                            likesLength != undefined &&
-                            currentLikedPostId == gridItemInfo.id
+                          <span
+                            class="textBlack"
+                            *ngIf="
+                              likesLength != undefined &&
+                              currentLikedPostId == gridItemInfo.id
+                            "
+                            >{{ likesLength }}</span
+                          >
+                          <span
+                            class="textBlack"
+                            *ngIf="currentLikedPostId != gridItemInfo.id"
+                            >{{ gridItemInfo.likes.length }}</span
+                          >
+                        </button>
+                        <button
+                          (click)="openPostsViewModal(gridItemInfo)"
+                          type="button"
+                          class="bg-transparent border-0 function-btns"
+                        >
+                          <img
+                            src="../../../../assets/images/Chat-dark.svg"
+                            class="d-block mx-auto"
+                          />
+                          {{ gridItemInfo.commentsCount }}
+                        </button>
+                        <button
+                          (click)="savePost(gridItemInfo.id)"
+                          type="button"
+                          class="bg-transparent border-0 function-btns"
+                        >
+                          <img
+                            *ngIf="!gridItemInfo.isPostSavedByCurrentUser"
+                            src="../../../../assets/images/Bookmark-dark.svg"
+                            class="d-block mx-auto"
+                          />
+                          <img
+                            *ngIf="gridItemInfo.isPostSavedByCurrentUser"
+                            src="../../../../assets/images/Bookmark-dark.svg"
+                            class="d-block mx-auto"
+                          />
+                          {{ gridItemInfo.savedPostsCount }}
+                        </button>
+                        <button
+                          (click)="
+                            openSharePostModal(
+                              gridItemInfo.id,
+                              gridItemInfo.postType,
+                              gridItemInfo.title,
+                              gridItemInfo.description
+                            )
                           "
-                          >{{ likesLength }}</span
+                          type="button"
+                          class="bg-transparent border-0 function-btns"
                         >
-                        <span
-                          class="textBlack"
-                          *ngIf="currentLikedPostId != gridItemInfo.id"
-                          >{{ gridItemInfo.likes.length }}</span
-                        >
-                      </button>
-                      <button
-                        (click)="openPostsViewModal(gridItemInfo)"
-                        type="button"
-                        class="bg-transparent border-0 function-btns"
-                      >
-                        <img
-                          src="../../../../assets/images/Chat-dark.svg"
-                          class="d-block mx-auto"
-                        />
-                        {{ gridItemInfo.commentsCount }}
-                      </button>
-                      <button
-                        (click)="savePost(gridItemInfo.id)"
-                        type="button"
-                        class="bg-transparent border-0 function-btns"
-                      >
-                        <img
-                          *ngIf="!gridItemInfo.isPostSavedByCurrentUser"
-                          src="../../../../assets/images/Bookmark-dark.svg"
-                          class="d-block mx-auto"
-                        />
-                        <img
-                          *ngIf="gridItemInfo.isPostSavedByCurrentUser"
-                          src="../../../../assets/images/Bookmark-dark.svg"
-                          class="d-block mx-auto"
-                        />
-                        {{ gridItemInfo.savedPostsCount }}
-                      </button>
-                      <button
-                        (click)="
-                          openSharePostModal(
-                            gridItemInfo.id,
-                            gridItemInfo.postType,
-                            gridItemInfo.title,
-                            gridItemInfo.description
-                          )
-                        "
-                        type="button"
-                        class="bg-transparent border-0 function-btns"
-                      >
-                        <img
-                          src="../../../../assets/images/Upload-dark.svg"
-                          class="d-block mx-auto"
-                        />
-                        {{ gridItemInfo.postSharedCount }}
-                      </button>
+                          <img
+                            src="../../../../assets/images/Upload-dark.svg"
+                            class="d-block mx-auto"
+                          />
+                          {{ gridItemInfo.postSharedCount }}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="row">
-              <ng-container *ngFor="let post of class.posts">
-                <div
-                  *ngIf="(post.postType == 1 && post.postAuthorType == 2) || post.isLive"
-                  class="col-md-6 col-xl-4"
-                >
+              <div class="row">
+                <ng-container *ngFor="let post of class.posts">
                   <div
-                    class="school-grid-box position-relative school-list-box mb-0"
+                    *ngIf="
+                      (post.postType == 1 && post.postAuthorType == 2) ||
+                      post.isLive
+                    "
+                    class="col-md-6 col-xl-4"
                   >
                     <div
-                      class="schoolgrid-header d-flex align-items-center position-relative"
+                      class="school-grid-box position-relative school-list-box mb-0"
                     >
-                      <div class="school-gridprofile-icon">
-                        <img [src]="class.avatar" />
-                      </div>
-                      <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">
-                        {{ post.title }}
-                      </h2>
-                      <div *ngIf="post.isLive">
-                        <img
-                          src="../../../../assets/images/live_img.png"
-                          style="height: 76px"
-                        />
-                      </div>
-                      <div class="right-action">
-                        <button
-                          type="button"
-                          class="view font_12 bg-transparent border-0 cursor_auto"
-                        >
-                          <img
-                            src="../../../../assets/images/eye.svg"
-                            class="me-2"
-                          />
-                          {{ post.views.length }}
-                        </button>
-                        <button
-                          *ngIf="post.isPinned && isOwner"
-                          (click)="pinUnpinPost(post.id, false)"
-                          type="button"
-                          class="bg-transparent border-0 pinned-grid-chat"
-                        >
-                          <img
-                            src="../../../../assets/images/pinned-orange.svg"
-                          />
-                        </button>
-                        <button
-                          *ngIf="!post.isPinned && isOwner"
-                          (click)="pinUnpinPost(post.id, true)"
-                          type="button"
-                          class="bg-transparent border-0 pinned-grid-chat"
-                        >
-                          <img
-                            src="../../../../assets/images/pinned-gray.svg"
-                          />
-                        </button>
-                      </div>
-                    </div>
-                    <div class="school-grid-body">
                       <div
-                        class="d-flex justify-content-between date-view-list"
+                        class="schoolgrid-header d-flex align-items-center position-relative"
                       >
-                        <p
-                          *ngIf="post.dateTime != null"
-                          class="font_14 school-grid-date d-inline-block mb-0"
+                        <div class="school-gridprofile-icon">
+                          <img [src]="class.avatar" />
+                        </div>
+                        <h2
+                          class="d-inline-block font_16 fw_600 text_sec1 mb-0"
                         >
-                          {{ post.dateTime | date : "MMMM d" }} -
-                          {{ post.dateTime | date : "hh mm" }}
-                        </p>
+                          {{ post.title }}
+                        </h2>
+                        <div *ngIf="post.isLive">
+                          <img
+                            src="../../../../assets/images/live_img.png"
+                            style="height: 76px"
+                          />
+                        </div>
+                        <div class="right-action">
+                          <button
+                            type="button"
+                            class="view font_12 bg-transparent border-0 cursor_auto"
+                          >
+                            <img
+                              src="../../../../assets/images/eye.svg"
+                              class="me-2"
+                            />
+                            {{ post.views.length }}
+                          </button>
+                          <button
+                            *ngIf="post.isPinned && isOwner"
+                            (click)="pinUnpinPost(post.id, false)"
+                            type="button"
+                            class="bg-transparent border-0 pinned-grid-chat"
+                          >
+                            <img
+                              src="../../../../assets/images/pinned-orange.svg"
+                            />
+                          </button>
+                          <button
+                            *ngIf="!post.isPinned && isOwner"
+                            (click)="pinUnpinPost(post.id, true)"
+                            type="button"
+                            class="bg-transparent border-0 pinned-grid-chat"
+                          >
+                            <img
+                              src="../../../../assets/images/pinned-gray.svg"
+                            />
+                          </button>
+                        </div>
                       </div>
-                      <div
-                        class="school-grid-thumbnail"
-                        style="cursor: pointer"
-                        (click)="showPostDiv(post.id)"
-                      >
-                        <div class="row gx-1">
-                          <div class="col-md-12">
-                            <div
-                              class="school-large-thumbnail shadow-thumnail position-relative"
-                            >
+                      <div class="school-grid-body">
+                        <div
+                          class="d-flex justify-content-between date-view-list"
+                        >
+                          <p
+                            *ngIf="post.dateTime != null"
+                            class="font_14 school-grid-date d-inline-block mb-0"
+                          >
+                            {{ post.dateTime | date : "MMMM d" }} -
+                            {{ post.dateTime | date : "hh mm" }}
+                          </p>
+                        </div>
+                        <div
+                          class="school-grid-thumbnail"
+                          style="cursor: pointer"
+                          (click)="showPostDiv(post.id)"
+                        >
+                          <div class="row gx-1">
+                            <div class="col-md-12">
                               <div
-                                *ngIf="post.postAttachments[0]?.fileUrl == null"
-                                class="description_scroll"
+                                class="school-large-thumbnail shadow-thumnail position-relative"
                               >
-                                {{ post.description }}
-                              </div>
-                              <div
-                                *ngIf="post.postAttachments[0]?.fileType == 2"
-                                class="videofile"
-                              >
+                                <div
+                                  *ngIf="
+                                    post.postAttachments[0]?.fileUrl == null
+                                  "
+                                  class="description_scroll"
+                                >
+                                  {{ post.description }}
+                                </div>
+                                <div
+                                  *ngIf="post.postAttachments[0]?.fileType == 2"
+                                  class="videofile"
+                                >
+                                  <img
+                                    style="height: 300px"
+                                    [src]="
+                                      post.postAttachments[0]?.fileThumbnail
+                                    "
+                                  />
+                                </div>
                                 <img
-                                  style="height: 300px"
-                                  [src]="post.postAttachments[0]?.fileThumbnail"
+                                  *ngIf="post.postAttachments[0]?.fileType == 1"
+                                  class="w-100"
+                                  [src]="post.postAttachments[0]?.fileUrl"
                                 />
                               </div>
-                              <img
-                                *ngIf="post.postAttachments[0]?.fileType == 1"
-                                class="w-100"
-                                [src]="post.postAttachments[0]?.fileUrl"
-                              />
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </ng-container>
+                </ng-container>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <!-- Modal -->
-      <div
-        class="modal fade edit-school-modal"
-        id="editClass"
-        tabindex="-1"
-        aria-labelledby="editClass"
-        aria-hidden="true"
-      >
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div
-              class="modal-header border-0 justify-content-center position-relative"
-            >
-              <h1
-                class="modal-title font_22 text_dark fw_700 border-0 text-center"
-                id="editschool"
+        <!-- Modal -->
+        <div
+          class="modal fade edit-school-modal"
+          id="editClass"
+          tabindex="-1"
+          aria-labelledby="editClass"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div
+                class="modal-header border-0 justify-content-center position-relative"
               >
-                {{ "EditClassProfile" | translate }}
-              </h1>
-              <button
-                type="button"
-                class="btn-close shadow-none"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              >
-                <img src="../../../../assets/images/cross.svg" />
-              </button>
-            </div>
-            <div class="modal-body">
-              <div class="edit-profile-header text-center mb-4">
-                <div
-                  class="rounded-circle modal-school-icon text-center mb-2 class-icon-profile"
+                <h1
+                  class="modal-title font_22 text_dark fw_700 border-0 text-center"
+                  id="editschool"
                 >
-                  <div *ngIf="uploadImage != ''">
-                    <img [src]="uploadImage" />
+                  {{ "EditClassProfile" | translate }}
+                </h1>
+                <button
+                  type="button"
+                  class="btn-close shadow-none"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                >
+                  <img src="../../../../assets/images/cross.svg" />
+                </button>
+              </div>
+              <div class="modal-body">
+                <div class="edit-profile-header text-center mb-4">
+                  <div
+                    class="rounded-circle modal-school-icon text-center mb-2 class-icon-profile"
+                  >
+                    <div *ngIf="uploadImage != ''">
+                      <img [src]="uploadImage" />
+                    </div>
+                    <div *ngIf="uploadImage == ''">
+                      <img
+                        *ngIf="classAvatar != 'null'"
+                        src="{{ classAvatar }}"
+                        style="scale: 1.8"
+                      />
+                    </div>
                   </div>
-                  <div *ngIf="uploadImage == ''">
-                    <img
-                      *ngIf="classAvatar != 'null'"
-                      src="{{ classAvatar }}"
-                      style="scale: 1.8"
-                    />
-                  </div>
-                </div>
 
                   <input
                     #imageFile
@@ -1672,13 +1694,13 @@
                     *ngIf="!class.isDisableByOwner"
                     class="text-center font_16 f-poppins"
                   >
-                    {{ "DoYouWantToDisableClass" | translate }} 
+                    {{ "DoYouWantToDisableClass" | translate }}
                   </h2>
                   <h2
                     *ngIf="class.isDisableByOwner"
                     class="text-center font_16 f-poppins"
                   >
-                    {{ "DoYouWantToUnableClass" | translate }} 
+                    {{ "DoYouWantToUnableClass" | translate }}
                   </h2>
                 </div>
                 <div
