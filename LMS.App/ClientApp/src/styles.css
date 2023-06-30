@@ -472,7 +472,7 @@ h3.subhead-btn {
 }
 
 .notification-box ul li {
-  margin: 0 20px;
+  margin: 0 14px;
   padding-left: 0;
 }
 
@@ -2589,7 +2589,7 @@ button.delete-tag img {
   max-width: 10px;
 }
 .new-school-grid-thumbnail {
-  height: 360px;
+  height: 650px;
 }
 .p-autocomplete-multiple-container.p-component {
   border: 0;
