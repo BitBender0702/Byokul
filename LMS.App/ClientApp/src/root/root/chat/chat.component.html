@@ -279,22 +279,12 @@
                   </div>
                 </div>
                 <div *ngFor="let key of getObjectKeys(firstuserChats)">
-                  <div style="text-align: center">
-                    <hr
-                      style="
-                        width: 40%;
-                        display: inline-block;
-                        margin-right: 10px;
-                      "
-                    />
+                  <div
+                    class="line-date d-flex align-items-center justify-content-between"
+                  >
+                    <hr />
                     <span>{{ key | date : "MMMM d" }}</span>
-                    <hr
-                      style="
-                        width: 40%;
-                        display: inline-block;
-                        margin-left: 10px;
-                      "
-                    />
+                    <hr />
                   </div>
                   <li
                     [ngClass]="this.userChat.sendByMe ? 'me' : 'you'"
