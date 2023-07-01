@@ -52,7 +52,9 @@
             <img src="../../../assets/images/Edit-light.svg" alt="edit" />
           </button>
         </div>
-        <div class="school-profile-tabs d-flex align-content-center justify-content-center">
+        <div
+          class="school-profile-tabs d-flex align-content-center justify-content-center position-relative"
+        >
           <div class="custom-tabs profile-custom-tabs">
             <ul class="nav nav-tabs border-0 before-none" id="myTab" role="tablist">
               <li class="nav-item ps-0 mb-0" role="presentation">
@@ -197,7 +199,11 @@
 
             <div class="school-grid-view grid-active" *ngIf="isProfileGrid">
               <div
-                *ngIf="(myFeeds?.length == 0 && myFeedsReels?.length == 0) && feedTab == 'myFeed'"
+                *ngIf="
+                  myFeeds?.length == 0 &&
+                  myFeedsReels?.length == 0 &&
+                  feedTab == 'myFeed'
+                "
                 style="
                   font-weight: 500;
                   color: orange;
@@ -642,7 +648,11 @@
                 </div>
               </div>
               <div
-                *ngIf="(myFeeds?.length == 0 && myFeedsReels?.length == 0) && feedTab == 'myFeed'"
+                *ngIf="
+                  myFeeds?.length == 0 &&
+                  myFeedsReels?.length == 0 &&
+                  feedTab == 'myFeed'
+                "
                 style="
                   font-weight: 500;
                   color: orange;

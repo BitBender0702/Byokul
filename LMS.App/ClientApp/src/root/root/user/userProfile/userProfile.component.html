@@ -287,7 +287,7 @@
         </div>
         <hr class="hr-gray" />
         <div
-          class="school-profile-tabs d-flex align-content-center justify-content-center"
+          class="school-profile-tabs d-flex align-content-center justify-content-center position-relative"
         >
           <div class="custom-tabs">
             <ul
@@ -621,7 +621,8 @@
               <ng-container *ngFor="let post of user.posts">
                 <div
                   *ngIf="
-                    (post.postType == 1  && post.postAuthorType == 4) || post.isLive
+                    (post.postType == 1 && post.postAuthorType == 4) ||
+                    post.isLive
                   "
                   class="school-grid-box position-relative"
                 >
@@ -1351,7 +1352,13 @@
 
           <div class="row">
             <ng-container *ngFor="let post of user.posts">
-              <div *ngIf="(post.postType == 1 && post.postAuthorType == 4) || post.isLive" class="col-md-6 col-xl-4">
+              <div
+                *ngIf="
+                  (post.postType == 1 && post.postAuthorType == 4) ||
+                  post.isLive
+                "
+                class="col-md-6 col-xl-4"
+              >
                 <div
                   class="school-grid-box position-relative school-list-box h-100 mb-0"
                 >
@@ -6600,25 +6607,27 @@
                       </div>
                     </div>
                     <div class="col-md-6">
-                    <div class="form-group">
-                      <label class="font_10">{{ "Country" | translate }}*</label>
-                      <select
-                        class="form-select rounded-8 w-100"
-                        formControlName="country"
-                        aria-label="Default select example"
-                        (change)="getCityByCountry($event.target)"
-                      >
-                        <option value="" disabled selected hidden>
-                          {{ "Country" | translate }}
-                        </option>
-                        <option
-                          *ngFor="let country of countries"
-                          [value]="country.countryName"
+                      <div class="form-group">
+                        <label class="font_10"
+                          >{{ "Country" | translate }}*</label
                         >
-                          {{ country.countryName }}
-                        </option>
-                      </select>
-                      <!-- <small
+                        <select
+                          class="form-select rounded-8 w-100"
+                          formControlName="country"
+                          aria-label="Default select example"
+                          (change)="getCityByCountry($event.target)"
+                        >
+                          <option value="" disabled selected hidden>
+                            {{ "Country" | translate }}
+                          </option>
+                          <option
+                            *ngFor="let country of countries"
+                            [value]="country.countryName"
+                          >
+                            {{ country.countryName }}
+                          </option>
+                        </select>
+                        <!-- <small
                         class="p-error"
                         style="color: orange"
                         *ngIf="
@@ -6627,7 +6636,7 @@
                         "
                         >{{ "ThisFieldRequired" | translate }}
                       </small> -->
-                    </div>
+                      </div>
                     </div>
                     <div class="col-md-6">
                       <div class="form-group">

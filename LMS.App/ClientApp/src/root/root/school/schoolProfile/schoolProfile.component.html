@@ -77,33 +77,47 @@
                 ><img src="../../../../assets/images/verified-badge.svg"
               /></span>
             </h2>
-            <div class="position-relative">
-              <div class="followers_name d-inline-block font_16 mr-_24">
-                <img src="../../../../assets/images/followers.svg" />
-                {{ "Followers" | translate }}:
-                <b class="fw_700"
-                  ><a
-                    style="text-decoration: none; cursor: pointer; color: black"
-                    [routerLink]="['/user/schoolFollowers', school.schoolId]"
-                    >{{ followersLength }}</a
-                  ></b
-                >
-              </div>
-              <div class="followers_name d-inline-block font_16 mr-_24">
-                <img src="../../../../assets/images/students-icon.svg" />
-                {{ "Students" | translate }}:
-                <b class="fw_700"
-                  ><a
-                    style="text-decoration: none; cursor: pointer; color: black"
-                    [routerLink]="['/user/studentList', school.schoolId, 1]"
-                    >{{ school.students }}</a
-                  ></b
-                >
-              </div>
-              <div class="followers_name d-inline-block font_16 mr-_24">
-                <img src="../../../../assets/images/Edit-dark.svg" />
-                {{ "Post" | translate }}:
-                <b class="fw_700">{{ school.posts.length }}</b>
+            <div
+              class="position-relative d-flex align-items-center justify-content-between gap-3 flex-xl-row flex-column"
+            >
+              <div
+                class="d-flex align-items-start align-items-xxl-center flex-lg-column flex-xxl-row gap-2"
+              >
+                <div class="followers_name d-inline-block font_16">
+                  <img src="../../../../assets/images/followers.svg" />
+                  {{ "Followers" | translate }}:
+                  <b class="fw_700"
+                    ><a
+                      style="
+                        text-decoration: none;
+                        cursor: pointer;
+                        color: black;
+                      "
+                      [routerLink]="['/user/schoolFollowers', school.schoolId]"
+                      >{{ followersLength }}</a
+                    ></b
+                  >
+                </div>
+                <div class="followers_name d-inline-block font_16">
+                  <img src="../../../../assets/images/students-icon.svg" />
+                  {{ "Students" | translate }}:
+                  <b class="fw_700"
+                    ><a
+                      style="
+                        text-decoration: none;
+                        cursor: pointer;
+                        color: black;
+                      "
+                      [routerLink]="['/user/studentList', school.schoolId, 1]"
+                      >{{ school.students }}</a
+                    ></b
+                  >
+                </div>
+                <div class="followers_name d-inline-block font_16">
+                  <img src="../../../../assets/images/Edit-dark.svg" />
+                  {{ "Post" | translate }}:
+                  <b class="fw_700">{{ school.posts.length }}</b>
+                </div>
               </div>
               <button
                 *ngIf="!isOwner && !isFollowed"
@@ -129,44 +143,44 @@
               >
                 {{ "MessageSchool" | translate }}
               </button>
-              <p class="font_16 mt-4">{{ school.description }}</p>
-              <button
-                *ngIf="isOwner || hasUpdateSchoolPermission"
-                (click)="getSchoolDetails(school.schoolId)"
-                class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins"
-                style="margin-right: 243px"
-                data-bs-toggle="modal"
-                data-bs-target="#editschool"
-              >
-                <img
-                  src="../../../../assets/images/Setting-solid-dark.svg"
-                  class="me-2"
-                />
-                {{ "EditProfile" | translate }}
-              </button>
-              <button
-                *ngIf="isOwner"
-                class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins"
-                style="margin-right: 122px"
-                data-bs-toggle="modal"
-                data-bs-target="#deleteschool"
-              >
-                {{ "DeleteSchool" | translate }}
-              </button>
-              <button
-                *ngIf="isOwner"
-                class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins"
-                data-bs-toggle="modal"
-                data-bs-target="#enableDisableSchool"
-              >
-                <span *ngIf="!school.isDisableByOwner">{{
-                  "DisableSchool" | translate
-                }}</span>
-                <span *ngIf="school.isDisableByOwner">{{
-                  "EnableSchool" | translate
-                }}</span>
-              </button>
+              <div class="d-flex align-items-center gap-3">
+                <button
+                  *ngIf="isOwner || hasUpdateSchoolPermission"
+                  (click)="getSchoolDetails(school.schoolId)"
+                  class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins"
+                  data-bs-toggle="modal"
+                  data-bs-target="#editschool"
+                >
+                  <img
+                    src="../../../../assets/images/Setting-solid-dark.svg"
+                    class="me-2"
+                  />
+                  {{ "EditProfile" | translate }}
+                </button>
+                <button
+                  *ngIf="isOwner"
+                  class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins"
+                  data-bs-toggle="modal"
+                  data-bs-target="#deleteschool"
+                >
+                  {{ "DeleteSchool" | translate }}
+                </button>
+                <button
+                  *ngIf="isOwner"
+                  class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins"
+                  data-bs-toggle="modal"
+                  data-bs-target="#enableDisableSchool"
+                >
+                  <span *ngIf="!school.isDisableByOwner">{{
+                    "DisableSchool" | translate
+                  }}</span>
+                  <span *ngIf="school.isDisableByOwner">{{
+                    "EnableSchool" | translate
+                  }}</span>
+                </button>
+              </div>
             </div>
+            <p class="font_16 mt-4">{{ school.description }}</p>
           </div>
         </div>
         <div *ngIf="school.teachers.length != 0 || this.isOwner">
@@ -197,7 +211,8 @@
             (click)="resetTeacherModal()"
             data-bs-toggle="modal"
             data-bs-target="#add-schoolTeacher"
-            >{{ "AddTeacher" | translate }}<button
+            >{{ "AddTeacher" | translate
+            }}<button
               (click)="resetTeacherModal()"
               class="border-0 bg-transparent p-0 position-absolute delete-tag"
               data-bs-toggle="modal"
@@ -240,7 +255,8 @@
             (click)="resetCertificateModal()"
             data-bs-toggle="modal"
             data-bs-target="#add-certificate"
-            >{{ "AddCertificates" | translate }}<button
+            >{{ "AddCertificates" | translate
+            }}<button
               (click)="resetCertificateModal()"
               class="border-0 bg-transparent p-0 position-absolute delete-tag"
               data-bs-toggle="modal"
@@ -280,7 +296,8 @@
             (click)="resetLanguageModal()"
             data-bs-toggle="modal"
             data-bs-target="#add-language"
-            >{{ "AddLanguage" | translate }}<button
+            >{{ "AddLanguage" | translate
+            }}<button
               (click)="resetLanguageModal()"
               class="border-0 bg-transparent p-0 position-absolute delete-tag"
               data-bs-toggle="modal"
@@ -303,7 +320,7 @@
         </div>
         <hr class="hr-gray" />
         <div
-          class="school-profile-tabs d-flex align-content-center justify-content-center"
+          class="school-profile-tabs d-flex align-content-center justify-content-center position-relative"
         >
           <div class="custom-tabs">
             <ul
@@ -339,7 +356,7 @@
                   aria-selected="false"
                   tabindex="-1"
                 >
-                {{ "Classes&Courses" | translate }}
+                  {{ "Classes&Courses" | translate }}
                 </button>
               </li>
             </ul>
@@ -352,7 +369,7 @@
                 type="button"
                 class="btn custom-btn primary_btn earning-btn fw_400 h_44 me-2"
               >
-              {{ "CreateClass" | translate }}
+                {{ "CreateClass" | translate }}
               </button>
               <button
                 *ngIf="isOwner || hasCreateEditCoursePermission"
@@ -360,7 +377,7 @@
                 type="button"
                 class="btn custom-btn primary_btn earning-btn fw_400 h_44 me-2"
               >
-              {{ "CreateCourse" | translate }}
+                {{ "CreateCourse" | translate }}
               </button>
               <button
                 *ngIf="hideFeedFilters"
@@ -966,7 +983,10 @@
             <div class="accordion" id="accordionPanelsStayOpenExample">
               <ng-container *ngFor="let post of school.posts">
                 <div
-                  *ngIf="(post.postType == 1 && post.postAuthorType == 1) || post.isLive"
+                  *ngIf="
+                    (post.postType == 1 && post.postAuthorType == 1) ||
+                    post.isLive
+                  "
                   class="school-grid-box position-relative"
                 >
                   <div
@@ -1650,7 +1670,10 @@
               <div class="row">
                 <ng-container *ngFor="let post of school.posts">
                   <div
-                    *ngIf="(post.postType == 1 && post.postAuthorType == 1) || post.isLive"
+                    *ngIf="
+                      (post.postType == 1 && post.postAuthorType == 1) ||
+                      post.isLive
+                    "
                     class="col-md-6 col-xl-4"
                   >
                     <div
@@ -2283,7 +2306,9 @@
                     </div>
                     <div class="col-md-12">
                       <div class="form-group">
-                        <label class="font_10">{{ "Country" | translate }}*</label>
+                        <label class="font_10"
+                          >{{ "Country" | translate }}*</label
+                        >
                         <select
                           class="form-select rounded-8 w-100"
                           formControlName="country"
@@ -2309,7 +2334,7 @@
                           >{{ "ThisFieldRequired" | translate }}
                         </small> -->
                       </div>
-                      </div>
+                    </div>
                     <div class="col-md-12">
                       <div class="form-group">
                         <label class="font_10">{{
@@ -2465,13 +2490,13 @@
                     *ngIf="!school.isDisableByOwner"
                     class="text-center font_16 f-poppins"
                   >
-                    {{ "DoYouWantToDisableSchool" | translate }} 
+                    {{ "DoYouWantToDisableSchool" | translate }}
                   </h2>
                   <h2
                     *ngIf="school.isDisableByOwner"
                     class="text-center font_16 f-poppins"
                   >
-                    {{ "DoYouWantToUnableSchool" | translate }} 
+                    {{ "DoYouWantToUnableSchool" | translate }}
                   </h2>
                 </div>
                 <div

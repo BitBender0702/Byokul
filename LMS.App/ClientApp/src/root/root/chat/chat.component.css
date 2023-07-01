@@ -24,3 +24,18 @@
   background: red;
 }
 
+.message span {
+  color: #64748b;
+  font-size: 16px;
+}
+
+.line-date span {
+  display: inline-block;
+  padding: 0 16px;
+  white-space: nowrap;
+}
+
+hr {
+  width: 100%;
+  border-color: #64748b;
+}
