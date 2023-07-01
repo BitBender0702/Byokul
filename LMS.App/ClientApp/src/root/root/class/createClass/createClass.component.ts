@@ -17,6 +17,7 @@ import { Arabic } from 'flatpickr/dist/l10n/ar';
 import { Turkish } from 'flatpickr/dist/l10n/tr';
 import flatpickr from 'flatpickr';
 import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
+import { TranslateService } from '@ngx-translate/core';
 
 export const ownedClassResponse =new Subject<{classId: string, classAvatar : string,className:string,schoolName:string, action:string}>(); 
 
@@ -81,7 +82,7 @@ export class CreateClassComponent extends MultilingualComponent implements OnIni
   changeLanguageSubscription!: Subscription;
 
 
-  constructor(injector: Injector,private bsModalService: BsModalService,private datePipe: DatePipe,public messageService:MessageService,private route: ActivatedRoute,private router: Router,private fb: FormBuilder,classService: ClassService,private http: HttpClient) {
+  constructor(injector: Injector,private translateService: TranslateService,private bsModalService: BsModalService,private datePipe: DatePipe,public messageService:MessageService,private route: ActivatedRoute,private router: Router,private fb: FormBuilder,classService: ClassService,private http: HttpClient) {
     super(injector);
     this._classService = classService;
   }
@@ -214,7 +215,7 @@ dateLessThan(from: string, to: string, currentDate:string) {
   return (group: FormGroup): {[key: string]: any} => {
    let f = group.controls[from];
    let t = group.controls[to];
-   if ((f.value > t.value && t.value != "" && f.value != "") || f.value < currentDate) {
+   if ((new Date(f.value) > new Date(t.value) && t.value != "" && f.value != "") || new Date(f.value) < new Date(currentDate)) {
      return {
        dates: `Please enter valid date`
      };
@@ -259,6 +260,9 @@ captureTeacherId(event: any) {
     inputElement.select();
     document.execCommand('copy');
     inputElement.setSelectionRange(0, 0);
+    const translatedInfoSummary = this.translateService.instant('Success');
+    const translatedMessage = this.translateService.instant('CopiedToClipboard');
+    this.messageService.add({severity:'success', summary:translatedInfoSummary,life: 3000, detail:translatedMessage});
   }
 
   handleImageInput(event: any) {

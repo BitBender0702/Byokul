@@ -66,7 +66,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     private _notificationService;
     private _authService;
     class:any;
-    isProfileGrid:boolean = true;
+    isProfileGrid:boolean = false;
     isOpenSidebar:boolean = false;
     isOpenModal:boolean = false;
     loadingIcon:boolean = false;
@@ -634,7 +634,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       return (group: FormGroup): {[key: string]: any} => {
        let f = group.controls[from];
        let t = group.controls[to];
-       if ((f.value > t.value && t.value != "" && f.value != "") || f.value < currentDate) {
+       if ((new Date(f.value) > new Date(t.value) && t.value != "" && f.value != "") || new Date(f.value) < new Date(currentDate)) {
          return {
            dates: `Please enter valid date`
          };
@@ -1116,11 +1116,11 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     }
 
     openReelsViewModal(postAttachmentId:string): void {
-      
-      const initialState = {
-        postAttachmentId: postAttachmentId
-      };
-      this.bsModalService.show(ReelsViewComponent,{initialState});
+      this.router.navigateByUrl(`user/reelsView/${this.class.classId}/class`);
+      // const initialState = {
+      //   postAttachmentId: postAttachmentId
+      // };
+      // this.bsModalService.show(ReelsViewComponent,{initialState});
     }
 
     openPaymentModal(){

@@ -467,5 +467,7 @@
   "SchoolDisabledSuccessfully": "School disabled successfully",
   "BannedSuccessfully": "Banned successfully",
   "MessageForwardedSuccessfully": "Message forwarded successfully",
-  "June": "abc"
+  "June": "abc",
+  "CopiedToClipboard": "Copied to clipboard",
+  "CreateSchools": "Create Schools"
 }

@@ -42,7 +42,7 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
     messageToGroup!:string;
     likeUnlikePost!: LikeUnlikePost;
     postView!:PostView;
-    isProfileGrid:boolean = true;
+    isProfileGrid:boolean = false;
     myFeeds:any;
     myFeedsReels:any;
     globalFeeds:any;
@@ -692,11 +692,17 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
         window.location.href=`user/userProfile/${userId}`;
       }
 
-      openReelsViewModal(postAttachmentId:string): void {
-        const initialState = {
-          postAttachmentId: postAttachmentId
-        };
-        this.bsModalService.show(ReelsViewComponent,{initialState});
+      openReelsViewModal(postAttachmentId:string,from:number): void {
+        if(from == 1){
+          this.router.navigateByUrl(`user/reelsView/${this.myFeedsReels}/myFeed`);
+        }
+        else{
+          this.router.navigateByUrl(`user/reelsView/${this.globalFeedReels}/globalFeed`);
+        }
+        // const initialState = {
+        //   postAttachmentId: postAttachmentId
+        // };
+        // this.bsModalService.show(ReelsViewComponent,{initialState});
       }
 
       openSharePostModal(postId:string,postType:number): void {

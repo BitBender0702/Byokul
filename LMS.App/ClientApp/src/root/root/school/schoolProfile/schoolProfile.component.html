@@ -169,6 +169,7 @@
             </div>
           </div>
         </div>
+        <div *ngIf="school.teachers.length != 0 || this.isOwner">
         <div class="teacher-tags tag-box hover-tags">
           <div class="teacher-content font_14 d-inline-block">
             <img src="../../../../assets/images/Profile-dark.svg" />{{
@@ -206,6 +207,8 @@
             </button>
           </span>
         </div>
+        </div>
+        <div *ngIf="school.schoolCertificates.length != 0 || this.isOwner">
         <div class="teacher-tags tag-box mt-0 hover-tags">
           <div class="teacher-content font_14 d-inline-block">
             <img src="../../../../assets/images/dark-star.svg" />{{
@@ -247,6 +250,8 @@
             </button>
           </span>
         </div>
+        </div>
+        <div *ngIf="school.languages.length != 0 || this.isOwner">
         <div class="teacher-tags tag-box mt-0 hover-tags">
           <div class="teacher-content font_14 d-inline-block">
             <img src="../../../../assets/images/Volume-Down.svg" />{{
@@ -284,6 +289,7 @@
               <img src="../../../../assets/images/school/plus-light.svg" />
             </button>
           </span>
+        </div>
         </div>
         <div class="teacher-tags tag-box mt-0">
           <div class="teacher-content font_14 d-inline-block">
@@ -356,19 +362,6 @@
               >
               {{ "CreateCourse" | translate }}
               </button>
-
-              <button
-                *ngIf="hideFeedFilters"
-                [ngClass]="
-                  isProfileGrid
-                    ? 'btn border-btn active d-inline-flex align-items-center justify-content-center'
-                    : 'btn border-btn d-inline-flex align-items-center justify-content-center'
-                "
-                (click)="profileGrid()"
-                type="button"
-              >
-                <img src="../../../../assets/images/Filter.svg" />
-              </button>
               <button
                 *ngIf="hideFeedFilters"
                 [ngClass]="
@@ -382,6 +375,19 @@
               >
                 <img src="../../../../assets/images/Category.svg" />
               </button>
+
+              <button
+              *ngIf="hideFeedFilters"
+              [ngClass]="
+                isProfileGrid
+                  ? 'btn border-btn active d-inline-flex align-items-center justify-content-center'
+                  : 'btn border-btn d-inline-flex align-items-center justify-content-center'
+              "
+              (click)="profileGrid()"
+              type="button"
+            >
+              <img src="../../../../assets/images/Filter.svg" />
+            </button>
             </div>
 
             <div *ngIf="!hideFeedFilters" class="btn-filter align-items-center">

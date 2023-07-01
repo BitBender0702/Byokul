@@ -55,7 +55,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     private _notificationService;
     private _authService;
     course:any;
-    isProfileGrid:boolean = true;
+    isProfileGrid:boolean = false;
     // isOpenSidebar:boolean = false;
     // isOpenModal:boolean = false;
     loadingIcon:boolean = false;
@@ -998,11 +998,11 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     }
 
     openReelsViewModal(postAttachmentId:string): void {
-      
-      const initialState = {
-        postAttachmentId: postAttachmentId
-      };
-      this.bsModalService.show(ReelsViewComponent,{initialState});
+      this.router.navigateByUrl(`user/reelsView/${this.course.courseId}/course`);
+      // const initialState = {
+      //   postAttachmentId: postAttachmentId
+      // };
+      // this.bsModalService.show(ReelsViewComponent,{initialState});
     }
 
     openCertificateViewModal(certificateUrl:string,certificateName:string,from?:number,event?:Event){

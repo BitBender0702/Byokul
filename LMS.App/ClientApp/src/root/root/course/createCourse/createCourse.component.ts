@@ -11,6 +11,7 @@ import { Subject, Subscription } from 'rxjs';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { SharePostComponent } from '../../sharePost/sharePost.component';
 import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
+import { TranslateService } from '@ngx-translate/core';
 
 export const ownedCourseResponse =new Subject<{courseId: string, courseAvatar : string,courseName:string,schoolName:string, action:string}>(); 
 
@@ -70,7 +71,7 @@ export class CreateCourseComponent extends MultilingualComponent implements OnIn
 
 
 
-  constructor(injector: Injector,private bsModalService: BsModalService,public messageService:MessageService,private router: Router,private route: ActivatedRoute,private fb: FormBuilder,courseService: CourseService,private http: HttpClient) {
+  constructor(injector: Injector,private translateService: TranslateService,private bsModalService: BsModalService,public messageService:MessageService,private router: Router,private route: ActivatedRoute,private fb: FormBuilder,courseService: CourseService,private http: HttpClient) {
     super(injector);
     this._courseService = courseService;
   }
@@ -215,6 +216,9 @@ captureTeacherId(event: any) {
     inputElement.select();
     document.execCommand('copy');
     inputElement.setSelectionRange(0, 0);
+    const translatedInfoSummary = this.translateService.instant('Success');
+    const translatedMessage = this.translateService.instant('CopiedToClipboard');
+    this.messageService.add({severity:'success', summary:translatedInfoSummary,life: 3000, detail:translatedMessage});
   }
 
   handleImageInput(event: any) {

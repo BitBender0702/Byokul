@@ -389,7 +389,6 @@ export class PostViewComponent implements OnInit,AfterViewInit {
   }
 
   sendToGroup(){
-    debugger
     var comment: any[] = this.post.comments;
     this.InitializeCommentViewModel();
     this.commentViewModel.userId = this.sender.id;
@@ -469,7 +468,8 @@ export class PostViewComponent implements OnInit,AfterViewInit {
     }
 
     openSharePostModal(postId:string, postType:number,title:string,description:string): void {
-      if(this.posts?.name == Constant.Private || this.posts?.serviceType == Constant.Paid){
+      debugger
+      if(this.posts?.accessibility == Constant.Private || this.posts?.serviceType == Constant.Paid){
         sharePostResponse.next({}); 
       }
       else{

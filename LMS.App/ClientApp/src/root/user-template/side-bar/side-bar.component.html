@@ -134,7 +134,14 @@
         </li>
       </ul>
     </div>
-    <button
+    <button *ngIf="sidebarInfo?.ownedSchools?.length == 0"
+    [routerLink]="['/user/createSchool']"
+    type="button"
+    class="btn custom-btn primary_btn w-100 earning-btn fw_400"
+  >
+    {{ "CreateSchools" | translate }}
+  </button>
+    <button *ngIf="sidebarInfo?.ownedSchools?.length > 0"
       [routerLink]="['/user/earnings']"
       type="button"
       class="btn custom-btn primary_btn w-100 earning-btn fw_400"

@@ -1,4 +1,4 @@
-<div *ngIf="reels != undefined">
+<!-- <div *ngIf="reels != undefined">
   <div class="mobile-reel-slider">
 <article>
   <div class="slider vertical-slider">
@@ -9,7 +9,7 @@
         <div class="live-inner w-100 reel_mobile">
           <div class="live-image overflow-hidden position-relative">
 			<div class="reel_videoinner">
-            <video controls *ngFor="let video of item.postAttachments">
+            <video controls *ngFor="let video of item.postAttachments" #videoPlayer (click)="toggleVideoPlayback(videoPlayer)">
 				<source [src]="video.fileUrl" type="video/mp4">
 			</video>
 			</div>
@@ -174,9 +174,9 @@
   </div>
 </article>
   </div>
-<!-- </div> -->
+</div> -->
 
-<loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
+<!-- <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
 
   
   
@@ -218,4 +218,118 @@ $('.slick', '.vertical-slider').slick({
   slidesToScroll: 1
 });
 </script>
+  -->
 
+  <div class="#slider slider vertical-slider" (wheel)="onSliderScroll($event)">
+    <div class="slick">
+      
+      <div *ngFor="let item of reels" [ngClass]="!isMobileView ? 'd-flex justify-content-center w-100 item':'item'">
+        <div class="f-poppins" [ngStyle]="!isMobileView ? {'width': '40%'} : {'width': '100%'}">
+          <div class="live-content" id="reel_content">
+            <div class="live-inner w-100 reel_mobile">
+              <div class="live-image overflow-hidden position-relative">
+                <div class="reel_videoinner">
+                  <video *ngFor="let video of item.postAttachments" [src]="video.fileUrl" type="video/mp4" (click)="toggleVideoPlayback($event)"></video>
+                </div>
+                <div class="reel-username font_16 white_text d-flex">
+                  <img [src]="item.parentImageUrl" class="me-2" /> {{item.parentName}}
+                </div>
+                <div class="live-bottom-text p-3" style="height: 100px;">
+                  <h5 class="font_14 mb-0 fw_600 text_sec1">{{item.title}} <span class="font_14 fw_400  ms-3">{{item.description}}</span></h5>
+                </div>
+                <div class="live-action-buttons d-flex justify-content-between">
+                  <button type="button" class="btn bg-transparent text_ltgray font_12 cursor_auto" data-bs-toggle="modal"
+                  data-bs-target="#comments-modal" (click)="openCommentsSection(item)"><img src="../../../assets/images/chat-icon.svg"
+                    class="d-block" /> {{item.commentsCount}}</button>
+                <button type="button" class="btn bg-transparent text_ltgray font_12 cursor_auto"><img src="../../../assets/images/eye.svg"
+                    class="d-block" /> {{item.views?.length}}</button>
+                  <button (click)="likeUnlikePosts(item.id,true,item.postType,item)" type="button" class="btn bg-transparent text_ltgray font_12">
+                    <img *ngIf="item.isPostLikedByCurrentUser" src="../../../assets/images/heart-red.svg" class="d-block" />
+                    <img *ngIf="!item.isPostLikedByCurrentUser" src="../../../assets/images/Heart-dark.svg" class="d-block" />
+      
+                    <span *ngIf="likesLength != undefined && currentLikedPostId== item.id">{{likesLength}}</span>
+                    <span *ngIf="currentLikedPostId!= item.id">{{item.likes.length}}</span>
+                  </button>
+                  <button (click)="saveReel(item.id,item)" type="button" class="btn bg-transparent text_ltgray font_12">
+                    <img *ngIf="!item.isPostSavedByCurrentUser" src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto" />
+                    <img *ngIf="item.isPostSavedByCurrentUser" src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto">
+                      {{item.savedPostsCount}}
+                  </button>
+                  <button (click)="openSharePostModal(item, item.postType,item.title,item.description)" type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Upload.svg"
+                    class="d-block" /> {{item.postSharedCount}}</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div
+  class="modal fade edit-school-modal delete-modal"
+  id="comments-modal"
+  tabindex="-1"
+  aria-labelledby="comments-modal"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div
+        class="modal-header border-0 justify-content-center position-relative"
+      >
+        <h1
+          class="modal-title font_22 text_dark fw_700 border-0 text-center"
+        >
+          {{ "Comments" | translate }}
+        </h1>
+        <button
+          type="button"
+          class="btn-close shadow-none"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        >
+          <img src="../../../../assets/images/cross.svg" />
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="live-chat-box text-center" *ngIf="reel != undefined">
+          <div *ngIf="reel.createdBy == userId && isCommentsDisabled" (click)="showCommentsDiv(true)" class="chat-enabled d-inline-flex align-items-center cursor_pointer"><img src="../../../assets/images/Unlock.svg" />{{'ChatDisabled'| translate }}
+          </div>
+          <div *ngIf="reel.createdBy == userId && !isCommentsDisabled" (click)="showCommentsDiv(false)" class="chat-enabled d-inline-flex align-items-center cursor_pointer"><img src="../../../assets/images/Unlock.svg" />{{'ChatEnabled'| translate }}
+          </div>
+          <div>
+            <span *ngIf="reel.createdBy != userId && isCommentsDisabled">{{'CommentsAreDisabled'| translate }}</span>
+          </div>
+          <div *ngIf="!isCommentsDisabled" #groupChatList id="groupChat" class="live-chat-outer position-relative" (scroll)="scrollHandler($event)">
+            <div *ngIf="commentsLoadingIcon" class="postloader-main position-absolute translate-middle">
+              <div class="postlds-ring" style="margin-left: 200px;margin-bottom: 214px;"><div></div><div></div><div></div><div></div></div>
+            </div>
+          <div *ngFor="let item of reel.comments" class="live-message d-flex position-relative align-items-start">
+            <img *ngIf="item.userAvatar != null" [src]="item.userAvatar" class="comment-user">
+            <img *ngIf="item.userAvatar == null && gender =='1'" src="../../../assets/images/maleProfile.jfif" class="comment-user"/>
+            <img *ngIf="(item.userAvatar == null) && (gender =='2' || gender =='3')" src="../../../assets/images/femaleProfile.jfif" class="comment-user"/>
+            <p class="text_sec1 font_12 fw_400 text-start mb-0">{{item.content}}</p>
+            <!-- <button (click)="likeUnlikeComments(item.id,true,item.isCommentLikedByCurrentUser,item.likeCount)" type="button" class="btn bg-transparent text_ltgray font_12 p-0 border-0 reel-like-chat">
+              <img *ngIf="item.isCommentLikedByCurrentUser" src="../../../assets/images/heart-red.svg" class="d-block" />
+              <img *ngIf="!item.isCommentLikedByCurrentUser" src="../../../assets/images/Heart-dark.svg" class="d-block" />
+              <span>{{item.likeCount}}</span>
+            </button> -->
+          </div>
+        </div>
+          <div *ngIf="!isCommentsDisabled" class="add-comment d-flex align-items-center justify-content-between"  style="margin-left:-40px">
+            <span class="bg-transparent rounded-circle comment-post-user rounded-circle"><img [src]="sender?.avatar" style="max-height: 100%;"/>
+            </span>
+            <input (keyup.enter)="sendToGroup(reel)" [(ngModel)]="messageToGroup" type="text" class="form-control rounded-8 font_14 fw_400" placeholder="{{'YourMessage'| translate }}">
+            <button (click)="sendToGroup(reel)" type="button" class="comment-btn border-0"><img src="../../../assets/images/arrowup.svg" /></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <p-toast></p-toast>
+
+  

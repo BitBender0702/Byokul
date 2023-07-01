@@ -167,6 +167,7 @@
           <p class="font_16 mt-4">{{ user.description }}</p>
         </div>
         <div class="teacher-tags tag-box hover-tags">
+          <div *ngIf="user.studentCertificates.length != 0 || this.isOwner">
           <div class="teacher-tags tag-box mt-0 hover-tags">
             <div class="teacher-content font_14 d-inline-block">
               <img src="../../../../assets/images/dark-star.svg" />
@@ -186,6 +187,8 @@
               ></button
             ></span>
           </div>
+          </div>
+          <div *ngIf="user.languages.length != 0 || this.isOwner">
           <div class="teacher-tags tag-box mt-0 hover-tags">
             <div class="teacher-content font_14 d-inline-block">
               <img src="../../../../assets/images/Volume-Down.svg" />
@@ -225,6 +228,8 @@
               </button>
             </span>
           </div>
+        </div>
+        <div *ngIf="user.schoolsAsStudent.length != 0 || this.isOwner">
           <div class="teacher-tags tag-box mt-0 hover-tags">
             <div class="teacher-content font_14 d-inline-block">
               <img src="../../../../assets/images/book.svg" />
@@ -244,6 +249,8 @@
                 /></button
             ></span>
           </div>
+        </div>
+        <div *ngIf="user.schoolsAsTeacher.length != 0 || this.isOwner">
           <div class="teacher-content font_14 d-inline-block">
             <img src="../../../../assets/images/bag-dark.svg" />
             {{ "Teacher" | translate }}
@@ -263,6 +270,7 @@
                 src="../../../../assets/images/cross-sm-light.svg"
               /></button
           ></span>
+          </div>
         </div>
         <div class="teacher-tags tag-box mt-0">
           <div class="teacher-content font_14 d-inline-block">
@@ -384,18 +392,6 @@
             <div class="btn-filter1 align-items-center">
               <button
                 [ngClass]="
-                  isProfileGrid
-                    ? 'btn border-btn active d-inline-flex align-items-center justify-content-center'
-                    : 'btn border-btn d-inline-flex align-items-center justify-content-center'
-                "
-                (click)="profileGrid()"
-                type="button"
-                id="list-btn"
-              >
-                <img src="../../../../assets/images/Filter.svg" />
-              </button>
-              <button
-                [ngClass]="
                   !isProfileGrid
                     ? 'btn border-btn active d-inline-flex align-items-center justify-content-center'
                     : 'btn border-btn d-inline-flex align-items-center justify-content-center'
@@ -407,6 +403,18 @@
               >
                 <img src="../../../../assets/images/Category.svg" />
               </button>
+              <button
+              [ngClass]="
+                isProfileGrid
+                  ? 'btn border-btn active d-inline-flex align-items-center justify-content-center'
+                  : 'btn border-btn d-inline-flex align-items-center justify-content-center'
+              "
+              (click)="profileGrid()"
+              type="button"
+              id="list-btn"
+            >
+              <img src="../../../../assets/images/Filter.svg" />
+            </button>
             </div>
           </div>
           <div *ngIf="!isPostTab && isSavedPostTab" class="filter-main d-flex">

@@ -21,7 +21,7 @@ import { MessageService } from 'primeng/api';
 import { LikeUnlikePost } from 'src/root/interfaces/post/likeUnlikePost';
 import { PostView } from 'src/root/interfaces/post/postView';
 import { BehaviorSubject, Subject, Subscription, filter } from 'rxjs';
-import { ReelsViewComponent, deleteReelResponse, savedReelResponse } from '../../reels/reelsView.component';
+import { ReelsViewComponent, deleteReelResponse } from '../../reels/reelsView.component';
 import { SignalrService } from 'src/root/service/signalr.service';
 import { NotificationType, NotificationViewModel } from 'src/root/interfaces/notification/notificationViewModel';
 import { PostAuthorTypeEnum } from 'src/root/Enums/postAuthorTypeEnum';
@@ -44,6 +44,7 @@ import { Spanish } from 'flatpickr/dist/l10n/es';
 import { Turkish } from 'flatpickr/dist/l10n/tr';
 import { DatePipe } from '@angular/common';
 import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
+import { savedReelResponse } from '../../reelsSlider/reelsSlider.component';
 export const userImageResponse =new Subject<{userAvatar : string,gender : number}>();  
 export const chatResponse =new Subject<{receiverId : string , type: string,chatTypeId:string}>();  
 
@@ -68,7 +69,7 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
     postLoadingIcon: boolean = false;
     reelsLoadingIcon:boolean = false;
     blockedDocument: boolean = false;
-    isProfileGrid:boolean = true;
+    isProfileGrid:boolean = false;
     userId!:string;
     isFollowed!:boolean;
     likesLength!:number;
@@ -1054,14 +1055,15 @@ openReelsViewModal(postAttachmentId:string): void {
   debugger
   const screenWidthThreshold = 768;
   const isMobileOrTab = window.innerWidth < screenWidthThreshold;
-  if (isMobileOrTab) {
-    this.router.navigateByUrl(`user/reelsView/${this.user.id}`);
-  } else {
-  const initialState = {
-    postAttachmentId: postAttachmentId
-  };
-  this.bsModalService.show(ReelsViewComponent,{initialState});
-}
+  // if (isMobileOrTab) {
+    this.router.navigateByUrl(`user/reelsView/${this.user.id}/user`);
+
+//   } else {
+//   const initialState = {
+//     postAttachmentId: postAttachmentId
+//   };
+//   this.bsModalService.show(ReelsViewComponent,{initialState});
+// }
 }
 
 userChat(){

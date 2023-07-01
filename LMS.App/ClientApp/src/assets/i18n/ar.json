@@ -460,7 +460,10 @@
   "SchoolEnabledSuccessfully": "School enabled successfully",
   "SchoolDisabledSuccessfully": "School disabled successfully",
   "BannedSuccessfully": "Banned successfully",
-  "MessageForwardedSuccessfully": "Message forwarded successfully"
+  "MessageForwardedSuccessfully": "Message forwarded successfully",
+  "CopiedToClipboard": "نسخ إلى الحافظة",
+  "CreateSchools": "إنشاء مدارس"
+
 
 
 

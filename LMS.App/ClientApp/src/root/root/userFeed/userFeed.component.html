@@ -92,19 +92,19 @@
             " id="school-feed-tab-pane" role="tabpanel" aria-labelledby="school-feed-tab" tabindex="0">
             <div class="button-list-grid">
               <button [ngClass]="
-                  isProfileGrid
-                    ? 'btn border-btn active d-inline-flex align-items-center justify-content-center'
-                    : 'btn border-btn d-inline-flex align-items-center justify-content-center'
-                " (click)="profileGrid()" type="button">
-                <img src="../../../../assets/images/Filter.svg" />
-              </button>
-              <button [ngClass]="
                   !isProfileGrid
                     ? 'btn border-btn active d-inline-flex align-items-center justify-content-center'
                     : 'btn border-btn d-inline-flex align-items-center justify-content-center'
                 " (click)="profileList()" type="button"
                 class="btn border-btn d-inline-flex align-items-center justify-content-center">
                 <img src="../../../../assets/images/Category.svg" />
+              </button>
+              <button [ngClass]="
+                  isProfileGrid
+                    ? 'btn border-btn active d-inline-flex align-items-center justify-content-center'
+                    : 'btn border-btn d-inline-flex align-items-center justify-content-center'
+                " (click)="profileGrid()" type="button">
+                <img src="../../../../assets/images/Filter.svg" />
               </button>
             </div>
             <div class="feed-section mt-0">
@@ -119,7 +119,7 @@
                         <slide *ngFor="let postAttachment of post.postAttachments">
                           <div *ngIf="postAttachment.fileType == 2">
                             <div class="feedimg-box position-relative text-light position-relative">
-                              <a (click)="openReelsViewModal(postAttachment.id)" style="cursor: pointer">
+                              <a (click)="openReelsViewModal(postAttachment.id,1)" style="cursor: pointer">
                                 <div class="videofile">
                                   <img style="height: 300px" [src]="postAttachment.fileThumbnail" />
                                 </div>
@@ -764,13 +764,6 @@
             tabindex="0">
             <div class="button-list-grid">
               <button [ngClass]="
-                  isProfileGrid
-                    ? 'btn border-btn active d-inline-flex align-items-center justify-content-center'
-                    : 'btn border-btn d-inline-flex align-items-center justify-content-center'
-                " (click)="profileGrid()" type="button">
-                <img src="../../../../assets/images/Filter.svg" />
-              </button>
-              <button [ngClass]="
                   !isProfileGrid
                     ? 'btn border-btn active d-inline-flex align-items-center justify-content-center'
                     : 'btn border-btn d-inline-flex align-items-center justify-content-center'
@@ -778,6 +771,13 @@
                 class="btn border-btn d-inline-flex align-items-center justify-content-center">
                 <img src="../../../../assets/images/Category.svg" />
               </button>
+              <button [ngClass]="
+              isProfileGrid
+                ? 'btn border-btn active d-inline-flex align-items-center justify-content-center'
+                : 'btn border-btn d-inline-flex align-items-center justify-content-center'
+            " (click)="profileGrid()" type="button">
+            <img src="../../../../assets/images/Filter.svg" />
+          </button>
             </div>
             <div class="feed-section mt-0">
               <div class="feed-box position-relative">
@@ -791,7 +791,7 @@
                         <slide *ngFor="let postAttachment of post.postAttachments">
                           <div *ngIf="postAttachment.fileType == 2">
                             <div class="feedimg-box position-relative text-light position-relative">
-                              <a (click)="openReelsViewModal(postAttachment.id)" style="cursor: pointer">
+                              <a (click)="openReelsViewModal(postAttachment.id,2)" style="cursor: pointer">
                                 <div class="videofile">
                                   <img style="height: 300px" [src]="postAttachment.fileThumbnail" />
                                 </div>
@@ -1427,6 +1427,7 @@
             <span class="followers-name font_16 text_sec1 fw_600">
               <img [src]="item.avatar" class="rounded-circle me-2 img_style" style="max-height: 30px" />
               <a class="routeLink" [routerLink]="['/user/userProfile', item.id]">{{ item.name }}</a></span>
+              <!-- <span>User</span> -->
           </div>
         </li>
         <li *ngIf="item.type == 1" class="search-results__item">

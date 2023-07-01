@@ -297,7 +297,9 @@
   "SchoolDisabledSuccessfully": "School disabled successfully",
   "BannedSuccessfully": "Banned successfully",
   "MessageForwardedSuccessfully": "Message forwarded successfully",
-  "ChooseThumbnail": "Elija miniatura o"
+  "ChooseThumbnail": "Elija miniatura o",
+  "CopiedToClipboard": "Copiada al portapapeles",
+  "CreateSchools": "Crear escuelas"
 
 
 

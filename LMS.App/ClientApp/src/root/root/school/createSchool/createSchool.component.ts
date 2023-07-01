@@ -13,6 +13,7 @@ import { environment } from "src/environments/environment";
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { SharePostComponent } from '../../sharePost/sharePost.component';
 import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
+import { TranslateService } from '@ngx-translate/core';
 
 export const ownedSchoolResponse =new Subject<{schoolId: string, schoolAvatar : string,schoolName:string,action:string}>(); 
 
@@ -60,7 +61,7 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
   changeLanguageSubscription!: Subscription;
 
   
-  constructor(injector: Injector,private bsModalService: BsModalService,public messageService:MessageService,private domSanitizer: DomSanitizer,private router: Router,private fb: FormBuilder,schoolService: SchoolService,private http: HttpClient) {
+  constructor(injector: Injector,private translateService: TranslateService,private bsModalService: BsModalService,public messageService:MessageService,private domSanitizer: DomSanitizer,private router: Router,private fb: FormBuilder,schoolService: SchoolService,private http: HttpClient) {
     super(injector);
     this._schoolService = schoolService;
   }
@@ -124,6 +125,9 @@ ngOnDestroy(): void {
     inputElement.select();
     document.execCommand('copy');
     inputElement.setSelectionRange(0, 0);
+    const translatedInfoSummary = this.translateService.instant('Success');
+    const translatedMessage = this.translateService.instant('CopiedToClipboard');
+    this.messageService.add({severity:'success', summary:translatedInfoSummary,life: 3000, detail:translatedMessage});
   }
 
   handleDefaultImageInput(url:string){

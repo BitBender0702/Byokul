@@ -87,7 +87,7 @@ export class SchoolProfileComponent
   private _authService;
   private _userService;
   school: any;
-  isProfileGrid: boolean = true;
+  isProfileGrid: boolean = false;
   isOpenSidebar: boolean = false;
   hideFeedFilters: boolean = true;
   loadingIcon: boolean = false;
@@ -1382,10 +1382,12 @@ export class SchoolProfileComponent
   }
 
   openReelsViewModal(postAttachmentId: string): void {
-    const initialState = {
-      postAttachmentId: postAttachmentId,
-    };
-    this.bsModalService.show(ReelsViewComponent, { initialState });
+    this.router.navigateByUrl(`user/reelsView/${this.school.schoolId}/school`);
+
+    // const initialState = {
+    //   postAttachmentId: postAttachmentId,
+    // };
+    // this.bsModalService.show(ReelsViewComponent, { initialState });
   }
 
   getClassFilters(){

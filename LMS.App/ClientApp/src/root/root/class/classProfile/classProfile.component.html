@@ -220,6 +220,7 @@
           </div>
           <p class="font_16 mt-4">{{ class.description }}</p>
         </div>
+        <div *ngIf="class.classCertificates.length != 0 || this.isOwner">
         <div class="teacher-tags tag-box hover-tags">
           <div class="teacher-tags tag-box mt-0 hover-tags">
             <div class="teacher-content font_14 d-inline-block">
@@ -266,6 +267,8 @@
             </span>
           </div>
         </div>
+      </div>
+        <div *ngIf="class.languages.length != 0 || this.isOwner">
         <div class="teacher-tags tag-box mt-0 hover-tags">
           <div class="teacher-content font_14 d-inline-block">
             <img src="../../../../assets/images/Volume-Down.svg" />{{
@@ -304,7 +307,8 @@
             </button>
           </span>
         </div>
-
+        </div>
+        <div *ngIf="class.teachers.length != 0 || this.isOwner">
         <div class="teacher-tags tag-box hover-tags">
           <div class="teacher-tags tag-box mt-0 hover-tags">
             <div class="teacher-content font_14 d-inline-block">
@@ -344,6 +348,7 @@
             </span>
           </div>
         </div>
+        </div>
 
         <div class="teacher-tags tag-box mt-0">
           <div class="teacher-content font_14 d-inline-block">
@@ -373,18 +378,6 @@
           </button>
           <div class="button-list-grid-filter">
             <button
-              (click)="profileGrid()"
-              type="button"
-              [ngClass]="
-                isProfileGrid
-                  ? 'btn border-btn active d-inline-flex align-items-center justify-content-center'
-                  : 'btn border-btn d-inline-flex align-items-center justify-content-center'
-              "
-              id="list-btn"
-            >
-              <img src="../../../../assets/images/Filter.svg" />
-            </button>
-            <button
               (click)="profileList()"
               type="button"
               [ngClass]="
@@ -396,6 +389,18 @@
             >
               <img src="../../../../assets/images/Category.svg" />
             </button>
+            <button
+            (click)="profileGrid()"
+            type="button"
+            [ngClass]="
+              isProfileGrid
+                ? 'btn border-btn active d-inline-flex align-items-center justify-content-center'
+                : 'btn border-btn d-inline-flex align-items-center justify-content-center'
+            "
+            id="list-btn"
+          >
+            <img src="../../../../assets/images/Filter.svg" />
+          </button>
           </div>
         </div>
 
@@ -1427,13 +1432,25 @@
                           >{{ "Start" | translate }}*</label
                         >
                         <input
+                        #startDate
+                        autocomplete="off"
+                        type="text"
+                        placeholder="mm/dd/yyyy"
+                        class="form-control w-100 date_calendar"
+                        name="startDate"
+                        formControlName="startDate"
+                        id="start_date"
+                        (click)="getSelectedLanguage()"
+                      />
+
+                        <!-- <input
                           formControlName="startDate"
                           type="date"
                           [min]="minDate"
                           max="9999-12-31"
                           name="start"
                           class="form-control w-100"
-                        />
+                        /> -->
                         <small
                           class="p-error"
                           style="color: orange"
@@ -1458,13 +1475,24 @@
                           >{{ "Finish" | translate }}*</label
                         >
                         <input
+                        #endDate
+                        autocomplete="off"
+                        type="text"
+                        placeholder="mm/dd/yyyy"
+                        class="form-control w-100 date_calendar"
+                        name="endDate"
+                        formControlName="endDate"
+                        id="end_date"
+                        (click)="getSelectedLanguage()"
+                      />
+                        <!-- <input
                           formControlName="endDate"
                           type="date"
                           [min]="minDate"
                           max="9999-12-31"
                           name="start"
                           class="form-control w-100"
-                        />
+                        /> -->
                         <small
                           class="p-error"
                           style="color: orange"
