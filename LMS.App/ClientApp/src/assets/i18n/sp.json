@@ -299,7 +299,18 @@
   "MessageForwardedSuccessfully": "Message forwarded successfully",
   "ChooseThumbnail": "Elija miniatura o",
   "CopiedToClipboard": "Copiada al portapapeles",
-  "CreateSchools": "Crear escuelas"
+  "CreateSchools": "Crear escuelas",
+
+  "TermsOfService": "Terms of Service",
+  "DistanceSalesAgreementForSchools": "Distance Sales Agreement for Schools",
+  "DistanceSalesAgreementForStudents": "Distance Sales Agreement for Students",
+  "GoLive": "Go Live",
+  "PhoneNumber": "Phone Number",
+  "StateOrProvince": "Provincia/Estado",
+  "VideoDurationExceed": "You can not upload a reel longer than 3 minutes",
+  "PhoneNumberRequired": "Phone number is required",
+  "InValidPhoneNumber": "Phone number is invalid"
+
 
 
 

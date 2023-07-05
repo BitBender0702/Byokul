@@ -26,6 +26,7 @@ namespace LMS.Services
         public string containerName = "classthumbnail";
         private readonly IMapper _mapper;
         private IGenericRepository<Class> _classRepository;
+        private IGenericRepository<Course> _courseRepository;
         private IGenericRepository<ClassLanguage> _classLanguageRepository;
         private IGenericRepository<ClassTeacher> _classTeacherRepository;
         private IGenericRepository<ClassStudent> _classStudentRepository;
@@ -47,10 +48,11 @@ namespace LMS.Services
         private readonly IUserService _userService;
         private IConfiguration _config;
 
-        public ClassService(IMapper mapper, IGenericRepository<Class> classRepository, IGenericRepository<ClassLanguage> classLanguageRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<ClassDiscipline> classDisciplineRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<ClassTag> classTagRepository, IGenericRepository<ClassCertificate> classCertificateRepository, UserManager<User> userManager, IBlobService blobService, IUserService userService, IGenericRepository<ClassLike> classLikeRepository, IGenericRepository<ClassViews> classViewsRepository, IGenericRepository<School> schoolRepository, IGenericRepository<ClassCourseFilter> classCourseFilterRepository, IGenericRepository<UserClassCourseFilter> userClassCourseFilterRepository, IGenericRepository<UserSharedPost> userSharedPostRepository, IGenericRepository<SavedPost> savedPostRepository, IConfiguration config)
+        public ClassService(IMapper mapper, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<ClassLanguage> classLanguageRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<ClassDiscipline> classDisciplineRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<ClassTag> classTagRepository, IGenericRepository<ClassCertificate> classCertificateRepository, UserManager<User> userManager, IBlobService blobService, IUserService userService, IGenericRepository<ClassLike> classLikeRepository, IGenericRepository<ClassViews> classViewsRepository, IGenericRepository<School> schoolRepository, IGenericRepository<ClassCourseFilter> classCourseFilterRepository, IGenericRepository<UserClassCourseFilter> userClassCourseFilterRepository, IGenericRepository<UserSharedPost> userSharedPostRepository, IGenericRepository<SavedPost> savedPostRepository, IConfiguration config)
         {
             _mapper = mapper;
             _classRepository = classRepository;
+            _courseRepository = courseRepository;
             _classLanguageRepository = classLanguageRepository;
             _classTeacherRepository = classTeacherRepository;
             _classStudentRepository = classStudentRepository;
@@ -885,6 +887,33 @@ namespace LMS.Services
             classes.IsDisableByOwner = !classes.IsDisableByOwner;
             _classRepository.Update(classes);
             _classRepository.Save();
+
+        }
+
+        public async Task<IEnumerable<GlobalSearchViewModel>> ClassAndCoursesGlobalSearch(string searchString, int pageNumber, int pageSize)
+        {
+            var classes = await _classRepository.GetAll().Include(x => x.School).Where(x => x.ClassName.Contains(searchString)).Select(x => new GlobalSearchViewModel
+            {
+                Id = x.ClassId,
+                Name = x.ClassName,
+                SchoolName = x.School.SchoolName,
+                Type = (int)PostAuthorTypeEnum.Class,
+                Avatar = x.Avatar
+            }).ToListAsync();
+
+
+            var courses = await _courseRepository.GetAll().Where(x => x.CourseName.Contains(searchString)).Select(x => new GlobalSearchViewModel
+            {
+                Id = x.CourseId,
+                Name = x.CourseName,
+                SchoolName = x.School.SchoolName,
+                Type = (int)PostAuthorTypeEnum.Course,
+                Avatar = x.Avatar
+            }).ToListAsync();
+
+            var result = classes.Concat(courses).Skip((pageNumber - 1) * pageSize).Take(pageSize).OrderBy(x => x.Type).ToList();
+            return result;
+
 
         }
     }

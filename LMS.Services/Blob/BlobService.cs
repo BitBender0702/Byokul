@@ -1,6 +1,7 @@
 ﻿using Azure.Storage;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using LMS.Services.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
@@ -8,6 +9,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,18 +24,21 @@ namespace LMS.Services.Blob
         private IConfiguration _configuration;
         private bool _isProgress;
         private int _uploadFileSize;
-        public BlobService(IOptions<BlobConfig> config, IHubContext<ChatHubs> hubContext, IConfiguration configuration)
+        private readonly ICommonService _commonService;
+        public BlobService(IOptions<BlobConfig> config, IHubContext<ChatHubs> hubContext, IConfiguration configuration, ICommonService commonService)
         {
             this.config = config;
             _hubContext = hubContext;
             _configuration = configuration;
+            _commonService = commonService;
         }
 
         public async Task<string> UploadFileAsync(IFormFile asset, string containerName, bool showProgress)
         {
             _isProgress = showProgress;
             _uploadFileSize = (int)asset.Length;
-
+            byte[] byteArray;
+            Stream streamResult;
             var fileType = Path.GetExtension(asset.FileName);
             byte[] buffer = new byte[2000000];
             int bytesRead;
@@ -45,6 +50,23 @@ namespace LMS.Services.Blob
             }
             try
             {
+
+                if (asset.ContentType == "video/mp4" || asset.ContentType == "video/webm" || asset.ContentType == "video/ogg" || asset.ContentType == " video/mpeg") {
+
+                    // get byte array
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await asset.CopyToAsync(memoryStream);
+                        byteArray = memoryStream.ToArray();
+                    }
+
+                    streamResult = await _commonService.CompressVideo(asset.FileName, byteArray);
+                }
+                else
+                {
+                    streamResult = asset.OpenReadStream();
+                }
+
                 var serviceClient = new BlobServiceClient("DefaultEndpointsProtocol=https;AccountName=byokulstorage;AccountKey=exYHA69x6yj0g9ET7+0ODXjs1zPYtqAqCkiwUuT7ocLG3qQOFhWKEn9Q+oS6EC6qcT+AJM+Cj8KR+ASt+3Lu5Q==;EndpointSuffix=core.windows.net");
                 var containerClient = serviceClient.GetBlobContainerClient(containerName);
 
@@ -66,7 +88,9 @@ namespace LMS.Services.Blob
                     ProgressHandler = new MyProgressHandler(showProgress, _uploadFileSize, _hubContext, asset.FileName)
                 };
 
-                var response = await blobClient.UploadAsync(asset.OpenReadStream(), op);
+                //var response = await blobClient.UploadAsync(asset.OpenReadStream(), op);
+                var response = await blobClient.UploadAsync(streamResult, op);
+
                 imageFullPath = blobClient.Uri.AbsoluteUri;
                 //if (CloudStorageAccount.TryParse(config.Value.StorageConnection, out CloudStorageAccount cloudStorageAccount))
                 //{

@@ -143,7 +143,7 @@ import { Subject } from 'rxjs';
 
           commentResponse.subscribe(response => {
             var comment: any[] = this.reels.post.comments;
-            var commentObj = {id:response.id,content:response.message,likeCount:0,isCommentLikedByCurrentUser:false,userAvatar:response.senderAvatar};
+            var commentObj = {id:response.id,content:response.message,likeCount:0,isCommentLikedByCurrentUser:false,userAvatar:response.senderAvatar,userName:response.userName,userId:response.userId};
             comment.push(commentObj);
             this.cd.detectChanges();
             this.groupChatList.nativeElement.scrollTop = this.groupChatList.nativeElement.scrollHeight;
@@ -532,6 +532,10 @@ player.play(); // Start playing the video again
           this.loadingIcon = false;
           deleteReelResponse.next({postId:id});
         });
+      }
+
+      hideCommentModal(){
+        this.bsModalService.hide();
       }
 
   }

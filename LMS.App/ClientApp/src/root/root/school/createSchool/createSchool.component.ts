@@ -1,5 +1,5 @@
 import { Component, Injector, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, NgForm, ValidatorFn, Validators } from '@angular/forms';
 import { CreateSchoolModel } from 'src/root/interfaces/school/createSchoolModel';
 import { SchoolService } from 'src/root/service/school.service';
 import { HttpClient, HttpEventType, HttpHeaders } from "@angular/common/http";
@@ -14,6 +14,8 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { SharePostComponent } from '../../sharePost/sharePost.component';
 import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
 import { TranslateService } from '@ngx-translate/core';
+import { Dimensions, ImageCroppedEvent, ImageTransform } from 'ngx-image-cropper';
+import { CountryISO, PhoneNumberFormat, SearchCountryField } from 'ngx-intl-tel-input';
 
 export const ownedSchoolResponse =new Subject<{schoolId: string, schoolAvatar : string,schoolName:string,action:string}>(); 
 
@@ -60,6 +62,23 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
   schoolName!:string;
   changeLanguageSubscription!: Subscription;
 
+  imageChangedEvent: any = '';
+  croppedImage: any = '';
+  canvasRotation = 0;
+  rotation = 0;
+  scale = 1;
+  showCropper = false;
+  containWithinAspectRatio = false;
+  transform: ImageTransform = {};
+  selectedImage: any = '';
+  isSelected: boolean = false;
+
+  separateDialCode = false;
+	SearchCountryField = SearchCountryField;
+	CountryISO = CountryISO;
+  PhoneNumberFormat = PhoneNumberFormat;
+	preferredCountries: CountryISO[] = [CountryISO.UnitedStates, CountryISO.UnitedKingdom];
+  selectedCountryISO:any;
   
   constructor(injector: Injector,private translateService: TranslateService,private bsModalService: BsModalService,public messageService:MessageService,private domSanitizer: DomSanitizer,private router: Router,private fb: FormBuilder,schoolService: SchoolService,private http: HttpClient) {
     super(injector);
@@ -68,6 +87,7 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
 
   ngOnInit(): void {
     debugger
+    this.selectedCountryISO = CountryISO.Turkey;
     this.step = 0;
     this.selectedLanguage = localStorage.getItem("selectedLanguage");
     this.translate.use(this.selectedLanguage);
@@ -98,7 +118,8 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
     countryName: this.fb.control('', [Validators.required]),
     specializationId: this.fb.control('', [Validators.required]),
     description: this.fb.control(''),
-    selectedLanguages:this.fb.control('',[Validators.required])
+    selectedLanguages:this.fb.control('',[Validators.required]),
+    phoneNumber: ['', [Validators.required]],
   });
 
   this.createSchoolForm3 = this.fb.group({
@@ -163,9 +184,16 @@ ngOnDestroy(): void {
   }
 
   forwardStep() {
-    
+    debugger
+    var phoneNumber = this.createSchoolForm1.get('phoneNumber')?.value;
+
     this.isStepCompleted = true;
     if (!this.createSchoolForm1.valid) {
+      return;
+    }
+
+    if(phoneNumber.number.length < 10){
+      this.createSchoolForm1.setErrors({ invalidPhoneNumber: true });
       return;
     }
 
@@ -184,6 +212,7 @@ ngOnDestroy(): void {
       else{
         this.fileToUpload.append('schoolName', form1Value.schoolName);
     this.fileToUpload.append('description', form1Value.description);
+    this.fileToUpload.append('phoneNumber', form1Value.phoneNumber.number)
     // this.fileToUpload.append('countryId',form1Value.countryId);
     this.fileToUpload.append('countryName',form1Value.countryName);
     this.fileToUpload.append('specializationId',form1Value.specializationId); 
@@ -208,6 +237,8 @@ ngOnDestroy(): void {
     this.loadingIcon = true;
     var form2Value =this.createSchoolForm2.value;
     this.fileToUpload.append('avatar',this.logoUrl);
+
+    this.fileToUpload.append("avatarImage", this.selectedImage);
 
     this.fileToUpload.append('schoolUrl',JSON.stringify(this.schoolUrl));
     this._schoolService.createSchool(this.fileToUpload).subscribe((response:any) => {
@@ -255,5 +286,82 @@ ngOnDestroy(): void {
     };
     this.bsModalService.show(SharePostComponent,{initialState});
   }
+
+  
+
+  // phoneFormatter(event : Event) {
+  //   debugger
+  //   const phoneNumberControl = this.createSchoolForm1.get('phoneNumber');
+  //   let phoneNumber = phoneNumberControl?.value;
+  
+  //   phoneNumber = phoneNumber.replace(/\D/g, ''); // Remove all non-digit characters
+  
+  //   if (phoneNumber.length > 11) {
+  //     phoneNumber = phoneNumber.substr(0, 11);
+  //   }
+  
+  //   // Format the phone number
+  //   if (phoneNumber.length >= 1) {
+  //     phoneNumber = `+${phoneNumber}`;
+  //   }
+  //   if (phoneNumber.length >= 3) {
+  //     phoneNumber = `${phoneNumber.substr(0, 3)} (${phoneNumber.substr(3)}`;
+  //   }
+  //   if (phoneNumber.length >= 7) {
+  //     phoneNumber = `${phoneNumber.substr(0, 7)}) ${phoneNumber.substr(7)}`;
+  //   }
+  //   if (phoneNumber.length >= 12) {
+  //     phoneNumber = `${phoneNumber.substr(0, 12)} ${phoneNumber.substr(12)}`;
+  //   }
+  
+  //   phoneNumberControl?.setValue(phoneNumber);
+  
+  //   // Remove parentheses and space when backspace is pressed
+  //   if (phoneNumber.length > 0 && phoneNumber.length < 3) {
+  //     phoneNumberControl?.setValue(phoneNumber.replace(/[\s()-]/g, ''));
+  //   }
+  //   if (phoneNumber.length >= 3 && phoneNumber.length < 7) {
+  //     phoneNumberControl?.setValue(phoneNumber.replace(/[\s)]/g, ''));
+  //   }
+  //   if (phoneNumber.length >= 7 && phoneNumber.length < 12) {
+  //     phoneNumberControl?.setValue(phoneNumber.replace(/[\s]/g, ''));
+  //   }
+  // }
+
+  imageCropped(event: ImageCroppedEvent) {
+    debugger
+    this.selectedImage = event.blob;
+    this.croppedImage = this.domSanitizer.bypassSecurityTrustResourceUrl(
+      event.objectUrl!
+    );
+  }
+  
+  imageLoaded() {
+    this.showCropper = true;
+    console.log('Image loaded');
+  }
+  
+  cropperReady(sourceImageDimensions: Dimensions) {
+    console.log('Cropper ready', sourceImageDimensions);
+  }
+  
+  loadImageFailed() {
+    console.log('Load failed');
+  }
+  
+  onFileChange(event: any): void {
+    debugger
+    this.isSelected = true;
+    this.imageChangedEvent = event;
+  }
+
+  changeCountryIsoCode(event:any){
+    debugger
+    var countryName = event.value;
+    this.selectedCountryISO = CountryISO[countryName as keyof typeof CountryISO];
+
+  }
+  
+  
   
 }

@@ -24,5 +24,6 @@ namespace LMS.Common.ViewModels.School
         public string? Description { get; set; }
         public UserViewModel? User { get; set; }
         public string? CountryName { get; set; }
+        public string? PhoneNumber { get; set; }
     }
 }

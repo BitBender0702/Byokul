@@ -22,7 +22,7 @@ import { CourseService } from 'src/root/service/course.service';
 import { ClassService } from 'src/root/service/class.service';
 import { ChatService } from 'src/root/service/chatService';
 import { CommentViewModel } from 'src/root/interfaces/chat/commentViewModel';
-import { SignalrService } from 'src/root/service/signalr.service';
+import { SignalrService, commentLikeResponse, commentResponse } from 'src/root/service/signalr.service';
 import { PostView } from 'src/root/interfaces/post/postView';
 
 export const savedReelResponse =new Subject<{isReelSaved:boolean,id:string}>();
@@ -141,6 +141,25 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
         this.InitializeLikeUnlikePost();
         this.InitializePostView();
         this.gender = localStorage.getItem("gender")??'';
+
+        commentResponse.subscribe(response => {
+          var comment: any[] = this.reels.post.comments;
+          var commentObj = {id:response.id,content:response.message,likeCount:0,isCommentLikedByCurrentUser:false,userAvatar:response.senderAvatar,userName:response.userName,userId:response.userId};
+          comment.push(commentObj);
+          this.cd.detectChanges();
+          this.groupChatList.nativeElement.scrollTop = this.groupChatList.nativeElement.scrollHeight;
+        });
+
+        commentLikeResponse.subscribe(response => {
+          var comments: any[] = this.reels.post.comments;
+          var reqComment = comments.find(x => x.id == response.commentId);
+          if(response.isLike){
+            reqComment.likeCount = reqComment.likeCount + 1;
+          }
+          else{
+            reqComment.likeCount = reqComment.likeCount - 1;
+          }
+        });
      }
 
      getReelsByUser(userId:string){
@@ -530,5 +549,9 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
         createdOn:new Date(),
         userName:''
        };
+    }
+
+    hideCommentModal(){
+      this.bsModalService.hide();
     }
 }

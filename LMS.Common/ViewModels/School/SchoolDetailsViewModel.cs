@@ -46,6 +46,8 @@ namespace LMS.Common.ViewModels.School
         public int NoOfAppliedClassFilters { get; set; }
         public int NoOfAppliedCourseFilters { get; set; }
         public bool? IsDisableByOwner { get; set; }
+        public string? PhoneNumber { get; set; }
+
 
     }
 }

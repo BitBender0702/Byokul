@@ -115,6 +115,7 @@ namespace LMS.Services
                 SpecializationId = schoolViewModel.SpecializationId,
                 CountryName = schoolViewModel.CountryName,
                 SchoolUrl = schoolViewModel.SchoolUrl,
+                PhoneNumber = schoolViewModel.PhoneNumber
 
             };
 
@@ -281,6 +282,7 @@ namespace LMS.Services
             school.AccessibilityId = schoolUpdateViewModel.AccessibilityId;
             school.Description = schoolUpdateViewModel.Description;
             school.CountryName = schoolUpdateViewModel.CountryName;
+            school.PhoneNumber = schoolUpdateViewModel.PhoneNumber;
 
             _schoolRepository.Update(school);
             _schoolRepository.Save();
@@ -1468,6 +1470,20 @@ namespace LMS.Services
             return false;
 
 
+
+        }
+
+        public async Task<IEnumerable<GlobalSearchViewModel>> SchoolsGlobalSearch(string searchString, int pageNumber, int pageSize)
+        {
+            var schools = await _schoolRepository.GetAll().Where(x => x.SchoolName.Contains(searchString)).Select(x => new GlobalSearchViewModel
+            {
+                Id = x.SchoolId,
+                Name = x.SchoolName,
+                Type = (int)PostAuthorTypeEnum.School,
+                Avatar = x.Avatar
+            }).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            return schools;
 
         }
 

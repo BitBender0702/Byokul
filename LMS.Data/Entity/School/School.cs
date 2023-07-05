@@ -29,5 +29,6 @@ namespace LMS.Data.Entity
         public bool IsBan { get; set; }
         public string? CountryName { get; set; }
         public bool? IsDisableByOwner { get; set; }
+        public string? PhoneNumber { get; set; }
     }
 }

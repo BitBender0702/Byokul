@@ -143,4 +143,10 @@ export class ClassService{
         return this.http.post(`${this.apiUrl}/class/enableDisableClass`+ '?classId=' + classId,'',{headers: this.headers});
     }
 
+    classAndCoursesGlobalSearch(searchString:string,pageNumber:number,pageSize:number){
+        let queryParams = new HttpParams().append("searchString",searchString).append("pageNumber",pageNumber).append("pageSize",pageSize);
+        return this.http.get(`${this.apiUrl}/class/classAndCoursesGlobalSearch`, {params:queryParams,headers: this.headers}
+        );
+    }
+
 }

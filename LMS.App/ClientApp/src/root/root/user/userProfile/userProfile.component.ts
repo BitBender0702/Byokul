@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectorRef, Component, ElementRef, HostListener, Injector, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, HostListener, Injector, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { DomSanitizer, Meta, Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
@@ -11,7 +11,7 @@ import { UserService } from 'src/root/service/user.service';
 import { MultilingualComponent, changeLanguage } from '../../sharedModule/Multilingual/multilingual.component';
 
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
-import { BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { addPostResponse, CreatePostComponent } from '../../createPost/createPost.component';
 import { FollowUnFollowEnum } from 'src/root/Enums/FollowUnFollowEnum';
 import { FollowUnfollow } from 'src/root/interfaces/FollowUnfollow';
@@ -45,6 +45,7 @@ import { Turkish } from 'flatpickr/dist/l10n/tr';
 import { DatePipe } from '@angular/common';
 import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
 import { savedReelResponse } from '../../reelsSlider/reelsSlider.component';
+import { Dimensions, ImageCroppedEvent, ImageTransform } from 'ngx-image-cropper';
 export const userImageResponse =new Subject<{userAvatar : string,gender : number}>();  
 export const chatResponse =new Subject<{receiverId : string , type: string,chatTypeId:string}>();  
 
@@ -186,6 +187,21 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
     countries:any;
     cities:any;
     requiredCountry:any;
+
+
+    imageChangedEvent: any = '';
+    croppedImage: any = '';
+    canvasRotation = 0;
+    rotation = 0;
+    scale = 1;
+    showCropper = false;
+    containWithinAspectRatio = false;
+    transform: ImageTransform = {};
+    selectedImage: any = '';
+    isSelected: boolean = false;
+    cropModalRef!: BsModalRef;
+    @ViewChild('hiddenButton') hiddenButtonRef!: ElementRef;
+
 
 
     constructor(injector: Injector,private translateService: TranslateService,private titleService:Title,private meta: Meta, private datePipe: DatePipe,authService:AuthService,signalrservice:SignalrService,public messageService:MessageService, private bsModalService: BsModalService,userService: UserService,postService: PostService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,private cd: ChangeDetectorRef,private schoolService:SchoolService) { 
@@ -848,6 +864,7 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
   }
 
   updateUser(){
+    debugger
     this.isSubmitted=true;
     if (!this.editUserForm.valid) {
       return;
@@ -857,6 +874,7 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
       this.fileToUpload.append('avatar', this.userAvatar);
 
     }
+    this.fileToUpload.append("avatarImage", this.selectedImage);
 
     this.updateUserDetails=this.editUserForm.value;
     this.fileToUpload.append('id', this.user.id);
@@ -992,10 +1010,11 @@ back(): void {
   window.history.back();
 }
 
-openPostModal(): void {
+openPostModal(isLiveTabOpen?:boolean): void {
   const initialState = {
     userId: this.user.id,
-    from: "user"
+    from: "user",
+    isLiveTabOpen: isLiveTabOpen
   };
     this.bsModalService.show(CreatePostComponent,{initialState});
 }
@@ -1621,6 +1640,47 @@ getCityByCountry(event:any){
     this.cities = response;
     // this.editUserForm.get('city')?.setValue('');
   });
+}
+
+imageCropped(event: ImageCroppedEvent) {
+  debugger
+  this.selectedImage = event.blob;
+  this.croppedImage = this.domSanitizer.bypassSecurityTrustResourceUrl(
+    event.objectUrl!
+  );
+}
+
+imageLoaded() {
+  this.showCropper = true;
+  console.log('Image loaded');
+}
+
+cropperReady(sourceImageDimensions: Dimensions) {
+  console.log('Cropper ready', sourceImageDimensions);
+}
+
+loadImageFailed() {
+  console.log('Load failed');
+}
+
+onFileChange(event: any): void {
+  debugger
+  this.isSelected = true;
+  this.imageChangedEvent = event;
+  this.hiddenButtonRef.nativeElement.click();
+}
+
+cropModalOpen(template: TemplateRef<any>) {
+  this.cropModalRef = this.bsModalService.show(template);
+}
+
+closeCropModal(){
+  this.cropModalRef.hide();
+}
+
+applyCropimage(){
+  this.uploadImage = this.croppedImage;
+  this.cropModalRef.hide();
 }
 
 }

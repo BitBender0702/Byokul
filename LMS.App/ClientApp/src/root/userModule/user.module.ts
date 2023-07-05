@@ -134,7 +134,7 @@ const routes: Routes = [
     path: 'fileStorage/:id/:ownerId/:type',component:FileStorageComponent, canActivate: [AuthGuard]
   },
   {
-    path: 'globalSearch/:searchString',component:GlobalSearchComponent, canActivate: [AuthGuard]
+    path: 'globalSearch/:searchString/:type',component:GlobalSearchComponent, canActivate: [AuthGuard]
   },
   {
     path: 'studentList/:id/:type',component:StudentListComponent, canActivate: [AuthGuard]

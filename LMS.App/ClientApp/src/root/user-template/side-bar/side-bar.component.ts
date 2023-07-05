@@ -55,6 +55,7 @@ export class SideBarComponent extends MultilingualComponent implements OnInit {
     this.translate.use(this.selectedLanguage ?? '');
     this._userService.getSidebarInfo().subscribe((response) => {
       this.sidebarInfo = response;
+      this.cd.detectChanges();
       this.loadingIcon = false;
       this.isDataLoaded = true;
     });

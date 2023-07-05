@@ -423,10 +423,10 @@
   "Most Viewed": "En çok görüntülenen",
   "Top Rated": "En Çok Oy Alan",
   "ChoosePdfFile": "PDF dosya seçin veya",
-  "PrivacyPolicy": "Gizlilik Politikası",
+  "PrivacyPolicy": "Gizlilik Politikası ve KVKK",
   "AboutUs": "Hakkımızda",
-  "Contact": "Temas etmek",
-  "Delivery&Return": "Teslimat & İade",
+  "Contact": "İletişim",
+  "Delivery&Return": "Teslimat ve İade",
   "DistanceSalesAgreement": "Mesafeli Satış Sözleşmesi",
   "AttachFile": "Dosya eki",
   "ProfileUpdatedSuccessfully": "Profil başarıyla güncellendi",
@@ -466,7 +466,18 @@
   "June": "abc turkish",
   "ChooseThumbnail": "Küçük resmi seçin veya",
   "CopiedToClipboard": "Panoya kopyalandı",
-  "CreateSchools": "okullar oluşturmak"
+  "CreateSchools": "okullar oluşturmak",
+
+  "TermsOfService": "Kullanım Şartları",
+  "DistanceSalesAgreementForSchools": "Mesafeli Satış Sözleşmesi (Okul)",
+  "DistanceSalesAgreementForStudents": "Mesafeli Satış Sözleşmesi (Öğrenci)",
+  "GoLive": "Go Live",
+  "PhoneNumber": "Phone Number",
+  "StateOrProvince": "Eyalet/İl",
+  "VideoDurationExceed": "You can not upload a reel longer than 3 minutes",
+  "PhoneNumberRequired": "Phone number is required",
+  "InValidPhoneNumber": "Phone number is invalid"
+
 
 
 

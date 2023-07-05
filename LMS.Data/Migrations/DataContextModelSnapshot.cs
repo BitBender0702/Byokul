@@ -1350,6 +1350,9 @@ namespace LMS.Data.Migrations
                     b.Property<bool>("IsVarified")
                         .HasColumnType("bit");
 
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("SchoolEmail")
                         .HasColumnType("nvarchar(max)");
 

@@ -330,6 +330,14 @@ namespace LMS.App.Controllers
             return Ok(reponse);
         }
 
+        [Route("schoolsGlobalSearch")]
+        [HttpGet]
+        public async Task<IActionResult> SchoolsGlobalSearch(string searchString, int pageNumber, int pageSize)
+        {
+            var user = await _schoolService.SchoolsGlobalSearch(searchString, pageNumber, pageSize);
+            return Ok(user);
+        }
+
 
     }
 }

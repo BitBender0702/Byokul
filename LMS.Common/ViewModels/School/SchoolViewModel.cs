@@ -37,6 +37,8 @@ namespace LMS.Common.ViewModels.School
         public bool? IsDisableByOwner { get; set; }
         public Guid? ClassStudentId { get; set; }
         public Guid? CourseStudentId { get; set; }
+        public string? PhoneNumber { get; set; }
+
 
 
     }

@@ -9,6 +9,7 @@ import {
   OnDestroy,
   OnInit,
   Renderer2,
+  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
@@ -31,7 +32,7 @@ import {
 
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { FollowUnfollow } from 'src/root/interfaces/FollowUnfollow';
 import { FollowUnFollowEnum } from 'src/root/Enums/FollowUnFollowEnum';
 import { PostService } from 'src/root/service/post.service';
@@ -63,6 +64,8 @@ import { ownedCourseResponse } from '../../course/createCourse/createCourse.comp
 import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
 import { TranslateService } from '@ngx-translate/core';
 import { UserService } from 'src/root/service/user.service';
+import { Dimensions, ImageCroppedEvent, ImageTransform } from 'ngx-image-cropper';
+import { CountryISO, PhoneNumberFormat, SearchCountryField } from 'ngx-intl-tel-input';
 
 export const deleteSchoolResponse =new BehaviorSubject <string>('');  
 
@@ -159,6 +162,13 @@ export class SchoolProfileComponent
   filteredAttachments:any[] = [];
   isOnInitInitialize:boolean = false;
   schoolAvatar:string = '';
+
+  separateDialCode = false;
+	SearchCountryField = SearchCountryField;
+	CountryISO = CountryISO;
+  PhoneNumberFormat = PhoneNumberFormat;
+	preferredCountries: CountryISO[] = [CountryISO.UnitedStates, CountryISO.UnitedKingdom];
+  selectedCountryISO:any;
   
 
   @ViewChild('closeEditModal') closeEditModal!: ElementRef;
@@ -200,6 +210,19 @@ export class SchoolProfileComponent
   requiredCountry:any;
   countries:any;
   iseditDataLoaded!:boolean;
+  
+  imageChangedEvent: any = '';
+  croppedImage: any = '';
+  canvasRotation = 0;
+  rotation = 0;
+  scale = 1;
+  showCropper = false;
+  containWithinAspectRatio = false;
+  transform: ImageTransform = {};
+  selectedImage: any = '';
+  isSelected: boolean = false;
+  cropModalRef!: BsModalRef;
+  @ViewChild('hiddenButton') hiddenButtonRef!: ElementRef;
   
 
   constructor(
@@ -343,7 +366,8 @@ export class SchoolProfileComponent
       schoolEmail: this.fb.control(''),
       description: this.fb.control(''),
       owner: this.fb.control(''),
-      country: this.fb.control('')
+      country: this.fb.control(''),
+      phoneNumber: this.fb.control(''),
     });
 
     this.languageForm = this.fb.group({
@@ -571,7 +595,7 @@ export class SchoolProfileComponent
   }
 
   addDescriptionMetaTag(description:string){
-    debugger
+   debugger
     const existingTag = this.meta.getTag('name="description"');
     if (existingTag) {
       this.meta.updateTag({ name: 'description', content: description });
@@ -739,6 +763,8 @@ export class SchoolProfileComponent
       founded = founded.substring(0, founded.indexOf('T'));
     }
 
+    this.selectedCountryISO = CountryISO[this.requiredCountry.countryName as keyof typeof CountryISO];
+
     this.editSchoolForm = this.fb.group(
       {
         schoolName: this.fb.control(this.editSchool.schoolName, [
@@ -754,7 +780,8 @@ export class SchoolProfileComponent
         ]),
         description: this.fb.control(this.editSchool.description ?? ''),
         owner: this.fb.control(this.editSchool.user.email),
-        country: this.fb.control(this.requiredCountry.countryName)
+        country: this.fb.control(this.requiredCountry.countryName),
+        phoneNumber: [this.editSchool.phoneNumber, [Validators.required]]
       },
       { validator: this.dateLessThan('founded', currentDate) }
     );
@@ -779,8 +806,15 @@ export class SchoolProfileComponent
   resetImage() {}
   updateSchool() {
     debugger
+    var phoneNumber = this.editSchoolForm.get('phoneNumber')?.value;
+
     this.isSubmitted = true;
     if (!this.editSchoolForm.valid) {
+      return;
+    }
+
+    if(phoneNumber.number.length < 10){
+      this.editSchoolForm.setErrors({ invalidPhoneNumber: true });
       return;
     }
 
@@ -788,6 +822,8 @@ export class SchoolProfileComponent
     if (!this.uploadImage) {
       this.fileToUpload.append('avatar', this.schoolAvatar);
     }
+
+    this.fileToUpload.append("avatarImage", this.selectedImage);
 
     this.updateSchoolDetails = this.editSchoolForm.value;
     this.fileToUpload.append('schoolId', this.school.schoolId);
@@ -810,6 +846,7 @@ export class SchoolProfileComponent
       this.updateSchoolDetails.description
     );
     this.fileToUpload.append('countryName',this.updateSchoolDetails.country);
+    this.fileToUpload.append('phoneNumber', phoneNumber.number)
 
     this._schoolService
       .editSchool(this.fileToUpload)
@@ -1108,10 +1145,11 @@ export class SchoolProfileComponent
     this.isOpenModal = true;
   }
 
-  openPostModal(): void {
+  openPostModal(isLiveTabOpen?:boolean): void {
     const initialState = {
       schoolId: this.school.schoolId,
       from: 'school',
+      isLiveTabOpen: isLiveTabOpen
     };
     this.bsModalService.show(CreatePostComponent, { initialState, backdrop: 'static' });
   }
@@ -1660,6 +1698,78 @@ export class SchoolProfileComponent
       };
     }
     this.bsModalService.show(SharePostComponent,{initialState});
+  }
+
+  // phoneFormatter() {
+  //   const phoneNumberControl = this.editSchoolForm.get('phoneNumber');
+  //   let phoneNumber = phoneNumberControl?.value;
+
+  //   if (phoneNumber.startsWith('+')) {
+  //     phoneNumber = '+' + phoneNumber.substr(1).replace(/\D/g, '');
+  //   } else {
+  //     phoneNumber = phoneNumber.replace(/\D/g, '');
+  //   }
+
+  //   if (phoneNumber.length > 11) {
+  //     phoneNumber = phoneNumber.substr(0, 11);
+  //   }
+
+  //   if (phoneNumber.length > 3) {
+  //     phoneNumber = `(${phoneNumber.substr(0, 3)}) ${phoneNumber.substr(3)}`;
+  //   }
+  //   if (phoneNumber.length > 9) {
+  //     phoneNumber = `${phoneNumber.substr(0, 9)}-${phoneNumber.substr(9)}`;
+  //   }
+
+  //   phoneNumberControl?.setValue(phoneNumber);
+  // }
+
+  imageCropped(event: ImageCroppedEvent) {
+    debugger
+    this.selectedImage = event.blob;
+    this.croppedImage = this.domSanitizer.bypassSecurityTrustResourceUrl(
+      event.objectUrl!
+    );
+  }
+  
+  imageLoaded() {
+    this.showCropper = true;
+    console.log('Image loaded');
+  }
+  
+  cropperReady(sourceImageDimensions: Dimensions) {
+    console.log('Cropper ready', sourceImageDimensions);
+  }
+  
+  loadImageFailed() {
+    console.log('Load failed');
+  }
+  
+  onFileChange(event: any): void {
+    debugger
+    this.isSelected = true;
+    this.imageChangedEvent = event;
+    this.hiddenButtonRef.nativeElement.click();
+  }
+  
+  cropModalOpen(template: TemplateRef<any>) {
+    this.cropModalRef = this.bsModalService.show(template);
+  }
+  
+  closeCropModal(){
+    this.cropModalRef.hide();
+  }
+  
+  applyCropimage(){
+    this.uploadImage = this.croppedImage;
+    this.cropModalRef.hide();
+  }
+
+  changeCountryIsoCode(event:any){
+    debugger
+    var countryName = event.value;
+    this.selectedCountryISO = CountryISO[countryName as keyof typeof CountryISO];
+
   }
 
 }

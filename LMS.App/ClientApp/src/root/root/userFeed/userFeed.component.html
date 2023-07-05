@@ -1431,13 +1431,54 @@
 
   <ng-template #globalSearchResults>
     <ul *ngIf="showSearchResults" class="search-results">
-      <ng-container *ngFor="let item of globalSearchResult">
+      <div *ngFor="let key of getObjectKeys(globalSearchResult)">
+        <span *ngIf="key == 'ClassAndCourse'" class="fw_600">{{ 'Classes & Courses'}}</span>
+        <span *ngIf="key == 'User'" class="fw_600">{{ 'People'}}</span>
+        <span *ngIf="key == 'School'" class="fw_600">{{ 'Schools'}}</span>
+        <br>
+        <ng-container *ngFor="let item of globalSearchResult[key]">
+          <li *ngIf="item.type == 1" class="search-results__item">
+            <div class="d-flex align-items-center justify-content-between">
+              <span class="followers-name font_16 text_sec1">
+                <img [src]="item.avatar" class="rounded-circle me-2 img_style" style="max-height: 30px" />
+                <a class="routeLink" [routerLink]="['/profile/school', item.name]">{{ item.name }}</a></span>
+            </div>
+          </li>
+          <li *ngIf="item.type == 2" class="search-results__item">
+            <div class="d-flex align-items-center justify-content-between">
+              <span class="followers-name font_16 text_sec1">
+                <img [src]="item.avatar" class="rounded-circle me-2 img_style" style="max-height: 30px" />
+                <a class="routeLink" [routerLink]="['/profile/class', item.schoolName, item.name]">{{ item.name
+                  }}</a></span>
+            </div>
+          </li>
+          <li *ngIf="item.type == 3" class="search-results__item">
+            <div class="d-flex align-items-center justify-content-between">
+              <span class="followers-name font_16 text_sec1">
+                <img [src]="item.avatar" class="rounded-circle me-2 img_style" style="max-height: 30px" />
+                <a class="routeLink" [routerLink]="['/profile/course', item.schoolName, item.name]">{{ item.name
+                  }}</a></span>
+            </div>
+          </li>
+          <li *ngIf="item.type == 4" class="search-results__item">
+            <div class="d-flex align-items-center justify-content-between">
+              <span class="followers-name font_16 text_sec1">
+                <img [src]="item.avatar" class="rounded-circle me-2 img_style" style="max-height: 30px" />
+                <a class="routeLink" [routerLink]="['/user/userProfile', item.id]">{{ item.name }}</a></span>
+            </div>
+          </li>
+        </ng-container>
+        <a *ngIf="key == 'User' && globalSearchResult[key].length == 5" [routerLink]="['/user/globalSearch', searchString,1]" class="show-more-button show_more">{{ "ShowMore" | translate }}</a>
+        <a *ngIf="key == 'School' && globalSearchResult[key].length == 5" [routerLink]="['/user/globalSearch', searchString,2]" class="show-more-button show_more">{{ "ShowMore" | translate }}</a>
+        <a *ngIf="key == 'ClassAndCourse' && globalSearchResult[key].length == 5" [routerLink]="['/user/globalSearch', searchString,3]" class="show-more-button show_more">{{ "ShowMore" | translate }}</a>
+        <hr>
+      </div>
+      <!-- <ng-container *ngFor="let item of globalSearchResult">
         <li *ngIf="item.type == 4" class="search-results__item">
           <div class="d-flex align-items-center justify-content-between">
             <span class="followers-name font_16 text_sec1 fw_600">
               <img [src]="item.avatar" class="rounded-circle me-2 img_style" style="max-height: 30px" />
               <a class="routeLink" [routerLink]="['/user/userProfile', item.id]">{{ item.name }}</a></span>
-              <!-- <span>User</span> -->
           </div>
         </li>
         <li *ngIf="item.type == 1" class="search-results__item">
@@ -1463,13 +1504,13 @@
                 }}</a></span>
           </div>
         </li>
-      </ng-container>
-      <li *ngIf="
+      </ng-container> -->
+      <!-- <li *ngIf="
           showSearchResults && !searchNotFound && globalSearchResult.length > 4
         " class="search-results__item">
         <a class="btn custom-btn primary_btn w-100" [routerLink]="['/user/globalSearch', searchString]">{{ "ShowMore" |
           translate }}</a>
-      </li>
+      </li> -->
       <li *ngIf="searchNotFound">
         {{ "NoReultsFound" | translate }}
       </li>

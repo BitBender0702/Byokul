@@ -784,6 +784,7 @@ this.addChatAttachments = {
     getChatUsersList(senderId:string){
       this.loadingIcon = true;
       this._chatService.getAllChatUsers(senderId,this.chatHeadsPageNumber,this.searchString).subscribe((response) => {
+        debugger
         this.allChatUsers = response;
         this.loadingIcon = false;
         this.isDataLoaded = true;

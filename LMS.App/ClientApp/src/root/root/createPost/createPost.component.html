@@ -20,7 +20,7 @@
             <li class="nav-item p-0">
               <button
                 *ngIf="courseId == undefined"
-                class="nav-link post-attch-btn d-inline-flex justify-content-center align-items-center"
+                [ngClass]="isLiveTabopen ? 'nav-link active post-attch-btn d-inline-flex justify-content-center align-items-center': 'nav-link post-attch-btn d-inline-flex justify-content-center align-items-center'"
                 id="live-tab"
                 data-bs-toggle="tab"
                 data-bs-target="#live-tab-pane"
@@ -41,7 +41,7 @@
             <li class="nav-item p-0">
               <button
                 (click)="postTab()"
-                class="nav-link active post-attch-btn d-inline-flex justify-content-center align-items-center"
+                [ngClass]="!isLiveTabopen ? 'nav-link active post-attch-btn d-inline-flex justify-content-center align-items-center': 'nav-link post-attch-btn d-inline-flex justify-content-center align-items-center'"
                 id="Post-tab"
                 data-bs-toggle="tab"
                 data-bs-target="#Post-tab-pane"
@@ -101,7 +101,7 @@
       <div class="modal-body">
         <div class="tab-content" id="myTabContent">
           <div
-            class="tab-pane fade"
+          [ngClass]="isLiveTabopen ? 'tab-pane fade show active': 'tab-pane fade'"
             id="live-tab-pane"
             role="tabpanel"
             aria-labelledby="live-tab"
@@ -506,7 +506,7 @@
             </form>
           </div>
           <div
-            class="tab-pane fade show active"
+          [ngClass]="!isLiveTabopen ? 'tab-pane fade show active': 'tab-pane fade'"
             id="Post-tab-pane"
             role="tabpanel"
             aria-labelledby="Post-tab"
@@ -943,14 +943,20 @@
                 >
                   {{ "SelectAtleastOneVideo" | translate }}
                 </small>
+                 <!-- <small
+                  class="p-error"
+                  style="color: orange; margin-left: 200px"
+                  *ngIf="isSubmitted && isVideoDurationExceed">
+                  {{ "VideoDurationExceed" | translate }}
+                </small> -->
               </div>
               <hr class="mb-0 sepearator mx-0 mt-3 opacity-100" />
-              <div
+              <!-- <div
                 *ngIf="
                   isSubmitted && createReelForm.valid && isShowingProgressBar
                 "
-              >
-                <div class="progress">
+              > -->
+                <!-- <div class="progress">
                   <div
                     class="progress-bar bg-success"
                     role="progressbar"
@@ -959,8 +965,8 @@
                     {{ progressBarValue }}%
                   </div>
                   <br />
-                </div>
-              </div>
+                </div> -->
+              <!-- </div> -->
 
               <div
                 class="teacher-tags tag-box hashtag_post mt-4 mb-2 hover-tags"
@@ -976,6 +982,13 @@
                     /></button
                 ></span>
               </div>
+              <small
+              class="p-error"
+              style="color: orange; margin-left: 148px"
+              *ngIf="isSubmitted && isVideoDurationExceed"
+            >
+            {{ "VideoDurationExceed" | translate }}
+            </small>
 
               <div
                 class="modal-footer steps_btns d-flex align-items-center justify-content-center flex-sm-nowrap border-0 pb-0 cr-postfooter pt-0 mt-3 px-0"

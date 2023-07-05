@@ -177,4 +177,10 @@ export class SchoolService{
         return this.http.post(`${this.apiUrl}/school/banFollower`,null, {params:queryParams,headers: this.headers});
     }
 
+    schoolsGlobalSearch(searchString:string,pageNumber:number,pageSize:number){
+        let queryParams = new HttpParams().append("searchString",searchString).append("pageNumber",pageNumber).append("pageSize",pageSize);
+        return this.http.get(`${this.apiUrl}/school/schoolsGlobalSearch`, {params:queryParams,headers: this.headers}
+        );
+    }
+
 }

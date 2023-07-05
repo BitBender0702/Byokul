@@ -327,6 +327,14 @@ namespace LMS.App.Controllers
             return Ok(user);
         }
 
+        [Route("usersGlobalSearch")]
+        [HttpGet]
+        public async Task<IActionResult> UsersGlobalSearch(string searchString, int pageNumber, int pageSize)
+        {
+            var user = await _userService.UsersGlobalSearch(searchString, pageNumber, pageSize);
+            return Ok(user);
+        }
+
 
 
     }

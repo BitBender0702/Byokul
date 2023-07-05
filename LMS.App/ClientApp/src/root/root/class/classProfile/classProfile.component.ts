@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, Injector, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, Injector, OnChanges, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { DomSanitizer, Meta, Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -45,6 +45,7 @@ import { Turkish } from 'flatpickr/dist/l10n/tr';
 import flatpickr from 'flatpickr';
 import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
 import { TranslateService } from '@ngx-translate/core';
+import { Dimensions, ImageCroppedEvent, ImageTransform } from 'ngx-image-cropper';
 
 
 export const deleteClassResponse =new BehaviorSubject <string>('');  
@@ -143,6 +144,19 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     deleteReelSubscription!: Subscription;
     generateCertificateSubscription!: Subscription;
 
+    imageChangedEvent: any = '';
+    croppedImage: any = '';
+    canvasRotation = 0;
+    rotation = 0;
+    scale = 1;
+    showCropper = false;
+    containWithinAspectRatio = false;
+    transform: ImageTransform = {};
+    selectedImage: any = '';
+    isSelected: boolean = false;
+    cropModalRef!: BsModalRef;
+    @ViewChild('hiddenButton') hiddenButtonRef!: ElementRef;
+
     minDate:any;
     filteredAttachments:any[] = [];
     public event: EventEmitter<any> = new EventEmitter();
@@ -215,7 +229,8 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     }
   
     ngOnInit(): void {
-      debugger
+
+     debugger
       // this.meta.addTag({ rel: 'canonical', href: 'https://www.byokul.com' });
       if(this._authService.roleUser(RolesEnum.SchoolAdmin)){
         this._authService.loginState$.next(false);
@@ -824,6 +839,8 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
           if(!this.uploadImage){
             this.fileToUpload.append('avatar', this.classAvatar);
           }
+
+          this.fileToUpload.append("avatarImage", this.selectedImage);
       
           this.updateClassDetails=this.editClassForm.value;
           this.schoolName = this.editClassForm.get('schoolName')?.value;
@@ -937,10 +954,11 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
         }
       }
 
-      openPostModal(): void {
+      openPostModal(isLiveTabOpen?:boolean): void {
         const initialState = {
           classId: this.class.classId,
-          from: "class"
+          from: "class",
+          isLiveTabOpen: isLiveTabOpen
         };
         this.bsModalService.show(CreatePostComponent,{initialState});
     }
@@ -1264,5 +1282,46 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       var locale = this.translate.currentLang;
       const formattedDate = this.datePipe.transform(date, 'MMMM d, y','',locale)??'';
       return this.translate.instant(formattedDate);
+    }
+
+    imageCropped(event: ImageCroppedEvent) {
+      debugger
+      this.selectedImage = event.blob;
+      this.croppedImage = this.domSanitizer.bypassSecurityTrustResourceUrl(
+        event.objectUrl!
+      );
+    }
+    
+    imageLoaded() {
+      this.showCropper = true;
+      console.log('Image loaded');
+    }
+    
+    cropperReady(sourceImageDimensions: Dimensions) {
+      console.log('Cropper ready', sourceImageDimensions);
+    }
+    
+    loadImageFailed() {
+      console.log('Load failed');
+    }
+    
+    onFileChange(event: any): void {
+      debugger
+      this.isSelected = true;
+      this.imageChangedEvent = event;
+      this.hiddenButtonRef.nativeElement.click();
+    }
+    
+    cropModalOpen(template: TemplateRef<any>) {
+      this.cropModalRef = this.bsModalService.show(template);
+    }
+    
+    closeCropModal(){
+      this.cropModalRef.hide();
+    }
+    
+    applyCropimage(){
+      this.uploadImage = this.croppedImage;
+      this.cropModalRef.hide();
     }
 }

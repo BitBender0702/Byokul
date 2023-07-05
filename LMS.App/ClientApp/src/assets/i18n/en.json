@@ -469,5 +469,15 @@
   "MessageForwardedSuccessfully": "Message forwarded successfully",
   "June": "abc",
   "CopiedToClipboard": "Copied to clipboard",
-  "CreateSchools": "Create Schools"
+  "CreateSchools": "Create Schools",
+
+  "TermsOfService": "Terms of Service",
+  "DistanceSalesAgreementForSchools": "Distance Sales Agreement for Schools",
+  "DistanceSalesAgreementForStudents": "Distance Sales Agreement for Students",
+  "GoLive": "Go Live",
+  "PhoneNumber": "Phone Number",
+  "StateOrProvince": "State/Province",
+  "VideoDurationExceed": "You can not upload a reel longer than 3 minutes",
+  "PhoneNumberRequired": "Phone number is required",
+  "InValidPhoneNumber": "Phone number is invalid"
 }

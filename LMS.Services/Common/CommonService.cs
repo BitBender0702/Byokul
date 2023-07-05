@@ -48,14 +48,14 @@ namespace LMS.Services.Common
             _logger = logger;
         }
 
-        public async Task<MemoryStream> CompressVideo(string meetingID,string fileName, byte[] videoData)
+        public async Task<MemoryStream> CompressVideo(string fileName, byte[] videoData)
         {
             var path = _webHostEnvironment.ContentRootPath;
-            var tempDirectoryPath = Path.Combine(path, "wwwroot/tmp/");
+            var tempDirectoryPath = Path.Combine(path, "wwwroot/CompressVideoes/");
 
             System.IO.File.WriteAllBytes(tempDirectoryPath + fileName, videoData);
             string ffmpegFileName = "ffmpeg.exe";
-            string compressVid = Path.Combine(tempDirectoryPath, meetingID + "compress.mp4");
+            string compressVid = Path.Combine(tempDirectoryPath + fileName);
 
             try
             {
@@ -66,7 +66,7 @@ namespace LMS.Services.Common
                 psi.CreateNoWindow = false;
                 psi.FileName = ffmpegFileName;
                 psi.WorkingDirectory = Directory.GetCurrentDirectory();
-                psi.Arguments = $" -i {tempDirectoryPath}{fileName} -vcodec libx265 -crf 28 -acodec aac {compressVid}";
+                psi.Arguments = $" -i {tempDirectoryPath}{fileName} -vcodec libx265 -crf 28 -acodec aac {Path.Combine(tempDirectoryPath + Guid.NewGuid().ToString()+ fileName)}";
 
                 var process = new Process
                 {
@@ -84,12 +84,56 @@ namespace LMS.Services.Common
             catch (Exception err)
             {
                 Console.WriteLine("Exception Error: " + err.ToString());
+                throw err;
             }
 
             var byteArray = System.IO.File.ReadAllBytes(compressVid);
             var stream = new MemoryStream(byteArray);
             return stream;
         }
+
+        //public async Task<MemoryStream> CompressVideo(string meetingID,string fileName, byte[] videoData)
+        //{
+        //    var path = _webHostEnvironment.ContentRootPath;
+        //    var tempDirectoryPath = Path.Combine(path, "wwwroot/tmp/");
+
+        //    System.IO.File.WriteAllBytes(tempDirectoryPath + fileName, videoData);
+        //    string ffmpegFileName = "ffmpeg.exe";
+        //    string compressVid = Path.Combine(tempDirectoryPath, meetingID + "compress.mp4");
+
+        //    try
+        //    {
+
+        //        ProcessStartInfo psi = new ProcessStartInfo();
+        //        psi.WindowStyle = ProcessWindowStyle.Hidden;
+        //        psi.UseShellExecute = false;
+        //        psi.CreateNoWindow = false;
+        //        psi.FileName = ffmpegFileName;
+        //        psi.WorkingDirectory = Directory.GetCurrentDirectory();
+        //        psi.Arguments = $" -i {tempDirectoryPath}{fileName} -vcodec libx265 -crf 28 -acodec aac {compressVid}";
+
+        //        var process = new Process
+        //        {
+        //            StartInfo = psi,
+        //            EnableRaisingEvents = true,
+
+        //        };
+        //        process.Exited += (sender, args) =>
+        //        {
+        //            process.Dispose();
+        //        };
+        //        process.Start();
+        //        process.WaitForExit();
+        //    }
+        //    catch (Exception err)
+        //    {
+        //        Console.WriteLine("Exception Error: " + err.ToString());
+        //    }
+
+        //    var byteArray = System.IO.File.ReadAllBytes(compressVid);
+        //    var stream = new MemoryStream(byteArray);
+        //    return stream;
+        //}
 
         public async Task<bool> SendEmail(List<string> to, List<string> cc, List<string> bcc, string subject, string body,string? pdfContent,string? pdfName)
         {

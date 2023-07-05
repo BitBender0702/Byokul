@@ -108,6 +108,7 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
     showSearchResults:boolean = false;
     searchNotFound:boolean = false;
     modalRef!:any;
+    globalSearchField!:string;
 
 
     constructor(injector: Injector,private translateService: TranslateService,private authService:AuthService,private bsModalService: BsModalService,notificationService:NotificationService,postService: PostService,public userService:UserService, public options: ModalOptions,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,public messageService:MessageService,private cd: ChangeDetectorRef) { 
@@ -719,8 +720,45 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
            this.showSearchResults = false;
            if(this.searchString.length >2){
             this._userService.globalSearch(this.searchString,this.globalSearchPageNumber,this.globalSearchPageSize).subscribe((response:any) => {
+              debugger
               this.loadingIcon = false;
-               this.globalSearchResult = response;
+              this.globalSearchResult = {};
+              response.forEach((item:any) => {
+                debugger
+                if(item.type == 4){
+                  this.globalSearchField = "User";
+                }
+                if(item.type == 1){
+                  this.globalSearchField = "School";
+                }
+                if(item.type == 2 || item.type == 3){
+                  this.globalSearchField = "ClassAndCourse";
+                }
+                if (this.globalSearchResult[ this.globalSearchField]) {
+                  if(this.globalSearchResult[this.globalSearchField].length < 5){
+                    this.globalSearchResult[ this.globalSearchField].push(item);
+                  }
+                } else {
+                  this.globalSearchResult[ this.globalSearchField] = [item];
+                }
+              });
+
+              // const originalObject = {
+              //   School: [/* Array of school objects */],
+              //   ClassAndCourse: [/* Array of class and course objects */],
+              //   User: [/* Array of user objects */]
+              // };
+              
+              const reorderedObject = {
+                User: this.globalSearchResult.User,
+                ClassAndCourse: this.globalSearchResult.ClassAndCourse,
+                School: this.globalSearchResult.School
+              };
+
+              var ab = reorderedObject;
+
+              var a = this.globalSearchResult;
+              //  this.globalSearchResult = response;
                this.showSearchResults = true;
                if(response.length == 0){
                 this.searchNotFound = true;
@@ -863,5 +901,13 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
           this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
             this.router.navigateByUrl(currentUrl);
           });
+        }
+
+        getObjectKeys(obj: any): string[] {
+          if(obj != null){
+          console.log(Object.keys(obj));
+          return Object.keys(obj).sort();
+        }
+        return [];
         }
 }

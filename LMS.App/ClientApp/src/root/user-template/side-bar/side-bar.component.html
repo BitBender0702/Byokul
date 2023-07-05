@@ -40,7 +40,7 @@
     <div class="d-flex text-center notification-box justify-content-center">
       <ul class="list-unstyled d-flex align-items-center">
         <li class="d-inline-block">
-          <button
+          <button [routerLink]="['/user/userFeed']"
             type="button"
             class="notification-btn position-relative border-0 bg-transparent"
           >
@@ -205,7 +205,9 @@
                   type="button"
                   data-bs-toggle="collapse"
                   data-bs-target="#collapseOne"
-                  aria-expanded="true"
+                  [ngClass]="{'collapsed': sidebarInfo?.followedSchools?.length > 5}"
+
+        [attr.aria-expanded]="sidebarInfo?.followedSchools?.length <= 5 ? 'true' : 'false'"
                   aria-controls="collapseOne"
                 >
                   <span>{{ "Schools" | translate }} </span>
@@ -213,7 +215,8 @@
               </h2>
               <div
                 id="collapseOne"
-                class="accordion-collapse collapse show"
+                class="accordion-collapse collapse"
+                [ngClass]="{'show': sidebarInfo?.followedSchools?.length <= 5}"
                 aria-labelledby="headingOne"
                 data-bs-parent="#accordionExample"
               >
@@ -254,7 +257,9 @@
                   type="button"
                   data-bs-toggle="collapse"
                   data-bs-target="#collapseTwo"
-                  aria-expanded="true"
+                  [ngClass]="{'collapsed': sidebarInfo?.followedClasses?.length > 5}"
+
+                  [attr.aria-expanded]="sidebarInfo?.followedClasses?.length <= 5 ? 'true' : 'false'"
                   aria-controls="collapseTwo"
                 >
                   <span>{{ "Classes" | translate }} </span>
@@ -263,6 +268,7 @@
               <div
                 id="collapseTwo"
                 class="accordion-collapse collapse"
+                [ngClass]="{'show': sidebarInfo?.followedClasses?.length <= 5}"
                 aria-labelledby="headingTwo"
                 data-bs-parent="#accordionExample"
               >
@@ -308,7 +314,9 @@
                   type="button"
                   data-bs-toggle="collapse"
                   data-bs-target="#collapseThree"
-                  aria-expanded="true"
+                  [ngClass]="{'collapsed': sidebarInfo?.followedCourses?.length > 5}"
+
+                  [attr.aria-expanded]="sidebarInfo?.followedCourses?.length <= 5 ? 'true' : 'false'"   
                   aria-controls="collapseThree"
                 >
                   <span>{{ "Courses" | translate }} </span>
@@ -317,6 +325,7 @@
               <div
                 id="collapseThree"
                 class="accordion-collapse collapse"
+                [ngClass]="{'show': sidebarInfo?.followedCourses?.length <= 5}"
                 aria-labelledby="headingThree"
                 data-bs-parent="#accordionExample"
               >
@@ -372,7 +381,9 @@
                   type="button"
                   data-bs-toggle="collapse"
                   data-bs-target="#collapseOne"
-                  aria-expanded="true"
+                  [ngClass]="{'collapsed': sidebarInfo?.ownedSchools?.length > 5}"
+
+        [attr.aria-expanded]="sidebarInfo?.ownedSchools?.length <= 5 ? 'true' : 'false'"
                   aria-controls="collapseOne"
                 >
                   <span>{{ "Schools" | translate }} </span>
@@ -385,7 +396,9 @@
               </h2>
               <div
                 id="collapseOne"
-                class="accordion-collapse collapse show"
+                class="accordion-collapse collapse"
+                [ngClass]="{'show': sidebarInfo?.ownedSchools?.length <= 5}"
+
                 aria-labelledby="headingOne"
                 data-bs-parent="#accordionExample"
               >
@@ -426,7 +439,9 @@
                   type="button"
                   data-bs-toggle="collapse"
                   data-bs-target="#collapseTwo"
-                  aria-expanded="true"
+                  [ngClass]="{'collapsed': sidebarInfo?.ownedClasses?.length > 5}"
+
+                  [attr.aria-expanded]="sidebarInfo?.ownedClasses?.length <= 5 ? 'true' : 'false'"
                   aria-controls="collapseTwo"
                 >
                   <span>{{ "Classes" | translate }} </span>
@@ -440,6 +455,7 @@
               <div
                 id="collapseTwo"
                 class="accordion-collapse collapse"
+                [ngClass]="{'show': sidebarInfo?.ownedClasses?.length <= 5}"
                 aria-labelledby="headingTwo"
                 data-bs-parent="#accordionExample"
               >
@@ -485,7 +501,8 @@
                   type="button"
                   data-bs-toggle="collapse"
                   data-bs-target="#collapseThree"
-                  aria-expanded="true"
+                  [ngClass]="{'collapsed': sidebarInfo?.ownedCourses?.length > 5}"
+                  [attr.aria-expanded]="sidebarInfo?.ownedCourses?.length <= 5 ? 'true' : 'false'"  
                   aria-controls="collapseThree"
                 >
                   <span>{{ "Courses" | translate }} </span>
@@ -499,6 +516,7 @@
               <div
                 id="collapseThree"
                 class="accordion-collapse collapse"
+                [ngClass]="{'show': sidebarInfo?.ownedCourses?.length <= 5}"
                 aria-labelledby="headingThree"
                 data-bs-parent="#accordionExample"
               >
@@ -583,7 +601,7 @@
             >Türkçe</label
           >
         </div>
-        <div class="language-btn">
+        <!-- <div class="language-btn">
           <input
             [attr.checked]="selectedLanguage == 'sp' ? true : null"
             (click)="switchLanguage('sp')"
@@ -596,17 +614,21 @@
           <label class="btn btn-outline-primary font_12 rounded-8" for="lang4"
             >Spanish</label
           >
-        </div>
+        </div> -->
       </div>
       <div class="footer-menu">
         <div class="footer-menu__menu">
+          <a [routerLink]="['/termsOfServices']" class="footer-menu__menu-item">{{ "TermsOfService" | translate }}</a>
           <a [routerLink]="['/privacyPolicy']" class="footer-menu__menu-item">{{ "PrivacyPolicy" | translate }}</a>
           <a [routerLink]="['/aboutUs']" class="footer-menu__menu-item">{{ "AboutUs" | translate }}</a>
-          <a href="#" class="footer-menu__menu-item">{{ "Contact" | translate }}</a>
-          <a href="#" class="footer-menu__menu-item">{{ "Delivery&Return" | translate }}</a>
-          <a href="#" class="footer-menu__menu-item"
-            >{{ "DistanceSalesAgreement" | translate }}</a
+          <a [routerLink]="['/contact']" class="footer-menu__menu-item">{{ "Contact" | translate }}</a>
+          <a [routerLink]="['/deliveryAndReturn']" class="footer-menu__menu-item">{{ "Delivery&Return" | translate }}</a>
+          <a [routerLink]="['/distanceSalesAgreementForSchools']" class="footer-menu__menu-item"
+            >{{ "DistanceSalesAgreementForSchools" | translate }}</a
           >
+          <a [routerLink]="['/distanceSalesAgreementForStudents']" class="footer-menu__menu-item"
+          >{{ "DistanceSalesAgreementForStudents" | translate }}</a
+        >
         </div>
         <img src="../../../assets/images/logo_band_colored.svg" />
       </div>

@@ -121,6 +121,8 @@ export class CreatePostComponent implements OnInit,OnDestroy {
   isThumbnailUpload: boolean = false;
   isVideoUpload: boolean = false;
   from!:any;
+  isLiveTabopen:boolean = false;
+  isVideoDurationExceed:boolean = false;
 
   @Output() onClose: EventEmitter<any> = new EventEmitter<any>();
 
@@ -131,8 +133,14 @@ export class CreatePostComponent implements OnInit,OnDestroy {
   }
 
   ngOnInit(): void {
+    debugger
     var initialValue = this.options.initialState;
     this.from = initialValue?.from;
+    var isLiveTabopen  = initialValue?.isLiveTabOpen;
+    if(isLiveTabopen == true){
+      this.isLiveTabopen = true;
+    }
+
     if(initialValue?.from == "school"){
     this.schoolId = initialValue.schoolId;
     this._postService.getSchool(this.schoolId).subscribe((response) => {
@@ -427,6 +435,7 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
 }
 
  handleReels(event:any){
+  debugger
   this.postToUpload.append('uploadVideos', event.target.files[0]);
   this.reel = event.target.files[0];
   const videoUrl = URL.createObjectURL(this.reel);
@@ -437,11 +446,36 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
     this.uploadReel = this.videoObject; 
     this.initializeVideoObject();
   });
+  this.validateVideoDuration(videoUrl, this.reel);
+
  }
+
+ validateVideoDuration(videoUrl: string, reel: File) {
+  const videoElement = document.createElement('video');
+  videoElement.src = videoUrl;
+
+  videoElement.addEventListener('loadedmetadata', () => {
+    debugger
+    if (videoElement.duration > 180) {
+      this.isVideoDurationExceed = true;
+      // Video duration is greater than 3 minutes
+      // Handle the validation logic here
+      console.log('Video duration exceeds 3 minutes');
+      // Reset the input value to clear the selected file
+      // const inputElement: HTMLInputElement = document.querySelector('input[type="file"]');
+      // if (inputElement) {
+      //   inputElement.value = '';
+      // }
+    } else {
+      this.isVideoDurationExceed = false;
+    }
+  });
+}
 
  removeUploadReel(uploadReel:any){
   this.postToUpload.set('uploadVideos','');
   this.uploadReel = null; 
+  this.isVideoDurationExceed = false;
 
  }
 
@@ -542,8 +576,13 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
    }
 
    saveReels(){
+    debugger
     this.isSubmitted = true;
     this.isShowingProgressBar = true;
+    if(this.isVideoDurationExceed){
+      return;
+    }
+
     if (!this.createReelForm.valid) {
       this.isShowingProgressBar = false;
       return;
@@ -555,6 +594,8 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
         return;
      }
     }
+
+    
     this.loadingIcon = true;
     var reel =this.createReelForm.value;
     this.postFrom();

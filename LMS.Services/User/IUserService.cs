@@ -34,6 +34,8 @@ namespace LMS.Services
         Task DeleteSchoolStudent(Guid schoolId, string userId);
         Task ReportFollower(ReportFollowerViewModel model);
         Task<IEnumerable<GlobalSearchViewModel>> GlobalSearch(string searchString, int pageNumber,int pageSize);
+        Task<IEnumerable<GlobalSearchViewModel>> UsersGlobalSearch(string searchString, int pageNumber, int pageSize);
+
 
     }
 }

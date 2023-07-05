@@ -267,8 +267,9 @@ export class PostViewComponent implements OnInit,AfterViewInit {
 
     commentResponse(){
       commentResponse.subscribe(response => {
+        debugger
         var comment: any[] = this.post.comments;
-        var commentObj = {id:response.id,content:response.message,likeCount:0,isCommentLikedByCurrentUser:false,userAvatar:response.senderAvatar};
+        var commentObj = {id:response.id,content:response.message,likeCount:0,isCommentLikedByCurrentUser:false,userAvatar:response.senderAvatar,userName:response.userName,userId:response.userId};
         comment.push(commentObj);
         this.cd.detectChanges();
         this.groupChatList.nativeElement.scrollTop = this.groupChatList.nativeElement.scrollHeight;
@@ -290,6 +291,7 @@ export class PostViewComponent implements OnInit,AfterViewInit {
 
     getComments(){
       this._chatService.getComments(this.post.id,this.pageNumber).subscribe((response) => {
+        debugger
         this.post.comments = response;
         });
     }
@@ -392,6 +394,7 @@ export class PostViewComponent implements OnInit,AfterViewInit {
     var comment: any[] = this.post.comments;
     this.InitializeCommentViewModel();
     this.commentViewModel.userId = this.sender.id;
+    this.commentViewModel.userName = this.sender.firstName + " " + this.sender.lastName;
     this.commentViewModel.groupName = this.post.id + "_group";
     this.commentViewModel.content = this.messageToGroup;
     this.commentViewModel.userAvatar = this.sender.avatar;
@@ -568,6 +571,10 @@ export class PostViewComponent implements OnInit,AfterViewInit {
       from:from
     };
     this.bsModalService.show(CertificateViewComponent, { initialState });
+  }
+
+  hideCommentModal(){
+    this.bsModalService.hide();
   }
 
 }

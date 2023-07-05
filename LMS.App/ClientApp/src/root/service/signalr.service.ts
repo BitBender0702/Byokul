@@ -138,6 +138,7 @@ export class SignalrService {
     });
 
     this.hubConnection?.on('ReceiveMessageFromGroup', (model) => {
+      debugger
       commentResponse.next({
         id:model.id,
         senderAvatar: model.userAvatar,

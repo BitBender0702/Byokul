@@ -9,6 +9,8 @@ import { MultilingualComponent } from '../sharedModule/Multilingual/multilingual
 import { ActivatedRoute } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
+import { SchoolService } from 'src/root/service/school.service';
+import { ClassService } from 'src/root/service/class.service';
 
 @Component({
     selector: 'globalSearch',
@@ -19,6 +21,8 @@ import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component'
 
   export class GlobalSearchComponent extends MultilingualComponent implements OnInit {
     private _userService;
+    private _schoolService;
+    private _classService;
     isDataLoaded:boolean = false;
     loadingIcon:boolean = false;
     postLoadingIcon: boolean = false;
@@ -28,24 +32,47 @@ import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component'
     globalSearchPageSize:number = 12;
     globalSearchResult:any;
     scrolled:boolean = false;
+    searchType:any;
 
-    constructor( injector: Injector,private route: ActivatedRoute,userService:UserService) {
+    constructor( injector: Injector,private route: ActivatedRoute,userService:UserService,schoolService:SchoolService,classService:ClassService) {
         super(injector);
         this._userService = userService;
+        this._schoolService = schoolService;
+        this._classService = classService;
     }
 
     ngOnInit(): void {
+      debugger
+      this.globalSearchPageNumber = 1;
         this.loadingIcon = true;
         this.searchString = this.route.snapshot.paramMap.get('searchString')??'';
+        this.searchType = this.route.snapshot.paramMap.get('type')??'';
         this.getGlobalSearch(this.searchString,this.globalSearchPageNumber,this.globalSearchPageSize);
     }
 
     getGlobalSearch(searchString:string,pageNumber:number,pageSize:number){
-      this._userService.globalSearch(searchString,pageNumber,pageSize).subscribe((response) => {
+      debugger
+      if(this.searchType == "1"){
+        this._userService.usersGlobalSearch(searchString,pageNumber,pageSize).subscribe((response) => {
+          this.loadingIcon = false;
+          this.isDataLoaded = true;
+          this.globalSearchResult = response;
+        });
+      }
+      if(this.searchType == "2"){
+        this._schoolService.schoolsGlobalSearch(searchString,pageNumber,pageSize).subscribe((response) => {
+          this.loadingIcon = false;
+          this.isDataLoaded = true;
+          this.globalSearchResult = response;
+        });
+      }
+      if(this.searchType == "3"){
+      this._classService.classAndCoursesGlobalSearch(searchString,pageNumber,pageSize).subscribe((response) => {
         this.loadingIcon = false;
         this.isDataLoaded = true;
         this.globalSearchResult = response;
       });
+    }
     }
     
 
@@ -81,11 +108,32 @@ import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component'
     }
 
     getNextSearchResults(){
-        this._userService.globalSearch(this.searchString,this.globalSearchPageNumber,this.globalSearchPageSize).subscribe((response:any) => {
+      debugger
+      if(this.searchType == "1"){
+        this._userService.usersGlobalSearch(this.searchString,this.globalSearchPageNumber,this.globalSearchPageSize).subscribe((response:any) => {
           this.globalSearchResult =[...this.globalSearchResult, ...response];
           this.postLoadingIcon = false;
           this.scrollSearchResponseCount = response.length; 
           this.scrolled = false;
         });
+        
+      }
+      if(this.searchType == "2"){
+        this._schoolService.schoolsGlobalSearch(this.searchString,this.globalSearchPageNumber,this.globalSearchPageSize).subscribe((response:any) => {
+          this.globalSearchResult =[...this.globalSearchResult, ...response];
+          this.postLoadingIcon = false;
+          this.scrollSearchResponseCount = response.length; 
+          this.scrolled = false;
+        });
+      }
+
+      if(this.searchType == "3"){
+        this._classService.classAndCoursesGlobalSearch(this.searchString,this.globalSearchPageNumber,this.globalSearchPageSize).subscribe((response:any) => {
+          this.globalSearchResult =[...this.globalSearchResult, ...response];
+          this.postLoadingIcon = false;
+          this.scrollSearchResponseCount = response.length; 
+          this.scrolled = false;
+        });
+      }
       }
 }

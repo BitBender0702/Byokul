@@ -38,7 +38,8 @@
               "node_modules/@fortawesome/fontawesome-free/css/all.css",
               "node_modules/flatpickr/dist/flatpickr.css",
               "node_modules/slick-carousel/slick/slick.css",
-              "node_modules/slick-carousel/slick/slick-theme.css"
+              "node_modules/slick-carousel/slick/slick-theme.css",
+              "node_modules/intl-tel-input/build/css/intlTelInput.css"
 
 
             ],
@@ -58,12 +59,12 @@
                 {
                   "type": "initial",
                   "maximumWarning": "2mb",
-                  "maximumError": "5mb"
+                  "maximumError": "10mb"
                 },
                 {
                   "type": "anyComponentStyle",
                   "maximumWarning": "2kb",
-                  "maximumError": "5mb"
+                  "maximumError": "10mb"
                 }
               ],
               "fileReplacements": [
@@ -127,7 +128,8 @@
               "node_modules/@fortawesome/fontawesome-free/css/all.css",
               "node_modules/flatpickr/dist/flatpickr.css",
               "node_modules/slick-carousel/slick/slick.css",
-              "node_modules/slick-carousel/slick/slick-theme.css"
+              "node_modules/slick-carousel/slick/slick-theme.css",
+              "node_modules/intl-tel-input/build/css/intlTelInput.css"
          ],
             "scripts": [
               "node_modules/bootstrap/dist/js/bootstrap.min.js",

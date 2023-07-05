@@ -39,3 +39,7 @@ hr {
   width: 100%;
   border-color: #64748b;
 }
+
+.cursor_pointer{
+  cursor: pointer;
+}

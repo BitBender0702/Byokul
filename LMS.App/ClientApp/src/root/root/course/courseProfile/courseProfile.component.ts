@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
-import { ChangeDetectorRef, Component, ElementRef, HostListener, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, HostListener, Injector, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { DomSanitizer, Meta, Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { MessageService } from 'primeng/api';
 import { PermissionTypeEnum } from 'src/root/Enums/permissionTypeEnum';
 import { PostAuthorTypeEnum } from 'src/root/Enums/postAuthorTypeEnum';
@@ -40,6 +40,7 @@ import { generateCertificateResponse } from '../../generateCertificate/generateC
 import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
 export const convertIntoClassResponse =new Subject<{classId: string, className : string,school:any,avatar:string}>(); 
 export const deleteCourseResponse =new BehaviorSubject <string>('');  
+import { Dimensions, ImageCroppedEvent, ImageTransform } from 'ngx-image-cropper';
 
 @Component({
     selector: 'courseProfile-root',
@@ -128,6 +129,19 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     generateCertificateSubscription!: Subscription;
     filteredAttachments:any[] = [];
     courseAvatar:string = '';
+
+    imageChangedEvent: any = '';
+    croppedImage: any = '';
+    canvasRotation = 0;
+    rotation = 0;
+    scale = 1;
+    showCropper = false;
+    containWithinAspectRatio = false;
+    transform: ImageTransform = {};
+    selectedImage: any = '';
+    isSelected: boolean = false;
+    cropModalRef!: BsModalRef;
+    @ViewChild('hiddenButton') hiddenButtonRef!: ElementRef;
 
 
     @ViewChild('closeEditModal') closeEditModal!: ElementRef;
@@ -733,6 +747,8 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
           if(!this.uploadImage){
             this.fileToUpload.append('avatar', this.courseAvatar);
           }
+
+          this.fileToUpload.append("avatarImage", this.selectedImage);
       
            this.updateCourseDetails=this.editCourseForm.value;
            this.schoolName = this.editCourseForm.get('schoolName')?.value;
@@ -1129,6 +1145,47 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
           }
         this.ngOnInit();
       });  
+    }
+
+    imageCropped(event: ImageCroppedEvent) {
+      debugger
+      this.selectedImage = event.blob;
+      this.croppedImage = this.domSanitizer.bypassSecurityTrustResourceUrl(
+        event.objectUrl!
+      );
+    }
+    
+    imageLoaded() {
+      this.showCropper = true;
+      console.log('Image loaded');
+    }
+    
+    cropperReady(sourceImageDimensions: Dimensions) {
+      console.log('Cropper ready', sourceImageDimensions);
+    }
+    
+    loadImageFailed() {
+      console.log('Load failed');
+    }
+    
+    onFileChange(event: any): void {
+      debugger
+      this.isSelected = true;
+      this.imageChangedEvent = event;
+      this.hiddenButtonRef.nativeElement.click();
+    }
+    
+    cropModalOpen(template: TemplateRef<any>) {
+      this.cropModalRef = this.bsModalService.show(template);
+    }
+    
+    closeCropModal(){
+      this.cropModalRef.hide();
+    }
+    
+    applyCropimage(){
+      this.uploadImage = this.croppedImage;
+      this.cropModalRef.hide();
     }
 
 }

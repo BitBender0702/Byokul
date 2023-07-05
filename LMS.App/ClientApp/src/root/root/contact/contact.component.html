@@ -1,0 +1,54 @@
+<section class="f-poppins" style="margin-left: 30%;">
+    <header class="header">
+      <div class="header__content">
+        <button
+        (click)="back()"
+        type="button"
+        class="back-button bg-transparent border-0 font_16 fw_400 text_dark">
+      <img src="../../../../assets/images/school/arrow-left.svg" />
+      {{ "Back" | translate }}
+    </button>
+        <a href="" class="main-logo"><img class="ms-4" src="../../../assets/images/logo.svg" /></a>
+      </div>
+    </header>
+    <main class="static-main">
+      <div class="static-content">
+     <div *ngIf="selectedLanguage == 'en'">
+        <p>BYOKUL SANAL VE DIJITAL PLATFORM LIMITED SIRKETI<br>
+            GURSELPASA MAH. ABIDIN DINO BLV. ALI GEZEN APT NO:13 A SEYHAN/ADANA<br>
+            E-MAIL : support@byokul.com</p>
+     </div>
+
+     <div *ngIf="selectedLanguage == 'tr'">
+        <p>BYOKUL SANAL VE DIJITAL PLATFORM LIMITED SIRKETI<br>
+           GURSELPASA MAH. ABIDIN DINO BLV. ALI GEZEN APT NO:13 A SEYHAN/ADANA<br>
+           E-MAIL : support@byokul.com</p>
+     </div>
+
+     <div *ngIf="selectedLanguage == 'ar'">
+        <p>BYOKUL SANAL VE DIJITAL PLATFORM LIMITED SIRKETI<br>
+            GURSELPASA MAH. ABIDIN DINO BLV. ALI GEZEN APT NO:13 A SEYHAN/ADANA<br>
+            E-MAIL : support@byokul.com</p>
+     </div>
+
+     <div *ngIf="selectedLanguage == 'sp'">
+        <p>BYOKUL SANAL VE DIJITAL PLATFORM LIMITED SIRKETI<br>
+            GURSELPASA MAH. ABIDIN DINO BLV. ALI GEZEN APT NO:13 A SEYHAN/ADANA<br>
+            E-MAIL : support@byokul.com</p>
+     </div>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="footer__content">
+        <a href="" class="main-logo"><img src="../../../assets/images/logo.svg" /></a>
+        <nav>
+          <a [routerLink]="['/privacyPolicy']">Privacy Policy</a>
+          <a [routerLink]="['/termsOfServices']">Terms of services</a>
+          <a [routerLink]="['/aboutUs']">About us</a>
+          <a [routerLink]="['/faq']">FAQ</a>
+        </nav>
+      </div>
+    </footer>
+   
+  </section>
+

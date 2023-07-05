@@ -82,6 +82,15 @@ import { AboutUsComponent } from './root/aboutUs/aboutUs.component';
 import { PrivecyPolicyComponent } from './root/privacyPolicy/privacyPolicy.component';
 import { TermsOfServiceComponent } from './root/termsOfService/termsOfService.component';
 import { ReelsSliderComponent } from './root/reelsSlider/reelsSlider.component';
+import { ContactComponent } from './root/contact/contact.component';
+import { DeliveryAndReturnComponent } from './root/DeliveryAndReturn/deliveryAndReturn.component';
+import { DSAForSchoolComponent } from './root/DSAForSchool/dsaForSchool.component';
+import { DSAForStudentsComponent } from './root/dsaForStudents/dsaForStudents.component';
+import { ImageCropperModule } from 'ngx-image-cropper'; 
+import { NgxIntlTelInputModule } from 'ngx-intl-tel-input';
+
+
+
 
 
 // import { MetaModule } from '@ngx-meta/core';
@@ -129,6 +138,18 @@ const routes: Routes = [
   {
     path: 'termsOfServices',component:TermsOfServiceComponent, canActivate: [AuthGuard]
   },
+  {
+    path: 'contact',component:ContactComponent, canActivate: [AuthGuard]
+  },
+  {
+    path: 'deliveryAndReturn',component:DeliveryAndReturnComponent, canActivate: [AuthGuard]
+  },
+  {
+    path: 'distanceSalesAgreementForSchools',component:DSAForSchoolComponent, canActivate: [AuthGuard]
+  },
+  {
+    path: 'distanceSalesAgreementForStudents',component:DSAForStudentsComponent, canActivate: [AuthGuard]
+  },
   
 
 
@@ -174,7 +195,11 @@ const routes: Routes = [
     FaqComponent,
     PrivecyPolicyComponent,
     TermsOfServiceComponent,
-    ReelsSliderComponent
+    ReelsSliderComponent,
+    ContactComponent,
+    DeliveryAndReturnComponent,
+    DSAForSchoolComponent,
+    DSAForStudentsComponent
     
   ],
   imports: [
@@ -201,6 +226,8 @@ const routes: Routes = [
     PaginatorModule,
     NgbModule,
     PickerModule,
+    ImageCropperModule,
+    NgxIntlTelInputModule,
     // MetaModule.forRoot(),
     // PickerComponent,
     // PdfJsViewerModule,

@@ -607,6 +607,8 @@ namespace LMS.Services.Chat
             var user = await _commentRepository.GetAll().Include(x => x.User).Where(x => x.Id == comment.Id).Select(x => x.User).FirstAsync();
             chatViewModel.User = _mapper.Map<UserDetailsViewModel>(user);
             chatViewModel.Id = comment.Id;
+            chatViewModel.UserId = user.Id;
+            chatViewModel.UserName = user.FirstName + " " + user.LastName;
             chatViewModel.CreatedOn = DateTime.SpecifyKind(comment.CreatedOn, DateTimeKind.Unspecified);
             return chatViewModel;
 
@@ -621,7 +623,9 @@ namespace LMS.Services.Chat
             var CommentLikes = await _commentLikeRepository.GetAll().ToListAsync();
             foreach (var item in response)
             {
+                item.UserId = item.User.Id;
                 item.UserAvatar = item.User.Avatar;
+                item.UserName = item.User.FirstName + " " + item.User.LastName;
                 if (CommentLikes.Any(x => x.CommentId == item.Id && x.UserId == userid))
                 {
                     item.isCommentLikedByCurrentUser = true;

@@ -107,10 +107,12 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
                 <div class="postlds-ring" style="margin-left: 200px;margin-bottom: 214px;"><div></div><div></div><div></div><div></div></div>
               </div>
             <div *ngFor="let item of reels.post.comments" class="live-message d-flex position-relative align-items-start">
-              <img *ngIf="item.userAvatar != null" [src]="item.userAvatar" class="comment-user">
-              <img *ngIf="item.userAvatar == null && gender =='1'" src="../../../assets/images/maleProfile.jfif" class="comment-user"/>
-              <img *ngIf="(item.userAvatar == null) && (gender =='2' || gender =='3')" src="../../../assets/images/femaleProfile.jfif" class="comment-user"/>
-              <p class="text_sec1 font_12 fw_400 text-start mb-0">{{item.content}}</p>
+              <img (click)="hideCommentModal()" [routerLink]="['/user/userProfile',item.userId]" *ngIf="item.userAvatar != null" [src]="item.userAvatar" class="comment-user cursorPointer">
+              <img (click)="hideCommentModal()" [routerLink]="['/user/userProfile',item.userId]" *ngIf="item.userAvatar == null && gender =='1'" src="../../../assets/images/maleProfile.jfif" class="comment-user cursorPointer"/>
+              <img (click)="hideCommentModal()" [routerLink]="['/user/userProfile',item.userId]" *ngIf="(item.userAvatar == null) && (gender =='2' || gender =='3')" src="../../../assets/images/femaleProfile.jfif" class="comment-user cursorPointer"/>
+              <div class="d-flex flex-column"><p (click)="hideCommentModal()" [routerLink]="['/user/userProfile',item.userId]" class="font_12 fw_600 text-start mb-0 cursorPointer">{{item.userName}}</p>
+                <p class="text_sec1 font_12 fw_400 text-start mb-0">{{item.content}}</p>
+              </div>
               <button (click)="likeUnlikeComments(item.id,true,item.isCommentLikedByCurrentUser,item.likeCount)" type="button" class="btn bg-transparent text_ltgray font_12 p-0 border-0 reel-like-chat">
                 <img *ngIf="item.isCommentLikedByCurrentUser" src="../../../assets/images/heart-red.svg" class="d-block" />
                 <img *ngIf="!item.isCommentLikedByCurrentUser" src="../../../assets/images/Heart-dark.svg" class="d-block" />
@@ -120,7 +122,10 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
             </div>
           </div>
             <div *ngIf="!reels.post.isCommentsDisabled" class="add-comment d-flex align-items-center justify-content-between" style="margin-left:-40px">
-              <span class="bg-transparent rounded-circle comment-post-user rounded-circle"><img [src]="sender.avatar" style="max-height: 100%;"/>
+              <span class="bg-transparent rounded-circle comment-post-user rounded-circle">
+                <img (click)="hideCommentModal()" [routerLink]="['/user/userProfile',sender.id]" *ngIf="sender.avatar != null" [src]="sender.avatar" style="max-height: 100%;cursor: pointer;">
+                <img (click)="hideCommentModal()" [routerLink]="['/user/userProfile',sender.id]" *ngIf="sender.avatar == null && gender =='1'" src="../../../assets/images/maleProfile.jfif" style="max-height: 100%;cursor: pointer;"/>
+                <img (click)="hideCommentModal()" [routerLink]="['/user/userProfile',sender.id]" *ngIf="(sender.avatar == null) && (gender =='2' || gender =='3')" src="../../../assets/images/femaleProfile.jfif" style="max-height: 100%;cursor: pointer;"/>
               </span>
               <input (keyup.enter)="sendToGroup()" [(ngModel)]="messageToGroup" type="text" class="form-control rounded-8 font_14 fw_400" placeholder="{{'YourMessage'| translate }}">
               <button (click)="sendToGroup()" type="button" class="comment-btn border-0"><img src="../../../assets/images/arrowup.svg" /></button>
@@ -313,10 +318,12 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
           </div>
           <div *ngIf="!reels.post.isCommentsDisabled" #groupChatList id="groupChat" class="live-chat-outer">
           <div *ngFor="let item of reels.post.comments" class="live-message d-flex position-relative align-items-start">
-            <img *ngIf="item.userAvatar != null" [src]="item.userAvatar" class="comment-user">
-            <img *ngIf="item.userAvatar == null && gender =='1'" src="../../../assets/images/maleProfile.jfif" class="comment-user"/>
-            <img *ngIf="(item.userAvatar == null) && (gender =='2' || gender =='3')" src="../../../assets/images/femaleProfile.jfif" class="comment-user"/>
-            <p class="text_sec1 font_12 fw_400 text-start mb-0">{{item.content}}</p>
+            <img (click)="hideCommentModal()" [routerLink]="['/user/userProfile',item.userId]" *ngIf="item.userAvatar != null" [src]="item.userAvatar" class="comment-user cursorPointer">
+            <img (click)="hideCommentModal()" [routerLink]="['/user/userProfile',item.userId]"  *ngIf="item.userAvatar == null && gender =='1'" src="../../../assets/images/maleProfile.jfif" class="comment-user cursorPointer"/>
+            <img (click)="hideCommentModal()" [routerLink]="['/user/userProfile',item.userId]"  *ngIf="(item.userAvatar == null) && (gender =='2' || gender =='3')" src="../../../assets/images/femaleProfile.jfif" class="comment-user cursorPointer"/>
+            <div class="d-flex flex-column"><p (click)="hideCommentModal()" [routerLink]="['/user/userProfile',item.userId]" class="font_12 fw_600 text-start mb-0 cursorPointer">{{item.userName}}</p>
+              <p class="text_sec1 font_12 fw_400 text-start mb-0">{{item.content}}</p>
+            </div>
             <button (click)="likeUnlikeComments(item.id,true,item.isCommentLikedByCurrentUser,item.likeCount)" type="button" class="btn bg-transparent text_ltgray font_12 p-0 border-0 reel-like-chat">
               <img *ngIf="item.isCommentLikedByCurrentUser" src="../../../assets/images/heart-red.svg" class="d-block" />
               <img *ngIf="!item.isCommentLikedByCurrentUser" src="../../../assets/images/Heart-dark.svg" class="d-block" />
@@ -325,7 +332,10 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
           </div>
         </div>
           <div *ngIf="!reels.post.isCommentsDisabled" class="add-comment d-flex align-items-center justify-content-between" style="margin-left:-40px">
-            <span class="bg-transparent rounded-circle comment-post-user rounded-circle"><img [src]="sender.avatar" style="max-height: 100%;"/>
+            <span class="bg-transparent rounded-circle comment-post-user rounded-circle">
+              <img (click)="hideCommentModal()" *ngIf="sender.avatar != null" [src]="sender.avatar" style="max-height: 100%;cursor: pointer;">
+              <img (click)="hideCommentModal()"*ngIf="sender.avatar == null && gender =='1'" src="../../../assets/images/maleProfile.jfif" style="max-height: 100%;cursor: pointer;"/>
+              <img (click)="hideCommentModal()" *ngIf="(sender.avatar == null) && (gender =='2' || gender =='3')" src="../../../assets/images/femaleProfile.jfif" style="max-height: 100%;cursor: pointer;"/>
             </span>
             <input (keyup.enter)="sendToGroup()" [(ngModel)]="messageToGroup" type="text" class="form-control rounded-8 font_14 fw_400" placeholder="{{'YourMessage'| translate }}">
             <button (click)="sendToGroup()" type="button" class="comment-btn border-0"><img src="../../../assets/images/arrowup.svg" /></button>

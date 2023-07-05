@@ -168,4 +168,10 @@ export class UserService{
         
     }
 
+    usersGlobalSearch(searchString:string,pageNumber:number,pageSize:number){
+        let queryParams = new HttpParams().append("searchString",searchString).append("pageNumber",pageNumber).append("pageSize",pageSize);
+        return this.http.get(`${this.apiUrl}/users/usersGlobalSearch`, {params:queryParams,headers: this.headers}
+        ); 
+    }
+
 }

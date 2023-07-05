@@ -162,7 +162,7 @@ namespace LMS.App.Controllers
                 videoData = wc.DownloadData(recordingUrl);
                 var stream = new MemoryStream(videoData);
 
-                var compressedVideo = await _commonService.CompressVideo(meetingID, fileName, videoData);
+                var compressedVideo = await _commonService.CompressVideo(fileName, videoData);
 
 
                 string containerName = this._config.GetValue<string>("MyConfig:Container");

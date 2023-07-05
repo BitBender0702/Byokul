@@ -10,5 +10,6 @@ export interface EditSchoolModel{
     ownerId: string;      // is this editable or not.
     description:string;
     country: string;
+    phoneNumber:string;
     
 }

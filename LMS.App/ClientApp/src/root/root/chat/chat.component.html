@@ -192,8 +192,16 @@
                   <input [value]="item.userID" hidden />
                   <div class="chat-userleft">
                     <div class="chat-username d-flex align-items-center mb-2">
-                      <img [src]="item?.profileURL" alt="" />
-                      <h2 class="mb-0">{{ item?.userName }}</h2>
+                      <img *ngIf="item.chatType==1" [routerLink]="['/user/userProfile',item.userID]" [src]="item?.profileURL" alt="" class="cursor_pointer"/>
+                      <img *ngIf="item.chatType==3" [routerLink]="['/profile/school',item.school.schoolName]" [src]="item?.profileURL" alt="" class="cursor_pointer" />
+                      <img *ngIf="item.chatType==4" [routerLink]="['/profile/class',item.class.school.schoolName,item.class.className]" [src]="item?.profileURL" alt="" class="cursor_pointer"/>
+                      <img *ngIf="item.chatType==5" [routerLink]="['/profile/course',item.course?.school?.schoolName,item.course.courseName]" [src]="item?.profileURL" alt="" class="cursor_pointer"/>
+
+                      <h2 *ngIf="item.chatType==1" [routerLink]="['/user/userProfile',item.userID]" class="mb-0 cursor_pointer">{{ item?.userName }}</h2>
+                      <h2 *ngIf="item.chatType==3" [routerLink]="['/profile/school',item.school.schoolName]" class="mb-0 cursor_pointer">{{ item?.userName }}</h2>
+                      <h2 *ngIf="item.chatType==4" [routerLink]="['/profile/class',item.class.school.schoolName,item.class.className]" class="mb-0 cursor_pointer">{{ item?.userName }}</h2>
+                      <h2 *ngIf="item.chatType==5" [routerLink]="['/profile/course',item.course?.school?.schoolName,item.course.courseName]" class="mb-0 cursor_pointer">{{ item?.userName }}</h2>
+
                       &nbsp;
                       <span
                         *ngIf="
@@ -1050,8 +1058,11 @@
                     <input [value]="item.userID" hidden />
                     <div class="chat-userleft">
                       <div class="chat-username d-flex align-items-center mb-2">
-                        <img [src]="item?.profileURL" alt="" />
-                        <h2 class="mb-0">{{ item?.userName }}</h2>
+                      <img [routerLink]="['/user/userProfile',item.userID]" [src]="item?.profileURL" alt="" class="cursor_pointer" />
+                      <h2 *ngIf="item.chatType==1" [routerLink]="['/user/userProfile',item.userID]" class="mb-0 cursor_pointer">{{ item?.userName }}</h2>
+                      <h2 *ngIf="item.chatType==3" [routerLink]="['/profile/school',item.school.schoolName]" class="mb-0 cursor_pointer">{{ item?.userName }}</h2>
+                      <h2 *ngIf="item.chatType==4" [routerLink]="['/profile/class',item.class.school.schoolName,item.class.className]" class="mb-0 cursor_pointer">{{ item?.userName }}</h2>
+                      <h2 *ngIf="item.chatType==5" [routerLink]="['/profile/course',item.course?.school?.schoolName,item.course.courseName]" class="mb-0 cursor_pointer">{{ item?.userName }}</h2>
                         <span
                           *ngIf="
                             item?.unreadMessageCount != 0 &&

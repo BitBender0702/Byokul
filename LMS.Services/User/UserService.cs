@@ -1277,7 +1277,7 @@ namespace LMS.Services
                 Type = (int)PostAuthorTypeEnum.User,
                 Avatar = x.Avatar
 
-            }).ToListAsync();
+            }).Take(5).ToListAsync();
 
             var schools = await _schoolRepository.GetAll().Where(x => x.SchoolName.Contains(searchString)).Select(x => new GlobalSearchViewModel
             {
@@ -1285,7 +1285,7 @@ namespace LMS.Services
                 Name = x.SchoolName,
                 Type = (int)PostAuthorTypeEnum.School,
                 Avatar = x.Avatar
-            }).ToListAsync();
+            }).Take(5).ToListAsync();
 
             var classes = await _classRepository.GetAll().Include(x => x.School).Where(x => x.ClassName.Contains(searchString)).Select(x => new GlobalSearchViewModel
             {
@@ -1294,7 +1294,7 @@ namespace LMS.Services
                 SchoolName = x.School.SchoolName,
                 Type = (int)PostAuthorTypeEnum.Class,
                 Avatar = x.Avatar
-            }).ToListAsync();
+            }).Take(5).ToListAsync();
 
 
             var courses = await _courseRepository.GetAll().Where(x => x.CourseName.Contains(searchString)).Select(x => new GlobalSearchViewModel
@@ -1304,11 +1304,29 @@ namespace LMS.Services
                 SchoolName = x.School.SchoolName,
                 Type = (int)PostAuthorTypeEnum.Course,
                 Avatar = x.Avatar
-            }).ToListAsync();
+            }).Take(5).ToListAsync();
 
-            var result = schools.Concat(classes).Concat(courses).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+            var result = courses.Concat(classes).Concat(schools).Concat(users).OrderBy(x => x.Type).ToList();
 
             return result;
+
+
+        }
+
+        public async Task<IEnumerable<GlobalSearchViewModel>> UsersGlobalSearch(string searchString, int pageNumber, int pageSize)
+        {
+            var users = await _userRepository.GetAll().Where(x => x.FirstName.Contains(searchString) || x.LastName.Contains(searchString) || (x.FirstName + " " + x.LastName).Contains(searchString)).Select(x => new GlobalSearchViewModel()
+            {
+                Id = new Guid(x.Id),
+                Name = x.FirstName + " " + x.LastName,
+                Type = (int)PostAuthorTypeEnum.User,
+                Avatar = x.Avatar
+
+            }).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+
+  
+
+            return users;
 
 
         }

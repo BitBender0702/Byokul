@@ -421,7 +421,7 @@
   "Most Students": "معظم الطلاب",
   "Most Viewed": "الأكثر مشاهدة",
   "Top Rated": "أعلى التقييمات",
-  "PrivacyPolicy": " سياسة الخصوصية",
+  "PrivacyPolicy": "سياسة الخصوصية",
   "AboutUs": "معلومات عنا",
   "Contact": "اتصال",
   "Delivery&Return": "التسليم والعودة",
@@ -462,7 +462,17 @@
   "BannedSuccessfully": "Banned successfully",
   "MessageForwardedSuccessfully": "Message forwarded successfully",
   "CopiedToClipboard": "نسخ إلى الحافظة",
-  "CreateSchools": "إنشاء مدارس"
+  "CreateSchools": "إنشاء مدارس",
+
+  "TermsOfService": "شروط الخدمة ",
+  "DistanceSalesAgreementForSchools": "اتفاقية البيع عن بعد للمدارس",
+  "DistanceSalesAgreementForStudents": "اتفاقية البيع عن بعد للطلاب",
+  "GoLive": "Go Live",
+  "PhoneNumber": "Phone Number",
+  "StateOrProvince": "الولاية / المقاطعة",
+  "VideoDurationExceed": "You can not upload a reel longer than 3 minutes",
+  "PhoneNumberRequired": "Phone number is required",
+  "InValidPhoneNumber": "Phone number is invalid"
 
 
 

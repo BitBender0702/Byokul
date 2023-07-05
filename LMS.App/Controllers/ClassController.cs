@@ -253,5 +253,13 @@ namespace LMS.App.Controllers
             return Ok();
         }
 
+        [Route("classAndCoursesGlobalSearch")]
+        [HttpGet]
+        public async Task<IActionResult> ClassAndCoursesGlobalSearch(string searchString, int pageNumber, int pageSize)
+        {
+            var user = await _classService.ClassAndCoursesGlobalSearch(searchString, pageNumber, pageSize);
+            return Ok(user);
+        }
+
     }
 }
