@@ -577,8 +577,10 @@ hr.earning-hr {
 /*=== center content css start here --*/
 .main_content {
   width: 100%;
-  transition: ease-in-out 0.5s;
-  padding: 40px 40px;
+    transition: ease-in-out 0.5s;
+    padding: 40px 40px;
+    max-width: 1800px;
+    margin: 0 auto;
 }
 
 .live-header {
