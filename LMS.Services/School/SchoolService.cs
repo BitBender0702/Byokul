@@ -1473,6 +1473,24 @@ namespace LMS.Services
 
         }
 
+        public async Task<bool> UnBanFollower(string followerId, Guid schoolId)
+        {
+            var follower = await _schoolFollowerRepository.GetAll().Where(x => x.UserId == followerId && x.SchoolId == schoolId).FirstOrDefaultAsync();
+
+            if (follower != null)
+            {
+                follower.IsBan = false;
+                _schoolFollowerRepository.Update(follower);
+                _schoolFollowerRepository.Save();
+                return true;
+            }
+
+            return false;
+
+
+
+        }
+
         public async Task<IEnumerable<GlobalSearchViewModel>> SchoolsGlobalSearch(string searchString, int pageNumber, int pageSize)
         {
             var schools = await _schoolRepository.GetAll().Where(x => x.SchoolName.Contains(searchString)).Select(x => new GlobalSearchViewModel

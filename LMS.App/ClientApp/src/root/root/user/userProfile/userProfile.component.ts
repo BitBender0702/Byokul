@@ -209,6 +209,7 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
     certificateToUpload = new FormData();
     @ViewChild('closeCertificateModal') closeCertificateModal!: ElementRef;
     @ViewChild('hiddenButton') hiddenButtonRef!: ElementRef;
+    isBanFollower!:boolean;
 
 
 
@@ -675,6 +676,7 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
     }
 
     isOwnerOrNot(){
+      debugger
       var validToken = localStorage.getItem("jwt");
         if (validToken != null) {
           let jwtData = validToken.split('.')[1]
@@ -682,7 +684,9 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
           let decodedJwtData = JSON.parse(decodedJwtJsonData);
           this.loginUserId = decodedJwtData.jti;
           if(this.gender == undefined){
-            localStorage.setItem('gender',decodedJwtData.gender);
+            localStorage.setItem('gender', decodedJwtData.gender);
+
+
             this.gender = decodedJwtData.gender;
           }
           if(decodedJwtData.sub == this.user.email){
@@ -690,6 +694,12 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
           }
           else{
             this.isOwner = false;
+
+
+            this._userService.isFollowerBan(this.loginUserId,this.user.id).subscribe((response:any) => {
+              debugger
+              // this.isBanFollower = response.
+            });
             this.isFollowedOwnerOrNot(decodedJwtData.jti);
           }
         }

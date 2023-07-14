@@ -330,6 +330,12 @@ namespace LMS.App.Controllers
             return Ok(reponse);
         }
 
+        public async Task<IActionResult> UnBanFollower(string followerId, Guid schoolId)
+        {
+            var reponse = await _schoolService.UnBanFollower(followerId, schoolId);
+            return Ok(reponse);
+        }
+
         [Route("schoolsGlobalSearch")]
         [HttpGet]
         public async Task<IActionResult> SchoolsGlobalSearch(string searchString, int pageNumber, int pageSize)

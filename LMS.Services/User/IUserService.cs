@@ -23,6 +23,7 @@ namespace LMS.Services
         Task<List<UserFollowerViewModel>> GetUserFollowers(string userId, int pageNumber, string? searchString);
         Task<List<UserFollowingViewModel>> GetUserFollowings(string userId, int pageNumber, string? searchString);
         Task<bool> BanFollower(string followerId,string userId);
+        Task<bool> UnBanFollower(string userId, string followerId);
         Task<IEnumerable<GlobalFeedViewModel>> GetGlobalFeed(string userId, PostTypeEnum postType, int pageNumber, string? searchString);
         Task<Guid> SaveUserPreference(string userId, string preferenceString);
         Task<List<LikeViewModel>> GetLikesOnPost(Guid postId);
@@ -38,6 +39,9 @@ namespace LMS.Services
         Task<IEnumerable<GlobalSearchViewModel>> UsersGlobalSearch(string searchString, int pageNumber, int pageSize);
         Task SaveUserCertificates(SaveUserCertificateViewModel model);
         Task DeleteUserCertificate(UserCertificateViewModel model);
+        Task<bool> IsFollowerBan(string userId, string followerId);
+
+
 
 
     }

@@ -707,6 +707,24 @@ namespace LMS.Services
 
         }
 
+        public async Task<bool> UnBanFollower(string userId, string followerId)
+        {
+            var follower = await _userFollowerRepository.GetAll().Where(x => x.FollowerId == followerId && x.UserId == userId).FirstOrDefaultAsync();
+
+            if (follower != null)
+            {
+                follower.IsBan = false;
+                _userFollowerRepository.Update(follower);
+                _userFollowerRepository.Save();
+                return true;
+            }
+
+            return false;
+
+
+
+        }
+
         public async Task<IEnumerable<PostAttachmentViewModel>> GetAttachmentsByPostId(Guid postId)
         {
             var attacchmentList = await _postAttachmentRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.PostId == postId).OrderByDescending(x => x.IsPinned).ToListAsync();
@@ -1404,6 +1422,16 @@ namespace LMS.Services
 
             _userCertificateRepository.Delete(userCertificate.CertificateId);
             _userCertificateRepository.Save();
+
+        }
+
+        public async Task<bool> IsFollowerBan(string userId, string followerId)
+        {
+            var follower = await _userFollowerRepository.GetAll().Where(x => x.UserId == userId && x.FollowerId == followerId).FirstOrDefaultAsync();
+
+            return follower.IsBan;
+
+
 
         }
 

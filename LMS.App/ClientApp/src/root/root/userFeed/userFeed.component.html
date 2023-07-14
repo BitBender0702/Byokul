@@ -1439,31 +1439,39 @@
           <li *ngIf="item.type == 1" class="search-results__item">
             <div class="d-flex align-items-center justify-content-between">
               <span class="followers-name font_16 text_sec1">
-                <img [src]="item.avatar" class="rounded-circle me-2 img_style" style="max-height: 30px" />
+                <span class="serch-follow-image">
+                  <img [src]="item.avatar" class="rounded-circleimg_style"/>
+                </span>
                 <a class="routeLink" [routerLink]="['/profile/school', item.name]">{{ item.name }}</a></span>
             </div>
           </li>
           <li *ngIf="item.type == 2" class="search-results__item">
             <div class="d-flex align-items-center justify-content-between">
               <span class="followers-name font_16 text_sec1">
-                <img [src]="item.avatar" class="rounded-circle me-2 img_style" style="max-height: 30px" />
-                <a class="routeLink" [routerLink]="['/profile/class', item.schoolName, item.name]">{{ item.name
+                <span class="serch-follow-image">
+                  <img [src]="item.avatar" class="rounded-circle img_style" />
+                  </span>
+                   <a class="routeLink" [routerLink]="['/profile/class', item.schoolName, item.name]">{{ item.name
                   }}</a></span>
             </div>
           </li>
           <li *ngIf="item.type == 3" class="search-results__item">
             <div class="d-flex align-items-center justify-content-between">
               <span class="followers-name font_16 text_sec1">
-                <img [src]="item.avatar" class="rounded-circle me-2 img_style" style="max-height: 30px" />
-                <a class="routeLink" [routerLink]="['/profile/course', item.schoolName, item.name]">{{ item.name
+                <span class="serch-follow-image">
+                  <img [src]="item.avatar" class="rounded-circle img_style" />
+                  </span>
+                  <a class="routeLink" [routerLink]="['/profile/course', item.schoolName, item.name]">{{ item.name
                   }}</a></span>
             </div>
           </li>
           <li *ngIf="item.type == 4" class="search-results__item">
             <div class="d-flex align-items-center justify-content-between">
               <span class="followers-name font_16 text_sec1">
-                <img [src]="item.avatar" class="rounded-circle me-2 img_style" style="max-height: 30px" />
-                <a class="routeLink" [routerLink]="['/user/userProfile', item.id]">{{ item.name }}</a></span>
+                <span class="serch-follow-image">
+                  <img [src]="item.avatar" class="rounded-circle img_style" />
+                  </span>
+                  <a class="routeLink" [routerLink]="['/user/userProfile', item.id]">{{ item.name }}</a></span>
             </div>
           </li>
         </ng-container>

@@ -155,6 +155,14 @@ namespace LMS.App.Controllers
             return Ok(reponse);
         }
 
+        [Route("unBanFollower")]
+        [HttpPost]
+        public async Task<IActionResult> UnBanFollower(string userId, string followerId)
+        {
+            var reponse = await _userService.UnBanFollower(userId, followerId);
+            return Ok(reponse);
+        }
+
         [Route("globalFeed")]
         [HttpGet]
         public async Task<IActionResult> GlobalFeed(PostTypeEnum postType, int pageNumber, string? searchString)
@@ -350,6 +358,14 @@ namespace LMS.App.Controllers
         {
             await _userService.DeleteUserCertificate(model);
             return Ok();
+        }
+
+        [Route("isFollowerBan")]
+        [HttpGet]
+        public async Task<IActionResult> IsFollowerBan(string userId, string followerId)
+        {
+            var user = await _userService.IsFollowerBan(userId, followerId);
+            return Ok(user);
         }
 
 

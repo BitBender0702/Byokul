@@ -182,4 +182,11 @@ export class UserService{
         return this.http.post(`${this.apiUrl}/users/deleteUserCertificate`,deleteCertificate,{headers: this.headers});
     }
 
+    isFollowerBan(userId:string,followerId:string){
+        let queryParams = new HttpParams().append("userId",userId).append("followerId",followerId);
+        return this.http.get(`${this.apiUrl}/users/isFollowerBan`, {params:queryParams,headers: this.headers}
+        );
+    }
+        
+
 }

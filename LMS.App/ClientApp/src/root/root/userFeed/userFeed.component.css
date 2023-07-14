@@ -44,9 +44,11 @@
   border-radius: 12px;
   box-shadow: 0px 4px 20px rgb(0 0 0 / 10%);
   list-style: none;
-  overflow-y: scroll;
-  z-index: 999;
   position: absolute;
+  z-index: 99;
+  /* overflow-y: scroll;
+  z-index: 999;
+  position: absolute; */
 }
 
 .search-results > *:not(:last-child) {
@@ -60,6 +62,7 @@
 
 .search-results__item:before {
   display: none;
+  margin-bottom: 4px;
 }
 
 .img_style {
@@ -75,5 +78,20 @@
   justify-content: end;
   display: flex;
   color: orange;
+}
+
+.search-results .followers-name {
+  display: flex;
+  align-items: center;
+}
+.search-results .serch-follow-image{
+  width: 32px;
+  height: 32px;
+  margin-right: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #7c8da7;
+  border-radius: 50%;
 }
 
