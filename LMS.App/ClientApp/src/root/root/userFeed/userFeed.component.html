@@ -300,8 +300,8 @@
                             <img *ngIf="
                                 post.postAttachments.length == 1 &&
                                 post.postAttachments[0]?.fileType == 2
-                              " class="w-100" style="cursor: pointer" [src]="post.postAttachments[0]?.fileThumbnail" />
-                            <img *ngIf="post.postAttachments[0]?.fileType == 1" style="cursor: pointer" class="w-100"
+                              " class="" style="cursor: pointer" [src]="post.postAttachments[0]?.fileThumbnail" />
+                            <img *ngIf="post.postAttachments[0]?.fileType == 1" style="cursor: pointer" class=""
                               [src]="post.postAttachments[0]?.fileUrl" />
                           </div>
                         </div>
@@ -310,7 +310,7 @@
                           <div class="school-large-thumbnail shadow-thumnail position-relative">
                             <ng-container *ngFor="let attachment of post.postAttachments">
                               <div *ngIf="attachment?.fileType == 2" style="width: 50%">
-                                <img *ngIf="attachment?.fileType == 2" preload="metadata" class="w-100"
+                                <img *ngIf="attachment?.fileType == 2" preload="metadata" class=""
                                   style="cursor: pointer" [src]="attachment?.fileThumbnail" />
                               </div>
                               <div style="width: 50%">
@@ -948,8 +948,8 @@
                             <img *ngIf="
                                 post.postAttachments.length == 1 &&
                                 post.postAttachments[0]?.fileType == 2
-                              " class="w-100" style="cursor: pointer" [src]="post.postAttachments[0]?.fileThumbnail" />
-                            <img *ngIf="post.postAttachments[0]?.fileType == 1" style="cursor: pointer" class="w-100"
+                              " class="" style="cursor: pointer" [src]="post.postAttachments[0]?.fileThumbnail" />
+                            <img *ngIf="post.postAttachments[0]?.fileType == 1" style="cursor: pointer" class=""
                               [src]="post.postAttachments[0]?.fileUrl" />
                           </div>
                         </div>
@@ -957,9 +957,9 @@
                         <div *ngIf="post.postAttachments.length == 2" class="col-md-12 h-100">
                           <div class="school-large-thumbnail shadow-thumnail position-relative">
                             <ng-container *ngFor="let attachment of post.postAttachments">
-                              <img *ngIf="attachment?.fileType == 2" class="w-100" style="cursor: pointer"
+                              <img *ngIf="attachment?.fileType == 2" class="" style="cursor: pointer"
                                 [src]="attachment?.fileThumbnail" />
-                              <img style="cursor: pointer" *ngIf="attachment?.fileType == 1" class="w-100"
+                              <img style="cursor: pointer" *ngIf="attachment?.fileType == 1" class=""
                                 [src]="attachment?.fileUrl" />
                             </ng-container>
                           </div>
@@ -1431,10 +1431,9 @@
   <ng-template #globalSearchResults>
     <ul *ngIf="showSearchResults" class="search-results">
       <div *ngFor="let key of getObjectKeys(globalSearchResult)">
-        <span *ngIf="key == 'ClassAndCourse'" class="fw_600">{{ 'Classes & Courses'}}</span>
-        <span *ngIf="key == 'User'" class="fw_600">{{ 'People'}}</span>
-        <span *ngIf="key == 'School'" class="fw_600">{{ 'Schools'}}</span>
-        <br>
+        <h4 *ngIf="key == 'ClassAndCourse'" class="fw_600">{{ 'Classes & Courses'}}</h4>
+        <h4 *ngIf="key == 'User'" class="fw_600">{{ 'People'}}</h4>
+        <h4 *ngIf="key == 'School'" class="fw_600">{{ 'Schools'}}</h4>
         <ng-container *ngFor="let item of globalSearchResult[key]">
           <li *ngIf="item.type == 1" class="search-results__item">
             <div class="d-flex align-items-center justify-content-between">
