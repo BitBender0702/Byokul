@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { HttpClient } from "@angular/common/http";
 import { AdminService } from 'src/root/service/admin/admin.service';
@@ -7,13 +7,16 @@ import { EnableDisableClassCourse } from 'src/root/interfaces/admin/enableDisabl
 import { Table } from 'primeng/table';
 import { AuthService } from 'src/root/service/auth.service';
 import { OpenAdminSideBar } from '../admin-template/side-bar/adminSide-bar.component';
+import { MultilingualComponent, changeLanguage } from 'src/root/root/sharedModule/Multilingual/multilingual.component';
+import { Subscription } from 'rxjs';
+
 
 @Component({
   selector: 'registered-classes',
   templateUrl: './registeredClasses.component.html',
   styleUrls: ['registeredClasses.component.css'],
 })
-export class RegisteredClassesComponent implements OnInit {
+export class RegisteredClassesComponent extends MultilingualComponent implements OnInit, OnDestroy {
 
   private _adminService;
   private _authService;
@@ -25,15 +28,19 @@ export class RegisteredClassesComponent implements OnInit {
   isDataLoaded:boolean = false;
   cloned!:any;
   @ViewChild('dt') table!: Table;
+  changeLanguageSubscription!:Subscription;
 
   
-  constructor(private fb: FormBuilder,private http: HttpClient,adminService: AdminService,authService: AuthService) {
+  constructor(injector: Injector,private fb: FormBuilder,private http: HttpClient,adminService: AdminService,authService: AuthService) {
+    super(injector);
     this._adminService = adminService;
     this._authService = authService;
   }
 
   ngOnInit(): void {
     this.loadingIcon = true;
+    this.selectedLanguage = localStorage.getItem("selectedLanguage");
+    this.translate.use(this.selectedLanguage ?? '');
         this._adminService.getRegClasses().subscribe((response) => {
           this.registeredClasses = response;
           this.cloned = response.slice(0);
@@ -42,6 +49,12 @@ export class RegisteredClassesComponent implements OnInit {
         });  
 
         this.InitializeEnableDisableClass();
+
+        if(!this.changeLanguageSubscription){
+          this.changeLanguageSubscription = changeLanguage.subscribe(response => {
+            this.translate.use(response.language);
+          })
+        }
       }
 
       InitializeEnableDisableClass(){
@@ -59,6 +72,12 @@ export class RegisteredClassesComponent implements OnInit {
         else{
           this.enableDisableClass.isDisable = false;
 
+        }
+      }
+
+      ngOnDestroy(): void {
+        if(this.changeLanguageSubscription){
+          this.changeLanguageSubscription.unsubscribe();
         }
       }
 

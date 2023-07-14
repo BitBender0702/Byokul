@@ -88,8 +88,11 @@ import { DSAForSchoolComponent } from './root/DSAForSchool/dsaForSchool.componen
 import { DSAForStudentsComponent } from './root/dsaForStudents/dsaForStudents.component';
 import { ImageCropperModule } from 'ngx-image-cropper'; 
 import { NgxIntlTelInputModule } from 'ngx-intl-tel-input';
+import { IConfig, NgxMaskModule } from 'ngx-mask';
 
-
+export const options: Partial<IConfig> = {
+  thousandSeparator: "'"
+};
 
 
 
@@ -208,6 +211,7 @@ const routes: Routes = [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
     FormsModule,
+    NgxMaskModule.forRoot(options),
     ReactiveFormsModule,
     MultiSelectModule,
     BrowserAnimationsModule,

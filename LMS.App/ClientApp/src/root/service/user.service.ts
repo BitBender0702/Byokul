@@ -174,4 +174,12 @@ export class UserService{
         ); 
     }
 
+    saveUserCertificates(addCertificates:any):Observable<any>{
+        return this.http.post(`${this.apiUrl}/users/saveUserCertificates`,addCertificates,{headers: this.headers});
+    }
+
+    deleteUserCertificate(deleteCertificate:any):Observable<any>{
+        return this.http.post(`${this.apiUrl}/users/deleteUserCertificate`,deleteCertificate,{headers: this.headers});
+    }
+
 }

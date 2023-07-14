@@ -55,3 +55,31 @@
 .cursor_pointer {
   cursor: pointer;
 }
+
+.date_calendar {
+  background-image: url(../../../../assets/images/Calendar.svg);
+  background-repeat: no-repeat;
+  background-position: center right 16px;
+}
+
+.clicked-post-div {
+  position: relative;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  /* Add your desired styling for the div */
+}
+
+
+/* .flex-container {
+  display: flex;
+  background-color: DodgerBlue;
+}
+
+.flex-container > div {
+  background-color: #f1f1f1;
+  padding: 20px;
+  font-size: 30px;
+  border: 2px solid green;
+} */

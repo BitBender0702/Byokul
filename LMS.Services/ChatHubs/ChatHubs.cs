@@ -184,7 +184,7 @@ public class ChatHubs : Hub
 
             var a = UserIDConnectionID[model.UserId.ToString()];
 
-            if (a is not null)
+            if (a is not null || model.NotificationType == NotificationTypeEnum.PostUploaded)
                 await Clients.Client(a).SendAsync("ReceiveNotification", responseNotification);
 
         }
@@ -218,10 +218,12 @@ public class ChatHubs : Hub
             {
                 model.UserId = follower;
                 notificationViewModel = await _notificationService.AddNotification(model);
+                if (UserIDConnectionID.ContainsKey(model.UserId.ToString()))
+                {
+                    var connectionId = UserIDConnectionID[model.UserId.ToString()];
+                    await Clients.Client(connectionId).SendAsync("ReceiveNotification", notificationViewModel);
+                }
             }
-
-
-            await Clients.Clients(model.FollowersIds).SendAsync("ReceiveNotification", notificationViewModel);
         }
 
     }

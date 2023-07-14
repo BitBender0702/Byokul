@@ -291,6 +291,7 @@ export class ChatComponent extends MultilingualComponent implements OnInit, Afte
 
     
     signalRResponse.subscribe(response => {
+      debugger
      if(this.chatHeadId == response.chatHeadId){         
          this._chatService.removeUnreadMessageCount(response.receiverId,response.senderId,Number(response.chatType)).subscribe((result) => {
          });
@@ -370,6 +371,10 @@ if(response.chatType =="1"){
                 user.lastMessage = response.attachments[0].fileName;
                 }
                }
+
+               user.time = new Date().toISOString().slice(0, -1);
+
+              
           
                 var senderDetails ={id:response.id, receiver:result.firstName + " " + result.lastName,message:response.message,isTest:true,receiverId:response.receiverId,isSchoolOwner:this.isSchoolOwner,replyChatContent:response.replyChatContent,replyMessageType:response.replyMessageType,fileName:response.fileName,fileURL:response.fileURL,isForwarded:response.isForwarded,forwardedFileName:response.forwardedFileName,forwardedFileURL:response.forwardedFileURL,forwardedFileType:response.forwardedFileType};
                 this.generateChatLi(senderDetails,result.avatar,"1");
@@ -404,6 +409,8 @@ if(response.chatType =="1"){
       user.lastMessage = response.attachments[0].fileName;
       }
      }
+
+     user.time = new Date().toISOString().slice(0, -1);
 
       var result ={id:response.id,receiver:this.receiverName,message:response.message,isTest:true,receiverId:response.receiverId,isSchoolOwner:this.isSchoolOwner,replyChatContent:response.replyChatContent,replyMessageType:response.replyMessageType,fileName:response.fileName,fileURL:response.fileURL,isForwarded:response.isForwarded,forwardedFileName:response.forwardedFileName,forwardedFileURL:response.forwardedFileURL,forwardedFileType:response.forwardedFileType};
       this.generateChatLi(result,this.receiverAvatar,"1");
@@ -443,6 +450,7 @@ if(response.chatType =="1"){
                  var receiverLastMessage = users.find(x => x.userID == response.senderId && x.chatType == 3);
                  if(receiverLastMessage!= undefined){
                   receiverLastMessage.lastMessage = response.message;
+                  receiverLastMessage.time = new Date().toISOString().slice(0, -1);
                  }
 
                  var schoolUsers: any[] = this.schoolInboxList;
@@ -454,6 +462,7 @@ if(response.chatType =="1"){
                  if(user.school.ownerId == this.sender.id || user.school?.createdById == this.sender.id){
                   this.isSchoolOwner = true;
                   user.lastMessage = response.message;
+                  user.time = new Date().toISOString().slice(0, -1);
                   var senderDetails ={id:response.id,receiver:result.firstName + " " + result.lastName + "(" + user.school.schoolName + ")",message:response.message,isTest:true,receiverId:response.receiverId,isSchoolOwner:this.isSchoolOwner,replyChatContent:response.replyChatContent,replyMessageType:response.replyMessageType,fileName:response.fileName,fileURL:response.fileURL,isForwarded:response.isForwarded,forwardedFileName:response.forwardedFileName,forwardedFileURL:response.forwardedFileURL,forwardedFileType:response.forwardedFileType};
                   this.generateChatLi(senderDetails,result.avatar,"3");
                  }
@@ -479,6 +488,7 @@ if(response.chatType =="1"){
                   user.lastMessage = response.attachments[0].fileName;
                   }
                  }
+                 user.time = new Date().toISOString().slice(0, -1);
                 });
               });
             }
@@ -487,6 +497,7 @@ if(response.chatType =="1"){
        var users: any[] = this.schoolInboxList;
        var user = users.find(x => x.userID == response.senderId);
        user.lastMessage = response.message;
+       user.time = new Date().toISOString().slice(0, -1);
        if(user.school != null){
        if(user.school.ownerId == this.sender.id || user.school?.createdById == this.sender.id){
         this.isSchoolOwner = true;
@@ -500,6 +511,7 @@ if(response.chatType =="1"){
       }
        if(response.message != ""){
         user.lastMessage = response.message;
+        user.time = new Date().toISOString().slice(0, -1);
        }
        else{
         if(response.forwardedFileName != undefined){
@@ -552,6 +564,7 @@ if(response.chatType =="1"){
                  var receiverLastMessage = users.find(x => x.userID == response.senderId && x.chatType == 4);
                  if(receiverLastMessage!= undefined){
                   receiverLastMessage.lastMessage = response.message;
+                  receiverLastMessage.time = new Date().toISOString().slice(0, -1);
                  }
 
                  var classUsers: any[] = this.classInboxList;
@@ -572,6 +585,7 @@ if(response.chatType =="1"){
                  if(user.class.ownerId == this.sender.id || user.class?.createdById == this.sender.id){
                   this.isSchoolOwner = true;
                   user.lastMessage = response.message;
+                  user.time = new Date().toISOString().slice(0, -1);
                   var senderDetails ={id:response.id,receiver:result.firstName + " " + result.lastName ,message:response.message,isTest:true,receiverId:response.receiverId,isSchoolOwner:this.isSchoolOwner,replyChatContent:response.replyChatContent,replyMessageType:response.replyMessageType,fileName:response.fileName,fileURL:response.fileURL,isForwarded:response.isForwarded,forwardedFileName:response.forwardedFileName,forwardedFileURL:response.forwardedFileURL,forwardedFileType:response.forwardedFileType};
                   this.generateChatLi(senderDetails,result.avatar,"4");
                  }
@@ -597,6 +611,7 @@ if(response.chatType =="1"){
               var receiverLastMessage = users.find(x => x.userID == response.senderId && x.chatType == 4);
               if(receiverLastMessage!= undefined){
                receiverLastMessage.lastMessage = response.message;
+               receiverLastMessage.time = new Date().toISOString().slice(0, -1);
               }
 
               var classUsers: any[] = this.classInboxList;
@@ -611,6 +626,7 @@ if(response.chatType =="1"){
        if(user.class.ownerId == this.sender.id || user.class?.createdById == this.sender.id){
         this.isSchoolOwner = true;
         user.lastMessage = response.message;
+        user.time = new Date().toISOString().slice(0, -1);
        }
        else{
         this.isSchoolOwner = false;
@@ -621,6 +637,7 @@ if(response.chatType =="1"){
       }
        if(response.message != ""){
         user.lastMessage = response.message;
+        user.time = new Date().toISOString().slice(0, -1);
        }
        else{
         if(response.forwardedFileName != undefined){
@@ -673,6 +690,7 @@ if(response.chatType =="1"){
                  var receiverLastMessage = users.find(x => x.userID == response.senderId && x.chatType == 5);
                  if(receiverLastMessage!= undefined){
                   receiverLastMessage.lastMessage = response.message;
+                  receiverLastMessage.time = new Date().toISOString().slice(0, -1);
                  }
 
                  var courseUsers: any[] = this.courseInboxList;
@@ -694,6 +712,7 @@ if(response.chatType =="1"){
                  if(user.course.ownerId == this.sender.id || user.course?.createdById == this.sender.id){
                   this.isSchoolOwner = true;
                   user.lastMessage = response.message;
+                  user.time = new Date().toISOString().slice(0, -1);
                   var senderDetails ={id:response.id,receiver:result.firstName + " " + result.lastName ,message:response.message,isTest:true,receiverId:response.receiverId,isSchoolOwner:this.isSchoolOwner,replyChatContent:response.replyChatContent,replyMessageType:response.replyMessageType,fileName:response.fileName,fileURL:response.fileURL,isForwarded:response.isForwarded,forwardedFileName:response.forwardedFileName,forwardedFileURL:response.forwardedFileURL,forwardedFileType:response.forwardedFileType};
                   this.generateChatLi(senderDetails,result.avatar,"5");
                  }
@@ -717,6 +736,7 @@ if(response.chatType =="1"){
               var receiverLastMessage = users.find(x => x.userID == response.senderId && x.chatType == "5");
               if(receiverLastMessage!= undefined){
               receiverLastMessage.lastMessage = response.message;
+              receiverLastMessage.time = new Date().toISOString().slice(0, -1);
               }
        var users: any[] = this.courseInboxList;
        var user = users.find(x => x.userID == response.senderId && x.chatType == "5");
@@ -724,6 +744,7 @@ if(response.chatType =="1"){
        if(user.course.ownerId == this.sender.id || user.course?.createdById == this.sender.id){
         this.isSchoolOwner = true;
         user.lastMessage = response.message;
+        user.time = new Date().toISOString().slice(0, -1);
        }
        else{
         this.isSchoolOwner = false;
@@ -734,6 +755,7 @@ if(response.chatType =="1"){
       }
        if(response.message != ""){
         user.lastMessage = response.message;
+        user.time = new Date().toISOString().slice(0, -1);
        }
        else{
         if(response.forwardedFileName != undefined){
@@ -837,8 +859,9 @@ this.addChatAttachments = {
 
       this.schoolInboxList.forEach((item: any) => {
         var chats:any = {};
-        const dateTime = new Date(item.time);
-        const date = dateTime.toISOString().split('T')[0]; 
+        const date = item.time.slice(0, 10);
+        // const dateTime = new Date(item.time);
+        // const date = dateTime.toISOString().split('T')[0]; 
         if (chats[date]) {
           chats[date].push(item);
         } else {
@@ -907,8 +930,9 @@ this.addChatAttachments = {
         this.firstuserChats = this.allChatUsers[0]?.chats;
         if (this.firstuserChats) {
           this.firstuserChats = this.firstuserChats.reduce((groupedChats: any, chat: any) => {
-            const dateTime = new Date(chat.time);
-            const date = dateTime.toISOString().split('T')[0]; // Extracting the date portion
+            const date = chat.time.slice(0, 10);
+            // const dateTime = new Date(chat.time);
+            // const date = dateTime.toISOString().split('T')[0]; // Extracting the date portion
         
             if (groupedChats[date]) {
               groupedChats[date].push(chat);
@@ -1137,9 +1161,12 @@ this.addChatAttachments = {
     // })
      this.clearChat();
       this.usersChatSub = this._chatService.getUsersChat(this.senderId,recieverId,Number(chatType),pageSize,pageNumber).subscribe((response) => {
+        debugger
         const groupedItems = response.reduce((acc: any, curr: any) => {
-          const dateTime = new Date(curr.time);
-          const date = dateTime.toISOString().split('T')[0]; // Extracting the date portion
+          debugger
+          // const dateTime = new Date(curr.time);
+          const date = curr.time.slice(0, 10);
+          // const date = dateTime.toISOString().split('T')[0]; // Extracting the date portion
           if (acc[date]) {
             acc[date].push(curr);
           } else {
@@ -1220,8 +1247,9 @@ this.addChatAttachments = {
           // her from grouping
           this.firstuserChats = {};
           response.forEach((item:any) => {
-            const dateTime = new Date(item.time);
-            const date = dateTime.toISOString().split('T')[0]; 
+            const date = item.time.slice(0, 10);
+            // const dateTime = new Date(item.time);
+            // const date = dateTime.toISOString().split('T')[0]; 
             if (this.firstuserChats[date]) {
               this.firstuserChats[date].push(item);
             } else {
@@ -1617,10 +1645,12 @@ getTextMessage(evant:any,receiverId:string){
     
     if(this.messageToUser != ""){
       user.lastMessage = this.messageToUser;
+      user.time = new Date().toISOString().slice(0, -1);
     }
     else{
       if(this.forwardedFileName != undefined){
-        user.lastMessage =  this.forwardedFileName;       
+        user.lastMessage =  this.forwardedFileName;   
+        user.time = new Date().toISOString().slice(0, -1);    
       }
       else{
       var attachments  = [ ...this.uploadImage, ...this.uploadVideos,...this.uploadAttachments];
@@ -1732,7 +1762,15 @@ getTextMessage(evant:any,receiverId:string){
   }
 
   generateChatLi(response:any,profileImage:string,chatType:string){
-    const today = new Date().toISOString().split('T')[0];
+    debugger
+    const date = new Date();
+const year = date.getUTCFullYear();
+const month = date.getUTCMonth() + 1; // Add 1 because getUTCMonth() returns a zero-based index
+const day = date.getUTCDate();
+
+const today = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+
+
     if(this.forwardedId != ""){
        if(this.forwardedId == response.receiverName){
          this.isGenerateChatLi = true;
@@ -1756,7 +1794,7 @@ getTextMessage(evant:any,receiverId:string){
       id: response.id != null ? response.id : null, 
       sendByMe: isFromReciever == 'me'?true : false,
       text:response.message,
-      time:new Date(),
+      time: new Date().toISOString().slice(0, -1),
       attachment: [],
       replyMessageType:this.replyMessageType == null ? response.replyMessageType:this.replyMessageType,
       replyChatContent:this.replyChat == "" ? response.replyChatContent:this.replyChat,
@@ -1766,6 +1804,8 @@ getTextMessage(evant:any,receiverId:string){
       forwardedFileURL: response.forwardedFileURL != undefined ? response.forwardedFileURL:this.forwardedFileURL,
       forwardedFileType: response.forwardedFileType != undefined ? response.forwardedFileType :this.forwardedFileType
     }
+
+    
 if(chatType == "1" || (chatType == "3" && !response.isSchoolOwner)){
   const chatExists = this.firstuserChats.hasOwnProperty(today);
   if (chatExists) {
@@ -2019,8 +2059,9 @@ chatHeadsSearch(){
           // here i will 
           this.firstuserChats = {};
           response[0].chats.forEach((item:any) => {
-            const dateTime = new Date(item.time);
-            const date = dateTime.toISOString().split('T')[0]; 
+            const date = item.time.slice(0, 10);
+            // const dateTime = new Date(item.time);
+            // const date = dateTime.toISOString().split('T')[0]; 
             if (this.firstuserChats[date]) {
               this.firstuserChats[date].push(item);
             } else {
@@ -2049,8 +2090,9 @@ scrollChatHandler(event: any) {
 getNextChats(){
      this._chatService.getUsersChat(this.senderId,this.recieverId,Number(this.chatType),7,this.chatsPageNumber).subscribe((response) => {
       response.forEach((item:any) => {
-        const dateTime = new Date(item.time);
-        const date = dateTime.toISOString().split('T')[0]; 
+        const date = item.time.slice(0, 10);
+        // const dateTime = new Date(item.time);
+        // const date = dateTime.toISOString().split('T')[0]; 
         if (this.firstuserChats[date]) {
           this.firstuserChats[date].push(item);
         } else {
@@ -2218,8 +2260,9 @@ groupBySchoolChat(response:any){
     this.schoolInboxList[0].chats = {};
   }
   response.forEach((item:any) => {
-    const dateTime = new Date(item.time);
-    const date = dateTime.toISOString().split('T')[0]; 
+    const date = item.time.slice(0, 10);
+    // const dateTime = new Date(item.time);
+    // const date = dateTime.toISOString().split('T')[0]; 
     if (this.schoolInboxList[0].chats[date]) {
       this.schoolInboxList[0].chats[date].push(item);
     } else {

@@ -17,7 +17,7 @@
       >
         <div class="custom-language-select liv-postbtn">
           <ul class="nav nav-tabs border-0" id="myTab" role="tablist">
-            <li class="nav-item p-0">
+            <li *ngIf="!isEditPost" class="nav-item p-0">
               <button
                 *ngIf="courseId == undefined"
                 [ngClass]="isLiveTabopen ? 'nav-link active post-attch-btn d-inline-flex justify-content-center align-items-center': 'nav-link post-attch-btn d-inline-flex justify-content-center align-items-center'"
@@ -60,7 +60,7 @@
                 {{ "Post" | translate }}
               </button>
             </li>
-            <li class="nav-item p-0">
+            <li *ngIf="!isEditPost" class="nav-item p-0">
               <button
                 (click)="reelsTab()"
                 class="nav-link post-attch-btn d-inline-flex justify-content-center align-items-center"
@@ -84,8 +84,11 @@
             </li>
           </ul>
         </div>
-        <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">
+        <h1 *ngIf="!isEditPost" class="modal-title font_22 text_dark fw_700 border-0 text-center">
           {{ "CreatePost" | translate }}
+        </h1>
+        <h1 *ngIf="isEditPost" class="modal-title font_22 text_dark fw_700 border-0 text-center">
+          {{ "UpdatePost" | translate }}
         </h1>
         <div></div>
         <button
@@ -597,6 +600,22 @@
 
               <div class="img-upl-result pt-4">
                 <span
+                *ngFor="let image of uploadImageUrls"
+                class="position-relative d-inline-block"
+              >
+                <img
+                  [src]="image.imageUrl"
+                  style="height: 150px; max-width: 100%"
+                />
+                <button
+                  (click)="removeUploadImage(image)"
+                  type="button"
+                  class="btn dl-post-img d-flex align-items-center justify-content-center rounded-circle position-absolute"
+                >
+                  <i class="fa-solid fa-xmark"></i>
+                </button>
+              </span>
+                <span
                   *ngFor="let image of uploadImage"
                   class="position-relative d-inline-block"
                 >
@@ -612,6 +631,24 @@
                     <i class="fa-solid fa-xmark"></i>
                   </button>
                 </span>
+                <span
+                *ngFor="let video of uploadVideoUrls"
+                class="position-relative d-inline-block"
+              >
+                <div class="videofile">
+                  <img
+                    [src]="video.videoUrl"
+                    style="height: 150px; max-width: 100%"
+                  />
+                </div>
+                <button
+                  (click)="removeUploadVideo(video)"
+                  type="button"
+                  class="btn dl-post-img d-flex align-items-center justify-content-center rounded-circle position-absolute"
+                >
+                  <i class="fa-solid fa-xmark"></i>
+                </button>
+              </span>
                 <span
                   *ngFor="let video of uploadVideo"
                   class="position-relative d-inline-block"
@@ -664,6 +701,24 @@
               <div
                 class="teacher-tags hashtag_post tag-boxattachment-outer mt-1 mb-0 hover-tags"
               >
+              <span *ngFor="let item of this.attachmentUrls" class="custom-tag"
+              ><img
+                src="../../../assets/images/Paper-gray.svg"
+                class="me-1 dark-svg"
+              />
+              <img
+                src="../../../assets/images/Paper-light.svg"
+                class="me-1 light-svg"
+              />
+              <span *ngIf="item?.name"> {{ item.name }} </span>
+              <span *ngIf="!item?.name"> {{ item.fileName }} </span>
+              <button
+                (click)="removeAttachment(item)"
+                class="border-0 bg-transparent p-0 position-absolute delete-tag"
+              >
+                <img src="../../../assets/images/cross-sm-light.svg" />
+              </button>
+            </span>
                 <span *ngFor="let item of this.attachment" class="custom-tag"
                   ><img
                     src="../../../assets/images/Paper-gray.svg"
@@ -697,6 +752,22 @@
               >
                 {{ "AddMax7Tags" | translate }}
               </small>
+              <div class="dropzone-wrapper">
+              <div class="dropzone-desc">
+                <i class="glyphicon glyphicon-download-alt"></i>
+                <p class="text-center fw_400">
+                  {{ "ChooseImageFile" | translate }}
+                  <b>{{ "DragItHere" | translate }}</b>
+                </p>
+              </div>
+              <input
+                type="file"
+                id="avatar"
+                (change)="handleImageInput($event)"
+                class="dropzone"
+                accept="image/*"
+              />
+            </div>
               <div
                 class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 cr-postfooter pt-0"
               >
@@ -765,7 +836,7 @@
                   </button>
                 </div>
                 <div class="post-bot-right d-flex justify-content-end">
-                  <button
+                  <button *ngIf="!isEditPost"
                     type="button"
                     class="btn custom-btn primary_btn w-100 earning-btn fw_400 delay-btn post-delay-btn position-relative"
                   >

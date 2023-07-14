@@ -1,4 +1,4 @@
-import { Component, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Component, OnInit,Injector, QueryList, ViewChild, ViewChildren, OnDestroy } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { HttpClient } from "@angular/common/http";
 import { AdminService } from 'src/root/service/admin/admin.service';
@@ -8,13 +8,16 @@ import { BanUnbanEnum } from 'src/root/Enums/BanUnbanEnum';
 import { VarifyUsers } from 'src/root/interfaces/admin/verifyUser';
 import { Table } from 'primeng/table';
 import { OpenAdminSideBar } from '../admin-template/side-bar/adminSide-bar.component';
+import { MultilingualComponent, changeLanguage } from 'src/root/root/sharedModule/Multilingual/multilingual.component';
+import { Subscription } from 'rxjs';
+
 
 @Component({
   selector: 'registered-users',
   templateUrl: './registeredUsers.component.html',
   styleUrls: ['registeredUsers.component.css'],
 })
-export class RegisteredUsersComponent implements OnInit {
+export class RegisteredUsersComponent extends MultilingualComponent implements OnInit, OnDestroy {
 
   private _adminService;
   isSubmitted: boolean = false;
@@ -27,15 +30,19 @@ export class RegisteredUsersComponent implements OnInit {
   sortOrder = 'asc';
   cloned!:any;
   @ViewChild('dt') table!: Table;
+  changeLanguageSubscription!:Subscription;
 
 
   
-  constructor(private fb: FormBuilder,private http: HttpClient,adminService: AdminService) {
+  constructor(injector: Injector,private fb: FormBuilder,private http: HttpClient,adminService: AdminService) {
+    super(injector);
     this._adminService = adminService;
   }
 
   ngOnInit(): void {
     this.loadingIcon = true;
+    this.selectedLanguage = localStorage.getItem("selectedLanguage");
+    this.translate.use(this.selectedLanguage ?? '');
         this._adminService.getRegUsers().subscribe((response) => {
           this.registeredUsers = response;
           this.cloned = response.slice(0);
@@ -45,6 +52,17 @@ export class RegisteredUsersComponent implements OnInit {
         this.InitializeBanUnbanUser();
         this.InitializeVerifyUser();
       
+        if(!this.changeLanguageSubscription){
+          this.changeLanguageSubscription = changeLanguage.subscribe(response => {
+            this.translate.use(response.language);
+          })
+        }
+      }
+
+      ngOnDestroy(): void {
+        if(this.changeLanguageSubscription){
+          this.changeLanguageSubscription.unsubscribe();
+        }
       }
 
       InitializeBanUnbanUser(){

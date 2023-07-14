@@ -1,5 +1,6 @@
 ﻿using LMS.Common.Enums;
 using LMS.Common.ViewModels.Chat;
+using LMS.Common.ViewModels.Class;
 using LMS.Common.ViewModels.Common;
 using LMS.Common.ViewModels.User;
 using LMS.Data.Entity;
@@ -189,7 +190,7 @@ namespace LMS.App.Controllers
 
         [Route("getPostsByUserId")]
         [HttpGet]
-        public async Task<IActionResult> GetPostsByUserId(string userId, int pageNumber, int pageSize = 6)
+        public async Task<IActionResult> GetPostsByUserId(string userId, int pageNumber, int pageSize = 12)
         {
             var response = await _userService.GetPostsByUserId(userId, pageNumber, pageSize);
             return Ok(response);
@@ -205,7 +206,7 @@ namespace LMS.App.Controllers
 
         [Route("getMyReels")]
         [HttpGet]
-        public async Task<IActionResult> getMyReels(int pageNumber, int pageSize = 4)
+        public async Task<IActionResult> getMyReels(int pageNumber, int pageSize = 8)
         {
             var userId = await GetUserIdAsync(this._userManager);
             var response = await _userService.GetReelsByUserId(userId, pageNumber, pageSize);
@@ -333,6 +334,22 @@ namespace LMS.App.Controllers
         {
             var user = await _userService.UsersGlobalSearch(searchString, pageNumber, pageSize);
             return Ok(user);
+        }
+
+        [Route("saveUserCertificates")]
+        [HttpPost]
+        public async Task<IActionResult> SaveUserCertificates(SaveUserCertificateViewModel model)
+        {
+            await _userService.SaveUserCertificates(model);
+            return Ok();
+        }
+
+        [Route("deleteUserCertificate")]
+        [HttpPost]
+        public async Task<IActionResult> DeleteUserCertificate([FromBody] UserCertificateViewModel model)
+        {
+            await _userService.DeleteUserCertificate(model);
+            return Ok();
         }
 
 

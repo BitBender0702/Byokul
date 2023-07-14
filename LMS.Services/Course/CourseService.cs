@@ -570,7 +570,7 @@ namespace LMS.Services
 
         public async Task<IEnumerable<PostDetailsViewModel>> GetPostsByCourseId(Guid courseId, string loginUserId, int pageNumber = 1, int pageSize = 12)
         {
-            var courseList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == courseId && (x.PostType == (int)PostTypeEnum.Post || x.PostType == (int)PostTypeEnum.Stream) && x.PostAuthorType == (int)PostAuthorTypeEnum.Course && x.IsPostSchedule != true).OrderByDescending(x => x.IsPinned).ThenByDescending(x => x.CreatedOn).ToListAsync();
+            var courseList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == courseId && (x.PostType == (int)PostTypeEnum.Post || (x.PostType == (int)PostTypeEnum.Stream) && x.IsLive == true) && x.PostAuthorType == (int)PostAuthorTypeEnum.Course && x.IsPostSchedule != true).OrderByDescending(x => x.IsPinned).ThenByDescending(x => x.CreatedOn).ToListAsync();
             var sharedPost = await _userSharedPostRepository.GetAll().ToListAsync();
             var savedPost = await _savedPostRepository.GetAll().ToListAsync();
             var result = _mapper.Map<List<PostDetailsViewModel>>(courseList).Skip((pageNumber - 1) * pageSize).Take(pageSize); ;

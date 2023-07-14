@@ -25,6 +25,10 @@ import { FileStorageService } from 'src/root/service/fileStorage';
 import { AutoComplete } from 'primeng/autocomplete';
 import { Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
+import { postProgressNotification } from '../root.component';
+import { TranslateService } from '@ngx-translate/core';
+import { NotificationService } from 'src/root/service/notification.service';
+import { NotificationType } from 'src/root/interfaces/notification/notificationViewModel';
 export const addPostResponse =new Subject<{}>();  
 
 
@@ -54,6 +58,7 @@ export class CreatePostComponent implements OnInit,OnDestroy {
 
   private _postService;
   private _fileStorageService;
+  private _notificationService;
   isSubmitted: boolean = false;
   isTagsValid: boolean = true;
   isAttachmentsValid: boolean = true;
@@ -123,18 +128,35 @@ export class CreatePostComponent implements OnInit,OnDestroy {
   from!:any;
   isLiveTabopen:boolean = false;
   isVideoDurationExceed:boolean = false;
+  editPostId!:string;
+  editPostDetails:any;
+  loginUserId!:string;
+  isEditPost:boolean = false;
+
+  uploadImageUrls:any[] = [];
+  uploadVideoUrls:any[] = [];
+  attachmentUrls:any[] = [];
 
   @Output() onClose: EventEmitter<any> = new EventEmitter<any>();
 
 
-  constructor(private bsModalRef: BsModalRef,private datePipe: DatePipe,private router: Router,private domSanitizer: DomSanitizer,fileStorageService:FileStorageService, public messageService:MessageService,private bsModalService: BsModalService,public options: ModalOptions,private fb: FormBuilder,postService: PostService,private http: HttpClient,private cd: ChangeDetectorRef) {
+  constructor(private bsModalRef: BsModalRef,private notificationService:NotificationService, private translateService: TranslateService,private datePipe: DatePipe,private router: Router,private domSanitizer: DomSanitizer,fileStorageService:FileStorageService, public messageService:MessageService,private bsModalService: BsModalService,public options: ModalOptions,private fb: FormBuilder,postService: PostService,private http: HttpClient,private cd: ChangeDetectorRef) {
     this._postService = postService;
     this._fileStorageService = fileStorageService;
+    this._notificationService = notificationService;
   }
 
   ngOnInit(): void {
-    debugger
+    this.isOwnerOrNot();
     var initialValue = this.options.initialState;
+
+    if(this.editPostId != undefined){
+      this._postService.getPostById(this.editPostId).subscribe((response) => {
+        this.editPostDetails = response;
+        this.isEditPost = true;
+        this.initializeEditPostForm();
+    });
+  }
     this.from = initialValue?.from;
     var isLiveTabopen  = initialValue?.isLiveTabOpen;
     if(isLiveTabopen == true){
@@ -252,6 +274,62 @@ export class CreatePostComponent implements OnInit,OnDestroy {
     // }
   }
 
+  initializeEditPostForm(){
+    debugger
+    this.createPostForm = this.fb.group({
+      title: this.fb.control(this.editPostDetails.title,[Validators.required]),
+      bodyText: this.fb.control(this.editPostDetails.description,[Validators.required]),
+      scheduleTime: this.fb.control(this.editPostDetails.dateTime)
+    });
+    this.createPostForm.updateValueAndValidity();
+
+    //this.tagLists = this.editPostDetails.postTags;
+    this.tagLists = this.editPostDetails.postTags.map((tagObj: { postTagValue: any; }) => tagObj.postTagValue);
+
+    this.editPostDetails.postAttachments
+  .filter((attachment: { fileType: number; }) => attachment.fileType === 1)
+  .forEach((attachment: { fileUrl: any; fileName: any; }) => {
+    debugger
+    const imageObject = {
+      imageUrl: attachment.fileUrl,
+      name: attachment.fileName
+    };
+    this.uploadImageUrls.push(imageObject);
+    this.cd.detectChanges();
+    // this.uploadImage.push(imageObject);
+  });
+
+  this.editPostDetails.postAttachments
+  .filter((attachment: { fileType: number; }) => attachment.fileType === 2)
+  .forEach((attachment: { fileThumbnail: any; fileName: any; }) => {
+    debugger
+    const imageObject = {
+      videoUrl: attachment.fileThumbnail,
+      name: attachment.fileName
+    };
+    this.uploadVideoUrls.push(imageObject);
+    // this.uploadVideo.push(imageObject);
+  });
+
+  this.editPostDetails.postAttachments
+  .filter((attachment: { fileType: number; }) => attachment.fileType === 3)
+  .forEach((attachment: { fileUrl: any; fileName: any; }) => {
+    debugger
+    const imageObject = {
+      name: attachment.fileName
+    };
+    this.attachmentUrls.push(imageObject);
+    // this.attachment.push(imageObject);
+  });
+
+  //   this.uploadImage = this.editPostDetails.postAttachments
+  // .filter((attachment: { fileType: number; }) => attachment.fileType === 1)
+  // .map((attachment: { fileUrl: any; }) => attachment.fileUrl);
+
+    
+
+  }
+
    ngOnDestroy() {
     this.progressSubscription.unsubscribe();
   }
@@ -274,12 +352,14 @@ export class CreatePostComponent implements OnInit,OnDestroy {
    }
 
    handleImageInput(event: any) {
+    debugger
     var selectedFiles = event.target.files;
     for (let i = 0; i < selectedFiles.length; i++) {
       this.images.push(selectedFiles[i]);
       const reader = new FileReader();
       reader.onload = ((fileIndex) => {
         return () => {
+          debugger
           const imageUrl = reader.result?.toString();
           const imageName = selectedFiles[fileIndex].name;
           const imageObject = { imageUrl, name: imageName };
@@ -301,6 +381,11 @@ export class CreatePostComponent implements OnInit,OnDestroy {
         const imageIndex = this.uploadImage.findIndex((item:any) => item.name === image.name);
         if (imageIndex > -1) {
           this.uploadImage.splice(imageIndex, 1);
+        }
+
+        const imageUrlIndex = this.uploadImageUrls.findIndex((item:any) => item.name === image.name);
+        if (imageUrlIndex > -1) {
+          this.uploadImageUrls.splice(imageUrlIndex, 1);
         }
 
         this.isThumbnailUpload = false;
@@ -384,6 +469,11 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
       if (imageIndex > -1) {
         this.uploadVideo.splice(imageIndex, 1);
       }
+
+      const videoUrlIndex = this.uploadVideoUrls.findIndex((item:any) => item.name === video.name);
+      if (videoUrlIndex > -1) {
+        this.uploadVideoUrls.splice(videoUrlIndex, 1);
+      }
       this.isVideoUpload = false;
  }
 
@@ -407,6 +497,11 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
   const fileAttachmentIndex = this.uploadFromFileStorage.findIndex((item) => item.fileName ===attachment.fileName);
   if (fileAttachmentIndex > -1) {
     this.uploadFromFileStorage.splice(fileAttachmentIndex, 1);
+  }
+
+  const fileAttachmentUrlIndex = this.attachmentUrls.findIndex((item) => item.fileName ===attachment.fileName);
+  if (fileAttachmentUrlIndex > -1) {
+    this.attachmentUrls.splice(fileAttachmentUrlIndex, 1);
   }
     this.cd.detectChanges();
 
@@ -480,7 +575,6 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
  }
 
    savePost(){
-    debugger
     this.isSubmitted=true;
     if (!this.createPostForm.valid) {
       return;
@@ -496,7 +590,28 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
         this.postToUpload.append('dateTime', date.toISOString());
       }
     }
+
+    if(this.videos.length == 0 && this.attachment.length == 0){
     this.loadingIcon = true;
+    }
+    else{
+      this.loadingIcon = true;
+      setTimeout(() => {
+        this.close();
+        this.loadingIcon = false;
+        postProgressNotification.next({});
+      }, 3000);
+    }
+
+    // for edit post
+
+    if(this.isEditPost){
+      this.postToUpload.append('Id', this.editPostDetails.id);
+      this.postToUpload.append('UploadImagesUrls', JSON.stringify(this.uploadImageUrls));
+      this.postToUpload.append('UploadVideosUrls', JSON.stringify(this.uploadVideoUrls));
+      this.postToUpload.append('UploadAttachmentsUrls', JSON.stringify(this.attachmentUrls));
+    }
+
   this.totalFilesLength = this.images.length + this.videos.length + this.attachment.length;
     // for images
     for(var i=0; i<this.images.length; i++){
@@ -534,14 +649,22 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
     // }
     this.postToUpload.append('postTags', JSON.stringify(this.tagLists))
     this._postService.createPost(this.postToUpload).subscribe((response:any) => {  
+      debugger
       this.close();
       this.onClose.emit(response);
       this.isSubmitted=false;
       this.loadingIcon = false;
       addPostResponse.next({response}); 
       this.postToUpload = new FormData();
+      if(this.videos.length != 0 || this.attachment.length != 0){
+        var translatedMessage = this.translateService.instant('PostReadyToViewMessage');
+        var notificationContent = translatedMessage;
+        this._notificationService.initializeNotificationViewModel(this.loginUserId,NotificationType.PostUploaded,notificationContent,this.loginUserId,response.id,response.postType,response,null).subscribe((response) => {
+        });
+      }
+        });
       // this.ngOnInit();
-    });
+  
    }
 
    postFrom(){
@@ -597,6 +720,12 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
 
     
     this.loadingIcon = true;
+    setTimeout(() => {
+      this.close();
+      this.loadingIcon = false;
+      postProgressNotification.next({});
+    }, 3000);
+
     var reel =this.createReelForm.value;
     this.postFrom();
     for(var i=0; i<this.videoThumbnails.length; i++){
@@ -611,12 +740,16 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
     this.postToUpload.append('postTags', JSON.stringify(this.reelsTagLists))
 
     this._postService.createPost(this.postToUpload).subscribe((response:any) => {
-      
+      debugger
       this.isSubmitted=false;
       this.loadingIcon = false;
       this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Reel created successfully'});
       addPostResponse.next({response}); 
       this.postToUpload = new FormData();
+      var translatedMessage = this.translateService.instant('PostReadyToViewMessage');
+      var notificationContent = translatedMessage;
+      this._notificationService.initializeNotificationViewModel(this.loginUserId,NotificationType.PostUploaded,notificationContent,this.loginUserId,response.id,response.postType,response,response.reelId).subscribe((response) => {
+      });
       this.close();
       this.ngOnInit();
     });
@@ -814,6 +947,7 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
    }
 
    liveStream(){
+    debugger
     this.isSubmitted=true;
 
     if(this.scheduleTime != undefined){
@@ -878,7 +1012,6 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
     }
 
     this._postService.createPost(this.postToUpload).subscribe((response:any) => { 
-      debugger
       this.isSubmitted=false;
       this.loadingIcon = false;
       //addPostResponse.next({response}); 
@@ -903,6 +1036,32 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
 openMicroPhone(){
   this.isMicroPhoneOpen = !this.isMicroPhoneOpen;
 }
+
+isOwnerOrNot() {
+  var validToken = localStorage.getItem('jwt');
+  if (validToken != null) {
+    let jwtData = validToken.split('.')[1];
+    let decodedJwtJsonData = window.atob(jwtData);
+    let decodedJwtData = JSON.parse(decodedJwtJsonData);
+    this.loginUserId = decodedJwtData.jti;
+  }
+}
+
+handleFileInput(event: any) {
+  debugger
+  var files = event.target.files;
+  if (files) {
+    for (let i = 0; i < files.length; i++) {
+      const file: File = files.item(i)!;
+      if (file.type.startsWith('image/')) {
+        this.handleImageInput(file);
+      } else if (file.type.startsWith('video/')) {
+        this.handleVideoInput(file);
+      }
+    }
+  }
+}
+
 }
 
    

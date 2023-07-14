@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, Injector, Input, OnDestroy, OnInit } from
 import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { Subject, Subscription } from 'rxjs';
-import { MultilingualComponent } from 'src/root/root/sharedModule/Multilingual/multilingual.component';
+import { MultilingualComponent, changeLanguage } from 'src/root/root/sharedModule/Multilingual/multilingual.component';
 import { AuthService } from 'src/root/service/auth.service';
 import { UserService } from 'src/root/service/user.service';
 export const OpenAdminSideBar =new Subject<{isOpenSideBar:boolean}>(); 
@@ -19,6 +19,8 @@ export class AdminSideBarComponent extends MultilingualComponent implements OnIn
   sidebarInfo:any;
   displaySideBar:boolean = false;
   openAdminSideBarSubscription!: Subscription;
+  changeLanguageSubscription!: Subscription;
+
 
   @Input() isOpenSidebar!:boolean;
 
@@ -43,11 +45,21 @@ export class AdminSideBarComponent extends MultilingualComponent implements OnIn
       });
     }
 
+    if(!this.changeLanguageSubscription){
+      this.changeLanguageSubscription = changeLanguage.subscribe(response => {
+        this.translate.use(response.language);
+      })
+    }
+
   }
 
   ngOnDestroy(): void {
     if(this.openAdminSideBarSubscription){
       this.openAdminSideBarSubscription.unsubscribe();
+    }
+
+    if(this.changeLanguageSubscription){
+      this.changeLanguageSubscription.unsubscribe();
     }
   }
 

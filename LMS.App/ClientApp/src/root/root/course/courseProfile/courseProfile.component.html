@@ -1531,12 +1531,17 @@
                         <label class="font_10">{{
                           "CourseBio" | translate
                         }}</label>
-                        <input
+                        <!-- <input
                           formControlName="description"
                           type="text"
                           class="form-control"
                           placeholder="{{ 'CourseBio' | translate }}"
-                        />
+                        /> -->
+                        <textarea maxlength="200" type="text"
+                        formControlName="description"
+                        class="form-control resize-none ht_96"
+                        placeholder="{{ 'CourseBio' | translate }}"
+                      ></textarea>
                       </div>
                     </div>
                   </div>

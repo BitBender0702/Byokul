@@ -1,6 +1,7 @@
 ﻿using LMS.Common.Enums;
 using LMS.Common.ViewModels.Common;
 using LMS.Common.ViewModels.Post;
+using LMS.Common.ViewModels.School;
 using LMS.Common.ViewModels.User;
 using LMS.Data.Entity;
 
@@ -35,6 +36,8 @@ namespace LMS.Services
         Task ReportFollower(ReportFollowerViewModel model);
         Task<IEnumerable<GlobalSearchViewModel>> GlobalSearch(string searchString, int pageNumber,int pageSize);
         Task<IEnumerable<GlobalSearchViewModel>> UsersGlobalSearch(string searchString, int pageNumber, int pageSize);
+        Task SaveUserCertificates(SaveUserCertificateViewModel model);
+        Task DeleteUserCertificate(UserCertificateViewModel model);
 
 
     }

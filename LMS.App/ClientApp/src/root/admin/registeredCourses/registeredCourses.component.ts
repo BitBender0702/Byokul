@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit,Injector, ViewChild, OnDestroy } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { HttpClient } from "@angular/common/http";
 import { AdminService } from 'src/root/service/admin/admin.service';
@@ -6,13 +6,15 @@ import { EnableDisableClassCourse } from 'src/root/interfaces/admin/enableDisabl
 import { RegisteredCourses } from 'src/root/interfaces/admin/registeredCourses';
 import { Table } from 'primeng/table';
 import { OpenAdminSideBar } from '../admin-template/side-bar/adminSide-bar.component';
+import { MultilingualComponent, changeLanguage } from 'src/root/root/sharedModule/Multilingual/multilingual.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'registered-courses',
   templateUrl: './registeredCourses.component.html',
   styleUrls: ['registeredCourses.component.css'],
 })
-export class RegisteredCoursesComponent implements OnInit {
+export class RegisteredCoursesComponent extends MultilingualComponent implements OnInit,OnDestroy {
 
   private _adminService;
   isSubmitted: boolean = false;
@@ -23,15 +25,19 @@ export class RegisteredCoursesComponent implements OnInit {
   isDataLoaded:boolean = false;
   cloned!:any;
   @ViewChild('dt') table!: Table;
+  changeLanguageSubscription!:Subscription;
   
 
 
-  constructor(private fb: FormBuilder,private http: HttpClient,adminService: AdminService) {
+  constructor(injector: Injector,private fb: FormBuilder,private http: HttpClient,adminService: AdminService) {
+    super(injector);
     this._adminService = adminService;
   }
 
   ngOnInit(): void {
     this.loadingIcon = true;
+    this.selectedLanguage = localStorage.getItem("selectedLanguage");
+    this.translate.use(this.selectedLanguage ?? '');
         this._adminService.getRegCourses().subscribe((response) => {
           this.registeredCourses = response;
           this.cloned = response.slice(0);
@@ -40,6 +46,12 @@ export class RegisteredCoursesComponent implements OnInit {
         });  
 
         this.InitializeEnableDisableCourse();    
+
+        if(!this.changeLanguageSubscription){
+          this.changeLanguageSubscription = changeLanguage.subscribe(response => {
+            this.translate.use(response.language);
+          })
+        }
       }
 
       InitializeEnableDisableCourse(){
@@ -49,6 +61,12 @@ export class RegisteredCoursesComponent implements OnInit {
            };
       }
 
+      ngOnDestroy(): void {
+        if(this.changeLanguageSubscription){
+          this.changeLanguageSubscription.unsubscribe();
+        }
+      }
+      
       getDisableCourseDetails(courseId:string,from:string){
         this.enableDisableCourse.Id = courseId;
         if(from == "Enable"){

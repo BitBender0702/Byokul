@@ -190,6 +190,7 @@ export class SignalrService {
     
     this.hubConnection?.on('ReceiveNotification',
     (model) => {
+      debugger
       notificationResponse.next(model);
     });
 

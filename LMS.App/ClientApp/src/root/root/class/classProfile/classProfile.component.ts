@@ -346,8 +346,8 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
        this.InitializeLikeUnlikePost();
 
        if(!this.addPostSubscription){
-       this.addPostSubscription = addPostResponse.subscribe(response => {
-          this.loadingIcon = true;
+       this.addPostSubscription = addPostResponse.subscribe((postResponse:any) => {
+          // this.loadingIcon = true;
           this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post created successfully'});
           this._classService.getClassById(this.className.replace(" ","").toLowerCase()).subscribe((response) => {
             this.class = response;
@@ -360,7 +360,8 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
             this.postLoadingIcon = false;
             this.scrolled = false;
             this.addClassView(this.class.classId);
-            this.class.posts = this.getFilteredAttachments(this.class.posts);      
+            this.class.posts = this.getFilteredAttachments(this.class.posts);  
+            this.showPostDiv(postResponse.response.id);    
           });
         });
       }
@@ -426,6 +427,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
 
         if(!this.deletePostSubscription){
           this.deletePostSubscription = deletePostResponse.subscribe(response => {
+            this.isGridItemInfo = false;
               this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post deleted successfully'});
               var deletedPost = this.class.posts.find((x: { id: string; }) => x.id == response.postId);
               const index = this.class.posts.indexOf(deletedPost);

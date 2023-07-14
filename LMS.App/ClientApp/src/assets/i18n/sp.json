@@ -309,7 +309,18 @@
   "StateOrProvince": "Provincia/Estado",
   "VideoDurationExceed": "You can not upload a reel longer than 3 minutes",
   "PhoneNumberRequired": "Phone number is required",
-  "InValidPhoneNumber": "Phone number is invalid"
+  "InValidPhoneNumber": "Phone number is invalid",
+  "Edit": "Edit",
+  "UpdatePost": "Update Post",
+  "UpdatedOn": "Updated On",
+  "ReelCreatedSuccessfully": "Reel created successfully",
+  "SchoolList": "School List",
+  "ClassList": "Class List",
+  "CourseList": "Course List",
+  "ResetTable": "Reset Table"
+
+
+
 
 
 

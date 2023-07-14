@@ -1,7 +1,7 @@
-import { Component, ElementRef, Injector, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { Component, ElementRef, Injector, Input, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { CommentLikeUnlike } from 'src/root/interfaces/chat/commentsLike';
 import { CommentViewModel } from 'src/root/interfaces/chat/commentViewModel';
 import { LikeUnlikePost } from 'src/root/interfaces/post/likeUnlikePost';
@@ -23,7 +23,7 @@ export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,ty
     styleUrls: ['classCourseModal.component.css'],
   })
   
-  export class ClassCourseModalComponent implements OnInit {
+  export class ClassCourseModalComponent implements OnInit, OnDestroy {
 
     classCourseItem:any;
     classCourseDetails:any;
@@ -59,6 +59,7 @@ export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,ty
     private _chatService;
     pageNumber:number = 1;
     commentLikeUnlike!:CommentLikeUnlike;
+    commentResponseSubscription!:Subscription;
 
     @ViewChild('groupChatList') groupChatList!: ElementRef;
 
@@ -91,11 +92,13 @@ export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,ty
           this.sender = response;
         });
 
-        commentResponse.subscribe(response => {
+        if(!this.commentResponseSubscription){
+        this.commentResponseSubscription = commentResponse.subscribe(response => {
           var comment: any[] =this.classCourseDetails.classCourseItem.comments;
           var commentObj = {id:response.id,content:response.message,likeCount:0,isCommentLikedByCurrentUser:false,userAvatar:response.senderAvatar};
           comment.push(commentObj);
         });
+      }
 
         commentLikeResponse.subscribe(response => {
           var comments: any[] = this.classCourseDetails.classCourseItem.comments;
@@ -120,6 +123,12 @@ export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,ty
         let decodedJwtJsonData = window.atob(jwtData)
         let decodedJwtData = JSON.parse(decodedJwtJsonData);
         this.userId = decodedJwtData.jti;
+      }
+    }
+
+    ngOnDestroy(): void {
+      if(this.commentResponseSubscription){
+        this.commentResponseSubscription.unsubscribe();
       }
     }
 

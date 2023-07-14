@@ -110,6 +110,42 @@
                 </div>
 
                 <div
+                *ngIf="item.notificationType == 10 && item.postType == 1"
+                style="cursor: pointer"
+                (click)="openPostsViewModel(item.post.id, item.postType)"
+                class="d-flex align-items-center justify-content-between"
+              >
+                <span class="followers-name font_16 text_sec1 fw_600">
+                  <img
+                    [src]="item.avatar"
+                    class="rounded-circle me-2"
+                    style="width: 38px; height: 35px"
+                  />
+                  <p class="font_16 ms-2 d-inline-block fw_400 mb-0">
+                    {{ item.notificationContent }}
+                  </p>
+                </span>
+              </div>
+
+              <div
+              *ngIf="item.notificationType == 10 && item.postType == 3"
+              style="cursor: pointer"
+              (click)="openReelsViewModel(item.postType, item.reelId)"
+              class="d-flex align-items-center justify-content-between"
+            >
+              <span class="followers-name font_16 text_sec1 fw_600">
+                <img
+                  [src]="item.avatar"
+                  class="rounded-circle me-2"
+                  style="width: 38px; height: 35px"
+                />
+                <p class="font_16 ms-2 d-inline-block fw_400 mb-0">
+                  {{ item.notificationContent }}
+                </p>
+              </span>
+            </div>
+
+                <div
                   *ngIf="item.notificationType == 1 && item.reelId != null"
                   style="cursor: pointer"
                   (click)="openReelsViewModel(item.postType, item.reelId)"

@@ -79,6 +79,7 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
   PhoneNumberFormat = PhoneNumberFormat;
 	preferredCountries: CountryISO[] = [CountryISO.UnitedStates, CountryISO.UnitedKingdom];
   selectedCountryISO:any;
+  mask:string = "(000) 000 0000"
   
   constructor(injector: Injector,private translateService: TranslateService,private bsModalService: BsModalService,public messageService:MessageService,private domSanitizer: DomSanitizer,private router: Router,private fb: FormBuilder,schoolService: SchoolService,private http: HttpClient) {
     super(injector);
@@ -113,6 +114,7 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
     this.languages = response;
   });
 
+
   this.createSchoolForm1 = this.fb.group({
     schoolName: this.fb.control('', [Validators.required]),
     countryName: this.fb.control('', [Validators.required]),
@@ -121,6 +123,11 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
     selectedLanguages:this.fb.control('',[Validators.required]),
     phoneNumber: ['', [Validators.required]],
   });
+
+  // this.createSchoolForm1.get("phoneNumber")?.valueChanges.subscribe(value => {
+  //   // Apply custom formatting logic to the phone number
+  //   this.formatPhoneNumber2(value);
+  // });
 
   this.createSchoolForm3 = this.fb.group({
     schoolUrl: this.fb.control('',[Validators.required]),
@@ -360,6 +367,70 @@ ngOnDestroy(): void {
     var countryName = event.value;
     this.selectedCountryISO = CountryISO[countryName as keyof typeof CountryISO];
 
+  }
+
+  onPhoneNumberChange(value: any) {
+    debugger
+    var phoneNumber = this.formatPhoneNumber(value.number);
+     this.createSchoolForm1.get("phoneNumber")?.setValue(phoneNumber);
+    // this.propagateChange(this.phoneNumber);
+  }
+
+  formatPhoneNumber(value: string): string {
+    if (!value) {
+      return '';
+    }
+    // Remove all non-digit characters
+    const cleanedValue = value.replace(/\D/g, '');
+    // Apply the desired format
+    const areaCode = cleanedValue.slice(0, 3);
+    const middlePart = cleanedValue.slice(3, 6);
+    const lastPart = cleanedValue.slice(6, 10);
+    return `(${areaCode}) ${middlePart}-${lastPart}`;
+  }
+  
+  previousString:string = "";
+
+  // formatPhoneNumber2(test:any) {
+  //   debugger
+  //   if(this.previousString == "" || this.previousString != test.number){
+
+  //   let value = test.number;
+  //   // Remove any non-digit characters from the phone number
+  //   value = value.replace(/\D/g, '');
+
+  //   // Apply the desired format (xxx) xxx-xxxx
+  //   const formattedValue = `(${value.slice(0, 3)}) ${value.slice(3, 6)}-${value.slice(6)}`;
+  //   this.previousString = formattedValue;
+  //   // Update the phone number field with the formatted value
+  //   this.createSchoolForm1.get("phoneNumber")?.setValue(formattedValue, { emitEvent: false });
+  // }
+  // }
+
+  formatPhoneNumber2(test: any) {
+    debugger
+    if (this.previousString === '' || this.previousString !== test.number) {
+      const value = test.number;
+      // Remove any non-digit characters from the phone number
+      const digitsOnly = value.replace(/\D/g, '');
+  
+      let formattedValue = '';
+  
+      if (digitsOnly.length <= 3) {
+        // Format as (xxx)
+        formattedValue = `(${digitsOnly.slice(0, 3)})`;
+      } else if (digitsOnly.length <= 6) {
+        // Format as (xxx) xxx
+        formattedValue = `(${digitsOnly.slice(0, 3)}) ${digitsOnly.slice(3, 6)}`;
+      } else {
+        // Apply the desired format (xxx) xxx-xxxx
+        formattedValue = `(${digitsOnly.slice(0, 3)}) ${digitsOnly.slice(3, 6)}-${digitsOnly.slice(6)}`;
+      }
+  
+      this.previousString = formattedValue;
+      // Update the phone number field with the formatted value
+      this.createSchoolForm1.get('phoneNumber')?.setValue(formattedValue, { emitEvent: false });
+    }
   }
   
   

@@ -39,6 +39,11 @@ export class NotificationService{
         return this.http.get(`${this.apiUrl}/notifications/getNotifications`, {params:queryParams,headers: this.headers})
     }
 
+
+
+
+
+
     removeUnreadNotifications():Observable<any>{
       debugger
       return this.http.post(`${this.apiUrl}/notifications/removeUnreadNotifications`,'', {headers: this.headers});
@@ -50,6 +55,7 @@ export class NotificationService{
 
     initializeNotificationViewModel(userid:string,notificationType:NotificationType,notificationContent:string,loginUserId:string,postId?:string | null,postType?:number,post?:any,reelId?:string | null,chatType?:number,chatTypeId?:string| null):Observable<any>{
         this._userService.getUser(loginUserId).subscribe((response) => {
+          debugger
           this.notificationViewModel = {
             id: Constant.defaultGuid,
             userId: userid,

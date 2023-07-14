@@ -1,21 +1,28 @@
-import { Component, OnInit } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Component, Injector, OnInit } from '@angular/core';
+import { Subject, Subscription } from 'rxjs';
 import { AuthService } from '../service/auth.service';
 import { SignalrService } from '../service/signalr.service';
 import { Meta } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, NavigationExtras, Params, Router } from '@angular/router';
 import { Constant } from '../interfaces/constant';
+import { MessageService } from 'primeng/api';
+import { TranslateService } from '@ngx-translate/core';
+import { MultilingualComponent } from './sharedModule/Multilingual/multilingual.component';
+export const postProgressNotification = new Subject();  
 
 @Component({
   selector: 'root-selector',
   templateUrl: './root.component.html',
-  styleUrls: []
+  styleUrls: [],
+  providers: [MessageService]
 })
-export class RootComponent implements OnInit {
+export class RootComponent extends MultilingualComponent implements OnInit {
   title = 'app';
   displaySideBar: boolean = false;
   displayAdminSideBar: boolean = false;
-  constructor( private signalRService: SignalrService, private meta: Meta,authService: AuthService,private router: Router,private route: ActivatedRoute) { 
+  postProgressSubscription!:Subscription;
+  constructor(injector: Injector, private signalRService: SignalrService,public messageService:MessageService,private translateService: TranslateService, private meta: Meta,authService: AuthService,private router: Router,private route: ActivatedRoute) { 
+    super(injector);
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         event.urlAfterRedirects = event.urlAfterRedirects.split('/').slice(0, 3).join('/');
@@ -49,12 +56,27 @@ export class RootComponent implements OnInit {
   }
 
   ngOnInit(): void {
+   debugger
     this.connectSignalR();
-    this.meta.addTag({ property: 'og:title', content: "test" });
-    this.meta.addTag({ property: 'og:type', content: "profile" });
-    this.meta.addTag({ property: 'og:description', content: "description" });
+    this.meta.updateTag({ property: 'og:title', content: "test" });
+    this.meta.updateTag({ property: 'og:type', content: "profile" });
+    this.meta.updateTag({ property: 'og:description', content: "description" });
     // this.meta.addTag({ property: 'og:image', content: "../../assets/images/logo.svg" });
-    this.meta.addTag({ property: 'og:url', content: "byokul.com" });
+    this.meta.updateTag({ property: 'og:url', content: "byokul.com" });
+
+    if(!this.postProgressSubscription){
+      this.postProgressSubscription = postProgressNotification.subscribe(response => {
+        const translatedMessage = this.translateService.instant('PostProgressMessage');
+        const translatedSummary = this.translateService.instant('Info');
+        this.messageService.add({severity:'info', summary:translatedSummary,life: 3000, detail:translatedMessage});
+      })
+    }
+
+    // here if language not selected in local storage we add english by default in local storage
+    var selectedLang = localStorage.getItem('selectedLanguage');
+    if(selectedLang == null || selectedLang == ""){
+      this.translate.use("en");
+    }
   }
 
   connectSignalR() : void {

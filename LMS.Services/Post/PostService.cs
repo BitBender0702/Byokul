@@ -37,6 +37,7 @@ namespace LMS.Services
         private IGenericRepository<Comment> _commentRepository;
         private IGenericRepository<CommentLike> _commentLikeRepository;
         private IGenericRepository<UserSharedPost> _userSharedPostRepository;
+        private IGenericRepository<Notification> _notificationRepository;
         private IGenericRepository<SavedPost> _savedPostRepository;
         private readonly IBlobService _blobService;
         private readonly IUserService _userService;
@@ -47,7 +48,7 @@ namespace LMS.Services
 
         private readonly IDistributedCache _cache;
 
-        public PostService(IMapper mapper, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<User> userRepository, IGenericRepository<Like> likeRpository, IGenericRepository<View> viewRepository, IGenericRepository<Comment> commentRepository, IGenericRepository<CommentLike> commentLikeRepository, IGenericRepository<SavedPost> savedPostRepository, IBlobService blobService, IUserService userService, IChatService chatService, IBigBlueButtonService bigBlueButtonService, IConfiguration config, IGenericRepository<UserSharedPost> userSharedPostRepository, INotificationService notificationService, IDistributedCache cache)
+        public PostService(IMapper mapper, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<User> userRepository, IGenericRepository<Like> likeRpository, IGenericRepository<View> viewRepository, IGenericRepository<Comment> commentRepository, IGenericRepository<CommentLike> commentLikeRepository, IGenericRepository<SavedPost> savedPostRepository, IBlobService blobService, IUserService userService, IChatService chatService, IBigBlueButtonService bigBlueButtonService, IConfiguration config, IGenericRepository<UserSharedPost> userSharedPostRepository, INotificationService notificationService, IDistributedCache cache, IGenericRepository<Notification> notificationRepository)
         {
             _mapper = mapper;
             _postRepository = postRepository;
@@ -70,20 +71,22 @@ namespace LMS.Services
             _userSharedPostRepository = userSharedPostRepository;
             _notificationService = notificationService;
             _cache = cache;
+            _notificationRepository = notificationRepository;
         }
         public async Task<PostViewModel> SavePost(PostViewModel postViewModel, string createdById)
         {
+            Guid PostId = new Guid();
             //if (postViewModel.PostAuthorType == (int)PostAuthorTypeEnum.School)
             //{
             //    await SavePostsInCache(postViewModel);
             //}
 
 
-            // Store a value in cache
-            await _cache.SetStringAsync("postTitle", postViewModel.Title);
+            //// Store a value in cache
+            //await _cache.SetStringAsync("postTitle", postViewModel.Title);
 
-            // Retrieve a value from cache
-            string cachedValue = await _cache.GetStringAsync("postTitle");
+            //// Retrieve a value from cache
+            //string cachedValue = await _cache.GetStringAsync("postTitle");
 
             var blobVideoUrls = new List<string>();
             IEnumerable<FileAttachmentViewModel> uploadFromFileStorage = null;
@@ -94,34 +97,92 @@ namespace LMS.Services
                 uploadFromFileStorage = JsonConvert.DeserializeObject<IEnumerable<FileAttachmentViewModel>>(postViewModel.UploadFromFileStorage.First());
             }
 
-            var post = new Post
+            if (postViewModel.Id != null && postViewModel.Id != new Guid())
             {
-                Title = postViewModel.Title,
-                Status = postViewModel.Status,
-                OwnerId = postViewModel.OwnerId,
-                AuthorId = postViewModel.AuthorId,
-                DateTime = postViewModel.DateTime,
-                PostType = postViewModel.PostType,
-                Description = postViewModel.Description,
-                PostAuthorType = postViewModel.PostAuthorType,
-                ParentId = postViewModel.ParentId,
-                CoverLetter = postViewModel.CoverLetter,
-                IsPostSchedule = false,
-                CommentsPerMinute = postViewModel.CommentsPerMinute == 0 ? null : postViewModel.CommentsPerMinute,
-                //IsLive = (postViewModel.DateTime == null && postViewModel.PostType == 2) ? true : false,
-                CreatedById = createdById,
-                CreatedOn = DateTime.UtcNow
-            };
-
-            _postRepository.Insert(post);
-            try
-            {
-                _postRepository.Save();
-                postViewModel.Id = post.Id;
+               PostId = await UpdatePost(postViewModel, createdById);
             }
-            catch (Exception ex)
+
+            else
             {
-                throw ex;
+                var post = new Post
+                {
+                    Title = postViewModel.Title,
+                    Status = postViewModel.Status,
+                    OwnerId = postViewModel.OwnerId,
+                    AuthorId = postViewModel.AuthorId,
+                    DateTime = postViewModel.DateTime,
+                    PostType = postViewModel.PostType,
+                    Description = postViewModel.Description,
+                    PostAuthorType = postViewModel.PostAuthorType,
+                    ParentId = postViewModel.ParentId,
+                    CoverLetter = postViewModel.CoverLetter,
+                    IsPostSchedule = false,
+                    CommentsPerMinute = postViewModel.CommentsPerMinute == 0 ? null : postViewModel.CommentsPerMinute,
+                    //IsLive = (postViewModel.DateTime == null && postViewModel.PostType == 2) ? true : false,
+                    CreatedById = createdById,
+                    CreatedOn = DateTime.UtcNow
+                };
+
+                _postRepository.Insert(post);
+                try
+                {
+                    _postRepository.Save();
+                    postViewModel.Id = post.Id;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+
+                if (postViewModel.PostType == (int)PostTypeEnum.Stream && postViewModel.DateTime != null)
+                {
+                    post.StreamUrl = blobVideoUrls[0];
+                    post.IsPostSchedule = true;
+                    _postRepository.Update(post);
+                    _postRepository.Save();
+                    DateTimeOffset scheduledTime = new DateTimeOffset(postViewModel.DateTime.Value);
+                    await ScheduleLiveStream(postViewModel, createdById, scheduledTime);
+                }
+                else
+                {
+                    if (postViewModel.PostType == (int)PostTypeEnum.Stream)
+                    {
+                        if (postViewModel.UploadVideos != null)
+                        {
+                            post.StreamUrl = blobVideoUrls[0];
+                            post.IsLive = true;
+                            _postRepository.Update(post);
+                            _postRepository.Save();
+                        }
+                        else
+                        {
+                            var user = _userRepository.GetById(createdById);
+                            var model = new NewMeetingViewModel();
+                            model.meetingName = postViewModel.Title;
+                            model.IsMicrophoneOpen = (bool)postViewModel.IsMicroPhoneOpen;
+                            model.ModeratorName = user.FirstName;
+                            model.PostId = post.Id;
+                            var url = await _bigBlueButtonService.Create(model);
+                            postViewModel.StreamUrl = url;
+                            post.StreamUrl = url;
+                            post.IsLive = true;
+                            _postRepository.Update(post);
+                            _postRepository.Save();
+                        }
+                    }
+
+                    if ((postViewModel.PostType == (int)PostTypeEnum.Post || postViewModel.PostType == (int)PostTypeEnum.Reel) && postViewModel.DateTime != null)
+                    {
+                        post.IsPostSchedule = true;
+                        _postRepository.Update(post);
+                        _postRepository.Save();
+                        DateTimeOffset scheduledTime = new DateTimeOffset(postViewModel.DateTime.Value);
+                        var scheduleJobId = BackgroundJob.Schedule(() => SaveSchedulePostInfo(postViewModel.Id), scheduledTime);
+                    }
+
+                }
+
+                PostId = post.Id;
             }
 
             if (postViewModel.UploadImages != null)
@@ -149,55 +210,117 @@ namespace LMS.Services
                 await SaveFileStorageAttachments(uploadFromFileStorage, postViewModel.Id, createdById);
             }
 
-            if (postViewModel.PostType == (int)PostTypeEnum.Stream && postViewModel.DateTime != null)
-            {
-                post.StreamUrl = blobVideoUrls[0];
-                post.IsPostSchedule = true;
-                _postRepository.Update(post);
-                _postRepository.Save();
-                DateTimeOffset scheduledTime = new DateTimeOffset(postViewModel.DateTime.Value);
-                await ScheduleLiveStream(postViewModel, createdById, scheduledTime);
-            }
-            else
-            {
-                if (postViewModel.PostType == (int)PostTypeEnum.Stream)
-                {
-                    if (postViewModel.UploadVideos != null)
-                    {
-                        post.StreamUrl = blobVideoUrls[0];
-                        post.IsLive = true;
-                        _postRepository.Update(post);
-                        _postRepository.Save();
-                    }
-                    else
-                    {
-                        var user = _userRepository.GetById(createdById);
-                        var model = new NewMeetingViewModel();
-                        model.meetingName = postViewModel.Title;
-                        model.IsMicrophoneOpen = (bool)postViewModel.IsMicroPhoneOpen;
-                        model.ModeratorName = user.FirstName;
-                        model.PostId = post.Id;
-                        var url = await _bigBlueButtonService.Create(model);
-                        postViewModel.StreamUrl = url;
-                        post.StreamUrl = url;
-                        post.IsLive = true;
-                        _postRepository.Update(post);
-                        _postRepository.Save();
-                    }
-                }
+            //if (postViewModel.PostType == (int)PostTypeEnum.Stream && postViewModel.DateTime != null)
+            //{
+            //    post.StreamUrl = blobVideoUrls[0];
+            //    post.IsPostSchedule = true;
+            //    _postRepository.Update(post);
+            //    _postRepository.Save();
+            //    DateTimeOffset scheduledTime = new DateTimeOffset(postViewModel.DateTime.Value);
+            //    await ScheduleLiveStream(postViewModel, createdById, scheduledTime);
+            //}
+            //else
+            //{
+            //    if (postViewModel.PostType == (int)PostTypeEnum.Stream)
+            //    {
+            //        if (postViewModel.UploadVideos != null)
+            //        {
+            //            post.StreamUrl = blobVideoUrls[0];
+            //            post.IsLive = true;
+            //            _postRepository.Update(post);
+            //            _postRepository.Save();
+            //        }
+            //        else
+            //        {
+            //            var user = _userRepository.GetById(createdById);
+            //            var model = new NewMeetingViewModel();
+            //            model.meetingName = postViewModel.Title;
+            //            model.IsMicrophoneOpen = (bool)postViewModel.IsMicroPhoneOpen;
+            //            model.ModeratorName = user.FirstName;
+            //            model.PostId = post.Id;
+            //            var url = await _bigBlueButtonService.Create(model);
+            //            postViewModel.StreamUrl = url;
+            //            post.StreamUrl = url;
+            //            post.IsLive = true;
+            //            _postRepository.Update(post);
+            //            _postRepository.Save();
+            //        }
+            //    }
 
-                if ((postViewModel.PostType == (int)PostTypeEnum.Post || postViewModel.PostType == (int)PostTypeEnum.Reel) && postViewModel.DateTime != null)
-                {
-                    post.IsPostSchedule = true;
-                    _postRepository.Update(post);
-                    _postRepository.Save();
-                    DateTimeOffset scheduledTime = new DateTimeOffset(postViewModel.DateTime.Value);
-                    var scheduleJobId = BackgroundJob.Schedule(() => SaveSchedulePostInfo(postViewModel.Id), scheduledTime);
-                }
+            //    if ((postViewModel.PostType == (int)PostTypeEnum.Post || postViewModel.PostType == (int)PostTypeEnum.Reel) && postViewModel.DateTime != null)
+            //    {
+            //        post.IsPostSchedule = true;
+            //        _postRepository.Update(post);
+            //        _postRepository.Save();
+            //        DateTimeOffset scheduledTime = new DateTimeOffset(postViewModel.DateTime.Value);
+            //        var scheduleJobId = BackgroundJob.Schedule(() => SaveSchedulePostInfo(postViewModel.Id), scheduledTime);
+            //    }
 
+            //}
+
+            if (postViewModel.PostType == (int)PostTypeEnum.Reel)
+            {
+                postViewModel.ReelId = await _postAttachmentRepository.GetAll().Where(x => x.PostId == PostId).Select(x => x.Id).FirstAsync();
             }
-            postViewModel.Id = post.Id;
+            postViewModel.Id = PostId;
             return postViewModel;
+        }
+
+        public async Task<Guid> UpdatePost(PostViewModel model, string createdById)
+        {
+            var post = _postRepository.GetById(model.Id);
+            post.Title = model.Title;
+            post.Description = model.Description;
+            post.UpdatedOn = DateTime.UtcNow;
+
+            _postRepository.Update(post);
+            _postRepository.Save();
+
+
+            // add images url
+
+            var imageList = await _postAttachmentRepository.GetAll().Where(x => x.PostId == model.Id && x.FileType == (int)FileTypeEnum.Image).ToListAsync();
+            var imagesUrls = JsonConvert.DeserializeObject<IEnumerable<UploadUrls>>(model.UploadImagesUrls);
+
+            foreach (var item in imageList)
+            {
+                if (!imagesUrls.Any(X => X.ImageUrl == item.FileUrl))
+                {
+                    var attachment = await _postAttachmentRepository.GetAll().Where(x => x.FileUrl == item.FileUrl).FirstAsync();
+                    _postAttachmentRepository.Delete(attachment.Id);
+                    _postAttachmentRepository.Save();
+                }
+            }
+
+            var videoList = await _postAttachmentRepository.GetAll().Where(x => x.PostId == model.Id && x.FileType == (int)FileTypeEnum.Video).ToListAsync();
+            var videosUrls = JsonConvert.DeserializeObject<IEnumerable<UploadUrls>>(model.UploadVideosUrls);
+
+            foreach (var item in videoList)
+            {
+                if (!videosUrls.Any(X => X.Name == item.FileName))
+                {
+                    var attachment = await _postAttachmentRepository.GetAll().Where(x => x.FileName == item.FileName).FirstAsync();
+                    _postAttachmentRepository.Delete(attachment.Id);
+                    _postAttachmentRepository.Save();
+                }
+            }
+
+            var attachmentList = await _postAttachmentRepository.GetAll().Where(x => x.PostId == model.Id && x.FileType == (int)FileTypeEnum.Attachment).ToListAsync();
+            var attachmentsUrls = JsonConvert.DeserializeObject<IEnumerable<UploadUrls>>(model.UploadAttachmentsUrls);
+
+            foreach (var item in attachmentList)
+            {
+                if (!attachmentsUrls.Any(X => X.Name == item.FileName))
+                {
+                    var attachment = await _postAttachmentRepository.GetAll().Where(x => x.FileName == item.FileName).FirstAsync();
+                    _postAttachmentRepository.Delete(attachment.Id);
+                    _postAttachmentRepository.Save();
+                }
+            }
+
+            return model.Id;
+
+
         }
 
         //public async Task SavePostsInCache(PostViewModel postViewModel)
@@ -377,6 +500,12 @@ namespace LMS.Services
 
         async Task SavePostTags(IEnumerable<string> postTags, Guid postId)
         {
+            var postTagList = await _postTagRepository.GetAll().Where(x => x.PostId == postId).ToListAsync();
+            if (postTagList.Count() != 0)
+            {
+                _postTagRepository.DeleteAll(postTagList);
+                _postTagRepository.Save();
+            }
             foreach (var tagValue in postTags)
             {
                 var postTag = new PostTag
@@ -464,6 +593,23 @@ namespace LMS.Services
                 {
                     post.IsClassPrivateOrPaid = true;
                 }
+
+                post.ParentName = classes.ClassName;
+                post.ParentImageUrl = classes.Avatar;
+            }
+
+            if (post.PostAuthorType == (int)PostAuthorTypeEnum.User)
+            {
+                var user = _userRepository.GetById(post.ParentId.ToString());
+                post.ParentName = user.FirstName + " " + user.LastName;
+                post.ParentImageUrl = user.Avatar;
+            }
+
+            if (post.PostAuthorType == (int)PostAuthorTypeEnum.School)
+            {
+                var school = _schoolRepository.GetById(post.ParentId);
+                post.ParentName = school.SchoolName;
+                post.ParentImageUrl = school.Avatar;
             }
 
             post.PostAttachments = await GetAttachmentsByPostId(post.Id);
@@ -1015,6 +1161,14 @@ namespace LMS.Services
                 _userSharedPostRepository.DeleteAll(postShared);
                 //_postTagRepository.Save();
             }
+
+            var notifications = await _notificationRepository.GetAll().Where(x => x.PostId == id).ToListAsync();
+            if (notifications.Count() != 0)
+            {
+                _notificationRepository.DeleteAll(notifications);
+                //_postTagRepository.Save();
+            }
+
             _postRepository.Delete(post.Id);
             _postRepository.Save();
         }

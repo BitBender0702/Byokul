@@ -85,6 +85,7 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
     fileCount:number = 1;
     progressSubscription!: Subscription;
     changeLanguageSubscription!: Subscription;
+    commentResponseSubscription!:Subscription;
 
     @ViewChild('closeFileModal') closeFileModal!: ElementRef;
     @ViewChild('closeFolderModal') closeFolderModal!: ElementRef;
@@ -157,6 +158,9 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
       }
       if(this.progressSubscription){
         this.progressSubscription.unsubscribe();
+      }
+      if(this.commentResponseSubscription){
+        this.commentResponseSubscription.unsubscribe();
       }
     }
 
@@ -540,13 +544,15 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
   }
 
   commentResponse(){
-    commentResponse.subscribe(response => {
+    if(!this.commentResponseSubscription){
+    this.commentResponseSubscription = commentResponse.subscribe(response => {
       var comment: any[] = this.fileComments;
       var commentObj = {id:response.id,content:response.message,likeCount:0,isCommentLikedByCurrentUser:false,userAvatar:response.senderAvatar,createdOn:response.createdOn,userName:response.userName};
       comment.push(commentObj);
       this.cd.detectChanges();
       this.groupChatList.nativeElement.scrollTop = this.groupChatList.nativeElement.scrollHeight;
     });
+  }
   }
 
   back(){

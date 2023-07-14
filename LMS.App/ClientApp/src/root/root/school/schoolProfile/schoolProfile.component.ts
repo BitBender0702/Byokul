@@ -46,7 +46,7 @@ import { ownedSchoolResponse } from '../createSchool/createSchool.component';
 import * as $ from 'jquery';
 import { ClassCourseModalComponent, savedClassCourseResponse } from '../../ClassCourseModal/classCourseModal.component';
 import { NotificationService } from 'src/root/service/notification.service';
-import { NotificationType } from 'src/root/interfaces/notification/notificationViewModel';
+import { NotificationType, NotificationViewModel } from 'src/root/interfaces/notification/notificationViewModel';
 import { CourseService } from 'src/root/service/course.service';
 import { ClassService } from 'src/root/service/class.service';
 import { ClassCourseFilterTypeEnum } from 'src/root/Enums/classCourseFilterTypeEnum';
@@ -66,10 +66,15 @@ import { TranslateService } from '@ngx-translate/core';
 import { UserService } from 'src/root/service/user.service';
 import { Dimensions, ImageCroppedEvent, ImageTransform } from 'ngx-image-cropper';
 import { CountryISO, PhoneNumberFormat, SearchCountryField } from 'ngx-intl-tel-input';
-
+import { DatePipe } from '@angular/common';
+import flatpickr from 'flatpickr';
+import { Arabic } from 'flatpickr/dist/l10n/ar';
+import { Spanish } from 'flatpickr/dist/l10n/es';
+import { Turkish } from 'flatpickr/dist/l10n/tr';
+import { SignalrService } from 'src/root/service/signalr.service';
 export const deleteSchoolResponse =new BehaviorSubject <string>('');  
 
-
+import { NgxMaskModule } from 'ngx-mask';
 
 
 @Component({
@@ -89,6 +94,7 @@ export class SchoolProfileComponent
   private _courseService;
   private _authService;
   private _userService;
+  private _signalrService;
   school: any;
   isProfileGrid: boolean = false;
   isOpenSidebar: boolean = false;
@@ -169,6 +175,7 @@ export class SchoolProfileComponent
   PhoneNumberFormat = PhoneNumberFormat;
 	preferredCountries: CountryISO[] = [CountryISO.UnitedStates, CountryISO.UnitedKingdom];
   selectedCountryISO:any;
+  notificationViewModel!:NotificationViewModel;
   
 
   @ViewChild('closeEditModal') closeEditModal!: ElementRef;
@@ -222,7 +229,15 @@ export class SchoolProfileComponent
   selectedImage: any = '';
   isSelected: boolean = false;
   cropModalRef!: BsModalRef;
+
+  mask = '(000) 000-0000';
+  @ViewChild('founded') founded!: ElementRef;
   @ViewChild('hiddenButton') hiddenButtonRef!: ElementRef;
+
+
+  // test
+  clickedPostId: string | null = null;
+showDiv: boolean = false;
   
 
   constructor(
@@ -249,6 +264,8 @@ export class SchoolProfileComponent
     private el: ElementRef,
     private meta: Meta,
     private titleService: Title,
+    private datePipe: DatePipe,
+    signalRService:SignalrService,
     
   ) {
     super(injector);
@@ -259,6 +276,7 @@ export class SchoolProfileComponent
     this._courseService = courseService
     this._authService = authService;
     this._userService = userService;
+    this._signalrService = signalRService;
     this.schoolParamsData$ = this.route.params.subscribe((routeParams) => {
       this.schoolName = routeParams.schoolName;
       if (!this.loadingIcon && this.isOnInitInitialize){
@@ -317,6 +335,7 @@ export class SchoolProfileComponent
     
 
     this._schoolService.getSchoolById(this.schoolName.replace(' ', '').toLowerCase()).subscribe(async (response) => {
+      debugger
         this.frontEndPageNumber = 1;
         this.reelsPageNumber = 1;
         this.school = response;
@@ -420,9 +439,15 @@ export class SchoolProfileComponent
     };
 
     if(!this.addPostSubscription){
-      this.addPostSubscription = addPostResponse.subscribe((response) => {
-        this.loadingIcon = true;
-        const translatedMessage = this.translateService.instant('PostCreatedSuccessfully');
+      this.addPostSubscription = addPostResponse.subscribe((postResponse:any) => {
+        debugger
+        // this.loadingIcon = true;
+        if(postResponse.response.postType == 1){
+          var translatedMessage = this.translateService.instant('PostCreatedSuccessfully');
+        }
+        else{
+          var translatedMessage = this.translateService.instant('ReelCreatedSuccessfully');
+        }
         const translatedSummary = this.translateService.instant('Success');
         this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage,});
         this._schoolService.getSchoolById(this.schoolName.replace(' ', '').toLowerCase()).subscribe((response) => {
@@ -436,7 +461,8 @@ export class SchoolProfileComponent
            this.isOwnerOrNot();
            this.loadingIcon = false;
            this.isDataLoaded = true;
-           this.school.posts = this.getFilteredAttachments(this.school.posts);     
+           this.school.posts = this.getFilteredAttachments(this.school.posts);  
+           this.showPostDiv(postResponse.response.id);   
           });
      });
     }
@@ -505,7 +531,7 @@ export class SchoolProfileComponent
       this.deletePostSubscription = deletePostResponse.subscribe(response => {
         const translatedSummary = this.translateService.instant('Success');
         const translatedMessage = this.translateService.instant('PostDeletedSuccessfully');
-
+        this.isGridItemInfo = false;
           this.messageService.add({severity:'success', summary:translatedSummary,life: 3000, detail:translatedMessage});
           var deletedPost = this.school.posts.find((x: { id: string; }) => x.id == response.postId);
           const index = this.school.posts.indexOf(deletedPost);
@@ -687,7 +713,7 @@ export class SchoolProfileComponent
     }
   }
 
-  followSchool(schoolId: string, from: string) {
+  followSchool(schoolId: string, from: string,school:any) {
     if (this.validToken == '') {
       window.open('user/auth/login', '_blank');
     } else {
@@ -696,6 +722,10 @@ export class SchoolProfileComponent
         this.followersLength += 1;
         this.isFollowed = true;
         this.followUnfollowSchool.isFollowed = true;
+        var notificationContent = `followed your school ${school.schoolName}`
+        var postId = '00000000-0000-0000-0000-000000000000';
+        var post = null;
+        this.initializeNotificationViewModel(school.createdById,NotificationType.Followings,notificationContent,postId,school.schoolId);
       } else {
         this.followersLength -= 1;
         this.isFollowed = false;
@@ -711,6 +741,27 @@ export class SchoolProfileComponent
         });
     }
   }
+
+     initializeNotificationViewModel(userid:string,notificationType:NotificationType,notificationContent:string,postId:string,schoolId?:string,postType?:number,post?:any){
+      this._userService.getUser(this.userId).subscribe((response) => {
+        debugger
+        this.notificationViewModel = {
+          id:'00000000-0000-0000-0000-000000000000',
+          userId: userid,
+          actionDoneBy: this.userId,
+          avatar: response.avatar,
+          isRead:false,
+          notificationContent:`${response.firstName + ' ' + response.lastName + ' ' + notificationContent}`,
+          notificationType:notificationType,
+          postId:postId,
+          postType:postType,
+          post:post,
+          followersIds:null,
+          chatTypeId:schoolId
+        }
+        this._signalrService.sendNotification(this.notificationViewModel);
+      });
+    }
 
   back(): void {
     window.history.back();
@@ -761,7 +812,15 @@ export class SchoolProfileComponent
     var founded = this.editSchool.founded;
     if (founded != null) {
       founded = founded.substring(0, founded.indexOf('T'));
+      founded = this.datePipe.transform(founded, 'MM/dd/yyyy');
     }
+
+    flatpickr('#founded',{
+      minDate:"1903-12-31",
+      maxDate:new Date(),
+      dateFormat: "m/d/Y",
+      defaultDate: founded
+      });
 
     this.selectedCountryISO = CountryISO[this.requiredCountry.countryName as keyof typeof CountryISO];
 
@@ -1308,6 +1367,10 @@ export class SchoolProfileComponent
   }
 
   showPostDiv(postId: string) {
+    debugger
+    this.clickedPostId = postId;
+    this.showDiv = true;
+    
     var posts: any[] = this.school.posts;
     this.gridItemInfo = posts.find((x) => x.id == postId);
     if(this.gridItemInfo.isLive){
@@ -1772,4 +1835,48 @@ export class SchoolProfileComponent
 
   }
 
+  getSelectedLanguage(){
+    var selectedLanguage = localStorage.getItem("selectedLanguage");
+    this.translate.use(selectedLanguage ?? '');
+    var locale = selectedLanguage == "ar" ? Arabic: selectedLanguage == "sp"? Spanish : selectedLanguage == "tr"? Turkish : null
+    const dateOfBirthElement = this.founded.nativeElement;
+    dateOfBirthElement._flatpickr.set("locale", locale); 
+  }
+
+  onPhoneNumberChange(value: any) {
+    debugger
+    var phoneNumber = this.formatPhoneNumber(value.number);
+    // this.propagateChange(this.phoneNumber);
+  }
+
+  formatPhoneNumber(value: string): string {
+    debugger
+    if (!value) {
+      return '';
+    }
+    // Remove all non-digit characters
+    const cleanedValue = value.replace(/\D/g, '');
+    // Apply the desired format
+    const areaCode = cleanedValue.slice(0, 3);
+    const middlePart = cleanedValue.slice(3, 6);
+    const lastPart = cleanedValue.slice(6, 10);
+    return `(${areaCode}) ${middlePart}-${lastPart}`;
+  }
+
+  previousGuid:string = '';
+   generateGuid():string {  
+    return Math.random().toString(36).substring(2, 15) +
+    Math.random().toString(36).substring(2, 15);
+
+    }
+
+
+    getRandomClass(index:number){
+      if(index %3 == 0){
+      this.previousGuid = this.generateGuid();
+      }
+        return this.previousGuid;
+    }
+
 }
+

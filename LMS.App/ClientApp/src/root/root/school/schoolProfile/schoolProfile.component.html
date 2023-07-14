@@ -5,7 +5,11 @@
         <div
           class="create-post-header d-flex justify-content-between d-none d-xl-flex"
         >
-        <button #hiddenButton hidden (click)="cropModalOpen(cropTemplate)"></button>
+          <button
+            #hiddenButton
+            hidden
+            (click)="cropModalOpen(cropTemplate)"
+          ></button>
           <button
             (click)="back()"
             mat-mini-fab
@@ -15,14 +19,14 @@
             <img src="../../../../assets/images/arrow-left.svg" />
             {{ "Back" | translate }}
           </button>
-          <button
-          *ngIf="isOwner || hasPostPermission"
-          (click)="openPostModal(true)"
-          type="button"
-          class="btn custom-btn primary_btn earning-btn fw_400 h_44"
-        >
-          {{ "GoLive" | translate }}
-        </button>
+          <!-- <button
+            *ngIf="isOwner || hasPostPermission"
+            (click)="openPostModal(true)"
+            type="button"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44"
+          >
+            {{ "GoLive" | translate }}
+          </button> -->
           <button
             *ngIf="isOwner || hasPostPermission"
             (click)="openPostModal(false)"
@@ -130,7 +134,7 @@
               </div>
               <button
                 *ngIf="!isOwner && !isFollowed"
-                (click)="followSchool(school.schoolId, 'Follow')"
+                (click)="followSchool(school.schoolId, 'Follow',school)"
                 type="button"
                 class="btn orange-button"
               >
@@ -138,7 +142,7 @@
               </button>
               <button
                 *ngIf="!isOwner && isFollowed"
-                (click)="followSchool(school.schoolId, 'UnFollow')"
+                (click)="followSchool(school.schoolId, 'UnFollow',school)"
                 type="button"
                 class="btn orange-button"
               >
@@ -193,129 +197,131 @@
           </div>
         </div>
         <div *ngIf="school.teachers.length != 0 || this.isOwner">
-        <div class="teacher-tags tag-box hover-tags">
-          <div class="teacher-content font_14 d-inline-block">
-            <img src="../../../../assets/images/Profile-dark.svg" />{{
-              "Teachers" | translate
-            }}
-          </div>
+          <div class="teacher-tags tag-box hover-tags">
+            <div class="teacher-content font_14 d-inline-block">
+              <img src="../../../../assets/images/Profile-dark.svg" />{{
+                "Teachers" | translate
+              }}
+            </div>
 
-          <span *ngFor="let item of school.teachers" class="custom-tag"
-            >{{ item.firstName + " " + item.lastName
-            }}<button
-              (click)="getDeletedTeacher(item.teacherId)"
-              class="border-0 bg-transparent p-0 position-absolute delete-tag"
-              data-bs-toggle="modal"
-              data-bs-target="#delete-schoolTeacher"
-            >
-              <img
-                *ngIf="isOwner || hasManageTeachersPermission"
-                src="../../../../assets/images/cross-sm-light.svg"
-              /></button
-          ></span>
+            <span *ngFor="let item of school.teachers" class="custom-tag"
+              >{{ item.firstName + " " + item.lastName
+              }}<button
+                (click)="getDeletedTeacher(item.teacherId)"
+                class="border-0 bg-transparent p-0 position-absolute delete-tag"
+                data-bs-toggle="modal"
+                data-bs-target="#delete-schoolTeacher"
+              >
+                <img
+                  *ngIf="isOwner || hasManageTeachersPermission"
+                  src="../../../../assets/images/cross-sm-light.svg"
+                /></button
+            ></span>
 
-          <span
-            *ngIf="isOwner || hasManageTeachersPermission"
-            class="custom-tag"
-            (click)="resetTeacherModal()"
-            data-bs-toggle="modal"
-            data-bs-target="#add-schoolTeacher"
-            >{{ "AddTeacher" | translate
-            }}<button
+            <span
+              *ngIf="isOwner || hasManageTeachersPermission"
+              class="custom-tag"
               (click)="resetTeacherModal()"
-              class="border-0 bg-transparent p-0 position-absolute delete-tag"
               data-bs-toggle="modal"
               data-bs-target="#add-schoolTeacher"
-            >
-              <img src="../../../../assets/images/school/plus-light.svg" />
-            </button>
-          </span>
-        </div>
+              >{{ "AddTeacher" | translate
+              }}<button
+                (click)="resetTeacherModal()"
+                class="border-0 bg-transparent p-0 position-absolute delete-tag"
+                data-bs-toggle="modal"
+                data-bs-target="#add-schoolTeacher"
+              >
+                <img src="../../../../assets/images/school/plus-light.svg" />
+              </button>
+            </span>
+          </div>
         </div>
         <div *ngIf="school.schoolCertificates.length != 0 || this.isOwner">
-        <div class="teacher-tags tag-box mt-0 hover-tags">
-          <div class="teacher-content font_14 d-inline-block">
-            <img src="../../../../assets/images/dark-star.svg" />{{
-              "Sertificates" | translate
-            }}
-          </div>
+          <div class="teacher-tags tag-box mt-0 hover-tags">
+            <div class="teacher-content font_14 d-inline-block">
+              <img src="../../../../assets/images/dark-star.svg" />{{
+                "Sertificates" | translate
+              }}
+            </div>
 
-          <span
-            *ngFor="let item of school.schoolCertificates"
-            class="custom-tag"
-            ><span
-              (click)="openCertificateViewModal(item.certificateUrl, item.name)"
-              >{{ item.name }}</span
-            ><button
-              (click)="getDeletedCertificate(item.certificateId)"
-              class="border-0 bg-transparent p-0 position-absolute delete-tag"
-              data-bs-toggle="modal"
-              data-bs-target="#delete-schoolCertificate"
-            >
-              <img
-                *ngIf="isOwner || hasAddSchoolCertificatesPermission"
-                src="../../../../assets/images/cross-sm-light.svg"
-              /></button
-          ></span>
+            <span
+              *ngFor="let item of school.schoolCertificates"
+              class="custom-tag"
+              ><span
+                (click)="
+                  openCertificateViewModal(item.certificateUrl, item.name)
+                "
+                >{{ item.name }}</span
+              ><button
+                (click)="getDeletedCertificate(item.certificateId)"
+                class="border-0 bg-transparent p-0 position-absolute delete-tag"
+                data-bs-toggle="modal"
+                data-bs-target="#delete-schoolCertificate"
+              >
+                <img
+                  *ngIf="isOwner || hasAddSchoolCertificatesPermission"
+                  src="../../../../assets/images/cross-sm-light.svg"
+                /></button
+            ></span>
 
-          <span
-            *ngIf="isOwner || hasAddSchoolCertificatesPermission"
-            class="custom-tag"
-            (click)="resetCertificateModal()"
-            data-bs-toggle="modal"
-            data-bs-target="#add-certificate"
-            >{{ "AddCertificates" | translate
-            }}<button
+            <span
+              *ngIf="isOwner || hasAddSchoolCertificatesPermission"
+              class="custom-tag"
               (click)="resetCertificateModal()"
-              class="border-0 bg-transparent p-0 position-absolute delete-tag"
               data-bs-toggle="modal"
               data-bs-target="#add-certificate"
-            >
-              <img src="../../../../assets/images/school/plus-light.svg" />
-            </button>
-          </span>
-        </div>
+              >{{ "AddCertificates" | translate
+              }}<button
+                (click)="resetCertificateModal()"
+                class="border-0 bg-transparent p-0 position-absolute delete-tag"
+                data-bs-toggle="modal"
+                data-bs-target="#add-certificate"
+              >
+                <img src="../../../../assets/images/school/plus-light.svg" />
+              </button>
+            </span>
+          </div>
         </div>
         <div *ngIf="school.languages.length != 0 || this.isOwner">
-        <div class="teacher-tags tag-box mt-0 hover-tags">
-          <div class="teacher-content font_14 d-inline-block">
-            <img src="../../../../assets/images/Volume-Down.svg" />{{
-              "Languages" | translate
-            }}
-          </div>
+          <div class="teacher-tags tag-box mt-0 hover-tags">
+            <div class="teacher-content font_14 d-inline-block">
+              <img src="../../../../assets/images/Volume-Down.svg" />{{
+                "Languages" | translate
+              }}
+            </div>
 
-          <span *ngFor="let item of school.languages" class="custom-tag"
-            >{{ item.name
-            }}<button
-              *ngIf="school.languages.length > 1"
-              (click)="getDeletedLanguage(item.id)"
-              class="border-0 bg-transparent p-0 position-absolute delete-tag"
-              data-bs-toggle="modal"
-              data-bs-target="#delete-schoolLanguage"
-            >
-              <img
-                *ngIf="isOwner || hasAddLanguagesPermission"
-                src="../../../../assets/images/cross-sm-light.svg"
-              /></button
-          ></span>
+            <span *ngFor="let item of school.languages" class="custom-tag"
+              >{{ item.name
+              }}<button
+                *ngIf="school.languages.length > 1"
+                (click)="getDeletedLanguage(item.id)"
+                class="border-0 bg-transparent p-0 position-absolute delete-tag"
+                data-bs-toggle="modal"
+                data-bs-target="#delete-schoolLanguage"
+              >
+                <img
+                  *ngIf="isOwner || hasAddLanguagesPermission"
+                  src="../../../../assets/images/cross-sm-light.svg"
+                /></button
+            ></span>
 
-          <span
-            *ngIf="isOwner || hasAddLanguagesPermission"
-            class="custom-tag"
-            (click)="resetLanguageModal()"
-            data-bs-toggle="modal"
-            data-bs-target="#add-language"
-            >{{ "AddLanguage" | translate
-            }}<button
+            <span
+              *ngIf="isOwner || hasAddLanguagesPermission"
+              class="custom-tag"
               (click)="resetLanguageModal()"
-              class="border-0 bg-transparent p-0 position-absolute delete-tag"
               data-bs-toggle="modal"
               data-bs-target="#add-language"
-            >
-              <img src="../../../../assets/images/school/plus-light.svg" />
-            </button>
-          </span>
-        </div>
+              >{{ "AddLanguage" | translate
+              }}<button
+                (click)="resetLanguageModal()"
+                class="border-0 bg-transparent p-0 position-absolute delete-tag"
+                data-bs-toggle="modal"
+                data-bs-target="#add-language"
+              >
+                <img src="../../../../assets/images/school/plus-light.svg" />
+              </button>
+            </span>
+          </div>
         </div>
         <div class="teacher-tags tag-box mt-0">
           <div class="teacher-content font_14 d-inline-block">
@@ -327,6 +333,13 @@
             ><span class="vr-border"></span>{{ school.countryName }}</span
           >
         </div>
+
+        <!-- <div class="flex-container row">
+          <ng-container  *ngFor="let post of school.posts; let i=index;">
+            <div class="col-12" [class]="getRandomClass(i)" *ngIf="i%3==0">abcd</div>
+            <div class="col-4" [class]="getRandomClass(i)" >1</div>
+          </ng-container>
+        </div> -->
         <hr class="hr-gray" />
         <div
           class="school-profile-tabs d-flex align-content-center justify-content-center position-relative"
@@ -403,17 +416,17 @@
               </button>
 
               <button
-              *ngIf="hideFeedFilters"
-              [ngClass]="
-                isProfileGrid
-                  ? 'btn border-btn active d-inline-flex align-items-center justify-content-center'
-                  : 'btn border-btn d-inline-flex align-items-center justify-content-center'
-              "
-              (click)="profileGrid()"
-              type="button"
-            >
-              <img src="../../../../assets/images/Filter.svg" />
-            </button>
+                *ngIf="hideFeedFilters"
+                [ngClass]="
+                  isProfileGrid
+                    ? 'btn border-btn active d-inline-flex align-items-center justify-content-center'
+                    : 'btn border-btn d-inline-flex align-items-center justify-content-center'
+                "
+                (click)="profileGrid()"
+                type="button"
+              >
+                <img src="../../../../assets/images/Filter.svg" />
+              </button>
             </div>
 
             <div *ngIf="!hideFeedFilters" class="btn-filter align-items-center">
@@ -1678,15 +1691,266 @@
             >
               <div class="row">
                 <ng-container *ngFor="let post of school.posts">
+                  <!-- <div
+                  class="clicked-post-div"
+                  *ngIf="showDiv && clickedPostId === post.id"
+                >
                   <div
-                    *ngIf="
-                      (post.postType == 1 && post.postAuthorType == 1) ||
-                      post.isLive
+                    [ngClass]="
+                      isGridItemInfo
+                        ? 'd-block school-grid-box position-relative school-list-box h-100'
+                        : 'd-none school-grid-box position-relative school-list-box h-100'
                     "
-                    class="col-md-6 col-xl-4"
+                    *ngIf="gridItemInfo != undefined"
                   >
+                    <div class="row post-list-preview-sec">
+                      <div
+                        [ngClass]="
+                          gridItemInfo.postAttachments.length > 0
+                            ? 'd-block col-lg-6'
+                            : 'd-none'
+                        "
+                      >
+                        <carousel>
+                          <div
+                            *ngFor="
+                              let postAttachment of gridItemInfo.postAttachments
+                            "
+                            class="school-grid-thumbnail"
+                          >
+                            <slide *ngIf="postAttachment.fileType == 2">
+                              <div
+                                *ngIf="postAttachment?.fileType == 2"
+                                class="videofile"
+                              >
+                                <video
+                                  #videoPlayer
+                                  controls
+                                  class="video-js vjs-big-play-centered"
+                                  preload="metadata"
+                                >
+                                  <source
+                                    [src]="postAttachment?.fileUrl"
+                                    type="video/mp4"
+                                  />
+                                </video>
+                              </div>
+                            </slide>
+                            <slide *ngIf="postAttachment?.fileType == 1">
+                              <img
+                                *ngIf="postAttachment?.fileType == 1"
+                                class="w-100"
+                                [src]="postAttachment?.fileUrl"
+                              />
+                            </slide>
+                          </div>
+                        </carousel>
+                      </div>
+                      <div
+                        [ngClass]="
+                          gridItemInfo.postAttachments.length > 0
+                            ? 'col-lg-6'
+                            : 'col-lg-12 heightForText'
+                        "
+                      >
+                        <div
+                          class="class-preview-right position-relative h-100"
+                        >
+                          <button
+                            (click)="hideGridItemInfo()"
+                            type="button"
+                            class="bg-transparent border-0 close-preview"
+                          >
+                            <img
+                              src="../../../../assets/images/cross.svg"
+                            />
+                          </button>
+                          <div class="schoolgrid-header">
+                            <div
+                              class="d-flex align-items-center position-relative"
+                            >
+                              <div class="school-gridprofile-icon">
+                                <img [src]="school.avatar" />
+                              </div>
+                              <h2
+                                class="d-inline-block font_16 fw_600 text_sec1 mb-0"
+                              >
+                                {{ gridItemInfo.title }}
+                              </h2>
+                              <div *ngIf="gridItemInfo.isLive">
+                                <img
+                                  src="../../../../assets/images/live_img.png"
+                                  style="height: 76px"
+                                />
+                              </div>
+                            </div>
+
+                            <p
+                              class="font_14 school-grid-date d-inline-block mb-0"
+                            >
+                              {{
+                                gridItemInfo.dateTime | date : "MMMM d"
+                              }}
+                              -
+                              {{ gridItemInfo.dateTime | date : "hh mm" }}
+                            </p>
+                          </div>
+                          <p class="text_sec1 font_14 pt-3">
+                            {{ gridItemInfo.description }}
+                          </p>
+                          <div class="teacher-tags tag-box hashtag_box">
+                            <ng-container
+                              *ngFor="let attachment of filteredAttachments"
+                            >
+                              <span
+                                *ngIf="attachment.postId == gridItemInfo.id"
+                                class="custom-tag cursor_pointer"
+                                (click)="
+                                  openCertificateViewModal(
+                                    attachment.fileUrl,
+                                    attachment.fileName,
+                                    5,
+                                    $event
+                                  )
+                                "
+                                >{{ attachment.fileName }}</span
+                              >
+                            </ng-container>
+                          </div>
+                          <div
+                            *ngIf="gridItemInfo.postTags.length != 0"
+                            class="teacher-tags tag-box hashtag_box"
+                          >
+                            <span
+                              *ngFor="let tag of gridItemInfo.postTags"
+                              class="custom-tag"
+                              >{{ tag.postTagValue }}</span
+                            >
+                          </div>
+                          <div
+                            class="school-grid-footer preview-right-action"
+                          >
+                            <button
+                              type="button"
+                              class="bg-transparent border-0 function-btns cursor_auto"
+                            >
+                              <img
+                                src="../../../../assets/images/eye.svg"
+                                class="d-block mx-auto"
+                              />
+                              <span class="textBlack">{{
+                                gridItemInfo.views.length
+                              }}</span>
+                            </button>
+                            <button
+                              (click)="
+                                likeUnlikePosts(
+                                  gridItemInfo.id,
+                                  true,
+                                  gridItemInfo.postType,
+                                  gridItemInfo
+                                )
+                              "
+                              type="button"
+                              class="bg-transparent border-0 function-btns text-light"
+                            >
+                              <img
+                                *ngIf="
+                                  gridItemInfo.isPostLikedByCurrentUser
+                                "
+                                src="../../../assets/images/heart-red.svg"
+                                class="d-block mx-auto"
+                              />
+                              <img
+                                *ngIf="
+                                  !gridItemInfo.isPostLikedByCurrentUser
+                                "
+                                src="../../../../assets/images/Heart-dark.svg"
+                                class="d-block mx-auto"
+                              />
+
+                              <span
+                                class="textBlack"
+                                *ngIf="
+                                  likesLength != undefined &&
+                                  currentLikedPostId == gridItemInfo.id
+                                "
+                                >{{ likesLength }}</span
+                              >
+                              <span
+                                class="textBlack"
+                                *ngIf="
+                                  currentLikedPostId != gridItemInfo.id
+                                "
+                                >{{ gridItemInfo.likes.length }}</span
+                              >
+                            </button>
+                            <button
+                              (click)="openPostsViewModal(gridItemInfo)"
+                              type="button"
+                              class="bg-transparent border-0 function-btns"
+                            >
+                              <img
+                                src="../../../../assets/images/Chat-dark.svg"
+                                class="d-block mx-auto"
+                              />
+                              {{ gridItemInfo.commentsCount }}
+                            </button>
+                            <button
+                              (click)="savePost(gridItemInfo.id)"
+                              type="button"
+                              class="bg-transparent border-0 function-btns"
+                            >
+                              <img
+                                *ngIf="
+                                  !gridItemInfo.isPostSavedByCurrentUser
+                                "
+                                src="../../../../assets/images/Bookmark-dark.svg"
+                                class="d-block mx-auto"
+                              />
+                              <img
+                                *ngIf="
+                                  gridItemInfo.isPostSavedByCurrentUser
+                                "
+                                src="../../../../assets/images/Bookmark-dark.svg"
+                                class="d-block mx-auto"
+                              />
+                              {{ gridItemInfo.savedPostsCount }}
+                            </button>
+                            <button
+                              (click)="
+                                openSharePostModal(
+                                  gridItemInfo.id,
+                                  gridItemInfo.postType,
+                                  gridItemInfo.title,
+                                  gridItemInfo.description
+                                )
+                              "
+                              type="button"
+                              class="bg-transparent border-0 function-btns"
+                            >
+                              <img
+                                src="../../../../assets/images/Upload-dark.svg"
+                                class="d-block mx-auto"
+                              />
+                              {{ gridItemInfo.postSharedCount }}
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div> -->
+                  <div *ngIf="
+                      (post.postType == 1 && post.postAuthorType == 1) ||
+                      post.isLive" class="col-md-6 col-xl-4"
+                  >
+                  
                     <div
                       class="school-grid-box position-relative school-list-box h-100 mb-0"
+                      [ngClass]="{
+                        active: showDiv && clickedPostId === post.id
+                      }"
                     >
                       <div
                         class="schoolgrid-header d-flex align-items-center position-relative"
@@ -1789,6 +2053,12 @@
                           </div>
                         </div>
                       </div>
+                      <!-- <div
+          class="clicked-post-div"
+          *ngIf="showDiv && clickedPostId === post.id"
+        >
+         here is content
+        </div> -->
                     </div>
                   </div>
                 </ng-container>
@@ -2260,12 +2530,22 @@
                         <label class="font_10"
                           >{{ "Founded" | translate }}*</label
                         >
-                        <input
+                        <!-- <input
                           type="date"
                           formControlName="founded"
                           placeholder="10/10/2022"
                           name="Founded"
                           class="form-control w-100"
+                        /> -->
+                        <input
+                          #founded
+                          autocomplete="off"
+                          type="text"
+                          class="form-control w-100 date_calendar"
+                          name="founded"
+                          formControlName="founded"
+                          id="founded"
+                          (click)="getSelectedLanguage()"
                         />
                         <small
                           class="p-error"
@@ -2348,29 +2628,44 @@
                     <div class="col-md-6">
                       <div class="form-group">
                         <label class="font_10"
-                        >{{ "PhoneNumber" | translate }}*</label
-                      >
-                        <ngx-intl-tel-input [preferredCountries]="preferredCountries"
-                          [enableAutoCountrySelect]="true" [enablePlaceholder]="true" [searchCountryFlag]="true"
-                          [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]" [selectFirstCountry]="false"
-                          [selectedCountryISO]="selectedCountryISO" [maxLength]="10"
-                          [phoneValidation]="true" [separateDialCode]="separateDialCode"
-                          [numberFormat]="PhoneNumberFormat.National" name="phone" formControlName="phoneNumber">
+                          >{{ "PhoneNumber" | translate }}*</label
+                        >
+                        <ngx-intl-tel-input
+                          [preferredCountries]="preferredCountries"
+                          [enableAutoCountrySelect]="true"
+                          [enablePlaceholder]="true"
+                          [searchCountryFlag]="true"
+                          [searchCountryField]="[
+                            SearchCountryField.Iso2,
+                            SearchCountryField.Name
+                          ]"
+                          [selectFirstCountry]="false"
+                          [selectedCountryISO]="selectedCountryISO"
+                          [maxLength]="10"
+                          [phoneValidation]="true"
+                          [separateDialCode]="separateDialCode"
+                          [numberFormat]="PhoneNumberFormat.National"
+                          name="phone"
+                          formControlName="phoneNumber"                          
+                        >
                         </ngx-intl-tel-input>
                         <small
-                        class="p-error"
-                        style="color: orange;"
-                        *ngIf="isSubmitted && editSchoolForm.get('phoneNumber')?.errors?.required"
-                      >
-                        {{ "PhoneNumberRequired" | translate }}
-                      </small>
-                      <small
-                      class="p-error"
-                      style="color: orange;"
-                      *ngIf="editSchoolForm.errors?.invalidPhoneNumber"
-                    >
-                      {{ "InValidPhoneNumber" | translate }}
-                    </small>
+                          class="p-error"
+                          style="color: orange"
+                          *ngIf="
+                            isSubmitted &&
+                            editSchoolForm.get('phoneNumber')?.errors?.required
+                          "
+                        >
+                          {{ "PhoneNumberRequired" | translate }}
+                        </small>
+                        <small
+                          class="p-error"
+                          style="color: orange"
+                          *ngIf="editSchoolForm.errors?.invalidPhoneNumber"
+                        >
+                          {{ "InValidPhoneNumber" | translate }}
+                        </small>
                       </div>
                     </div>
                     <div class="col-md-12">
@@ -2378,11 +2673,17 @@
                         <label class="font_10">{{
                           "SchoolBio" | translate
                         }}</label>
-                        <input
+                        <!-- <input
                           type="text"
                           formControlName="description"
                           class="form-control resize-none ht_96"
-                        />
+                        /> -->
+                        <textarea
+                          maxlength="200"
+                          type="text"
+                          formControlName="description"
+                          class="form-control resize-none ht_96"
+                        ></textarea>
                       </div>
                     </div>
                     <div class="col-md-12">
@@ -3084,48 +3385,47 @@
         </button>
       </div>
       <div class="modal-body">
-      
         <image-cropper
-        [imageChangedEvent]="imageChangedEvent"
-        [maintainAspectRatio]="true"
-        [containWithinAspectRatio]="containWithinAspectRatio"
-        [aspectRatio]="4 / 4"
-        [resizeToWidth]="256"
-        [cropperMinWidth]="128"
-        [onlyScaleDown]="true"
-        [roundCropper]="true"
-        [canvasRotation]="canvasRotation"
-        [transform]="transform"
-        [alignImage]="'left'"
-        [style.display]="showCropper ? null : 'none'"
-        format="png"
-        (imageCropped)="imageCropped($event)"
-        (imageLoaded)="imageLoaded()"
-        (cropperReady)="cropperReady($event)"
-        (loadImageFailed)="loadImageFailed()"
-      ></image-cropper>
+          [imageChangedEvent]="imageChangedEvent"
+          [maintainAspectRatio]="true"
+          [containWithinAspectRatio]="containWithinAspectRatio"
+          [aspectRatio]="4 / 4"
+          [resizeToWidth]="256"
+          [cropperMinWidth]="128"
+          [onlyScaleDown]="true"
+          [roundCropper]="true"
+          [canvasRotation]="canvasRotation"
+          [transform]="transform"
+          [alignImage]="'left'"
+          [style.display]="showCropper ? null : 'none'"
+          format="png"
+          (imageCropped)="imageCropped($event)"
+          (imageLoaded)="imageLoaded()"
+          (cropperReady)="cropperReady($event)"
+          (loadImageFailed)="loadImageFailed()"
+        ></image-cropper>
       </div>
       <div
-      class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4"
-    >
-      <button
-        (click)="closeCropModal()"
-        type="button"
-        class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
-        data-bs-target="#create-post"
+        class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4"
       >
-        {{ "DiscardChanges" | translate }}
-      </button>
-      <button
-        (click)="applyCropimage()"
-        type="button"
-        class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
-        data-bs-target="#create-post"
-      >
-        {{ "Apply" | translate }}
-      </button>
-      <!-- <button (click)="deselectAutocomplete()">avv</button> -->
-    </div>
+        <button
+          (click)="closeCropModal()"
+          type="button"
+          class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+          data-bs-target="#create-post"
+        >
+          {{ "DiscardChanges" | translate }}
+        </button>
+        <button
+          (click)="applyCropimage()"
+          type="button"
+          class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
+          data-bs-target="#create-post"
+        >
+          {{ "Apply" | translate }}
+        </button>
+        <!-- <button (click)="deselectAutocomplete()">avv</button> -->
+      </div>
     </div>
   </div>
 </ng-template>

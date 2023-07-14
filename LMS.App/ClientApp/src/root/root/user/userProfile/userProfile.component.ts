@@ -46,6 +46,9 @@ import { DatePipe } from '@angular/common';
 import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
 import { savedReelResponse } from '../../reelsSlider/reelsSlider.component';
 import { Dimensions, ImageCroppedEvent, ImageTransform } from 'ngx-image-cropper';
+import { DeleteSchoolCertificate } from 'src/root/interfaces/school/deleteSchoolCertificate';
+import { DeleteUserCertificate } from 'src/root/interfaces/user/deleteUserCertificate';
+import { AddUserCertificate } from 'src/root/interfaces/user/addUserCertificate';
 export const userImageResponse =new Subject<{userAvatar : string,gender : number}>();  
 export const chatResponse =new Subject<{receiverId : string , type: string,chatTypeId:string}>();  
 
@@ -200,6 +203,11 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
     selectedImage: any = '';
     isSelected: boolean = false;
     cropModalRef!: BsModalRef;
+    deleteCertificate!: DeleteUserCertificate;
+    userCertificate!: AddUserCertificate;
+    certificateForm!: FormGroup;
+    certificateToUpload = new FormData();
+    @ViewChild('closeCertificateModal') closeCertificateModal!: ElementRef;
     @ViewChild('hiddenButton') hiddenButtonRef!: ElementRef;
 
 
@@ -292,8 +300,9 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
       });
 
       if(!this.addPostSubscription){
-      this.addPostSubscription = addPostResponse.subscribe(response => {
-        this.loadingIcon = true;
+      this.addPostSubscription = addPostResponse.subscribe((postResponse:any) => {
+        debugger
+        // this.loadingIcon = true;
         const translatedMessage = this.translateService.instant('PostCreatedSuccessfully');
         const translatedSummary = this.translateService.instant('Success');
         this.messageService.add({severity:'success', summary:translatedSummary,life: 3000, detail:translatedMessage});
@@ -310,7 +319,8 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
           this.postLoadingIcon = false;
           this.cd.detectChanges();
           this.addEventListnerOnCarousel();
-          this.user.posts = this.getFilteredAttachments(this.user.posts);     
+          this.user.posts = this.getFilteredAttachments(this.user.posts);   
+          this.showPostDiv(postResponse.response.id);
           });
       });
     }
@@ -408,6 +418,7 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
         this.deletePostSubscription = deletePostResponse.subscribe(response => {
           const translatedMessage = this.translateService.instant('PostDeletedSuccessfully');
           const translatedSummary = this.translateService.instant('Success');
+            this.isGridItemInfo = false;
             this.messageService.add({severity:'success', summary:translatedSummary,life: 3000, detail:translatedMessage});
             var deletedPost = this.user.posts.find((x: { id: string; }) => x.id == response.postId);
             const index = this.user.posts.indexOf(deletedPost);
@@ -439,8 +450,21 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
           });        
         }
       });
-     
 
+      this.deleteCertificate = {
+        userId: '',
+        certificateId: '',
+      };
+
+      this.userCertificate = {
+        userId: '',
+        certificates: [],
+      };
+
+      this.certificateForm = this.fb.group({
+        certificates: this.fb.control([], [Validators.required]),
+      });
+     
     }
 
     addDescriptionMetaTag(description:string){
@@ -1681,6 +1705,75 @@ closeCropModal(){
 applyCropimage(){
   this.uploadImage = this.croppedImage;
   this.cropModalRef.hide();
+}
+
+getDeletedCertificate(deletedCertificate: string) {
+  debugger
+  this.deleteCertificate.certificateId = deletedCertificate;
+}
+
+resetCertificateModal() {
+  this.isSubmitted = false;
+  this.userCertificate.certificates = [];
+}
+
+handleCertificates(event: any) {
+  this.userCertificate.certificates.push(event.target.files[0]);
+}
+
+saveUserCertificates() {
+  this.isSubmitted = true;
+  if (!this.certificateForm.valid) {
+    return;
+  }
+  this.loadingIcon = true;
+  for (var i = 0; i < this.userCertificate.certificates.length; i++) {
+    this.certificateToUpload.append(
+      'certificates',
+      this.userCertificate.certificates[i]
+    );
+  }
+  this.certificateToUpload.append('userId', this.user.id);
+  this._userService
+    .saveUserCertificates(this.certificateToUpload)
+    .subscribe((response: any) => {
+      this.closeCertificatesModal();
+      this.isSubmitted = false;
+      this.userCertificate.certificates = [];
+      this.certificateToUpload.set('certificates', '');
+      const translatedSummary = this.translateService.instant('Success');
+      const translatedMessage = this.translateService.instant('CertificateAddedSuccessfully');
+      this.messageService.add({
+        severity: 'success',
+        summary: translatedSummary,
+        life: 3000,
+        detail: translatedMessage,
+      });
+      this.ngOnInit();
+      console.log(response);
+    });
+}
+
+private closeCertificatesModal(): void {
+  this.closeCertificateModal.nativeElement.click();
+}
+
+deleteUserCertificate() {
+  this.loadingIcon = true;
+  this.deleteCertificate.userId = this.user.id;
+  this._userService
+    .deleteUserCertificate(this.deleteCertificate)
+    .subscribe((response: any) => {
+      const translatedSummary = this.translateService.instant('Success');
+      const translatedMessage = this.translateService.instant('CertificateDeletedSuccessfully');
+      this.messageService.add({
+        severity: 'success',
+        summary: translatedSummary,
+        life: 3000,
+        detail: translatedMessage,
+      });
+      this.ngOnInit();
+    });
 }
 
 }

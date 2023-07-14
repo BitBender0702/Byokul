@@ -60,9 +60,13 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
       this._authService = authService;
     }
   
-    ngOnInit(): void {        
+    ngOnInit(): void {   
+      debugger     
       this._authService.loginState$.next(false);
       this.selectedLanguage = localStorage.getItem("selectedLanguage");
+      if(this.selectedLanguage == null || this.selectedLanguage == ""){
+        localStorage.setItem("selectedLanguage","en");
+      }
       this.loginForm = this.fb.group({
         email: this.fb.control('', [Validators.required,Validators.pattern(this.EMAIL_PATTERN)]),
         password: this.fb.control('', [Validators.required])

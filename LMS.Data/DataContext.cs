@@ -83,6 +83,7 @@ namespace LMS.Data
         public DbSet<Folder> Folders { get; set; }
         public DbSet<File> Files { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<UserCertificate> UserCertificates { get; set; }
 
 
 

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit,Injector, ViewChild, OnDestroy } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { HttpClient } from "@angular/common/http";
 import { AdminService } from 'src/root/service/admin/admin.service';
@@ -9,6 +9,8 @@ import { VerifySchools } from 'src/root/interfaces/admin/verifySchools';
 import { Table } from 'primeng/table';
 import { AuthService } from 'src/root/service/auth.service';
 import { OpenAdminSideBar } from '../admin-template/side-bar/adminSide-bar.component';
+import { MultilingualComponent, changeLanguage } from 'src/root/root/sharedModule/Multilingual/multilingual.component';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -16,7 +18,7 @@ import { OpenAdminSideBar } from '../admin-template/side-bar/adminSide-bar.compo
   templateUrl: './registeredSchools.component.html',
   styleUrls: ['registeredSchools.component.css'],
 })
-export class RegisteredSchoolsComponent implements OnInit {
+export class RegisteredSchoolsComponent extends MultilingualComponent implements OnInit, OnDestroy {
 
   private _adminService;
   private _authService;
@@ -30,8 +32,10 @@ export class RegisteredSchoolsComponent implements OnInit {
   myPaginationString!:string;
   cloned!:any;
   @ViewChild('dt') table!: Table;
+  changeLanguageSubscription!:Subscription;
   
-  constructor(private fb: FormBuilder,private http: HttpClient,adminService: AdminService,authService: AuthService) {
+  constructor(injector: Injector,private fb: FormBuilder,private http: HttpClient,adminService: AdminService,authService: AuthService) {
+    super(injector);
     this._adminService = adminService;
     this._authService = authService;
   }
@@ -39,6 +43,8 @@ export class RegisteredSchoolsComponent implements OnInit {
   ngOnInit(): void {
     this._authService.loginAdminState$.next(true);
     this.loadingIcon = true;
+    this.selectedLanguage = localStorage.getItem("selectedLanguage");
+    this.translate.use(this.selectedLanguage ?? '');
         this._adminService.getRegSchools().subscribe((response) => {
           this.registeredSchools = response;
           this.cloned = response.slice(0);
@@ -48,6 +54,18 @@ export class RegisteredSchoolsComponent implements OnInit {
 
         this.InitializeBanUnbanSchool();
         this.InitializeVerifySchool();
+
+        if(!this.changeLanguageSubscription){
+          this.changeLanguageSubscription = changeLanguage.subscribe(response => {
+            this.translate.use(response.language);
+          })
+        }
+      }
+
+      ngOnDestroy(): void {
+        if(this.changeLanguageSubscription){
+          this.changeLanguageSubscription.unsubscribe();
+        }
       }
 
       InitializeBanUnbanSchool(){

@@ -38,6 +38,7 @@ export const unreadNotificationResponse =new Subject<{type:string}>();
     userId!:string;
     validToken!: string;
     changeLanguageSubscription!: Subscription;
+    notificationResponseSubscription!:Subscription;
     notificationPageNumber:number = 1;
     scrolled:boolean = false;
     scrollNotificationResponseCount:number = 1;
@@ -71,10 +72,13 @@ export const unreadNotificationResponse =new Subject<{type:string}>();
             this.isDataLoaded = true;
             });
 
-     notificationResponse.subscribe(response => {
+      if(!this.notificationResponseSubscription){
+      this.notificationResponseSubscription = notificationResponse.subscribe(response => {
+      debugger
        this.notifications.push(response);
        unreadNotificationResponse.next({type:"add"});
       });
+    }
 
       this.validToken = localStorage.getItem("jwt")?? '';
       if (this.validToken != null) {
@@ -94,6 +98,9 @@ export const unreadNotificationResponse =new Subject<{type:string}>();
     ngOnDestroy(): void {
       if(this.changeLanguageSubscription){
         this.changeLanguageSubscription.unsubscribe();
+      }
+      if(this.notificationResponseSubscription){
+        this.notificationResponseSubscription.unsubscribe();
       }
     }
 

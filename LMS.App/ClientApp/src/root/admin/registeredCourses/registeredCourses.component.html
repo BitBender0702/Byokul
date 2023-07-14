@@ -80,7 +80,7 @@
                     (click)="resetSorting()"
                     class="btn custom-btn primary_btn earning-btn fw_400 h_44 me-3"
                   >
-                    Reset Table
+                  {{ "ResetTable" | translate }}
                   </button>
                 </div>
                 <span class="p-input-icon-left">
@@ -89,7 +89,7 @@
                     pInputText
                     type="text"
                     (input)="search($event)"
-                    placeholder="Search..."
+                    placeholder="{{ 'Search' | translate }}"
                   />
                 </span>
               </div>

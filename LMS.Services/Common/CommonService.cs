@@ -54,7 +54,9 @@ namespace LMS.Services.Common
             var tempDirectoryPath = Path.Combine(path, "wwwroot/CompressVideoes/");
 
             System.IO.File.WriteAllBytes(tempDirectoryPath + fileName, videoData);
-            string ffmpegFileName = "ffmpeg.exe";
+            string ffmpegFileName = Path.Combine(path, "Ffmpeg/ffmpeg.exe");
+            //string ffmpegFileName = "ffmpeg.exe";
+
             string compressVid = Path.Combine(tempDirectoryPath + fileName);
 
             try

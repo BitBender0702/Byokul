@@ -27,5 +27,6 @@ export enum NotificationType{
     AssignTeacher = 6,
     CertificateSent = 7,
     Transaction = 8,
-    Report = 9
+    Report = 9,
+    PostUploaded = 10
 }

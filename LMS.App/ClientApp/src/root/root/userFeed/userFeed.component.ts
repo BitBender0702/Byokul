@@ -186,17 +186,28 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
           this.InitializeLikeUnlikePost();
 
           if(!this.addPostSubscription){
-           this.addPostSubscription = addPostResponse.subscribe((response) => {   
+           this.addPostSubscription = addPostResponse.subscribe((postResponse:any) => {  
             var feedTab = localStorage.getItem('feedTab');
             feedTab = 'myFeed';
             localStorage.setItem('feedTab',feedTab);
             this.router.navigateByUrl(`user/userFeed}`);
-            this.refreshRoute();
+            this.refreshRoute(postResponse);
               //this.ngOnInit();
-              const translatedMessage = this.translateService.instant('PostCreatedSuccessfully');
-              const translatedSummary = this.translateService.instant('Success');
-              this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage,
-              });
+              // if(postResponse.response.postType == 1){
+              //   var translatedMessage = this.translateService.instant('PostCreatedSuccessfully');
+              // }
+              // else{
+              //   var translatedMessage = this.translateService.instant('ReelCreatedSuccessfully');
+              // }
+              // const translatedSummary = this.translateService.instant('Success');
+              // setTimeout(() => {
+              //   this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage,
+              // });
+              // this.cd.detectChanges();
+              // }, 3000);
+              // this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage,
+              // });
+              // this.cd.detectChanges();
             });
           }
 
@@ -254,6 +265,7 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
 
           if(!this.deletePostSubscription){
             this.deletePostSubscription = deletePostResponse.subscribe(response => {
+              this.isGridItemInfo = false;
                 this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post deleted successfully'});
                 var deletedPost = this.myFeeds?.find((x: { id: string; }) => x.id == response.postId);
                 if(deletedPost != null){
@@ -317,6 +329,9 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
     }
     if(this.deleteReelSubscription){
       this.deleteReelSubscription.unsubscribe();
+    }
+    if(this.addPostSubscription){
+      this.addPostSubscription.unsubscribe();
     }
   }
 
@@ -896,10 +911,26 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
           return feeds;
         }
 
-        refreshRoute() {
+        refreshRoute(postResponse:any) {
           const currentUrl = this.router.url;
           this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+            debugger
             this.router.navigateByUrl(currentUrl);
+
+            setTimeout(() => {
+            
+            if(postResponse.response.postType == 1){
+              var translatedMessage = this.translateService.instant('PostCreatedSuccessfully');
+            }
+            else{
+              var translatedMessage = this.translateService.instant('ReelCreatedSuccessfully');
+            }
+            const translatedSummary = this.translateService.instant('Success');
+
+            this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage,
+            });
+            this.cd.detectChanges();
+          }, 3000);
           });
         }
 

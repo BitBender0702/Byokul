@@ -33,11 +33,27 @@ namespace LMS.Common.ViewModels.Post
         public IFormFile UploadReels { get; set; }
         public bool IsPinned { get; set; }
         public Boolean IsCommentsDisabled { get; set; }
+        public DateTime? UpdatedOn { get; set; }
         public List<IFormFile> UploadVideosThumbnail { get; set; }
         public IEnumerable<string> UploadFromFileStorage { get; set; }
         public string? StreamUrl { get; set; }
         public int? CommentsPerMinute { get; set; }
         public bool? IsMicroPhoneOpen { get; set; }
+        public Guid? ReelId { get; set; }
+
+
+        // here for update
+        public string? UploadImagesUrls { get; set; }
+        public string? UploadVideosUrls { get; set; }
+        public string? UploadAttachmentsUrls { get; set; }
+
+    }
+
+    public class UploadUrls
+    {
+        public string? Name { get; set; }
+        public string? ImageUrl { get; set; }
+        public string? VideoUrl { get; set; }
 
     }
 }

@@ -11,7 +11,7 @@ import { NotificationType } from 'src/root/interfaces/notification/notificationV
 import { NotificationService } from 'src/root/service/notification.service';
 import { LikeUnlikePost } from 'src/root/interfaces/post/likeUnlikePost';
 import { PostService } from 'src/root/service/post.service';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { Constant } from 'src/root/interfaces/constant';
 import { SharePostComponent } from '../sharePost/sharePost.component';
@@ -35,7 +35,7 @@ export const savedReelResponse =new Subject<{isReelSaved:boolean,id:string}>();
     providers: [MessageService]
   })
 
-export class ReelsSliderComponent extends MultilingualComponent implements OnInit, AfterViewInit {
+export class ReelsSliderComponent extends MultilingualComponent implements OnInit, AfterViewInit, OnDestroy {
     private _userService;
     private _schoolService;
     private _classService;
@@ -49,6 +49,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
     reels:any;
     isDataLoaded:boolean = false;
     loadingIcon:boolean = false;
+    commentResponseSubscription!:Subscription;
     @ViewChild('videoPlayer') videoPlayer!: ElementRef;
 
 
@@ -141,14 +142,15 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
         this.InitializeLikeUnlikePost();
         this.InitializePostView();
         this.gender = localStorage.getItem("gender")??'';
-
-        commentResponse.subscribe(response => {
+        if(!this.commentResponseSubscription){
+          this.commentResponseSubscription = commentResponse.subscribe(response => {
           var comment: any[] = this.reels.post.comments;
           var commentObj = {id:response.id,content:response.message,likeCount:0,isCommentLikedByCurrentUser:false,userAvatar:response.senderAvatar,userName:response.userName,userId:response.userId};
           comment.push(commentObj);
           this.cd.detectChanges();
           this.groupChatList.nativeElement.scrollTop = this.groupChatList.nativeElement.scrollHeight;
         });
+      }
 
         commentLikeResponse.subscribe(response => {
           var comments: any[] = this.reels.post.comments;
@@ -160,6 +162,12 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
             reqComment.likeCount = reqComment.likeCount - 1;
           }
         });
+     }
+
+     ngOnDestroy(): void {
+      if(this.commentResponseSubscription){
+        this.commentResponseSubscription.unsubscribe();
+      }
      }
 
      getReelsByUser(userId:string){

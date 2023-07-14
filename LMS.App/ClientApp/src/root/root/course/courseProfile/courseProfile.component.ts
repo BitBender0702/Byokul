@@ -276,8 +276,9 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       //   this.ngOnInit();
       // });
       if(!this.addPostSubscription){
-        this.addPostSubscription = addPostResponse.subscribe(response => {
-          this.loadingIcon = true;
+        this.addPostSubscription = addPostResponse.subscribe((postResponse:any) => {
+          debugger
+          // this.loadingIcon = true;
           this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post created successfully'});
           this._courseService.getCourseById(this.courseName.replace(" ","").toLowerCase()).subscribe((response) => {
             this.course = response;
@@ -291,6 +292,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
             this.postLoadingIcon = false;
             this.addCourseView(this.course.courseId);
             this.course.posts = this.getFilteredAttachments(this.course.posts);     
+            this.showPostDiv(postResponse.response.id);    
           });
         });
       }
@@ -345,6 +347,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
 
      if(!this.deletePostSubscription){
       this.deletePostSubscription = deletePostResponse.subscribe(response => {
+          this.isGridItemInfo = false;
           this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post deleted successfully'});
           var deletedPost = this.course.posts.find((x: { id: string; }) => x.id == response.postId);
           const index = this.course.posts.indexOf(deletedPost);

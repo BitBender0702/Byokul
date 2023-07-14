@@ -28,6 +28,7 @@ namespace LMS.Data.Entity
         public string? InternalMeetingId { get; set; }
         public Guid? ExternalMeetingId { get; set; }
         public bool? IsPostSchedule { get; set; }
+        public DateTime? UpdatedOn { get; set; }
 
     }
 }

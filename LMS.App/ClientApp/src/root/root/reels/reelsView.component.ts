@@ -1,4 +1,4 @@
-import { AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, Injector, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, Injector, Input, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { CommentLikeUnlike } from 'src/root/interfaces/chat/commentsLike';
@@ -19,7 +19,7 @@ export const deleteReelResponse =new Subject<{postId:string}>();
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
 import 'videojs-contrib-quality-levels';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 
 @Component({
     selector: 'reels-view',
@@ -27,7 +27,7 @@ import { Subject } from 'rxjs';
     styleUrls: ['reelsView.component.css'],
   })
   
-  export class ReelsViewComponent implements OnInit, AfterViewInit  {
+  export class ReelsViewComponent implements OnInit, AfterViewInit, OnDestroy  {
 
     @ViewChild('groupChatList') groupChatList!: ElementRef;
     @ViewChild('videoPlayer') videoPlayer!: ElementRef;
@@ -68,6 +68,7 @@ import { Subject } from 'rxjs';
     commentsPageNumber:number = 1;
     gender!:string;
     loadingIcon: boolean = false;
+    commentResponseSubscription!:Subscription;
 
     constructor(private bsModalService: BsModalService,notificationService:NotificationService,chatService:ChatService,private renderer: Renderer2,public options: ModalOptions,private userService: UserService,postService: PostService,public signalRService: SignalrService,private route: ActivatedRoute,reelsService: ReelsService,private activatedRoute: ActivatedRoute,private cd: ChangeDetectorRef) { 
           this._reelsService = reelsService;
@@ -140,14 +141,15 @@ import { Subject } from 'rxjs';
 
           this.InitializeLikeUnlikePost();
           this.InitializePostView();
-
-          commentResponse.subscribe(response => {
+          if(!this.commentResponseSubscription){
+            this.commentResponseSubscription = commentResponse.subscribe(response => {
             var comment: any[] = this.reels.post.comments;
             var commentObj = {id:response.id,content:response.message,likeCount:0,isCommentLikedByCurrentUser:false,userAvatar:response.senderAvatar,userName:response.userName,userId:response.userId};
             comment.push(commentObj);
             this.cd.detectChanges();
             this.groupChatList.nativeElement.scrollTop = this.groupChatList.nativeElement.scrollHeight;
-          });
+           });
+          }
 
           commentLikeResponse.subscribe(response => {
             var comments: any[] = this.reels.post.comments;
@@ -162,6 +164,12 @@ import { Subject } from 'rxjs';
           
           this.gender = localStorage.getItem("gender")??'';
           this.cd.detectChanges();          
+    }
+
+    ngOnDestroy(): void {
+      if(this.commentResponseSubscription){
+        this.commentResponseSubscription.unsubscribe();
+      }
     }
 
     ngAfterViewInit() {        

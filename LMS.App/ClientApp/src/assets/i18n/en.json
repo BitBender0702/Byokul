@@ -479,5 +479,17 @@
   "StateOrProvince": "State/Province",
   "VideoDurationExceed": "You can not upload a reel longer than 3 minutes",
   "PhoneNumberRequired": "Phone number is required",
-  "InValidPhoneNumber": "Phone number is invalid"
+  "InValidPhoneNumber": "Phone number is invalid",
+  "Edit": "Edit",
+  "UpdatePost": "Update Post",
+  "UpdatedOn": "Updated On",
+  "PostProgressMessage": "Your post is being processed. We’ll let you know when it's ready to view.",
+  "ReelCreatedSuccessfully": "Reel created successfully",
+  "PostReadyToViewMessage": "Your post is ready to view.You can now watch it",
+  "SchoolList": "School List",
+  "ClassList": "Class List",
+  "CourseList": "Course List",
+  "ResetTable": "Reset Table"
+
+
 }

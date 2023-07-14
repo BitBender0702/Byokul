@@ -3,7 +3,7 @@ import { ChangeDetectorRef, Component, ElementRef, HostListener, Injector, OnDes
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { UserService } from 'src/root/service/user.service';
 import { MultilingualComponent } from '../sharedModule/Multilingual/multilingual.component';
 import { NotificationType, NotificationViewModel } from 'src/root/interfaces/notification/notificationViewModel';
@@ -83,9 +83,13 @@ import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component'
     videoTotalTime:any;
     startVideoTime:any;
     cacheBuster: number = Math.random();
+    commentResponseSubscription!:Subscription;
     @ViewChild('groupChatList') groupChatList!: ElementRef;
     @ViewChild('startButton') startButton!: ElementRef;
     @ViewChild('videoPlayer') videoPlayer!: ElementRef<HTMLVideoElement>;
+    @ViewChild('streamEndMessage') streamEndMessage!: ElementRef;
+    @ViewChild('streamEndModalClose') streamEndModalClose!: ElementRef;
+
 
 
     constructor( injector: Injector,private renderer: Renderer2,private modalService: NgbModal,private bsModalService: BsModalService,
@@ -298,6 +302,9 @@ else{
 
     ngOnDestroy(): void {
       this._signalrService.notifyLiveUsers(this.post.id + "_group",true);
+      if(this.commentResponseSubscription){
+        this.commentResponseSubscription.unsubscribe();
+      }
     }
 
     // startVideo() {
@@ -404,7 +411,7 @@ else{
         this.lastCommentTime = localStorage.getItem('lastCommentTime');
         this.lastCommentTime = JSON.parse(this.lastCommentTime);
         const currentTime = Date.now();
-        if(this.post.commentsPerMinute != 0){
+        if(this.post.commentsPerMinute != null){
         if (this.lastCommentTime == null) {
           const lastComment = {
             commentsCount:1,
@@ -548,7 +555,8 @@ else{
     }
 
     commentResponse(){
-      commentResponse.subscribe(response => {
+      if(!this.commentResponseSubscription){
+        this.commentResponseSubscription =  commentResponse.subscribe(response => {
         debugger
         var comment: any[] = this.post.comments;
         if(response.senderAvatar == ""){
@@ -564,6 +572,7 @@ else{
         this.cd.detectChanges();
         this.groupChatList.nativeElement.scrollTop = this.groupChatList.nativeElement.scrollHeight;
       });
+    }
     }
 
     likeUnlikeComments(commentId:string, isLike:boolean,isCommentLikedByCurrentUser:boolean,likeCount:number){
@@ -676,9 +685,18 @@ else{
 
     endMeetingResponse(){
       endMeetingResponse.subscribe(response => {
-        setTimeout(() => {
-        window.history.back();
-        }, 3000);
+        debugger
+        if(!this.isOwner){
+          this.streamEndMessage.nativeElement.click();
+          setTimeout(() => {
+            debugger
+          this.streamEndModalClose.nativeElement.click();
+          window.history.back();
+          }, 5000);
+        }
+        else{
+          window.history.back();
+        }
       });
     }
 
@@ -905,6 +923,10 @@ else{
 
     openSidebar(){
       OpenSideBar.next({isOpenSideBar:true})  
+    }
+
+    streamEndPopup(){
+
     }
     
 }

@@ -204,7 +204,7 @@ namespace LMS.App.Controllers
 
         [Route("getPostsByClass")]
         [HttpGet]
-        public async Task<IActionResult> GetPostsByClass(Guid classId, int pageNumber, int pageSize = 6)
+        public async Task<IActionResult> GetPostsByClass(Guid classId, int pageNumber, int pageSize = 12)
         {
             var userId = await GetUserIdAsync(this._userManager);
             var response = await _classService.GetPostsByClassId(classId, userId, pageNumber, pageSize);
@@ -213,7 +213,7 @@ namespace LMS.App.Controllers
 
         [Route("getReelsByClass")]
         [HttpGet]
-        public async Task<IActionResult> GetReelsByClass(Guid classId, int pageNumber, int pageSize = 4)
+        public async Task<IActionResult> GetReelsByClass(Guid classId, int pageNumber, int pageSize = 8)
         {
             var userId = await GetUserIdAsync(this._userManager);
             var response = await _classService.GetReelsByClassId(classId, userId, pageNumber, pageSize);

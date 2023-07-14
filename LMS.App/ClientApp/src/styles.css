@@ -552,7 +552,7 @@ hr.earning-hr {
 
 .custom-tabs .nav-item .nav-link.active,
 .custom-tabs .nav-item .show > .nav-link {
-  background: transparent !important;
+  /* background: transparent !important; */
   border-color: #ff821c !important;
 }
 
@@ -2565,7 +2565,7 @@ ul .p-steps-item {
   padding: 0 !important;
 }
 .modal .edit-sprofilebtn {
-  width: 92px;
+  width: 106px;
   height: 34px;
   border: none !important;
   color: transparent;
@@ -2577,7 +2577,7 @@ ul .p-steps-item {
   overflow: hidden;
 }
 .modal .edit-sprofilebtn:before {
-  content: "Edit Photo";
+  content: "Upload Image";
   font-weight: 400;
   font-size: 12px;
   line-height: 18px;

@@ -472,7 +472,17 @@
   "StateOrProvince": "الولاية / المقاطعة",
   "VideoDurationExceed": "You can not upload a reel longer than 3 minutes",
   "PhoneNumberRequired": "Phone number is required",
-  "InValidPhoneNumber": "Phone number is invalid"
+  "InValidPhoneNumber": "Phone number is invalid",
+  "Edit": "Edit",
+  "UpdatePost": "Update Post",
+  "UpdatedOn": "Updated On",
+  "ReelCreatedSuccessfully": "Reel created successfully",
+  "SchoolList": "قائمة المدرسة",
+  "ClassList": "قائمة الطبقة",
+  "CourseList": "قائمة الدورات",
+  "ResetTable": "إعادة ضبط الجدول"
+
+
 
 
 

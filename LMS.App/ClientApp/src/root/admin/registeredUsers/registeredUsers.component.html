@@ -75,13 +75,13 @@
                 class="d-flex justify-content-between p-ai-center p-jc-between"
               >
                 <div class="d-flex w-100 justify-content-between">
-                  <h5 class="p-m-0">Users</h5>
+                  <h5 class="p-m-0">{{ "Users" | translate }}</h5>
                   <button
                     type="button"
                     (click)="resetSorting()"
                     class="btn custom-btn primary_btn earning-btn fw_400 h_44 me-3"
                   >
-                    Reset Table
+                    {{ "ResetTable" | translate }}
                   </button>
                 </div>
                 <span class="p-input-icon-left">
@@ -90,7 +90,7 @@
                     pInputText
                     type="text"
                     (input)="search($event)"
-                    placeholder="Search..."
+                    placeholder="{{ 'Search' | translate }}"
                   />
                 </span>
               </div>

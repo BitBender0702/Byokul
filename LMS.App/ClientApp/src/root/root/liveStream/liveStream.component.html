@@ -5,6 +5,8 @@
     <div
       class="create-post-header d-flex justify-content-between d-none d-xl-flex"
     >
+    <button #streamEndMessage hidden data-bs-toggle="modal"
+    data-bs-target="#streamEndPopup"></button>
       <button
         (click)="back()"
         mat-mini-fab
@@ -454,3 +456,38 @@ aria-labelledby="add-language" aria-hidden="true">
 
 <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
 <p-toast></p-toast>
+
+<div
+class="modal fade edit-school-modal delete-modal"
+id="streamEndPopup"
+tabindex="-1"
+aria-labelledby="streamEndPopup"
+aria-hidden="true"
+>
+<div class="modal-dialog modal-dialog-centered">
+  <div class="modal-content">
+    <div
+      class="modal-header border-0 justify-content-center position-relative"
+    >
+    </div>
+    <div class="modal-body">
+      <div>
+       <h3 class="text-center fw-semibold">
+         Live stream has ended
+       </h3>
+       <h5 class="text-center fw-semibold" style="margin-top:30px">
+         Full video will be upload to {{post.parentName}} profile shortly.
+       </h5>
+      </div>
+   </div>
+    <button
+    #streamEndModalClose
+    hidden
+    id="closeBtn"
+    type="button"
+    class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+    data-bs-dismiss="modal"
+  ></button>
+  </div>
+</div>
+</div>

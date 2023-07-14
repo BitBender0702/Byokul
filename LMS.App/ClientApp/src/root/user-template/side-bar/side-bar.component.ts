@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Injector, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Injector, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { unreadChatResponse } from 'src/root/root/chat/chat.component';
@@ -12,7 +12,8 @@ import { MultilingualComponent } from 'src/root/root/sharedModule/Multilingual/m
 import { userImageResponse } from 'src/root/root/user/userProfile/userProfile.component';
 import { UserService } from 'src/root/service/user.service';
 import { dashboardResponse } from 'src/root/userModule/user-auth/component/login/login.component';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
+import { notificationResponse } from 'src/root/service/signalr.service';
 export const OpenSideBar =new Subject<{isOpenSideBar:boolean}>(); 
 
 @Component({
@@ -20,7 +21,7 @@ export const OpenSideBar =new Subject<{isOpenSideBar:boolean}>();
   templateUrl: 'side-bar.component.html',
   styleUrls: ['side-bar.component.css']
 })
-export class SideBarComponent extends MultilingualComponent implements OnInit {
+export class SideBarComponent extends MultilingualComponent implements OnInit, OnDestroy{
   items!: MenuItem[];
   private _userService;
   sidebarInfo:any;
@@ -29,6 +30,7 @@ export class SideBarComponent extends MultilingualComponent implements OnInit {
   isDataLoaded:boolean = false;
   loginUserId!:string;
   isOpenSidebar: boolean = false;
+  notificationResponseSubscription!:Subscription;
   // @Input() isOpenSidebar!:boolean;
 
   constructor(injector: Injector,userService: UserService,private router: Router,private cd: ChangeDetectorRef) {
@@ -38,6 +40,7 @@ export class SideBarComponent extends MultilingualComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getCurrentUserId();
     this.loadingIcon = true;
       var validToken = localStorage.getItem("jwt");
         if (validToken != null) {
@@ -59,6 +62,13 @@ export class SideBarComponent extends MultilingualComponent implements OnInit {
       this.loadingIcon = false;
       this.isDataLoaded = true;
     });
+
+    if(!this.notificationResponseSubscription){
+      this.notificationResponseSubscription = notificationResponse.subscribe(response => {
+      debugger
+        this.sidebarInfo.unreadNotificationCount = this.sidebarInfo?.unreadNotificationCount + 1;
+      });
+    }
 
     OpenSideBar.subscribe(response => {
       this.isOpenSidebar = response.isOpenSideBar;
@@ -231,6 +241,13 @@ export class SideBarComponent extends MultilingualComponent implements OnInit {
     
   }
 
+
+  ngOnDestroy(): void {
+    if(this.notificationResponseSubscription){
+      this.notificationResponseSubscription.unsubscribe();
+    }
+  }
+
   closeSidebar(){
     this.isOpenSidebar = false;
   }
@@ -249,5 +266,15 @@ export class SideBarComponent extends MultilingualComponent implements OnInit {
 
   getUserDetails(userId:string){
     this.router.navigateByUrl(`user/userProfile/${userId}`);
+  }
+
+  getCurrentUserId(){
+    var validToken = localStorage.getItem("jwt");
+    if (validToken != null) {
+      let jwtData = validToken.split('.')[1]
+      let decodedJwtJsonData = window.atob(jwtData)
+      let decodedJwtData = JSON.parse(decodedJwtJsonData);
+      this.loginUserId = decodedJwtData.jti;
+    }
   }
 }

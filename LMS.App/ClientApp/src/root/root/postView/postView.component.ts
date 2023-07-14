@@ -1,9 +1,9 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, Injector, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BsModalService, ModalDirective, ModalOptions } from 'ngx-bootstrap/modal';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { CommentLikeUnlike } from 'src/root/interfaces/chat/commentsLike';
 import { CommentViewModel } from 'src/root/interfaces/chat/commentViewModel';
 import { Constant } from 'src/root/interfaces/constant';
@@ -23,6 +23,7 @@ import { MessageService } from 'primeng/api';
 import { CertificateViewComponent } from '../certificateView/certificateView.component';
 import { JoinMeetingModel } from 'src/root/interfaces/bigBlueButton/joinMeeting';
 import { BigBlueButtonService } from 'src/root/service/bigBlueButton';
+import { CreatePostComponent } from '../createPost/createPost.component';
 
 export const sharePostResponse =new Subject<{}>();  
 export const deletePostResponse =new Subject<{postId:string}>();  
@@ -36,7 +37,7 @@ export const savedPostResponse =new Subject<{isPostSaved:boolean,postId:string}>
     providers: [MessageService]
   })
 
-export class PostViewComponent implements OnInit,AfterViewInit {
+export class PostViewComponent implements OnInit,AfterViewInit,OnDestroy {
     posts:any;    
     @ViewChild('createPostModal', { static: true }) createPostModal!: ModalDirective;
     @ViewChild('groupChatList') groupChatList!: ElementRef;
@@ -76,6 +77,7 @@ export class PostViewComponent implements OnInit,AfterViewInit {
     base64String2!:any;
     imageSource!:any;
     joinMeetingViewModel!:JoinMeetingModel;
+    commentResponseSubscription!:Subscription;
 
 
     constructor(private bsModalService: BsModalService,bigBlueButtonService:BigBlueButtonService,public messageService:MessageService,notificationService:NotificationService,chatService: ChatService,public signalRService: SignalrService,public postService:PostService, public options: ModalOptions,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,userService:UserService,private cd: ChangeDetectorRef) { 
@@ -230,6 +232,12 @@ export class PostViewComponent implements OnInit,AfterViewInit {
         this.savePreferences(this.post.title,this.post.description,this.post.postTags);
     }
 
+    ngOnDestroy(): void {
+      if(this.commentResponseSubscription){
+        this.commentResponseSubscription.unsubscribe();
+      }
+    }
+
     ngAfterViewInit() {        
       setTimeout(() => this.scrollToBottom());
     } 
@@ -266,7 +274,8 @@ export class PostViewComponent implements OnInit,AfterViewInit {
   }
 
     commentResponse(){
-      commentResponse.subscribe(response => {
+      if(!this.commentResponseSubscription){
+        this.commentResponseSubscription = commentResponse.subscribe(response => {
         debugger
         var comment: any[] = this.post.comments;
         var commentObj = {id:response.id,content:response.message,likeCount:0,isCommentLikedByCurrentUser:false,userAvatar:response.senderAvatar,userName:response.userName,userId:response.userId};
@@ -274,6 +283,7 @@ export class PostViewComponent implements OnInit,AfterViewInit {
         this.cd.detectChanges();
         this.groupChatList.nativeElement.scrollTop = this.groupChatList.nativeElement.scrollHeight;
       });
+    }
     }
 
     commentLikeResponse(){
@@ -575,6 +585,20 @@ export class PostViewComponent implements OnInit,AfterViewInit {
 
   hideCommentModal(){
     this.bsModalService.hide();
+  }
+
+  openPostModal(post:any){
+    debugger
+    this.bsModalService.hide(this.bsModalService.config.id);
+    this.cd.detectChanges();
+    const initialState = {
+      editPostId: post.id,
+      from: post.postAuthorType == 1 ? "school" : post.postAuthorType == 2 ? "class" : post.postAuthorType == 3 ? "course" : post.postAuthorType == 4 ? "user" : undefined
+    };
+    setTimeout(() => {
+      this.bsModalService.show(CreatePostComponent,{initialState});
+    }, 500);
+    //this.bsModalService.show(CreatePostComponent,{initialState});
   }
 
 }

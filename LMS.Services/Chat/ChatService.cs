@@ -77,7 +77,7 @@ namespace LMS.Services.Chat
             }
             var chatModel = _mapper.Map<ChatMessage>(chatViewModel);
             chatModel.Id = Guid.NewGuid();
-            chatModel.CreatedOn = DateTime.Now;
+            chatModel.CreatedOn = DateTime.UtcNow;
             chatModel.IsRead = false;
             chatModel.SenderId = chatViewModel.Sender;
             chatModel.ReceiverId = chatViewModel.Receiver;

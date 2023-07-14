@@ -10,6 +10,7 @@ using LMS.Common.ViewModels.School;
 using LMS.Common.ViewModels.Student;
 using LMS.Common.ViewModels.User;
 using LMS.Data.Entity;
+using LMS.Data.Entity.Common;
 using LMS.DataAccess.GenericRepository;
 using LMS.DataAccess.Repository;
 using LMS.Services.Blob;
@@ -18,6 +19,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System;
 using Country = LMS.Data.Entity.Country;
 
 namespace LMS.Services
@@ -54,6 +56,7 @@ namespace LMS.Services
         private IGenericRepository<StudentCertificate> _studentCertificateRepository;
         private IGenericRepository<UserSharedPost> _userSharedPostRepository;
         private IGenericRepository<SavedPost> _savedPostRepository;
+        private IGenericRepository<UserCertificate> _userCertificateRepository;
         private readonly UserManager<User> _userManager;
         private readonly IBlobService _blobService;
         private readonly IPostRepository _postRepositoryCustom;
@@ -61,7 +64,7 @@ namespace LMS.Services
 
 
         public UserService(IMapper mapper, IConfiguration config, IWebHostEnvironment webHostEnvironment, IGenericRepository<User> userRepository, IGenericRepository<UserFollower> userFollowerRepository, IGenericRepository<UserLanguage> userLanguageRepository, IGenericRepository<City> cityRepository, IGenericRepository<Country> countryRepository, IGenericRepository<SchoolFollower> schoolFollowerRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<CourseTeacher> courseTeacherRepository,
-          IGenericRepository<SchoolTeacher> schoolteacherRepository, IGenericRepository<Student> studentRepository, IGenericRepository<Teacher> teacherRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<UserPreference> userPreferenceRepository, IGenericRepository<Like> likeRepository, IGenericRepository<View> viewRepository, IGenericRepository<Comment> commentRepository, IGenericRepository<StudentCertificate> studentCertificateRepository, IGenericRepository<UserSharedPost> userSharedPostRepository, IGenericRepository<SavedPost> savedPostRepository, UserManager<User> userManager, IBlobService blobService, IPostRepository postRepositoryCustom, ICommonService commonService)
+          IGenericRepository<SchoolTeacher> schoolteacherRepository, IGenericRepository<Student> studentRepository, IGenericRepository<Teacher> teacherRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<UserPreference> userPreferenceRepository, IGenericRepository<Like> likeRepository, IGenericRepository<View> viewRepository, IGenericRepository<Comment> commentRepository, IGenericRepository<StudentCertificate> studentCertificateRepository, IGenericRepository<UserSharedPost> userSharedPostRepository, IGenericRepository<SavedPost> savedPostRepository, UserManager<User> userManager, IBlobService blobService, IPostRepository postRepositoryCustom, IGenericRepository<UserCertificate> userCertificateRepository, ICommonService commonService)
         {
             _mapper = mapper;
             _config = config;
@@ -95,9 +98,11 @@ namespace LMS.Services
             _userManager = userManager;
             _blobService = blobService;
             _postRepositoryCustom = postRepositoryCustom;
+            _userCertificateRepository = userCertificateRepository;
             _commonService = commonService;
         }
         public async Task<UserDetailsViewModel> GetUserById(string userId)
+        
         {
             var user = await _userRepository.GetAll().Include(x => x.UserLanguage).ThenInclude(x => x.Language).Where(x => x.Id == userId).FirstOrDefaultAsync();
             var result = _mapper.Map<UserDetailsViewModel>(user);
@@ -125,7 +130,13 @@ namespace LMS.Services
             var schoolTeachers = await GetSchoolTeachers(userId);
             var classTeachers = await GetClassTeachers(userId);
             var courseTeachers = await GetCourseTeachers(userId);
-            result.StudentCertificates = await GetCertificateByUser(userId);
+            var studentCertificates = await GetStudentCertificate(userId);
+            var userCertificates = await GetUserCertificate(userId);
+
+            studentCertificates.AddRange(userCertificates);
+
+            result.Certificates = studentCertificates;
+
 
             var classCourseTeachers = classTeachers.Union(courseTeachers).DistinctBy(x => x.SchoolId).ToList();
 
@@ -136,10 +147,16 @@ namespace LMS.Services
         }
 
 
-        public async Task<List<StudentCertificateViewModel>> GetCertificateByUser(string userId)
+        public async Task<List<CertificateViewModel>> GetStudentCertificate(string userId)
         {
             var studentCertificates = await _studentCertificateRepository.GetAll().Include(x => x.Student).Where(x => x.Student.UserId == userId).ToListAsync();
-            return _mapper.Map<List<StudentCertificateViewModel>>(studentCertificates);
+            return _mapper.Map<List<CertificateViewModel>>(studentCertificates);
+        }
+
+        public async Task<List<CertificateViewModel>> GetUserCertificate(string userId)
+        {
+            var userCertificates = await _userCertificateRepository.GetAll().Where(x => x.UserId == userId).ToListAsync();
+            return _mapper.Map<List<CertificateViewModel>>(userCertificates);
         }
 
         public async Task<UserUpdateViewModel> GetUserEditDetails(string userId)
@@ -522,7 +539,7 @@ namespace LMS.Services
         public async Task<IEnumerable<PostDetailsViewModel>> GetPostsByUserId(string userId, int pageNumber = 1, int pageSize = 12)
         {
 
-            var postList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == new Guid(userId) && (x.PostType == (int)PostTypeEnum.Post || (x.PostType == (int)PostTypeEnum.Stream)) && x.PostAuthorType == (int)PostAuthorTypeEnum.User && x.IsPostSchedule != true).OrderByDescending(x => x.IsPinned).ToListAsync();
+            var postList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == new Guid(userId) && (x.PostType == (int)PostTypeEnum.Post || (x.PostType == (int)PostTypeEnum.Stream && x.IsLive == true)) && x.PostAuthorType == (int)PostAuthorTypeEnum.User && x.IsPostSchedule != true).OrderByDescending(x => x.IsPinned).ToListAsync();
 
             var requiredPostList = postList.OrderByDescending(x => x.IsPinned).ThenByDescending(x => x.CreatedOn).ToList();
 
@@ -878,7 +895,7 @@ namespace LMS.Services
 
         async Task<Dictionary<Guid, double>> GenericCompareAlgo(string tokenList, PostTypeEnum postType, int pageNumber, int pageSize)
         {
-
+            double averageScore = 0;
             var DBPostTokens = new List<string>();
             var PostGUIDScore = new Dictionary<Guid, double>();
             var PostGUIDScore2 = new Dictionary<Guid, int>();
@@ -886,6 +903,9 @@ namespace LMS.Services
             var listOfPosts = await _postRepository.GetAll().Where(x => x.PostType == (int)postType)
                 //.Skip((pageNumber - 1) * pageSize).Take(pageSize)
                 .ToListAsync();
+            //var clientPosts = await _postRepository.GetAll().Where(x => x.ParentId == new Guid("2C0296BC-33D4-4479-775F-08DB81F59785")).ToListAsync();
+
+            //listOfPosts.AddRange(clientPosts);
             var listOfTags = await _postTagRepository.GetAll().ToListAsync();
 
             var levenshtein = new Levenshtein();
@@ -909,7 +929,32 @@ namespace LMS.Services
                 PostGUIDScore.Add(post.Id, score);
             }
 
-            var result = PostGUIDScore.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value); ;
+            DateTime currentDate = DateTime.Now.Date;
+            DateTime fiveDaysAgo = currentDate.AddDays(-5);
+            Random random = new Random();
+
+            var clientPosts = await _postRepository.GetAll().Where(x => x.ParentId == new Guid("2C0296BC-33D4-4479-775F-08DB81F59785") && x.CreatedOn >= fiveDaysAgo).ToListAsync();
+
+            var PostGUIDScores = PostGUIDScore.Where(x => x.Value > 10);
+            if (PostGUIDScores.Count() != 0)
+            {
+                 averageScore = PostGUIDScore.Where(x => x.Value > 10).Select(x => x.Value).Average();
+            }
+            else
+            {
+                 averageScore = PostGUIDScore.Values.Average();
+            }
+
+            foreach (var post in clientPosts)
+            {
+                double randomScore = averageScore + random.NextDouble();
+                if (PostGUIDScore.ContainsKey(post.Id))
+                {
+                    PostGUIDScore[post.Id] = randomScore;
+                }
+            }
+
+            var result = PostGUIDScore.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
             return result;
 
         }
@@ -1331,12 +1376,36 @@ namespace LMS.Services
 
         }
 
+        public async Task SaveUserCertificates(SaveUserCertificateViewModel userCertificates)
+        {
+            string containerName = this._config.GetValue<string>("Container:SchoolContainer");
 
+            foreach (var certificate in userCertificates.Certificates)
+            {
+                string certificateUrl = await _blobService.UploadFileAsync(certificate, containerName, false);
 
-        //public async Task<UserDetailsViewModel> SearchUserFollowers(string searchString)
-        //{
+                string certificateName = certificate.FileName;
 
-        //}
+                var userCertificate = new UserCertificate
+                {
+                    CertificateUrl = certificateUrl,
+                    Name = certificateName,
+                    UserId = userCertificates.UserId
+                };
+                _userCertificateRepository.Insert(userCertificate);
+                _userCertificateRepository.Save();
+            }
+
+        }
+
+        public async Task DeleteUserCertificate(UserCertificateViewModel model)
+        {
+            var userCertificate = await _userCertificateRepository.GetAll().Where(x => x.UserId == model.UserId && x.CertificateId == model.CertificateId).FirstOrDefaultAsync();
+
+            _userCertificateRepository.Delete(userCertificate.CertificateId);
+            _userCertificateRepository.Save();
+
+        }
 
     }
 
