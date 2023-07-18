@@ -1,20 +1,25 @@
-<section class="f-poppins" style="margin-left: 30%;">
+<section class="f-poppins main_content about-container" >
       <header class="header">
         <div class="header__content">
-          <button
-          (click)="back()"
-          type="button"
-          class="back-button bg-transparent border-0 font_16 fw_400 text_dark">
-        <img src="../../../../assets/images/school/arrow-left.svg" />
-        {{ "Back" | translate }}
-      </button>
-          <a [routerLink]="['/user/userFeed']" class="main-logo"><img class="ms-4" src="../../../assets/images/logo.svg" /></a>
+         
+          <a [routerLink]="['/user/userFeed']" class="main-logo"><img src="../../../assets/images/logo.svg" /></a>
         </div>
       </header>
-      <main class="static-main">
+      <main class="static-main min-height w-100 h-auto">
         <div class="static-content">
         <div *ngIf="selectedLanguage == 'en'">
-          <p><strong>BYOKUL Terms of Use</strong></p>
+      <div class="d-flex align-items-center justify-content-between ">
+        <button
+        (click)="back()"
+        type="button"
+        class="back-button bg-transparent border-0 font_16 fw_400 text_dark">
+      <img src="../../../../assets/images/school/arrow-left.svg" />
+      {{ "Back" | translate }}
+    </button>
+        <h3 class="font_24 text_dark fw-bold ">BYOKUL Terms of Use</h3>
+        <div class="d-md-block d-none"></div>
+      </div>
+      <hr class="about_hr" />
           <p><em>These Terms of Use were last updated on JUNE 13, 2023.</em></p>
           <p><strong>Please carefully review</strong> <strong>these Terms, which act as an enforceable contract between us and contain important information regarding your legal rights, remedies and obligations.</strong></p>
           <p>ByOkul's mission is to improve people's lives through learning. We enable anyone, everywhere to create and share educational content (instructors) and access it for learning purposes (students). We believe our platform model is the best way to deliver valuable educational content to our users. We need rules to keep our platform and services safe for you, for us, and for our student and instructor community. These Terms apply to all your activities on the ByOkul website, ByOkul mobile apps, TV apps, APIs and other related services ("<strong>Services</strong>").</p>
@@ -183,7 +188,18 @@
         </div>
 
         <div *ngIf="selectedLanguage == 'tr'">
-          <p><strong>BYOKUL Kullanım Şartları</strong></p>
+          <div class="d-flex align-items-center justify-content-between ">
+            <button
+            (click)="back()"
+            type="button"
+            class="back-button bg-transparent border-0 font_16 fw_400 text_dark">
+          <img src="../../../../assets/images/school/arrow-left.svg" />
+          {{ "Back" | translate }}
+        </button>
+            <h3 class="font_24 text_dark fw-bold ">BYOKUL Kullanım Şartları</h3>
+            <div class="d-md-block d-none"></div>
+          </div>
+          <hr class="about_hr" />
           <p><em>Bu Kullanım Şartları en son 13 HAZİRAN 2023 tarihinde g&uuml;ncellenmiştir.</em></p>
           <p><strong>Aramızda uygulanabilir bir s&ouml;zleşme g&ouml;revi g&ouml;ren ve yasal haklarınız, &ccedil;&ouml;z&uuml;m yollarınız ve y&uuml;k&uuml;ml&uuml;l&uuml;klerinize ilişkin &ouml;nemli bilgiler i&ccedil;eren bu Şartları l&uuml;tfen dikkatle inceleyiniz.</strong></p>
           <p>ByOkul'un misyonu, &ouml;ğrenme yoluyla insanların hayatlarını iyileştirmektir. Her yerde herkesin eğitim i&ccedil;erikleri oluşturup paylaşmasına (eğitmenler) ve bu eğitim i&ccedil;eriklerine &ouml;ğrenme amacıyla erişmesine (&ouml;ğrenciler) olanak sağlıyoruz. Platform modelimizin, kullanıcılarımıza değerli eğitim i&ccedil;erikleri sunmak i&ccedil;in en iyi y&ouml;ntem olduğunu d&uuml;ş&uuml;n&uuml;yoruz. Platformumuzu ve hizmetlerimizi sizin i&ccedil;in, bizim i&ccedil;in, &ouml;ğrenci ve eğitmen topluluğumuz i&ccedil;in g&uuml;vende tutmak amacıyla kurallara ihtiya&ccedil; duyuyoruz. Bu Şartlar, ByOkul web sitesindeki, ByOkul mobil uygulamalarındaki, TV uygulamalarımızdaki, API'larımızdaki ve diğer ilgili hizmetlerdeki (<strong>"Hizmetler"</strong>) t&uuml;m faaliyetleriniz i&ccedil;in ge&ccedil;erlidir.</p>
@@ -355,7 +371,18 @@
         </div>
 
         <div *ngIf="selectedLanguage == 'ar'">
-          <p>شروط استخدام <strong>BYOKUL</strong></p>
+          <div class="d-flex align-items-center justify-content-between ">
+            <button
+            (click)="back()"
+            type="button"
+            class="back-button bg-transparent border-0 font_16 fw_400 text_dark">
+          <img src="../../../../assets/images/school/arrow-left.svg" />
+          {{ "Back" | translate }}
+        </button>
+            <h3 class="font_24 text_dark fw-bold ">شروط استخدام <strong>BYOKUL</strong></h3>
+            <div class="d-md-block d-none"></div>
+          </div>
+          <hr class="about_hr" />
           <p>تم آخر تحديث لشروط الاستخدام هذه في 13 يونيو 2023.</p>
           <p>يرجى مراجعة هذه الشروط بعناية، والتي تعد بمثابة عقد قابل للتنفيذ بيننا وتحتوي على معلومات مهمة تتعلق بحقوقك القانونية وسبل الانتصاف والالتزامات.</p>
           <p>مهمة ByOkul هي تحسين حياة الناس من خلال التعلم. نحن نمكن أي شخص، في كل مكان، من إنشاء ومشاركة المحتوى التعليمي (المعلمين) والوصول إليه لأغراض التعلم (الطلاب). نعتقد أن نموذج المنصة الخاص بنا هو أفضل طريقة لتقديم محتوى تعليمي قيم لمستخدمينا. نحتاج إلى قواعد للحفاظ على منصتنا وخدماتنا آمنة لك ولنا ولمجتمعنا من الطلاب والمعلمين. تنطبق هذه الشروط على جميع أنشطتك على موقع ByOkul الإلكتروني وتطبيقات ByOkul للهاتف المحمول وتطبيقات التلفزيون وواجهات برمجة التطبيقات والخدمات الأخرى ذات الصلة ("الخدمات").</p>
@@ -533,7 +560,18 @@
         </div>
 
         <div *ngIf="selectedLanguage == 'sp'">
-          <p><strong>BYOKUL Terms of Use</strong></p>
+          <div class="d-flex align-items-center justify-content-between ">
+            <button
+            (click)="back()"
+            type="button"
+            class="back-button bg-transparent border-0 font_16 fw_400 text_dark">
+          <img src="../../../../assets/images/school/arrow-left.svg" />
+          {{ "Back" | translate }}
+        </button>
+            <h3 class="font_24 text_dark fw-bold ">BYOKUL Terms of Use</h3>
+            <div class="d-md-block d-none"></div>
+          </div>
+          <hr class="about_hr" />
           <p><em>These Terms of Use were last updated on JUNE 13, 2023.</em></p>
           <p><strong>Please carefully review</strong> <strong>these Terms, which act as an enforceable contract between us and contain important information regarding your legal rights, remedies and obligations.</strong></p>
           <p>ByOkul's mission is to improve people's lives through learning. We enable anyone, everywhere to create and share educational content (instructors) and access it for learning purposes (students). We believe our platform model is the best way to deliver valuable educational content to our users. We need rules to keep our platform and services safe for you, for us, and for our student and instructor community. These Terms apply to all your activities on the ByOkul website, ByOkul mobile apps, TV apps, APIs and other related services ("<strong>Services</strong>").</p>

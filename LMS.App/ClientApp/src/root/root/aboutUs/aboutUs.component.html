@@ -1,6 +1,14 @@
-    <section class="f-poppins" style="margin-left: 30%;">
+    <section class="f-poppins main_content about-container">
       <header class="header">
         <div class="header__content">
+          <a [routerLink]="['/user/userFeed']" class="main-logo"><img src="../../../assets/images/logo.svg" /></a>
+         
+        </div>
+      </header>
+      <main class="static-main min-height w-100 h-auto">
+        <div class="static-content">
+       <div *ngIf="selectedLanguage == 'en'">
+        <div class="d-flex align-items-center justify-content-between ">
           <button
           (click)="back()"
           type="button"
@@ -8,29 +16,57 @@
         <img src="../../../../assets/images/school/arrow-left.svg" />
         {{ "Back" | translate }}
       </button>
-          <a [routerLink]="['/user/userFeed']" class="main-logo"><img class="ms-4" src="../../../assets/images/logo.svg" /></a>
+          <h3 class="font_24 text_dark fw-bold ">About us</h3>
+          <div class="d-md-block d-none"></div>
         </div>
-      </header>
-      <main class="static-main">
-        <div class="static-content">
-       <div *ngIf="selectedLanguage == 'en'">
-        <p><strong>ABOUT US</strong></p>
+        <hr class="about_hr" />
         <p>ByOkul's mission is to improve people's lives through learning. We enable anyone, everywhere to create and share educational content (instructors) and access it for learning purposes (students). We believe our platform model is the best way to deliver valuable educational content to our users.</p>
        </div>
 
        <div *ngIf="selectedLanguage == 'tr'">
-        <p><strong>ABOUT US</strong></p>
+        <div class="d-flex align-items-center justify-content-between ">
+          <button
+          (click)="back()"
+          type="button"
+          class="back-button bg-transparent border-0 font_16 fw_400 text_dark">
+        <img src="../../../../assets/images/school/arrow-left.svg" />
+        {{ "Back" | translate }}
+      </button>
+          <h3 class="font_24 text_dark fw-bold ">About us</h3>
+          <div class="d-md-block d-none"></div>
+        </div>
 <p>ByOkul'un misyonu, &ouml;ğrenme yoluyla insanların hayatlarını iyileştirmektir. Her yerde herkesin eğitim i&ccedil;erikleri oluşturup paylaşmasına (eğitmenler) ve bu eğitim i&ccedil;eriklerine &ouml;ğrenme amacıyla erişmesine (&ouml;ğrenciler) olanak sağlıyoruz. Platform modelimizin, kullanıcılarımıza değerli eğitim i&ccedil;erikleri sunmak i&ccedil;in en iyi y&ouml;ntem olduğunu d&uuml;ş&uuml;n&uuml;yoruz.</p>
        </div>
 
        <div *ngIf="selectedLanguage == 'ar'">
-        <p>معلومات عنا</p>
+        <div class="d-flex align-items-center justify-content-between ">
+          <button
+          (click)="back()"
+          type="button"
+          class="back-button bg-transparent border-0 font_16 fw_400 text_dark">
+        <img src="../../../../assets/images/school/arrow-left.svg" />
+        {{ "Back" | translate }}
+      </button>
+      <h3 class="font_24 text_dark fw-bold ">معلومات عنا</h3>
+          <div class="d-md-block d-none"></div>
+        </div>
+        
         <p>مهمة ByOkul هي تحسين حياة الناس من خلال التعلم. نحن نمكن أي شخص، في كل مكان، من إنشاء ومشاركة المحتوى التعليمي (المعلمين) والوصول إليه لأغراض التعلم (الطلاب). نعتقد أن نموذج المنصة الخاص بنا هو أفضل طريقة لتقديم محتوى تعليمي قيم لمستخدمينا.</p>
         <p>&nbsp;</p>
        </div>
 
        <div *ngIf="selectedLanguage == 'sp'">
-        ABOUT US
+        <div class="d-flex align-items-center justify-content-between ">
+          <button
+          (click)="back()"
+          type="button"
+          class="back-button bg-transparent border-0 font_16 fw_400 text_dark">
+        <img src="../../../../assets/images/school/arrow-left.svg" />
+        {{ "Back" | translate }}
+      </button>
+          <h3 class="font_24 text_dark fw-bold ">About us</h3>
+          <div class="d-md-block d-none"></div>
+        </div>
         ByOkul's mission is to improve people's lives through learning. We enable anyone, everywhere to create and share educational content (instructors) and access it for learning purposes (students). We believe our platform model is the best way to deliver valuable educational content to our users.         
        </div>
         </div>
