@@ -77,7 +77,8 @@
   text-decoration: auto;
   justify-content: end;
   display: flex;
-  color: orange;
+  color: #ffa114;
+    text-transform: capitalize;
 }
 
 .search-results .followers-name {
@@ -93,5 +94,19 @@
   justify-content: center;
   background: #7c8da7;
   border-radius: 50%;
+  overflow: hidden;
 }
-
+.search-results div>li{
+  margin-bottom: 10px;
+}
+.search-results h4{
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+.search-results div hr {
+  opacity: 1;
+  border-color: #ededed;
+}
+.search-results div:last-child hr {
+  display: none;
+}

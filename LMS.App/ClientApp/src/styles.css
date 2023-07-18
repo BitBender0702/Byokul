@@ -2,7 +2,6 @@
 @import "~@fortawesome/fontawesome-free/css/all.css";
 @import "@ctrl/ngx-emoji-mart/picker";
 
-
 html {
   overflow-x: hidden;
 }
@@ -22,17 +21,6 @@ body {
 
 .f-monteserrat {
   font-family: "Montserrat", sans-serif;
-}
-
-.liveStream {
-  margin-top: 27px;
-}
-
-@media screen and (min-width: 1200px) {
-  .liveStream {
-    margin-left: 300px;
-    height: 800px;
-  }
 }
 
 * {
@@ -577,8 +565,10 @@ hr.earning-hr {
 /*=== center content css start here --*/
 .main_content {
   width: 100%;
-  transition: ease-in-out 0.5s;
-  padding: 40px 40px;
+    transition: ease-in-out 0.5s;
+    padding: 40px 40px;
+    max-width: 1800px;
+    margin: 0 auto;
 }
 
 .live-header {
@@ -655,14 +645,25 @@ button.live_chats .live-chat-back {
   top: 4px;
 }
 .livechat-box {
-  border-right: 1px solid #f1f7ff;
   margin: 0 16px 0 0;
   border-left: 0;
+  overflow: hidden;
+  border: 1px solid #F1F7FF;
+  border-radius: 16px;
 }
-
+.live-chat-outer {
+  padding: 2px 10px 30px 0px;
+  max-height: 550px;
+  overflow: auto;
+  margin-right: -10px;
+  height: calC(750px - 250px);
+}
 .live-chat-box {
   padding: 32px 36px;
   background: #fcfcfc;
+}
+.livechat-box-right {
+  margin: 0 0px 0 16px;
 }
 .live-message {
   margin-bottom: 32px;
@@ -673,7 +674,6 @@ button.live_chats .live-chat-back {
   position: absolute;
   right: 0;
 }
-
 button.comment-btn {
   background: #ff821c;
   box-shadow: -4px 4px 30px rgb(0 0 0 / 8%);
@@ -682,7 +682,6 @@ button.comment-btn {
   min-width: 24px;
   height: 24px;
 }
-
 .add-comment input {
   height: 41px;
   margin: 0 9px 0 8px;
@@ -1288,6 +1287,9 @@ input[type="number"]::-webkit-outer-spin-button {
   height: 100%;
   display: flex;
   overflow: hidden;
+  align-items: center;
+  justify-content: center;
+  background: #000;
 }
 
 .school-grid-thumbnail .medium-thumnail {
@@ -2031,7 +2033,7 @@ main {
   margin: 0;
   list-style-type: none;
   overflow-y: auto;
-  height: calC(100vh - 160px);
+  height: calC(100vh - 250px);
   border-right: 1px solid #f5f5f5;
 }
 .chat-aside li {
@@ -2060,12 +2062,12 @@ main {
 
 #chat {
   padding-left: 0;
-  margin: 0;
-  list-style-type: none;
-  overflow-y: scroll;
-  height: calC(100vh - 267px);
-  border-top: 2px solid #fff;
-  border-bottom: 2px solid #fff;
+    margin: 0;
+    list-style-type: none;
+    overflow-y: scroll;
+    height: calC(100vh - 390px);
+    border-top: 2px solid #fff;
+    border-bottom: 2px solid #fff;
 }
 #chat li {
   padding: 28px 30px;
@@ -3079,11 +3081,20 @@ p-autocomplete li:before {
   right: 25px;
   left: auto;
 }
-
+.liveStream {
+  margin-top: 27px;
+}
+.message-box main {
+  height: calC(100vh - 250px);
+}
 @media screen and (min-width: 1200px) {
   .main_content-max-width {
     max-width: 1200px;
     margin: 0 auto;
+  }
+  .liveStream {
+    margin-left: 300px;
+    height: 800px;
   }
 }
 
