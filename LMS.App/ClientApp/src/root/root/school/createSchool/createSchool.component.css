@@ -96,6 +96,9 @@ ngx-intl-tel-input input[disabled] {
 	background-color: #e5eaf1;
 }
 
+:host ::ng-deep .intl-tel-input {
+	width: 100%;
+  }
 
 
 

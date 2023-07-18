@@ -1,4 +1,5 @@
-﻿using LMS.Common.ViewModels.Common;
+﻿using LMS.Common.Enums;
+using LMS.Common.ViewModels.Common;
 using LMS.Common.ViewModels.Course;
 using LMS.Data.Entity;
 using LMS.Services;
@@ -230,6 +231,15 @@ namespace LMS.App.Controllers
         {
             await _courseService.EnableDisableCourse(courseId);
             return Ok();
+        }
+
+        [Route("getSliderReelsByCourseId")]
+        [HttpGet]
+        public async Task<IActionResult> GetSliderReelsByCourseId(Guid courseId, Guid postId, ScrollTypesEnum scrollType)
+        {
+            var userId = await GetUserIdAsync(this._userManager);
+            var response = await _courseService.GetSliderReelsByCourseId(courseId, userId, postId, scrollType);
+            return Ok(response);
         }
 
     }

@@ -51,7 +51,7 @@ namespace LMS.Services.Common
         public async Task<MemoryStream> CompressVideo(string fileName, byte[] videoData)
         {
             var path = _webHostEnvironment.ContentRootPath;
-            var tempDirectoryPath = Path.Combine(path, "wwwroot/CompressVideoes/");
+            var tempDirectoryPath = Path.Combine(path, "FfmpegVideos/");
 
             System.IO.File.WriteAllBytes(tempDirectoryPath + fileName, videoData);
             string ffmpegFileName = Path.Combine(path, "Ffmpeg/ffmpeg.exe");

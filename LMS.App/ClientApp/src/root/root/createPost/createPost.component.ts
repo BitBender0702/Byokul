@@ -372,6 +372,41 @@ export class CreatePostComponent implements OnInit,OnDestroy {
     this.isThumbnailUpload = true;
 }
 
+handleImageInput2(file: any) {
+  debugger
+  this.images.push(file);
+  const reader = new FileReader();
+  
+  reader.onload = () => {
+    const imageUrl = reader.result as string;
+    const imageName = file.name;
+    const imageObject = { imageUrl, name: imageName };
+    this.uploadImage.push(imageObject);
+    
+    this.thumbnailRequired = false;
+    this.isThumbnailUpload = true;
+  };
+  
+  reader.readAsDataURL(file);
+}
+
+handleVideoInput2(file: any) {
+  debugger
+    this.videos.push(file);
+    const videoUrl = URL.createObjectURL(file);
+    this.getVideoThumbnail(videoUrl,file.name, (thumbnailUrl) => {
+      debugger
+      this.videoObject.videoUrl = thumbnailUrl;
+      this.videoObject.name = file.name;
+      this.videoObject.type = file.type;
+      this.uploadVideo.push(this.videoObject); 
+      this.initializeVideoObject();
+    });
+  this.scheduleVideoRequired = false;
+  this.isVideoUpload = true;
+}
+
+
    removeUploadImage(image:any){
     const index = this.images.findIndex((item:any) => item.name === image.name);
         if (index > -1) {
@@ -482,6 +517,11 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
   for (let i = 0; i < selectedFiles.length; i++) {
     this.initialAttachment.push(selectedFiles[i]);
   }
+ }
+
+ handleAttachmentInput2(file: any) {
+  debugger
+    this.attachment.push(file);
  }
 
  removeAttachment(attachment:any){
@@ -994,7 +1034,18 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
           this.postToUpload.append('uploadVideosThumbnail', this.videoThumbnails[i]);
         }
 
-    this.loadingIcon = true;
+        if(this.videos.length == 0){
+          this.loadingIcon = true;
+          }
+          else{
+            this.loadingIcon = true;
+            setTimeout(() => {
+              this.close();
+              this.loadingIcon = false;
+              postProgressNotification.next({});
+            }, 3000);
+          }
+
     var post =this.createLiveForm.value;
     this.postFrom();
 
@@ -1012,11 +1063,20 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
     }
 
     this._postService.createPost(this.postToUpload).subscribe((response:any) => { 
+      debugger
       this.isSubmitted=false;
       this.loadingIcon = false;
       //addPostResponse.next({response}); 
       this.postToUpload = new FormData();
       this.close();
+      if(this.videos.length != 0){
+      var translatedMessage = this.translateService.instant('VideoReadyToStream');
+      var notificationContent = translatedMessage;
+      var chatType = this.from == "user" ? 1 :this.from == "school" ? 3 : this.from == "class" ? 4 : undefined;
+      this._notificationService.initializeNotificationViewModel(this.loginUserId,NotificationType.PostUploaded,notificationContent,this.loginUserId,response.id,response.postType,response,null,chatType).subscribe((response) => {
+      });
+    }
+    else{
       // const fullNameIndex = response.streamUrl.indexOf('fullName='); // find the index of "fullName="
       // const newUrl = response.streamUrl.slice(fullNameIndex);
       // here we need to send schoolId/classId if stream from those.
@@ -1029,6 +1089,7 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
       );
       
     }
+  }
       });
 
 }
@@ -1048,15 +1109,18 @@ isOwnerOrNot() {
 }
 
 handleFileInput(event: any) {
-  debugger
   var files = event.target.files;
   if (files) {
     for (let i = 0; i < files.length; i++) {
+      debugger
       const file: File = files.item(i)!;
       if (file.type.startsWith('image/')) {
-        this.handleImageInput(file);
+        this.handleImageInput2(file);
       } else if (file.type.startsWith('video/')) {
-        this.handleVideoInput(file);
+        this.handleVideoInput2(file);
+      }
+      else if (file.type.startsWith('application/pdf')) {
+        this.handleAttachmentInput2(file);
       }
     }
   }

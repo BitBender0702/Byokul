@@ -13,7 +13,7 @@
           <img src="../../../../assets/images/school/arrow-left.svg" />
           {{ "Back" | translate }}
         </button>
-          <h1>FAQ</h1>
+          <h1>{{ "FAQ" | translate }}</h1>
           <div class="accordion" id="accordionExample">
             <div class="accordion-item">
               <button
@@ -115,10 +115,10 @@
         <div class="footer__content">
           <a href="" class="main-logo"><img src="../../../assets/images/logo.svg" /></a>
           <nav>
-            <a [routerLink]="['/privacyPolicy']">Privacy Policy</a>
-            <a [routerLink]="['/termsOfServices']">Terms of services</a>
-            <a [routerLink]="['/aboutUs']">About us</a>
-            <a [routerLink]="['/faq']">FAQ</a>
+            <a [routerLink]="['/privacyPolicy']">{{ "PrivacyPolicy" | translate }}</a>
+            <a [routerLink]="['/termsOfServices']">{{ "TermsOfService" | translate }}</a>
+            <a [routerLink]="['/aboutUs']">{{ "AboutUs" | translate }}</a>
+            <a [routerLink]="['/faq']">{{ "FAQ" | translate }}</a>
           </nav>
         </div>
       </footer>

@@ -58,8 +58,8 @@
                  <!-- <p style="position: relative;bottom: 467px;">{{post.coverLetter}}</p> -->
               </div>
               <iframe *ngIf="streamUrl != undefined && streamUrl != null && meetingId != ''" width="100%" height="500" [src]="streamUrl" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share;camera;microphone;display-capture" allowfullscreen></iframe>
-              <video #videoPlayer id="test12" *ngIf="meetingId == ''" width="100%" height="500" autoplay (ended)="onVideoEnded()" (timeupdate)="onVideoTimeUpdate($event)" controls preload="auto">
-                <source [src]="post.streamUrl + '?cache=' + cacheBuster" type="video/mp4" />
+              <video id="test12" *ngIf="meetingId == ''" width="100%" height="500" autoplay (ended)="onVideoEnded()" (timeupdate)="onVideoTimeUpdate($event)" preload="auto">
+                <source [src]="post.streamUrl" type="video/mp4" />
               </video>
               <!-- <div class="overlay" (click)="startVideo()" #startButton>
                 <span>Click to Play</span>
@@ -326,27 +326,30 @@
                       *ngFor="let item of post.comments"
                       class="live-message d-flex position-relative align-items-start"
                     >
-                      <img
+                      <img [routerLink]="['/user/userProfile',item.userId]"
                         *ngIf="item.userAvatar != null"
                         [src]="item.userAvatar"
-                        class="comment-user"
+                        class="comment-user cursor_pointer"
                       />
-                      <img
+                      <img [routerLink]="['/user/userProfile',item.userId]"
                         *ngIf="item.userAvatar == null && gender == '1'"
                         src="../../../assets/images/maleProfile.jfif"
-                        class="comment-user"
+                        class="comment-user cursor_pointer"
                       />
-                      <img
+                      <img [routerLink]="['/user/userProfile',item.userId]"
                         *ngIf="
                           item.userAvatar == null &&
                           (gender == '2' || gender == '3')
                         "
                         src="../../../assets/images/femaleProfile.jfif"
-                        class="comment-user"
+                        class="comment-user cursor_pointer"
                       />
+                      <div class="d-flex flex-column">
+                      <p [routerLink]="['/user/userProfile',item.userId]" class="font_12 fw_600 text-start mb-0 cursor_pointer">{{item.userName}}</p>
                       <p class="text_sec1 font_12 fw_400 text-start mb-0">
                         {{ item.content }}
                       </p>
+                      </div>
                       <button
                         (click)="
                           likeUnlikeComments(

@@ -56,7 +56,6 @@ export class RootComponent extends MultilingualComponent implements OnInit {
   }
 
   ngOnInit(): void {
-   debugger
     this.connectSignalR();
     this.meta.updateTag({ property: 'og:title', content: "test" });
     this.meta.updateTag({ property: 'og:type', content: "profile" });

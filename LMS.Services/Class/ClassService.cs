@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using iText.Kernel.Geom;
 using LMS.Common.Enums;
 using LMS.Common.ViewModels.Class;
 using LMS.Common.ViewModels.Common;
@@ -546,6 +547,48 @@ namespace LMS.Services
         {
             var courseList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == classId && x.PostType == (int)PostTypeEnum.Reel && x.IsPostSchedule != true).OrderByDescending(x => x.IsPinned).ThenByDescending(x => x.CreatedOn).ToListAsync();
             var result = _mapper.Map<List<PostDetailsViewModel>>(courseList).Skip((pageNumber - 1) * pageSize).Take(pageSize);
+
+            foreach (var post in result)
+            {
+                post.PostAttachments = await GetAttachmentsByPostId(post.Id);
+                post.Likes = await _userService.GetLikesOnPost(post.Id);
+                post.Views = await _userService.GetViewsOnPost(post.Id);
+
+                if (post.Likes.Any(x => x.UserId == loginUserId && x.PostId == post.Id))
+                {
+                    post.IsPostLikedByCurrentUser = true;
+                }
+                else
+                {
+                    post.IsPostLikedByCurrentUser = false;
+                }
+            }
+
+            foreach (var post in result)
+            {
+                var tags = await GetTagsByPostId(post.Id);
+                post.PostTags = tags;
+            }
+
+            return result;
+        }
+
+        public async Task<IEnumerable<PostDetailsViewModel>> GetSliderReelsByClassId(Guid classId, string loginUserId, Guid lastPostId, ScrollTypesEnum scrollType)
+        {
+            var requiredResults = new List<Post>();
+            var courseList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == classId && x.PostType == (int)PostTypeEnum.Reel && x.IsPostSchedule != true).OrderByDescending(x => x.IsPinned).ThenByDescending(x => x.CreatedOn).ToListAsync();
+
+            if (scrollType == ScrollTypesEnum.Down)
+            {
+                requiredResults = courseList.SkipWhile(x => x.Id != lastPostId).Skip(1).Take(3).ToList();
+
+            }
+            else
+            {
+                requiredResults = courseList.TakeWhile(x => x.Id != lastPostId).Reverse().Take(3).Reverse().ToList();
+
+            }
+            var result = _mapper.Map<List<PostDetailsViewModel>>(requiredResults);
 
             foreach (var post in result)
             {

@@ -40,6 +40,8 @@ namespace LMS.Services
         Task SaveUserCertificates(SaveUserCertificateViewModel model);
         Task DeleteUserCertificate(UserCertificateViewModel model);
         Task<bool> IsFollowerBan(string userId, string followerId);
+        Task<IEnumerable<PostDetailsViewModel>> GetSliderReelsByUserId(string userId, Guid lastReelId, ScrollTypesEnum scrollType);
+
 
 
 

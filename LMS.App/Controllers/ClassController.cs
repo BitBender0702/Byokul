@@ -1,4 +1,5 @@
-﻿using LMS.Common.ViewModels.Class;
+﻿using LMS.Common.Enums;
+using LMS.Common.ViewModels.Class;
 using LMS.Common.ViewModels.Common;
 using LMS.Data.Entity;
 using LMS.Services;
@@ -259,6 +260,15 @@ namespace LMS.App.Controllers
         {
             var user = await _classService.ClassAndCoursesGlobalSearch(searchString, pageNumber, pageSize);
             return Ok(user);
+        }
+
+        [Route("getSliderReelsByClassId")]
+        [HttpGet]
+        public async Task<IActionResult> GetSliderReelsByClassId(Guid classId, Guid postId, ScrollTypesEnum scrollType)
+        {
+            var userId = await GetUserIdAsync(this._userManager);
+            var response = await _classService.GetSliderReelsByClassId(classId, userId, postId, scrollType);
+            return Ok(response);
         }
 
     }

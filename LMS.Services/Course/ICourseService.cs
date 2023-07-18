@@ -1,4 +1,5 @@
-﻿using LMS.Common.ViewModels.Class;
+﻿using LMS.Common.Enums;
+using LMS.Common.ViewModels.Class;
 using LMS.Common.ViewModels.Common;
 using LMS.Common.ViewModels.Course;
 using LMS.Common.ViewModels.Post;
@@ -40,6 +41,7 @@ namespace LMS.Services
         Task<int> GetStudents(Guid courseId);
         Task<CourseInfoForCertificateViewModel> GetCourseInfoForCertificate(Guid courseId);
         Task EnableDisableCourse(Guid courseId);
+        Task<IEnumerable<PostDetailsViewModel>> GetSliderReelsByCourseId(Guid courseId, string loginUserId, Guid lastReelId, ScrollTypesEnum scrollType);
 
 
 

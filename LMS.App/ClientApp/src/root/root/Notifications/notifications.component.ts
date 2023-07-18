@@ -234,4 +234,27 @@ export const unreadNotificationResponse =new Subject<{type:string}>();
       OpenSideBar.next({isOpenSideBar:true})
     }
 
+    opeStream(postId:string, chatType:number){
+      debugger
+      this._postService.getPostById(postId).subscribe((response) => {
+        debugger
+        if(response.isLive){
+          var from = chatType == 1 ? "user" : chatType == 3 ? "school" : chatType == 4 ? "class" : "";
+      this.router.navigate(
+        [`liveStream`,postId,from]
+    );
+        }
+        else{
+          this.messageService.add({severity: 'info',summary: 'Info',life: 3000,detail: 'This live has ended!',});
+        }
+
+      });
+
+    //   var from = chatType == 1 ? "user" : chatType == 3 ? "school" : chatType == 4 ? "class" : "";
+    //   this.router.navigate(
+    //     [`liveStream`,postId,from]
+    // );
+
+    }
+
 }

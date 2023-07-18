@@ -334,10 +334,21 @@
           >
         </div>
 
+        <div class="teacher-tags tag-box mt-0">
+          <div class="teacher-content font_14 d-inline-block">
+            <img src="../../../../assets/images/Profile-dark.svg" />{{
+              "PhoneNumber" | translate
+            }}
+          </div>
+          <span class="custom-tag d-inline-flex align-items-center"
+            ><span class="vr-border"></span>{{ school.phoneNumber }}</span
+          >
+        </div>
+
         <!-- <div class="flex-container row">
           <ng-container  *ngFor="let post of school.posts; let i=index;">
-            <div class="col-12" [class]="getRandomClass(i)" *ngIf="i%3==0">abcd</div>
-            <div class="col-4" [class]="getRandomClass(i)" >1</div>
+            <div class="col-12 imgDisplay" [class]="getRandomClass(i,false)" *ngIf="i%3==0" style="display: none;">abcd</div>
+            <div class="col-4" [class]="getRandomClass(i,true)" (click)="openDialouge($event)" >1</div>
           </ng-container>
         </div> -->
         <hr class="hr-gray" />
@@ -1460,7 +1471,7 @@
           *ngIf="!isProfileGrid"
         >
           <!-- here is for view -->
-          <div
+          <!-- <div
             [ngClass]="
               isGridItemInfo
                 ? 'd-block school-grid-box position-relative school-list-box h-100'
@@ -1677,7 +1688,7 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> -->
           <div
             class="tab-pane fade show active"
             id="school-feed-tab-pane"
@@ -1689,11 +1700,26 @@
               class="accordion list-schol-profile"
               id="accordionPanelsStayOpenExample"
             >
+
+
+
+
+            <!-- <div class="flex-container row">
+              <ng-container  *ngFor="let post of school.posts; let i=index;">
+                <div class="col-12 imgDisplay" [class]="getRandomClass(i,false)" *ngIf="i%3==0" style="display: none;">abcd</div>
+                <div class="col-4" [class]="getRandomClass(i,true)" (click)="openDialouge($event)" >1</div>
+              </ng-container>
+            </div> -->
+
+
+
+
+
               <div class="row">
-                <ng-container *ngFor="let post of school.posts">
-                  <!-- <div
-                  class="clicked-post-div"
-                  *ngIf="showDiv && clickedPostId === post.id"
+                <ng-container *ngFor="let post of school.posts; let i = index">
+                  <div
+                  class="col-12 imgDisplay" [class]="getRandomClass(i,true)" *ngIf="(isScreenPc && i % 3 == 0) || (isScreenTablet && i % 2 == 0) || (isScreenMobile && i % 1 == 0)"
+                  style="display: none;"
                 >
                   <div
                     [ngClass]="
@@ -1714,7 +1740,7 @@
                         <carousel>
                           <div
                             *ngFor="
-                              let postAttachment of gridItemInfo.postAttachments
+                              let postAttachment of gridItemInfo.postAttachments; let i = index
                             "
                             class="school-grid-thumbnail"
                           >
@@ -1724,7 +1750,7 @@
                                 class="videofile"
                               >
                                 <video
-                                  #videoPlayer
+                                [id] = "'video01' + counter"
                                   controls
                                   class="video-js vjs-big-play-centered"
                                   preload="metadata"
@@ -1940,10 +1966,10 @@
                       </div>
                     </div>
                   </div>
-                </div> -->
+                </div>
                   <div *ngIf="
                       (post.postType == 1 && post.postAuthorType == 1) ||
-                      post.isLive" class="col-md-6 col-xl-4"
+                      post.isLive" class="col-md-6 col-xl-4" [class]="getRandomClass(i,false)" (click)="openDialouge($event)"
                   >
                   
                     <div
@@ -2641,10 +2667,10 @@
                           ]"
                           [selectFirstCountry]="false"
                           [selectedCountryISO]="selectedCountryISO"
-                          [maxLength]="10"
+
                           [phoneValidation]="true"
                           [separateDialCode]="separateDialCode"
-                          [numberFormat]="PhoneNumberFormat.National"
+                          [maxLength]="maxLength"
                           name="phone"
                           formControlName="phoneNumber"                          
                         >
@@ -2662,7 +2688,7 @@
                         <small
                           class="p-error"
                           style="color: orange"
-                          *ngIf="editSchoolForm.errors?.invalidPhoneNumber"
+                          *ngIf="isSubmitted && !editSchoolForm.get('phoneNumber')?.errors?.required && editSchoolForm.get('phoneNumber')?.errors"
                         >
                           {{ "InValidPhoneNumber" | translate }}
                         </small>

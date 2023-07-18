@@ -752,10 +752,10 @@
               >
                 {{ "AddMax7Tags" | translate }}
               </small>
-              <div class="dropzone-wrapper">
+              <div class="dropzone-wrapper" style="height:80px">
               <div class="dropzone-desc">
                 <i class="glyphicon glyphicon-download-alt"></i>
-                <p class="text-center fw_400">
+                <p class="text-center fw_400" style="padding:15px">
                   {{ "ChooseImageFile" | translate }}
                   <b>{{ "DragItHere" | translate }}</b>
                 </p>
@@ -763,11 +763,13 @@
               <input
                 type="file"
                 id="avatar"
-                (change)="handleImageInput($event)"
+                (change)="handleFileInput($event)"
                 class="dropzone"
-                accept="image/*"
+                accept="image/*,video/*,application/pdf"
+                multiple="multiple"
               />
             </div>
+            <br>
               <div
                 class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 cr-postfooter pt-0"
               >

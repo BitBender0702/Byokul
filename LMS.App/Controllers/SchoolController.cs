@@ -344,6 +344,15 @@ namespace LMS.App.Controllers
             return Ok(user);
         }
 
+        [Route("getSliderReelsBySchoolId")]
+        [HttpGet]
+        public async Task<IActionResult> GetSliderReelsBySchoolId(Guid schoolId, Guid postId, ScrollTypesEnum scrollType)
+        {
+            var userId = await GetUserIdAsync(this._userManager);
+            var response = await _schoolService.GetSliderReelsBySchoolId(schoolId,userId, postId, scrollType);
+            return Ok(response);
+        }
+
 
     }
 }

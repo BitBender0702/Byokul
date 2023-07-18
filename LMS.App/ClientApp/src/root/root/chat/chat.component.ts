@@ -820,6 +820,10 @@ this.addChatAttachments = {
       
        if(this.userId!= null && this.chatType == "3"){
         var chatUsers: any[] = this.allChatUsers;
+        // var chats = chatUsers.filter(x => x.chatType == 3 && x.school.ownerId == this.sender.id);
+        // chats = chats.filter(x => x.chatType == 4 && x.class.ownerId == this.sender.id);
+        // chats = chats.filter(x => x.chatType == 5 && x.course.ownerId == this.sender.id);
+
         var isuserExist = chatUsers.find(x => x.userID == this.userId && x.chatType =="3");
         if(isuserExist == undefined){
         this.allChatUsers.unshift(this.schoolInfo);

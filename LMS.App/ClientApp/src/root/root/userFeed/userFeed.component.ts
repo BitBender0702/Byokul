@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, Injector, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, Injector, OnDestroy, OnInit, Renderer2, ViewChild} from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BsModalService, ModalDirective, ModalOptions } from 'ngx-bootstrap/modal';
@@ -80,6 +80,7 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
     @ViewChild('carousel') carousel!: ElementRef;
     @ViewChild('globalReelCarousel') globalReelCarousel!: ElementRef;
     @ViewChild('searchInput') searchInput!: ElementRef;
+    @ViewChild('globalSearchResults') globalSearchResults!: ElementRef;
     @ViewChild('myFeedPlayer') myFeedPlayer!: ElementRef;
     @ViewChild('globalFeedPlayer') globalFeedPlayer!: ElementRef;
 
@@ -111,12 +112,21 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
     globalSearchField!:string;
 
 
-    constructor(injector: Injector,private translateService: TranslateService,private authService:AuthService,private bsModalService: BsModalService,notificationService:NotificationService,postService: PostService,public userService:UserService, public options: ModalOptions,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,public messageService:MessageService,private cd: ChangeDetectorRef) { 
+    constructor(injector: Injector,private renderer: Renderer2, private elementRef: ElementRef,private translateService: TranslateService,private authService:AuthService,private bsModalService: BsModalService,notificationService:NotificationService,postService: PostService,public userService:UserService, public options: ModalOptions,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,public messageService:MessageService,private cd: ChangeDetectorRef) { 
       super(injector);
       this._userService = userService;
       this._postService = postService;
       this._authService = authService;
       this._notificationService = notificationService;
+
+      this.renderer.listen('document', 'click', (event: Event) => {
+        const targetElement = event.target as HTMLElement;
+        const isClickInsideInput = this.searchInput.nativeElement.contains(targetElement);
+        const isClickInsideTemplate = targetElement.closest('.search-results') !== null;
+        if (!isClickInsideInput && !isClickInsideTemplate) {
+          this.showSearchResults = false; // Set a flag to hide the template
+        }
+      });
     }
 
     ngOnChanges(): void {
@@ -129,6 +139,7 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
     }
   
     ngOnInit(): void {
+      this.checkScreenSize();
       this.postLoadingIcon = false;
       this.loadingIcon = true;
       this._authService.loginState$.next(true);
@@ -735,11 +746,9 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
            this.showSearchResults = false;
            if(this.searchString.length >2){
             this._userService.globalSearch(this.searchString,this.globalSearchPageNumber,this.globalSearchPageSize).subscribe((response:any) => {
-              debugger
               this.loadingIcon = false;
               this.globalSearchResult = {};
               response.forEach((item:any) => {
-                debugger
                 if(item.type == 4){
                   this.globalSearchField = "User";
                 }
@@ -914,7 +923,6 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
         refreshRoute(postResponse:any) {
           const currentUrl = this.router.url;
           this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-            debugger
             this.router.navigateByUrl(currentUrl);
 
             setTimeout(() => {
@@ -941,4 +949,70 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
         }
         return [];
         }
+
+        // @HostListener('document:click', ['$event'])
+        // clickOutside(event: MouseEvent) {
+        //   debugger
+        //   this.cd.detectChanges();
+        //   if (!this.searchInput.nativeElement.contains(event.target) && !this.globalSearchResults.nativeElement.contains(event.target)) {
+        //     this.showSearchResults = false;
+        //   }
+        // }
+
+        toggleSearchResults() {
+          this.showSearchResults = !this.showSearchResults;
+        }
+
+        previousGuid:string = '';
+
+   generateGuid():string {  
+    return Math.random().toString(36).substring(2, 15) +
+    Math.random().toString(36).substring(2, 15);
+
+    }
+
+
+    getRandomClass(index:number, iscontainer:boolean){
+      var number = this.isScreenPc ? 3 :  this.isScreenTablet ? 2 : this.isScreenMobile ? 1 : 0;
+      if(index %number == 0 && iscontainer){
+      this.previousGuid = this.generateGuid();
+      }
+        return this.previousGuid;
+    }
+
+    postDivId:string = "";
+    openDialouge(event:any){
+debugger;
+const parts = event.currentTarget.className.split(' ');
+this.postDivId = parts[3];
+var displayDivs = document.getElementsByClassName("imgDisplay");
+for (var i = 0; i < displayDivs.length; i++){
+
+  if(displayDivs[i].className.includes(this.postDivId)){
+    displayDivs[i].setAttribute("style", "display:block;");
+  }else{
+    displayDivs[i].setAttribute("style", "display:none;");
+  }
+  //elements[i].style.display = displayState;
+}
+
+// var playerId = "video01" + this.counter;
+// const vjsPlayer = videojs(playerId, { autoplay: false });
+// this.cd.detectChanges();
+    }
+
+  @HostListener('window:resize')
+  onWindowResize() {
+    this.checkScreenSize();
+  }
+
+  isScreenPc!:boolean;
+  isScreenTablet!:boolean;
+  isScreenMobile!:boolean;
+  private checkScreenSize() {
+    const screenWidth = window.innerWidth;
+    this.isScreenPc = screenWidth >= 992;
+    this.isScreenTablet = screenWidth >= 768 && screenWidth < 992;
+    this.isScreenMobile = screenWidth < 768;
+  }
 }

@@ -172,6 +172,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
 
   
     ngOnInit(): void {
+      this.checkScreenSize();
       // this.meta.addTag({ rel: 'canonical', href: 'https://www.byokul.com/course' });
       if(this._authService.roleUser(RolesEnum.SchoolAdmin)){
         this._authService.loginState$.next(false);
@@ -1190,5 +1191,58 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       this.uploadImage = this.croppedImage;
       this.cropModalRef.hide();
     }
+
+    previousGuid:string = '';
+
+    generateGuid():string {  
+     return Math.random().toString(36).substring(2, 15) +
+     Math.random().toString(36).substring(2, 15);
+ 
+     }
+ 
+ 
+     getRandomClass(index:number, iscontainer:boolean){
+       var number = this.isScreenPc ? 3 :  this.isScreenTablet ? 2 : this.isScreenMobile ? 1 : 0;
+       if(index %number == 0 && iscontainer){
+       this.previousGuid = this.generateGuid();
+       }
+         return this.previousGuid;
+     }
+ 
+     postDivId:string = "";
+     openDialouge(event:any){
+ debugger;
+ const parts = event.currentTarget.className.split(' ');
+ this.postDivId = parts[3];
+ var displayDivs = document.getElementsByClassName("imgDisplay");
+ for (var i = 0; i < displayDivs.length; i++){
+ 
+   if(displayDivs[i].className.includes(this.postDivId)){
+     displayDivs[i].setAttribute("style", "display:block;");
+   }else{
+     displayDivs[i].setAttribute("style", "display:none;");
+   }
+   //elements[i].style.display = displayState;
+ }
+ 
+//  var playerId = "video01" + this.counter;
+//  const vjsPlayer = videojs(playerId, { autoplay: false });
+//  this.cd.detectChanges();
+     }
+ 
+   @HostListener('window:resize')
+   onWindowResize() {
+     this.checkScreenSize();
+   }
+ 
+   isScreenPc!:boolean;
+   isScreenTablet!:boolean;
+   isScreenMobile!:boolean;
+   private checkScreenSize() {
+     const screenWidth = window.innerWidth;
+     this.isScreenPc = screenWidth >= 992;
+     this.isScreenTablet = screenWidth >= 768 && screenWidth < 992;
+     this.isScreenMobile = screenWidth < 768;
+   }
 
 }

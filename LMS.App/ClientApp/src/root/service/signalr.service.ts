@@ -184,6 +184,7 @@ export class SignalrService {
 
     this.hubConnection?.on('NotifyEndMeetingToReceiver',
     (response) => {
+      debugger
       endMeetingResponse.next({});         
     });
 
@@ -242,6 +243,7 @@ export class SignalrService {
   }
 
   notifyEndMeeting(groupName:string) {
+    debugger
     this.hubConnection?.invoke('NotifyEndMeeting', groupName)
       .catch((err) => console.error(err));
   }

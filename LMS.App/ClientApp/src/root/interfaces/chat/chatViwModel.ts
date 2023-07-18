@@ -2,7 +2,7 @@ import { ChatType } from "./chatType";
 import { FileUploadResult } from "./uploadFiles";
 
 export interface ChatViewModel {
-    chatHeadId:string,
+    chatHeadId:string | null,
     sender:string,
     receiver:string,
     chatType:number,

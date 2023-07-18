@@ -66,11 +66,14 @@
 
   <ItemGroup>
     <Folder Include="bin\Debug\net6.0\" />
+    <Folder Include="FfmpegVideos\" />
     <Folder Include="Properties\PublishProfiles\" />
     <Folder Include="wwwroot\certificateTemplate\" />
     <Folder Include="wwwroot\graduateCertificates\" />
     <Folder Include="wwwroot\AssignedCertificates\" />
     <Folder Include="wwwroot\CompressVideoes\" />
+    <Folder Include="wwwroot\CompressVideoes\" />
+    <Folder Include="wwwroot\CompressVideo\" />
     <Folder Include="wwwroot\tmp\" />
   </ItemGroup>
 

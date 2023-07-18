@@ -52,6 +52,8 @@ namespace LMS.Services
         Task<bool> BanFollower(string followerId,Guid schoolId);
         Task<bool> UnBanFollower(string followerId, Guid schoolId);
         Task<IEnumerable<GlobalSearchViewModel>> SchoolsGlobalSearch(string searchString, int pageNumber, int pageSize);
+        Task<IEnumerable<PostDetailsViewModel>> GetSliderReelsBySchoolId(Guid schoolId, string loginUserId, Guid lastReelId, ScrollTypesEnum scrollType);
+
 
 
     }

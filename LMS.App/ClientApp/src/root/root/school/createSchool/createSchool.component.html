@@ -173,9 +173,11 @@
                 <ngx-intl-tel-input [preferredCountries]="preferredCountries"
                   [enableAutoCountrySelect]="true" [enablePlaceholder]="true" [searchCountryFlag]="true"
                   [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]" [selectFirstCountry]="false"
-                  [selectedCountryISO]="selectedCountryISO" [maxLength]="10"
+                  [selectedCountryISO]="selectedCountryISO"
                   [phoneValidation]="false" [separateDialCode]="separateDialCode"
-                  [numberFormat]="PhoneNumberFormat.National" name="phoneNumber" formControlName="phoneNumber">
+                  [maxLength]="maxLength"
+                  [phoneValidation]="true"
+                  name="phoneNumber" formControlName="phoneNumber">
                 </ngx-intl-tel-input>
                 <small
                 class="p-error"
@@ -187,7 +189,7 @@
               <small
               class="p-error"
               style="color: orange;"
-              *ngIf="createSchoolForm1.errors?.invalidPhoneNumber"
+              *ngIf="isStepCompleted && !createSchoolForm1.get('phoneNumber')?.errors?.required && createSchoolForm1.get('phoneNumber')?.errors"
             >
               {{ "InValidPhoneNumber" | translate }}
             </small>

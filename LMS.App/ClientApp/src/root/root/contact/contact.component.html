@@ -8,7 +8,7 @@
       <img src="../../../../assets/images/school/arrow-left.svg" />
       {{ "Back" | translate }}
     </button>
-        <a href="" class="main-logo"><img class="ms-4" src="../../../assets/images/logo.svg" /></a>
+        <a [routerLink]="['/user/userFeed']" class="main-logo"><img class="ms-4" src="../../../assets/images/logo.svg" /></a>
       </div>
     </header>
     <main class="static-main">
@@ -40,12 +40,12 @@
     </main>
     <footer class="footer">
       <div class="footer__content">
-        <a href="" class="main-logo"><img src="../../../assets/images/logo.svg" /></a>
+        <a [routerLink]="['/user/userFeed']" class="main-logo"><img src="../../../assets/images/logo.svg" /></a>
         <nav>
-          <a [routerLink]="['/privacyPolicy']">Privacy Policy</a>
-          <a [routerLink]="['/termsOfServices']">Terms of services</a>
-          <a [routerLink]="['/aboutUs']">About us</a>
-          <a [routerLink]="['/faq']">FAQ</a>
+          <a [routerLink]="['/privacyPolicy']">{{ "PrivacyPolicy" | translate }}</a>
+          <a [routerLink]="['/termsOfServices']">{{ "TermsOfService" | translate }}</a>
+          <a [routerLink]="['/aboutUs']">{{ "AboutUs" | translate }}</a>
+          <a [routerLink]="['/faq']">{{ "FAQ" | translate }}</a>
         </nav>
       </div>
     </footer>

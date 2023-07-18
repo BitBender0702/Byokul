@@ -71,6 +71,13 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
     messageToGroup!:string;
     postView!:PostView;
     selectedReel:any;
+    videos:any = [];
+    reelId:string = "";
+    from:string = "";
+    selectedReelIndex:number = 0;
+    slickSlider:any;
+    firstPostId:string = "";
+    lastPostId:string = "";
     @ViewChild('groupChatList') groupChatList!: ElementRef;
 
 
@@ -93,25 +100,30 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       this.getSenderInfo();
         this.loadingIcon = true;
         var id = this.route.snapshot.paramMap.get('id')??'';
-        var from = this.route.snapshot.paramMap.get('from')??'';
+        this.from = this.route.snapshot.paramMap.get('from')??'';
+        this.reelId = this.route.snapshot.paramMap.get('reelId')??'';
 
 
-        if(from == Constant.User){
+
+
+
+
+        if(this.from == Constant.User){
            this.getReelsByUser(id);
         }
-        if(from == Constant.School){
+        if(this.from == Constant.School){
           this.getReelsBySchool(id);
         }
-        if(from == Constant.Class){
+        if(this.from == Constant.Class){
           this.getReelsByClass(id);
         }
-        if(from == Constant.Course){
+        if(this.from == Constant.Course){
           this.getReelsByCourse(id);
         }
-        if(from == Constant.MyFeed){
+        if(this.from == Constant.MyFeed){
           this.getMyFeedReels();
         }
-        if(from == Constant.GlobalFeed){
+        if(this.from == Constant.GlobalFeed){
           this.getGlobalFeedReels();
         }
 
@@ -175,7 +187,24 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
         debugger
         this.reels = response;
         this.selectedReel = this.reels[0];
+        this.lastPostId = this.reels[this.reels.length - 1].id;
+        this.firstPostId =  this.reels[0].id;
+        this.reels.forEach((reel:any) => {
+          debugger
+          // Extract postAttachments from each reel and add them to the allPostAttachments list
+          const postAttachments = reel.postAttachments;
+          this.videos.push(...postAttachments);
+        });
+
+        var index = this.videos.findIndex((x: { id: string; }) => x.id == this.reelId);
+        this.selectedReelIndex = index;
+        // this.reels.find(x => x.);
         this.initializeReelsSlider();
+        const initialVideoElement : HTMLVideoElement | null = document.querySelector(`#video-${this.selectedReelIndex}`);
+          if (initialVideoElement) {
+            initialVideoElement.play();
+            initialVideoElement.muted = false;
+          }
       });
      }
 
@@ -307,54 +336,99 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
           this.initializeSlick();
         }
       }
+
+      
     
       initializeSlick() {
+        debugger
+        var a = this.selectedReelIndex;
         this.cd.detectChanges();
         const self = this;
-        $('.slick', '.vertical-slider').slick({
+        this.slickSlider = $('.slick', '.vertical-slider').slick({
           vertical: true,
           verticalSwiping: true,
           slidesToShow: 1,
           slidesToScroll: 1,
           autoplay: false,
+          initialSlide : this.selectedReelIndex,
 
-          onBeforeChange: function(slideIndex: any) {
-            debugger
-            const previousVideoElement = $(this).find('.item').eq(slideIndex).find('video')[0];
-            if (previousVideoElement) {
-              previousVideoElement.pause();
-            }
-          },
-          onAfterChange: (slideIndex: any) => {
-            debugger
-            const currentItem = self.reels[slideIndex]; // Access the component's `reels` property
-            self.addPostView(currentItem.id);
-      
-            const currentVideoElement = $(this).find('.item').eq(slideIndex).find('video')[0];
-            if (currentVideoElement) {
-              currentVideoElement.play();
-            }
-          }
           // onBeforeChange: function(slideIndex: any) {
-          //   // Pause the previous video when transitioning to the next slide
+          //   debugger
           //   const previousVideoElement = $(this).find('.item').eq(slideIndex).find('video')[0];
           //   if (previousVideoElement) {
           //     previousVideoElement.pause();
           //   }
           // },
-          // onAfterChange: function(slideIndex: any) {
+          // onAfterChange: (slideIndex: any) => {
           //   debugger
-          //   // for add view
-          //   const currentItem = this.reels[slideIndex];
-          //   this.addPostView(currentItem.id);
-
-          //   // Play the video of the current slide
+          //   const currentItem = self.reels[slideIndex]; // Access the component's `reels` property
+          //   self.addPostView(currentItem.id);
+      
           //   const currentVideoElement = $(this).find('.item').eq(slideIndex).find('video')[0];
           //   if (currentVideoElement) {
-          //     debugger
           //     currentVideoElement.play();
           //   }
           // }
+        });
+
+        const initialVideoElement : HTMLVideoElement | null = document.querySelector(`#video-${this.selectedReelIndex}`);
+          if (initialVideoElement) {
+            initialVideoElement.play();
+            initialVideoElement.muted = false;
+          }
+
+
+        // this.slickSlider.on('swipe', function(event:any, slick:any, direction:any) {
+        //   debugger
+        //   if (direction === 'up') {
+        //     // User has swiped upwards
+        //     self.onSlideUp();
+        //   } else if (direction === 'down') {
+        //     // User has swiped downwards
+        //     self.onSlideDown();
+        //   }
+        // });
+        this.slickSlider.on('beforeChange', function(event:any, slick:any, currentSlide:any, nextSlide:any) {
+          debugger
+
+          if(self.currentSlide != currentSlide && self.nextSlide != nextSlide){
+          const direction = nextSlide > currentSlide ? 'down' : 'up';
+          if (direction === 'up') {
+            self.onSlideUp();
+          }
+          if (direction === 'down') {
+            self.onSlideDown();
+            self.isReelLoad = true;
+          }
+        }
+        self.currentSlide = currentSlide;
+        self.nextSlide = nextSlide;
+
+          // if(direction == "up"){
+          //   self.onSlideUp();
+          // }
+          // if(direction == "down"){
+          //   self.onSlideDown();
+          // }
+      // console.log('Direction:', direction);
+          // Find the current video element within the current slide
+          const currentVideo = $(slick.$slides[currentSlide]).find('video')[0];
+          
+          // Pause the current video playback
+          if (currentVideo && !currentVideo.paused) {
+            currentVideo.pause();
+          }
+        });
+
+        this.slickSlider.on('afterChange', function(event:any, slick:any, currentSlide:any) {
+          debugger
+          // Find the new video element within the current slide
+          const newVideo = $(slick.$slides[currentSlide]).find('video')[0];
+      
+          // Play the new video
+          if (newVideo && newVideo.paused) {
+            newVideo.play();
+          }
         });
 
         const currentSlideIndex = $('.slick', '.vertical-slider').slick('slickCurrentSlide');
@@ -363,6 +437,35 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
           videoElement.play();
         }
       }
+
+      
+
+      onSlideUp(){
+        debugger
+
+      }
+
+      isReelLoad:boolean = false;
+      nextSlide:any;
+      currentSlide:any;
+      onSlideDown(){
+        debugger
+        // if(!this.isReelLoad){
+
+        if(this.from == "user"){
+          this._userService.GetSliderReelsByUserId(this.userId, this.lastPostId, 2).subscribe((response:any) => {
+            debugger
+            this.reels.push(...response);
+              // this.isReelLoad = true;
+              this.cd.detectChanges();
+            // this.reels = this.reels.concat(response);
+
+           });
+        }
+      // }
+      }
+
+      
 
 
       addPostView(postId:string){
@@ -526,6 +629,20 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
      
    }
 
+  // previousScrollPosition: number = window.pageYOffset;
+  //  @HostListener('window:scroll', [])
+  //  onWindowScroll() {
+  //    const currentScrollPosition = window.pageYOffset;
+ 
+  //    if (currentScrollPosition > this.previousScrollPosition) {
+  //      // Slide Down
+  //      this.onSlideDown();
+  //    } else if (currentScrollPosition < this.previousScrollPosition) {
+  //      // Slide Up
+  //      this.onSlideUp();
+  //    }
+  //   }
+
    sendToGroup(reel:any){
     debugger
     var comment: any[] = reel.comments;
@@ -562,4 +679,5 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
     hideCommentModal(){
       this.bsModalService.hide();
     }
+
 }

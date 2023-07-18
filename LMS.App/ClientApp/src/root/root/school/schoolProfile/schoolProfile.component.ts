@@ -8,6 +8,7 @@ import {
   OnChanges,
   OnDestroy,
   OnInit,
+  QueryList,
   Renderer2,
   TemplateRef,
   ViewChild,
@@ -65,7 +66,7 @@ import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component'
 import { TranslateService } from '@ngx-translate/core';
 import { UserService } from 'src/root/service/user.service';
 import { Dimensions, ImageCroppedEvent, ImageTransform } from 'ngx-image-cropper';
-import { CountryISO, PhoneNumberFormat, SearchCountryField } from 'ngx-intl-tel-input';
+import { CountryISO, SearchCountryField } from 'ngx-intl-tel-input';
 import { DatePipe } from '@angular/common';
 import flatpickr from 'flatpickr';
 import { Arabic } from 'flatpickr/dist/l10n/ar';
@@ -168,11 +169,13 @@ export class SchoolProfileComponent
   filteredAttachments:any[] = [];
   isOnInitInitialize:boolean = false;
   schoolAvatar:string = '';
+  counter:number = 0;
 
-  separateDialCode = false;
+  separateDialCode = true;
 	SearchCountryField = SearchCountryField;
 	CountryISO = CountryISO;
-  PhoneNumberFormat = PhoneNumberFormat;
+  maxLength = "15";
+  // PhoneNumberFormat = PhoneNumberFormat;
 	preferredCountries: CountryISO[] = [CountryISO.UnitedStates, CountryISO.UnitedKingdom];
   selectedCountryISO:any;
   notificationViewModel!:NotificationViewModel;
@@ -185,6 +188,7 @@ export class SchoolProfileComponent
   @ViewChild('imageFile') imageFile!: ElementRef;
   @ViewChild('carousel') carousel!: ElementRef;
   @ViewChild('videoPlayer') videoPlayer!: ElementRef;
+  videoPlayers!: QueryList<ElementRef<HTMLVideoElement>>;
   @ViewChild('schoolTabButton') schoolTabButton!: ElementRef;
 
   @ViewChild('createPostModal', { static: true })
@@ -317,6 +321,7 @@ showDiv: boolean = false;
     
   }
   ngOnInit(): void {
+    this.checkScreenSize();
     this.classCourseList = undefined;
     if(this._authService.roleUser(RolesEnum.SchoolAdmin)){
       this._authService.loginState$.next(false);
@@ -872,16 +877,6 @@ showDiv: boolean = false;
       return;
     }
 
-    if(phoneNumber.number.length < 10){
-      this.editSchoolForm.setErrors({ invalidPhoneNumber: true });
-      return;
-    }
-
-    this.loadingIcon = true;
-    if (!this.uploadImage) {
-      this.fileToUpload.append('avatar', this.schoolAvatar);
-    }
-
     this.fileToUpload.append("avatarImage", this.selectedImage);
 
     this.updateSchoolDetails = this.editSchoolForm.value;
@@ -1368,6 +1363,7 @@ showDiv: boolean = false;
 
   showPostDiv(postId: string) {
     debugger
+    this.counter += 1;
     this.clickedPostId = postId;
     this.showDiv = true;
     
@@ -1381,7 +1377,19 @@ showDiv: boolean = false;
     else{
     this.isGridItemInfo = true;
     this.cd.detectChanges();
-    const player = videojs(this.videoPlayer.nativeElement, {autoplay: false});
+    // const videoElements = document.getElementById("video01" + this.gridItemInfo.id);
+    // videoElements.forEach((videoElement: ElementRef<HTMLVideoElement>) => {
+      var playerId = "video01" + this.counter;
+      const vjsPlayer = videojs(playerId, { autoplay: false });
+      this.cd.detectChanges();
+    // });
+    // this.videoPlayers.forEach(player => {
+    //   debugger
+    //   const videoElement = player.nativeElement;
+    //   const vjsPlayer = videojs(videoElement, { autoplay: false });
+    // });
+
+    // const player = videojs(this.videoPlayer.nativeElement, {autoplay: false});
     this.addPostView(this.gridItemInfo.id);     
   }
   }
@@ -1864,6 +1872,7 @@ showDiv: boolean = false;
   }
 
   previousGuid:string = '';
+
    generateGuid():string {  
     return Math.random().toString(36).substring(2, 15) +
     Math.random().toString(36).substring(2, 15);
@@ -1871,12 +1880,49 @@ showDiv: boolean = false;
     }
 
 
-    getRandomClass(index:number){
-      if(index %3 == 0){
+    getRandomClass(index:number, iscontainer:boolean){
+      var number = this.isScreenPc ? 3 :  this.isScreenTablet ? 2 : this.isScreenMobile ? 1 : 0;
+      if(index %number == 0 && iscontainer){
       this.previousGuid = this.generateGuid();
       }
         return this.previousGuid;
     }
+
+    postDivId:string = "";
+    openDialouge(event:any){
+debugger;
+const parts = event.currentTarget.className.split(' ');
+this.postDivId = parts[3];
+var displayDivs = document.getElementsByClassName("imgDisplay");
+for (var i = 0; i < displayDivs.length; i++){
+
+  if(displayDivs[i].className.includes(this.postDivId)){
+    displayDivs[i].setAttribute("style", "display:block;");
+  }else{
+    displayDivs[i].setAttribute("style", "display:none;");
+  }
+  //elements[i].style.display = displayState;
+}
+
+var playerId = "video01" + this.counter;
+const vjsPlayer = videojs(playerId, { autoplay: false });
+this.cd.detectChanges();
+    }
+
+  @HostListener('window:resize')
+  onWindowResize() {
+    this.checkScreenSize();
+  }
+
+  isScreenPc!:boolean;
+  isScreenTablet!:boolean;
+  isScreenMobile!:boolean;
+  private checkScreenSize() {
+    const screenWidth = window.innerWidth;
+    this.isScreenPc = screenWidth >= 992;
+    this.isScreenTablet = screenWidth >= 768 && screenWidth < 992;
+    this.isScreenMobile = screenWidth < 768;
+  }
 
 }
 

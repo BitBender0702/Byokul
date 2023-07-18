@@ -122,7 +122,7 @@ const routes: Routes = [
     path: 'reels/:id',component:ReelsViewComponent, canActivate: [AuthGuard]
   },
   {
-    path: 'reelsView/:id/:from',component:ReelsSliderComponent, canActivate: [AuthGuard]
+    path: 'reelsView/:id/:from/:reelId',component:ReelsSliderComponent, canActivate: [AuthGuard]
   },
   {
     path: 'addTeacher/:userId',component:AddTeacherComponent, canActivate: [AuthGuard]

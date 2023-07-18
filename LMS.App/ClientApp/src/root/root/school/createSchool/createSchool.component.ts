@@ -15,7 +15,7 @@ import { SharePostComponent } from '../../sharePost/sharePost.component';
 import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
 import { TranslateService } from '@ngx-translate/core';
 import { Dimensions, ImageCroppedEvent, ImageTransform } from 'ngx-image-cropper';
-import { CountryISO, PhoneNumberFormat, SearchCountryField } from 'ngx-intl-tel-input';
+import { CountryISO, SearchCountryField } from 'ngx-intl-tel-input';
 
 export const ownedSchoolResponse =new Subject<{schoolId: string, schoolAvatar : string,schoolName:string,action:string}>(); 
 
@@ -73,10 +73,11 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
   selectedImage: any = '';
   isSelected: boolean = false;
 
-  separateDialCode = false;
+  separateDialCode = true;
 	SearchCountryField = SearchCountryField;
 	CountryISO = CountryISO;
-  PhoneNumberFormat = PhoneNumberFormat;
+  maxLength = "15";
+  // PhoneNumberFormat = PhoneNumberFormat;
 	preferredCountries: CountryISO[] = [CountryISO.UnitedStates, CountryISO.UnitedKingdom];
   selectedCountryISO:any;
   mask:string = "(000) 000 0000"
@@ -191,16 +192,8 @@ ngOnDestroy(): void {
   }
 
   forwardStep() {
-    debugger
-    var phoneNumber = this.createSchoolForm1.get('phoneNumber')?.value;
-
     this.isStepCompleted = true;
     if (!this.createSchoolForm1.valid) {
-      return;
-    }
-
-    if(phoneNumber.number.length < 10){
-      this.createSchoolForm1.setErrors({ invalidPhoneNumber: true });
       return;
     }
 
@@ -236,7 +229,6 @@ ngOnDestroy(): void {
   }
 
   forwardStep2() {
-    debugger
     this.isStepCompleted = true;
     if(this.logoUrl == undefined && this.avatarImage == undefined){
       return;
@@ -363,7 +355,6 @@ ngOnDestroy(): void {
   }
 
   changeCountryIsoCode(event:any){
-    debugger
     var countryName = event.value;
     this.selectedCountryISO = CountryISO[countryName as keyof typeof CountryISO];
 

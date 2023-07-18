@@ -188,5 +188,11 @@ export class UserService{
         );
     }
         
+    GetSliderReelsByUserId(userId:string,postId:string,scrollType:number){
+        debugger
+        let queryParams = new HttpParams().append("userId",userId).append("postId",postId).append("scrollType",scrollType);
+        return this.http.get(`${this.apiUrl}/users/getSliderReelsByUserId`, {params:queryParams,headers: this.headers}
+        );
+    }
 
 }

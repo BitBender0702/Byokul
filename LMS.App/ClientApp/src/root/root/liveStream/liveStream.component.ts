@@ -190,36 +190,71 @@ if(this.meetingId == ''){
   debugger
   this.isDataLoaded = true;
   this.cd.detectChanges();
-  // setTimeout(() => {
-  const videoElement: HTMLVideoElement = this.videoPlayer.nativeElement;
-  var postAttachment = this.post.postAttachments.find((x: { fileType: number; }) => x.fileType == 2);
-  if(postAttachment.videoLiveTime != null){
-    // const buttonElement: HTMLDivElement = this.startButton.nativeElement;
-    //   buttonElement.click();
-      // this.startVideoTime = postAttachment.videoLiveTime;
-      // this.startVideoTime = 15;
 
   // setTimeout(() => {
-    // videoElement.addEventListener('loadedmetadata', () => {
-    //   debugger
-    //   videoElement.currentTime = 15;
-    //   // videoElement.play();
-    // });
-
-    this.cd.detectChanges();
-    var video = document.getElementById("test12");
-    videoElement.addEventListener('loadedmetadata', () => {
+    var postAttachment = this.post.postAttachments.find((x: { fileType: number; }) => x.fileType == 2);
+       if(postAttachment.videoLiveTime != null){
+    const videoElement1: HTMLVideoElement | null = document.getElementById('test12') as HTMLVideoElement
+    if(videoElement1){
       debugger
-      videoElement.currentTime = postAttachment.videoLiveTime; 
+      videoElement1.currentTime = postAttachment.videoLiveTime;
       this.cd.detectChanges();
-    });
-    // videoElement.currentTime = postAttachment.videoLiveTime;
-    this.cd.detectChanges();
-    var a = 10;
-    // videoElement.play();
-  //  }, 500);
+    }
+  }
+
+    // if (videoElement1) {
+    //   videoElement1.addEventListener('loadedmetadata', () => {
+    //     debugger
+
+
+    //     videoElement1.currentTime = 7;
+    //     // Other operations after setting currentTime
+    //   });
+    // }
+
+    // if (videoElement1) {
+    //   const setTimeAndUpdate = () => {
+    //     debugger
+    //     videoElement1.currentTime = 7;
+    //     // Other operations after setting currentTime
+    //     videoElement1.removeEventListener('timeupdate', setTimeAndUpdate);
+    //   };
+    
+    //   videoElement1.addEventListener('timeupdate', setTimeAndUpdate);
+    
+    //   videoElement1.play();
+    // }
+    
+
+//   const videoElement: HTMLVideoElement = this.videoPlayer.nativeElement;
+//   var postAttachment = this.post.postAttachments.find((x: { fileType: number; }) => x.fileType == 2);
+//   if(postAttachment.videoLiveTime != null){
+//     // const buttonElement: HTMLDivElement = this.startButton.nativeElement;
+//     //   buttonElement.click();
+//       // this.startVideoTime = postAttachment.videoLiveTime;
+//       // this.startVideoTime = 15;
+
+//   // setTimeout(() => {
+//     // videoElement.addEventListener('loadedmetadata', () => {
+//     //   debugger
+//     //   videoElement.currentTime = 15;
+//     //   // videoElement.play();
+//     // });
+
+//     this.cd.detectChanges();
+//     var video = document.getElementById("test12");
+//     videoElement.addEventListener('loadedmetadata', () => {
+//       debugger
+//       videoElement.currentTime = postAttachment.videoLiveTime; 
+//       this.cd.detectChanges();
+//     });
+//     // videoElement.currentTime = postAttachment.videoLiveTime;
+//     this.cd.detectChanges();
+//     var a = 10;
+//     // videoElement.play();
+//   //  }, 500);
   
-}
+// }
 // }, 100);
 }
 else{
@@ -449,6 +484,7 @@ else{
       var comment: any[] = this.post.comments;
       this.InitializeCommentViewModel();
       this.commentViewModel.userId = this.sender.id;
+      this.commentViewModel.userName = this.sender.firstName + " " + this.sender.lastName;
       this.commentViewModel.groupName = this.post.id + "_group";
       this.commentViewModel.content = this.messageToGroup;
       this.commentViewModel.userAvatar = this.sender.avatar;
@@ -567,7 +603,7 @@ else{
             response.senderAvatar = "../../../assets/images/femaleProfile.jfif"
           }
         }
-        var commentObj = {id:response.id,content:response.message,likeCount:0,isCommentLikedByCurrentUser:false,userAvatar:response.senderAvatar};
+        var commentObj = {id:response.id,content:response.message,likeCount:0,isCommentLikedByCurrentUser:false,userAvatar:response.senderAvatar,userName:response.userName,userId:response.userId};
         comment.push(commentObj);
         this.cd.detectChanges();
         this.groupChatList.nativeElement.scrollTop = this.groupChatList.nativeElement.scrollHeight;
@@ -684,6 +720,7 @@ else{
     }
 
     endMeetingResponse(){
+      debugger
       endMeetingResponse.subscribe(response => {
         debugger
         if(!this.isOwner){
@@ -875,6 +912,7 @@ else{
     }
 
     onVideoTimeUpdate(event: any) {
+      if(this.isOwner){
       if (!this.isUpdateAllowed) {
         return; // Skip execution if update is not allowed
       }
@@ -898,6 +936,7 @@ else{
       }
       this.isUpdateAllowed = true;
     }, 1000);
+  }
       //   debugger
       // const videoElement: HTMLVideoElement = this.videoPlayer.nativeElement;
       // const totalDuration = videoElement.duration;

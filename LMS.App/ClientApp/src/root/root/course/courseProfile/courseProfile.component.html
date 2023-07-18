@@ -959,234 +959,238 @@
             </div>
 
             <div class="list-schol-profile" *ngIf="!isProfileGrid">
+              <div class="row">
+                <ng-container *ngFor="let post of course.posts; let i = index">
+                  
+            <div class="col-12 imgDisplay" [class]="getRandomClass(i,true)" *ngIf="(isScreenPc && i % 3 == 0) || (isScreenTablet && i % 2 == 0) || (isScreenMobile && i % 1 == 0)"
+            style="display: none;">
+            <div
+            [ngClass]="
+              isGridItemInfo
+                ? 'd-block school-grid-box position-relative school-list-box h-100'
+                : 'd-none school-grid-box position-relative school-list-box h-100'
+            "
+            *ngIf="gridItemInfo != undefined"
+          >
+            <div class="row post-list-preview-sec">
+              <!-- <ng-container *ngFor="let item of gridItemInfo.postAttachments"> -->
               <div
                 [ngClass]="
-                  isGridItemInfo
-                    ? 'd-block school-grid-box position-relative school-list-box h-100'
-                    : 'd-none school-grid-box position-relative school-list-box h-100'
+                  gridItemInfo.postAttachments.length > 0
+                    ? 'd-block col-lg-6'
+                    : 'd-none'
                 "
-                *ngIf="gridItemInfo != undefined"
               >
-                <div class="row post-list-preview-sec">
-                  <!-- <ng-container *ngFor="let item of gridItemInfo.postAttachments"> -->
+                <carousel>
                   <div
-                    [ngClass]="
-                      gridItemInfo.postAttachments.length > 0
-                        ? 'd-block col-lg-6'
-                        : 'd-none'
+                    *ngFor="
+                      let postAttachment of gridItemInfo.postAttachments
                     "
+                    class="school-grid-thumbnail"
                   >
-                    <carousel>
+                    <slide *ngIf="postAttachment.fileType == 2">
                       <div
-                        *ngFor="
-                          let postAttachment of gridItemInfo.postAttachments
-                        "
-                        class="school-grid-thumbnail"
+                        *ngIf="postAttachment?.fileType == 2"
+                        class="videofile"
                       >
-                        <slide *ngIf="postAttachment.fileType == 2">
-                          <div
-                            *ngIf="postAttachment?.fileType == 2"
-                            class="videofile"
-                          >
-                            <video
-                              #videoPlayer
-                              controls
-                              class="video-js vjs-big-play-centered"
-                              preload="metadata"
-                            >
-                              <source
-                                [src]="postAttachment?.fileUrl"
-                                type="video/mp4"
-                              />
-                            </video>
-                          </div>
-                        </slide>
-                        <slide *ngIf="postAttachment?.fileType == 1">
-                          <img
-                            *ngIf="postAttachment?.fileType == 1"
-                            class="w-100"
+                        <video
+                          #videoPlayer
+                          controls
+                          class="video-js vjs-big-play-centered"
+                          preload="metadata"
+                        >
+                          <source
                             [src]="postAttachment?.fileUrl"
+                            type="video/mp4"
                           />
-                        </slide>
+                        </video>
                       </div>
-                    </carousel>
+                    </slide>
+                    <slide *ngIf="postAttachment?.fileType == 1">
+                      <img
+                        *ngIf="postAttachment?.fileType == 1"
+                        class="w-100"
+                        [src]="postAttachment?.fileUrl"
+                      />
+                    </slide>
+                  </div>
+                </carousel>
+              </div>
+              <div
+                [ngClass]="
+                  gridItemInfo.postAttachments.length > 0
+                    ? 'col-lg-6'
+                    : 'col-lg-12 heightForText'
+                "
+              >
+                <div class="class-preview-right position-relative h-100">
+                  <button
+                    (click)="hideGridItemInfo()"
+                    type="button"
+                    class="bg-transparent border-0 close-preview"
+                  >
+                    <img src="../../../../assets/images/cross.svg" />
+                  </button>
+                  <div class="schoolgrid-header">
+                    <div
+                      class="d-flex align-items-center position-relative"
+                    >
+                      <div class="school-gridprofile-icon">
+                        <img [src]="course.avatar" />
+                      </div>
+                      <h2
+                        class="d-inline-block font_16 fw_600 text_sec1 mb-0"
+                      >
+                        {{ gridItemInfo.title }}
+                      </h2>
+                    </div>
+
+                    <p class="font_14 school-grid-date d-inline-block mb-0">
+                      {{ gridItemInfo.dateTime | date : "MMMM d" }} -
+                      {{ gridItemInfo.dateTime | date : "hh mm" }}
+                    </p>
+                  </div>
+                  <p class="text_sec1 font_14 pt-3">
+                    {{ gridItemInfo.description }}
+                  </p>
+                  <div class="teacher-tags tag-box hashtag_box">
+                    <ng-container
+                      *ngFor="let attachment of filteredAttachments"
+                    >
+                      <span
+                        *ngIf="attachment.postId == gridItemInfo.id"
+                        class="custom-tag cursor_pointer"
+                        (click)="
+                          openCertificateViewModal(
+                            attachment.fileUrl,
+                            attachment.fileName,
+                            5,
+                            $event
+                          )
+                        "
+                        >{{ attachment.fileName }}</span
+                      >
+                    </ng-container>
                   </div>
                   <div
-                    [ngClass]="
-                      gridItemInfo.postAttachments.length > 0
-                        ? 'col-lg-6'
-                        : 'col-lg-12 heightForText'
-                    "
+                    *ngIf="gridItemInfo.postTags.length != 0"
+                    class="teacher-tags tag-box hashtag_box"
                   >
-                    <div class="class-preview-right position-relative h-100">
-                      <button
-                        (click)="hideGridItemInfo()"
-                        type="button"
-                        class="bg-transparent border-0 close-preview"
-                      >
-                        <img src="../../../../assets/images/cross.svg" />
-                      </button>
-                      <div class="schoolgrid-header">
-                        <div
-                          class="d-flex align-items-center position-relative"
-                        >
-                          <div class="school-gridprofile-icon">
-                            <img [src]="course.avatar" />
-                          </div>
-                          <h2
-                            class="d-inline-block font_16 fw_600 text_sec1 mb-0"
-                          >
-                            {{ gridItemInfo.title }}
-                          </h2>
-                        </div>
-
-                        <p class="font_14 school-grid-date d-inline-block mb-0">
-                          {{ gridItemInfo.dateTime | date : "MMMM d" }} -
-                          {{ gridItemInfo.dateTime | date : "hh mm" }}
-                        </p>
-                      </div>
-                      <p class="text_sec1 font_14 pt-3">
-                        {{ gridItemInfo.description }}
-                      </p>
-                      <div class="teacher-tags tag-box hashtag_box">
-                        <ng-container
-                          *ngFor="let attachment of filteredAttachments"
-                        >
-                          <span
-                            *ngIf="attachment.postId == gridItemInfo.id"
-                            class="custom-tag cursor_pointer"
-                            (click)="
-                              openCertificateViewModal(
-                                attachment.fileUrl,
-                                attachment.fileName,
-                                5,
-                                $event
-                              )
-                            "
-                            >{{ attachment.fileName }}</span
-                          >
-                        </ng-container>
-                      </div>
-                      <div
-                        *ngIf="gridItemInfo.postTags.length != 0"
-                        class="teacher-tags tag-box hashtag_box"
-                      >
-                        <span
-                          *ngFor="let tag of gridItemInfo.postTags"
-                          class="custom-tag"
-                          >{{ tag.postTagValue }}</span
-                        >
-                      </div>
-                      <div class="school-grid-footer preview-right-action">
-                        <button
-                          type="button"
-                          class="bg-transparent border-0 function-btns cursor_auto"
-                        >
-                          <img
-                            src="../../../../assets/images/eye.svg"
-                            class="d-block mx-auto"
-                          />
-                          <span class="textBlack">{{
-                            gridItemInfo.views.length
-                          }}</span>
-                        </button>
-                        <button
-                          (click)="
-                            likeUnlikePosts(
-                              gridItemInfo.id,
-                              true,
-                              gridItemInfo.postType,
-                              gridItemInfo
-                            )
-                          "
-                          type="button"
-                          class="bg-transparent border-0 function-btns text-light"
-                        >
-                          <img
-                            *ngIf="gridItemInfo.isPostLikedByCurrentUser"
-                            src="../../../assets/images/heart-red.svg"
-                            class="d-block mx-auto"
-                          />
-                          <img
-                            *ngIf="!gridItemInfo.isPostLikedByCurrentUser"
-                            src="../../../../assets/images/Heart-dark.svg"
-                            class="d-block mx-auto"
-                          />
-
-                          <span
-                            class="textBlack"
-                            *ngIf="
-                              likesLength != undefined &&
-                              currentLikedPostId == gridItemInfo.id
-                            "
-                            >{{ likesLength }}</span
-                          >
-                          <span
-                            class="textBlack"
-                            *ngIf="currentLikedPostId != gridItemInfo.id"
-                            >{{ gridItemInfo.likes.length }}</span
-                          >
-                        </button>
-                        <button
-                          (click)="openPostsViewModal(gridItemInfo)"
-                          type="button"
-                          class="bg-transparent border-0 function-btns"
-                        >
-                          <img
-                            src="../../../../assets/images/Chat-dark.svg"
-                            class="d-block mx-auto"
-                          />
-                          {{ gridItemInfo.commentsCount }}
-                        </button>
-                        <button
-                          (click)="savePost(gridItemInfo.id)"
-                          type="button"
-                          class="bg-transparent border-0 function-btns"
-                        >
-                          <img
-                            *ngIf="!gridItemInfo.isPostSavedByCurrentUser"
-                            src="../../../../assets/images/Bookmark-dark.svg"
-                            class="d-block mx-auto"
-                          />
-                          <img
-                            *ngIf="gridItemInfo.isPostSavedByCurrentUser"
-                            src="../../../../assets/images/Bookmark-dark.svg"
-                            class="d-block mx-auto"
-                          />
-                          {{ gridItemInfo.savedPostsCount }}
-                        </button>
-                        <button
-                          (click)="
-                            openSharePostModal(
-                              gridItemInfo.id,
-                              gridItemInfo.postType,
-                              gridItemInfo.title,
-                              gridItemInfo.description
-                            )
-                          "
-                          type="button"
-                          class="bg-transparent border-0 function-btns"
-                        >
-                          <img
-                            src="../../../../assets/images/Upload-dark.svg"
-                            class="d-block mx-auto"
-                          />
-                          {{ gridItemInfo.postSharedCount }}
-                        </button>
-                      </div>
-                    </div>
+                    <span
+                      *ngFor="let tag of gridItemInfo.postTags"
+                      class="custom-tag"
+                      >{{ tag.postTagValue }}</span
+                    >
                   </div>
-                  <!-- </ng-container> -->
+                  <div class="school-grid-footer preview-right-action">
+                    <button
+                      type="button"
+                      class="bg-transparent border-0 function-btns cursor_auto"
+                    >
+                      <img
+                        src="../../../../assets/images/eye.svg"
+                        class="d-block mx-auto"
+                      />
+                      <span class="textBlack">{{
+                        gridItemInfo.views.length
+                      }}</span>
+                    </button>
+                    <button
+                      (click)="
+                        likeUnlikePosts(
+                          gridItemInfo.id,
+                          true,
+                          gridItemInfo.postType,
+                          gridItemInfo
+                        )
+                      "
+                      type="button"
+                      class="bg-transparent border-0 function-btns text-light"
+                    >
+                      <img
+                        *ngIf="gridItemInfo.isPostLikedByCurrentUser"
+                        src="../../../assets/images/heart-red.svg"
+                        class="d-block mx-auto"
+                      />
+                      <img
+                        *ngIf="!gridItemInfo.isPostLikedByCurrentUser"
+                        src="../../../../assets/images/Heart-dark.svg"
+                        class="d-block mx-auto"
+                      />
+
+                      <span
+                        class="textBlack"
+                        *ngIf="
+                          likesLength != undefined &&
+                          currentLikedPostId == gridItemInfo.id
+                        "
+                        >{{ likesLength }}</span
+                      >
+                      <span
+                        class="textBlack"
+                        *ngIf="currentLikedPostId != gridItemInfo.id"
+                        >{{ gridItemInfo.likes.length }}</span
+                      >
+                    </button>
+                    <button
+                      (click)="openPostsViewModal(gridItemInfo)"
+                      type="button"
+                      class="bg-transparent border-0 function-btns"
+                    >
+                      <img
+                        src="../../../../assets/images/Chat-dark.svg"
+                        class="d-block mx-auto"
+                      />
+                      {{ gridItemInfo.commentsCount }}
+                    </button>
+                    <button
+                      (click)="savePost(gridItemInfo.id)"
+                      type="button"
+                      class="bg-transparent border-0 function-btns"
+                    >
+                      <img
+                        *ngIf="!gridItemInfo.isPostSavedByCurrentUser"
+                        src="../../../../assets/images/Bookmark-dark.svg"
+                        class="d-block mx-auto"
+                      />
+                      <img
+                        *ngIf="gridItemInfo.isPostSavedByCurrentUser"
+                        src="../../../../assets/images/Bookmark-dark.svg"
+                        class="d-block mx-auto"
+                      />
+                      {{ gridItemInfo.savedPostsCount }}
+                    </button>
+                    <button
+                      (click)="
+                        openSharePostModal(
+                          gridItemInfo.id,
+                          gridItemInfo.postType,
+                          gridItemInfo.title,
+                          gridItemInfo.description
+                        )
+                      "
+                      type="button"
+                      class="bg-transparent border-0 function-btns"
+                    >
+                      <img
+                        src="../../../../assets/images/Upload-dark.svg"
+                        class="d-block mx-auto"
+                      />
+                      {{ gridItemInfo.postSharedCount }}
+                    </button>
+                  </div>
                 </div>
               </div>
-              <div class="row">
-                <ng-container *ngFor="let post of course.posts">
+              <!-- </ng-container> -->
+            </div>
+          </div>
+              </div>
                   <div
                     *ngIf="
                       post.postType == 1 &&
                       (post.postAuthorType == 3 || post.postAuthorType == 2)
                     "
-                    class="col-md-6 col-xl-4"
+                    class="col-md-6 col-xl-4" [class]="getRandomClass(i,false)" (click)="openDialouge($event)"
                   >
                     <div
                       class="school-grid-box position-relative school-list-box h-100 mb-0"
@@ -1287,6 +1291,7 @@
                       </div>
                     </div>
                   </div>
+                
                 </ng-container>
               </div>
             </div>

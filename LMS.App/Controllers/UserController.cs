@@ -206,7 +206,7 @@ namespace LMS.App.Controllers
 
         [Route("getReelsByUserId")]
         [HttpGet]
-        public async Task<IActionResult> GetReelsByUserId(string userId, int pageNumber, int pageSize = 4)
+        public async Task<IActionResult> GetReelsByUserId(string userId, int pageNumber, int pageSize = 8)
         {
             var response = await _userService.GetReelsByUserId(userId, pageNumber, pageSize);
             return Ok(response);
@@ -366,6 +366,15 @@ namespace LMS.App.Controllers
         {
             var user = await _userService.IsFollowerBan(userId, followerId);
             return Ok(user);
+        }
+
+        
+        [Route("getSliderReelsByUserId")]
+        [HttpGet]
+        public async Task<IActionResult> GetSliderReelsByUserId(string userId, Guid postId, ScrollTypesEnum scrollType)
+        {
+            var response = await _userService.GetSliderReelsByUserId(userId, postId, scrollType);
+            return Ok(response);
         }
 
 

@@ -100,6 +100,11 @@ namespace LMS.Services
             if (postViewModel.Id != null && postViewModel.Id != new Guid())
             {
                PostId = await UpdatePost(postViewModel, createdById);
+
+                if (postViewModel.UploadVideos != null)
+                {
+                    blobVideoUrls = await SaveUploadVideos(postViewModel.UploadVideos, postViewModel.UploadVideosThumbnail, postViewModel.Id, createdById);
+                }
             }
 
             else
@@ -128,6 +133,11 @@ namespace LMS.Services
                 {
                     _postRepository.Save();
                     postViewModel.Id = post.Id;
+
+                    if (postViewModel.UploadVideos != null)
+                    {
+                        blobVideoUrls = await SaveUploadVideos(postViewModel.UploadVideos, postViewModel.UploadVideosThumbnail, postViewModel.Id, createdById);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -190,10 +200,10 @@ namespace LMS.Services
                 await SaveUploadImages(postViewModel.UploadImages, postViewModel.Id, createdById);
             }
 
-            if (postViewModel.UploadVideos != null)
-            {
-                blobVideoUrls = await SaveUploadVideos(postViewModel.UploadVideos, postViewModel.UploadVideosThumbnail, postViewModel.Id, createdById);
-            }
+            //if (postViewModel.UploadVideos != null)
+            //{
+            //    blobVideoUrls = await SaveUploadVideos(postViewModel.UploadVideos, postViewModel.UploadVideosThumbnail, postViewModel.Id, createdById);
+            //}
 
             if (postViewModel.UploadAttachments != null)
             {

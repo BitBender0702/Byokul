@@ -102,7 +102,7 @@ namespace LMS.Services
             _commonService = commonService;
         }
         public async Task<UserDetailsViewModel> GetUserById(string userId)
-        
+
         {
             var user = await _userRepository.GetAll().Include(x => x.UserLanguage).ThenInclude(x => x.Language).Where(x => x.Id == userId).FirstOrDefaultAsync();
             var result = _mapper.Map<UserDetailsViewModel>(user);
@@ -661,6 +661,76 @@ namespace LMS.Services
 
         }
 
+
+        public async Task<IEnumerable<PostDetailsViewModel>> GetSliderReelsByUserId(string userId, Guid lastPostId, ScrollTypesEnum scrollType)
+        {
+            var requiredResults = new List<Post>();
+            var reelList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == new Guid(userId) && x.PostType == (int)PostTypeEnum.Reel && x.PostAuthorType == (int)PostAuthorTypeEnum.User && x.IsPostSchedule != true).OrderByDescending(x => x.IsPinned).ThenByDescending(x => x.CreatedOn).ToListAsync();
+
+            if (scrollType == ScrollTypesEnum.Down)
+            {
+                requiredResults = reelList.SkipWhile(x => x.Id != lastPostId).Skip(1).Take(3).ToList();
+
+            }
+            else
+            {
+                requiredResults = reelList.TakeWhile(x => x.Id != lastPostId).Reverse().Take(3).Reverse().ToList();
+
+            }
+            var result = _mapper.Map<List<PostDetailsViewModel>>(requiredResults);
+
+            foreach (var post in result)
+            {
+                if (post.PostAuthorType == (int)PostAuthorTypeEnum.School)
+                {
+                    var school = _schoolRepository.GetById(post.ParentId);
+                    post.ParentName = school.SchoolName;
+                    post.ParentImageUrl = school.Avatar;
+                }
+
+                if (post.PostAuthorType == (int)PostAuthorTypeEnum.Class)
+                {
+                    var classes = _classRepository.GetById(post.ParentId);
+                    post.ParentName = classes.ClassName;
+                    post.ParentImageUrl = classes.Avatar;
+                }
+
+                if (post.PostAuthorType == (int)PostAuthorTypeEnum.Course)
+                {
+                    var course = _courseRepository.GetById(post.ParentId);
+                    post.ParentName = course.CourseName;
+                    post.ParentImageUrl = course.Avatar;
+                }
+
+                if (post.PostAuthorType == (int)PostAuthorTypeEnum.User)
+                {
+                    var user = _userRepository.GetById(post.ParentId.ToString());
+                    post.ParentName = user.FirstName + " " + user.LastName;
+                    post.ParentImageUrl = user.Avatar;
+                }
+
+                post.PostAttachments = await GetAttachmentsByPostId(post.Id);
+                post.Likes = await GetLikesOnPost(post.Id);
+                post.Views = await GetViewsOnPost(post.Id);
+                post.CommentsCount = await GetCommentsCountOnPost(post.Id);
+                if (post.Likes.Any(x => x.UserId == userId && x.PostId == post.Id))
+                {
+                    post.IsPostLikedByCurrentUser = true;
+                }
+                else
+                {
+                    post.IsPostLikedByCurrentUser = false;
+                }
+
+            }
+
+            foreach (var post in result)
+            {
+                post.PostTags = await GetTagsByPostId(post.Id);
+            }
+            return result;
+        }
+
         public async Task<List<UserFollowerViewModel>> GetUserFollowers(string userId, int pageNumber, string? searchString)
         {
             int pageSize = 13;
@@ -689,7 +759,7 @@ namespace LMS.Services
 
         }
 
-        public async Task<bool> BanFollower(string followerId,string userId)
+        public async Task<bool> BanFollower(string followerId, string userId)
         {
             var follower = await _userFollowerRepository.GetAll().Where(x => x.FollowerId == followerId && x.UserId == userId).FirstOrDefaultAsync();
 
@@ -956,11 +1026,11 @@ namespace LMS.Services
             var PostGUIDScores = PostGUIDScore.Where(x => x.Value > 10);
             if (PostGUIDScores.Count() != 0)
             {
-                 averageScore = PostGUIDScore.Where(x => x.Value > 10).Select(x => x.Value).Average();
+                averageScore = PostGUIDScore.Where(x => x.Value > 10).Select(x => x.Value).Average();
             }
             else
             {
-                 averageScore = PostGUIDScore.Values.Average();
+                averageScore = PostGUIDScore.Values.Average();
             }
 
             foreach (var post in clientPosts)
@@ -1334,7 +1404,8 @@ namespace LMS.Services
 
         public async Task<IEnumerable<GlobalSearchViewModel>> GlobalSearch(string searchString, int pageNumber, int pageSize)
         {
-            var users = await _userRepository.GetAll().Where(x => x.FirstName.Contains(searchString) || x.LastName.Contains(searchString) || (x.FirstName + " " + x.LastName).Contains(searchString)).Select(x => new GlobalSearchViewModel() { 
+            var users = await _userRepository.GetAll().Where(x => x.FirstName.Contains(searchString) || x.LastName.Contains(searchString) || (x.FirstName + " " + x.LastName).Contains(searchString)).Select(x => new GlobalSearchViewModel()
+            {
                 Id = new Guid(x.Id),
                 Name = x.FirstName + " " + x.LastName,
                 Type = (int)PostAuthorTypeEnum.User,
@@ -1387,7 +1458,7 @@ namespace LMS.Services
 
             }).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
 
-  
+
 
             return users;
 
