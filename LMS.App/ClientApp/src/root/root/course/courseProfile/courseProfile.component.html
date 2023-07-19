@@ -994,7 +994,7 @@
                         class="videofile"
                       >
                         <video
-                          #videoPlayer
+                        [id] = "getRandomClass(i,false)"
                           controls
                           class="video-js vjs-big-play-centered"
                           preload="metadata"
@@ -1257,13 +1257,13 @@
                           <div class="row gx-1">
                             <div class="col-md-12">
                               <div
-                                class="school-large-thumbnail shadow-thumnail position-relative"
+                              [ngClass]="post.postAttachments.length > 0 ? 'school-large-thumbnail shadow-thumnail position-relative':'position-relative'"
                               >
                                 <div
                                   *ngIf="
                                     post.postAttachments[0]?.fileUrl == null
                                   "
-                                  class="description_scroll"
+                                  class="description_scroll" [id] = "getRandomClass(i,false)"
                                 >
                                   {{ post.description }}
                                 </div>

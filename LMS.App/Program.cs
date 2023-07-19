@@ -213,18 +213,18 @@ builder.Services.AddHangfire(config =>
 
 builder.Services.Configure<IISServerOptions>(options =>
 {
-    options.MaxRequestBodySize = int.MaxValue;
+    options.MaxRequestBodySize = long.MaxValue;
 });
 
 builder.Services.Configure<KestrelServerOptions>(options =>
 {
-    options.Limits.MaxRequestBodySize = int.MaxValue;
+    options.Limits.MaxRequestBodySize = long.MaxValue;
 });
 
 builder.Services.Configure<FormOptions>(options =>
 {
     options.ValueLengthLimit = int.MaxValue;
-    options.MultipartBodyLengthLimit = int.MaxValue;
+    options.MultipartBodyLengthLimit = long.MaxValue;
     options.MultipartHeadersLengthLimit = int.MaxValue;
 });
 

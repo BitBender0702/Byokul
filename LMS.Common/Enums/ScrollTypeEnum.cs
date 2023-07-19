@@ -9,6 +9,7 @@ namespace LMS.Common.Enums
     public enum ScrollTypeEnum
     {
         Up = 1,
-        Down = 2
+        Down = 2,
+        None = 3
     }
 }

@@ -482,7 +482,12 @@
   "CourseList": "قائمة الدورات",
   "ResetTable": "إعادة ضبط الجدول",
   "FAQ": "التعليمات",
-  "VideoReadyToStream": "Your video is ready to stream.You can start stream now"
+  "VideoReadyToStream": "Your video is ready to stream.You can start stream now",
+  "InValidEmail": "Email is invalid",
+  "SchoolUpdatedsuccessfully":"تم تحديث المدرسة بنجاح",
+  "ClassUpdatedsuccessfully":"تم تحديث الفصل بنجاح",
+  "CourseUpdatedsuccessfully":"تم تحديث الدورة بنجاح"
+
 
 
 

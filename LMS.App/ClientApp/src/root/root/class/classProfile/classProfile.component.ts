@@ -865,7 +865,9 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
 
             this.fileToUpload = new FormData();
             this.cd.detectChanges();
-            this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Class updated successfully'});
+            const translatedSummary = this.translateService.instant('Success');
+            const translatedMessage = this.translateService.instant('ClassUpdatedsuccessfully');
+            this.messageService.add({severity:'success', summary:translatedSummary,life: 3000, detail:translatedMessage});
             // this.ngOnInit();
           });
       
@@ -1350,6 +1352,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
  debugger;
  const parts = event.currentTarget.className.split(' ');
  this.postDivId = parts[3];
+ videojs(this.postDivId);
  var displayDivs = document.getElementsByClassName("imgDisplay");
  for (var i = 0; i < displayDivs.length; i++){
  

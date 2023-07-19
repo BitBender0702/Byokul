@@ -36,6 +36,7 @@
 
 .description_scroll {
   overflow-y: auto;
+  height:150px;
 }
 
 .description_scroll::-webkit-scrollbar {

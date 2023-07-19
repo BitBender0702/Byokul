@@ -59,7 +59,7 @@
   "StartEarningCreateSchool": "To start earning you can create a School.",
   "HereFromCreateClass": "Here From Create Class",
   "CreateClass": "Create Class",
-  "CreateClassStep1": "Step 1: Information about your School",
+  "CreateClassStep1": "Step 1: Information about your Class",
   "CreateClassStep2": "Step 2: Add Disciplines, Teachers and Students of your Class",
   "ClassName": "Class Name",
   "TellUsAboutClass": "Tell us about your Class",
@@ -491,7 +491,11 @@
   "CourseList": "Course List",
   "ResetTable": "Reset Table",
   "FAQ": "FAQ",
-  "VideoReadyToStream": "Your video is ready to stream.You can start stream now"
+  "VideoReadyToStream": "Your video is ready to stream.You can start stream now",
+  "InValidEmail": "Email is invalid",
+  "SchoolUpdatedsuccessfully":"School updated successfully",
+  "ClassUpdatedsuccessfully":"Class updated successfully",
+  "CourseUpdatedsuccessfully":"Course updated successfully"
 
 
 }

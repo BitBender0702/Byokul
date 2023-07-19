@@ -76,6 +76,7 @@ import { SignalrService } from 'src/root/service/signalr.service';
 export const deleteSchoolResponse =new BehaviorSubject <string>('');  
 
 import { NgxMaskModule } from 'ngx-mask';
+import { v4 as uuidv4 } from 'uuid';
 
 
 @Component({
@@ -169,7 +170,7 @@ export class SchoolProfileComponent
   filteredAttachments:any[] = [];
   isOnInitInitialize:boolean = false;
   schoolAvatar:string = '';
-  counter:number = 0;
+  counter:any;
 
   separateDialCode = true;
 	SearchCountryField = SearchCountryField;
@@ -178,8 +179,7 @@ export class SchoolProfileComponent
   // PhoneNumberFormat = PhoneNumberFormat;
 	preferredCountries: CountryISO[] = [CountryISO.UnitedStates, CountryISO.UnitedKingdom];
   selectedCountryISO:any;
-  notificationViewModel!:NotificationViewModel;
-  
+  notificationViewModel!:NotificationViewModel;  
 
   @ViewChild('closeEditModal') closeEditModal!: ElementRef;
   @ViewChild('closeTeacherModal') closeTeacherModal!: ElementRef;
@@ -916,8 +916,8 @@ showDiv: boolean = false;
         });
         this.fileToUpload = new FormData();
         const translatedSummary = this.translateService.instant('Success');
-        const translatedMessage = this.translateService.instant('ReelDeletedSuccessfully');
-        this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage,});
+        const translatedMessage = this.translateService.instant('SchoolUpdatedsuccessfully');
+        this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage});
         this.ngOnInit();
       });
   }
@@ -1361,14 +1361,17 @@ showDiv: boolean = false;
       });
   }
 
+
+
   showPostDiv(postId: string) {
     debugger
-    this.counter += 1;
+    this.counter = uuidv4();
     this.clickedPostId = postId;
     this.showDiv = true;
     
     var posts: any[] = this.school.posts;
     this.gridItemInfo = posts.find((x) => x.id == postId);
+    this.gridItemInfo.postAttachments
     if(this.gridItemInfo.isLive){
       this.isGridItemInfo = true;
       this._postService.openLiveStream(this.gridItemInfo,this.userId).subscribe((response) => {
@@ -1379,8 +1382,8 @@ showDiv: boolean = false;
     this.cd.detectChanges();
     // const videoElements = document.getElementById("video01" + this.gridItemInfo.id);
     // videoElements.forEach((videoElement: ElementRef<HTMLVideoElement>) => {
-      var playerId = "video01" + this.counter;
-      const vjsPlayer = videojs(playerId, { autoplay: false });
+      // var playerId = "video01" + this.counter;
+      // const vjsPlayer = videojs(playerId, { autoplay: false });
       this.cd.detectChanges();
     // });
     // this.videoPlayers.forEach(player => {
@@ -1893,10 +1896,16 @@ showDiv: boolean = false;
 debugger;
 const parts = event.currentTarget.className.split(' ');
 this.postDivId = parts[3];
+if(this.postDivId != ""){
+  videojs(this.postDivId);
+}
 var displayDivs = document.getElementsByClassName("imgDisplay");
 for (var i = 0; i < displayDivs.length; i++){
 
   if(displayDivs[i].className.includes(this.postDivId)){
+//     var playerId = "video01" + this.counter;
+// const vjsPlayer = videojs(playerId, { autoplay: false });
+// this.cd.detectChanges();
     displayDivs[i].setAttribute("style", "display:block;");
   }else{
     displayDivs[i].setAttribute("style", "display:none;");
@@ -1904,9 +1913,9 @@ for (var i = 0; i < displayDivs.length; i++){
   //elements[i].style.display = displayState;
 }
 
-var playerId = "video01" + this.counter;
-const vjsPlayer = videojs(playerId, { autoplay: false });
-this.cd.detectChanges();
+// var playerId = "video01" + this.counter;
+// const vjsPlayer = videojs(playerId, { autoplay: false });
+// this.cd.detectChanges();
     }
 
   @HostListener('window:resize')
@@ -1922,6 +1931,10 @@ this.cd.detectChanges();
     this.isScreenPc = screenWidth >= 992;
     this.isScreenTablet = screenWidth >= 768 && screenWidth < 992;
     this.isScreenMobile = screenWidth < 768;
+  }
+
+  get schoolEmailValue(): string {
+    return this.editSchoolForm.get('schoolEmail')?.value;
   }
 
 }

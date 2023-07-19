@@ -319,7 +319,12 @@
   "CourseList": "Course List",
   "ResetTable": "Reset Table",
   "FAQ": "Preguntas más frecuentes",
-  "VideoReadyToStream": "Your video is ready to stream.You can start stream now"
+  "VideoReadyToStream": "Your video is ready to stream.You can start stream now",
+  "InValidEmail": "Email is invalid",
+  "SchoolUpdatedsuccessfully":"School updated successfully",
+  "ClassUpdatedsuccessfully":"Class updated successfully",
+  "CourseUpdatedsuccessfully":"Course updated successfully"
+
 
 
 

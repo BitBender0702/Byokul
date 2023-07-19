@@ -1740,7 +1740,7 @@
                         <carousel>
                           <div
                             *ngFor="
-                              let postAttachment of gridItemInfo.postAttachments; let i = index
+                              let postAttachment of gridItemInfo.postAttachments;
                             "
                             class="school-grid-thumbnail"
                           >
@@ -1750,7 +1750,7 @@
                                 class="videofile"
                               >
                                 <video
-                                [id] = "'video01' + counter"
+                                [id] = "getRandomClass(i,false)"
                                   controls
                                   class="video-js vjs-big-play-centered"
                                   preload="metadata"
@@ -2045,8 +2045,7 @@
                         >
                           <div class="row gx-1">
                             <div class="col-md-12">
-                              <div
-                                class="school-large-thumbnail shadow-thumnail position-relative"
+                              <div [ngClass]="post.postAttachments.length > 0 ? 'school-large-thumbnail shadow-thumnail position-relative':'position-relative'"
                               >
                                 <div
                                   *ngIf="
@@ -2054,6 +2053,7 @@
                                     post.postAttachments[0]?.fileType == 3
                                   "
                                   class="description_scroll"
+                                  [id] = "getRandomClass(i,false)"
                                 >
                                   {{ post.description }}
                                 </div>
@@ -2739,6 +2739,13 @@
                           placeholder="{{ 'SchoolEmail' | translate }}"
                         />
                       </div>
+                      <small
+                      class="p-error"
+                      style="color: orange"
+                      *ngIf="isSubmitted && editSchoolForm.get('schoolEmail')?.errors && schoolEmailValue !== ''"
+                    >
+                      {{ "InValidEmail" | translate }}
+                    </small>
                     </div>
                   </div>
                   <div
