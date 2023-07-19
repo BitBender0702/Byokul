@@ -486,7 +486,12 @@
   "CourseList": "Ders Listesi",
   "ResetTable": "Tabloyu Sıfırla",
   "FAQ": "SSS",
-  "VideoReadyToStream": "Your video is ready to stream.You can start stream now"
+  "VideoReadyToStream": "Your video is ready to stream.You can start stream now",
+  "InValidEmail": "Email is invalid",
+  "SchoolUpdatedsuccessfully":"Okul başarıyla güncellendi",
+  "ClassUpdatedsuccessfully":"Sınıf başarıyla güncellendi",
+  "CourseUpdatedsuccessfully":"Kurs başarıyla güncellendi"
+
 
 
 

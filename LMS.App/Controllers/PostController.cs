@@ -23,7 +23,7 @@ namespace LMS.App.Controllers
             _postService = postService;
         }
 
-        [DisableRequestSizeLimit, RequestFormLimits(MultipartBodyLengthLimit = int.MaxValue, ValueLengthLimit = int.MaxValue)]
+        [DisableRequestSizeLimit, RequestFormLimits(MultipartBodyLengthLimit = long.MaxValue, ValueLengthLimit = int.MaxValue)]
         [Route("savePost")]
         [HttpPost]
         public async Task<IActionResult> SavePost(PostViewModel postViewModel)

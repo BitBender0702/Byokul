@@ -183,7 +183,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
      }
 
      getReelsByUser(userId:string){
-      this._userService.getReelsByUserId(userId, this.reelsPageNumber).subscribe((response) => {
+      this._userService.GetSliderReelsByUserId(userId, this.reelId, 3).subscribe((response) => {
         debugger
         this.reels = response;
         this.selectedReel = this.reels[0];
@@ -345,6 +345,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
         this.cd.detectChanges();
         const self = this;
         this.slickSlider = $('.slick', '.vertical-slider').slick({
+          lazyLoad: 'ondemand',
           vertical: true,
           verticalSwiping: true,
           slidesToShow: 1,
@@ -418,6 +419,8 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
           if (currentVideo && !currentVideo.paused) {
             currentVideo.pause();
           }
+
+          self.cd.detectChanges();
         });
 
         this.slickSlider.on('afterChange', function(event:any, slick:any, currentSlide:any) {
@@ -429,6 +432,8 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
           if (newVideo && newVideo.paused) {
             newVideo.play();
           }
+          self.cd.detectChanges();
+
         });
 
         const currentSlideIndex = $('.slick', '.vertical-slider').slick('slickCurrentSlide');
@@ -442,7 +447,18 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
 
       onSlideUp(){
         debugger
+        if(this.from == "user"){
+          this._userService.GetSliderReelsByUserId(this.userId, this.firstPostId, 1).subscribe((response:any) => {
+            debugger
+            this.reels.unshift(...response);
+            this.lastPostId = this.reels[this.reels.length - 1].id;
+            this.firstPostId =  this.reels[0].id;
+              // this.isReelLoad = true;
+              this.cd.detectChanges();
+            // this.reels = this.reels.concat(response);
 
+           });
+        }
       }
 
       isReelLoad:boolean = false;
@@ -455,8 +471,44 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
         if(this.from == "user"){
           this._userService.GetSliderReelsByUserId(this.userId, this.lastPostId, 2).subscribe((response:any) => {
             debugger
-            this.reels.push(...response);
+            // this.reels.push(...response);
+            const previousSlideCount = this.reels.length;
+            // for(var i = 0;  i < response.length; i++){
+            //    this.reels.push(response[i]);
+            // }
+
+            // setTimeout(() => {
+              this.reels.push(...response);
+            // }, 5000);
+
+
+            // this.cd.detectChanges();
+            this.lastPostId = this.reels[this.reels.length - 1].id;
+            this.firstPostId =  this.reels[0].id;
+
+            const newSlideCount = this.reels.length;
+      const slideOffset = newSlideCount - previousSlideCount;
+
+      // Update the slide index if there is a slide offset
+      if (slideOffset > 0) {
+        // Update the Slick slider's settings to reflect the new slide count
+        $('.slick', '.vertical-slider').slick('slickAdd', this.getSlideMarkup(response));
+        $('.slick', '.vertical-slider').slick('slickGoTo', previousSlideCount, false);
+      }
+    //         const newSlideCount = this.reels.length;
+    // const slideOffset = newSlideCount - previousSlideCount;
+
+    // if (slideOffset > 0) {
+    //   // $('.slick').slick('slickAdd', this.getSlideMarkup(response)); // Add new slides to Slick.js
+    //   $('.slick').slick('slickGoTo', previousSlideCount); // Set initial slide index
+    // }
               // this.isReelLoad = true;
+        //       $('.slick', '.vertical-slider').slick('unslick');
+
+        // // Reinitialize the Slick slider with the updated reels array
+        // this.initializeSlick();
+        // $('.slick', '.vertical-slider').slick('slickGoTo', 0, false);
+
               this.cd.detectChanges();
             // this.reels = this.reels.concat(response);
 
@@ -465,6 +517,37 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       // }
       }
 
+
+      getSlideMarkup(response: any[]): string {
+        let slideMarkup = '';
+      
+        for (const item of response) {
+          // Generate the slide markup based on the item and provided HTML structure
+          const slideHtml = `
+            <div class="item">
+              <div class="f-poppins" [ngStyle]="!isMobileView ? {'width': '50%'} : {'width': '100%'}">
+                <div class="live-content" id="reel_content">
+                  <div class="live-inner w-100 reel_mobile">
+                    <div class="live-image overflow-hidden position-relative">
+                      <div class="reel_videoinner">
+                        <video controls>
+                          <source [src]="item.fileUrl" type="video/mp4">
+                        </video>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+      
+          slideMarkup += slideHtml;
+        }
+      
+        return slideMarkup;
+      }
+      
+      
       
 
 

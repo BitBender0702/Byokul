@@ -985,6 +985,7 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
 debugger;
 const parts = event.currentTarget.className.split(' ');
 this.postDivId = parts[3];
+videojs(this.postDivId);
 var displayDivs = document.getElementsByClassName("imgDisplay");
 for (var i = 0; i < displayDivs.length; i++){
 

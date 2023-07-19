@@ -667,12 +667,24 @@ namespace LMS.Services
             var requiredResults = new List<Post>();
             var reelList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == new Guid(userId) && x.PostType == (int)PostTypeEnum.Reel && x.PostAuthorType == (int)PostAuthorTypeEnum.User && x.IsPostSchedule != true).OrderByDescending(x => x.IsPinned).ThenByDescending(x => x.CreatedOn).ToListAsync();
 
+
+            if (scrollType == ScrollTypesEnum.None)
+            {
+
+                var attachment = _postAttachmentRepository.GetById(lastPostId);
+                int index = reelList.FindIndex(x => x.Id == attachment.PostId);
+                int startIndex = Math.Max(0, index - 3);
+                int totalItems = 7;
+                requiredResults = reelList.GetRange(startIndex, Math.Min(totalItems, reelList.Count - startIndex));
+
+
+            }
             if (scrollType == ScrollTypesEnum.Down)
             {
                 requiredResults = reelList.SkipWhile(x => x.Id != lastPostId).Skip(1).Take(3).ToList();
 
             }
-            else
+            if(scrollType == ScrollTypesEnum.Up)
             {
                 requiredResults = reelList.TakeWhile(x => x.Id != lastPostId).Reverse().Take(3).Reverse().ToList();
 

@@ -41,6 +41,7 @@ import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component'
 export const convertIntoClassResponse =new Subject<{classId: string, className : string,school:any,avatar:string}>(); 
 export const deleteCourseResponse =new BehaviorSubject <string>('');  
 import { Dimensions, ImageCroppedEvent, ImageTransform } from 'ngx-image-cropper';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'courseProfile-root',
@@ -155,7 +156,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     @ViewChild('createPostModal', { static: true }) createPostModal!: CreatePostComponent;
 
     isDataLoaded:boolean = false;
-    constructor(injector: Injector,private titleService: Title,private meta: Meta,authService:AuthService,notificationService:NotificationService,public messageService:MessageService,postService:PostService,private bsModalService: BsModalService,courseService: CourseService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,private cd: ChangeDetectorRef) { 
+    constructor(injector: Injector,private translateService: TranslateService,private titleService: Title,private meta: Meta,authService:AuthService,notificationService:NotificationService,public messageService:MessageService,postService:PostService,private bsModalService: BsModalService,courseService: CourseService,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,private cd: ChangeDetectorRef) { 
       super(injector);
         this._courseService = courseService;
          this._postService = postService;
@@ -770,7 +771,9 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
             ownedCourseResponse.next({courseId:response.courseId, courseAvatar:response.avatar, courseName:response.courseName,schoolName: this.schoolName, action:"update"});
             this.fileToUpload = new FormData();
             this.cd.detectChanges();
-            this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Course updated successfully'});
+            const translatedSummary = this.translateService.instant('Success');
+            const translatedMessage = this.translateService.instant('CourseUpdatedsuccessfully');
+            this.messageService.add({severity:'success', summary:translatedSummary,life: 3000, detail:translatedMessage});
             // this.ngOnInit();
           });
         }
@@ -1214,6 +1217,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
  debugger;
  const parts = event.currentTarget.className.split(' ');
  this.postDivId = parts[3];
+ videojs(this.postDivId);
  var displayDivs = document.getElementsByClassName("imgDisplay");
  for (var i = 0; i < displayDivs.length; i++){
  
