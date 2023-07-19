@@ -2087,9 +2087,27 @@ main {
   max-width: 45%;
   display: inline-block;
   text-align: left;
-  font-size: 12px;
+  font-size: 13px;
   color: #151718;
   line-height: 18px;
+  padding: 8px 15px;
+  border-radius: 6px;
+  background: #f7f7f7;
+}
+.user-replyanswer {
+  margin-bottom: 5px;
+  display: inline-block;
+  border-bottom: 1px solid #ddd;
+  font-style: italic;
+  margin: 0 -15px 6px;
+  padding: 20px 15px 6px;
+  color: rgb(66 66 66);
+  font-weight: 500;
+}
+.reply-dark-icon {
+  position: relative;
+  top: -20px;
+  color: #8f8e8d;
 }
 #chat .me .chat-username,
 .gallery-attch {
@@ -2120,7 +2138,7 @@ main {
   margin: 0;
   list-style-type: none;
   overflow-y: scroll;
-  height: calC(100vh - 267px);
+  height: calC(100vh - 350px);
   border-top: 2px solid #fff;
   border-bottom: 2px solid #fff;
 }
@@ -2140,11 +2158,17 @@ main {
 
 #chats .message {
   max-width: 45%;
-  display: inline-block;
-  text-align: left;
-  font-size: 12px;
-  color: #151718;
-  line-height: 18px;
+    display: inline-block;
+    text-align: left;
+    font-size: 13px;
+    color: #151718;
+    line-height: 18px;
+    padding: 8px 15px;
+    border-radius: 6px;
+    background: #f7f7f7;
+}
+.message-time {
+  margin-top: 6px;
 }
 #chats .me .chat-username,
 .gallery-attch {
@@ -3086,7 +3110,15 @@ p-autocomplete li:before {
 }
 .message-box main {
   height: calC(100vh - 250px);
+  width: calC(100% - 380px);
 }
+.leftuser-chat-icon img {
+  background: #7c8da7;
+  min-width: 32px;
+}
+
+
+
 @media screen and (min-width: 1200px) {
   .main_content-max-width {
     max-width: 1200px;

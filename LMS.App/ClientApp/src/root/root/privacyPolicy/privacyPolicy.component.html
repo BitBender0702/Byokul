@@ -1,20 +1,25 @@
-<section class="f-poppins" style="margin-left: 30%;">
+<section class="f-poppins main_content about-container">
       <header class="header">
         <div class="header__content">
-          <button
-          (click)="back()"
-          type="button"
-          class="back-button bg-transparent border-0 font_16 fw_400 text_dark">
-        <img src="../../../../assets/images/school/arrow-left.svg" />
-        {{ "Back" | translate }}
-      </button>
-          <a [routerLink]="['/user/userFeed']" class="main-logo"><img class="ms-4" src="../../../assets/images/logo.svg" /></a>
+        
+          <a [routerLink]="['/user/userFeed']" class="main-logo"><img src="../../../assets/images/logo.svg" /></a>
         </div>
       </header>
-      <main class="static-main">
+      <main class="static-main min-height w-100 h-auto">
         <div class="static-content">
           <div *ngIf="selectedLanguage == 'en'">
-        <p><strong>PRIVACY POLICY</strong></p>
+    <div class="d-flex align-items-center justify-content-between ">
+      <button
+      (click)="back()"
+      type="button"
+      class="back-button bg-transparent border-0 font_16 fw_400 text_dark">
+    <img src="../../../../assets/images/school/arrow-left.svg" />
+    {{ "Back" | translate }}
+  </button>
+      <h3 class="font_24 text_dark fw-bold ">Privacy Policy</h3>
+      <div class="d-md-block d-none"></div>
+    </div>
+    <hr class="about_hr" />
 <p><em>This Privacy Policy was last updated on JUNE 13, 2023.</em></p>
 <p>Thank you for joining ByOkul.</p>
 <p>&nbsp;As (<strong>&ldquo;ByOkul&rdquo;</strong>), we respect your privacy and want you to understand how we collect, use and share data about you. This Privacy Policy covers our data collection practices and explains your rights regarding your personal data.</p>
@@ -103,7 +108,18 @@
 <p>&nbsp;</p>
 </div>
 <div *ngIf="selectedLanguage == 'tr'">
-  <p><strong>GİZLİLİK POLİTİKASI</strong></p>
+  <div class="d-flex align-items-center justify-content-between ">
+    <button
+    (click)="back()"
+    type="button"
+    class="back-button bg-transparent border-0 font_16 fw_400 text_dark">
+  <img src="../../../../assets/images/school/arrow-left.svg" />
+  {{ "Back" | translate }}
+</button>
+    <h3 class="font_24 text_dark fw-bold ">GİZLİLİK POLİTİKASI</h3>
+    <div class="d-md-block d-none"></div>
+  </div>
+  <hr class="about_hr" />
   <p><em>Bu Gizlilik Politikası en son&nbsp; 13 HAZİRAN, 2023 tarihinde g&uuml;ncellenmiştir.</em></p>
   <p>ByOkul&rsquo;a katıldığınız i&ccedil;in teşekk&uuml;r ederiz.</p>
   <p>&nbsp;(<strong>&ldquo;ByOkul&rdquo;</strong>) olarak gizliliğinize saygı duyuyoruz ve sizin hakkınızdaki verileri nasıl topladığımızı, kullandığımızı ve paylaştığımızı anlamanızı istiyoruz. Bu Gizlilik Politikası, veri toplama uygulamalarımızı kapsar ve kişisel verilerinize ilişkin haklarınızı a&ccedil;ıklar.</p>
@@ -197,7 +213,18 @@
   <p>&nbsp;</p>
 </div>
 <div *ngIf="selectedLanguage == 'ar'">
-  <p>سياسة الخصوصية</p>
+  <div class="d-flex align-items-center justify-content-between ">
+    <button
+    (click)="back()"
+    type="button"
+    class="back-button bg-transparent border-0 font_16 fw_400 text_dark">
+  <img src="../../../../assets/images/school/arrow-left.svg" />
+  {{ "Back" | translate }}
+</button>
+    <h3 class="font_24 text_dark fw-bold ">سياسة الخصوصية</h3>
+    <div class="d-md-block d-none"></div>
+  </div>
+  <hr class="about_hr" />
   <p>تم آخر تحديث لسياسة الخصوصية هذه في 13 يونيو 2023.</p>
   <p>شكرا لانضمامك إلى ByOkul.</p>
   <p>&nbsp;("<strong>ByOkul</strong>") تحترم خصوصيتك وتريد منك أن تفهم كيف نجمع البيانات عنك ونستخدمها ونشاركها. تغطي سياسة الخصوصية هذه ممارسات جمع البيانات الخاصة بنا وتشرح حقوقك فيما يتعلق ببياناتك الشخصية.</p>
@@ -293,7 +320,18 @@
 
 </div>
 <div *ngIf="selectedLanguage == 'sp'">
-  <p><strong>PRIVACY POLICY</strong></p>
+  <div class="d-flex align-items-center justify-content-between ">
+    <button
+    (click)="back()"
+    type="button"
+    class="back-button bg-transparent border-0 font_16 fw_400 text_dark">
+  <img src="../../../../assets/images/school/arrow-left.svg" />
+  {{ "Back" | translate }}
+</button>
+    <h3 class="font_24 text_dark fw-bold ">PRIVACY POLICY</h3>
+    <div class="d-md-block d-none"></div>
+  </div>
+  <hr class="about_hr" />
   <p><em>This Privacy Policy was last updated on JUNE 13, 2023.</em></p>
   <p>Thank you for joining ByOkul.</p>
   <p>&nbsp;As (<strong>&ldquo;ByOkul&rdquo;</strong>), we respect your privacy and want you to understand how we collect, use and share data about you. This Privacy Policy covers our data collection practices and explains your rights regarding your personal data.</p>
