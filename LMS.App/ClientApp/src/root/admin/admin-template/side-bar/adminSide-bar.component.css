@@ -4,6 +4,7 @@
     text-decoration: none;
 }
 
-.image{
-    padding-right: 15px;
+.admin-sidebar .comment-post-user {
+    margin-right: 10px;
+    background: #adadad;
 }

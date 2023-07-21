@@ -6,3 +6,10 @@
     cursor: pointer;
 }
 
+::ng-deep .theading-nowrap .p-datatable-wrapper {
+    overflow-x: auto;
+}
+::ng-deep .theading-nowrap table thead tr>th{
+    overflow: hidden;
+    white-space: nowrap;
+}

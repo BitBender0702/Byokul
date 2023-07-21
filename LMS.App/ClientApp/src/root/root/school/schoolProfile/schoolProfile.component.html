@@ -96,7 +96,7 @@
               <div
                 class="d-flex align-items-start align-items-xxl-center flex-lg-column flex-xxl-row gap-2"
               >
-                <div class="followers_name d-inline-block font_16">
+                <div class="followers_name d-inline-block font_16 mr-_24">
                   <img src="../../../../assets/images/followers.svg" />
                   {{ "Followers" | translate }}:
                   <b class="fw_700"
@@ -111,7 +111,7 @@
                     ></b
                   >
                 </div>
-                <div class="followers_name d-inline-block font_16">
+                <div class="followers_name d-inline-block font_16 mr-_24">
                   <img src="../../../../assets/images/students-icon.svg" />
                   {{ "Students" | translate }}:
                   <b class="fw_700"
@@ -126,17 +126,16 @@
                     ></b
                   >
                 </div>
-                <div class="followers_name d-inline-block font_16">
+                <div class="followers_name d-inline-block font_16 mr-_24">
                   <img src="../../../../assets/images/Edit-dark.svg" />
                   {{ "Post" | translate }}:
                   <b class="fw_700">{{ school.posts.length }}</b>
                 </div>
-              </div>
-              <button
+                <button
                 *ngIf="!isOwner && !isFollowed"
                 (click)="followSchool(school.schoolId, 'Follow',school)"
                 type="button"
-                class="btn orange-button"
+                class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn follow-btn"
               >
                 {{ "Follow" | translate }}
               </button>
@@ -144,18 +143,21 @@
                 *ngIf="!isOwner && isFollowed"
                 (click)="followSchool(school.schoolId, 'UnFollow',school)"
                 type="button"
-                class="btn orange-button"
+                class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn follow-btn"
               >
                 {{ "UnFollow" | translate }}
               </button>
               <button
-                *ngIf="!isOwner"
-                type="button"
-                (click)="schoolChat(school.createdById, '3', school.schoolId)"
-                class="btn orange-button"
-              >
-                {{ "MessageSchool" | translate }}
-              </button>
+              *ngIf="!isOwner"
+              type="button"
+              (click)="schoolChat(school.createdById, '3', school.schoolId)"
+              class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn me-0"
+            >
+              {{ "MessageSchool" | translate }}
+            </button>
+              </div>
+              
+              
               <div class="d-flex align-items-center gap-3">
                 <button
                   *ngIf="isOwner || hasUpdateSchoolPermission"
