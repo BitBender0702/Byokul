@@ -348,6 +348,8 @@ namespace LMS.App.Controllers
         [HttpPost]
         public async Task<IActionResult> SaveUserCertificates(SaveUserCertificateViewModel model)
         {
+            var userId = await GetUserIdAsync(this._userManager);
+            model.UserId = userId;
             await _userService.SaveUserCertificates(model);
             return Ok();
         }
@@ -377,7 +379,21 @@ namespace LMS.App.Controllers
             return Ok(response);
         }
 
+        [Route("getMyFeedSliderReels")]
+        [HttpGet]
+        public async Task<IActionResult> GetMyFeedSliderReels(string userId, Guid postId, ScrollTypesEnum scrollType)
+        {
+            var response = await _userService.GetMyFeedSliderReels(userId, postId, scrollType);
+            return Ok(response);
+        }
 
+        [Route("getGlobalFeedSliderReels")]
+        [HttpGet]
+        public async Task<IActionResult> GetGlobalFeedSliderReels(string userId, Guid postId, ScrollTypesEnum scrollType)
+        {
+            var response = await _userService.GetGlobalFeedSliderReels(userId, postId, scrollType);
+            return Ok(response);
+        }
 
     }
 }

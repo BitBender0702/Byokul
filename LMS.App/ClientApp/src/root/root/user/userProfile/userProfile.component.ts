@@ -94,6 +94,7 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
     editUser:any;
     editUserForm!:FormGroup;
     languageForm!:FormGroup;
+    userCertificateForm!:FormGroup;
     updateUserDetails!:EditUserModel;
     isOwner!:boolean;
     followUnfollowUser!: FollowUnfollow;
@@ -133,6 +134,7 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
     @ViewChild('videoPlayer') videoPlayer!: ElementRef;
     @ViewChild('createPostModal', { static: true }) createPostModal!: CreatePostComponent;
     @ViewChild('dateOfBirth') dateOfBirthRef!: ElementRef;
+    @ViewChild('issuedDate') issuedDateRef!: ElementRef;
     uploadImage!:any;
     fileToUpload= new FormData();
     translate!: TranslateService;
@@ -207,8 +209,12 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
     userCertificate!: AddUserCertificate;
     certificateForm!: FormGroup;
     certificateToUpload = new FormData();
+    userCertificateInfo:any;
     @ViewChild('closeCertificateModal') closeCertificateModal!: ElementRef;
+
     @ViewChild('hiddenButton') hiddenButtonRef!: ElementRef;
+    @ViewChild('openUserOwnCertificate') openUserOwnCertificate!: ElementRef;
+
     isBanFollower!:boolean;
 
 
@@ -465,6 +471,14 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
 
       this.certificateForm = this.fb.group({
         certificates: this.fb.control([], [Validators.required]),
+      });
+
+      this.userCertificateForm = this.fb.group({
+        certificateName: this.fb.control('', [Validators.required]),
+        provider: this.fb.control('', [Validators.required]),
+        issuedDate: this.fb.control(new Date().toISOString().substring(0, 10), [Validators.required]),
+        description: this.fb.control(''),
+        certificateId: this.fb.control(''),
       });
      
     }
@@ -888,6 +902,7 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
   handleImageInput(event: any) {
     this.disableSaveButton = true;
     this.fileToUpload.append("avatarImage", event.target.files[0], event.target.files[0].name);
+    this.cd.detectChanges();
     const reader = new FileReader();
     reader.onload = (_event) => { 
         this.uploadImage = _event.target?.result; 
@@ -1667,6 +1682,14 @@ getSelectedLanguage(){
   dateOfBirthElement._flatpickr.set("locale", locale); 
 }
 
+getSelectedLanguageForCertificate(){
+  var selectedLanguage = localStorage.getItem("selectedLanguage");
+  this.translate.use(selectedLanguage ?? '');
+  var locale = selectedLanguage == "ar" ? Arabic: selectedLanguage == "sp"? Spanish : selectedLanguage == "tr"? Turkish : null
+  const issuedDateElement = this.issuedDateRef.nativeElement;
+  issuedDateElement._flatpickr.set("locale", locale); 
+}
+
 getCityByCountry(event:any){
   debugger
   var countryName = event.value;
@@ -1726,6 +1749,21 @@ getDeletedCertificate(deletedCertificate: string) {
 resetCertificateModal() {
   this.isSubmitted = false;
   this.userCertificate.certificates = [];
+  this.uploadImage = null;
+  this.userCertificateForm = this.fb.group({
+    certificateName: this.fb.control('', [Validators.required]),
+    provider: this.fb.control('', [Validators.required]),
+    issuedDate: this.fb.control(new Date().toISOString().substring(0, 10), [Validators.required]),
+    description: this.fb.control(''),
+    certificateId: this.fb.control(''),
+  });
+  this.certificateToUpload.set('certificateImage','');
+  flatpickr('#issuedDate',{
+    minDate:"1903-12-31",
+    maxDate:new Date(),
+    dateFormat: "m/d/Y",
+    defaultDate: new Date()
+    });
 }
 
 handleCertificates(event: any) {
@@ -1839,6 +1877,128 @@ private checkScreenSize() {
  this.isScreenPc = screenWidth >= 992;
  this.isScreenTablet = screenWidth >= 768 && screenWidth < 992;
  this.isScreenMobile = screenWidth < 768;
+}
+
+uploadImageName:string = "";
+avatarImage!:any;
+handleUserCertificate(event: any) {
+  debugger
+  this.certificateToUpload.append("certificateImage", event.target.files[0], event.target.files[0].name);
+  this.uploadImageName = event.target.files[0].name;
+  const reader = new FileReader();
+  reader.onload = (_event) => { 
+      this.uploadImage = _event.target?.result; 
+      this.uploadImage = this.domSanitizer.bypassSecurityTrustUrl(this.uploadImage);
+  }
+  reader.readAsDataURL(event.target.files[0]); 
+  this.avatarImage = this.fileToUpload.get('avatarImage');
+
+}
+
+removeUploadCertificateImage(){
+  this.uploadImage = null;
+  this.certificateToUpload.set('certificateImage','');
+  this.avatarImage = undefined;
+  this.uploadImageName = "";
+
+}
+
+initializeCertificateForm(){
+  this.userCertificateForm = this.fb.group({
+    certificateName: this.fb.control('', [Validators.required]),
+    provider: this.fb.control('', [Validators.required]),
+    issuedDate: this.fb.control(new Date().toISOString().substring(0, 10), [Validators.required]),
+    description: this.fb.control(''),
+    certificateId: this.fb.control(''),
+  });
+}
+
+saveUsercertificcate(){
+  debugger
+  this.isSubmitted = true;
+    if (!this.userCertificateForm.valid) {
+      return;
+    }
+
+    if(this.uploadImage == null){
+      return;
+    }
+
+  this.loadingIcon = true;
+  var formValue =this.userCertificateForm.value;
+
+//here we will add if id has
+if(formValue.certificateId != ""){
+  this.certificateToUpload.append('certificateId', formValue.certificateId);
+}
+
+  if(typeof this.uploadImage == "string"){
+    this.certificateToUpload.append('certificateUrl', this.uploadImage);
+  }
+  this.certificateToUpload.append('certificateName', formValue.certificateName);
+  this.certificateToUpload.append('provider', formValue.provider);
+  this.certificateToUpload.append('issuedDate', formValue.issuedDate);
+  this.certificateToUpload.append('description', formValue.description);
+
+  // this.userCertificateForm.updateValueAndValidity();
+
+  this._userService.saveUserCertificates(this.certificateToUpload).subscribe((response:any) => {
+    debugger
+    this.closeCertificatesModal();
+    this.isSubmitted = false;
+    this.certificateToUpload = new FormData();
+    this.userCertificate.certificates = [];
+    // this.certificateToUpload.set('certificateImage', '');
+    if(formValue.certificateId != ""){
+      var translatedSummary = this.translateService.instant('Success');
+      var translatedMessage = this.translateService.instant('CertificateUpdatedSuccessfully');   
+    }
+    else{
+    var translatedSummary = this.translateService.instant('Success');
+    var translatedMessage = this.translateService.instant('CertificateAddedSuccessfully');   
+   }
+    this.messageService.add({
+      severity: 'success',
+      summary: translatedSummary,
+      life: 3000,
+      detail: translatedMessage,
+    });
+    this.ngOnInit();
+});
+
+}
+
+openUserOwnCertificateModal(certificateInfo:any){
+  debugger
+  this.certificateToUpload.set('certificateImage','');
+  this.userCertificateInfo = certificateInfo;
+  this.openUserOwnCertificate.nativeElement.click();
+  this.cd.detectChanges();
+}
+
+editUserCertificate(userCertificateInfo:any){
+  debugger
+  // dob = dob.substring(0, dob.indexOf('T'));     
+
+    var issuedDate = userCertificateInfo.issuedDate.substring(0, userCertificateInfo.issuedDate.indexOf('T'));     
+    issuedDate = this.datePipe.transform(issuedDate, 'MM/dd/yyyy');
+
+  flatpickr('#issuedDate',{
+    minDate:"1903-12-31",
+    maxDate:new Date(),
+    dateFormat: "m/d/Y",
+    defaultDate: issuedDate
+    });
+
+    this.userCertificateForm = this.fb.group({
+    certificateName: this.fb.control(userCertificateInfo.certificateName, [Validators.required]),
+    provider: this.fb.control(userCertificateInfo.provider, [Validators.required]),
+    issuedDate: this.fb.control(issuedDate, [Validators.required]),
+    description: this.fb.control(userCertificateInfo.description),
+    certificateId: this.fb.control(userCertificateInfo.id)
+  });
+
+  this.uploadImage = userCertificateInfo.certificateUrl;
 }
 
 }

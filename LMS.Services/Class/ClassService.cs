@@ -576,22 +576,41 @@ namespace LMS.Services
         public async Task<IEnumerable<PostDetailsViewModel>> GetSliderReelsByClassId(Guid classId, string loginUserId, Guid lastPostId, ScrollTypesEnum scrollType)
         {
             var requiredResults = new List<Post>();
-            var courseList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == classId && x.PostType == (int)PostTypeEnum.Reel && x.IsPostSchedule != true).OrderByDescending(x => x.IsPinned).ThenByDescending(x => x.CreatedOn).ToListAsync();
+            var reelList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == classId && x.PostType == (int)PostTypeEnum.Reel && x.IsPostSchedule != true).OrderByDescending(x => x.IsPinned).ThenByDescending(x => x.CreatedOn).ToListAsync();
 
-            if (scrollType == ScrollTypesEnum.Down)
+            if (scrollType == ScrollTypesEnum.None)
             {
-                requiredResults = courseList.SkipWhile(x => x.Id != lastPostId).Skip(1).Take(3).ToList();
+
+                var attachment = _postAttachmentRepository.GetById(lastPostId);
+                int index = reelList.FindIndex(x => x.Id == attachment.PostId);
+                int startIndex = Math.Max(0, index - 3);
+                int totalItems = 7;
+                requiredResults = reelList.GetRange(startIndex, Math.Min(totalItems, reelList.Count - startIndex));
+
 
             }
-            else
+            if (scrollType == ScrollTypesEnum.Down)
             {
-                requiredResults = courseList.TakeWhile(x => x.Id != lastPostId).Reverse().Take(3).Reverse().ToList();
+                requiredResults = reelList.SkipWhile(x => x.Id != lastPostId).Skip(1).Take(3).ToList();
+
+            }
+            if (scrollType == ScrollTypesEnum.Up)
+            {
+                requiredResults = reelList.TakeWhile(x => x.Id != lastPostId).Reverse().Take(3).Reverse().ToList();
 
             }
             var result = _mapper.Map<List<PostDetailsViewModel>>(requiredResults);
 
             foreach (var post in result)
             {
+
+                if (post.PostAuthorType == (int)PostAuthorTypeEnum.Class)
+                {
+                    var classes = _classRepository.GetById(post.ParentId);
+                    post.ParentName = classes.ClassName;
+                    post.ParentImageUrl = classes.Avatar;
+                }
+
                 post.PostAttachments = await GetAttachmentsByPostId(post.Id);
                 post.Likes = await _userService.GetLikesOnPost(post.Id);
                 post.Views = await _userService.GetViewsOnPost(post.Id);

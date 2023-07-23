@@ -51,22 +51,23 @@ namespace LMS.Services.Blob
             try
             {
 
-                if (asset.ContentType == "video/mp4" || asset.ContentType == "video/webm" || asset.ContentType == "video/ogg" || asset.ContentType == " video/mpeg") {
+                //if (asset.ContentType == "video/mp4" || asset.ContentType == "video/webm" || asset.ContentType == "video/ogg" || asset.ContentType == " video/mpeg") {
 
-                    // get byte array
-                    using (var memoryStream = new MemoryStream())
-                    {
-                        await asset.CopyToAsync(memoryStream);
-                        byteArray = memoryStream.ToArray();
-                    }
+                //    // get byte array
+                //    using (var memoryStream = new MemoryStream())
+                //    {
+                //        await asset.CopyToAsync(memoryStream);
+                //        byteArray = memoryStream.ToArray();
+                //    }
 
-                    streamResult = await _commonService.CompressVideo(asset.FileName, byteArray);
-                }
-                else
-                {
-                    streamResult = asset.OpenReadStream();
-                }
+                //    streamResult = await _commonService.CompressVideo(asset.FileName, byteArray);
+                //}
+                //else
+                //{
+                //    streamResult = asset.OpenReadStream();
+                //}
 
+                streamResult = asset.OpenReadStream();
                 var serviceClient = new BlobServiceClient("DefaultEndpointsProtocol=https;AccountName=byokulstorage;AccountKey=exYHA69x6yj0g9ET7+0ODXjs1zPYtqAqCkiwUuT7ocLG3qQOFhWKEn9Q+oS6EC6qcT+AJM+Cj8KR+ASt+3Lu5Q==;EndpointSuffix=core.windows.net");
                 var containerClient = serviceClient.GetBlobContainerClient(containerName);
 

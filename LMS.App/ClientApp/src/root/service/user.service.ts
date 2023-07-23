@@ -175,6 +175,12 @@ export class UserService{
     }
 
     saveUserCertificates(addCertificates:any):Observable<any>{
+        debugger
+        for(var pair in addCertificates.entries())
+        {
+            console.log(pair[0]);
+            console.log(pair[1]);
+        }
         return this.http.post(`${this.apiUrl}/users/saveUserCertificates`,addCertificates,{headers: this.headers});
     }
 
@@ -195,4 +201,17 @@ export class UserService{
         );
     }
 
+    getMyFeedSliderReels(userId:string,postId:string,scrollType:number){
+        debugger
+        let queryParams = new HttpParams().append("userId",userId).append("postId",postId).append("scrollType",scrollType);
+        return this.http.get(`${this.apiUrl}/users/getMyFeedSliderReels`, {params:queryParams,headers: this.headers}
+        );
+    }
+
+    getGlobalFeedSliderReels(userId:string,postId:string,scrollType:number){
+        debugger
+        let queryParams = new HttpParams().append("userId",userId).append("postId",postId).append("scrollType",scrollType);
+        return this.http.get(`${this.apiUrl}/users/getGlobalFeedSliderReels`, {params:queryParams,headers: this.headers}
+        );
+    }
 }

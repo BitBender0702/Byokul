@@ -1021,7 +1021,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     }
 
     openReelsViewModal(postAttachmentId:string): void {
-      this.router.navigateByUrl(`user/reelsView/${this.course.courseId}/course`);
+      this.router.navigateByUrl(`user/reelsView/${this.course.courseId}/course/${postAttachmentId}`);
       // const initialState = {
       //   postAttachmentId: postAttachmentId
       // };

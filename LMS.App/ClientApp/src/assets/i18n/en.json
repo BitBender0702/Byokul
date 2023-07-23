@@ -495,7 +495,16 @@
   "InValidEmail": "Email is invalid",
   "SchoolUpdatedsuccessfully":"School updated successfully",
   "ClassUpdatedsuccessfully":"Class updated successfully",
-  "CourseUpdatedsuccessfully":"Course updated successfully"
+  "CourseUpdatedsuccessfully":"Course updated successfully",
+  "CertificateNameRequired": "Certificate name is required",
+  "ProviderNameRequired": "Provider name is required",
+  "IssuedDateRequired": "Issued date is required",
+  "CertificateImageRequired": "CertificateImageRequired",
+  "Certificate": "Certificate",
+  "CertificateName": "Certificate Name",
+  "ProviderName": "Provider Name",
+  "IssuedDate": "Issued Date",
+  "CertificateUpdatedSuccessfully": "Certificate updated successfully"
 
 
 }

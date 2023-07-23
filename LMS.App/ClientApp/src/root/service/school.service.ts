@@ -183,4 +183,11 @@ export class SchoolService{
         );
     }
 
+    GetSliderReelsBySchoolId(schoolId:string,postId:string,scrollType:number){
+        debugger
+        let queryParams = new HttpParams().append("schoolId",schoolId).append("postId",postId).append("scrollType",scrollType);
+        return this.http.get(`${this.apiUrl}/school/getSliderReelsBySchoolId`, {params:queryParams,headers: this.headers}
+        );
+    }
+
 }

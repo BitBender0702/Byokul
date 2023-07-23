@@ -1,224 +1,4 @@
-<!-- <div *ngIf="reels != undefined">
-  <div class="mobile-reel-slider">
-<article>
-  <div class="slider vertical-slider">
-    <div class="slick">
-      <div class="item" *ngFor="let item of reels">
-	  <div class="f-poppins">
-      <div class="live-content" id="reel_content">
-        <div class="live-inner w-100 reel_mobile">
-          <div class="live-image overflow-hidden position-relative">
-			<div class="reel_videoinner">
-            <video controls *ngFor="let video of item.postAttachments" #videoPlayer (click)="toggleVideoPlayback(videoPlayer)">
-				<source [src]="video.fileUrl" type="video/mp4">
-			</video>
-			</div>
-			 <div class="reel-username font_16 white_text d-flex">
-                <img [src]="item.parentImageUrl" class="me-2"/> {{item.parentName}}
-            </div>
-            <div class="live-bottom-text p-3" style="height: 100px;">
-              <h5 class="font_14 mb-0 fw_600 text_sec1">{{item.title}} <span
-                  class="font_14 fw_400  ms-3">{{item.description}}</span></h5>
-            </div>
-			 <div class="live-action-buttons d-flex justify-content-between">
-            <button type="button" class="btn bg-transparent text_ltgray font_12 active"><img src="../../../assets/images/chat-icon.svg"
-                class="d-block" /> 34</button>
-            <button type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/eye.svg"
-                class="d-block" /> 954</button>
-            <button type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Heart-dark.svg"
-                class="d-block" /> 82</button>
-            <button type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Bookmark.svg"
-                class="d-block" /> 34</button>
-            <button type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Upload.svg"
-                class="d-block" /> 34</button>
-          </div>
-          </div>
-         
-        </div>
-      </div>
-  </div></div>
-      <div class="item">
-	  <div class="f-poppins">
-      <div class="live-content" id="reel_content">
-        <div class="live-inner w-100 reel_mobile">
-          <div class="live-image overflow-hidden position-relative">
-			<div class="reel_videoinner">
-             <video controls>
-				<source src="https://byokulstorage.blob.core.windows.net/posts/d22e23a8-d5af-4d9c-90f5-1d1bddb39f51movie.mp4" type="video/mp4">
-			</video>
-			</div>
-			 <div class="reel-username font_16 white_text">
-                <img src="images/reel-user-logo.jpg" class="me-2"/> Name
-            </div>
-            <div class="live-bottom-text p-3">
-              <h5 class="font_14 mb-0 fw_600 text_sec1">Python programming course <span
-                  class="font_14 fw_400  ms-3">Lecture One - Introduction and basics in Python</span></h5>
-            </div>
-            <div class="live-action-buttons d-flex justify-content-between">
-                <button type="button" class="btn bg-transparent text_ltgray font_12 active"><img src="../../../assets/images/chat-icon.svg"
-                    class="d-block" /> 34</button>
-                <button type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/eye.svg"
-                    class="d-block" /> 954</button>
-                <button type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Heart-dark.svg"
-                    class="d-block" /> 82</button>
-                <button type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Bookmark.svg"
-                    class="d-block" /> 34</button>
-                <button type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Upload.svg"
-                    class="d-block" /> 34</button>
-              </div>
-          </div>
-         
-        </div>
-      </div>
-  </div></div>
-      <div class="item"><div class="f-poppins">
-      <div class="live-content" id="reel_content">
-        <div class="live-inner w-100 reel_mobile">
-          <div class="live-image overflow-hidden position-relative">
-			<div class="reel_videoinner">
-             <video controls>
-				<source src="https://byokulstorage.blob.core.windows.net/posts/d22e23a8-d5af-4d9c-90f5-1d1bddb39f51movie.mp4" type="video/mp4">
-			</video>
-			</div>
-			 <div class="reel-username font_16 white_text">
-                <img src="images/reel-user-logo.jpg" class="me-2"/> Name
-            </div>
-            <div class="live-bottom-text p-3">
-              <h5 class="font_14 mb-0 fw_600 text_sec1">Python programming course <span
-                  class="font_14 fw_400  ms-3">Lecture One - Introduction and basics in Python</span></h5>
-            </div>
-            <div class="live-action-buttons d-flex justify-content-between">
-                <button type="button" class="btn bg-transparent text_ltgray font_12 active"><img src="../../../assets/images/chat-icon.svg"
-                    class="d-block" /> 34</button>
-                <button type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/eye.svg"
-                    class="d-block" /> 954</button>
-                <button type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Heart-dark.svg"
-                    class="d-block" /> 82</button>
-                <button type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Bookmark.svg"
-                    class="d-block" /> 34</button>
-                <button type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Upload.svg"
-                    class="d-block" /> 34</button>
-              </div>
-          </div>
-         
-        </div>
-      </div>
-  </div></div>
-      <div class="item"><div class="f-poppins">
-      <div class="live-content" id="reel_content">
-        <div class="live-inner w-100 reel_mobile">
-          <div class="live-image overflow-hidden position-relative">
-			<div class="reel_videoinner">
-             <video controls>
-				<source src="https://byokulstorage.blob.core.windows.net/posts/d22e23a8-d5af-4d9c-90f5-1d1bddb39f51movie.mp4" type="video/mp4">
-			</video>
-			</div>
-			 <div class="reel-username font_16 white_text">
-                <img src="images/reel-user-logo.jpg" class="me-2"/> Name
-            </div>
-            <div class="live-bottom-text p-3">
-              <h5 class="font_14 mb-0 fw_600 text_sec1">Python programming course <span
-                  class="font_14 fw_400  ms-3">Lecture One - Introduction and basics in Python</span></h5>
-            </div>
-            <div class="live-action-buttons d-flex justify-content-between">
-                <button type="button" class="btn bg-transparent text_ltgray font_12 active"><img src="../../../assets/images/chat-icon.svg"
-                    class="d-block" /> 34</button>
-                <button type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/eye.svg"
-                    class="d-block" /> 954</button>
-                <button type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Heart-dark.svg"
-                    class="d-block" /> 82</button>
-                <button type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Bookmark.svg"
-                    class="d-block" /> 34</button>
-                <button type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Upload.svg"
-                    class="d-block" /> 34</button>
-              </div>
-          </div>
-         
-        </div>
-      </div>
-  </div></div>
-      <div class="item"><div class="f-poppins">
-      <div class="live-content" id="reel_content">
-        <div class="live-inner w-100 reel_mobile">
-          <div class="live-image overflow-hidden position-relative">
-			<div class="reel_videoinner">
-             <video controls>
-				<source src="https://byokulstorage.blob.core.windows.net/posts/d22e23a8-d5af-4d9c-90f5-1d1bddb39f51movie.mp4" type="video/mp4">
-			</video>
-			</div>
-			 <div class="reel-username font_16 white_text">
-                <img src="images/reel-user-logo.jpg" class="me-2"/> Name
-            </div>
-            <div class="live-bottom-text p-3">
-              <h5 class="font_14 mb-0 fw_600 text_sec1">Python programming course <span
-                  class="font_14 fw_400  ms-3">Lecture One - Introduction and basics in Python</span></h5>
-            </div>
-            <div class="live-action-buttons d-flex justify-content-between">
-                <button type="button" class="btn bg-transparent text_ltgray font_12 active"><img src="../../../assets/images/chat-icon.svg"
-                    class="d-block" /> 34</button>
-                <button type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/eye.svg"
-                    class="d-block" /> 954</button>
-                <button type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Heart-dark.svg"
-                    class="d-block" /> 82</button>
-                <button type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Bookmark.svg"
-                    class="d-block" /> 34</button>
-                <button type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Upload.svg"
-                    class="d-block" /> 34</button>
-              </div>
-          </div>
-         
-        </div>
-      </div>
-  </div></div>
-    </div>
-  </div>
-</article>
-  </div>
-</div> -->
-
-<!-- <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
-
-  
-  
-
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="js/slick.js"></script>
-
-
-
-  <script>
-
-    $(document).ready(function () {
-      $("#reel_content").addClass("full-widthreel");   
-      $.fn.size = function () {
-        return this.length;
-      }
-
-      $("#live-chat").click(function () {
-        $("#live-chat-open").toggle();
-        if ($('#live-chat-open:visible').size() != 0) {
-
-          $(this).addClass('cl-livechat');
-          $("#reel_content").removeClass("full-widthreel");   
-        }
-        else {
-          $(this).removeClass('cl-livechat');
-          $("#reel_content").addClass("full-widthreel");   
-        }
-      });
-    });
-  </script>
-
-<script>
-$('.slick', '.vertical-slider').slick({
-  vertical: true,
-  verticalSwiping: true,
-  slidesToShow: 1,
-  slidesToScroll: 1
-});
-</script>
-  -->
+<!-- 
   <section class="f-poppins">
     <div class="main_content">
       <div class="main_content-max-width">
@@ -284,7 +64,7 @@ $('.slick', '.vertical-slider').slick({
   </div>
   </div>
   </section>
-
+ -->
 
   <div
   class="modal fade edit-school-modal delete-modal"
@@ -332,11 +112,7 @@ $('.slick', '.vertical-slider').slick({
             <div><p (click)="hideCommentModal()" [routerLink]="['/user/userProfile',item.userId]" class="d-flex flex-column cursorPointer" class="font_12 fw_600 text-start mb-0">{{item.userName}}</p>
               <p class="text_sec1 font_12 fw_400 text-start mb-0">{{item.content}}</p>
             </div>
-            <!-- <button (click)="likeUnlikeComments(item.id,true,item.isCommentLikedByCurrentUser,item.likeCount)" type="button" class="btn bg-transparent text_ltgray font_12 p-0 border-0 reel-like-chat">
-              <img *ngIf="item.isCommentLikedByCurrentUser" src="../../../assets/images/heart-red.svg" class="d-block" />
-              <img *ngIf="!item.isCommentLikedByCurrentUser" src="../../../assets/images/Heart-dark.svg" class="d-block" />
-              <span>{{item.likeCount}}</span>
-            </button> -->
+
           </div>
         </div>
           <div *ngIf="!isCommentsDisabled" class="add-comment d-flex align-items-center justify-content-between"  style="margin-left:-40px">
@@ -354,6 +130,86 @@ $('.slick', '.vertical-slider').slick({
   </div>
 </div>
 
+
+
+// here is from new
+
+<section class="f-poppins">
+  <div class="main_content">
+    <div class="main_content-max-width">
+      <div
+        class="live-header d-flex align-items-center justify-content-between"
+      >
+        <button style="position:fixed;"
+          (click)="back()"
+          type="button"
+          class="back-button bg-transparent border-0 font_16 fw_400 text_dark cursorPointer"
+        >
+          <img src="../../../assets/images/arrow-left.svg" />
+          {{ "Back" | translate }}
+        </button>
+      </div>
+
+      <div>
+        <div class="slick">
+<ngx-slick-carousel
+  class="carousel"
+  [config]="carouselConfig"
+  (afterChange)="afterChange($event)"
+  (beforeChange)="beforeChange($event)"
+  >
+  <div
+    ngxSlickItem
+    *ngFor="let item of reels; let i = index"
+  >
+  <div class="f-poppins" [ngStyle]="!isMobileView ? {'width': '50%','margin-left': '300px'} : {'width': '100%'}">
+    <div class="live-content" id="reel_content">
+      <div class="live-inner w-100 reel_mobile">
+        <div class="live-image overflow-hidden position-relative">
+          <div class="reel_videoinner">
+            <video [id]="'video-' + i" controls *ngFor="let video of item.postAttachments" loop [src]="video.fileUrl"  type="video/mp4" (click)="toggleVideoPlayback($event)"></video>
+          </div>
+          <div class="reel-username font_16 white_text d-flex">
+            <img [src]="item.parentImageUrl" class="me-2" /> {{item.parentName}}
+          </div>
+          <div class="live-bottom-text p-3" style="height: 100px;">
+            <h5 class="font_14 mb-0 fw_600 text_sec1">{{item.title}} <span class="font_14 fw_400  ms-3">{{item.description}}</span></h5>
+          </div>
+          <div class="live-action-buttons d-flex justify-content-between">
+            <button type="button" class="btn bg-transparent text_ltgray font_12 cursor_auto" data-bs-toggle="modal"
+            data-bs-target="#comments-modal" (click)="openCommentsSection(item)"><img src="../../../assets/images/chat-icon.svg"
+              class="d-block" /> {{item.commentsCount}}</button>
+          <button type="button" class="btn bg-transparent text_ltgray font_12 cursor_auto"><img src="../../../assets/images/eye.svg"
+              class="d-block" /> {{item.views?.length}}</button>
+            <button (click)="likeUnlikePosts(item.id,true,item.postType,item)" type="button" class="btn bg-transparent text_ltgray font_12">
+              <img *ngIf="item.isPostLikedByCurrentUser" src="../../../assets/images/heart-red.svg" class="d-block" />
+              <img *ngIf="!item.isPostLikedByCurrentUser" src="../../../assets/images/Heart-dark.svg" class="d-block" />
+
+              <span *ngIf="likesLength != undefined && currentLikedPostId== item.id">{{likesLength}}</span>
+              <span *ngIf="currentLikedPostId!= item.id">{{item.likes.length}}</span>
+            </button>
+            <button (click)="saveReel(item.id,item)" type="button" class="btn bg-transparent text_ltgray font_12">
+              <img *ngIf="!item.isPostSavedByCurrentUser" src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto" />
+              <img *ngIf="item.isPostSavedByCurrentUser" src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto">
+                {{item.savedPostsCount}}
+            </button>
+            <button (click)="openSharePostModal(item, item.postType,item.title,item.description)" type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Upload.svg"
+              class="d-block" /> {{item.postSharedCount}}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+</ngx-slick-carousel>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- <button (click)="addSlide()">Add</button> -->
   <p-toast></p-toast>
+  <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
+
 
   

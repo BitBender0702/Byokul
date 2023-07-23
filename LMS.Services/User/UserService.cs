@@ -684,7 +684,7 @@ namespace LMS.Services
                 requiredResults = reelList.SkipWhile(x => x.Id != lastPostId).Skip(1).Take(3).ToList();
 
             }
-            if(scrollType == ScrollTypesEnum.Up)
+            if (scrollType == ScrollTypesEnum.Up)
             {
                 requiredResults = reelList.TakeWhile(x => x.Id != lastPostId).Reverse().Take(3).Reverse().ToList();
 
@@ -862,12 +862,12 @@ namespace LMS.Services
 
             if (tokenList.Count() != 0)
             {
-                var PostGUIDScore = await GenericCompareAlgo(String.Join(" ", tokenList), postType, pageNumber, pageSize);
-                return await GetFeedResult(PostGUIDScore, userId, postType, pageNumber, pageSize, searchString);
+                var PostGUIDScore = await GenericCompareAlgo(String.Join(" ", tokenList), postType);
+                return await GetFeedResult(PostGUIDScore, userId, postType, pageNumber, pageSize, searchString, null, null);
             }
             else
             {
-                return await GetDefaultFeeds(userId, postType, pageNumber, pageSize, searchString);
+                return await GetDefaultFeeds(userId, postType, pageNumber, pageSize, searchString,null, null);
             }
 
         }
@@ -993,7 +993,7 @@ namespace LMS.Services
         }
 
 
-        async Task<Dictionary<Guid, double>> GenericCompareAlgo(string tokenList, PostTypeEnum postType, int pageNumber, int pageSize)
+        async Task<Dictionary<Guid, double>> GenericCompareAlgo(string tokenList, PostTypeEnum postType)
         {
             double averageScore = 0;
             var DBPostTokens = new List<string>();
@@ -1059,12 +1059,55 @@ namespace LMS.Services
 
         }
 
-        async Task<List<GlobalFeedViewModel>> GetFeedResult(Dictionary<Guid, double> postGUIDScore, string loginUserId, PostTypeEnum postType, int pageNumber, int pageSize, string? searchString)
+        async Task<List<GlobalFeedViewModel>> GetFeedResult(Dictionary<Guid, double> postGUIDScore, string loginUserId, PostTypeEnum postType, int pageNumber, int pageSize, string? searchString, Guid? lastPostId, ScrollTypesEnum? scrollType)
         {
             bool IsPostLikedByCurrentUser;
             var response = new List<GlobalFeedViewModel>();
+            Guid[] requiredPostIds = null;
 
-            var requiredPostIds = postGUIDScore.Keys.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToArray();
+            if (lastPostId != null)
+            {
+                if (scrollType == ScrollTypesEnum.None)
+                {
+
+                    var attachment = _postAttachmentRepository.GetById(lastPostId);
+                    ////int index = postGUIDScore.FindIndex(x => x.Id == attachment.PostId);
+                    ////int startIndex = Math.Max(0, index - 3);
+                    ////int totalItems = 7;
+                    //requiredPostIds = postGUIDScore.GetRange(startIndex, Math.Min(totalItems, postGUIDScore.Count - startIndex));
+
+
+
+
+                    // Find the index of lastPostId in the dictionary keys
+                    var keys = postGUIDScore.Keys.ToList();
+                    var index = keys.FindIndex(key => key == attachment.PostId);
+
+                    // Define the range parameters
+                    int startIndex = Math.Max(0, index - 3);
+                    int totalItems = 7;
+
+                    // Get the range of items from the dictionary
+                    requiredPostIds = keys.Skip(startIndex).Take(Math.Min(totalItems, keys.Count - startIndex)).ToArray();
+
+
+                }
+                if (scrollType == ScrollTypesEnum.Down)
+                {
+                    requiredPostIds = postGUIDScore.Keys.SkipWhile(x => x != lastPostId).Skip(1).Take(3).ToArray();
+
+                }
+                if (scrollType == ScrollTypesEnum.Up)
+                {
+                    requiredPostIds = postGUIDScore.Keys.TakeWhile(x => x != lastPostId).Reverse().Take(3).Reverse().ToArray();
+                }
+            }
+
+            else
+            {
+                requiredPostIds = postGUIDScore.Keys.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToArray();
+
+            }
             var postList = await _postRepositoryCustom.GetPostsByIds(requiredPostIds);
             var postAttachmentList = await _postAttachmentRepository.GetAll().ToListAsync();
             var postTagsList = await _postTagRepository.GetAll().ToListAsync();
@@ -1169,11 +1212,44 @@ namespace LMS.Services
             return response;
         }
 
-        async Task<List<GlobalFeedViewModel>> GetDefaultFeeds(string loginUserId, PostTypeEnum postType, int pageNumber, int pageSize, string? searchString)
+        async Task<List<GlobalFeedViewModel>> GetDefaultFeeds(string loginUserId, PostTypeEnum postType, int pageNumber, int pageSize, string? searchString, Guid? lastPostId, ScrollTypesEnum? scrollType)
         {
             bool IsPostLikedByCurrentUser;
             var response = new List<GlobalFeedViewModel>();
-            var postList = await _postRepository.GetAll().Where(x => x.PostType == (int)postType && ((string.IsNullOrEmpty(searchString)) || (x.Title.Contains(searchString)))).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            var postList = new List<Post>();
+
+            if (lastPostId != null)
+            {
+                if (scrollType == ScrollTypesEnum.None)
+                {
+
+                    var attachment = _postAttachmentRepository.GetById(lastPostId);
+                    var posts = await _postRepository.GetAll().Where(x => x.PostType == (int)PostTypeEnum.Reel).ToListAsync();
+                    int index = posts.FindIndex(x => x.Id == attachment.PostId);
+                    int startIndex = Math.Max(0, index - 3);
+                    int totalItems = 7;
+                    postList = posts.GetRange(startIndex, Math.Min(totalItems, posts.Count - startIndex));
+
+
+                }
+                if (scrollType == ScrollTypesEnum.Down)
+                {
+                    var posts = await _postRepository.GetAll().Where(x => x.PostType == (int)PostTypeEnum.Reel).ToListAsync();
+                    postList = posts.SkipWhile(x => x.Id != lastPostId).Skip(1).Take(3).ToList();
+
+                }
+                if (scrollType == ScrollTypesEnum.Up)
+                {
+                    var posts = await _postRepository.GetAll().Where(x => x.PostType == (int)PostTypeEnum.Reel).ToListAsync();
+                    postList = posts.TakeWhile(x => x.Id != lastPostId).Reverse().Take(3).Reverse().ToList();
+                }
+            }
+
+            else
+            {
+                postList = await _postRepository.GetAll().Where(x => x.PostType == (int)postType && ((string.IsNullOrEmpty(searchString)) || (x.Title.Contains(searchString)))).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+            }
             var postAttachmentList = await _postAttachmentRepository.GetAll().ToListAsync();
             var postTagsList = await _postTagRepository.GetAll().ToListAsync();
             var likesList = await _likeRepository.GetAll().ToListAsync();
@@ -1479,22 +1555,51 @@ namespace LMS.Services
 
         public async Task SaveUserCertificates(SaveUserCertificateViewModel userCertificates)
         {
+            string certificateUrl = "";
             string containerName = this._config.GetValue<string>("Container:SchoolContainer");
-
-            foreach (var certificate in userCertificates.Certificates)
+            var user = _userRepository.GetById(userCertificates.UserId);
+            if (userCertificates.CertificateUrl == null || (userCertificates.CertificateUrl != null && userCertificates.CertificateImage != null))
             {
-                string certificateUrl = await _blobService.UploadFileAsync(certificate, containerName, false);
+                certificateUrl = await _blobService.UploadFileAsync(userCertificates.CertificateImage, containerName, false);
 
-                string certificateName = certificate.FileName;
+            }
+            else
+            {
+                certificateUrl = userCertificates.CertificateUrl;
+            }
 
+            //string certificateName = userCertificates.CertificateImage.FileName;
+
+            if (userCertificates.CertificateId != null)
+            {
+                var editUserCertificate = _userCertificateRepository.GetById(userCertificates.CertificateId);
+                editUserCertificate.CertificateName = userCertificates.CertificateName;
+                editUserCertificate.Provider = userCertificates.Provider;
+                editUserCertificate.IssuedDate = userCertificates.IssuedDate;
+                editUserCertificate.CertificateUrl = certificateUrl;
+                editUserCertificate.Name = userCertificates.CertificateName;
+                editUserCertificate.UserId = userCertificates.UserId;
+                editUserCertificate.Description = userCertificates.Description;
+
+                _userCertificateRepository.Update(editUserCertificate);
+                _userCertificateRepository.Save();
+
+            }
+            else
+            {
                 var userCertificate = new UserCertificate
                 {
+                    CertificateName = userCertificates.CertificateName,
+                    Provider = userCertificates.Provider,
+                    IssuedDate = userCertificates.IssuedDate,
                     CertificateUrl = certificateUrl,
-                    Name = certificateName,
-                    UserId = userCertificates.UserId
+                    Name = userCertificates.CertificateName,
+                    UserId = userCertificates.UserId,
+                    Description = userCertificates.Description
                 };
                 _userCertificateRepository.Insert(userCertificate);
                 _userCertificateRepository.Save();
+
             }
 
         }
@@ -1503,8 +1608,18 @@ namespace LMS.Services
         {
             var userCertificate = await _userCertificateRepository.GetAll().Where(x => x.UserId == model.UserId && x.CertificateId == model.CertificateId).FirstOrDefaultAsync();
 
-            _userCertificateRepository.Delete(userCertificate.CertificateId);
-            _userCertificateRepository.Save();
+            if (userCertificate != null)
+            {
+                _userCertificateRepository.Delete(userCertificate.CertificateId);
+                _userCertificateRepository.Save();
+            }
+
+            var studentCertificate = await _studentCertificateRepository.GetAll().Where(x => x.Id == model.CertificateId).FirstOrDefaultAsync();
+            if (studentCertificate != null)
+            {
+                _studentCertificateRepository.Delete(studentCertificate.Id);
+                _studentCertificateRepository.Save();
+            }
 
         }
 
@@ -1517,6 +1632,151 @@ namespace LMS.Services
 
 
         }
+
+        public async Task<IEnumerable<PostDetailsViewModel>> GetMyFeedSliderReels(string userId, Guid lastPostId, ScrollTypesEnum scrollType)
+        {
+            var requiredResults = new List<Post>();
+            var myFeeds = new List<PostDetailsViewModel>();
+            var myData = await _userRepository.GetAll().Where(x => x.Id == userId).ToListAsync();
+            var mySchoolData = await _schoolRepository.GetAll().Where(x => x.CreatedById == userId).ToListAsync();
+            var myClassData = await _classRepository.GetAll().Include(x => x.School).Where(x => x.CreatedById == userId).ToListAsync();
+            var myCourseData = await _courseRepository.GetAll().Include(x => x.School).Where(x => x.CreatedById == userId).ToListAsync();
+
+
+            // feeds from schools user follow
+            var schoolFollowers = await _schoolFollowerRepository.GetAll()
+                .Include(x => x.User)
+                .Include(x => x.School)
+                .Where(x => x.UserId == userId).ToListAsync();
+
+            var userFollowersData = await _userFollowerRepository.GetAll().Include(x => x.User).Where(x => x.FollowerId == userId).ToListAsync();
+
+            var classStudentsData = await _classStudentRepository.GetAll()
+                .Include(x => x.Student)
+                .Include(x => x.Class)
+                .ThenInclude(x => x.School)
+                .Where(x => x.Student.UserId == userId).ToListAsync();
+
+            var courseStudentsData = await _courseStudentRepository.GetAll()
+                .Include(x => x.Student)
+                .Include(x => x.Course)
+                .ThenInclude(x => x.School)
+                .Where(x => x.Student.UserId == userId).ToListAsync();
+
+            var requiredIds = schoolFollowers.Select(x => new FeedConvertDTO { Id = x.SchoolId, ParentImageUrl = x.School.Avatar, ParentName = x.School.SchoolName, SchoolName = "" }).ToList();
+            var testData = userFollowersData.Where(p => p.UserId != string.Empty).Select(x => new FeedConvertDTO { Id = new Guid(x.UserId), ParentImageUrl = x.User.Avatar, ParentName = x.User.FirstName, SchoolName = "" }).ToList();
+            requiredIds.AddRange(testData);
+            requiredIds.AddRange(classStudentsData.Select(c => new FeedConvertDTO { Id = c.ClassId, ParentImageUrl = c.Class.Avatar, ParentName = c.Class.ClassName, SchoolName = c.Class.School.SchoolName }).ToList());
+            requiredIds.AddRange(courseStudentsData.Select(c => new FeedConvertDTO { Id = c.CourseId, ParentImageUrl = c.Course.Avatar, ParentName = c.Course.CourseName, SchoolName = c.Course.School.SchoolName }).ToList());
+
+            requiredIds.AddRange(myData.Select(c => new FeedConvertDTO { Id = new Guid(c.Id), ParentImageUrl = c.Avatar, ParentName = c.FirstName, SchoolName = "" }).ToList());
+
+            requiredIds.AddRange(mySchoolData.Select(c => new FeedConvertDTO { Id = c.SchoolId, ParentImageUrl = c.Avatar, ParentName = c.SchoolName, SchoolName = "" }).ToList());
+
+            requiredIds.AddRange(myClassData.Select(c => new FeedConvertDTO { Id = c.ClassId, ParentImageUrl = c.Avatar, ParentName = c.ClassName, SchoolName = c.School.SchoolName }).ToList());
+
+            requiredIds.AddRange(myCourseData.Select(c => new FeedConvertDTO { Id = c.CourseId, ParentImageUrl = c.Avatar, ParentName = c.CourseName, SchoolName = c.School.SchoolName }).ToList());
+
+
+            var postList = _postRepository.GetAll().Include(x => x.CreatedBy);
+            var test = requiredIds.Where(a => a.Id.HasValue).ToList();
+
+
+            if (scrollType == ScrollTypesEnum.None)
+            {
+
+                var postListData = postList.Include(p => p.CreatedBy).AsEnumerable().Where(x => test.Any(q => q.Id == x.ParentId) && x.PostType == (int)PostTypeEnum.Reel).OrderByDescending(x => x.CreatedOn).ToList();
+
+                var attachment = _postAttachmentRepository.GetById(lastPostId);
+                int index = postListData.FindIndex(x => x.Id == attachment.PostId);
+                int startIndex = Math.Max(0, index - 3);
+                int totalItems = 7;
+                requiredResults = postListData.GetRange(startIndex, Math.Min(totalItems, postListData.Count - startIndex));
+
+
+            }
+
+            if (scrollType == ScrollTypesEnum.Down)
+            {
+                requiredResults = postList.Include(p => p.CreatedBy).AsEnumerable().Where(x => test.Any(q => q.Id == x.ParentId) && x.PostType == (int)PostTypeEnum.Reel).OrderByDescending(x => x.CreatedOn).ToList().SkipWhile(x => x.Id != lastPostId).Skip(1).Take(3).ToList();
+
+            }
+            if (scrollType == ScrollTypesEnum.Up)
+            {
+                requiredResults = postList.Include(p => p.CreatedBy).AsEnumerable().Where(x => test.Any(q => q.Id == x.ParentId) && x.PostType == (int)PostTypeEnum.Reel).OrderByDescending(x => x.CreatedOn).ToList().TakeWhile(x => x.Id != lastPostId).Reverse().Take(3).Reverse().ToList();
+
+            }
+
+            //var postListData = postList.Include(p => p.CreatedBy).AsEnumerable().Where(x => test.Any(q => q.Id == x.ParentId) && x.PostType == (int)PostTypeEnum.Reel).OrderByDescending(x => x.CreatedOn).ToList();
+
+            var sharedPosts = await _userSharedPostRepository.GetAll().ToListAsync();
+            var savedPosts = await _savedPostRepository.GetAll().ToListAsync();
+
+
+            var resultData = _mapper.Map<List<PostDetailsViewModel>>(requiredResults);
+            foreach (var post in resultData)
+            {
+                var data = requiredIds.FirstOrDefault(x => x.Id == post.ParentId);
+                var attachment = await GetAttachmentsByPostId(post.Id);
+                post.PostAttachments = attachment;
+                post.ParentImageUrl = data.ParentImageUrl;
+                post.ParentName = data.ParentName;
+                post.Likes = await GetLikesOnPost(post.Id);
+                post.Views = await GetViewsOnPost(post.Id);
+                post.CommentsCount = await GetCommentsCountOnPost(post.Id);
+                post.PostSharedCount = sharedPosts.Where(x => x.PostId == post.Id).Count();
+                post.IsPostSavedByCurrentUser = savedPosts.Any(x => x.PostId == post.Id && x.UserId == userId);
+                post.SavedPostsCount = savedPosts.Where(x => x.PostId == post.Id && x.UserId == userId).Count();
+                post.ParentId = data.Id != null ? data.Id.Value : Guid.Empty;
+                post.SchoolName = data.SchoolName;
+                if (post.Likes.Any(x => x.UserId == userId && x.PostId == post.Id))
+                {
+                    post.IsPostLikedByCurrentUser = true;
+                }
+                else
+                {
+                    post.IsPostLikedByCurrentUser = false;
+                }
+            }
+
+            foreach (var post in resultData)
+            {
+                var tags = await GetTagsByPostId(post.Id);
+                post.PostTags = tags;
+            }
+
+            myFeeds.AddRange(resultData);
+            return myFeeds;
+        }
+
+        public async Task<IEnumerable<GlobalFeedViewModel>> GetGlobalFeedSliderReels(string userId, Guid lastReelId, ScrollTypesEnum scrollType)
+        {
+
+            var tokenList = new List<string>();
+            var result = await _userPreferenceRepository.GetAll().Where(x => x.UserId == userId).FirstOrDefaultAsync();
+
+            if (result != null)
+            {
+                tokenList = result.PreferenceTokens.Split(' ').ToList();
+
+            }
+            else
+            {
+                tokenList = await GetDefaultGlobalfeeds(userId);
+            }
+
+            if (tokenList.Count() != 0)
+            {
+                var PostGUIDScore = await GenericCompareAlgo(String.Join(" ", tokenList), PostTypeEnum.Reel);
+                return await GetFeedResult(PostGUIDScore, userId, PostTypeEnum.Reel, 1, 8, null, lastReelId, scrollType);
+            }
+            else
+            {
+                return await GetDefaultFeeds(userId, PostTypeEnum.Reel, 1, 8, null, lastReelId, scrollType);
+            }
+
+        }
+
 
     }
 

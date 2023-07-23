@@ -60,6 +60,7 @@
     "ngx-image-cropper": "^7.0.1",
     "ngx-intl-tel-input": "^2.3.3",
     "ngx-mask": "^8.1.6",
+    "ngx-slick-carousel": "^0.6.0",
     "ngx-toastr": "^16.0.1",
     "node": "^18.9.0",
     "oidc-client": "^1.11.5",

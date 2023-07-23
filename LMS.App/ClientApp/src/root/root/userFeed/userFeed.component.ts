@@ -721,10 +721,10 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
 
       openReelsViewModal(postAttachmentId:string,from:number): void {
         if(from == 1){
-          this.router.navigateByUrl(`user/reelsView/${this.myFeedsReels}/myFeed`);
+          this.router.navigateByUrl(`user/reelsView/""/myFeed/${postAttachmentId}`);
         }
         else{
-          this.router.navigateByUrl(`user/reelsView/${this.globalFeedReels}/globalFeed`);
+          this.router.navigateByUrl(`user/reelsView/""/globalFeed/${postAttachmentId}`);
         }
         // const initialState = {
         //   postAttachmentId: postAttachmentId

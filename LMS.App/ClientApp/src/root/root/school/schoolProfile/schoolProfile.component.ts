@@ -1494,7 +1494,7 @@ showDiv: boolean = false;
   }
 
   openReelsViewModal(postAttachmentId: string): void {
-    this.router.navigateByUrl(`user/reelsView/${this.school.schoolId}/school`);
+    this.router.navigateByUrl(`user/reelsView/${this.school.schoolId}/school/${postAttachmentId}`);
 
     // const initialState = {
     //   postAttachmentId: postAttachmentId,

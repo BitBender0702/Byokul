@@ -12,6 +12,10 @@ namespace LMS.Common.ViewModels.User
         public Guid CertificateId { get; set; }
         public string? Name { get; set; }
         public string CertificateUrl { get; set; }
+        public string Provider { get; set; }
+        public DateTime IssuedDate { get; set; }
+        public string CertificateName { get; set; }
+        public string? Description { get; set; }
 
     }
 }

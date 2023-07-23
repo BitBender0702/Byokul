@@ -41,6 +41,9 @@ namespace LMS.Services
         Task DeleteUserCertificate(UserCertificateViewModel model);
         Task<bool> IsFollowerBan(string userId, string followerId);
         Task<IEnumerable<PostDetailsViewModel>> GetSliderReelsByUserId(string userId, Guid lastReelId, ScrollTypesEnum scrollType);
+        Task<IEnumerable<PostDetailsViewModel>> GetMyFeedSliderReels(string userId, Guid lastReelId, ScrollTypesEnum scrollType);
+        Task<IEnumerable<GlobalFeedViewModel>> GetGlobalFeedSliderReels(string userId, Guid lastReelId, ScrollTypesEnum scrollType);
+
 
 
 

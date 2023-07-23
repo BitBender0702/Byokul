@@ -89,6 +89,7 @@ import { DSAForStudentsComponent } from './root/dsaForStudents/dsaForStudents.co
 import { ImageCropperModule } from 'ngx-image-cropper'; 
 import { NgxIntlTelInputModule } from 'ngx-intl-tel-input';
 import { IConfig, NgxMaskModule } from 'ngx-mask';
+import { SlickCarouselModule } from 'ngx-slick-carousel';
 
 export const options: Partial<IConfig> = {
   thousandSeparator: "'"
@@ -202,8 +203,7 @@ const routes: Routes = [
     ContactComponent,
     DeliveryAndReturnComponent,
     DSAForSchoolComponent,
-    DSAForStudentsComponent
-    
+    DSAForStudentsComponent    
   ],
   imports: [
     CommonModule,
@@ -232,6 +232,7 @@ const routes: Routes = [
     PickerModule,
     ImageCropperModule,
     NgxIntlTelInputModule,
+    SlickCarouselModule,
     // MetaModule.forRoot(),
     // PickerComponent,
     // PdfJsViewerModule,

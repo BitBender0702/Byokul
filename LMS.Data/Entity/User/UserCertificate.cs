@@ -15,5 +15,9 @@ namespace LMS.Data.Entity
         public string UserId { get; set; }
         public User User { get; set; }
         public string? Name { get; set; }
+        public string Provider { get; set; }
+        public DateTime IssuedDate { get; set; }
+        public string CertificateName { get; set; }
+        public string? Description { get; set; }
     }
 }

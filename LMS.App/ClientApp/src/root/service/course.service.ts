@@ -136,4 +136,11 @@ export class CourseService{
         debugger
         return this.http.post(`${this.apiUrl}/course/enableDisableCourse`+ '?courseId=' + courseId,'',{headers: this.headers});
     }
+
+    GetSliderReelsByCourseId(courseId:string,postId:string,scrollType:number){
+        debugger
+        let queryParams = new HttpParams().append("courseId",courseId).append("postId",postId).append("scrollType",scrollType);
+        return this.http.get(`${this.apiUrl}/course/getSliderReelsByCourseId`, {params:queryParams,headers: this.headers}
+        );
+    }
 }
