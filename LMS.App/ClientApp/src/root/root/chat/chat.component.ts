@@ -302,16 +302,16 @@ export class ChatComponent extends MultilingualComponent implements OnInit, Afte
     
       unreadChatResponse.next({readMessagesCount:1,type:"add"});
       var chatUsers: any[] = this.allChatUsers;
-      var chatUser = chatUsers.find(x => x.userID == response.senderId && x.chatType == response.chatType);
+      var chatUser = chatUsers.find(x => x.userID == response.senderId && x.chatType == response.chatType && x.chatHeadId == response.chatHeadId);
       if(chatUser == undefined){
         var chatSchoolUsers: any[] = this.schoolInboxList;
-        chatUser = chatSchoolUsers.find(x => x.userID == response.senderId && x.chatType == response.chatType);
+        chatUser = chatSchoolUsers.find(x => x.userID == response.senderId && x.chatType == response.chatType && x.chatHeadId == response.chatHeadId);
         if(chatUser == undefined){
           var chatClassUsers: any[] = this.classInboxList;
-          chatUser = chatClassUsers.find(x => x.userID == response.senderId && x.chatType == response.chatType);
+          chatUser = chatClassUsers.find(x => x.userID == response.senderId && x.chatType == response.chatType && x.chatHeadId == response.chatHeadId);
           if(chatUser == undefined){
             var chatCourseUsers: any[] = this.courseInboxList;
-            chatUser = chatCourseUsers.find(x => x.userID == response.senderId && x.chatType == response.chatType);
+            chatUser = chatCourseUsers.find(x => x.userID == response.senderId && x.chatType == response.chatType && x.chatHeadId == response.chatHeadId);
           }
         }
       }
@@ -340,7 +340,7 @@ if(response.chatType =="1"){
     }
 
     var chatUsers: any[] = this.allChatUsers;
-          var isuserExist = chatUsers.find(x => x.userID == response.senderId && x.chatType == 1);
+          var isuserExist = chatUsers.find(x => x.userID == response.senderId && x.chatType == 1 && x.chatHeadId == response.chatHeadId);
           if(isuserExist == undefined)
           {
             this._userService.getUser(response.senderId).subscribe((result) => {
@@ -359,7 +359,7 @@ if(response.chatType =="1"){
                
                
                var users: any[] = this.allChatUsers;
-                var user = users.find(x => x.userID == response.senderId);
+                var user = users.find(x => x.chatHeadId == response.chatHeadId);
                if(response.message != ""){
                 user.lastMessage = response.message;
                }
@@ -387,7 +387,7 @@ if(response.chatType =="1"){
                  
 
      var users: any[] = this.allChatUsers;
-     var user = users.find(x => x.userID == response.senderId);
+     var user = users.find(x => x.chatHeadId == response.chatHeadId);
      if(this.receiverName == undefined){
       this.receiverName = user.userName;
 
@@ -423,7 +423,7 @@ if(response.chatType =="1"){
   
       var chatUsers: any[] = this.schoolInboxList;
       this.chatType = response.chatType;
-              var isuserExist = chatUsers.find(x => x.userID == response.senderId && x.chatType == 3);
+              var isuserExist = chatUsers.find(x => x.userID == response.senderId && x.chatType == 3 && x.chatHeadId == response.chatHeadId);
             if(isuserExist == undefined)
             {
               this._userService.getUser(response.senderId).subscribe((result) => {
@@ -447,16 +447,16 @@ if(response.chatType =="1"){
                  this.schoolInboxList.unshift(userDetails);
                  
                  var users: any[] = this.allChatUsers;
-                 var receiverLastMessage = users.find(x => x.userID == response.senderId && x.chatType == 3);
+                 var receiverLastMessage = users.find(x => x.userID == response.senderId && x.chatType == 3 && x.chatHeadId == response.chatHeadId);
                  if(receiverLastMessage!= undefined){
                   receiverLastMessage.lastMessage = response.message;
                   receiverLastMessage.time = new Date().toISOString().slice(0, -1);
                  }
 
                  var schoolUsers: any[] = this.schoolInboxList;
-                 var user = schoolUsers.find(x => x.userID == response.senderId && x.chatType == 3);
+                 var user = schoolUsers.find(x => x.userID == response.senderId && x.chatType == 3 && x.chatHeadId == response.chatHeadId);
                 //  var users: any[] = this.schoolInboxList;
-                //  var user = users.find(x => x.userID == response.senderId);
+                //  var user = users.find(x => x.uschatHeadIderID == response.chatHeadId);
                 //  user.lastMessage = response.message;
                  if(user.school != null){
                  if(user.school.ownerId == this.sender.id || user.school?.createdById == this.sender.id){
@@ -495,7 +495,7 @@ if(response.chatType =="1"){
   
             else{
        var users: any[] = this.schoolInboxList;
-       var user = users.find(x => x.userID == response.senderId);
+       var user = users.find(x => x.chatHeadId == response.chatHeadId);
        user.lastMessage = response.message;
        user.time = new Date().toISOString().slice(0, -1);
        if(user.school != null){
@@ -561,20 +561,20 @@ if(response.chatType =="1"){
                  this.schoolInboxList.unshift(userDetails);
                  
                  var users: any[] = this.allChatUsers;
-                 var receiverLastMessage = users.find(x => x.userID == response.senderId && x.chatType == 4);
+                 var receiverLastMessage = users.find(x => x.userID == response.senderId && x.chatType == 4 && x.chatHeadId == response.chatHeadId);
                  if(receiverLastMessage!= undefined){
                   receiverLastMessage.lastMessage = response.message;
                   receiverLastMessage.time = new Date().toISOString().slice(0, -1);
                  }
 
                  var classUsers: any[] = this.classInboxList;
-                 var user = classUsers.find(x => x.userID == response.senderId && x.chatType == 4);
+                 var user = classUsers.find(x => x.userID == response.senderId && x.chatType == 4 && x.chatHeadId == response.chatHeadId);
 
                 //  var users: any[] = this.schoolInboxList;
                 //  var receiverLastMessage = users.find(x => x.userID == response.senderId && x.chatType == 4);
                 //  receiverLastMessage.lastMessage = response.message;
                 //  var users: any[] = this.classInboxList;
-                //  var user = users.find(x => x.userID == response.senderId);
+                //  var user = users.find(x => x.usechatHeadIdrID == response.chatHeadId);
                 //  if(response.message != ""){
                 //   user.lastMessage = response.message;
                 //  }
@@ -608,17 +608,17 @@ if(response.chatType =="1"){
   
             else{
               var users: any[] = this.allChatUsers;
-              var receiverLastMessage = users.find(x => x.userID == response.senderId && x.chatType == 4);
+              var receiverLastMessage = users.find(x => x.userID == response.senderId && x.chatType == 4 && x.chatHeadId == response.chatHeadId);
               if(receiverLastMessage!= undefined){
                receiverLastMessage.lastMessage = response.message;
                receiverLastMessage.time = new Date().toISOString().slice(0, -1);
               }
 
               var classUsers: any[] = this.classInboxList;
-              var user = classUsers.find(x => x.userID == response.senderId && x.chatType == 4);
+              var user = classUsers.find(x => x.userID == response.senderId && x.chatType == 4 && x.chatHeadId == response.chatHeadId);
 
       //         var users: any[] = this.allChatUsers;
-      //         var receiverLastMessage = users.find(x => x.userID == response.senderId);
+      //         var receiverLastMessage = users.find(x => x.chatHeadId == response.chatHeadId);
       //         receiverLastMessage.lastMessage = response.message;
       //  var users: any[] = this.classInboxList;
       //  var user = users.find(x => x.userID == response.senderId);
@@ -687,14 +687,14 @@ if(response.chatType =="1"){
 
 
                  var users: any[] = this.allChatUsers;
-                 var receiverLastMessage = users.find(x => x.userID == response.senderId && x.chatType == 5);
+                 var receiverLastMessage = users.find(x => x.userID == response.senderId && x.chatType == 5 && x.chatHeadId == response.chatHeadId);
                  if(receiverLastMessage!= undefined){
                   receiverLastMessage.lastMessage = response.message;
                   receiverLastMessage.time = new Date().toISOString().slice(0, -1);
                  }
 
                  var courseUsers: any[] = this.courseInboxList;
-                 var user = courseUsers.find(x => x.userID == response.senderId && x.chatType == 5);
+                 var user = courseUsers.find(x => x.userID == response.senderId && x.chatType == 5 && x.chatHeadId == response.chatHeadId);
 
 
                 //  var users: any[] = this.allChatUsers;
@@ -733,13 +733,13 @@ if(response.chatType =="1"){
   
             else{
               var users: any[] = this.allChatUsers;
-              var receiverLastMessage = users.find(x => x.userID == response.senderId && x.chatType == "5");
+              var receiverLastMessage = users.find(x => x.userID == response.senderId && x.chatType == "5" && x.chatHeadId == response.chatHeadId);
               if(receiverLastMessage!= undefined){
               receiverLastMessage.lastMessage = response.message;
               receiverLastMessage.time = new Date().toISOString().slice(0, -1);
               }
        var users: any[] = this.courseInboxList;
-       var user = users.find(x => x.userID == response.senderId && x.chatType == "5");
+       var user = users.find(x => x.userID == response.senderId && x.chatType == "5" && x.chatHeadId == response.chatHeadId);
        if(user.course != null){
        if(user.course.ownerId == this.sender.id || user.course?.createdById == this.sender.id){
         this.isSchoolOwner = true;
@@ -1057,7 +1057,7 @@ this.addChatAttachments = {
       this.loadingIcon = false;
 
       // this.schoolChatList.nativeElement.scrollTop = this.schoolChatList.nativeElement.scrollHeight;
-      this._chatService.getUsersChat(this.senderId,this.schoolInboxList[0].userID,this.schoolInboxList[0].chatType,10,1).subscribe((response) => {
+      this._chatService.getUsersChat(this.chatHeadId,this.senderId,this.schoolInboxList[0].userID,this.schoolInboxList[0].chatType,10,1).subscribe((response) => {
         var schoolChats = this.groupBySchoolChat(response);
         this.schoolInboxList[0].chats = schoolChats;
         this.cd.detectChanges();
@@ -1088,6 +1088,7 @@ this.addChatAttachments = {
     }
 
     getUsersChat(chatHeadId:string,recieverId:string,receiverAvatar:string,username:string,chatType:string,From:string,pageSize:number,pageNumber:number,school?:any){
+      debugger
       if(this.messageToUser != ""){
         var dynamicMessages = localStorage.getItem("messages")??'';
         if(dynamicMessages != ""){
@@ -1164,7 +1165,7 @@ this.addChatAttachments = {
     //   top:-100
     // })
      this.clearChat();
-      this.usersChatSub = this._chatService.getUsersChat(this.senderId,recieverId,Number(chatType),pageSize,pageNumber).subscribe((response) => {
+      this.usersChatSub = this._chatService.getUsersChat(chatHeadId,this.senderId,recieverId,Number(chatType),pageSize,pageNumber).subscribe((response) => {
         debugger
         const groupedItems = response.reduce((acc: any, curr: any) => {
           debugger
@@ -1544,6 +1545,8 @@ getTextMessage(evant:any,receiverId:string){
 }
 
   sendToUser(receiverId:string){
+    debugger
+    var chatTypeId = "";
     this.isSubmitted = false;
     this.InitializeChatViewModel();
     if(receiverId == undefined){
@@ -1568,29 +1571,34 @@ getTextMessage(evant:any,receiverId:string){
     }
     if(this.receiverInfo.school!= null){
       this.chatViewModel.chatTypeId = this.receiverInfo?.school.schoolId;
+      chatTypeId = this.receiverInfo?.school.schoolId;
     }
     if(this.receiverInfo.class!= null){
       this.chatViewModel.chatTypeId = this.receiverInfo?.class.classId;
+      chatTypeId = this.receiverInfo?.class.classId;
     }
     if(this.receiverInfo.course!= null){
       this.chatViewModel.chatTypeId = this.receiverInfo?.course.courseId;
+      chatTypeId = this.receiverInfo?.course.courseId;
     }
     // this.chatViewModel.chatTypeId = this.receiverInfo?.chatTypeId;
     if(this.receiverInfo.school?.ownerId == this.sender.id || this.receiverInfo.school?.createdById == this.sender.id){
        this.isSchoolOwner = true;
         this.chatViewModel.chatTypeId = this.receiverInfo.school.schoolId;
+        chatTypeId = this.receiverInfo.school.schoolId;
 
     }
     else{
     if(this.receiverInfo.class?.createdById == this.sender.id){
       this.isSchoolOwner = true;
       this.chatViewModel.chatTypeId = this.receiverInfo.school.schoolId;
-
+      chatTypeId = this.receiverInfo.school.schoolId;
    }
     else{
       if(this.receiverInfo.course?.createdById == this.sender.id){
         this.isSchoolOwner = true;
         this.chatViewModel.chatTypeId = this.receiverInfo.school.schoolId;
+        chatTypeId = this.receiverInfo.school.schoolId;
       }
       this.isSchoolOwner = false;
 
@@ -1610,6 +1618,7 @@ getTextMessage(evant:any,receiverId:string){
       user = schoolUsers.find(x => x.userID == receiverId && x.chatType == this.chatType);
       this.receiverInfo = user;
       this.chatViewModel.chatTypeId = this.receiverInfo?.school?.schoolId;
+      chatTypeId = this.receiverInfo?.school?.schoolId;
       if(this.receiverInfo.school?.ownerId == this.sender.id || this.receiverInfo.school?.createdById == this.sender.id){
         this.isSchoolOwner = true;
      }
@@ -1623,6 +1632,7 @@ getTextMessage(evant:any,receiverId:string){
     user = classUsers.find(x => x.userID == receiverId && x.chatType == this.chatType);
     this.receiverInfo = user;
     this.chatViewModel.chatTypeId = this.receiverInfo?.class?.classId;
+    chatTypeId =  this.receiverInfo?.class?.classId;
     if(this.receiverInfo.class?.ownerId == this.sender.id || this.receiverInfo.class?.createdById == this.sender.id){
       this.isSchoolOwner = true;
    }
@@ -1637,6 +1647,7 @@ getTextMessage(evant:any,receiverId:string){
     user = courseUsers.find(x => x.userID == receiverId && x.chatType == this.chatType);
     this.receiverInfo = user;
     this.chatViewModel.chatTypeId = this.receiverInfo?.course?.courseId;
+    chatTypeId =  this.receiverInfo?.course?.courseId;
     if(this.receiverInfo.course?.ownerId == this.sender.id || this.receiverInfo.course?.createdById == this.sender.id){
       this.isSchoolOwner = true;
    }
@@ -1683,7 +1694,8 @@ getTextMessage(evant:any,receiverId:string){
 
       this.userId = receiverId;
 
-    this.chatheadSub = this._chatService.getChatHead(this.senderId,this.userId,Number(this.chatType)).subscribe((response) => {
+    this.chatheadSub = this._chatService.getChatHead(this.senderId,this.userId,Number(this.chatType),chatTypeId).subscribe((response) => {
+      debugger
       this.chatViewModel.sender = this.senderId;
       this.chatViewModel.receiver = this.userId;
 
@@ -2092,7 +2104,7 @@ scrollChatHandler(event: any) {
 }
 
 getNextChats(){
-     this._chatService.getUsersChat(this.senderId,this.recieverId,Number(this.chatType),7,this.chatsPageNumber).subscribe((response) => {
+     this._chatService.getUsersChat(this.chatHeadId,this.senderId,this.recieverId,Number(this.chatType),7,this.chatsPageNumber).subscribe((response) => {
       response.forEach((item:any) => {
         const date = item.time.slice(0, 10);
         // const dateTime = new Date(item.time);
@@ -2141,7 +2153,7 @@ getNextChats(){
 }
 
 getNextSchoolChats(){
-  this._chatService.getUsersChat(this.senderId,this.schoolInboxList[0].userID,Number(this.chatType),7,this.schoolChatsPageNumber).subscribe((response) => {
+  this._chatService.getUsersChat(this.chatHeadId, this.senderId,this.schoolInboxList[0].userID,Number(this.chatType),7,this.schoolChatsPageNumber).subscribe((response) => {
     var schoolChats = this.groupBySchoolChat(response);
   //  this.schoolInboxList[0].chats = response.concat(this.schoolInboxList[0].chats);
   this.schoolInboxList[0].chats = schoolChats;

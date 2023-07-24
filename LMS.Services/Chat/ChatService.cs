@@ -22,6 +22,7 @@ using System.Linq;
 using LMS.Common.ViewModels.Post;
 using LMS.Common.ViewModels.User;
 using LMS.Common.Enums;
+using Microsoft.IdentityModel.Tokens;
 
 namespace LMS.Services.Chat
 {
@@ -173,13 +174,13 @@ namespace LMS.Services.Chat
             throw new NotImplementedException();
         }
 
-        public async Task<ChatHeadViewModel> GetChatHead(Guid sender, Guid receiver, ChatType chatType)
+        public async Task<ChatHeadViewModel> GetChatHead(Guid sender, Guid receiver, ChatType chatType, Guid? chatTypeId)
         {
             ChatHead res;
-            res = _chatHeadRepository.GetFirstOrDefaultBy(x => x.SenderId == sender.ToString() && x.ReceiverId == receiver.ToString() && x.ChatType == chatType);
+            res = _chatHeadRepository.GetFirstOrDefaultBy(x => x.SenderId == sender.ToString() && x.ReceiverId == receiver.ToString() && x.ChatType == chatType && ((string.IsNullOrEmpty(chatTypeId.ToString())) || (x.ChatTypeId == chatTypeId)));
 
             if (res is null)
-                res = _chatHeadRepository.GetFirstOrDefaultBy(x => x.SenderId == receiver.ToString() && x.ReceiverId == sender.ToString() && x.ChatType == chatType);
+                res = _chatHeadRepository.GetFirstOrDefaultBy(x => x.SenderId == receiver.ToString() && x.ReceiverId == sender.ToString() && x.ChatType == chatType && ((string.IsNullOrEmpty(chatTypeId.ToString())) || (x.ChatTypeId == chatTypeId)));
 
             var result = _mapper.Map<ChatHeadViewModel>(res);
             if (result == null)
@@ -454,7 +455,7 @@ namespace LMS.Services.Chat
             var firstUser = users.Where(x => x.ChatType == ChatType.Personal).FirstOrDefault();
             if (firstUser != null)
             {
-                firstUser.Chats = await GetParticularUserChat(userId, firstUser.UserID, ChatType.Personal);
+                firstUser.Chats = await GetParticularUserChat(firstUser.ChatHeadId, userId, firstUser.UserID, ChatType.Personal);
                 await RemoveUnreadMessageCount(userId, firstUser.UserID, ChatType.Personal);
 
             }
@@ -462,19 +463,19 @@ namespace LMS.Services.Chat
             var firstSchool = users.Where(x => x.ChatType == ChatType.School).FirstOrDefault();
             if (firstSchool != null)
             {
-                firstSchool.Chats = await GetParticularUserChat(userId, firstSchool.UserID, ChatType.School);
+                firstSchool.Chats = await GetParticularUserChat(firstUser.ChatHeadId, userId, firstSchool.UserID, ChatType.School);
             }
 
             var firstClass = users.Where(x => x.ChatType == ChatType.Class).FirstOrDefault();
             if (firstClass != null)
             {
-                firstClass.Chats = await GetParticularUserChat(userId, firstClass.UserID, ChatType.Class);
+                firstClass.Chats = await GetParticularUserChat(firstUser.ChatHeadId, userId, firstClass.UserID, ChatType.Class);
             }
 
             var firstCourse = users.Where(x => x.ChatType == ChatType.Course).FirstOrDefault();
             if (firstCourse != null)
             {
-                firstCourse.Chats = await GetParticularUserChat(userId, firstCourse.UserID, ChatType.Course);
+                firstCourse.Chats = await GetParticularUserChat(firstUser.ChatHeadId, userId, firstCourse.UserID, ChatType.Course);
             }
             return users;
         }
@@ -497,11 +498,11 @@ namespace LMS.Services.Chat
             return new CourseViewModel { CourseId = course.CourseId, CourseName = course.CourseName, Avatar = course.Avatar, CreatedById = course.CreatedById, SchoolId = course.SchoolId };
         }
 
-        public async Task<IEnumerable<ParticularChat>> GetParticularUserChat(Guid SenderId, Guid ReceiverId, ChatType chatType, int pageSize = 7, int pageNumber = 1)
+        public async Task<IEnumerable<ParticularChat>> GetParticularUserChat(Guid ChatHeadId, Guid SenderId, Guid ReceiverId, ChatType chatType, int pageSize = 7, int pageNumber = 1)
         {
             //const int MinimumPageSize = 10;
             var attachRepo = _attachmentRepository.GetAll();
-            var chatRepo = _chatMessageRepository.GetAll().Where(x => !x.IsDeleted).Include(x => x.ChatHead).Where(x => (x.SenderId == SenderId && x.ReceiverId == ReceiverId && x.ChatHead.ChatType == chatType) || (x.SenderId == ReceiverId && x.ReceiverId == SenderId && x.ChatHead.ChatType == chatType)).OrderByDescending(x => x.CreatedOn).Skip((pageNumber - 1) * pageSize).Take(pageSize);
+            var chatRepo = _chatMessageRepository.GetAll().Where(x => !x.IsDeleted).Include(x => x.ChatHead).Where(x => (x.SenderId == SenderId && x.ReceiverId == ReceiverId && x.ChatHead.ChatType == chatType && x.ChatHeadId == ChatHeadId) || (x.SenderId == ReceiverId && x.ReceiverId == SenderId && x.ChatHead.ChatType == chatType && x.ChatHeadId == ChatHeadId)).OrderByDescending(x => x.CreatedOn).Skip((pageNumber - 1) * pageSize).Take(pageSize);
 
             //  if (chatrepo.count() < minimumpagesize)
             //chatRepo = chatRepo.OrderByDescending(x => x.CreatedOn);

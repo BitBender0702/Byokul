@@ -170,7 +170,7 @@
                   *ngFor="let item of allChatUsers"
                   [ngClass]="
                     selectedChatHeadDiv &&
-                    item.userID == recieverId &&
+                    item.chatHeadId == selectedChatHeadId &&
                     item.chatType == chatType
                       ? 'd-flex justify-content-between align-items-end selectedChatHead'
                       : 'd-flex justify-content-between align-items-end'

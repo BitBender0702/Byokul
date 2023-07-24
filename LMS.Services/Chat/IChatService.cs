@@ -16,11 +16,11 @@ namespace LMS.Services.Chat
         Task<ChatMessageViewModel> GetChatMessageForChatHead(Guid chatHeadId);
         Task<Guid> AddChatHead(ChatHeadViewModel chatViewModel);
         Task UpdateChatHead(ChatMessageViewModel chatheadViewModel);
-        Task<ChatHeadViewModel> GetChatHead(Guid sender, Guid receiver, ChatType chatType);
+        Task<ChatHeadViewModel> GetChatHead(Guid sender, Guid receiver, ChatType chatType, Guid? chatTypeId);
         Task<List<ChatUsersViewModel>> GetAllChatHeadForLoggedInUser(Guid user, int pageNumber, string? searchString);
         Task<List<ChatHeadViewModel>> GetChatHeadsForReceiver(string receiver);
         Task<List<ChatAttachmentResponse>> SaveChatAttachments(SaveChatAttachmentViewModel model);
-        Task<IEnumerable<ParticularChat>> GetParticularUserChat(Guid SenderId, Guid ReceiverId,ChatType chatType, int pageSize, int pageNumber);
+        Task<IEnumerable<ParticularChat>> GetParticularUserChat(Guid ChatHeadId, Guid SenderId, Guid ReceiverId,ChatType chatType, int pageSize, int pageNumber);
         Task<bool> SetParticularUserPinned(Guid senderId, Guid receiverId,ChatType chatType);
         Task RemoveUnreadMessageCount(Guid senderId, Guid receiverId,ChatType chatType);
         Task<CommentViewModel> AddComment(CommentViewModel model);

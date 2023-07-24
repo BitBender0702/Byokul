@@ -182,9 +182,9 @@ namespace LMS.App.Controllers
 
         [Route("getChatHead")]
         [HttpGet]
-        public async Task<IActionResult> GetChatHead(Guid senderId, Guid receiverId, ChatType chatType)
+        public async Task<IActionResult> GetChatHead(Guid senderId, Guid receiverId, ChatType chatType, Guid? chatTypeId)
         {
-            var response = await _chatService.GetChatHead(senderId, receiverId, chatType);
+            var response = await _chatService.GetChatHead(senderId, receiverId, chatType, chatTypeId);
             return Ok(response);
         }
 

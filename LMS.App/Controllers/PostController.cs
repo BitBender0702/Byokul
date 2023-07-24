@@ -24,46 +24,34 @@ namespace LMS.App.Controllers
         }
 
         [DisableRequestSizeLimit, RequestFormLimits(MultipartBodyLengthLimit = long.MaxValue, ValueLengthLimit = int.MaxValue)]
+        [Route("savePost1")]
+        [HttpPost]
+        public async Task<IActionResult> SavePost1(IFormFile UploadVideo)
+        {
+            return Ok("Success");
+        }
+
+        [DisableRequestSizeLimit, RequestFormLimits(MultipartBodyLengthLimit = long.MaxValue, ValueLengthLimit = int.MaxValue)]
         [Route("savePost")]
         [HttpPost]
         public async Task<IActionResult> SavePost(PostViewModel postViewModel)
         {
             var response = new PostViewModel();
             var userId = await GetUserIdAsync(this._userManager);
+            if (postViewModel.PostAuthorType == (int)PostAuthorTypeEnum.School)
+            {
+                postViewModel.OwnerId = new Guid(userId);
+            }
 
-            //if (postViewModel.DateTime != null && postViewModel.PostType != (int)PostTypeEnum.Stream)
-            //{
-            //    DateTimeOffset scheduledTime = new DateTimeOffset(postViewModel.DateTime.Value);
-            //    //var jobId = BackgroundJob.Enqueue(() => _postService.SavePost(postViewModel, userId));
-
-            //    var scheduleJobId = BackgroundJob.Schedule(() => _postService.SavePost(postViewModel, userId), scheduledTime);
-
-            //    //var jobId = BackgroundJob.Schedule(() => _postService.SavePost(postViewModel, userId), new TimeSpan(120));
-
-            //    var monitoringApi = JobStorage.Current.GetMonitoringApi();
-
-            //    // Get the job details
-            //    var jobDetails = monitoringApi.JobDetails(scheduleJobId);
-
-            //    // Get the return value type of the job
-            //    //Type returnType = Type.GetType(jobDetails.ResultType);
-
-            //}
-            //else
-            //{
-                if (postViewModel.PostAuthorType == (int)PostAuthorTypeEnum.School)
-                {
-                    postViewModel.OwnerId = new Guid(userId);
-                }
-
-                if (postViewModel.PostAuthorType == (int)PostAuthorTypeEnum.Class || postViewModel.PostAuthorType == (int)PostAuthorTypeEnum.Course)
-                {
-                    postViewModel.AuthorId = new Guid(userId);
-                }
-                response = await _postService.SavePost(postViewModel, userId);
+            if (postViewModel.PostAuthorType == (int)PostAuthorTypeEnum.Class || postViewModel.PostAuthorType == (int)PostAuthorTypeEnum.Course)
+            {
+                postViewModel.AuthorId = new Guid(userId);
+            }
+            response = await _postService.SavePost(postViewModel, userId);
             //}
             return Ok(response);
         }
+
         [Route("getReelById")]
         [HttpGet]
         public async Task<IActionResult> GetReelById(Guid id)
@@ -124,7 +112,7 @@ namespace LMS.App.Controllers
         [HttpPost]
         public async Task<IActionResult> EnableDisableComments(Guid postId, bool isHideComments)
         {
-            await _postService.EnableDisableComments(postId,isHideComments);
+            await _postService.EnableDisableComments(postId, isHideComments);
             return Ok();
         }
 
@@ -146,7 +134,7 @@ namespace LMS.App.Controllers
 
         [Route("getSavedPostsByUser")]
         [HttpPost]
-        public async Task<IActionResult> GetSavedPostsByUser(string userId, int pageNumber,PostTypeEnum type)
+        public async Task<IActionResult> GetSavedPostsByUser(string userId, int pageNumber, PostTypeEnum type)
         {
             var response = await _postService.GetSavedPostsByUser(userId, pageNumber, type);
             return Ok(response);

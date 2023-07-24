@@ -30,9 +30,9 @@ namespace LMS.App.Controllers
 
         [Route("getChatHead")]
         [HttpGet]
-        public async Task<IActionResult> GetChatHead(Guid senderId, Guid receiverId,ChatType chatType)
+        public async Task<IActionResult> GetChatHead(Guid senderId, Guid receiverId,ChatType chatType, Guid? chatTypeId)
         {
-            var response = await _chatService.GetChatHead(senderId, receiverId, chatType);
+            var response = await _chatService.GetChatHead(senderId, receiverId, chatType, chatTypeId);
             return Ok(response);
         }
 
@@ -46,10 +46,10 @@ namespace LMS.App.Controllers
 
         [Route("getUsersChat")]
         [HttpGet]
-        public async Task<IActionResult> GetUsersChat(Guid senderId, Guid receiverId,ChatType chatType, int pageSize=10, int pageNumber=1)
+        public async Task<IActionResult> GetUsersChat(Guid ChatHeadId, Guid senderId, Guid receiverId,ChatType chatType, int pageSize=10, int pageNumber=1)
         {
             await _chatService.RemoveUnreadMessageCount(senderId, receiverId, chatType);
-            var response = await _chatService.GetParticularUserChat(senderId, receiverId,chatType,  pageSize,  pageNumber);
+            var response = await _chatService.GetParticularUserChat(ChatHeadId,senderId, receiverId,chatType,  pageSize,  pageNumber);
             return Ok(response);
         }
 

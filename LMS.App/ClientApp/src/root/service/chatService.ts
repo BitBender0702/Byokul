@@ -20,8 +20,8 @@ export class ChatService{
         this.headers = new HttpHeaders().set("Authorization", "Bearer " + this.token);
     }
     
-    getChatHead(senderId:string,receiverId:string,chatType:number): Observable<any> {
-        let queryParams = new HttpParams().append("senderId",senderId).append("receiverId",receiverId).append("chatType",chatType);
+    getChatHead(senderId:string,receiverId:string,chatType:number,chatTypeId:string): Observable<any> {
+        let queryParams = new HttpParams().append("senderId",senderId).append("receiverId",receiverId).append("chatType",chatType).append("chatTypeId",chatTypeId);
         return this.http.get(`${this.apiUrl}/users/getChatHead`, {params:queryParams,headers: this.headers});
     }
 
@@ -45,10 +45,9 @@ export class ChatService{
         return this.http.get(`${this.apiUrl}/chats/getAllChatUsers`, {params:queryParams,headers: this.headers});
     }
 
-    getUsersChat(senderId:string,receiverId:string,chatType:number,pageSize:number,pageNumber:number):Observable<any>{
-        let queryParams = new HttpParams().append("senderId",senderId).append("receiverId",receiverId).append("chatType",chatType).append("pageSize",pageSize).append("pageNumber",pageNumber);
+    getUsersChat(chatHeadId:string,senderId:string,receiverId:string,chatType:number,pageSize:number,pageNumber:number):Observable<any>{
+        let queryParams = new HttpParams().append("chatHeadId",chatHeadId).append("senderId",senderId).append("receiverId",receiverId).append("chatType",chatType).append("pageSize",pageSize).append("pageNumber",pageNumber);
         return this.http.get(`${this.apiUrl}/chats/GetUsersChat`, {params:queryParams,headers: this.headers});
-
     }
 
     pinUnpinChat(senderId:string,receiverId:string,chatType:number): Observable<any> {
