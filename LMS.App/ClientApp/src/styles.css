@@ -3116,8 +3116,23 @@ p-autocomplete li:before {
   background: #7c8da7;
   min-width: 32px;
 }
-
-
+.create-livevideo {
+  background: #000;
+}
+.create-livevideo .cr-livedd {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+}
+.livestream-rightbottom {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+}
+.create-livevideo button {
+  opacity: .9;
+  cursor: no-drop;
+}
 
 @media screen and (min-width: 1200px) {
   .main_content-max-width {
