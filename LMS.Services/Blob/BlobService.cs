@@ -79,7 +79,7 @@ namespace LMS.Services.Blob
                 {
                     TransferOptions = new StorageTransferOptions
                     {
-                        MaximumTransferSize = 600 * 1024 * 1024,
+                        MaximumTransferSize = 4 * 1024 * 1024,
                         InitialTransferSize = 4 * 1024 * 1024,
                         MaximumConcurrency = 5
                     },

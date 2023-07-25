@@ -24,12 +24,41 @@ namespace LMS.App.Controllers
         }
 
         [DisableRequestSizeLimit, RequestFormLimits(MultipartBodyLengthLimit = long.MaxValue, ValueLengthLimit = int.MaxValue)]
-        [Route("savePost1")]
+        [Route("uploadPost")]
         [HttpPost]
-        public async Task<IActionResult> SavePost1(IFormFile UploadVideo)
+        public async Task<IActionResult> UploadPost()
         {
-            return Ok("Success");
+            var formCollection = await Request.ReadFormAsync();
+            var imagesFiles = formCollection.Files.GetFiles("uploadImages");
+            var file = formCollection.Files.First();
+            return Ok("success");
         }
+
+        //[HttpPost, DisableRequestSizeLimit]
+        //[Route("uploadPost")]
+        //public async Task<IActionResult> SavePost()
+        //{
+        //    var response = new PostViewModel();
+
+        //    var formCollection = await Request.ReadFormAsync();
+        //    var imagesFiles = formCollection.Files.GetFiles("uploadImages");
+        //    var AuthorId = formCollection["AuthorId"];
+
+
+        //    var userId = await GetUserIdAsync(this._userManager);
+        //    if (postViewModel.PostAuthorType == (int)PostAuthorTypeEnum.School)
+        //    {
+        //        postViewModel.OwnerId = new Guid(userId);
+        //    }
+
+        //    if (postViewModel.PostAuthorType == (int)PostAuthorTypeEnum.Class || postViewModel.PostAuthorType == (int)PostAuthorTypeEnum.Course)
+        //    {
+        //        postViewModel.AuthorId = new Guid(userId);
+        //    }
+        //    response = await _postService.SavePost(postViewModel, userId);
+        //    //}
+        //    return Ok(response);
+        //}
 
         [DisableRequestSizeLimit, RequestFormLimits(MultipartBodyLengthLimit = long.MaxValue, ValueLengthLimit = int.MaxValue)]
         [Route("savePost")]

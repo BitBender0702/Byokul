@@ -68,7 +68,7 @@ namespace LMS.Services.Common
                 psi.CreateNoWindow = false;
                 psi.FileName = ffmpegFileName;
                 psi.WorkingDirectory = Directory.GetCurrentDirectory();
-                psi.Arguments = $" -i {tempDirectoryPath}{fileName} -vcodec libx265 -crf 28 -acodec aac {Path.Combine(tempDirectoryPath + Guid.NewGuid().ToString()+ fileName)}";
+                psi.Arguments = $" -i {tempDirectoryPath}{fileName} -vcodec libx265 -crf 28 -tune fastdecode -preset ultrafast -threads 10 -r 23 -acodec aac {Path.Combine(tempDirectoryPath + Guid.NewGuid().ToString() + fileName)}";
 
                 var process = new Process
                 {

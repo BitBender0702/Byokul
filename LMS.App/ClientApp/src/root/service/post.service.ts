@@ -46,7 +46,7 @@ export class PostService{
     }
 
     createPost(credentials:any): Observable<any> {
-        return this.http.post(`${this.apiUrl}/posts/savePost`, credentials,{headers: this.headers});
+        return this.http.post(`${this.apiUrl}/posts/uploadPost`, credentials,{headers: this.headers});
     }
 
     pinUnpinPost(attachmentId:any,isPinned:boolean): Observable<any> {

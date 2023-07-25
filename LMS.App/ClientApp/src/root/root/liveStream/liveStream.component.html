@@ -58,9 +58,16 @@
                  <!-- <p style="position: relative;bottom: 467px;">{{post.coverLetter}}</p> -->
               </div>
               <iframe *ngIf="streamUrl != undefined && streamUrl != null && meetingId != ''" width="100%" height="500" [src]="streamUrl" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share;camera;microphone;display-capture" allowfullscreen></iframe>
+              <div class="create-livevideo position-relative">
               <video id="test12" *ngIf="meetingId == ''" width="100%" height="500" autoplay (ended)="onVideoEnded()" (timeupdate)="onVideoTimeUpdate($event)" preload="auto">
                 <source [src]="post.streamUrl" type="video/mp4" />
               </video>
+              <button class="cr-livedd border-0 shadow-none bg-transparent"><img src="../../../assets/images/add.png" alt="add"/></button>
+              <div class="livestream-rightbottom">
+                <button class="border-0 shadow-none bg-transparent me-3"><img src="../../../assets/images/tv-button.png" alt="screen"/></button>
+                <button class="border-0 shadow-none bg-transparent"><img src="../../../assets/images/hand-button.png" alt="hand"/></button>
+              </div>
+            </div>
               <!-- <div class="overlay" (click)="startVideo()" #startButton>
                 <span>Click to Play</span>
               </div> -->

@@ -74,7 +74,7 @@ export class SignalrService {
 
   initializeConnection(token: string) {
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl('https://byokul.com/chatHub', {
+      .withUrl('https://localhost:7220/chatHub', {
          httpClient: new CustomXhrHttpClient(token)
       })
       .withAutomaticReconnect()
