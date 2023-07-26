@@ -132,16 +132,16 @@
 
 
 
-// here is from new
+<!-- // here is from new -->
 
-<section class="f-poppins">
+<section class="f-poppins desktop-slider">
   <div class="main_content">
     <div class="main_content-max-width">
       <div
         class="live-header d-flex align-items-center justify-content-between"
       >
-        <button style="position:fixed;"
-          (click)="back()"
+      <div class="live-headerinner">
+        <button (click)="back()"
           type="button"
           class="back-button bg-transparent border-0 font_16 fw_400 text_dark cursorPointer"
         >
@@ -149,11 +149,12 @@
           {{ "Back" | translate }}
         </button>
       </div>
+      </div>
 
-      <div>
+      <div class="slick-outer-box">
         <div class="slick">
 <ngx-slick-carousel
-  class="carousel"
+  class="carousel desktop-slider"
   [config]="carouselConfig"
   (afterChange)="afterChange($event)"
   (beforeChange)="beforeChange($event)"
@@ -162,7 +163,7 @@
     ngxSlickItem
     *ngFor="let item of reels; let i = index"
   >
-  <div class="f-poppins" [ngStyle]="!isMobileView ? {'width': '50%','margin-left': '300px'} : {'width': '100%'}">
+  <div class="f-poppins live-outerbox" [ngStyle]="!isMobileView ? {'width': '50%','margin-left': '300px'} : {'width': '100%'}">
     <div class="live-content" id="reel_content">
       <div class="live-inner w-100 reel_mobile">
         <div class="live-image overflow-hidden position-relative">
@@ -172,7 +173,7 @@
           <div class="reel-username font_16 white_text d-flex">
             <img [src]="item.parentImageUrl" class="me-2" /> {{item.parentName}}
           </div>
-          <div class="live-bottom-text p-3" style="height: 100px;">
+          <div class="live-bottom-text p-3">
             <h5 class="font_14 mb-0 fw_600 text_sec1">{{item.title}} <span class="font_14 fw_400  ms-3">{{item.description}}</span></h5>
           </div>
           <div class="live-action-buttons d-flex justify-content-between">

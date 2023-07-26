@@ -1,6 +1,14 @@
-<section class="f-poppins" style="margin-left: 30%;">
+<section class="f-poppins main_content about-container">
     <header class="header">
       <div class="header__content">
+        
+        <a [routerLink]="['/user/userFeed']" class="main-logo"><img class="ms-4" src="../../../assets/images/logo.svg" /></a>
+      </div>
+    </header>
+    <main class="static-main min-height w-100 h-auto">
+      <div class="static-content">
+     <div *ngIf="selectedLanguage == 'en'">
+      <div class="d-flex align-items-center justify-content-between ">
         <button
         (click)="back()"
         type="button"
@@ -8,13 +16,10 @@
       <img src="../../../../assets/images/school/arrow-left.svg" />
       {{ "Back" | translate }}
     </button>
-        <a [routerLink]="['/user/userFeed']" class="main-logo"><img class="ms-4" src="../../../assets/images/logo.svg" /></a>
+        <h3 class="font_24 text_dark fw-bold mb-0 text-center">BYOKUL DISTANCE SALES CONTRACT</h3>
+        <div class="d-md-block d-none"></div>
       </div>
-    </header>
-    <main class="static-main">
-      <div class="static-content">
-     <div *ngIf="selectedLanguage == 'en'">
-        <p><strong>BYOKUL DISTANCE SALES CONTRACT</strong></p>
+      <hr class="about_hr" />
         <ul>
         <li><strong>ARTICLE 1 - PARTIES</strong></li>
         </ul>
@@ -94,8 +99,18 @@
      </div>
 
      <div *ngIf="selectedLanguage == 'tr'">
-        <p><strong>BYOKUL MESAFELİ SATIŞ S&Ouml;ZLEŞMESİ</strong></p>
-
+      <div class="d-flex align-items-center justify-content-between ">
+        <button
+        (click)="back()"
+        type="button"
+        class="back-button bg-transparent border-0 font_16 fw_400 text_dark">
+      <img src="../../../../assets/images/school/arrow-left.svg" />
+      {{ "Back" | translate }}
+    </button>
+        <h3 class="font_24 text_dark fw-bold mb-0 text-center">BYOKUL MESAFELİ SATIŞ S&Ouml;ZLEŞMESİ</h3>
+        <div class="d-md-block d-none"></div>
+      </div>
+      <hr class="about_hr" />
         <ul>
         <li><strong>MADDE 1 - TARAFLAR</strong></li>
         </ul>
@@ -173,7 +188,18 @@
      </div>
 
      <div *ngIf="selectedLanguage == 'ar'">
-        <p>عقد BYOKUL للبيع عن بعد</p>
+      <div class="d-flex align-items-center justify-content-between ">
+        <button
+        (click)="back()"
+        type="button"
+        class="back-button bg-transparent border-0 font_16 fw_400 text_dark">
+      <img src="../../../../assets/images/school/arrow-left.svg" />
+      {{ "Back" | translate }}
+    </button>
+        <h3 class="font_24 text_dark fw-bold mb-0 text-center">>عقد BYOKUL للبيع عن بعد</h3>
+        <div class="d-md-block d-none"></div>
+      </div>
+      <hr class="about_hr" />
         <ul>
         <li>المادة 1 - الأطراف</li>
         </ul>
@@ -253,7 +279,19 @@
      </div>
 
      <div *ngIf="selectedLanguage == 'sp'">
-        <p><strong>BYOKUL DISTANCE SALES CONTRACT</strong></p>
+        <p><strong></strong></p>
+        <div class="d-flex align-items-center justify-content-between ">
+          <button
+          (click)="back()"
+          type="button"
+          class="back-button bg-transparent border-0 font_16 fw_400 text_dark">
+        <img src="../../../../assets/images/school/arrow-left.svg" />
+        {{ "Back" | translate }}
+      </button>
+          <h3 class="font_24 text_dark fw-bold mb-0 text-center">>BYOKUL DISTANCE SALES CONTRACT</h3>
+          <div class="d-md-block d-none"></div>
+        </div>
+        <hr class="about_hr" />
         <ul>
         <li><strong>ARTICLE 1 - PARTIES</strong></li>
         </ul>

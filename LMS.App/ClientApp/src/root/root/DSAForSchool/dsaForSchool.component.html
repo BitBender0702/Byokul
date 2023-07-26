@@ -1,6 +1,13 @@
-<section class="f-poppins" style="margin-left: 30%;">
+<section class="f-poppins main_content about-container">
     <header class="header">
       <div class="header__content">
+        <a [routerLink]="['/user/userFeed']" class="main-logo"><img class="ms-4" src="../../../assets/images/logo.svg" /></a>
+      </div>
+    </header>
+    <main class="static-main min-height w-100 h-auto">
+      <div class="static-content">
+     <div *ngIf="selectedLanguage == 'en'">
+      <div class="d-flex align-items-center justify-content-between ">
         <button
         (click)="back()"
         type="button"
@@ -8,13 +15,10 @@
       <img src="../../../../assets/images/school/arrow-left.svg" />
       {{ "Back" | translate }}
     </button>
-        <a [routerLink]="['/user/userFeed']" class="main-logo"><img class="ms-4" src="../../../assets/images/logo.svg" /></a>
+        <h3 class="font_24 text_dark fw-bold mb-0 text-center">"DISTANCE CONTRACT" ON THE PURCHASE OF SUBSCRIPTION SERVICE</h3>
+        <div class="d-md-block d-none"></div>
       </div>
-    </header>
-    <main class="static-main">
-      <div class="static-content">
-     <div *ngIf="selectedLanguage == 'en'">
-        <p><strong>&ldquo;DISTANCE CONTRACT&rdquo; ON THE PURCHASE OF SUBSCRIPTION SERVICE</strong></p>
+      <hr class="about_hr" />
         <p>We have prepared this contract in the capacity of &ldquo;SELLER/SUPPLIER&rdquo; in accordance with the Law on the Protection of the Consumer No. 6502, the Regulation on Distance Contracts and the Regulation on Subscription Contracts and present it to your approval.</p>
         <p>By electronically confirming on every device you can access BYOKUL, you accept all conditions.&nbsp; We allow sufficient time for you to read these terms. Please confirm the contract after making sure that you have read and understood all the terms.</p>
         <p>It should be noted that every environment where the services you purchase are offered will be referred to as &ldquo;BYOKUL&rdquo; in this contract.</p>

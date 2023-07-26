@@ -1,37 +1,80 @@
-<section class="f-poppins" style="margin-left: 30%;">
+<section class="f-poppins main_content about-container">
     <header class="header">
       <div class="header__content">
-        <button
-        (click)="back()"
-        type="button"
-        class="back-button bg-transparent border-0 font_16 fw_400 text_dark">
-      <img src="../../../../assets/images/school/arrow-left.svg" />
-      {{ "Back" | translate }}
-    </button>
         <a [routerLink]="['/user/userFeed']" class="main-logo"><img class="ms-4" src="../../../assets/images/logo.svg" /></a>
       </div>
     </header>
-    <main class="static-main">
+    <main class="static-main min-height w-100 h-auto">
+     
       <div class="static-content">
      <div *ngIf="selectedLanguage == 'en'">
+      <div class="d-flex align-items-center justify-content-between ">
+        <button
+          (click)="back()"
+          type="button"
+          class="back-button bg-transparent border-0 font_16 fw_400 text_dark">
+        <img src="../../../../assets/images/school/arrow-left.svg" />
+        {{ "Back" | translate }}
+      </button>
+        <h3 class="font_24 text_dark fw-bold ">Contact us</h3>
+        <div class="d-md-block d-none"></div>
+      </div>
+      <hr class="about_hr" />
         <p>BYOKUL SANAL VE DIJITAL PLATFORM LIMITED SIRKETI<br>
             GURSELPASA MAH. ABIDIN DINO BLV. ALI GEZEN APT NO:13 A SEYHAN/ADANA<br>
             E-MAIL : support@byokul.com</p>
      </div>
 
      <div *ngIf="selectedLanguage == 'tr'">
+      <div class="d-flex align-items-center justify-content-between ">
+        <button
+          (click)="back()"
+          type="button"
+          class="back-button bg-transparent border-0 font_16 fw_400 text_dark">
+        <img src="../../../../assets/images/school/arrow-left.svg" />
+        {{ "Back" | translate }}
+      </button>
+        <h3 class="font_24 text_dark fw-bold ">Contact us</h3>
+        <div class="d-md-block d-none"></div>
+      </div>
+      <hr class="about_hr" />
+      
         <p>BYOKUL SANAL VE DIJITAL PLATFORM LIMITED SIRKETI<br>
            GURSELPASA MAH. ABIDIN DINO BLV. ALI GEZEN APT NO:13 A SEYHAN/ADANA<br>
            E-MAIL : support@byokul.com</p>
      </div>
 
      <div *ngIf="selectedLanguage == 'ar'">
+      <div class="d-flex align-items-center justify-content-between ">
+        <button
+          (click)="back()"
+          type="button"
+          class="back-button bg-transparent border-0 font_16 fw_400 text_dark">
+        <img src="../../../../assets/images/school/arrow-left.svg" />
+        {{ "Back" | translate }}
+      </button>
+        <h3 class="font_24 text_dark fw-bold ">Contact us</h3>
+        <div class="d-md-block d-none"></div>
+      </div>
+      <hr class="about_hr" />
         <p>BYOKUL SANAL VE DIJITAL PLATFORM LIMITED SIRKETI<br>
             GURSELPASA MAH. ABIDIN DINO BLV. ALI GEZEN APT NO:13 A SEYHAN/ADANA<br>
             E-MAIL : support@byokul.com</p>
      </div>
 
      <div *ngIf="selectedLanguage == 'sp'">
+      <div class="d-flex align-items-center justify-content-between ">
+        <button
+          (click)="back()"
+          type="button"
+          class="back-button bg-transparent border-0 font_16 fw_400 text_dark">
+        <img src="../../../../assets/images/school/arrow-left.svg" />
+        {{ "Back" | translate }}
+      </button>
+        <h3 class="font_24 text_dark fw-bold ">Contact us</h3>
+        <div class="d-md-block d-none"></div>
+      </div>
+      <hr class="about_hr" />
         <p>BYOKUL SANAL VE DIJITAL PLATFORM LIMITED SIRKETI<br>
             GURSELPASA MAH. ABIDIN DINO BLV. ALI GEZEN APT NO:13 A SEYHAN/ADANA<br>
             E-MAIL : support@byokul.com</p>

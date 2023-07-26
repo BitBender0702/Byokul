@@ -572,7 +572,10 @@ hr.earning-hr {
 }
 
 .live-header {
-  padding-bottom: 40px;
+  padding: 40px 0;
+  background: #fff;
+  position: relative;
+  z-index: 99;
 }
 
 .live-content {
@@ -3739,7 +3742,9 @@ p-autocomplete li:before {
 .iti .search-container input:focus {
 	outline: none;
 }
-
+.slick-dots{
+  display: none !important; 
+}
 @media screen and (max-width: 479px) {
 	.iti .iti__country-list {
 		width: 88.3vw;
@@ -3791,3 +3796,65 @@ ngx-intl-tel-input input[disabled] {
 	background-color: #e5eaf1;
 }
 
+@media (min-width:768px){
+	.desktop-slider .live-inner{
+		padding: 0;
+	}
+	.desktop-slider .full-widthreel .live-inner .live-image{
+		max-width: 100%;
+	}
+	.desktop-slider .reel_videoinner {
+		height: calc(100vh - 230px);
+	}
+	.main_content{
+		padding-top: 0 !important;
+	}
+  .desktop-slider .live-outerbox {
+    width: 100% !important;
+    margin-left: 0 !important;
+} 
+.desktop-slider .live-outerbox .live-content .live-inner {
+  max-width: 50%;
+  margin: 0 auto;
+}
+.desktop-slider .live-content {
+  margin-bottom: 20px;
+    padding: 0;
+    background-image: url(https://www.tbmatuka.com/upload/placeholders/16px_outline_blurred.jpg);
+    /* background: #000; */
+    background-size: cover;
+}
+.desktop-slider .live-header {
+  min-height: 80px;
+}
+.live-headerinner{
+  position: fixed;
+  z-index: 9999;
+  width: 100%;
+}
+.desktop-slider  .live-image{
+  margin-bottom: 0;
+}
+.desktop-slider .main_content-max-width{
+  display: flex;
+  flex-flow: column;
+  justify-content: space-between;
+  height: calc(100vh - 41px);
+}
+.desktop-slider .slick{
+  height: 100%;
+}
+.desktop-slider .slick-outer-box{
+  height: calc(100% - 80px);
+  overflow: hidden;
+}
+
+}
+@media (max-width:767px) {
+  button.back-button{
+    min-width: 60px;
+    margin-right: 0;
+    margin-bottom: 15px;
+}
+  
+}
