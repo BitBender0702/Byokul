@@ -3806,7 +3806,7 @@ ngx-intl-tel-input input[disabled] {
 	.desktop-slider .reel_videoinner {
 		height: calc(100vh - 230px);
 	}
-	.main_content{
+	.desktop-slider .main_content{
 		padding-top: 0 !important;
 	}
   .desktop-slider .live-outerbox {
