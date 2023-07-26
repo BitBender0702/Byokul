@@ -572,7 +572,7 @@ hr.earning-hr {
 }
 
 .live-header {
-  padding: 40px 0;
+  padding: 10px 0;
   background: #fff;
   position: relative;
   z-index: 99;
@@ -3473,6 +3473,13 @@ p-autocomplete li:before {
 }
 .feedbox-inner{
   padding: 0 20px;
+}
+.chat-aside{
+  width: 100%;
+}
+.chat-aside li {
+  padding: 16px;
+  flex-wrap: nowrap;
 }
 
 }
