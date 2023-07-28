@@ -463,19 +463,19 @@ namespace LMS.Services.Chat
             var firstSchool = users.Where(x => x.ChatType == ChatType.School).FirstOrDefault();
             if (firstSchool != null)
             {
-                firstSchool.Chats = await GetParticularUserChat(firstUser.ChatHeadId, userId, firstSchool.UserID, ChatType.School);
+                firstSchool.Chats = await GetParticularUserChat(firstSchool.ChatHeadId, userId, firstSchool.UserID, ChatType.School);
             }
 
             var firstClass = users.Where(x => x.ChatType == ChatType.Class).FirstOrDefault();
             if (firstClass != null)
             {
-                firstClass.Chats = await GetParticularUserChat(firstUser.ChatHeadId, userId, firstClass.UserID, ChatType.Class);
+                firstClass.Chats = await GetParticularUserChat(firstClass.ChatHeadId, userId, firstClass.UserID, ChatType.Class);
             }
 
             var firstCourse = users.Where(x => x.ChatType == ChatType.Course).FirstOrDefault();
             if (firstCourse != null)
             {
-                firstCourse.Chats = await GetParticularUserChat(firstUser.ChatHeadId, userId, firstCourse.UserID, ChatType.Course);
+                firstCourse.Chats = await GetParticularUserChat(firstCourse.ChatHeadId, userId, firstCourse.UserID, ChatType.Course);
             }
             return users;
         }

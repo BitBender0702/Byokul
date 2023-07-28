@@ -16,6 +16,7 @@ import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component'
 import { TranslateService } from '@ngx-translate/core';
 import { Dimensions, ImageCroppedEvent, ImageTransform } from 'ngx-image-cropper';
 import { CountryISO, SearchCountryField } from 'ngx-intl-tel-input';
+import { AzureBlobStorageService } from 'src/root/service/blobStorage.service';
 
 export const ownedSchoolResponse =new Subject<{schoolId: string, schoolAvatar : string,schoolName:string,action:string}>(); 
 
@@ -32,7 +33,9 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
     return environment.apiUrl;
   }
 
+  uploadedFile:any;
   private _schoolService;
+  private _blobService;
   countries:any;
   specializations:any;
   defaultLogos:any;
@@ -82,9 +85,10 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
   selectedCountryISO:any;
   mask:string = "(000) 000 0000"
   
-  constructor(injector: Injector,private translateService: TranslateService,private bsModalService: BsModalService,public messageService:MessageService,private domSanitizer: DomSanitizer,private router: Router,private fb: FormBuilder,schoolService: SchoolService,private http: HttpClient) {
+  constructor(injector: Injector,private blobService: AzureBlobStorageService,private translateService: TranslateService,private bsModalService: BsModalService,public messageService:MessageService,private domSanitizer: DomSanitizer,private router: Router,private fb: FormBuilder,schoolService: SchoolService,private http: HttpClient) {
     super(injector);
     this._schoolService = schoolService;
+    this._blobService = blobService;
   }
 
   ngOnInit(): void {
@@ -423,6 +427,24 @@ ngOnDestroy(): void {
       this.createSchoolForm1.get('phoneNumber')?.setValue(formattedValue, { emitEvent: false });
     }
   }
+
+onFileSelected(event: any) {
+  this.uploadedFile = event.target.files[0];
+}
+
+uploadOnBlob(){
+  debugger
+  const containerName = 'posts';
+    const fileName = this.uploadedFile.name;
+
+    this._blobService.uploadFile(containerName, fileName, this.uploadedFile)
+      .then(() => {
+        console.log('File uploaded successfully.');
+      })
+      .catch((error) => {
+        console.error('Error uploading file:', error);
+      });
+}
   
   
   

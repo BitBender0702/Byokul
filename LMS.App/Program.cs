@@ -228,7 +228,7 @@ builder.Services.Configure<FormOptions>(options =>
     options.MultipartHeadersLengthLimit = int.MaxValue;
 });
 
-//builder.Services.AddHangfireServer();
+builder.Services.AddHangfireServer();
 
 
 builder.Services.AddSignalR(options =>

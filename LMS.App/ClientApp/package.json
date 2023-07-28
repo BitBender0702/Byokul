@@ -28,6 +28,7 @@
     "@angular/router": "~13.3.5",
     "@aspnet/signalr": "^1.1.4",
     "@auth0/angular-jwt": "^5.0.2",
+    "@azure/storage-blob": "^12.15.0",
     "@ctrl/ngx-emoji-mart": "^5.1.2",
     "@fortawesome/fontawesome-free": "^6.4.0",
     "@microsoft/signalr": "^7.0.0",

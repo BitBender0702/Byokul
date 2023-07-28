@@ -19,6 +19,8 @@ using LMS.Common.ViewModels.FileStorage;
 using LMS.Common.ViewModels.Notification;
 using Hangfire;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.AspNetCore.Hosting;
+using System.Collections;
 
 namespace LMS.Services
 {
@@ -44,11 +46,12 @@ namespace LMS.Services
         private readonly IChatService _chatService;
         private readonly INotificationService _notificationService;
         private readonly IBigBlueButtonService _bigBlueButtonService;
+        private readonly IWebHostEnvironment _webHostEnvironment;
         private IConfiguration _config;
 
         private readonly IDistributedCache _cache;
 
-        public PostService(IMapper mapper, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<User> userRepository, IGenericRepository<Like> likeRpository, IGenericRepository<View> viewRepository, IGenericRepository<Comment> commentRepository, IGenericRepository<CommentLike> commentLikeRepository, IGenericRepository<SavedPost> savedPostRepository, IBlobService blobService, IUserService userService, IChatService chatService, IBigBlueButtonService bigBlueButtonService, IConfiguration config, IGenericRepository<UserSharedPost> userSharedPostRepository, INotificationService notificationService, IDistributedCache cache, IGenericRepository<Notification> notificationRepository)
+        public PostService(IMapper mapper, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<User> userRepository, IGenericRepository<Like> likeRpository, IGenericRepository<View> viewRepository, IGenericRepository<Comment> commentRepository, IGenericRepository<CommentLike> commentLikeRepository, IGenericRepository<SavedPost> savedPostRepository, IBlobService blobService, IUserService userService, IChatService chatService, IBigBlueButtonService bigBlueButtonService, IConfiguration config, IGenericRepository<UserSharedPost> userSharedPostRepository, INotificationService notificationService, IDistributedCache cache, IGenericRepository<Notification> notificationRepository, IWebHostEnvironment webHostEnvironment)
         {
             _mapper = mapper;
             _postRepository = postRepository;
@@ -72,10 +75,12 @@ namespace LMS.Services
             _notificationService = notificationService;
             _cache = cache;
             _notificationRepository = notificationRepository;
+            _webHostEnvironment = webHostEnvironment;
         }
         public async Task<PostViewModel> SavePost(PostViewModel postViewModel, string createdById)
         {
             Guid PostId = new Guid();
+            var videoUploadResponse = new List<VideoUploadResponseViewModel>();
             //if (postViewModel.PostAuthorType == (int)PostAuthorTypeEnum.School)
             //{
             //    await SavePostsInCache(postViewModel);
@@ -99,12 +104,14 @@ namespace LMS.Services
 
             if (postViewModel.Id != null && postViewModel.Id != new Guid())
             {
-               PostId = await UpdatePost(postViewModel, createdById);
+                PostId = await UpdatePost(postViewModel, createdById);
 
                 if (postViewModel.UploadVideos != null)
                 {
-                    blobVideoUrls = await SaveUploadVideos(postViewModel.UploadVideos, postViewModel.UploadVideosThumbnail, postViewModel.Id, createdById);
+                    videoUploadResponse = await SaveUploadVideos(postViewModel.UploadVideos, postViewModel.UploadVideosThumbnail, postViewModel.Id, createdById, false);
+                    blobVideoUrls = videoUploadResponse.Where(x => x.IsVideo).Select(x => x.VideoUrl).ToList();
                 }
+                
             }
 
             else
@@ -123,6 +130,7 @@ namespace LMS.Services
                     CoverLetter = postViewModel.CoverLetter,
                     IsPostSchedule = false,
                     CommentsPerMinute = postViewModel.CommentsPerMinute == 0 ? null : postViewModel.CommentsPerMinute,
+
                     //IsLive = (postViewModel.DateTime == null && postViewModel.PostType == 2) ? true : false,
                     CreatedById = createdById,
                     CreatedOn = DateTime.UtcNow
@@ -136,7 +144,8 @@ namespace LMS.Services
 
                     if (postViewModel.UploadVideos != null)
                     {
-                        blobVideoUrls = await SaveUploadVideos(postViewModel.UploadVideos, postViewModel.UploadVideosThumbnail, postViewModel.Id, createdById);
+                        videoUploadResponse = await SaveUploadVideos(postViewModel.UploadVideos, postViewModel.UploadVideosThumbnail, postViewModel.Id, createdById, false);
+                        blobVideoUrls = videoUploadResponse.Where(x => x.IsVideo).Select(x => x.VideoUrl).ToList();
                     }
                 }
                 catch (Exception ex)
@@ -273,8 +282,194 @@ namespace LMS.Services
                 postViewModel.ReelId = await _postAttachmentRepository.GetAll().Where(x => x.PostId == PostId).Select(x => x.Id).FirstAsync();
             }
             postViewModel.Id = PostId;
+
+            if (postViewModel.UploadVideos.Count() != 0)
+            {
+
+                //using (var httpClient = new HttpClient())
+                //{
+                //    byte[] byteArray = await httpClient.GetByteArrayAsync(blobVideoUrls[0]);
+                //}
+
+                //postViewModel.Status = (int)StatusEnum.Disabled;
+                var scheduledCompressTime = DateTimeOffset.Now.AddMinutes(3);
+
+                //List<CompressVideoViewModel> videoByteArrayLists = new List<CompressVideoViewModel>();
+                //List<CompressVideoViewModel> thumbnailByteArrayLists = new List<CompressVideoViewModel>();
+                //List<byte[]> videoByteArrayList = new List<byte[]>();
+                //List<byte[]> thumbnailByteArrayList = new List<byte[]>();
+
+
+                //var path = _webHostEnvironment.ContentRootPath;
+                //var tempDirectoryPath = Path.Combine(path, "FfmpegVideos/");
+
+                //foreach (var video in postViewModel.UploadVideos)
+                //{
+
+                //    //string fileName = video.FileName;
+                //    //string fullPath = Path.Combine(tempDirectoryPath, fileName);
+
+                //    byte[] byteArray;
+                //    using (var memoryStream = new MemoryStream())
+                //    {
+                //        await video.CopyToAsync(memoryStream);
+                //        byteArray = memoryStream.ToArray();
+                //    }
+
+                //    videoByteArrayLists.Add(new CompressVideoViewModel
+                //    {
+                //        Bytes = byteArray,
+                //        FileName = video.FileName,
+                //        ContentType = video.ContentType
+                //    });
+
+                //    //videoByteArrayList.Add(byteArray);
+                //}
+
+                //foreach (var video in postViewModel.UploadVideosThumbnail)
+                //{
+                //    //string fileName = video.FileName;
+                //    //string fullPath = Path.Combine(tempDirectoryPath, fileName);
+
+                //    byte[] byteArray;
+                //    using (var memoryStream = new MemoryStream())
+                //    {
+                //        await video.CopyToAsync(memoryStream);
+                //        byteArray = memoryStream.ToArray();
+                //    }
+
+                //    thumbnailByteArrayLists.Add(new CompressVideoViewModel
+                //    {
+                //        Bytes = byteArray,
+                //        FileName = video.FileName,
+                //        ContentType = video.ContentType
+                //    });
+                //    //thumbnailByteArrayList.Add(byteArray);
+                //}
+
+                ////await SaveCompressedVideos2(blobVideoUrls,PostId);
+
+                //var res = SaveCompressedVideos(videoUploadResponse, createdById, postViewModel.Id);
+                BackgroundJob.Schedule(() => SaveCompressedVideos(videoUploadResponse, createdById, postViewModel.Id), scheduledCompressTime);
+                //BackgroundJob.Schedule(() => SaveCompressedVideos(videoByteArrayLists, thumbnailByteArrayLists, createdById,postViewModel.Id), scheduledCompressTime);
+            }
             return postViewModel;
         }
+
+        public async Task SaveCompressedVideos2(VideoUploadResponseViewModel model,string createdById,Guid PostId)
+        {
+            var attachment = await _postAttachmentRepository.GetAll().Where(x => x.PostId == PostId).FirstAsync();
+            attachment.IsCompressed = true;
+            _postAttachmentRepository.Update(attachment);
+            _postAttachmentRepository.Save();
+        }
+
+        public async Task SaveCompressedVideos(List<VideoUploadResponseViewModel> model, string createdById, Guid postId)
+        {
+            byte[] byteArray;
+            List<IFormFile> uploadVideos = new List<IFormFile>();
+            List<IFormFile> uploadThumbnails = new List<IFormFile>();
+
+            foreach (var item in model)
+            {
+                if (item.IsVideo)
+                {
+                    using (var httpClient = new HttpClient())
+                    {
+                        byteArray = await httpClient.GetByteArrayAsync(item.VideoUrl);
+                    }
+
+                    var memoryStream = new MemoryStream(byteArray);
+
+                    var formFile = new FormFile(memoryStream, 0, memoryStream.Length, null, item.FileName)
+                    {
+                        Headers = new HeaderDictionary(),
+                    };
+                    formFile.ContentType = item.FileType;
+                    uploadVideos.Add(formFile);
+                }
+
+                else
+                {
+                    using (var httpClient = new HttpClient())
+                    {
+                        byteArray = await httpClient.GetByteArrayAsync(item.ThumbnailUrl);
+                    }
+
+                    var memoryStream = new MemoryStream(byteArray);
+
+                    var formFile = new FormFile(memoryStream, 0, memoryStream.Length, null, item.FileName)
+                    {
+                        Headers = new HeaderDictionary(),
+                    };
+                    formFile.ContentType = item.FileType;
+                    uploadThumbnails.Add(formFile);
+                }
+            }
+
+            var blobUrls = await SaveUploadVideos(uploadVideos, uploadThumbnails, postId, createdById, true);
+
+
+
+            //List<IFormFile> uploadVideos = new List<IFormFile>();
+            //List<IFormFile> uploadThumbnails = new List<IFormFile>();
+            //foreach (var item in videoByteArrayList)
+            //{
+            //    var stream = new MemoryStream(item.Bytes);
+            //    var file = new FormFile(stream, 0, item.Bytes.Length, item.FileName, item.FileName)
+            //    {
+            //        Headers = new HeaderDictionary()
+            //    };
+            //    file.ContentType = item.ContentType;
+            //    uploadVideos.Add(file);
+            //}
+
+            //foreach (var item in thumbnailByteArrayList)
+            //{
+            //    var stream = new MemoryStream(item.Bytes);
+            //    var file = new FormFile(stream, 0, item.Bytes.Length, item.FileName, item.FileName)
+            //    {
+            //        Headers = new HeaderDictionary()
+            //    };
+            //    file.ContentType = item.ContentType;
+            //    uploadThumbnails.Add(file);
+            //}
+
+            //var blobUrls = await SaveUploadVideos(uploadVideos, uploadThumbnails, postId, createdById, true);
+        }
+
+        //public async Task SaveCompressedVideos(List<CompressVideoViewModel> videoByteArrayList, List<CompressVideoViewModel> thumbnailByteArrayList, string createdById, Guid postId)
+        //{
+
+
+
+
+        //    List<IFormFile> uploadVideos = new List<IFormFile>();
+        //    List<IFormFile> uploadThumbnails = new List<IFormFile>();
+        //    foreach (var item in videoByteArrayList)
+        //    {
+        //        var stream = new MemoryStream(item.Bytes);
+        //        var file = new FormFile(stream, 0, item.Bytes.Length, item.FileName, item.FileName)
+        //        {
+        //            Headers = new HeaderDictionary()
+        //        };
+        //        file.ContentType = item.ContentType;
+        //        uploadVideos.Add(file);
+        //    }
+
+        //    foreach (var item in thumbnailByteArrayList)
+        //    {
+        //        var stream = new MemoryStream(item.Bytes);
+        //        var file = new FormFile(stream, 0, item.Bytes.Length, item.FileName, item.FileName)
+        //        {
+        //            Headers = new HeaderDictionary()
+        //        };
+        //        file.ContentType = item.ContentType;
+        //        uploadThumbnails.Add(file);
+        //    }
+
+        //    var blobUrls = await SaveUploadVideos(uploadVideos, uploadThumbnails, postId, createdById, true);
+        //}
 
         public async Task<Guid> UpdatePost(PostViewModel model, string createdById)
         {
@@ -420,8 +615,9 @@ namespace LMS.Services
             }
         }
 
-        async Task<List<string>> SaveUploadVideos(IEnumerable<IFormFile> uploadVideos, IEnumerable<IFormFile> uploadVideosThumbnail, Guid postId, string createdById)
+        public async Task<List<VideoUploadResponseViewModel>> SaveUploadVideos(IEnumerable<IFormFile> uploadVideos, IEnumerable<IFormFile> uploadVideosThumbnail, Guid postId, string createdById, bool isJobRunning)
         {
+            var response = new List<VideoUploadResponseViewModel>();
             var uploadBlobUrls = new List<string>();
             string containerName = "posts";
             string videoThumbnailName = "";
@@ -435,33 +631,75 @@ namespace LMS.Services
 
                 var isVideoThumbnailExist = uploadVideosThumbnail.Where(x => x.FileName.Substring(0, x.FileName.LastIndexOf(".") + 1) == videoThumbnailName).FirstOrDefault();
 
-
-
                 var postAttachment = new PostAttachmentViewModel();
-                postAttachment.FileUrl = await _blobService.UploadFileAsync(video, containerName, true);
-
                 if (isVideoThumbnailExist != null)
                 {
                     postAttachment.FileThumbnail = await _blobService.UploadFileAsync(isVideoThumbnailExist, containerName, false);
+                    response.Add(new VideoUploadResponseViewModel
+                    {
+                        FileName = isVideoThumbnailExist.FileName,
+                        FileType = isVideoThumbnailExist.ContentType,
+                        ThumbnailUrl = postAttachment.FileThumbnail,
+                        IsVideo = false
+                    });
+
+                }
+                if (!isJobRunning)
+                {
+                    postAttachment.FileUrl = await _blobService.UploadFileAsync(video, containerName, true);
+
+                    var postAttach = new PostAttachment
+                    {
+                        PostId = postId,
+                        FileName = video.FileName,
+                        FileUrl = postAttachment.FileUrl,
+                        FileThumbnail = postAttachment.FileThumbnail,
+                        FileType = (int)FileTypeEnum.Video,
+                        CreatedById = createdById,
+                        CreatedOn = DateTime.UtcNow,
+                        IsCompressed = false
+                    };
+
+                    _postAttachmentRepository.Insert(postAttach);
+                    _postAttachmentRepository.Save();
+                    //uploadBlobUrls.Add(postAttach.FileUrl);
+                    response.Add(new VideoUploadResponseViewModel
+                    {
+                        FileName = video.FileName,
+                        FileType = video.ContentType,
+                        VideoUrl = postAttach.FileUrl,
+                        IsVideo = true
+                    });
 
                 }
 
-                var postAttach = new PostAttachment
+                else
                 {
-                    PostId = postId,
-                    FileName = video.FileName,
-                    FileUrl = postAttachment.FileUrl,
-                    FileThumbnail = postAttachment.FileThumbnail,
-                    FileType = (int)FileTypeEnum.Video,
-                    CreatedById = createdById,
-                    CreatedOn = DateTime.UtcNow
-                };
+                    var fileUrl = await _blobService.CompressAndUploadFileAsync(video, containerName, true);
+                    var attachments = await _postAttachmentRepository.GetAll().Where(x => x.PostId == postId).ToListAsync();
 
-                _postAttachmentRepository.Insert(postAttach);
-                _postAttachmentRepository.Save();
-                uploadBlobUrls.Add(postAttach.FileUrl);
+                    _postAttachmentRepository.DeleteAll(attachments);
+                    _postAttachmentRepository.Save();
+
+                    var postAttach = new PostAttachment
+                    {
+                        PostId = postId,
+                        FileName = video.FileName,
+                        FileUrl = fileUrl,
+                        FileThumbnail = postAttachment.FileThumbnail,
+                        FileType = (int)FileTypeEnum.Video,
+                        CreatedById = createdById,
+                        CreatedOn = DateTime.UtcNow,
+                        IsCompressed = true
+                    };
+
+                    _postAttachmentRepository.Insert(postAttach);
+                    _postAttachmentRepository.Save();
+
+                }
             }
-            return uploadBlobUrls;
+
+            return response;
 
         }
 

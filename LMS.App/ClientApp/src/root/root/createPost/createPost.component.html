@@ -515,6 +515,7 @@
             aria-labelledby="Post-tab"
             tabindex="0"
           >
+
             <form [formGroup]="createPostForm">
               <div *ngIf="this.schoolId != undefined" class="form-group">
                 <label class="font_10">{{ "SchoolName" | translate }}</label>
@@ -582,6 +583,8 @@
                   >{{ "TitleRequired" | translate }}
                 </small>
               </div>
+
+           
 
               <div class="form-group">
                 <label class="font_10">{{ "BodyText" | translate }}</label>

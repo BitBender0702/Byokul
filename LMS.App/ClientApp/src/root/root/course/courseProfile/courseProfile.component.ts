@@ -1217,8 +1217,9 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
  debugger;
  const parts = event.currentTarget.className.split(' ');
  this.postDivId = parts[3];
- videojs(this.postDivId);
- var displayDivs = document.getElementsByClassName("imgDisplay");
+ if(this.postDivId != ""){
+  videojs(this.postDivId);
+} var displayDivs = document.getElementsByClassName("imgDisplay");
  for (var i = 0; i < displayDivs.length; i++){
  
    if(displayDivs[i].className.includes(this.postDivId)){

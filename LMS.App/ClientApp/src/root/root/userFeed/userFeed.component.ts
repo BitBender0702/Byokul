@@ -659,7 +659,7 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
           this.gridItemInfo = posts.find(x => x.id == postId);
           this.isGridItemInfo = true;
           this.cd.detectChanges();
-          const player = videojs(this.myFeedPlayer.nativeElement, {autoplay: false});
+          // const player = videojs(this.myFeedPlayer.nativeElement, {autoplay: false});
           this.addPostView(this.gridItemInfo.id,From);
         }
         else{
@@ -981,25 +981,40 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
     }
 
     postDivId:string = "";
-    openDialouge(event:any){
-debugger;
-const parts = event.currentTarget.className.split(' ');
-this.postDivId = parts[3];
-videojs(this.postDivId);
-var displayDivs = document.getElementsByClassName("imgDisplay");
-for (var i = 0; i < displayDivs.length; i++){
+    openDialouge(event:any, post:any){
+      debugger
+      const parts = event.currentTarget.className.split(' ');
+      this.postDivId = parts[3];
 
-  if(displayDivs[i].className.includes(this.postDivId)){
-    displayDivs[i].setAttribute("style", "display:block;");
-  }else{
-    displayDivs[i].setAttribute("style", "display:none;");
-  }
-  //elements[i].style.display = displayState;
-}
+      if(post.postAttachments != undefined){
+        var postAttach = post.postAttachments[0];
+        debugger
+        if(postAttach != undefined){
+          if(postAttach.fileType != 1){
+            if(this.postDivId != ""){
+              try{
+                videojs(this.postDivId);
+              } catch{
+                var displayDivs = document.getElementsByClassName("imgDisplay");
+              }
+            }
+          }
+        }
+      }
+      var displayDivs = document.getElementsByClassName("imgDisplay");
+      for (var i = 0; i < displayDivs.length; i++){
 
-// var playerId = "video01" + this.counter;
-// const vjsPlayer = videojs(playerId, { autoplay: false });
-// this.cd.detectChanges();
+        if(displayDivs[i].className.includes(this.postDivId)){
+          displayDivs[i].setAttribute("style", "display:block;");
+        }else{
+          displayDivs[i].setAttribute("style", "display:none;");
+        }
+        //elements[i].style.display = displayState;
+      }
+
+      // var playerId = "video01" + this.counter;
+      // const vjsPlayer = videojs(playerId, { autoplay: false });
+      // this.cd.detectChanges();
     }
 
   @HostListener('window:resize')

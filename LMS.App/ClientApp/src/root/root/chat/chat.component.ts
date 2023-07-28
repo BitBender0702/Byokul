@@ -432,6 +432,7 @@ if(response.chatType =="1"){
                   userID:response.senderId,
                   profileURL: result.avatar,
                   chatType:response.chatType,
+                  chatHeadId:response.chatHeadId,
                   chats:[],
                   school:{createdById:'',schoolName:'',avatar:'',schoolId:''}
                   };
@@ -543,6 +544,7 @@ if(response.chatType =="1"){
                   userID:response.senderId,
                   profileURL: result.avatar,
                   chatType:response.chatType,
+                  chatHeadId:response.chatHeadId,
                   chats:[],
                   class:{createdById:'',className:'',avatar:'',classId:'',schoolId:''}
                   };
@@ -669,6 +671,7 @@ if(response.chatType =="1"){
                   userID:response.senderId,
                   profileURL: result.avatar,
                   chatType:response.chatType,
+                  chatHeadId:response.chatHeadId,
                   chats:[],
                   course:{createdById:'',courseName:'',avatar:'',courseId:'',schoolId:''}
                   };
@@ -804,6 +807,7 @@ this.addChatAttachments = {
   }
 
     getChatUsersList(senderId:string){
+      debugger
       this.loadingIcon = true;
       this._chatService.getAllChatUsers(senderId,this.chatHeadsPageNumber,this.searchString).subscribe((response) => {
         debugger
@@ -1554,7 +1558,7 @@ getTextMessage(evant:any,receiverId:string){
     }
 
     var users: any[] = this.allChatUsers;
-    var user = users.find(x => x.userID == receiverId && x.chatType == this.chatType);
+    var user = users.find(x => x.userID == receiverId && x.chatType == this.chatType && x.chatHeadId == this.chatHeadId);
     if(this.isForwarded == true){
       this.chatViewModel.isForwarded = this.isForwarded;
       this.chatViewModel.forwardedFileName = this.forwardedFileName;
@@ -1615,7 +1619,7 @@ getTextMessage(evant:any,receiverId:string){
       }
       var schoolUsers: any[] = this.schoolInboxList;
       if(schoolUsers!=undefined && this.chatType== "3"){
-      user = schoolUsers.find(x => x.userID == receiverId && x.chatType == this.chatType);
+      user = schoolUsers.find(x => x.userID == receiverId && x.chatType == this.chatType && x.chatHeadId == this.chatHeadId);
       this.receiverInfo = user;
       this.chatViewModel.chatTypeId = this.receiverInfo?.school?.schoolId;
       chatTypeId = this.receiverInfo?.school?.schoolId;
@@ -1629,7 +1633,7 @@ getTextMessage(evant:any,receiverId:string){
    }
    var classUsers: any[] = this.classInboxList;
    if(classUsers!=undefined && this.chatType== "4"){
-    user = classUsers.find(x => x.userID == receiverId && x.chatType == this.chatType);
+    user = classUsers.find(x => x.userID == receiverId && x.chatType == this.chatType && x.chatHeadId == this.chatHeadId);
     this.receiverInfo = user;
     this.chatViewModel.chatTypeId = this.receiverInfo?.class?.classId;
     chatTypeId =  this.receiverInfo?.class?.classId;
@@ -1644,7 +1648,7 @@ getTextMessage(evant:any,receiverId:string){
 
  var courseUsers: any[] = this.courseInboxList;
    if(courseUsers!=undefined && this.chatType== "5"){
-    user = courseUsers.find(x => x.userID == receiverId && x.chatType == this.chatType);
+    user = courseUsers.find(x => x.userID == receiverId && x.chatType == this.chatType && x.chatHeadId == this.chatHeadId);
     this.receiverInfo = user;
     this.chatViewModel.chatTypeId = this.receiverInfo?.course?.courseId;
     chatTypeId =  this.receiverInfo?.course?.courseId;
@@ -1779,6 +1783,7 @@ getTextMessage(evant:any,receiverId:string){
 
   generateChatLi(response:any,profileImage:string,chatType:string){
     debugger
+    this.cd.detectChanges();
     const date = new Date();
 const year = date.getUTCFullYear();
 const month = date.getUTCMonth() + 1; // Add 1 because getUTCMonth() returns a zero-based index

@@ -1,6 +1,7 @@
 ﻿using LMS.Common.Enums;
 using LMS.Common.ViewModels.Post;
 using LMS.Data.Entity;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +32,7 @@ namespace LMS.Services
         Task UpdateCommentThrottling(Guid postId, int noOfComments);
         Task SaveStreamAsPost(Guid postId);
         Task SaveLiveVideoTime(Guid postId, float videoTotalTime, float videoLiveTime);
+        Task<List<VideoUploadResponseViewModel>> SaveUploadVideos(IEnumerable<IFormFile> uploadVideos, IEnumerable<IFormFile> uploadVideosThumbnail, Guid postId, string createdById,bool isJobRunning);
 
 
 

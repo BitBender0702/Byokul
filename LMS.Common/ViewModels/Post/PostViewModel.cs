@@ -30,7 +30,7 @@ namespace LMS.Common.ViewModels.Post
         public List<IFormFile> UploadImages { get; set; }
         public List<IFormFile> UploadVideos { get; set; }
         public List<IFormFile> UploadAttachments { get; set; }
-        public IFormFile UploadReels { get; set; }
+        //public IFormFile UploadReels { get; set; }
         public bool IsPinned { get; set; }
         public Boolean IsCommentsDisabled { get; set; }
         public DateTime? UpdatedOn { get; set; }

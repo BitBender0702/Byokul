@@ -668,7 +668,7 @@
                 </div>
               </div>
               </div>
-                  <div *ngIf="post.postType == 1" class="col-md-6 col-xl-4" [class]="getRandomClass(i,false)" (click)="openDialouge($event)">
+                  <div *ngIf="post.postType == 1" class="col-md-6 col-xl-4" [class]="getRandomClass(i,false)" (click)="openDialouge($event,post)">
                     <div class="school-grid-box position-relative school-list-box h-100 mb-0">
                       <div class="schoolgrid-header d-flex align-items-center position-relative">
                         <div class="school-gridprofile-icon">
@@ -1335,7 +1335,7 @@
                   </div>
                 </div>
                   </div>
-                  <div *ngIf="post.postType == 1" class="col-md-6 col-xl-4" [class]="getRandomClass(i,false)" (click)="openDialouge($event)">
+                  <div *ngIf="post.postType == 1" class="col-md-6 col-xl-4" [class]="getRandomClass(i,false)" (click)="openDialouge($event,post)">
                     <div class="school-grid-box position-relative school-list-box h-100 mb-0">
                       <div class="schoolgrid-header d-flex align-items-center position-relative">
                         <div class="school-gridprofile-icon">

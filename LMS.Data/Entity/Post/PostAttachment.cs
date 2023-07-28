@@ -18,6 +18,7 @@ namespace LMS.Data.Entity
         public string? FileThumbnail { get; set; }
         public float? VideoTotalTime { get; set; }
         public float?  VideoLiveTime { get; set; }
+        public bool IsCompressed { get; set; }
 
-}
+    }
 }
