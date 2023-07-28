@@ -1,6 +1,13 @@
-<section class="f-poppins" style="margin-left: 30%;">
+<section class="f-poppins main_content about-container" >
     <header class="header">
       <div class="header__content">
+        <a [routerLink]="['/user/userFeed']" class="main-logo"><img class="ms-4" src="../../../assets/images/logo.svg" /></a>
+      </div>
+    </header>
+    <main class="static-main min-height w-100 h-auto">
+      <div class="static-content">
+     <div *ngIf="selectedLanguage == 'en'">
+      <div class="d-flex align-items-center justify-content-between ">
         <button
         (click)="back()"
         type="button"
@@ -8,13 +15,10 @@
       <img src="../../../../assets/images/school/arrow-left.svg" />
       {{ "Back" | translate }}
     </button>
-        <a [routerLink]="['/user/userFeed']" class="main-logo"><img class="ms-4" src="../../../assets/images/logo.svg" /></a>
+        <h3 class="font_24 text_dark fw-bold ">Delivery & Return</h3>
+        <div class="d-md-block d-none"></div>
       </div>
-    </header>
-    <main class="static-main">
-      <div class="static-content">
-     <div *ngIf="selectedLanguage == 'en'">
-        <p><strong>Delivery &amp; Return</strong></p>
+      <hr class="about_hr" />
         <p>You agree to use a valid payment method when making a payment. If you are not satisfied with the content, you can request a refund by filling out the return request form within 7 working days.</p>
         <p><strong>Pricing</strong></p>
         <p>The prices of the contents in ByOkul are determined based on the <u>Instructor Terms</u>. The instructor sets the price of their content themselves.</p>
@@ -29,7 +33,18 @@
      </div>
 
      <div *ngIf="selectedLanguage == 'tr'">
-        <p><strong>TESLİMAT ve İADE</strong></p>
+      <div class="d-flex align-items-center justify-content-between ">
+        <button
+        (click)="back()"
+        type="button"
+        class="back-button bg-transparent border-0 font_16 fw_400 text_dark">
+      <img src="../../../../assets/images/school/arrow-left.svg" />
+      {{ "Back" | translate }}
+    </button>
+        <h3 class="font_24 text_dark fw-bold ">TESLİMAT ve İADE</h3>
+        <div class="d-md-block d-none"></div>
+      </div>
+      <hr class="about_hr" />
         <p>&Ouml;deme yaparken ge&ccedil;erli bir &ouml;deme y&ouml;ntemi kullanmayı kabul edersiniz. İ&ccedil;erikten memnun değilseniz 7 iş g&uuml;n&uuml; i&ccedil;erisinde iade talep formunu doldurarak iade talebinde bulunabilirsiniz</p>
         <p><strong>Fiyatlandırma</strong></p>
         <p>ByOkul&rsquo;daki i&ccedil;eriklerin fiyatları <u>Eğitmen şartlarına</u> dayalı olarak belirlenir. <br /> eğitmen i&ccedil;eriğinin fiyatını kendisi belirler.</p>
@@ -46,7 +61,18 @@
      </div>
 
      <div *ngIf="selectedLanguage == 'ar'">
-        <p>التسليم والعودة</p>
+      <div class="d-flex align-items-center justify-content-between ">
+        <button
+        (click)="back()"
+        type="button"
+        class="back-button bg-transparent border-0 font_16 fw_400 text_dark">
+      <img src="../../../../assets/images/school/arrow-left.svg" />
+      {{ "Back" | translate }}
+    </button>
+        <h3 class="font_24 text_dark fw-bold ">التسليم والعودة</h3>
+        <div class="d-md-block d-none"></div>
+      </div>
+      <hr class="about_hr" />        
 <p>أنت توافق على استخدام طريقة دفع صالحة عند إجراء الدفع. إذا لم تكن راضيا عن المحتوى، يمكنك طلب استرداد المدفوعات عن طريق ملء نموذج طلب الاسترداد في غضون 7 أيام عمل.</p>
 <p>&nbsp;</p>
 <p>&nbsp;التسعير</p>
@@ -64,8 +90,18 @@
      </div>
 
      <div *ngIf="selectedLanguage == 'sp'">
-        <p><strong>Delivery &amp; Return</strong></p>
-        <p><strong>&nbsp;</strong></p>
+      <div class="d-flex align-items-center justify-content-between ">
+        <button
+        (click)="back()"
+        type="button"
+        class="back-button bg-transparent border-0 font_16 fw_400 text_dark">
+      <img src="../../../../assets/images/school/arrow-left.svg" />
+      {{ "Back" | translate }}
+    </button>
+        <h3 class="font_24 text_dark fw-bold ">Delivery & Return</h3>
+        <div class="d-md-block d-none"></div>
+      </div>
+      <hr class="about_hr" />        
         <p>You agree to use a valid payment method when making a payment. If you are not satisfied with the content, you can request a refund by filling out the return request form within 7 working days.</p>
         <p>&nbsp;&nbsp;</p>
         <p><strong>Pricing</strong></p>

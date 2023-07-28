@@ -242,9 +242,9 @@
                       *ngIf="!isPinned && !item.isPinned"
                       (click)="pinUnpinChat(item.userID, item.chatType, true)"
                       type="button"
-                      class="bg-transparent border-0"
+                      class="bg-transparent border-0 pinned-btn"
                     >
-                      <img
+                      <img class="me-0 w-auto rounded-0"
                         style="height: 20px"
                         src="../../../../assets/images/pinned-gray.svg"
                       />
@@ -258,9 +258,9 @@
                       "
                       (click)="pinUnpinChat(item.userID, item.chatType, false)"
                       type="button"
-                      class="bg-transparent border-0"
+                      class="bg-transparent border-0 pinned-btn"
                     >
-                      <img
+                      <img class="me-0 w-auto rounded-0"
                         style="height: 20px"
                         src="../../../../assets/images/pinned-orange.svg"
                       />
