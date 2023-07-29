@@ -195,7 +195,7 @@
                 </button>
               </div>
             </div>
-            <p class="font_16 mt-4">{{ school.description }}</p>
+            <p class="font_16 mt-4 preserve-line-breaks">{{ school.description }}</p>
           </div>
         </div>
         <div *ngIf="school.teachers.length != 0 || this.isOwner">
@@ -1971,7 +1971,7 @@
                 </div>
                   <div *ngIf="
                       (post.postType == 1 && post.postAuthorType == 1) ||
-                      post.isLive" class="col-md-6 col-xl-4" [class]="getRandomClass(i,false)" (click)="openDialouge($event)"
+                      post.isLive" class="col-md-6 col-xl-4" [class]="getRandomClass(i,false)" (click)="openDialouge($event,post)"
                   >
                   
                     <div

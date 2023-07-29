@@ -254,6 +254,7 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
       this.userId = id ?? '';
 
       this._userService.getUserById(this.userId).subscribe((response) => {
+        debugger
         this.frontEndPageNumber = 1;
         this.reelsPageNumber = 1;
         this.user = response;
@@ -315,6 +316,7 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
         const translatedSummary = this.translateService.instant('Success');
         this.messageService.add({severity:'success', summary:translatedSummary,life: 3000, detail:translatedMessage});
         this._userService.getUserById(this.userId).subscribe((response) => {
+          debugger
           this.user = response;
           this.titleService.setTitle(this.user.firstName + " " + this.user.lastName);
           this.addDescriptionMetaTag(this.user.description);
@@ -1843,13 +1845,26 @@ generateGuid():string {
  }
 
  postDivId:string = "";
- openDialouge(event:any){
+ openDialouge(event:any, post:any){
 debugger;
 const parts = event.currentTarget.className.split(' ');
 this.postDivId = parts[3];
-if(this.postDivId != ""){
-  videojs(this.postDivId);
-}var displayDivs = document.getElementsByClassName("imgDisplay");
+if(post.postAttachments != undefined){
+  var postAttach = post.postAttachments[0];
+  debugger
+  if(postAttach != undefined){
+    if(postAttach.fileType != 1){
+      if(this.postDivId != ""){
+        try{
+          videojs(this.postDivId);
+        } catch{
+          var displayDivs = document.getElementsByClassName("imgDisplay");
+        }
+      }
+    }
+  }
+}
+var displayDivs = document.getElementsByClassName("imgDisplay");
 for (var i = 0; i < displayDivs.length; i++){
 
 if(displayDivs[i].className.includes(this.postDivId)){

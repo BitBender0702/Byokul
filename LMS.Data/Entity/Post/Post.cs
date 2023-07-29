@@ -29,6 +29,8 @@ namespace LMS.Data.Entity
         public Guid? ExternalMeetingId { get; set; }
         public bool? IsPostSchedule { get; set; }
         public DateTime? UpdatedOn { get; set; }
+        public List<PostAttachment> Attachments { get; set; }
+        public List<PostTag> Tags { get; set; }
 
     }
 }

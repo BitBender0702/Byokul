@@ -87,3 +87,7 @@
   justify-content: end;
 
 }
+
+.preserve-line-breaks {
+  white-space: pre-wrap;
+}

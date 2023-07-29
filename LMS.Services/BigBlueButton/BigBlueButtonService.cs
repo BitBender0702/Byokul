@@ -24,7 +24,7 @@ namespace LMS.Services.BigBlueButton
             _config = config;
             _postRepository = postRepository;
         }
-        public async Task<string> Create(NewMeetingViewModel newMeetingViewModel)
+        public async Task<Response> Create(NewMeetingViewModel newMeetingViewModel)
         {
             try
             {
@@ -71,18 +71,10 @@ namespace LMS.Services.BigBlueButton
                 string joinModeratorUrl = "join?fullName=" + fullName + "&meetingID=" + meetingId + "&password=" + moderatorPW + "&redirect=true" + "&checksum=" + joinchecksum;
 
                 string joinFinalUrl = baseUrl + joinModeratorUrl;
-                //var res = await RegisterWebHook(meetingId);
-
-                var post = _postRepository.GetById(newMeetingViewModel.PostId);
-                post.StreamUrl = joinFinalUrl;
-                post.ExternalMeetingId = new Guid(meetingId);
+                result.StreamUrl = joinFinalUrl;
                 int hyphenIndex = result.InternalMeetingID.IndexOf('-');
                 result.InternalMeetingID = result.InternalMeetingID.Substring(0, hyphenIndex);
-                post.InternalMeetingId = result.InternalMeetingID;
-                _postRepository.Update(post);
-                _postRepository.Save();
-
-                return joinFinalUrl;
+                return result;
             }
             catch (Exception ex)
             {

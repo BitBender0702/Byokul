@@ -33,3 +33,7 @@
   .cursor_pointer{
     cursor: pointer;
   }
+
+  .preserve-line-breaks {
+    white-space: pre-wrap;
+  }

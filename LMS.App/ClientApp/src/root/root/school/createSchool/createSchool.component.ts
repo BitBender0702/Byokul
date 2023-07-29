@@ -1,4 +1,4 @@
-import { Component, Injector, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, ValidatorFn, Validators } from '@angular/forms';
 import { CreateSchoolModel } from 'src/root/interfaces/school/createSchoolModel';
 import { SchoolService } from 'src/root/service/school.service';
@@ -17,6 +17,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { Dimensions, ImageCroppedEvent, ImageTransform } from 'ngx-image-cropper';
 import { CountryISO, SearchCountryField } from 'ngx-intl-tel-input';
 import { AzureBlobStorageService } from 'src/root/service/blobStorage.service';
+import { BlobServiceClient, ContainerClient, BlockBlobClient } from '@azure/storage-blob';
+import { url } from 'inspector';
 
 export const ownedSchoolResponse =new Subject<{schoolId: string, schoolAvatar : string,schoolName:string,action:string}>(); 
 
@@ -64,6 +66,7 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
   schoolId!:string;
   schoolName!:string;
   changeLanguageSubscription!: Subscription;
+  @ViewChild('textarea') textarea!: ElementRef;
 
   imageChangedEvent: any = '';
   croppedImage: any = '';
@@ -196,6 +199,7 @@ ngOnDestroy(): void {
   }
 
   forwardStep() {
+    debugger
     this.isStepCompleted = true;
     if (!this.createSchoolForm1.valid) {
       return;
@@ -214,8 +218,9 @@ ngOnDestroy(): void {
         return;
       }
       else{
+        let value=this.textarea.nativeElement.value;
         this.fileToUpload.append('schoolName', form1Value.schoolName);
-    this.fileToUpload.append('description', form1Value.description);
+    this.fileToUpload.append('description',value);
     this.fileToUpload.append('phoneNumber', form1Value.phoneNumber.number)
     // this.fileToUpload.append('countryId',form1Value.countryId);
     this.fileToUpload.append('countryName',form1Value.countryName);
@@ -437,15 +442,57 @@ uploadOnBlob(){
   const containerName = 'posts';
     const fileName = this.uploadedFile.name;
 
-    this._blobService.uploadFile(containerName, fileName, this.uploadedFile)
-      .then(() => {
-        console.log('File uploaded successfully.');
-      })
-      .catch((error) => {
-        console.error('Error uploading file:', error);
-      });
+    const selectedFile: File = this.uploadedFile;
+this.uploadFile1(selectedFile);
+
+    // this._blobService.uploadFile(containerName, fileName, this.uploadedFile)
+    //   .then(() => {
+    //     console.log('File uploaded successfully.');
+    //   })
+    //   .catch((error) => {
+    //     console.error('Error uploading file:', error);
+    //   });
 }
   
+async uploadFile1(file: File) {
+  debugger
   
+  // Replace with your SAS token or connection string
+  const sasToken = '?sv=2022-11-02&ss=bfqt&srt=sco&sp=rwdlacupiytfx&se=2023-07-28T13:40:03Z&st=2023-07-28T05:40:03Z&spr=https&sig=zRI9R2hIEQ1R2ldT7h4eQOECnrP35PXiElqbbHLmcGI%3D';
+  const blobName = file.name;
+  const blobStorageName =  "byokulstorage";
+  var containerClient =  new BlobServiceClient(`https://${blobStorageName}.blob.core.windows.net?${sasToken}`)
+  .getContainerClient("posts");
+
+  this.uploadBlobTest(file, blobName, containerClient)
+  .then((response) => {
+    debugger
+    console.log(response);
+  })
+  .catch((error) => {
+    console.error(error);
+  });
+
+}
+
+private async uploadBlobTest(content: Blob, name: string, client: ContainerClient) {
+  debugger
+  try {
+  let blockBlobClient = client.getBlockBlobClient(name);
+  // blockBlobClient.uploadData(content, { blobHTTPHeaders: { blobContentType: content.type } })
+
+  await blockBlobClient.uploadData(content, { blobHTTPHeaders: { blobContentType: content.type } });
+
+  const blobUrl = blockBlobClient.url;
+    console.log('File uploaded successfully.');
+
+    return { success: true, message: 'File uploaded successfully' };
+  } catch (error) {
+    console.error('Error uploading file:', error);
+
+    return { success: false, message: 'Error uploading file: ' + error };
+  }
+}
+
   
 }

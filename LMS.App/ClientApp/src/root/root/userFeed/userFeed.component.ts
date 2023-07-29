@@ -148,9 +148,9 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
       if(this.feedTab != ''){
         if (window.performance.navigation.type === 1) {
           var feedTab = localStorage.getItem('feedTab');
-          feedTab = 'myFeed';
+          feedTab = 'globalFeed';
           localStorage.setItem('feedTab',feedTab);
-          this.feedTab = 'myFeed';
+          this.feedTab = 'globalFeed';
         }
         // if (window.performance.navigation.type === 2) {
         //   this.feedTab = localStorage.getItem('feedTab')??'';

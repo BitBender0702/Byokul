@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Org.BouncyCastle.Ocsp;
 using System.Collections;
 
@@ -69,79 +70,25 @@ namespace LMS.App.Controllers
         [DisableRequestSizeLimit, RequestFormLimits(MultipartBodyLengthLimit = long.MaxValue, ValueLengthLimit = int.MaxValue)]
         [Route("uploadPost")]
         [HttpPost]
-        public async Task<IActionResult> UploadPost()
+        public async Task<IActionResult> UploadPost(PostViewModel postViewModel)
         {
-            var postViewModel = new PostViewModel();
             var userId = await GetUserIdAsync(this._userManager);
-            var formCollection = await Request.ReadFormAsync();
-            var images = (formCollection.Files.GetFiles("uploadImages")).ToList<IFormFile>();
-            var videos = (formCollection.Files.GetFiles("uploadVideos")).ToList<IFormFile>();
-            var videoThumbnail = (formCollection.Files.GetFiles("uploadVideosThumbnail")).ToList<IFormFile>();
-            postViewModel.UploadVideos = videos;
-            postViewModel.UploadImages = images;
-            postViewModel.UploadVideosThumbnail = videoThumbnail;
-            var authorId = formCollection["authorId"].ToString();
-            postViewModel.AuthorId = Guid.Parse(authorId);
-            var ownerId = formCollection["ownerId"].ToString();
-            postViewModel.OwnerId = Guid.Parse(ownerId);
-            var parentId = formCollection["parentId"].ToString();
-            postViewModel.ParentId = Guid.Parse(parentId);
-            postViewModel.Title = formCollection["title"].ToString();
-            postViewModel.Description = formCollection["description"].ToString();
-
-            var postType = int.Parse(formCollection["postType"].ToString());
-            postViewModel.PostType = postType;
-
-            var postAuthorType = int.Parse(formCollection["postAuthorType"].ToString());
-            postViewModel.PostAuthorType = postAuthorType;
-
-            var attachments = (formCollection.Files.GetFiles("uploadAttachments")).ToList<IFormFile>();
-            postViewModel.UploadAttachments = attachments;
-
-            var postTags = (formCollection["postTags"]).ToList<string>();
-            postViewModel.PostTags = postTags;
-
-            var uploadFromFileStorage = (formCollection["UploadFromFileStorage"]).ToList<string>();
-            postViewModel.UploadFromFileStorage = uploadFromFileStorage;
-
-            postViewModel.CreatedBy = userId;
-            postViewModel.CreatedOn = DateTime.UtcNow;
-            postViewModel.IsDeleted = false;
-            postViewModel.IsPinned = false;
-            postViewModel.IsCommentsDisabled = false;
-
-            var streamUrl = formCollection["streamUrl"].ToString() ?? null;
-            postViewModel.StreamUrl = streamUrl;
-
-            var reelId = formCollection["reelId"].ToString();
-            if (String.IsNullOrEmpty(reelId))
+            postViewModel.BlobUrls = JsonConvert.DeserializeObject<List<BlobUrlsViewModel>>(postViewModel.BlobUrlsJson);
+            if (postViewModel.Id != null && postViewModel.Id != new Guid())
             {
-                postViewModel.ReelId = null;
+                var response = await _postService.UpdatePost(postViewModel, userId);
+                return Ok(response);
             }
             else
             {
-                postViewModel.ReelId = Guid.Parse(reelId);
+                postViewModel.CreatedBy = userId;
+                postViewModel.CreatedOn = DateTime.UtcNow;
+                postViewModel.IsDeleted = false;
+                postViewModel.IsPinned = false;
+                postViewModel.IsCommentsDisabled = false;
+                var response = await _postService.SavePost(postViewModel, userId);
+                return Ok(response);
             }
-
-
-
-            var commentsPerMinute = formCollection["commentsPerMinute"].ToString();
-
-
-            if (!string.IsNullOrEmpty(commentsPerMinute) && int.Parse(commentsPerMinute) > 0)
-            {
-                postViewModel.CommentsPerMinute = int.Parse(commentsPerMinute);
-            }
-            else
-            {
-                postViewModel.CommentsPerMinute = 0;
-            }
-
-            var response = await _postService.SavePost(postViewModel, userId);
-            //}
-            return Ok(response);
-
-
         }
 
         //[HttpPost, DisableRequestSizeLimit]

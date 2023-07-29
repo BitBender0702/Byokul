@@ -1348,12 +1348,24 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
      }
  
      postDivId:string = "";
-     openDialouge(event:any){
+     openDialouge(event:any,post:any){
  debugger;
  const parts = event.currentTarget.className.split(' ');
  this.postDivId = parts[3];
- if(this.postDivId != ""){
-  videojs(this.postDivId);
+ if(post.postAttachments != undefined){
+  var postAttach = post.postAttachments[0];
+  debugger
+  if(postAttach != undefined){
+    if(postAttach.fileType != 1){
+      if(this.postDivId != ""){
+        try{
+          videojs(this.postDivId);
+        } catch{
+          var displayDivs = document.getElementsByClassName("imgDisplay");
+        }
+      }
+    }
+  }
 }
  var displayDivs = document.getElementsByClassName("imgDisplay");
  for (var i = 0; i < displayDivs.length; i++){

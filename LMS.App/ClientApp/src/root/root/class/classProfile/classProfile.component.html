@@ -224,7 +224,7 @@
               </div>
             </div>
           </div>
-          <p class="font_16 mt-4">{{ class.description }}</p>
+          <p class="font_16 mt-4 preserve-line-breaks">{{ class.description }}</p>
         </div>
         <div *ngIf="class.classCertificates.length != 0 || this.isOwner">
         <div class="teacher-tags tag-box hover-tags">
@@ -1209,7 +1209,7 @@
                       (post.postType == 1 && post.postAuthorType == 2) ||
                       post.isLive
                     "
-                    class="col-md-6 col-xl-4" [class]="getRandomClass(i,false)" (click)="openDialouge($event)"
+                    class="col-md-6 col-xl-4" [class]="getRandomClass(i,false)" (click)="openDialouge($event,post)"
                   >
                     <div
                       class="school-grid-box position-relative school-list-box mb-0"

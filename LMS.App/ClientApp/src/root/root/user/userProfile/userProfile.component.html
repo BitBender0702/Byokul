@@ -174,7 +174,7 @@
               </div>
             </div>
           </div>
-          <p class="font_16 mt-4">{{ user.description }}</p>
+          <p class="font_16 mt-4 preserve-line-breaks">{{ user.description }}</p>
         </div>
         <div class="teacher-tags tag-box hover-tags">
           <div *ngIf="user.certificates.length != 0 || this.isOwner">
@@ -1612,7 +1612,7 @@
                   (post.postType == 1 && post.postAuthorType == 4) ||
                   post.isLive
                 "
-                class="col-md-6 col-xl-4" [class]="getRandomClass(i,false)" (click)="openDialouge($event)"
+                class="col-md-6 col-xl-4" [class]="getRandomClass(i,false)" (click)="openDialouge($event,post)"
               >
                 <div
                   class="school-grid-box position-relative school-list-box h-100 mb-0"

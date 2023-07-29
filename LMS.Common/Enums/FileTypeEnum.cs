@@ -14,6 +14,7 @@ namespace LMS.Common.Enums
         Word = 4,
         Excel = 5,
         Presentation = 6,
-        Pdf = 7
+        Pdf = 7,
+        Thumbnail = 8
     }
 }

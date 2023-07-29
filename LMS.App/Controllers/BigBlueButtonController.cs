@@ -50,8 +50,8 @@ namespace LMS.App.Controllers
         [HttpPost]
         public async Task<ActionResult> Create([FromBody] NewMeetingViewModel newMeetingViewModel)
         {
-            string url = await _bigBlueButtonService.Create(newMeetingViewModel);
-            return Ok(new { url = url });
+            var response = await _bigBlueButtonService.Create(newMeetingViewModel);
+            return Ok(new { url = response.StreamUrl });
         }
 
         [Route("joinMeeting")]

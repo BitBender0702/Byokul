@@ -53,6 +53,7 @@ namespace LMS.Common.ViewModels.BigBlueButton
 
         [JsonProperty("message")]
         public string Message { get; set; }
+        public string StreamUrl { get; set; }
     }
 
     public class CreateResponse

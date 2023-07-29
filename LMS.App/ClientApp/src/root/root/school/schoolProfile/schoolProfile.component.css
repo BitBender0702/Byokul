@@ -72,6 +72,10 @@
   /* Add your desired styling for the div */
 }
 
+.preserve-line-breaks {
+  white-space: pre-wrap;
+}
+
 
 /* .flex-container {
   display: flex;
