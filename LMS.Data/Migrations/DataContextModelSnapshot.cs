@@ -216,6 +216,9 @@ namespace LMS.Data.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("IsCommentsDisabled")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsCourse")
                         .HasColumnType("bit");
 
@@ -605,6 +608,9 @@ namespace LMS.Data.Migrations
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsCommentsDisabled")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");

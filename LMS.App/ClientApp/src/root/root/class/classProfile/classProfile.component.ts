@@ -349,7 +349,17 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
        if(!this.addPostSubscription){
        this.addPostSubscription = addPostResponse.subscribe((postResponse:any) => {
           // this.loadingIcon = true;
-          this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post created successfully'});
+        //   if(postResponse.response.postType == 1){
+        //     var translatedMessage = this.translateService.instant('PostCreatedSuccessfully');
+        //   }
+        //   else if(postResponse.response.postType == 3){
+        //     var translatedMessage = this.translateService.instant('ReelCreatedSuccessfully');
+        //   }
+        //   else{
+        //     var translatedMessage = this.translateService.instant('PostUpdatedSuccessfully');
+        //   }
+        // const translatedSummary = this.translateService.instant('Success');
+        // this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage,});        
           this._classService.getClassById(this.className.replace(" ","").toLowerCase()).subscribe((response) => {
             this.class = response;
             this.titleService.setTitle(this.class.className);
@@ -1397,4 +1407,22 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
      this.isScreenTablet = screenWidth >= 768 && screenWidth < 992;
      this.isScreenMobile = screenWidth < 768;
    }
+
+   getDeletedPostId(id: string) {
+    debugger
+    this.loadingIcon = true;
+    this._postService.deletePost(id).subscribe((_response) => {
+      this.loadingIcon = false;
+      deletePostResponse.next({postId:id});
+    });
+  }
+  
+  openEditPostModal(post:any){
+    debugger
+    const initialState = {
+      editPostId: post.id,
+      from: post.postAuthorType == 1 ? "school" : post.postAuthorType == 2 ? "class" : post.postAuthorType == 3 ? "course" : post.postAuthorType == 4 ? "user" : undefined
+    };
+      this.bsModalService.show(CreatePostComponent,{initialState});
+  }
 }

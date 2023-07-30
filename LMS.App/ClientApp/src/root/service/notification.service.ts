@@ -54,6 +54,7 @@ export class NotificationService{
     }
 
     initializeNotificationViewModel(userid:string,notificationType:NotificationType,notificationContent:string,loginUserId:string,postId?:string | null,postType?:number,post?:any,reelId?:string | null,chatType?:number,chatTypeId?:string| null):Observable<any>{
+      debugger
         this._userService.getUser(loginUserId).subscribe((response) => {
           debugger
           this.notificationViewModel = {

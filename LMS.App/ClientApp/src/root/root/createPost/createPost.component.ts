@@ -25,16 +25,33 @@ import { FileStorageService } from 'src/root/service/fileStorage';
 import { AutoComplete } from 'primeng/autocomplete';
 import { Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
-import { postProgressNotification } from '../root.component';
+import { postProgressNotification, postUploadOnBlob, reelUploadOnBlob } from '../root.component';
 import { TranslateService } from '@ngx-translate/core';
 import { NotificationService } from 'src/root/service/notification.service';
 import { NotificationType } from 'src/root/interfaces/notification/notificationViewModel';
 import { AzureBlobStorageService } from 'src/root/service/blobStorage.service';
-export const addPostResponse =new Subject<{}>();  
+export const addPostResponse =new Subject<{}>();
 import { v4 as uuidv4 } from 'uuid';
 import { BlobServiceClient, ContainerClient, BlockBlobClient } from '@azure/storage-blob';
 import { Constant } from 'src/root/interfaces/constant';
 import { UploadTypeEnum } from 'src/root/Enums/uploadTypeEnum';
+
+export const createPost = new Subject<{
+  postToUpload:any;
+  uploadVideoUrlList:any;
+  type:any
+}>();
+
+
+export const createReel = new Subject<{
+  postToUpload:any;
+  uploadVideoUrlList:any;
+}>();
+
+export const createLive = new Subject<{
+  postToUpload:any;
+  uploadVideoUrlList:any;
+}>();
 
 
 @Component({
@@ -142,6 +159,10 @@ export class CreatePostComponent implements OnInit,OnDestroy {
   uploadImageUrls:any[] = [];
   uploadVideoUrls:any[] = [];
   attachmentUrls:any[] = [];
+  createPostSubscription!:Subscription;
+  createReelSubscription!:Subscription;
+  createLiveSubscription!:Subscription;
+
 
   @Output() onClose: EventEmitter<any> = new EventEmitter<any>();
 
@@ -182,7 +203,7 @@ export class CreatePostComponent implements OnInit,OnDestroy {
     this.classId = initialValue.classId;
     this._postService.getClass(this.classId).subscribe((response) => {
       this.parentDetails = response;
-     
+
     });
 
    }
@@ -191,7 +212,7 @@ export class CreatePostComponent implements OnInit,OnDestroy {
     this.userId = initialValue.userId;
     this._postService.getUser(this.userId).subscribe((response) => {
       this.parentDetails = response;
-     
+
     });
 
    }
@@ -199,7 +220,7 @@ export class CreatePostComponent implements OnInit,OnDestroy {
    if(initialValue?.from == "course"){
     this._postService.getCourse(this.courseId).subscribe((response) => {
       this.parentDetails = response;
-     
+
     });
 
    }
@@ -238,6 +259,7 @@ export class CreatePostComponent implements OnInit,OnDestroy {
     this.reelsTagLists = [];
     this.initialTagList = [];
     this.uploadFromFileStorage = [];
+    this.uploadVideoUrlList = [];
 
     this.initializeImageObject();
     this.initializeVideoObject();
@@ -253,6 +275,101 @@ export class CreatePostComponent implements OnInit,OnDestroy {
       this.cd.detectChanges();
     });
 
+   createReel.subscribe(postResponse => {
+      debugger
+      this.postToUpload.append('blobUrlsJson', JSON.stringify(postResponse.uploadVideoUrlList));
+      this._postService.createPost(this.postToUpload).subscribe((response:any) => {
+        debugger
+        this.isSubmitted=false;
+        this.loadingIcon = false;
+        this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Reel created successfully'});
+        addPostResponse.next({response});
+        this.postToUpload = new FormData();
+        var translatedMessage = this.translateService.instant('PostReadyToViewMessage');
+        var notificationContent = translatedMessage;
+        this.uploadVideoUrlList = [];
+        this._notificationService.initializeNotificationViewModel(this.loginUserId,NotificationType.PostUploaded,notificationContent,this.loginUserId,response.id,response.postType,response,response.reelId).subscribe((response) => {
+        });
+        this.close();
+        this.ngOnInit();
+      });
+     });
+
+      createLive.subscribe(postResponse => {
+      debugger
+      this.postToUpload.append('blobUrlsJson', JSON.stringify(postResponse.uploadVideoUrlList));
+      this._postService.createPost(this.postToUpload).subscribe((response:any) => {
+        debugger
+        this.isSubmitted=false;
+        this.loadingIcon = false;
+        //addPostResponse.next({response});
+        this.postToUpload = new FormData();
+        this.close();
+        this.uploadVideoUrlList = [];
+        if(this.videos.length != 0){
+        var translatedMessage = this.translateService.instant('VideoReadyToStream');
+        var notificationContent = translatedMessage;
+        var chatType = this.from == "user" ? 1 :this.from == "school" ? 3 : this.from == "class" ? 4 : undefined;
+        this._notificationService.initializeNotificationViewModel(this.loginUserId,NotificationType.PostUploaded,notificationContent,this.loginUserId,response.id,response.postType,response,null,chatType).subscribe((response) => {
+        });
+       }
+      else{
+        if(!response.isPostSchedule){
+        this.router.navigate(
+            [`liveStream`,response.id,this.from]
+        );
+      }
+    }
+     });
+    });
+
+
+    createPost.subscribe(postResponse => {
+      debugger
+      this.close();
+      this.isSubmitted=false;
+      this.loadingIcon = false;
+      // this.postToUpload.append('blobUrlsJson', JSON.stringify(postResponse.uploadVideoUrlList));
+      // if(postResponse.type == 1 ){
+      // this._postService.createPost(this.postToUpload).subscribe((response:any) => {
+      //   debugger
+      //   this.close();
+      //   this.onClose.emit(response);
+      //   this.isSubmitted=false;
+      //   this.loadingIcon = false;
+      //   addPostResponse.next({response});
+      //   this.postToUpload = new FormData();
+      //   if(this.videos.length != 0 || this.attachment.length != 0){
+      //     var translatedMessage = this.translateService.instant('PostReadyToViewMessage');
+      //     var notificationContent = translatedMessage;
+      //     this._notificationService.initializeNotificationViewModel(this.loginUserId,NotificationType.PostUploaded,notificationContent,this.loginUserId,response.id,response.postType,response,null).subscribe((response) => {
+      //     });
+      //   }
+      //     });
+
+      //}
+    });
+
+
+    // this.createReelSubscription = createReels.subscribe(postResponse => {
+    //   debugger
+    //   // this.postToUpload.append('blobUrlsJson', JSON.stringify(postResponse.uploadVideoUrlList));
+    //   // this._postService.createPost(this.postToUpload).subscribe((response:any) => {
+    //   //   debugger
+    //   //   this.isSubmitted=false;
+    //   //   this.loadingIcon = false;
+    //   //   this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Reel created successfully'});
+    //   //   addPostResponse.next({response});
+    //   //   this.postToUpload = new FormData();
+    //   //   var translatedMessage = this.translateService.instant('PostReadyToViewMessage');
+    //   //   var notificationContent = translatedMessage;
+    //   //   this._notificationService.initializeNotificationViewModel(this.loginUserId,NotificationType.PostUploaded,notificationContent,this.loginUserId,response.id,response.postType,response,response.reelId).subscribe((response) => {
+    //   //   });
+    //   //   this.close();
+    //   //   this.ngOnInit();
+    //   // });
+    // });
+
     this.cd.detectChanges();
     var modal = document.getElementById('create-post');
     window.onclick = (event) => {
@@ -260,10 +377,10 @@ export class CreatePostComponent implements OnInit,OnDestroy {
       if (modal != null) {
        this.bsModalService.hide();
       }
-    } 
+    }
    }
 
- 
+
 
   //  onModalClick(event: MouseEvent) {
   //   var a = document.querySelector('.modal-backdrop');
@@ -355,12 +472,24 @@ export class CreatePostComponent implements OnInit,OnDestroy {
   // .filter((attachment: { fileType: number; }) => attachment.fileType === 1)
   // .map((attachment: { fileUrl: any; }) => attachment.fileUrl);
 
-    
+
 
   }
 
    ngOnDestroy() {
+    debugger;
+    if(this.createPostSubscription){
+      this.createPostSubscription.unsubscribe();
+    }
+    if(this.createReelSubscription){
+      this.createReelSubscription.unsubscribe();
+    }
+    if(this.createLiveSubscription){
+      this.createLiveSubscription.unsubscribe();
+    }
+    if(this.progressSubscription){
     this.progressSubscription.unsubscribe();
+    }
   }
 
    initializeImageObject(){
@@ -405,17 +534,17 @@ handleImageInput2(file: any) {
   debugger
   this.images.push(file);
   const reader = new FileReader();
-  
+
   reader.onload = () => {
     const imageUrl = reader.result as string;
     const imageName = file.name;
     const imageObject = { imageUrl, name: imageName };
     this.uploadImage.push(imageObject);
-    
+
     this.thumbnailRequired = false;
     this.isThumbnailUpload = true;
   };
-  
+
   reader.readAsDataURL(file);
 }
 
@@ -424,13 +553,13 @@ handleVideoInput2(file: any) {
     this.videos.push(file);
     this.videoObject.name = file.name;
     this.videoObject.type = file.type;
-    this.uploadVideo.push(this.videoObject); 
+    this.uploadVideo.push(this.videoObject);
     this.initializeVideoObject();
     const videoUrl = URL.createObjectURL(file);
     this.getVideoThumbnail(videoUrl,file.name, (thumbnailUrl) => {
       debugger
       this.videoObject.videoUrl = thumbnailUrl;
-     
+
     });
   this.scheduleVideoRequired = false;
   this.isVideoUpload = true;
@@ -473,7 +602,7 @@ handleVideoInput(event: any) {
       this.videoObject.videoUrl = thumbnailUrl;
       this.videoObject.name = file.name;
       this.videoObject.type = file.type;
-      this.uploadVideo.push(this.videoObject); 
+      this.uploadVideo.push(this.videoObject);
       this.initializeVideoObject();
     });
   }
@@ -508,13 +637,13 @@ async saveCanvasToFile(canvas: HTMLCanvasElement, fileName: string) {
   let lastSlashIndex = blob.type.lastIndexOf("/");
 if (lastSlashIndex !== -1) {
   var thumbnailType = blob.type.substring(lastSlashIndex + 1);
-} 
+}
 
 
 let lastDotIndex = fileName.lastIndexOf(".");
 if (lastDotIndex !== -1) {
   fileName = fileName.substring(0, lastDotIndex + 1);
-} 
+}
 
 fileName = fileName + thumbnailType;
 
@@ -617,14 +746,14 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
 
  handleReels(event:any){
   debugger
-  this.postToUpload.append('uploadVideos', event.target.files[0]);
+  // this.postToUpload.append('uploadVideos', event.target.files[0]);
   this.reel = event.target.files[0];
   const videoUrl = URL.createObjectURL(this.reel);
   this.getVideoThumbnail(videoUrl,this.reel.name, (thumbnailUrl) => {
     this.videoObject.videoUrl = thumbnailUrl;
     this.videoObject.name = this.reel.name;
     this.videoObject.type = this.reel.type;
-    this.uploadReel = this.videoObject; 
+    this.uploadReel = this.videoObject;
     this.initializeVideoObject();
   });
   this.validateVideoDuration(videoUrl, this.reel);
@@ -655,7 +784,7 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
 
  removeUploadReel(uploadReel:any){
   this.postToUpload.set('uploadVideos','');
-  this.uploadReel = null; 
+  this.uploadReel = null;
   this.isVideoDurationExceed = false;
 
  }
@@ -664,6 +793,7 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
  blobVideoThumbnails: any[] = [];
   async savePost(){
     debugger
+    this.uploadVideoUrlList = [];
     this.isSubmitted=true;
     if (!this.createPostForm.valid) {
       return;
@@ -703,42 +833,42 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
 
   this.totalFilesLength = this.images.length + this.videos.length + this.attachment.length;
     // for images
-    for(var i=0; i<this.images.length; i++){
-      this.postToUpload.append('uploadImages', this.images[i]);
-    }
+    // for(var i=0; i<this.images.length; i++){
+    //   this.postToUpload.append('uploadImages', this.images[i]);
+    // }
 
     const combinedFiles = [...this.videos, ...this.images, ...this.attachment, ... this.videoThumbnails];
 
-const uploadPromises = combinedFiles.map((file) => {
-  if (this.videos.includes(file)) {
-    return this.uploadVideosOnBlob(file, UploadTypeEnum.Video);
-  } 
-  if(this.images.includes(file)){
-    return this.uploadVideosOnBlob(file, UploadTypeEnum.Image);
-  }
-  if(this.videoThumbnails.includes(file)){
-    return this.uploadVideosOnBlob(file, UploadTypeEnum.Thumbnail);
-  }
-  else {
-    return this.uploadVideosOnBlob(file, UploadTypeEnum.Attachment);
-  }
-  
-});
+// const uploadPromises = combinedFiles.map((file) => {
+//   if (this.videos.includes(file)) {
+//     return this.uploadVideosOnBlob(file, UploadTypeEnum.Video);
+//   }
+//   if(this.images.includes(file)){
+//     return this.uploadVideosOnBlob(file, UploadTypeEnum.Image);
+//   }
+//   if(this.videoThumbnails.includes(file)){
+//     return this.uploadVideosOnBlob(file, UploadTypeEnum.Thumbnail);
+//   }
+//   else {
+//     return this.uploadVideosOnBlob(file, UploadTypeEnum.Attachment);
+//   }
 
-await Promise.all(uploadPromises);
+// });
 
-    
-for (let i = 0; i < this.uploadVideoUrlList.length; i++) {
-  debugger
-  const uploadVideo = this.uploadVideoUrlList[i];
+// await Promise.all(uploadPromises);
 
-  for (const blobVideo of this.blobVideoThumbnails) {
-    if (uploadVideo.blobName === blobVideo.blobName) {
-      uploadVideo.thumbnailUrl = blobVideo.blobUrl;
-      break;
-    }
-  }
-}
+
+// for (let i = 0; i < this.uploadVideoUrlList.length; i++) {
+//   debugger
+//   const uploadVideo = this.uploadVideoUrlList[i];
+
+//   for (const blobVideo of this.blobVideoThumbnails) {
+//     if (uploadVideo.blobName === blobVideo.blobName) {
+//       uploadVideo.thumbnailUrl = blobVideo.blobUrl;
+//       break;
+//     }
+//   }
+// }
 
     // const uploadPromises = this.videos.map((file) => this.uploadVideosOnBlob(file,UploadTypeEnum.Video));
     // await Promise.all(uploadPromises);
@@ -749,21 +879,21 @@ for (let i = 0; i < this.uploadVideoUrlList.length; i++) {
     // const uploadAttachmentPromises = this.attachment.map((file:any) => this.uploadVideosOnBlob(file,UploadTypeEnum.Attachment));
     // await Promise.all(uploadAttachmentPromises);
     // for videoes
-    for(var i=0; i<this.videos.length; i++){
-      this.postToUpload.append('uploadVideos', this.videos[i]);
-      // await this.uploadVideosOnBlob(this.videos[i]);
-    }
+    // for(var i=0; i<this.videos.length; i++){
+    //   this.postToUpload.append('uploadVideos', this.videos[i]);
+    //   // await this.uploadVideosOnBlob(this.videos[i]);
+    // }
 
-    for(var i=0; i<this.videoThumbnails.length; i++){
-      this.postToUpload.append('uploadVideosThumbnail', this.videoThumbnails[i]);
-    }
+    // for(var i=0; i<this.videoThumbnails.length; i++){
+    //   this.postToUpload.append('uploadVideosThumbnail', this.videoThumbnails[i]);
+    // }
 
-    // for attachments
-    for(var i=0; i<this.attachment.length; i++){
-      this.postToUpload.append('uploadAttachments', this.attachment[i]);
-    }
+    // // for attachments
+    // for(var i=0; i<this.attachment.length; i++){
+    //   this.postToUpload.append('uploadAttachments', this.attachment[i]);
+    // }
 
-    this.postToUpload.append('blobUrlsJson', JSON.stringify(this.uploadVideoUrlList))
+    // this.postToUpload.append('blobUrlsJson', JSON.stringify(this.uploadVideoUrlList))
 
     var post =this.createPostForm.value;
     this.postFrom();
@@ -781,23 +911,25 @@ for (let i = 0; i < this.uploadVideoUrlList.length; i++) {
     //   this.postToUpload.append('dateTime',localTime);
     // }
     this.postToUpload.append('postTags', JSON.stringify(this.tagLists))
-    this._postService.createPost(this.postToUpload).subscribe((response:any) => {  
-      debugger
-      this.close();
-      this.onClose.emit(response);
-      this.isSubmitted=false;
-      this.loadingIcon = false;
-      addPostResponse.next({response}); 
-      this.postToUpload = new FormData();
-      if(this.videos.length != 0 || this.attachment.length != 0){
-        var translatedMessage = this.translateService.instant('PostReadyToViewMessage');
-        var notificationContent = translatedMessage;
-        this._notificationService.initializeNotificationViewModel(this.loginUserId,NotificationType.PostUploaded,notificationContent,this.loginUserId,response.id,response.postType,response,null).subscribe((response) => {
-        });
-      }
-        });
-      // this.ngOnInit();
-  
+
+    postUploadOnBlob.next({postToUpload:this.postToUpload,combineFiles:combinedFiles,videos:this.videos,images:this.images,attachment:this.attachment,type:1,reel:null});
+
+    // this._postService.createPost(this.postToUpload).subscribe((response:any) => {
+    //   debugger
+    //   this.close();
+    //   this.onClose.emit(response);
+    //   this.isSubmitted=false;
+    //   this.loadingIcon = false;
+    //   addPostResponse.next({response});
+    //   this.postToUpload = new FormData();
+    //   if(this.videos.length != 0 || this.attachment.length != 0){
+    //     var translatedMessage = this.translateService.instant('PostReadyToViewMessage');
+    //     var notificationContent = translatedMessage;
+    //     this._notificationService.initializeNotificationViewModel(this.loginUserId,NotificationType.PostUploaded,notificationContent,this.loginUserId,response.id,response.postType,response,null).subscribe((response) => {
+    //     });
+    //   }
+    //     });
+
    }
 
    postFrom(){
@@ -831,8 +963,9 @@ for (let i = 0; i < this.uploadVideoUrlList.length; i++) {
 
    }
 
-   saveReels(){
+   async saveReels(){
     debugger
+    this.uploadVideoUrlList = [];
     this.isSubmitted = true;
     this.isShowingProgressBar = true;
     if(this.isVideoDurationExceed){
@@ -851,7 +984,7 @@ for (let i = 0; i < this.uploadVideoUrlList.length; i++) {
      }
     }
 
-    
+
     this.loadingIcon = true;
     setTimeout(() => {
       this.close();
@@ -861,9 +994,12 @@ for (let i = 0; i < this.uploadVideoUrlList.length; i++) {
 
     var reel =this.createReelForm.value;
     this.postFrom();
-    for(var i=0; i<this.videoThumbnails.length; i++){
-      this.postToUpload.append('uploadVideosThumbnail', this.videoThumbnails[i]);
-    }
+    // for(var i=0; i<this.videoThumbnails.length; i++){
+    //   this.postToUpload.append('uploadVideosThumbnail', this.videoThumbnails[i]);
+    // }
+
+      //  await this.uploadVideosOnBlob(this.reel,UploadTypeEnum.Video);
+      // this.postToUpload.append('blobUrlsJson', JSON.stringify(this.uploadVideoUrlList))
     this.postToUpload.append('postType', PostTypeEnum.Reel.toString());
     if(reel.scheduleTime != undefined){
     this.postToUpload.append('dateTime', reel.scheduleTime.toISOString());
@@ -872,20 +1008,22 @@ for (let i = 0; i < this.uploadVideoUrlList.length; i++) {
     this.postToUpload.append('title', reel.title);
     this.postToUpload.append('postTags', JSON.stringify(this.reelsTagLists))
 
-    this._postService.createPost(this.postToUpload).subscribe((response:any) => {
-      debugger
-      this.isSubmitted=false;
-      this.loadingIcon = false;
-      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Reel created successfully'});
-      addPostResponse.next({response}); 
-      this.postToUpload = new FormData();
-      var translatedMessage = this.translateService.instant('PostReadyToViewMessage');
-      var notificationContent = translatedMessage;
-      this._notificationService.initializeNotificationViewModel(this.loginUserId,NotificationType.PostUploaded,notificationContent,this.loginUserId,response.id,response.postType,response,response.reelId).subscribe((response) => {
-      });
-      this.close();
-      this.ngOnInit();
-    });
+    // reelUploadOnBlob.next({postToUpload:this.postToUpload,reel:this.reel});
+    postUploadOnBlob.next({postToUpload:this.postToUpload,combineFiles:null,videos:null,images:null,attachment:null,type:2,reel:this.reel});
+    // this._postService.createPost(this.postToUpload).subscribe((response:any) => {
+    //   debugger
+    //   this.isSubmitted=false;
+    //   this.loadingIcon = false;
+    //   this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Reel created successfully'});
+    //   addPostResponse.next({response});
+    //   this.postToUpload = new FormData();
+    //   var translatedMessage = this.translateService.instant('PostReadyToViewMessage');
+    //   var notificationContent = translatedMessage;
+    //   this._notificationService.initializeNotificationViewModel(this.loginUserId,NotificationType.PostUploaded,notificationContent,this.loginUserId,response.id,response.postType,response,response.reelId).subscribe((response) => {
+    //   });
+    //   this.close();
+    //   this.ngOnInit();
+    // });
 
    }
 
@@ -900,7 +1038,7 @@ for (let i = 0; i < this.uploadVideoUrlList.length; i++) {
     const tagIndex = this.tagLists.findIndex((item) => item ===tag);
     if (tagIndex > -1) {
       this.tagLists.splice(tagIndex, 1);
-    }       
+    }
   }
   }
 
@@ -911,7 +1049,7 @@ for (let i = 0; i < this.uploadVideoUrlList.length; i++) {
       var tagCount = this.tagLists.length + this.initialTagList.length;
       if(tagCount > 7){
         this.tagCountExceeded = true;
-        return; 
+        return;
       }
       else{
         this.tagCountExceeded = false;
@@ -928,7 +1066,7 @@ for (let i = 0; i < this.uploadVideoUrlList.length; i++) {
     var tagCount = this.tagLists.length + this.initialTagList.length;
     if(tagCount > 7){
       this.tagCountExceeded = true;
-      return; 
+      return;
     }
     if(this.isOpenReelsTab){
       this.reelsTagLists = [ ...this.reelsTagLists, ...this.initialTagList];
@@ -968,7 +1106,7 @@ for (let i = 0; i < this.uploadVideoUrlList.length; i++) {
     this.isTagsValid = true;
     if(tagCount > 7){
       this.tagCountExceeded = true;
-      return; 
+      return;
     }
     else{
       this.tagCountExceeded = false;
@@ -1081,6 +1219,7 @@ for (let i = 0; i < this.uploadVideoUrlList.length; i++) {
 
    liveStream(){
     debugger
+    this.uploadVideoUrlList = [];
     this.isSubmitted=true;
 
     if(this.scheduleTime != undefined){
@@ -1119,13 +1258,13 @@ for (let i = 0; i < this.uploadVideoUrlList.length; i++) {
     }
 
         // for videoes
-        for(var i=0; i<this.videos.length; i++){
-          this.postToUpload.append('uploadVideos', this.videos[i]);
-        }
+        // for(var i=0; i<this.videos.length; i++){
+        //   this.postToUpload.append('uploadVideos', this.videos[i]);
+        // }
 
-        for(var i=0; i<this.videoThumbnails.length; i++){
-          this.postToUpload.append('uploadVideosThumbnail', this.videoThumbnails[i]);
-        }
+        // for(var i=0; i<this.videoThumbnails.length; i++){
+        //   this.postToUpload.append('uploadVideosThumbnail', this.videoThumbnails[i]);
+        // }
 
         if(this.videos.length == 0){
           this.loadingIcon = true;
@@ -1150,40 +1289,43 @@ for (let i = 0; i < this.uploadVideoUrlList.length; i++) {
     this.postToUpload.append('commentsPerMinute', post.commentPerMinute);
     this.postToUpload.append('isMicroPhoneOpen', this.isMicroPhoneOpen.toString());
 
-    
+
     for(var i=0; i<this.images.length; i++){
       this.postToUpload.append('uploadImages', this.images[i]);
     }
 
-    this._postService.createPost(this.postToUpload).subscribe((response:any) => { 
-      debugger
-      this.isSubmitted=false;
-      this.loadingIcon = false;
-      //addPostResponse.next({response}); 
-      this.postToUpload = new FormData();
-      this.close();
-      if(this.videos.length != 0){
-      var translatedMessage = this.translateService.instant('VideoReadyToStream');
-      var notificationContent = translatedMessage;
-      var chatType = this.from == "user" ? 1 :this.from == "school" ? 3 : this.from == "class" ? 4 : undefined;
-      this._notificationService.initializeNotificationViewModel(this.loginUserId,NotificationType.PostUploaded,notificationContent,this.loginUserId,response.id,response.postType,response,null,chatType).subscribe((response) => {
-      });
-    }
-    else{
-      // const fullNameIndex = response.streamUrl.indexOf('fullName='); // find the index of "fullName="
-      // const newUrl = response.streamUrl.slice(fullNameIndex);
-      // here we need to send schoolId/classId if stream from those.
-      if(!response.isPostSchedule){
-      this.router.navigate(
-          [`liveStream`,response.id,this.from]
-          // { state: { stream: {streamUrl: response.streamUrl, userId:this.userId, meetingId: post.title,from:"user"} } });
+    const combinedFiles = [...this.videos, ...this.images];
 
-      // }
-      );
-      
-    }
-  }
-      });
+    postUploadOnBlob.next({postToUpload:this.postToUpload,combineFiles:combinedFiles,videos:this.videos,images:this.images,attachment:null,type:3,reel:null});
+  //   this._postService.createPost(this.postToUpload).subscribe((response:any) => {
+  //     debugger
+  //     this.isSubmitted=false;
+  //     this.loadingIcon = false;
+  //     //addPostResponse.next({response});
+  //     this.postToUpload = new FormData();
+  //     this.close();
+  //     if(this.videos.length != 0){
+  //     var translatedMessage = this.translateService.instant('VideoReadyToStream');
+  //     var notificationContent = translatedMessage;
+  //     var chatType = this.from == "user" ? 1 :this.from == "school" ? 3 : this.from == "class" ? 4 : undefined;
+  //     this._notificationService.initializeNotificationViewModel(this.loginUserId,NotificationType.PostUploaded,notificationContent,this.loginUserId,response.id,response.postType,response,null,chatType).subscribe((response) => {
+  //     });
+  //    }
+  //   else{
+  //     // const fullNameIndex = response.streamUrl.indexOf('fullName='); // find the index of "fullName="
+  //     // const newUrl = response.streamUrl.slice(fullNameIndex);
+  //     // here we need to send schoolId/classId if stream from those.
+  //     if(!response.isPostSchedule){
+  //     this.router.navigate(
+  //         [`liveStream`,response.id,this.from]
+  //         // { state: { stream: {streamUrl: response.streamUrl, userId:this.userId, meetingId: post.title,from:"user"} } });
+
+  //     // }
+  //     );
+
+  //   }
+  // }
+  //     });
 
 }
 
@@ -1225,7 +1367,7 @@ uploadVideoUrlList: any[] = [];
 
 public async uploadVideosOnBlob(file: File, fileType:number) {
   debugger
-  
+
   // Replace with your SAS token or connection string
   const sasToken = Constant.SASToken;
   var prefix = "attachments";
@@ -1233,22 +1375,22 @@ public async uploadVideosOnBlob(file: File, fileType:number) {
   prefix = "images";
   else if(fileType == UploadTypeEnum.Video)
   prefix = "videos";
-  const blobName = `${prefix}/${uuidv4().toString()}`;
+  const id = uuidv4();
+  const blobName = `${prefix}/${id.toString()}${file.name.substring(file.name.lastIndexOf('.'))}`;
   var containerName = Constant.ContainerName;
   const blobStorageName =  Constant.blobStorageName;
   var containerClient =  new BlobServiceClient(`https://${blobStorageName}.blob.core.windows.net?${sasToken}`)
-  .getContainerClient("posts");
+  .getContainerClient("userposts");
 
   await this.uploadBlobTest(file, blobName, containerClient)
   .then((response) => {
     debugger
-    var uploadVideoObject = 
+    var uploadVideoObject =
     {
-      id: blobName,
+      id: id,
       blobUrl:response.blobUrl,
       blobName:blobName,
-      fileType:fileType,
-      thumbnailUrl:null
+      fileType:fileType
     }
     if(fileType != UploadTypeEnum.Thumbnail){
     this.uploadVideoUrlList.push(uploadVideoObject);
@@ -1287,5 +1429,5 @@ private async uploadBlobTest(content: Blob, name: string, client: ContainerClien
 
 }
 
-   
+
 

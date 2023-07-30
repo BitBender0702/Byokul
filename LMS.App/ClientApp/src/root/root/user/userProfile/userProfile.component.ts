@@ -312,9 +312,17 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
       this.addPostSubscription = addPostResponse.subscribe((postResponse:any) => {
         debugger
         // this.loadingIcon = true;
-        const translatedMessage = this.translateService.instant('PostCreatedSuccessfully');
-        const translatedSummary = this.translateService.instant('Success');
-        this.messageService.add({severity:'success', summary:translatedSummary,life: 3000, detail:translatedMessage});
+        // if(postResponse.response.postType == 1){
+        //   var translatedMessage = this.translateService.instant('PostCreatedSuccessfully');
+        // }
+        // else if(postResponse.response.postType == 3){
+        //   var translatedMessage = this.translateService.instant('ReelCreatedSuccessfully');
+        // }
+        // else{
+        //   var translatedMessage = this.translateService.instant('PostUpdatedSuccessfully');
+        // }
+        // const translatedSummary = this.translateService.instant('Success');
+        // this.messageService.add({severity:'success', summary:translatedSummary,life: 3000, detail:translatedMessage});
         this._userService.getUserById(this.userId).subscribe((response) => {
           debugger
           this.user = response;
@@ -330,7 +338,7 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
           this.cd.detectChanges();
           this.addEventListnerOnCarousel();
           this.user.posts = this.getFilteredAttachments(this.user.posts);   
-          this.showPostDiv(postResponse.response.id);
+          this.showPostDiv(postResponse.response);
           });
       });
     }
@@ -1127,7 +1135,10 @@ openReelsViewModal(postAttachmentId:string): void {
   const screenWidthThreshold = 768;
   const isMobileOrTab = window.innerWidth < screenWidthThreshold;
   // if (isMobileOrTab) {
-    this.router.navigateByUrl(`user/reelsView/${this.user.id}/user/${postAttachmentId}`);
+    // this.router.navigateByUrl(`user/reelsView/${this.user.id}/user/${postAttachmentId}`);
+this.router.navigate(
+    [`user/reelsView/${this.user.id}/user/${postAttachmentId}`],
+    { state: { post: {postId: postAttachmentId} } });
 
 //   } else {
 //   const initialState = {
@@ -1209,6 +1220,7 @@ likeUnlikePosts(postId:string, isLike:boolean,postType:number,post:any,from:numb
 }
 
 showPostDiv(postId:string){
+  debugger
   var posts: any[] = this.user.posts;
   this.gridItemInfo = posts.find(x => x.id == postId);
   if(this.gridItemInfo.isLive){
@@ -2015,6 +2027,24 @@ editUserCertificate(userCertificateInfo:any){
   });
 
   this.uploadImage = userCertificateInfo.certificateUrl;
+}
+
+getDeletedPostId(id: string) {
+  debugger
+  this.loadingIcon = true;
+  this._postService.deletePost(id).subscribe((_response) => {
+    this.loadingIcon = false;
+    deletePostResponse.next({postId:id});
+  });
+}
+
+openEditPostModal(post:any){
+  debugger
+  const initialState = {
+    editPostId: post.id,
+    from: post.postAuthorType == 1 ? "school" : post.postAuthorType == 2 ? "class" : post.postAuthorType == 3 ? "course" : post.postAuthorType == 4 ? "user" : undefined
+  };
+    this.bsModalService.show(CreatePostComponent,{initialState});
 }
 
 }

@@ -90,7 +90,7 @@ import { ImageCropperModule } from 'ngx-image-cropper';
 import { NgxIntlTelInputModule } from 'ngx-intl-tel-input';
 import { IConfig, NgxMaskModule } from 'ngx-mask';
 import { SlickCarouselModule } from 'ngx-slick-carousel';
-
+import {LazyLoadImageModule} from 'ng-lazyload-image'
 export const options: Partial<IConfig> = {
   thousandSeparator: "'"
 };
@@ -233,6 +233,7 @@ const routes: Routes = [
     ImageCropperModule,
     NgxIntlTelInputModule,
     SlickCarouselModule,
+    LazyLoadImageModule ,
     // MetaModule.forRoot(),
     // PickerComponent,
     // PdfJsViewerModule,

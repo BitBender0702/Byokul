@@ -80,10 +80,10 @@
         <div class="School-prof-header">
           <div class="d-flex">
             <div class="school-profile-icon rounded-circle user-profile-header">
-              <img *ngIf="user.avatar != null" [src]="user.avatar" />
+              <img *ngIf="user.avatar != null" [lazyLoad]="user.avatar" />
               <img
                 *ngIf="user.avatar == null && gender == '1'"
-                src="../../../assets/images/maleProfile.jfif"
+                lazyLoad="../../../assets/images/maleProfile.jfif"
               />
               <img
                 *ngIf="user.avatar == null && (gender == '2' || gender == '3')"
@@ -615,56 +615,6 @@
           >
             <div class="accordion" id="accordionPanelsStayOpenExample">
               <ng-container *ngTemplateOutlet="postFeedSection"></ng-container>
-
-              <!-- <div class="feed-section">
-                <div class="feed-box position-relative">
-                  <reels-loading-spinner [reelsLoadingIcon]="reelsLoadingIcon" class="position-absolute translate-middle reel_spinner_position"></reels-loading-spinner>
-                    <div class="feedbox-inner d-flex ">
-                      <carousel #carousel
-                      [itemsPerSlide]="itemsPerSlide"
-                      [singleSlideOffset]="singleSlideOffset"
-                      [interval]="0"
-                      [noWrap]="noWrap">
-                      <div *ngFor="let post of user.reels">
-                        <div *ngIf="post.postType == 3">
-                        <slide *ngFor="let postAttachment of post.postAttachments">
-                          <div *ngIf="postAttachment.fileType == 2">
-                            <div class="feedimg-box position-relative text-light position-relative">
-                              <a (click)="openReelsViewModal(postAttachment.id)" style="cursor: pointer;">
-                                <div class="videofile">
-                                  <img style="height: 300px;" [src]="postAttachment.fileThumbnail">
-                                </div>
-                              </a>
-                                <div class="pinned-view d-flex  justify-content-between align-items-start">
-                                    <button type="button" class="view font_12 bg-transparent border-0 text-light">
-                                        <img src="../../../../assets/images/eye-light.svg" /> {{post.views.length}}
-                                    </button>
-                                      <button *ngIf="post.isPinned && isOwner" (click)="pinUnpinPost(post.id,false)" type="button" class="pinned bg-transparent border-0">
-                                        <img src="../../../../assets/images/pinned-orange.svg" />
-                                    </button>
-                                    <button *ngIf="!post.isPinned && isOwner" (click)="pinUnpinPost(post.id,true)" type="button" class="pinned bg-transparent border-0">
-                                      <img src="../../../../assets/images/pinned-gray.svg" />
-                                  </button>
-                                </div>
-                                <div class="feed-name font_14 text_sec1">
-                                  <img *ngIf="post.parentImageUrl != null" [src]="post.parentImageUrl"/>
-                                  <img *ngIf="post.parentImageUrl == null && gender =='1'" src="../../../assets/images/maleProfile.jfif"/>
-                                  <img *ngIf="post.parentImageUrl == null && (gender =='2' || gender =='3')" src="../../../assets/images/femaleProfile.jfif"/>
-                                  {{post.parentName}}
-                                </div>
-                                <div class="feed-title font_14 text_sec1 d-flex align-content-center fw_600">
-                                    {{post.title}}
-                                    <span class="fw-light ms-2" *ngFor="let item of post.postTags; let isLast=last">#{{item.postTagValue}}{{isLast ? '' : ', '}}</span>
-                                </div>
-                            </div>
-                          </div>
-                      </slide>
-                      </div>
-                      </div>
-                    </carousel>
-                    </div>
-                </div>
-            </div> -->
               <ng-container *ngFor="let post of user.posts">
                 <div
                   *ngIf="
@@ -1140,262 +1090,9 @@
           *ngIf="!isProfileGrid && isPostTab"
         >
           <ng-container *ngTemplateOutlet="postFeedSection"></ng-container>
-          <!-- <div class="feed-section">
-              <div class="feed-box position-relative">
-                <reels-loading-spinner [reelsLoadingIcon]="reelsLoadingIcon" class="position-absolute translate-middle reel_spinner_position"></reels-loading-spinner>
-                  <div class="feedbox-inner d-flex ">
-                    <carousel #carousel
-                    [itemsPerSlide]="itemsPerSlide"
-                    [singleSlideOffset]="singleSlideOffset"
-                    [interval]="0"
-                    [noWrap]="noWrap">
-                    <div *ngFor="let post of user.reels">
-                      <div *ngIf="post.postType == 3">
-                      <slide *ngFor="let postAttachment of post.postAttachments">
-                        <div *ngIf="postAttachment.fileType == 2">
-                          <div class="feedimg-box position-relative text-light position-relative">
-                            <a (click)="openReelsViewModal(postAttachment.id)" style="cursor: pointer;">
-                              <div class="videofile">
-                                <img style="height: 300px;" [src]="postAttachment.fileThumbnail">
-                              </div>
-                            </a>
-                              <div class="pinned-view d-flex  justify-content-between align-items-start">
-                                  <button type="button" class="view font_12 bg-transparent border-0 text-light">
-                                      <img src="../../../../assets/images/eye-light.svg" /> {{post.views.length}}
-                                  </button>
-                                    <button *ngIf="post.isPinned && isOwner" (click)="pinUnpinPost(post.id,false)" type="button" class="pinned bg-transparent border-0">
-                                      <img src="../../../../assets/images/pinned-orange.svg" />
-                                  </button>
-                                  <button *ngIf="!post.isPinned && isOwner" (click)="pinUnpinPost(post.id,true)" type="button" class="pinned bg-transparent border-0">
-                                    <img src="../../../../assets/images/pinned-gray.svg" />
-                                </button>
-                              </div>
-                              <div class="feed-name font_14 text_sec1">
-                                <img *ngIf="post.parentImageUrl != null" [src]="post.parentImageUrl"/>
-                                <img *ngIf="post.parentImageUrl == null && gender =='1'" src="../../../assets/images/maleProfile.jfif"/>
-                                <img *ngIf="post.parentImageUrl == null && (gender =='2' || gender =='3')" src="../../../assets/images/femaleProfile.jfif"/>
-                                 {{post.parentName}}
-                              </div>
-                              <div class="feed-title font_14 text_sec1 d-flex align-content-center fw_600">
-                                  {{post.title}}
-                                  <span class="fw-light ms-2" *ngFor="let item of post.postTags; let isLast=last">#{{item.postTagValue}}{{isLast ? '' : ', '}}</span>
-                              </div>
-                          </div>
-                        </div>
-                    </slide>
-                    </div>
-                    </div>
-                  </carousel>
-                  </div>
-              </div>
-          </div> -->
-          <!-- <div
-            [ngClass]="
-              isGridItemInfo
-                ? 'd-block school-grid-box position-relative school-list-box h-100'
-                : 'd-none school-grid-box position-relative school-list-box h-100'
-            "
-            *ngIf="gridItemInfo != undefined"
-          >
-            <div class="row post-list-preview-sec">
-              <div
-                [ngClass]="
-                  gridItemInfo.postAttachments.length > 0
-                    ? 'd-block col-lg-6'
-                    : 'd-none'
-                "
-              >
-                <carousel>
-                  <div
-                    *ngFor="let postAttachment of gridItemInfo.postAttachments"
-                    class="school-grid-thumbnail"
-                  >
-                    <slide *ngIf="postAttachment.fileType == 2">
-                      <div
-                        *ngIf="postAttachment?.fileType == 2"
-                        class="videofile"
-                      >
-                        <video
-                          #videoPlayer
-                          controls
-                          class="video-js vjs-big-play-centered"
-                          preload="metadata"
-                        >
-                          <source
-                            [src]="postAttachment?.fileUrl"
-                            type="video/mp4"
-                          />
-                        </video>
-                      </div>
-                    </slide>
-                    <slide *ngIf="postAttachment?.fileType == 1">
-                      <img
-                        *ngIf="postAttachment?.fileType == 1"
-                        class="w-100"
-                        [src]="postAttachment?.fileUrl"
-                      />
-                    </slide>
-                  </div>
-                </carousel>
-              </div>
-              <div
-                [ngClass]="
-                  gridItemInfo.postAttachments.length > 0
-                    ? 'col-lg-6'
-                    : 'col-lg-12 heightForText'
-                "
-              >
-                <div class="class-preview-right position-relative h-100">
-                  <button
-                    (click)="hideGridItemInfo()"
-                    type="button"
-                    class="bg-transparent border-0 close-preview"
-                  >
-                    <img src="../../../../assets/images/cross.svg" />
-                  </button>
-                  <div class="schoolgrid-header">
-                    <div class="d-flex align-items-center position-relative">
-                      <div class="school-gridprofile-icon">
-                        <img *ngIf="user.avatar != null" [src]="user.avatar" />
-                        <img
-                          *ngIf="user.avatar == null && gender == '1'"
-                          src="../../../assets/images/maleProfile.jfif"
-                        />
-                        <img
-                          *ngIf="
-                            user.avatar == null &&
-                            (gender == '2' || gender == '3')
-                          "
-                          src="../../../assets/images/femaleProfile.jfif"
-                        />
-                      </div>
-                      <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">
-                        {{ gridItemInfo.title }}
-                      </h2>
-                    </div>
-
-                    <p class="font_14 school-grid-date d-inline-block mb-0">
-                      {{ gridItemInfo.dateTime | date : "MMMM d" }} -
-                      {{ gridItemInfo.dateTime | date : "hh mm" }}
-                    </p>
-                  </div>
-                  <p class="text_sec1 font_14 pt-3">
-                    {{ gridItemInfo.description }}
-                  </p>
-                  <div
-                    *ngIf="gridItemInfo.postTags.length != 0"
-                    class="teacher-tags tag-box hashtag_box"
-                  >
-                    <span
-                      *ngFor="let tag of gridItemInfo.postTags"
-                      class="custom-tag"
-                      >{{ tag.postTagValue }}</span
-                    >
-                  </div>
-                  <div class="school-grid-footer preview-right-action">
-                    <button
-                      type="button"
-                      class="bg-transparent border-0 function-btns cursor_auto"
-                    >
-                      <img
-                        src="../../../../assets/images/eye.svg"
-                        class="d-block mx-auto"
-                      />
-                      <span class="textBlack">{{
-                        gridItemInfo.views.length
-                      }}</span>
-                    </button>
-                    <button
-                      (click)="
-                        likeUnlikePosts(
-                          gridItemInfo.id,
-                          true,
-                          gridItemInfo.postType,
-                          gridItemInfo,
-                          1
-                        )
-                      "
-                      type="button"
-                      class="bg-transparent border-0 function-btns text-light"
-                    >
-                      <img
-                        *ngIf="gridItemInfo.isPostLikedByCurrentUser"
-                        src="../../../assets/images/heart-red.svg"
-                        class="d-block mx-auto"
-                      />
-                      <img
-                        *ngIf="!gridItemInfo.isPostLikedByCurrentUser"
-                        src="../../../../assets/images/Heart-dark.svg"
-                        class="d-block mx-auto"
-                      />
-
-                      <span
-                        class="textBlack"
-                        *ngIf="
-                          likesLength != undefined &&
-                          currentLikedPostId == gridItemInfo.id
-                        "
-                        >{{ likesLength }}</span
-                      >
-                      <span
-                        class="textBlack"
-                        *ngIf="currentLikedPostId != gridItemInfo.id"
-                        >{{ gridItemInfo.likes.length }}</span
-                      >
-                    </button>
-                    <button
-                      (click)="openPostsViewModal(gridItemInfo)"
-                      type="button"
-                      class="bg-transparent border-0 function-btns"
-                    >
-                      <img
-                        src="../../../../assets/images/Chat-dark.svg"
-                        class="d-block mx-auto"
-                      />
-                      {{ gridItemInfo.commentsCount }}
-                    </button>
-                    <button
-                      (click)="savePost(gridItemInfo.id, 1)"
-                      type="button"
-                      class="bg-transparent border-0 function-btns"
-                    >
-                      <img
-                        *ngIf="!gridItemInfo.isPostSavedByCurrentUser"
-                        src="../../../../assets/images/Bookmark-dark.svg"
-                        class="d-block mx-auto"
-                      />
-                      <img
-                        *ngIf="gridItemInfo.isPostSavedByCurrentUser"
-                        src="../../../../assets/images/Bookmark-dark.svg"
-                        class="d-block mx-auto"
-                      />
-                      {{ gridItemInfo.savedPostsCount }}
-                    </button>
-                    <button
-                      (click)="
-                        openSharePostModal(
-                          gridItemInfo.id,
-                          gridItemInfo.postType
-                        )
-                      "
-                      type="button"
-                      class="bg-transparent border-0 function-btns"
-                    >
-                      <img
-                        src="../../../../assets/images/Upload-dark.svg"
-                        class="d-block mx-auto"
-                      />
-                      {{ gridItemInfo.postSharedCount }}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div> -->
-
           <div class="row">
             <ng-container *ngFor="let post of user.posts; let i = index">
-              <div  class="col-12 imgDisplay" [class]="getRandomClass(i,true)" *ngIf="(isScreenPc && i % 3 == 0) || (isScreenTablet && i % 2 == 0) || (isScreenMobile && i % 1 == 0)"
+              <div  class="col-12 imgDisplay {{::getRandomClass(i,true)}}" *ngIf="(isScreenPc && i % 3 == 0) || (isScreenTablet && i % 2 == 0) || (isScreenMobile && i % 1 == 0)"
               style="display: none;">
               <div
               [ngClass]="
@@ -1424,10 +1121,10 @@
                           class="videofile"
                         >
                           <video
-                          [id] = "getRandomClass(i,false)"
-                            controls
+                          [id] = "getRandomClass(i,false)"                            
                             class="video-js vjs-big-play-centered"
-                            preload="metadata"
+                            controls
+                            preload="auto"                            
                           >
                             <source
                               [src]="postAttachment?.fileUrl"
@@ -1440,7 +1137,7 @@
                         <img
                           *ngIf="postAttachment?.fileType == 1"
                           class="w-100"
-                          [src]="postAttachment?.fileUrl"
+                          [lazyLoad]="postAttachment?.fileUrl"
                         />
                       </slide>
                     </div>
@@ -1454,6 +1151,27 @@
                   "
                 >
                   <div class="class-preview-right position-relative h-100">
+                    <ul *ngIf="gridItemInfo?.createdBy == userId" class="list-unstyled d-flex more-action-btn before-none pe-2 me-1 mb-0" style="position: absolute;right: 50px;">
+                      <li class="d-inline-block ps-0 mb-0">
+                        <div class="dropdown">
+                          <button class="bg-transparent dropdown-toggle border-0 action-more-btn after-none pt-1" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <i class="fa-solid fa-ellipsis"></i>
+                          </button>
+                          <ul class="dropdown-menu">
+                            <li><a style="cursor: pointer;" class="dropdown-item"
+                              (click)="getDeletedPostId(gridItemInfo?.id)" data-bs-toggle="modal" data-bs-target="#delete-Class">{{'Delete'| translate }}
+                            </a>
+                            </li>
+                            <li><a style="cursor: pointer;" class="dropdown-item"
+                              (click)="openEditPostModal(gridItemInfo)" data-bs-toggle="modal" data-bs-target="#delete-Class">{{'Edit'| translate }}
+                              <div *ngIf="gridItemInfo.updatedOn != null">(<span>{{ "UpdatedOn" | translate }} - </span> {{ gridItemInfo.updatedOn | date:'d MMMM y h:mm a' }})</div>
+                            </a>
+                            </li>
+                          </ul>
+                        </div>
+                      </li>
+                    </ul>  
                     <button
                       (click)="hideGridItemInfo()"
                       type="button"
@@ -1612,7 +1330,7 @@
                   (post.postType == 1 && post.postAuthorType == 4) ||
                   post.isLive
                 "
-                class="col-md-6 col-xl-4" [class]="getRandomClass(i,false)" (click)="openDialouge($event,post)"
+                class="col-md-6 col-xl-4 {{::getRandomClass(i,false)}}" (click)="openDialouge($event,post)"
               >
                 <div
                   class="school-grid-box position-relative school-list-box h-100 mb-0"
@@ -1621,7 +1339,7 @@
                     class="schoolgrid-header d-flex align-items-center position-relative"
                   >
                     <div class="school-gridprofile-icon">
-                      <img *ngIf="user.avatar != null" [src]="user.avatar" />
+                      <img *ngIf="user.avatar != null" [lazyLoad]="user.avatar" />
                       <img
                         *ngIf="user.avatar == null && gender == '1'"
                         src="../../../assets/images/maleProfile.jfif"
@@ -1643,6 +1361,17 @@
                         style="height: 76px"
                       />
                     </div>
+                    <div class="right-action">
+                      <button
+                        type="button"
+                        class="view font_12 bg-transparent border-0 cursor_auto"
+                      >
+                        <img
+                          src="../../../../assets/images/eye.svg"
+                          class="me-2"
+                        />
+                        {{ post.views.length }}
+                      </button>
                     <button
                       *ngIf="post.isPinned && isOwner"
                       (click)="pinUnpinPost(post.id, false)"
@@ -1659,6 +1388,7 @@
                     >
                       <img src="../../../../assets/images/pinned-gray.svg" />
                     </button>
+                    </div>
                   </div>
                   <div class="school-grid-body">
                     <div class="d-flex justify-content-between date-view-list">
@@ -1701,13 +1431,13 @@
                             >
                               <img
                                 style="height: 300px"
-                                [src]="post.postAttachments[0]?.fileThumbnail"
+                                [lazyLoad]="post.postAttachments[0]?.fileThumbnail"
                               />
                             </div>
                             <img
                               *ngIf="post.postAttachments[0]?.fileType == 1"
                               class="w-100"
-                              [src]="post.postAttachments[0].fileUrl"
+                              [lazyLoad]="post.postAttachments[0].fileUrl"
                             />
                           </div>
                         </div>
@@ -1733,56 +1463,6 @@
           "
         >
           <ng-container *ngTemplateOutlet="savedPostFeedSection"></ng-container>
-
-          <!-- <div class="feed-section">
-            <div class="feed-box position-relative">
-              <reels-loading-spinner [reelsLoadingIcon]="reelsLoadingIcon" class="position-absolute translate-middle reel_spinner_position"></reels-loading-spinner>
-                <div class="feedbox-inner d-flex ">
-                  <carousel #carousel
-                  [itemsPerSlide]="itemsPerSlide"
-                  [singleSlideOffset]="singleSlideOffset"
-                  [interval]="0"
-                  [noWrap]="noWrap">
-                  <div *ngFor="let post of savedReelsList">
-                    <div *ngIf="post.postType == 3">
-                    <slide *ngFor="let postAttachment of post.postAttachments">
-                      <div *ngIf="postAttachment.fileType == 2">
-                        <div class="feedimg-box position-relative text-light position-relative">
-                          <a (click)="openReelsViewModal(postAttachment.id)" style="cursor: pointer;">
-                            <div class="videofile">
-                              <img style="height: 300px;" [src]="postAttachment.fileThumbnail">
-                            </div>
-                          </a>
-                            <div class="pinned-view d-flex  justify-content-between align-items-start">
-                                <button type="button" class="view font_12 bg-transparent border-0 text-light">
-                                    <img src="../../../../assets/images/eye-light.svg" /> {{post.views.length}}
-                                </button>
-                              <button *ngIf="post.isSavedPostPinned && isOwner" (click)="pinUnpinPost(post.id,false)" type="button" class="bg-transparent border-0 pinned-grid-chat">
-                                <img class="w-auto h-auto" src="../../../../assets/images/pinned-orange.svg" />
-                              </button>
-                              <button *ngIf="!post.isSavedPostPinned && isOwner" (click)="pinUnpinPost(post.id,true)" type="button" class="bg-transparent border-0 pinned-grid-chat">
-                               <img class="w-auto h-auto" src="../../../../assets/images/pinned-gray.svg" />
-                              </button>
-                            </div>
-                            <div class="feed-name font_14 text_sec1">
-                              <img *ngIf="post.parentImageUrl != null" [src]="post.parentImageUrl"/>
-                              <img *ngIf="post.postAuthorType == 4 && post.parentImageUrl == null && gender =='1'" src="../../../assets/images/maleProfile.jfif"/>
-                              <img *ngIf="post.postAuthorType == 4 && post.parentImageUrl == null && (gender =='2' || gender =='3')" src="../../../assets/images/femaleProfile.jfif"/>
-                              {{post.parentName}}
-                            </div>
-                            <div class="feed-title font_14 text_sec1 d-flex align-content-center fw_600">
-                                {{post.title}}
-                                <span class="fw-light ms-2" *ngFor="let item of post.postTags; let isLast=last">#{{item.postTagValue}}{{isLast ? '' : ', '}}</span>
-                            </div>
-                        </div>
-                      </div>
-                  </slide>
-                  </div>
-                  </div>
-                </carousel>
-                </div>
-            </div>
-        </div> -->
           <div class="list-schol-profile">
             <div class="row">
               <ng-container *ngFor="let post of savedPostsList">
@@ -2357,55 +2037,6 @@
           "
         >
           <ng-container *ngTemplateOutlet="savedPostFeedSection"></ng-container>
-          <!-- <div class="feed-section">
-            <div class="feed-box position-relative">
-              <reels-loading-spinner [reelsLoadingIcon]="reelsLoadingIcon" class="position-absolute translate-middle reel_spinner_position"></reels-loading-spinner>
-                <div class="feedbox-inner d-flex ">
-                  <carousel #carousel
-                  [itemsPerSlide]="itemsPerSlide"
-                  [singleSlideOffset]="singleSlideOffset"
-                  [interval]="0"
-                  [noWrap]="noWrap">
-                  <div *ngFor="let post of savedReelsList">
-                    <div *ngIf="post.postType == 3">
-                    <slide *ngFor="let postAttachment of post.postAttachments">
-                      <div *ngIf="postAttachment.fileType == 2">
-                        <div class="feedimg-box position-relative text-light position-relative">
-                          <a (click)="openReelsViewModal(postAttachment.id)" style="cursor: pointer;">
-                            <div class="videofile">
-                              <img style="height: 300px;" [src]="postAttachment.fileThumbnail">
-                            </div>
-                          </a>
-                            <div class="pinned-view d-flex  justify-content-between align-items-start">
-                                <button type="button" class="view font_12 bg-transparent border-0 text-light">
-                                    <img src="../../../../assets/images/eye-light.svg" /> {{post.views.length}}
-                                </button>
-                              <button *ngIf="post.isSavedPostPinned && isOwner" (click)="pinUnpinPost(post.id,false)" type="button" class="bg-transparent border-0 pinned-grid-chat">
-                                <img class="w-auto h-auto" src="../../../../assets/images/pinned-orange.svg" />
-                              </button>
-                              <button *ngIf="!post.isSavedPostPinned && isOwner" (click)="pinUnpinPost(post.id,true)" type="button" class="bg-transparent border-0 pinned-grid-chat">
-                               <img class="w-auto h-auto" src="../../../../assets/images/pinned-gray.svg" />
-                              </button>
-                            </div>
-                            <div class="feed-name font_14 text_sec1">
-                              <img *ngIf="post.parentImageUrl != null" [src]="post.parentImageUrl"/>
-                              <img *ngIf="post.postAuthorType == 4 && post.parentImageUrl == null && gender =='1'" src="../../../assets/images/maleProfile.jfif"/>
-                              <img *ngIf="post.postAuthorType == 4 && post.parentImageUrl == null && (gender =='2' || gender =='3')" src="../../../assets/images/femaleProfile.jfif"/>
-                              {{post.parentName}}
-                            </div>
-                            <div class="feed-title font_14 text_sec1 d-flex align-content-center fw_600">
-                                {{post.title}}
-                                <span class="fw-light ms-2" *ngFor="let item of post.postTags; let isLast=last">#{{item.postTagValue}}{{isLast ? '' : ', '}}</span>
-                            </div>
-                        </div>
-                      </div>
-                  </slide>
-                  </div>
-                  </div>
-                </carousel>
-                </div>
-            </div>
-        </div> -->
           <div
             [ngClass]="
               isSavedPostGridInfo
@@ -3743,56 +3374,6 @@
           <ng-container
             *ngTemplateOutlet="sharedPostFeedSection"
           ></ng-container>
-
-          <!-- <div class="feed-section">
-          <div class="feed-box position-relative">
-            <reels-loading-spinner [reelsLoadingIcon]="reelsLoadingIcon" class="position-absolute translate-middle reel_spinner_position"></reels-loading-spinner>
-              <div class="feedbox-inner d-flex ">
-                <carousel #carousel
-                [itemsPerSlide]="itemsPerSlide"
-                [singleSlideOffset]="singleSlideOffset"
-                [interval]="0"
-                [noWrap]="noWrap">
-                <div *ngFor="let post of sharedReelsList">
-                  <div *ngIf="post.postType == 3">
-                  <slide *ngFor="let postAttachment of post.postAttachments">
-                    <div *ngIf="postAttachment.fileType == 2">
-                      <div class="feedimg-box position-relative text-light position-relative">
-                        <a (click)="openReelsViewModal(postAttachment.id)" style="cursor: pointer;">
-                          <div class="videofile">
-                            <img style="height: 300px;" [src]="postAttachment.fileThumbnail">
-                          </div>
-                        </a>
-                          <div class="pinned-view d-flex  justify-content-between align-items-start">
-                              <button type="button" class="view font_12 bg-transparent border-0 text-light">
-                                  <img src="../../../../assets/images/eye-light.svg" /> {{post.views.length}}
-                              </button>
-                            <button *ngIf="post.isSharedPostPinned && isOwner" (click)="pinUnpinPost(post.id,false)" type="button" class="bg-transparent border-0 pinned-grid-chat">
-                              <img class="w-auto h-auto" src="../../../../assets/images/pinned-orange.svg" />
-                            </button>
-                            <button *ngIf="!post.isSharedPostPinned && isOwner" (click)="pinUnpinPost(post.id,true)" type="button" class="bg-transparent border-0 pinned-grid-chat">
-                             <img class="w-auto h-auto" src="../../../../assets/images/pinned-gray.svg" />
-                            </button>
-                          </div>
-                          <div class="feed-name font_14 text_sec1">
-                            <img *ngIf="post.parentImageUrl != null" [src]="post.parentImageUrl"/>
-                            <img *ngIf="post.postAuthorType == 4 && post.parentImageUrl == null && gender =='1'" src="../../../assets/images/maleProfile.jfif"/>
-                            <img *ngIf="post.postAuthorType == 4 && post.parentImageUrl == null && (gender =='2' || gender =='3')" src="../../../assets/images/femaleProfile.jfif"/>
-                            {{post.parentName}}
-                          </div>
-                          <div class="feed-title font_14 text_sec1 d-flex align-content-center fw_600">
-                              {{post.title}}
-                              <span class="fw-light ms-2" *ngFor="let item of post.postTags; let isLast=last">#{{item.postTagValue}}{{isLast ? '' : ', '}}</span>
-                          </div>
-                      </div>
-                    </div>
-                </slide>
-                </div>
-                </div>
-              </carousel>
-              </div>
-          </div>
-      </div> -->
           <div class="list-schol-profile">
             <div class="row">
               <ng-container *ngFor="let post of sharedPostsList">
@@ -4370,56 +3951,6 @@
           <ng-container
             *ngTemplateOutlet="sharedPostFeedSection"
           ></ng-container>
-
-          <!-- <div class="feed-section">
-          <div class="feed-box position-relative">
-            <reels-loading-spinner [reelsLoadingIcon]="reelsLoadingIcon" class="position-absolute translate-middle reel_spinner_position"></reels-loading-spinner>
-              <div class="feedbox-inner d-flex ">
-                <carousel #carousel
-                [itemsPerSlide]="itemsPerSlide"
-                [singleSlideOffset]="singleSlideOffset"
-                [interval]="0"
-                [noWrap]="noWrap">
-                <div *ngFor="let post of sharedReelsList">
-                  <div *ngIf="post.postType == 3">
-                  <slide *ngFor="let postAttachment of post.postAttachments">
-                    <div *ngIf="postAttachment.fileType == 2">
-                      <div class="feedimg-box position-relative text-light position-relative">
-                        <a (click)="openReelsViewModal(postAttachment.id)" style="cursor: pointer;">
-                          <div class="videofile">
-                            <img style="height: 300px;" [src]="postAttachment.fileThumbnail">
-                          </div>
-                        </a>
-                          <div class="pinned-view d-flex  justify-content-between align-items-start">
-                              <button type="button" class="view font_12 bg-transparent border-0 text-light">
-                                  <img src="../../../../assets/images/eye-light.svg" /> {{post.views.length}}
-                              </button>
-                                <button *ngIf="post.isPinned && isOwner" (click)="pinUnpinPost(post.id,false)" type="button" class="pinned bg-transparent border-0">
-                                  <img src="../../../../assets/images/pinned-orange.svg" />
-                              </button>
-                              <button *ngIf="!post.isPinned && isOwner" (click)="pinUnpinPost(post.id,true)" type="button" class="pinned bg-transparent border-0">
-                                <img src="../../../../assets/images/pinned-gray.svg" />
-                            </button>
-                          </div>
-                          <div class="feed-name font_14 text_sec1">
-                            <img *ngIf="post.parentImageUrl != null" [src]="post.parentImageUrl"/>
-                            <img *ngIf="post.postAuthorType == 4 && post.parentImageUrl == null && gender =='1'" src="../../../assets/images/maleProfile.jfif"/>
-                            <img *ngIf="post.postAuthorType == 4 && post.parentImageUrl == null && (gender =='2' || gender =='3')" src="../../../assets/images/femaleProfile.jfif"/>
-                            {{post.parentName}}
-                          </div>
-                          <div class="feed-title font_14 text_sec1 d-flex align-content-center fw_600">
-                              {{post.title}}
-                              <span class="fw-light ms-2" *ngFor="let item of post.postTags; let isLast=last">#{{item.postTagValue}}{{isLast ? '' : ', '}}</span>
-                          </div>
-                      </div>
-                    </div>
-                </slide>
-                </div>
-                </div>
-              </carousel>
-              </div>
-          </div>
-      </div> -->
           <div
             [ngClass]="
               isSharedPostGridInfo
@@ -4976,56 +4507,6 @@
           "
         >
           <ng-container *ngTemplateOutlet="likedPostFeedSection"></ng-container>
-
-          <!-- <div class="feed-section">
-        <div class="feed-box position-relative">
-          <reels-loading-spinner [reelsLoadingIcon]="reelsLoadingIcon" class="position-absolute translate-middle reel_spinner_position"></reels-loading-spinner>
-            <div class="feedbox-inner d-flex ">
-              <carousel #carousel
-              [itemsPerSlide]="itemsPerSlide"
-              [singleSlideOffset]="singleSlideOffset"
-              [interval]="0"
-              [noWrap]="noWrap">
-              <div *ngFor="let post of likedReelsList">
-                <div *ngIf="post.postType == 3">
-                <slide *ngFor="let postAttachment of post.postAttachments">
-                  <div *ngIf="postAttachment.fileType == 2">
-                    <div class="feedimg-box position-relative text-light position-relative">
-                      <a (click)="openReelsViewModal(postAttachment.id)" style="cursor: pointer;">
-                        <div class="videofile">
-                          <img style="height: 300px;" [src]="postAttachment.fileThumbnail">
-                        </div>
-                      </a>
-                        <div class="pinned-view d-flex  justify-content-between align-items-start">
-                            <button type="button" class="view font_12 bg-transparent border-0 text-light">
-                                <img src="../../../../assets/images/eye-light.svg" /> {{post.views.length}}
-                            </button>
-                          <button *ngIf="post.isLikedPostPinned && isOwner" (click)="pinUnpinPost(post.id,false)" type="button" class="bg-transparent border-0 pinned-grid-chat">
-                            <img class="w-auto h-auto" src="../../../../assets/images/pinned-orange.svg" />
-                          </button>
-                          <button *ngIf="!post.isLikedPostPinned && isOwner" (click)="pinUnpinPost(post.id,true)" type="button" class="bg-transparent border-0 pinned-grid-chat">
-                           <img class="w-auto h-auto" src="../../../../assets/images/pinned-gray.svg" />
-                          </button>
-                        </div>
-                        <div class="feed-name font_14 text_sec1">
-                          <img *ngIf="post.parentImageUrl != null" [src]="post.parentImageUrl"/>
-                          <img *ngIf="post.postAuthorType == 4 && post.parentImageUrl == null && gender =='1'" src="../../../assets/images/maleProfile.jfif"/>
-                          <img *ngIf="post.postAuthorType == 4 && post.parentImageUrl == null && (gender =='2' || gender =='3')" src="../../../assets/images/femaleProfile.jfif"/>
-                          {{post.parentName}}
-                        </div>
-                        <div class="feed-title font_14 text_sec1 d-flex align-content-center fw_600">
-                            {{post.title}}
-                            <span class="fw-light ms-2" *ngFor="let item of post.postTags; let isLast=last">#{{item.postTagValue}}{{isLast ? '' : ', '}}</span>
-                        </div>
-                    </div>
-                  </div>
-              </slide>
-              </div>
-              </div>
-            </carousel>
-            </div>
-        </div>
-    </div> -->
           <div class="list-schol-profile">
             <div class="row">
               <ng-container *ngFor="let post of likedPostsList">
@@ -5602,58 +5083,6 @@
           "
         >
           <ng-container *ngTemplateOutlet="likedPostFeedSection"></ng-container>
-
-          <!-- <div class="feed-section">
-        <div class="feed-box position-relative">
-          <reels-loading-spinner [reelsLoadingIcon]="reelsLoadingIcon" class="position-absolute translate-middle reel_spinner_position"></reels-loading-spinner>
-            <div class="feedbox-inner d-flex ">
-              <carousel #carousel
-              [itemsPerSlide]="itemsPerSlide"
-              [singleSlideOffset]="singleSlideOffset"
-              [interval]="0"
-              [noWrap]="noWrap">
-              <div *ngFor="let post of likedReelsList">
-                <div *ngIf="post.postType == 3">
-                <slide *ngFor="let postAttachment of post.postAttachments">
-                  <div *ngIf="postAttachment.fileType == 2">
-                    <div class="feedimg-box position-relative text-light position-relative">
-                      <a (click)="openReelsViewModal(postAttachment.id)" style="cursor: pointer;">
-                        <div class="videofile">
-                          <img style="height: 300px;" [src]="postAttachment.fileThumbnail">
-                        </div>
-                      </a>
-                        <div class="pinned-view d-flex  justify-content-between align-items-start">
-                            <button type="button" class="view font_12 bg-transparent border-0 text-light">
-                                <img src="../../../../assets/images/eye-light.svg" /> {{post.views.length}}
-                            </button>
-                          <div style="position:absolute;right:20px">
-                            <button *ngIf="post.isLikedPostPinned && isOwner" (click)="pinUnpinPost(post.id,false)" type="button" class="bg-transparent border-0 pinned-grid-chat">
-                              <img class="w-auto h-auto" src="../../../../assets/images/pinned-orange.svg" />
-                            </button>
-                            <button *ngIf="!post.isLikedPostPinned && isOwner" (click)="pinUnpinPost(post.id,true)" type="button" class="bg-transparent border-0 pinned-grid-chat">
-                             <img class="w-auto h-auto" src="../../../../assets/images/pinned-gray.svg" />
-                            </button>
-                          </div>
-                        </div>
-                        <div class="feed-name font_14 text_sec1">
-                          <img *ngIf="post.parentImageUrl != null" [src]="post.parentImageUrl"/>
-                          <img *ngIf="post.postAuthorType == 4 && post.parentImageUrl == null && gender =='1'" src="../../../assets/images/maleProfile.jfif"/>
-                          <img *ngIf="post.postAuthorType == 4 && post.parentImageUrl == null && (gender =='2' || gender =='3')" src="../../../assets/images/femaleProfile.jfif"/>
-                          {{post.parentName}}
-                        </div>
-                        <div class="feed-title font_14 text_sec1 d-flex align-content-center fw_600">
-                            {{post.title}}
-                            <span class="fw-light ms-2" *ngFor="let item of post.postTags; let isLast=last">#{{item.postTagValue}}{{isLast ? '' : ', '}}</span>
-                        </div>
-                    </div>
-                  </div>
-              </slide>
-              </div>
-              </div>
-            </carousel>
-            </div>
-        </div>
-    </div> -->
           <div
             [ngClass]="
               isLikedPostGridInfo

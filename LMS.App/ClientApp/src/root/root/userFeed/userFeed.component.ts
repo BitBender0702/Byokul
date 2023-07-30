@@ -198,27 +198,24 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
 
           if(!this.addPostSubscription){
            this.addPostSubscription = addPostResponse.subscribe((postResponse:any) => {  
+            debugger
             var feedTab = localStorage.getItem('feedTab');
             feedTab = 'myFeed';
             localStorage.setItem('feedTab',feedTab);
+            this.feedTab = "myFeed";
             this.router.navigateByUrl(`user/userFeed}`);
             this.refreshRoute(postResponse);
-              //this.ngOnInit();
-              // if(postResponse.response.postType == 1){
-              //   var translatedMessage = this.translateService.instant('PostCreatedSuccessfully');
-              // }
-              // else{
-              //   var translatedMessage = this.translateService.instant('ReelCreatedSuccessfully');
-              // }
-              // const translatedSummary = this.translateService.instant('Success');
-              // setTimeout(() => {
-              //   this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage,
-              // });
-              // this.cd.detectChanges();
-              // }, 3000);
-              // this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage,
-              // });
-              // this.cd.detectChanges();
+            // if(postResponse.response.postType == 1){
+            //   var translatedMessage = this.translateService.instant('PostCreatedSuccessfully');
+            // }
+            // else if(postResponse.response.postType == 3){
+            //   var translatedMessage = this.translateService.instant('ReelCreatedSuccessfully');
+            // }
+            // else{
+            //   var translatedMessage = this.translateService.instant('PostUpdatedSuccessfully');
+            // }
+            // const translatedSummary = this.translateService.instant('Success');
+            // this.messageService.add({severity:'success', summary:translatedSummary,life: 3000, detail:translatedMessage});
             });
           }
 

@@ -96,6 +96,7 @@ namespace LMS.Services
                 ParentId = postViewModel.ParentId,
                 CoverLetter = postViewModel.CoverLetter,
                 IsPostSchedule = false,
+                IsCommentsDisabled = false,
                 CommentsPerMinute = postViewModel.CommentsPerMinute == 0 ? null : postViewModel.CommentsPerMinute,
                 Attachments = postViewModel.BlobUrls.Select(x => new PostAttachment
                 {

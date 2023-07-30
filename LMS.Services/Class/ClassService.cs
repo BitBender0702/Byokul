@@ -126,7 +126,8 @@ namespace LMS.Services
                 ThumbnailUrl = classViewModel.ThumbnailUrl,
                 ThumbnailType = classViewModel.ThumbnailType,
                 CreatedById = createdById,
-                CreatedOn = DateTime.UtcNow
+                CreatedOn = DateTime.UtcNow,
+                IsCommentsDisabled = false
             };
 
             try
@@ -356,7 +357,7 @@ namespace LMS.Services
             ClassDetailsViewModel model = new ClassDetailsViewModel();
             if (className != null)
             {
-                className = System.Web.HttpUtility.UrlEncode(className, Encoding.GetEncoding("iso-8859-7")).Replace("%3f", "").ToLower();
+                className = System.Web.HttpUtility.UrlEncode(className, Encoding.GetEncoding("iso-8859-7")).Replace("%3f", "").Replace("+", "").ToLower();
                 var classesList = await _classRepository.GetAll()
                     .Include(x => x.ServiceType)
                     .Include(x => x.School)
@@ -976,6 +977,16 @@ namespace LMS.Services
             var result = classes.Concat(courses).Skip((pageNumber - 1) * pageSize).Take(pageSize).OrderBy(x => x.Type).ToList();
             return result;
 
+
+        }
+
+        public async Task EnableDisableComments(Guid classId, bool isHideComments)
+        {
+            var classes = _classRepository.GetById(classId);
+
+            classes.IsCommentsDisabled = isHideComments;
+            _classRepository.Update(classes);
+            _classRepository.Save();
 
         }
     }

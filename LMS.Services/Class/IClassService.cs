@@ -44,6 +44,9 @@ namespace LMS.Services
         Task<IEnumerable<GlobalSearchViewModel>> ClassAndCoursesGlobalSearch(string searchString, int pageNumber, int pageSize);
         Task<IEnumerable<PostDetailsViewModel>> GetSliderReelsByClassId(Guid classId, string loginUserId, Guid lastReelId, ScrollTypesEnum scrollType);
 
+        Task EnableDisableComments(Guid classId, bool isHideComments);
+
+
 
 
     }

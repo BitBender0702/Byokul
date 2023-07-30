@@ -156,4 +156,9 @@ export class ClassService{
         );
     }
 
+    enableDisableComments(classId:string,isHideComments:boolean):Observable<any>{
+        let queryParams = new HttpParams().append("classId",classId).append("isHideComments",isHideComments);
+        return this.http.post(`${this.apiUrl}/class/enableDisableComments`,null, {params:queryParams,headers: this.headers});
+    }
+
 }

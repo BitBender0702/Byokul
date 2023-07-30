@@ -13,6 +13,6 @@ namespace LMS.Common.ViewModels.Post
         public string BlobUrl { get; set; }
         public FileTypeEnum FileType { get; set; }
         public string BlobName { get; set; }
-        public string? ThumbnailUrl { get; set; }
+        //public string? ThumbnailUrl { get; set; }
     }
 }

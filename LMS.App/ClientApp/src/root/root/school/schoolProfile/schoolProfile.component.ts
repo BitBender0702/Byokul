@@ -446,15 +446,18 @@ showDiv: boolean = false;
     if(!this.addPostSubscription){
       this.addPostSubscription = addPostResponse.subscribe((postResponse:any) => {
         debugger
-        // this.loadingIcon = true;
-        if(postResponse.response.postType == 1){
-          var translatedMessage = this.translateService.instant('PostCreatedSuccessfully');
-        }
-        else{
-          var translatedMessage = this.translateService.instant('ReelCreatedSuccessfully');
-        }
-        const translatedSummary = this.translateService.instant('Success');
-        this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage,});
+        // if(postResponse.response.postType == 1){
+        //   var translatedMessage = this.translateService.instant('PostCreatedSuccessfully');
+        // }
+        // else if(postResponse.response.postType == 3){
+        //   var translatedMessage = this.translateService.instant('ReelCreatedSuccessfully');
+        // }
+        // else{
+        //   var translatedMessage = this.translateService.instant('PostUpdatedSuccessfully');
+        // }
+        // // this.loadingIcon = true;
+        // const translatedSummary = this.translateService.instant('Success');
+        // this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage,});
         this._schoolService.getSchoolById(this.schoolName.replace(' ', '').toLowerCase()).subscribe((response) => {
            this.school = response;
            this.titleService.setTitle(this.school.schoolName);
@@ -1953,6 +1956,24 @@ for (var i = 0; i < displayDivs.length; i++){
     debugger
     var result = description.replace(/\n/g, '<br/>');
     return result;
+  }
+
+  getDeletedPostId(id: string) {
+    debugger
+    this.loadingIcon = true;
+    this._postService.deletePost(id).subscribe((_response) => {
+      this.loadingIcon = false;
+      deletePostResponse.next({postId:id});
+    });
+  }
+  
+  openEditPostModal(post:any){
+    debugger
+    const initialState = {
+      editPostId: post.id,
+      from: post.postAuthorType == 1 ? "school" : post.postAuthorType == 2 ? "class" : post.postAuthorType == 3 ? "course" : post.postAuthorType == 4 ? "user" : undefined
+    };
+      this.bsModalService.show(CreatePostComponent,{initialState});
   }
 
 }

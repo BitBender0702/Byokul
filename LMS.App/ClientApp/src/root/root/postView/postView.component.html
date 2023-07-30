@@ -49,7 +49,10 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
                   </h5>
                 </div>
                 <div class="reel-username font_16 white_text">
-                      <img [src]="post.parentImageUrl" class="me-2"/> {{post.parentName}}
+                      <img *ngIf="post.parentImageUrl != null" [src]="post.parentImageUrl" class="me-2">
+                      <img *ngIf="post.parentImageUrl == null && gender =='1'" src="../../../assets/images/maleProfile.jfif" class="me-2"/>
+                      <img *ngIf="(post.parentImageUrl == null) && (gender =='2' || gender =='3')" src="../../../assets/images/femaleProfile.jfif" class="me-2"/>
+                      {{post.parentName}}
                 </div>
               </slide>
               <slide *ngIf="postAttachment.fileType==1">
@@ -59,7 +62,10 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
               </h5>
             </div>
             <div class="reel-username font_16 white_text">
-                  <img [src]="post.parentImageUrl" class="me-2"/> {{post.parentName}}
+                  <img *ngIf="post.parentImageUrl != null" [src]="post.parentImageUrl" class="me-2">
+                  <img *ngIf="post.parentImageUrl == null && gender =='1'" src="../../../assets/images/maleProfile.jfif" class="me-2"/>
+                  <img *ngIf="(post.parentImageUrl == null) && (gender =='2' || gender =='3')" src="../../../assets/images/femaleProfile.jfif" class="me-2"/>
+                   {{post.parentName}}
             </div>
           </slide>
             </div>
