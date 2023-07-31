@@ -504,13 +504,10 @@
                         " class="school-grid-thumbnail">
                         <slide *ngIf="postAttachment.fileType == 2">
                           <div *ngIf="postAttachment?.fileType == 2" class="videofile">
-                            <video [id] = "getRandomClass(i,false)" controls class="video-js vjs-big-play-centered" preload="metadata">
-
-                              <source  *ngIf="postAttachment?.compressedFileUrl == ''"
-                               [src]="postAttachment?.fileUrl" type="video/mp4" />
-                            <source  *ngIf="postAttachment?.compressedFileUrl != ''"
-                            [src]="postAttachment?.compressedFileUrl" type="video/mp4" />
-                         </video>
+                            <videoJs-component [postAttachment]="postAttachment" ></videoJs-component>
+                            <!-- <video [id] = "getRandomClass(i,false)" controls class="video-js vjs-big-play-centered" preload="metadata">
+                              <source [lazyLoad]="postAttachment?.fileUrl" type="video/mp4" />
+                            </video> -->
                           </div>
                         </slide>
                         <slide *ngIf="postAttachment?.fileType == 1">
