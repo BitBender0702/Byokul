@@ -6,6 +6,7 @@ using LMS.Common.ViewModels.Post;
 using LMS.Common.ViewModels.School;
 using LMS.Common.ViewModels.User;
 using LMS.Data.Entity;
+using LMS.Data.Entity.Common;
 using Country = LMS.Data.Entity.Country;
 
 namespace LMS.DataAccess.Automapper
@@ -47,6 +48,8 @@ namespace LMS.DataAccess.Automapper
                 .ForMember(x => x.User, opt => opt.MapFrom(o => o.CreatedBy));
 
             CreateMap<SchoolDefaultLogo, SchoolDefaultLogoViewmodel>();
+            CreateMap<SchoolCertificate, CertificateViewModel>()
+               .ForMember(x => x.Id, opt => opt.MapFrom(o => o.CertificateId));
 
         }
     }

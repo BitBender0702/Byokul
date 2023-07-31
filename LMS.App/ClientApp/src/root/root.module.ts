@@ -92,6 +92,8 @@ import { IConfig, NgxMaskModule } from 'ngx-mask';
 import { SlickCarouselModule } from 'ngx-slick-carousel';
 import {LazyLoadImageModule} from 'ng-lazyload-image'
 import { VideoJsComponent } from './root/videojs/videojs.component';
+import { UploadCertificateComponent } from './root/UploadCertificates/uploadCertificate.component';
+
 export const options: Partial<IConfig> = {
   thousandSeparator: "'"
 };
@@ -205,6 +207,7 @@ const routes: Routes = [
     DeliveryAndReturnComponent,
     DSAForSchoolComponent,
     DSAForStudentsComponent,
+    UploadCertificateComponent,
     VideoJsComponent
   ],
   imports: [

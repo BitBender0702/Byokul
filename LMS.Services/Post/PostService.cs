@@ -605,7 +605,7 @@ namespace LMS.Services
                     FileUrl = attachment.FileUrl,
                     FileType = (int)FileTypeEnum.Attachment,
                     CreatedById = createdById,
-                    CreatedOn = DateTime.UtcNow
+                    CreatedOn = DateTime.UtcNow,
                 };
 
                 _postAttachmentRepository.Insert(postAttach);

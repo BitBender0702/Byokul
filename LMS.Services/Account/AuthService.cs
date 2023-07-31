@@ -72,7 +72,7 @@ namespace LMS.Services.Account
                 }
                 if (!result.Succeeded)
                 {
-                    jwtResponse.ErrorMessage = Constants.InCorrectPassword;
+                    jwtResponse.ErrorMessage = Constants.IncorrectPassword;
                     return jwtResponse;
                 }
             }
@@ -116,11 +116,12 @@ namespace LMS.Services.Account
             return result;
         }
 
-        public async Task<bool> GeneratePasswordResetRequest(ForgetPasswordViewModel forgetPasswordViewModel)
+        public async Task<string> GeneratePasswordResetRequest(ForgetPasswordViewModel forgetPasswordViewModel)
         {
+            
             var user = await _userManager.FindByEmailAsync(forgetPasswordViewModel.Email);
             if (user == null)
-                return false;
+                return Constants.UserDoesNotExist;
 
             user.UniqueToken = String.Format("{0}-{1}", Guid.NewGuid(), Guid.NewGuid());
             user.TokenCreatedOn = DateTime.UtcNow;
@@ -130,10 +131,10 @@ namespace LMS.Services.Account
             if (response.Succeeded)
                 return await TriggerResetPasswordEmail(forgetPasswordViewModel.Email, user.UniqueToken, user);
 
-            return false;
+            return "";
         }
 
-        private async Task<bool> TriggerResetPasswordEmail(string email, string token, User user)
+        private async Task<string> TriggerResetPasswordEmail(string email, string token, User user)
         {
             string callBackUrl = string.Format(_config["ForgotPasswordCallback"], token);
 
@@ -147,7 +148,7 @@ namespace LMS.Services.Account
             text = text.Replace("*#FirstName#*", email);
 
             await _commonService.SendEmail(new List<string> { email }, null, null, subject: "Reset Your Password", body: text, null, null);
-            return true;
+            return Constants.ForgetEmailSentSuccessfully;
         }
 
         public bool SendEmail(List<string> to, List<string> cc, List<string> bcc, string subject, string body)
@@ -183,9 +184,9 @@ namespace LMS.Services.Account
             return true;
         }
 
-        public async Task<IdentityResult> UpdatePassword(UpdatePasswordViewModel updatePasswordViewModel)
+        public async Task<IdentityResult> UpdatePassword(UpdatePasswordViewModel updatePasswordViewModel, string email)
         {
-            var user = await _userManager.FindByEmailAsync(updatePasswordViewModel.Email);
+            var user = await _userManager.FindByEmailAsync(email);
             var result = await _userManager.ChangePasswordAsync(user, updatePasswordViewModel.CurrentPassword, updatePasswordViewModel.Password);
             return result;
         }
@@ -207,9 +208,16 @@ namespace LMS.Services.Account
                 return null;
 
             var user = await GetUserByToken(resetPasswordDto.PasswordResetToken);
-            if (user.ResetTokenExirationTime < DateTime.UtcNow)
+            try
             {
-                return Constants.ResetTokenExpired;
+                if (user.ResetTokenExirationTime < DateTime.UtcNow)
+                {
+                    return Constants.ResetTokenExpired;
+                }
+            }
+            catch(Exception ex)
+            {
+                return ex.Message;
             }
 
             if (user != null)

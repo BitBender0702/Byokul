@@ -56,7 +56,7 @@ namespace LMS.Services
 
         }
 
-        public async Task<bool> VarifyUser(VerifyUsersViewModel model)
+        public async Task<bool> VerifyUser(VerifyUsersViewModel model)
         {
             var user = await _userRepository.GetAll().Where(x => x.Id == model.UserId).FirstOrDefaultAsync();
 
@@ -99,7 +99,7 @@ namespace LMS.Services
 
         }
 
-        public async Task<bool> VarifySchool(VerifySchoolsViewModel model)
+        public async Task<bool> VerifySchool(VerifySchoolsViewModel model)
         {
             var school = await _schoolRepository.GetAll().Where(x => x.SchoolId == model.SchoolId).FirstOrDefaultAsync();
 

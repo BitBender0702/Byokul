@@ -5,7 +5,7 @@ import { AdminService } from 'src/root/service/admin/admin.service';
 import { RegisteredUsers } from 'src/root/interfaces/admin/registeredUsers';
 import { BanUnbanUsers } from 'src/root/interfaces/admin/banUnbanUser';
 import { BanUnbanEnum } from 'src/root/Enums/BanUnbanEnum';
-import { VarifyUsers } from 'src/root/interfaces/admin/verifyUser';
+import { VerifyUsers } from 'src/root/interfaces/admin/verifyUser';
 import { Table } from 'primeng/table';
 import { OpenAdminSideBar } from '../admin-template/side-bar/adminSide-bar.component';
 import { MultilingualComponent, changeLanguage } from 'src/root/root/sharedModule/Multilingual/multilingual.component';
@@ -24,7 +24,7 @@ export class RegisteredUsersComponent extends MultilingualComponent implements O
   registeredUsers!:RegisteredUsers[];
   selectedUsers!: RegisteredUsers[];
   banUnbanUser!: BanUnbanUsers;
-  verifyUser!: VarifyUsers;
+  verifyUsers!: VerifyUsers;
   loadingIcon:boolean = false;
   isDataLoaded:boolean = false;
   sortOrder = 'asc';
@@ -73,7 +73,7 @@ export class RegisteredUsersComponent extends MultilingualComponent implements O
       }
 
       InitializeVerifyUser(){
-        this.verifyUser = {
+        this.verifyUsers = {
           userId: '',
           isVerify: false
          };
@@ -99,22 +99,22 @@ export class RegisteredUsersComponent extends MultilingualComponent implements O
 
       }
 
-      getVarifyUserDetails(userid:string,from:string){
-        this.verifyUser.userId = userid;
+      getVerifyUserDetails(userid:string,from:string){
+        this.verifyUsers.userId = userid;
         if(from == "Verify"){
-          this.verifyUser.isVerify = true;
+          this.verifyUsers.isVerify = true;
         }
         else{
-          this.verifyUser.isVerify = false;
+          this.verifyUsers.isVerify = false;
 
         }
 
         
       }
 
-      varifyUser(){
+      verifyUser(){
         this.loadingIcon = true;
-        this._adminService.varifyUser(this.verifyUser).subscribe((response) => {
+        this._adminService.verifyUser(this.verifyUsers).subscribe((response) => {
           this.InitializeVerifyUser();
           this.ngOnInit();
         }); 

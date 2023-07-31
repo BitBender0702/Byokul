@@ -522,6 +522,14 @@ namespace LMS.Services
 
             var postAttachments = await _postAttachmentRepository.GetAll().Include(x => x.Post).Where(x => x.Post.CreatedById == userId).ToListAsync();
 
+            foreach (var isCompressed in postAttachments)
+            {
+                if (!string.IsNullOrEmpty(isCompressed.CompressedFileUrl))
+                {
+                    isCompressed.FileUrl = isCompressed.CompressedFileUrl;
+                }
+            }
+
             userProfileFeeds.AddRange(_mapper.Map<List<PostAttachmentViewModel>>(postAttachments));
             return userProfileFeeds;
 
@@ -807,11 +815,34 @@ namespace LMS.Services
 
         }
 
+        //public async Task<IEnumerable<PostAttachmentViewModel>> GetAttachmentsByPostId(Guid postId)
+        //{
+        //    var attachmentList = await _postAttachmentRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.PostId == postId).OrderByDescending(x => x.IsPinned).ToListAsync();
+        //    var compressed = "";
+        //    foreach (var isCompressed in attachmentList)
+        //    {
+        //        compressed = isCompressed.CompressedFileUrl;
+        //        isCompressed.FileUrl
+        //    }
+
+        //    var result = _mapper.Map<List<PostAttachmentViewModel>>(attachmentList);
+        //    return result;
+        //}
+
         public async Task<IEnumerable<PostAttachmentViewModel>> GetAttachmentsByPostId(Guid postId)
         {
-            var attacchmentList = await _postAttachmentRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.PostId == postId).OrderByDescending(x => x.IsPinned).ToListAsync();
+            var attachmentList = await _postAttachmentRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.PostId == postId).OrderByDescending(x => x.IsPinned).ToListAsync();
 
-            var result = _mapper.Map<List<PostAttachmentViewModel>>(attacchmentList);
+            foreach (var isCompressed in attachmentList)
+            {
+                if (!string.IsNullOrEmpty(isCompressed.CompressedFileUrl))
+                {
+                    isCompressed.FileUrl = isCompressed.CompressedFileUrl;
+                }
+                isCompressed.FileThumbnail = $"https://byokulstorage.blob.core.windows.net/userpostscompressed/thumbnails/{postId}.png";
+            }
+
+            var result = _mapper.Map<List<PostAttachmentViewModel>>(attachmentList);
             return result;
         }
 

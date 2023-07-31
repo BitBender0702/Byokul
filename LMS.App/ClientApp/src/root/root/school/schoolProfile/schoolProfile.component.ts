@@ -234,6 +234,10 @@ export class SchoolProfileComponent
   isSelected: boolean = false;
   cropModalRef!: BsModalRef;
 
+  videoFileUrl:string='';
+
+
+
   mask = '(000) 000-0000';
   @ViewChild('founded') founded!: ElementRef;
   @ViewChild('hiddenButton') hiddenButtonRef!: ElementRef;
@@ -241,8 +245,11 @@ export class SchoolProfileComponent
 
   // test
   clickedPostId: string | null = null;
-showDiv: boolean = false;
-  
+  showDiv: boolean = false;
+
+  schoolCertificateForm!:FormGroup;
+  schoolCertificateInfo:any;
+  @ViewChild('openSchoolOwnCertificate') openSchoolOwnCertificate!: ElementRef;
 
   constructor(
     injector: Injector,
@@ -404,6 +411,15 @@ showDiv: boolean = false;
 
     this.certificateForm = this.fb.group({
       certificates: this.fb.control([], [Validators.required]),
+    });
+
+    this.schoolCertificateForm = this.fb.group({
+      schoolId: this.fb.control(''),
+      certificateName: this.fb.control('', [Validators.required]),
+      provider: this.fb.control('', [Validators.required]),
+      issuedDate: this.fb.control(new Date().toISOString().substring(0, 10), [Validators.required]),
+      description: this.fb.control(''),
+      certificateId: this.fb.control(''),
     });
 
     this.schoolLanguage = {
@@ -1105,38 +1121,38 @@ showDiv: boolean = false;
       });
   }
 
-  saveSchoolCertificates() {
-    this.isSubmitted = true;
-    if (!this.certificateForm.valid) {
-      return;
-    }
-    this.loadingIcon = true;
-    for (var i = 0; i < this.schoolCertificate.certificates.length; i++) {
-      this.certificateToUpload.append(
-        'certificates',
-        this.schoolCertificate.certificates[i]
-      );
-    }
-    this.certificateToUpload.append('schoolId', this.school.schoolId);
-    this._schoolService
-      .saveSchoolCertificates(this.certificateToUpload)
-      .subscribe((response: any) => {
-        this.closeCertificatesModal();
-        this.isSubmitted = false;
-        this.schoolCertificate.certificates = [];
-        this.certificateToUpload.set('certificates', '');
-        const translatedSummary = this.translateService.instant('Success');
-        const translatedMessage = this.translateService.instant('CertificateAddedSuccessfully');
-        this.messageService.add({
-          severity: 'success',
-          summary: translatedSummary,
-          life: 3000,
-          detail: translatedMessage,
-        });
-        this.ngOnInit();
-        console.log(response);
-      });
-  }
+  // saveSchoolCertificates() {
+  //   this.isSubmitted = true;
+  //   if (!this.certificateForm.valid) {
+  //     return;
+  //   }
+  //   this.loadingIcon = true;
+  //   for (var i = 0; i < this.schoolCertificate.certificates.length; i++) {
+  //     this.certificateToUpload.append(
+  //       'certificates',
+  //       this.schoolCertificate.certificates[i]
+  //     );
+  //   }
+  //   this.certificateToUpload.append('schoolId', this.school.schoolId);
+  //   this._schoolService
+  //     .saveSchoolCertificates(this.certificateToUpload)
+  //     .subscribe((response: any) => {
+  //       this.closeCertificatesModal();
+  //       this.isSubmitted = false;
+  //       this.schoolCertificate.certificates = [];
+  //       this.certificateToUpload.set('certificates', '');
+  //       const translatedSummary = this.translateService.instant('Success');
+  //       const translatedMessage = this.translateService.instant('CertificateAddedSuccessfully');
+  //       this.messageService.add({
+  //         severity: 'success',
+  //         summary: translatedSummary,
+  //         life: 3000,
+  //         detail: translatedMessage,
+  //       });
+  //       this.ngOnInit();
+  //       console.log(response);
+  //     });
+  // }
 
   getDeletedCertificate(deletedCertificate: string) {
     this.deleteCertificate.certificateId = deletedCertificate;
@@ -1162,7 +1178,22 @@ showDiv: boolean = false;
 
   resetCertificateModal() {
     this.isSubmitted = false;
-    this.schoolCertificate.certificates = [];
+    // this.addSchoolCertificate.certificates = [];
+    this.uploadImage = null;
+    this.schoolCertificateForm = this.fb.group({
+      certificateName: this.fb.control('', [Validators.required]),
+      provider: this.fb.control('', [Validators.required]),
+      issuedDate: this.fb.control(new Date().toISOString().substring(0, 10), [Validators.required]),
+      description: this.fb.control(''),
+      certificateId: this.fb.control(''),
+    });
+    this.certificateToUpload.set('certificateImage','');
+    flatpickr('#issuedDate',{
+      minDate:"1903-12-31",
+      maxDate:new Date(),
+      dateFormat: "m/d/Y",
+      defaultDate: new Date()
+      });
   }
 
   resetLanguageModal() {
@@ -1261,7 +1292,9 @@ showDiv: boolean = false;
     if (this.classCourseList == undefined || appliedFilters) {
       this.loadingIcon = true;
       this._schoolService.getSchoolClassCourseList(schoolId,this.classCoursePageNumber).subscribe((response) => {
+        debugger
           this.classCourseList = response;
+          console.log(this.classCourseList);
           this.loadingIcon = false;
         });
     }
@@ -1919,7 +1952,6 @@ if(post.postAttachments != undefined){
 }
 var displayDivs = document.getElementsByClassName("imgDisplay");
 for (var i = 0; i < displayDivs.length; i++){
-
   if(displayDivs[i].className.includes(this.postDivId)){
 //     var playerId = "video01" + this.counter;
 // const vjsPlayer = videojs(playerId, { autoplay: false });
@@ -1977,6 +2009,177 @@ for (var i = 0; i < displayDivs.length; i++){
       from: post.postAuthorType == 1 ? "school" : post.postAuthorType == 2 ? "class" : post.postAuthorType == 3 ? "course" : post.postAuthorType == 4 ? "user" : undefined
     };
       this.bsModalService.show(CreatePostComponent,{initialState});
+  }
+
+
+  // resetCertificateModal() {
+  //   this.isSubmitted = false;
+  //   this.addSchoolCertificate.certificates = [];
+  //   this.uploadImage = null;
+  //   this.schoolCertificateForm = this.fb.group({
+  //     certificateName: this.fb.control('', [Validators.required]),
+  //     provider: this.fb.control('', [Validators.required]),
+  //     issuedDate: this.fb.control(new Date().toISOString().substring(0, 10), [Validators.required]),
+  //     description: this.fb.control(''),
+  //     certificateId: this.fb.control(''),
+  //   });
+  //   this.certificateToUpload.set('certificateImage','');
+  //   flatpickr('#issuedDate',{
+  //     minDate:"1903-12-31",
+  //     maxDate:new Date(),
+  //     dateFormat: "m/d/Y",
+  //     defaultDate: new Date()
+  //     });
+  // }
+  
+  // handleCertificates(event: any) {
+  //   this.addSchoolCertificate.certificates.push(event.target.files[0]);
+  // }
+  
+  saveSchoolCertificates() {
+    debugger;
+    this.isSubmitted = true;
+    if (!this.schoolCertificateForm.valid) {
+      return;
+    }
+    this.loadingIcon = true;
+    for (var i = 0; i < this.schoolCertificate.certificates.length; i++) {
+      this.certificateToUpload.append(
+        'certificates',
+        this.schoolCertificate.certificates[i]
+      );
+    }
+    this.certificateToUpload.append('userId', this.school.id);
+    this._schoolService
+      .saveSchoolCertificates(this.certificateToUpload)
+      .subscribe((response: any) => {
+        this.closeCertificatesModal();
+        this.isSubmitted = false;
+        // this.addSchoolCertificate.certificates = [];
+        this.certificateToUpload.set('certificates', '');
+        const translatedSummary = this.translateService.instant('Success');
+        const translatedMessage = this.translateService.instant('CertificateAddedSuccessfully');
+        this.messageService.add({
+          severity: 'success',
+          summary: translatedSummary,
+          life: 3000,
+          detail: translatedMessage,
+        });
+        this.ngOnInit();
+        console.log(response);
+      });
+  }
+
+  uploadImageName:string = "";
+  avatarImage!:any;
+  handleSchoolCertificate(event: any) {
+    debugger
+    this.certificateToUpload.append("certificateImage", event.target.files[0], event.target.files[0].name);
+    this.uploadImageName = event.target.files[0].name;
+    const reader = new FileReader();
+    reader.onload = (_event) => { 
+        this.uploadImage = _event.target?.result; 
+        this.uploadImage = this.domSanitizer.bypassSecurityTrustUrl(this.uploadImage);
+    }
+    reader.readAsDataURL(event.target.files[0]); 
+    this.avatarImage = this.fileToUpload.get('avatarImage');
+  }
+
+  removeUploadCertificateImage(){
+    this.uploadImage = null;
+    this.certificateToUpload.set('certificateImage','');
+    this.avatarImage = undefined;
+    this.uploadImageName = "";
+  
+  }
+
+  saveSchoolCertificate(){
+    debugger
+    this.isSubmitted = true;
+      if (!this.schoolCertificateForm.valid) {
+        return;
+      }
+  
+      if(this.uploadImage == null){
+        return;
+      }
+  
+    this.loadingIcon = true;
+    var formValue =this.schoolCertificateForm.value;
+  
+  //here we will add if id has
+  if(formValue.certificateId != ""){
+    this.certificateToUpload.append('certificateId', formValue.certificateId);
+  }
+  
+    if(typeof this.uploadImage == "string"){
+      this.certificateToUpload.append('certificateUrl', this.uploadImage);
+    }
+    this.certificateToUpload.append('schoolId', this.school.schoolId);
+    this.certificateToUpload.append('certificateName', formValue.certificateName);
+    this.certificateToUpload.append('provider', formValue.provider);
+    this.certificateToUpload.append('issuedDate', formValue.issuedDate);
+    this.certificateToUpload.append('description', formValue.description);
+  
+    // this.userCertificateForm.updateValueAndValidity();
+  
+    this._schoolService.saveSchoolCertificates(this.certificateToUpload).subscribe((response:any) => {
+      debugger
+      this.closeCertificatesModal();
+      this.isSubmitted = false;
+      this.certificateToUpload = new FormData();
+      this.schoolCertificate.certificates = [];
+      // this.certificateToUpload.set('certificateImage', '');
+      if(formValue.certificateId != ""){
+        var translatedSummary = this.translateService.instant('Success');
+        var translatedMessage = this.translateService.instant('CertificateUpdatedSuccessfully');   
+      }
+      else{
+      var translatedSummary = this.translateService.instant('Success');
+      var translatedMessage = this.translateService.instant('CertificateAddedSuccessfully');   
+     }
+      this.messageService.add({
+        severity: 'success',
+        summary: translatedSummary,
+        life: 3000,
+        detail: translatedMessage,
+      });
+      this.ngOnInit();
+  });
+  }
+
+  editSchoolCertificate(schoolCertificateInfo:any){
+    debugger
+    // dob = dob.substring(0, dob.indexOf('T'));     
+  
+      var issuedDate = schoolCertificateInfo.issuedDate.substring(0, schoolCertificateInfo.issuedDate.indexOf('T'));     
+      issuedDate = this.datePipe.transform(issuedDate, 'MM/dd/yyyy');
+  
+    flatpickr('#issuedDate',{
+      minDate:"1903-12-31",
+      maxDate:new Date(),
+      dateFormat: "m/d/Y",
+      defaultDate: issuedDate
+      });
+  
+      this.schoolCertificateForm = this.fb.group({
+        schoolId:this.fb.control(this.school.schoolId),
+      certificateName: this.fb.control(schoolCertificateInfo.certificateName, [Validators.required]),
+      provider: this.fb.control(schoolCertificateInfo.provider, [Validators.required]),
+      issuedDate: this.fb.control(issuedDate, [Validators.required]),
+      description: this.fb.control(schoolCertificateInfo.description),
+      certificateId: this.fb.control(schoolCertificateInfo.id)
+    });
+  
+    this.uploadImage = schoolCertificateInfo.certificateUrl;
+  }
+
+  openSchoolCertificate(certificateInfo:any){
+    debugger
+    this.certificateToUpload.set('certificateImage','');
+    this.schoolCertificateInfo = certificateInfo;
+    this.openSchoolOwnCertificate.nativeElement.click();
+    this.cd.detectChanges();
   }
 
 }

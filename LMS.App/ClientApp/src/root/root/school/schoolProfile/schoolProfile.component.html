@@ -10,6 +10,7 @@
             hidden
             (click)="cropModalOpen(cropTemplate)"
           ></button>
+          <button #openSchoolOwnCertificate hidden data-bs-toggle="modal" data-bs-target="#schoolOwnCertificate"></button>
           <button
             (click)="back()"
             mat-mini-fab
@@ -251,7 +252,7 @@
               class="custom-tag"
               ><span
                 (click)="
-                  openCertificateViewModal(item.certificateUrl, item.name)
+                  openSchoolCertificate(item)
                 "
                 >{{ item.name }}</span
               ><button
@@ -1758,18 +1759,31 @@
                                   class="video-js vjs-big-play-centered"
                                   preload="metadata"
                                 >
-                                  <source
-                                    [lazyLoad]="postAttachment?.fileUrl"
+                                  <source *ngIf="postAttachment?.compressedFileUrl == ''"
+                                    [src]="postAttachment?.fileUrl"
                                     type="video/mp4"
                                   />
-                                </video> -->
+                                  <source *ngIf="postAttachment?.compressedFileUrl != ''"
+                                    [src]="postAttachment?.compressedFileUrl"
+                                    type="video/mp4"
+                                  />
+                                  <!-- <source
+                                    [src]="postAttachment?.fileUrl"
+                                    type="video/mp4"
+                                  /> -->
+                                </video>
                               </div>
                             </slide>
                             <slide *ngIf="postAttachment?.fileType == 1">
                               <img
-                                *ngIf="postAttachment?.fileType == 1"
+                                *ngIf="postAttachment?.fileType == 1 && postAttachment?.compressedFileUrl == ''"
                                 class="w-100"
                                 [lazyLoad]="postAttachment?.fileUrl"
+                              />
+                              <img
+                                *ngIf="postAttachment?.fileType == 1 && postAttachment?.compressedFileUrl != ''"
+                                class="w-100"
+                                [src]="postAttachment?.compressedFileUrl"
                               />
                             </slide>
                           </div>
@@ -2106,21 +2120,21 @@
                                   />
                                 </div>
                                 <img
-                                  *ngIf="post.postAttachments[0]?.fileType == 1"
+                                  *ngIf="post.postAttachments[0]?.fileType == 1 && post.postAttachments[0]?.compressedFileUrl != ''"
                                   class="w-100"
-                                  [lazyLoad]="post.postAttachments[0]?.fileUrl"
+                                  [src]="post.postAttachments[0]?.compressedFileUrl"
+                                />
+                                <img
+                                  *ngIf="post.postAttachments[0]?.fileType == 1 && post.postAttachments[0]?.compressedFileUrl == ''"
+                                  class="w-100"
+                                  [src]="post.postAttachments[0]?.fileUrl"
                                 />
                               </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                      <!-- <div
-          class="clicked-post-div"
-          *ngIf="showDiv && clickedPostId === post.id"
-        >
-         here is content
-        </div> -->
+      
                     </div>
                   </div>
                 </ng-container>
@@ -2350,6 +2364,7 @@
                                 class="w-100"
                                 [lazyLoad]="item.thumbnailUrl"
                               />
+                              
                               <div
                                 *ngIf="item.thumbnailType == 2"
                                 class="videofile"
@@ -2477,6 +2492,66 @@
         </div>
 
         <!-- Modal -->
+        <div
+class="modal fade edit-school-modal delete-modal post-view-large"
+id="schoolOwnCertificate"
+tabindex="-1"
+aria-labelledby="schoolOwnCertificate"
+aria-hidden="true"
+>
+<div class="modal-dialog modal-dialog-centered">
+  <div class="modal-content">
+    <div
+      class="modal-header border-0 justify-content-center position-relative"
+    >
+      <h1
+        class="modal-title font_22 text_dark fw_700 border-0 text-center"
+      >
+        {{ "Certificate" | translate }}
+      </h1>
+      <ul *ngIf="isOwner" class="list-unstyled d-flex more-action-btn before-none pe-2 me-1 mb-0" style="position: absolute;right: 50px;top: 28px;">
+        <li class="d-inline-block ps-0 mb-0">
+          <div class="dropdown">
+            <button class="bg-transparent dropdown-toggle border-0 action-more-btn after-none pt-1" type="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              <i class="fa-solid fa-ellipsis"></i>
+            </button>
+            <ul class="dropdown-menu">
+              <li><a style="cursor: pointer;" class="dropdown-item"
+                (click)="editSchoolCertificate(schoolCertificateInfo)" data-bs-toggle="modal" data-bs-target="#add-certificate">{{'Edit'| translate }}
+              </a>
+              </li>
+            </ul>
+          </div>
+        </li>
+      </ul>  
+      <button
+        type="button"
+        class="btn-close shadow-none"
+        data-bs-dismiss="modal"
+        aria-label="Close"
+      >
+        <img src="../../../../assets/images/cross.svg" />
+      </button>
+    </div>
+    <div class="modal-body" *ngIf="schoolCertificateInfo != undefined">
+      <div>
+        <img [src]="schoolCertificateInfo.certificateUrl"/>
+      </div>
+      <br>
+      <div>
+        <span class="fw-bold">{{ "CertificateName" | translate }} :</span> {{schoolCertificateInfo.name}}<br>
+        <span class="fw-bold">{{ "ProviderName" | translate}} :</span> {{schoolCertificateInfo.provider}}<br>
+        <span class="fw-bold">{{ "IssuedDate" | translate}} :</span>  {{schoolCertificateInfo.issuedDate | date : "MMMM d, y"}}<br>
+        <span *ngIf="schoolCertificateInfo.description != null">
+          <span class="fw-bold">{{ "Description" | translate}} :</span> {{schoolCertificateInfo.description}}
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
         <div
           class="modal fade edit-school-modal"
           id="editschool"
@@ -3216,7 +3291,7 @@
           </div>
         </div>
 
-        <div
+        <!-- <div
           class="modal fade edit-school-modal"
           id="add-certificate"
           tabindex="-1"
@@ -3244,39 +3319,97 @@
               </div>
               <div class="modal-body">
                 <form
-                  [formGroup]="certificateForm"
+                  [formGroup]="schoolCertificateForm"
                   class="latest-form add-tag-step"
                 >
-                  <div class="form-group">
-                    <div class="dropzone-wrapper">
-                      <div class="dropzone-desc">
-                        <i class="glyphicon glyphicon-download-alt"></i>
-                        <p class="text-center fw_400">
-                          {{ "ChoosePdfFile" | translate }}
-                          <b>{{ "DragItHere" | translate }}</b>
-                        </p>
-                      </div>
+                <div class="row">
+
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label class="font_10">{{
+                        "CertificateName" | translate
+                      }}*</label>
                       <input
-                        formControlName="certificates"
-                        type="file"
-                        id="certificate"
-                        (change)="handleCertificates($event)"
-                        class="dropzone"
-                        accept="application/pdf"
+                        formControlName="certificateName"
+                        type="text"
+                        name="CertificateName"
+                        class="form-control w-100"
+                      />
+                      <small
+                      class="p-error"
+                      style="color: orange"
+                      *ngIf="isSubmitted && schoolCertificateForm.get('certificateName')?.errors"
+                      >
+                        {{ "CertificateNameRequired" | translate }}
+                      </small>
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label class="font_10">{{
+                        "ProviderName" | translate
+                      }}*</label>
+                      <input
+                        formControlName="provider"
+                        type="text"
+                        name="provider"
+                        class="form-control w-100"
                       />
                     </div>
                   </div>
-                  <div class="teacher-tags tag-box language-tag my-0">
-                    <button
-                      *ngFor="
-                        let certificate of this.schoolCertificate.certificates
-                      "
-                      type="button"
-                      class="custom-tag border-0"
-                    >
-                      {{ certificate.name }}
-                    </button>
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label class="font_10"
+                        >{{ "IssuedDate" | translate }}*</label
+                      >
+                      <input
+                        #issuedDate
+                        autocomplete="off"
+                        type="text"
+                        class="form-control w-100 date_calendar"
+                        name="dob"
+                        formControlName="issuedDate"
+                        id="issuedDate"
+                        (click)="getSelectedLanguage()"
+                        />
+                    
+                    </div>
                   </div>
+                  <div class="col-md-12">
+                      <div class="form-group">
+                        <label class="font_10">{{
+                          "Description" | translate
+                        }}</label>
+                        <textarea
+                        maxlength="200"
+                        type="text"
+                        formControlName="description"
+                        class="form-control resize-none ht_96"
+                      ></textarea>
+                      </div>
+                  </div>
+                  <div class="col-md-12">
+                      <div class="dropzone-wrapper">
+                        <div class="dropzone-desc">
+                          <i class="glyphicon glyphicon-download-alt"></i>
+                          <p class="text-center fw_400">
+                            {{ "ChoosePdfFile" | translate }}
+                            <b>{{ "DragItHere" | translate }}</b>
+                          </p>
+                          
+                        </div>
+                      </div>
+                        <input
+                          formControlName="certificates"
+                          type="file"
+                          id="certificate"
+                          (change)="handleSchoolCertificate($event)"
+                          class="dropzone"
+                          accept="image/*"
+                        />
+                      </div>
+                    </div>
+                  <div class="teacher-tags tag-box language-tag my-0">
                   <small
                     class="p-error"
                     style="color: orange"
@@ -3288,6 +3421,7 @@
                   >
                     {{ "SelectAtLeastOneCertificate" | translate }}
                   </small>
+                </div>
                   <div
                     class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 mt-4"
                   >
@@ -3308,10 +3442,217 @@
                     </button>
                   </div>
                 </form>
-              </div>
+                </div>
             </div>
           </div>
+        </div> -->
+
+
+        <div
+class="modal fade edit-school-modal"
+id="add-certificate"
+tabindex="-1"
+aria-labelledby="add-certificate"
+aria-hidden="true"
+>
+<div class="modal-dialog modal-dialog-centered">
+  <div class="modal-content">
+    <div
+      class="modal-header border-0 justify-content-center position-relative"
+    >
+      <h1
+        class="modal-title font_22 text_dark fw_700 border-0 text-center"
+      >
+        {{ "AddCertificates" | translate }}
+      </h1>      
+      <button
+        type="button"
+        class="btn-close shadow-none"
+        data-bs-dismiss="modal"
+        aria-label="Close"
+      >
+        <img src="../../../../assets/images/cross.svg" />
+      </button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="schoolCertificateForm" class="latest-form">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label class="font_10">{{
+                "CertificateName" | translate
+              }}*</label>
+              <input
+                formControlName="schoolId"
+                type="text"
+                name="CertificateName"
+                class="form-control w-100"
+              />
+              <input
+                formControlName="certificateName"
+                type="text"
+                name="CertificateName"
+                class="form-control w-100"
+              />
+            </div>
+            <small
+            class="p-error"
+            style="color: orange"
+            *ngIf="isSubmitted && schoolCertificateForm.get('certificateName')?.errors"
+          >
+            {{ "CertificateNameRequired" | translate }}
+          </small>
+          </div>
+
+          <div class="col-md-12">
+            <div class="form-group">
+              <label class="font_10">{{
+                "ProviderName" | translate
+              }}*</label>
+              <input
+                formControlName="provider"
+                type="text"
+                name="provider"
+                class="form-control w-100"
+              />
+            </div>
+            <small
+            class="p-error"
+            style="color: orange"
+            *ngIf="isSubmitted && schoolCertificateForm.get('provider')?.errors"
+          >
+            {{ "ProviderNameRequired" | translate }}
+          </small>
+          </div>
+
+          <div class="col-md-12">
+            <div class="form-group">
+              <label class="font_10"
+                >{{ "IssuedDate" | translate }}*</label
+              >
+              <input
+                #issuedDate
+                autocomplete="off"
+                type="text"
+                class="form-control w-100 date_calendar"
+                name="dob"
+                formControlName="issuedDate"
+                id="issuedDate"
+                (click)="getSelectedLanguage()"
+              />
+             
+            </div>
+            <small
+            class="p-error"
+            style="color: orange"
+            *ngIf="
+              isSubmitted && schoolCertificateForm.controls.issuedDate.errors
+            "
+            >{{ "IssuedDateRequired" | translate }}
+          </small>
+          </div>
+
+          <div class="col-md-12">
+            <div class="form-group">
+              <label class="font_10">{{
+                "Description" | translate
+              }}</label>
+              <textarea
+              maxlength="200"
+              type="text"
+              formControlName="description"
+              class="form-control resize-none ht_96"
+            ></textarea>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="preview-zone hidden">
+              <div class="box box-solid">
+                <div class="box-header with-border"></div>
+                <div class="box-body">
+                  <span class="position-relative d-inline-block">
+                    <img
+                      style="width: 200px"
+                      class="mb-3"
+                      [src]="uploadImage"
+                    />
+                    <button
+                      *ngIf="
+                        uploadImage != undefined && uploadImage != null
+                      "
+                      (click)="removeUploadCertificateImage()"
+                      type="button"
+                      class="btn dl-school-img d-flex align-items-center justify-content-center rounded-circle position-absolute"
+                      style="height: 27px !important"
+                    >
+                      <i class="fa-solid fa-xmark"></i>
+                    </button>
+                  </span>
+                  <br />
+                  <p>{{ uploadImageName }}</p>
+                </div>
+              </div>
+            </div>
+            <div
+              *ngIf="uploadImage == null || uploadImage == undefined"
+              class="dropzone-wrapper"
+            >
+              <div class="dropzone-desc">
+                <i class="glyphicon glyphicon-download-alt"></i>
+                <p class="text-center fw_400">
+                  {{ "ChooseImageFile" | translate }}
+                  <b>{{ "DragItHere" | translate }}</b>
+                </p>
+              </div>
+              <input
+                type="file"
+                id="avatar"
+                (change)="handleSchoolCertificate($event)"
+                class="dropzone"
+                accept="image/*"
+              />
+            </div>
+          </div>
+
+          <small
+          class="p-error"
+          style="color: orange; margin-left: 180px"
+          *ngIf="
+            isSubmitted &&
+            (this.uploadImage == undefined || this.uploadImage == null)
+          "
+        >
+          {{ "CertificateImageRequired" | translate }}
+        </small>
+          </div>
+
+          <div
+          class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 mt-4"
+        >
+          <button
+            #closeCertificateModal
+            id="closeBtn"
+            type="button"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+            data-bs-dismiss="modal"
+          >
+            {{ "DiscardChanges" | translate }}
+          </button>
+          <button
+            (click)="saveSchoolCertificate()"
+            type="button"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
+          >
+            {{ "Save" | translate }}
+          </button>
         </div>
+      </form>
+    </div>
+  </div>
+</div>
+</div>
+
 
         <div
           class="modal fade edit-school-modal delete-modal"

@@ -11,9 +11,13 @@ namespace LMS.Data.Entity
     {
         [Key]
         public Guid CertificateId { get; set; }
-        public string CertificateUrl { get; set; }
+        public string? CertificateUrl { get; set; }
         public Guid ClassId { get; set; }
-        public Class Class { get; set; }
+        public Class? Class { get; set; }
         public string? Name { get; set; }
+        public string? Provider { get; set; }
+        public DateTime IssuedDate { get; set; }
+        public string? CertificateName { get; set; }
+        public string? Description { get; set; }
     }
 }

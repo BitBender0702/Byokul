@@ -17,6 +17,7 @@ import { SharePostComponent } from '../sharePost/sharePost.component';
 import { ClassCourseFilterTypeEnum } from 'src/root/Enums/classCourseFilterTypeEnum';
 import { ClassService } from 'src/root/service/class.service';
 import { CourseService } from 'src/root/service/course.service';
+import { FormGroup } from '@angular/forms';
 export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,type:string}>();  
 
 
@@ -67,6 +68,10 @@ export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,ty
     gender!:string;
     commentLikeUnlike!:CommentLikeUnlike;
     commentResponseSubscription!:Subscription;
+
+    courseCertificateForm!:FormGroup;
+    courseCertificateInfo:any;
+    @ViewChild('openCourseOwnCertificate') openCourseOwnCertificate!: ElementRef;
 
     @ViewChild('groupChatList') groupChatList!: ElementRef;
 
