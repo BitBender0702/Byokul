@@ -1001,11 +1001,11 @@
                           class="video-js vjs-big-play-centered"
                           preload="metadata"
                         >
-                          <!-- <source
+                           <source
                             [src]="postAttachment?.fileUrl"
                             type="video/mp4"
                           /> -->
-                          <source *ngIf="postAttachment?.compressedFileUrl == ''"
+                          <!-- <source *ngIf="postAttachment?.compressedFileUrl == ''"
                             [src]="postAttachment?.fileUrl"
                             type="video/mp4"
                           />
@@ -1013,7 +1013,7 @@
                             [src]="postAttachment?.compressedFileUrl"
                             type="video/mp4"
                           />
-                        </video> -->
+                        </video>  -->
                       </div>
                     </slide>
                     <slide *ngIf="postAttachment?.fileType == 1">

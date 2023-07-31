@@ -1541,5 +1541,23 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     this.cd.detectChanges();
   }
 
+  getDeletedPostId(id: string) {
+    debugger
+    this.loadingIcon = true;
+    this._postService.deletePost(id).subscribe((_response) => {
+      this.loadingIcon = false;
+      deletePostResponse.next({postId:id});
+    });
+  }
+  
+  openEditPostModal(post:any){
+    debugger
+    const initialState = {
+      editPostId: post.id,
+      from: post.postAuthorType == 1 ? "school" : post.postAuthorType == 2 ? "class" : post.postAuthorType == 3 ? "course" : post.postAuthorType == 4 ? "user" : undefined
+    };
+      this.bsModalService.show(CreatePostComponent,{initialState});
+  }
+
 
 }
