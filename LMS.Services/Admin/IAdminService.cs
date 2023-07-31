@@ -15,10 +15,10 @@ namespace LMS.Services.Admin
     {
         Task<List<RegisteredUsersViewModel>> GetRegisteredUsers();
         Task<bool> BanUser(BanUsersViewModel model);
-        Task<bool> VarifyUser(VerifyUsersViewModel model);
+        Task<bool> VerifyUser(VerifyUsersViewModel model);
         Task<List<SchoolViewModel>> GetRegisteredSchools();
         Task<bool> BanSchool(BanSchoolsViewModel model);
-        Task<bool> VarifySchool(VerifySchoolsViewModel model);
+        Task<bool> VerifySchool(VerifySchoolsViewModel model);
         Task<List<ClassViewModel>> GetRegisteredClasses();
         Task<List<CourseViewModel>> GetRegisteredCourses();
         Task<bool> DisableClass(DisableClassCourseViewModel model);

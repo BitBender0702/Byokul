@@ -505,12 +505,18 @@
                         <slide *ngIf="postAttachment.fileType == 2">
                           <div *ngIf="postAttachment?.fileType == 2" class="videofile">
                             <video [id] = "getRandomClass(i,false)" controls class="video-js vjs-big-play-centered" preload="metadata">
-                              <source [src]="postAttachment?.fileUrl" type="video/mp4" />
-                            </video>
+
+                              <source  *ngIf="postAttachment?.compressedFileUrl == ''"
+                               [src]="postAttachment?.fileUrl" type="video/mp4" />
+                            <source  *ngIf="postAttachment?.compressedFileUrl != ''"
+                            [src]="postAttachment?.compressedFileUrl" type="video/mp4" />
+                         </video>
                           </div>
                         </slide>
                         <slide *ngIf="postAttachment?.fileType == 1">
-                          <img *ngIf="postAttachment?.fileType == 1" class="w-100" [src]="postAttachment?.fileUrl" />
+                          <img *ngIf="postAttachment?.fileType == 1 && postAttachment?.compressedFileUrl == ''" class="w-100" [src]="postAttachment?.fileUrl" />
+                          <img *ngIf="postAttachment?.fileType == 1 && postAttachment?.compressedFileUrl == ''" class="w-100" [src]="postAttachment?.fileUrl" />
+
                         </slide>
                       </div>
                     </carousel>

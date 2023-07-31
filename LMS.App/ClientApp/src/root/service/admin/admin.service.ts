@@ -7,7 +7,7 @@ import { BanUnbanSchools } from "src/root/interfaces/admin/banUnbanSchools";
 import { BanUnbanUsers } from "src/root/interfaces/admin/banUnbanUser";
 import { EnableDisableClassCourse } from "src/root/interfaces/admin/enableDisableClassCourse";
 import { VerifySchools } from "src/root/interfaces/admin/verifySchools";
-import { VarifyUsers } from "src/root/interfaces/admin/verifyUser";
+import { VerifyUsers } from "src/root/interfaces/admin/verifyUser";
 
 @Injectable({providedIn: 'root'})
 
@@ -30,8 +30,8 @@ export class AdminService{
         return this.http.post(`${this.apiUrl}/admins/banUser`,banUser);
     }
 
-    varifyUser(verifyUser:VarifyUsers):Observable<any>{
-        return this.http.post(`${this.apiUrl}/admins/varifyUser`,verifyUser);
+    verifyUser(verifyUser:VerifyUsers):Observable<any>{
+        return this.http.post(`${this.apiUrl}/admins/verifyUser`,verifyUser);
     }
 
     getRegSchools():Observable<any>{

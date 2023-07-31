@@ -999,18 +999,36 @@
                           class="video-js vjs-big-play-centered"
                           preload="metadata"
                         >
-                          <source
+                          <!-- <source
                             [src]="postAttachment?.fileUrl"
+                            type="video/mp4"
+                          /> -->
+                          <source *ngIf="postAttachment?.compressedFileUrl == ''"
+                            [src]="postAttachment?.fileUrl"
+                            type="video/mp4"
+                          />
+                          <source *ngIf="postAttachment?.compressedFileUrl != ''"
+                            [src]="postAttachment?.compressedFileUrl"
                             type="video/mp4"
                           />
                         </video>
                       </div>
                     </slide>
                     <slide *ngIf="postAttachment?.fileType == 1">
-                      <img
+                      <!-- <img
                         *ngIf="postAttachment?.fileType == 1"
                         class="w-100"
                         [src]="postAttachment?.fileUrl"
+                      /> -->
+                      <img
+                        *ngIf="postAttachment?.fileType == 1 && postAttachment?.compressedFileUrl == ''"
+                        class="w-100"
+                        [src]="postAttachment?.fileUrl"
+                      />
+                      <img
+                        *ngIf="postAttachment?.fileType == 1 && postAttachment?.compressedFileUrl != ''"
+                        class="w-100"
+                        [src]="postAttachment?.compressedFileUrl"
                       />
                     </slide>
                   </div>

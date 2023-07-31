@@ -159,6 +159,13 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
 
     minDate:any;
     filteredAttachments:any[] = [];
+
+    classCertificateForm!:FormGroup;
+    classCertificateInfo:any;
+    
+    @ViewChild('openClassOwnCertificate') openClassOwnCertificate!: ElementRef;
+
+
     public event: EventEmitter<any> = new EventEmitter();
 
     @ViewChild('closeEditModal') closeEditModal!: ElementRef;
@@ -312,6 +319,16 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       this.certificateForm = this.fb.group({
         certificates:this.fb.control([],[Validators.required]),
       });
+
+      this.classCertificateForm = this.fb.group({
+        classId: this.fb.control(''),
+        certificateName: this.fb.control('', [Validators.required]),
+        provider: this.fb.control('', [Validators.required]),
+        issuedDate: this.fb.control(new Date().toISOString().substring(0, 10), [Validators.required]),
+        description: this.fb.control(''),
+        certificateId: this.fb.control(''),
+      });
+    
 
       this.deleteLanguage = {
         classId: '',
@@ -811,25 +828,88 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
             this.classCertificate.certificates.push(event.target.files[0]);
         }
 
-        saveClassCertificates(){
+        // saveClassCertificates(){
+        //   this.isSubmitted = true;
+        //   if (!this.certificateForm.valid) {
+        //     return;
+        //   }
+        //   this.loadingIcon = true;
+        //   for(var i=0; i<this.classCertificate.certificates.length; i++){
+        //     this.certificateToUpload.append('certificates', this.classCertificate.certificates[i]);
+        //  }
+        //   this.certificateToUpload.append('classId', this.class.classId);
+        //   this._classService.saveClassCertificates(this.certificateToUpload).subscribe((response:any) => {
+        //     this.closeCertificatesModal();
+        //     this.isSubmitted = false;
+        //     this.classCertificate.certificates = [];
+        //     this.certificateToUpload.set('certificates','');
+        //     this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Certificate deleted successfully'});
+        //     this.ngOnInit();
+        //   });
+        // }
+        saveClassCertificate(){
+          debugger
           this.isSubmitted = true;
-          if (!this.certificateForm.valid) {
-            return;
-          }
+            if (!this.classCertificateForm.valid) {
+              return;
+            }
+        
+            if(this.uploadImage == null){
+              return;
+            }
+        
           this.loadingIcon = true;
-          for(var i=0; i<this.classCertificate.certificates.length; i++){
-            this.certificateToUpload.append('certificates', this.classCertificate.certificates[i]);
-         }
+          var formValue =this.classCertificateForm.value;
+        
+        //here we will add if id has
+        if(formValue.certificateId != ""){
+          this.certificateToUpload.append('certificateId', formValue.certificateId);
+        }
+        
+          if(typeof this.uploadImage == "string"){
+            this.certificateToUpload.append('certificateUrl', this.uploadImage);
+          }
           this.certificateToUpload.append('classId', this.class.classId);
+          this.certificateToUpload.append('certificateName', formValue.certificateName);
+          this.certificateToUpload.append('provider', formValue.provider);
+          this.certificateToUpload.append('issuedDate', formValue.issuedDate);
+          this.certificateToUpload.append('description', formValue.description);
+        
+          // this.userCertificateForm.updateValueAndValidity();
+        
           this._classService.saveClassCertificates(this.certificateToUpload).subscribe((response:any) => {
+            debugger
             this.closeCertificatesModal();
             this.isSubmitted = false;
+            this.certificateToUpload = new FormData();
             this.classCertificate.certificates = [];
-            this.certificateToUpload.set('certificates','');
-            this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Certificate deleted successfully'});
+            // this.certificateToUpload.set('certificateImage', '');
+            if(formValue.certificateId != ""){
+              var translatedSummary = this.translateService.instant('Success');
+              var translatedMessage = this.translateService.instant('CertificateUpdatedSuccessfully');   
+            }
+            else{
+            var translatedSummary = this.translateService.instant('Success');
+            var translatedMessage = this.translateService.instant('CertificateAddedSuccessfully');   
+           }
+            this.messageService.add({
+              severity: 'success',
+              summary: translatedSummary,
+              life: 3000,
+              detail: translatedMessage,
+            });
             this.ngOnInit();
-          });
+        });
+        
         }
+
+        removeUploadCertificateImage(){
+          this.uploadImage = null;
+          this.certificateToUpload.set('certificateImage','');
+          this.avatarImage = undefined;
+          this.uploadImageName = "";
+        }
+      
 
         updateClass(){
            this.isSubmitted=true;
@@ -1385,4 +1465,56 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
      this.isScreenTablet = screenWidth >= 768 && screenWidth < 992;
      this.isScreenMobile = screenWidth < 768;
    }
+
+   uploadImageName:string = "";
+    avatarImage!:any;
+   handleClassCertificate(event: any) {
+    debugger
+    this.certificateToUpload.append("certificateImage", event.target.files[0], event.target.files[0].name);
+    this.uploadImageName = event.target.files[0].name;
+    const reader = new FileReader();
+    reader.onload = (_event) => { 
+        this.uploadImage = _event.target?.result; 
+        this.uploadImage = this.domSanitizer.bypassSecurityTrustUrl(this.uploadImage);
+    }
+    reader.readAsDataURL(event.target.files[0]); 
+    this.avatarImage = this.fileToUpload.get('avatarImage');
+  
+  }
+
+  editClassCertificate(classCertificateInfo:any){
+    debugger
+    // dob = dob.substring(0, dob.indexOf('T'));     
+  
+      var issuedDate = classCertificateInfo.issuedDate.substring(0, classCertificateInfo.issuedDate.indexOf('T'));     
+      issuedDate = this.datePipe.transform(issuedDate, 'MM/dd/yyyy');
+  
+    flatpickr('#issuedDate',{
+      minDate:"1903-12-31",
+      maxDate:new Date(),
+      dateFormat: "m/d/Y",
+      defaultDate: issuedDate
+      });
+  
+      this.classCertificateForm = this.fb.group({
+        schoolId:this.fb.control(this.class.classId),
+      certificateName: this.fb.control(classCertificateInfo.certificateName, [Validators.required]),
+      provider: this.fb.control(classCertificateInfo.provider, [Validators.required]),
+      issuedDate: this.fb.control(issuedDate, [Validators.required]),
+      description: this.fb.control(classCertificateInfo.description),
+      certificateId: this.fb.control(classCertificateInfo.id)
+    });
+  
+    this.uploadImage = classCertificateInfo.certificateUrl;
+  }
+
+  openClassOwnCertificateModal(certificateInfo:any){
+    debugger
+    this.certificateToUpload.set('certificateImage','');
+    this.classCertificateInfo = certificateInfo;
+    this.openClassOwnCertificate.nativeElement.click();
+    this.cd.detectChanges();
+  }
+
+
 }

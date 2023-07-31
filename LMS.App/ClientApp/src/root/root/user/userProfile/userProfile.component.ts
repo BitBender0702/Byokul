@@ -1770,38 +1770,38 @@ handleCertificates(event: any) {
   this.userCertificate.certificates.push(event.target.files[0]);
 }
 
-saveUserCertificates() {
-  this.isSubmitted = true;
-  if (!this.certificateForm.valid) {
-    return;
-  }
-  this.loadingIcon = true;
-  for (var i = 0; i < this.userCertificate.certificates.length; i++) {
-    this.certificateToUpload.append(
-      'certificates',
-      this.userCertificate.certificates[i]
-    );
-  }
-  this.certificateToUpload.append('userId', this.user.id);
-  this._userService
-    .saveUserCertificates(this.certificateToUpload)
-    .subscribe((response: any) => {
-      this.closeCertificatesModal();
-      this.isSubmitted = false;
-      this.userCertificate.certificates = [];
-      this.certificateToUpload.set('certificates', '');
-      const translatedSummary = this.translateService.instant('Success');
-      const translatedMessage = this.translateService.instant('CertificateAddedSuccessfully');
-      this.messageService.add({
-        severity: 'success',
-        summary: translatedSummary,
-        life: 3000,
-        detail: translatedMessage,
+  saveUserCertificates() {
+    this.isSubmitted = true;
+    if (!this.certificateForm.valid) {
+      return;
+    }
+    this.loadingIcon = true;
+    for (var i = 0; i < this.userCertificate.certificates.length; i++) {
+      this.certificateToUpload.append(
+        'certificates',
+        this.userCertificate.certificates[i]
+      );
+    }
+    this.certificateToUpload.append('userId', this.user.id);
+    this._userService
+      .saveUserCertificates(this.certificateToUpload)
+      .subscribe((response: any) => {
+        this.closeCertificatesModal();
+        this.isSubmitted = false;
+        this.userCertificate.certificates = [];
+        this.certificateToUpload.set('certificates', '');
+        const translatedSummary = this.translateService.instant('Success');
+        const translatedMessage = this.translateService.instant('CertificateAddedSuccessfully');
+        this.messageService.add({
+          severity: 'success',
+          summary: translatedSummary,
+          life: 3000,
+          detail: translatedMessage,
+        });
+        this.ngOnInit();
+        console.log(response);
       });
-      this.ngOnInit();
-      console.log(response);
-    });
-}
+  }
 
 private closeCertificatesModal(): void {
   this.closeCertificateModal.nativeElement.click();
@@ -1979,8 +1979,6 @@ openUserOwnCertificateModal(certificateInfo:any){
 
 editUserCertificate(userCertificateInfo:any){
   debugger
-  // dob = dob.substring(0, dob.indexOf('T'));     
-
     var issuedDate = userCertificateInfo.issuedDate.substring(0, userCertificateInfo.issuedDate.indexOf('T'));     
     issuedDate = this.datePipe.transform(issuedDate, 'MM/dd/yyyy');
 

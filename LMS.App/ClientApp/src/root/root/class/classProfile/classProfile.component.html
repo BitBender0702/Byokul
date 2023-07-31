@@ -1013,18 +1013,36 @@
                                     class="video-js vjs-big-play-centered"
                                     preload="metadata"
                                   >
-                                    <source
+                                    <!-- <source
                                       [src]="postAttachment?.fileUrl"
+                                      type="video/mp4"
+                                    /> -->
+                                    <source *ngIf="postAttachment?.compressedFileUrl == ''"
+                                      [src]="postAttachment?.fileUrl"
+                                      type="video/mp4"
+                                    />
+                                    <source *ngIf="postAttachment?.compressedFileUrl != ''"
+                                      [src]="postAttachment?.compressedFileUrl"
                                       type="video/mp4"
                                     />
                                   </video>
                                 </div>
                               </slide>
                               <slide *ngIf="postAttachment?.fileType == 1">
-                                <img
+                                <!-- <img
                                   *ngIf="postAttachment?.fileType == 1"
                                   class="w-100"
                                   [src]="postAttachment?.fileUrl"
+                                /> -->
+                                <img
+                                  *ngIf="postAttachment?.fileType == 1 && postAttachment?.compressedFileUrl == ''"
+                                  class="w-100"
+                                  [src]="postAttachment?.fileUrl"
+                                />
+                                <img
+                                  *ngIf="postAttachment?.fileType == 1 && postAttachment?.compressedFileUrl != ''"
+                                  class="w-100"
+                                  [src]="postAttachment?.compressedFileUrl"
                                 />
                               </slide>
                             </div>
@@ -2112,7 +2130,7 @@
           </div>
         </div>
 
-        <div
+        <!-- <div
           class="modal fade edit-school-modal"
           id="add-certificate"
           tabindex="-1"
@@ -2203,7 +2221,266 @@
               </div>
             </div>
           </div>
+        </div> -->
+
+
+        <div
+class="modal fade edit-school-modal"
+id="add-certificate"
+tabindex="-1"
+aria-labelledby="add-certificate"
+aria-hidden="true"
+>
+<div class="modal-dialog modal-dialog-centered">
+  <div class="modal-content">
+    <div
+      class="modal-header border-0 justify-content-center position-relative"
+    >
+      <h1
+        class="modal-title font_22 text_dark fw_700 border-0 text-center"
+      >
+        {{ "AddCertificates" | translate }}
+      </h1>      
+      <button
+        type="button"
+        class="btn-close shadow-none"
+        data-bs-dismiss="modal"
+        aria-label="Close"
+      >
+        <img src="../../../../assets/images/cross.svg" />
+      </button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="classCertificateForm" class="latest-form">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label class="font_10">{{
+                "CertificateName" | translate
+              }}*</label>
+              <input
+                formControlName="certificateName"
+                type="text"
+                name="CertificateName"
+                class="form-control w-100"
+              />
+            </div>
+            <small
+            class="p-error"
+            style="color: orange"
+            *ngIf="isSubmitted && classCertificateForm.get('certificateName')?.errors"
+          >
+            {{ "CertificateNameRequired" | translate }}
+          </small>
+          </div>
+
+          <div class="col-md-12">
+            <div class="form-group">
+              <label class="font_10">{{
+                "ProviderName" | translate
+              }}*</label>
+              <input
+                formControlName="provider"
+                type="text"
+                name="provider"
+                class="form-control w-100"
+              />
+            </div>
+            <small
+            class="p-error"
+            style="color: orange"
+            *ngIf="isSubmitted && classCertificateForm.get('provider')?.errors">
+            {{ "ProviderNameRequired" | translate }}
+          </small>
+          </div>
+          <div class="col-md-12">
+            <div class="form-group">
+              <label class="font_10"
+                >{{ "IssuedDate" | translate }}*</label
+              >
+              <input
+                #issuedDate
+                autocomplete="off"
+                type="text"
+                class="form-control w-100 date_calendar"
+                name="dob"
+                formControlName="issuedDate"
+                id="issuedDate"
+                (click)="getSelectedLanguage()"
+              />
+             
+            </div>
+            <small
+            class="p-error"
+            style="color: orange"
+            *ngIf="
+              isSubmitted && classCertificateForm.controls.issuedDate.errors
+            "
+            >{{ "IssuedDateRequired" | translate }}
+          </small>
+          </div>
+
+          <div class="col-md-12">
+            <div class="form-group">
+              <label class="font_10">{{
+                "Description" | translate
+              }}</label>
+              <textarea
+              maxlength="200"
+              type="text"
+              formControlName="description"
+              class="form-control resize-none ht_96"
+            ></textarea>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="preview-zone hidden">
+              <div class="box box-solid">
+                <div class="box-header with-border"></div>
+                <div class="box-body">
+                  <span class="position-relative d-inline-block">
+                    <img
+                      style="width: 200px"
+                      class="mb-3"
+                      [src]="uploadImage"
+                    />
+                    <button
+                      *ngIf="
+                        uploadImage != undefined && uploadImage != null
+                      "
+                      (click)="removeUploadCertificateImage()"
+                      type="button"
+                      class="btn dl-school-img d-flex align-items-center justify-content-center rounded-circle position-absolute"
+                      style="height: 27px !important"
+                    >
+                      <i class="fa-solid fa-xmark"></i>
+                    </button>
+                  </span>
+                  <br />
+                  <p>{{ uploadImageName }}</p>
+                </div>
+              </div>
+            </div>
+            <div
+              *ngIf="uploadImage == null || uploadImage == undefined"
+              class="dropzone-wrapper"
+            >
+              <div class="dropzone-desc">
+                <i class="glyphicon glyphicon-download-alt"></i>
+                <p class="text-center fw_400">
+                  {{ "ChooseImageFile" | translate }}
+                  <b>{{ "DragItHere" | translate }}</b>
+                </p>
+              </div>
+              <input
+                type="file"
+                id="avatar"
+                (change)="handleClassCertificate($event)"
+                class="dropzone"
+                accept="image/*"
+              />
+            </div>
+          </div>
+          <small
+          class="p-error"
+          style="color: orange; margin-left: 180px"
+          *ngIf="
+            isSubmitted &&
+            (this.uploadImage == undefined || this.uploadImage == null)
+          "
+        >
+          {{ "CertificateImageRequired" | translate }}
+        </small>
+          </div>
+
+          <div
+          class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 mt-4"
+        >
+          <button
+            #closeCertificateModal
+            id="closeBtn"
+            type="button"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+            data-bs-dismiss="modal"
+          >
+            {{ "DiscardChanges" | translate }}
+          </button>
+          <button
+            (click)="saveClassCertificate()"
+            type="button"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
+          >
+            {{ "Save" | translate }}
+          </button>
         </div>
+      </form>
+    </div>
+  </div>
+</div>
+</div>
+
+        <div
+        class="modal fade edit-school-modal delete-modal post-view-large"
+        id="classOwnCertificate"
+        tabindex="-1"
+        aria-labelledby="classOwnCertificate"
+        aria-hidden="true"
+        >
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div
+              class="modal-header border-0 justify-content-center position-relative"
+            >
+              <h1
+                class="modal-title font_22 text_dark fw_700 border-0 text-center"
+              >
+                {{ "Certificate" | translate }}
+              </h1>
+              <ul *ngIf="isOwner" class="list-unstyled d-flex more-action-btn before-none pe-2 me-1 mb-0" style="position: absolute;right: 50px;top: 28px;">
+                <li class="d-inline-block ps-0 mb-0">
+                  <div class="dropdown">
+                    <button class="bg-transparent dropdown-toggle border-0 action-more-btn after-none pt-1" type="button" data-bs-toggle="dropdown"
+                      aria-expanded="false">
+                      <i class="fa-solid fa-ellipsis"></i>
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li><a style="cursor: pointer;" class="dropdown-item"
+                        (click)="editClassCertificate(classCertificateInfo)" data-bs-toggle="modal" data-bs-target="#add-certificate">{{'Edit'| translate }}
+                      </a>
+                      </li>
+                    </ul>
+                  </div>
+                </li>
+              </ul>  
+              <button
+                type="button"
+                class="btn-close shadow-none"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              >
+                <img src="../../../../assets/images/cross.svg" />
+              </button>
+            </div>
+            <div class="modal-body" *ngIf="classCertificateInfo != undefined">
+              <div>
+                <img [src]="classCertificateInfo.certificateUrl"/>
+              </div>
+              <br>
+              <div>
+                <span class="fw-bold">{{ "CertificateName" | translate }} :</span> {{classCertificateInfo.name}}<br>
+                <span class="fw-bold">{{ "ProviderName" | translate}} :</span> {{classCertificateInfo.provider}}<br>
+                <span class="fw-bold">{{ "IssuedDate" | translate}} :</span>  {{classCertificateInfo.issuedDate | date : "MMMM d, y"}}<br>
+                <span *ngIf="classCertificateInfo.description != null">
+                  <span class="fw-bold">{{ "Description" | translate}} :</span> {{classCertificateInfo.description}}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
 
         <div
           class="modal fade edit-school-modal delete-modal"

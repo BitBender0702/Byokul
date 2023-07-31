@@ -1,4 +1,4 @@
-export interface VarifyUsers {
+export interface VerifyUsers {
     userId:string;
     isVerify:boolean;
 }

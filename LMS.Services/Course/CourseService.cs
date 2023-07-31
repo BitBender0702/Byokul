@@ -771,6 +771,8 @@ namespace LMS.Services
 
                 item.ByteArray = await _blobService.GetFileContentAsync(this._config.GetValue<string>("Container:PostContainer"), fileName);
 
+                item.FileThumbnail = $"https://byokulstorage.blob.core.windows.net/userpostscompressed/thumbnails/{postId}.png";
+
             }
             return result;
         }

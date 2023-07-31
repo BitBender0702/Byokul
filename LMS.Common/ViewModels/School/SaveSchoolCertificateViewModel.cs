@@ -12,5 +12,13 @@ namespace LMS.Common.ViewModels.School
         public Guid SchoolId { get; set; }
         //public string? Name { get; set; }
         public List<IFormFile> Certificates { get; set; }
+        public string? Name { get; set; }
+        public IFormFile? CertificateImage { get; set; }
+        public string? CertificateUrl { get; set; }
+        public string Provider { get; set; }
+        public DateTime IssuedDate { get; set; }
+        public string CertificateName { get; set; }
+        public string? Description { get; set; }
+        public Guid? CertificateId { get; set; }
     }
 }

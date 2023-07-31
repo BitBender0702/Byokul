@@ -90,6 +90,7 @@ import { ImageCropperModule } from 'ngx-image-cropper';
 import { NgxIntlTelInputModule } from 'ngx-intl-tel-input';
 import { IConfig, NgxMaskModule } from 'ngx-mask';
 import { SlickCarouselModule } from 'ngx-slick-carousel';
+import { UploadCertificateComponent } from './root/UploadCertificates/uploadCertificate.component';
 
 export const options: Partial<IConfig> = {
   thousandSeparator: "'"
@@ -203,7 +204,8 @@ const routes: Routes = [
     ContactComponent,
     DeliveryAndReturnComponent,
     DSAForSchoolComponent,
-    DSAForStudentsComponent    
+    DSAForStudentsComponent,
+    UploadCertificateComponent 
   ],
   imports: [
     CommonModule,

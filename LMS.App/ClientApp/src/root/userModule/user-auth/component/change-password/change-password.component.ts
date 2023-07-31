@@ -101,6 +101,7 @@ export class ChangePasswordComponent extends MultilingualComponent implements On
 
       this.loadingIcon = true;
       this.user = this.changePasswordForm.value;
+
       //this.user.passwordResetToken = this.route.snapshot.paramMap.get('id');
       this._authService.changePassword(this.user).pipe(finalize(()=> this.loadingIcon = false)).subscribe({
                 next: (response:any) => {

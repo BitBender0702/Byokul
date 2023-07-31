@@ -226,7 +226,7 @@ export class RegisterComponent extends MultilingualComponent implements OnInit,A
         this.user = this.registrationForm.value;
         this._authService.registerUser(this.user).pipe(finalize(()=> this.loadingIcon = false)).subscribe({
                   next: (response: AuthenticatedResponse) => {
-                    if(response.token == ""){
+                    if(response.token != "success"){
                       this.registrationForm.setErrors({ unauthenticated: true });
                     }
                     else{

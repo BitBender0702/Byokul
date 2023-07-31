@@ -14,8 +14,8 @@ namespace LMS.Services.Account
     {
         Task<JwtResponseViewModel> AuthenticateUser(LoginViewModel loginViewModel);
         Task<string> GenerateJSONWebToken(User userInfo);
-        Task<bool> GeneratePasswordResetRequest(ForgetPasswordViewModel resetPasswordRequestViewModel);
-        Task<IdentityResult> UpdatePassword(UpdatePasswordViewModel updatePasswordViewModel);
+        Task<string> GeneratePasswordResetRequest(ForgetPasswordViewModel resetPasswordRequestViewModel);
+        Task<IdentityResult> UpdatePassword(UpdatePasswordViewModel updatePasswordViewModel, string email);
         Task Logout();
         Task<string> ResetPassword(ResetPasswordViewModel resetPasswordDto);
         Task<IdentityResult> SetPassword(SetPasswordViewModel model);

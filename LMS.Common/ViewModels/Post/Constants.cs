@@ -13,9 +13,12 @@ namespace LMS.Common.ViewModels.Post
         public static string Pdf = "pdf";
         public static string Word = "msword";
         public static string Excel = "vnd.ms-excel";
+        public static string UserDoesNotExist = "User does not exist";
+        public static string ForgetEmailSentSuccessfully = "Forget Email sent successfully";
         public static string PPT = "vnd.ms-powerpoint";
+        public static string Success = "Success";
+        public static string IncorrectPassword = "Incorrect password.";
         public static string EmailNotConfirmed = "email not confirm";
-        public static string InCorrectPassword = "Incorrect password";
         public static string UserNotFound = "user not found";
         public static string ResetTokenExpired = "reset token expired";
         public static string FolderCantDeleted = "folder cant deleted";

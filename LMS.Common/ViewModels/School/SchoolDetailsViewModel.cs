@@ -6,6 +6,7 @@ using LMS.Common.ViewModels.Post;
 using LMS.Common.ViewModels.Student;
 using LMS.Common.ViewModels.Teacher;
 using LMS.Common.ViewModels.User;
+using LMS.Data.Entity.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,7 +35,7 @@ namespace LMS.Common.ViewModels.School
         public string SchoolUrl { get; set; }
         public bool IsVarified { get; set; }
         public StatusEnum Status { get; set; }
-        public IEnumerable<SchoolCertificateViewModel> SchoolCertificates { get; set; }
+        public IEnumerable<CertificateViewModel> SchoolCertificates { get; set; }
         public IEnumerable<SchoolFollowerViewModel> SchoolFollowers { get; set; }
         public IEnumerable<UserViewModel> Users { get; set; }
         public int Students { get; set; }

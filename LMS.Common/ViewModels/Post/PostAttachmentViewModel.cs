@@ -30,6 +30,7 @@ namespace LMS.Common.ViewModels.Post
         public byte[]? ByteArray { get; set; }
         public float? VideoTotalTime { get; set; }
         public float? VideoLiveTime { get; set; }
+        public string CompressedFileUrl { get; set; }
 
     }
 }

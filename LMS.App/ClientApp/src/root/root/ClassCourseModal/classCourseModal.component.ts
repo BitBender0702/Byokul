@@ -14,6 +14,7 @@ import { SchoolService } from 'src/root/service/school.service';
 import { commentLikeResponse, commentResponse, signalRResponse, SignalrService } from 'src/root/service/signalr.service';
 import { UserService } from 'src/root/service/user.service';
 import { SharePostComponent } from '../sharePost/sharePost.component';
+import { FormGroup } from '@angular/forms';
 export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,type:string}>();  
 
 
@@ -60,6 +61,10 @@ export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,ty
     pageNumber:number = 1;
     commentLikeUnlike!:CommentLikeUnlike;
     commentResponseSubscription!:Subscription;
+
+    courseCertificateForm!:FormGroup;
+    courseCertificateInfo:any;
+    @ViewChild('openCourseOwnCertificate') openCourseOwnCertificate!: ElementRef;
 
     @ViewChild('groupChatList') groupChatList!: ElementRef;
 
@@ -304,4 +309,63 @@ export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,ty
     }
     this.bsModalService.show(SharePostComponent,{initialState});
   }
+
+  isSubmitted:boolean=false;
+  // saveCourseCertificate(){
+  //   debugger
+  //   this.isSubmitted = true;
+  //     if (!this.courseCertificateForm.valid) {
+  //       return;
+  //     }
+  
+  //     if(this.uploadImage == null){
+  //       return;
+  //     }
+  
+  //   this.loadingIcon = true;
+  //   var formValue =this.courseCertificateForm.value;
+  
+  // //here we will add if id has
+  // if(formValue.certificateId != ""){
+  //   this.certificateToUpload.append('certificateId', formValue.certificateId);
+  // }
+  
+  //   if(typeof this.uploadImage == "string"){
+  //     this.certificateToUpload.append('certificateUrl', this.uploadImage);
+  //   }
+  //   this.certificateToUpload.append('classId', this.class.classId);
+  //   this.certificateToUpload.append('certificateName', formValue.certificateName);
+  //   this.certificateToUpload.append('provider', formValue.provider);
+  //   this.certificateToUpload.append('issuedDate', formValue.issuedDate);
+  //   this.certificateToUpload.append('description', formValue.description);
+  
+  //   // this.userCertificateForm.updateValueAndValidity();
+  
+  //   this._classService.saveClassCertificates(this.certificateToUpload).subscribe((response:any) => {
+  //     debugger
+  //     this.closeCertificatesModal();
+  //     this.isSubmitted = false;
+  //     this.certificateToUpload = new FormData();
+  //     this.classCertificate.certificates = [];
+  //     // this.certificateToUpload.set('certificateImage', '');
+  //     if(formValue.certificateId != ""){
+  //       var translatedSummary = this.translateService.instant('Success');
+  //       var translatedMessage = this.translateService.instant('CertificateUpdatedSuccessfully');   
+  //     }
+  //     else{
+  //     var translatedSummary = this.translateService.instant('Success');
+  //     var translatedMessage = this.translateService.instant('CertificateAddedSuccessfully');   
+  //    }
+  //     this.messageService.add({
+  //       severity: 'success',
+  //       summary: translatedSummary,
+  //       life: 3000,
+  //       detail: translatedMessage,
+  //     });
+  //     this.ngOnInit();
+  // });
+  
+  // }
+
+
 }

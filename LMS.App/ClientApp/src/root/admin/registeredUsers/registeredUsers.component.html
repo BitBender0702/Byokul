@@ -192,7 +192,7 @@
                 <td>
                   <button
                     *ngIf="!user.isVarified"
-                    (click)="getVarifyUserDetails(user.id, 'Verify')"
+                    (click)="getVerifyUserDetails(user.id, 'Verify')"
                     data-bs-toggle="modal"
                     data-bs-target="#verify-user"
                     pButton
@@ -204,7 +204,7 @@
                   </button>
                   <button
                     *ngIf="user.isVarified"
-                    (click)="getVarifyUserDetails(user.id, 'UnVerify')"
+                    (click)="getVerifyUserDetails(user.id, 'UnVerify')"
                     data-bs-toggle="modal"
                     data-bs-target="#verify-user"
                     pButton
@@ -311,13 +311,13 @@
         class="modal-header border-0 justify-content-center position-relative"
       >
         <h1
-          *ngIf="this.verifyUser.isVerify"
+          *ngIf="this.verifyUsers.isVerify"
           class="modal-title font_22 text_dark fw_700 border-0 text-center"
         >
           {{ "Verify" | translate }} {{ "User" | translate }}
         </h1>
         <h1
-          *ngIf="!this.verifyUser.isVerify"
+          *ngIf="!this.verifyUsers.isVerify"
           class="modal-title font_22 text_dark fw_700 border-0 text-center"
         >
           {{ "UnVerify" | translate }} {{ "User" | translate }}
@@ -333,10 +333,10 @@
       </div>
       <div class="modal-body">
         <div class="form-group">
-          <h2 *ngIf="this.verifyUser.isVerify" class="text-center">
+          <h2 *ngIf="this.verifyUsers.isVerify" class="text-center">
             {{ "DoYouWantToVerifyUser" | translate }} ?
           </h2>
-          <h2 *ngIf="!this.verifyUser.isVerify" class="text-center">
+          <h2 *ngIf="!this.verifyUsers.isVerify" class="text-center">
             {{ "DoYouWantToUnVerifyUser" | translate }}?
           </h2>
         </div>
@@ -351,7 +351,7 @@
             {{ "No" | translate }}
           </button>
           <button
-            (click)="varifyUser()"
+            (click)="verifyUser()"
             type="button"
             class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
             data-bs-dismiss="modal"

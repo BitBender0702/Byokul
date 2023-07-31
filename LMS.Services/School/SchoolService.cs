@@ -224,28 +224,80 @@ namespace LMS.Services
             }
         }
 
+        //public async Task SaveSchoolCertificates(SaveSchoolCertificateViewModel schoolCertificates)
+        //{
+        //    //string containerName = "schoolcertificates";
+        //    string containerName = this._config.GetValue<string>("Container:SchoolContainer");
+
+        //    foreach (var certificate in schoolCertificates.Certificates)
+        //    {
+        //        string certificateUrl = await _blobService.UploadFileAsync(certificate, containerName, false);
+
+        //        string certificateName = certificate.FileName;
+
+        //        var schoolCertificate = new SchoolCertificate
+        //        {
+        //            CertificateUrl = certificateUrl,
+        //            Name = certificateName,
+        //            SchoolId = schoolCertificates.SchoolId
+        //        };
+        //        _schoolCertificateRepository.Insert(schoolCertificate);
+        //        _schoolCertificateRepository.Save();
+        //    }
+
+        //}
+
         public async Task SaveSchoolCertificates(SaveSchoolCertificateViewModel schoolCertificates)
         {
-            //string containerName = "schoolcertificates";
+            string certificateUrl = "";
             string containerName = this._config.GetValue<string>("Container:SchoolContainer");
-
-            foreach (var certificate in schoolCertificates.Certificates)
+            var school = _schoolRepository.GetById(schoolCertificates.SchoolId);
+            if (schoolCertificates.CertificateUrl == null || (schoolCertificates.CertificateUrl != null && schoolCertificates.CertificateImage != null))
             {
-                string certificateUrl = await _blobService.UploadFileAsync(certificate, containerName, false);
+                certificateUrl = await _blobService.UploadFileAsync(schoolCertificates.CertificateImage, containerName, false);
 
-                string certificateName = certificate.FileName;
+            }
+            else
+            {
+                certificateUrl = schoolCertificates.CertificateUrl;
+            }
 
+            //string certificateName = userCertificates.CertificateImage.FileName;
+
+            if (schoolCertificates.CertificateId != null)
+            {
+                var editSchoolCertificate = _schoolCertificateRepository.GetById(schoolCertificates.CertificateId);
+                editSchoolCertificate.CertificateName = schoolCertificates.CertificateName;
+                editSchoolCertificate.Provider = schoolCertificates.Provider;
+                editSchoolCertificate.IssuedDate = schoolCertificates.IssuedDate;
+                editSchoolCertificate.CertificateUrl = certificateUrl;
+                editSchoolCertificate.Name = schoolCertificates.CertificateName;
+                editSchoolCertificate.SchoolId = schoolCertificates.SchoolId;
+                editSchoolCertificate.Description = schoolCertificates.Description;
+
+                _schoolCertificateRepository.Update(editSchoolCertificate);
+                _schoolCertificateRepository.Save();
+
+            }
+            else
+            {
                 var schoolCertificate = new SchoolCertificate
                 {
+                    CertificateName = schoolCertificates.CertificateName,
+                    Provider = schoolCertificates.Provider,
+                    IssuedDate = schoolCertificates.IssuedDate,
                     CertificateUrl = certificateUrl,
-                    Name = certificateName,
-                    SchoolId = schoolCertificates.SchoolId
+                    Name = schoolCertificates.CertificateName,
+                    SchoolId = schoolCertificates.SchoolId,
+                    Description = schoolCertificates.Description
                 };
                 _schoolCertificateRepository.Insert(schoolCertificate);
                 _schoolCertificateRepository.Save();
+
             }
 
         }
+
 
         public async Task DeleteSchoolCertificate(SchoolCertificateViewModel model)
         {
@@ -434,12 +486,13 @@ namespace LMS.Services
         }
 
 
-        async Task<IEnumerable<SchoolCertificateViewModel>> GetCertificateBySchoolId(Guid schoolId)
+        async Task<IEnumerable<CertificateViewModel>> GetCertificateBySchoolId(Guid schoolId)
         {
             var schoolCertificate = _schoolCertificateRepository.GetAll().Where(x => x.SchoolId == schoolId).ToList();
-            var response = _mapper.Map<IEnumerable<SchoolCertificateViewModel>>(schoolCertificate);
+            var response = _mapper.Map<IEnumerable<CertificateViewModel>>(schoolCertificate);
             return response;
         }
+
         async Task<IEnumerable<SchoolTagViewModel>> GetTagsBySchoolId(Guid schoolId)
         {
             var schoolTags = _schoolTagRepository.GetAll().Where(x => x.SchoolId == schoolId).ToList();
@@ -458,15 +511,15 @@ namespace LMS.Services
             return model;
         }
 
-        public async Task<IEnumerable<SchoolViewModel>> GetAllCertificates(IEnumerable<SchoolViewModel> model)
-        {
-            foreach (var item in model)
-            {
-                var schoolCertificate = await GetCertificateBySchoolId(item.SchoolId);
-                item.SchoolCertificates = schoolCertificate;
-            }
-            return model;
-        }
+        //public async Task<IEnumerable<SchoolViewModel>> GetAllCertificates(IEnumerable<SchoolViewModel> model)
+        //{
+        //    foreach (var item in model)
+        //    {
+        //        var schoolCertificate = await GetCertificateBySchoolId(item.SchoolId);
+        //        item.SchoolCertificates = schoolCertificate;
+        //    }
+        //    return model;
+        //}
 
         public async Task DeleteSchoolById(Guid schoolId, string deletedByid)
         {
@@ -836,9 +889,12 @@ namespace LMS.Services
 
         public async Task<IEnumerable<PostAttachmentViewModel>> GetAttachmentsByPostId(Guid postId, string loginUserId)
         {
-            var attacchmentList = await _postAttachmentRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.PostId == postId).OrderByDescending(x => x.IsPinned).ToListAsync();
-
-            var result = _mapper.Map<List<PostAttachmentViewModel>>(attacchmentList);
+            var attachmentList = await _postAttachmentRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.PostId == postId).OrderByDescending(x => x.IsPinned).ToListAsync();
+            foreach (var isCompressed in attachmentList)
+            {
+                isCompressed.FileThumbnail = $"https://byokulstorage.blob.core.windows.net/userpostscompressed/thumbnails/{postId}.png";
+            }
+            var result = _mapper.Map<List<PostAttachmentViewModel>>(attachmentList);
             return result;
         }
 

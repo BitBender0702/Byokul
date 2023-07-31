@@ -654,6 +654,8 @@ namespace LMS.Services
 
                 item.ByteArray = await _blobService.GetFileContentAsync(this._config.GetValue<string>("Container:PostContainer"), fileName);
 
+                item.FileThumbnail = $"https://byokulstorage.blob.core.windows.net/userpostscompressed/thumbnails/{postId}.png";
+
             }
             return result;
         }
@@ -706,28 +708,78 @@ namespace LMS.Services
 
         }
 
+        //public async Task SaveClassCertificates(SaveClassCertificateViewModel classCertificates)
+        //{
+        //    //string containerName = "classcertificates";
+        //    string containerName = this._config.GetValue<string>("Container:ClassCourseContainer");
+
+        //    foreach (var certificate in classCertificates.Certificates)
+        //    {
+        //        string certificateUrl = await _blobService.UploadFileAsync(certificate, containerName, false);
+
+        //        string certificateName = certificate.FileName;
+
+        //        var classCertificate = new ClassCertificate
+        //        {
+        //            CertificateUrl = certificateUrl,
+        //            Name = certificateName,
+        //            ClassId = classCertificates.ClassId
+        //        };
+        //        _classCertificateRepository.Insert(classCertificate);
+        //        _classCertificateRepository.Save();
+        //    }
+
+        //}
         public async Task SaveClassCertificates(SaveClassCertificateViewModel classCertificates)
         {
-            //string containerName = "classcertificates";
+            string certificateUrl = "";
             string containerName = this._config.GetValue<string>("Container:ClassCourseContainer");
-
-            foreach (var certificate in classCertificates.Certificates)
+            //var class = _classRepository.(classCertificates.ClassId);
+            if (classCertificates.CertificateUrl == null || (classCertificates.CertificateUrl != null && classCertificates.CertificateImage != null))
             {
-                string certificateUrl = await _blobService.UploadFileAsync(certificate, containerName, false);
+                certificateUrl = await _blobService.UploadFileAsync(classCertificates.CertificateImage, containerName, false);
 
-                string certificateName = certificate.FileName;
+            }
+            else
+            {
+                certificateUrl = classCertificates.CertificateUrl;
+            }
 
+            //string certificateName = userCertificates.CertificateImage.FileName;
+
+            if (classCertificates.CertificateId != null)
+            {
+                var editClassCertificate = _classCertificateRepository.GetById(classCertificates.CertificateId);
+                editClassCertificate.Name = classCertificates.CertificateName;
+                editClassCertificate.Provider = classCertificates.Provider;
+                editClassCertificate.IssuedDate = classCertificates.IssuedDate;
+                editClassCertificate.CertificateUrl = certificateUrl;
+                editClassCertificate.Name = classCertificates.CertificateName;
+                editClassCertificate.ClassId = classCertificates.ClassId;
+                editClassCertificate.Description = classCertificates.Description;
+
+                _classCertificateRepository.Update(editClassCertificate);
+                _classCertificateRepository.Save();
+
+            }
+            else
+            {
                 var classCertificate = new ClassCertificate
                 {
+                    CertificateName = classCertificates.CertificateName,
+                    Provider = classCertificates.Provider,
+                    IssuedDate = classCertificates.IssuedDate,
                     CertificateUrl = certificateUrl,
-                    Name = certificateName,
-                    ClassId = classCertificates.ClassId
+                    Name = classCertificates.CertificateName,
+                    ClassId = classCertificates.ClassId,
+                    Description = classCertificates.Description
                 };
                 _classCertificateRepository.Insert(classCertificate);
                 _classCertificateRepository.Save();
             }
 
         }
+
 
         public async Task DeleteClassCertificate(ClassCertificateViewModel model)
         {

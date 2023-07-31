@@ -268,6 +268,8 @@
   "PasswordDoesNotMatch": "Password and Confirm password does not match!",
   "EmailAlreadyTaken": "Email is already taken!",
   "ExpireResetLink": "Reset password link is expired, please try again.",
+  "ObjectReference":"Invalid Token",
+  "PasswordMismatch":"New password and confirm password doesnot match",
   "RepeatPasswordRequired": "Repeat password is required",
   "PasswordRepeatPasswordNotMatch": "Password and Repeat password does not match",
   "CurrentPasswordInvalid": "Current password is invalid",

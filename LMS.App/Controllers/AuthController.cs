@@ -11,6 +11,8 @@ using System.Configuration;
 using LMS.Common.ViewModels.Post;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Reflection.Metadata;
+using System.Text.RegularExpressions;
 
 namespace LMS.App.Controllers
 {
@@ -39,7 +41,15 @@ namespace LMS.App.Controllers
         [HttpPost]
         public async Task<IActionResult> Login([FromBody] LoginViewModel loginViewModel)
         {
+            if (!ModelState.IsValid)
+            {
+                return Ok("Invalid Email");
+            }
             var result = await _authService.AuthenticateUser(loginViewModel);
+            if(result.ErrorMessage == "Incorrect password.")
+            {
+                return Ok(result.ErrorMessage);
+            }
             Token = result.Token;
             return Ok(result);
         }
@@ -52,35 +62,43 @@ namespace LMS.App.Controllers
         {
             try
             {
-                var user = new User
+                if (ModelState.IsValid)
                 {
-                    UserName = registerViewModel.Email,
-                    Email = registerViewModel.Email,
-                    FirstName = registerViewModel.FirstName,
-                    LastName = registerViewModel.LastName,
-                    Gender = registerViewModel.Gender,
-                    CountryName = registerViewModel.CountryName,
-                    CityName = registerViewModel.CityName,
-                    DOB = registerViewModel.DOB,
-                    CreatedOn = DateTime.UtcNow
-                };
-                var result = await _userManager.CreateAsync(user, registerViewModel.Password);
+                    var user = new User
+                    {
+                        UserName = registerViewModel.Email,
+                        Email = registerViewModel.Email,
+                        FirstName = registerViewModel.FirstName,
+                        LastName = registerViewModel.LastName,
+                        Gender = registerViewModel.Gender,
+                        CountryName = registerViewModel.CountryName,
+                        CityName = registerViewModel.CityName,
+                        DOB = registerViewModel.DOB,
+                        CreatedOn = DateTime.UtcNow
+                    };
+                    var result = await _userManager.CreateAsync(user, registerViewModel.Password);
 
-                if (result.Succeeded)
-                {
-                    var path = _webHostEnvironment.ContentRootPath;
-                    var filePath = Path.Combine(path, "Email/confirm-email.html");
-                    var imagePath = Path.Combine(path, "Email/images/logo.svg");
-                    var text = System.IO.File.ReadAllText(filePath);
-                    text = text.Replace("[Recipient]", user.FirstName + " " + user.LastName);
-                    var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    string callBackUrl = $"{_config["AppUrl"]}/user/auth/emailConfirm?token={token}&email={user.Email}";
-                    text = text.Replace("[URL]", callBackUrl);
-                    await _commonService.SendEmail(new List<string> { user.Email }, null, null, "Verify Your Email Address", body: text,null,null);
+                    if (result.Succeeded)
+                    {
+                        var path = _webHostEnvironment.ContentRootPath;
+                        var filePath = Path.Combine(path, "Email/confirm-email.html");
+                        var imagePath = Path.Combine(path, "Email/images/logo.svg");
+                        var text = System.IO.File.ReadAllText(filePath);
+                        text = text.Replace("[Recipient]", user.FirstName + " " + user.LastName);
+                        var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                        string callBackUrl = $"{_config["AppUrl"]}/user/auth/emailConfirm?token={token}&email={user.Email}";
+                        text = text.Replace("[URL]", callBackUrl);
+                        await _commonService.SendEmail(new List<string> { user.Email }, null, null, "Verify Your Email Address", body: text, null, null);
 
-                    return Ok(new { result = "success" });
+                        return Ok(new { result = "success" });
+                    }
+
+                    return Ok(new { result = result.Errors.FirstOrDefault()?.Description });
                 }
-                return Ok(new { token = "" });
+
+                return Ok(new { result = ModelState.Select(x => x.Value.Errors.FirstOrDefault()?.ErrorMessage).FirstOrDefault()});
+
+
             }
             catch (Exception ex)
             {
@@ -92,11 +110,14 @@ namespace LMS.App.Controllers
         [HttpGet]
         [Route("confirmEmail")]
         public async Task<IActionResult> ConfirmEmail(string token, string email)
-       {
-            token = token.Replace(" ","+");
+        {
+            token = token.Replace(" ", "+");
+            if (!IsValidEmail(email))
+            {
+                return Ok("Invalid Email");
+            }
+            var user = await _userManager.FindByEmailAsync(email);
 
-            var user = await _userManager.FindByEmailAsync(email)
-;
             if (user is null) return BadRequest($"User not found for email: {email}");
 
             var result = await _userManager.ConfirmEmailAsync(user, token);
@@ -109,17 +130,26 @@ namespace LMS.App.Controllers
         [HttpPost]
         public async Task<IActionResult> ForgetPassword([FromBody] ForgetPasswordViewModel forgetPasswordViewModel)
         {
-            var response = await _authService.GeneratePasswordResetRequest(forgetPasswordViewModel);
-            if (response)
+            if (!IsValidEmail(forgetPasswordViewModel.Email))
             {
-                return Ok(new { result = "success" });
+                return Ok("Invalid Email");
+            }
+            var response = await _authService.GeneratePasswordResetRequest(forgetPasswordViewModel);
+            if (response == Constants.UserDoesNotExist)
+            {
+                return Ok(new { result = Constants.UserDoesNotExist });
             }
             else
             {
-                return Ok(new { result = "" });
+                return Ok(new { result = Constants.Success });
             }
         }
-
+        private bool IsValidEmail(string email)
+        {
+            // Regular expression for basic email format validation
+            string emailPattern = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
+            return Regex.IsMatch(email, emailPattern);
+        }
 
         // Change password
         [Authorize]
@@ -127,28 +157,55 @@ namespace LMS.App.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdatePassword([FromBody] UpdatePasswordViewModel updatePasswordViewModel)
         {
-            updatePasswordViewModel.Email = User.Identity.Name;
-            var response = await Login(new LoginViewModel
+            var Email = User.Identity.Name;
+            //var response = await Login(new LoginViewModel
+            //{
+            //    Email = updatePasswordViewModel.Email,
+            //    Password = updatePasswordViewModel.CurrentPassword
+            //});
+            //var token = Token;
+            //if (token != null)
+            //{
+            //    //var isEmailExist = response
+            //    var result = await _authService.UpdatePassword(updatePasswordViewModel);
+
+            //    if (result.Succeeded)
+            //    {
+            //        return Ok(new { result = "Success" });
+            //    }
+            //}
+
+            if (updatePasswordViewModel.CurrentPassword == updatePasswordViewModel.Password)
             {
-                Email = updatePasswordViewModel.Email,
-                Password = updatePasswordViewModel.CurrentPassword
-            });
-            var token = Token;
-            if (token != null)
-            {
-                var result = await _authService.UpdatePassword(updatePasswordViewModel);
-                if (result.Succeeded)
-                {
-                    return Ok(new { result = "Success" });
-                }
+                return Ok(new { result = "Old and new password cannot be same" });
             }
-            return Ok(new { result = "" });
+
+            if (updatePasswordViewModel.Password != updatePasswordViewModel.ConfirmPassword)
+            {
+                return Ok(new { result = "Password and confirm password did not match" });
+            }
+
+            var result = await _authService.UpdatePassword(updatePasswordViewModel, Email);
+
+            if (result.Succeeded)
+            {
+                return Ok(new { result = "Success" });
+            }
+            if (result.Errors.FirstOrDefault()?.Description == Constants.IncorrectPassword)
+            {
+                return Ok(new { result = Constants.IncorrectPassword });
+            }
+            return Ok(new { result = "Incorrect new password" });
         }
 
         [Route("resetPassword")]
         [HttpPost]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordViewModel resetPasswordViewModel)
         {
+            if (resetPasswordViewModel.NewPassword != resetPasswordViewModel.ConfirmPassword)
+            {
+                return Ok(new { token = "New Password and confirm password did not match" });
+            }
             var result = await _authService.ResetPassword(resetPasswordViewModel);
             if (result == Constants.ResetTokenExpired)
             {

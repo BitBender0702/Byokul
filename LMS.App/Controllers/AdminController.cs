@@ -30,11 +30,11 @@ namespace LMS.App.Controllers
             return Ok(response);
         }
 
-        [Route("varifyUser")]
+        [Route("verifyUser")]
         [HttpPost]
-        public async Task<IActionResult> VarifyUser([FromBody] VerifyUsersViewModel model)
+        public async Task<IActionResult> VerifyUser([FromBody] VerifyUsersViewModel model)
         {
-            var response = await _adminService.VarifyUser(model);
+            var response = await _adminService.VerifyUser(model);
             return Ok(response);
         }
 
@@ -55,11 +55,11 @@ namespace LMS.App.Controllers
         }
 
 
-        [Route("varifySchool")]
+        [Route("verifySchool")]
         [HttpPost]
-        public async Task<IActionResult> VarifySchool([FromBody] VerifySchoolsViewModel model)
+        public async Task<IActionResult> VerifySchool([FromBody] VerifySchoolsViewModel model)
         {
-            var response = await _adminService.VarifySchool(model);
+            var response = await _adminService.VerifySchool(model);
             return Ok(response);
         }
 
