@@ -14,6 +14,9 @@ import { SchoolService } from 'src/root/service/school.service';
 import { commentLikeResponse, commentResponse, signalRResponse, SignalrService } from 'src/root/service/signalr.service';
 import { UserService } from 'src/root/service/user.service';
 import { SharePostComponent } from '../sharePost/sharePost.component';
+import { ClassCourseFilterTypeEnum } from 'src/root/Enums/classCourseFilterTypeEnum';
+import { ClassService } from 'src/root/service/class.service';
+import { CourseService } from 'src/root/service/course.service';
 import { FormGroup } from '@angular/forms';
 export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,type:string}>();  
 
@@ -35,6 +38,9 @@ export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,ty
     private _schoolService;
     private _signalRService;
     private _userService;
+    private _classService;
+    private _courseService;
+
 
     reels:any;
     isOpenSidebar:boolean = false;
@@ -59,6 +65,7 @@ export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,ty
     commentLikeCount!:number;
     private _chatService;
     pageNumber:number = 1;
+    gender!:string;
     commentLikeUnlike!:CommentLikeUnlike;
     commentResponseSubscription!:Subscription;
 
@@ -68,16 +75,20 @@ export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,ty
 
     @ViewChild('groupChatList') groupChatList!: ElementRef;
 
-    constructor(private bsModalService: BsModalService,chatService:ChatService,schoolService: SchoolService,public options: ModalOptions,private userService: UserService,postService: PostService,public signalRService: SignalrService,private route: ActivatedRoute,reelsService: ReelsService,private activatedRoute: ActivatedRoute) { 
+    constructor(private bsModalService: BsModalService,classService:ClassService,courseService:CourseService,chatService:ChatService,schoolService: SchoolService,public options: ModalOptions,private userService: UserService,postService: PostService,public signalRService: SignalrService,private route: ActivatedRoute,reelsService: ReelsService,private activatedRoute: ActivatedRoute) { 
         this._schoolService = schoolService;
         this._chatService = chatService;
         this._signalRService = signalRService;
         this._userService = userService;
+        this._classService = classService;
+        this._courseService = courseService;
   
       }
 
      ngOnInit(): void {
+      debugger
          this.getLoginUserId();
+         this.gender = localStorage.getItem("gender")??'';
          this.classCourseDetails = this.options.initialState;
          this._chatService.getComments(this.classCourseDetails.classCourseItem.id,this.pageNumber).subscribe((response) => {
           this.isDataLoaded = true;
@@ -310,62 +321,27 @@ export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,ty
     this.bsModalService.show(SharePostComponent,{initialState});
   }
 
-  isSubmitted:boolean=false;
-  // saveCourseCertificate(){
-  //   debugger
-  //   this.isSubmitted = true;
-  //     if (!this.courseCertificateForm.valid) {
-  //       return;
-  //     }
-  
-  //     if(this.uploadImage == null){
-  //       return;
-  //     }
-  
-  //   this.loadingIcon = true;
-  //   var formValue =this.courseCertificateForm.value;
-  
-  // //here we will add if id has
-  // if(formValue.certificateId != ""){
-  //   this.certificateToUpload.append('certificateId', formValue.certificateId);
-  // }
-  
-  //   if(typeof this.uploadImage == "string"){
-  //     this.certificateToUpload.append('certificateUrl', this.uploadImage);
-  //   }
-  //   this.certificateToUpload.append('classId', this.class.classId);
-  //   this.certificateToUpload.append('certificateName', formValue.certificateName);
-  //   this.certificateToUpload.append('provider', formValue.provider);
-  //   this.certificateToUpload.append('issuedDate', formValue.issuedDate);
-  //   this.certificateToUpload.append('description', formValue.description);
-  
-  //   // this.userCertificateForm.updateValueAndValidity();
-  
-  //   this._classService.saveClassCertificates(this.certificateToUpload).subscribe((response:any) => {
-  //     debugger
-  //     this.closeCertificatesModal();
-  //     this.isSubmitted = false;
-  //     this.certificateToUpload = new FormData();
-  //     this.classCertificate.certificates = [];
-  //     // this.certificateToUpload.set('certificateImage', '');
-  //     if(formValue.certificateId != ""){
-  //       var translatedSummary = this.translateService.instant('Success');
-  //       var translatedMessage = this.translateService.instant('CertificateUpdatedSuccessfully');   
-  //     }
-  //     else{
-  //     var translatedSummary = this.translateService.instant('Success');
-  //     var translatedMessage = this.translateService.instant('CertificateAddedSuccessfully');   
-  //    }
-  //     this.messageService.add({
-  //       severity: 'success',
-  //       summary: translatedSummary,
-  //       life: 3000,
-  //       detail: translatedMessage,
-  //     });
-  //     this.ngOnInit();
-  // });
-  
-  // }
 
+  showCommentsDiv(id:string,type:number,isShowComments:boolean){
+    debugger
+    if(isShowComments){
+      this.classCourseDetails.classCourseItem.isCommentsDisabled = false;
+    }
+    else{
+      this.classCourseDetails.classCourseItem.isCommentsDisabled = true;
+    }
 
+    if(type == ClassCourseFilterTypeEnum.Class){
+      this._classService.enableDisableComments(id,this.classCourseDetails.classCourseItem.isCommentsDisabled).subscribe((_response:any) => {
+      }); 
+    }
+    else{
+      this._courseService.enableDisableComments(id,this.classCourseDetails.classCourseItem.isCommentsDisabled).subscribe((_response:any) => {
+      }); 
+    }
+  }
+
+  hideCommentModal(){
+    this.bsModalService.hide();
+  }
 }

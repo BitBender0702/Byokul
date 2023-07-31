@@ -143,4 +143,9 @@ export class CourseService{
         return this.http.get(`${this.apiUrl}/course/getSliderReelsByCourseId`, {params:queryParams,headers: this.headers}
         );
     }
+
+    enableDisableComments(courseId:string,isHideComments:boolean):Observable<any>{
+        let queryParams = new HttpParams().append("courseId",courseId).append("isHideComments",isHideComments);
+        return this.http.post(`${this.apiUrl}/course/enableDisableComments`,null, {params:queryParams,headers: this.headers});
+    }
 }

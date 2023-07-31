@@ -33,3 +33,16 @@
   .cursor_pointer{
     cursor: pointer;
   }
+
+  .preserve-line-breaks {
+    white-space: pre-wrap;
+  }
+
+  .right-action {
+    position: absolute;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+  }

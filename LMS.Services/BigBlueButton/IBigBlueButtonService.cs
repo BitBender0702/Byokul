@@ -1,4 +1,5 @@
 ﻿using LMS.Common.ViewModels.BigBlueButton;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace LMS.Services.BigBlueButton
 {
     public interface IBigBlueButtonService
     {
-        Task<string> Create(NewMeetingViewModel newMeetingViewModel);
+        Task<Response> Create(NewMeetingViewModel newMeetingViewModel);
         Task<string> Join(JoinMeetingViewModel joinMeetingViewModel);
         Task EndMeeting(EndMeetingViewModel endMeetingViewModel);
 

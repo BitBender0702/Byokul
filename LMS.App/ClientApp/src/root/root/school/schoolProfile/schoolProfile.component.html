@@ -17,7 +17,7 @@
             type="button"
             class="back-button bg-transparent border-0 font_16 fw_400 text_dark"
           >
-            <img src="../../../../assets/images/arrow-left.svg" />
+            <img lazyLoad="../../../../assets/images/arrow-left.svg" />
             {{ "Back" | translate }}
           </button>
           <!-- <button
@@ -45,11 +45,11 @@
             type="button"
             class="back-button bg-transparent border-0 font_16 fw_400 text_dark d-xl-none"
           >
-            <img src="../../../../assets/images/arrow-left.svg" />
+            <img lazyLoad="../../../../assets/images/arrow-left.svg" />
             {{ "Back" | translate }}
           </button>
           <span class="logo_mobile d-xl-none">
-            <img src="../../../../assets/images/logo.svg" />
+            <img lazyLoad="../../../../assets/images/logo.svg" />
           </span>
           <div class="d-xl-none">
             <button
@@ -57,7 +57,7 @@
               type="button"
               class="mobile-search border_btn"
             >
-              <img src="../../../../assets/images/menu.svg" />
+              <img lazyLoad="../../../../assets/images/menu.svg" />
             </button>
           </div>
         </div>
@@ -68,18 +68,18 @@
             type="button"
             class="step-edit-button btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase next-step"
           >
-            <img src="../../../assets/images/Edit-light.svg" alt="edit" />
+            <img lazyLoad="../../../assets/images/Edit-light.svg" alt="edit" />
           </button>
         </div>
         <div class="School-prof-header d-flex school-profile-mobile">
           <div class="d-flex align-items-center mb-3 mb-md-0">
             <div class="school-profile-icon rounded-circle">
-              <img [src]="school.avatar" style="scale: 1.2" />
+              <img [lazyLoad]="school.avatar" style="scale: 1.2" />
             </div>
             <h2 class="font_24 fw_700 d-md-none mb-0">
               {{ school.schoolName }}
               <span *ngIf="school.isVarified" class="verified-badge"
-                ><img src="../../../../assets/images/verified-badge.svg"
+                ><img lazyLoad="../../../../assets/images/verified-badge.svg"
               /></span>
             </h2>
           </div>
@@ -88,7 +88,7 @@
             <h2 class="font_24 fw_700 d-none d-md-block">
               {{ school.schoolName }}
               <span *ngIf="school.isVarified" class="verified-badge"
-                ><img src="../../../../assets/images/verified-badge.svg"
+                ><img lazyLoad="../../../../assets/images/verified-badge.svg"
               /></span>
             </h2>
             <div
@@ -98,7 +98,7 @@
                 class="d-flex align-items-start align-items-xxl-center flex-lg-column flex-xxl-row gap-2"
               >
                 <div class="followers_name d-inline-block font_16 mr-_24">
-                  <img src="../../../../assets/images/followers.svg" />
+                  <img lazyLoad="../../../../assets/images/followers.svg" />
                   {{ "Followers" | translate }}:
                   <b class="fw_700"
                     ><a
@@ -113,7 +113,7 @@
                   >
                 </div>
                 <div class="followers_name d-inline-block font_16 mr-_24">
-                  <img src="../../../../assets/images/students-icon.svg" />
+                  <img lazyLoad="../../../../assets/images/students-icon.svg" />
                   {{ "Students" | translate }}:
                   <b class="fw_700"
                     ><a
@@ -128,7 +128,7 @@
                   >
                 </div>
                 <div class="followers_name d-inline-block font_16 mr-_24">
-                  <img src="../../../../assets/images/Edit-dark.svg" />
+                  <img lazyLoad="../../../../assets/images/Edit-dark.svg" />
                   {{ "Post" | translate }}:
                   <b class="fw_700">{{ school.posts.length }}</b>
                 </div>
@@ -168,7 +168,7 @@
                   data-bs-target="#editschool"
                 >
                   <img
-                    src="../../../../assets/images/Setting-solid-dark.svg"
+                    lazyLoad="../../../../assets/images/Setting-solid-dark.svg"
                     class="me-2"
                   />
                   {{ "EditProfile" | translate }}
@@ -196,13 +196,13 @@
                 </button>
               </div>
             </div>
-            <p class="font_16 mt-4">{{ school.description }}</p>
+            <p class="font_16 mt-4 preserve-line-breaks">{{ school.description }}</p>
           </div>
         </div>
         <div *ngIf="school.teachers.length != 0 || this.isOwner">
           <div class="teacher-tags tag-box hover-tags">
             <div class="teacher-content font_14 d-inline-block">
-              <img src="../../../../assets/images/Profile-dark.svg" />{{
+              <img lazyLoad="../../../../assets/images/Profile-dark.svg" />{{
                 "Teachers" | translate
               }}
             </div>
@@ -217,7 +217,7 @@
               >
                 <img
                   *ngIf="isOwner || hasManageTeachersPermission"
-                  src="../../../../assets/images/cross-sm-light.svg"
+                  lazyLoad="../../../../assets/images/cross-sm-light.svg"
                 /></button
             ></span>
 
@@ -234,7 +234,7 @@
                 data-bs-toggle="modal"
                 data-bs-target="#add-schoolTeacher"
               >
-                <img src="../../../../assets/images/school/plus-light.svg" />
+                <img lazyLoad="../../../../assets/images/school/plus-light.svg" />
               </button>
             </span>
           </div>
@@ -242,7 +242,7 @@
         <div *ngIf="school.schoolCertificates.length != 0 || this.isOwner">
           <div class="teacher-tags tag-box mt-0 hover-tags">
             <div class="teacher-content font_14 d-inline-block">
-              <img src="../../../../assets/images/dark-star.svg" />{{
+              <img lazyLoad="../../../../assets/images/dark-star.svg" />{{
                 "Sertificates" | translate
               }}
             </div>
@@ -263,7 +263,7 @@
               >
                 <img
                   *ngIf="isOwner || hasAddSchoolCertificatesPermission"
-                  src="../../../../assets/images/cross-sm-light.svg"
+                  lazyLoad="../../../../assets/images/cross-sm-light.svg"
                 /></button
             ></span>
 
@@ -280,7 +280,7 @@
                 data-bs-toggle="modal"
                 data-bs-target="#add-certificate"
               >
-                <img src="../../../../assets/images/school/plus-light.svg" />
+                <img lazyLoad="../../../../assets/images/school/plus-light.svg" />
               </button>
             </span>
           </div>
@@ -288,7 +288,7 @@
         <div *ngIf="school.languages.length != 0 || this.isOwner">
           <div class="teacher-tags tag-box mt-0 hover-tags">
             <div class="teacher-content font_14 d-inline-block">
-              <img src="../../../../assets/images/Volume-Down.svg" />{{
+              <img lazyLoad="../../../../assets/images/Volume-Down.svg" />{{
                 "Languages" | translate
               }}
             </div>
@@ -304,7 +304,7 @@
               >
                 <img
                   *ngIf="isOwner || hasAddLanguagesPermission"
-                  src="../../../../assets/images/cross-sm-light.svg"
+                  lazyLoad="../../../../assets/images/cross-sm-light.svg"
                 /></button
             ></span>
 
@@ -321,14 +321,14 @@
                 data-bs-toggle="modal"
                 data-bs-target="#add-language"
               >
-                <img src="../../../../assets/images/school/plus-light.svg" />
+                <img lazyLoad="../../../../assets/images/school/plus-light.svg" />
               </button>
             </span>
           </div>
         </div>
         <div class="teacher-tags tag-box mt-0">
           <div class="teacher-content font_14 d-inline-block">
-            <img src="../../../../assets/images/Location-dark.svg" />{{
+            <img lazyLoad="../../../../assets/images/Location-dark.svg" />{{
               "Location" | translate
             }}
           </div>
@@ -339,7 +339,7 @@
 
         <div class="teacher-tags tag-box mt-0">
           <div class="teacher-content font_14 d-inline-block">
-            <img src="../../../../assets/images/Profile-dark.svg" />{{
+            <img lazyLoad="../../../../assets/images/Profile-dark.svg" />{{
               "PhoneNumber" | translate
             }}
           </div>
@@ -426,7 +426,7 @@
                 type="button"
                 class="btn border-btn d-inline-flex align-items-center justify-content-center"
               >
-                <img src="../../../../assets/images/Category.svg" />
+                <img lazyLoad="../../../../assets/images/Category.svg" />
               </button>
 
               <button
@@ -439,7 +439,7 @@
                 (click)="profileGrid()"
                 type="button"
               >
-                <img src="../../../../assets/images/Filter.svg" />
+                <img lazyLoad="../../../../assets/images/Filter.svg" />
               </button>
             </div>
 
@@ -940,7 +940,7 @@
                           >
                             <img
                               style="height: 300px"
-                              [src]="postAttachment.fileThumbnail"
+                              [lazyLoad]="postAttachment.fileThumbnail"
                             />
                           </a>
                           <div
@@ -951,7 +951,7 @@
                               class="view font_12 bg-transparent border-0 text-light cursor_auto"
                             >
                               <img
-                                src="../../../../assets/images/eye-light.svg"
+                                lazyLoad="../../../../assets/images/eye-light.svg"
                               />
                               {{ post.views.length }}
                             </button>
@@ -962,7 +962,7 @@
                               class="pinned bg-transparent border-0"
                             >
                               <img
-                                src="../../../../assets/images/pinned-orange.svg"
+                                lazyLoad="../../../../assets/images/pinned-orange.svg"
                               />
                             </button>
                             <button
@@ -972,12 +972,12 @@
                               class="pinned bg-transparent border-0"
                             >
                               <img
-                                src="../../../../assets/images/pinned-gray.svg"
+                                lazyLoad="../../../../assets/images/pinned-gray.svg"
                               />
                             </button>
                           </div>
                           <div class="feed-name font_14 text_sec1">
-                            <img [src]="school.avatar" />
+                            <img [lazyLoad]="school.avatar" />
                             {{ school.schoolName }}
                           </div>
                           <div
@@ -1029,14 +1029,14 @@
                     class="schoolgrid-header d-flex align-items-center position-relative"
                   >
                     <div class="school-gridprofile-icon">
-                      <img [src]="school.avatar" />
+                      <img [lazyLoad]="school.avatar" />
                     </div>
                     <h2 class="d-inline-block font_20 fw_600 text_sec1 mb-0">
                       {{ post.title }}
                     </h2>
                     <div *ngIf="post.isLive">
                       <img
-                        src="../../../../assets/images/live_img.png"
+                        lazyLoad="../../../../assets/images/live_img.png"
                         style="height: 76px"
                       />
                     </div>
@@ -1055,7 +1055,7 @@
                     >
                       <img
                         class="w-auto h-auto"
-                        src="../../../../assets/images/pinned-orange.svg"
+                        lazyLoad="../../../../assets/images/pinned-orange.svg"
                       />
                     </button>
                     <button
@@ -1066,7 +1066,7 @@
                     >
                       <img
                         class="w-auto h-auto"
-                        src="../../../../assets/images/pinned-gray.svg"
+                        lazyLoad="../../../../assets/images/pinned-gray.svg"
                       />
                     </button>
                   </div>
@@ -1121,12 +1121,12 @@
                               "
                               class="w-100"
                               style="cursor: pointer"
-                              [src]="post.postAttachments[0]?.fileThumbnail"
+                              [lazyLoad]="post.postAttachments[0]?.fileThumbnail"
                             />
                             <img
                               *ngIf="post.postAttachments[0]?.fileType == 1"
                               class="w-100"
-                              [src]="post.postAttachments[0]?.fileUrl"
+                              [lazyLoad]="post.postAttachments[0]?.fileUrl"
                             />
                           </div>
                         </div>
@@ -1144,13 +1144,13 @@
                                 *ngIf="attachment?.fileType == 2"
                                 class="w-100"
                                 style="cursor: pointer"
-                                [src]="attachment?.fileThumbnail"
+                                [lazyLoad]="attachment?.fileThumbnail"
                               />
                               <img
                                 style="height: 598px; width: 50% !important"
                                 *ngIf="attachment?.fileType == 1"
                                 class="w-100"
-                                [src]="attachment?.fileUrl"
+                                [lazyLoad]="attachment?.fileUrl"
                               />
                             </ng-container>
                           </div>
@@ -1167,12 +1167,12 @@
                               *ngIf="post.postAttachments[0]?.fileType == 2"
                               class="w-100"
                               style="cursor: pointer; margin-top: -700px"
-                              [src]="post.postAttachments[0]?.fileThumbnail"
+                              [lazyLoad]="post.postAttachments[0]?.fileThumbnail"
                             />
                             <img
                               *ngIf="post.postAttachments[0]?.fileType == 1"
                               class="w-100"
-                              [src]="post.postAttachments[0]?.fileUrl"
+                              [lazyLoad]="post.postAttachments[0]?.fileUrl"
                             />
                           </div>
                         </div>
@@ -1187,12 +1187,12 @@
                                 *ngIf="post.postAttachments[1]?.fileType == 2"
                                 class="w-100"
                                 style="cursor: pointer"
-                                [src]="post.postAttachments[1]?.fileThumbnail"
+                                [lazyLoad]="post.postAttachments[1]?.fileThumbnail"
                               />
                               <img
                                 *ngIf="post.postAttachments[1]?.fileType == 1"
                                 class="w-100"
-                                [src]="post.postAttachments[1]?.fileUrl"
+                                [lazyLoad]="post.postAttachments[1]?.fileUrl"
                                 style="cursor: pointer"
                               />
                             </div>
@@ -1201,12 +1201,12 @@
                                 *ngIf="post.postAttachments[2]?.fileType == 2"
                                 class="w-100"
                                 style="cursor: pointer"
-                                [src]="post.postAttachments[2]?.fileThumbnail"
+                                [lazyLoad]="post.postAttachments[2]?.fileThumbnail"
                               />
                               <img
                                 *ngIf="post.postAttachments[2]?.fileType == 1"
                                 class="w-100"
-                                [src]="post.postAttachments[2]?.fileUrl"
+                                [lazyLoad]="post.postAttachments[2]?.fileUrl"
                                 style="cursor: pointer"
                               />
                             </div>
@@ -1224,12 +1224,12 @@
                               *ngIf="post.postAttachments[0]?.fileType == 2"
                               class="w-100"
                               style="cursor: pointer"
-                              [src]="post.postAttachments[0]?.fileThumbnail"
+                              [lazyLoad]="post.postAttachments[0]?.fileThumbnail"
                             />
                             <img
                               *ngIf="post.postAttachments[0]?.fileType == 1"
                               class="w-100"
-                              [src]="post.postAttachments[0]?.fileUrl"
+                              [lazyLoad]="post.postAttachments[0]?.fileUrl"
                             />
                           </div>
                         </div>
@@ -1242,7 +1242,7 @@
                             <div class="medium-thumnail position-relative">
                               <img
                                 class="w-100 position-relative"
-                                src="../../../../assets/images/blurImage.jfif"
+                                lazyLoad="../../../../assets/images/blurImage.jfif"
                                 style="cursor: pointer"
                               />
                               <div
@@ -1263,12 +1263,12 @@
                                 *ngIf="post.postAttachments[1]?.fileType == 2"
                                 class="w-100"
                                 style="cursor: pointer"
-                                [src]="post.postAttachments[1]?.fileThumbnail"
+                                [lazyLoad]="post.postAttachments[1]?.fileThumbnail"
                               />
                               <img
                                 *ngIf="post.postAttachments[1]?.fileType == 1"
                                 class="w-100"
-                                [src]="post.postAttachments[2]?.fileUrl"
+                                [lazyLoad]="post.postAttachments[2]?.fileUrl"
                                 style="cursor: pointer"
                               />
                             </div>
@@ -1286,7 +1286,7 @@
                       class="bg-transparent border-0 function-btns text-light cursor_auto"
                     >
                       <img
-                        src="../../../../assets/images/eye-light.svg"
+                        lazyLoad="../../../../assets/images/eye-light.svg"
                         class="d-block mx-auto"
                       />
                       {{ post.views.length }}
@@ -1300,12 +1300,12 @@
                     >
                       <img
                         *ngIf="post.isPostLikedByCurrentUser"
-                        src="../../../assets/images/heart-red.svg"
+                        lazyLoad="../../../assets/images/heart-red.svg"
                         class="d-block mx-auto"
                       />
                       <img
                         *ngIf="!post.isPostLikedByCurrentUser"
-                        src="../../../../assets/images/Heart-light.svg"
+                        lazyLoad="../../../../assets/images/Heart-light.svg"
                         class="d-block mx-auto"
                       />
 
@@ -1327,7 +1327,7 @@
                       class="bg-transparent border-0 function-btns text-light"
                     >
                       <img
-                        src="../../../../assets/images/Chat-light.svg"
+                        lazyLoad="../../../../assets/images/Chat-light.svg"
                         class="d-block mx-auto"
                       />
                       {{ post.commentsCount }}
@@ -1340,12 +1340,12 @@
                     >
                       <img
                         *ngIf="!post.isPostSavedByCurrentUser"
-                        src="../../../../assets/images/Bookmark-light.svg"
+                        lazyLoad="../../../../assets/images/Bookmark-light.svg"
                         class="d-block mx-auto"
                       />
                       <img
                         *ngIf="post.isPostSavedByCurrentUser"
-                        src="../../../../assets/images/Bookmark-light.svg"
+                        lazyLoad="../../../../assets/images/Bookmark-light.svg"
                         class="d-block mx-auto"
                       />
                       {{ post.savedPostsCount }}
@@ -1363,7 +1363,7 @@
                       class="bg-transparent border-0 function-btns text-light"
                     >
                       <img
-                        src="../../../../assets/images/Upload-light.svg"
+                        lazyLoad="../../../../assets/images/Upload-light.svg"
                         class="d-block mx-auto"
                       />
                       {{ post.postSharedCount }}
@@ -1378,7 +1378,7 @@
                       class="bg-transparent border-0 function-btns text-light cursor_auto"
                     >
                       <img
-                        src="../../../../assets/images/eye.svg"
+                        lazyLoad="../../../../assets/images/eye.svg"
                         class="d-block mx-auto"
                       />
                       <span class="textBlack">{{ post.views.length }}</span>
@@ -1392,12 +1392,12 @@
                     >
                       <img
                         *ngIf="post.isPostLikedByCurrentUser"
-                        src="../../../assets/images/heart-red.svg"
+                        lazyLoad="../../../assets/images/heart-red.svg"
                         class="d-block mx-auto"
                       />
                       <img
                         *ngIf="!post.isPostLikedByCurrentUser"
-                        src="../../../../assets/images/Heart-dark.svg"
+                        lazyLoad="../../../../assets/images/Heart-dark.svg"
                         class="d-block mx-auto"
                       />
 
@@ -1421,7 +1421,7 @@
                       class="bg-transparent border-0 function-btns text-light"
                     >
                       <img
-                        src="../../../../assets/images/Chat-dark.svg"
+                        lazyLoad="../../../../assets/images/Chat-dark.svg"
                         class="d-block mx-auto"
                       />
                       <span class="textBlack">{{ post.commentsCount }}</span>
@@ -1433,12 +1433,12 @@
                     >
                       <img
                         *ngIf="!post.isPostSavedByCurrentUser"
-                        src="../../../../assets/images/Bookmark-dark.svg"
+                        lazyLoad="../../../../assets/images/Bookmark-dark.svg"
                         class="d-block mx-auto"
                       />
                       <img
                         *ngIf="post.isPostSavedByCurrentUser"
-                        src="../../../../assets/images/Bookmark-dark.svg"
+                        lazyLoad="../../../../assets/images/Bookmark-dark.svg"
                         class="d-block mx-auto"
                       />
                       <span class="textBlack">{{ post.savedPostsCount }}</span>
@@ -1456,7 +1456,7 @@
                       class="bg-transparent border-0 function-btns text-light"
                     >
                       <img
-                        src="../../../../assets/images/Upload-dark.svg"
+                        lazyLoad="../../../../assets/images/Upload-dark.svg"
                         class="d-block mx-auto"
                       />
                       <span class="textBlack">{{ post.postSharedCount }}</span>
@@ -1507,7 +1507,7 @@
                           preload="metadata"
                         >
                           <source
-                            [src]="postAttachment?.fileUrl"
+                            [lazyLoad]="postAttachment?.fileUrl"
                             type="video/mp4"
                           />
                         </video>
@@ -1517,7 +1517,7 @@
                       <img
                         *ngIf="postAttachment?.fileType == 1"
                         class="w-100"
-                        [src]="postAttachment?.fileUrl"
+                        [lazyLoad]="postAttachment?.fileUrl"
                       />
                     </slide>
                   </div>
@@ -1536,19 +1536,19 @@
                     type="button"
                     class="bg-transparent border-0 close-preview"
                   >
-                    <img src="../../../../assets/images/cross.svg" />
+                    <img lazyLoad="../../../../assets/images/cross.svg" />
                   </button>
                   <div class="schoolgrid-header">
                     <div class="d-flex align-items-center position-relative">
                       <div class="school-gridprofile-icon">
-                        <img [src]="school.avatar" />
+                        <img [lazyLoad]="school.avatar" />
                       </div>
                       <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">
                         {{ gridItemInfo.title }}
                       </h2>
                       <div *ngIf="gridItemInfo.isLive">
                         <img
-                          src="../../../../assets/images/live_img.png"
+                          lazyLoad="../../../../assets/images/live_img.png"
                           style="height: 76px"
                         />
                       </div>
@@ -1597,7 +1597,7 @@
                       class="bg-transparent border-0 function-btns cursor_auto"
                     >
                       <img
-                        src="../../../../assets/images/eye.svg"
+                        lazyLoad="../../../../assets/images/eye.svg"
                         class="d-block mx-auto"
                       />
                       <span class="textBlack">{{
@@ -1618,12 +1618,12 @@
                     >
                       <img
                         *ngIf="gridItemInfo.isPostLikedByCurrentUser"
-                        src="../../../assets/images/heart-red.svg"
+                        lazyLoad="../../../assets/images/heart-red.svg"
                         class="d-block mx-auto"
                       />
                       <img
                         *ngIf="!gridItemInfo.isPostLikedByCurrentUser"
-                        src="../../../../assets/images/Heart-dark.svg"
+                        lazyLoad="../../../../assets/images/Heart-dark.svg"
                         class="d-block mx-auto"
                       />
 
@@ -1647,7 +1647,7 @@
                       class="bg-transparent border-0 function-btns"
                     >
                       <img
-                        src="../../../../assets/images/Chat-dark.svg"
+                        lazyLoad="../../../../assets/images/Chat-dark.svg"
                         class="d-block mx-auto"
                       />
                       {{ gridItemInfo.commentsCount }}
@@ -1659,12 +1659,12 @@
                     >
                       <img
                         *ngIf="!gridItemInfo.isPostSavedByCurrentUser"
-                        src="../../../../assets/images/Bookmark-dark.svg"
+                        lazyLoad="../../../../assets/images/Bookmark-dark.svg"
                         class="d-block mx-auto"
                       />
                       <img
                         *ngIf="gridItemInfo.isPostSavedByCurrentUser"
-                        src="../../../../assets/images/Bookmark-dark.svg"
+                        lazyLoad="../../../../assets/images/Bookmark-dark.svg"
                         class="d-block mx-auto"
                       />
                       {{ gridItemInfo.savedPostsCount }}
@@ -1682,7 +1682,7 @@
                       class="bg-transparent border-0 function-btns"
                     >
                       <img
-                        src="../../../../assets/images/Upload-dark.svg"
+                        lazyLoad="../../../../assets/images/Upload-dark.svg"
                         class="d-block mx-auto"
                       />
                       {{ gridItemInfo.postSharedCount }}
@@ -1777,7 +1777,7 @@
                               <img
                                 *ngIf="postAttachment?.fileType == 1 && postAttachment?.compressedFileUrl == ''"
                                 class="w-100"
-                                [src]="postAttachment?.fileUrl"
+                                [lazyLoad]="postAttachment?.fileUrl"
                               />
                               <img
                                 *ngIf="postAttachment?.fileType == 1 && postAttachment?.compressedFileUrl != ''"
@@ -1798,13 +1798,34 @@
                         <div
                           class="class-preview-right position-relative h-100"
                         >
+                        <ul *ngIf="gridItemInfo?.createdBy == userId" class="list-unstyled d-flex more-action-btn before-none pe-2 me-1 mb-0" style="position: absolute;right: 50px;">
+                          <li class="d-inline-block ps-0 mb-0">
+                            <div class="dropdown">
+                              <button class="bg-transparent dropdown-toggle border-0 action-more-btn after-none pt-1" type="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                <i class="fa-solid fa-ellipsis"></i>
+                              </button>
+                              <ul class="dropdown-menu">
+                                <li><a style="cursor: pointer;" class="dropdown-item"
+                                  (click)="getDeletedPostId(gridItemInfo?.id)" data-bs-toggle="modal" data-bs-target="#delete-Class">{{'Delete'| translate }}
+                                </a>
+                                </li>
+                                <li><a style="cursor: pointer;" class="dropdown-item"
+                                  (click)="openEditPostModal(gridItemInfo)" data-bs-toggle="modal" data-bs-target="#delete-Class">{{'Edit'| translate }}
+                                  <div *ngIf="gridItemInfo.updatedOn != null">(<span>{{ "UpdatedOn" | translate }} - </span> {{ gridItemInfo.updatedOn | date:'d MMMM y h:mm a' }})</div>
+                                </a>
+                                </li>
+                              </ul>
+                            </div>
+                          </li>
+                        </ul> 
                           <button
                             (click)="hideGridItemInfo()"
                             type="button"
                             class="bg-transparent border-0 close-preview"
                           >
                             <img
-                              src="../../../../assets/images/cross.svg"
+                              lazyLoad="../../../../assets/images/cross.svg"
                             />
                           </button>
                           <div class="schoolgrid-header">
@@ -1812,7 +1833,7 @@
                               class="d-flex align-items-center position-relative"
                             >
                               <div class="school-gridprofile-icon">
-                                <img [src]="school.avatar" />
+                                <img [lazyLoad]="school.avatar" />
                               </div>
                               <h2
                                 class="d-inline-block font_16 fw_600 text_sec1 mb-0"
@@ -1821,7 +1842,7 @@
                               </h2>
                               <div *ngIf="gridItemInfo.isLive">
                                 <img
-                                  src="../../../../assets/images/live_img.png"
+                                  lazyLoad="../../../../assets/images/live_img.png"
                                   style="height: 76px"
                                 />
                               </div>
@@ -1877,7 +1898,7 @@
                               class="bg-transparent border-0 function-btns cursor_auto"
                             >
                               <img
-                                src="../../../../assets/images/eye.svg"
+                                lazyLoad="../../../../assets/images/eye.svg"
                                 class="d-block mx-auto"
                               />
                               <span class="textBlack">{{
@@ -1900,14 +1921,14 @@
                                 *ngIf="
                                   gridItemInfo.isPostLikedByCurrentUser
                                 "
-                                src="../../../assets/images/heart-red.svg"
+                                lazyLoad="../../../assets/images/heart-red.svg"
                                 class="d-block mx-auto"
                               />
                               <img
                                 *ngIf="
                                   !gridItemInfo.isPostLikedByCurrentUser
                                 "
-                                src="../../../../assets/images/Heart-dark.svg"
+                                lazyLoad="../../../../assets/images/Heart-dark.svg"
                                 class="d-block mx-auto"
                               />
 
@@ -1933,7 +1954,7 @@
                               class="bg-transparent border-0 function-btns"
                             >
                               <img
-                                src="../../../../assets/images/Chat-dark.svg"
+                                lazyLoad="../../../../assets/images/Chat-dark.svg"
                                 class="d-block mx-auto"
                               />
                               {{ gridItemInfo.commentsCount }}
@@ -1947,14 +1968,14 @@
                                 *ngIf="
                                   !gridItemInfo.isPostSavedByCurrentUser
                                 "
-                                src="../../../../assets/images/Bookmark-dark.svg"
+                                lazyLoad="../../../../assets/images/Bookmark-dark.svg"
                                 class="d-block mx-auto"
                               />
                               <img
                                 *ngIf="
                                   gridItemInfo.isPostSavedByCurrentUser
                                 "
-                                src="../../../../assets/images/Bookmark-dark.svg"
+                                lazyLoad="../../../../assets/images/Bookmark-dark.svg"
                                 class="d-block mx-auto"
                               />
                               {{ gridItemInfo.savedPostsCount }}
@@ -1972,7 +1993,7 @@
                               class="bg-transparent border-0 function-btns"
                             >
                               <img
-                                src="../../../../assets/images/Upload-dark.svg"
+                                lazyLoad="../../../../assets/images/Upload-dark.svg"
                                 class="d-block mx-auto"
                               />
                               {{ gridItemInfo.postSharedCount }}
@@ -1985,7 +2006,7 @@
                 </div>
                   <div *ngIf="
                       (post.postType == 1 && post.postAuthorType == 1) ||
-                      post.isLive" class="col-md-6 col-xl-4" [class]="getRandomClass(i,false)" (click)="openDialouge($event)"
+                      post.isLive" class="col-md-6 col-xl-4" [class]="getRandomClass(i,false)" (click)="openDialouge($event,post)"
                   >
                   
                     <div
@@ -1998,7 +2019,7 @@
                         class="schoolgrid-header d-flex align-items-center position-relative"
                       >
                         <div class="school-gridprofile-icon">
-                          <img [src]="school.avatar" />
+                          <img [lazyLoad]="school.avatar" />
                         </div>
                         <h2
                           class="d-inline-block font_16 fw_600 text_sec1 mb-0"
@@ -2007,10 +2028,21 @@
                         </h2>
                         <div *ngIf="post.isLive">
                           <img
-                            src="../../../../assets/images/live_img.png"
+                            lazyLoad="../../../../assets/images/live_img.png"
                             style="height: 76px"
                           />
                         </div>
+                        <div class="right-action">
+                          <button
+                            type="button"
+                            class="view font_12 bg-transparent border-0 cursor_auto"
+                          >
+                            <img
+                              lazyLoad="../../../../assets/images/eye.svg"
+                              class="me-2"
+                            />
+                            {{ post.views.length }}
+                          </button>
                         <button
                           *ngIf="post.isPinned && isOwner"
                           (click)="pinUnpinPost(post.id, false)"
@@ -2018,7 +2050,7 @@
                           class="bg-transparent border-0 pinned-grid-chat"
                         >
                           <img
-                            src="../../../../assets/images/pinned-orange.svg"
+                            lazyLoad="../../../../assets/images/pinned-orange.svg"
                           />
                         </button>
                         <button
@@ -2028,9 +2060,10 @@
                           class="bg-transparent border-0 pinned-grid-chat"
                         >
                           <img
-                            src="../../../../assets/images/pinned-gray.svg"
+                            lazyLoad="../../../../assets/images/pinned-gray.svg"
                           />
                         </button>
+                        </div>
                       </div>
                       <div class="school-grid-body">
                         <div
@@ -2048,7 +2081,7 @@
                             class="view font_12 bg-transparent border-0 cursor_auto"
                           >
                             <img
-                              src="../../../../assets/images/eye.svg"
+                              lazyLoad="../../../../assets/images/eye.svg"
                               class="me-2"
                             />
                             {{ post.views.length }}
@@ -2080,7 +2113,7 @@
                                   <img
                                     preload="metadata"
                                     style="height: 300px"
-                                    [src]="
+                                    [lazyLoad]="
                                       post.postAttachments[0]?.fileThumbnail
                                     "
                                   />
@@ -2150,12 +2183,12 @@
                           class="school-gridprofile-icon"
                         >
                           <!-- <a *ngIf="item.type == 1" [routerLink]="['/profile/class', item.schoolName,item.name]" class="routeLink">
-                            <img [src]="item.avatar" />
+                            <img [lazyLoad]="item.avatar" />
                           </a>
                           <a *ngIf="item.type == 2" [routerLink]="['/profile/course', item.schoolName,item.name]" class="routeLink">
 
                           </a> -->
-                          <img [src]="item.avatar" />
+                          <img [lazyLoad]="item.avatar" />
                         </div>
                         <div
                           *ngIf="item.type == 2"
@@ -2167,12 +2200,12 @@
                           class="school-gridprofile-icon"
                         >
                           <!-- <a *ngIf="item.type == 1" [routerLink]="['/profile/class', item.schoolName,item.name]" class="routeLink">
-                            <img [src]="item.avatar" />
+                            <img [lazyLoad]="item.avatar" />
                           </a>
                           <a *ngIf="item.type == 2" [routerLink]="['/profile/course', item.schoolName,item.name]" class="routeLink">
 
                           </a> -->
-                          <img [src]="item.avatar" />
+                          <img [lazyLoad]="item.avatar" />
                         </div>
                         <h2
                           class="d-inline-block font_16 fw_600 text_sec1 mb-0"
@@ -2247,7 +2280,7 @@
                           >
                             <img
                               class="w-auto h-auto"
-                              src="../../../../assets/images/pinned-orange.svg"
+                              lazyLoad="../../../../assets/images/pinned-orange.svg"
                             />
                           </button>
                           <button
@@ -2260,7 +2293,7 @@
                           >
                             <img
                               class="w-auto h-auto"
-                              src="../../../../assets/images/pinned-gray.svg"
+                              lazyLoad="../../../../assets/images/pinned-gray.svg"
                             />
                           </button>
                         </div>
@@ -2281,7 +2314,7 @@
                             *ngIf="item.rating != null"
                             class="font_14 fw_600 text_sec1 d-inline-flex align-items-center"
                             ><img
-                              src="../../../../assets/images/Star-solid-dark.svg"
+                              lazyLoad="../../../../assets/images/Star-solid-dark.svg"
                               class="me-1"
                             />{{ item.rating }}</span
                           >
@@ -2328,7 +2361,7 @@
                               <img
                                 *ngIf="item.thumbnailType == 1"
                                 class="w-100"
-                                [src]="item.thumbnailUrl"
+                                [lazyLoad]="item.thumbnailUrl"
                               />
                               
                               <div
@@ -2337,7 +2370,7 @@
                               >
                                 <video preload="metadata" style="height: 300px">
                                   <source
-                                    [src]="item.thumbnailUrl"
+                                    [lazyLoad]="item.thumbnailUrl"
                                     type="video/mp4"
                                   />
                                 </video>
@@ -2351,7 +2384,7 @@
                             class="bg-transparent border-0 function-btns text-light"
                           >
                             <img
-                              src="../../../../assets/images/eye-light.svg"
+                              lazyLoad="../../../../assets/images/eye-light.svg"
                               class="d-block mx-auto"
                             />
                             <span *ngIf="item.type == 1">{{
@@ -2370,12 +2403,12 @@
                           >
                             <img
                               *ngIf="item.isLikedByCurrentUser"
-                              src="../../../assets/images/heart-red.svg"
+                              lazyLoad="../../../assets/images/heart-red.svg"
                               class="d-block mx-auto"
                             />
                             <img
                               *ngIf="!item.isLikedByCurrentUser"
-                              src="../../../../assets/images/Heart-light.svg"
+                              lazyLoad="../../../../assets/images/Heart-light.svg"
                               class="d-block mx-auto"
                             />
 
@@ -2406,7 +2439,7 @@
                             class="bg-transparent border-0 function-btns text-light"
                           >
                             <img
-                              src="../../../../assets/images/Chat-light.svg"
+                              lazyLoad="../../../../assets/images/Chat-light.svg"
                               class="d-block mx-auto"
                             />
                             {{ item.commentsCount }}
@@ -2418,12 +2451,12 @@
                           >
                             <img
                               *ngIf="!item.isClassCourseSavedByCurrentUser"
-                              src="../../../../assets/images/Bookmark-light.svg"
+                              lazyLoad="../../../../assets/images/Bookmark-light.svg"
                               class="d-block mx-auto"
                             />
                             <img
                               *ngIf="item.isClassCourseSavedByCurrentUser"
-                              src="../../../../assets/images/Bookmark-light.svg"
+                              lazyLoad="../../../../assets/images/Bookmark-light.svg"
                               class="d-block mx-auto"
                             />
                             {{ item.savedClassCourseCount }}
@@ -2442,7 +2475,7 @@
                             class="bg-transparent border-0 function-btns text-light"
                           >
                             <img
-                              src="../../../../assets/images/Upload-light.svg"
+                              lazyLoad="../../../../assets/images/Upload-light.svg"
                               class="d-block mx-auto"
                             />
                             0
@@ -2543,7 +2576,7 @@ aria-hidden="true"
                     data-bs-dismiss="modal"
                     aria-label="Close"
                   >
-                    <img src="../../../../assets/images/cross.svg" />
+                    <img lazyLoad="../../../../assets/images/cross.svg" />
                   </button>
                 </div>
                 <div class="edit-profile-header text-center mb-4">
@@ -2552,10 +2585,10 @@ aria-hidden="true"
                       class="school-profile-icon rounded-circle overflow-hidden new-upload-img modal-school-icon"
                     >
                       <div *ngIf="uploadImage != ''">
-                        <img [src]="uploadImage" />
+                        <img [lazyLoad]="uploadImage" />
                       </div>
                       <div *ngIf="uploadImage == ''">
-                        <img src="{{ schoolAvatar }}" style="scale: 1.2" />
+                        <img lazyLoad="{{ schoolAvatar }}" style="scale: 1.2" />
                       </div>
                     </div>
                   </div>
@@ -2874,7 +2907,7 @@ aria-hidden="true"
                   data-bs-dismiss="modal"
                   aria-label="Close"
                 >
-                  <img src="../../../../assets/images/cross.svg" />
+                  <img lazyLoad="../../../../assets/images/cross.svg" />
                 </button>
               </div>
               <div class="modal-body">
@@ -2930,7 +2963,7 @@ aria-hidden="true"
                   data-bs-dismiss="modal"
                   aria-label="Close"
                 >
-                  <img src="../../../../assets/images/cross.svg" />
+                  <img lazyLoad="../../../../assets/images/cross.svg" />
                 </button>
               </div>
               <div class="modal-body">
@@ -2995,7 +3028,7 @@ aria-hidden="true"
                   data-bs-dismiss="modal"
                   aria-label="Close"
                 >
-                  <img src="../../../../assets/images/cross.svg" />
+                  <img lazyLoad="../../../../assets/images/cross.svg" />
                 </button>
               </div>
               <div class="modal-body">
@@ -3082,7 +3115,7 @@ aria-hidden="true"
                   data-bs-dismiss="modal"
                   aria-label="Close"
                 >
-                  <img src="../../../../assets/images/cross.svg" />
+                  <img lazyLoad="../../../../assets/images/cross.svg" />
                 </button>
               </div>
               <div class="modal-body">
@@ -3138,7 +3171,7 @@ aria-hidden="true"
                   data-bs-dismiss="modal"
                   aria-label="Close"
                 >
-                  <img src="../../../../assets/images/cross.svg" />
+                  <img lazyLoad="../../../../assets/images/cross.svg" />
                 </button>
               </div>
               <div class="modal-body">
@@ -3224,7 +3257,7 @@ aria-hidden="true"
                   data-bs-dismiss="modal"
                   aria-label="Close"
                 >
-                  <img src="../../../../assets/images/cross.svg" />
+                  <img lazyLoad="../../../../assets/images/cross.svg" />
                 </button>
               </div>
               <div class="modal-body">
@@ -3280,7 +3313,7 @@ aria-hidden="true"
                   data-bs-dismiss="modal"
                   aria-label="Close"
                 >
-                  <img src="../../../../assets/images/cross.svg" />
+                  <img lazyLoad="../../../../assets/images/cross.svg" />
                 </button>
               </div>
               <div class="modal-body">
@@ -3643,7 +3676,7 @@ aria-hidden="true"
                   data-bs-dismiss="modal"
                   aria-label="Close"
                 >
-                  <img src="../../../../assets/images/cross.svg" />
+                  <img lazyLoad="../../../../assets/images/cross.svg" />
                 </button>
               </div>
               <div class="modal-body">
@@ -3699,7 +3732,7 @@ aria-hidden="true"
                   data-bs-dismiss="modal"
                   aria-label="Close"
                 >
-                  <img src="../../../../assets/images/cross.svg" />
+                  <img lazyLoad="../../../../assets/images/cross.svg" />
                 </button>
               </div>
               <div class="modal-body">
@@ -3757,7 +3790,7 @@ aria-hidden="true"
           data-bs-dismiss="modal"
           aria-label="Close"
         >
-          <img src="../../../assets/images/cross.svg" />
+          <img lazyLoad="../../../assets/images/cross.svg" />
         </button>
       </div>
       <div class="modal-body">

@@ -201,7 +201,7 @@
   "DoYouWantToVerifyUser": "Do you really want to verify this user?",
   "DoYouWantToUnVerifyUser": "Do you really want to unverify this user?",
   "UserLogo": "User Logo",
-  "UnFollow": "UnFollow",
+  "UnFollow": "Unfollow",
   "ConvertToCourse": "Convert To Course",
   "ConvertToClass": "Convert To Class",
   "Avatar": "Avatar",
@@ -506,7 +506,8 @@
   "CertificateName": "Certificate Name",
   "ProviderName": "Provider Name",
   "IssuedDate": "Issued Date",
-  "CertificateUpdatedSuccessfully": "Certificate updated successfully"
+  "CertificateUpdatedSuccessfully": "Certificate updated successfully",
+  "PostUpdatedSuccessfully": "Post updated successfully"
 
 
 }

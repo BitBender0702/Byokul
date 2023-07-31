@@ -41,6 +41,7 @@ export const unreadNotificationResponse =new Subject<{type:string}>();
     notificationResponseSubscription!:Subscription;
     notificationPageNumber:number = 1;
     scrolled:boolean = false;
+    gender!:string;
     scrollNotificationResponseCount:number = 1;
     notificationLoadingIcon: boolean = false;
     joinMeetingViewModel!:JoinMeetingModel;
@@ -57,6 +58,7 @@ export const unreadNotificationResponse =new Subject<{type:string}>();
     ngOnInit(): void {
         this.loadingIcon = true;
         var selectedLang = localStorage.getItem('selectedLanguage');
+        this.gender = localStorage.getItem("gender")??'';
         this.translate.use(selectedLang ?? '');
         this._notificationService.getNotifications(this.notificationPageNumber).subscribe((notificationsResponse) => {
           debugger

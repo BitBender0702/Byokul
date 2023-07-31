@@ -277,4 +277,11 @@ export class SideBarComponent extends MultilingualComponent implements OnInit, O
       this.loginUserId = decodedJwtData.jti;
     }
   }
+
+  openGlobalFeedTab(){
+    var feedTab = localStorage.getItem('feedTab')??'';
+    if(feedTab != ''){
+      localStorage.setItem('feedTab','globalFeed');
+    }
+  }
 }

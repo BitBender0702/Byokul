@@ -1068,6 +1068,7 @@ namespace LMS.Services
                 item.Price = classDetails.Price;
                 item.Rating = classDetails.Rating;
                 item.CreatedOn = classDetails.CreatedOn;
+                item.CreatedById = classDetails.CreatedById;
                 item.Type = ClassCourseEnum.Class;
                 item.IsPinned = classDetails.IsPinned;
                 item.StartDate = classDetails.StartDate;
@@ -1081,6 +1082,7 @@ namespace LMS.Services
                 item.ThumbnailType = classDetails.ThumbnailType;
                 item.NoOfStudents = await _classService.GetStudents(classDetails.ClassId);
                 item.Rating = classDetails.Rating;
+                item.IsCommentsDisabled = classDetails.IsCommentsDisabled;
                 item.IsClassCourseSavedByCurrentUser = savedClassCourse.Any(x => x.ClassId == classDetails.ClassId && x.UserId == userId);
                 item.SavedClassCourseCount = savedClassCourse.Where(x => x.ClassId == classDetails.ClassId && x.UserId == userId).Count();
 
@@ -1100,6 +1102,7 @@ namespace LMS.Services
                 item.Price = courseDetails.Price;
                 item.Rating = courseDetails.Rating;
                 item.CreatedOn = courseDetails.CreatedOn;
+                item.CreatedById = courseDetails.CreatedById;
                 item.Type = ClassCourseEnum.Course;
                 item.IsPinned = courseDetails.IsPinned;
                 item.ThumbnailUrl = courseDetails.ThumbnailUrl;
@@ -1111,6 +1114,7 @@ namespace LMS.Services
                 item.ThumbnailType = courseDetails.ThumbnailType;
                 item.NoOfStudents = await _courseService.GetStudents(courseDetails.CourseId);
                 item.Rating = courseDetails.Rating;
+                item.IsCommentsDisabled = courseDetails.IsCommentsDisabled;
                 item.IsClassCourseSavedByCurrentUser = savedClassCourse.Any(x => x.ClassId == courseDetails.CourseId && x.UserId == userId);
                 item.SavedClassCourseCount = savedClassCourse.Where(x => x.ClassId == courseDetails.CourseId && x.UserId == userId).Count();
 

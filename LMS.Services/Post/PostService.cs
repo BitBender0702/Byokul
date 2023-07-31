@@ -21,6 +21,8 @@ using Hangfire;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.AspNetCore.Hosting;
 using System.Collections;
+using LMS.DataAccess.GenericRepository;
+
 
 namespace LMS.Services
 {
@@ -79,284 +81,160 @@ namespace LMS.Services
         }
         public async Task<PostViewModel> SavePost(PostViewModel postViewModel, string createdById)
         {
-            Guid PostId = new Guid();
-            var videoUploadResponse = new List<VideoUploadResponseViewModel>();
-            //if (postViewModel.PostAuthorType == (int)PostAuthorTypeEnum.School)
-            //{
-            //    await SavePostsInCache(postViewModel);
-            //}
-
-
-            //// Store a value in cache
-            //await _cache.SetStringAsync("postTitle", postViewModel.Title);
-
-            //// Retrieve a value from cache
-            //string cachedValue = await _cache.GetStringAsync("postTitle");
-
-            var blobVideoUrls = new List<string>();
-            IEnumerable<FileAttachmentViewModel> uploadFromFileStorage = null;
-            postViewModel.PostTags = JsonConvert.DeserializeObject<string[]>(postViewModel.PostTags.First());
-
-            if (postViewModel.UploadFromFileStorage != null)
+            bool scheduleLiveStream = false;
+            bool isPostSchedule = false;
+            var post = new Post
             {
-                uploadFromFileStorage = JsonConvert.DeserializeObject<IEnumerable<FileAttachmentViewModel>>(postViewModel.UploadFromFileStorage.First());
-            }
-
-            if (postViewModel.Id != null && postViewModel.Id != new Guid())
-            {
-                PostId = await UpdatePost(postViewModel, createdById);
-
-                if (postViewModel.UploadVideos != null)
+                Title = postViewModel.Title,
+                Status = postViewModel.Status,
+                OwnerId = postViewModel.OwnerId,
+                AuthorId = postViewModel.AuthorId,
+                DateTime = postViewModel.DateTime,
+                PostType = postViewModel.PostType,
+                Description = postViewModel.Description,
+                PostAuthorType = postViewModel.PostAuthorType,
+                ParentId = postViewModel.ParentId,
+                CoverLetter = postViewModel.CoverLetter,
+                IsPostSchedule = false,
+                IsCommentsDisabled = false,
+                CommentsPerMinute = postViewModel.CommentsPerMinute == 0 ? null : postViewModel.CommentsPerMinute,
+                Attachments = postViewModel.BlobUrls.Select(x => new PostAttachment
                 {
-                    videoUploadResponse = await SaveUploadVideos(postViewModel.UploadVideos, postViewModel.UploadVideosThumbnail, postViewModel.Id, createdById, false);
-                    blobVideoUrls = videoUploadResponse.Where(x => x.IsVideo).Select(x => x.VideoUrl).ToList();
-                }
-                
-            }
-
-            else
-            {
-                var post = new Post
-                {
-                    Title = postViewModel.Title,
-                    Status = postViewModel.Status,
-                    OwnerId = postViewModel.OwnerId,
-                    AuthorId = postViewModel.AuthorId,
-                    DateTime = postViewModel.DateTime,
-                    PostType = postViewModel.PostType,
-                    Description = postViewModel.Description,
-                    PostAuthorType = postViewModel.PostAuthorType,
-                    ParentId = postViewModel.ParentId,
-                    CoverLetter = postViewModel.CoverLetter,
-                    IsPostSchedule = false,
-                    CommentsPerMinute = postViewModel.CommentsPerMinute == 0 ? null : postViewModel.CommentsPerMinute,
-
-                    //IsLive = (postViewModel.DateTime == null && postViewModel.PostType == 2) ? true : false,
+                    Id = x.Id,
                     CreatedById = createdById,
-                    CreatedOn = DateTime.UtcNow
-                };
+                    CreatedOn = DateTime.UtcNow,
+                    FileName = x.BlobName,
+                    FileType = Convert.ToInt32(x.FileType),
+                    FileUrl = x.BlobUrl,
+                    IsCompressed = false
+                }).ToList(),
+                Tags = postViewModel.PostTags.Select(x => new PostTag
+                {
+                    PostTagValue = x
+                }).ToList(),
+                CreatedById = createdById,
+                CreatedOn = DateTime.UtcNow
+            };
 
+            if (postViewModel.PostType == (int)PostTypeEnum.Stream && postViewModel.DateTime.HasValue)
+            {
+                post.StreamUrl = postViewModel.BlobUrls[0].BlobUrl;
+                post.IsPostSchedule = true;
+                scheduleLiveStream = true;
+            }
+            else if (postViewModel.PostType == (int)PostTypeEnum.Stream)
+            {
+                post.StreamUrl = postViewModel.BlobUrls[0].BlobUrl;
+                post.IsLive = true;
+            }
+            if (postViewModel.PostType == (int)PostTypeEnum.Stream && postViewModel.BlobUrls.Any(x => x.FileType != FileTypeEnum.Video))
+            {
+                var user = _userRepository.GetById(createdById);
+                var model = new NewMeetingViewModel();
+                model.meetingName = postViewModel.Title;
+                model.IsMicrophoneOpen = (bool)postViewModel.IsMicroPhoneOpen;
+                model.ModeratorName = user.FirstName;
+                model.PostId = post.Id;
+                var response = await _bigBlueButtonService.Create(model);
+                postViewModel.StreamUrl = response.StreamUrl;
+                post.StreamUrl = response.StreamUrl;
+                post.ExternalMeetingId = new Guid(response.MeetingID);
+                post.InternalMeetingId = response.InternalMeetingID;
+                post.IsLive = true;
+            }
+
+            if ((postViewModel.PostType == (int)PostTypeEnum.Post || postViewModel.PostType == (int)PostTypeEnum.Reel) && postViewModel.DateTime != null)
+            {
+                post.IsPostSchedule = true;
+                isPostSchedule = true;
+            }
+
+            try
+            {
                 _postRepository.Insert(post);
-                try
-                {
-                    _postRepository.Save();
-                    postViewModel.Id = post.Id;
-
-                    if (postViewModel.UploadVideos != null)
-                    {
-                        videoUploadResponse = await SaveUploadVideos(postViewModel.UploadVideos, postViewModel.UploadVideosThumbnail, postViewModel.Id, createdById, false);
-                        blobVideoUrls = videoUploadResponse.Where(x => x.IsVideo).Select(x => x.VideoUrl).ToList();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
-
-                if (postViewModel.PostType == (int)PostTypeEnum.Stream && postViewModel.DateTime != null)
-                {
-                    post.StreamUrl = blobVideoUrls[0];
-                    post.IsPostSchedule = true;
-                    _postRepository.Update(post);
-                    _postRepository.Save();
-                    DateTimeOffset scheduledTime = new DateTimeOffset(postViewModel.DateTime.Value);
-                    await ScheduleLiveStream(postViewModel, createdById, scheduledTime);
-                }
-                else
-                {
-                    if (postViewModel.PostType == (int)PostTypeEnum.Stream)
-                    {
-                        if (postViewModel.UploadVideos != null)
-                        {
-                            post.StreamUrl = blobVideoUrls[0];
-                            post.IsLive = true;
-                            _postRepository.Update(post);
-                            _postRepository.Save();
-                        }
-                        else
-                        {
-                            var user = _userRepository.GetById(createdById);
-                            var model = new NewMeetingViewModel();
-                            model.meetingName = postViewModel.Title;
-                            model.IsMicrophoneOpen = (bool)postViewModel.IsMicroPhoneOpen;
-                            model.ModeratorName = user.FirstName;
-                            model.PostId = post.Id;
-                            var url = await _bigBlueButtonService.Create(model);
-                            postViewModel.StreamUrl = url;
-                            post.StreamUrl = url;
-                            post.IsLive = true;
-                            _postRepository.Update(post);
-                            _postRepository.Save();
-                        }
-                    }
-
-                    if ((postViewModel.PostType == (int)PostTypeEnum.Post || postViewModel.PostType == (int)PostTypeEnum.Reel) && postViewModel.DateTime != null)
-                    {
-                        post.IsPostSchedule = true;
-                        _postRepository.Update(post);
-                        _postRepository.Save();
-                        DateTimeOffset scheduledTime = new DateTimeOffset(postViewModel.DateTime.Value);
-                        var scheduleJobId = BackgroundJob.Schedule(() => SaveSchedulePostInfo(postViewModel.Id), scheduledTime);
-                    }
-
-                }
-
-                PostId = post.Id;
+                _postRepository.Save();
             }
-
-            if (postViewModel.UploadImages != null)
+            catch (Exception ex)
             {
-                await SaveUploadImages(postViewModel.UploadImages, postViewModel.Id, createdById);
+                throw ex;
             }
 
-            //if (postViewModel.UploadVideos != null)
-            //{
-            //    blobVideoUrls = await SaveUploadVideos(postViewModel.UploadVideos, postViewModel.UploadVideosThumbnail, postViewModel.Id, createdById);
-            //}
+            postViewModel.Id = post.Id;
 
-            if (postViewModel.UploadAttachments != null)
-            {
-                await SaveUploadAttachments(postViewModel.UploadAttachments, postViewModel.Id, createdById);
-            }
+            if (scheduleLiveStream)
+                await ScheduleLiveStream(postViewModel, createdById, new DateTimeOffset(postViewModel.DateTime.Value));
+            if (isPostSchedule)
+                BackgroundJob.Schedule(() => SaveSchedulePostInfo(postViewModel.Id), new DateTimeOffset(postViewModel.DateTime.Value));
 
-            if (postViewModel.PostTags != null)
-            {
-                await SavePostTags(postViewModel.PostTags, postViewModel.Id);
-            }
-
-            if (postViewModel.UploadFromFileStorage != null)
-            {
-                await SaveFileStorageAttachments(uploadFromFileStorage, postViewModel.Id, createdById);
-            }
-
-            //if (postViewModel.PostType == (int)PostTypeEnum.Stream && postViewModel.DateTime != null)
-            //{
-            //    post.StreamUrl = blobVideoUrls[0];
-            //    post.IsPostSchedule = true;
-            //    _postRepository.Update(post);
-            //    _postRepository.Save();
-            //    DateTimeOffset scheduledTime = new DateTimeOffset(postViewModel.DateTime.Value);
-            //    await ScheduleLiveStream(postViewModel, createdById, scheduledTime);
-            //}
-            //else
-            //{
-            //    if (postViewModel.PostType == (int)PostTypeEnum.Stream)
-            //    {
-            //        if (postViewModel.UploadVideos != null)
-            //        {
-            //            post.StreamUrl = blobVideoUrls[0];
-            //            post.IsLive = true;
-            //            _postRepository.Update(post);
-            //            _postRepository.Save();
-            //        }
-            //        else
-            //        {
-            //            var user = _userRepository.GetById(createdById);
-            //            var model = new NewMeetingViewModel();
-            //            model.meetingName = postViewModel.Title;
-            //            model.IsMicrophoneOpen = (bool)postViewModel.IsMicroPhoneOpen;
-            //            model.ModeratorName = user.FirstName;
-            //            model.PostId = post.Id;
-            //            var url = await _bigBlueButtonService.Create(model);
-            //            postViewModel.StreamUrl = url;
-            //            post.StreamUrl = url;
-            //            post.IsLive = true;
-            //            _postRepository.Update(post);
-            //            _postRepository.Save();
-            //        }
-            //    }
-
-            //    if ((postViewModel.PostType == (int)PostTypeEnum.Post || postViewModel.PostType == (int)PostTypeEnum.Reel) && postViewModel.DateTime != null)
-            //    {
-            //        post.IsPostSchedule = true;
-            //        _postRepository.Update(post);
-            //        _postRepository.Save();
-            //        DateTimeOffset scheduledTime = new DateTimeOffset(postViewModel.DateTime.Value);
-            //        var scheduleJobId = BackgroundJob.Schedule(() => SaveSchedulePostInfo(postViewModel.Id), scheduledTime);
-            //    }
-
-            //}
 
             if (postViewModel.PostType == (int)PostTypeEnum.Reel)
             {
-                postViewModel.ReelId = await _postAttachmentRepository.GetAll().Where(x => x.PostId == PostId).Select(x => x.Id).FirstAsync();
+                postViewModel.ReelId = await _postAttachmentRepository.GetAll().Where(x => x.PostId == post.Id).Select(x => x.Id).FirstAsync();
             }
-            postViewModel.Id = PostId;
 
-            if (postViewModel.UploadVideos.Count() != 0)
-            {
-
-                //using (var httpClient = new HttpClient())
-                //{
-                //    byte[] byteArray = await httpClient.GetByteArrayAsync(blobVideoUrls[0]);
-                //}
-
-                //postViewModel.Status = (int)StatusEnum.Disabled;
-                var scheduledCompressTime = DateTimeOffset.Now.AddMinutes(3);
-
-                //List<CompressVideoViewModel> videoByteArrayLists = new List<CompressVideoViewModel>();
-                //List<CompressVideoViewModel> thumbnailByteArrayLists = new List<CompressVideoViewModel>();
-                //List<byte[]> videoByteArrayList = new List<byte[]>();
-                //List<byte[]> thumbnailByteArrayList = new List<byte[]>();
-
-
-                //var path = _webHostEnvironment.ContentRootPath;
-                //var tempDirectoryPath = Path.Combine(path, "FfmpegVideos/");
-
-                //foreach (var video in postViewModel.UploadVideos)
-                //{
-
-                //    //string fileName = video.FileName;
-                //    //string fullPath = Path.Combine(tempDirectoryPath, fileName);
-
-                //    byte[] byteArray;
-                //    using (var memoryStream = new MemoryStream())
-                //    {
-                //        await video.CopyToAsync(memoryStream);
-                //        byteArray = memoryStream.ToArray();
-                //    }
-
-                //    videoByteArrayLists.Add(new CompressVideoViewModel
-                //    {
-                //        Bytes = byteArray,
-                //        FileName = video.FileName,
-                //        ContentType = video.ContentType
-                //    });
-
-                //    //videoByteArrayList.Add(byteArray);
-                //}
-
-                //foreach (var video in postViewModel.UploadVideosThumbnail)
-                //{
-                //    //string fileName = video.FileName;
-                //    //string fullPath = Path.Combine(tempDirectoryPath, fileName);
-
-                //    byte[] byteArray;
-                //    using (var memoryStream = new MemoryStream())
-                //    {
-                //        await video.CopyToAsync(memoryStream);
-                //        byteArray = memoryStream.ToArray();
-                //    }
-
-                //    thumbnailByteArrayLists.Add(new CompressVideoViewModel
-                //    {
-                //        Bytes = byteArray,
-                //        FileName = video.FileName,
-                //        ContentType = video.ContentType
-                //    });
-                //    //thumbnailByteArrayList.Add(byteArray);
-                //}
-
-                ////await SaveCompressedVideos2(blobVideoUrls,PostId);
-
-                //var res = SaveCompressedVideos(videoUploadResponse, createdById, postViewModel.Id);
-                BackgroundJob.Schedule(() => SaveCompressedVideos(videoUploadResponse, createdById, postViewModel.Id), scheduledCompressTime);
-                //BackgroundJob.Schedule(() => SaveCompressedVideos(videoByteArrayLists, thumbnailByteArrayLists, createdById,postViewModel.Id), scheduledCompressTime);
-            }
             return postViewModel;
         }
 
-        public async Task SaveCompressedVideos2(VideoUploadResponseViewModel model,string createdById,Guid PostId)
+        public async Task<List<VideoUploadResponseViewModel>> SaveBlobUrls(List<BlobUrlsViewModel> bloburls, IEnumerable<IFormFile> uploadVideosThumbnail, Guid postId, string createdById, bool isJobRunning)
+        {
+            var response = new List<VideoUploadResponseViewModel>();
+            var uploadBlobUrls = new List<string>();
+            string containerName = this._config.GetValue<string>("Container:PostContainer");
+            string videoThumbnailName = "";
+            foreach (var video in bloburls)
+            {
+                int lastDotIndex = video.BlobName.LastIndexOf(".");
+                if (lastDotIndex != -1)
+                {
+                    videoThumbnailName = video.BlobName.Substring(0, lastDotIndex + 1);
+                }
+
+                var isVideoThumbnailExist = bloburls.Where(x => x.BlobName.Substring(0, x.BlobName.LastIndexOf(".") + 1) == videoThumbnailName && x.FileType == FileTypeEnum.Thumbnail).FirstOrDefault();
+
+                var postAttachment = new PostAttachmentViewModel();
+                if (isVideoThumbnailExist != null)
+                {
+                    postAttachment.FileThumbnail = isVideoThumbnailExist.BlobUrl;
+                    response.Add(new VideoUploadResponseViewModel
+                    {
+                        FileName = isVideoThumbnailExist.BlobName,
+                        ThumbnailUrl = postAttachment.FileThumbnail,
+                        IsVideo = false
+                    });
+
+                }
+
+                //postAttachment.FileUrl = await _blobService.UploadFileAsync(video, containerName, true);
+
+                var postAttach = new PostAttachment
+                {
+                    Id = video.Id,
+                    PostId = postId,
+                    FileName = video.BlobName,
+                    FileUrl = video.BlobUrl,
+                    FileThumbnail = postAttachment.FileThumbnail,
+                    FileType = (int)video.FileType,
+                    CreatedById = createdById,
+                    CreatedOn = DateTime.UtcNow,
+                    IsCompressed = false
+                };
+
+                _postAttachmentRepository.Insert(postAttach);
+                _postAttachmentRepository.Save();
+                //uploadBlobUrls.Add(postAttach.FileUrl);
+                response.Add(new VideoUploadResponseViewModel
+                {
+                    FileName = video.BlobName,
+                    VideoUrl = postAttach.FileUrl,
+                    IsVideo = true
+                });
+
+            }
+
+            return response;
+        }
+
+        public async Task SaveCompressedVideos2(VideoUploadResponseViewModel model, string createdById, Guid PostId)
         {
             var attachment = await _postAttachmentRepository.GetAll().Where(x => x.PostId == PostId).FirstAsync();
             attachment.IsCompressed = true;
@@ -473,59 +351,49 @@ namespace LMS.Services
 
         public async Task<Guid> UpdatePost(PostViewModel model, string createdById)
         {
-            var post = _postRepository.GetById(model.Id);
+            var post = await _postRepository.GetAll().FirstAsync(x => x.Id == model.Id);
             post.Title = model.Title;
             post.Description = model.Description;
             post.UpdatedOn = DateTime.UtcNow;
 
             _postRepository.Update(post);
             _postRepository.Save();
+            var attachments = await _postAttachmentRepository.GetAll().Where(x => x.PostId == model.Id).ToListAsync();
 
-
-            // add images url
-
-            var imageList = await _postAttachmentRepository.GetAll().Where(x => x.PostId == model.Id && x.FileType == (int)FileTypeEnum.Image).ToListAsync();
-            var imagesUrls = JsonConvert.DeserializeObject<IEnumerable<UploadUrls>>(model.UploadImagesUrls);
-
-            foreach (var item in imageList)
+            foreach (var item in attachments)
             {
-                if (!imagesUrls.Any(X => X.ImageUrl == item.FileUrl))
+                if (!model.BlobUrls.Any(x => x.BlobUrl == item.FileUrl))
                 {
                     var attachment = await _postAttachmentRepository.GetAll().Where(x => x.FileUrl == item.FileUrl).FirstAsync();
                     _postAttachmentRepository.Delete(attachment.Id);
-                    _postAttachmentRepository.Save();
+                    //_postAttachmentRepository.Save();
                 }
             }
 
-            var videoList = await _postAttachmentRepository.GetAll().Where(x => x.PostId == model.Id && x.FileType == (int)FileTypeEnum.Video).ToListAsync();
-            var videosUrls = JsonConvert.DeserializeObject<IEnumerable<UploadUrls>>(model.UploadVideosUrls);
-
-            foreach (var item in videoList)
+            foreach (var item in model.BlobUrls)
             {
-                if (!videosUrls.Any(X => X.Name == item.FileName))
+                if (!attachments.Any(x => x.FileUrl == item.BlobUrl))
                 {
-                    var attachment = await _postAttachmentRepository.GetAll().Where(x => x.FileName == item.FileName).FirstAsync();
-                    _postAttachmentRepository.Delete(attachment.Id);
-                    _postAttachmentRepository.Save();
+                    var attachment = new PostAttachment
+                    {
+                        Id = item.Id,
+                        CreatedById = createdById,
+                        CreatedOn = DateTime.UtcNow,
+                        FileName = item.BlobName,
+                        FileType = Convert.ToInt32(item.FileType),
+                        FileUrl = item.BlobUrl,
+                        IsCompressed = false,
+                        PostId = post.Id
+                    };
+                    _postAttachmentRepository.Insert(attachment);
+                    //_postAttachmentRepository.Save();
                 }
             }
+            _postAttachmentRepository.Save();
 
-            var attachmentList = await _postAttachmentRepository.GetAll().Where(x => x.PostId == model.Id && x.FileType == (int)FileTypeEnum.Attachment).ToListAsync();
-            var attachmentsUrls = JsonConvert.DeserializeObject<IEnumerable<UploadUrls>>(model.UploadAttachmentsUrls);
-
-            foreach (var item in attachmentList)
-            {
-                if (!attachmentsUrls.Any(X => X.Name == item.FileName))
-                {
-                    var attachment = await _postAttachmentRepository.GetAll().Where(x => x.FileName == item.FileName).FirstAsync();
-                    _postAttachmentRepository.Delete(attachment.Id);
-                    _postAttachmentRepository.Save();
-                }
-            }
-
+            //_postRepository.Update(post);
+            //_postRepository.Save();
             return model.Id;
-
-
         }
 
         //public async Task SavePostsInCache(PostViewModel postViewModel)

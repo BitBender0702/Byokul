@@ -68,6 +68,7 @@ export class SchoolFollowersComponent extends MultilingualComponent implements O
       this._schoolService.getSchoolFollowers(this.schoolId,this.schoolFollowersPageNumber,this.searchString).subscribe((response) => {
         debugger
         this.schoolFollowers = response;
+        
         this.loadingIcon = false;
         this.isDataLoaded = true;
         this.isOwnerOrNot(this.schoolFollowers[0].school.createdById);

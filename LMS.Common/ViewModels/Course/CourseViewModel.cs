@@ -47,6 +47,7 @@ namespace LMS.Common.ViewModels.Course
         public int CommentsCount { get; set; }
         public bool IsCourseLikedByCurrentUser { get; set; }
         public bool? IsDisableByOwner { get; set; }
+        public bool IsCommentsDisabled { get; set; }
 
 
     }

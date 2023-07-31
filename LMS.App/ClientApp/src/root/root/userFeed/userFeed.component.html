@@ -10,7 +10,7 @@
             <ng-container *ngTemplateOutlet="globalSearchResults; context: { showSearchResults: showSearchResults }"
              ></ng-container>
             <button type="button" class="btn search-icon">
-              <img src="../../../assets/images/school/search-gray.svg" />
+              <img lazyLoad="../../../assets/images/school/search-gray.svg" />
             </button>
           </div>
           <button (click)="openPostModal()" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44">
@@ -20,11 +20,11 @@
         <div class="live-header d-flex align-items-center justify-content-between">
           <button (click)="back()" mat-mini-fab type="button"
             class="back-button bg-transparent border-0 font_16 fw_400 text_dark  d-xl-none">
-            <img src="../../../../assets/images/arrow-left.svg" />
+            <img lazyLoad="../../../../assets/images/arrow-left.svg" />
             {{ "Back" | translate }}
           </button>
           <span class="logo_mobile d-xl-none">
-            <img src="../../../assets/images/logo.svg" />
+            <img lazyLoad="../../../assets/images/logo.svg" />
           </span>
           <div class="d-xl-none d-flex">
             <!-- <button
@@ -32,25 +32,25 @@
             class="mobile-search border_btn"
             onclick="openSearch()"
           >
-            <img src="../../../assets/images/search-lg.svg" />
+            <img lazyLoad="../../../assets/images/search-lg.svg" />
           </button> -->
             <div class="search-header position-relative me-2">
               <input [(ngModel)]="searchString" class="form-control h_44" type="search" #searchInput
                 (input)="globalSearch()" />
               <ng-container *ngTemplateOutlet="globalSearchResults; context: { showSearchResults: showSearchResults }"></ng-container>
               <button type="button" class="btn search-icon">
-                <img src="../../../assets/images/school/search-gray.svg" />
+                <img lazyLoad="../../../assets/images/school/search-gray.svg" />
               </button>
             </div>
             <button type="button" class="mobile-search border_btn" (click)="openSidebar()">
-              <img src="../../../assets/images/menu.svg" />
+              <img lazyLoad="../../../assets/images/menu.svg" />
             </button>
           </div>
         </div>
         <div class="d-flex justify-content-end mt-5 create_post_btn">
           <button (click)="openPostModal()" type="button"
             class="step-edit-button btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase next-step">
-            <img src="../../../assets/images/Edit-light.svg" alt="edit" />
+            <img lazyLoad="../../../assets/images/Edit-light.svg" alt="edit" />
           </button>
         </div>
         <div
@@ -100,14 +100,14 @@
                     : 'btn border-btn d-inline-flex align-items-center justify-content-center'
                 " (click)="profileList()" type="button"
                 class="btn border-btn d-inline-flex align-items-center justify-content-center">
-                <img src="../../../../assets/images/Category.svg" />
+                <img lazyLoad="../../../../assets/images/Category.svg" />
               </button>
               <button [ngClass]="
                   isProfileGrid
                     ? 'btn border-btn active d-inline-flex align-items-center justify-content-center'
                     : 'btn border-btn d-inline-flex align-items-center justify-content-center'
                 " (click)="profileGrid()" type="button">
-                <img src="../../../../assets/images/Filter.svg" />
+                <img lazyLoad="../../../../assets/images/Filter.svg" />
               </button>
             </div>
             <div class="feed-section mt-0">
@@ -124,20 +124,20 @@
                             <div class="feedimg-box position-relative text-light position-relative">
                               <a (click)="openReelsViewModal(postAttachment.id,1)" style="cursor: pointer">
                                 <div class="videofile">
-                                  <img style="height: 300px" [src]="postAttachment.fileThumbnail" />
+                                  <img style="height: 300px" [lazyLoad]="postAttachment.fileThumbnail" />
                                 </div>
                               </a>
                               <div class="pinned-view d-flex justify-content-between align-items-start">
                                 <button type="button"
                                   class="view font_12 bg-transparent border-0 text-light cursor_auto">
-                                  <img src="../../../assets/images/eye-light.svg" />
+                                  <img lazyLoad="../../../assets/images/eye-light.svg" />
                                   {{ post.views.length }}
                                 </button>
                               </div>
                               <div class="feed-name font_14 text_sec1">
                                 <a *ngIf="post.postAuthorType == 1" (click)="getSelectedSchool(post.parentName)"
                                   class="routeLink">
-                                  <img [src]="post.parentImageUrl" />
+                                  <img [lazyLoad]="post.parentImageUrl" />
                                   {{ post.parentName }}
                                 </a>
                                 <a *ngIf="post.postAuthorType == 2" (click)="
@@ -149,7 +149,7 @@
                                     '/profile/class',
                                     post.parentName
                                   ]" class="routeLink">
-                                  <img [src]="post.parentImageUrl" />
+                                  <img [lazyLoad]="post.parentImageUrl" />
                                   {{ post.parentName }}
                                 </a>
                                 <a *ngIf="post.postAuthorType == 3" (click)="
@@ -158,23 +158,23 @@
                                       post.schoolName
                                     )
                                   " class="routeLink">
-                                  <img [src]="post.parentImageUrl" />
+                                  <img [lazyLoad]="post.parentImageUrl" />
                                   {{ post.parentName }}
                                 </a>
                                 <a *ngIf="post.postAuthorType == 4" (click)="getUserDetails(post.parentId)"
                                   class="routeLink">
-                                  <img *ngIf="post.parentImageUrl != null" [src]="post.parentImageUrl" />
+                                  <img *ngIf="post.parentImageUrl != null" [lazyLoad]="post.parentImageUrl" />
                                   <img *ngIf="
                                       post.parentImageUrl == null &&
                                       gender == '1'
-                                    " src="../../../assets/images/maleProfile.jfif" />
+                                    " lazyLoad="../../../assets/images/maleProfile.jfif" />
                                   <img *ngIf="
                                       post.parentImageUrl == null &&
                                       (gender == '2' || gender == '3')
-                                    " src="../../../assets/images/femaleProfile.jfif" />
+                                    " lazyLoad="../../../assets/images/femaleProfile.jfif" />
                                   {{ post.parentName }}
                                 </a>
-                                <!-- <img [src]="school.avatar"/> {{school.schoolName}} -->
+                                <!-- <img [lazyLoad]="school.avatar"/> {{school.schoolName}} -->
                               </div>
                               <div class="feed-title font_14 text_sec1 d-flex align-content-center fw_600">
                                 {{ post.title }}
@@ -217,29 +217,29 @@
                 <div *ngIf="post.postType == 1" class="school-grid-box position-relative">
                   <div class="schoolgrid-header d-flex align-items-center position-relative">
                     <div class="school-gridprofile-icon">
-                      <!-- <img [src]="post.parentImageUrl"/> -->
+                      <!-- <img [lazyLoad]="post.parentImageUrl"/> -->
                       <a *ngIf="post.postAuthorType == 1" (click)="getSelectedSchool(post.parentName)"
                         class="routeLink">
-                        <img [src]="post.parentImageUrl" />
+                        <img [lazyLoad]="post.parentImageUrl" />
                       </a>
                       <a *ngIf="post.postAuthorType == 2" (click)="
                           getSelectedClass(post.parentName, post.schoolName)
                         " class="routeLink">
-                        <img [src]="post.parentImageUrl" />
+                        <img [lazyLoad]="post.parentImageUrl" />
                       </a>
                       <a *ngIf="post.postAuthorType == 3" (click)="
                           getSelectedCourse(post.parentName, post.schoolName)
                         " class="routeLink">
-                        <img [src]="post.parentImageUrl" />
+                        <img [lazyLoad]="post.parentImageUrl" />
                       </a>
                       <a *ngIf="post.postAuthorType == 4" (click)="getUserDetails(post.parentId)" class="routeLink">
-                        <img *ngIf="post.parentImageUrl != null" [src]="post.parentImageUrl" />
+                        <img *ngIf="post.parentImageUrl != null" [lazyLoad]="post.parentImageUrl" />
                         <img *ngIf="post.parentImageUrl == null && gender == '1'"
-                          src="../../../assets/images/maleProfile.jfif" />
+                          lazyLoad="../../../assets/images/maleProfile.jfif" />
                         <img *ngIf="
                             post.parentImageUrl == null &&
                             (gender == '2' || gender == '3')
-                          " src="../../../assets/images/femaleProfile.jfif" />
+                          " lazyLoad="../../../assets/images/femaleProfile.jfif" />
                       </a>
                     </div>
                     <h2 class="d-inline-block font_20 fw_600 text_sec1 mb-0">
@@ -267,10 +267,10 @@
                       <!-- <span class="fw_600 ">11:30 - 13:50</span> -->
                     </p>
                     <!-- <button *ngIf="post.isPinned && isOwner" (click)="pinUnpinPost(post.id,false)" type="button" class="bg-transparent border-0 pinned-grid-chat">
-                      <img class="w-auto h-auto" src="../../../../assets/images/pinned-orange.svg" />
+                      <img class="w-auto h-auto" lazyLoad="../../../../assets/images/pinned-orange.svg" />
                     </button>
                     <button *ngIf="!post.isPinned && isOwner" (click)="pinUnpinPost(post.id,true)" type="button" class="bg-transparent border-0 pinned-grid-chat">
-                     <img class="w-auto h-auto" src="../../../../assets/images/pinned-gray.svg" />
+                     <img class="w-auto h-auto" lazyLoad="../../../../assets/images/pinned-gray.svg" />
                     </button>    -->
                   </div>
 
@@ -301,9 +301,9 @@
                             <img *ngIf="
                                 post.postAttachments.length == 1 &&
                                 post.postAttachments[0]?.fileType == 2
-                              " class="" style="cursor: pointer" [src]="post.postAttachments[0]?.fileThumbnail" />
+                              " class="" style="cursor: pointer" [lazyLoad]="post.postAttachments[0]?.fileThumbnail" />
                             <img *ngIf="post.postAttachments[0]?.fileType == 1" style="cursor: pointer" class=""
-                              [src]="post.postAttachments[0]?.fileUrl" />
+                              [lazyLoad]="post.postAttachments[0]?.fileUrl" />
                           </div>
                         </div>
 
@@ -312,11 +312,11 @@
                             <ng-container *ngFor="let attachment of post.postAttachments">
                               <div *ngIf="attachment?.fileType == 2" style="width: 50%">
                                 <img *ngIf="attachment?.fileType == 2" preload="metadata" class=""
-                                  style="cursor: pointer" [src]="attachment?.fileThumbnail" />
+                                  style="cursor: pointer" [lazyLoad]="attachment?.fileThumbnail" />
                               </div>
                               <div style="width: 50%">
                                 <img style="cursor: pointer" *ngIf="attachment?.fileType == 1" class="w-100"
-                                  [src]="attachment?.fileUrl" />
+                                  [lazyLoad]="attachment?.fileUrl" />
                               </div>
                             </ng-container>
                           </div>
@@ -326,9 +326,9 @@
                           <div class="school-large-thumbnail shadow-thumnail position-relative">
                             <img *ngIf="post.postAttachments[0]?.fileType == 2" class="w-100"
                               style="cursor: pointer; margin-top: -700px"
-                              [src]="post.postAttachments[0]?.fileThumbnail" />
+                              [lazyLoad]="post.postAttachments[0]?.fileThumbnail" />
                             <img *ngIf="post.postAttachments[0]?.fileType == 1" style="cursor: pointer" class="w-100"
-                              [src]="post.postAttachments[0]?.fileUrl" />
+                              [lazyLoad]="post.postAttachments[0]?.fileUrl" />
                           </div>
                         </div>
 
@@ -336,15 +336,15 @@
                           <div class="h-100 medium_thumbox d-flex">
                             <div class="medium-thumnail">
                               <img *ngIf="post.postAttachments[1]?.fileType == 2" class="w-100" style="cursor: pointer"
-                                [src]="post.postAttachments[1]?.fileThumbnail" />
+                                [lazyLoad]="post.postAttachments[1]?.fileThumbnail" />
                               <img *ngIf="post.postAttachments[1]?.fileType == 1" class="w-100"
-                                [src]="post.postAttachments[1]?.fileUrl" style="cursor: pointer" />
+                                [lazyLoad]="post.postAttachments[1]?.fileUrl" style="cursor: pointer" />
                             </div>
                             <div class="medium-thumnail">
                               <img *ngIf="post.postAttachments[2]?.fileType == 2" class="w-100" style="cursor: pointer"
-                                [src]="post.postAttachments[2]?.fileThumbnail" />
+                                [lazyLoad]="post.postAttachments[2]?.fileThumbnail" />
                               <img *ngIf="post.postAttachments[2]?.fileType == 1" class="w-100"
-                                [src]="post.postAttachments[2]?.fileUrl" style="cursor: pointer" />
+                                [lazyLoad]="post.postAttachments[2]?.fileUrl" style="cursor: pointer" />
                             </div>
                           </div>
                         </div>
@@ -352,16 +352,16 @@
                         <div *ngIf="post.postAttachments.length > 3" class="col-md-8 h-100">
                           <div class="school-large-thumbnail shadow-thumnail position-relative">
                             <img *ngIf="post.postAttachments[0]?.fileType == 2" class="w-100" style="cursor: pointer"
-                              [src]="post.postAttachments[0]?.fileThumbnail" />
+                              [lazyLoad]="post.postAttachments[0]?.fileThumbnail" />
                             <img *ngIf="post.postAttachments[0]?.fileType == 1" class="w-100"
-                              [src]="post.postAttachments[0]?.fileUrl" style="cursor: pointer" />
+                              [lazyLoad]="post.postAttachments[0]?.fileUrl" style="cursor: pointer" />
                           </div>
                         </div>
 
                         <div *ngIf="post.postAttachments.length > 3" class="col-md-4 h-100">
                           <div class="h-100 medium_thumbox d-flex">
                             <div class="medium-thumnail">
-                              <img class="w-100 position-relative" src="../../../../assets/images/blurImage.jfif"
+                              <img class="w-100 position-relative" lazyLoad="../../../../assets/images/blurImage.jfif"
                                 style="cursor: pointer" />
                               <div class="position-absolute" style="
                                   margin-top: 55px;
@@ -374,9 +374,9 @@
                             </div>
                             <div class="medium-thumnail">
                               <img *ngIf="post.postAttachments[1]?.fileType == 2" preload="metadata" class="w-100"
-                                style="cursor: pointer" [src]="post.postAttachments[1]?.fileThumbnail" />
+                                style="cursor: pointer" [lazyLoad]="post.postAttachments[1]?.fileThumbnail" />
                               <img *ngIf="post.postAttachments[1]?.fileType == 1"
-                                [src]="post.postAttachments[1]?.fileUrl" class="w-100" style="cursor: pointer" />
+                                [lazyLoad]="post.postAttachments[1]?.fileUrl" class="w-100" style="cursor: pointer" />
                             </div>
                           </div>
                         </div>
@@ -385,15 +385,15 @@
                   </div>
                   <div *ngIf="post.postAttachments.length" class="school-grid-footer above-thumbnail">
                     <button type="button" class="bg-transparent border-0 function-btns text-light cursor_auto">
-                      <img src="../../../../assets/images/eye-light.svg" class="d-block mx-auto" />
+                      <img lazyLoad="../../../../assets/images/eye-light.svg" class="d-block mx-auto" />
                       {{ post.views.length }}
                     </button>
                     <button (click)="
                         likeUnlikePosts(post.id, true, post.postType, post)
                       " type="button" class="bg-transparent border-0 function-btns text-light">
-                      <img *ngIf="post.isPostLikedByCurrentUser" src="../../../assets/images/heart-red.svg"
+                      <img *ngIf="post.isPostLikedByCurrentUser" lazyLoad="../../../assets/images/heart-red.svg"
                         class="d-block mx-auto" />
-                      <img *ngIf="!post.isPostLikedByCurrentUser" src="../../../../assets/images/Heart-light.svg"
+                      <img *ngIf="!post.isPostLikedByCurrentUser" lazyLoad="../../../../assets/images/Heart-light.svg"
                         class="d-block mx-auto" />
 
                       <span *ngIf="
@@ -406,35 +406,35 @@
                     </button>
                     <button (click)="openPostsViewModal(post, 'myFeeds')" type="button"
                       class="bg-transparent border-0 function-btns text-light">
-                      <img src="../../../../assets/images/Chat-light.svg" class="d-block mx-auto" />
+                      <img lazyLoad="../../../../assets/images/Chat-light.svg" class="d-block mx-auto" />
                       {{ post.commentsCount }}
                     </button>
                     <button (click)="savePost(post.id)" type="button"
                       class="bg-transparent border-0 function-btns text-light">
-                      <img *ngIf="!post.isPostSavedByCurrentUser" src="../../../assets/images/Bookmark-light.svg"
+                      <img *ngIf="!post.isPostSavedByCurrentUser" lazyLoad="../../../assets/images/Bookmark-light.svg"
                         class="d-block mx-auto" />
-                      <img *ngIf="post.isPostSavedByCurrentUser" src="../../../assets/images/Bookmark-light.svg"
+                      <img *ngIf="post.isPostSavedByCurrentUser" lazyLoad="../../../assets/images/Bookmark-light.svg"
                         class="d-block mx-auto" />
                       {{ post.savedPostsCount }}
                     </button>
                     <button (click)="openSharePostModal(post.id, post.postType)" type="button"
                       class="bg-transparent border-0 function-btns text-light">
-                      <img src="../../../../assets/images/Upload-light.svg" class="d-block mx-auto" />
+                      <img lazyLoad="../../../../assets/images/Upload-light.svg" class="d-block mx-auto" />
                       {{ post.postSharedCount }}
                     </button>
                   </div>
 
                   <div *ngIf="post.postAttachments.length == 0" class="school-grid-footer">
                     <button type="button" class="bg-transparent border-0 function-btns text-light cursor_auto">
-                      <img src="../../../../assets/images/eye.svg" class="d-block mx-auto" />
+                      <img lazyLoad="../../../../assets/images/eye.svg" class="d-block mx-auto" />
                       <span class="textBlack">{{ post.views.length }}</span>
                     </button>
                     <button (click)="
                         likeUnlikePosts(post.id, true, post.postType, post)
                       " type="button" class="bg-transparent border-0 function-btns text-light">
-                      <img *ngIf="post.isPostLikedByCurrentUser" src="../../../assets/images/heart-red.svg"
+                      <img *ngIf="post.isPostLikedByCurrentUser" lazyLoad="../../../assets/images/heart-red.svg"
                         class="d-block mx-auto" />
-                      <img *ngIf="!post.isPostLikedByCurrentUser" src="../../../../assets/images/Heart-dark.svg"
+                      <img *ngIf="!post.isPostLikedByCurrentUser" lazyLoad="../../../../assets/images/Heart-dark.svg"
                         class="d-block mx-auto" />
 
                       <span class="textBlack" *ngIf="
@@ -445,20 +445,20 @@
                     </button>
                     <button (click)="openPostsViewModal(post, 'myFeeds')" type="button"
                       class="bg-transparent border-0 function-btns text-light">
-                      <img src="../../../../assets/images/Chat-dark.svg" class="d-block mx-auto" />
+                      <img lazyLoad="../../../../assets/images/Chat-dark.svg" class="d-block mx-auto" />
                       <span class="textBlack"> {{ post.commentsCount }}</span>
                     </button>
                     <button (click)="savePost(post.id)" type="button"
                       class="bg-transparent border-0 function-btns text-light">
-                      <img *ngIf="!post.isPostSavedByCurrentUser" src="../../../../assets/images/Bookmark-dark.svg"
+                      <img *ngIf="!post.isPostSavedByCurrentUser" lazyLoad="../../../../assets/images/Bookmark-dark.svg"
                         class="d-block mx-auto" />
-                      <img *ngIf="post.isPostSavedByCurrentUser" src="../../../assets/images/Bookmark-dark.svg"
+                      <img *ngIf="post.isPostSavedByCurrentUser" lazyLoad="../../../assets/images/Bookmark-dark.svg"
                         class="d-block mx-auto" />
                       <span class="textBlack">{{ post.savedPostsCount }}</span>
                     </button>
                     <button (click)="openSharePostModal(post.id, post.postType)" type="button"
                       class="bg-transparent border-0 function-btns text-light">
-                      <img src="../../../../assets/images/Upload-dark.svg" class="d-block mx-auto" />
+                      <img lazyLoad="../../../../assets/images/Upload-dark.svg" class="d-block mx-auto" />
                       <span class="textBlack">{{ post.postSharedCount }}</span>
                     </button>
                   </div>
@@ -529,7 +529,7 @@
                     <div class="class-preview-right position-relative h-100">
                       <button (click)="hideGridItemInfo('FromMyFeeds')" type="button"
                         class="bg-transparent border-0 close-preview">
-                        <img src="../../../../assets/images/cross.svg" />
+                        <img lazyLoad="../../../../assets/images/cross.svg" />
                       </button>
                       <div class="schoolgrid-header">
                         <div class="d-flex align-items-center position-relative">
@@ -537,7 +537,7 @@
                             <a *ngIf="gridItemInfo.postAuthorType == 1" (click)="
                                 getSelectedSchool(gridItemInfo.parentName)
                               " class="routeLink">
-                              <img [src]="gridItemInfo.parentImageUrl" />
+                              <img [lazyLoad]="gridItemInfo.parentImageUrl" />
                             </a>
                             <a *ngIf="gridItemInfo.postAuthorType == 2" (click)="
                                 getSelectedClass(
@@ -545,7 +545,7 @@
                                   gridItemInfo.schoolName
                                 )
                               " class="routeLink">
-                              <img [src]="gridItemInfo.parentImageUrl" />
+                              <img [lazyLoad]="gridItemInfo.parentImageUrl" />
                             </a>
                             <a *ngIf="gridItemInfo.postAuthorType == 3" (click)="
                                 getSelectedCourse(
@@ -553,19 +553,19 @@
                                   gridItemInfo.schoolName
                                 )
                               " class="routeLink">
-                              <img [src]="gridItemInfo.parentImageUrl" />
+                              <img [lazyLoad]="gridItemInfo.parentImageUrl" />
                             </a>
                             <a *ngIf="gridItemInfo.postAuthorType == 4" (click)="getUserDetails(gridItemInfo.parentId)"
                               class="routeLink">
-                              <img *ngIf="gridItemInfo.parentImageUrl != null" [src]="gridItemInfo.parentImageUrl" />
+                              <img *ngIf="gridItemInfo.parentImageUrl != null" [lazyLoad]="gridItemInfo.parentImageUrl" />
                               <img *ngIf="
                                   gridItemInfo.parentImageUrl == null &&
                                   gender == '1'
-                                " src="../../../assets/images/maleProfile.jfif" />
+                                " lazyLoad="../../../assets/images/maleProfile.jfif" />
                               <img *ngIf="
                                   gridItemInfo.parentImageUrl == null &&
                                   (gender == '2' || gender == '3')
-                                " src="../../../assets/images/femaleProfile.jfif" />
+                                " lazyLoad="../../../assets/images/femaleProfile.jfif" />
                             </a>
                           </div>
                           <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">
@@ -621,7 +621,7 @@
                       </div>
                       <div class="school-grid-footer preview-right-action">
                         <button type="button" class="bg-transparent border-0 function-btns cursor_auto">
-                          <img src="../../../../assets/images/eye.svg" class="d-block mx-auto" />
+                          <img lazyLoad="../../../../assets/images/eye.svg" class="d-block mx-auto" />
                           <span class="textBlack">{{
                             gridItemInfo.views.length
                             }}</span>
@@ -634,10 +634,10 @@
                               gridItemInfo
                             )
                           " type="button" class="bg-transparent border-0 function-btns text-light">
-                          <img *ngIf="gridItemInfo.isPostLikedByCurrentUser" src="../../../assets/images/heart-red.svg"
+                          <img *ngIf="gridItemInfo.isPostLikedByCurrentUser" lazyLoad="../../../assets/images/heart-red.svg"
                             class="d-block mx-auto" />
                           <img *ngIf="!gridItemInfo.isPostLikedByCurrentUser"
-                            src="../../../../assets/images/Heart-dark.svg" class="d-block mx-auto" />
+                            lazyLoad="../../../../assets/images/Heart-dark.svg" class="d-block mx-auto" />
 
                           <span class="textBlack" *ngIf="
                               likesLength != undefined &&
@@ -648,15 +648,15 @@
                         </button>
                         <button (click)="openPostsViewModal(gridItemInfo, 'myFeeds')" type="button"
                           class="bg-transparent border-0 function-btns">
-                          <img src="../../../../assets/images/Chat-dark.svg" class="d-block mx-auto" />
+                          <img lazyLoad="../../../../assets/images/Chat-dark.svg" class="d-block mx-auto" />
                           {{ gridItemInfo.commentsCount }}
                         </button>
                         <button (click)="savePost(gridItemInfo.id)" type="button"
                           class="bg-transparent border-0 function-btns">
                           <img *ngIf="!gridItemInfo.isPostSavedByCurrentUser"
-                            src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto" />
+                            lazyLoad="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto" />
                           <img *ngIf="gridItemInfo.isPostSavedByCurrentUser"
-                            src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto" />
+                            lazyLoad="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto" />
                           {{ gridItemInfo.savedPostsCount }}
                         </button>
                         <button (click)="
@@ -665,7 +665,7 @@
                               gridItemInfo.postType
                             )
                           " type="button" class="bg-transparent border-0 function-btns">
-                          <img src="../../../../assets/images/Upload-dark.svg" class="d-block mx-auto" />
+                          <img lazyLoad="../../../../assets/images/Upload-dark.svg" class="d-block mx-auto" />
                           {{ gridItemInfo.postSharedCount }}
                         </button>
                       </div>
@@ -680,12 +680,12 @@
                         <div class="school-gridprofile-icon">
                           <a *ngIf="post.postAuthorType == 1" (click)="getSelectedSchool(post.parentName)"
                             class="routeLink">
-                            <img [src]="post.parentImageUrl" />
+                            <img [lazyLoad]="post.parentImageUrl" />
                           </a>
                           <a *ngIf="post.postAuthorType == 2" (click)="
                               getSelectedClass(post.parentName, post.schoolName)
                             " class="routeLink">
-                            <img [src]="post.parentImageUrl" />
+                            <img [lazyLoad]="post.parentImageUrl" />
                           </a>
                           <a *ngIf="post.postAuthorType == 3" (click)="
                               getSelectedCourse(
@@ -693,17 +693,17 @@
                                 post.schoolName
                               )
                             " class="routeLink">
-                            <img [src]="post.parentImageUrl" />
+                            <img [lazyLoad]="post.parentImageUrl" />
                           </a>
                           <a *ngIf="post.postAuthorType == 4" (click)="getUserDetails(post.parentId)" class="routeLink">
-                            <img *ngIf="post.parentImageUrl != null" [src]="post.parentImageUrl" />
+                            <img *ngIf="post.parentImageUrl != null" [lazyLoad]="post.parentImageUrl" />
                             <img *ngIf="
                                 post.parentImageUrl == null && gender == '1'
-                              " src="../../../assets/images/maleProfile.jfif" />
+                              " lazyLoad="../../../assets/images/maleProfile.jfif" />
                             <img *ngIf="
                                 post.parentImageUrl == null &&
                                 (gender == '2' || gender == '3')
-                              " src="../../../assets/images/femaleProfile.jfif" />
+                              " lazyLoad="../../../assets/images/femaleProfile.jfif" />
                           </a>
                         </div>
                         <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">
@@ -728,15 +728,7 @@
                             {{ post.title }}
                           </a>
                         </h2>
-                        <!-- <button *ngIf="post.isPinned && isOwner" (click)="pinUnpinPost(post.id,false)" type="button" class="bg-transparent border-0 pinned-grid-chat">
-                            <img src="../../../../assets/images/pinned-orange.svg" />
-                      </button>
-                      <button *ngIf="!post.isPinned && isOwner" (click)="pinUnpinPost(post.id,true)" type="button" class="bg-transparent border-0 pinned-grid-chat">
-                          <img src="../../../../assets/images/pinned-gray.svg" />
-                      </button>    -->
-                      </div>
-                      <div class="school-grid-body">
-                        <div class="d-flex justify-content-between date-view-list">
+                        <div class="right-action">
                           <div>
                             <p *ngIf="post.dateTime != null" class="font_14 school-grid-date d-inline-block mb-0">
                               {{ post.dateTime | date : "MMMM d" }} -
@@ -744,10 +736,18 @@
                             </p>
                           </div>
                           <button type="button" class="view font_12 bg-transparent border-0 cursor_auto">
-                            <img src="../../../../assets/images/eye.svg" class="me-2" />
+                            <img lazyLoad="../../../../assets/images/eye.svg" class="me-2" />
                             {{ post.views.length }}
                           </button>
                         </div>
+                        <!-- <button *ngIf="post.isPinned && isOwner" (click)="pinUnpinPost(post.id,false)" type="button" class="bg-transparent border-0 pinned-grid-chat">
+                            <img lazyLoad="../../../../assets/images/pinned-orange.svg" />
+                      </button>
+                      <button *ngIf="!post.isPinned && isOwner" (click)="pinUnpinPost(post.id,true)" type="button" class="bg-transparent border-0 pinned-grid-chat">
+                          <img lazyLoad="../../../../assets/images/pinned-gray.svg" />
+                      </button>    -->
+                      </div>
+                      <div class="school-grid-body">
                         <div class="school-grid-thumbnail" style="cursor: pointer"
                           (click)="showPostDiv(post.id, 'FromMyFeeds')">
                           <div class="row gx-1">
@@ -759,12 +759,12 @@
                                   {{ post.description }}
                                 </div>
                                 <div *ngIf="post.postAttachments[0]?.fileType == 2" class="videofile">
-                                  <img style="height: 300px" [src]="
+                                  <img style="height: 300px" [lazyLoad]="
                                       post.postAttachments[0]?.fileThumbnail
                                     " />
                                 </div>
                                 <img *ngIf="post.postAttachments[0]?.fileType == 1" class="w-100"
-                                  [src]="post.postAttachments[0].fileUrl" />
+                                  [lazyLoad]="post.postAttachments[0].fileUrl" />
                               </div>
                             </div>
                           </div>
@@ -790,14 +790,14 @@
                     : 'btn border-btn d-inline-flex align-items-center justify-content-center'
                 " (click)="profileList()" type="button"
                 class="btn border-btn d-inline-flex align-items-center justify-content-center">
-                <img src="../../../../assets/images/Category.svg" />
+                <img lazyLoad="../../../../assets/images/Category.svg" />
               </button>
               <button [ngClass]="
               isProfileGrid
                 ? 'btn border-btn active d-inline-flex align-items-center justify-content-center'
                 : 'btn border-btn d-inline-flex align-items-center justify-content-center'
             " (click)="profileGrid()" type="button">
-            <img src="../../../../assets/images/Filter.svg" />
+            <img lazyLoad="../../../../assets/images/Filter.svg" />
           </button>
             </div>
             <div class="feed-section mt-0">
@@ -814,20 +814,20 @@
                             <div class="feedimg-box position-relative text-light position-relative">
                               <a (click)="openReelsViewModal(postAttachment.id,2)" style="cursor: pointer">
                                 <div class="videofile">
-                                  <img style="height: 300px" [src]="postAttachment.fileThumbnail" />
+                                  <img style="height: 300px" [lazyLoad]="postAttachment.fileThumbnail" />
                                 </div>
                               </a>
                               <div class="pinned-view d-flex justify-content-between align-items-start">
                                 <button type="button"
                                   class="view font_12 bg-transparent border-0 text-light cursor_auto">
-                                  <img src="../../../assets/images/eye-light.svg" />
+                                  <img lazyLoad="../../../assets/images/eye-light.svg" />
                                   {{ post.views.length }}
                                 </button>
                               </div>
                               <div class="feed-name font_14 text_sec1">
                                 <a *ngIf="post.postAuthorType == 1" (click)="getSelectedSchool(post.parentName)"
                                   class="routeLink">
-                                  <img [src]="post.parentImageUrl" />
+                                  <img [lazyLoad]="post.parentImageUrl" />
                                   {{ post.parentName }}
                                 </a>
                                 <a *ngIf="post.postAuthorType == 2" (click)="
@@ -836,7 +836,7 @@
                                       post.schoolName
                                     )
                                   " class="routeLink">
-                                  <img [src]="post.parentImageUrl" />
+                                  <img [lazyLoad]="post.parentImageUrl" />
                                   {{ post.parentName }}
                                 </a>
                                 <a *ngIf="post.postAuthorType == 3" (click)="
@@ -845,21 +845,21 @@
                                       post.schoolName
                                     )
                                   " class="routeLink">
-                                  <img [src]="post.parentImageUrl" />
+                                  <img [lazyLoad]="post.parentImageUrl" />
                                   {{ post.parentName }}
                                 </a>
                                 <a *ngIf="post.postAuthorType == 4" (click)="getUserDetails(post.parentId)"
                                   class="routeLink">
-                                  <img *ngIf="post.parentImageUrl != null" [src]="post.parentImageUrl" />
+                                  <img *ngIf="post.parentImageUrl != null" [lazyLoad]="post.parentImageUrl" />
                                   {{ post.parentName }}
                                   <img *ngIf="
                                       post.parentImageUrl == null &&
                                       gender == '1'
-                                    " src="../../../assets/images/maleProfile.jfif" />
+                                    " lazyLoad="../../../assets/images/maleProfile.jfif" />
                                   <img *ngIf="
                                       post.parentImageUrl == null &&
                                       (gender == '2' || gender == '3')
-                                    " src="../../../assets/images/femaleProfile.jfif" />
+                                    " lazyLoad="../../../assets/images/femaleProfile.jfif" />
                                 </a>
                               </div>
                               <div class="feed-title font_14 text_sec1 d-flex align-content-center fw_600">
@@ -886,26 +886,26 @@
                     <div class="school-gridprofile-icon">
                       <a *ngIf="post.postAuthorType == 1" (click)="getSelectedSchool(post.parentName)"
                         class="routeLink">
-                        <img [src]="post.parentImageUrl" />
+                        <img [lazyLoad]="post.parentImageUrl" />
                       </a>
                       <a *ngIf="post.postAuthorType == 2" (click)="
                           getSelectedClass(post.parentName, post.schoolName)
                         " class="routeLink">
-                        <img [src]="post.parentImageUrl" />
+                        <img [lazyLoad]="post.parentImageUrl" />
                       </a>
                       <a *ngIf="post.postAuthorType == 3" (click)="
                           getSelectedCourse(post.parentName, post.schoolName)
                         " class="routeLink">
-                        <img [src]="post.parentImageUrl" />
+                        <img [lazyLoad]="post.parentImageUrl" />
                       </a>
                       <a *ngIf="post.postAuthorType == 4" (click)="getUserDetails(post.parentId)" class="routeLink">
-                        <img *ngIf="post.parentImageUrl != null" [src]="post.parentImageUrl" />
+                        <img *ngIf="post.parentImageUrl != null" [lazyLoad]="post.parentImageUrl" />
                         <img *ngIf="post.parentImageUrl == null && gender == '1'"
-                          src="../../../assets/images/maleProfile.jfif" />
+                          lazyLoad="../../../assets/images/maleProfile.jfif" />
                         <img *ngIf="
                             post.parentImageUrl == null &&
                             (gender == '2' || gender == '3')
-                          " src="../../../assets/images/femaleProfile.jfif" />
+                          " lazyLoad="../../../assets/images/femaleProfile.jfif" />
                       </a>
                     </div>
                     <h2 class="d-inline-block font_20 fw_600 text_sec1 mb-0">
@@ -960,9 +960,9 @@
                             <img *ngIf="
                                 post.postAttachments.length == 1 &&
                                 post.postAttachments[0]?.fileType == 2
-                              " class="" style="cursor: pointer" [src]="post.postAttachments[0]?.fileThumbnail" />
+                              " class="" style="cursor: pointer" [lazyLoad]="post.postAttachments[0]?.fileThumbnail" />
                             <img *ngIf="post.postAttachments[0]?.fileType == 1" style="cursor: pointer" class=""
-                              [src]="post.postAttachments[0]?.fileUrl" />
+                              [lazyLoad]="post.postAttachments[0]?.fileUrl" />
                           </div>
                         </div>
 
@@ -970,9 +970,9 @@
                           <div class="school-large-thumbnail shadow-thumnail position-relative">
                             <ng-container *ngFor="let attachment of post.postAttachments">
                               <img *ngIf="attachment?.fileType == 2" class="" style="cursor: pointer"
-                                [src]="attachment?.fileThumbnail" />
+                                [lazyLoad]="attachment?.fileThumbnail" />
                               <img style="cursor: pointer" *ngIf="attachment?.fileType == 1" class=""
-                                [src]="attachment?.fileUrl" />
+                                [lazyLoad]="attachment?.fileUrl" />
                             </ng-container>
                           </div>
                         </div>
@@ -981,9 +981,9 @@
                           <div class="school-large-thumbnail shadow-thumnail position-relative">
                             <img *ngIf="post.postAttachments[0]?.fileType == 2" class="w-100"
                               style="cursor: pointer; margin-top: -700px"
-                              [src]="post.postAttachments[0]?.fileThumbnail" />
+                              [lazyLoad]="post.postAttachments[0]?.fileThumbnail" />
                             <img *ngIf="post.postAttachments[0]?.fileType == 1" style="cursor: pointer" class="w-100"
-                              [src]="post.postAttachments[0]?.fileUrl" />
+                              [lazyLoad]="post.postAttachments[0]?.fileUrl" />
                           </div>
                         </div>
 
@@ -991,15 +991,15 @@
                           <div class="h-100 medium_thumbox d-flex">
                             <div class="medium-thumnail">
                               <img *ngIf="post.postAttachments[1]?.fileType == 2" preload="metadata" class="w-100"
-                                style="cursor: pointer" [src]="post.postAttachments[1]?.fileThumbnail" />
+                                style="cursor: pointer" [lazyLoad]="post.postAttachments[1]?.fileThumbnail" />
                               <img *ngIf="post.postAttachments[1]?.fileType == 1" class="w-100"
-                                [src]="post.postAttachments[1]?.fileUrl" style="cursor: pointer" />
+                                [lazyLoad]="post.postAttachments[1]?.fileUrl" style="cursor: pointer" />
                             </div>
                             <div class="medium-thumnail">
                               <img *ngIf="post.postAttachments[2]?.fileType == 2" class="w-100" style="cursor: pointer"
-                                [src]="post.postAttachments[2]?.fileThumbnail" />
+                                [lazyLoad]="post.postAttachments[2]?.fileThumbnail" />
                               <img *ngIf="post.postAttachments[2]?.fileType == 1" class="w-100"
-                                [src]="post.postAttachments[2]?.fileUrl" style="cursor: pointer" />
+                                [lazyLoad]="post.postAttachments[2]?.fileUrl" style="cursor: pointer" />
                             </div>
                           </div>
                         </div>
@@ -1007,16 +1007,16 @@
                         <div *ngIf="post.postAttachments.length > 3" class="col-md-8 h-100">
                           <div class="school-large-thumbnail shadow-thumnail position-relative">
                             <img *ngIf="post.postAttachments[0]?.fileType == 2" preload="metadata" class="w-100"
-                              style="cursor: pointer" [src]="post.postAttachments[0]?.fileThumbnail" />
+                              style="cursor: pointer" [lazyLoad]="post.postAttachments[0]?.fileThumbnail" />
                             <img *ngIf="post.postAttachments[0]?.fileType == 1" class="w-100"
-                              [src]="post.postAttachments[0]?.fileUrl" style="cursor: pointer" />
+                              [lazyLoad]="post.postAttachments[0]?.fileUrl" style="cursor: pointer" />
                           </div>
                         </div>
 
                         <div *ngIf="post.postAttachments.length > 3" class="col-md-4 h-100">
                           <div class="h-100 medium_thumbox d-flex">
                             <div class="medium-thumnail position-relative">
-                              <img class="w-100 position-relative" src="../../../../assets/images/blurImage.jfif"
+                              <img class="w-100 position-relative" lazyLoad="../../../../assets/images/blurImage.jfif"
                                 style="cursor: pointer" />
                               <div class="position-absolute" style="
                                   top: 50%;
@@ -1028,9 +1028,9 @@
                             </div>
                             <div class="medium-thumnail">
                               <img *ngIf="post.postAttachments[1]?.fileType == 2" class="w-100" style="cursor: pointer"
-                                [src]="post.postAttachments[1]?.fileThumbnail" />
+                                [lazyLoad]="post.postAttachments[1]?.fileThumbnail" />
                               <img *ngIf="post.postAttachments[1]?.fileType == 1" class="w-100"
-                                [src]="post.postAttachments[1]?.fileUrl" style="cursor: pointer" />
+                                [lazyLoad]="post.postAttachments[1]?.fileUrl" style="cursor: pointer" />
                             </div>
                           </div>
                         </div>
@@ -1039,7 +1039,7 @@
                   </div>
                   <div *ngIf="post.postAttachments.length" class="school-grid-footer above-thumbnail">
                     <button type="button" class="bg-transparent border-0 function-btns text-light cursor_auto">
-                      <img src="../../../../assets/images/eye-light.svg" class="d-block mx-auto" />
+                      <img lazyLoad="../../../../assets/images/eye-light.svg" class="d-block mx-auto" />
                       {{ post.views.length }}
                     </button>
                     <button (click)="
@@ -1050,9 +1050,9 @@
                           post
                         )
                       " type="button" class="bg-transparent border-0 function-btns text-light">
-                      <img *ngIf="post.isPostLikedByCurrentUser" src="../../../assets/images/heart-red.svg"
+                      <img *ngIf="post.isPostLikedByCurrentUser" lazyLoad="../../../assets/images/heart-red.svg"
                         class="d-block mx-auto" />
-                      <img *ngIf="!post.isPostLikedByCurrentUser" src="../../../../assets/images/Heart-light.svg"
+                      <img *ngIf="!post.isPostLikedByCurrentUser" lazyLoad="../../../../assets/images/Heart-light.svg"
                         class="d-block mx-auto" />
 
                       <span *ngIf="
@@ -1065,27 +1065,27 @@
                     </button>
                     <button (click)="openPostsViewModal(post, 'globalFeed')" type="button"
                       class="bg-transparent border-0 function-btns text-light">
-                      <img src="../../../../assets/images/Chat-light.svg" class="d-block mx-auto" />
+                      <img lazyLoad="../../../../assets/images/Chat-light.svg" class="d-block mx-auto" />
                       {{ post.commentsCount }}
                     </button>
                     <button (click)="savePost(post.id)" type="button"
                       class="bg-transparent border-0 function-btns text-light">
-                      <img *ngIf="!post.isPostSavedByCurrentUser" src="../../../assets/images/Bookmark-light.svg"
+                      <img *ngIf="!post.isPostSavedByCurrentUser" lazyLoad="../../../assets/images/Bookmark-light.svg"
                         class="d-block mx-auto" />
-                      <img *ngIf="post.isPostSavedByCurrentUser" src="../../../assets/images/Bookmark-light.svg"
+                      <img *ngIf="post.isPostSavedByCurrentUser" lazyLoad="../../../assets/images/Bookmark-light.svg"
                         class="d-block mx-auto" />
                       {{ post.savedPostsCount }}
                     </button>
                     <button (click)="openSharePostModal(post.id, post.postType)" type="button"
                       class="bg-transparent border-0 function-btns text-light">
-                      <img src="../../../../assets/images/Upload-light.svg" class="d-block mx-auto" />
+                      <img lazyLoad="../../../../assets/images/Upload-light.svg" class="d-block mx-auto" />
                       {{ post.postSharedCount }}
                     </button>
                   </div>
 
                   <div *ngIf="post.postAttachments.length == 0" class="school-grid-footer">
                     <button type="button" class="bg-transparent border-0 function-btns text-light cursor_auto">
-                      <img src="../../../../assets/images/eye.svg" class="d-block mx-auto" />
+                      <img lazyLoad="../../../../assets/images/eye.svg" class="d-block mx-auto" />
                       <span class="textBlack">{{ post.views.length }}</span>
                     </button>
                     <button (click)="
@@ -1096,9 +1096,9 @@
                           post
                         )
                       " type="button" class="bg-transparent border-0 function-btns text-light">
-                      <img *ngIf="post.isPostLikedByCurrentUser" src="../../../assets/images/heart-red.svg"
+                      <img *ngIf="post.isPostLikedByCurrentUser" lazyLoad="../../../assets/images/heart-red.svg"
                         class="d-block mx-auto" />
-                      <img *ngIf="!post.isPostLikedByCurrentUser" src="../../../../assets/images/Heart-dark.svg"
+                      <img *ngIf="!post.isPostLikedByCurrentUser" lazyLoad="../../../../assets/images/Heart-dark.svg"
                         class="d-block mx-auto" />
 
                       <span class="textBlack" *ngIf="
@@ -1109,20 +1109,20 @@
                     </button>
                     <button (click)="openPostsViewModal(post, 'globalFeed')" type="button"
                       class="bg-transparent border-0 function-btns text-light">
-                      <img src="../../../../assets/images/Chat-dark.svg" class="d-block mx-auto" />
+                      <img lazyLoad="../../../../assets/images/Chat-dark.svg" class="d-block mx-auto" />
                       <span class="textBlack">{{ post.commentsCount }}</span>
                     </button>
                     <button (click)="savePost(post.id)" type="button"
                       class="bg-transparent border-0 function-btns text-light">
-                      <img *ngIf="!post.isPostSavedByCurrentUser" src="../../../assets/images/Bookmark-dark.svg"
+                      <img *ngIf="!post.isPostSavedByCurrentUser" lazyLoad="../../../assets/images/Bookmark-dark.svg"
                         class="d-block mx-auto" />
-                      <img *ngIf="post.isPostSavedByCurrentUser" src="../../../assets/images/Bookmark-dark.svg"
+                      <img *ngIf="post.isPostSavedByCurrentUser" lazyLoad="../../../assets/images/Bookmark-dark.svg"
                         class="d-block mx-auto" />
                       <span class="textBlack">{{ post.savedPostsCount }}</span>
                     </button>
                     <button (click)="openSharePostModal(post.id, post.postType)" type="button"
                       class="bg-transparent border-0 function-btns text-light">
-                      <img src="../../../../assets/images/Upload-dark.svg" class="d-block mx-auto" />
+                      <img lazyLoad="../../../../assets/images/Upload-dark.svg" class="d-block mx-auto" />
                       <span class="textBlack">{{ post.postSharedCount }}</span>
                     </button>
                   </div>
@@ -1153,12 +1153,12 @@
                           <slide *ngIf="postAttachment.fileType == 2">
                             <div *ngIf="postAttachment?.fileType == 2" class="videofile">
                               <video [id] = "getRandomClass(i,false)" controls class="video-js vjs-big-play-centered" preload="metadata">
-                                <source [src]="postAttachment?.fileUrl" type="video/mp4" />
+                                <source [lazyLoad]="postAttachment?.fileUrl" type="video/mp4" />
                               </video>
                             </div>
                           </slide>
                           <slide *ngIf="postAttachment?.fileType == 1">
-                            <img *ngIf="postAttachment?.fileType == 1" class="w-100" [src]="postAttachment?.fileUrl" />
+                            <img *ngIf="postAttachment?.fileType == 1" class="w-100" [lazyLoad]="postAttachment?.fileUrl" />
                           </slide>
                         </div>
                       </carousel>
@@ -1171,7 +1171,7 @@
                       <div class="class-preview-right position-relative h-100">
                         <button (click)="hideGridItemInfo('FromGlobalFeeds')" type="button"
                           class="bg-transparent border-0 close-preview">
-                          <img src="../../../../assets/images/cross.svg" />
+                          <img lazyLoad="../../../../assets/images/cross.svg" />
                         </button>
                         <div class="schoolgrid-header">
                           <div class="d-flex align-items-center position-relative">
@@ -1181,7 +1181,7 @@
                                     gridItemInfoForGlobal.parentName
                                   )
                                 " class="routeLink">
-                                <img [src]="gridItemInfoForGlobal.parentImageUrl" />
+                                <img [lazyLoad]="gridItemInfoForGlobal.parentImageUrl" />
                               </a>
                               <a *ngIf="gridItemInfoForGlobal.postAuthorType == 2" (click)="
                                   getSelectedClass(
@@ -1189,7 +1189,7 @@
                                     gridItemInfoForGlobal.schoolName
                                   )
                                 " class="routeLink">
-                                <img [src]="gridItemInfoForGlobal.parentImageUrl" />
+                                <img [lazyLoad]="gridItemInfoForGlobal.parentImageUrl" />
                               </a>
                               <a *ngIf="gridItemInfoForGlobal.postAuthorType == 3" (click)="
                                   getSelectedCourse(
@@ -1197,23 +1197,23 @@
                                     gridItemInfoForGlobal.schoolName
                                   )
                                 " class="routeLink">
-                                <img [src]="gridItemInfoForGlobal.parentImageUrl" />
+                                <img [lazyLoad]="gridItemInfoForGlobal.parentImageUrl" />
                               </a>
                               <a *ngIf="gridItemInfoForGlobal.postAuthorType == 4" (click)="
                                   getUserDetails(gridItemInfoForGlobal.parentId)
                                 " class="routeLink">
                                 <img *ngIf="
                                     gridItemInfoForGlobal.parentImageUrl != null
-                                  " [src]="gridItemInfoForGlobal.parentImageUrl" />
+                                  " [lazyLoad]="gridItemInfoForGlobal.parentImageUrl" />
                                 <img *ngIf="
                                     gridItemInfoForGlobal.parentImageUrl ==
                                       null && gender == '1'
-                                  " src="../../../assets/images/maleProfile.jfif" />
+                                  " lazyLoad="../../../assets/images/maleProfile.jfif" />
                                 <img *ngIf="
                                     gridItemInfoForGlobal.parentImageUrl ==
                                       null &&
                                     (gender == '2' || gender == '3')
-                                  " src="../../../assets/images/femaleProfile.jfif" />
+                                  " lazyLoad="../../../assets/images/femaleProfile.jfif" />
                               </a>
                             </div>
                             <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">
@@ -1279,7 +1279,7 @@
                         </div>
                         <div class="school-grid-footer preview-right-action">
                           <button type="button" class="bg-transparent border-0 function-btns cursor_auto">
-                            <img src="../../../../assets/images/eye.svg" class="d-block mx-auto" />
+                            <img lazyLoad="../../../../assets/images/eye.svg" class="d-block mx-auto" />
                             <span class="textBlack">{{
                               gridItemInfoForGlobal.views.length
                               }}</span>
@@ -1294,10 +1294,10 @@
                             " type="button" class="bg-transparent border-0 function-btns text-light">
                             <img *ngIf="
                                 gridItemInfoForGlobal.isPostLikedByCurrentUser
-                              " src="../../../assets/images/heart-red.svg" class="d-block mx-auto" />
+                              " lazyLoad="../../../assets/images/heart-red.svg" class="d-block mx-auto" />
                             <img *ngIf="
                                 !gridItemInfoForGlobal.isPostLikedByCurrentUser
-                              " src="../../../../assets/images/Heart-dark.svg" class="d-block mx-auto" />
+                              " lazyLoad="../../../../assets/images/Heart-dark.svg" class="d-block mx-auto" />
   
                             <span class="textBlack" *ngIf="
                                 likesLength != undefined &&
@@ -1313,17 +1313,17 @@
                                 'globalFeed'
                               )
                             " type="button" class="bg-transparent border-0 function-btns">
-                            <img src="../../../../assets/images/Chat-dark.svg" class="d-block mx-auto" />
+                            <img lazyLoad="../../../../assets/images/Chat-dark.svg" class="d-block mx-auto" />
                             {{ gridItemInfoForGlobal.commentsCount }}
                           </button>
                           <button (click)="savePost(gridItemInfoForGlobal.id)" type="button"
                             class="bg-transparent border-0 function-btns">
                             <img *ngIf="
                                 !gridItemInfoForGlobal.isPostSavedByCurrentUser
-                              " src="../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto" />
+                              " lazyLoad="../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto" />
                             <img *ngIf="
                                 gridItemInfoForGlobal.isPostSavedByCurrentUser
-                              " src="../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto" />
+                              " lazyLoad="../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto" />
                             {{ gridItemInfoForGlobal.savedPostsCount }}
                           </button>
                           <button (click)="
@@ -1332,7 +1332,7 @@
                                 gridItemInfoForGlobal.postType
                               )
                             " type="button" class="bg-transparent border-0 function-btns">
-                            <img src="../../../../assets/images/Upload-dark.svg" class="d-block mx-auto" />
+                            <img lazyLoad="../../../../assets/images/Upload-dark.svg" class="d-block mx-auto" />
                             {{ gridItemInfoForGlobal.postSharedCount }}
                           </button>
                         </div>
@@ -1347,12 +1347,12 @@
                         <div class="school-gridprofile-icon">
                           <a *ngIf="post.postAuthorType == 1" (click)="getSelectedSchool(post.parentName)"
                             class="routeLink">
-                            <img [src]="post.parentImageUrl" />
+                            <img [lazyLoad]="post.parentImageUrl" />
                           </a>
                           <a *ngIf="post.postAuthorType == 2" (click)="
                               getSelectedClass(post.parentName, post.schoolName)
                             " class="routeLink">
-                            <img [src]="post.parentImageUrl" />
+                            <img [lazyLoad]="post.parentImageUrl" />
                           </a>
                           <a *ngIf="post.postAuthorType == 3" (click)="
                               getSelectedCourse(
@@ -1360,17 +1360,17 @@
                                 post.schoolName
                               )
                             " class="routeLink">
-                            <img [src]="post.parentImageUrl" />
+                            <img [lazyLoad]="post.parentImageUrl" />
                           </a>
                           <a *ngIf="post.postAuthorType == 4" (click)="getUserDetails(post.parentId)" class="routeLink">
-                            <img *ngIf="post.parentImageUrl != null" [src]="post.parentImageUrl" />
+                            <img *ngIf="post.parentImageUrl != null" [lazyLoad]="post.parentImageUrl" />
                             <img *ngIf="
                                 post.parentImageUrl == null && gender == '1'
-                              " src="../../../assets/images/maleProfile.jfif" />
+                              " lazyLoad="../../../assets/images/maleProfile.jfif" />
                             <img *ngIf="
                                 post.parentImageUrl == null &&
                                 (gender == '2' || gender == '3')
-                              " src="../../../assets/images/femaleProfile.jfif" />
+                              " lazyLoad="../../../assets/images/femaleProfile.jfif" />
                           </a>
                         </div>
                         <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">
@@ -1395,9 +1395,7 @@
                             {{ post.title }}
                           </a>
                         </h2>
-                      </div>
-                      <div class="school-grid-body">
-                        <div class="d-flex justify-content-between date-view-list">
+                        <div class="right-action">
                           <div>
                             <p *ngIf="post.dateTime != null" class="font_14 school-grid-date d-inline-block mb-0">
                               {{ post.dateTime | date : "MMMM d" }} -
@@ -1405,10 +1403,12 @@
                             </p>
                           </div>
                           <button type="button" class="view font_12 bg-transparent border-0 cursor_auto">
-                            <img src="../../../../assets/images/eye.svg" class="me-2" />
+                            <img lazyLoad="../../../../assets/images/eye.svg" class="me-2" />
                             {{ post.views.length }}
                           </button>
                         </div>
+                      </div>
+                      <div class="school-grid-body">
                         <div class="school-grid-thumbnail" style="cursor: pointer"
                           (click)="showPostDiv(post.id, 'FromGlobalFeeds')">
                           <div class="row gx-1">
@@ -1420,12 +1420,12 @@
                                   {{ post.description }}
                                 </div>
                                 <div *ngIf="post.postAttachments[0]?.fileType == 2" class="videofile">
-                                  <img style="height: 300px" [src]="
+                                  <img style="height: 300px" [lazyLoad]="
                                       post.postAttachments[0]?.fileThumbnail
                                     " />
                                 </div>
                                 <img *ngIf="post.postAttachments[0]?.fileType == 1" class="w-100"
-                                  [src]="post.postAttachments[0].fileUrl" />
+                                  [lazyLoad]="post.postAttachments[0].fileUrl" />
                               </div>
                             </div>
                           </div>
@@ -1453,7 +1453,7 @@
             <div class="d-flex align-items-center justify-content-between">
               <span class="followers-name font_16 text_sec1">
                 <span class="serch-follow-image">
-                  <img [src]="item.avatar" class="rounded-circleimg_style"/>
+                  <img [lazyLoad]="item.avatar" class="rounded-circleimg_style"/>
                 </span>
                 <a class="routeLink" [routerLink]="['/profile/school', item.name]">{{ item.name }}</a></span>
             </div>
@@ -1462,7 +1462,7 @@
             <div class="d-flex align-items-center justify-content-between">
               <span class="followers-name font_16 text_sec1">
                 <span class="serch-follow-image">
-                  <img [src]="item.avatar" class="rounded-circle img_style" />
+                  <img [lazyLoad]="item.avatar" class="rounded-circle img_style" />
                   </span>
                    <a class="routeLink" [routerLink]="['/profile/class', item.schoolName, item.name]">{{ item.name
                   }}</a></span>
@@ -1472,7 +1472,7 @@
             <div class="d-flex align-items-center justify-content-between">
               <span class="followers-name font_16 text_sec1">
                 <span class="serch-follow-image">
-                  <img [src]="item.avatar" class="rounded-circle img_style" />
+                  <img [lazyLoad]="item.avatar" class="rounded-circle img_style" />
                   </span>
                   <a class="routeLink" [routerLink]="['/profile/course', item.schoolName, item.name]">{{ item.name
                   }}</a></span>
@@ -1482,7 +1482,7 @@
             <div class="d-flex align-items-center justify-content-between">
               <span class="followers-name font_16 text_sec1">
                 <span class="serch-follow-image">
-                  <img [src]="item.avatar" class="rounded-circle img_style" />
+                  <img [lazyLoad]="item.avatar" class="rounded-circle img_style" />
                   </span>
                   <a class="routeLink" [routerLink]="['/user/userProfile', item.id]">{{ item.name }}</a></span>
             </div>
@@ -1497,21 +1497,21 @@
         <li *ngIf="item.type == 4" class="search-results__item">
           <div class="d-flex align-items-center justify-content-between">
             <span class="followers-name font_16 text_sec1 fw_600">
-              <img [src]="item.avatar" class="rounded-circle me-2 img_style" style="max-height: 30px" />
+              <img [lazyLoad]="item.avatar" class="rounded-circle me-2 img_style" style="max-height: 30px" />
               <a class="routeLink" [routerLink]="['/user/userProfile', item.id]">{{ item.name }}</a></span>
           </div>
         </li>
         <li *ngIf="item.type == 1" class="search-results__item">
           <div class="d-flex align-items-center justify-content-between">
             <span class="followers-name font_16 text_sec1 fw_600">
-              <img [src]="item.avatar" class="rounded-circle me-2 img_style" style="max-height: 30px" />
+              <img [lazyLoad]="item.avatar" class="rounded-circle me-2 img_style" style="max-height: 30px" />
               <a class="routeLink" [routerLink]="['/profile/school', item.name]">{{ item.name }}</a></span>
           </div>
         </li>
         <li *ngIf="item.type == 2" class="search-results__item">
           <div class="d-flex align-items-center justify-content-between">
             <span class="followers-name font_16 text_sec1 fw_600">
-              <img [src]="item.avatar" class="rounded-circle me-2 img_style" style="max-height: 30px" />
+              <img [lazyLoad]="item.avatar" class="rounded-circle me-2 img_style" style="max-height: 30px" />
               <a class="routeLink" [routerLink]="['/profile/class', item.schoolName, item.name]">{{ item.name
                 }}</a></span>
           </div>
@@ -1519,7 +1519,7 @@
         <li *ngIf="item.type == 3" class="search-results__item">
           <div class="d-flex align-items-center justify-content-between">
             <span class="followers-name font_16 text_sec1 fw_600">
-              <img [src]="item.avatar" class="rounded-circle me-2 img_style" style="max-height: 30px" />
+              <img [lazyLoad]="item.avatar" class="rounded-circle me-2 img_style" style="max-height: 30px" />
               <a class="routeLink" [routerLink]="['/profile/course', item.schoolName, item.name]">{{ item.name
                 }}</a></span>
           </div>

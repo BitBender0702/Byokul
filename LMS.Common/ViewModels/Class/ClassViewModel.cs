@@ -47,6 +47,7 @@ namespace LMS.Common.ViewModels.Class
         public int CommentsCount { get; set; }
         public bool IsClassLikedByCurrentUser { get; set; }
         public bool? IsDisableByOwner { get; set; }
+        public bool IsCommentsDisabled { get; set; }
 
 
 

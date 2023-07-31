@@ -103,6 +103,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       debugger
       var selectedLang = localStorage.getItem("selectedLanguage");
       this.translate.use(selectedLang?? '');
+      let chatHeadObj = history.state.post;
       this.getSenderInfo();
         this.loadingIcon = true;
         this.ownerId = this.route.snapshot.paramMap.get('id')??'';

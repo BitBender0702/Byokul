@@ -80,10 +80,10 @@
         <div class="School-prof-header">
           <div class="d-flex">
             <div class="school-profile-icon rounded-circle user-profile-header">
-              <img *ngIf="user.avatar != null" [src]="user.avatar" />
+              <img *ngIf="user.avatar != null" [lazyLoad]="user.avatar" />
               <img
                 *ngIf="user.avatar == null && gender == '1'"
-                src="../../../assets/images/maleProfile.jfif"
+                lazyLoad="../../../assets/images/maleProfile.jfif"
               />
               <img
                 *ngIf="user.avatar == null && (gender == '2' || gender == '3')"
@@ -1092,7 +1092,7 @@
           <ng-container *ngTemplateOutlet="postFeedSection"></ng-container>
           <div class="row">
             <ng-container *ngFor="let post of user.posts; let i = index">
-              <div  class="col-12 imgDisplay" [class]="getRandomClass(i,true)" *ngIf="(isScreenPc && i % 3 == 0) || (isScreenTablet && i % 2 == 0) || (isScreenMobile && i % 1 == 0)"
+              <div  class="col-12 imgDisplay {{::getRandomClass(i,true)}}" *ngIf="(isScreenPc && i % 3 == 0) || (isScreenTablet && i % 2 == 0) || (isScreenMobile && i % 1 == 0)"
               style="display: none;">
               <div
               [ngClass]="
@@ -1121,10 +1121,10 @@
                           class="videofile"
                         >
                           <video
-                          [id] = "getRandomClass(i,false)"
-                            controls
+                          [id] = "getRandomClass(i,false)"                            
                             class="video-js vjs-big-play-centered"
-                            preload="metadata"
+                            controls
+                            preload="auto"                            
                           >
                             <source
                               [src]="postAttachment?.fileUrl"
@@ -1137,7 +1137,7 @@
                         <img
                           *ngIf="postAttachment?.fileType == 1"
                           class="w-100"
-                          [src]="postAttachment?.fileUrl"
+                          [lazyLoad]="postAttachment?.fileUrl"
                         />
                       </slide>
                     </div>
@@ -1158,7 +1158,7 @@
                             aria-expanded="false">
                             <i class="fa-solid fa-ellipsis"></i>
                           </button>
-                          <!-- <ul class="dropdown-menu">
+                          <ul class="dropdown-menu">
                             <li><a style="cursor: pointer;" class="dropdown-item"
                               (click)="getDeletedPostId(gridItemInfo?.id)" data-bs-toggle="modal" data-bs-target="#delete-Class">{{'Delete'| translate }}
                             </a>
@@ -1168,7 +1168,7 @@
                               <div *ngIf="gridItemInfo.updatedOn != null">(<span>{{ "UpdatedOn" | translate }} - </span> {{ gridItemInfo.updatedOn | date:'d MMMM y h:mm a' }})</div>
                             </a>
                             </li>
-                          </ul> -->
+                          </ul>
                         </div>
                       </li>
                     </ul>  
@@ -1330,7 +1330,7 @@
                   (post.postType == 1 && post.postAuthorType == 4) ||
                   post.isLive
                 "
-                class="col-md-6 col-xl-4" [class]="getRandomClass(i,false)" (click)="openDialouge($event)"
+                class="col-md-6 col-xl-4 {{::getRandomClass(i,false)}}" (click)="openDialouge($event,post)"
               >
                 <div
                   class="school-grid-box position-relative school-list-box h-100 mb-0"
@@ -1339,7 +1339,7 @@
                     class="schoolgrid-header d-flex align-items-center position-relative"
                   >
                     <div class="school-gridprofile-icon">
-                      <img *ngIf="user.avatar != null" [src]="user.avatar" />
+                      <img *ngIf="user.avatar != null" [lazyLoad]="user.avatar" />
                       <img
                         *ngIf="user.avatar == null && gender == '1'"
                         src="../../../assets/images/maleProfile.jfif"
@@ -1431,13 +1431,13 @@
                             >
                               <img
                                 style="height: 300px"
-                                [src]="post.postAttachments[0]?.fileThumbnail"
+                                [lazyLoad]="post.postAttachments[0]?.fileThumbnail"
                               />
                             </div>
                             <img
                               *ngIf="post.postAttachments[0]?.fileType == 1"
                               class="w-100"
-                              [src]="post.postAttachments[0].fileUrl"
+                              [lazyLoad]="post.postAttachments[0].fileUrl"
                             />
                           </div>
                         </div>

@@ -23,29 +23,18 @@ namespace LMS.Common.ViewModels.Post
         public DateTime CreatedOn { get; set; }
         public string CreatedBy { get; set; }
         public bool IsDeleted { get; set; }
-        public IEnumerable<IFormFile> PostAttachments { get; set; }
         public IEnumerable<string> PostTags { get; set; }
         public Guid ParentId { get; set; }
         public string? CoverLetter { get; set; }
-        public List<IFormFile> UploadImages { get; set; }
-        public List<IFormFile> UploadVideos { get; set; }
-        public List<IFormFile> UploadAttachments { get; set; }
-        //public IFormFile UploadReels { get; set; }
         public bool IsPinned { get; set; }
         public Boolean IsCommentsDisabled { get; set; }
         public DateTime? UpdatedOn { get; set; }
-        public List<IFormFile> UploadVideosThumbnail { get; set; }
-        public IEnumerable<string> UploadFromFileStorage { get; set; }
         public string? StreamUrl { get; set; }
         public int? CommentsPerMinute { get; set; }
         public bool? IsMicroPhoneOpen { get; set; }
         public Guid? ReelId { get; set; }
-
-
-        // here for update
-        public string? UploadImagesUrls { get; set; }
-        public string? UploadVideosUrls { get; set; }
-        public string? UploadAttachmentsUrls { get; set; }
+        public List<BlobUrlsViewModel> BlobUrls { get; set; }
+        public string BlobUrlsJson { get; set; }
 
     }
 

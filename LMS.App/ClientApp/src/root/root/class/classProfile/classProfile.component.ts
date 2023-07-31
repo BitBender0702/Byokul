@@ -366,7 +366,17 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
        if(!this.addPostSubscription){
        this.addPostSubscription = addPostResponse.subscribe((postResponse:any) => {
           // this.loadingIcon = true;
-          this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Post created successfully'});
+        //   if(postResponse.response.postType == 1){
+        //     var translatedMessage = this.translateService.instant('PostCreatedSuccessfully');
+        //   }
+        //   else if(postResponse.response.postType == 3){
+        //     var translatedMessage = this.translateService.instant('ReelCreatedSuccessfully');
+        //   }
+        //   else{
+        //     var translatedMessage = this.translateService.instant('PostUpdatedSuccessfully');
+        //   }
+        // const translatedSummary = this.translateService.instant('Success');
+        // this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage,});        
           this._classService.getClassById(this.className.replace(" ","").toLowerCase()).subscribe((response) => {
             this.class = response;
             this.titleService.setTitle(this.class.className);
@@ -1428,12 +1438,24 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
      }
  
      postDivId:string = "";
-     openDialouge(event:any){
+     openDialouge(event:any,post:any){
  debugger;
  const parts = event.currentTarget.className.split(' ');
  this.postDivId = parts[3];
- if(this.postDivId != ""){
-  videojs(this.postDivId);
+ if(post.postAttachments != undefined){
+  var postAttach = post.postAttachments[0];
+  debugger
+  if(postAttach != undefined){
+    if(postAttach.fileType != 1){
+      if(this.postDivId != ""){
+        try{
+          videojs(this.postDivId);
+        } catch{
+          var displayDivs = document.getElementsByClassName("imgDisplay");
+        }
+      }
+    }
+  }
 }
  var displayDivs = document.getElementsByClassName("imgDisplay");
  for (var i = 0; i < displayDivs.length; i++){

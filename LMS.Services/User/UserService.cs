@@ -866,6 +866,43 @@ namespace LMS.Services
             return result;
         }
 
+        public async Task<IEnumerable<GlobalFeedViewModel>> GetGlobalFeedFromCache(string userId, PostTypeEnum postType, int pageNumber, string? searchString)
+        {
+            int pageSize = 0;
+            if (postType == PostTypeEnum.Post)
+            {
+                pageSize = 12;
+            }
+
+            if (postType == PostTypeEnum.Reel)
+            {
+                pageSize = 8;
+            }
+            var tokenList = new List<string>();
+            var result = await _userPreferenceRepository.GetAll().Where(x => x.UserId == userId).FirstOrDefaultAsync();
+
+            if (result != null)
+            {
+                tokenList = result.PreferenceTokens.Split(' ').ToList();
+
+            }
+            else
+            {
+                tokenList = await GetDefaultGlobalfeeds(userId);
+            }
+
+            if (tokenList.Count() != 0)
+            {
+                var PostGUIDScore = await GenericCompareAlgo(String.Join(" ", tokenList), postType);
+                return await GetFeedResult(PostGUIDScore, userId, postType, pageNumber, pageSize, searchString, null, null);
+            }
+            else
+            {
+                return await GetDefaultFeeds(userId, postType, pageNumber, pageSize, searchString, null, null);
+            }
+
+        }
+
         public async Task<IEnumerable<GlobalFeedViewModel>> GetGlobalFeed(string userId, PostTypeEnum postType, int pageNumber, string? searchString)
         {
             int pageSize = 0;

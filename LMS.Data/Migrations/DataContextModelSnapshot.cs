@@ -216,6 +216,9 @@ namespace LMS.Data.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("IsCommentsDisabled")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsCourse")
                         .HasColumnType("bit");
 
@@ -616,6 +619,9 @@ namespace LMS.Data.Migrations
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsCommentsDisabled")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -2816,7 +2822,7 @@ namespace LMS.Data.Migrations
                         .HasForeignKey("DeletedById");
 
                     b.HasOne("LMS.Data.Entity.Post", "Post")
-                        .WithMany()
+                        .WithMany("Attachments")
                         .HasForeignKey("PostId");
 
                     b.Navigation("CreatedBy");
@@ -2829,7 +2835,7 @@ namespace LMS.Data.Migrations
             modelBuilder.Entity("LMS.Data.Entity.PostTag", b =>
                 {
                     b.HasOne("LMS.Data.Entity.Post", "Post")
-                        .WithMany()
+                        .WithMany("Tags")
                         .HasForeignKey("PostId");
 
                     b.Navigation("Post");
@@ -3277,6 +3283,13 @@ namespace LMS.Data.Migrations
             modelBuilder.Entity("LMS.Data.Entity.Chat.ChatMessage", b =>
                 {
                     b.Navigation("Attachments");
+                });
+
+            modelBuilder.Entity("LMS.Data.Entity.Post", b =>
+                {
+                    b.Navigation("Attachments");
+
+                    b.Navigation("Tags");
                 });
 
             modelBuilder.Entity("LMS.Data.Entity.User", b =>

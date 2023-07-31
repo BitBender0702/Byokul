@@ -25,6 +25,7 @@ namespace LMS.Common.ViewModels.School
         public long? Price { get; set; }
         public string? Description { get; set; }
         public DateTime CreatedOn { get; set; }
+        public String CreatedById { get; set; }
         public ClassCourseEnum Type { get; set; }
         public bool IsPinned { get; set; }
         public DateTime StartDate { get; set; }
@@ -45,6 +46,8 @@ namespace LMS.Common.ViewModels.School
         public int SavedClassCourseCount { get; set; }
         public bool IsSavedClassCoursePinned { get; set; }
         public string SchoolName { get; set; }
+        public bool IsCommentsDisabled { get; set; }
+
 
 
     }
