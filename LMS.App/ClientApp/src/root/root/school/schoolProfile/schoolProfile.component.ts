@@ -470,7 +470,7 @@ showDiv: boolean = false;
            this.loadingIcon = false;
            this.isDataLoaded = true;
            this.school.posts = this.getFilteredAttachments(this.school.posts);  
-           this.showPostDiv(postResponse.response.id);   
+          //  this.showPostDiv(postResponse.response.id);   
           });
      });
     }
@@ -1366,14 +1366,17 @@ showDiv: boolean = false;
 
 
 
-  showPostDiv(postId: string) {
+  showPostDiv(post: any) {
     debugger
-    this.counter = uuidv4();
-    this.clickedPostId = postId;
-    this.showDiv = true;
+    $('.imgDisplay').attr("style","display:none;")
+  $('.'+post.id).prevAll('.imgDisplay').first().attr("style", "display:block;");
+
+    // this.counter = uuidv4();
+    // this.clickedPostId = postId;
+    // this.showDiv = true;
     
-    var posts: any[] = this.school.posts;
-    this.gridItemInfo = posts.find((x) => x.id == postId);
+    // var posts: any[] = this.school.posts;
+    this.gridItemInfo = post;
     this.gridItemInfo.postAttachments
     if(this.gridItemInfo.isLive){
       this.isGridItemInfo = true;

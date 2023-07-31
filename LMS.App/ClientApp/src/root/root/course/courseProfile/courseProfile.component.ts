@@ -304,7 +304,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
             this.postLoadingIcon = false;
             this.addCourseView(this.course.courseId);
             this.course.posts = this.getFilteredAttachments(this.course.posts);     
-            this.showPostDiv(postResponse.response.id);    
+            // this.showPostDiv(postResponse.response.id);    
           });
         });
       }
@@ -972,9 +972,12 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     
     }
 
-    showPostDiv(postId:string){
+    showPostDiv(post:any){
+      $('.imgDisplay').attr("style","display:none;")
+      $('.'+post.id).prevAll('.imgDisplay').first().attr("style", "display:block;");
+
       var posts: any[] = this.course.posts;
-      this.gridItemInfo = posts.find(x => x.id == postId);
+      this.gridItemInfo = post;
       // this.gridItemInfo.postAttachments = this.gridItemInfo.postAttachments.filter((x: { fileType: number; }) => x.fileType !=3);
       this.isGridItemInfo = true;
       this.cd.detectChanges();

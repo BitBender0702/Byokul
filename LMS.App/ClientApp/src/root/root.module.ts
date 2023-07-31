@@ -91,6 +91,7 @@ import { NgxIntlTelInputModule } from 'ngx-intl-tel-input';
 import { IConfig, NgxMaskModule } from 'ngx-mask';
 import { SlickCarouselModule } from 'ngx-slick-carousel';
 import {LazyLoadImageModule} from 'ng-lazyload-image'
+import { VideoJsComponent } from './root/videojs/videojs.component';
 export const options: Partial<IConfig> = {
   thousandSeparator: "'"
 };
@@ -203,7 +204,8 @@ const routes: Routes = [
     ContactComponent,
     DeliveryAndReturnComponent,
     DSAForSchoolComponent,
-    DSAForStudentsComponent    
+    DSAForStudentsComponent,
+    VideoJsComponent
   ],
   imports: [
     CommonModule,

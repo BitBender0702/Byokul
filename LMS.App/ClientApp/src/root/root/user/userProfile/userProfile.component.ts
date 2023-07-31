@@ -49,6 +49,7 @@ import { Dimensions, ImageCroppedEvent, ImageTransform } from 'ngx-image-cropper
 import { DeleteSchoolCertificate } from 'src/root/interfaces/school/deleteSchoolCertificate';
 import { DeleteUserCertificate } from 'src/root/interfaces/user/deleteUserCertificate';
 import { AddUserCertificate } from 'src/root/interfaces/user/addUserCertificate';
+import { defined } from 'chart.js/dist/helpers/helpers.core';
 export const userImageResponse =new Subject<{userAvatar : string,gender : number}>();  
 export const chatResponse =new Subject<{receiverId : string , type: string,chatTypeId:string}>();  
 
@@ -338,7 +339,7 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
           this.cd.detectChanges();
           this.addEventListnerOnCarousel();
           this.user.posts = this.getFilteredAttachments(this.user.posts);   
-          this.showPostDiv(postResponse.response);
+          //this.showPostDiv(postResponse.response);
           });
       });
     }
@@ -1021,7 +1022,7 @@ profileList(){
   this.isProfileGrid = false;
   this.isGridItemInfo = true;
   this.cd.detectChanges();
-  if(this.videoPlayer != undefined){
+  if(this.videoPlayer != undefined){    
     videojs(this.videoPlayer.nativeElement, {autoplay: false});
   }
 }
@@ -1219,10 +1220,30 @@ likeUnlikePosts(postId:string, isLike:boolean,postType:number,post:any,from:numb
   });
 }
 
-showPostDiv(postId:string){
+showPostDiv(post:any){
   debugger
-  var posts: any[] = this.user.posts;
-  this.gridItemInfo = posts.find(x => x.id == postId);
+  $('.imgDisplay').attr("style","display:none;")
+  $('.imgDisplay').attr("style","display:none;").removeClass("intro")
+  $('.imgDisplay').removeClass("initVideo");
+  $('.'+post.id).prevAll('.imgDisplay').first().attr("style", "display:block;");
+  $('.'+post.id).prevAll('.imgDisplay').first().addClass("intro")
+  // if(post.postAttachments != undefined){
+  //   var postAttach = post.postAttachments[0];
+  //   debugger
+  //   if(postAttach != undefined){
+  //     if(postAttach.fileType != 1){
+  //         try{
+  //           videojs(postAttach.id);
+  //         } catch{
+  //         }
+  //     }
+  //   }
+  // }
+  // if(post.id != undefined){
+  //   videojs(post.id);
+  // }
+  //var posts: any[] = this.user.posts;
+  this.gridItemInfo = post;//posts.find(x => x.id == postId);
   if(this.gridItemInfo.isLive){
     this.isGridItemInfo = true;
     this._postService.openLiveStream(this.gridItemInfo,this.loginUserId).subscribe((response) => {
@@ -1231,9 +1252,42 @@ showPostDiv(postId:string){
   else{
   this.isGridItemInfo = true;
   this.cd.detectChanges();
+ if(this.videoPlayer!=undefined)
+ {
   videojs(this.videoPlayer.nativeElement, {autoplay: false});
+ }
   this.addPostView(this.gridItemInfo.id);
   }
+}
+
+checkIfIntro(e:any){
+  var isIntro = e.classList.contains('intro');
+  // var initVideo = e.classList.contains('initVideo');
+  // if(isIntro && !initVideo){
+  //   var id = `#${this.gridItemInfo.postAttachments[0].id}`;
+  //   var videoElement = $(id);
+  //   if(videoElement != null){
+  //     e.classList.add("initVideo");
+  //     this.intializeVideoJs();
+  //   }
+   
+  // }
+return isIntro;
+}
+
+intializeVideoJs(){
+  var post = this.gridItemInfo;
+    if(post.postAttachments != undefined){
+      var postAttach = post.postAttachments[0];
+      if(postAttach != undefined){
+        if(postAttach.fileType != 1){
+            try{
+              videojs(postAttach.id);
+            } catch{
+            }
+        }
+      }}
+      return true;
 }
 
 showSavedPostDiv(postId:string){
@@ -1848,11 +1902,11 @@ generateGuid():string {
  }
 
 
- getRandomClass(index:number, iscontainer:boolean){
+ getRandomClass(iscontainer:boolean){
    var number = this.isScreenPc ? 3 :  this.isScreenTablet ? 2 : this.isScreenMobile ? 1 : 0;
-   if(index %number == 0 && iscontainer){
-   this.previousGuid = this.generateGuid();
-   }
+   if(iscontainer)
+   return this.generateGuid();
+   else
      return this.previousGuid;
  }
 

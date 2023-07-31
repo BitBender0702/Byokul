@@ -816,6 +816,7 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
     else{
       this.loadingIcon = true;
       setTimeout(() => {
+        debugger
         this.close();
         this.loadingIcon = false;
         postProgressNotification.next({});

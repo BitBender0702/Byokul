@@ -372,7 +372,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
             this.scrolled = false;
             this.addClassView(this.class.classId);
             this.class.posts = this.getFilteredAttachments(this.class.posts);  
-            this.showPostDiv(postResponse.response.id);    
+            // this.showPostDiv(postResponse.response.id);    
           });
         });
       }
@@ -1083,10 +1083,13 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     
     }
 
-    showPostDiv(postId:string){
+    showPostDiv(post:any){
       debugger
-      var posts: any[] = this.class.posts;
-      this.gridItemInfo = posts.find(x => x.id == postId);
+      $('.imgDisplay').attr("style","display:none;")
+  $('.'+post.id).prevAll('.imgDisplay').first().attr("style", "display:block;");
+
+      // var posts: any[] = this.class.posts;
+      this.gridItemInfo = post;
       if(this.gridItemInfo.isLive){
         this.isGridItemInfo = true;
         this._postService.openLiveStream(this.gridItemInfo,this.userId).subscribe((response) => {

@@ -650,18 +650,23 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
         });
       }
 
-      showPostDiv(postId:string,From:string){
+      showPostDiv(post:any,From:string){
         if(From == 'FromMyFeeds'){
+          $('.imgDisplay').attr("style","display:none;")
+          $('.'+post.id).prevAll('.imgDisplay').first().attr("style", "display:block;");
+
           var posts: any[] = this.myFeeds;
-          this.gridItemInfo = posts.find(x => x.id == postId);
+          this.gridItemInfo = post;
           this.isGridItemInfo = true;
           this.cd.detectChanges();
           // const player = videojs(this.myFeedPlayer.nativeElement, {autoplay: false});
           this.addPostView(this.gridItemInfo.id,From);
         }
         else{
+          $('.imgDisplay').attr("style","display:none;")
+          $('.'+post.id).prevAll('.imgDisplay').first().attr("style", "display:block;");
           var posts: any[] = this.globalFeeds;
-          this.gridItemInfoForGlobal = posts.find(x => x.id == postId);
+          this.gridItemInfoForGlobal = post;
           this.isGridItemInfoForGlobal = true;
           this.cd.detectChanges();
           const player = videojs(this.globalFeedPlayer.nativeElement, {autoplay: false});
