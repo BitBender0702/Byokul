@@ -3479,15 +3479,18 @@ aria-hidden="true"
         <div class="row">
           <div class="col-md-12">
             <div class="form-group">
-              <label class="font_10">{{
-                "CertificateName" | translate
-              }}*</label>
               <input
                 formControlName="schoolId"
                 type="text"
-                name="CertificateName"
+                name="Id"
                 class="form-control w-100"
+                [disabled]="true"
+
               />
+              <label class="font_10">{{
+                "CertificateName" | translate
+              }}*</label>
+             
               <input
                 formControlName="certificateName"
                 type="text"
