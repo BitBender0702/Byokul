@@ -657,9 +657,7 @@
                       {{ post.title }}
                     </h2>
                     <div *ngIf="post.isLive">
-                      <img
-                        src="../../../../assets/images/live_img.png"
-                      />
+                      <img src="../../../../assets/images/live_img.png" />
                     </div>
                     <p class="font_14 school-grid-date d-inline-block mb-0">
                       {{ post.dateTime | date : "MMMM d" }} -
@@ -1419,9 +1417,7 @@
                       {{ post.title }}
                     </h2>
                     <div *ngIf="post.isLive">
-                      <img
-                        src="../../../../assets/images/live_img.png"
-                      />
+                      <img src="../../../../assets/images/live_img.png" />
                     </div>
                     <div class="right-action">
                       <button
@@ -7141,7 +7137,7 @@
 </div>
 
 <div
-  class="modal fade edit-school-modal delete-modal post-view-large"
+  class="modal fade edit-school-modal delete-modal"
   id="userOwnCertificate"
   tabindex="-1"
   aria-labelledby="userOwnCertificate"
@@ -7194,7 +7190,10 @@
           <img src="../../../../assets/images/cross.svg" />
         </button>
       </div>
-      <div class="modal-body" *ngIf="userCertificateInfo != undefined">
+      <div
+        class="modal-body d-flex flex-column align-items-center"
+        *ngIf="userCertificateInfo != undefined"
+      >
         <div>
           <img [src]="userCertificateInfo.certificateUrl" />
         </div>
