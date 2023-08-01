@@ -124,10 +124,10 @@ namespace LMS.Services
             }
             else if (postViewModel.PostType == (int)PostTypeEnum.Stream)
             {
-                post.StreamUrl = postViewModel.BlobUrls[0].BlobUrl;
+                post.StreamUrl = postViewModel.BlobUrls.Where(x => x.FileType == FileTypeEnum.Video).Select(x => x.BlobUrl).First();
                 post.IsLive = true;
             }
-            if (postViewModel.PostType == (int)PostTypeEnum.Stream && postViewModel.BlobUrls.Any(x => x.FileType != FileTypeEnum.Video))
+            if (postViewModel.PostType == (int)PostTypeEnum.Stream && postViewModel.BlobUrls.All(x => x.FileType != FileTypeEnum.Video))
             {
                 var user = _userRepository.GetById(createdById);
                 var model = new NewMeetingViewModel();
@@ -774,9 +774,9 @@ namespace LMS.Services
             return result;
         }
 
-        public async Task<bool> PinUnpinPost(Guid attachmentId, bool isPinned)
+        public async Task<bool> PinUnpinPost(Guid postId, bool isPinned)
         {
-            var post = await _postRepository.GetAll().Where(x => x.Id == attachmentId).FirstOrDefaultAsync();
+            var post = await _postRepository.GetAll().Where(x => x.Id == postId).FirstOrDefaultAsync();
 
             if (post != null)
             {
@@ -1207,9 +1207,9 @@ namespace LMS.Services
             return result;
         }
 
-        public async Task<bool> PinUnpinSavedPost(Guid attachmentId, bool isPinned, string userId)
+        public async Task<bool> PinUnpinSavedPost(Guid postId, bool isPinned, string userId)
         {
-            var savedPost = await _savedPostRepository.GetAll().Where(x => x.PostId == attachmentId && x.UserId == userId).FirstOrDefaultAsync();
+            var savedPost = await _savedPostRepository.GetAll().Where(x => x.PostId == postId && x.UserId == userId).FirstOrDefaultAsync();
 
             if (savedPost != null)
             {
@@ -1224,9 +1224,9 @@ namespace LMS.Services
 
         }
 
-        public async Task<bool> PinUnpinLikedPost(Guid attachmentId, bool isPinned, string userId)
+        public async Task<bool> PinUnpinLikedPost(Guid postId, bool isPinned, string userId)
         {
-            var likedPost = await _likeRepository.GetAll().Where(x => x.PostId == attachmentId && x.UserId == userId).FirstOrDefaultAsync();
+            var likedPost = await _likeRepository.GetAll().Where(x => x.PostId == postId && x.UserId == userId).FirstOrDefaultAsync();
 
             if (likedPost != null)
             {

@@ -159,9 +159,9 @@ namespace LMS.App.Controllers
 
         [Route("pinUnpinPost")]
         [HttpPost]
-        public async Task<IActionResult> PinUnpinPost(Guid attachmentId, bool isPinned)
+        public async Task<IActionResult> PinUnpinPost(Guid postId, bool isPinned)
         {
-            var response = await _postService.PinUnpinPost(attachmentId, isPinned);
+            var response = await _postService.PinUnpinPost(postId, isPinned);
             return Ok(response);
         }
 
@@ -244,10 +244,10 @@ namespace LMS.App.Controllers
 
         [Route("pinUnpinSavedPost")]
         [HttpPost]
-        public async Task<IActionResult> PinUnpinSavedPost(Guid attachmentId, bool isPinned)
+        public async Task<IActionResult> PinUnpinSavedPost(Guid postId, bool isPinned)
         {
             var userId = await GetUserIdAsync(this._userManager);
-            var response = await _postService.PinUnpinSavedPost(attachmentId, isPinned, userId);
+            var response = await _postService.PinUnpinSavedPost(postId, isPinned, userId);
             return Ok(response);
         }
 
@@ -261,10 +261,10 @@ namespace LMS.App.Controllers
 
         [Route("pinUnpinLikedPost")]
         [HttpPost]
-        public async Task<IActionResult> PinUnpinLikedPost(Guid attachmentId, bool isPinned)
+        public async Task<IActionResult> PinUnpinLikedPost(Guid postId, bool isPinned)
         {
             var userId = await GetUserIdAsync(this._userManager);
-            var response = await _postService.PinUnpinLikedPost(attachmentId, isPinned, userId);
+            var response = await _postService.PinUnpinLikedPost(postId, isPinned, userId);
             return Ok(response);
         }
 

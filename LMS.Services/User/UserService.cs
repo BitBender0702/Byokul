@@ -387,7 +387,7 @@ namespace LMS.Services
             user.Description = userUpdateViewModel.Description;
             user.ContactEmail = userUpdateViewModel.ContactEmail;
             user.CountryName = userUpdateViewModel.CountryName;
-            user.CityName = userUpdateViewModel.CityName;
+            user.StateName = userUpdateViewModel.StateName;
             _userRepository.Update(user);
             _userRepository.Save();
             return _mapper.Map<UserUpdateViewModel>(user);
@@ -839,7 +839,7 @@ namespace LMS.Services
                 {
                     isCompressed.FileUrl = isCompressed.CompressedFileUrl;
                 }
-                isCompressed.FileThumbnail = $"https://byokulstorage.blob.core.windows.net/userpostscompressed/thumbnails/{postId}.png";
+                isCompressed.FileThumbnail = $"https://byokulstorage.blob.core.windows.net/userpostscompressed/thumbnails/{isCompressed.Id}.png";
             }
 
             var result = _mapper.Map<List<PostAttachmentViewModel>>(attachmentList);

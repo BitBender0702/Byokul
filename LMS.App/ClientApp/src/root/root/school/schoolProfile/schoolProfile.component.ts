@@ -1532,9 +1532,10 @@ export class SchoolProfileComponent
     };
   }
 
-  openReelsViewModal(postAttachmentId: string): void {
-    this.router.navigateByUrl(`user/reelsView/${this.school.schoolId}/school/${postAttachmentId}`);
-
+  openReelsViewModal(postAttachmentId: string,postId:string): void {
+    this.router.navigate(
+      [`user/reelsView/${this.school.schoolId}/school/${postAttachmentId}`],
+      { state: { post: {postId: postId} } });
     // const initialState = {
     //   postAttachmentId: postAttachmentId,
     // };

@@ -1231,8 +1231,10 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       }
     }
 
-    openReelsViewModal(postAttachmentId:string): void {
-      this.router.navigateByUrl(`user/reelsView/${this.class.classId}/class/${postAttachmentId}`);
+    openReelsViewModal(postAttachmentId:string,postId:string): void {
+      this.router.navigate(
+        [`user/reelsView/${this.class.classId}/class/${postAttachmentId}`],
+        { state: { post: {postId: postId} } });
       // const initialState = {
       //   postAttachmentId: postAttachmentId
       // };

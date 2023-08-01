@@ -72,7 +72,7 @@ namespace LMS.App.Controllers
                         LastName = registerViewModel.LastName,
                         Gender = registerViewModel.Gender,
                         CountryName = registerViewModel.CountryName,
-                        CityName = registerViewModel.CityName,
+                        StateName = registerViewModel.StateName,
                         DOB = registerViewModel.DOB,
                         CreatedOn = DateTime.UtcNow
                     };

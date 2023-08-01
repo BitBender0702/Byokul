@@ -935,7 +935,7 @@
                           class="feedimg-box position-relative text-light position-relative"
                         >
                           <a
-                            (click)="openReelsViewModal(postAttachment.id)"
+                            (click)="openReelsViewModal(postAttachment.id,postAttachment.postId)"
                             style="cursor: pointer"
                           >
                             <img
@@ -1776,14 +1776,9 @@
                             </slide>
                             <slide *ngIf="postAttachment?.fileType == 1">
                               <img
-                                *ngIf="postAttachment?.fileType == 1 && postAttachment?.compressedFileUrl == ''"
+                                *ngIf="postAttachment?.fileType == 1"
                                 class="w-100"
                                 [lazyLoad]="postAttachment?.fileUrl"
-                              />
-                              <img
-                                *ngIf="postAttachment?.fileType == 1 && postAttachment?.compressedFileUrl != ''"
-                                class="w-100"
-                                [src]="postAttachment?.compressedFileUrl"
                               />
                             </slide>
                           </div>

@@ -325,11 +325,11 @@
             {{ "Location" | translate }}
           </div>
           <span
-            *ngIf="user.cityName != null && user.countryName != null"
+            *ngIf="user.stateName != null && user.countryName != null"
             class="custom-tag d-inline-flex align-items-center"
           >
             <span class="vr-border"></span
-            >{{ user.cityName + "  " + user.countryName }}
+            >{{ user.stateName + "  " + user.countryName }}
           </span>
         </div>
         <hr class="hr-gray" />
@@ -5650,7 +5650,7 @@
                             class="feedimg-box position-relative text-light position-relative"
                           >
                             <a
-                              (click)="openReelsViewModal(postAttachment.id)"
+                              (click)="openReelsViewModal(postAttachment.id,postAttachment.postId)"
                               style="cursor: pointer"
                             >
                               <div class="videofile">
@@ -5765,7 +5765,7 @@
                             class="feedimg-box position-relative text-light position-relative"
                           >
                             <a
-                              (click)="openReelsViewModal(postAttachment.id)"
+                              (click)="openReelsViewModal(postAttachment.id,postAttachment.postId)"
                               style="cursor: pointer"
                             >
                               <div class="videofile">
@@ -5883,7 +5883,7 @@
                             class="feedimg-box position-relative text-light position-relative"
                           >
                             <a
-                              (click)="openReelsViewModal(postAttachment.id)"
+                              (click)="openReelsViewModal(postAttachment.id,postAttachment.postId)"
                               style="cursor: pointer"
                             >
                               <div class="videofile">
@@ -6001,7 +6001,7 @@
                             class="feedimg-box position-relative text-light position-relative"
                           >
                             <a
-                              (click)="openReelsViewModal(postAttachment.id)"
+                              (click)="openReelsViewModal(postAttachment.id,postAttachment.postId)"
                               style="cursor: pointer"
                             >
                               <div class="videofile">
@@ -6353,7 +6353,7 @@
                           class="form-select rounded-8 w-100"
                           formControlName="country"
                           aria-label="Default select example"
-                          (change)="getCityByCountry($event.target)"
+                          (change)="getStateByCountry($event.target)"
                         >
                           <option value="" disabled selected hidden>
                             {{ "Country" | translate }}
@@ -6378,17 +6378,17 @@
                     </div>
                     <div class="col-md-6">
                       <div class="form-group">
-                        <label class="font_10">{{ "City" | translate }}*</label>
+                        <label class="font_10">{{ "State" | translate }}*</label>
                         <select
                           class="form-select rounded-8 w-100"
-                          formControlName="city"
+                          formControlName="state"
                           aria-label="Default select example"
                         >
                           <option value="" disabled selected hidden>
-                            {{ "City" | translate }}
+                            {{ "StateOrProvince" | translate }}
                           </option>
-                          <option *ngFor="let city of cities" [value]="city">
-                            {{ city }}
+                          <option *ngFor="let state of states" [value]="state">
+                            {{ state }}
                           </option>
                         </select>
                         <!-- <small

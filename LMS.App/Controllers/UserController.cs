@@ -302,6 +302,23 @@ namespace LMS.App.Controllers
             return cities;
         }
 
+        [AllowAnonymous]
+        [Route("getStates")]
+        [HttpPost]
+        public async Task<IEnumerable<string>> GetStates(string countryName)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Post, "https://countriesnow.space/api/v0.1/countries/states");
+            request.Content = new StringContent($"{{ \"country\": \"{countryName}\" }}", Encoding.UTF8, "application/json");
+            var response = await _httpClient.SendAsync(request);
+
+
+            // var response = await _httpClient.GetAsync($"https://countriesnow.space/api/v0.1/countries/cities?&country={countryCode.Country}");
+            var content = await response.Content.ReadAsStringAsync();
+            var statesResponse = JsonConvert.DeserializeObject<StateRoot>(content);
+            var states = statesResponse.Data.States.OrderBy(x=> x.Name).Select(x => x.Name).ToList();
+            return states;
+        }
+
         [Route("deleteSchoolTeacher")]
         [HttpPost]
         public async Task<IActionResult> DeleteSchoolTeacher(Guid schoolId)

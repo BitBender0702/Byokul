@@ -721,12 +721,16 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
         window.location.href=`user/userProfile/${userId}`;
       }
 
-      openReelsViewModal(postAttachmentId:string,from:number): void {
+      openReelsViewModal(postAttachmentId:string,from:number,postId:string): void {
         if(from == 1){
-          this.router.navigateByUrl(`user/reelsView/""/myFeed/${postAttachmentId}`);
+          this.router.navigate(
+            [`user/reelsView//""/myFeed/${postAttachmentId}`],
+            { state: { post: {postId: postId} } });
         }
         else{
-          this.router.navigateByUrl(`user/reelsView/""/globalFeed/${postAttachmentId}`);
+          this.router.navigate(
+            [`user/reelsView/""/globalFeed/${postAttachmentId}`],
+            { state: { post: {postId: postId} } });
         }
         // const initialState = {
         //   postAttachmentId: postAttachmentId

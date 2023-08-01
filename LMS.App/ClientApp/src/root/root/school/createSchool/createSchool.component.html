@@ -61,9 +61,6 @@
               {{ "Step1" | translate }}
             </p>
             <form id="regForm" [formGroup]="createSchoolForm1">
-
-              <input type="file" (change)="onFileSelected($event)">
-              <button (click)="uploadOnBlob()">Upload</button>
               <div class="form-group">
                 <input
                   placeholder="{{ 'SchoolName' | translate }}"

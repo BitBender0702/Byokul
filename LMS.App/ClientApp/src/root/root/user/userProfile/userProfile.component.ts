@@ -192,6 +192,7 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
     userAvatar:string = '';
     countries:any;
     cities:any;
+    states:any;
     requiredCountry:any;
 
 
@@ -298,7 +299,7 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
         description: this.fb.control(''),
         contactEmail: this.fb.control(''),
         country: this.fb.control(''),
-        city: this.fb.control('')
+        state: this.fb.control('')
       });
 
       this.InitializeFollowUnfollowUser();
@@ -879,8 +880,8 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
       this._userService.getCountryList().subscribe((response) => {
         debugger
         this.countries = response;
-        this._userService.getCityList(this.user.countryName).subscribe((response) => {
-          this.cities = response;
+        this._userService.getStateList(this.user.countryName).subscribe((response) => {
+          this.states = response;
           this.requiredCountry = this.countries.find((x: { countryName: string; }) => x.countryName == this.user.countryName);
           // var requiredCity = this.cities.find((x: { cityName: string; }) => x.cityName == this.user.cityName);
           this.editUserForm = this.fb.group({
@@ -891,7 +892,7 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
           description: this.fb.control(this.editUser.description??''),
           contactEmail: this.fb.control(this.editUser.contactEmail??'',[Validators.pattern(this.EMAIL_PATTERN)]),
           country: this.fb.control(this.requiredCountry.countryName),
-          city: this.fb.control(this.user.cityName)
+          state: this.fb.control(this.user.stateName)
 
         });
         this.editUserForm.updateValueAndValidity();
@@ -946,7 +947,7 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
     this.fileToUpload.append('description',this.updateUserDetails.description);
     this.fileToUpload.append('contactEmail',this.updateUserDetails.contactEmail);
     this.fileToUpload.append('countryName',this.updateUserDetails.country);
-    this.fileToUpload.append('cityName',this.updateUserDetails.city);
+    this.fileToUpload.append('stateName',this.updateUserDetails.state);
 
     // this.user.countryName = this.updateUserDetails.country;
     // this.user.cityName = this.updateUserDetails.city;
@@ -1131,7 +1132,7 @@ openPostsViewModal(posts:any): void {
 }
 }
 
-openReelsViewModal(postAttachmentId:string): void {
+openReelsViewModal(postAttachmentId:string,postId:string): void {
   debugger
   const screenWidthThreshold = 768;
   const isMobileOrTab = window.innerWidth < screenWidthThreshold;
@@ -1139,7 +1140,7 @@ openReelsViewModal(postAttachmentId:string): void {
     // this.router.navigateByUrl(`user/reelsView/${this.user.id}/user/${postAttachmentId}`);
 this.router.navigate(
     [`user/reelsView/${this.user.id}/user/${postAttachmentId}`],
-    { state: { post: {postId: postAttachmentId} } });
+    { state: { post: {postId: postId} } });
 
 //   } else {
 //   const initialState = {
@@ -1758,12 +1759,12 @@ getSelectedLanguageForCertificate(){
   issuedDateElement._flatpickr.set("locale", locale); 
 }
 
-getCityByCountry(event:any){
+getStateByCountry(event:any){
   debugger
   var countryName = event.value;
-  this._userService.getCityList(countryName).subscribe((response) => {
+  this._userService.getStateList(countryName).subscribe((response) => {
     debugger
-    this.cities = response;
+    this.states = response;
     // this.editUserForm.get('city')?.setValue('');
   });
 }

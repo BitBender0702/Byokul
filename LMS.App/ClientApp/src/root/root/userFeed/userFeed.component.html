@@ -122,7 +122,7 @@
                         <slide *ngFor="let postAttachment of post.postAttachments">
                           <div *ngIf="postAttachment.fileType == 2">
                             <div class="feedimg-box position-relative text-light position-relative">
-                              <a (click)="openReelsViewModal(postAttachment.id,1)" style="cursor: pointer">
+                              <a (click)="openReelsViewModal(postAttachment.id,1,postAttachment.postId)" style="cursor: pointer">
                                 <div class="videofile">
                                   <img style="height: 300px" [lazyLoad]="postAttachment.fileThumbnail" />
                                 </div>
@@ -511,9 +511,7 @@
                           </div>
                         </slide>
                         <slide *ngIf="postAttachment?.fileType == 1">
-                          <img *ngIf="postAttachment?.fileType == 1 && postAttachment?.compressedFileUrl == ''" class="w-100" [src]="postAttachment?.fileUrl" />
-                          <img *ngIf="postAttachment?.fileType == 1 && postAttachment?.compressedFileUrl == ''" class="w-100" [src]="postAttachment?.fileUrl" />
-
+                          <img *ngIf="postAttachment?.fileType == 1" class="w-100" [lazyLoad]="postAttachment?.fileUrl" />
                         </slide>
                       </div>
                     </carousel>
@@ -809,7 +807,7 @@
                         <slide *ngFor="let postAttachment of post.postAttachments">
                           <div *ngIf="postAttachment.fileType == 2">
                             <div class="feedimg-box position-relative text-light position-relative">
-                              <a (click)="openReelsViewModal(postAttachment.id,2)" style="cursor: pointer">
+                              <a (click)="openReelsViewModal(postAttachment.id,2,postAttachment.postId)" style="cursor: pointer">
                                 <div class="videofile">
                                   <img style="height: 300px" [lazyLoad]="postAttachment.fileThumbnail" />
                                 </div>

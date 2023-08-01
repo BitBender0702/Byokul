@@ -195,26 +195,28 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
           debugger
 
           var from = response.postAuthorType == 1? "school" : response.postAuthorType == 2 ? "class":response.postAuthorType == 4 ? "user" :undefined;
+          var chatType = from == "user" ? 1 :from == "school" ? 3 : from == "class" ? 4 : undefined;
 
           // this.isSubmitted=false;
           // this.loadingIcon = false;
-          addPostResponse.next({response});
+          //addPostResponse.next({response});
           // this.postToUpload = new FormData();
           // this.close();
           // this.uploadVideoUrlList = [];
-          // if(this.videos.length != 0){
-          // var translatedMessage = this.translateService.instant('VideoReadyToStream');
-          // var notificationContent = translatedMessage;
-          // var chatType = this.from == "user" ? 1 :this.from == "school" ? 3 : this.from == "class" ? 4 : undefined;
-          // this._notificationService.initializeNotificationViewModel(this.loginUserId,NotificationType.PostUploaded,notificationContent,this.loginUserId,response.id,response.postType,response,null,chatType).subscribe((response) => {
-          // });
-        //  }
-        // else{
+          if(uploadResponse.videos.length != 0){
+          var translatedMessage = this.translateService.instant('VideoReadyToStream');
+          var notificationContent = translatedMessage;
+          //var chatType = this.from == "user" ? 1 :this.from == "school" ? 3 : this.from == "class" ? 4 : undefined;
+          this._notificationService.initializeNotificationViewModel(this.loginUserId,NotificationType.PostUploaded,notificationContent,this.loginUserId,response.id,response.postType,null,null,chatType).subscribe((response) => {
+          });
+        }
+        else{
           if(!response.isPostSchedule){
           this.router.navigate(
               [`liveStream`,response.id,from]
           );
         }
+      }
       }
         
        );

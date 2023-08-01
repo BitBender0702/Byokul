@@ -50,7 +50,7 @@ export class PostService{
     }
 
     pinUnpinPost(attachmentId:any,isPinned:boolean): Observable<any> {
-        let queryParams = new HttpParams().append("attachmentId",attachmentId).append("isPinned",isPinned);
+        let queryParams = new HttpParams().append("postId",attachmentId).append("isPinned",isPinned);
         return this.http.post(`${this.apiUrl}/posts/pinUnpinPost`,null, {params:queryParams,headers: this.headers});
     }
 
@@ -59,6 +59,7 @@ export class PostService{
     }
 
     postView(postView:any):Observable<any>{
+        debugger
         return this.http.post(`${this.apiUrl}/posts/postView`, postView,{headers: this.headers});
 
     }
@@ -103,7 +104,7 @@ export class PostService{
     }
 
     pinUnpinSavedPost(attachmentId:any,isPinned:boolean): Observable<any> {
-        let queryParams = new HttpParams().append("attachmentId",attachmentId).append("isPinned",isPinned);
+        let queryParams = new HttpParams().append("postId",attachmentId).append("isPinned",isPinned);
         return this.http.post(`${this.apiUrl}/posts/pinUnpinSavedPost`,null, {params:queryParams,headers: this.headers});
     }
 
@@ -113,7 +114,7 @@ export class PostService{
     }
 
     pinUnpinLikedPost(attachmentId:any,isPinned:boolean): Observable<any> {
-        let queryParams = new HttpParams().append("attachmentId",attachmentId).append("isPinned",isPinned);
+        let queryParams = new HttpParams().append("postId",attachmentId).append("isPinned",isPinned);
         return this.http.post(`${this.apiUrl}/posts/pinUnpinLikedPost`,null, {params:queryParams,headers: this.headers});
     }
 
