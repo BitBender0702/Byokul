@@ -11,7 +11,11 @@
         <div
           class="create-post-header d-flex justify-content-between d-none d-xl-flex"
         >
-        <button #hiddenButton hidden (click)="cropModalOpen(cropTemplate)"></button>
+          <button
+            #hiddenButton
+            hidden
+            (click)="cropModalOpen(cropTemplate)"
+          ></button>
           <button
             (click)="back()"
             type="button"
@@ -32,13 +36,13 @@
             {{ "CreateCertificate" | translate }}
           </button>
           <button
-          *ngIf="isOwner || hasPostPermission"
-          (click)="openPostModal(true)"
-          type="button"
-          class="btn custom-btn primary_btn earning-btn fw_400 h_44"
-        >
-          {{ "GoLive" | translate }}
-        </button>
+            *ngIf="isOwner || hasPostPermission"
+            (click)="openPostModal(true)"
+            type="button"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44"
+          >
+            {{ "GoLive" | translate }}
+          </button>
           <button
             *ngIf="isOwner || hasPostPermission"
             (click)="openPostModal(false)"
@@ -97,7 +101,10 @@
                 <div
                   class="school-profile-icon rounded-circle class-course-image"
                 >
-                  <img *ngIf="class.avatar != 'null'" [lazyLoad]="class.avatar" />
+                  <img
+                    *ngIf="class.avatar != 'null'"
+                    [lazyLoad]="class.avatar"
+                  />
                 </div>
                 <div class="univ-logo">
                   <img [lazyLoad]="class.school.avatar" />
@@ -158,9 +165,10 @@
                       >
                     </div>
                     <div class="followers_name d-inline-block font_16 mr-_24">
-                      <img lazyLoad="../../../../assets/images/Edit-dark.svg" />{{
-                        "Post" | translate
-                      }}: <b class="fw_700">{{ class.posts.length }}</b>
+                      <img
+                        lazyLoad="../../../../assets/images/Edit-dark.svg"
+                      />{{ "Post" | translate }}:
+                      <b class="fw_700">{{ class.posts.length }}</b>
                     </div>
                   </div>
                   <button
@@ -224,138 +232,146 @@
               </div>
             </div>
           </div>
-          <p class="font_16 mt-4 preserve-line-breaks">{{ class.description }}</p>
+          <p class="font_16 mt-4 preserve-line-breaks">
+            {{ class.description }}
+          </p>
         </div>
         <div *ngIf="class.classCertificates.length != 0 || this.isOwner">
-        <div class="teacher-tags tag-box hover-tags">
+          <div class="teacher-tags tag-box hover-tags">
+            <div class="teacher-tags tag-box mt-0 hover-tags">
+              <div class="teacher-content font_14 d-inline-block">
+                <img lazyLoad="../../../../assets/images/dark-star.svg" />{{
+                  "Sertificates" | translate
+                }}
+              </div>
+
+              <span
+                *ngFor="let item of class.classCertificates"
+                class="custom-tag"
+                ><span
+                  (click)="
+                    openCertificateViewModal(item.certificateUrl, item.name)
+                  "
+                  >{{ item.name }}</span
+                ><button
+                  (click)="getDeletedCertificate(item.certificateId)"
+                  class="border-0 bg-transparent p-0 position-absolute delete-tag"
+                  data-bs-toggle="modal"
+                  data-bs-target="#delete-classCertificate"
+                >
+                  <img
+                    *ngIf="isOwner || hasAddClassCertificatesPermission"
+                    lazyLoad="../../../../assets/images/cross-sm-light.svg"
+                  /></button
+              ></span>
+
+              <span
+                *ngIf="isOwner || hasAddClassCertificatesPermission"
+                class="custom-tag"
+                (click)="resetCertificateModal()"
+                >{{ "AddCertificates" | translate
+                }}<button
+                  (click)="resetCertificateModal()"
+                  data-bs-toggle="modal"
+                  data-bs-target="#add-certificate"
+                  class="border-0 bg-transparent p-0 position-absolute delete-tag"
+                  data-bs-toggle="modal"
+                  data-bs-target="#add-certificate"
+                >
+                  <img
+                    lazyLoad="../../../../assets/images/school/plus-light.svg"
+                  />
+                </button>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="class.languages.length != 0 || this.isOwner">
           <div class="teacher-tags tag-box mt-0 hover-tags">
             <div class="teacher-content font_14 d-inline-block">
-              <img lazyLoad="../../../../assets/images/dark-star.svg" />{{
-                "Sertificates" | translate
+              <img lazyLoad="../../../../assets/images/Volume-Down.svg" />{{
+                "Languages" | translate
               }}
             </div>
 
-            <span
-              *ngFor="let item of class.classCertificates"
-              class="custom-tag"
-              ><span
-                (click)="
-                  openCertificateViewModal(item.certificateUrl, item.name)
-                "
-                >{{ item.name }}</span
-              ><button
-                (click)="getDeletedCertificate(item.certificateId)"
+            <span *ngFor="let item of class.languages" class="custom-tag"
+              >{{ item.name
+              }}<button
+                *ngIf="class.languages.length > 1"
+                (click)="getDeletedLanguage(item.id)"
                 class="border-0 bg-transparent p-0 position-absolute delete-tag"
                 data-bs-toggle="modal"
-                data-bs-target="#delete-classCertificate"
+                data-bs-target="#delete-classLanguage"
               >
                 <img
-                  *ngIf="isOwner || hasAddClassCertificatesPermission"
+                  *ngIf="isOwner || hasAddLanguagesPermission"
                   lazyLoad="../../../../assets/images/cross-sm-light.svg"
                 /></button
             ></span>
 
             <span
-              *ngIf="isOwner || hasAddClassCertificatesPermission"
+              *ngIf="isOwner || hasAddLanguagesPermission"
               class="custom-tag"
-              (click)="resetCertificateModal()"
-              >{{ "AddCertificates" | translate
-              }}<button
-                (click)="resetCertificateModal()"
-                data-bs-toggle="modal"
-                data-bs-target="#add-certificate"
-                class="border-0 bg-transparent p-0 position-absolute delete-tag"
-                data-bs-toggle="modal"
-                data-bs-target="#add-certificate"
-              >
-                <img lazyLoad="../../../../assets/images/school/plus-light.svg" />
-              </button>
-            </span>
-          </div>
-        </div>
-      </div>
-        <div *ngIf="class.languages.length != 0 || this.isOwner">
-        <div class="teacher-tags tag-box mt-0 hover-tags">
-          <div class="teacher-content font_14 d-inline-block">
-            <img lazyLoad="../../../../assets/images/Volume-Down.svg" />{{
-              "Languages" | translate
-            }}
-          </div>
-
-          <span *ngFor="let item of class.languages" class="custom-tag"
-            >{{ item.name
-            }}<button
-              *ngIf="class.languages.length > 1"
-              (click)="getDeletedLanguage(item.id)"
-              class="border-0 bg-transparent p-0 position-absolute delete-tag"
-              data-bs-toggle="modal"
-              data-bs-target="#delete-classLanguage"
-            >
-              <img
-                *ngIf="isOwner || hasAddLanguagesPermission"
-                lazyLoad="../../../../assets/images/cross-sm-light.svg"
-              /></button
-          ></span>
-
-          <span
-            *ngIf="isOwner || hasAddLanguagesPermission"
-            class="custom-tag"
-            (click)="resetLanguageModal()"
-            data-bs-toggle="modal"
-            data-bs-target="#add-language"
-            >{{ "AddLanguage" | translate
-            }}<button
               (click)="resetLanguageModal()"
-              class="border-0 bg-transparent p-0 position-absolute delete-tag"
               data-bs-toggle="modal"
               data-bs-target="#add-language"
-            >
-              <img lazyLoad="../../../../assets/images/school/plus-light.svg" />
-            </button>
-          </span>
-        </div>
-        </div>
-        <div *ngIf="class.teachers.length != 0 || this.isOwner">
-        <div class="teacher-tags tag-box hover-tags">
-          <div class="teacher-tags tag-box mt-0 hover-tags">
-            <div class="teacher-content font_14 d-inline-block">
-              <img lazyLoad="../../../../assets/images/Profile-dark.svg" />{{
-                "Teachers" | translate
-              }}
-            </div>
-
-            <span *ngFor="let item of class.teachers" class="custom-tag"
-              >{{ item.firstName + " " + item.lastName
+              >{{ "AddLanguage" | translate
               }}<button
-                (click)="getDeletedTeacher(item.teacherId)"
+                (click)="resetLanguageModal()"
                 class="border-0 bg-transparent p-0 position-absolute delete-tag"
                 data-bs-toggle="modal"
-                data-bs-target="#delete-classTeacher"
+                data-bs-target="#add-language"
               >
                 <img
-                  *ngIf="isOwner || hasManageTeachersPermission"
-                  lazyLoad="../../../../assets/images/cross-sm-light.svg"
-                /></button
-            ></span>
-
-            <span
-              *ngIf="isOwner || hasManageTeachersPermission"
-              class="custom-tag"
-              (click)="resetTeacherModal()"
-              data-bs-toggle="modal"
-              data-bs-target="#add-classTeacher"
-              >{{ "AddTeacher" | translate
-              }}<button
-                (click)="resetTeacherModal()"
-                class="border-0 bg-transparent p-0 position-absolute delete-tag"
-                data-bs-toggle="modal"
-                data-bs-target="#add-classTeacher"
-              >
-                <img lazyLoad="../../../../assets/images/school/plus-light.svg" />
+                  lazyLoad="../../../../assets/images/school/plus-light.svg"
+                />
               </button>
             </span>
           </div>
         </div>
+        <div *ngIf="class.teachers.length != 0 || this.isOwner">
+          <div class="teacher-tags tag-box hover-tags">
+            <div class="teacher-tags tag-box mt-0 hover-tags">
+              <div class="teacher-content font_14 d-inline-block">
+                <img lazyLoad="../../../../assets/images/Profile-dark.svg" />{{
+                  "Teachers" | translate
+                }}
+              </div>
+
+              <span *ngFor="let item of class.teachers" class="custom-tag"
+                >{{ item.firstName + " " + item.lastName
+                }}<button
+                  (click)="getDeletedTeacher(item.teacherId)"
+                  class="border-0 bg-transparent p-0 position-absolute delete-tag"
+                  data-bs-toggle="modal"
+                  data-bs-target="#delete-classTeacher"
+                >
+                  <img
+                    *ngIf="isOwner || hasManageTeachersPermission"
+                    lazyLoad="../../../../assets/images/cross-sm-light.svg"
+                  /></button
+              ></span>
+
+              <span
+                *ngIf="isOwner || hasManageTeachersPermission"
+                class="custom-tag"
+                (click)="resetTeacherModal()"
+                data-bs-toggle="modal"
+                data-bs-target="#add-classTeacher"
+                >{{ "AddTeacher" | translate
+                }}<button
+                  (click)="resetTeacherModal()"
+                  class="border-0 bg-transparent p-0 position-absolute delete-tag"
+                  data-bs-toggle="modal"
+                  data-bs-target="#add-classTeacher"
+                >
+                  <img
+                    lazyLoad="../../../../assets/images/school/plus-light.svg"
+                  />
+                </button>
+              </span>
+            </div>
+          </div>
         </div>
 
         <div class="teacher-tags tag-box mt-0">
@@ -382,9 +398,10 @@
               1
             ]"
           >
-            <img lazyLoad="../../../../assets/images/Folder.svg" class="me-2" />{{
-              "FileStorage" | translate
-            }}
+            <img
+              lazyLoad="../../../../assets/images/Folder.svg"
+              class="me-2"
+            />{{ "FileStorage" | translate }}
           </button>
           <div class="button-list-grid-filter">
             <button
@@ -400,17 +417,17 @@
               <img lazyLoad="../../../../assets/images/Category.svg" />
             </button>
             <button
-            (click)="profileGrid()"
-            type="button"
-            [ngClass]="
-              isProfileGrid
-                ? 'btn border-btn active d-inline-flex align-items-center justify-content-center'
-                : 'btn border-btn d-inline-flex align-items-center justify-content-center'
-            "
-            id="list-btn"
-          >
-            <img lazyLoad="../../../../assets/images/Filter.svg" />
-          </button>
+              (click)="profileGrid()"
+              type="button"
+              [ngClass]="
+                isProfileGrid
+                  ? 'btn border-btn active d-inline-flex align-items-center justify-content-center'
+                  : 'btn border-btn d-inline-flex align-items-center justify-content-center'
+              "
+              id="list-btn"
+            >
+              <img lazyLoad="../../../../assets/images/Filter.svg" />
+            </button>
           </div>
         </div>
 
@@ -448,7 +465,12 @@
                               class="feedimg-box position-relative text-light position-relative"
                             >
                               <a
-                                (click)="openReelsViewModal(postAttachment.id,postAttachment.postId)"
+                                (click)="
+                                  openReelsViewModal(
+                                    postAttachment.id,
+                                    postAttachment.postId
+                                  )
+                                "
                                 style="cursor: pointer"
                               >
                                 <div class="videofile">
@@ -545,10 +567,7 @@
                       {{ post.title }}
                     </h2>
                     <div *ngIf="post.isLive">
-                      <img
-                        lazyLoad="../../../../assets/images/live_img.png"
-                        style="height: 76px"
-                      />
+                      <img lazyLoad="../../../../assets/images/live_img.png" />
                     </div>
                     <p
                       *ngIf="post.dateTime != null"
@@ -563,7 +582,9 @@
                       type="button"
                       class="bg-transparent border-0 pinned-grid-chat"
                     >
-                      <img lazyLoad="../../../../assets/images/pinned-orange.svg" />
+                      <img
+                        lazyLoad="../../../../assets/images/pinned-orange.svg"
+                      />
                     </button>
                     <button
                       *ngIf="!post.isPinned && isOwner"
@@ -571,7 +592,9 @@
                       type="button"
                       class="bg-transparent border-0 pinned-grid-chat"
                     >
-                      <img lazyLoad="../../../../assets/images/pinned-gray.svg" />
+                      <img
+                        lazyLoad="../../../../assets/images/pinned-gray.svg"
+                      />
                     </button>
                   </div>
 
@@ -626,7 +649,9 @@
                               "
                               class="w-100"
                               style="cursor: pointer"
-                              [lazyLoad]="post.postAttachments[0]?.fileThumbnail"
+                              [lazyLoad]="
+                                post.postAttachments[0]?.fileThumbnail
+                              "
                             />
                             <img
                               *ngIf="post.postAttachments[0]?.fileType == 1"
@@ -674,7 +699,9 @@
                               *ngIf="post.postAttachments[0]?.fileType == 2"
                               class="w-100"
                               style="cursor: pointer; margin-top: -700px"
-                              [lazyLoad]="post.postAttachments[0]?.fileThumbnail"
+                              [lazyLoad]="
+                                post.postAttachments[0]?.fileThumbnail
+                              "
                             />
                             <img
                               *ngIf="post.postAttachments[0]?.fileType == 1"
@@ -694,7 +721,9 @@
                                 *ngIf="post.postAttachments[1]?.fileType == 2"
                                 class="w-100"
                                 style="cursor: pointer"
-                                [lazyLoad]="post.postAttachments[1]?.fileThumbnail"
+                                [lazyLoad]="
+                                  post.postAttachments[1]?.fileThumbnail
+                                "
                               />
                               <img
                                 *ngIf="post.postAttachments[1]?.fileType == 1"
@@ -708,7 +737,9 @@
                                 *ngIf="post.postAttachments[2]?.fileType == 2"
                                 class="w-100"
                                 style="cursor: pointer"
-                                [lazyLoad]="post.postAttachments[2]?.fileThumbnail"
+                                [lazyLoad]="
+                                  post.postAttachments[2]?.fileThumbnail
+                                "
                               />
                               <img
                                 *ngIf="post.postAttachments[2]?.fileType == 1"
@@ -731,7 +762,9 @@
                               *ngIf="post.postAttachments[0]?.fileType == 2"
                               class="w-100"
                               style="cursor: pointer"
-                              [lazyLoad]="post.postAttachments[0]?.fileThumbnail"
+                              [lazyLoad]="
+                                post.postAttachments[0]?.fileThumbnail
+                              "
                             />
                             <img
                               *ngIf="post.postAttachments[0]?.fileType == 1"
@@ -770,7 +803,9 @@
                                 *ngIf="post.postAttachments[1]?.fileType == 2"
                                 class="w-100"
                                 style="cursor: pointer"
-                                [lazyLoad]="post.postAttachments[1]?.fileThumbnail"
+                                [lazyLoad]="
+                                  post.postAttachments[1]?.fileThumbnail
+                                "
                               />
                               <img
                                 *ngIf="post.postAttachments[1]?.fileType == 1"
@@ -976,9 +1011,15 @@
             <div class="list-schol-profile" *ngIf="!isProfileGrid">
               <div class="row">
                 <ng-container *ngFor="let post of class.posts; let i = index">
-                  
-                  <div class="col-12 imgDisplay" *ngIf="(isScreenPc && i % 3 == 0) || (isScreenTablet && i % 2 == 0) || (isScreenMobile && i % 1 == 0)"
-                  style="display: none;">
+                  <div
+                    class="col-12 imgDisplay"
+                    *ngIf="
+                      (isScreenPc && i % 3 == 0) ||
+                      (isScreenTablet && i % 2 == 0) ||
+                      (isScreenMobile && i % 1 == 0)
+                    "
+                    style="display: none"
+                  >
                     <div
                       [ngClass]="
                         isGridItemInfo
@@ -1007,7 +1048,9 @@
                                   *ngIf="postAttachment?.fileType == 2"
                                   class="videofile"
                                 >
-                                <videoJs-component [postAttachment]="postAttachment" ></videoJs-component>
+                                  <videoJs-component
+                                    [postAttachment]="postAttachment"
+                                  ></videoJs-component>
 
                                   <!-- <video
                                   [id] = "getRandomClass(i,false)"
@@ -1019,7 +1062,7 @@
                                       [src]="postAttachment?.fileUrl"
                                       type="video/mp4"
                                     /> -->
-                                    <!-- <source *ngIf="postAttachment?.compressedFileUrl == ''"
+                                  <!-- <source *ngIf="postAttachment?.compressedFileUrl == ''"
                                       [src]="postAttachment?.fileUrl"
                                       type="video/mp4"
                                     />
@@ -1052,34 +1095,72 @@
                               : 'col-lg-12 heightForText'
                           "
                         >
-                          <div class="class-preview-right position-relative h-100">
-                            <ul *ngIf="gridItemInfo?.createdBy == userId" class="list-unstyled d-flex more-action-btn before-none pe-2 me-1 mb-0" style="position: absolute;right: 50px;">
+                          <div
+                            class="class-preview-right position-relative h-100"
+                          >
+                            <ul
+                              *ngIf="gridItemInfo?.createdBy == userId"
+                              class="list-unstyled d-flex more-action-btn before-none pe-2 me-1 mb-0"
+                              style="position: absolute; right: 50px"
+                            >
                               <li class="d-inline-block ps-0 mb-0">
                                 <div class="dropdown">
-                                  <button class="bg-transparent dropdown-toggle border-0 action-more-btn after-none pt-1" type="button" data-bs-toggle="dropdown"
-                                    aria-expanded="false">
+                                  <button
+                                    class="bg-transparent dropdown-toggle border-0 action-more-btn after-none pt-1"
+                                    type="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                  >
                                     <i class="fa-solid fa-ellipsis"></i>
                                   </button>
                                   <ul class="dropdown-menu">
-                                    <li><a style="cursor: pointer;" class="dropdown-item"
-                                      (click)="getDeletedPostId(gridItemInfo?.id)" data-bs-toggle="modal" data-bs-target="#delete-Class">{{'Delete'| translate }}
-                                    </a>
+                                    <li>
+                                      <a
+                                        style="cursor: pointer"
+                                        class="dropdown-item"
+                                        (click)="
+                                          getDeletedPostId(gridItemInfo?.id)
+                                        "
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#delete-Class"
+                                        >{{ "Delete" | translate }}
+                                      </a>
                                     </li>
-                                    <li><a style="cursor: pointer;" class="dropdown-item"
-                                      (click)="openEditPostModal(gridItemInfo)" data-bs-toggle="modal" data-bs-target="#delete-Class">{{'Edit'| translate }}
-                                      <div *ngIf="gridItemInfo.updatedOn != null">(<span>{{ "UpdatedOn" | translate }} - </span> {{ gridItemInfo.updatedOn | date:'d MMMM y h:mm a' }})</div>
-                                    </a>
+                                    <li>
+                                      <a
+                                        style="cursor: pointer"
+                                        class="dropdown-item"
+                                        (click)="
+                                          openEditPostModal(gridItemInfo)
+                                        "
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#delete-Class"
+                                        >{{ "Edit" | translate }}
+                                        <div
+                                          *ngIf="gridItemInfo.updatedOn != null"
+                                        >
+                                          (<span
+                                            >{{ "UpdatedOn" | translate }} -
+                                          </span>
+                                          {{
+                                            gridItemInfo.updatedOn
+                                              | date : "d MMMM y h:mm a"
+                                          }})
+                                        </div>
+                                      </a>
                                     </li>
                                   </ul>
                                 </div>
                               </li>
-                            </ul> 
+                            </ul>
                             <button
                               (click)="hideGridItemInfo()"
                               type="button"
                               class="bg-transparent border-0 close-preview"
                             >
-                              <img lazyLoad="../../../../assets/images/cross.svg" />
+                              <img
+                                lazyLoad="../../../../assets/images/cross.svg"
+                              />
                             </button>
                             <div class="schoolgrid-header">
                               <div
@@ -1096,12 +1177,13 @@
                                 <div *ngIf="gridItemInfo.isLive">
                                   <img
                                     lazyLoad="../../../../assets/images/live_img.png"
-                                    style="height: 76px"
                                   />
                                 </div>
                               </div>
-      
-                              <p class="font_14 school-grid-date d-inline-block mb-0">
+
+                              <p
+                                class="font_14 school-grid-date d-inline-block mb-0"
+                              >
                                 {{ gridItemInfo.dateTime | date : "MMMM d" }} -
                                 {{ gridItemInfo.dateTime | date : "hh mm" }}
                               </p>
@@ -1138,7 +1220,9 @@
                                 >{{ tag.postTagValue }}</span
                               >
                             </div>
-                            <div class="school-grid-footer preview-right-action">
+                            <div
+                              class="school-grid-footer preview-right-action"
+                            >
                               <button
                                 type="button"
                                 class="bg-transparent border-0 function-btns cursor_auto"
@@ -1173,7 +1257,7 @@
                                   lazyLoad="../../../../assets/images/Heart-dark.svg"
                                   class="d-block mx-auto"
                                 />
-      
+
                                 <span
                                   class="textBlack"
                                   *ngIf="
@@ -1239,13 +1323,14 @@
                         </div>
                       </div>
                     </div>
-                    </div>
+                  </div>
                   <div
                     *ngIf="
                       (post.postType == 1 && post.postAuthorType == 2) ||
                       post.isLive
                     "
-                    class="col-md-6 col-xl-4 {{post.id}}" (click)="showPostDiv(post)"
+                    class="col-md-6 col-xl-4 {{ post.id }}"
+                    (click)="showPostDiv(post)"
                   >
                     <div
                       class="school-grid-box position-relative school-list-box mb-0"
@@ -1264,7 +1349,6 @@
                         <div *ngIf="post.isLive">
                           <img
                             lazyLoad="../../../../assets/images/live_img.png"
-                            style="height: 76px"
                           />
                         </div>
                         <div class="right-action">
@@ -1320,13 +1404,18 @@
                           <div class="row gx-1">
                             <div class="col-md-12">
                               <div
-                              [ngClass]="post.postAttachments.length > 0 ? 'school-large-thumbnail shadow-thumnail position-relative':'position-relative'"
+                                [ngClass]="
+                                  post.postAttachments.length > 0
+                                    ? 'school-large-thumbnail shadow-thumnail position-relative'
+                                    : 'position-relative'
+                                "
                               >
                                 <div
                                   *ngIf="
                                     post.postAttachments[0]?.fileUrl == null
                                   "
-                                  class="description_scroll" [id] = "getRandomClass(i,false)"
+                                  class="description_scroll"
+                                  [id]="getRandomClass(i, false)"
                                 >
                                   {{ post.description }}
                                 </div>
@@ -1353,7 +1442,6 @@
                       </div>
                     </div>
                   </div>
-                 
                 </ng-container>
               </div>
             </div>
@@ -1504,16 +1592,16 @@
                           >{{ "Start" | translate }}*</label
                         >
                         <input
-                        #startDate
-                        autocomplete="off"
-                        type="text"
-                        placeholder="mm/dd/yyyy"
-                        class="form-control w-100 date_calendar"
-                        name="startDate"
-                        formControlName="startDate"
-                        id="start_date"
-                        (click)="getSelectedLanguage()"
-                      />
+                          #startDate
+                          autocomplete="off"
+                          type="text"
+                          placeholder="mm/dd/yyyy"
+                          class="form-control w-100 date_calendar"
+                          name="startDate"
+                          formControlName="startDate"
+                          id="start_date"
+                          (click)="getSelectedLanguage()"
+                        />
 
                         <!-- <input
                           formControlName="startDate"
@@ -1547,16 +1635,16 @@
                           >{{ "Finish" | translate }}*</label
                         >
                         <input
-                        #endDate
-                        autocomplete="off"
-                        type="text"
-                        placeholder="mm/dd/yyyy"
-                        class="form-control w-100 date_calendar"
-                        name="endDate"
-                        formControlName="endDate"
-                        id="end_date"
-                        (click)="getSelectedLanguage()"
-                      />
+                          #endDate
+                          autocomplete="off"
+                          type="text"
+                          placeholder="mm/dd/yyyy"
+                          class="form-control w-100 date_calendar"
+                          name="endDate"
+                          formControlName="endDate"
+                          id="end_date"
+                          (click)="getSelectedLanguage()"
+                        />
                         <!-- <input
                           formControlName="endDate"
                           type="date"
@@ -1711,11 +1799,13 @@
                           class="form-control"
                           placeholder="{{ 'ClassBio' | translate }}"
                         /> -->
-                        <textarea maxlength="200" type="text"
-                formControlName="description"
-                class="form-control resize-none ht_96"
-                placeholder="{{ 'ClassBio' | translate }}"
-              ></textarea>
+                        <textarea
+                          maxlength="200"
+                          type="text"
+                          formControlName="description"
+                          class="form-control resize-none ht_96"
+                          placeholder="{{ 'ClassBio' | translate }}"
+                        ></textarea>
                       </div>
                     </div>
                   </div>
@@ -2241,264 +2331,295 @@
           </div>
         </div> -->
 
+        <div
+          class="modal fade edit-school-modal"
+          id="add-certificate"
+          tabindex="-1"
+          aria-labelledby="add-certificate"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div
+                class="modal-header border-0 justify-content-center position-relative"
+              >
+                <h1
+                  class="modal-title font_22 text_dark fw_700 border-0 text-center"
+                >
+                  {{ "AddCertificates" | translate }}
+                </h1>
+                <button
+                  type="button"
+                  class="btn-close shadow-none"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                >
+                  <img src="../../../../assets/images/cross.svg" />
+                </button>
+              </div>
+              <div class="modal-body">
+                <form [formGroup]="classCertificateForm" class="latest-form">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <label class="font_10"
+                          >{{ "CertificateName" | translate }}*</label
+                        >
+                        <input
+                          formControlName="certificateName"
+                          type="text"
+                          name="CertificateName"
+                          class="form-control w-100"
+                        />
+                      </div>
+                      <small
+                        class="p-error"
+                        style="color: orange"
+                        *ngIf="
+                          isSubmitted &&
+                          classCertificateForm.get('certificateName')?.errors
+                        "
+                      >
+                        {{ "CertificateNameRequired" | translate }}
+                      </small>
+                    </div>
+
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <label class="font_10"
+                          >{{ "ProviderName" | translate }}*</label
+                        >
+                        <input
+                          formControlName="provider"
+                          type="text"
+                          name="provider"
+                          class="form-control w-100"
+                        />
+                      </div>
+                      <small
+                        class="p-error"
+                        style="color: orange"
+                        *ngIf="
+                          isSubmitted &&
+                          classCertificateForm.get('provider')?.errors
+                        "
+                      >
+                        {{ "ProviderNameRequired" | translate }}
+                      </small>
+                    </div>
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <label class="font_10"
+                          >{{ "IssuedDate" | translate }}*</label
+                        >
+                        <input
+                          #issuedDate
+                          autocomplete="off"
+                          type="text"
+                          class="form-control w-100 date_calendar"
+                          name="dob"
+                          formControlName="issuedDate"
+                          id="issuedDate"
+                          (click)="getSelectedLanguage()"
+                        />
+                      </div>
+                      <small
+                        class="p-error"
+                        style="color: orange"
+                        *ngIf="
+                          isSubmitted &&
+                          classCertificateForm.controls.issuedDate.errors
+                        "
+                        >{{ "IssuedDateRequired" | translate }}
+                      </small>
+                    </div>
+
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <label class="font_10">{{
+                          "Description" | translate
+                        }}</label>
+                        <textarea
+                          maxlength="200"
+                          type="text"
+                          formControlName="description"
+                          class="form-control resize-none ht_96"
+                        ></textarea>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <div class="preview-zone hidden">
+                        <div class="box box-solid">
+                          <div class="box-header with-border"></div>
+                          <div class="box-body">
+                            <span class="position-relative d-inline-block">
+                              <img
+                                style="width: 200px"
+                                class="mb-3"
+                                [src]="uploadImage"
+                              />
+                              <button
+                                *ngIf="
+                                  uploadImage != undefined &&
+                                  uploadImage != null
+                                "
+                                (click)="removeUploadCertificateImage()"
+                                type="button"
+                                class="btn dl-school-img d-flex align-items-center justify-content-center rounded-circle position-absolute"
+                                style="height: 27px !important"
+                              >
+                                <i class="fa-solid fa-xmark"></i>
+                              </button>
+                            </span>
+                            <br />
+                            <p>{{ uploadImageName }}</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        *ngIf="uploadImage == null || uploadImage == undefined"
+                        class="dropzone-wrapper"
+                      >
+                        <div class="dropzone-desc">
+                          <i class="glyphicon glyphicon-download-alt"></i>
+                          <p class="text-center fw_400">
+                            {{ "ChooseImageFile" | translate }}
+                            <b>{{ "DragItHere" | translate }}</b>
+                          </p>
+                        </div>
+                        <input
+                          type="file"
+                          id="avatar"
+                          (change)="handleClassCertificate($event)"
+                          class="dropzone"
+                          accept="image/*"
+                        />
+                      </div>
+                    </div>
+                    <small
+                      class="p-error"
+                      style="color: orange; margin-left: 180px"
+                      *ngIf="
+                        isSubmitted &&
+                        (this.uploadImage == undefined ||
+                          this.uploadImage == null)
+                      "
+                    >
+                      {{ "CertificateImageRequired" | translate }}
+                    </small>
+                  </div>
+
+                  <div
+                    class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 mt-4"
+                  >
+                    <button
+                      #closeCertificateModal
+                      id="closeBtn"
+                      type="button"
+                      class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+                      data-bs-dismiss="modal"
+                    >
+                      {{ "DiscardChanges" | translate }}
+                    </button>
+                    <button
+                      (click)="saveClassCertificate()"
+                      type="button"
+                      class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
+                    >
+                      {{ "Save" | translate }}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <div
-class="modal fade edit-school-modal"
-id="add-certificate"
-tabindex="-1"
-aria-labelledby="add-certificate"
-aria-hidden="true"
->
-<div class="modal-dialog modal-dialog-centered">
-  <div class="modal-content">
-    <div
-      class="modal-header border-0 justify-content-center position-relative"
-    >
-      <h1
-        class="modal-title font_22 text_dark fw_700 border-0 text-center"
-      >
-        {{ "AddCertificates" | translate }}
-      </h1>      
-      <button
-        type="button"
-        class="btn-close shadow-none"
-        data-bs-dismiss="modal"
-        aria-label="Close"
-      >
-        <img src="../../../../assets/images/cross.svg" />
-      </button>
-    </div>
-    <div class="modal-body">
-      <form [formGroup]="classCertificateForm" class="latest-form">
-        <div class="row">
-          <div class="col-md-12">
-            <div class="form-group">
-              <label class="font_10">{{
-                "CertificateName" | translate
-              }}*</label>
-              <input
-                formControlName="certificateName"
-                type="text"
-                name="CertificateName"
-                class="form-control w-100"
-              />
-            </div>
-            <small
-            class="p-error"
-            style="color: orange"
-            *ngIf="isSubmitted && classCertificateForm.get('certificateName')?.errors"
-          >
-            {{ "CertificateNameRequired" | translate }}
-          </small>
-          </div>
-
-          <div class="col-md-12">
-            <div class="form-group">
-              <label class="font_10">{{
-                "ProviderName" | translate
-              }}*</label>
-              <input
-                formControlName="provider"
-                type="text"
-                name="provider"
-                class="form-control w-100"
-              />
-            </div>
-            <small
-            class="p-error"
-            style="color: orange"
-            *ngIf="isSubmitted && classCertificateForm.get('provider')?.errors">
-            {{ "ProviderNameRequired" | translate }}
-          </small>
-          </div>
-          <div class="col-md-12">
-            <div class="form-group">
-              <label class="font_10"
-                >{{ "IssuedDate" | translate }}*</label
+          class="modal fade edit-school-modal delete-modal post-view-large"
+          id="classOwnCertificate"
+          tabindex="-1"
+          aria-labelledby="classOwnCertificate"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div
+                class="modal-header border-0 justify-content-center position-relative"
               >
-              <input
-                #issuedDate
-                autocomplete="off"
-                type="text"
-                class="form-control w-100 date_calendar"
-                name="dob"
-                formControlName="issuedDate"
-                id="issuedDate"
-                (click)="getSelectedLanguage()"
-              />
-             
-            </div>
-            <small
-            class="p-error"
-            style="color: orange"
-            *ngIf="
-              isSubmitted && classCertificateForm.controls.issuedDate.errors
-            "
-            >{{ "IssuedDateRequired" | translate }}
-          </small>
-          </div>
-
-          <div class="col-md-12">
-            <div class="form-group">
-              <label class="font_10">{{
-                "Description" | translate
-              }}</label>
-              <textarea
-              maxlength="200"
-              type="text"
-              formControlName="description"
-              class="form-control resize-none ht_96"
-            ></textarea>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <div class="preview-zone hidden">
-              <div class="box box-solid">
-                <div class="box-header with-border"></div>
-                <div class="box-body">
-                  <span class="position-relative d-inline-block">
-                    <img
-                      style="width: 200px"
-                      class="mb-3"
-                      [src]="uploadImage"
-                    />
-                    <button
-                      *ngIf="
-                        uploadImage != undefined && uploadImage != null
-                      "
-                      (click)="removeUploadCertificateImage()"
-                      type="button"
-                      class="btn dl-school-img d-flex align-items-center justify-content-center rounded-circle position-absolute"
-                      style="height: 27px !important"
+                <h1
+                  class="modal-title font_22 text_dark fw_700 border-0 text-center"
+                >
+                  {{ "Certificate" | translate }}
+                </h1>
+                <ul
+                  *ngIf="isOwner"
+                  class="list-unstyled d-flex more-action-btn before-none pe-2 me-1 mb-0"
+                  style="position: absolute; right: 50px; top: 28px"
+                >
+                  <li class="d-inline-block ps-0 mb-0">
+                    <div class="dropdown">
+                      <button
+                        class="bg-transparent dropdown-toggle border-0 action-more-btn after-none pt-1"
+                        type="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                      >
+                        <i class="fa-solid fa-ellipsis"></i>
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li>
+                          <a
+                            style="cursor: pointer"
+                            class="dropdown-item"
+                            (click)="editClassCertificate(classCertificateInfo)"
+                            data-bs-toggle="modal"
+                            data-bs-target="#add-certificate"
+                            >{{ "Edit" | translate }}
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                  </li>
+                </ul>
+                <button
+                  type="button"
+                  class="btn-close shadow-none"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                >
+                  <img src="../../../../assets/images/cross.svg" />
+                </button>
+              </div>
+              <div class="modal-body" *ngIf="classCertificateInfo != undefined">
+                <div>
+                  <img [src]="classCertificateInfo.certificateUrl" />
+                </div>
+                <br />
+                <div>
+                  <span class="fw-bold"
+                    >{{ "CertificateName" | translate }} :</span
+                  >
+                  {{ classCertificateInfo.name }}<br />
+                  <span class="fw-bold"
+                    >{{ "ProviderName" | translate }} :</span
+                  >
+                  {{ classCertificateInfo.provider }}<br />
+                  <span class="fw-bold">{{ "IssuedDate" | translate }} :</span>
+                  {{ classCertificateInfo.issuedDate | date : "MMMM d, y"
+                  }}<br />
+                  <span *ngIf="classCertificateInfo.description != null">
+                    <span class="fw-bold"
+                      >{{ "Description" | translate }} :</span
                     >
-                      <i class="fa-solid fa-xmark"></i>
-                    </button>
+                    {{ classCertificateInfo.description }}
                   </span>
-                  <br />
-                  <p>{{ uploadImageName }}</p>
                 </div>
               </div>
             </div>
-            <div
-              *ngIf="uploadImage == null || uploadImage == undefined"
-              class="dropzone-wrapper"
-            >
-              <div class="dropzone-desc">
-                <i class="glyphicon glyphicon-download-alt"></i>
-                <p class="text-center fw_400">
-                  {{ "ChooseImageFile" | translate }}
-                  <b>{{ "DragItHere" | translate }}</b>
-                </p>
-              </div>
-              <input
-                type="file"
-                id="avatar"
-                (change)="handleClassCertificate($event)"
-                class="dropzone"
-                accept="image/*"
-              />
-            </div>
-          </div>
-          <small
-          class="p-error"
-          style="color: orange; margin-left: 180px"
-          *ngIf="
-            isSubmitted &&
-            (this.uploadImage == undefined || this.uploadImage == null)
-          "
-        >
-          {{ "CertificateImageRequired" | translate }}
-        </small>
-          </div>
-
-          <div
-          class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 mt-4"
-        >
-          <button
-            #closeCertificateModal
-            id="closeBtn"
-            type="button"
-            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
-            data-bs-dismiss="modal"
-          >
-            {{ "DiscardChanges" | translate }}
-          </button>
-          <button
-            (click)="saveClassCertificate()"
-            type="button"
-            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
-          >
-            {{ "Save" | translate }}
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-</div>
-
-        <div
-        class="modal fade edit-school-modal delete-modal post-view-large"
-        id="classOwnCertificate"
-        tabindex="-1"
-        aria-labelledby="classOwnCertificate"
-        aria-hidden="true"
-        >
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div
-              class="modal-header border-0 justify-content-center position-relative"
-            >
-              <h1
-                class="modal-title font_22 text_dark fw_700 border-0 text-center"
-              >
-                {{ "Certificate" | translate }}
-              </h1>
-              <ul *ngIf="isOwner" class="list-unstyled d-flex more-action-btn before-none pe-2 me-1 mb-0" style="position: absolute;right: 50px;top: 28px;">
-                <li class="d-inline-block ps-0 mb-0">
-                  <div class="dropdown">
-                    <button class="bg-transparent dropdown-toggle border-0 action-more-btn after-none pt-1" type="button" data-bs-toggle="dropdown"
-                      aria-expanded="false">
-                      <i class="fa-solid fa-ellipsis"></i>
-                    </button>
-                    <ul class="dropdown-menu">
-                      <li><a style="cursor: pointer;" class="dropdown-item"
-                        (click)="editClassCertificate(classCertificateInfo)" data-bs-toggle="modal" data-bs-target="#add-certificate">{{'Edit'| translate }}
-                      </a>
-                      </li>
-                    </ul>
-                  </div>
-                </li>
-              </ul>  
-              <button
-                type="button"
-                class="btn-close shadow-none"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              >
-                <img src="../../../../assets/images/cross.svg" />
-              </button>
-            </div>
-            <div class="modal-body" *ngIf="classCertificateInfo != undefined">
-              <div>
-                <img [src]="classCertificateInfo.certificateUrl"/>
-              </div>
-              <br>
-              <div>
-                <span class="fw-bold">{{ "CertificateName" | translate }} :</span> {{classCertificateInfo.name}}<br>
-                <span class="fw-bold">{{ "ProviderName" | translate}} :</span> {{classCertificateInfo.provider}}<br>
-                <span class="fw-bold">{{ "IssuedDate" | translate}} :</span>  {{classCertificateInfo.issuedDate | date : "MMMM d, y"}}<br>
-                <span *ngIf="classCertificateInfo.description != null">
-                  <span class="fw-bold">{{ "Description" | translate}} :</span> {{classCertificateInfo.description}}
-                </span>
-              </div>
-            </div>
           </div>
         </div>
-      </div>
-
-
 
         <div
           class="modal fade edit-school-modal delete-modal"
@@ -2585,48 +2706,47 @@ aria-hidden="true"
         </button>
       </div>
       <div class="modal-body">
-      
         <image-cropper
-        [imageChangedEvent]="imageChangedEvent"
-        [maintainAspectRatio]="true"
-        [containWithinAspectRatio]="containWithinAspectRatio"
-        [aspectRatio]="4 / 4"
-        [resizeToWidth]="256"
-        [cropperMinWidth]="128"
-        [onlyScaleDown]="true"
-        [roundCropper]="true"
-        [canvasRotation]="canvasRotation"
-        [transform]="transform"
-        [alignImage]="'left'"
-        [style.display]="showCropper ? null : 'none'"
-        format="png"
-        (imageCropped)="imageCropped($event)"
-        (imageLoaded)="imageLoaded()"
-        (cropperReady)="cropperReady($event)"
-        (loadImageFailed)="loadImageFailed()"
-      ></image-cropper>
+          [imageChangedEvent]="imageChangedEvent"
+          [maintainAspectRatio]="true"
+          [containWithinAspectRatio]="containWithinAspectRatio"
+          [aspectRatio]="4 / 4"
+          [resizeToWidth]="256"
+          [cropperMinWidth]="128"
+          [onlyScaleDown]="true"
+          [roundCropper]="true"
+          [canvasRotation]="canvasRotation"
+          [transform]="transform"
+          [alignImage]="'left'"
+          [style.display]="showCropper ? null : 'none'"
+          format="png"
+          (imageCropped)="imageCropped($event)"
+          (imageLoaded)="imageLoaded()"
+          (cropperReady)="cropperReady($event)"
+          (loadImageFailed)="loadImageFailed()"
+        ></image-cropper>
       </div>
       <div
-      class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4"
-    >
-      <button
-        (click)="closeCropModal()"
-        type="button"
-        class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
-        data-bs-target="#create-post"
+        class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4"
       >
-        {{ "DiscardChanges" | translate }}
-      </button>
-      <button
-        (click)="applyCropimage()"
-        type="button"
-        class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
-        data-bs-target="#create-post"
-      >
-        {{ "Apply" | translate }}
-      </button>
-      <!-- <button (click)="deselectAutocomplete()">avv</button> -->
-    </div>
+        <button
+          (click)="closeCropModal()"
+          type="button"
+          class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+          data-bs-target="#create-post"
+        >
+          {{ "DiscardChanges" | translate }}
+        </button>
+        <button
+          (click)="applyCropimage()"
+          type="button"
+          class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
+          data-bs-target="#create-post"
+        >
+          {{ "Apply" | translate }}
+        </button>
+        <!-- <button (click)="deselectAutocomplete()">avv</button> -->
+      </div>
     </div>
   </div>
 </ng-template>
