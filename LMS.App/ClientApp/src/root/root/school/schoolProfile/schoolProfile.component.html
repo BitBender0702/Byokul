@@ -943,7 +943,12 @@
                           class="feedimg-box position-relative text-light position-relative"
                         >
                           <a
-                            (click)="openReelsViewModal(postAttachment.id,postAttachment.postId)"
+                            (click)="
+                              openReelsViewModal(
+                                postAttachment.id,
+                                postAttachment.postId
+                              )
+                            "
                             style="cursor: pointer"
                           >
                             <img
@@ -1193,7 +1198,7 @@
                           *ngIf="post.postAttachments.length == 3"
                           class="col-md-4 h-100"
                         >
-                          <div class="h-100 medium_thumbox d-flex">
+                          <div class="medium_thumbox d-flex">
                             <div class="medium-thumnail">
                               <img
                                 *ngIf="post.postAttachments[1]?.fileType == 2"
@@ -1790,94 +1795,14 @@
                                     [src]="postAttachment?.fileUrl"
                                     type="video/mp4"
                                   /> -->
-<<<<<<< HEAD
-                                <!-- </video> -->
-                              </div>
-                            </slide>
-                            <slide *ngIf="postAttachment?.fileType == 1">
-                              <img
-                                *ngIf="postAttachment?.fileType == 1"
-                                class="w-100"
-                                [lazyLoad]="postAttachment?.fileUrl"
-                              />
-                            </slide>
-                          </div>
-                        </carousel>
-                      </div>
-                      <div
-                        [ngClass]="
-                          gridItemInfo.postAttachments.length > 0
-                            ? 'col-lg-6'
-                            : 'col-lg-12 heightForText'
-                        "
-                      >
-                        <div
-                          class="class-preview-right position-relative h-100"
-                        >
-                        <ul *ngIf="gridItemInfo?.createdBy == userId" class="list-unstyled d-flex more-action-btn before-none pe-2 me-1 mb-0" style="position: absolute;right: 50px;">
-                          <li class="d-inline-block ps-0 mb-0">
-                            <div class="dropdown">
-                              <button class="bg-transparent dropdown-toggle border-0 action-more-btn after-none pt-1" type="button" data-bs-toggle="dropdown"
-                                aria-expanded="false">
-                                <i class="fa-solid fa-ellipsis"></i>
-                              </button>
-                              <ul class="dropdown-menu">
-                                <li><a style="cursor: pointer;" class="dropdown-item"
-                                  (click)="getDeletedPostId(gridItemInfo?.id)" data-bs-toggle="modal" data-bs-target="#delete-Class">{{'Delete'| translate }}
-                                </a>
-                                </li>
-                                <li><a style="cursor: pointer;" class="dropdown-item"
-                                  (click)="openEditPostModal(gridItemInfo)" data-bs-toggle="modal" data-bs-target="#delete-Class">{{'Edit'| translate }}
-                                  <div *ngIf="gridItemInfo.updatedOn != null">(<span>{{ "UpdatedOn" | translate }} - </span> {{ gridItemInfo.updatedOn | date:'d MMMM y h:mm a' }})</div>
-                                </a>
-                                </li>
-                              </ul>
-                            </div>
-                          </li>
-                        </ul>
-                          <button
-                            (click)="hideGridItemInfo()"
-                            type="button"
-                            class="bg-transparent border-0 close-preview"
-                          >
-                            <img
-                              lazyLoad="../../../../assets/images/cross.svg"
-                            />
-                          </button>
-                          <div class="schoolgrid-header">
-                            <div
-                              class="d-flex align-items-center position-relative"
-                            >
-                              <div class="school-gridprofile-icon">
-                                <img [lazyLoad]="school.avatar" />
-                              </div>
-                              <h2
-                                class="d-inline-block font_16 fw_600 text_sec1 mb-0"
-                              >
-                                {{ gridItemInfo.title }}
-                              </h2>
-                              <div *ngIf="gridItemInfo.isLive">
-=======
                                   <!-- </video> -->
                                 </div>
                               </slide>
                               <slide *ngIf="postAttachment?.fileType == 1">
->>>>>>> 659011f (BYKL-420 Fixed images spacing)
                                 <img
-                                  *ngIf="
-                                    postAttachment?.fileType == 1 &&
-                                    postAttachment?.compressedFileUrl == ''
-                                  "
+                                  *ngIf="postAttachment?.fileType == 1"
                                   class="w-100"
                                   [lazyLoad]="postAttachment?.fileUrl"
-                                />
-                                <img
-                                  *ngIf="
-                                    postAttachment?.fileType == 1 &&
-                                    postAttachment?.compressedFileUrl != ''
-                                  "
-                                  class="w-100"
-                                  [src]="postAttachment?.compressedFileUrl"
                                 />
                               </slide>
                             </div>
@@ -3619,89 +3544,16 @@
         </div> -->
 
         <div
-class="modal fade edit-school-modal"
-id="add-certificate"
-tabindex="-1"
-aria-labelledby="add-certificate"
-aria-hidden="true"
->
-<div class="modal-dialog modal-dialog-centered">
-  <div class="modal-content">
-    <div
-      class="modal-header border-0 justify-content-center position-relative"
-    >
-      <h1
-        class="modal-title font_22 text_dark fw_700 border-0 text-center"
-      >
-        {{ "AddCertificates" | translate }}
-      </h1>
-      <button
-        type="button"
-        class="btn-close shadow-none"
-        data-bs-dismiss="modal"
-        aria-label="Close"
-      >
-        <img src="../../../../assets/images/cross.svg" />
-      </button>
-    </div>
-    <div class="modal-body">
-      <form [formGroup]="schoolCertificateForm" class="latest-form">
-        <div class="row">
-          <div class="col-md-12">
-            <div class="form-group">
-              <input
-                formControlName="schoolId"
-                type="text"
-                name="Id"
-                class="form-control w-100"
-                [disabled]="true"
-
-              />
-              <label class="font_10">{{
-                "CertificateName" | translate
-              }}*</label>
-
-              <input
-                formControlName="certificateName"
-                type="text"
-                name="CertificateName"
-                class="form-control w-100"
-              />
-            </div>
-            <small
-            class="p-error"
-            style="color: orange"
-            *ngIf="isSubmitted && schoolCertificateForm.get('certificateName')?.errors"
-          >
-            {{ "CertificateNameRequired" | translate }}
-          </small>
-          </div>
-
-          <div class="col-md-12">
-            <div class="form-group">
-              <label class="font_10">{{
-                "ProviderName" | translate
-              }}*</label>
-              <input
-                formControlName="provider"
-                type="text"
-                name="provider"
-                class="form-control w-100"
-              />
-            </div>
-            <small
-            class="p-error"
-            style="color: orange"
-            *ngIf="isSubmitted && schoolCertificateForm.get('provider')?.errors"
-          >
-            {{ "ProviderNameRequired" | translate }}
-          </small>
-          </div>
-
-          <div class="col-md-12">
-            <div class="form-group">
-              <label class="font_10"
-                >{{ "IssuedDate" | translate }}*</label
+          class="modal fade edit-school-modal"
+          id="add-certificate"
+          tabindex="-1"
+          aria-labelledby="add-certificate"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div
+                class="modal-header border-0 justify-content-center position-relative"
               >
                 <h1
                   class="modal-title font_22 text_dark fw_700 border-0 text-center"
@@ -3722,15 +3574,17 @@ aria-hidden="true"
                   <div class="row">
                     <div class="col-md-12">
                       <div class="form-group">
-                        <label class="font_10"
-                          >{{ "CertificateName" | translate }}*</label
-                        >
                         <input
                           formControlName="schoolId"
                           type="text"
-                          name="CertificateName"
+                          name="Id"
                           class="form-control w-100"
+                          [disabled]="true"
                         />
+                        <label class="font_10"
+                          >{{ "CertificateName" | translate }}*</label
+                        >
+
                         <input
                           formControlName="certificateName"
                           type="text"
