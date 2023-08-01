@@ -48,7 +48,7 @@ namespace LMS.App.Controllers
             var result = await _authService.AuthenticateUser(loginViewModel);
             if(result.ErrorMessage == "Incorrect password.")
             {
-                return Ok(result.ErrorMessage);
+                return Ok(result);
             }
             Token = result.Token;
             return Ok(result);
@@ -158,22 +158,6 @@ namespace LMS.App.Controllers
         public async Task<IActionResult> UpdatePassword([FromBody] UpdatePasswordViewModel updatePasswordViewModel)
         {
             var Email = User.Identity.Name;
-            //var response = await Login(new LoginViewModel
-            //{
-            //    Email = updatePasswordViewModel.Email,
-            //    Password = updatePasswordViewModel.CurrentPassword
-            //});
-            //var token = Token;
-            //if (token != null)
-            //{
-            //    //var isEmailExist = response
-            //    var result = await _authService.UpdatePassword(updatePasswordViewModel);
-
-            //    if (result.Succeeded)
-            //    {
-            //        return Ok(new { result = "Success" });
-            //    }
-            //}
 
             if (updatePasswordViewModel.CurrentPassword == updatePasswordViewModel.Password)
             {
