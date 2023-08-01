@@ -199,7 +199,7 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
         
         },
       error: (err: HttpErrorResponse) => this.invalidLogin = true
-      })
+      })      
     }
 
     getUserRoles(token:string): any{

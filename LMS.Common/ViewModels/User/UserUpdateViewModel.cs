@@ -20,5 +20,6 @@ namespace LMS.Common.ViewModels.User
         public string? ContactEmail { get; set; }
         public string? CountryName { get; set; }
         public string? CityName { get; set; }
+        public string? StateName { get; set; }
     }
 }

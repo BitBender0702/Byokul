@@ -59,6 +59,7 @@ export class RegisterComponent extends MultilingualComponent implements OnInit,A
     currentDate!:string;
     countries!:any;
     cities!:any;
+    states!:any;
     isDataLoaded:boolean = false;
     isPasswordVisible:boolean=false;
     isConfirmPasswordVisible:boolean = false;
@@ -134,7 +135,7 @@ export class RegisterComponent extends MultilingualComponent implements OnInit,A
         password: this.fb.control('', [...passwordValidators]),
         confirmPassword: this.fb.control('', [...passwordValidators]),
         countryName: this.fb.control('', [Validators.required]),
-        cityName: this.fb.control('', [Validators.required]),
+        stateName: this.fb.control('', [Validators.required]),
       }
       // , {validator: this.dateLessThan('dob',this.currentDate)}
       );
@@ -226,7 +227,7 @@ export class RegisterComponent extends MultilingualComponent implements OnInit,A
         this.user = this.registrationForm.value;
         this._authService.registerUser(this.user).pipe(finalize(()=> this.loadingIcon = false)).subscribe({
                   next: (response: AuthenticatedResponse) => {
-                    if(response.token != "success"){
+                    if(response.result != "success"){
                       this.registrationForm.setErrors({ unauthenticated: true });
                     }
                     else{
@@ -242,10 +243,12 @@ export class RegisterComponent extends MultilingualComponent implements OnInit,A
                 })
       }
 
-      getCityByCountry(event:any){
+      getStateByCountry(event:any){
+        debugger
         var countryName = event.value;
-        this._userService.getCityList(countryName).subscribe((response) => {
-          this.cities = response;
+        this._userService.getStateList(countryName).subscribe((response) => {
+          debugger
+          this.states = response;
         });
       }
 

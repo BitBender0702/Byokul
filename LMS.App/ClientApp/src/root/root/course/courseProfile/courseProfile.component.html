@@ -436,7 +436,7 @@
                               class="feedimg-box position-relative text-light position-relative"
                             >
                               <a
-                                (click)="openReelsViewModal(postAttachment.id)"
+                                (click)="openReelsViewModal(postAttachment.id,postAttachment.postId)"
                                 style="cursor: pointer"
                               >
                                 <div class="videofile">
@@ -962,7 +962,7 @@
               <div class="row">
                 <ng-container *ngFor="let post of course.posts; let i = index">
                   
-            <div class="col-12 imgDisplay" [class]="getRandomClass(i,true)" *ngIf="(isScreenPc && i % 3 == 0) || (isScreenTablet && i % 2 == 0) || (isScreenMobile && i % 1 == 0)"
+            <div class="col-12 imgDisplay" *ngIf="(isScreenPc && i % 3 == 0) || (isScreenTablet && i % 2 == 0) || (isScreenMobile && i % 1 == 0)"
             style="display: none;">
             <div
             [ngClass]="
@@ -993,17 +993,19 @@
                         *ngIf="postAttachment?.fileType == 2"
                         class="videofile"
                       >
-                        <video
+                      <videoJs-component [postAttachment]="postAttachment" ></videoJs-component>
+
+                        <!-- <video
                         [id] = "getRandomClass(i,false)"
                           controls
                           class="video-js vjs-big-play-centered"
                           preload="metadata"
                         >
-                          <!-- <source
+                           <source
                             [src]="postAttachment?.fileUrl"
                             type="video/mp4"
                           /> -->
-                          <source *ngIf="postAttachment?.compressedFileUrl == ''"
+                          <!-- <source *ngIf="postAttachment?.compressedFileUrl == ''"
                             [src]="postAttachment?.fileUrl"
                             type="video/mp4"
                           />
@@ -1011,7 +1013,7 @@
                             [src]="postAttachment?.compressedFileUrl"
                             type="video/mp4"
                           />
-                        </video>
+                        </video>  -->
                       </div>
                     </slide>
                     <slide *ngIf="postAttachment?.fileType == 1">
@@ -1021,14 +1023,9 @@
                         [src]="postAttachment?.fileUrl"
                       /> -->
                       <img
-                        *ngIf="postAttachment?.fileType == 1 && postAttachment?.compressedFileUrl == ''"
+                        *ngIf="postAttachment?.fileType == 1"
                         class="w-100"
                         [lazyLoad]="postAttachment?.fileUrl"
-                      />
-                      <img
-                        *ngIf="postAttachment?.fileType == 1 && postAttachment?.compressedFileUrl != ''"
-                        class="w-100"
-                        [src]="postAttachment?.compressedFileUrl"
                       />
                     </slide>
                   </div>
@@ -1229,7 +1226,7 @@
                       post.postType == 1 &&
                       (post.postAuthorType == 3 || post.postAuthorType == 2)
                     "
-                    class="col-md-6 col-xl-4" [class]="getRandomClass(i,false)" (click)="openDialouge($event,post)"
+                    class="col-md-6 col-xl-4 {{post.id}}" (click)="showPostDiv(post)"
                   >
                     <div
                       class="school-grid-box position-relative school-list-box h-100 mb-0"
@@ -1297,7 +1294,7 @@
                               lazyLoad="../../../../assets/images/eye.svg"
                               class="me-2"
                             />
-                            954
+                            {{ post.views.length }}
                           </button>
                         </div>
                         <div

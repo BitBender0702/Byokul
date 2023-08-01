@@ -25,6 +25,7 @@ namespace LMS.Data.Entity
         public string? StripeCustomerId { get; set; }
         public string? CountryName { get; set; }
         public string? CityName { get; set; }
+        public string? StateName { get; set; }
         public IEnumerable<UserLanguage> UserLanguage { get; set; }
 
 

@@ -362,7 +362,7 @@ namespace LMS.Services
 
             if (courseName != null)
             {
-                courseName = System.Web.HttpUtility.UrlEncode(courseName, Encoding.GetEncoding("iso-8859-7")).Replace("%3f", "").Replace("+", "").ToLower();
+                courseName = System.Web.HttpUtility.UrlEncode(courseName, Encoding.GetEncoding("iso-8859-7")).Replace("%3f", "").Replace("+", "").Replace(".","").ToLower();
 
                 var courseList = await _courseRepository.GetAll()
                     .Include(x => x.ServiceType)
@@ -373,7 +373,7 @@ namespace LMS.Services
                     .Include(x => x.Accessibility)
                     .Include(x => x.CreatedBy).ToListAsync();
 
-                var course = courseList.Where(x => (System.Web.HttpUtility.UrlEncode(x.CourseName.Replace(" ", "").ToLower(), Encoding.GetEncoding("iso-8859-7")) == courseName) && !x.IsDeleted).FirstOrDefault();
+                var course = courseList.Where(x => (System.Web.HttpUtility.UrlEncode(x.CourseName.Replace(" ", "").Replace(".", "").ToLower(), Encoding.GetEncoding("iso-8859-7")) == courseName) && !x.IsDeleted).FirstOrDefault();
 
                 if (course == null)
                 {
@@ -769,10 +769,13 @@ namespace LMS.Services
             {
                 int lastSlashIndex = item.FileUrl.LastIndexOf('/');
                 var fileName = item.FileUrl.Substring(lastSlashIndex + 1);
-
+                if (!string.IsNullOrEmpty(item.CompressedFileUrl))
+                {
+                    item.FileUrl = item.CompressedFileUrl;
+                }
                 item.ByteArray = await _blobService.GetFileContentAsync(this._config.GetValue<string>("Container:PostContainer"), fileName);
 
-                item.FileThumbnail = $"https://byokulstorage.blob.core.windows.net/userpostscompressed/thumbnails/{postId}.png";
+                item.FileThumbnail = $"https://byokulstorage.blob.core.windows.net/userpostscompressed/thumbnails/{item.Id}.png";
 
             }
             return result;

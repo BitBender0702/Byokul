@@ -389,7 +389,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
             this.scrolled = false;
             this.addClassView(this.class.classId);
             this.class.posts = this.getFilteredAttachments(this.class.posts);  
-            this.showPostDiv(postResponse.response.id);    
+            // this.showPostDiv(postResponse.response.id);    
           });
         });
       }
@@ -1163,10 +1163,13 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     
     }
 
-    showPostDiv(postId:string){
+    showPostDiv(post:any){
       debugger
-      var posts: any[] = this.class.posts;
-      this.gridItemInfo = posts.find(x => x.id == postId);
+      $('.imgDisplay').attr("style","display:none;")
+  $('.'+post.id).prevAll('.imgDisplay').first().attr("style", "display:block;");
+
+      // var posts: any[] = this.class.posts;
+      this.gridItemInfo = post;
       if(this.gridItemInfo.isLive){
         this.isGridItemInfo = true;
         this._postService.openLiveStream(this.gridItemInfo,this.userId).subscribe((response) => {
@@ -1228,8 +1231,10 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       }
     }
 
-    openReelsViewModal(postAttachmentId:string): void {
-      this.router.navigateByUrl(`user/reelsView/${this.class.classId}/class/${postAttachmentId}`);
+    openReelsViewModal(postAttachmentId:string,postId:string): void {
+      this.router.navigate(
+        [`user/reelsView/${this.class.classId}/class/${postAttachmentId}`],
+        { state: { post: {postId: postId} } });
       // const initialState = {
       //   postAttachmentId: postAttachmentId
       // };
@@ -1536,6 +1541,24 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     this.classCertificateInfo = certificateInfo;
     this.openClassOwnCertificate.nativeElement.click();
     this.cd.detectChanges();
+  }
+
+  getDeletedPostId(id: string) {
+    debugger
+    this.loadingIcon = true;
+    this._postService.deletePost(id).subscribe((_response) => {
+      this.loadingIcon = false;
+      deletePostResponse.next({postId:id});
+    });
+  }
+  
+  openEditPostModal(post:any){
+    debugger
+    const initialState = {
+      editPostId: post.id,
+      from: post.postAuthorType == 1 ? "school" : post.postAuthorType == 2 ? "class" : post.postAuthorType == 3 ? "course" : post.postAuthorType == 4 ? "user" : undefined
+    };
+      this.bsModalService.show(CreatePostComponent,{initialState});
   }
 
 

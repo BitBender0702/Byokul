@@ -365,7 +365,7 @@ namespace LMS.Services
 
             if (schoolName != null)
             {
-                schoolName = System.Web.HttpUtility.UrlEncode(schoolName, Encoding.GetEncoding("iso-8859-7")).Replace("%3f", "").Replace("+", "").ToLower();
+                schoolName = System.Web.HttpUtility.UrlEncode(schoolName, Encoding.GetEncoding("iso-8859-7")).Replace("%3f", "").Replace("+", "").Replace(".","").ToLower();
 
                 var schoolLanguages = await _schoolLanguageRepository.GetAll()
                 .Include(x => x.Language)
@@ -376,7 +376,7 @@ namespace LMS.Services
                 .Include(x => x.School)
                 .ThenInclude(x => x.CreatedBy).ToListAsync();
 
-                schoolLanguages = schoolLanguages.Where(x => (System.Web.HttpUtility.UrlEncode(x.School.SchoolName.Replace(" ", "").Replace("+", "").ToLower(), Encoding.GetEncoding("iso-8859-7")) == schoolName) && !x.School.IsDeleted).ToList();
+                schoolLanguages = schoolLanguages.Where(x => (System.Web.HttpUtility.UrlEncode(x.School.SchoolName.Replace(" ", "").Replace("+", "").Replace(".", "").ToLower(), Encoding.GetEncoding("iso-8859-7")) == schoolName) && !x.School.IsDeleted).ToList();
 
                 var response = _mapper.Map<SchoolDetailsViewModel>(schoolLanguages.First().School);
 
@@ -892,7 +892,11 @@ namespace LMS.Services
             var attachmentList = await _postAttachmentRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.PostId == postId).OrderByDescending(x => x.IsPinned).ToListAsync();
             foreach (var isCompressed in attachmentList)
             {
-                isCompressed.FileThumbnail = $"https://byokulstorage.blob.core.windows.net/userpostscompressed/thumbnails/{postId}.png";
+                if (!string.IsNullOrEmpty(isCompressed.CompressedFileUrl))
+                {
+                    isCompressed.FileUrl = isCompressed.CompressedFileUrl;
+                }
+                isCompressed.FileThumbnail = $"https://byokulstorage.blob.core.windows.net/userpostscompressed/thumbnails/{isCompressed.Id}.png";
             }
             var result = _mapper.Map<List<PostAttachmentViewModel>>(attachmentList);
             return result;

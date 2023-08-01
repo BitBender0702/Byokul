@@ -122,7 +122,7 @@
                         <slide *ngFor="let postAttachment of post.postAttachments">
                           <div *ngIf="postAttachment.fileType == 2">
                             <div class="feedimg-box position-relative text-light position-relative">
-                              <a (click)="openReelsViewModal(postAttachment.id,1)" style="cursor: pointer">
+                              <a (click)="openReelsViewModal(postAttachment.id,1,postAttachment.postId)" style="cursor: pointer">
                                 <div class="videofile">
                                   <img style="height: 300px" [lazyLoad]="postAttachment.fileThumbnail" />
                                 </div>
@@ -484,7 +484,7 @@
               <div class="row">
                 <ng-container *ngFor="let post of myFeeds; let i = index">
                   <div
-                  class="col-12 imgDisplay" [class]="getRandomClass(i,true)" *ngIf="(isScreenPc && i % 3 == 0) || (isScreenTablet && i % 2 == 0) || (isScreenMobile && i % 1 == 0)"
+                  class="col-12 imgDisplay" *ngIf="(isScreenPc && i % 3 == 0) || (isScreenTablet && i % 2 == 0) || (isScreenMobile && i % 1 == 0)"
                   style="display: none;"
                 >
                   <div [ngClass]="
@@ -504,19 +504,14 @@
                         " class="school-grid-thumbnail">
                         <slide *ngIf="postAttachment.fileType == 2">
                           <div *ngIf="postAttachment?.fileType == 2" class="videofile">
-                            <video [id] = "getRandomClass(i,false)" controls class="video-js vjs-big-play-centered" preload="metadata">
-
-                              <source  *ngIf="postAttachment?.compressedFileUrl == ''"
-                               [src]="postAttachment?.fileUrl" type="video/mp4" />
-                            <source  *ngIf="postAttachment?.compressedFileUrl != ''"
-                            [src]="postAttachment?.compressedFileUrl" type="video/mp4" />
-                         </video>
+                            <videoJs-component [postAttachment]="postAttachment" ></videoJs-component>
+                            <!-- <video [id] = "getRandomClass(i,false)" controls class="video-js vjs-big-play-centered" preload="metadata">
+                              <source [lazyLoad]="postAttachment?.fileUrl" type="video/mp4" />
+                            </video> -->
                           </div>
                         </slide>
                         <slide *ngIf="postAttachment?.fileType == 1">
-                          <img *ngIf="postAttachment?.fileType == 1 && postAttachment?.compressedFileUrl == ''" class="w-100" [src]="postAttachment?.fileUrl" />
-                          <img *ngIf="postAttachment?.fileType == 1 && postAttachment?.compressedFileUrl == ''" class="w-100" [src]="postAttachment?.fileUrl" />
-
+                          <img *ngIf="postAttachment?.fileType == 1" class="w-100" [lazyLoad]="postAttachment?.fileUrl" />
                         </slide>
                       </div>
                     </carousel>
@@ -674,7 +669,7 @@
                 </div>
               </div>
               </div>
-                  <div *ngIf="post.postType == 1" class="col-md-6 col-xl-4" [class]="getRandomClass(i,false)" (click)="openDialouge($event,post)">
+                  <div *ngIf="post.postType == 1" class="col-md-6 col-xl-4 {{post.id}}" (click)="showPostDiv(post,'FromMyFeeds')">
                     <div class="school-grid-box position-relative school-list-box h-100 mb-0">
                       <div class="schoolgrid-header d-flex align-items-center position-relative">
                         <div class="school-gridprofile-icon">
@@ -812,7 +807,7 @@
                         <slide *ngFor="let postAttachment of post.postAttachments">
                           <div *ngIf="postAttachment.fileType == 2">
                             <div class="feedimg-box position-relative text-light position-relative">
-                              <a (click)="openReelsViewModal(postAttachment.id,2)" style="cursor: pointer">
+                              <a (click)="openReelsViewModal(postAttachment.id,2,postAttachment.postId)" style="cursor: pointer">
                                 <div class="videofile">
                                   <img style="height: 300px" [lazyLoad]="postAttachment.fileThumbnail" />
                                 </div>
@@ -1133,7 +1128,7 @@
             <div class="list-schol-profile" *ngIf="!isProfileGrid">
               <div class="row">
                 <ng-container *ngFor="let post of globalFeeds; let i = index">
-                  <div  class="col-12 imgDisplay" [class]="getRandomClass(i,true)" *ngIf="(isScreenPc && i % 3 == 0) || (isScreenTablet && i % 2 == 0) || (isScreenMobile && i % 1 == 0)"
+                  <div  class="col-12 imgDisplay" *ngIf="(isScreenPc && i % 3 == 0) || (isScreenTablet && i % 2 == 0) || (isScreenMobile && i % 1 == 0)"
                   style="display: none;">
                     <div [ngClass]="
                     isGridItemInfoForGlobal
@@ -1152,9 +1147,10 @@
                           " class="school-grid-thumbnail">
                           <slide *ngIf="postAttachment.fileType == 2">
                             <div *ngIf="postAttachment?.fileType == 2" class="videofile">
-                              <video [id] = "getRandomClass(i,false)" controls class="video-js vjs-big-play-centered" preload="metadata">
+                              <videoJs-component [postAttachment]="postAttachment" ></videoJs-component>
+                              <!-- <video [id] = "getRandomClass(i,false)" controls class="video-js vjs-big-play-centered" preload="metadata">
                                 <source [lazyLoad]="postAttachment?.fileUrl" type="video/mp4" />
-                              </video>
+                              </video> -->
                             </div>
                           </slide>
                           <slide *ngIf="postAttachment?.fileType == 1">
@@ -1341,7 +1337,7 @@
                   </div>
                 </div>
                   </div>
-                  <div *ngIf="post.postType == 1" class="col-md-6 col-xl-4" [class]="getRandomClass(i,false)" (click)="openDialouge($event,post)">
+                  <div *ngIf="post.postType == 1" class="col-md-6 col-xl-4 {{post.id}}" (click)="showPostDiv(post,'FromGlobalFeeds')">
                     <div class="school-grid-box position-relative school-list-box h-100 mb-0">
                       <div class="schoolgrid-header d-flex align-items-center position-relative">
                         <div class="school-gridprofile-icon">

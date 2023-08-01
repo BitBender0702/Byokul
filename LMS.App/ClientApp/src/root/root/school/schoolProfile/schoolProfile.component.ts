@@ -486,7 +486,7 @@ export class SchoolProfileComponent
            this.loadingIcon = false;
            this.isDataLoaded = true;
            this.school.posts = this.getFilteredAttachments(this.school.posts);  
-           this.showPostDiv(postResponse.response.id);   
+          //  this.showPostDiv(postResponse.response.id);   
           });
      });
     }
@@ -1399,21 +1399,18 @@ export class SchoolProfileComponent
 
 
 
-  showPostDiv(postId: string) {
+  showPostDiv(post: any) {
     debugger
-    this.counter = uuidv4();
-    this.clickedPostId = postId;
-    this.showDiv = true;
+    $('.imgDisplay').attr("style","display:none;")
+  $('.'+post.id).prevAll('.imgDisplay').first().attr("style", "display:block;");
+
+    // this.counter = uuidv4();
+    // this.clickedPostId = postId;
+    // this.showDiv = true;
     
-    var posts: any[] = this.school.posts;
-    this.gridItemInfo = posts.find((x) => x.id == postId);
-    this.gridItemInfo.postAttachments[0].fileThumbnail;
-    const fileThumbnails = this.gridItemInfo.postAttachments.map((post:any) => {
-      const thumbnailURL = `https://byokulstorage.blob.core.windows.net/userpostscompressed/thumbnails/${postId}.png`;
-      return thumbnailURL;
-    });
-
-
+    // var posts: any[] = this.school.posts;
+    this.gridItemInfo = post;
+    this.gridItemInfo.postAttachments
     if(this.gridItemInfo.isLive){
       this.isGridItemInfo = true;
       this._postService.openLiveStream(this.gridItemInfo,this.userId).subscribe((response) => {
@@ -1535,9 +1532,10 @@ export class SchoolProfileComponent
     };
   }
 
-  openReelsViewModal(postAttachmentId: string): void {
-    this.router.navigateByUrl(`user/reelsView/${this.school.schoolId}/school/${postAttachmentId}`);
-
+  openReelsViewModal(postAttachmentId: string,postId:string): void {
+    this.router.navigate(
+      [`user/reelsView/${this.school.schoolId}/school/${postAttachmentId}`],
+      { state: { post: {postId: postId} } });
     // const initialState = {
     //   postAttachmentId: postAttachmentId,
     // };

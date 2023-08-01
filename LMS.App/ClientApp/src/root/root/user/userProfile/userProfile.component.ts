@@ -49,6 +49,7 @@ import { Dimensions, ImageCroppedEvent, ImageTransform } from 'ngx-image-cropper
 import { DeleteSchoolCertificate } from 'src/root/interfaces/school/deleteSchoolCertificate';
 import { DeleteUserCertificate } from 'src/root/interfaces/user/deleteUserCertificate';
 import { AddUserCertificate } from 'src/root/interfaces/user/addUserCertificate';
+import { defined } from 'chart.js/dist/helpers/helpers.core';
 export const userImageResponse =new Subject<{userAvatar : string,gender : number}>();  
 export const chatResponse =new Subject<{receiverId : string , type: string,chatTypeId:string}>();  
 
@@ -191,6 +192,7 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
     userAvatar:string = '';
     countries:any;
     cities:any;
+    states:any;
     requiredCountry:any;
 
 
@@ -297,7 +299,7 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
         description: this.fb.control(''),
         contactEmail: this.fb.control(''),
         country: this.fb.control(''),
-        city: this.fb.control('')
+        state: this.fb.control('')
       });
 
       this.InitializeFollowUnfollowUser();
@@ -338,7 +340,7 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
           this.cd.detectChanges();
           this.addEventListnerOnCarousel();
           this.user.posts = this.getFilteredAttachments(this.user.posts);   
-          this.showPostDiv(postResponse.response);
+          //this.showPostDiv(postResponse.response);
           });
       });
     }
@@ -878,8 +880,8 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
       this._userService.getCountryList().subscribe((response) => {
         debugger
         this.countries = response;
-        this._userService.getCityList(this.user.countryName).subscribe((response) => {
-          this.cities = response;
+        this._userService.getStateList(this.user.countryName).subscribe((response) => {
+          this.states = response;
           this.requiredCountry = this.countries.find((x: { countryName: string; }) => x.countryName == this.user.countryName);
           // var requiredCity = this.cities.find((x: { cityName: string; }) => x.cityName == this.user.cityName);
           this.editUserForm = this.fb.group({
@@ -890,7 +892,7 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
           description: this.fb.control(this.editUser.description??''),
           contactEmail: this.fb.control(this.editUser.contactEmail??'',[Validators.pattern(this.EMAIL_PATTERN)]),
           country: this.fb.control(this.requiredCountry.countryName),
-          city: this.fb.control(this.user.cityName)
+          state: this.fb.control(this.user.stateName)
 
         });
         this.editUserForm.updateValueAndValidity();
@@ -945,7 +947,7 @@ export const chatResponse =new Subject<{receiverId : string , type: string,chatT
     this.fileToUpload.append('description',this.updateUserDetails.description);
     this.fileToUpload.append('contactEmail',this.updateUserDetails.contactEmail);
     this.fileToUpload.append('countryName',this.updateUserDetails.country);
-    this.fileToUpload.append('cityName',this.updateUserDetails.city);
+    this.fileToUpload.append('stateName',this.updateUserDetails.state);
 
     // this.user.countryName = this.updateUserDetails.country;
     // this.user.cityName = this.updateUserDetails.city;
@@ -1021,7 +1023,7 @@ profileList(){
   this.isProfileGrid = false;
   this.isGridItemInfo = true;
   this.cd.detectChanges();
-  if(this.videoPlayer != undefined){
+  if(this.videoPlayer != undefined){    
     videojs(this.videoPlayer.nativeElement, {autoplay: false});
   }
 }
@@ -1130,7 +1132,7 @@ openPostsViewModal(posts:any): void {
 }
 }
 
-openReelsViewModal(postAttachmentId:string): void {
+openReelsViewModal(postAttachmentId:string,postId:string): void {
   debugger
   const screenWidthThreshold = 768;
   const isMobileOrTab = window.innerWidth < screenWidthThreshold;
@@ -1138,7 +1140,7 @@ openReelsViewModal(postAttachmentId:string): void {
     // this.router.navigateByUrl(`user/reelsView/${this.user.id}/user/${postAttachmentId}`);
 this.router.navigate(
     [`user/reelsView/${this.user.id}/user/${postAttachmentId}`],
-    { state: { post: {postId: postAttachmentId} } });
+    { state: { post: {postId: postId} } });
 
 //   } else {
 //   const initialState = {
@@ -1219,10 +1221,30 @@ likeUnlikePosts(postId:string, isLike:boolean,postType:number,post:any,from:numb
   });
 }
 
-showPostDiv(postId:string){
+showPostDiv(post:any){
   debugger
-  var posts: any[] = this.user.posts;
-  this.gridItemInfo = posts.find(x => x.id == postId);
+  $('.imgDisplay').attr("style","display:none;")
+  $('.imgDisplay').attr("style","display:none;").removeClass("intro")
+  $('.imgDisplay').removeClass("initVideo");
+  $('.'+post.id).prevAll('.imgDisplay').first().attr("style", "display:block;");
+  $('.'+post.id).prevAll('.imgDisplay').first().addClass("intro")
+  // if(post.postAttachments != undefined){
+  //   var postAttach = post.postAttachments[0];
+  //   debugger
+  //   if(postAttach != undefined){
+  //     if(postAttach.fileType != 1){
+  //         try{
+  //           videojs(postAttach.id);
+  //         } catch{
+  //         }
+  //     }
+  //   }
+  // }
+  // if(post.id != undefined){
+  //   videojs(post.id);
+  // }
+  //var posts: any[] = this.user.posts;
+  this.gridItemInfo = post;//posts.find(x => x.id == postId);
   if(this.gridItemInfo.isLive){
     this.isGridItemInfo = true;
     this._postService.openLiveStream(this.gridItemInfo,this.loginUserId).subscribe((response) => {
@@ -1231,9 +1253,42 @@ showPostDiv(postId:string){
   else{
   this.isGridItemInfo = true;
   this.cd.detectChanges();
+ if(this.videoPlayer!=undefined)
+ {
   videojs(this.videoPlayer.nativeElement, {autoplay: false});
+ }
   this.addPostView(this.gridItemInfo.id);
   }
+}
+
+checkIfIntro(e:any){
+  var isIntro = e.classList.contains('intro');
+  // var initVideo = e.classList.contains('initVideo');
+  // if(isIntro && !initVideo){
+  //   var id = `#${this.gridItemInfo.postAttachments[0].id}`;
+  //   var videoElement = $(id);
+  //   if(videoElement != null){
+  //     e.classList.add("initVideo");
+  //     this.intializeVideoJs();
+  //   }
+   
+  // }
+return isIntro;
+}
+
+intializeVideoJs(){
+  var post = this.gridItemInfo;
+    if(post.postAttachments != undefined){
+      var postAttach = post.postAttachments[0];
+      if(postAttach != undefined){
+        if(postAttach.fileType != 1){
+            try{
+              videojs(postAttach.id);
+            } catch{
+            }
+        }
+      }}
+      return true;
 }
 
 showSavedPostDiv(postId:string){
@@ -1704,12 +1759,12 @@ getSelectedLanguageForCertificate(){
   issuedDateElement._flatpickr.set("locale", locale); 
 }
 
-getCityByCountry(event:any){
+getStateByCountry(event:any){
   debugger
   var countryName = event.value;
-  this._userService.getCityList(countryName).subscribe((response) => {
+  this._userService.getStateList(countryName).subscribe((response) => {
     debugger
-    this.cities = response;
+    this.states = response;
     // this.editUserForm.get('city')?.setValue('');
   });
 }
@@ -1848,11 +1903,11 @@ generateGuid():string {
  }
 
 
- getRandomClass(index:number, iscontainer:boolean){
+ getRandomClass(iscontainer:boolean){
    var number = this.isScreenPc ? 3 :  this.isScreenTablet ? 2 : this.isScreenMobile ? 1 : 0;
-   if(index %number == 0 && iscontainer){
-   this.previousGuid = this.generateGuid();
-   }
+   if(iscontainer)
+   return this.generateGuid();
+   else
      return this.previousGuid;
  }
 

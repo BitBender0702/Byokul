@@ -55,7 +55,10 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
     isFinishUpReels:boolean = false;
     @ViewChild('videoPlayer') videoPlayer!: ElementRef;
     @ViewChild(SlickCarouselComponent, { static: false }) carousel!: SlickCarouselComponent;
+    @ViewChild('slickCarousel') slickCarousel!: ElementRef;
 
+
+    @ViewChild('slickCarouselRef', { read: ElementRef }) slickCarouselRef!: ElementRef;
 
 
     //test
@@ -84,6 +87,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
     firstPostId:string = "";
     lastPostId:string = "";
     ownerId:string = "";
+    post:any;
     @ViewChild('groupChatList') groupChatList!: ElementRef;
 
 
@@ -103,8 +107,10 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       debugger
       var selectedLang = localStorage.getItem("selectedLanguage");
       this.translate.use(selectedLang?? '');
-      let chatHeadObj = history.state.post;
+      this.post = history.state.post;
+      this.InitializePostView();
       this.getSenderInfo();
+      this.addPostView(this.post.postId);
         this.loadingIcon = true;
         this.ownerId = this.route.snapshot.paramMap.get('id')??'';
         this.from = this.route.snapshot.paramMap.get('from')??'';
@@ -159,7 +165,6 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       // //       });
       //    });
         this.InitializeLikeUnlikePost();
-        this.InitializePostView();
         this.gender = localStorage.getItem("gender")??'';
         if(!this.commentResponseSubscription){
           this.commentResponseSubscription = commentResponse.subscribe(response => {
@@ -779,13 +784,11 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
 
       addPostView(postId:string){
         debugger
-        if(this.userId != undefined){
         this.postView.postId = postId;
         this._postService.postView(this.postView).subscribe((response) => {
-          this.reels.post.views.length = response;
+          debugger
+          // this.reels.post.views.length = response;
          }); 
-        }
-      
       }
 
       // for like
@@ -1037,6 +1040,7 @@ private checkScreenSize() {
   carouselConfig = {
     slidesToShow: 1,
     slidesToScroll: 1,
+    accessibility: true,
     dots: true,
     numberOfDots:3,
     vertical:true,
@@ -1067,4 +1071,19 @@ onMouseWheel(event: WheelEvent) {
   }
 
 }
+
+@HostListener('window:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    debugger
+    this.cd.detectChanges();
+    const slick = this.slickCarouselRef.nativeElement.slick;
+    switch (event.key) {
+      case 'ArrowUp':
+        slick.slickPrev();
+        break;
+      case 'ArrowDown':
+        slick.slickNext();
+        break;
+    }
+  }
 }

@@ -935,7 +935,7 @@
                           class="feedimg-box position-relative text-light position-relative"
                         >
                           <a
-                            (click)="openReelsViewModal(postAttachment.id)"
+                            (click)="openReelsViewModal(postAttachment.id,postAttachment.postId)"
                             style="cursor: pointer"
                           >
                             <img
@@ -1721,7 +1721,7 @@
               <div class="row">
                 <ng-container *ngFor="let post of school.posts; let i = index">
                   <div
-                  class="col-12 imgDisplay" [class]="getRandomClass(i,true)" *ngIf="(isScreenPc && i % 3 == 0) || (isScreenTablet && i % 2 == 0) || (isScreenMobile && i % 1 == 0)"
+                  class="col-12 imgDisplay" *ngIf="(isScreenPc && i % 3 == 0) || (isScreenTablet && i % 2 == 0) || (isScreenMobile && i % 1 == 0)"
                   style="display: none;"
                 >
                   <div
@@ -1752,7 +1752,8 @@
                                 *ngIf="postAttachment?.fileType == 2"
                                 class="videofile"
                               >
-                                <video
+                              <videoJs-component [postAttachment]="postAttachment" ></videoJs-component>
+                                <!-- <video
                                 [id] = "getRandomClass(i,false)"
                                   controls
                                   class="video-js vjs-big-play-centered"
@@ -1766,23 +1767,18 @@
                                     [src]="postAttachment?.compressedFileUrl"
                                     type="video/mp4"
                                   />
-                                  <!-- <source
+                                  <source
                                     [src]="postAttachment?.fileUrl"
                                     type="video/mp4"
                                   /> -->
-                                </video>
+                                <!-- </video> -->
                               </div>
                             </slide>
                             <slide *ngIf="postAttachment?.fileType == 1">
                               <img
-                                *ngIf="postAttachment?.fileType == 1 && postAttachment?.compressedFileUrl == ''"
+                                *ngIf="postAttachment?.fileType == 1"
                                 class="w-100"
                                 [lazyLoad]="postAttachment?.fileUrl"
-                              />
-                              <img
-                                *ngIf="postAttachment?.fileType == 1 && postAttachment?.compressedFileUrl != ''"
-                                class="w-100"
-                                [src]="postAttachment?.compressedFileUrl"
                               />
                             </slide>
                           </div>
@@ -2006,7 +2002,7 @@
                 </div>
                   <div *ngIf="
                       (post.postType == 1 && post.postAuthorType == 1) ||
-                      post.isLive" class="col-md-6 col-xl-4" [class]="getRandomClass(i,false)" (click)="openDialouge($event,post)"
+                      post.isLive" class="col-md-6 col-xl-4 {{post.id}}" (click)="showPostDiv(post)"
                   >
                   
                     <div
@@ -3478,15 +3474,18 @@ aria-hidden="true"
         <div class="row">
           <div class="col-md-12">
             <div class="form-group">
-              <label class="font_10">{{
-                "CertificateName" | translate
-              }}*</label>
               <input
                 formControlName="schoolId"
                 type="text"
-                name="CertificateName"
+                name="Id"
                 class="form-control w-100"
+                [disabled]="true"
+
               />
+              <label class="font_10">{{
+                "CertificateName" | translate
+              }}*</label>
+             
               <input
                 formControlName="certificateName"
                 type="text"

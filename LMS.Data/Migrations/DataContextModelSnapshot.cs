@@ -1220,7 +1220,6 @@ namespace LMS.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CompressedFileUrl")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CreatedById")
@@ -1918,6 +1917,9 @@ namespace LMS.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StateName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("StripeCustomerId")

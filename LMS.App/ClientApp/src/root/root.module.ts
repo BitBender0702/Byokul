@@ -91,6 +91,7 @@ import { NgxIntlTelInputModule } from 'ngx-intl-tel-input';
 import { IConfig, NgxMaskModule } from 'ngx-mask';
 import { SlickCarouselModule } from 'ngx-slick-carousel';
 import {LazyLoadImageModule} from 'ng-lazyload-image'
+import { VideoJsComponent } from './root/videojs/videojs.component';
 import { UploadCertificateComponent } from './root/UploadCertificates/uploadCertificate.component';
 
 export const options: Partial<IConfig> = {
@@ -206,7 +207,8 @@ const routes: Routes = [
     DeliveryAndReturnComponent,
     DSAForSchoolComponent,
     DSAForStudentsComponent,
-    UploadCertificateComponent 
+    UploadCertificateComponent,
+    VideoJsComponent
   ],
   imports: [
     CommonModule,

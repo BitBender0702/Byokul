@@ -17,6 +17,7 @@ export class NotificationService{
     private _userService;
     private _signalrService;
     notificationViewModel!:NotificationViewModel;
+    notificationViewModel2!:any;
     
     token:string = localStorage.getItem("jwt")?? '';
     private headers!: HttpHeaders;
@@ -72,6 +73,22 @@ export class NotificationService{
             chatType:chatType,
             chatTypeId:chatTypeId
           }
+
+          // this.notificationViewModel2 = {
+          //   id: Constant.defaultGuid,
+          //   userId: userid,
+          //   actionDoneBy: loginUserId,
+          //   avatar: response.avatar,
+          //   isRead:false,
+          //   notificationContent:`${response.firstName + ' ' + response.lastName + ' ' + notificationContent}`,
+          //   notificationType:notificationType,
+          //   postId: postId,
+          //   postType:postType,
+          //   //post:post,
+          //   // reelId:reelId,
+          //   // chatType:chatType,
+          //   // chatTypeId:chatTypeId
+          // }
 
           if(notificationType == NotificationType.CertificateSent){
             this.notificationViewModel.notificationContent = notificationContent;

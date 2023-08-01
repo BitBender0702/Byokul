@@ -9,4 +9,5 @@ export interface EditUserModel{
     contactEmail:string;
     country:string;
     city:string;
+    state:string;
 }

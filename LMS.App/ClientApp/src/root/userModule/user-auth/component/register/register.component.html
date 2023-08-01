@@ -97,7 +97,7 @@
               class="form-select rounded-8 w-100"
               formControlName="countryName"
               aria-label="Default select example"
-              (change)="getCityByCountry($event.target)"
+              (change)="getStateByCountry($event.target)"
             >
               <option value="" disabled selected hidden>
                 {{ "Country" | translate }}
@@ -123,20 +123,20 @@
           <div class="form-group">
             <select
               class="form-select rounded-8 w-100"
-              formControlName="cityName"
+              formControlName="stateName"
               aria-label="Default select example"
             >
               <option value="" disabled selected hidden>
                 {{ "StateOrProvince" | translate }}
               </option>
-              <option *ngFor="let city of cities" [value]="city">
-                {{ city }}
+              <option *ngFor="let state of states" [value]="state">
+                {{ state }}
               </option>
             </select>
             <small
               class="p-error"
               style="color: orange"
-              *ngIf="isSubmitted && registrationForm.controls.cityName.errors"
+              *ngIf="isSubmitted && registrationForm.controls.stateName.errors"
               >{{ "ThisFieldRequired" | translate }}
             </small>
           </div>

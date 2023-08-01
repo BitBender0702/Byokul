@@ -13,6 +13,8 @@ import { UploadTypeEnum } from '../Enums/uploadTypeEnum';
 import { v4 as uuidv4 } from 'uuid';
 import { BlobServiceClient, ContainerClient, BlockBlobClient } from '@azure/storage-blob';
 import { PostService } from '../service/post.service';
+import { NotificationService } from '../service/notification.service';
+import { NotificationType } from '../interfaces/notification/notificationViewModel';
 
 
 export const postProgressNotification = new Subject();  
@@ -45,12 +47,15 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
   postUploadOnBlobSubscription!:Subscription;
   reelUploadOnBlobSubscription!:Subscription;
   addPostSubscription!: Subscription;
+  loginUserId:string = "";
 
   private _postService;
+  private _notificationService;
 
-  constructor(injector: Injector, private signalRService: SignalrService,public messageService:MessageService,private translateService: TranslateService, private meta: Meta,authService: AuthService,private router: Router,private route: ActivatedRoute,postService:PostService) { 
+  constructor(injector: Injector,private notificationService: NotificationService, private signalRService: SignalrService,public messageService:MessageService,private translateService: TranslateService, private meta: Meta,authService: AuthService,private router: Router,private route: ActivatedRoute,postService:PostService) { 
     super(injector);
     this._postService = postService;
+    this._notificationService = notificationService;
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         event.urlAfterRedirects = event.urlAfterRedirects.split('/').slice(0, 3).join('/');
@@ -84,6 +89,7 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
   }
 
   ngOnInit(): void {
+    this.loginUserInfo();
     this.connectSignalR();
     this.meta.updateTag({ property: 'og:title', content: "test" });
     this.meta.updateTag({ property: 'og:type', content: "profile" });
@@ -93,6 +99,7 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
 
     if(!this.postProgressSubscription){
       this.postProgressSubscription = postProgressNotification.subscribe(response => {
+        debugger
         const translatedMessage = this.translateService.instant('PostProgressMessage');
         const translatedSummary = this.translateService.instant('Info');
         this.messageService.add({severity:'info', summary:translatedSummary,life: 3000, detail:translatedMessage});
@@ -100,18 +107,18 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
     }
 
     if(!this.postUploadOnBlobSubscription){
-      this.postUploadOnBlobSubscription = postUploadOnBlob.subscribe(async (response) => {
+      this.postUploadOnBlobSubscription = postUploadOnBlob.subscribe(async (uploadResponse) => {
         debugger
         this.uploadVideoUrlList = [];
-        if(response.type == 1){
-        const uploadPromises = response.combineFiles.map((file:any) => {
-          if (response.videos.includes(file)) {
+        if(uploadResponse.type == 1){
+        const uploadPromises = uploadResponse.combineFiles.map((file:any) => {
+          if (uploadResponse.videos.includes(file)) {
             return this.uploadVideosOnBlob(file, UploadTypeEnum.Video);
           } 
-          if(response.images.includes(file)){
+          if(uploadResponse.images.includes(file)){
             return this.uploadVideosOnBlob(file, UploadTypeEnum.Image);
           }
-          if(response.attachment.includes(file)) {
+          if(uploadResponse.attachment.includes(file)) {
             return this.uploadVideosOnBlob(file, UploadTypeEnum.Attachment);
           }
           return "";
@@ -120,66 +127,120 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
         
         await Promise.all(uploadPromises);
         // this.createPostRef.createPostResponse({postToUpload:response.postToUpload,uploadVideoUrlList:this.uploadVideoUrlList,type:1});
-        createPost.next({postToUpload:response.postToUpload,uploadVideoUrlList:this.uploadVideoUrlList,type:1});
-        response.postToUpload.append('blobUrlsJson', JSON.stringify(this.uploadVideoUrlList));
-        this._postService.createPost(response.postToUpload).subscribe((response:any) => {
+        createPost.next({postToUpload:uploadResponse.postToUpload,uploadVideoUrlList:this.uploadVideoUrlList,type:1});
+        uploadResponse.postToUpload.append('blobUrlsJson', JSON.stringify(this.uploadVideoUrlList));
+        this._postService.createPost(uploadResponse.postToUpload).subscribe((response:any) => {
           debugger
+            var translatedMessage = this.translateService.instant('PostCreatedSuccessfully');
+        const translatedSummary = this.translateService.instant('Success');
+        this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage,}); 
           // this.close();
           // this.onClose.emit(response);
           // this.isSubmitted=false;
           // this.loadingIcon = false;
           addPostResponse.next({response});
           // this.postToUpload = new FormData();
-          // if(this.videos.length != 0 || this.attachment.length != 0){
-          //   var translatedMessage = this.translateService.instant('PostReadyToViewMessage');
-          //   var notificationContent = translatedMessage;
-          //   this._notificationService.initializeNotificationViewModel(this.loginUserId,NotificationType.PostUploaded,notificationContent,this.loginUserId,response.id,response.postType,response,null).subscribe((response) => {
-          //   });
-          // }
+          if(uploadResponse.videos.length != 0 || uploadResponse.attachment.length != 0){
+            var translatedMessage = this.translateService.instant('PostReadyToViewMessage');
+            var notificationContent = translatedMessage;
+            this._notificationService.initializeNotificationViewModel(this.loginUserId,NotificationType.PostUploaded,notificationContent,this.loginUserId,response.id,response.postType,null,null).subscribe((response) => {
+            });
+          }
             });
   
         
         
       }
-      if(response.type == 2){
-        await this.uploadVideosOnBlob(response.reel,UploadTypeEnum.Video);
-        createReel.next({postToUpload:response.postToUpload,uploadVideoUrlList:this.uploadVideoUrlList});
+      if(uploadResponse.type == 2){
+        await this.uploadVideosOnBlob(uploadResponse.reel,UploadTypeEnum.Video);
+        createPost.next({postToUpload:uploadResponse.postToUpload,uploadVideoUrlList:this.uploadVideoUrlList,type:1});
+        uploadResponse.postToUpload.append('blobUrlsJson', JSON.stringify(this.uploadVideoUrlList));
+        this._postService.createPost(uploadResponse.postToUpload).subscribe((response:any) => {
+          debugger
+            var translatedMessage = this.translateService.instant('ReelCreatedSuccessfully');
+        const translatedSummary = this.translateService.instant('Success');
+        this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage,}); 
+          // this.isSubmitted=false;
+          // this.loadingIcon = false;
+          // this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Reel created successfully'});
+          addPostResponse.next({response});
+          // this.postToUpload = new FormData();
+          var translatedMessage = this.translateService.instant('PostReadyToViewMessage');
+          var notificationContent = translatedMessage;
+          // this.uploadVideoUrlList = [];
+          this._notificationService.initializeNotificationViewModel(this.loginUserId,NotificationType.PostUploaded,notificationContent,this.loginUserId,response.id,response.postType,null,response.reelId).subscribe((response) => {
+          });
+          // this.close();
+          // this.ngOnInit();
+        });
+        // createReel.next({postToUpload:response.postToUpload,uploadVideoUrlList:this.uploadVideoUrlList});
       }
 
-      if(response.type == 3){
-        const uploadPromises = response.combineFiles.map((file:any) => {
-          if (response.videos.includes(file)) {
+      if(uploadResponse.type == 3){
+        const uploadPromises = uploadResponse.combineFiles.map((file:any) => {
+          if (uploadResponse.videos.includes(file)) {
             return this.uploadVideosOnBlob(file, UploadTypeEnum.Video);
           } 
-          if (response.images.includes(file)){
+          if (uploadResponse.images.includes(file)){
             return this.uploadVideosOnBlob(file, UploadTypeEnum.Image);
           }
           return "";
         });
         
         await Promise.all(uploadPromises);
-        createLive.next({postToUpload:response.postToUpload,uploadVideoUrlList:this.uploadVideoUrlList});
+        createPost.next({postToUpload:uploadResponse.postToUpload,uploadVideoUrlList:this.uploadVideoUrlList,type:1});
+
+        uploadResponse.postToUpload.append('blobUrlsJson', JSON.stringify(this.uploadVideoUrlList));
+        this._postService.createPost(uploadResponse.postToUpload).subscribe((response:any) => {
+          debugger
+
+          var from = response.postAuthorType == 1? "school" : response.postAuthorType == 2 ? "class":response.postAuthorType == 4 ? "user" :undefined;
+          var chatType = from == "user" ? 1 :from == "school" ? 3 : from == "class" ? 4 : undefined;
+
+          // this.isSubmitted=false;
+          // this.loadingIcon = false;
+          //addPostResponse.next({response});
+          // this.postToUpload = new FormData();
+          // this.close();
+          // this.uploadVideoUrlList = [];
+          if(uploadResponse.videos.length != 0){
+          var translatedMessage = this.translateService.instant('VideoReadyToStream');
+          var notificationContent = translatedMessage;
+          //var chatType = this.from == "user" ? 1 :this.from == "school" ? 3 : this.from == "class" ? 4 : undefined;
+          this._notificationService.initializeNotificationViewModel(this.loginUserId,NotificationType.PostUploaded,notificationContent,this.loginUserId,response.id,response.postType,null,null,chatType).subscribe((response) => {
+          });
+        }
+        else{
+          if(!response.isPostSchedule){
+          this.router.navigate(
+              [`liveStream`,response.id,from]
+          );
+        }
+      }
+      }
+        
+       );
       }
       })
     }
 
-    if(!this.addPostSubscription){
-      this.addPostSubscription = addPostResponse.subscribe((postResponse:any) => {
-        debugger
-         // this.loadingIcon = true;
-         if(postResponse.response.postType == 1){
-           var translatedMessage = this.translateService.instant('PostCreatedSuccessfully');
-         }
-         else if(postResponse.response.postType == 3){
-           var translatedMessage = this.translateService.instant('ReelCreatedSuccessfully');
-         }
-         else{
-           var translatedMessage = this.translateService.instant('PostUpdatedSuccessfully');
-         }
-       const translatedSummary = this.translateService.instant('Success');
-       this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage,}); 
-        })
-      }
+    // if(!this.addPostSubscription){
+    //   this.addPostSubscription = addPostResponse.subscribe((postResponse:any) => {
+    //     debugger
+    //      // this.loadingIcon = true;
+    //      if(postResponse.response.postType == 1){
+    //        var translatedMessage = this.translateService.instant('PostCreatedSuccessfully');
+    //      }
+    //      else if(postResponse.response.postType == 3){
+    //        var translatedMessage = this.translateService.instant('ReelCreatedSuccessfully');
+    //      }
+    //      else{
+    //        var translatedMessage = this.translateService.instant('PostUpdatedSuccessfully');
+    //      }
+    //    const translatedSummary = this.translateService.instant('Success');
+    //    this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage,}); 
+    //     })
+    //   }
 
     // if(!this.reelUploadOnBlobSubscription){
     //   this.reelUploadOnBlobSubscription = reelUploadOnBlob.subscribe(async (response) => {
@@ -208,6 +269,17 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
     }
     if(this.addPostSubscription){
       this.addPostSubscription.unsubscribe();
+    }
+  }
+
+  loginUserInfo(){
+    debugger
+    var validToken = localStorage.getItem("jwt");
+      if (validToken != null) {
+        let jwtData = validToken.split('.')[1]
+        let decodedJwtJsonData = window.atob(jwtData)
+        let decodedJwtData = JSON.parse(decodedJwtJsonData);
+        this.loginUserId = decodedJwtData.jti;
     }
   }
   connectSignalR() : void {

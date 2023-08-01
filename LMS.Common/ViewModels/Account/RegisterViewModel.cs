@@ -22,5 +22,6 @@ namespace LMS.Common.ViewModels.Account
         public int? Gender { get; set; }
         public string? CountryName { get; set; }
         public string? CityName { get; set; }
+        public string? StateName { get; set; }
     }
 }

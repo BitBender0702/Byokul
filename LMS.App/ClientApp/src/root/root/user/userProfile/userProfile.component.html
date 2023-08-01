@@ -325,11 +325,11 @@
             {{ "Location" | translate }}
           </div>
           <span
-            *ngIf="user.cityName != null && user.countryName != null"
+            *ngIf="user.stateName != null && user.countryName != null"
             class="custom-tag d-inline-flex align-items-center"
           >
             <span class="vr-border"></span
-            >{{ user.cityName + "  " + user.countryName }}
+            >{{ user.stateName + "  " + user.countryName }}
           </span>
         </div>
         <hr class="hr-gray" />
@@ -1092,7 +1092,7 @@
           <ng-container *ngTemplateOutlet="postFeedSection"></ng-container>
           <div class="row">
             <ng-container *ngFor="let post of user.posts; let i = index">
-              <div  class="col-12 imgDisplay {{::getRandomClass(i,true)}}" *ngIf="(isScreenPc && i % 3 == 0) || (isScreenTablet && i % 2 == 0) || (isScreenMobile && i % 1 == 0)"
+              <div #i class="col-12 imgDisplay" *ngIf="(isScreenPc && i % 3 == 0) || (isScreenTablet && i % 2 == 0) || (isScreenMobile && i % 1 == 0)"
               style="display: none;">
               <div
               [ngClass]="
@@ -1100,9 +1100,9 @@
                   ? 'd-block school-grid-box position-relative school-list-box h-100'
                   : 'd-none school-grid-box position-relative school-list-box h-100'
               "
-              *ngIf="gridItemInfo != undefined"
+              *ngIf="gridItemInfo != undefined && checkIfIntro(i)"
             >
-              <div class="row post-list-preview-sec">
+              <div class="row post-list-preview-sec" >
                 <div
                   [ngClass]="
                     gridItemInfo.postAttachments.length > 0
@@ -1120,17 +1120,18 @@
                           *ngIf="postAttachment?.fileType == 2"
                           class="videofile"
                         >
-                          <video
-                          [id] = "getRandomClass(i,false)"                            
-                            class="video-js vjs-big-play-centered"
-                            controls
-                            preload="auto"                            
+                        <videoJs-component [postAttachment]="postAttachment" ></videoJs-component>
+                          <!-- <video 
+                          [id] = "postAttachment.id"
+                          controls                                              
+                            class="video-js vjs-big-play-centered"                            
+                            controls preload="auto"                           
                           >
                             <source
                               [src]="postAttachment?.fileUrl"
                               type="video/mp4"
                             />
-                          </video>
+                          </video> -->
                         </div>
                       </slide>
                       <slide *ngIf="postAttachment?.fileType == 1">
@@ -1330,7 +1331,7 @@
                   (post.postType == 1 && post.postAuthorType == 4) ||
                   post.isLive
                 "
-                class="col-md-6 col-xl-4 {{::getRandomClass(i,false)}}" (click)="openDialouge($event,post)"
+                class="col-md-6 col-xl-4 {{post.id}}" (click)="showPostDiv(post)"
               >
                 <div
                   class="school-grid-box position-relative school-list-box h-100 mb-0"
@@ -1413,7 +1414,7 @@
                     <div
                       class="school-grid-thumbnail"
                       style="cursor: pointer"
-                      (click)="showPostDiv(post.id)"
+                      
                     >
                       <div class="row gx-1">
                         <div class="col-md-12">
@@ -1421,7 +1422,7 @@
                           [ngClass]="post.postAttachments.length > 0 ? 'school-large-thumbnail shadow-thumnail position-relative':'position-relative'"
                           >
                             <div
-                              *ngIf="post.postAttachments[0]?.fileUrl == null" [id] = "getRandomClass(i,false)"
+                              *ngIf="post.postAttachments[0]?.fileUrl == null" [id] = "getRandomClass(false)"
                             >
                               {{ post.description }}
                             </div>
@@ -1656,7 +1657,7 @@
                                 post.postAttachments.length == 1 &&
                                 post.postAttachments[0]?.fileType == 2
                               "
-                              preload="metadata"
+                              controls preload="auto"
                               class="w-100"
                               style="cursor: pointer"
                             >
@@ -1686,7 +1687,7 @@
                             >
                               <video
                                 *ngIf="attachment?.fileType == 2"
-                                preload="metadata"
+                                controls preload="auto"
                                 class="w-100"
                                 style="cursor: pointer"
                               >
@@ -1714,7 +1715,7 @@
                           >
                             <video
                               *ngIf="post.postAttachments[0]?.fileType == 2"
-                              preload="metadata"
+                              controls preload="auto"
                               class="w-100"
                               style="cursor: pointer; margin-top: -700px"
                             >
@@ -1740,7 +1741,7 @@
                             <div class="medium-thumnail">
                               <video
                                 *ngIf="post.postAttachments[1]?.fileType == 2"
-                                preload="metadata"
+                                controls preload="auto"
                                 class="w-100"
                                 style="cursor: pointer"
                               >
@@ -1759,7 +1760,7 @@
                             <div class="medium-thumnail">
                               <video
                                 *ngIf="post.postAttachments[2]?.fileType == 2"
-                                preload="metadata"
+                                controls preload="auto"
                                 class="w-100"
                                 style="cursor: pointer"
                               >
@@ -1787,7 +1788,7 @@
                           >
                             <video
                               *ngIf="post.postAttachments[0]?.fileType == 2"
-                              preload="metadata"
+                              controls preload="auto"
                               class="w-100"
                               style="cursor: pointer"
                             >
@@ -1831,7 +1832,7 @@
                             <div class="medium-thumnail">
                               <video
                                 *ngIf="post.postAttachments[1]?.fileType == 2"
-                                preload="metadata"
+                                controls preload="auto"
                                 class="w-100"
                                 style="cursor: pointer"
                               >
@@ -2065,7 +2066,7 @@
                         *ngIf="postAttachment?.fileType == 2"
                         class="videofile"
                       >
-                        <video style="height: 300px" controls>
+                        <video style="height: 300px" controls preload="auto">
                           <source
                             [src]="postAttachment?.fileUrl"
                             type="video/mp4"
@@ -2555,7 +2556,7 @@
                               *ngIf="post.postAttachments[0]?.fileType == 2"
                               class="videofile"
                             >
-                              <video preload="metadata" style="height: 300px">
+                              <video controls preload="auto" style="height: 300px">
                                 <source
                                   [src]="post.postAttachments[0]?.fileUrl"
                                   type="video/mp4"
@@ -2787,7 +2788,7 @@
                                 (click)="openClassCourseViewModal(item)"
                                 style="cursor: pointer"
                               >
-                                <video preload="metadata" style="height: 300px">
+                                <video controls preload="auto" style="height: 300px">
                                   <source
                                     [src]="item.thumbnailUrl"
                                     type="video/mp4"
@@ -3567,7 +3568,7 @@
                                 post.postAttachments.length == 1 &&
                                 post.postAttachments[0]?.fileType == 2
                               "
-                              preload="metadata"
+                              controls preload="auto"
                               class="w-100"
                               style="cursor: pointer"
                             >
@@ -3597,7 +3598,7 @@
                             >
                               <video
                                 *ngIf="attachment?.fileType == 2"
-                                preload="metadata"
+                                controls preload="auto"
                                 class="w-100"
                                 style="cursor: pointer"
                               >
@@ -3625,7 +3626,7 @@
                           >
                             <video
                               *ngIf="post.postAttachments[0]?.fileType == 2"
-                              preload="metadata"
+                              controls preload="auto"
                               class="w-100"
                               style="cursor: pointer; margin-top: -700px"
                             >
@@ -3651,7 +3652,7 @@
                             <div class="medium-thumnail">
                               <video
                                 *ngIf="post.postAttachments[1]?.fileType == 2"
-                                preload="metadata"
+                                controls preload="auto"
                                 class="w-100"
                                 style="cursor: pointer"
                               >
@@ -3670,7 +3671,7 @@
                             <div class="medium-thumnail">
                               <video
                                 *ngIf="post.postAttachments[2]?.fileType == 2"
-                                preload="metadata"
+                                controls preload="auto"
                                 class="w-100"
                                 style="cursor: pointer"
                               >
@@ -3698,7 +3699,7 @@
                           >
                             <video
                               *ngIf="post.postAttachments[0]?.fileType == 2"
-                              preload="metadata"
+                              controls preload="auto"
                               class="w-100"
                               style="cursor: pointer"
                             >
@@ -3742,7 +3743,7 @@
                             <div class="medium-thumnail">
                               <video
                                 *ngIf="post.postAttachments[1]?.fileType == 2"
-                                preload="metadata"
+                                controls preload="auto"
                                 class="w-100"
                                 style="cursor: pointer"
                               >
@@ -3979,7 +3980,7 @@
                         *ngIf="postAttachment?.fileType == 2"
                         class="videofile"
                       >
-                        <video style="height: 300px" controls>
+                        <video style="height: 300px" controls preload="auto">
                           <source
                             [src]="postAttachment?.fileUrl"
                             type="video/mp4"
@@ -4469,7 +4470,7 @@
                               *ngIf="post.postAttachments[0]?.fileType == 2"
                               class="videofile"
                             >
-                              <video preload="metadata" style="height: 300px">
+                              <video controls preload="auto" style="height: 300px">
                                 <source
                                   [src]="post.postAttachments[0]?.fileUrl"
                                   type="video/mp4"
@@ -4700,7 +4701,7 @@
                                 post.postAttachments.length == 1 &&
                                 post.postAttachments[0]?.fileType == 2
                               "
-                              preload="metadata"
+                              controls preload="auto"
                               class="w-100"
                               style="cursor: pointer"
                             >
@@ -4730,7 +4731,7 @@
                             >
                               <video
                                 *ngIf="attachment?.fileType == 2"
-                                preload="metadata"
+                                controls preload="auto"
                                 class="w-100"
                                 style="cursor: pointer"
                               >
@@ -4758,7 +4759,7 @@
                           >
                             <video
                               *ngIf="post.postAttachments[0]?.fileType == 2"
-                              preload="metadata"
+                              controls preload="auto"
                               class="w-100"
                               style="cursor: pointer; margin-top: -700px"
                             >
@@ -4784,7 +4785,7 @@
                             <div class="medium-thumnail">
                               <video
                                 *ngIf="post.postAttachments[1]?.fileType == 2"
-                                preload="metadata"
+                                controls preload="auto"
                                 class="w-100"
                                 style="cursor: pointer"
                               >
@@ -4803,7 +4804,7 @@
                             <div class="medium-thumnail">
                               <video
                                 *ngIf="post.postAttachments[2]?.fileType == 2"
-                                preload="metadata"
+                                controls preload="auto"
                                 class="w-100"
                                 style="cursor: pointer"
                               >
@@ -4831,7 +4832,7 @@
                           >
                             <video
                               *ngIf="post.postAttachments[0]?.fileType == 2"
-                              preload="metadata"
+                              controls preload="auto"
                               class="w-100"
                               style="cursor: pointer"
                             >
@@ -4875,7 +4876,7 @@
                             <div class="medium-thumnail">
                               <video
                                 *ngIf="post.postAttachments[1]?.fileType == 2"
-                                preload="metadata"
+                                controls preload="auto"
                                 class="w-100"
                                 style="cursor: pointer"
                               >
@@ -5111,7 +5112,7 @@
                         *ngIf="postAttachment?.fileType == 2"
                         class="videofile"
                       >
-                        <video style="height: 300px" controls>
+                        <video style="height: 300px" controls preload="auto">
                           <source
                             [src]="postAttachment?.fileUrl"
                             type="video/mp4"
@@ -5601,7 +5602,7 @@
                               *ngIf="post.postAttachments[0]?.fileType == 2"
                               class="videofile"
                             >
-                              <video preload="metadata" style="height: 300px">
+                              <video controls preload="auto" style="height: 300px">
                                 <source
                                   [src]="post.postAttachments[0]?.fileUrl"
                                   type="video/mp4"
@@ -5649,7 +5650,7 @@
                             class="feedimg-box position-relative text-light position-relative"
                           >
                             <a
-                              (click)="openReelsViewModal(postAttachment.id)"
+                              (click)="openReelsViewModal(postAttachment.id,postAttachment.postId)"
                               style="cursor: pointer"
                             >
                               <div class="videofile">
@@ -5764,7 +5765,7 @@
                             class="feedimg-box position-relative text-light position-relative"
                           >
                             <a
-                              (click)="openReelsViewModal(postAttachment.id)"
+                              (click)="openReelsViewModal(postAttachment.id,postAttachment.postId)"
                               style="cursor: pointer"
                             >
                               <div class="videofile">
@@ -5882,7 +5883,7 @@
                             class="feedimg-box position-relative text-light position-relative"
                           >
                             <a
-                              (click)="openReelsViewModal(postAttachment.id)"
+                              (click)="openReelsViewModal(postAttachment.id,postAttachment.postId)"
                               style="cursor: pointer"
                             >
                               <div class="videofile">
@@ -6000,7 +6001,7 @@
                             class="feedimg-box position-relative text-light position-relative"
                           >
                             <a
-                              (click)="openReelsViewModal(postAttachment.id)"
+                              (click)="openReelsViewModal(postAttachment.id,postAttachment.postId)"
                               style="cursor: pointer"
                             >
                               <div class="videofile">
@@ -6352,7 +6353,7 @@
                           class="form-select rounded-8 w-100"
                           formControlName="country"
                           aria-label="Default select example"
-                          (change)="getCityByCountry($event.target)"
+                          (change)="getStateByCountry($event.target)"
                         >
                           <option value="" disabled selected hidden>
                             {{ "Country" | translate }}
@@ -6377,17 +6378,17 @@
                     </div>
                     <div class="col-md-6">
                       <div class="form-group">
-                        <label class="font_10">{{ "City" | translate }}*</label>
+                        <label class="font_10">{{ "State" | translate }}*</label>
                         <select
                           class="form-select rounded-8 w-100"
-                          formControlName="city"
+                          formControlName="state"
                           aria-label="Default select example"
                         >
                           <option value="" disabled selected hidden>
-                            {{ "City" | translate }}
+                            {{ "StateOrProvince" | translate }}
                           </option>
-                          <option *ngFor="let city of cities" [value]="city">
-                            {{ city }}
+                          <option *ngFor="let state of states" [value]="state">
+                            {{ state }}
                           </option>
                         </select>
                         <!-- <small

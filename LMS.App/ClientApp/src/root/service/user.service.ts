@@ -147,6 +147,11 @@ export class UserService{
         return this.http.post(`${this.apiUrl}/users/getCities` + '?countryName=' + countryName,'',{headers: this.headers});
     }   
 
+    getStateList(countryName:string):Observable<any>{
+        debugger
+        return this.http.post(`${this.apiUrl}/users/getStates` + '?countryName=' + countryName,'',{headers: this.headers});
+    }   
+
     deleteSchoolTeacher(schoolId:string):Observable<any>{
         return this.http.post(`${this.apiUrl}/users/deleteSchoolTeacher` + '?schoolId=' + schoolId,'',{headers: this.headers});
     }
