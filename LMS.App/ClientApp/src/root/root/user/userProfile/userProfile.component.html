@@ -1082,11 +1082,7 @@
             </div>
           </div>
         </div>
-        <div
-          class="tab-content scroll-schoolTab"
-          id="pills-tabContent"
-          *ngIf="!isProfileGrid && isPostTab"
-        >
+        <div   class="tab-content scroll-schoolTab"   id="pills-tabContent" *ngIf="!isProfileGrid && isPostTab">
           <ng-container *ngTemplateOutlet="postFeedSection"></ng-container>
           <div class="row">
             <ng-container *ngFor="let post of user.posts; let i = index">
@@ -1142,8 +1138,8 @@
                             />
                           </slide>
                         </div>
-                      </carousel>
-                    </div>
+                    </carousel>
+                </div>
                     <div
                       [ngClass]="
                         gridItemInfo.postAttachments.length > 0
@@ -1361,14 +1357,9 @@
                       </div>
                     </div>
                   </div>
-<<<<<<< HEAD
-=======
                 </div>
                 </div>
-<<<<<<< Updated upstream
-=======
->>>>>>> 5fd04ea51f28a31ed9eb4048f7268ff9ae6c4f1a
->>>>>>> Stashed changes
+
               <div
                 *ngIf="
                   (post.postType == 1 && post.postAuthorType == 4) ||
@@ -1496,7 +1487,6 @@
                   </div>
                 </div>
               </div>
-            </div>
             </ng-container>
           </div>
         </div>
@@ -6632,16 +6622,8 @@
           </div>
         </div>
       </div>
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
-   
-=======
->>>>>>> Stashed changes
-      </div>
-    
+     </div>
 
->>>>>>> 5fd04ea51f28a31ed9eb4048f7268ff9ae6c4f1a
     <div
       class="modal fade edit-school-modal delete-modal"
       id="delete-schoolTeacher"
@@ -6761,8 +6743,9 @@
         <img src="../../../assets/images/Edit-light.svg" alt="edit" />
       </button>
     </div>
-  </div>
-  </section>
+ 
+</section>
+
   <post-loading-spinner
     [postLoadingIcon]="postLoadingIcon"
   ></post-loading-spinner>
