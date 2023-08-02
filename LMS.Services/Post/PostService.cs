@@ -18,7 +18,6 @@ using LMS.Services.Chat;
 using LMS.Common.ViewModels.FileStorage;
 using LMS.Common.ViewModels.Notification;
 using Hangfire;
-using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.AspNetCore.Hosting;
 using System.Collections;
 using LMS.DataAccess.GenericRepository;
@@ -51,9 +50,7 @@ namespace LMS.Services
         private readonly IWebHostEnvironment _webHostEnvironment;
         private IConfiguration _config;
 
-        private readonly IDistributedCache _cache;
-
-        public PostService(IMapper mapper, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<User> userRepository, IGenericRepository<Like> likeRpository, IGenericRepository<View> viewRepository, IGenericRepository<Comment> commentRepository, IGenericRepository<CommentLike> commentLikeRepository, IGenericRepository<SavedPost> savedPostRepository, IBlobService blobService, IUserService userService, IChatService chatService, IBigBlueButtonService bigBlueButtonService, IConfiguration config, IGenericRepository<UserSharedPost> userSharedPostRepository, INotificationService notificationService, IDistributedCache cache, IGenericRepository<Notification> notificationRepository, IWebHostEnvironment webHostEnvironment)
+        public PostService(IMapper mapper, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<User> userRepository, IGenericRepository<Like> likeRpository, IGenericRepository<View> viewRepository, IGenericRepository<Comment> commentRepository, IGenericRepository<CommentLike> commentLikeRepository, IGenericRepository<SavedPost> savedPostRepository, IBlobService blobService, IUserService userService, IChatService chatService, IBigBlueButtonService bigBlueButtonService, IConfiguration config, IGenericRepository<UserSharedPost> userSharedPostRepository, INotificationService notificationService, IGenericRepository<Notification> notificationRepository, IWebHostEnvironment webHostEnvironment)
         {
             _mapper = mapper;
             _postRepository = postRepository;
@@ -75,7 +72,6 @@ namespace LMS.Services
             _config = config;
             _userSharedPostRepository = userSharedPostRepository;
             _notificationService = notificationService;
-            _cache = cache;
             _notificationRepository = notificationRepository;
             _webHostEnvironment = webHostEnvironment;
         }

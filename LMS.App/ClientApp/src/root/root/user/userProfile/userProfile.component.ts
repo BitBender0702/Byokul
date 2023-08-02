@@ -1224,10 +1224,7 @@ likeUnlikePosts(postId:string, isLike:boolean,postType:number,post:any,from:numb
 showPostDiv(post:any){
   debugger
   $('.imgDisplay').attr("style","display:none;")
-  $('.imgDisplay').attr("style","display:none;").removeClass("intro")
-  $('.imgDisplay').removeClass("initVideo");
   $('.'+post.id).prevAll('.imgDisplay').first().attr("style", "display:block;");
-  $('.'+post.id).prevAll('.imgDisplay').first().addClass("intro")
   // if(post.postAttachments != undefined){
   //   var postAttach = post.postAttachments[0];
   //   debugger

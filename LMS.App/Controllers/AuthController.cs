@@ -1,4 +1,4 @@
-﻿using Abp.Net.Mail;
+﻿//using Abp.Net.Mail;
 using LMS.Common.ViewModels.Account;
 using LMS.Common.ViewModels.Chat;
 using LMS.Data.Entity;
