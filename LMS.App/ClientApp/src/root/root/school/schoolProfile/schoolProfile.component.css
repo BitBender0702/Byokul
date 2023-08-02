@@ -36,7 +36,7 @@
 
 .description_scroll {
   overflow-y: auto;
-  height:150px;
+  height: 150px;
 }
 
 .description_scroll::-webkit-scrollbar {
@@ -85,6 +85,13 @@
   gap: 10px;
 }
 
+.teacher-tags .teacher-content {
+  min-width: 130px;
+}
+
+.teacher-tags {
+  margin-bottom: 0;
+}
 
 /* .flex-container {
   display: flex;
