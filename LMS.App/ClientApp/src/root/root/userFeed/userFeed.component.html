@@ -809,7 +809,7 @@
                             <div class="feedimg-box position-relative text-light position-relative">
                               <a (click)="openReelsViewModal(postAttachment.id,2,postAttachment.postId)" style="cursor: pointer">
                                 <div class="videofile">
-                                  <img style="height: 300px" [lazyLoad]="postAttachment.fileThumbnail" />
+                                  <img style="height: 300px" class="w-100" [lazyLoad]="postAttachment.fileThumbnail" />
                                 </div>
                               </a>
                               <div class="pinned-view d-flex justify-content-between align-items-start">
@@ -1146,7 +1146,7 @@
                             let postAttachment of gridItemInfoForGlobal.postAttachments
                           " class="school-grid-thumbnail">
                           <slide *ngIf="postAttachment.fileType == 2">
-                            <div *ngIf="postAttachment?.fileType == 2" class="videofile">
+                            <div *ngIf="postAttachment?.fileType == 2" class="videofile feed-box-preview">
                               <videoJs-component [postAttachment]="postAttachment" ></videoJs-component>
                               <!-- <video [id] = "getRandomClass(i,false)" controls class="video-js vjs-big-play-centered" preload="metadata">
                                 <source [lazyLoad]="postAttachment?.fileUrl" type="video/mp4" />
@@ -1154,7 +1154,9 @@
                             </div>
                           </slide>
                           <slide *ngIf="postAttachment?.fileType == 1">
-                            <img *ngIf="postAttachment?.fileType == 1" class="w-100" [lazyLoad]="postAttachment?.fileUrl" />
+                            <div class="feed-box-preview">
+                            <img *ngIf="postAttachment?.fileType == 1"  [lazyLoad]="postAttachment?.fileUrl" />
+                          </div>
                           </slide>
                         </div>
                       </carousel>
@@ -1420,7 +1422,7 @@
                                       post.postAttachments[0]?.fileThumbnail
                                     " />
                                 </div>
-                                <img *ngIf="post.postAttachments[0]?.fileType == 1" class="w-100"
+                                <img *ngIf="post.postAttachments[0]?.fileType == 1" class="full-pic-img"
                                   [lazyLoad]="post.postAttachments[0].fileUrl" />
                               </div>
                             </div>

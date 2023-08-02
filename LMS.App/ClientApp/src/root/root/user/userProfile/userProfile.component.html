@@ -5,9 +5,7 @@
     </div>
     <div class="main_content">
       <div class="main_content-max-width">
-        <div
-          class="create-post-header d-flex justify-content-between d-none d-xl-flex"
-        >
+        <div class="create-post-header d-flex justify-content-between d-none d-xl-flex" >
           <button
             #hiddenButton
             hidden
@@ -35,14 +33,7 @@
           >
             {{ "AddTeacher" | translate }}
           </button>
-          <!-- <button
-          *ngIf="isOwner"
-          (click)="openPostModal(true)"
-          type="button"
-          class="btn custom-btn primary_btn earning-btn fw_400 h_44"
-        >
-          {{ "GoLive" | translate }}
-        </button> -->
+         
           <button
             *ngIf="isOwner"
             (click)="openPostModal()"
@@ -52,9 +43,8 @@
             {{ "CreatePost" | translate }}
           </button>
         </div>
-        <div
-          class="live-header d-flex align-items-center justify-content-between"
-        >
+		
+        <div class="live-header d-flex align-items-center justify-content-between" >
           <button
             (click)="back()"
             type="button"
@@ -76,7 +66,9 @@
             </button>
           </div>
         </div>
-        <div class="d-flex justify-content-end mt-5 create_post_btn">
+        
+		
+		<div class="d-flex justify-content-end mt-5 create_post_btn">
           <button
             *ngIf="isOwner"
             (click)="openPostModal()"
@@ -86,7 +78,8 @@
             <img src="../../../assets/images/Edit-light.svg" alt="edit" />
           </button>
         </div>
-        <div class="School-prof-header">
+        
+		<div class="School-prof-header">
           <div class="d-flex">
             <div class="school-profile-icon rounded-circle user-profile-header">
               <img *ngIf="user.avatar != null" [lazyLoad]="user.avatar" />
@@ -110,17 +103,15 @@
                 <div class="followers_name d-inline-block font_16 mr-_24">
                   <img src="../../../../assets/images/followers.svg" />
                   {{ "Followers" | translate }}:
-                  <b class="fw_700"
-                    ><a
+                  <b class="fw_700">
+				  <a
                       style="
                         text-decoration: none;
                         cursor: pointer;
                         color: black;
                       "
                       [routerLink]="['/user/userFollowers', user.id]"
-                      >{{ followersLength }}</a
-                    ></b
-                  >
+                      >{{ followersLength }}</a></b>
                 </div>
                 <div class="followers_name d-inline-block font_16 mr-_24">
                   <img src="../../../../assets/images/students-icon.svg" />
@@ -142,7 +133,8 @@
                   {{ "Post" | translate }}:
                   <b class="fw_700">{{ user.posts.length }}</b>
                 </div>
-                <button
+               
+			   <button
                   *ngIf="!isOwner && !isFollowed"
                   (click)="followUser(user.id, 'Follow')"
                   type="button"
@@ -187,7 +179,9 @@
             {{ user.description }}
           </p>
         </div>
-        <div class="teacher-tags tag-box hover-tags">
+       
+
+	   <div class="teacher-tags tag-box hover-tags">
           <div *ngIf="user.certificates.length != 0 || this.isOwner">
             <div class="teacher-tags tag-box mt-0 hover-tags">
               <div class="teacher-content font_14 d-inline-block">
@@ -329,7 +323,8 @@
             ></span>
           </div>
         </div>
-        <div class="teacher-tags tag-box mt-0">
+       
+	   <div class="teacher-tags tag-box mt-0">
           <div class="teacher-content font_14 d-inline-block">
             <img src="../../../../assets/images/Location-dark.svg" />
             {{ "Location" | translate }}
@@ -343,9 +338,7 @@
           </span>
         </div>
         <hr class="hr-gray" />
-        <div
-          class="school-profile-tabs d-flex align-content-center justify-content-center position-relative"
-        >
+        <div class="school-profile-tabs d-flex align-content-center justify-content-center position-relative">
           <div class="custom-tabs">
             <ul
               class="nav nav-tabs mb-3 border-0 before-none"
@@ -503,10 +496,7 @@
               </button>
             </div>
           </div>
-          <div
-            *ngIf="!isPostTab && !isSavedPostTab && isSavedClassCourseTab"
-            class="filter-main d-flex"
-          >
+          <div *ngIf="!isPostTab && !isSavedPostTab && isSavedClassCourseTab" class="filter-main d-flex" >
             <div class="btn-filter1 align-items-center">
               <button
                 [ngClass]="
@@ -535,8 +525,7 @@
               </button>
             </div>
           </div>
-          <div
-            *ngIf="
+          <div *ngIf="
               !isPostTab &&
               !isSavedPostTab &&
               !isSavedClassCourseTab &&
@@ -572,15 +561,15 @@
               </button>
             </div>
           </div>
-          <div
-            *ngIf="
+         
+
+		 <div *ngIf="
               !isPostTab &&
               !isSavedPostTab &&
               !isSavedClassCourseTab &&
               !isSharedPostTab &&
               isLikedPostTab
-            "
-            class="filter-main d-flex"
+            " class="filter-main d-flex"
           >
             <div class="btn-filter1 align-items-center">
               <button
@@ -610,8 +599,12 @@
               </button>
             </div>
           </div>
+		  
+		  
+		  
         </div>
-        <div
+        
+		<div
           class="tab-content scroll-schoolTab"
           id="pills-tabContent"
           *ngIf="isProfileGrid && isPostTab"
@@ -689,10 +682,7 @@
                     <!-- </div> -->
                   </div>
 
-                  <div
-                    class="school-grid-body"
-                    (click)="openPostsViewModal(post)"
-                  >
+                  <div class="school-grid-body" (click)="openPostsViewModal(post)"                 >
                     <p class="text_sec1 font_14" style="cursor: pointer">
                       {{ post.description }}
                     </p>
@@ -916,7 +906,8 @@
                       </div>
                     </div>
                   </div>
-                  <div
+                  
+				  <div
                     *ngIf="post.postAttachments.length"
                     class="school-grid-footer above-thumbnail"
                   >
@@ -1370,8 +1361,14 @@
                       </div>
                     </div>
                   </div>
+<<<<<<< HEAD
+=======
                 </div>
                 </div>
+<<<<<<< Updated upstream
+=======
+>>>>>>> 5fd04ea51f28a31ed9eb4048f7268ff9ae6c4f1a
+>>>>>>> Stashed changes
               <div
                 *ngIf="
                   (post.postType == 1 && post.postAuthorType == 4) ||
@@ -1499,6 +1496,7 @@
                   </div>
                 </div>
               </div>
+            </div>
             </ng-container>
           </div>
         </div>
@@ -6257,15 +6255,7 @@
                       />
                     </div>
                   </div>
-                  <!-- <input
-                    #imageFile
-                    class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins position-static opacity-100"
-                    type="file"
-                    name="Edit Picture"
-                    id="avatar"
-                    (change)="handleImageInput($event)"
-                    accept="image/*"
-                  /> -->
+                  
                   <input
                     #imageFile
                     class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins position-static opacity-100"
@@ -6294,48 +6284,7 @@
                     >{{ "PersonalInformation" | translate }}</span
                   >
                 </div>
-                <!-- <div class="col-md-8">
-                  <image-cropper
-                    [imageChangedEvent]="imageChangedEvent"
-                    [maintainAspectRatio]="true"
-                    [containWithinAspectRatio]="containWithinAspectRatio"
-                    [aspectRatio]="4 / 4"
-                    [resizeToWidth]="256"
-                    [cropperMinWidth]="128"
-                    [onlyScaleDown]="true"
-                    [roundCropper]="false"
-                    [canvasRotation]="canvasRotation"
-                    [transform]="transform"
-                    [alignImage]="'left'"
-                    [style.display]="showCropper ? null : 'none'"
-                    format="png"
-                    (imageCropped)="imageCropped($event)"
-                    (imageLoaded)="imageLoaded()"
-                    (cropperReady)="cropperReady($event)"
-                    (loadImageFailed)="loadImageFailed()"
-                  ></image-cropper>
-                </div> -->
-                <!-- <div class="col-md-4 text-center">
-                  <div class="flex items-center mt-4 mx-4">
-                    <img class="ms-4 rounded-full" [src]="croppedImage" />
-                  </div>
-                  <div class="flex items-center mt-4 gap-4">
-                    <button
-                      type="button"
-                      (click)="cancelUpload()"
-                      class="inline-flex items-center justify-center gap-2 bg-[#F3F8FC] text-c-blue px-14 py-2.5 rounded-lg transition ease-in-out duration-200 hover:bg-c-blue/20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-c-blue/50"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="button"
-                      (click)="uploadAvatar()"
-                      class="inline-flex items-center justify-center gap-2 bg-c-blue text-white px-14 py-2.5 rounded-lg transition ease-in-out duration-200 hover:bg-c-blue/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-c-blue/50"
-                    >
-                      Save
-                    </button>
-                  </div>
-                </div> -->
+                
                 <form [formGroup]="editUserForm" class="latest-form">
                   <div class="row">
                     <div class="col-md-6">
@@ -6518,9 +6467,7 @@
                   </div>
                 </form>
               </div>
-              <div
-                class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4"
-              >
+              <div class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4" >
                 <button
                   #closeEditModal
                   id="closeBtn"
@@ -6685,9 +6632,16 @@
           </div>
         </div>
       </div>
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+   
+=======
+>>>>>>> Stashed changes
       </div>
     
 
+>>>>>>> 5fd04ea51f28a31ed9eb4048f7268ff9ae6c4f1a
     <div
       class="modal fade edit-school-modal delete-modal"
       id="delete-schoolTeacher"
@@ -6807,11 +6761,12 @@
         <img src="../../../assets/images/Edit-light.svg" alt="edit" />
       </button>
     </div>
+  </div>
   </section>
   <post-loading-spinner
     [postLoadingIcon]="postLoadingIcon"
   ></post-loading-spinner>
-</div>
+
 <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
 <p-toast></p-toast>
 

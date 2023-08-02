@@ -37,7 +37,7 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
       <div [ngClass]="showCommentsField? '' : 'full-widthreel'" id="reel_content">
         <div class="row">
         <div class="col-md-8">
-        <div class="live-inner w-100" *ngIf="post.postAttachments.length>0">
+        <div class="live-inner w-100 image_full_inner" *ngIf="post.postAttachments.length>0">
           <carousel [interval]="0">
             <div *ngFor="let postAttachment of post.postAttachments" class="live-image overflow-hidden position-relative">
               <slide *ngIf="postAttachment.fileType==2">
@@ -58,7 +58,9 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
                 </div>
               </slide>
               <slide *ngIf="postAttachment.fileType==1">
-               <img *ngIf="postAttachment.fileType==1" class="w-100" [src]="postAttachment.fileUrl" />
+                <div class="full_image_card">
+                    <img *ngIf="postAttachment.fileType==1" class="w-100" [src]="postAttachment.fileUrl" />
+                 </div>
                 <div class="live-bottom-text p-3">
               <h5 class="font_14 mb-0 fw_600 text_sec1">{{postAttachment.post.title}} 
               </h5>
@@ -93,7 +95,7 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
   </div>
  <div class="col-md-4">
     <div>
-      <div [ngClass]="showCommentsField? 'accordion-open d-block' : 'accordion-open d-none'" id="live-chat-open" style="display:none;">
+      <div [ngClass]="showCommentsField? 'accordion-open d-block' : 'accordion-open d-none'" id="live-chat-open" style="display:none;" class="livechat-box p-0">
       <div class="live-action-buttons d-flex justify-content-between">
         <button type="button" class="btn bg-transparent text_ltgray font_12 cursor_auto"><img src="../../../assets/images/chat-icon.svg"
             class="d-block" /> {{post.comments.length}}</button>
@@ -114,7 +116,7 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
         <button (click)="openSharePostModal(post.id, post.postType,post.title,post.description)" type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Upload.svg"
             class="d-block" /> {{post.postSharedCount}}</button>
       </div>
-      <div class="live-chat-box text-center">
+      <div class="live-chat-box text-center live-chat-padding">
         <div *ngIf="post.createdBy == userId && isCommentsDisabled" (click)="showCommentsDiv(true)" class="chat-enabled d-inline-flex align-items-center cursor_pointer"><img src="../../../assets/images/Unlock.svg" />{{'ChatDisabled'| translate }}
         </div>
         <div *ngIf="post.createdBy == userId && !isCommentsDisabled" (click)="showCommentsDiv(false)" class="chat-enabled d-inline-flex align-items-center cursor_pointer"><img src="../../../assets/images/Unlock.svg" />{{'ChatEnabled'| translate }}
@@ -140,7 +142,7 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
           </button>
         </div>
       </div>
-        <div *ngIf="!isCommentsDisabled" class="add-comment d-flex align-items-center justify-content-between"  style="margin-left:-40px">
+        <div *ngIf="!isCommentsDisabled" class="add-comment d-flex align-items-center justify-content-between flex-nowrap ng-star-inserted" >
           <span class="bg-transparent rounded-circle comment-post-user rounded-circle">
             <img (click)="hideCommentModal()" [routerLink]="['/user/userProfile',sender.id]" *ngIf="sender.avatar != null" [src]="sender.avatar" style="max-height: 100%;cursor: pointer;">
             <img (click)="hideCommentModal()" [routerLink]="['/user/userProfile',sender.id]" *ngIf="sender.avatar == null && gender =='1'" src="../../../assets/images/maleProfile.jfif" style="max-height: 100%;cursor: pointer;"/>
