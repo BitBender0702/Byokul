@@ -1,4 +1,5 @@
 ﻿using LMS.Common.ViewModels.FileStorage;
+using LMS.Common.ViewModels.Post;
 using LMS.Data.Entity;
 using LMS.Services.Blob;
 using LMS.Services.FileStorage;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Newtonsoft.Json;
 
 namespace LMS.App.Controllers
 {
@@ -50,6 +52,7 @@ namespace LMS.App.Controllers
         public async Task<IActionResult> SaveFiles(SaveFilesViewModel model)
         {
             var userId = await GetUserIdAsync(this._userManager);
+            model.BlobUrls = JsonConvert.DeserializeObject<List<BlobUrlsViewModel>>(model.BlobUrlsJson);
             var response = await _fileStorageService.SaveFiles(model, userId);
              return Ok(response);
         }

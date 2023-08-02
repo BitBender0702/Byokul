@@ -15,6 +15,9 @@ import { TeacherService } from 'src/root/service/teacher.service';
 import { UserService } from 'src/root/service/user.service';
 import { MultilingualComponent, changeLanguage } from '../sharedModule/Multilingual/multilingual.component';
 import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
+import { postProgressNotification, postUploadOnBlob } from '../root.component';
+
+export const fileStorageResponse = new Subject<{fileStorageResponse:any;}>();
 
 @Component({
     selector: 'fileStorage',
@@ -83,6 +86,7 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
     progressFileName!:string;
     ownerId!:string;
     fileCount:number = 1;
+    totalUploadFilesSize:number = 0;
     progressSubscription!: Subscription;
     changeLanguageSubscription!: Subscription;
     commentResponseSubscription!:Subscription;
@@ -150,6 +154,19 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
       }
 
       this.isOwnerOrNot();
+
+
+      fileStorageResponse.subscribe(result => {
+        debugger
+        this.isSubmitted = false;
+        this.loadingIcon = false;
+        this.files = result.fileStorageResponse.concat(this.files);
+        this.getFilesSelectedPage();
+        this.totalFolderRecords = this.files.length;
+        this.saveFileViewModel.files = [];
+        this.filesToUpload.set('files', '');
+        this.closeFilesModal();
+    });
     }
 
     ngOnDestroy() {
@@ -339,6 +356,7 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
   }
 
   saveFiles() {
+    debugger
     this.isSubmitted = true;
     if (!this.filesForm.valid) {
       return;
@@ -359,23 +377,43 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
         this.filesToUpload.append('folderId', this.parentFolderId);
       }
 
-    this._fileStorageService.saveFiles(this.filesToUpload).subscribe(response => {
-        this.isSubmitted = false;
-        this.loadingIcon = false;
-        this.files = response.concat(this.files);
-        this.getFilesSelectedPage();
-        this.totalFolderRecords = this.files.length;
-        this.saveFileViewModel.files = [];
-        this.filesToUpload.set('files', '');
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Success',
-          life: 3000,
-          detail: 'Files added successfully',
-        });
+      for (const file of this.saveFileViewModel.files) {
+        // Add the size of the current file to the totalSize variable
+        this.totalUploadFilesSize += file.size;
+      }
+      
+      if(this.totalUploadFilesSize < 10000000){
+        this.loadingIcon = true;
+        }
+        else{
+          this.loadingIcon = true;
+          setTimeout(() => {
+            debugger
+            this.closeFilesModal();
+            this.loadingIcon = false;
+            postProgressNotification.next({from:Constant.FileStorage});
+          }, 3000);
+        }
 
-        this.closeFilesModal();
-      });
+    postUploadOnBlob.next({postToUpload:this.filesToUpload,combineFiles:this.saveFileViewModel.files,videos:null,images:null,attachment:null,type:4,reel:null,uploadedUrls:[]});
+
+    // this._fileStorageService.saveFiles(this.filesToUpload).subscribe(response => {
+    //     this.isSubmitted = false;
+    //     this.loadingIcon = false;
+    //     this.files = response.concat(this.files);
+    //     this.getFilesSelectedPage();
+    //     this.totalFolderRecords = this.files.length;
+    //     this.saveFileViewModel.files = [];
+    //     this.filesToUpload.set('files', '');
+    //     this.messageService.add({
+    //       severity: 'success',
+    //       summary: 'Success',
+    //       life: 3000,
+    //       detail: 'Files added successfully',
+    //     });
+
+    //     this.closeFilesModal();
+    //   });
       
   }
 

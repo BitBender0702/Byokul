@@ -62,50 +62,14 @@ namespace LMS.Services.FileStorage
         {
             var requiredFiles = new List<File>();
             string containerName = this._config.GetValue<string>("Container:PostContainer");
-
-            foreach (var file in model.Files)
+            foreach (var file in model.BlobUrls)
             {
-                string fileUrl = await _blobService.UploadFileAsync(file, containerName,true);
-                string fileName = file.FileName;
-
-                int index = file.ContentType.IndexOf('/');
-                if (index > 0)
-                {
-                    if (file.ContentType.Substring(0, index) == Constants.Image)
-                    {
-                        model.FileType = FileTypeEnum.Image;
-                    }
-
-                    if (file.ContentType.Substring(0, index) == Constants.Video)
-                    {
-                        model.FileType = FileTypeEnum.Video;
-                    }
-
-                    if (file.ContentType.Substring(index + 1) == Constants.Pdf)
-                    {
-                        model.FileType = FileTypeEnum.Pdf;
-                    }
-
-                    if (file.ContentType.Substring(index + 1) == Constants.Word)
-                    {
-                        model.FileType = FileTypeEnum.Word;
-                    }
-                    if (file.ContentType.Substring(index + 1) == Constants.Excel)
-                    {
-                        model.FileType = FileTypeEnum.Excel;
-                    }
-                    if (file.ContentType.Substring(index + 1) == Constants.PPT)
-                    {
-                        model.FileType = FileTypeEnum.Presentation;
-                    }
-                }
-
                 var files = new File
                 {
-                    FileUrl = fileUrl,
-                    FileName = fileName,
+                    FileUrl = file.BlobUrl,
+                    FileName = file.BlobName,
                     FolderId = model.FolderId,
-                    FileType = (Data.Entity.Chat.FileTypeEnum)model.FileType,
+                    FileType = (Data.Entity.Chat.FileTypeEnum)file.FileType,
                     ParentId = model.ParentId,
                     CreatedById = createdById,
                     CreatedOn = DateTime.UtcNow
@@ -118,6 +82,62 @@ namespace LMS.Services.FileStorage
 
 
             }
+
+            //foreach (var file in model.Files)
+            //{
+            //    string fileUrl = await _blobService.UploadFileAsync(file, containerName,true);
+            //    string fileName = file.FileName;
+
+            //    int index = file.ContentType.IndexOf('/');
+            //    if (index > 0)
+            //    {
+            //        if (file.ContentType.Substring(0, index) == Constants.Image)
+            //        {
+            //            model.FileType = FileTypeEnum.Image;
+            //        }
+
+            //        if (file.ContentType.Substring(0, index) == Constants.Video)
+            //        {
+            //            model.FileType = FileTypeEnum.Video;
+            //        }
+
+            //        if (file.ContentType.Substring(index + 1) == Constants.Pdf)
+            //        {
+            //            model.FileType = FileTypeEnum.Pdf;
+            //        }
+
+            //        if (file.ContentType.Substring(index + 1) == Constants.Word)
+            //        {
+            //            model.FileType = FileTypeEnum.Word;
+            //        }
+            //        if (file.ContentType.Substring(index + 1) == Constants.Excel)
+            //        {
+            //            model.FileType = FileTypeEnum.Excel;
+            //        }
+            //        if (file.ContentType.Substring(index + 1) == Constants.PPT)
+            //        {
+            //            model.FileType = FileTypeEnum.Presentation;
+            //        }
+            //    }
+
+            //    var files = new File
+            //    {
+            //        FileUrl = fileUrl,
+            //        FileName = fileName,
+            //        FolderId = model.FolderId,
+            //        FileType = (Data.Entity.Chat.FileTypeEnum)model.FileType,
+            //        ParentId = model.ParentId,
+            //        CreatedById = createdById,
+            //        CreatedOn = DateTime.UtcNow
+            //    };
+            //    _fileRepository.Insert(files);
+            //    _fileRepository.Save();
+
+            //    requiredFiles.Add(files);
+
+
+
+            //}
 
             var response = _mapper.Map<List<FileViewModel>>(requiredFiles);
             return response;

@@ -547,7 +547,7 @@ namespace LMS.Services
         public async Task<IEnumerable<PostDetailsViewModel>> GetPostsByUserId(string userId, int pageNumber = 1, int pageSize = 12)
         {
 
-            var postList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == new Guid(userId) && (x.PostType == (int)PostTypeEnum.Post || (x.PostType == (int)PostTypeEnum.Stream && x.IsLive == true)) && x.PostAuthorType == (int)PostAuthorTypeEnum.User && x.IsPostSchedule != true).OrderByDescending(x => x.IsPinned).ToListAsync();
+            var postList = await _postRepository.GetAll().Include(x => x.CreatedBy).Include(x => x.Tags).Where(x => x.ParentId == new Guid(userId) && (x.PostType == (int)PostTypeEnum.Post || (x.PostType == (int)PostTypeEnum.Stream && x.IsLive == true)) && x.PostAuthorType == (int)PostAuthorTypeEnum.User && x.IsPostSchedule != true).OrderByDescending(x => x.IsPinned).ToListAsync();
 
             var requiredPostList = postList.OrderByDescending(x => x.IsPinned).ThenByDescending(x => x.CreatedOn).ToList();
 
@@ -602,10 +602,10 @@ namespace LMS.Services
 
             }
 
-            foreach (var post in result)
-            {
-                post.PostTags = await GetTagsByPostId(post.Id);
-            }
+            //foreach (var post in result)
+            //{
+            //    post.PostTags = await GetTagsByPostId(post.Id);
+            //}
             return result;
 
         }
@@ -1268,6 +1268,7 @@ namespace LMS.Services
                         PostAttachments = _mapper.Map<List<PostAttachmentViewModel>>(postAttachment),
                         PostTags = _mapper.Map<List<PostTagViewModel>>(postTag),
                         CreatedBy = post.CreatedById,
+                        CreatedOn = post.CreatedOn,
                         IsPostSavedByCurrentUser = savedPosts.Any(x => x.PostId == post.Id && x.UserId == loginUserId),
                         SavedPostsCount = savedPosts.Where(x => x.PostId == post.Id && x.UserId == loginUserId).Count()
 
@@ -1407,6 +1408,7 @@ namespace LMS.Services
                     PostAttachments = _mapper.Map<List<PostAttachmentViewModel>>(postAttachment),
                     PostTags = _mapper.Map<List<PostTagViewModel>>(postTag),
                     CreatedBy = post.CreatedById,
+                    CreatedOn = post.CreatedOn,
                     IsPostSavedByCurrentUser = savedPosts.Any(x => x.PostId == post.Id && x.UserId == loginUserId),
                     SavedPostsCount = savedPosts.Where(x => x.PostId == post.Id && x.UserId == loginUserId).Count()
 

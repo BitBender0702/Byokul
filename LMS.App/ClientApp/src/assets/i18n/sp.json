@@ -332,7 +332,13 @@
   "CertificateName": "Certificate Name",
   "ProviderName": "Provider Name",
   "IssuedDate": "Issued Date",
-  "CertificateUpdatedSuccessfully": "Certificate updated successfully"
+  "CertificateUpdatedSuccessfully": "Certificate updated successfully",
+  "TypeToAddTags": "Escribe y presiona enter para agregar",
+  "FileStorageProgressMessage": "Your files is being processed. We’ll let you know when upload will completed",
+  "FilesUploadedSuccessfully": "Files uploaded successfully in file storage"
+
+
+
 
 
 

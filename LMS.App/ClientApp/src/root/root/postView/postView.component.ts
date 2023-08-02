@@ -79,7 +79,6 @@ export class PostViewComponent implements OnInit,AfterViewInit,OnDestroy {
     joinMeetingViewModel!:JoinMeetingModel;
     commentResponseSubscription!:Subscription;
 
-
     constructor(private bsModalService: BsModalService,bigBlueButtonService:BigBlueButtonService,public messageService:MessageService,notificationService:NotificationService,chatService: ChatService,public signalRService: SignalrService,public postService:PostService, public options: ModalOptions,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,userService:UserService,private cd: ChangeDetectorRef) { 
          this._postService = postService;
          this._signalRService = signalRService;
@@ -182,32 +181,32 @@ export class PostViewComponent implements OnInit,AfterViewInit,OnDestroy {
         }
         
 
-        if(this.post.postAuthorType == 2 || this.post.postAuthorType == 3){
-          this.post.postAttachments.forEach((item: any) => {
-            debugger
-          const byteArray = new Uint8Array(atob(item.byteArray).split('').map(char => char.charCodeAt(0)));
-          if(item.fileType == 1){
-            var type = 'image/png';
-          }
-          else{
-            var type = 'video/mp4';
-          }
-          const blob = new Blob([byteArray], { type: type });
-          const reader = new FileReader();
-          reader.onloadend = () => {
-            debugger
-            item.fileUrl = reader.result as string;
-            this.isDataLoaded = true;
-            this.initializeVideoPlayer();
-          };
-          reader.readAsDataURL(blob);      
-        });
+        // if(this.post.postAuthorType == 2 || this.post.postAuthorType == 3){
+        //   this.post.postAttachments.forEach((item: any) => {
+        //     debugger
+        //   const byteArray = new Uint8Array(atob(item.byteArray).split('').map(char => char.charCodeAt(0)));
+        //   if(item.fileType == 1){
+        //     var type = 'image/png';
+        //   }
+        //   else{
+        //     var type = 'video/mp4';
+        //   }
+        //   const blob = new Blob([byteArray], { type: type });
+        //   const reader = new FileReader();
+        //   reader.onloadend = () => {
+        //     debugger
+        //     item.fileUrl = reader.result as string;
+        //     this.isDataLoaded = true;
+        //     this.initializeVideoPlayer();
+        //   };
+        //   reader.readAsDataURL(blob);      
+        // });
         
-          }
-          else{
+        //   }
+        //   else{
             this.isDataLoaded = true;
             this.initializeVideoPlayer();   
-                 }        
+                //  }        
 
         var modal = document.getElementById('modal-post');
         window.onclick = (event) => {

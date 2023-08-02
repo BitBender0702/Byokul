@@ -1,4 +1,5 @@
 ﻿using LMS.Common.Enums;
+using LMS.Common.ViewModels.Post;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -14,5 +15,8 @@ namespace LMS.Common.ViewModels.FileStorage
         public Guid? FolderId { get; set; }
         public Guid? ParentId { get; set; }
         public List<IFormFile> Files { get; set; }
+        public List<BlobUrlsViewModel> BlobUrls { get; set; }
+        public string BlobUrlsJson { get; set; }
+
     }
 }

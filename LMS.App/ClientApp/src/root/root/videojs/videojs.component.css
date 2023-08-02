@@ -1,3 +1,7 @@
 .video-js {
     height: 300px;
   }
+
+  .abc{
+    height: 700px !important;
+  }

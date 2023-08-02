@@ -653,8 +653,8 @@
                       />
                     </div>
                     <p class="font_14 school-grid-date d-inline-block mb-0">
-                      {{ post.dateTime | date : "MMMM d" }} -
-                      {{ post.dateTime | date : "hh mm" }}
+                      {{ post.createdOn | date : "MMMM d" }} -
+                      {{ post.createdOn | date : "hh:mm" }}
                     </p>
                     <button
                       *ngIf="post.isPinned && isOwner"
@@ -1110,7 +1110,7 @@
                       : 'd-none'
                   "
                 >
-                  <carousel>
+                  <carousel [interval]="0">
                     <div
                       *ngFor="let postAttachment of gridItemInfo.postAttachments"
                       class="school-grid-thumbnail"
@@ -1222,7 +1222,8 @@
                       <span
                         *ngFor="let tag of gridItemInfo.postTags"
                         class="custom-tag"
-                        >{{ tag.postTagValue }}</span
+                        >
+                        {{ tag.postTagValue }}</span
                       >
                     </div>
                     <div class="school-grid-footer preview-right-action">
@@ -1394,11 +1395,11 @@
                   <div class="school-grid-body">
                     <div class="d-flex justify-content-between date-view-list">
                       <p
-                        *ngIf="post.dateTime != null"
+                        *ngIf="post.createdOn != null"
                         class="font_14 school-grid-date d-inline-block mb-0"
                       >
-                        {{ post.dateTime | date : "MMMM d" }} -
-                        {{ post.dateTime | date : "hh mm" }}
+                        {{ post.createdOn | date : "MMMM d" }} -
+                        {{ post.createdOn | date : "hh:mm" }}
                       </p>
                       <button
                         type="button"
@@ -1617,8 +1618,8 @@
                       </a>
                     </h2>
                     <p class="font_14 school-grid-date d-inline-block mb-0">
-                      {{ post.dateTime | date : "MMMM d" }} -
-                      {{ post.dateTime | date : "hh mm" }}
+                      {{ post.createdOn | date : "MMMM d" }} -
+                      {{ post.createdOn | date : "hh:mm" }}
                     </p>
                   </div>
 
@@ -2054,7 +2055,7 @@
                     : 'd-none'
                 "
               >
-                <carousel>
+                <carousel [interval]="0">
                   <div
                     *ngFor="
                       let postAttachment of savedPostGridInfo.postAttachments
@@ -2520,11 +2521,11 @@
                   <div class="school-grid-body">
                     <div class="d-flex justify-content-between date-view-list">
                       <p
-                        *ngIf="post.dateTime != null"
+                        *ngIf="post.createdOn != null"
                         class="font_14 school-grid-date d-inline-block mb-0"
                       >
-                        {{ post.dateTime | date : "MMMM d" }} -
-                        {{ post.dateTime | date : "hh mm" }}
+                        {{ post.createdOn | date : "MMMM d" }} -
+                        {{ post.createdOn | date : "hh:mm" }}
                       </p>
                       <button
                         type="button"
@@ -3533,8 +3534,8 @@
                       </a>
                     </h2>
                     <p class="font_14 school-grid-date d-inline-block mb-0">
-                      {{ post.dateTime | date : "MMMM d" }} -
-                      {{ post.dateTime | date : "hh mm" }}
+                      {{ post.createdOn | date : "MMMM d" }} -
+                      {{ post.createdOn | date : "hh:mm" }}
                     </p>
                   </div>
 
@@ -3968,7 +3969,7 @@
                     : 'd-none'
                 "
               >
-                <carousel>
+                <carousel [interval]="0">
                   <div
                     *ngFor="
                       let postAttachment of sharedPostGridInfo.postAttachments
@@ -4434,11 +4435,11 @@
                   <div class="school-grid-body">
                     <div class="d-flex justify-content-between date-view-list">
                       <p
-                        *ngIf="post.dateTime != null"
+                        *ngIf="post.createdOn != null"
                         class="font_14 school-grid-date d-inline-block mb-0"
                       >
-                        {{ post.dateTime | date : "MMMM d" }} -
-                        {{ post.dateTime | date : "hh mm" }}
+                        {{ post.createdOn | date : "MMMM d" }} -
+                        {{ post.createdOn | date : "hh:mm" }}
                       </p>
                       <button
                         type="button"
@@ -4666,8 +4667,8 @@
                       </a>
                     </h2>
                     <p class="font_14 school-grid-date d-inline-block mb-0">
-                      {{ post.dateTime | date : "MMMM d" }} -
-                      {{ post.dateTime | date : "hh mm" }}
+                      {{ post.createdOn | date : "MMMM d" }} -
+                      {{ post.createdOn | date : "hh:mm" }}
                     </p>
                   </div>
 
@@ -5100,7 +5101,7 @@
                     : 'd-none'
                 "
               >
-                <carousel>
+                <carousel [interval]="0">
                   <div
                     *ngFor="
                       let postAttachment of likedPostGridInfo.postAttachments
@@ -5566,11 +5567,11 @@
                   <div class="school-grid-body">
                     <div class="d-flex justify-content-between date-view-list">
                       <p
-                        *ngIf="post.dateTime != null"
+                        *ngIf="post.createdOn != null"
                         class="font_14 school-grid-date d-inline-block mb-0"
                       >
-                        {{ post.dateTime | date : "MMMM d" }} -
-                        {{ post.dateTime | date : "hh mm" }}
+                        {{ post.createdOn | date : "MMMM d" }} -
+                        {{ post.createdOn | date : "hh:mm" }}
                       </p>
                       <button
                         type="button"

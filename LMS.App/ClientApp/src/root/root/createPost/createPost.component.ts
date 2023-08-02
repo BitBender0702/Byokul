@@ -175,11 +175,13 @@ export class CreatePostComponent implements OnInit,OnDestroy {
   }
 
   ngOnInit(): void {
+    debugger
     this.isOwnerOrNot();
     var initialValue = this.options.initialState;
 
     if(this.editPostId != undefined){
       this._postService.getPostById(this.editPostId).subscribe((response) => {
+        debugger
         this.editPostDetails = response;
         this.isEditPost = true;
         this.initializeEditPostForm();
@@ -551,15 +553,14 @@ handleImageInput2(file: any) {
 handleVideoInput2(file: any) {
   debugger
     this.videos.push(file);
-    this.videoObject.name = file.name;
-    this.videoObject.type = file.type;
-    this.uploadVideo.push(this.videoObject);
-    this.initializeVideoObject();
     const videoUrl = URL.createObjectURL(file);
     this.getVideoThumbnail(videoUrl,file.name, (thumbnailUrl) => {
       debugger
       this.videoObject.videoUrl = thumbnailUrl;
-
+      this.videoObject.name = file.name;
+      this.videoObject.type = file.type;
+      this.uploadVideo.push(this.videoObject);
+      this.initializeVideoObject();
     });
   this.scheduleVideoRequired = false;
   this.isVideoUpload = true;
@@ -793,7 +794,7 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
  blobVideoThumbnails: any[] = [];
   async savePost(){
     debugger
-    this.uploadVideoUrlList = [];
+    // this.uploadVideoUrlList = [];
     this.isSubmitted=true;
     if (!this.createPostForm.valid) {
       return;
@@ -819,7 +820,7 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
         debugger
         this.close();
         this.loadingIcon = false;
-        postProgressNotification.next({});
+        postProgressNotification.next({from:Constant.Post});
       }, 3000);
     }
 
@@ -913,7 +914,7 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
     // }
     this.postToUpload.append('postTags', JSON.stringify(this.tagLists))
 
-    postUploadOnBlob.next({postToUpload:this.postToUpload,combineFiles:combinedFiles,videos:this.videos,images:this.images,attachment:this.attachment,type:1,reel:null});
+    postUploadOnBlob.next({postToUpload:this.postToUpload,combineFiles:combinedFiles,videos:this.videos,images:this.images,attachment:this.attachment,type:1,reel:null,uploadedUrls:this.uploadVideoUrlList});
 
     // this._postService.createPost(this.postToUpload).subscribe((response:any) => {
     //   debugger
@@ -990,7 +991,7 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
     setTimeout(() => {
       this.close();
       this.loadingIcon = false;
-      postProgressNotification.next({});
+      postProgressNotification.next({from:Constant.Post});
     }, 3000);
 
     var reel =this.createReelForm.value;
@@ -1010,7 +1011,7 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
     this.postToUpload.append('postTags', JSON.stringify(this.reelsTagLists))
 
     // reelUploadOnBlob.next({postToUpload:this.postToUpload,reel:this.reel});
-    postUploadOnBlob.next({postToUpload:this.postToUpload,combineFiles:null,videos:null,images:null,attachment:null,type:2,reel:this.reel});
+    postUploadOnBlob.next({postToUpload:this.postToUpload,combineFiles:null,videos:null,images:null,attachment:null,type:2,reel:this.reel,uploadedUrls:this.uploadVideoUrlList});
     // this._postService.createPost(this.postToUpload).subscribe((response:any) => {
     //   debugger
     //   this.isSubmitted=false;
@@ -1275,7 +1276,7 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
             setTimeout(() => {
               this.close();
               this.loadingIcon = false;
-              postProgressNotification.next({});
+              postProgressNotification.next({from:Constant.Post});
             }, 3000);
           }
 
@@ -1297,7 +1298,7 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
 
     const combinedFiles = [...this.videos, ...this.images];
 
-    postUploadOnBlob.next({postToUpload:this.postToUpload,combineFiles:combinedFiles,videos:this.videos,images:this.images,attachment:null,type:3,reel:null});
+    postUploadOnBlob.next({postToUpload:this.postToUpload,combineFiles:combinedFiles,videos:this.videos,images:this.images,attachment:null,type:3,reel:null,uploadedUrls:[]});
   //   this._postService.createPost(this.postToUpload).subscribe((response:any) => {
   //     debugger
   //     this.isSubmitted=false;

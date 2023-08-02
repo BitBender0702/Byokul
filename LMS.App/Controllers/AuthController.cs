@@ -112,10 +112,6 @@ namespace LMS.App.Controllers
         public async Task<IActionResult> ConfirmEmail(string token, string email)
         {
             token = token.Replace(" ", "+");
-            if (!IsValidEmail(email))
-            {
-                return Ok("Invalid Email");
-            }
             var user = await _userManager.FindByEmailAsync(email);
 
             if (user is null) return BadRequest($"User not found for email: {email}");

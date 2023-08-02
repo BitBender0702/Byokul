@@ -115,7 +115,7 @@
                 <reels-loading-spinner [reelsLoadingIcon]="reelsLoadingIcon"
                   class="position-absolute translate-middle reel_spinner_position"></reels-loading-spinner>
                 <div class="feedbox-inner d-flex flex-wrap">
-                  <carousel #carousel id="reels-carousel" [itemsPerSlide]="itemsPerSlide"
+                  <carousel [interval]="0" #carousel id="reels-carousel" [itemsPerSlide]="itemsPerSlide"
                     [singleSlideOffset]="singleSlideOffset" [interval]="0" [noWrap]="noWrap">
                     <div *ngFor="let post of myFeedsReels">
                       <div *ngIf="post.postType == 3">
@@ -261,9 +261,9 @@
                         {{ post.title }}
                       </a>
                     </h2>
-                    <p *ngIf="post.dateTime != null" class="font_14 school-grid-date d-inline-block mb-0">
-                      {{ post.dateTime | date : "MMMM d" }} -
-                      {{ post.dateTime | date : "hh mm" }}
+                    <p *ngIf="post.createdOn != null" class="font_14 school-grid-date d-inline-block mb-0">
+                      {{ post.createdOn | date : "MMMM d" }} -
+                      {{ post.createdOn | date : "hh:mm" }}
                       <!-- <span class="fw_600 ">11:30 - 13:50</span> -->
                     </p>
                     <!-- <button *ngIf="post.isPinned && isOwner" (click)="pinUnpinPost(post.id,false)" type="button" class="bg-transparent border-0 pinned-grid-chat">
@@ -498,7 +498,7 @@
                         ? 'd-block col-lg-6'
                         : 'd-none'
                     ">
-                    <carousel>
+                    <carousel [interval]="0">
                       <div *ngFor="
                           let postAttachment of gridItemInfo.postAttachments
                         " class="school-grid-thumbnail">
@@ -725,9 +725,9 @@
                         </h2>
                         <div class="right-action">
                           <div>
-                            <p *ngIf="post.dateTime != null" class="font_14 school-grid-date d-inline-block mb-0">
-                              {{ post.dateTime | date : "MMMM d" }} -
-                              {{ post.dateTime | date : "hh mm" }}
+                            <p *ngIf="post.createdOn != null" class="font_14 school-grid-date d-inline-block mb-0">
+                              {{ post.createdOn | date : "MMMM d" }} -
+                              {{ post.createdOn | date : "hh:mm" }}
                             </p>
                           </div>
                           <button type="button" class="view font_12 bg-transparent border-0 cursor_auto">
@@ -800,7 +800,7 @@
                 <reels-loading-spinner [reelsLoadingIcon]="reelsLoadingIcon"
                   class="position-absolute translate-middle reel_spinner_position"></reels-loading-spinner>
                 <div class="feedbox-inner d-flex">
-                  <carousel #globalReelCarousel id="globalReels-carousel" [itemsPerSlide]="itemsPerSlide"
+                  <carousel #globalReelCarousel [interval]="0" id="globalReels-carousel" [itemsPerSlide]="itemsPerSlide"
                     [singleSlideOffset]="singleSlideOffset" [interval]="0" [noWrap]="noWrap">
                     <div *ngFor="let post of globalFeedReels">
                       <div *ngIf="post.postType == 3">
@@ -922,9 +922,9 @@
                         {{ post.title }}
                       </a>
                     </h2>
-                    <p *ngIf="post.dateTime != null" class="font_14 school-grid-date d-inline-block mb-0">
-                      {{ post.dateTime | date : "MMMM d" }} -
-                      {{ post.dateTime | date : "hh mm" }}
+                    <p *ngIf="post.createdOn != null" class="font_14 school-grid-date d-inline-block mb-0">
+                      {{ post.createdOn | date : "MMMM d" }} -
+                      {{ post.createdOn | date : "hh:mm" }}
                     </p>
                   </div>
 
@@ -1141,7 +1141,7 @@
                           ? 'd-block col-lg-6'
                           : 'd-none'
                       ">
-                      <carousel>
+                      <carousel [interval]="0">
                         <div *ngFor="
                             let postAttachment of gridItemInfoForGlobal.postAttachments
                           " class="school-grid-thumbnail">
@@ -1393,9 +1393,9 @@
                         </h2>
                         <div class="right-action">
                           <div>
-                            <p *ngIf="post.dateTime != null" class="font_14 school-grid-date d-inline-block mb-0">
-                              {{ post.dateTime | date : "MMMM d" }} -
-                              {{ post.dateTime | date : "hh mm" }}
+                            <p *ngIf="post.createdOn != null" class="font_14 school-grid-date d-inline-block mb-0">
+                              {{ post.createdOn | date : "MMMM d" }} -
+                              {{ post.createdOn | date : "hh:mm" }}
                             </p>
                           </div>
                           <button type="button" class="view font_12 bg-transparent border-0 cursor_auto">

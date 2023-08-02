@@ -507,7 +507,11 @@
   "ProviderName": "Provider Name",
   "IssuedDate": "Issued Date",
   "CertificateUpdatedSuccessfully": "Certificate updated successfully",
-  "PostUpdatedSuccessfully": "Post updated successfully"
+  "PostUpdatedSuccessfully": "Post updated successfully",
+  "TypeToAddTags": "Eklemek için yazın ve enter tuşuna basın",
+  "FileStorageProgressMessage": "Your files is being processed. We’ll let you know when upload will completed",
+  "FilesUploadedSuccessfully": "Files uploaded successfully in file storage"
+
 
 
 }

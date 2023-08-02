@@ -389,7 +389,14 @@ namespace LMS.Services
                     //_postAttachmentRepository.Save();
                 }
             }
-            _postAttachmentRepository.Save();
+            try
+            {
+                _postAttachmentRepository.Save();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             //_postRepository.Update(post);
             //_postRepository.Save();
@@ -734,7 +741,7 @@ namespace LMS.Services
                 int lastSlashIndex = item.FileUrl.LastIndexOf('/');
                 var fileName = item.FileUrl.Substring(lastSlashIndex + 1);
 
-                item.ByteArray = await _blobService.GetFileContentAsync(this._config.GetValue<string>("Container:PostContainer"), fileName);
+                //item.ByteArray = await _blobService.GetFileContentAsync(this._config.GetValue<string>("Container:PostContainer"), fileName);
 
             }
             post.Likes = await _userService.GetLikesOnPost(post.Id);
@@ -761,6 +768,15 @@ namespace LMS.Services
         public async Task<IEnumerable<PostAttachmentViewModel>> GetAttachmentsByPostId(Guid postId)
         {
             var attacchmentList = await _postAttachmentRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.PostId == postId).OrderByDescending(x => x.IsPinned).ToListAsync();
+
+            foreach (var isCompressed in attacchmentList)
+            {
+                if (!string.IsNullOrEmpty(isCompressed.CompressedFileUrl))
+                {
+                    isCompressed.FileUrl = isCompressed.CompressedFileUrl;
+                }
+                isCompressed.FileThumbnail = $"https://byokulstorage.blob.core.windows.net/userpostscompressed/thumbnails/{isCompressed.Id}.png";
+            }
 
             var result = _mapper.Map<List<PostAttachmentViewModel>>(attacchmentList);
             return result;

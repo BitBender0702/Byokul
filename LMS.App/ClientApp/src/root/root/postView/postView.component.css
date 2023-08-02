@@ -15,3 +15,8 @@
 .overflow_paragraph::-webkit-scrollbar {
     width: 2px;
   }
+
+  .video-js {
+    height: 700px !important;
+    width: 100% !important;
+  }

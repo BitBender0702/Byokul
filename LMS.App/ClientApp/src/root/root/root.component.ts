@@ -15,9 +15,11 @@ import { BlobServiceClient, ContainerClient, BlockBlobClient } from '@azure/stor
 import { PostService } from '../service/post.service';
 import { NotificationService } from '../service/notification.service';
 import { NotificationType } from '../interfaces/notification/notificationViewModel';
+import { FileStorageService } from '../service/fileStorage';
+import { fileStorageResponse } from './fileStorage/fileStorage.component';
 
 
-export const postProgressNotification = new Subject();  
+export const postProgressNotification = new Subject<{from:string}>();  
 export const postUploadOnBlob = new Subject<{
   postToUpload:any,
   combineFiles:any,
@@ -25,7 +27,8 @@ export const postUploadOnBlob = new Subject<{
   images:any,
   attachment:any,
   type:any,
-  reel:any
+  reel:any,
+  uploadedUrls:any[]
 }>();
 
 export const reelUploadOnBlob = new Subject<{
@@ -51,11 +54,14 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
 
   private _postService;
   private _notificationService;
+  private _fileStorageService;
+  
 
-  constructor(injector: Injector,private notificationService: NotificationService, private signalRService: SignalrService,public messageService:MessageService,private translateService: TranslateService, private meta: Meta,authService: AuthService,private router: Router,private route: ActivatedRoute,postService:PostService) { 
+  constructor(injector: Injector,private fileStorageService: FileStorageService,private notificationService: NotificationService, private signalRService: SignalrService,public messageService:MessageService,private translateService: TranslateService, private meta: Meta,authService: AuthService,private router: Router,private route: ActivatedRoute,postService:PostService) { 
     super(injector);
     this._postService = postService;
     this._notificationService = notificationService;
+    this._fileStorageService = fileStorageService;
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         event.urlAfterRedirects = event.urlAfterRedirects.split('/').slice(0, 3).join('/');
@@ -100,10 +106,15 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
     if(!this.postProgressSubscription){
       this.postProgressSubscription = postProgressNotification.subscribe(response => {
         debugger
-        const translatedMessage = this.translateService.instant('PostProgressMessage');
+        if(response.from == Constant.Post){
+          var translatedMessage = this.translateService.instant('PostProgressMessage');
+        }
+        if(response.from == Constant.FileStorage){
+          var translatedMessage = this.translateService.instant('FileStorageProgressMessage');
+        }
         const translatedSummary = this.translateService.instant('Info');
         this.messageService.add({severity:'info', summary:translatedSummary,life: 3000, detail:translatedMessage});
-      })
+      });
     }
 
     if(!this.postUploadOnBlobSubscription){
@@ -128,18 +139,15 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
         await Promise.all(uploadPromises);
         // this.createPostRef.createPostResponse({postToUpload:response.postToUpload,uploadVideoUrlList:this.uploadVideoUrlList,type:1});
         createPost.next({postToUpload:uploadResponse.postToUpload,uploadVideoUrlList:this.uploadVideoUrlList,type:1});
-        uploadResponse.postToUpload.append('blobUrlsJson', JSON.stringify(this.uploadVideoUrlList));
+        // var uploadUrls = uploadResponse.uploadedUrls.push(...this.uploadVideoUrlList);
+        var uploadUrls = [...uploadResponse.uploadedUrls, ...this.uploadVideoUrlList]
+        uploadResponse.postToUpload.append('blobUrlsJson', JSON.stringify(uploadUrls));
         this._postService.createPost(uploadResponse.postToUpload).subscribe((response:any) => {
           debugger
             var translatedMessage = this.translateService.instant('PostCreatedSuccessfully');
         const translatedSummary = this.translateService.instant('Success');
         this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage,}); 
-          // this.close();
-          // this.onClose.emit(response);
-          // this.isSubmitted=false;
-          // this.loadingIcon = false;
           addPostResponse.next({response});
-          // this.postToUpload = new FormData();
           if(uploadResponse.videos.length != 0 || uploadResponse.attachment.length != 0){
             var translatedMessage = this.translateService.instant('PostReadyToViewMessage');
             var notificationContent = translatedMessage;
@@ -221,6 +229,50 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
         
        );
       }
+
+      if(uploadResponse.type == 4){
+        const uploadPromises = uploadResponse.combineFiles.map((file:any) => {
+          debugger
+          var index = file.type.indexOf('/');
+          if (index > 0)
+            {
+              if (file.type.substring(0, index) == Constant.Image)
+              {
+                return this.uploadVideosOnBlob(file, UploadTypeEnum.Image);
+              }
+              if (file.type.substring(0, index) == Constant.Video)
+              {
+                return this.uploadVideosOnBlob(file, UploadTypeEnum.Video);
+              }
+              if (file.type.substring(0, index) == Constant.Pdf)
+              {
+                return this.uploadVideosOnBlob(file, UploadTypeEnum.Pdf);
+              }
+              if (file.type.substring(0, index) == Constant.Word)
+              {
+                return this.uploadVideosOnBlob(file, UploadTypeEnum.Word);
+              }
+              if (file.type.substring(0, index) == Constant.Word)
+              {
+                return this.uploadVideosOnBlob(file, UploadTypeEnum.Word);
+              }
+              if (file.type.substring(0, index) == Constant.Excel)
+              {
+                return this.uploadVideosOnBlob(file, UploadTypeEnum.Excel);
+              }
+              if (file.type.substring(0, index) == Constant.Ppt)
+              {
+                return this.uploadVideosOnBlob(file, UploadTypeEnum.Excel);
+              }
+            }
+
+            return "";  
+        });
+
+        await Promise.all(uploadPromises);
+        this.saveFilesInFileStorge(uploadResponse);
+
+      }
       })
     }
 
@@ -255,6 +307,27 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
     if(selectedLang == null || selectedLang == ""){
       this.translate.use("en");
     }
+  }
+
+  
+  saveFilesInFileStorge(uploadResponse:any){
+    debugger
+    var files = this.uploadVideoUrlList;
+    uploadResponse.postToUpload.append('blobUrlsJson', JSON.stringify(this.uploadVideoUrlList));
+      this._fileStorageService.saveFiles(uploadResponse.postToUpload).subscribe(response => {
+        fileStorageResponse.next({fileStorageResponse:response});
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          life: 3000,
+          detail: 'Files added successfully',
+        });
+      });
+
+      var translatedMessage = this.translateService.instant('FilesUploadedSuccessfully');
+      var notificationContent = translatedMessage;
+      this._notificationService.initializeNotificationViewModel(this.loginUserId,NotificationType.FilesUploaded,notificationContent,this.loginUserId,null,0,null,null).subscribe((response) => {
+      });
   }
 
   ngOnDestroy(): void {
@@ -303,7 +376,6 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
   public async uploadVideosOnBlob(file: File, fileType:number) {
     debugger
     
-    // Replace with your SAS token or connection string
     const sasToken = Constant.SASToken;
     var prefix = "attachments";
     if(fileType == UploadTypeEnum.Image)
@@ -332,6 +404,18 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
     .catch((error) => {
       console.error(error);
     });
+
+
+
+
+    // var uploadVideoObject = 
+    // {
+    //   id: uuidv4(),
+    //   blobUrl:"https://byokulstorage.blob.core.windows.net/userposts/videos/e1079a43-243b-4dac-8acc-28a887b9a496.mp4",
+    //   blobName:"TestName",
+    //   fileType:2
+    // }
+    // this.uploadVideoUrlList.push(uploadVideoObject);
   
   }
 

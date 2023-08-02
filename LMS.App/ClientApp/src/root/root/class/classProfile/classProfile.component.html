@@ -551,11 +551,11 @@
                       />
                     </div>
                     <p
-                      *ngIf="post.dateTime != null"
+                      *ngIf="post.createdOn != null"
                       class="font_14 school-grid-date d-inline-block mb-0"
                     >
-                      {{ post.dateTime | date : "MMMM d" }} -
-                      {{ post.dateTime | date : "hh mm" }}
+                      {{ post.createdOn | date : "MMMM d" }} -
+                      {{ post.createdOn | date : "hh:mm" }}
                     </p>
                     <button
                       *ngIf="post.isPinned && isOwner"
@@ -995,7 +995,7 @@
                               : 'd-none'
                           "
                         >
-                          <carousel>
+                          <carousel [interval]="0">
                             <div
                               *ngFor="
                                 let postAttachment of gridItemInfo.postAttachments
@@ -1305,11 +1305,11 @@
                           class="d-flex justify-content-between date-view-list"
                         >
                           <p
-                            *ngIf="post.dateTime != null"
+                            *ngIf="post.createdOn != null"
                             class="font_14 school-grid-date d-inline-block mb-0"
                           >
-                            {{ post.dateTime | date : "MMMM d" }} -
-                            {{ post.dateTime | date : "hh mm" }}
+                            {{ post.createdOn | date : "MMMM d" }} -
+                            {{ post.createdOn | date : "hh:mm" }}
                           </p>
                         </div>
                         <div

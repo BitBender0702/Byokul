@@ -16,6 +16,7 @@ export class VideoJsComponent implements OnInit {
   selectedLanguage:any;
   changeLanguageSubscription!:Subscription;
     @Input() postAttachment:any;
+    @Input() isView:boolean=false;
     @ViewChild('disVideo', { read: ElementRef }) disVideo!:ElementRef;
   constructor(private cd: ChangeDetectorRef,) { }
 

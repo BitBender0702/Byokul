@@ -1,4 +1,4 @@
-<video #disVideo id="displayVideo"  controls class="video-js vjs-big-play-centered asdad" controls preload="auto">
+<video #disVideo id="displayVideo" [class.abc]="isView"  controls class="video-js vjs-big-play-centered asdad" controls preload="auto">
     <source *ngIf="postAttachment?.compressedFileUrl == '' || postAttachment?.compressedFileUrl == null || postAttachment?.compressedFileUrl == undefined"
        [src]="postAttachment?.fileUrl"
        type="video/mp4"
