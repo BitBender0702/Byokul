@@ -1227,17 +1227,13 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .school-gridprofile-icon {
   margin-right: 16px;
-  width: 40.59px;
-  height: 40.59px;
+  width: 40px;
+  height: 40px;
+  flex: 0 0 auto;
   border-radius: 50%;
   overflow: hidden;
-  min-width: 40.59px;
   display: flex;
   background: #7c8da7;
-}
-
-.schoolgrid-header h2 {
-  margin-right: 32px;
 }
 
 .schoolgrid-header p span {
@@ -1254,9 +1250,8 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .schoolgrid-header {
-  padding-bottom: 16px;
+  margin-bottom: 16px;
   border-bottom: 1px solid #f5f5f5;
-  padding-right: 40px;
 }
 
 .school-grid-body {
@@ -3188,9 +3183,6 @@ p-autocomplete li:before {
   .liveStream {
     margin-left: 300px;
     height: 800px;
-  }
-  .list-schol-profile .schoolgrid-header h2 {
-    margin-right: 120px;
   }
 }
 
