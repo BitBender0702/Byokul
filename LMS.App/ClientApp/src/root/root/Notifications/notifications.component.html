@@ -80,9 +80,26 @@
                 >
                   <span class="followers-name font_16 text_sec1 fw_600">
                     <!-- <span class="new-notidot"><i class="fa-solid fa-circle"></i></span> -->
-                    <img *ngIf="item.avatar != null" [src]="item.avatar" class="rounded-circle me-2" style="width: 38px; height: 35px"/>
-                    <img *ngIf="item.avatar == null && gender =='1'" src="../../../assets/images/maleProfile.jfif" class="rounded-circle me-2"style="width: 38px; height: 35px"/>
-                    <img *ngIf="(item.avatar == null) && (gender =='2' || gender =='3')" src="../../../assets/images/femaleProfile.jfif" class="rounded-circle me-2"style="width: 38px; height: 35px"/>
+                    <img
+                      *ngIf="item.avatar != null"
+                      [src]="item.avatar"
+                      class="rounded-circle me-2"
+                      style="width: 38px; height: 35px"
+                    />
+                    <img
+                      *ngIf="item.avatar == null && gender == '1'"
+                      src="../../../assets/images/maleProfile.jfif"
+                      class="rounded-circle me-2"
+                      style="width: 38px; height: 35px"
+                    />
+                    <img
+                      *ngIf="
+                        item.avatar == null && (gender == '2' || gender == '3')
+                      "
+                      src="../../../assets/images/femaleProfile.jfif"
+                      class="rounded-circle me-2"
+                      style="width: 38px; height: 35px"
+                    />
                     <p class="font_16 ms-2 d-inline-block fw_400 mb-0">
                       {{ item.notificationContent }}
                     </p>
@@ -96,9 +113,26 @@
                   class="d-flex align-items-center justify-content-between"
                 >
                   <span class="followers-name font_16 text_sec1 fw_600">
-                    <img *ngIf="item.avatar != null" [src]="item.avatar" class="rounded-circle me-2" style="width: 38px; height: 35px"/>
-                    <img *ngIf="item.avatar == null && gender =='1'" src="../../../assets/images/maleProfile.jfif" class="rounded-circle me-2"style="width: 38px; height: 35px"/>
-                    <img *ngIf="(item.avatar == null) && (gender =='2' || gender =='3')" src="../../../assets/images/femaleProfile.jfif" class="rounded-circle me-2"style="width: 38px; height: 35px"/>
+                    <img
+                      *ngIf="item.avatar != null"
+                      [src]="item.avatar"
+                      class="rounded-circle me-2"
+                      style="width: 38px; height: 35px"
+                    />
+                    <img
+                      *ngIf="item.avatar == null && gender == '1'"
+                      src="../../../assets/images/maleProfile.jfif"
+                      class="rounded-circle me-2"
+                      style="width: 38px; height: 35px"
+                    />
+                    <img
+                      *ngIf="
+                        item.avatar == null && (gender == '2' || gender == '3')
+                      "
+                      src="../../../assets/images/femaleProfile.jfif"
+                      class="rounded-circle me-2"
+                      style="width: 38px; height: 35px"
+                    />
                     <p class="font_16 ms-2 d-inline-block fw_400 mb-0">
                       {{ item.notificationContent }}
                     </p>
@@ -106,58 +140,58 @@
                 </div>
 
                 <div
-                *ngIf="item.notificationType == 10 && item.postType == 1"
-                style="cursor: pointer"
-                (click)="openPostsViewModel(item.post.id, item.postType)"
-                class="d-flex align-items-center justify-content-between"
-              >
-                <span class="followers-name font_16 text_sec1 fw_600">
-                  <img
-                    [src]="item.avatar"
-                    class="rounded-circle me-2"
-                    style="width: 38px; height: 35px"
-                  />
-                  <p class="font_16 ms-2 d-inline-block fw_400 mb-0">
-                    {{ item.notificationContent }}
-                  </p>
-                </span>
-              </div>
+                  *ngIf="item.notificationType == 10 && item.postType == 1"
+                  style="cursor: pointer"
+                  (click)="openPostsViewModel(item.post.id, item.postType)"
+                  class="d-flex align-items-center justify-content-between"
+                >
+                  <span class="followers-name font_16 text_sec1 fw_600">
+                    <img
+                      [src]="item.avatar"
+                      class="rounded-circle me-2"
+                      style="width: 38px; height: 35px"
+                    />
+                    <p class="font_16 ms-2 d-inline-block fw_400 mb-0">
+                      {{ item.notificationContent }}
+                    </p>
+                  </span>
+                </div>
 
-              <div
-              *ngIf="item.notificationType == 10 && item.postType == 3"
-              style="cursor: pointer"
-              (click)="openReelsViewModel(item.postType, item.reelId)"
-              class="d-flex align-items-center justify-content-between"
-            >
-              <span class="followers-name font_16 text_sec1 fw_600">
-                <img
-                  [src]="item.avatar"
-                  class="rounded-circle me-2"
-                  style="width: 38px; height: 35px"
-                />
-                <p class="font_16 ms-2 d-inline-block fw_400 mb-0">
-                  {{ item.notificationContent }}
-                </p>
-              </span>
-            </div>
+                <div
+                  *ngIf="item.notificationType == 10 && item.postType == 3"
+                  style="cursor: pointer"
+                  (click)="openReelsViewModel(item.postType, item.reelId)"
+                  class="d-flex align-items-center justify-content-between"
+                >
+                  <span class="followers-name font_16 text_sec1 fw_600">
+                    <img
+                      [src]="item.avatar"
+                      class="rounded-circle me-2"
+                      style="width: 38px; height: 35px"
+                    />
+                    <p class="font_16 ms-2 d-inline-block fw_400 mb-0">
+                      {{ item.notificationContent }}
+                    </p>
+                  </span>
+                </div>
 
-            <div
-            *ngIf="item.notificationType == 10 && item.postType == 2"
-            style="cursor: pointer"
-            (click)="opeStream(item.post.id, item.chatType)"
-            class="d-flex align-items-center justify-content-between"
-          >
-            <span class="followers-name font_16 text_sec1 fw_600">
-              <img
-                [src]="item.avatar"
-                class="rounded-circle me-2"
-                style="width: 38px; height: 35px"
-              />
-              <p class="font_16 ms-2 d-inline-block fw_400 mb-0">
-                {{ item.notificationContent }}
-              </p>
-            </span>
-          </div>
+                <div
+                  *ngIf="item.notificationType == 10 && item.postType == 2"
+                  style="cursor: pointer"
+                  (click)="opeStream(item.post.id, item.chatType)"
+                  class="d-flex align-items-center justify-content-between"
+                >
+                  <span class="followers-name font_16 text_sec1 fw_600">
+                    <img
+                      [src]="item.avatar"
+                      class="rounded-circle me-2"
+                      style="width: 38px; height: 35px"
+                    />
+                    <p class="font_16 ms-2 d-inline-block fw_400 mb-0">
+                      {{ item.notificationContent }}
+                    </p>
+                  </span>
+                </div>
 
                 <div
                   *ngIf="item.notificationType == 1 && item.reelId != null"
@@ -166,9 +200,26 @@
                   class="d-flex align-items-center justify-content-between"
                 >
                   <span class="followers-name font_16 text_sec1 fw_600">
-                    <img *ngIf="item.avatar != null" [src]="item.avatar" class="rounded-circle me-2" style="width: 38px; height: 35px"/>
-                    <img *ngIf="item.avatar == null && gender =='1'" src="../../../assets/images/maleProfile.jfif" class="rounded-circle me-2"style="width: 38px; height: 35px"/>
-                    <img *ngIf="(item.avatar == null) && (gender =='2' || gender =='3')" src="../../../assets/images/femaleProfile.jfif" class="rounded-circle me-2"style="width: 38px; height: 35px"/>
+                    <img
+                      *ngIf="item.avatar != null"
+                      [src]="item.avatar"
+                      class="rounded-circle me-2"
+                      style="width: 38px; height: 35px"
+                    />
+                    <img
+                      *ngIf="item.avatar == null && gender == '1'"
+                      src="../../../assets/images/maleProfile.jfif"
+                      class="rounded-circle me-2"
+                      style="width: 38px; height: 35px"
+                    />
+                    <img
+                      *ngIf="
+                        item.avatar == null && (gender == '2' || gender == '3')
+                      "
+                      src="../../../assets/images/femaleProfile.jfif"
+                      class="rounded-circle me-2"
+                      style="width: 38px; height: 35px"
+                    />
                     <p class="font_16 ms-2 d-inline-block fw_400 mb-0">
                       {{ item.notificationContent }}
                     </p>
@@ -246,20 +297,21 @@
                 </div>
 
                 <div
-                *ngIf="item.notificationType == 11"
-                style="cursor: pointer"
-                class="d-flex align-items-center justify-content-between">
-                <span class="followers-name font_16 text_sec1 fw_600">
-                  <img
-                    [src]="item.avatar"
-                    class="rounded-circle me-2"
-                    style="width: 38px; height: 35px"
-                  />
-                  <p class="font_16 ms-2 d-inline-block fw_400 mb-0">
-                    {{ item.notificationContent }}
-                  </p>
-                </span>
-              </div>
+                  *ngIf="item.notificationType == 11"
+                  style="cursor: pointer"
+                  class="d-flex align-items-center justify-content-between"
+                >
+                  <span class="followers-name font_16 text_sec1 fw_600">
+                    <img
+                      [src]="item.avatar"
+                      class="rounded-circle me-2"
+                      style="width: 38px; height: 35px"
+                    />
+                    <p class="font_16 ms-2 d-inline-block fw_400 mb-0">
+                      {{ item.notificationContent }}
+                    </p>
+                  </span>
+                </div>
               </li>
             </ul>
           </div>

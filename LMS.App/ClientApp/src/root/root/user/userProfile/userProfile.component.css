@@ -3,6 +3,16 @@
   z-index: 100000;
 }
 
+.tag-box .teacher-tags {
+  margin-bottom: 10px;
+}
+
+@media screen and (min-width: 1024px) {
+  .tag-box .teacher-tags {
+    margin-bottom: 15px;
+  }
+}
+
 .orange-button {
   display: inline-flex;
   align-items: center;
@@ -80,12 +90,11 @@
   background-position: center right 16px;
 }
 
-.updatedOn_date{
+.updatedOn_date {
   width: 100%;
   font-weight: 600;
   display: flex;
   justify-content: end;
-
 }
 
 .preserve-line-breaks {
