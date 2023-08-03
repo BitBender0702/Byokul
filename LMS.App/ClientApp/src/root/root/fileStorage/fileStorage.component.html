@@ -97,62 +97,60 @@
             <br />
 
             <div class="folder-sec">
-              <div class="row">
-                <div *ngFor="let item of folderRecords" class="col-md-3">
-                  <div class="folder-box" style="cursor: pointer">
-                    <div class="d-flex justify-content-between">
-                      <h3
-                        class="foldername font_14 fw_400 text_sec1 mb-0"
-                        (click)="getNestedFolders(item.id, item.folderName)"
-                      >
-                        {{ item.folderName }}
-                      </h3>
-                      <div *ngIf="isClassTeacher || isCourseTeacher || isOwner">
-                        <ul
-                          class="list-unstyled d-flex more-action-btn before-none pe-2 me-1 mb-0"
-                        >
-                          <li class="d-inline-block ps-0 mb-0">
-                            <div class="dropdown">
-                              <button
-                                class="bg-transparent dropdown-toggle border-0 action-more-btn after-none pt-1"
-                                type="button"
-                                data-bs-toggle="dropdown"
-                                aria-expanded="false"
-                              >
-                                <i class="fa-solid fa-ellipsis"></i>
-                              </button>
-                              <ul class="dropdown-menu">
-                                <li>
-                                  <a
-                                    style="cursor: pointer"
-                                    class="dropdown-item"
-                                    (click)="deleteFolder(item.id)"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#delete-Class"
-                                    >{{ "Delete" | translate }}
-                                  </a>
-                                </li>
-                              </ul>
-                            </div>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                    <div
-                      class="foldericon d-flex align-items-center justify-content-between"
+              <div *ngFor="let item of folderRecords" class="folder-wrapper">
+                <div class="folder-box" style="cursor: pointer">
+                  <div class="d-flex justify-content-between">
+                    <h3
+                      class="foldername font_14 fw_400 text_sec1 mb-0"
+                      (click)="getNestedFolders(item.id, item.folderName)"
                     >
-                      <img src="../../../assets/images/folder-regular.svg" />
+                      {{ item.folderName }}
+                    </h3>
+                    <div *ngIf="isClassTeacher || isCourseTeacher || isOwner">
+                      <ul
+                        class="list-unstyled d-flex more-action-btn before-none pe-2 me-1 mb-0"
+                      >
+                        <li class="d-inline-block ps-0 mb-0">
+                          <div class="dropdown">
+                            <button
+                              class="bg-transparent dropdown-toggle border-0 action-more-btn after-none pt-1"
+                              type="button"
+                              data-bs-toggle="dropdown"
+                              aria-expanded="false"
+                            >
+                              <i class="fa-solid fa-ellipsis"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                              <li>
+                                <a
+                                  style="cursor: pointer"
+                                  class="dropdown-item"
+                                  (click)="deleteFolder(item.id)"
+                                  data-bs-toggle="modal"
+                                  data-bs-target="#delete-Class"
+                                  >{{ "Delete" | translate }}
+                                </a>
+                              </li>
+                            </ul>
+                          </div>
+                        </li>
+                      </ul>
                     </div>
                   </div>
+                  <div
+                    class="foldericon d-flex align-items-center justify-content-between"
+                  >
+                    <img src="../../../assets/images/folder-regular.svg" />
+                  </div>
                 </div>
+              </div>
 
-                <div *ngIf="totalFolderRecords != 0" class="col-md-12">
-                  <p-paginator
-                    [rows]="folderItemsPerPage"
-                    [totalRecords]="totalFolderRecords"
-                    (onPageChange)="getFoldersSelectedPage($event)"
-                  ></p-paginator>
-                </div>
+              <div *ngIf="totalFolderRecords != 0">
+                <p-paginator
+                  [rows]="folderItemsPerPage"
+                  [totalRecords]="totalFolderRecords"
+                  (onPageChange)="getFoldersSelectedPage($event)"
+                ></p-paginator>
               </div>
             </div>
 
@@ -179,7 +177,7 @@
             <br />
 
             <div class="folder-sec">
-              <div class="d-flex files-sec flex-wrap">
+              <div class="folder-wrapper">
                 <div *ngFor="let file of fileRecords" class="folder-box">
                   <div class="d-flex justify-content-between">
                     <h3

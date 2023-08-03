@@ -2352,7 +2352,6 @@ input[type="search"] {
   border-left: 1px solid #ff801c;
   box-shadow: 0px 4px 20px rgb(0 0 0 / 15%);
   border-radius: 8px;
-  margin-bottom: 32px;
   width: 100%;
 }
 .foldername {
@@ -2372,13 +2371,20 @@ input[type="search"] {
 .file-action .btn {
   padding: 0 10px;
 }
-.files-sec {
-  margin: 0 -16px;
+
+.folder-wrapper {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-bottom: 25px;
 }
-.files-sec > div {
-  margin: 0 16px 32px;
-  width: calC(20% - 32px);
+
+@media screen and (min-width: 768px) {
+  .folder-wrapper {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
+
 .files-sec .folder-box {
   border: 1px solid rgba(124, 141, 167, 0.5);
 }
@@ -3149,7 +3155,7 @@ p-autocomplete li:before {
   background: #000;
   min-height: 700px;
 }
-.full_image_card>img {
+.full_image_card > img {
   min-height: 100%;
   width: auto !important;
 }
@@ -3159,7 +3165,7 @@ p-autocomplete li:before {
 .full-pic-img {
   object-fit: contain;
 }
-.feed-box-preview{
+.feed-box-preview {
   min-height: 320px;
 }
 .feed-box-preview {
@@ -3185,7 +3191,7 @@ p-autocomplete li:before {
   }
   .list-schol-profile .schoolgrid-header h2 {
     margin-right: 120px;
-}
+  }
 }
 
 @media screen and (min-width: 1281px) {
