@@ -22,8 +22,8 @@ export class PaymentService{
         this.headers = new HttpHeaders().set("Authorization", "Bearer " + this.token);
     }
 
-    buySubscription(paymentDetails:any):Observable<any>{
-        return this.http.post(`${this.apiUrl}/stripe/buySubscription`,paymentDetails, {headers: this.headers});
+    buyClassCourse(paymentDetails:any):Observable<any>{
+        return this.http.post(`${this.apiUrl}/iyizico/buyClassCourse`,paymentDetails, {headers: this.headers});
       }
 
       transactionDetails(transactionParamViewModel: TransactionParamViewModel):Observable<any>{

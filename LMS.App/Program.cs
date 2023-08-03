@@ -34,6 +34,7 @@ using LMS.Services.FileStorage;
 using Hangfire;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.AspNetCore.Http.Features;
+using LMS.Services.Iyizico;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -103,6 +104,7 @@ builder.Services.AddScoped<IFileStorageService, FileStorageService>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped(typeof(IAsyncGenericRepository<>), typeof(AsyncGenericRepository<>));
 builder.Services.AddScoped<IPostRepository, PostRepository>();
+builder.Services.AddScoped<IIyizicoService, IyizicoService>();
 builder.Services.AddScoped<CustomerService>();
 builder.Services.AddScoped<ChargeService>();
 builder.Services.AddScoped<TokenService>();

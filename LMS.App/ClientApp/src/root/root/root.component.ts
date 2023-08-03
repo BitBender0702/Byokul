@@ -186,6 +186,7 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
 
       if(uploadResponse.type == 3){
         const uploadPromises = uploadResponse.combineFiles.map((file:any) => {
+          debugger
           if (uploadResponse.videos.includes(file)) {
             return this.uploadVideosOnBlob(file, UploadTypeEnum.Video);
           } 
@@ -217,7 +218,7 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
           //var chatType = this.from == "user" ? 1 :this.from == "school" ? 3 : this.from == "class" ? 4 : undefined;
           this._notificationService.initializeNotificationViewModel(this.loginUserId,NotificationType.PostUploaded,notificationContent,this.loginUserId,response.id,response.postType,null,null,chatType).subscribe((response) => {
           });
-        }
+         }
         else{
           if(!response.isPostSchedule){
           this.router.navigate(

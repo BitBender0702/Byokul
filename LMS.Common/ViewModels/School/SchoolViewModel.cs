@@ -1,4 +1,5 @@
 ﻿using LMS.Common.ViewModels.Common;
+using LMS.Common.ViewModels.Iyizico;
 using LMS.Common.ViewModels.Teacher;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -38,6 +39,8 @@ namespace LMS.Common.ViewModels.School
         public Guid? ClassStudentId { get; set; }
         public Guid? CourseStudentId { get; set; }
         public string? PhoneNumber { get; set; }
+        public BuySchoolSubscriptionViewModel SubscriptionDetails { get; set; }
+        public string SubscriptionDetailsJson { get; set; }
 
 
 

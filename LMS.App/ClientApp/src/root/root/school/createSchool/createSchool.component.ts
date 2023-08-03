@@ -19,6 +19,7 @@ import { CountryISO, SearchCountryField } from 'ngx-intl-tel-input';
 import { AzureBlobStorageService } from 'src/root/service/blobStorage.service';
 import { BlobServiceClient, ContainerClient, BlockBlobClient } from '@azure/storage-blob';
 import { url } from 'inspector';
+import { IyizicoService } from 'src/root/service/iyizico.service';
 
 export const ownedSchoolResponse =new Subject<{schoolId: string, schoolAvatar : string,schoolName:string,action:string}>(); 
 
@@ -38,6 +39,7 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
   uploadedFile:any;
   private _schoolService;
   private _blobService;
+  private _iyizicoService;
   countries:any;
   specializations:any;
   defaultLogos:any;
@@ -47,6 +49,7 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
   createSchoolForm1!:FormGroup;
   createSchoolForm2!:FormGroup;
   createSchoolForm3!:FormGroup;
+  subscriptionForm!:FormGroup;
   invalidMeetingName!: boolean;
   isSubmitted: boolean = false;
   isStepCompleted: boolean = false;
@@ -86,16 +89,21 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
   // PhoneNumberFormat = PhoneNumberFormat;
 	preferredCountries: CountryISO[] = [CountryISO.UnitedStates, CountryISO.UnitedKingdom];
   selectedCountryISO:any;
-  mask:string = "(000) 000 0000"
+  mask:string = "(000) 000 0000";
+  subscriptionPlans: any;
+  currentDate!:string;
+
   
-  constructor(injector: Injector,private blobService: AzureBlobStorageService,private translateService: TranslateService,private bsModalService: BsModalService,public messageService:MessageService,private domSanitizer: DomSanitizer,private router: Router,private fb: FormBuilder,schoolService: SchoolService,private http: HttpClient) {
+  constructor(injector: Injector,private iyizicoService:IyizicoService, private blobService: AzureBlobStorageService,private translateService: TranslateService,private bsModalService: BsModalService,public messageService:MessageService,private domSanitizer: DomSanitizer,private router: Router,private fb: FormBuilder,schoolService: SchoolService,private http: HttpClient) {
     super(injector);
     this._schoolService = schoolService;
     this._blobService = blobService;
+    this._iyizicoService = iyizicoService;
   }
 
   ngOnInit(): void {
     debugger
+    this.currentDate = this.getCurrentDate();
     this.selectedCountryISO = CountryISO.Turkey;
     this.step = 0;
     this.selectedLanguage = localStorage.getItem("selectedLanguage");
@@ -122,6 +130,11 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
     this.languages = response;
   });
 
+  this._iyizicoService.getSubscriptionPlans().subscribe((response) => {
+    debugger
+    this.subscriptionPlans = response;
+  });
+
 
   this.createSchoolForm1 = this.fb.group({
     schoolName: this.fb.control('', [Validators.required]),
@@ -130,7 +143,8 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
     description: this.fb.control(''),
     selectedLanguages:this.fb.control('',[Validators.required]),
     phoneNumber: ['', [Validators.required]],
-  });
+  }
+  );
 
   // this.createSchoolForm1.get("phoneNumber")?.valueChanges.subscribe(value => {
   //   // Apply custom formatting logic to the phone number
@@ -149,7 +163,17 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
       this.translate.use(response.language);
     })
   }
-}
+
+  this.subscriptionForm = this.fb.group({
+    cardNumber: this.fb.control('',[Validators.required, Validators.minLength(19)]),
+    expiresOn: this.fb.control('',[Validators.required, Validators.minLength(5)]),
+    securityCode: this.fb.control('',[Validators.required]),
+    accountHolderName: this.fb.control('',[Validators.required]),
+    subscriptionReferenceId: this.fb.control('',[Validators.required])
+},
+{validator: this.isValidExpiresOn('expiresOn',this.currentDate)}
+)
+  }
 
 ngOnDestroy(): void {
   if(this.changeLanguageSubscription){
@@ -238,17 +262,56 @@ ngOnDestroy(): void {
   }
 
   forwardStep2() {
+    debugger
     this.isStepCompleted = true;
     if(this.logoUrl == undefined && this.avatarImage == undefined){
       return;
     }
-    this.loadingIcon = true;
     var form2Value =this.createSchoolForm2.value;
     this.fileToUpload.append('avatar',this.logoUrl);
 
     this.fileToUpload.append("avatarImage", this.selectedImage);
 
     this.fileToUpload.append('schoolUrl',JSON.stringify(this.schoolUrl));
+    
+
+    //
+    this.step += 1;
+    this.isStepCompleted = false;
+
+    // this._schoolService.createSchool(this.fileToUpload).subscribe((response:any) => {
+    //      var schoolId =  response;
+    //      this.schoolId = schoolId;
+    //      this.loadingIcon = false;
+    //      var form1Value =this.createSchoolForm1.value;
+    //      ownedSchoolResponse.next({schoolId:response.schoolId, schoolAvatar:response.avatar, schoolName:response.schoolName,action:"add"});
+    //      this.step += 1;
+    //      this.isStepCompleted = false;
+    //      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'School created successfully'});
+    // });
+
+    
+  }
+
+  subscriptionStep(){
+    debugger
+    this.isStepCompleted = true;
+    if (!this.subscriptionForm.valid) {
+      return;
+    }
+
+    this.loadingIcon = true;
+
+    var formValues =this.subscriptionForm.value;
+    var subscriptionDetails = {
+      cardNumber:formValues.cardNumber,
+      expiresOn:formValues.expiresOn,
+      securityCode: formValues.securityCode,
+      accountHolderName: formValues.accountHolderName,
+      subscriptionReferenceId: formValues.subscriptionReferenceId
+    }
+    this.fileToUpload.append('SubscriptionDetailsJson',JSON.stringify(subscriptionDetails));
+
     this._schoolService.createSchool(this.fileToUpload).subscribe((response:any) => {
          var schoolId =  response;
          this.schoolId = schoolId;
@@ -260,7 +323,6 @@ ngOnDestroy(): void {
          this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'School created successfully'});
     });
 
-    
   }
 
   backStep() {
@@ -494,5 +556,60 @@ private async uploadBlobTest(content: Blob, name: string, client: ContainerClien
   }
 }
 
+omit_special_char(event: any) {
+  const charCode = (event.which) ? event.which : event.keyCode;
+  if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+    event.preventDefault();
+  }
+}
+
+formatCardNumber(event:any) {
+  const input = event.target as HTMLInputElement;
+  let trimmed = input.value.replace(/[\s|-]/g, '');
+  trimmed = trimmed.slice(0, 16);
+  const chunks = trimmed.match(/.{1,4}/g);
+  input.value = chunks?.join('-')??'';
+}
+
+formatMonthYear(event:any){
+  const input = event.target as HTMLInputElement;
+  let trimmed = input.value.replace(/[\s|-]/g, '');
+  trimmed = trimmed.slice(0, 4);
+  const chunks = trimmed.match(/.{1,2}/g);
+  input.value = chunks?.join('-')??'';
+}
+
+getCurrentDate(){
+  var today = new Date();
+    var dd = String(today. getDate()). padStart(2, '0');
+    var mm = String(today. getMonth() + 1). padStart(2, '0');
+    var yyyy = today. getFullYear().toString().slice(-2);
+  ​  var currentDate = mm + '-' + yyyy;
+    return currentDate;
+  }
+
+  isValidExpiresOn(expiresOn: string, currentDate:string){
+    return (group: FormGroup): {[key: string]: any} => {
+      let monthYear = group.controls[expiresOn].value;
+      if(monthYear.length == 5){
+        const yearIndex = monthYear.indexOf('-');
+        const year = monthYear.substring(yearIndex + 1);
+
+        const currentYearIndex = currentDate.indexOf('-');
+        const currentYear = currentDate.substring(currentYearIndex + 1);
+
+        const monthIndex = monthYear.indexOf('-');
+        const month = monthYear.substring(0, monthIndex);
+
+        const currentMonthIndex = currentDate.indexOf('-');
+        const currentMonth = currentDate.substring(0, currentMonthIndex);
+        
+        if(year < currentYear || (year == currentYear && month < currentMonth) || month > 12){
+          return { dates: `Please enter valid expiresOn`};
+        }
+      }
+      return {};
+     }
+  }
   
 }

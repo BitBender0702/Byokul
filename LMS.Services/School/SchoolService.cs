@@ -5,6 +5,7 @@ using LMS.Common.ViewModels;
 using LMS.Common.ViewModels.Class;
 using LMS.Common.ViewModels.Common;
 using LMS.Common.ViewModels.Course;
+using LMS.Common.ViewModels.Iyizico;
 using LMS.Common.ViewModels.Post;
 using LMS.Common.ViewModels.School;
 using LMS.Common.ViewModels.Student;
@@ -13,6 +14,7 @@ using LMS.Data.Entity;
 using LMS.Data.Entity.Common;
 using LMS.DataAccess.Repository;
 using LMS.Services.Blob;
+using LMS.Services.Iyizico;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -58,8 +60,9 @@ namespace LMS.Services
         private readonly IUserService _userService;
         private readonly IClassService _classService;
         private readonly ICourseService _courseService;
+        private readonly IIyizicoService _iyizicoService;
         private IConfiguration _config;
-        public SchoolService(IMapper mapper, IGenericRepository<School> schoolRepository, IGenericRepository<SchoolCertificate> schoolCertificateRepository, IGenericRepository<SchoolTag> schoolTagRepository, IGenericRepository<Country> countryRepository, IGenericRepository<Specialization> specializationRepository, IGenericRepository<Language> languageRepository, IGenericRepository<SchoolUser> schoolUserRepository, IGenericRepository<SchoolFollower> schoolFollowerRepository, IGenericRepository<SchoolLanguage> schoolLanguageRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<SchoolTeacher> schoolTeacherRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<CourseTeacher> courseTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<SchoolDefaultLogo> schoolDefaultLogoRepository, IGenericRepository<UserClassCourseFilter> userClassCourseFilterRepository, IGenericRepository<UserSharedPost> userSharedPostRepository, IGenericRepository<SavedClassCourse> savedClassCourseRepository, IGenericRepository<SavedPost> savedPostRepository, UserManager<User> userManager, IBlobService blobService, IUserService userService, IGenericRepository<ClassTag> classTagRepository, IGenericRepository<CourseTag> courseTagRepository, IClassService classService, ICourseService courseService, IConfiguration config)
+        public SchoolService(IMapper mapper, IGenericRepository<School> schoolRepository, IGenericRepository<SchoolCertificate> schoolCertificateRepository, IGenericRepository<SchoolTag> schoolTagRepository, IGenericRepository<Country> countryRepository, IGenericRepository<Specialization> specializationRepository, IGenericRepository<Language> languageRepository, IGenericRepository<SchoolUser> schoolUserRepository, IGenericRepository<SchoolFollower> schoolFollowerRepository, IGenericRepository<SchoolLanguage> schoolLanguageRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<SchoolTeacher> schoolTeacherRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<CourseTeacher> courseTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<SchoolDefaultLogo> schoolDefaultLogoRepository, IGenericRepository<UserClassCourseFilter> userClassCourseFilterRepository, IGenericRepository<UserSharedPost> userSharedPostRepository, IGenericRepository<SavedClassCourse> savedClassCourseRepository, IGenericRepository<SavedPost> savedPostRepository, UserManager<User> userManager, IBlobService blobService, IUserService userService, IGenericRepository<ClassTag> classTagRepository, IGenericRepository<CourseTag> courseTagRepository, IClassService classService, ICourseService courseService, IConfiguration config, IIyizicoService iyizicoService)
         {
             _mapper = mapper;
             _schoolRepository = schoolRepository;
@@ -94,10 +97,13 @@ namespace LMS.Services
             _classService = classService;
             _courseService = courseService;
             _config = config;
+            _iyizicoService = iyizicoService;
         }
 
         public async Task<SchoolViewModel> SaveNewSchool(SchoolViewModel schoolViewModel, string createdById)
         {
+            schoolViewModel.SubscriptionDetails = JsonConvert.DeserializeObject<BuySchoolSubscriptionViewModel>(schoolViewModel.SubscriptionDetailsJson);
+            await _iyizicoService.BuySchoolSubscription(schoolViewModel.SubscriptionDetails, createdById);
             if (schoolViewModel.AvatarImage != null)
             {
                 schoolViewModel.Avatar = await _blobService.UploadFileAsync(schoolViewModel.AvatarImage, containerName, false);

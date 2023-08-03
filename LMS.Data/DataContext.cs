@@ -84,6 +84,8 @@ namespace LMS.Data
         public DbSet<File> Files { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<UserCertificate> UserCertificates { get; set; }
+        public DbSet<SchoolSubscriptionPlan> SchoolSubscriptionPlans { get; set; }
+
 
 
 

@@ -63,8 +63,9 @@ export const paymentStatusResponse =new Subject();
             cardNumber: this.fb.control('',[Validators.required, Validators.minLength(19)]),
             expiresOn: this.fb.control('',[Validators.required, Validators.minLength(5)]),
             securityCode: this.fb.control('',[Validators.required]),
-            firstName: this.fb.control('',[Validators.required]),
-            lastName: this.fb.control('',[Validators.required]),
+            cardHolderName: this.fb.control('',[Validators.required]),
+            // firstName: this.fb.control('',[Validators.required]),
+            // lastName: this.fb.control('',[Validators.required]),
             parentId: this.fb.control(this.parentInfo.paymentDetails.id),
             parentName: this.fb.control(this.parentInfo.paymentDetails.name),
             parentType: this.fb.control(this.parentInfo.paymentDetails.type),
@@ -109,7 +110,7 @@ export const paymentStatusResponse =new Subject();
      }
 
      this.loadingIcon = true;
-     this._paymentService.buySubscription(paymentDetails).subscribe((response: any) => {
+     this._paymentService.buyClassCourse(paymentDetails).subscribe((response: any) => {
       debugger
       this.closeModal();
       this.loadingIcon = false;

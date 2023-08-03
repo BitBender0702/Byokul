@@ -13,6 +13,7 @@
     <PackageReference Include="F23.StringSimilarity" Version="5.1.0" />
     <PackageReference Include="Hangfire" Version="1.8.0" />
     <PackageReference Include="itext7.pdfhtml" Version="4.0.4" />
+    <PackageReference Include="Iyzipay" Version="2.1.55" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />

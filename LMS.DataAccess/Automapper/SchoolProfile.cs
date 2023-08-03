@@ -2,6 +2,7 @@
 using LMS.Common.ViewModels.Accessibility;
 using LMS.Common.ViewModels.Class;
 using LMS.Common.ViewModels.Common;
+using LMS.Common.ViewModels.Iyizico;
 using LMS.Common.ViewModels.Post;
 using LMS.Common.ViewModels.School;
 using LMS.Common.ViewModels.User;
@@ -50,6 +51,7 @@ namespace LMS.DataAccess.Automapper
             CreateMap<SchoolDefaultLogo, SchoolDefaultLogoViewmodel>();
             CreateMap<SchoolCertificate, CertificateViewModel>()
                .ForMember(x => x.Id, opt => opt.MapFrom(o => o.CertificateId));
+            CreateMap<SchoolSubscriptionPlan, SchoolSubscriptionPlansViewModel>();
 
         }
     }

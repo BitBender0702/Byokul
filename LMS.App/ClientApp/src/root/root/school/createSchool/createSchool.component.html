@@ -358,9 +358,104 @@
             </form>
           </div>
 
+ <div [ngClass]="step == 2 ? 'tab tab-pane active' : 'tab tab-pane'"
+        >
+          <h2 class="font_24 fw-bold text_dark text-center my_32 mt-1">
+            School Subscription
+          </h2>
+          <p class="font_16 text_dark fw_600 text-center mb-0">
+            This is the subscription form
+          </p>
+          <form id="regForm" [formGroup]="subscriptionForm">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label class="font_10">{{'CardNumber'| translate }}*</label>
+                  <input (keypress)="omit_special_char($event)" formControlName="cardNumber" type="text" placeholder="XXXX-XXXX-XXXX-XXXX" maxlength="19" name="cardNumber" class="form-control w-100" (input)="formatCardNumber($event)">
+                  <small class="p-error" style="color: orange;"
+                  *ngIf="(isSubmitted && subscriptionForm.controls.cardNumber.errors)">{{'CardNumberRequired'| translate }}
+                </small>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="font_10">{{'ExpiresOn'| translate }}*</label>
+                  <input (keypress)="omit_special_char($event)" formControlName="expiresOn" type="text" placeholder="XX-XX" maxlength="5" name="expiresOn" class="form-control w-100" (input)="formatMonthYear($event)">
+                  <small class="p-error" style="color: orange;"
+                  *ngIf="(isSubmitted && subscriptionForm.controls.expiresOn.errors)">{{'ExpiresOnRequired'| translate }}
+                </small>
+                <small class="p-error" style="color: orange;" *ngIf="subscriptionForm.errors">
+                  {{subscriptionForm.errors.dates}}
+                </small>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="font_10">{{'SecurityCode'| translate }}*</label>
+                  <input formControlName="securityCode" type="text" name="securityCode" class="form-control w-100">
+                  <small class="p-error" style="color: orange;"
+                  *ngIf="(isSubmitted && subscriptionForm.controls.securityCode.errors)">{{'SecurityCodeRequired'| translate }}
+                </small>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="row">
+                  <div class="col mt-3 mb-2">
+                    <input
+                      formControlName="subscriptionReferenceId"
+                      type="radio"
+                      id="forFree"
+                      name="subscriptionReferenceId"
+                      [value]= "subscriptionPlans[1].planReferenceCode"
+                    />
+                    <label for="forFree">
+                      {{ "Monthly" | translate }}
+                    </label>
+                  </div>
+
+                  <div class="col mt-3 mb-2">
+                    <input
+                      formControlName="subscriptionReferenceId"
+                      type="radio"
+                      id="forPaid"
+                      name="subscriptionReference"
+                      [value]= "subscriptionPlans[0].planReferenceCode"
+                    />
+                    <label for="forPaid">
+                      {{ "Yearly" | translate }}
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="font_10">{{'AccountHolderName'| translate }}*</label>
+                  <input formControlName="accountHolderName" type="text" name="AccountHolderName" class="form-control w-100">
+                  <small class="p-error" style="color: orange;"
+                  *ngIf="(isSubmitted && subscriptionForm.controls.accountHolderName.errors)">{{'AccountHolderNameRequired'| translate }}
+                </small>
+                </div>
+              </div>
+              </div>
+
+            <div class="steps_btns">
+              <input
+                (click)="subscriptionStep()"
+                type="submit"
+                id="nextBtn"
+                class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 text-uppercase"
+                [value]="'Finish' | translate"
+              />
+            </div>
+          </form>
+        </div>
+   
           <div
             [ngClass]="
-              step == 2
+              step == 3
                 ? 'tab tab-pane active final-multiple-step'
                 : 'tab tab-pane final-multiple-step'
             "
