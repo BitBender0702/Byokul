@@ -193,26 +193,92 @@
                   <div class="chat-userleft">
                     <div class="chat-username d-flex align-items-center mb-2">
                       <div class="leftuser-chat-icon">
-                        <img *ngIf="item.chatType==1" [routerLink]="['/user/userProfile',item.userID]" [src]="item?.profileURL" alt="" class="cursor_pointer"/>
+                        <img
+                          *ngIf="item.chatType == 1"
+                          [routerLink]="['/user/userProfile', item.userID]"
+                          [src]="item?.profileURL"
+                          alt=""
+                          class="cursor_pointer"
+                        />
                       </div>
                       <div class="leftuser-chat-icon">
-                        <img *ngIf="item.chatType==3" [routerLink]="['/profile/school',item.school.schoolName]" [src]="item?.profileURL" alt="" class="cursor_pointer" />
+                        <img
+                          *ngIf="item.chatType == 3"
+                          [routerLink]="[
+                            '/profile/school',
+                            item.school.schoolName
+                          ]"
+                          [src]="item?.profileURL"
+                          alt=""
+                          class="cursor_pointer"
+                        />
                       </div>
                       <div class="leftuser-chat-icon">
-                        <img *ngIf="item.chatType==4" [routerLink]="['/profile/class',item.class.school.schoolName,item.class.className]" [src]="item?.profileURL" alt="" class="cursor_pointer"/>
+                        <img
+                          *ngIf="item.chatType == 4"
+                          [routerLink]="[
+                            '/profile/class',
+                            item.class.school.schoolName,
+                            item.class.className
+                          ]"
+                          [src]="item?.profileURL"
+                          alt=""
+                          class="cursor_pointer"
+                        />
                       </div>
                       <div class="leftuser-chat-icon">
-                        <img *ngIf="item.chatType==5" [routerLink]="['/profile/course',item.course?.school?.schoolName,item.course.courseName]" [src]="item?.profileURL" alt="" class="cursor_pointer"/>
+                        <img
+                          *ngIf="item.chatType == 5"
+                          [routerLink]="[
+                            '/profile/course',
+                            item.course?.school?.schoolName,
+                            item.course.courseName
+                          ]"
+                          [src]="item?.profileURL"
+                          alt=""
+                          class="cursor_pointer"
+                        />
                       </div>
-                      
-                      
-                      
-                     
 
-                      <h2 *ngIf="item.chatType==1" [routerLink]="['/user/userProfile',item.userID]" class="mb-0 cursor_pointer">{{ item?.userName }}</h2>
-                      <h2 *ngIf="item.chatType==3" [routerLink]="['/profile/school',item.school.schoolName]" class="mb-0 cursor_pointer">{{ item?.userName }}</h2>
-                      <h2 *ngIf="item.chatType==4" [routerLink]="['/profile/class',item.class.school.schoolName,item.class.className]" class="mb-0 cursor_pointer">{{ item?.userName }}</h2>
-                      <h2 *ngIf="item.chatType==5" [routerLink]="['/profile/course',item.course?.school?.schoolName,item.course.courseName]" class="mb-0 cursor_pointer">{{ item?.userName }}</h2>
+                      <h2
+                        *ngIf="item.chatType == 1"
+                        [routerLink]="['/user/userProfile', item.userID]"
+                        class="mb-0 cursor_pointer"
+                      >
+                        {{ item?.userName }}
+                      </h2>
+                      <h2
+                        *ngIf="item.chatType == 3"
+                        [routerLink]="[
+                          '/profile/school',
+                          item.school.schoolName
+                        ]"
+                        class="mb-0 cursor_pointer"
+                      >
+                        {{ item?.userName }}
+                      </h2>
+                      <h2
+                        *ngIf="item.chatType == 4"
+                        [routerLink]="[
+                          '/profile/class',
+                          item.class.school.schoolName,
+                          item.class.className
+                        ]"
+                        class="mb-0 cursor_pointer"
+                      >
+                        {{ item?.userName }}
+                      </h2>
+                      <h2
+                        *ngIf="item.chatType == 5"
+                        [routerLink]="[
+                          '/profile/course',
+                          item.course?.school?.schoolName,
+                          item.course.courseName
+                        ]"
+                        class="mb-0 cursor_pointer"
+                      >
+                        {{ item?.userName }}
+                      </h2>
 
                       &nbsp;
                       <span
@@ -244,7 +310,8 @@
                       type="button"
                       class="bg-transparent border-0 pinned-btn"
                     >
-                      <img class="me-0 w-auto rounded-0"
+                      <img
+                        class="me-0 w-auto rounded-0"
                         style="height: 20px"
                         src="../../../../assets/images/pinned-gray.svg"
                       />
@@ -260,7 +327,8 @@
                       type="button"
                       class="bg-transparent border-0 pinned-btn"
                     >
-                      <img class="me-0 w-auto rounded-0"
+                      <img
+                        class="me-0 w-auto rounded-0"
                         style="height: 20px"
                         src="../../../../assets/images/pinned-orange.svg"
                       />
@@ -318,10 +386,15 @@
                 </div> -->
                     <div class="message">
                       <!-- for reply -->
-                      <span *ngIf="userChat.replyMessageType == 0" class="user-replyanswer"
+                      <span
+                        *ngIf="userChat.replyMessageType == 0"
+                        class="user-replyanswer"
                         >{{ userChat.replyChatContent }}
                       </span>
-                      <span *ngIf="userChat.replyMessageType == 1" class="user-reply">
+                      <span
+                        *ngIf="userChat.replyMessageType == 1"
+                        class="user-reply"
+                      >
                         <div
                           class="img-attach me-2 d-inline-block cursor-pointer"
                           data-bs-toggle="modal"
@@ -460,19 +533,23 @@
                       </span>
 
                       <span
-                        *ngIf="userChat.isForwarded && userChat.text != null" class="reply-dark-icon"
+                        *ngIf="userChat.isForwarded && userChat.text != null"
+                        class="reply-dark-icon"
                       >
                         <i
                           class="fa-sharp fa-solid fa-share fa-rotate-180 font_16"
                         ></i>
                       </span>
 
-                      <span *ngIf="userChat.replyMessageType != null" class="reply-dark-icon">
+                      <span
+                        *ngIf="userChat.replyMessageType != null"
+                        class="reply-dark-icon"
+                      >
                         <i
                           class="fa-sharp fa-solid fa-share fa-rotate-180 font_16"
                         ></i>
                       </span>
-                     <div class="clearfix"></div>
+                      <div class="clearfix"></div>
                       <span *ngIf="userChat.text != null" class="user-reply">{{
                         userChat.text
                       }}</span>
@@ -887,143 +964,146 @@
                   </div>
                 </div>
                 <div
-                  class="add-comment d-flex align-items-center justify-content-between pt-0"
+                  class="add-comment d-flex flex-column flex-md-row gap-3 align-items-md-center justify-content-between pt-0"
                 >
-                  <span
-                    class="bg-transparent rounded-circle comment-post-user rounded-circle"
-                    ><img
-                      *ngIf="sender.avatar != null"
-                      style="max-height: 160%"
-                      [src]="sender.avatar"
-                    />
-                    <img
-                      *ngIf="sender.avatar == null && gender == '1'"
-                      style="max-height: 160%"
-                      src="../../../assets/images/maleProfile.jfif"
-                    />
-                    <img
-                      *ngIf="
-                        sender.avatar == null &&
-                        (gender == '2' || gender == '3')
-                      "
-                      style="max-height: 160%"
-                      src="../../../assets/images/femaleProfile.jfif"
-                    />
-                  </span>
-
-                  <input
-                    (keyup)="getTextMessage($event, recieverId)"
-                    [(ngModel)]="messageToUser"
-                    type="text"
-                    class="form-control rounded-8 font_14 fw_400"
-                    placeholder="Your message"
-                  />
-                  <br />
-
-                  <div class="post-bot-left d-flex">
-                    <label
-                      class="custom-file-upload post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center"
-                    >
-                      <input
-                        class="invisible"
-                        id="hideFileType"
-                        type="file"
-                        multiple="multiple"
-                        (change)="handleImages($event)"
-                        accept="image/*"
-                      />
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke-width="1.5"
-                        stroke="currentColor"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
-                        />
-                      </svg>
-                    </label>
-                    <label
-                      class="custom-file-upload post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center"
-                    >
-                      <input
-                        class="invisible"
-                        id="hideFileType"
-                        type="file"
-                        (change)="handleVideos($event)"
-                        accept="video/*"
-                      />
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke-width="1.5"
-                        stroke="currentColor"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          d="M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25h-9A2.25 2.25 0 002.25 7.5v9a2.25 2.25 0 002.25 2.25z"
-                        />
-                      </svg>
-                    </label>
-                    <label
-                      class="custom-file-upload post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center"
-                    >
-                      <input
-                        class="invisible"
-                        id="hideFileType"
-                        type="file"
-                        (change)="handleAttachments($event)"
-                        accept="application/pdf"
+                  <div class="d-flex align-items-center gap-2 w-100">
+                    <span
+                      class="bg-transparent rounded-circle comment-post-user rounded-circle"
+                      ><img
+                        *ngIf="sender.avatar != null"
+                        style="max-height: 160%"
+                        [src]="sender.avatar"
                       />
                       <img
-                        src="../../../assets/images/Paper-Plus-dark.svg"
-                        class="dark-attach"
-                      /><img
-                        src="../../../assets/images/Paper-Plus-light.svg"
-                        class="light-attach"
+                        *ngIf="sender.avatar == null && gender == '1'"
+                        style="max-height: 160%"
+                        src="../../../assets/images/maleProfile.jfif"
                       />
-                    </label>
+                      <img
+                        *ngIf="
+                          sender.avatar == null &&
+                          (gender == '2' || gender == '3')
+                        "
+                        style="max-height: 160%"
+                        src="../../../assets/images/femaleProfile.jfif"
+                      />
+                    </span>
+
+                    <input
+                      (keyup)="getTextMessage($event, recieverId)"
+                      [(ngModel)]="messageToUser"
+                      type="text"
+                      class="form-control rounded-8 font_14 fw_400"
+                      placeholder="Your message"
+                    />
                   </div>
-                  <div>
+
+                  <div class="d-flex align-items-center gap-2">
+                    <div class="post-bot-left d-flex">
+                      <label
+                        class="custom-file-upload post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center"
+                      >
+                        <input
+                          class="invisible"
+                          id="hideFileType"
+                          type="file"
+                          multiple="multiple"
+                          (change)="handleImages($event)"
+                          accept="image/*"
+                        />
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke-width="1.5"
+                          stroke="currentColor"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
+                          />
+                        </svg>
+                      </label>
+                      <label
+                        class="custom-file-upload post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center"
+                      >
+                        <input
+                          class="invisible"
+                          id="hideFileType"
+                          type="file"
+                          (change)="handleVideos($event)"
+                          accept="video/*"
+                        />
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke-width="1.5"
+                          stroke="currentColor"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            d="M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25h-9A2.25 2.25 0 002.25 7.5v9a2.25 2.25 0 002.25 2.25z"
+                          />
+                        </svg>
+                      </label>
+                      <label
+                        class="custom-file-upload post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center"
+                      >
+                        <input
+                          class="invisible"
+                          id="hideFileType"
+                          type="file"
+                          (change)="handleAttachments($event)"
+                          accept="application/pdf"
+                        />
+                        <img
+                          src="../../../assets/images/Paper-Plus-dark.svg"
+                          class="dark-attach"
+                        /><img
+                          src="../../../assets/images/Paper-Plus-light.svg"
+                          class="light-attach"
+                        />
+                      </label>
+                    </div>
+                    <div>
+                      <button
+                        *ngIf="invalidMessage || disabledSendButton"
+                        disabled
+                        (click)="sendToUser(recieverId)"
+                        type="button"
+                        class="comment-btn border-0"
+                      >
+                        <img
+                          *ngIf="!disabledSendButton"
+                          src="../../../assets/images/school/arrowup.svg"
+                        />
+                      </button>
+                      <div
+                        *ngIf="disabledSendButton"
+                        class="postloader-main position-relative"
+                      >
+                        <div
+                          class="postlds-chatUpload-ring"
+                          style="top: 18px; left: 34px"
+                        >
+                          <div></div>
+                          <div></div>
+                          <div></div>
+                          <div></div>
+                        </div>
+                      </div>
+                    </div>
                     <button
-                      *ngIf="invalidMessage || disabledSendButton"
-                      disabled
+                      *ngIf="!invalidMessage && !disabledSendButton"
                       (click)="sendToUser(recieverId)"
                       type="button"
                       class="comment-btn border-0"
                     >
-                      <img
-                        *ngIf="!disabledSendButton"
-                        src="../../../assets/images/school/arrowup.svg"
-                      />
+                      <img src="../../../assets/images/school/arrowup.svg" />
                     </button>
-                    <div
-                      *ngIf="disabledSendButton"
-                      class="postloader-main position-relative"
-                    >
-                      <div
-                        class="postlds-chatUpload-ring"
-                        style="top: 18px; left: 34px"
-                      >
-                        <div></div>
-                        <div></div>
-                        <div></div>
-                        <div></div>
-                      </div>
-                    </div>
                   </div>
-                  <button
-                    *ngIf="!invalidMessage && !disabledSendButton"
-                    (click)="sendToUser(recieverId)"
-                    type="button"
-                    class="comment-btn border-0"
-                  >
-                    <img src="../../../assets/images/school/arrowup.svg" />
-                  </button>
                 </div>
               </div>
             </main>
@@ -1070,12 +1150,52 @@
                     <div class="chat-userleft">
                       <div class="chat-username d-flex align-items-center mb-2">
                         <div class="leftuser-chat-icon">
-                      <img [routerLink]="['/user/userProfile',item.userID]" [src]="item?.profileURL" alt="" class="cursor_pointer" />
-                    </div>
-                      <h2 *ngIf="item.chatType==1" [routerLink]="['/user/userProfile',item.userID]" class="mb-0 cursor_pointer">{{ item?.userName }}</h2>
-                      <h2 *ngIf="item.chatType==3" [routerLink]="['/profile/school',item.school.schoolName]" class="mb-0 cursor_pointer">{{ item?.userName }}</h2>
-                      <h2 *ngIf="item.chatType==4" [routerLink]="['/profile/class',item.class.school.schoolName,item.class.className]" class="mb-0 cursor_pointer">{{ item?.userName }}</h2>
-                      <h2 *ngIf="item.chatType==5" [routerLink]="['/profile/course',item.course?.school?.schoolName,item.course.courseName]" class="mb-0 cursor_pointer">{{ item?.userName }}</h2>
+                          <img
+                            [routerLink]="['/user/userProfile', item.userID]"
+                            [src]="item?.profileURL"
+                            alt=""
+                            class="cursor_pointer"
+                          />
+                        </div>
+                        <h2
+                          *ngIf="item.chatType == 1"
+                          [routerLink]="['/user/userProfile', item.userID]"
+                          class="mb-0 cursor_pointer"
+                        >
+                          {{ item?.userName }}
+                        </h2>
+                        <h2
+                          *ngIf="item.chatType == 3"
+                          [routerLink]="[
+                            '/profile/school',
+                            item.school.schoolName
+                          ]"
+                          class="mb-0 cursor_pointer"
+                        >
+                          {{ item?.userName }}
+                        </h2>
+                        <h2
+                          *ngIf="item.chatType == 4"
+                          [routerLink]="[
+                            '/profile/class',
+                            item.class.school.schoolName,
+                            item.class.className
+                          ]"
+                          class="mb-0 cursor_pointer"
+                        >
+                          {{ item?.userName }}
+                        </h2>
+                        <h2
+                          *ngIf="item.chatType == 5"
+                          [routerLink]="[
+                            '/profile/course',
+                            item.course?.school?.schoolName,
+                            item.course.courseName
+                          ]"
+                          class="mb-0 cursor_pointer"
+                        >
+                          {{ item?.userName }}
+                        </h2>
                         <span
                           *ngIf="
                             item?.unreadMessageCount != 0 &&
@@ -1161,7 +1281,9 @@
                 <div
                   *ngFor="let key of getObjectKeys(schoolInboxList[0]?.chats)"
                 >
-                  <div class="text-center d-flex align-items-center justify-content-center">
+                  <div
+                    class="text-center d-flex align-items-center justify-content-center"
+                  >
                     <hr
                       style="
                         width: 40%;
@@ -1190,10 +1312,15 @@
                 </div> -->
                     <div class="message">
                       <!-- for reply -->
-                      <span *ngIf="userChat.replyMessageType == 0" class="user-replyanswer"
+                      <span
+                        *ngIf="userChat.replyMessageType == 0"
+                        class="user-replyanswer"
                         >{{ userChat.replyChatContent }}
                       </span>
-                      <span *ngIf="userChat.replyMessageType == 1" class="user-reply">
+                      <span
+                        *ngIf="userChat.replyMessageType == 1"
+                        class="user-reply"
+                      >
                         <div
                           class="img-attach me-2 d-inline-block cursor-pointer"
                           data-bs-toggle="modal"
@@ -1252,13 +1379,13 @@
 
                       <!-- for forwarded -->
                       <span
-                        *ngIf="userChat.isForwarded && userChat.text == null" 
+                        *ngIf="userChat.isForwarded && userChat.text == null"
                       >
                         <i
                           class="fa-sharp fa-solid fa-share fa-rotate-180 font_16"
                         ></i>
                       </span>
-                      
+
                       <span
                         *ngIf="
                           userChat.isForwarded &&
@@ -1333,14 +1460,17 @@
                       </span>
 
                       <span
-                        *ngIf="userChat.isForwarded && userChat.text != null" 
+                        *ngIf="userChat.isForwarded && userChat.text != null"
                       >
                         <i
                           class="fa-sharp fa-solid fa-share fa-rotate-180 font_16"
                         ></i>
                       </span>
 
-                      <span *ngIf="userChat.replyMessageType != null"  class="reply-dark-icon">
+                      <span
+                        *ngIf="userChat.replyMessageType != null"
+                        class="reply-dark-icon"
+                      >
                         <i
                           class="fa-sharp fa-solid fa-share fa-rotate-180 font_16"
                         ></i>
