@@ -639,35 +639,37 @@
                   class="school-grid-box position-relative"
                 >
                   <div
-                    class="schoolgrid-header d-flex align-items-center position-relative"
+                    class="schoolgrid-header d-flex align-items-center justify-content-between position-relative"
                   >
-                    <div class="school-gridprofile-icon">
-                      <img
-                        *ngIf="post.parentImageUrl != null"
-                        [src]="post.parentImageUrl"
-                      />
-                      <img
-                        *ngIf="post.parentImageUrl == null && gender == '1'"
-                        src="../../../assets/images/maleProfile.jfif"
-                      />
-                      <img
-                        *ngIf="
-                          post.parentImageUrl == null &&
-                          (gender == '2' || gender == '3')
-                        "
-                        src="../../../assets/images/femaleProfile.jfif"
-                      />
+                    <div class="d-flex align-items-center gap-2">
+                      <div class="school-gridprofile-icon">
+                        <img
+                          *ngIf="post.parentImageUrl != null"
+                          [src]="post.parentImageUrl"
+                        />
+                        <img
+                          *ngIf="post.parentImageUrl == null && gender == '1'"
+                          src="../../../assets/images/maleProfile.jfif"
+                        />
+                        <img
+                          *ngIf="
+                            post.parentImageUrl == null &&
+                            (gender == '2' || gender == '3')
+                          "
+                          src="../../../assets/images/femaleProfile.jfif"
+                        />
+                      </div>
+                      <h2 class="d-inline-block font_20 fw_600 text_sec1 mb-0">
+                        {{ post.title }}
+                      </h2>
+                      <div *ngIf="post.isLive">
+                        <img src="../../../../assets/images/live_img.png" />
+                      </div>
+                      <p class="font_14 school-grid-date d-inline-block mb-0">
+                        {{ post.createdOn | date : "MMMM d" }} -
+                        {{ post.createdOn | date : "hh:mm" }}
+                      </p>
                     </div>
-                    <h2 class="d-inline-block font_20 fw_600 text_sec1 mb-0">
-                      {{ post.title }}
-                    </h2>
-                    <div *ngIf="post.isLive">
-                      <img src="../../../../assets/images/live_img.png" />
-                    </div>
-                    <p class="font_14 school-grid-date d-inline-block mb-0">
-                      {{ post.createdOn | date : "MMMM d" }} -
-                      {{ post.createdOn | date : "hh:mm" }}
-                    </p>
                     <button
                       *ngIf="post.isPinned && isOwner"
                       (click)="pinUnpinPost(post.id, false)"
