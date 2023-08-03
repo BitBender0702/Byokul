@@ -5,7 +5,9 @@
     </div>
     <div class="main_content">
       <div class="main_content-max-width">
-        <div class="create-post-header d-flex justify-content-between d-none d-xl-flex" >
+        <div
+          class="create-post-header d-flex justify-content-between d-none d-xl-flex"
+        >
           <button
             #hiddenButton
             hidden
@@ -33,7 +35,7 @@
           >
             {{ "AddTeacher" | translate }}
           </button>
-         
+
           <button
             *ngIf="isOwner"
             (click)="openPostModal()"
@@ -43,8 +45,10 @@
             {{ "CreatePost" | translate }}
           </button>
         </div>
-		
-        <div class="live-header d-flex align-items-center justify-content-between" >
+
+        <div
+          class="live-header d-flex align-items-center justify-content-between"
+        >
           <button
             (click)="back()"
             type="button"
@@ -66,9 +70,8 @@
             </button>
           </div>
         </div>
-        
-		
-		<div class="d-flex justify-content-end mt-5 create_post_btn">
+
+        <div class="d-flex justify-content-end mt-5 create_post_btn">
           <button
             *ngIf="isOwner"
             (click)="openPostModal()"
@@ -78,8 +81,8 @@
             <img src="../../../assets/images/Edit-light.svg" alt="edit" />
           </button>
         </div>
-        
-		<div class="School-prof-header">
+
+        <div class="School-prof-header">
           <div class="d-flex">
             <div class="school-profile-icon rounded-circle user-profile-header">
               <img *ngIf="user.avatar != null" [lazyLoad]="user.avatar" />
@@ -104,14 +107,16 @@
                   <img src="../../../../assets/images/followers.svg" />
                   {{ "Followers" | translate }}:
                   <b class="fw_700">
-				  <a
+                    <a
                       style="
                         text-decoration: none;
                         cursor: pointer;
                         color: black;
                       "
                       [routerLink]="['/user/userFollowers', user.id]"
-                      >{{ followersLength }}</a></b>
+                      >{{ followersLength }}</a
+                    ></b
+                  >
                 </div>
                 <div class="followers_name d-inline-block font_16 mr-_24">
                   <img src="../../../../assets/images/students-icon.svg" />
@@ -133,8 +138,8 @@
                   {{ "Post" | translate }}:
                   <b class="fw_700">{{ user.posts.length }}</b>
                 </div>
-               
-			   <button
+
+                <button
                   *ngIf="!isOwner && !isFollowed"
                   (click)="followUser(user.id, 'Follow')"
                   type="button"
@@ -179,9 +184,8 @@
             {{ user.description }}
           </p>
         </div>
-       
 
-	   <div class="teacher-tags tag-box hover-tags">
+        <div class="teacher-tags tag-box hover-tags">
           <div *ngIf="user.certificates.length != 0 || this.isOwner">
             <div class="teacher-tags tag-box mt-0 hover-tags">
               <div class="teacher-content font_14 d-inline-block">
@@ -302,29 +306,33 @@
             </div>
           </div>
           <div *ngIf="user.schoolsAsTeacher.length != 0 || this.isOwner">
-            <div class="teacher-content font_14 d-inline-block">
-              <img src="../../../../assets/images/bag-dark.svg" />
-              {{ "Teacher" | translate }}
+            <div class="teacher-tags tag-box mt-0 hover-tags">
+              <div class="teacher-content font_14 d-inline-block">
+                <img src="../../../../assets/images/bag-dark.svg" />
+                {{ "Teacher" | translate }}
+              </div>
+              <span
+                *ngFor="let item of user.schoolsAsTeacher"
+                class="custom-tag"
+                ><span [routerLink]="['/profile/school', item.schoolName]">{{
+                  item.schoolName
+                }}</span
+                ><button
+                  (click)="getDeletedSchool(item.schoolId)"
+                  class="border-0 bg-transparent p-0 position-absolute delete-tag"
+                  data-bs-toggle="modal"
+                  data-bs-target="#delete-schoolTeacher"
+                >
+                  <img
+                    *ngIf="isOwner"
+                    src="../../../../assets/images/cross-sm-light.svg"
+                  /></button
+              ></span>
             </div>
-            <span *ngFor="let item of user.schoolsAsTeacher" class="custom-tag"
-              ><span [routerLink]="['/profile/school', item.schoolName]">{{
-                item.schoolName
-              }}</span
-              ><button
-                (click)="getDeletedSchool(item.schoolId)"
-                class="border-0 bg-transparent p-0 position-absolute delete-tag"
-                data-bs-toggle="modal"
-                data-bs-target="#delete-schoolTeacher"
-              >
-                <img
-                  *ngIf="isOwner"
-                  src="../../../../assets/images/cross-sm-light.svg"
-                /></button
-            ></span>
           </div>
         </div>
-       
-	   <div class="teacher-tags tag-box mt-0">
+
+        <div class="teacher-tags tag-box mt-0">
           <div class="teacher-content font_14 d-inline-block">
             <img src="../../../../assets/images/Location-dark.svg" />
             {{ "Location" | translate }}
@@ -338,7 +346,9 @@
           </span>
         </div>
         <hr class="hr-gray" />
-        <div class="school-profile-tabs d-flex align-content-center justify-content-center position-relative">
+        <div
+          class="school-profile-tabs d-flex align-content-center justify-content-center position-relative"
+        >
           <div class="custom-tabs">
             <ul
               class="nav nav-tabs mb-3 border-0 before-none"
@@ -496,7 +506,10 @@
               </button>
             </div>
           </div>
-          <div *ngIf="!isPostTab && !isSavedPostTab && isSavedClassCourseTab" class="filter-main d-flex" >
+          <div
+            *ngIf="!isPostTab && !isSavedPostTab && isSavedClassCourseTab"
+            class="filter-main d-flex"
+          >
             <div class="btn-filter1 align-items-center">
               <button
                 [ngClass]="
@@ -525,7 +538,8 @@
               </button>
             </div>
           </div>
-          <div *ngIf="
+          <div
+            *ngIf="
               !isPostTab &&
               !isSavedPostTab &&
               !isSavedClassCourseTab &&
@@ -561,15 +575,16 @@
               </button>
             </div>
           </div>
-         
 
-		 <div *ngIf="
+          <div
+            *ngIf="
               !isPostTab &&
               !isSavedPostTab &&
               !isSavedClassCourseTab &&
               !isSharedPostTab &&
               isLikedPostTab
-            " class="filter-main d-flex"
+            "
+            class="filter-main d-flex"
           >
             <div class="btn-filter1 align-items-center">
               <button
@@ -599,12 +614,9 @@
               </button>
             </div>
           </div>
-		  
-		  
-		  
         </div>
-        
-		<div
+
+        <div
           class="tab-content scroll-schoolTab"
           id="pills-tabContent"
           *ngIf="isProfileGrid && isPostTab"
@@ -682,7 +694,10 @@
                     <!-- </div> -->
                   </div>
 
-                  <div class="school-grid-body" (click)="openPostsViewModal(post)"                 >
+                  <div
+                    class="school-grid-body"
+                    (click)="openPostsViewModal(post)"
+                  >
                     <p class="text_sec1 font_14" style="cursor: pointer">
                       {{ post.description }}
                     </p>
@@ -810,7 +825,7 @@
                           *ngIf="post.postAttachments.length == 3"
                           class="col-md-4 h-100"
                         >
-                          <div class="h-100 medium_thumbox d-flex">
+                          <div class="medium_thumbox d-flex">
                             <div class="medium-thumnail">
                               <img
                                 *ngIf="post.postAttachments[1]?.fileType == 2"
@@ -868,7 +883,7 @@
                           *ngIf="post.postAttachments.length > 3"
                           class="col-md-4 h-100"
                         >
-                          <div class="h-100 medium_thumbox d-flex">
+                          <div class="medium_thumbox d-flex">
                             <div class="medium-thumnail">
                               <img
                                 class="w-100 position-relative"
@@ -906,8 +921,8 @@
                       </div>
                     </div>
                   </div>
-                  
-				  <div
+
+                  <div
                     *ngIf="post.postAttachments.length"
                     class="school-grid-footer above-thumbnail"
                   >
@@ -1082,42 +1097,55 @@
             </div>
           </div>
         </div>
-        <div   class="tab-content scroll-schoolTab"   id="pills-tabContent" *ngIf="!isProfileGrid && isPostTab">
+        <div
+          class="tab-content scroll-schoolTab"
+          id="pills-tabContent"
+          *ngIf="!isProfileGrid && isPostTab"
+        >
           <ng-container *ngTemplateOutlet="postFeedSection"></ng-container>
           <div class="row">
             <ng-container *ngFor="let post of user.posts; let i = index">
               <div
-              class="col-12 imgDisplay" *ngIf="(isScreenPc && i % 3 == 0) || (isScreenTablet && i % 2 == 0) || (isScreenMobile && i % 1 == 0)"
-              style="display: none;"
-            >
-              <div
-              [ngClass]="
-                isGridItemInfo
-                  ? 'd-block school-grid-box position-relative school-list-box h-100'
-                  : 'd-none school-grid-box position-relative school-list-box h-100'
-              "
-              *ngIf="gridItemInfo != undefined"
-            >
-              <div class="row post-list-preview-sec" >
+                class="col-12 imgDisplay"
+                *ngIf="
+                  (isScreenPc && i % 3 == 0) ||
+                  (isScreenTablet && i % 2 == 0) ||
+                  (isScreenMobile && i % 1 == 0)
+                "
+                style="display: none"
+              >
                 <div
                   [ngClass]="
-                    gridItemInfo.postAttachments.length > 0
-                      ? 'd-block col-lg-6'
-                      : 'd-none'
+                    isGridItemInfo
+                      ? 'd-block school-grid-box position-relative school-list-box h-100'
+                      : 'd-none school-grid-box position-relative school-list-box h-100'
                   "
+                  *ngIf="gridItemInfo != undefined"
                 >
-                  <carousel [interval]="0">
+                  <div class="row post-list-preview-sec">
                     <div
-                      *ngFor="let postAttachment of gridItemInfo.postAttachments"
-                      class="school-grid-thumbnail"
+                      [ngClass]="
+                        gridItemInfo.postAttachments.length > 0
+                          ? 'd-block col-lg-6'
+                          : 'd-none'
+                      "
                     >
-                      <slide *ngIf="postAttachment.fileType == 2">
+                      <carousel [interval]="0">
                         <div
-                          *ngIf="postAttachment?.fileType == 2"
-                          class="videofile"
+                          *ngFor="
+                            let postAttachment of gridItemInfo.postAttachments
+                          "
+                          class="school-grid-thumbnail"
                         >
-                        <videoJs-component [postAttachment]="postAttachment" ></videoJs-component>
-                          <!-- <video 
+                          <slide *ngIf="postAttachment.fileType == 2">
+                            <div
+                              *ngIf="postAttachment?.fileType == 2"
+                              class="videofile"
+                            >
+                              <videoJs-component
+                                [postAttachment]="postAttachment"
+                              ></videoJs-component>
+                              <!-- <video
                           [id] = "postAttachment.id"
                           controls
                             class="video-js vjs-big-play-centered"
@@ -1138,8 +1166,8 @@
                             />
                           </slide>
                         </div>
-                    </carousel>
-                </div>
+                      </carousel>
+                    </div>
                     <div
                       [ngClass]="
                         gridItemInfo.postAttachments.length > 0
@@ -1358,7 +1386,7 @@
                     </div>
                   </div>
                 </div>
-                </div>
+              </div>
 
               <div
                 *ngIf="
@@ -1780,7 +1808,7 @@
                           *ngIf="post.postAttachments.length == 3"
                           class="col-md-4 h-100"
                         >
-                          <div class="h-100 medium_thumbox d-flex">
+                          <div class="medium_thumbox d-flex">
                             <div class="medium-thumnail">
                               <video
                                 *ngIf="post.postAttachments[1]?.fileType == 2"
@@ -1856,7 +1884,7 @@
                           *ngIf="post.postAttachments.length > 3"
                           class="col-md-4 h-100"
                         >
-                          <div class="h-100 medium_thumbox d-flex">
+                          <div class="medium_thumbox d-flex">
                             <div class="medium-thumnail">
                               <img
                                 class="w-100 position-relative"
@@ -3706,7 +3734,7 @@
                           *ngIf="post.postAttachments.length == 3"
                           class="col-md-4 h-100"
                         >
-                          <div class="h-100 medium_thumbox d-flex">
+                          <div class="medium_thumbox d-flex">
                             <div class="medium-thumnail">
                               <video
                                 *ngIf="post.postAttachments[1]?.fileType == 2"
@@ -3782,7 +3810,7 @@
                           *ngIf="post.postAttachments.length > 3"
                           class="col-md-4 h-100"
                         >
-                          <div class="h-100 medium_thumbox d-flex">
+                          <div class="medium_thumbox d-flex">
                             <div class="medium-thumnail">
                               <img
                                 class="w-100 position-relative"
@@ -4850,7 +4878,7 @@
                           *ngIf="post.postAttachments.length == 3"
                           class="col-md-4 h-100"
                         >
-                          <div class="h-100 medium_thumbox d-flex">
+                          <div class="medium_thumbox d-flex">
                             <div class="medium-thumnail">
                               <video
                                 *ngIf="post.postAttachments[1]?.fileType == 2"
@@ -4926,7 +4954,7 @@
                           *ngIf="post.postAttachments.length > 3"
                           class="col-md-4 h-100"
                         >
-                          <div class="h-100 medium_thumbox d-flex">
+                          <div class="medium_thumbox d-flex">
                             <div class="medium-thumnail">
                               <img
                                 class="w-100 position-relative"
@@ -6245,7 +6273,7 @@
                       />
                     </div>
                   </div>
-                  
+
                   <input
                     #imageFile
                     class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins position-static opacity-100"
@@ -6274,7 +6302,7 @@
                     >{{ "PersonalInformation" | translate }}</span
                   >
                 </div>
-                
+
                 <form [formGroup]="editUserForm" class="latest-form">
                   <div class="row">
                     <div class="col-md-6">
@@ -6457,7 +6485,9 @@
                   </div>
                 </form>
               </div>
-              <div class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4" >
+              <div
+                class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4"
+              >
                 <button
                   #closeEditModal
                   id="closeBtn"
@@ -6622,7 +6652,7 @@
           </div>
         </div>
       </div>
-     </div>
+    </div>
 
     <div
       class="modal fade edit-school-modal delete-modal"
@@ -6743,401 +6773,406 @@
         <img src="../../../assets/images/Edit-light.svg" alt="edit" />
       </button>
     </div>
- 
-</section>
+  </section>
 
   <post-loading-spinner
     [postLoadingIcon]="postLoadingIcon"
   ></post-loading-spinner>
 
-<loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
-<p-toast></p-toast>
+  <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
+  <p-toast></p-toast>
 
-<ng-template #cropTemplate style="max-width: 700px">
-  <div>
-    <div class="modal-content">
-      <div
-        class="modal-header border-0 justify-content-center position-relative"
-      >
-        <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">
-          {{ "CropImage" | translate }}
-        </h1>
-        <button
-          (click)="closeCropModal()"
-          type="button"
-          class="btn-close shadow-none"
-          data-bs-dismiss="modal"
-          aria-label="Close"
+  <ng-template #cropTemplate style="max-width: 700px">
+    <div>
+      <div class="modal-content">
+        <div
+          class="modal-header border-0 justify-content-center position-relative"
         >
-          <img src="../../../assets/images/cross.svg" />
-        </button>
+          <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">
+            {{ "CropImage" | translate }}
+          </h1>
+          <button
+            (click)="closeCropModal()"
+            type="button"
+            class="btn-close shadow-none"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          >
+            <img src="../../../assets/images/cross.svg" />
+          </button>
+        </div>
+        <div class="modal-body">
+          <image-cropper
+            [imageChangedEvent]="imageChangedEvent"
+            [maintainAspectRatio]="true"
+            [containWithinAspectRatio]="containWithinAspectRatio"
+            [aspectRatio]="4 / 4"
+            [resizeToWidth]="256"
+            [cropperMinWidth]="128"
+            [onlyScaleDown]="true"
+            [roundCropper]="true"
+            [canvasRotation]="canvasRotation"
+            [transform]="transform"
+            [alignImage]="'left'"
+            [style.display]="showCropper ? null : 'none'"
+            format="png"
+            (imageCropped)="imageCropped($event)"
+            (imageLoaded)="imageLoaded()"
+            (cropperReady)="cropperReady($event)"
+            (loadImageFailed)="loadImageFailed()"
+          ></image-cropper>
+        </div>
+        <div
+          class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4"
+        >
+          <button
+            (click)="closeCropModal()"
+            type="button"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+            data-bs-target="#create-post"
+          >
+            {{ "DiscardChanges" | translate }}
+          </button>
+          <button
+            (click)="applyCropimage()"
+            type="button"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
+            data-bs-target="#create-post"
+          >
+            {{ "Apply" | translate }}
+          </button>
+          <!-- <button (click)="deselectAutocomplete()">avv</button> -->
+        </div>
       </div>
-      <div class="modal-body">
-        <image-cropper
-          [imageChangedEvent]="imageChangedEvent"
-          [maintainAspectRatio]="true"
-          [containWithinAspectRatio]="containWithinAspectRatio"
-          [aspectRatio]="4 / 4"
-          [resizeToWidth]="256"
-          [cropperMinWidth]="128"
-          [onlyScaleDown]="true"
-          [roundCropper]="true"
-          [canvasRotation]="canvasRotation"
-          [transform]="transform"
-          [alignImage]="'left'"
-          [style.display]="showCropper ? null : 'none'"
-          format="png"
-          (imageCropped)="imageCropped($event)"
-          (imageLoaded)="imageLoaded()"
-          (cropperReady)="cropperReady($event)"
-          (loadImageFailed)="loadImageFailed()"
-        ></image-cropper>
-      </div>
-      <div
-        class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4"
-      >
-        <button
-          (click)="closeCropModal()"
-          type="button"
-          class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
-          data-bs-target="#create-post"
+    </div>
+  </ng-template>
+
+  <div
+    class="modal fade edit-school-modal"
+    id="add-certificate"
+    tabindex="-1"
+    aria-labelledby="add-certificate"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div
+          class="modal-header border-0 justify-content-center position-relative"
         >
-          {{ "DiscardChanges" | translate }}
-        </button>
-        <button
-          (click)="applyCropimage()"
-          type="button"
-          class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
-          data-bs-target="#create-post"
-        >
-          {{ "Apply" | translate }}
-        </button>
-        <!-- <button (click)="deselectAutocomplete()">avv</button> -->
+          <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">
+            {{ "AddCertificates" | translate }}
+          </h1>
+          <button
+            type="button"
+            class="btn-close shadow-none"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          >
+            <img src="../../../../assets/images/cross.svg" />
+          </button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="userCertificateForm" class="latest-form">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label class="font_10"
+                    >{{ "CertificateName" | translate }}*</label
+                  >
+                  <input
+                    formControlName="certificateName"
+                    type="text"
+                    name="CertificateName"
+                    class="form-control w-100"
+                  />
+                </div>
+                <small
+                  class="p-error"
+                  style="color: orange"
+                  *ngIf="
+                    isSubmitted &&
+                    userCertificateForm.get('certificateName')?.errors
+                  "
+                >
+                  {{ "CertificateNameRequired" | translate }}
+                </small>
+              </div>
+
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label class="font_10"
+                    >{{ "ProviderName" | translate }}*</label
+                  >
+                  <input
+                    formControlName="provider"
+                    type="text"
+                    name="provider"
+                    class="form-control w-100"
+                  />
+                </div>
+                <small
+                  class="p-error"
+                  style="color: orange"
+                  *ngIf="
+                    isSubmitted && userCertificateForm.get('provider')?.errors
+                  "
+                >
+                  {{ "ProviderNameRequired" | translate }}
+                </small>
+              </div>
+
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label class="font_10">{{ "IssuedDate" | translate }}*</label>
+                  <input
+                    #issuedDate
+                    autocomplete="off"
+                    type="text"
+                    class="form-control w-100 date_calendar"
+                    name="dob"
+                    formControlName="issuedDate"
+                    id="issuedDate"
+                    (click)="getSelectedLanguage()"
+                  />
+                </div>
+                <small
+                  class="p-error"
+                  style="color: orange"
+                  *ngIf="
+                    isSubmitted &&
+                    userCertificateForm.controls.issuedDate.errors
+                  "
+                  >{{ "IssuedDateRequired" | translate }}
+                </small>
+              </div>
+
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label class="font_10">{{ "Description" | translate }}</label>
+                  <textarea
+                    maxlength="200"
+                    type="text"
+                    formControlName="description"
+                    class="form-control resize-none ht_96"
+                  ></textarea>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div class="preview-zone hidden">
+                  <div class="box box-solid">
+                    <div class="box-header with-border"></div>
+                    <div class="box-body">
+                      <span class="position-relative d-inline-block">
+                        <img
+                          style="width: 200px"
+                          class="mb-3"
+                          [src]="uploadImage"
+                        />
+                        <button
+                          *ngIf="
+                            uploadImage != undefined && uploadImage != null
+                          "
+                          (click)="removeUploadCertificateImage()"
+                          type="button"
+                          class="btn dl-school-img d-flex align-items-center justify-content-center rounded-circle position-absolute"
+                          style="height: 27px !important"
+                        >
+                          <i class="fa-solid fa-xmark"></i>
+                        </button>
+                      </span>
+                      <br />
+                      <p>{{ uploadImageName }}</p>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  *ngIf="uploadImage == null || uploadImage == undefined"
+                  class="dropzone-wrapper"
+                >
+                  <div class="dropzone-desc">
+                    <i class="glyphicon glyphicon-download-alt"></i>
+                    <p class="text-center fw_400">
+                      {{ "ChooseImageFile" | translate }}
+                      <b>{{ "DragItHere" | translate }}</b>
+                    </p>
+                  </div>
+                  <input
+                    type="file"
+                    id="avatar"
+                    (change)="handleUserCertificate($event)"
+                    class="dropzone"
+                    accept="image/*"
+                  />
+                </div>
+              </div>
+
+              <small
+                class="p-error"
+                style="color: orange; margin-left: 180px"
+                *ngIf="
+                  isSubmitted &&
+                  (this.uploadImage == undefined || this.uploadImage == null)
+                "
+              >
+                {{ "CertificateImageRequired" | translate }}
+              </small>
+            </div>
+
+            <div
+              class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 mt-4"
+            >
+              <button
+                #closeCertificateModal
+                id="closeBtn"
+                type="button"
+                class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+                data-bs-dismiss="modal"
+              >
+                {{ "DiscardChanges" | translate }}
+              </button>
+              <button
+                (click)="saveUsercertificcate()"
+                type="button"
+                class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
+              >
+                {{ "Save" | translate }}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   </div>
-</ng-template>
 
-<div
-  class="modal fade edit-school-modal"
-  id="add-certificate"
-  tabindex="-1"
-  aria-labelledby="add-certificate"
-  aria-hidden="true"
->
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div
-        class="modal-header border-0 justify-content-center position-relative"
-      >
-        <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">
-          {{ "AddCertificates" | translate }}
-        </h1>
-        <button
-          type="button"
-          class="btn-close shadow-none"
-          data-bs-dismiss="modal"
-          aria-label="Close"
+  <div
+    class="modal fade edit-school-modal delete-modal"
+    id="delete-userCertificate"
+    tabindex="-1"
+    aria-labelledby="delete-userCertificate"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div
+          class="modal-header border-0 justify-content-center position-relative"
         >
-          <img src="../../../../assets/images/cross.svg" />
-        </button>
-      </div>
-      <div class="modal-body">
-        <form [formGroup]="userCertificateForm" class="latest-form">
-          <div class="row">
-            <div class="col-md-12">
-              <div class="form-group">
-                <label class="font_10"
-                  >{{ "CertificateName" | translate }}*</label
-                >
-                <input
-                  formControlName="certificateName"
-                  type="text"
-                  name="CertificateName"
-                  class="form-control w-100"
-                />
-              </div>
-              <small
-                class="p-error"
-                style="color: orange"
-                *ngIf="
-                  isSubmitted &&
-                  userCertificateForm.get('certificateName')?.errors
-                "
-              >
-                {{ "CertificateNameRequired" | translate }}
-              </small>
-            </div>
-
-            <div class="col-md-12">
-              <div class="form-group">
-                <label class="font_10">{{ "ProviderName" | translate }}*</label>
-                <input
-                  formControlName="provider"
-                  type="text"
-                  name="provider"
-                  class="form-control w-100"
-                />
-              </div>
-              <small
-                class="p-error"
-                style="color: orange"
-                *ngIf="
-                  isSubmitted && userCertificateForm.get('provider')?.errors
-                "
-              >
-                {{ "ProviderNameRequired" | translate }}
-              </small>
-            </div>
-
-            <div class="col-md-12">
-              <div class="form-group">
-                <label class="font_10">{{ "IssuedDate" | translate }}*</label>
-                <input
-                  #issuedDate
-                  autocomplete="off"
-                  type="text"
-                  class="form-control w-100 date_calendar"
-                  name="dob"
-                  formControlName="issuedDate"
-                  id="issuedDate"
-                  (click)="getSelectedLanguage()"
-                />
-              </div>
-              <small
-                class="p-error"
-                style="color: orange"
-                *ngIf="
-                  isSubmitted && userCertificateForm.controls.issuedDate.errors
-                "
-                >{{ "IssuedDateRequired" | translate }}
-              </small>
-            </div>
-
-            <div class="col-md-12">
-              <div class="form-group">
-                <label class="font_10">{{ "Description" | translate }}</label>
-                <textarea
-                  maxlength="200"
-                  type="text"
-                  formControlName="description"
-                  class="form-control resize-none ht_96"
-                ></textarea>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <div class="preview-zone hidden">
-                <div class="box box-solid">
-                  <div class="box-header with-border"></div>
-                  <div class="box-body">
-                    <span class="position-relative d-inline-block">
-                      <img
-                        style="width: 200px"
-                        class="mb-3"
-                        [src]="uploadImage"
-                      />
-                      <button
-                        *ngIf="uploadImage != undefined && uploadImage != null"
-                        (click)="removeUploadCertificateImage()"
-                        type="button"
-                        class="btn dl-school-img d-flex align-items-center justify-content-center rounded-circle position-absolute"
-                        style="height: 27px !important"
-                      >
-                        <i class="fa-solid fa-xmark"></i>
-                      </button>
-                    </span>
-                    <br />
-                    <p>{{ uploadImageName }}</p>
-                  </div>
-                </div>
-              </div>
-              <div
-                *ngIf="uploadImage == null || uploadImage == undefined"
-                class="dropzone-wrapper"
-              >
-                <div class="dropzone-desc">
-                  <i class="glyphicon glyphicon-download-alt"></i>
-                  <p class="text-center fw_400">
-                    {{ "ChooseImageFile" | translate }}
-                    <b>{{ "DragItHere" | translate }}</b>
-                  </p>
-                </div>
-                <input
-                  type="file"
-                  id="avatar"
-                  (change)="handleUserCertificate($event)"
-                  class="dropzone"
-                  accept="image/*"
-                />
-              </div>
-            </div>
-
-            <small
-              class="p-error"
-              style="color: orange; margin-left: 180px"
-              *ngIf="
-                isSubmitted &&
-                (this.uploadImage == undefined || this.uploadImage == null)
-              "
-            >
-              {{ "CertificateImageRequired" | translate }}
-            </small>
+          <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">
+            {{ "DeleteCertificate" | translate }}
+          </h1>
+          <button
+            type="button"
+            class="btn-close shadow-none"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          >
+            <img src="../../../../assets/images/cross.svg" />
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <h2 class="text-center font_16 f-poppins">
+              {{ "DoYouWantToDelete" | translate }}
+            </h2>
           </div>
-
           <div
-            class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 mt-4"
+            class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-2 mt-4"
           >
             <button
-              #closeCertificateModal
-              id="closeBtn"
               type="button"
               class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
               data-bs-dismiss="modal"
             >
-              {{ "DiscardChanges" | translate }}
+              {{ "No" | translate }}
             </button>
             <button
-              (click)="saveUsercertificcate()"
+              (click)="deleteUserCertificate()"
               type="button"
               class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
+              data-bs-dismiss="modal"
             >
-              {{ "Save" | translate }}
+              {{ "Yes" | translate }}
             </button>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<div
-  class="modal fade edit-school-modal delete-modal"
-  id="delete-userCertificate"
-  tabindex="-1"
-  aria-labelledby="delete-userCertificate"
-  aria-hidden="true"
->
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div
-        class="modal-header border-0 justify-content-center position-relative"
-      >
-        <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">
-          {{ "DeleteCertificate" | translate }}
-        </h1>
-        <button
-          type="button"
-          class="btn-close shadow-none"
-          data-bs-dismiss="modal"
-          aria-label="Close"
+  <div
+    class="modal fade edit-school-modal delete-modal"
+    id="userOwnCertificate"
+    tabindex="-1"
+    aria-labelledby="userOwnCertificate"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div
+          class="modal-header border-0 justify-content-center position-relative"
         >
-          <img src="../../../../assets/images/cross.svg" />
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <h2 class="text-center font_16 f-poppins">
-            {{ "DoYouWantToDelete" | translate }}
-          </h2>
+          <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">
+            {{ "Certificate" | translate }}
+          </h1>
+          <ul
+            *ngIf="isOwner"
+            class="list-unstyled d-flex more-action-btn before-none pe-2 me-1 mb-0"
+            style="position: absolute; right: 50px; top: 28px"
+          >
+            <li class="d-inline-block ps-0 mb-0">
+              <div class="dropdown">
+                <button
+                  class="bg-transparent dropdown-toggle border-0 action-more-btn after-none pt-1"
+                  type="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <i class="fa-solid fa-ellipsis"></i>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <a
+                      style="cursor: pointer"
+                      class="dropdown-item"
+                      (click)="editUserCertificate(userCertificateInfo)"
+                      data-bs-toggle="modal"
+                      data-bs-target="#add-certificate"
+                      >{{ "Edit" | translate }}
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+          <button
+            type="button"
+            class="btn-close shadow-none"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          >
+            <img src="../../../../assets/images/cross.svg" />
+          </button>
         </div>
         <div
-          class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-2 mt-4"
+          class="modal-body d-flex flex-column align-items-center"
+          *ngIf="userCertificateInfo != undefined"
         >
-          <button
-            type="button"
-            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
-            data-bs-dismiss="modal"
-          >
-            {{ "No" | translate }}
-          </button>
-          <button
-            (click)="deleteUserCertificate()"
-            type="button"
-            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
-            data-bs-dismiss="modal"
-          >
-            {{ "Yes" | translate }}
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div
-  class="modal fade edit-school-modal delete-modal"
-  id="userOwnCertificate"
-  tabindex="-1"
-  aria-labelledby="userOwnCertificate"
-  aria-hidden="true"
->
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div
-        class="modal-header border-0 justify-content-center position-relative"
-      >
-        <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">
-          {{ "Certificate" | translate }}
-        </h1>
-        <ul
-          *ngIf="isOwner"
-          class="list-unstyled d-flex more-action-btn before-none pe-2 me-1 mb-0"
-          style="position: absolute; right: 50px; top: 28px"
-        >
-          <li class="d-inline-block ps-0 mb-0">
-            <div class="dropdown">
-              <button
-                class="bg-transparent dropdown-toggle border-0 action-more-btn after-none pt-1"
-                type="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                <i class="fa-solid fa-ellipsis"></i>
-              </button>
-              <ul class="dropdown-menu">
-                <li>
-                  <a
-                    style="cursor: pointer"
-                    class="dropdown-item"
-                    (click)="editUserCertificate(userCertificateInfo)"
-                    data-bs-toggle="modal"
-                    data-bs-target="#add-certificate"
-                    >{{ "Edit" | translate }}
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </li>
-        </ul>
-        <button
-          type="button"
-          class="btn-close shadow-none"
-          data-bs-dismiss="modal"
-          aria-label="Close"
-        >
-          <img src="../../../../assets/images/cross.svg" />
-        </button>
-      </div>
-      <div
-        class="modal-body d-flex flex-column align-items-center"
-        *ngIf="userCertificateInfo != undefined"
-      >
-        <div>
-          <img [src]="userCertificateInfo.certificateUrl" />
-        </div>
-        <br />
-        <div>
-          <span class="fw-bold">{{ "CertificateName" | translate }} :</span>
-          {{ userCertificateInfo.name }}<br />
-          <span class="fw-bold">{{ "ProviderName" | translate }} :</span>
-          {{ userCertificateInfo.provider }}<br />
-          <span class="fw-bold">{{ "IssuedDate" | translate }} :</span>
-          {{ userCertificateInfo.issuedDate | date : "MMMM d, y" }}<br />
-          <span *ngIf="userCertificateInfo.description != null">
-            <span class="fw-bold">{{ "Description" | translate }} :</span>
-            {{ userCertificateInfo.description }}
-          </span>
+          <div>
+            <img [src]="userCertificateInfo.certificateUrl" />
+          </div>
+          <br />
+          <div>
+            <span class="fw-bold">{{ "CertificateName" | translate }} :</span>
+            {{ userCertificateInfo.name }}<br />
+            <span class="fw-bold">{{ "ProviderName" | translate }} :</span>
+            {{ userCertificateInfo.provider }}<br />
+            <span class="fw-bold">{{ "IssuedDate" | translate }} :</span>
+            {{ userCertificateInfo.issuedDate | date : "MMMM d, y" }}<br />
+            <span *ngIf="userCertificateInfo.description != null">
+              <span class="fw-bold">{{ "Description" | translate }} :</span>
+              {{ userCertificateInfo.description }}
+            </span>
+          </div>
         </div>
       </div>
     </div>
