@@ -3310,9 +3310,9 @@ p-autocomplete li:before {
     padding: 48px 59px;
   }
   .School-prof-header .school-profile-icon {
-    width: 180px;
-    height: 180px;
-    min-width: 180px;
+    width: 100px;
+    height: 100px;
+    min-width: 100px;
   }
   .font_24 {
     font-size: 22px;
