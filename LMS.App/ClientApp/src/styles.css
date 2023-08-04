@@ -1820,9 +1820,23 @@ body .liv-postbtn .post-attch-btn.active,
 }
 
 .reels-uploader-img {
-  height: 524px;
-  max-width: 524px;
+  height: 250px;
+  max-width: 100%;
   margin: 0 auto;
+}
+
+@media screen and (min-width: 768px) {
+  .reels-uploader-img {
+    height: 524px;
+    margin: 0 auto;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .reels-uploader-img {
+    height: 524px;
+    max-width: 524px;
+  }
 }
 
 .reels-uploader-img .dropzone-desc {

@@ -20,7 +20,11 @@
             <li *ngIf="!isEditPost" class="nav-item p-0">
               <button
                 *ngIf="courseId == undefined"
-                [ngClass]="isLiveTabopen ? 'nav-link active post-attch-btn d-inline-flex justify-content-center align-items-center': 'nav-link post-attch-btn d-inline-flex justify-content-center align-items-center'"
+                [ngClass]="
+                  isLiveTabopen
+                    ? 'nav-link active post-attch-btn d-inline-flex justify-content-center align-items-center'
+                    : 'nav-link post-attch-btn d-inline-flex justify-content-center align-items-center'
+                "
                 id="live-tab"
                 data-bs-toggle="tab"
                 data-bs-target="#live-tab-pane"
@@ -41,7 +45,11 @@
             <li class="nav-item p-0">
               <button
                 (click)="postTab()"
-                [ngClass]="!isLiveTabopen ? 'nav-link active post-attch-btn d-inline-flex justify-content-center align-items-center': 'nav-link post-attch-btn d-inline-flex justify-content-center align-items-center'"
+                [ngClass]="
+                  !isLiveTabopen
+                    ? 'nav-link active post-attch-btn d-inline-flex justify-content-center align-items-center'
+                    : 'nav-link post-attch-btn d-inline-flex justify-content-center align-items-center'
+                "
                 id="Post-tab"
                 data-bs-toggle="tab"
                 data-bs-target="#Post-tab-pane"
@@ -84,10 +92,16 @@
             </li>
           </ul>
         </div>
-        <h1 *ngIf="!isEditPost" class="modal-title font_22 text_dark fw_700 border-0 text-center">
+        <h1
+          *ngIf="!isEditPost"
+          class="modal-title font_22 text_dark fw_700 border-0 text-center"
+        >
           {{ "CreatePost" | translate }}
         </h1>
-        <h1 *ngIf="isEditPost" class="modal-title font_22 text_dark fw_700 border-0 text-center">
+        <h1
+          *ngIf="isEditPost"
+          class="modal-title font_22 text_dark fw_700 border-0 text-center"
+        >
           {{ "UpdatePost" | translate }}
         </h1>
         <div></div>
@@ -104,7 +118,9 @@
       <div class="modal-body">
         <div class="tab-content" id="myTabContent">
           <div
-          [ngClass]="isLiveTabopen ? 'tab-pane fade show active': 'tab-pane fade'"
+            [ngClass]="
+              isLiveTabopen ? 'tab-pane fade show active' : 'tab-pane fade'
+            "
             id="live-tab-pane"
             role="tabpanel"
             aria-labelledby="live-tab"
@@ -399,7 +415,7 @@
                 {{ "AddMax7Tags" | translate }}
               </small>
               <div
-                class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 cr-postfooter pt-0"
+                class="steps_btns d-flex flex-column flex-md-row gap-3 align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 cr-postfooter pt-0"
               >
                 <div class="post-bot-left d-flex">
                   <label
@@ -509,13 +525,14 @@
             </form>
           </div>
           <div
-          [ngClass]="!isLiveTabopen ? 'tab-pane fade show active': 'tab-pane fade'"
+            [ngClass]="
+              !isLiveTabopen ? 'tab-pane fade show active' : 'tab-pane fade'
+            "
             id="Post-tab-pane"
             role="tabpanel"
             aria-labelledby="Post-tab"
             tabindex="0"
           >
-
             <form [formGroup]="createPostForm">
               <div *ngIf="this.schoolId != undefined" class="form-group">
                 <label class="font_10">{{ "SchoolName" | translate }}</label>
@@ -584,8 +601,6 @@
                 </small>
               </div>
 
-           
-
               <div class="form-group">
                 <label class="font_10">{{ "BodyText" | translate }}</label>
                 <textarea
@@ -603,21 +618,21 @@
 
               <div class="img-upl-result pt-4">
                 <span
-                *ngFor="let image of uploadImageUrls"
-                class="position-relative d-inline-block"
-              >
-                <img
-                  [src]="image.imageUrl"
-                  style="height: 150px; max-width: 100%"
-                />
-                <button
-                  (click)="removeUploadImage(image)"
-                  type="button"
-                  class="btn dl-post-img d-flex align-items-center justify-content-center rounded-circle position-absolute"
+                  *ngFor="let image of uploadImageUrls"
+                  class="position-relative d-inline-block"
                 >
-                  <i class="fa-solid fa-xmark"></i>
-                </button>
-              </span>
+                  <img
+                    [src]="image.imageUrl"
+                    style="height: 150px; max-width: 100%"
+                  />
+                  <button
+                    (click)="removeUploadImage(image)"
+                    type="button"
+                    class="btn dl-post-img d-flex align-items-center justify-content-center rounded-circle position-absolute"
+                  >
+                    <i class="fa-solid fa-xmark"></i>
+                  </button>
+                </span>
                 <span
                   *ngFor="let image of uploadImage"
                   class="position-relative d-inline-block"
@@ -635,23 +650,23 @@
                   </button>
                 </span>
                 <span
-                *ngFor="let video of uploadVideoUrls"
-                class="position-relative d-inline-block"
-              >
-                <div class="videofile">
-                  <img
-                    [src]="video.videoUrl"
-                    style="height: 150px; max-width: 100%"
-                  />
-                </div>
-                <button
-                  (click)="removeUploadVideo(video)"
-                  type="button"
-                  class="btn dl-post-img d-flex align-items-center justify-content-center rounded-circle position-absolute"
+                  *ngFor="let video of uploadVideoUrls"
+                  class="position-relative d-inline-block"
                 >
-                  <i class="fa-solid fa-xmark"></i>
-                </button>
-              </span>
+                  <div class="videofile">
+                    <img
+                      [src]="video.videoUrl"
+                      style="height: 150px; max-width: 100%"
+                    />
+                  </div>
+                  <button
+                    (click)="removeUploadVideo(video)"
+                    type="button"
+                    class="btn dl-post-img d-flex align-items-center justify-content-center rounded-circle position-absolute"
+                  >
+                    <i class="fa-solid fa-xmark"></i>
+                  </button>
+                </span>
                 <span
                   *ngFor="let video of uploadVideo"
                   class="position-relative d-inline-block"
@@ -704,24 +719,26 @@
               <div
                 class="teacher-tags hashtag_post tag-boxattachment-outer mt-1 mb-0 hover-tags"
               >
-              <span *ngFor="let item of this.attachmentUrls" class="custom-tag"
-              ><img
-                src="../../../assets/images/Paper-gray.svg"
-                class="me-1 dark-svg"
-              />
-              <img
-                src="../../../assets/images/Paper-light.svg"
-                class="me-1 light-svg"
-              />
-              <span *ngIf="item?.name"> {{ item.name }} </span>
-              <span *ngIf="!item?.name"> {{ item.fileName }} </span>
-              <button
-                (click)="removeAttachment(item)"
-                class="border-0 bg-transparent p-0 position-absolute delete-tag"
-              >
-                <img src="../../../assets/images/cross-sm-light.svg" />
-              </button>
-            </span>
+                <span
+                  *ngFor="let item of this.attachmentUrls"
+                  class="custom-tag"
+                  ><img
+                    src="../../../assets/images/Paper-gray.svg"
+                    class="me-1 dark-svg"
+                  />
+                  <img
+                    src="../../../assets/images/Paper-light.svg"
+                    class="me-1 light-svg"
+                  />
+                  <span *ngIf="item?.name"> {{ item.name }} </span>
+                  <span *ngIf="!item?.name"> {{ item.fileName }} </span>
+                  <button
+                    (click)="removeAttachment(item)"
+                    class="border-0 bg-transparent p-0 position-absolute delete-tag"
+                  >
+                    <img src="../../../assets/images/cross-sm-light.svg" />
+                  </button>
+                </span>
                 <span *ngFor="let item of this.attachment" class="custom-tag"
                   ><img
                     src="../../../assets/images/Paper-gray.svg"
@@ -755,26 +772,26 @@
               >
                 {{ "AddMax7Tags" | translate }}
               </small>
-              <div class="dropzone-wrapper" style="height:80px">
-              <div class="dropzone-desc">
-                <i class="glyphicon glyphicon-download-alt"></i>
-                <p class="text-center fw_400" style="padding:15px">
-                  {{ "ChooseImageFile" | translate }}
-                  <b>{{ "DragItHere" | translate }}</b>
-                </p>
+              <div class="dropzone-wrapper" style="height: 80px">
+                <div class="dropzone-desc">
+                  <i class="glyphicon glyphicon-download-alt"></i>
+                  <p class="text-center fw_400" style="padding: 15px">
+                    {{ "ChooseImageFile" | translate }}
+                    <b>{{ "DragItHere" | translate }}</b>
+                  </p>
+                </div>
+                <input
+                  type="file"
+                  id="avatar"
+                  (change)="handleFileInput($event)"
+                  class="dropzone"
+                  accept="image/*,video/*,application/pdf"
+                  multiple="multiple"
+                />
               </div>
-              <input
-                type="file"
-                id="avatar"
-                (change)="handleFileInput($event)"
-                class="dropzone"
-                accept="image/*,video/*,application/pdf"
-                multiple="multiple"
-              />
-            </div>
-            <br>
+              <br />
               <div
-                class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 cr-postfooter pt-0"
+                class="steps_btns d-flex flex-column flex-md-row gap-3 align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 cr-postfooter pt-0"
               >
                 <div class="post-bot-left d-flex">
                   <label
@@ -841,7 +858,8 @@
                   </button>
                 </div>
                 <div class="post-bot-right d-flex justify-content-end">
-                  <button *ngIf="!isEditPost"
+                  <button
+                    *ngIf="!isEditPost"
                     type="button"
                     class="btn custom-btn primary_btn w-100 earning-btn fw_400 delay-btn post-delay-btn position-relative"
                   >
@@ -1019,7 +1037,7 @@
                 >
                   {{ "SelectAtleastOneVideo" | translate }}
                 </small>
-                 <!-- <small
+                <!-- <small
                   class="p-error"
                   style="color: orange; margin-left: 200px"
                   *ngIf="isSubmitted && isVideoDurationExceed">
@@ -1032,7 +1050,7 @@
                   isSubmitted && createReelForm.valid && isShowingProgressBar
                 "
               > -->
-                <!-- <div class="progress">
+              <!-- <div class="progress">
                   <div
                     class="progress-bar bg-success"
                     role="progressbar"
@@ -1059,12 +1077,12 @@
                 ></span>
               </div>
               <small
-              class="p-error"
-              style="color: orange; margin-left: 148px"
-              *ngIf="isSubmitted && isVideoDurationExceed"
-            >
-            {{ "VideoDurationExceed" | translate }}
-            </small>
+                class="p-error"
+                style="color: orange; margin-left: 148px"
+                *ngIf="isSubmitted && isVideoDurationExceed"
+              >
+                {{ "VideoDurationExceed" | translate }}
+              </small>
 
               <div
                 class="modal-footer steps_btns d-flex align-items-center justify-content-center flex-sm-nowrap border-0 pb-0 cr-postfooter pt-0 mt-3 px-0"
