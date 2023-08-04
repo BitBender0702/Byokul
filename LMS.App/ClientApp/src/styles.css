@@ -1679,6 +1679,12 @@ body .liv-postbtn .post-attch-btn.active,
   width: 250px !important;
 }
 
+@media screen and (max-width: 767px) {
+  .post-bot-right .lg_btn {
+    max-width: 100%;
+  }
+}
+
 .post-bot-right .delay-btn {
   width: 60px !important;
   background: #fff0e5;
@@ -3469,7 +3475,7 @@ p-autocomplete li:before {
     padding-right: 15px;
   }
   .post-bot-right .lg_btn {
-    width: 175px !important;
+    width: 100% !important;
   }
   .school-list-box .school-large-thumbnail {
     height: auto;
@@ -3563,7 +3569,6 @@ p-autocomplete li:before {
 
 @media (max-width: 575px) {
   .steps_btns button {
-    margin-right: 10px;
     margin-bottom: 8px;
     font-size: 13px !important;
   }
