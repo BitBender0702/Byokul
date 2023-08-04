@@ -1345,7 +1345,7 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .school-grid-thumbnail img,
 .school-grid-thumbnail video {
-  object-fit: cover;
+  object-fit: contain;
   max-height: 100%;
   min-height: 100%;
 }
