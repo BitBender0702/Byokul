@@ -9,6 +9,7 @@ using LMS.Common.ViewModels.School;
 using LMS.Common.ViewModels.Student;
 using LMS.Common.ViewModels.Teacher;
 using LMS.Data.Entity;
+using LMS.Data.Entity.Common;
 using LMS.DataAccess.Repository;
 using LMS.Services.Blob;
 using Microsoft.AspNetCore.Identity;
@@ -48,10 +49,11 @@ namespace LMS.Services
         private IGenericRepository<UserClassCourseFilter> _userClassCourseFilterRepository;
         private IGenericRepository<UserSharedPost> _userSharedPostRepository;
         private IGenericRepository<SavedPost> _savedPostRepository;
+        private IGenericRepository<ClassCourseTransaction> _classCourseTransactionRepository;
         private IConfiguration _config;
 
 
-        public CourseService(IMapper mapper, IGenericRepository<Course> courseRepository, IGenericRepository<CourseLanguage> courseLanguageRepository, IGenericRepository<CourseDiscipline> courseDisciplineRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<CourseTeacher> courseTeacherRepository, IGenericRepository<Post> postRepository, IGenericRepository<Class> classRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<CourseCertificate> courseCertificateRepository, IGenericRepository<CourseTag> courseTagRepository, UserManager<User> userManager, IBlobService blobService, IClassService classService, IUserService userService, IGenericRepository<CourseLike> courseLikeRepository, IGenericRepository<CourseViews> courseViewsRepository, IGenericRepository<School> schoolRepository, IGenericRepository<ClassCourseFilter> classCourseFilterRepository, IGenericRepository<UserClassCourseFilter> userClassCourseFilterRepository, IGenericRepository<UserSharedPost> userSharedPostRepository, IGenericRepository<SavedPost> savedPostRepository, IConfiguration config)
+        public CourseService(IMapper mapper, IGenericRepository<Course> courseRepository, IGenericRepository<CourseLanguage> courseLanguageRepository, IGenericRepository<CourseDiscipline> courseDisciplineRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<CourseTeacher> courseTeacherRepository, IGenericRepository<Post> postRepository, IGenericRepository<Class> classRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<CourseCertificate> courseCertificateRepository, IGenericRepository<CourseTag> courseTagRepository, UserManager<User> userManager, IBlobService blobService, IClassService classService, IUserService userService, IGenericRepository<CourseLike> courseLikeRepository, IGenericRepository<CourseViews> courseViewsRepository, IGenericRepository<School> schoolRepository, IGenericRepository<ClassCourseFilter> classCourseFilterRepository, IGenericRepository<UserClassCourseFilter> userClassCourseFilterRepository, IGenericRepository<UserSharedPost> userSharedPostRepository, IGenericRepository<SavedPost> savedPostRepository, IGenericRepository<ClassCourseTransaction> classCourseTransactionRepository, IConfiguration config)
         {
             _mapper = mapper;
             _courseRepository = courseRepository;
@@ -76,6 +78,7 @@ namespace LMS.Services
             _userClassCourseFilterRepository = userClassCourseFilterRepository;
             _userSharedPostRepository = userSharedPostRepository;
             _savedPostRepository = savedPostRepository;
+            _classCourseTransactionRepository = classCourseTransactionRepository;
             _config = config;
         }
 
@@ -402,6 +405,13 @@ namespace LMS.Services
 
                     courses.CourseCertificates = _mapper.Map<IEnumerable<CourseCertificateViewModel>>(classDetails.ClassCertificates);
 
+                    var isCourseAccessible = await _classCourseTransactionRepository.GetAll().Where(x => x.CourseId == model.CourseId && x.UserId == loginUserid).FirstOrDefaultAsync();
+
+                    if (isCourseAccessible != null || model.CreatedById == loginUserid)
+                    {
+                        model.IsCourseAccessable = true;
+                    }
+
                     return courses;
 
 
@@ -464,6 +474,12 @@ namespace LMS.Services
 
                 courses.CourseCertificates = _mapper.Map<IEnumerable<CourseCertificateViewModel>>(classDetails.ClassCertificates);
 
+                var isCourseAccessible = await _classCourseTransactionRepository.GetAll().Where(x => x.CourseId == model.CourseId && x.UserId == loginUserid).FirstOrDefaultAsync();
+
+                if (isCourseAccessible != null || model.CreatedById == loginUserid)
+                {
+                    model.IsCourseAccessable = true;
+                }
                 return courses;
 
 

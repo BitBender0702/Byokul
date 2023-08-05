@@ -8,6 +8,7 @@ using LMS.Common.ViewModels.School;
 using LMS.Common.ViewModels.Student;
 using LMS.Common.ViewModels.Teacher;
 using LMS.Data.Entity;
+using LMS.Data.Entity.Common;
 using LMS.DataAccess.Repository;
 using LMS.Services.Blob;
 using Microsoft.AspNetCore.Identity;
@@ -45,11 +46,12 @@ namespace LMS.Services
         private IGenericRepository<UserClassCourseFilter> _userClassCourseFilterRepository;
         private IGenericRepository<UserSharedPost> _userSharedPostRepository;
         private IGenericRepository<SavedPost> _savedPostRepository;
+        private IGenericRepository<ClassCourseTransaction> _classCourseTransactionRepository;
         private readonly IBlobService _blobService;
         private readonly IUserService _userService;
         private IConfiguration _config;
 
-        public ClassService(IMapper mapper, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<ClassLanguage> classLanguageRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<ClassDiscipline> classDisciplineRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<ClassTag> classTagRepository, IGenericRepository<ClassCertificate> classCertificateRepository, UserManager<User> userManager, IBlobService blobService, IUserService userService, IGenericRepository<ClassLike> classLikeRepository, IGenericRepository<ClassViews> classViewsRepository, IGenericRepository<School> schoolRepository, IGenericRepository<ClassCourseFilter> classCourseFilterRepository, IGenericRepository<UserClassCourseFilter> userClassCourseFilterRepository, IGenericRepository<UserSharedPost> userSharedPostRepository, IGenericRepository<SavedPost> savedPostRepository, IConfiguration config)
+        public ClassService(IMapper mapper, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<ClassLanguage> classLanguageRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<ClassDiscipline> classDisciplineRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<ClassTag> classTagRepository, IGenericRepository<ClassCertificate> classCertificateRepository, UserManager<User> userManager, IBlobService blobService, IUserService userService, IGenericRepository<ClassLike> classLikeRepository, IGenericRepository<ClassViews> classViewsRepository, IGenericRepository<School> schoolRepository, IGenericRepository<ClassCourseFilter> classCourseFilterRepository, IGenericRepository<UserClassCourseFilter> userClassCourseFilterRepository, IGenericRepository<UserSharedPost> userSharedPostRepository, IGenericRepository<SavedPost> savedPostRepository, IConfiguration config, IGenericRepository<ClassCourseTransaction> classCourseTransactionRepository)
         {
             _mapper = mapper;
             _classRepository = classRepository;
@@ -74,6 +76,7 @@ namespace LMS.Services
             _userSharedPostRepository = userSharedPostRepository;
             _savedPostRepository = savedPostRepository;
             _config = config;
+            _classCourseTransactionRepository = classCourseTransactionRepository;
         }
         public async Task<ClassViewModel> SaveNewClass(ClassViewModel classViewModel, string createdById)
         {
@@ -386,6 +389,14 @@ namespace LMS.Services
                 model.Reels = await GetReelsByClassId(classes.ClassId, loginUserId);
                 model.ClassCertificates = await GetCertificateByClassId(classes.ClassId);
 
+
+                var isClassAccessible = await _classCourseTransactionRepository.GetAll().Where(x => x.ClassId == model.ClassId && x.UserId == loginUserId).FirstOrDefaultAsync();
+
+                if (isClassAccessible != null || model.CreatedById == loginUserId)
+                {
+                    model.IsClassAccessable = true;
+                }
+
                 return model;
             }
             return null;
@@ -420,6 +431,13 @@ namespace LMS.Services
             model.Posts = await GetPostsByClassId(classes.ClassId, loginUserId);
             model.Reels = await GetReelsByClassId(classes.ClassId, loginUserId);
             model.ClassCertificates = await GetCertificateByClassId(classes.ClassId);
+
+            var isClassAccessible = await _classCourseTransactionRepository.GetAll().Where(x => x.ClassId == model.ClassId && x.UserId == loginUserId).FirstOrDefaultAsync();
+
+            if (isClassAccessible != null || model.CreatedById == loginUserId)
+            {
+                model.IsClassAccessable = true;
+            }
 
             return model;
         }

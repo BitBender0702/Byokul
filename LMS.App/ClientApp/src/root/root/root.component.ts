@@ -1,4 +1,4 @@
-import { Component, ContentChild, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ContentChild, ElementRef, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import { AuthService } from '../service/auth.service';
 import { SignalrService } from '../service/signalr.service';
@@ -18,7 +18,7 @@ import { NotificationType } from '../interfaces/notification/notificationViewMod
 import { FileStorageService } from '../service/fileStorage';
 import { fileStorageResponse } from './fileStorage/fileStorage.component';
 
-
+export const paymentConfirmDialoge = new Subject<{response:any}>();  
 export const postProgressNotification = new Subject<{from:string}>();  
 export const postUploadOnBlob = new Subject<{
   postToUpload:any,
@@ -30,6 +30,7 @@ export const postUploadOnBlob = new Subject<{
   reel:any,
   uploadedUrls:any[]
 }>();
+
 
 export const reelUploadOnBlob = new Subject<{
   postToUpload:any,
@@ -50,7 +51,9 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
   postUploadOnBlobSubscription!:Subscription;
   reelUploadOnBlobSubscription!:Subscription;
   addPostSubscription!: Subscription;
+  paymentConfirmSubscription!: Subscription;
   loginUserId:string = "";
+  @ViewChild('paymentConfirmationBtn') paymentConfirmationBtn!: ElementRef;
 
   private _postService;
   private _notificationService;
@@ -103,6 +106,13 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
     // this.meta.addTag({ property: 'og:image', content: "../../assets/images/logo.svg" });
     this.meta.updateTag({ property: 'og:url', content: "byokul.com" });
 
+
+    if(!this.paymentConfirmSubscription){
+      this.paymentConfirmSubscription = paymentConfirmDialoge.subscribe(response => {
+        debugger
+        this.paymentConfirmationBtn.nativeElement.click();
+      })
+    }
     if(!this.postProgressSubscription){
       this.postProgressSubscription = postProgressNotification.subscribe(response => {
         debugger
@@ -344,10 +354,12 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
     if(this.addPostSubscription){
       this.addPostSubscription.unsubscribe();
     }
+    if(this.paymentConfirmSubscription){
+      this.paymentConfirmSubscription.unsubscribe();
+    }
   }
 
   loginUserInfo(){
-    debugger
     var validToken = localStorage.getItem("jwt");
       if (validToken != null) {
         let jwtData = validToken.split('.')[1]

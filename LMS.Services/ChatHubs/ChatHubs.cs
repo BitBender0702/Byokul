@@ -233,6 +233,24 @@ public class ChatHubs : Hub
         await Clients.All.SendAsync("UpdateProgress", progress);
     }
 
+    public async Task CloseIyizicoThreeDAuthWindow(string userId)
+    {
+        var connectionId = UserIDConnectionID[userId.ToString()];
+        await Clients.Client(connectionId).SendAsync("closeIyizicoThreeDAuthWindow", true);
+    }
+
+    //public async Task SendToUser(ChatMessageViewModel chatMessageViewModel)
+    //{
+
+
+    //    var reposnseMessage = await _chatService.AddChatMessage(chatMessageViewModel);
+    //    chatMessageViewModel.Id = reposnseMessage.Id;
+    //    var a = UserIDConnectionID[chatMessageViewModel.Receiver.ToString()];
+    //    if (a is not null)
+    //        await Clients.Client(a).SendAsync("ReceiveMessage", chatMessageViewModel, "success");
+
+    //}
+
 }
 
 public static class Extensions

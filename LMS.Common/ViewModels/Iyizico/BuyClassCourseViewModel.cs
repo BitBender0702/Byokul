@@ -13,10 +13,11 @@ namespace LMS.Common.ViewModels.Iyizico
         public string CardNumber { get; set; }
         public string ExpiresOn { get; set; }
         public string SecurityCode { get; set; }
-        public string AccountHolderName { get; set; }
+        public string CardHolderName { get; set; }
         public Guid ParentId { get; set; }
         public string ParentName { get; set; }
         public ClassCourseEnum ParentType { get; set; }
         public long Amount { get; set; }
+        public string? ConversationId { get; set; }
     }
 }

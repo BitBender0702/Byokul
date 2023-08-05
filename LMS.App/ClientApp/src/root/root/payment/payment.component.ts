@@ -1,10 +1,12 @@
 import { HttpClient } from '@angular/common/http';
+import { HtmlParser, Parser } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { MessageService } from 'primeng/api';
-import { Subject } from 'rxjs';
+import { Subject, Subscription, subscribeOn } from 'rxjs';
 import { PaymentService } from 'src/root/service/payment.service';
+import { closeIyizicoThreeDAuthWindow } from 'src/root/service/signalr.service';
 export const paymentStatusResponse =new Subject(); 
 
 @Component({
@@ -23,19 +25,30 @@ export const paymentStatusResponse =new Subject();
     parentInfo:any;
     isDataLoaded:boolean = false;
     currentDate!:string;
-
+    cardNumberMask:string = "0000-0000-0000-0000";
+    monthYearMask:string = "00-00"
+    isPaymentConfirmation:boolean = false;
+    paymentConfirmationHtml:any;
+    paymentConfirmationWindow!:Window | null;
+    closeIyizicoWindowSubscription!: Subscription;
 
     constructor(public messageService:MessageService,private http: HttpClient,private fb: FormBuilder,private bsModalService: BsModalService,public options: ModalOptions,paymentService:PaymentService) {
       this._paymentService = paymentService;
     }
 
     ngOnInit(): void {
+      // this.openWindow();
       this.parentInfo = this.options.initialState;
       this.isDataLoaded = true;
 
       this.currentDate = this.getCurrentDate();
       this.InitializePaymentForm();
 
+
+      this.closeIyizicoWindowSubscription = closeIyizicoThreeDAuthWindow.subscribe((response:any) => {
+        debugger
+        this.paymentConfirmationWindow?.close();
+      });
       // this._paymentService.stripeWebhook().subscribe((response: any) => {
   
       //  });
@@ -60,8 +73,8 @@ export const paymentStatusResponse =new Subject();
     InitializePaymentForm(){
         this.paymentForm = this.fb.group({
             paymentMethod: this.fb.control('1',[Validators.required]),
-            cardNumber: this.fb.control('',[Validators.required, Validators.minLength(19)]),
-            expiresOn: this.fb.control('',[Validators.required, Validators.minLength(5)]),
+            cardNumber: this.fb.control('',[Validators.required, Validators.minLength(16)]),
+            expiresOn: this.fb.control('',[Validators.required, Validators.minLength(4)]),
             securityCode: this.fb.control('',[Validators.required]),
             cardHolderName: this.fb.control('',[Validators.required]),
             // firstName: this.fb.control('',[Validators.required]),
@@ -100,9 +113,45 @@ export const paymentStatusResponse =new Subject();
        }
     }
     
+    result = `"<!doctype html>
+    <html lang="en">
+    <head>
+        <title>iyzico Mock 3D-Secure Processing Page</title>
+    </head>
+    <body>
+    <h1>Test</h1>
+    <form id="iyzico-3ds-form" action="https://sandbox-api.iyzipay.com/payment/mock/init3ds" method="post">
+    <h1>Test22</h1>
+    <input type = "text" name = "testtt">
+        <input type="hidden" name="orderId" value="mock12-2071925513136821iyziord">
+        <input type="hidden" name="bin" value="552879">
+        <input type="hidden" name="successUrl" value="https://sandbox-api.iyzipay.com/payment/iyzipos/callback3ds/success/3">
+        <input type="hidden" name="failureUrl" value="https://sandbox-api.iyzipay.com/payment/iyzipos/callback3ds/failure/3">
+        <input type="hidden" name="confirmationUrl" value="https://sandbox-api.iyzipay.com/payment/mock/confirm3ds">
+        <input type="hidden" name="PaReq" value="811e0a4e-0989-45de-b54b-37fc22de3e5b">
+    </form>
+    <script type="text/javascript">
+        document.getElementById("iyzico-3ds-form").submit();
+    </script>
+    </body>
+    </html>"`;
+
+    winUrl = URL.createObjectURL(new Blob([this.result], { type: 'text/html' }));
+
+
+// openWindow() {
+//   debugger
+//   // window.open(this.winUrl);
+//   //window.open(this.winUrl, "", "width=200,height=100");
+
+//   var myWindow = window.open("", "MsgWindow", "width=500,height=300");
+// myWindow?.document.write(this.result);
+
+// setTimeout(function(){myWindow?.close()},10000);
+// }
 
     addPayment(){
-      debugger
+      
       var paymentDetails =this.paymentForm.value;
       this.isSubmitted=true;
       if (!this.paymentForm.valid) {
@@ -111,11 +160,20 @@ export const paymentStatusResponse =new Subject();
 
      this.loadingIcon = true;
      this._paymentService.buyClassCourse(paymentDetails).subscribe((response: any) => {
-      debugger
+      
       this.closeModal();
       this.loadingIcon = false;
       paymentStatusResponse.next(true);
-      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'We will notify when payment will be successful'});
+      //this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'We will notify when payment will be successful'});
+      this.isPaymentConfirmation = true;
+      this.paymentConfirmationHtml = response;
+      
+      this.paymentConfirmationWindow = window.open("","_blank", "width=500,height=300");
+      this.paymentConfirmationWindow?.document.write(response);
+
+      // const parser = new HtmlParser();
+      // this.paymentConfirmationHtml = parser.parse(this.paymentConfirmationHtml,'text/html');
+      // paymentConfirmDialoge.next({response});
      });
 
 

@@ -29,6 +29,7 @@ export class EarningsComponent extends MultilingualComponent implements OnInit, 
     private _userService;
     transactionDetails:any;
     withdrawDetails:any;
+    classCourseDetails:any;
     allTransactionDetails:any;
     isDataLoaded:boolean = false;
     loadingIcon:boolean = false;
@@ -38,11 +39,14 @@ export class EarningsComponent extends MultilingualComponent implements OnInit, 
     scrolled:boolean = false;
     transactionsResponseCount:number = 1;
     withdrawScrolled:boolean = false;
+    classCourseScrolled:boolean = false;
     withdrawResponseCount:number = 1;
     withdrawPageNumber:number = 1;
     allScrolled:boolean = false;
     allTransactionPageNumber:number = 1;
+    classCoursePageNumber:number = 1;
     allTransactionsResponseCount:number = 1;
+    classCourseResponseCount:number = 1;
     scrollLoadingIcon: boolean = false;
     currentDate!:string;
     filterDateForm!:FormGroup;
@@ -54,6 +58,7 @@ export class EarningsComponent extends MultilingualComponent implements OnInit, 
     payoutViewModel!:PayoutViewModel
     countries!:any;
     isOpenOwnedSchoolTab!:boolean;
+    isOpenClassCourseTab!:boolean;
     isOpenWithdrawTab!:boolean;
     isOpenAllTab!:boolean;
     isApplieDateFilter!:boolean;
@@ -71,6 +76,7 @@ export class EarningsComponent extends MultilingualComponent implements OnInit, 
     }
   
     ngOnInit(): void {
+      debugger
       this.loadingIcon = true;
       this.isOpenOwnedSchoolTab = true;
       var selectedLang = localStorage.getItem('selectedLanguage');
@@ -143,7 +149,9 @@ export class EarningsComponent extends MultilingualComponent implements OnInit, 
     }
 
     initialTransactionDetails(transactionParamViewModel:TransactionParamViewModel){
+      debugger
       this._paymentService.transactionDetails(transactionParamViewModel).subscribe((response) => {
+        debugger
         this.transactionDetails = response;
         this.isDataLoaded = true;
         this.loadingIcon = false;
@@ -154,6 +162,15 @@ export class EarningsComponent extends MultilingualComponent implements OnInit, 
     initialWithdrawDetails(transactionParamViewModel:TransactionParamViewModel){
       this._paymentService.withdrawDetails(transactionParamViewModel).subscribe((response) => {
         this.withdrawDetails = response;
+        this.loadingIcon = false;
+        this.isSubmitted = false;
+      });
+    }
+
+    initialClassCourseDetails(transactionParamViewModel:TransactionParamViewModel){
+      this._paymentService.classCourseTransactionDetails(transactionParamViewModel).subscribe((response) => {
+        debugger
+        this.classCourseDetails = response.classCourseTransactions;
         this.loadingIcon = false;
         this.isSubmitted = false;
       });
@@ -254,6 +271,12 @@ this.dropdownMenu.nativeElement.style.display = (display === 'none') ? 'block' :
             this.withdrawDetails = response;
           });
         }
+
+        if(this.isOpenClassCourseTab){
+          this._paymentService.classCourseTransactionDetails(this.transactionParamViewModel).subscribe((response) => {
+            this.classCourseDetails = response.classCourseTransactions;
+          });
+        }
       }
     }
 
@@ -291,6 +314,15 @@ this.dropdownMenu.nativeElement.style.display = (display === 'none') ? 'block' :
         }
        }
       }
+
+      if(this.isOpenClassCourseTab){
+        if(!this.classCourseScrolled && this.classCourseResponseCount != 0){
+          this.classCourseScrolled = true;
+          this.scrollLoadingIcon = true;
+          this.classCoursePageNumber++;
+          this.getClassCourseDetails();
+        }
+       }
   }
 
   getTransactionDetails(){
@@ -335,6 +367,22 @@ this.dropdownMenu.nativeElement.style.display = (display === 'none') ? 'block' :
     });
   }
 
+  getClassCourseDetails(){
+    debugger
+    this.transactionParamViewModel.pageNumber = this.classCoursePageNumber;
+    this.transactionParamViewModel.searchString = this.searchString;
+    // this.transactionParamViewModel.StartDate = this.startDate;
+    // this.transactionParamViewModel.endDate = this.endDate;
+
+    this._paymentService.classCourseTransactionDetails(this.transactionParamViewModel).subscribe((response) => {
+      debugger
+      this.classCourseDetails.transactions =[...this.classCourseDetails, ...response.classCourseTransactions];
+      this.scrollLoadingIcon = false;
+      this.allTransactionsResponseCount = response.length; 
+      this.allScrolled = false;
+    });
+  }
+
   applyDateFilter(){
     this.isSubmitted=true;
     if (!this.filterDateForm.valid) {
@@ -370,6 +418,15 @@ this.dropdownMenu.nativeElement.style.display = (display === 'none') ? 'block' :
     //   this.isSubmitted = false;
     // });
    }
+   if(this.isOpenClassCourseTab){
+    this.transactionParamViewModel.pageNumber = 1;
+    this.initialClassCourseDetails(this.transactionParamViewModel);
+
+    // this._paymentService.withdrawDetails(this.transactionParamViewModel).subscribe((response) => {
+    //   this.withdrawDetails = response;
+    //   this.isSubmitted = false;
+    // });
+   }
 
    if(this.isOpenAllTab){
     this.transactionParamViewModel.pageNumber = 1;
@@ -397,6 +454,9 @@ this.dropdownMenu.nativeElement.style.display = (display === 'none') ? 'block' :
     }
     if(this.isOpenAllTab){
       this.initialAllTransactionDetails(this.transactionParamViewModel);
+    }
+    if(this.isOpenClassCourseTab){
+      this.initialClassCourseDetails(this.transactionParamViewModel);
     }
     this.filterDateForm.get('startDate')?.setValue(new Date());
     this.filterDateForm.get('endDate')?.setValue(new Date());
@@ -450,6 +510,7 @@ this.dropdownMenu.nativeElement.style.display = (display === 'none') ? 'block' :
       this.isOpenOwnedSchoolTab = true;
       this.isOpenAllTab = false;
       this.isOpenWithdrawTab = false;
+      this.isOpenClassCourseTab = false;
 
       this.loadingIcon = true;
       this.transactionParamViewModel.pageNumber = 1;
@@ -468,11 +529,35 @@ this.dropdownMenu.nativeElement.style.display = (display === 'none') ? 'block' :
       this.initialTransactionDetails(this.transactionParamViewModel);
     }
 
+    isClassCourseTab(){
+      this.isOpenOwnedSchoolTab = false;
+      this.isOpenAllTab = false;
+      this.isOpenWithdrawTab = false;
+      this.isOpenClassCourseTab = true;
+
+      this.loadingIcon = true;
+      this.transactionParamViewModel.pageNumber = 1;
+      var dates = this.filterDateForm.value;
+      // if(this.isApplieDateFilter){
+        // if(dates.startDate != dates.endDate){
+        var startDate = new Date(dates.startDate.getTime() - dates.startDate.getTimezoneOffset() * 60000);
+        var endDate = new Date(dates.endDate.getTime() - dates.endDate.getTimezoneOffset() * 60000);
+
+        if(startDate.getTime() != endDate.getTime()){
+          this.transactionDetails.startDate = startDate;
+          this.transactionDetails.endDate = endDate;
+        }
+      // }
+      //this.transactionParamViewModel.TransactionType = TransactionTypeEnum.OwnedSchoolPayment;
+      this.initialClassCourseDetails(this.transactionParamViewModel);
+    }
+
     isWithdarwTab(){
       this.loadingIcon = true;
       this.isOpenOwnedSchoolTab = false;
       this.isOpenAllTab = false;
       this.isOpenWithdrawTab = true;
+      this.isOpenClassCourseTab = false;
       this.transactionParamViewModel.pageNumber = 1;
       var dates = this.filterDateForm.value;
       // if(dates.startDate != dates.endDate){
@@ -498,6 +583,7 @@ this.dropdownMenu.nativeElement.style.display = (display === 'none') ? 'block' :
       this.isOpenOwnedSchoolTab = false;
       this.isOpenAllTab = true;
       this.isOpenWithdrawTab = false;
+      this.isOpenClassCourseTab = false;
       this.transactionParamViewModel.pageNumber = 1;
       var dates = this.filterDateForm.value;
       // if(this.isApplieDateFilter){

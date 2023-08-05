@@ -1,12 +1,17 @@
-﻿using Iyzipay.Model;
+﻿using Abp.BackgroundJobs;
+using Hangfire;
+using Iyzipay.Model;
+using Iyzipay.Model.V2.Subscription;
 using Iyzipay.Model.V2.Transaction;
 using Iyzipay.Request;
 using Iyzipay.Request.V2;
+using Iyzipay.Request.V2.Subscription;
 using LMS.Common.ViewModels;
 using LMS.Common.ViewModels.Iyizico;
 using LMS.Common.ViewModels.Stripe;
 using LMS.Common.ViewModels.Student;
 using LMS.Data.Entity;
+using LMS.Data.Migrations;
 using LMS.Services;
 using LMS.Services.Blob;
 using LMS.Services.Iyizico;
@@ -14,6 +19,7 @@ using LMS.Services.Students;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System.Text;
 
 namespace LMS.App.Controllers
@@ -34,9 +40,9 @@ namespace LMS.App.Controllers
         [HttpPost]
         public async Task<IActionResult> BuySchoolSubscription([FromBody] BuySchoolSubscriptionViewModel model)
         {
-            //var userId = await GetUserIdAsync(this._userManager);
-            var userId = "d2e00a9d-c26a-4389-a8b3-470a575ef8f4";
-           await _iyizicoService.BuySchoolSubscription(model, userId);
+            var userId = await GetUserIdAsync(this._userManager);
+            var schoolId = new Guid();
+            await _iyizicoService.BuySchoolSubscription(model, userId, schoolId);
 
             return Ok();
         }
@@ -45,7 +51,6 @@ namespace LMS.App.Controllers
         [HttpPost]
         public async Task<IActionResult> GetSubscriptionPlans()
         {
-            //var userId = await GetUserIdAsync(this._userManager);
             var response = await _iyizicoService.GetSubscriptionPlans();
 
             return Ok(response);
@@ -53,16 +58,14 @@ namespace LMS.App.Controllers
 
         [Route("buyClassCourse")]
         [HttpPost]
-        public async Task<IActionResult> BuySchoolSubscription([FromBody] BuyClassCourseViewModel model)
+        public async Task<IActionResult> BuyClassCourseSubscription([FromBody] BuyClassCourseViewModel model)
         {
-            //var userId = await GetUserIdAsync(this._userManager);
-            var userId = "d2e00a9d-c26a-4389-a8b3-470a575ef8f4";
-            await _iyizicoService.BuyClassCourse(model, userId);
-
-            return Ok();
+            var userId = await GetUserIdAsync(this._userManager);
+            var response = await _iyizicoService.BuyClassCourse(model, userId);
+            return Json(response);
         }
 
-        [HttpPost("Callback")]
+        [HttpPost("callback")]
         public IActionResult Callback([FromForm] ThreeDCallbackViewModel callbackModel)
         {
             try
@@ -89,8 +92,17 @@ namespace LMS.App.Controllers
 
                     if (threedsPayment.Status == Status.SUCCESS.ToString())
                     {
+                        _iyizicoService.CloseIyizicoThreeDAuthWindow(request.ConversationId);
                         return base.Content("<div>Payment successful.</div>", "text/html");
                     }
+                    if (threedsPayment.Status == Status.FAILURE.ToString())
+                    {
+                        _iyizicoService.CloseIyizicoThreeDAuthWindow(request.ConversationId);
+                        return base.Content("<div>Your payment has failed. Please try again.</div>", "text/html");
+                    }
+
+
+
                 }
             }
             catch (Exception ex)
@@ -98,7 +110,7 @@ namespace LMS.App.Controllers
                 throw ex;
             }
 
-            return Ok(); // Need to redirect to success page
+            return Ok();
         }
 
         [HttpPost("CheckoutCallback")]
@@ -138,7 +150,6 @@ namespace LMS.App.Controllers
 
         private async Task<string> ReadRequestBodyAsStringAsync(HttpContext context)
         {
-            // Read the request body as a string
             using (var reader = new StreamReader(context.Request.Body, encoding: Encoding.UTF8))
             {
                 return await reader.ReadToEndAsync();
@@ -154,8 +165,32 @@ namespace LMS.App.Controllers
         [HttpPost("PaymentNotification")]
         public async Task<IActionResult> PaymentNotification([FromBody] dynamic data)
         {
-            RetrieveTransactionDetailRequest request = new RetrieveTransactionDetailRequest();
-            request.PaymentId = "20417262";
+            var paymentResponse = JsonConvert.DeserializeObject<PaymentResponseViewModel>(data.ToString());
+            string conversationId = paymentResponse.PaymentConversationId;
+            var paymentId = paymentResponse.PaymentId.ToString();
+
+            if (paymentResponse.IyziEventType == "THREE_DS_AUTH" && paymentResponse.Status == "SUCCESS")
+            {
+                await _iyizicoService.UpdateClassCourseTransaction(conversationId, paymentId);
+            }
+            if (paymentResponse.Status == "SUCCESS")
+            {
+                await _iyizicoService.UpdateSchoolTransaction(conversationId, paymentId);
+            }
+            if (paymentResponse.Status == "FAILURE")
+            {
+                HandlePaymentFailure(data.iyziPaymentId);
+            }
+
+            return Ok();
+        }
+
+        public async Task RetryPayment(string subscriptionCode)
+        {
+            RetrySubscriptionRequest request = new RetrySubscriptionRequest
+            {
+                SubscriptionOrderReferenceCode = subscriptionCode
+            };
             Iyzipay.Options options = new Iyzipay.Options
             {
                 ApiKey = "sandbox-aMqc85z6hayNJmHSoZXAGxdvruaYwkWi",
@@ -163,9 +198,62 @@ namespace LMS.App.Controllers
                 BaseUrl = "https://sandbox-api.iyzipay.com"
             };
 
-            var transactionDetails = TransactionDetail.Retrieve(request, options);
 
-            return Ok();
+            Subscription.Retry(request, options);
+        }
+
+        public void CancelSubscription(string subscriptionCode)
+        {
+            RetrieveSubscriptionRequest subRequest = new RetrieveSubscriptionRequest();
+            Iyzipay.Options options = new Iyzipay.Options
+            {
+                ApiKey = "sandbox-aMqc85z6hayNJmHSoZXAGxdvruaYwkWi",
+                SecretKey = "sandbox-zkMyw4uHeLFDt9CTltscujK6dVk6Piem",
+                BaseUrl = "https://sandbox-api.iyzipay.com"
+            };
+
+            var subScription = Subscription.Retrieve(subRequest, options);
+            if (subScription.Data.SubscriptionStatus == SubscriptionStatus.UNPAID.ToString())
+            {
+                // Need to update the table and make the status to false here
+
+                CancelSubscriptionRequest cancelSubscriptionRequest = new CancelSubscriptionRequest
+                {
+                    SubscriptionReferenceCode = subscriptionCode
+                };
+
+                Subscription.Cancel(cancelSubscriptionRequest, options);
+            }
+
+        }
+
+        public void HandlePaymentFailure(string paymentId)
+        {
+            string subReferenceCode = "TestCode";
+            if (!string.IsNullOrEmpty(subReferenceCode)) //&& !isExpiered)
+            {
+                BackgroundJob.Schedule((string subCode) => RetryPayment(subReferenceCode), DateTime.UtcNow.AddDays(5));
+            }
+            BackgroundJob.Schedule((string subCode) => CancelSubscription(subReferenceCode), DateTime.UtcNow.AddDays(10));
+
+        }
+
+        [Route("ownedSchoolTransactionDetails")]
+        [HttpPost]
+        public async Task<IActionResult> GetSchoolTransactionDetails([FromBody] TransactionParamViewModel model)
+        {
+            var userId = await GetUserIdAsync(this._userManager);
+            var response = await _iyizicoService.GetSchoolTransactionDetails(model, userId);
+            return Ok(response);
+        }
+
+        [Route("classCourseTransactionDetails")]
+        [HttpPost]
+        public async Task<IActionResult> GetClassCourseTransactionDetails([FromBody] TransactionParamViewModel model)
+        {
+            var userId = await GetUserIdAsync(this._userManager);
+            var response = await _iyizicoService.GetClassCourseTransactionDetails(model, userId);
+            return Ok(response);
         }
 
     }

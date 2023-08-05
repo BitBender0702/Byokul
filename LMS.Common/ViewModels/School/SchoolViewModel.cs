@@ -41,6 +41,7 @@ namespace LMS.Common.ViewModels.School
         public string? PhoneNumber { get; set; }
         public BuySchoolSubscriptionViewModel SubscriptionDetails { get; set; }
         public string SubscriptionDetailsJson { get; set; }
+        public string SubscriptionMessage { get; set; }
 
 
 

@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using System.Reflection.Metadata;
 using System.Text;
 using Country = LMS.Data.Entity.Country;
 
@@ -103,7 +104,7 @@ namespace LMS.Services
         public async Task<SchoolViewModel> SaveNewSchool(SchoolViewModel schoolViewModel, string createdById)
         {
             schoolViewModel.SubscriptionDetails = JsonConvert.DeserializeObject<BuySchoolSubscriptionViewModel>(schoolViewModel.SubscriptionDetailsJson);
-            await _iyizicoService.BuySchoolSubscription(schoolViewModel.SubscriptionDetails, createdById);
+
             if (schoolViewModel.AvatarImage != null)
             {
                 schoolViewModel.Avatar = await _blobService.UploadFileAsync(schoolViewModel.AvatarImage, containerName, false);
@@ -129,7 +130,6 @@ namespace LMS.Services
             _schoolRepository.Insert(school);
             _schoolRepository.Save();
             schoolViewModel.SchoolId = school.SchoolId;
-
             if (schoolViewModel.LanguageIds != null)
             {
                 await SaveSchoolLanguages(schoolViewModel.LanguageIds, school.SchoolId);
@@ -137,6 +137,15 @@ namespace LMS.Services
 
             await AddRoleForUser(createdById, "School Owner");
 
+            var subscriptionResponse = await _iyizicoService.BuySchoolSubscription(schoolViewModel.SubscriptionDetails, createdById,school.SchoolId);
+
+            if (subscriptionResponse.SubscriptionMessage != Constants.Success)
+            {
+                schoolViewModel.SubscriptionDetails.SubscriptionMessage = subscriptionResponse.SubscriptionMessage;
+                return schoolViewModel;
+            }
+
+            schoolViewModel.SubscriptionDetails.SubscriptionMessage = Constants.Success;
             return schoolViewModel;
         }
 

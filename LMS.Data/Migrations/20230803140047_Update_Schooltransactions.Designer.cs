@@ -4,6 +4,7 @@ using LMS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LMS.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230803140047_Update_Schooltransactions")]
+    partial class Update_Schooltransactions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -532,51 +534,6 @@ namespace LMS.Data.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("CommentLikes");
-                });
-
-            modelBuilder.Entity("LMS.Data.Entity.Common.ClassCourseTransaction", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("ClassId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ConversationId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("CourseId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Message")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PaymentId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClassId");
-
-                    b.HasIndex("CourseId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("ClassCourseTransactions");
                 });
 
             modelBuilder.Entity("LMS.Data.Entity.Common.SavedClassCourse", b =>
@@ -1654,9 +1611,11 @@ namespace LMS.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Message")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PaymentId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("SchoolId")
@@ -1665,24 +1624,9 @@ namespace LMS.Data.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("SubscriptionEndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("SubscriptionReferenceCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("SubscriptionStartDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("SchoolId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("SchoolTransactions");
                 });
@@ -2659,27 +2603,6 @@ namespace LMS.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("LMS.Data.Entity.Common.ClassCourseTransaction", b =>
-                {
-                    b.HasOne("LMS.Data.Entity.Class", "Class")
-                        .WithMany()
-                        .HasForeignKey("ClassId");
-
-                    b.HasOne("LMS.Data.Entity.Course", "Course")
-                        .WithMany()
-                        .HasForeignKey("CourseId");
-
-                    b.HasOne("LMS.Data.Entity.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("Class");
-
-                    b.Navigation("Course");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("LMS.Data.Entity.Common.SavedClassCourse", b =>
                 {
                     b.HasOne("LMS.Data.Entity.Class", "Class")
@@ -3115,13 +3038,7 @@ namespace LMS.Data.Migrations
                         .WithMany()
                         .HasForeignKey("SchoolId");
 
-                    b.HasOne("LMS.Data.Entity.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
                     b.Navigation("School");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("LMS.Data.Entity.SchoolUser", b =>

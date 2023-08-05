@@ -381,6 +381,7 @@
                 </li>
                 <li class="nav-item ps-0 mb-0" role="presentation">
                   <button
+                  (click)="isClassCourseTab()"
                     class="nav-link"
                     id="guest-tab"
                     data-bs-toggle="tab"
@@ -524,7 +525,7 @@
               <ul class="list-unstyled before-none mb-0">
                 <li
                   class="mb-0"
-                  *ngFor="let item of transactionDetails.transactions"
+                  *ngFor="let item of transactionDetails.ownedSchoolTransactions"
                 >
                   <div
                     class="d-flex align-items-center justify-content-between"
@@ -543,14 +544,13 @@
                         "
                         ><img
                           [routerLink]="[
-                            '/profile/course',
-                            item.course?.school.schoolName,
-                            item.course?.courseName
+                            '/profile/school',
+                            item.school?.schoolName
                           ]"
-                          [src]="item.course?.avatar"
+                          [src]="item.school?.avatar"
                           class="rounded-circle ms-2 image_style"
                       /></span>
-                      <span
+                      <!-- <span
                         *ngIf="
                           item.course == null && item.class?.avatar != 'null'
                         "
@@ -562,7 +562,7 @@
                           ]"
                           [src]="item.class?.avatar"
                           class="rounded-circle ms-2 image_style"
-                      /></span>
+                      /></span> -->
                     </span>
                     <span
                       class="followe_report d-inline-flex align-items-center"
@@ -586,9 +586,78 @@
             aria-labelledby="guest-school-tab-pane"
             tabindex="0"
           >
-            <div class="wht_newbox followers_box earning-transactions">
-              <ul class="list-unstyled before-none mb-0"></ul>
+          <div class="wht_newbox followers_box earning-transactions">
+            <div *ngIf="!transactionDetails.isUserHasOwnedSchool">
+              <div class="text-center mt-5">
+                {{ "ForCreateSchoolClickOn" | translate }}:
+                <button
+                  [routerLink]="['/user/createSchool']"
+                  type="button"
+                  class="btn custom-btn primary_btn earning-btn fw_400 h_44 me-2 ms-4"
+                >
+                  Create School
+                </button>
+              </div>
             </div>
+            <ul class="list-unstyled before-none mb-0">
+              <li
+                class="mb-0"
+                *ngFor="let item of classCourseDetails"
+              >
+                <div
+                  class="d-flex align-items-center justify-content-between"
+                >
+                  <span class="followers-name font_16 text_sec1">
+                    <img
+                      [routerLink]="['/user/userProfile', item.user?.id]"
+                      [src]="item.user?.avatar"
+                      class="rounded-circle me-2 image_style"
+                    />
+                    <span [innerHTML]="item.message"></span>
+
+                    <span
+                      *ngIf="
+                        item.class == null && item.course?.avatar != 'null'
+                      "
+                      ><img
+                        [routerLink]="[
+                          '/profile/school',
+                          item.school?.schoolName
+                        ]"
+                        [src]="item.school?.avatar"
+                        class="rounded-circle ms-2 image_style"
+                    /></span>
+                    <span
+                      *ngIf="
+                        item.course == null && item.class?.avatar != 'null'
+                      "
+                      ><img
+                        [routerLink]="[
+                          '/profile/class',
+                          item.class?.school.schoolName,
+                          item.class?.className
+                        ]"
+                        [src]="item.class?.avatar"
+                        class="rounded-circle ms-2 image_style"
+                    /></span>
+                  </span>
+                  <span
+                    class="followe_report d-inline-flex align-items-center"
+                    ><p class="font_12 text_ltgray fw_400 me-3 mb-0"></p>
+                    <p class="font_12 text_ltgray fw_400 me-3 mb-0">
+                      {{ item.createdOn | date : "dd/MM/yyyy" }}
+                    </p>
+                    <p class="font_12 text_ltgray fw_400 mb-0">
+                      {{ item.createdOn | date : "HH:mm" }}
+                    </p>
+                  </span>
+                </div>
+              </li>
+            </ul>
+          </div>
+            <!-- <div class="wht_newbox followers_box earning-transactions">
+              <ul class="list-unstyled before-none mb-0"></ul>
+            </div> -->
           </div>
           <div
             class="tab-pane fade show"

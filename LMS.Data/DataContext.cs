@@ -85,6 +85,9 @@ namespace LMS.Data
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<UserCertificate> UserCertificates { get; set; }
         public DbSet<SchoolSubscriptionPlan> SchoolSubscriptionPlans { get; set; }
+        public DbSet<SchoolTransaction> SchoolTransactions { get; set; }
+        public DbSet<ClassCourseTransaction> ClassCourseTransactions { get; set; }
+
 
 
 

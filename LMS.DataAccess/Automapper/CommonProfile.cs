@@ -2,11 +2,13 @@
 using LMS.Common.ViewModels.Admin;
 using LMS.Common.ViewModels.Common;
 using LMS.Common.ViewModels.FileStorage;
+using LMS.Common.ViewModels.Iyizico;
 using LMS.Common.ViewModels.Permission;
 using LMS.Common.ViewModels.Post;
 using LMS.Common.ViewModels.Stripe;
 using LMS.Common.ViewModels.User;
 using LMS.Data.Entity;
+using LMS.Data.Entity.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,6 +41,9 @@ namespace LMS.DataAccess.Automapper
             CreateMap<Transaction, TransactionViewModel>();
             CreateMap<UserSharedPost, PostDetailsViewModel>()
               .ForMember(x => x.IsSharedPostPinned, opt => opt.MapFrom(o => o.IsPinned));
+            CreateMap<SchoolTransaction, SchoolTransactionViewModel>();
+            CreateMap<ClassCourseTransaction, ClassCourseTransactionViewModel>();
+
 
         }
     }

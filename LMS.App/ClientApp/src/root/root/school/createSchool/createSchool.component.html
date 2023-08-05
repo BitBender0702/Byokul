@@ -371,9 +371,11 @@
               <div class="col-md-12">
                 <div class="form-group">
                   <label class="font_10">{{'CardNumber'| translate }}*</label>
-                  <input (keypress)="omit_special_char($event)" formControlName="cardNumber" type="text" placeholder="XXXX-XXXX-XXXX-XXXX" maxlength="19" name="cardNumber" class="form-control w-100" (input)="formatCardNumber($event)">
+                  <!-- <input (keypress)="omit_special_char($event)" formControlName="cardNumber" type="text" placeholder="XXXX-XXXX-XXXX-XXXX" maxlength="19" name="cardNumber" class="form-control w-100" (input)="formatCardNumber($event)"> -->
+                  <input [mask]="accountNumberMask" (keypress)="omit_special_char($event)" formControlName="cardNumber" type="text" placeholder="XXXX-XXXX-XXXX-XXXX" maxlength="19" name="cardNumber" class="form-control w-100">
+
                   <small class="p-error" style="color: orange;"
-                  *ngIf="(isSubmitted && subscriptionForm.controls.cardNumber.errors)">{{'CardNumberRequired'| translate }}
+                  *ngIf="(isStepCompleted && subscriptionForm.controls.cardNumber.errors)">{{'CardNumberRequired'| translate }}
                 </small>
                 </div>
               </div>
@@ -381,9 +383,10 @@
               <div class="col-md-6">
                 <div class="form-group">
                   <label class="font_10">{{'ExpiresOn'| translate }}*</label>
-                  <input (keypress)="omit_special_char($event)" formControlName="expiresOn" type="text" placeholder="XX-XX" maxlength="5" name="expiresOn" class="form-control w-100" (input)="formatMonthYear($event)">
+                  <!-- <input (keypress)="omit_special_char($event)" formControlName="expiresOn" type="text" placeholder="XX-XX" maxlength="5" name="expiresOn" class="form-control w-100" (input)="formatMonthYear($event)"> -->
+                  <input [mask]="monthYearMask" (keypress)="omit_special_char($event)" formControlName="expiresOn" type="text" placeholder="XX-XX" maxlength="5" name="expiresOn" class="form-control w-100">
                   <small class="p-error" style="color: orange;"
-                  *ngIf="(isSubmitted && subscriptionForm.controls.expiresOn.errors)">{{'ExpiresOnRequired'| translate }}
+                  *ngIf="(isStepCompleted && subscriptionForm.controls.expiresOn.errors)">{{'ExpiresOnRequired'| translate }}
                 </small>
                 <small class="p-error" style="color: orange;" *ngIf="subscriptionForm.errors">
                   {{subscriptionForm.errors.dates}}
@@ -395,7 +398,7 @@
                   <label class="font_10">{{'SecurityCode'| translate }}*</label>
                   <input formControlName="securityCode" type="text" name="securityCode" class="form-control w-100">
                   <small class="p-error" style="color: orange;"
-                  *ngIf="(isSubmitted && subscriptionForm.controls.securityCode.errors)">{{'SecurityCodeRequired'| translate }}
+                  *ngIf="(isStepCompleted && subscriptionForm.controls.securityCode.errors)">{{'SecurityCodeRequired'| translate }}
                 </small>
                 </div>
               </div>
@@ -414,7 +417,6 @@
                       {{ "Monthly" | translate }}
                     </label>
                   </div>
-
                   <div class="col mt-3 mb-2">
                     <input
                       formControlName="subscriptionReferenceId"
@@ -427,6 +429,9 @@
                       {{ "Yearly" | translate }}
                     </label>
                   </div>
+                  <small class="p-error" style="color: orange;"
+                  *ngIf="(isStepCompleted && subscriptionForm.controls.subscriptionReferenceId.errors)">{{'ThisFieldRequired'| translate }}
+                </small>
                 </div>
               </div>
 
@@ -435,7 +440,7 @@
                   <label class="font_10">{{'AccountHolderName'| translate }}*</label>
                   <input formControlName="accountHolderName" type="text" name="AccountHolderName" class="form-control w-100">
                   <small class="p-error" style="color: orange;"
-                  *ngIf="(isSubmitted && subscriptionForm.controls.accountHolderName.errors)">{{'AccountHolderNameRequired'| translate }}
+                  *ngIf="(isStepCompleted && subscriptionForm.controls.accountHolderName.errors)">{{'AccountHolderNameRequired'| translate }}
                 </small>
                 </div>
               </div>

@@ -21,6 +21,8 @@ export class Constant {
     public static Excel = "vnd.ms-excel";
     public static Ppt = "vnd.ms-powerpoint";
     public static Post = "Post";
+    public static Success = "Success";
+
 
 
 

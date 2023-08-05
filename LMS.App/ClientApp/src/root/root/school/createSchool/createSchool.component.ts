@@ -20,6 +20,7 @@ import { AzureBlobStorageService } from 'src/root/service/blobStorage.service';
 import { BlobServiceClient, ContainerClient, BlockBlobClient } from '@azure/storage-blob';
 import { url } from 'inspector';
 import { IyizicoService } from 'src/root/service/iyizico.service';
+import { Constant } from 'src/root/interfaces/constant';
 
 export const ownedSchoolResponse =new Subject<{schoolId: string, schoolAvatar : string,schoolName:string,action:string}>(); 
 
@@ -89,7 +90,8 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
   // PhoneNumberFormat = PhoneNumberFormat;
 	preferredCountries: CountryISO[] = [CountryISO.UnitedStates, CountryISO.UnitedKingdom];
   selectedCountryISO:any;
-  mask:string = "(000) 000 0000";
+  accountNumberMask:string = "0000-0000-0000-0000";
+  monthYearMask:string = "00-00"
   subscriptionPlans: any;
   currentDate!:string;
 
@@ -165,8 +167,8 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
   }
 
   this.subscriptionForm = this.fb.group({
-    cardNumber: this.fb.control('',[Validators.required, Validators.minLength(19)]),
-    expiresOn: this.fb.control('',[Validators.required, Validators.minLength(5)]),
+    cardNumber: this.fb.control('',[Validators.required, Validators.minLength(16)]),
+    expiresOn: this.fb.control('',[Validators.required, Validators.minLength(4)]),
     securityCode: this.fb.control('',[Validators.required]),
     accountHolderName: this.fb.control('',[Validators.required]),
     subscriptionReferenceId: this.fb.control('',[Validators.required])
@@ -313,6 +315,7 @@ ngOnDestroy(): void {
     this.fileToUpload.append('SubscriptionDetailsJson',JSON.stringify(subscriptionDetails));
 
     this._schoolService.createSchool(this.fileToUpload).subscribe((response:any) => {
+      debugger
          var schoolId =  response;
          this.schoolId = schoolId;
          this.loadingIcon = false;
@@ -320,7 +323,13 @@ ngOnDestroy(): void {
          ownedSchoolResponse.next({schoolId:response.schoolId, schoolAvatar:response.avatar, schoolName:response.schoolName,action:"add"});
          this.step += 1;
          this.isStepCompleted = false;
-         this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'School created successfully'});
+
+         if(response.subscriptionDetails.subscriptionMessage == Constant.Success){
+          this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'School created successfully'});
+         }
+         else{
+          this.messageService.add({severity:'info', summary:'Info',life: 3000, detail:response.subscriptionDetails.subscriptionMessage});
+         }
     });
 
   }
@@ -590,21 +599,25 @@ getCurrentDate(){
 
   isValidExpiresOn(expiresOn: string, currentDate:string){
     return (group: FormGroup): {[key: string]: any} => {
+      debugger
       let monthYear = group.controls[expiresOn].value;
       if(monthYear.length == 5){
-        const yearIndex = monthYear.indexOf('-');
-        const year = monthYear.substring(yearIndex + 1);
+
+        const month = expiresOn.substring(0, 2);
+        const year = expiresOn.substring(expiresOn.length - 2);
+        // const yearIndex = monthYear.indexOf('-');
+        // const year = monthYear.substring(yearIndex + 1);
 
         const currentYearIndex = currentDate.indexOf('-');
         const currentYear = currentDate.substring(currentYearIndex + 1);
 
-        const monthIndex = monthYear.indexOf('-');
-        const month = monthYear.substring(0, monthIndex);
+        // const monthIndex = monthYear.indexOf('-');
+        // const month = monthYear.substring(0, monthIndex);
 
         const currentMonthIndex = currentDate.indexOf('-');
         const currentMonth = currentDate.substring(0, currentMonthIndex);
         
-        if(year < currentYear || (year == currentYear && month < currentMonth) || month > 12){
+        if(year < currentYear || (year == currentYear && month < currentMonth) || month > "12"){
           return { dates: `Please enter valid expiresOn`};
         }
       }

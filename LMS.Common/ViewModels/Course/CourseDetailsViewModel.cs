@@ -41,6 +41,8 @@ namespace LMS.Common.ViewModels.Course
         public bool IsConvertable { get; set; }
         public bool? IsDisableByOwner { get; set; }
         public bool IsCommentsDisabled { get; set; }
+        public bool IsCourseAccessable { get; set; }
+
 
 
     }

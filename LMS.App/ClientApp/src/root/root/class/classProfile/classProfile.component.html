@@ -59,6 +59,14 @@
           >
             {{ "Buyfor" | translate }} ${{ class.price }}
           </button>
+          <!-- <button
+          *ngIf="!isOwner && class.price != null && class.price != 0 && !class.isClassAccessable"
+          (click)="openPaymentModal()"
+          type="button"
+          class="btn custom-btn primary_btn earning-btn fw_400 h_44"
+        >
+          {{ "Buyfor" | translate }} ${{ class.price }}
+        </button> -->
         </div>
         <div
           class="live-header d-flex align-items-center justify-content-between"
@@ -438,7 +446,7 @@
           </div>
         </div>
 
-        <div class="tab-content" id="pills-tabContent">
+        <div *ngIf="class.isClassAccessable" class="tab-content" id="pills-tabContent">
           <div
             class="tab-pane fade show active"
             id="school-feed-tab-pane"

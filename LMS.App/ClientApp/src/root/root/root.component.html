@@ -1,7 +1,43 @@
 <side-bar *ngIf="displaySideBar"></side-bar>
 <adminSide-bar *ngIf="displayAdminSideBar"></adminSide-bar>
+
 <router-outlet>
     <!-- <h1>test.............................................................test</h1> -->
     <p-toast></p-toast>
+    <!-- <div
+class="modal fade edit-school-modal delete-modal"
+id="paymentConfirmationModal"
+tabindex="-1"
+aria-labelledby="paymentConfirmationModal"
+aria-hidden="true"
+>
+<div class="modal-dialog modal-dialog-centered">
+  <div class="modal-content">
+    <div
+      class="modal-header border-0 justify-content-center position-relative"
+    >
+    </div>
+    <div class="modal-body">
+      <div>
+       <h3 class="text-center fw-semibold">
+         Live stream has ended
+       </h3>
+       <h5 class="text-center fw-semibold" style="margin-top:30px">
+         Full video will be uploaded to profile shortly.
+       </h5>
+      </div>
+   </div>
+    <button
+    hidden
+    id="closeBtn"
+    type="button"
+    class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+    data-bs-dismiss="modal"
+  ></button>
+  </div>
+</div>
+</div> -->
 </router-outlet>
 
+<button #paymentConfirmationBtn hidden data-bs-toggle="modal"
+data-bs-target="#paymentConfirmationModal"></button>

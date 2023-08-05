@@ -27,13 +27,17 @@ export class PaymentService{
       }
 
       transactionDetails(transactionParamViewModel: TransactionParamViewModel):Observable<any>{
-        return this.http.post(`${this.apiUrl}/stripe/ownedSchoolTransactionDetails`,transactionParamViewModel, {headers: this.headers});
-
+        debugger
+        return this.http.post(`${this.apiUrl}/iyizico/ownedSchoolTransactionDetails`,transactionParamViewModel, {headers: this.headers});
       }
 
       withdrawDetails(transactionParamViewModel: TransactionParamViewModel):Observable<any>{
         return this.http.post(`${this.apiUrl}/stripe/withdrawDetails`,transactionParamViewModel, {headers: this.headers});
 
+      }
+
+      classCourseTransactionDetails(transactionParamViewModel: TransactionParamViewModel):Observable<any>{
+        return this.http.post(`${this.apiUrl}/iyizico/classCourseTransactionDetails`,transactionParamViewModel, {headers: this.headers});
       }
 
       allTransactionDetails(transactionParamViewModel: TransactionParamViewModel):Observable<any>{

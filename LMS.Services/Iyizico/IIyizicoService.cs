@@ -12,9 +12,16 @@ namespace LMS.Services.Iyizico
 {
     public interface IIyizicoService
     {
-        Task BuySchoolSubscription(BuySchoolSubscriptionViewModel model,string userId);
+        Task<BuySchoolSubscriptionViewModel> BuySchoolSubscription(BuySchoolSubscriptionViewModel model,string userId,Guid schoolId);
         Task<List<SchoolSubscriptionPlansViewModel>> GetSubscriptionPlans();
-        Task<Payment> BuyClassCourse(BuyClassCourseViewModel model, string userId);
+        Task<string> BuyClassCourse(BuyClassCourseViewModel model, string userId);
+        Task UpdateSchoolTransaction(string ConversationId, string paymentId);
+        Task UpdateClassCourseTransaction(string ConversationId, string paymentId);
+        Task<TransactionsDetailsViewModel> GetSchoolTransactionDetails(TransactionParamViewModel model, string userId);
+        Task<TransactionsDetailsViewModel> GetClassCourseTransactionDetails(TransactionParamViewModel model, string userId);
+        void CloseIyizicoThreeDAuthWindow(string userId);
+
+
 
 
     }

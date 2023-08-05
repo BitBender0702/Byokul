@@ -14,6 +14,11 @@ namespace LMS.Common.ViewModels.Iyizico
         public string SecurityCode { get; set; }
         public string AccountHolderName { get; set; }
         public string SubscriptionReferenceId { get; set; }
+        public Guid SchoolId { get; set; }
+        public string? SubscriptionMessage { get; set; }
+        public string? ConversationId { get; set; }
+        public DateTime? SubscriptionStartDate { get; set; }
+        public DateTime? SubscriptionEndDate { get; set; }
 
         //public int PlanId { get; set; }
     }

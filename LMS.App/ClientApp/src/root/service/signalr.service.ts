@@ -47,6 +47,11 @@ export const commentLikeResponse = new Subject<{
   isLike: boolean;
 }>();
 
+
+export const closeIyizicoThreeDAuthWindow = new Subject<{
+  isClose: boolean;
+}>();
+
 export const postLikeResponse = new Subject<{isLiked: boolean;}>();
 export const saveStreamResponse = new Subject<{isSaved: boolean;}>();
 export const postViewResponse = new Subject<{isAddView: boolean;}>();
@@ -199,6 +204,12 @@ export class SignalrService {
       progressResponse.next({
         progressCount:progress,
         fileName:fileName
+      });
+    });
+
+    this.hubConnection?.on('closeIyizicoThreeDAuthWindow', (isClose: boolean) => {
+      closeIyizicoThreeDAuthWindow.next({
+        isClose:true
       });
     });
 

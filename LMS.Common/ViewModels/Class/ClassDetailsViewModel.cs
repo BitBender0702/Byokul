@@ -44,6 +44,7 @@ namespace LMS.Common.ViewModels.Class
         public string? ThumbnailUrl { get; set; }
         public bool? IsDisableByOwner { get; set; }
         public bool IsCommentsDisabled { get; set; }
+        public bool IsClassAccessable { get; set; }
 
     }
 }

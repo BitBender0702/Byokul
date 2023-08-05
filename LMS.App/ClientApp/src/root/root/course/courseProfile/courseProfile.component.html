@@ -40,7 +40,7 @@
             {{ "CreatePost" | translate }}
           </button>
           <button
-            *ngIf="!isOwner && course.price != null && course.price != 0"
+            *ngIf="(!isOwner && course.price != null && course.price != 0 && !course.isCourseAccessable)"
             (click)="openPaymentModal()"
             type="button"
             class="btn custom-btn primary_btn earning-btn fw_400 h_44"
@@ -404,7 +404,7 @@
           </div>
         </div>
 
-        <div class="tab-content" id="pills-tabContent">
+        <div *ngIf="course.isCourseAccessable" class="tab-content" id="pills-tabContent">
           <div
             class="tab-pane fade show active"
             id="school-feed-tab-pane"
