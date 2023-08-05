@@ -118,7 +118,7 @@ namespace LMS.Services
                 post.IsPostSchedule = true;
                 scheduleLiveStream = true;
             }
-            else if (postViewModel.PostType == (int)PostTypeEnum.Stream)
+            else if (postViewModel.PostType == (int)PostTypeEnum.Stream && postViewModel.BlobUrls.Any(x => x.FileType == FileTypeEnum.Video))
             {
                 post.StreamUrl = postViewModel.BlobUrls.Where(x => x.FileType == FileTypeEnum.Video).Select(x => x.BlobUrl).First();
                 post.IsLive = true;

@@ -498,12 +498,18 @@
                                 <span
                                   class="fw-light ms-2"
                                   *ngFor="
-                                    let item of post.postTags;
+                                    let item of parseTheTags(post.postTags);
                                     let isLast = last
                                   "
-                                  >#{{ item.postTagValue
+                                  >#{{ item
                                   }}{{ isLast ? "" : ", " }}</span
                                 >
+                                <!-- <span 
+                                  class="ms-2"
+                                  *ngFor="let tag of postsTagValues;  let isLast = last"
+                                  class="custom-tag"
+                                  >#{{ tag }}{{ isLast ? "" : ", " }}</span
+                                > -->
                               </div>
                             </div>
                           </div>
@@ -1112,11 +1118,11 @@
                     *ngIf="gridItemInfo.postTags.length != 0"
                     class="teacher-tags tag-box hashtag_box"
                   >
-                    <span
-                      *ngFor="let tag of gridItemInfo.postTags"
-                      class="custom-tag"
-                      >{{ tag.postTagValue }}</span
-                    >
+                  <span 
+                    *ngFor="let tag of postsTagValues"
+                    class="custom-tag"
+                    >#{{ tag }}</span
+                  >
                   </div>
                   <div class="school-grid-footer preview-right-action">
                     <button
@@ -1247,11 +1253,11 @@
                             type="button"
                             class="view font_12 bg-transparent border-0 cursor_auto"
                           >
-                            <img
+                            <!-- <img
                               lazyLoad="../../../../assets/images/eye.svg"
                               class="me-2"
                             />
-                            {{ post.views.length }}
+                            {{ post.views.length }} -->
                           </button>
                         <button
                           *ngIf="post.isPinned && isOwner"

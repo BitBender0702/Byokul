@@ -998,14 +998,14 @@
                           >
                             {{ post.title }}
                             <span
-                              class="fw-light ms-2"
-                              *ngFor="
-                                let item of post.postTags;
-                                let isLast = last
-                              "
-                              >#{{ item.postTagValue
-                              }}{{ isLast ? "" : ", " }}</span
-                            >
+                                  class="fw-light ms-2"
+                                  *ngFor="
+                                    let item of parseTheTags(post.postTags);
+                                    let isLast = last
+                                  "
+                                  >#{{ item
+                                  }}{{ isLast ? "" : ", " }}</span
+                                >
                           </div>
                         </div>
                       </div>
@@ -1109,8 +1109,10 @@
                       </ng-container>
                     </div>
                     <div class="teacher-tags tag-box hashtag_box">
-                      <span *ngFor="let tag of post.postTags" class="custom-tag"
-                        >#{{ tag.postTagValue }}</span
+                      <span 
+                        *ngFor="let tag of postsTagValues"
+                        class="custom-tag"
+                        >#{{ tag }}</span
                       >
                     </div>
                     <div
@@ -1767,7 +1769,7 @@
                                 *ngIf="postAttachment?.fileType == 2"
                                 class="videofile"
                               >
-                              <videoJs-component [postAttachment]="postAttachment" ></videoJs-component>
+                              <videoJs-component [postAttachment]="postAttachment"></videoJs-component>
                                 <!-- <video
                                 [id] = "getRandomClass(i,false)"
                                   controls
@@ -1926,10 +1928,10 @@
                               *ngIf="gridItemInfo.postTags.length != 0"
                               class="teacher-tags tag-box hashtag_box"
                             >
-                              <span
-                                *ngFor="let tag of gridItemInfo.postTags"
+                              <span 
+                                *ngFor="let tag of postsTagValues"
                                 class="custom-tag"
-                                >{{ tag.postTagValue }}</span
+                                >#{{ tag }}</span
                               >
                             </div>
                             <div
@@ -2071,11 +2073,6 @@
                             type="button"
                             class="view font_12 bg-transparent border-0 cursor_auto"
                           >
-                            <img
-                              lazyLoad="../../../../assets/images/eye.svg"
-                              class="me-2"
-                            />
-                            {{ post.views.length }}
                           </button>
                           <button
                             *ngIf="post.isPinned && isOwner"
@@ -2382,11 +2379,11 @@
                         *ngIf="item.tags.length > 0"
                         class="teacher-tags tag-box hashtag_box"
                       >
-                        <span
-                          *ngFor="let tag of item.tags"
-                          class="custom-tag"
-                          >{{ tag }}</span
-                        >
+                      <span 
+                      *ngFor="let tag of postsTagValues"
+                      class="custom-tag"
+                      >#{{ tag }}</span
+                    >
                       </div>
                       <div
                         *ngIf="item.tags.length == 0"
@@ -3569,11 +3566,11 @@
                           name="Id"
                           class="form-control w-100"
                           [disabled]="true"
+                          [hidden]="true"
                         />
                         <label class="font_10"
                           >{{ "CertificateName" | translate }}*</label
                         >
-
                         <input
                           formControlName="certificateName"
                           type="text"

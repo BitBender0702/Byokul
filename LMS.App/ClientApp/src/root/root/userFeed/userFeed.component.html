@@ -35,7 +35,7 @@
         <div
           class="live-header d-flex align-items-center justify-content-between"
         >
-          <button
+          <!-- <button
             (click)="back()"
             mat-mini-fab
             type="button"
@@ -43,7 +43,7 @@
           >
             <img lazyLoad="../../../../assets/images/arrow-left.svg" />
             {{ "Back" | translate }}
-          </button>
+          </button> -->
           <span class="logo_mobile d-xl-none">
             <img lazyLoad="../../../assets/images/logo.svg" />
           </span>
@@ -310,10 +310,10 @@
                                 <span
                                   class="fw-light ms-2"
                                   *ngFor="
-                                    let item of post.postTags;
+                                    let item of parseTheTags(post.postTags);
                                     let isLast = last
                                   "
-                                  >#{{ item.postTagValue
+                                  >#{{ item
                                   }}{{ isLast ? "" : ", " }}</span
                                 >
                               </div>
@@ -481,9 +481,7 @@
                       </ng-container>
                     </div>
                     <div class="teacher-tags tag-box hashtag_box">
-                      <span *ngFor="let tag of post.postTags" class="custom-tag"
-                        >#{{ tag.postTagValue }}</span
-                      >
+                      <span *ngFor="let item of parseTheListViewTags(post.postTags);" class="custom-tag">#{{ item }}</span>
                     </div>
                     <div
                       *ngIf="post.postAttachments.length"
@@ -1106,9 +1104,9 @@
                               class="teacher-tags tag-box hashtag_box"
                             >
                               <span
-                                *ngFor="let tag of gridItemInfo.postTags"
+                                *ngFor="let tag of postsTagValues"
                                 class="custom-tag"
-                                >{{ tag.postTagValue }}</span
+                                >#{{ tag }}</span
                               >
                             </div>
                             <div
@@ -1562,10 +1560,10 @@
                                 <span
                                   class="fw-light ms-2"
                                   *ngFor="
-                                    let item of post.postTags;
+                                    let item of parseTheTags(post.postTags);
                                     let isLast = last
                                   "
-                                  >#{{ item.postTagValue
+                                  >#{{ item
                                   }}{{ isLast ? "" : ", " }}</span
                                 >
                               </div>
@@ -1705,11 +1703,7 @@
                       </ng-container>
                     </div>
                     <div class="teacher-tags tag-box hashtag_box">
-                      <span
-                        *ngFor="let tag of post.postTags"
-                        class="custom-tag"
-                        >{{ tag.postTagValue }}</span
-                      >
+                      <span *ngFor="let item of parseTheListViewTags(post.postTags);" class="custom-tag">#{{ item }}</span>
                     </div>
                     <div
                       *ngIf="post.postAttachments.length"
@@ -2367,10 +2361,10 @@
                             >
                               <span
                                 *ngFor="
-                                  let tag of gridItemInfoForGlobal.postTags
+                                  let tag of postsTagValues
                                 "
                                 class="custom-tag"
-                                >{{ tag.postTagValue }}</span
+                                >#{{ tag }}</span
                               >
                             </div>
                             <div

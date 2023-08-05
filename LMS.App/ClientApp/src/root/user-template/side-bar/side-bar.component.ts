@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Injector, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Injector, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { unreadChatResponse } from 'src/root/root/chat/chat.component';
@@ -14,6 +14,7 @@ import { UserService } from 'src/root/service/user.service';
 import { dashboardResponse } from 'src/root/userModule/user-auth/component/login/login.component';
 import { Subject, Subscription } from 'rxjs';
 import { notificationResponse } from 'src/root/service/signalr.service';
+
 export const OpenSideBar =new Subject<{isOpenSideBar:boolean}>(); 
 
 @Component({
@@ -33,7 +34,7 @@ export class SideBarComponent extends MultilingualComponent implements OnInit, O
   notificationResponseSubscription!:Subscription;
   // @Input() isOpenSidebar!:boolean;
 
-  constructor(injector: Injector,userService: UserService,private router: Router,private cd: ChangeDetectorRef) {
+  constructor(injector: Injector,userService: UserService,private router: Router,private cd: ChangeDetectorRef, private elementRef: ElementRef) {
     super(injector);
     this._userService = userService;
     
@@ -254,18 +255,25 @@ export class SideBarComponent extends MultilingualComponent implements OnInit, O
 
   getSelectedSchool(schoolName:string){
     this.router.navigateByUrl(`profile/school/${schoolName.split(" ").join("").toLowerCase()}`);
+    this.closeSidebar()
   }
 
   getSelectedClass(className:string,schoolName:string){
     this.router.navigateByUrl(`profile/class/${schoolName.split(" ").join("").toLowerCase()}/${className.split(" ").join("").toLowerCase()}`);
+    this.closeSidebar()
+
   }
 
   getSelectedCourse(courseName:string,schoolName:string){
     this.router.navigateByUrl(`profile/course/${schoolName.split(" ").join("").toLowerCase()}/${courseName.split(" ").join("").toLowerCase()}`);
+    this.closeSidebar()
+
   }
 
   getUserDetails(userId:string){
     this.router.navigateByUrl(`user/userProfile/${userId}`);
+    this.closeSidebar()
+
   }
 
   getCurrentUserId(){
@@ -276,6 +284,8 @@ export class SideBarComponent extends MultilingualComponent implements OnInit, O
       let decodedJwtData = JSON.parse(decodedJwtJsonData);
       this.loginUserId = decodedJwtData.jti;
     }
+    this.closeSidebar()
+
   }
 
   openGlobalFeedTab(){
@@ -283,5 +293,27 @@ export class SideBarComponent extends MultilingualComponent implements OnInit, O
     if(feedTab != ''){
       localStorage.setItem('feedTab','globalFeed');
     }
+    this.closeSidebar()
   }
+
+  // window.onload = function(){
+  //   debugger
+  //   var hideSiedBar = document.getElementById('side-bar');
+  //   document.onclick = function(e:any) {
+  //     if(hideSiedBar)
+  //     if(e.target.id !== 'hideSiedBar'){
+  //       hideSiedBar.style.display = 'none';
+  //     }
+  //   }
+  // }
+
+  // document.addEventListener("click", function(event) {
+  //   // Check if the click occurred outside the sidebar
+  //   if (!sidebar.contains(event.target)) {
+  //     // Close the sidebar
+  //     sidebar.style.display = "none";
+  //   }
+  // });
+  
+
 }

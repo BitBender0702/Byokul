@@ -183,7 +183,7 @@
                   </button>
                 </div>
                 <div class="hover-double-button">
-                  <button
+                  <!-- <button
                     *ngIf="isOwner"
                     (click)="
                       convertToCourse(class.className, class.school.schoolName)
@@ -192,8 +192,15 @@
                     class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins"
                   >
                     {{ "ConvertToCourse" | translate }}
+                  </button> -->
+                  <button
+                    *ngIf="isOwner"
+                    class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins"
+                    data-bs-toggle="modal"
+                    data-bs-target="#confirm-courseChange"
+                  >
+                    {{ "ConvertToCourse" | translate }}
                   </button>
-
                   <button
                     *ngIf="isOwner || hasUpdateClassPermission"
                     (click)="getClassDetails(class.classId)"
@@ -532,10 +539,10 @@
                                 <span
                                   class="fw-light ms-2"
                                   *ngFor="
-                                    let item of post.postTags;
+                                    let item of parseTheTags(post.postTags);
                                     let isLast = last
                                   "
-                                  >#{{ item.postTagValue
+                                  >#{{ item
                                   }}{{ isLast ? "" : ", " }}</span
                                 >
                               </div>
@@ -1214,11 +1221,11 @@
                               *ngIf="gridItemInfo.postTags.length != 0"
                               class="teacher-tags tag-box hashtag_box"
                             >
-                              <span
-                                *ngFor="let tag of gridItemInfo.postTags"
-                                class="custom-tag"
-                                >{{ tag.postTagValue }}</span
-                              >
+                            <span 
+                            *ngFor="let tag of postsTagValues"
+                            class="custom-tag"
+                            >#{{ tag }}</span
+                          >
                             </div>
                             <div
                               class="school-grid-footer preview-right-action"
@@ -2750,3 +2757,60 @@
     </div>
   </div>
 </ng-template>
+
+
+<div
+class="modal fade edit-school-modal delete-modal"
+id="confirm-courseChange"
+tabindex="-1"
+aria-labelledby="confirm-courseChange"
+aria-hidden="true"
+>
+<div class="modal-dialog modal-dialog-centered">
+  <div class="modal-content">
+    <div
+      class="modal-header border-0 justify-content-center position-relative"
+    >
+      <h1
+        class="modal-title font_22 text_dark fw_700 border-0 text-center"
+      >
+        {{ "ConfirmCourseChange" | translate }}
+      </h1>
+      <button
+        type="button"
+        class="btn-close shadow-none"
+        data-bs-dismiss="modal"
+        aria-label="Close"
+      >
+        <img lazyLoad="../../../../assets/images/cross.svg" />
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <h2 class="text-center font_16 f-poppins">
+          {{ "DoYouWantToChange" | translate }}
+        </h2>
+      </div>
+      <div
+        class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-2 mt-4"
+      >
+        <button
+          type="button"
+          class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+          data-bs-dismiss="modal"
+        >
+          {{ "No" | translate }}
+        </button>
+        <button
+          (click)="convertToCourse(class.className, class.school.schoolName)"
+          type="button"
+          class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
+          data-bs-dismiss="modal"
+        >
+          {{ "Yes" | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>

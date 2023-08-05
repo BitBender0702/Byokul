@@ -1,22 +1,28 @@
-.cursor_pointer{
+.cursor_pointer {
     cursor: pointer;
 }
 
-.cursor_auto{
+.cursor_auto {
     cursor: auto;
 }
 
-.overflow_paragraph{
+.overflow_paragraph {
     overflow: auto;
     max-height: 200px !important;
 
 }
 
+@media (max-width: 767px) {
+    #checkMobileView {
+        display: none !important;
+    }
+}
+
 .overflow_paragraph::-webkit-scrollbar {
     width: 2px;
-  }
+}
 
-  .video-js {
+.video-js {
     height: 700px !important;
     width: 100% !important;
-  }
+}

@@ -733,8 +733,8 @@
                       >
                     </div>
                     <div class="teacher-tags tag-box hashtag_box">
-                      <span *ngFor="let tag of post.postTags" class="custom-tag"
-                        >#{{ tag.postTagValue }}</span
+                      <span *ngFor="let item of parseTheListViewTags(post.postTags);" class="custom-tag"
+                        >#{{ item }}</span
                       >
                     </div>
                     <div
@@ -1016,6 +1016,7 @@
                       type="button"
                       class="bg-transparent border-0 function-btns text-light"
                     >
+                    
                       <img
                         src="../../../../assets/images/eye.svg"
                         class="d-block mx-auto"
@@ -1283,9 +1284,9 @@
                           class="teacher-tags tag-box hashtag_box"
                         >
                           <span
-                            *ngFor="let tag of gridItemInfo.postTags"
+                            *ngFor="let tag of postsTagValues"
                             class="custom-tag"
-                            >{{ tag.postTagValue }}</span
+                            >#{{ tag }}</span
                           >
                         </div>
                         <div class="school-grid-footer preview-right-action">
@@ -1432,11 +1433,6 @@
                         type="button"
                         class="view font_12 bg-transparent border-0 cursor_auto"
                       >
-                        <img
-                          src="../../../../assets/images/eye.svg"
-                          class="me-2"
-                        />
-                        {{ post.views.length }}
                       </button>
                       <button
                         *ngIf="post.isPinned && isOwner"
@@ -5832,14 +5828,14 @@
                             >
                               {{ post.title }}
                               <span
-                                class="fw-light ms-2"
-                                *ngFor="
-                                  let item of post.postTags;
-                                  let isLast = last
-                                "
-                                >#{{ item.postTagValue
-                                }}{{ isLast ? "" : ", " }}</span
-                              >
+                                  class="fw-light ms-2"
+                                  *ngFor="
+                                    let item of parseTheTags(post.postTags);
+                                    let isLast = last
+                                  "
+                                  >#{{ item
+                                  }}{{ isLast ? "" : ", " }}</span
+                                >
                             </div>
                           </div>
                         </div>
@@ -5955,14 +5951,14 @@
                             >
                               {{ post.title }}
                               <span
-                                class="fw-light ms-2"
-                                *ngFor="
-                                  let item of post.postTags;
-                                  let isLast = last
-                                "
-                                >#{{ item.postTagValue
-                                }}{{ isLast ? "" : ", " }}</span
-                              >
+                                  class="fw-light ms-2"
+                                  *ngFor="
+                                    let item of parseTheTags(post.postTags);
+                                    let isLast = last
+                                  "
+                                  >#{{ item
+                                  }}{{ isLast ? "" : ", " }}</span
+                                >
                             </div>
                           </div>
                         </div>
@@ -6078,14 +6074,14 @@
                             >
                               {{ post.title }}
                               <span
-                                class="fw-light ms-2"
-                                *ngFor="
-                                  let item of post.postTags;
-                                  let isLast = last
-                                "
-                                >#{{ item.postTagValue
-                                }}{{ isLast ? "" : ", " }}</span
-                              >
+                                  class="fw-light ms-2"
+                                  *ngFor="
+                                    let item of parseTheTags(post.postTags);
+                                    let isLast = last
+                                  "
+                                  >#{{ item
+                                  }}{{ isLast ? "" : ", " }}</span
+                                >
                             </div>
                           </div>
                         </div>
@@ -6201,14 +6197,14 @@
                             >
                               {{ post.title }}
                               <span
-                                class="fw-light ms-2"
-                                *ngFor="
-                                  let item of post.postTags;
-                                  let isLast = last
-                                "
-                                >#{{ item.postTagValue
-                                }}{{ isLast ? "" : ", " }}</span
-                              >
+                                  class="fw-light ms-2"
+                                  *ngFor="
+                                    let item of parseTheTags(post.postTags);
+                                    let isLast = last
+                                  "
+                                  >#{{ item
+                                  }}{{ isLast ? "" : ", " }}</span
+                                >
                             </div>
                           </div>
                         </div>

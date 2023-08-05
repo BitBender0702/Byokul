@@ -85,12 +85,16 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
       </ng-container>
     </div>
     <div class="teacher-tags tag-box hashtag_box mt-0">
-        <span *ngFor="let tag of post.postTags" class="custom-tag">#{{tag.postTagValue}}</span>
+      <span 
+      *ngFor="let tag of postsTagValues"
+      class="custom-tag"
+      >#{{ tag }}</span
+    >
     </div>
-    <p *ngIf="post.description != null && post.postAttachments.length>0" class="text_sec1 font_14 pt-3 overflow_paragraph">{{post.description}}</p>
+    <p *ngIf="post.description != null && post.postAttachments.length>0" class="text_sec1 font_14 pt-3 ">{{post.description}}</p>
     <div *ngIf="post.postAttachments.length==0">
       <!-- <h2>{{post.title}}</h2> -->
-      <p *ngIf="post.description != null" class="text_sec1 font_14 pt-3 overflow_paragraph" style="height:400px">{{post.description}}</p>
+      <p *ngIf="post.description != null" class="text_sec1 font_14 pt-3 " style="height:400px">{{post.description}}</p>
     </div>
   </div>
  <div class="col-md-4">
@@ -209,6 +213,13 @@ margin-top: 30px;">
                     <img [src]="post.parentImageUrl" class="me-2"/> {{post.parentName}}
               </div>
             </slide>
+
+            <slide *ngIf="postAttachment.fileType!=2 || postAttachment.fileType!=1">
+              <div class="w-100" id="wasCalled">
+                <p>{{post.description}}</p>
+              </div>
+            </slide>
+
             <slide *ngIf="postAttachment.fileType==1">
              <img *ngIf="postAttachment.fileType==1" class="w-100" [src]="postAttachment.fileUrl" />
               <div class="live-bottom-text p-3">

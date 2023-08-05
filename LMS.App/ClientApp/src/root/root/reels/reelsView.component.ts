@@ -134,9 +134,9 @@ import { Subject, Subscription } from 'rxjs';
 
         this._userService.getUser(this.senderId).subscribe((response) => {
           this.sender = response;
-        });
+        });             
 
-             
+
       }
 
           this.InitializeLikeUnlikePost();
