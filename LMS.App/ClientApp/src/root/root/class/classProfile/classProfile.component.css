@@ -1,3 +1,13 @@
+.tag-box .teacher-tags {
+  margin-bottom: 10px;
+}
+
+@media screen and (min-width: 1024px) {
+  .tag-box .teacher-tags {
+    margin-bottom: 15px;
+  }
+}
+
 .right-action {
   position: absolute;
   right: 0;
@@ -28,7 +38,7 @@
 
 .description_scroll {
   overflow-y: auto;
-  height:150px;
+  height: 150px;
 }
 
 .description_scroll::-webkit-scrollbar {
@@ -39,16 +49,16 @@
   height: 300px;
 }
 
-  .cursor_pointer{
-    cursor: pointer;
-  }
+.cursor_pointer {
+  cursor: pointer;
+}
 
-  .date_calendar {
-    background-image: url(../../../../assets/images/Calendar.svg);
-    background-repeat: no-repeat;
-    background-position: center right 16px;
-  }
+.date_calendar {
+  background-image: url(../../../../assets/images/Calendar.svg);
+  background-repeat: no-repeat;
+  background-position: center right 16px;
+}
 
-  .preserve-line-breaks {
-    white-space: pre-wrap;
-  }
+.preserve-line-breaks {
+  white-space: pre-wrap;
+}

@@ -508,9 +508,12 @@
   "IssuedDate": "Issued Date",
   "CertificateUpdatedSuccessfully": "Certificate updated successfully",
   "PostUpdatedSuccessfully": "Post updated successfully",
-  "TypeToAddTags": "Eklemek için yazın ve enter tuşuna basın",
+  "TypeToAddTags": "Type and press enter to add",
   "FileStorageProgressMessage": "Your files is being processed. We’ll let you know when upload will completed",
-  "FilesUploadedSuccessfully": "Files uploaded successfully in file storage"
+  "FilesUploadedSuccessfully": "Files uploaded successfully in file storage",
+  "DoYouWantToChange":"Do you want to change between class and course?",
+  "ConfirmCourseChange":"Change Class-Course"
+  
 
 
 

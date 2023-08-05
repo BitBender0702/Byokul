@@ -1,207 +1,590 @@
 <section class="f-poppins main_content about-container">
-    <header class="header">
-      <div class="header__content">
-        
-        <a [routerLink]="['/user/userFeed']" class="main-logo"><img class="ms-4" src="../../../assets/images/logo.svg" /></a>
-      </div>
-    </header>
-    <main class="static-main min-height w-100 h-auto">
-      <div class="static-content">
-     <div *ngIf="selectedLanguage == 'en'">
-      <div class="d-flex align-items-center justify-content-between ">
-        <button
-        (click)="back()"
-        type="button"
-        class="back-button bg-transparent border-0 font_16 fw_400 text_dark">
-      <img src="../../../../assets/images/school/arrow-left.svg" />
-      {{ "Back" | translate }}
-    </button>
-        <h3 class="font_24 text_dark fw-bold mb-0 text-center">BYOKUL DISTANCE SALES CONTRACT</h3>
-        <div class="d-md-block d-none"></div>
-      </div>
-      <hr class="about_hr" />
+  <main class="static-main min-height w-100 h-auto">
+    <div class="static-content">
+      <div *ngIf="selectedLanguage == 'en'">
+        <div class="d-flex align-items-center justify-content-between">
+          <button
+            (click)="back()"
+            type="button"
+            class="back-button bg-transparent border-0 font_16 fw_400 text_dark"
+          >
+            <img src="../../../../assets/images/school/arrow-left.svg" />
+            {{ "Back" | translate }}
+          </button>
+          <h3 class="font_24 text_dark fw-bold mb-0 text-center">
+            BYOKUL DISTANCE SALES CONTRACT
+          </h3>
+          <div class="d-md-block d-none"></div>
+        </div>
+        <hr class="about_hr" />
         <ul>
-        <li><strong>ARTICLE 1 - PARTIES</strong></li>
+          <li><strong>ARTICLE 1 - PARTIES</strong></li>
         </ul>
         <p>SELLER</p>
-        <p>Title &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : (SCHOOL NAME) (OR SCHOOL LINK)</p>
-        <p>Address &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :</p>
-        <p>Tax Office&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :</p>
-        <p>E-Mail&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :</p>
+        <p>
+          Title
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          : (SCHOOL NAME) (OR SCHOOL LINK)
+        </p>
+        <p>
+          Address
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          :
+        </p>
+        <p>
+          Tax
+          Office&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          :
+        </p>
+        <p>
+          E-Mail&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          :
+        </p>
         <p>___________________________________</p>
         <p>BUYER</p>
-        <p>Full Name / Title&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : [invoice-name]</p>
-        <p>TR No&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : [TR-ID-No]</p>
-        <p>Address&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : [invoice-address]</p>
-        <p>Phone&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : [phone]</p>
-        <p>E-Mail&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : [e-mail]</p>
+        <p>
+          Full Name / Title&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :
+          [invoice-name]
+        </p>
+        <p>
+          TR
+          No&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          : [TR-ID-No]
+        </p>
+        <p>
+          Address&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          : [invoice-address]
+        </p>
+        <p>
+          Phone&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          : [phone]
+        </p>
+        <p>
+          E-Mail&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          : [e-mail]
+        </p>
         <p>_____________________________________</p>
 
         <ul>
-        <li><strong>ARTICLE 2 - SUBJECT OF THE CONTRACT, SERVICE, PAYMENT AND DELIVERY</strong></li>
+          <li>
+            <strong
+              >ARTICLE 2 - SUBJECT OF THE CONTRACT, SERVICE, PAYMENT AND
+              DELIVERY</strong
+            >
+          </li>
         </ul>
 
-        <p>2.1 The subject of this contract is the determination of the rights and obligations of the parties and the provisions regarding the right to watch the said digital content within the scope of the service period purchased from this date including the purchase of the paid and/or free digital content, video, music, live TV broadcast, game and similar content services offered by Sahneport by the BUYER and the purchase date of the BUYER via the SELLER&rsquo;s address [www.byokul.com] and/or the application on mobile devices, smart televisions and similar devices.</p>
+        <p>
+          2.1 The subject of this contract is the determination of the rights
+          and obligations of the parties and the provisions regarding the right
+          to watch the said digital content within the scope of the service
+          period purchased from this date including the purchase of the paid
+          and/or free digital content, video, music, live TV broadcast, game and
+          similar content services offered by Sahneport by the BUYER and the
+          purchase date of the BUYER via the SELLER&rsquo;s address
+          [www.byokul.com] and/or the application on mobile devices, smart
+          televisions and similar devices.
+        </p>
 
-        <p>2.2 From the moment of payment, the BUYER has the right to watch the requested content on the internet at the address ([www.byokul.com]) and/or the application on their mobile device, smart television and similar devices, and at the end of the monitoring activity, access to the relevant content is terminated.</p>
+        <p>
+          2.2 From the moment of payment, the BUYER has the right to watch the
+          requested content on the internet at the address ([www.byokul.com])
+          and/or the application on their mobile device, smart television and
+          similar devices, and at the end of the monitoring activity, access to
+          the relevant content is terminated.
+        </p>
 
-        <p>2.3 The BUYER can get service directly from [www.byokul.com] address or through the application on the appropriate mobile devices by logging in with the user name and password information that they provided when registering to the site. After the service buyer approves the payment transaction, the product is delivered electronically via the website at the moment the payment is made.</p>
+        <p>
+          2.3 The BUYER can get service directly from [www.byokul.com] address
+          or through the application on the appropriate mobile devices by
+          logging in with the user name and password information that they
+          provided when registering to the site. After the service buyer
+          approves the payment transaction, the product is delivered
+          electronically via the website at the moment the payment is made.
+        </p>
 
-        <p>2.4 The BUYER purchases the digital content services subject to the contract from [www.byokul.com] with the intermediary virtual pos. Due to the unfair or unlawful use of the BUYER&rsquo;s credit card by unauthorized persons, not due to the BUYER&rsquo;s fault, it is not possible to return and/or exchange purchased content. The SELLER is not under any other liability, undertaking or responsibility regarding its sales and/or activities, except for the service fee to be paid to the contracted intermediary virtual pos company and/or iyzico. The BUYER accepts, declares and undertakes that the responsibility of the SELLER is limited to this article and that it cannot make any demands from the SELLER, regardless of the name, except for the liability limit in this article.</p>
+        <p>
+          2.4 The BUYER purchases the digital content services subject to the
+          contract from [www.byokul.com] with the intermediary virtual pos. Due
+          to the unfair or unlawful use of the BUYER&rsquo;s credit card by
+          unauthorized persons, not due to the BUYER&rsquo;s fault, it is not
+          possible to return and/or exchange purchased content. The SELLER is
+          not under any other liability, undertaking or responsibility regarding
+          its sales and/or activities, except for the service fee to be paid to
+          the contracted intermediary virtual pos company and/or iyzico. The
+          BUYER accepts, declares and undertakes that the responsibility of the
+          SELLER is limited to this article and that it cannot make any demands
+          from the SELLER, regardless of the name, except for the liability
+          limit in this article.
+        </p>
 
         <ul>
-        <li><strong>ARTICLE 3 - RIGHTS AND LIABILITIES OF THE PARTIES</strong></li>
+          <li>
+            <strong>ARTICLE 3 - RIGHTS AND LIABILITIES OF THE PARTIES</strong>
+          </li>
         </ul>
 
-        <p>3.1 The last access date determined by the founder of the virtual school established in byokul as of the date of establishment of the contract with predetermined prices and conditions within the license restrictions for the selected service category of the digital content services determined by the SELLER at its unilateral discretion and offered through the application at [www.byokul.com] and/or mobile devices, smart televisions and similar devices. When all the digital content is watched, the BUYER&rsquo;s right to access the digital content continues until the end of the specified period.</p>
+        <p>
+          3.1 The last access date determined by the founder of the virtual
+          school established in byokul as of the date of establishment of the
+          contract with predetermined prices and conditions within the license
+          restrictions for the selected service category of the digital content
+          services determined by the SELLER at its unilateral discretion and
+          offered through the application at [www.byokul.com] and/or mobile
+          devices, smart televisions and similar devices. When all the digital
+          content is watched, the BUYER&rsquo;s right to access the digital
+          content continues until the end of the specified period.
+        </p>
 
-        <p>3.2 The BUYER accepts and undertakes that all information (such as name, surname, TR identity number, address, telephone number) provided to the SELLER during membership creation and use of the services is correct and the SELLER is not responsible for any problems that may arise from incorrect or incomplete information when necessary. In case of a change in the BUYER&rsquo;s information, it is the BUYER&rsquo;s responsibility to update the said information.</p>
+        <p>
+          3.2 The BUYER accepts and undertakes that all information (such as
+          name, surname, TR identity number, address, telephone number) provided
+          to the SELLER during membership creation and use of the services is
+          correct and the SELLER is not responsible for any problems that may
+          arise from incorrect or incomplete information when necessary. In case
+          of a change in the BUYER&rsquo;s information, it is the BUYER&rsquo;s
+          responsibility to update the said information.
+        </p>
 
-        <p>3.3 The use of digital content services by the BUYER for purposes other than individual use, the transmission of digital content to third parties and/or institutions, their use and/or transfer to such persons and on the other hand, recording, photographing, copying, duplicating, modifying and publishing audio or video by the BUYER is prohibited pursuant to the Law on Intellectual and Artistic Works No. 5846. The rights subject to the contract cannot be made the subject of commercial purposes by the BUYER in any way. Otherwise, the BUYER accepts and undertakes that they will indemnify the SELLER for all damages.</p>
+        <p>
+          3.3 The use of digital content services by the BUYER for purposes
+          other than individual use, the transmission of digital content to
+          third parties and/or institutions, their use and/or transfer to such
+          persons and on the other hand, recording, photographing, copying,
+          duplicating, modifying and publishing audio or video by the BUYER is
+          prohibited pursuant to the Law on Intellectual and Artistic Works No.
+          5846. The rights subject to the contract cannot be made the subject of
+          commercial purposes by the BUYER in any way. Otherwise, the BUYER
+          accepts and undertakes that they will indemnify the SELLER for all
+          damages.
+        </p>
 
-        <p>3.4 In the event that the BUYER causes a violation, the SELLER shall pay a penalty of <strong>100,000 - TRY (hundred thousand Turkish Liras)</strong> for each violation, without prejudice <strong>to the rights of the SELLER</strong> regarding the pecuniary and non-pecuniary damage suffered and the rights regarding the surplus. Since the use of the contents, even partially or completely, during and after the broadcast, without the prior written permission of the seller, constitutes a crime at the same time, the BUYER will be required to notify the BUYER and demand a criminal sanction by making a criminal complaint.</p>
+        <p>
+          3.4 In the event that the BUYER causes a violation, the SELLER shall
+          pay a penalty of
+          <strong>100,000 - TRY (hundred thousand Turkish Liras)</strong> for
+          each violation, without prejudice
+          <strong>to the rights of the SELLER</strong> regarding the pecuniary
+          and non-pecuniary damage suffered and the rights regarding the
+          surplus. Since the use of the contents, even partially or completely,
+          during and after the broadcast, without the prior written permission
+          of the seller, constitutes a crime at the same time, the BUYER will be
+          required to notify the BUYER and demand a criminal sanction by making
+          a criminal complaint.
+        </p>
         <p><strong>&nbsp;</strong></p>
         <ul>
-        <li><strong>ARTICLE 4 - RIGHT OF WITHDRAWAL</strong></li>
+          <li><strong>ARTICLE 4 - RIGHT OF WITHDRAWAL</strong></li>
         </ul>
-   
-        <p>4.1 Pursuant to the clause (ğ) of Article 15 of the Distance Sales Regulation, &ldquo;There is no right of withdrawal in the contracts regarding the services performed instantly in the electronic environment or the intangible goods delivered immediately to the consumer&rdquo;, the BUYER has no right of withdrawal within the scope of this Contract, since the service sold is in the nature of electronic media and delivered instantly to the consumer.</p>
+
+        <p>
+          4.1 Pursuant to the clause (ğ) of Article 15 of the Distance Sales
+          Regulation, &ldquo;There is no right of withdrawal in the contracts
+          regarding the services performed instantly in the electronic
+          environment or the intangible goods delivered immediately to the
+          consumer&rdquo;, the BUYER has no right of withdrawal within the scope
+          of this Contract, since the service sold is in the nature of
+          electronic media and delivered instantly to the consumer.
+        </p>
 
         <ul>
-        <li><strong>ARTICLE 5 - TERMINATION OF CONTRACT</strong></li>
+          <li><strong>ARTICLE 5 - TERMINATION OF CONTRACT</strong></li>
         </ul>
 
-        <p>5.1 The SELLER cannot be held responsible for the BUYER&rsquo;s inability to access the content for any reason not caused by the SELLER for interruptions in service due to disruptions in the internet, quality problems, security disruptions and/or the emergence of a general disturbance in the country, war, terrorism, strike, general power outage, earthquake, flood, state of emergency, cyber-attack, devices infected with viruses, server-based problems, internet infrastructure or similar problems to be experienced due to force majeure and similar reasons.</p>
+        <p>
+          5.1 The SELLER cannot be held responsible for the BUYER&rsquo;s
+          inability to access the content for any reason not caused by the
+          SELLER for interruptions in service due to disruptions in the
+          internet, quality problems, security disruptions and/or the emergence
+          of a general disturbance in the country, war, terrorism, strike,
+          general power outage, earthquake, flood, state of emergency,
+          cyber-attack, devices infected with viruses, server-based problems,
+          internet infrastructure or similar problems to be experienced due to
+          force majeure and similar reasons.
+        </p>
 
-        <p>5.2 In case the BUYER cannot access the purchased content due to a technical problem caused by the SELLER, the BUYER must immediately notify the SELLER in writing of the malfunction. If the access problem caused by the SELLER is notified to the SELLER, the SELLER will fix the problem, and the time between the date of notification and the date the problem is resolved will be added in addition to the BUYER&rsquo;s usage period.</p>
+        <p>
+          5.2 In case the BUYER cannot access the purchased content due to a
+          technical problem caused by the SELLER, the BUYER must immediately
+          notify the SELLER in writing of the malfunction. If the access problem
+          caused by the SELLER is notified to the SELLER, the SELLER will fix
+          the problem, and the time between the date of notification and the
+          date the problem is resolved will be added in addition to the
+          BUYER&rsquo;s usage period.
+        </p>
 
-        <p>5.3 If it is accepted that the problem is caused by a technical problem caused by the SELLER and this problem is not resolved within a reasonable time, The BUYER has the right to terminate the contract for just cause because they cannot use the digital product they have purchased, to use their access right in another digital product, if they do not want this, to request a refund of the fee they have paid, deducting the amount that corresponds to the access time to the content.</p>
+        <p>
+          5.3 If it is accepted that the problem is caused by a technical
+          problem caused by the SELLER and this problem is not resolved within a
+          reasonable time, The BUYER has the right to terminate the contract for
+          just cause because they cannot use the digital product they have
+          purchased, to use their access right in another digital product, if
+          they do not want this, to request a refund of the fee they have paid,
+          deducting the amount that corresponds to the access time to the
+          content.
+        </p>
 
-        <p>5.4 In the event that the Contract is terminated by the BUYER, all kinds of price advantages and other gains obtained by the BUYER shall be deducted from the refunded price. In the event that the contract is terminated by the BUYER without a justified reason, the SELLER will not be subject to any refund.</p>
+        <p>
+          5.4 In the event that the Contract is terminated by the BUYER, all
+          kinds of price advantages and other gains obtained by the BUYER shall
+          be deducted from the refunded price. In the event that the contract is
+          terminated by the BUYER without a justified reason, the SELLER will
+          not be subject to any refund.
+        </p>
 
         <ul>
-        <li><strong>ARTICLE 6 - CONSUMER COMPLAINTS, REMEDIES AND NOTICES</strong></li>
+          <li>
+            <strong
+              >ARTICLE 6 - CONSUMER COMPLAINTS, REMEDIES AND NOTICES</strong
+            >
+          </li>
         </ul>
 
-        <p>6.1 The BUYER can submit their complaints regarding the service they have received or via e-mail address (<a href="mailto:support@byokul.com">support@byokul.com</a>).</p>
+        <p>
+          6.1 The BUYER can submit their complaints regarding the service they
+          have received or via e-mail address (<a
+            href="mailto:support@byokul.com"
+            >support@byokul.com</a
+          >).
+        </p>
 
-        <p>6.2 Provided that any notice or other notification to be made in accordance with this Contract is made in writing or electronically, fax, e-mail, registered e-mail or hand delivery, mail, courier or postal courier to the address of the SELLER in Article 1 of this Contract, and the address of the buyer in the Sales Contract, which is declared to be correct.</p>
+        <p>
+          6.2 Provided that any notice or other notification to be made in
+          accordance with this Contract is made in writing or electronically,
+          fax, e-mail, registered e-mail or hand delivery, mail, courier or
+          postal courier to the address of the SELLER in Article 1 of this
+          Contract, and the address of the buyer in the Sales Contract, which is
+          declared to be correct.
+        </p>
 
         <ul>
-        <li><strong>ARTICLE 7 - RESOLUTION OF DISPUTES</strong></li>
+          <li><strong>ARTICLE 7 - RESOLUTION OF DISPUTES</strong></li>
         </ul>
 
-        <p>7.1 In the applications to be made regarding the complaints and objections regarding the implementation of this Sales Contract, only ADANA arbitration committee for consumer problems or ADANA Consumer Court is authorized within the monetary limits determined by the Ministry in December every year.</p>
+        <p>
+          7.1 In the applications to be made regarding the complaints and
+          objections regarding the implementation of this Sales Contract, only
+          ADANA arbitration committee for consumer problems or ADANA Consumer
+          Court is authorized within the monetary limits determined by the
+          Ministry in December every year.
+        </p>
 
-        <p>7.2 In disputes arising from this contract, the books and documents of the SELLER and all kinds of records constitute definitive evidence, and only ADANA Courts and Enforcement Offices are authorized in case of any dispute or dispute.</p>
+        <p>
+          7.2 In disputes arising from this contract, the books and documents of
+          the SELLER and all kinds of records constitute definitive evidence,
+          and only ADANA Courts and Enforcement Offices are authorized in case
+          of any dispute or dispute.
+        </p>
 
-        <p>This Contract has been approved electronically within the framework of the terms and conditions set forth between the ABOVE parties.</p>
-     </div>
-
-     <div *ngIf="selectedLanguage == 'tr'">
-      <div class="d-flex align-items-center justify-content-between ">
-        <button
-        (click)="back()"
-        type="button"
-        class="back-button bg-transparent border-0 font_16 fw_400 text_dark">
-      <img src="../../../../assets/images/school/arrow-left.svg" />
-      {{ "Back" | translate }}
-    </button>
-        <h3 class="font_24 text_dark fw-bold mb-0 text-center">BYOKUL MESAFELİ SATIŞ S&Ouml;ZLEŞMESİ</h3>
-        <div class="d-md-block d-none"></div>
+        <p>
+          This Contract has been approved electronically within the framework of
+          the terms and conditions set forth between the ABOVE parties.
+        </p>
       </div>
-      <hr class="about_hr" />
+
+      <div *ngIf="selectedLanguage == 'tr'">
+        <div class="d-flex align-items-center justify-content-between">
+          <button
+            (click)="back()"
+            type="button"
+            class="back-button bg-transparent border-0 font_16 fw_400 text_dark"
+          >
+            <img src="../../../../assets/images/school/arrow-left.svg" />
+            {{ "Back" | translate }}
+          </button>
+          <h3 class="font_24 text_dark fw-bold mb-0 text-center">
+            BYOKUL MESAFELİ SATIŞ S&Ouml;ZLEŞMESİ
+          </h3>
+          <div class="d-md-block d-none"></div>
+        </div>
+        <hr class="about_hr" />
         <ul>
-        <li><strong>MADDE 1 - TARAFLAR</strong></li>
+          <li><strong>MADDE 1 - TARAFLAR</strong></li>
         </ul>
         <p>SATICI</p>
-        <p>&Uuml;nvan :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ( OKUL ADI )&nbsp;&nbsp; ( VEYA OKUL BAĞLANTI LİNKİ )</p>
+        <p>
+          &Uuml;nvan :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ( OKUL ADI )&nbsp;&nbsp; (
+          VEYA OKUL BAĞLANTI LİNKİ )
+        </p>
         <p>Adres :</p>
         <p>Vergi Dairesi :</p>
         <p>E-Posta :</p>
         <p>___________________________________</p>
         <p>ALICI&nbsp;</p>
-        <p>Ad Soyad / &Uuml;nvan :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [fatura-isim]</p>
-        <p>TC No:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [tc-kimlik-no]</p>
-        <p>Adres :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [fatura-adres]</p>
-        <p>Telefon :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [telefon]</p>
-        <p>E-Posta :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [eposta]</p>
+        <p>
+          Ad Soyad / &Uuml;nvan
+          :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [fatura-isim]
+        </p>
+        <p>
+          TC
+          No:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          [tc-kimlik-no]
+        </p>
+        <p>
+          Adres
+          :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          [fatura-adres]
+        </p>
+        <p>
+          Telefon
+          :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          [telefon]
+        </p>
+        <p>
+          E-Posta
+          :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          [eposta]
+        </p>
         <p>_____________________________________</p>
 
         <ul>
-        <li><strong>MADDE 2 - S&Ouml;ZLEŞMENİN KONUSU, HİZMET, &Ouml;DEME VE TESLİMAT</strong></li>
+          <li>
+            <strong
+              >MADDE 2 - S&Ouml;ZLEŞMENİN KONUSU, HİZMET, &Ouml;DEME VE
+              TESLİMAT</strong
+            >
+          </li>
         </ul>
 
-        <p>2.1 İşbu s&ouml;zleşmenin konusu SATICI&rsquo;nın [www.byokul.com] adresinden ve/veya mobil cihaz, akıllı televizyon ve benzeri cihazlar &uuml;zerinde yer alan uygulaması &uuml;zerinden Sahneport&rsquo;un sunduğu &uuml;cretli ve/veya &uuml;cretsiz dijital i&ccedil;erik, video, m&uuml;zik, canlı TV yayını, oyun ve benzeri i&ccedil;erik hizmetlerinin ALICI tarafından satın alınması ve&nbsp; ALICI&rsquo;nın satın alma tarihi de dahil olmak &uuml;zere&nbsp; bu tarihten itibaren satın alınan hizmet&nbsp; s&uuml;resi kapsamında s&ouml;z konusu dijital i&ccedil;erikleri izleme hakkına sahip olmasına dair h&uuml;k&uuml;mler ile tarafların hak ve y&uuml;k&uuml;ml&uuml;l&uuml;klerinin belirlenmesidir.</p>
+        <p>
+          2.1 İşbu s&ouml;zleşmenin konusu SATICI&rsquo;nın [www.byokul.com]
+          adresinden ve/veya mobil cihaz, akıllı televizyon ve benzeri cihazlar
+          &uuml;zerinde yer alan uygulaması &uuml;zerinden Sahneport&rsquo;un
+          sunduğu &uuml;cretli ve/veya &uuml;cretsiz dijital i&ccedil;erik,
+          video, m&uuml;zik, canlı TV yayını, oyun ve benzeri i&ccedil;erik
+          hizmetlerinin ALICI tarafından satın alınması ve&nbsp; ALICI&rsquo;nın
+          satın alma tarihi de dahil olmak &uuml;zere&nbsp; bu tarihten itibaren
+          satın alınan hizmet&nbsp; s&uuml;resi kapsamında s&ouml;z konusu
+          dijital i&ccedil;erikleri izleme hakkına sahip olmasına dair
+          h&uuml;k&uuml;mler ile tarafların hak ve
+          y&uuml;k&uuml;ml&uuml;l&uuml;klerinin belirlenmesidir.
+        </p>
 
-        <p>2.2 ALICI, &ouml;deme yaptığı andan itibaren ([www.byokul.com]) adresinde ve/veya mobil cihaz, akıllı televizyon ve benzeri cihazlarında bulunan uygulamasında yer alan talep ettiği i&ccedil;eriği internet &uuml;zerinden izleme hakkı edinmekte olup izleme faaliyeti sonunda ilgili i&ccedil;eriğe erişimi sonlanmaktadır.</p>
+        <p>
+          2.2 ALICI, &ouml;deme yaptığı andan itibaren ([www.byokul.com])
+          adresinde ve/veya mobil cihaz, akıllı televizyon ve benzeri
+          cihazlarında bulunan uygulamasında yer alan talep ettiği
+          i&ccedil;eriği internet &uuml;zerinden izleme hakkı edinmekte olup
+          izleme faaliyeti sonunda ilgili i&ccedil;eriğe erişimi sonlanmaktadır.
+        </p>
 
-        <p>2.3 ALICI siteye kayıt olurken bildirdiği kullanıcı adı ve şifre bilgileri ile giriş yaparak doğrudan [www.byokul.com] adresinden veya uygun mobil cihazlarda yer alan uygulaması &uuml;zerinden hizmet alabilir. Hizmet alıcının &ouml;deme işlemine onay vermesi sonrasında &ouml;demenin ger&ccedil;ekleştiği anda internet sitesi &uuml;zerinden &uuml;r&uuml;n elektronik olarak teslim edilmektedir.</p>
+        <p>
+          2.3 ALICI siteye kayıt olurken bildirdiği kullanıcı adı ve şifre
+          bilgileri ile giriş yaparak doğrudan [www.byokul.com] adresinden veya
+          uygun mobil cihazlarda yer alan uygulaması &uuml;zerinden hizmet
+          alabilir. Hizmet alıcının &ouml;deme işlemine onay vermesi sonrasında
+          &ouml;demenin ger&ccedil;ekleştiği anda internet sitesi &uuml;zerinden
+          &uuml;r&uuml;n elektronik olarak teslim edilmektedir.
+        </p>
 
-        <p>2.4 ALICI S&ouml;zleşme konusu dijital i&ccedil;erik hizmetlerini [www.byokul.com] adresinden aracı sanal pos ile satın almaktadır.&nbsp; ALICI'ya ait kredi kartının ALICI'nın kusurundan kaynaklanmayan bir şekilde yetkisiz kişilerce haksız veya hukuka aykırı olarak kullanılması nedeni ile satın alınan i&ccedil;eriğin iadesi ve/veya değişimi m&uuml;mk&uuml;n değildir.&nbsp; SATICI, anlaşmalı olduğu aracı sanal pos şirketi ve/veya iyzico tarafına &ouml;deyeceği hizmet bedeli dışında satışlarına ve/veya etkinliklere ilişkin olarak başkaca hi&ccedil;bir y&uuml;k&uuml;ml&uuml;l&uuml;k, taahh&uuml;t ve sorumluluk altında değildir. ALICI, SATICI&rsquo;nın sorumluluğunun bu madde ile sınırlı olduğunu ve her ne nam adı altında olursa olsun, işbu maddedeki sorumluluk limiti dışında, SATICI&rsquo;dan talepte bulunamayacağını kabul, beyan ve taahh&uuml;t etmektedir.</p>
+        <p>
+          2.4 ALICI S&ouml;zleşme konusu dijital i&ccedil;erik hizmetlerini
+          [www.byokul.com] adresinden aracı sanal pos ile satın
+          almaktadır.&nbsp; ALICI'ya ait kredi kartının ALICI'nın kusurundan
+          kaynaklanmayan bir şekilde yetkisiz kişilerce haksız veya hukuka
+          aykırı olarak kullanılması nedeni ile satın alınan i&ccedil;eriğin
+          iadesi ve/veya değişimi m&uuml;mk&uuml;n değildir.&nbsp; SATICI,
+          anlaşmalı olduğu aracı sanal pos şirketi ve/veya iyzico tarafına
+          &ouml;deyeceği hizmet bedeli dışında satışlarına ve/veya etkinliklere
+          ilişkin olarak başkaca hi&ccedil;bir y&uuml;k&uuml;ml&uuml;l&uuml;k,
+          taahh&uuml;t ve sorumluluk altında değildir. ALICI, SATICI&rsquo;nın
+          sorumluluğunun bu madde ile sınırlı olduğunu ve her ne nam adı altında
+          olursa olsun, işbu maddedeki sorumluluk limiti dışında,
+          SATICI&rsquo;dan talepte bulunamayacağını kabul, beyan ve taahh&uuml;t
+          etmektedir.
+        </p>
         <p><strong>&nbsp;</strong></p>
         <ul>
-        <li><strong>MADDE 3 - TARAFLARIN HAK VE Y&Uuml;K&Uuml;ML&Uuml;L&Uuml;KLERİ</strong></li>
+          <li>
+            <strong
+              >MADDE 3 - TARAFLARIN HAK VE
+              Y&Uuml;K&Uuml;ML&Uuml;L&Uuml;KLERİ</strong
+            >
+          </li>
         </ul>
 
-        <p>3.1 SATICI, tek taraflı takdir hakkına bağlı olarak belirlediği ve [www.byokul.com] adresinde ve/veya mobil cihaz, akıllı televizyon ve benzeri cihazlar &uuml;zerinde yer alan uygulaması &uuml;zerinden sunduğu dijital i&ccedil;erik hizmetlerini, se&ccedil;ilen hizmet kategorisine ilişkin lisans sınırlamaları d&acirc;hilinde, &ouml;nceden belirlenmiş bedel ve şartlarda s&ouml;zleşmenin kurulması tarihi itibariyle byokul da kurulmuş olan sanal okul kurucusunun belirlediği son erişim tarihi . Dijital i&ccedil;eriğin tamamı izlendiğinde belirlenmiş olan&nbsp; s&uuml;re sonuna kadar&nbsp; ALICI&rsquo;nın dijital i&ccedil;eriğe erişim hakkı devam eder.</p>
+        <p>
+          3.1 SATICI, tek taraflı takdir hakkına bağlı olarak belirlediği ve
+          [www.byokul.com] adresinde ve/veya mobil cihaz, akıllı televizyon ve
+          benzeri cihazlar &uuml;zerinde yer alan uygulaması &uuml;zerinden
+          sunduğu dijital i&ccedil;erik hizmetlerini, se&ccedil;ilen hizmet
+          kategorisine ilişkin lisans sınırlamaları d&acirc;hilinde,
+          &ouml;nceden belirlenmiş bedel ve şartlarda s&ouml;zleşmenin kurulması
+          tarihi itibariyle byokul da kurulmuş olan sanal okul kurucusunun
+          belirlediği son erişim tarihi . Dijital i&ccedil;eriğin tamamı
+          izlendiğinde belirlenmiş olan&nbsp; s&uuml;re sonuna kadar&nbsp;
+          ALICI&rsquo;nın dijital i&ccedil;eriğe erişim hakkı devam eder.
+        </p>
 
-        <p>3.2 ALICI, &uuml;yelik oluşturulması ve hizmetlerin kullanılması sırasında, SATICI&rsquo;ya bildirdiği t&uuml;m bilgilerin (ad, soyad,&nbsp; T.C. kimlik no, adres, telefon numarası gibi) doğru olduğunu ve bu bilgilerin gerekli olduğu durumlarda hatalı veya noksan olmasından kaynaklanabilecek sorunlardan SATICI&rsquo;nın bir sorumluluğu bulunmadığını kabul ve taahh&uuml;t eder. ALICI&rsquo;nın bilgilerinde değişiklik olması halinde s&ouml;z konusu bilgilerin g&uuml;ncellenmesi ALICI&rsquo;nın sorumluluğundadır.</p>
+        <p>
+          3.2 ALICI, &uuml;yelik oluşturulması ve hizmetlerin kullanılması
+          sırasında, SATICI&rsquo;ya bildirdiği t&uuml;m bilgilerin (ad,
+          soyad,&nbsp; T.C. kimlik no, adres, telefon numarası gibi) doğru
+          olduğunu ve bu bilgilerin gerekli olduğu durumlarda hatalı veya noksan
+          olmasından kaynaklanabilecek sorunlardan SATICI&rsquo;nın bir
+          sorumluluğu bulunmadığını kabul ve taahh&uuml;t eder. ALICI&rsquo;nın
+          bilgilerinde değişiklik olması halinde s&ouml;z konusu bilgilerin
+          g&uuml;ncellenmesi ALICI&rsquo;nın sorumluluğundadır.
+        </p>
 
-        <p>3.3 ALICI tarafından Dijital i&ccedil;erik hizmetlerinin bireysel kullanım amacı dışında kullanılması kullandırılması, dijital i&ccedil;eriklerin 3. kişi ve/veya kurumlara iletilmesi, bu kişilerce kullandırılması ve/veya bu kişilere devredilmesi, diğer taraftan ALICI tarafından ses ya da g&ouml;r&uuml;nt&uuml; kaydı almak, fotoğrafını &ccedil;ekmek, kopyalamak, &ccedil;oğaltmak, değiştirmek ve yayınlamak&nbsp;&nbsp; 5846 Sayılı Fikir ve Sanat Eserleri Kanunu uyarınca yasaktır. S&ouml;zleşme konusu haklar ALICI tarafından hi&ccedil;bir surette ticari ama&ccedil;lara konu yapılamaz.&nbsp; Aksi halde ALICI SATICI&rsquo;nın uğrayacağı t&uuml;m zararları tazmin edeceğini kabul ve taahh&uuml;t eder.</p>
+        <p>
+          3.3 ALICI tarafından Dijital i&ccedil;erik hizmetlerinin bireysel
+          kullanım amacı dışında kullanılması kullandırılması, dijital
+          i&ccedil;eriklerin 3. kişi ve/veya kurumlara iletilmesi, bu kişilerce
+          kullandırılması ve/veya bu kişilere devredilmesi, diğer taraftan ALICI
+          tarafından ses ya da g&ouml;r&uuml;nt&uuml; kaydı almak, fotoğrafını
+          &ccedil;ekmek, kopyalamak, &ccedil;oğaltmak, değiştirmek ve
+          yayınlamak&nbsp;&nbsp; 5846 Sayılı Fikir ve Sanat Eserleri Kanunu
+          uyarınca yasaktır. S&ouml;zleşme konusu haklar ALICI tarafından
+          hi&ccedil;bir surette ticari ama&ccedil;lara konu yapılamaz.&nbsp;
+          Aksi halde ALICI SATICI&rsquo;nın uğrayacağı t&uuml;m zararları tazmin
+          edeceğini kabul ve taahh&uuml;t eder.
+        </p>
 
-        <p>3.4 ALICI aykırılığa sebebiyet vermesi halinde beher aykırılık i&ccedil;in, SATICI&rsquo;nın uğradığı maddi manevi zarara ilişkin hakları ile fazlaya dair hakları saklı kalmak kaydıyla, SATICI&rsquo;ya 100,000 - TL (y&uuml;zbin T&Uuml;RKLİRASI) cezai şart &ouml;deyecektir. ALICI&nbsp; tarafından, &ouml;nceden satıcıdan yazılı izin alınmadan kısmen veya tamamen, yayın esnasında ve sonrasında bile olsa i&ccedil;eriklerin kullanılması aynı zamanda&nbsp; su&ccedil; teşkil ettiğinden ALICI&nbsp; hakkında gerekli ihbar ve su&ccedil; duyurusunda bulunularak cezai m&uuml;eyyide uygulanması talep edilecektir.</p>
+        <p>
+          3.4 ALICI aykırılığa sebebiyet vermesi halinde beher aykırılık
+          i&ccedil;in, SATICI&rsquo;nın uğradığı maddi manevi zarara ilişkin
+          hakları ile fazlaya dair hakları saklı kalmak kaydıyla,
+          SATICI&rsquo;ya 100,000 - TL (y&uuml;zbin T&Uuml;RKLİRASI) cezai şart
+          &ouml;deyecektir. ALICI&nbsp; tarafından, &ouml;nceden satıcıdan
+          yazılı izin alınmadan kısmen veya tamamen, yayın esnasında ve
+          sonrasında bile olsa i&ccedil;eriklerin kullanılması aynı
+          zamanda&nbsp; su&ccedil; teşkil ettiğinden ALICI&nbsp; hakkında
+          gerekli ihbar ve su&ccedil; duyurusunda bulunularak cezai
+          m&uuml;eyyide uygulanması talep edilecektir.
+        </p>
 
         <ul>
-        <li><strong>MADDE 4 - CAYMA HAKKI</strong></li>
+          <li><strong>MADDE 4 - CAYMA HAKKI</strong></li>
         </ul>
 
-        <p>4.1 Mesafeli Satışlar Y&ouml;netmeliği&rsquo;nin 15. Maddesinin (ğ) bendi &ldquo;Elektronik ortamda anında ifa edilen hizmetler veya t&uuml;keticiye anında teslim edilen gayrimaddi mallara ilişkin s&ouml;zleşmelerde cayma hakkı bulunmamaktadır.&rdquo; h&uuml;km&uuml; gereği satışı ger&ccedil;ekleştirilen hizmet elektronik ortamda ifa edilen ve t&uuml;keticiye anında teslim edilen nitelikte olduğundan işbu S&ouml;zleşme kapsamında ALICI&rsquo;nın cayma hakkı bulunmamaktadır</p>
+        <p>
+          4.1 Mesafeli Satışlar Y&ouml;netmeliği&rsquo;nin 15. Maddesinin (ğ)
+          bendi &ldquo;Elektronik ortamda anında ifa edilen hizmetler veya
+          t&uuml;keticiye anında teslim edilen gayrimaddi mallara ilişkin
+          s&ouml;zleşmelerde cayma hakkı bulunmamaktadır.&rdquo; h&uuml;km&uuml;
+          gereği satışı ger&ccedil;ekleştirilen hizmet elektronik ortamda ifa
+          edilen ve t&uuml;keticiye anında teslim edilen nitelikte olduğundan
+          işbu S&ouml;zleşme kapsamında ALICI&rsquo;nın cayma hakkı
+          bulunmamaktadır
+        </p>
 
         <ul>
-        <li><strong>MADDE 5 - S&Ouml;ZLEŞMENİN FESHİ</strong></li>
+          <li><strong>MADDE 5 - S&Ouml;ZLEŞMENİN FESHİ</strong></li>
         </ul>
 
-        <p>5.1 SATICI, internette meydana gelen aksaklıklar nedeniyle hizmette yaşanacak kesinti, kalite problemlerinden, g&uuml;venlik aksaklıklarından ve/veya &uuml;lkede genel bir karışıklığın ortaya &ccedil;ıkması savaş, ter&ouml;r, grev, genel elektrik kesintisi, deprem, su baskını, olağan&uuml;st&uuml; hal, siber saldırı, cihazlara vir&uuml;s bulaşmış olması, sunucu tabanlı sorunlar, internet altyapısı veya benzeri bir m&uuml;cbir sebeple yaşanacak sorunlardan ve benzeri sebeplerle&nbsp; SATICI&rsquo;dan kaynaklanmayan herhangi bir sebeple ALICI&rsquo;nın i&ccedil;eriğe erişememesinden&nbsp; sorumlu tutulamaz.</p>
+        <p>
+          5.1 SATICI, internette meydana gelen aksaklıklar nedeniyle hizmette
+          yaşanacak kesinti, kalite problemlerinden, g&uuml;venlik
+          aksaklıklarından ve/veya &uuml;lkede genel bir karışıklığın ortaya
+          &ccedil;ıkması savaş, ter&ouml;r, grev, genel elektrik kesintisi,
+          deprem, su baskını, olağan&uuml;st&uuml; hal, siber saldırı, cihazlara
+          vir&uuml;s bulaşmış olması, sunucu tabanlı sorunlar, internet
+          altyapısı veya benzeri bir m&uuml;cbir sebeple yaşanacak sorunlardan
+          ve benzeri sebeplerle&nbsp; SATICI&rsquo;dan kaynaklanmayan herhangi
+          bir sebeple ALICI&rsquo;nın i&ccedil;eriğe erişememesinden&nbsp;
+          sorumlu tutulamaz.
+        </p>
 
-        <p>5.2 ALICI&rsquo;nın satın aldığı i&ccedil;eriğe SATICI&rsquo;dan kaynaklı teknik sorun sebebi ile erişememesi halinde, ALICI&rsquo;nın yaşanan aksaklığı yazılı olarak SATICI&rsquo;ya derhal bildirmelidir. SATICI&rsquo;dan kaynaklanan erişim problemi SATICI&rsquo;ya bildirildiği takdirde SATICI tarafından aksaklık giderilecek, bildirimin yapıldığı tarih ile problemin giderildiği tarih arasında ge&ccedil;irilen s&uuml;re, ALICI&rsquo;nın kullanım s&uuml;resine ek olarak ilave edilecektir.</p>
+        <p>
+          5.2 ALICI&rsquo;nın satın aldığı i&ccedil;eriğe SATICI&rsquo;dan
+          kaynaklı teknik sorun sebebi ile erişememesi halinde, ALICI&rsquo;nın
+          yaşanan aksaklığı yazılı olarak SATICI&rsquo;ya derhal bildirmelidir.
+          SATICI&rsquo;dan kaynaklanan erişim problemi SATICI&rsquo;ya
+          bildirildiği takdirde SATICI tarafından aksaklık giderilecek,
+          bildirimin yapıldığı tarih ile problemin giderildiği tarih arasında
+          ge&ccedil;irilen s&uuml;re, ALICI&rsquo;nın kullanım s&uuml;resine ek
+          olarak ilave edilecektir.
+        </p>
 
-        <p>5.3 Problemin SATICIdan kaynaklanan teknik sorun sebebiyle yaşandığı kabul edilirse ve işbu problem makul s&uuml;rede giderilmezse, ALICI satın almış olduğu dijital &uuml;r&uuml;n&uuml; kullanamaması nedeni ile s&ouml;zleşmeyi haklı nedenle feshetme, erişim hakkını başka bir dijital &uuml;r&uuml;nde kullanma, bunu istemediği takdirde &ouml;demiş olduğu &uuml;cretin i&ccedil;eriğe erişilebilir s&uuml;relere denk gelen meblağ d&uuml;ş&uuml;lerek iadesini isteme haklarına sahiptir.</p>
+        <p>
+          5.3 Problemin SATICIdan kaynaklanan teknik sorun sebebiyle yaşandığı
+          kabul edilirse ve işbu problem makul s&uuml;rede giderilmezse, ALICI
+          satın almış olduğu dijital &uuml;r&uuml;n&uuml; kullanamaması nedeni
+          ile s&ouml;zleşmeyi haklı nedenle feshetme, erişim hakkını başka bir
+          dijital &uuml;r&uuml;nde kullanma, bunu istemediği takdirde
+          &ouml;demiş olduğu &uuml;cretin i&ccedil;eriğe erişilebilir
+          s&uuml;relere denk gelen meblağ d&uuml;ş&uuml;lerek iadesini isteme
+          haklarına sahiptir.
+        </p>
 
-        <p>5.4 ALICI&nbsp; tarafından S&ouml;zleşmenin feshedilmesi durumunda, ALICI&rsquo;nın faydalandığı her t&uuml;rl&uuml; fiyat avantajları ile elde ettiği diğer kazanımlar da iade edilecek bedelden mahsup edilecektir. S&ouml;zleşmenin ALICI tarafından haklı bir neden olmaksızın feshi halinde SATICI&rsquo;nın herhangi bir &uuml;cret iadesi s&ouml;z konusu olmayacaktır.</p>
+        <p>
+          5.4 ALICI&nbsp; tarafından S&ouml;zleşmenin feshedilmesi durumunda,
+          ALICI&rsquo;nın faydalandığı her t&uuml;rl&uuml; fiyat avantajları ile
+          elde ettiği diğer kazanımlar da iade edilecek bedelden mahsup
+          edilecektir. S&ouml;zleşmenin ALICI tarafından haklı bir neden
+          olmaksızın feshi halinde SATICI&rsquo;nın herhangi bir &uuml;cret
+          iadesi s&ouml;z konusu olmayacaktır.
+        </p>
 
         <ul>
-        <li><strong>MADDE 6 - T&Uuml;KETİCİ ŞİK&Acirc;YETLERİ &Ccedil;&Ouml;Z&Uuml;M YOLLARI VE BİLDİRİMLER</strong></li>
+          <li>
+            <strong
+              >MADDE 6 - T&Uuml;KETİCİ ŞİK&Acirc;YETLERİ &Ccedil;&Ouml;Z&Uuml;M
+              YOLLARI VE BİLDİRİMLER</strong
+            >
+          </li>
         </ul>
-        <p>6.1 ALICI, aldığı hizmete ilişkin şik&acirc;yetlerini veya (support@byokul.com) e-posta adresi &uuml;zerinden iletebilir.</p>
-        <p>6.2 İşbu S&ouml;zleşme&rsquo;ye g&ouml;re yapılacak olan her t&uuml;rl&uuml; ihbar veya diğer bildirimler yazılı veya elektronik ortamda yapılmak kaydıyla, faks, elektronik posta, kayıtlı elektronik posta ya da elden teslim, posta, kargo veya posta kuryesiyle SATICI&rsquo;nın işbu S&ouml;zleşme&rsquo;nin Madde 1&rsquo;de bulunan adresine, alıcının ise doğruluğunu beyan ettiği, Satış S&ouml;zleşmesinde mevcut adreslerine g&ouml;nderilecektir.</p>
+        <p>
+          6.1 ALICI, aldığı hizmete ilişkin şik&acirc;yetlerini veya
+          (support@byokul.com) e-posta adresi &uuml;zerinden iletebilir.
+        </p>
+        <p>
+          6.2 İşbu S&ouml;zleşme&rsquo;ye g&ouml;re yapılacak olan her
+          t&uuml;rl&uuml; ihbar veya diğer bildirimler yazılı veya elektronik
+          ortamda yapılmak kaydıyla, faks, elektronik posta, kayıtlı elektronik
+          posta ya da elden teslim, posta, kargo veya posta kuryesiyle
+          SATICI&rsquo;nın işbu S&ouml;zleşme&rsquo;nin Madde 1&rsquo;de bulunan
+          adresine, alıcının ise doğruluğunu beyan ettiği, Satış
+          S&ouml;zleşmesinde mevcut adreslerine g&ouml;nderilecektir.
+        </p>
         <ul>
-        <li><strong>MADDE 7 - UYUŞMAZLIKLARIN &Ccedil;&Ouml;Z&Uuml;M&Uuml;</strong></li>
+          <li>
+            <strong
+              >MADDE 7 - UYUŞMAZLIKLARIN &Ccedil;&Ouml;Z&Uuml;M&Uuml;</strong
+            >
+          </li>
         </ul>
 
-        <p>7.1 İşbu Satış S&ouml;zleşmesi&rsquo;nin uygulanmasına ilişkin şik&acirc;yet ve itirazlar konusunda yapılacak başvurularda, Bakanlık&ccedil;a her yıl Aralık ayında belirlenen parasal sınırlar d&acirc;hilinde, sadece ADANA t&uuml;ketici sorunları hakem heyeti veya ADANA T&uuml;ketici Mahkemesi yetkilidir.</p>
+        <p>
+          7.1 İşbu Satış S&ouml;zleşmesi&rsquo;nin uygulanmasına ilişkin
+          şik&acirc;yet ve itirazlar konusunda yapılacak başvurularda,
+          Bakanlık&ccedil;a her yıl Aralık ayında belirlenen parasal sınırlar
+          d&acirc;hilinde, sadece ADANA t&uuml;ketici sorunları hakem heyeti
+          veya ADANA T&uuml;ketici Mahkemesi yetkilidir.
+        </p>
 
-        <p>7.2 İşbu s&ouml;zleşmeden kaynaklı uyuşmazlıklarda SATICI&rsquo;nın defter ve belgeleri ile her t&uuml;rl&uuml; kayıtlarının kesin delil teşkil eder ve her t&uuml;rl&uuml; uyuşmazlık ve ihtilaf vukuunda sadece ADANA Mahkemeleri ve İcra Daireleri yetkilidir.</p>
+        <p>
+          7.2 İşbu s&ouml;zleşmeden kaynaklı uyuşmazlıklarda SATICI&rsquo;nın
+          defter ve belgeleri ile her t&uuml;rl&uuml; kayıtlarının kesin delil
+          teşkil eder ve her t&uuml;rl&uuml; uyuşmazlık ve ihtilaf vukuunda
+          sadece ADANA Mahkemeleri ve İcra Daireleri yetkilidir.
+        </p>
 
-        <p>İşbu S&ouml;zleşme YUKARIDAKİ taraflar arasında belirtilen esas ve şartlar &ccedil;er&ccedil;evesinde elektronik olarak onaylanmıştır.</p>
-        
-     </div>
-
-     <div *ngIf="selectedLanguage == 'ar'">
-      <div class="d-flex align-items-center justify-content-between ">
-        <button
-        (click)="back()"
-        type="button"
-        class="back-button bg-transparent border-0 font_16 fw_400 text_dark">
-      <img src="../../../../assets/images/school/arrow-left.svg" />
-      {{ "Back" | translate }}
-    </button>
-        <h3 class="font_24 text_dark fw-bold mb-0 text-center">>عقد BYOKUL للبيع عن بعد</h3>
-        <div class="d-md-block d-none"></div>
+        <p>
+          İşbu S&ouml;zleşme YUKARIDAKİ taraflar arasında belirtilen esas ve
+          şartlar &ccedil;er&ccedil;evesinde elektronik olarak onaylanmıştır.
+        </p>
       </div>
-      <hr class="about_hr" />
+
+      <div *ngIf="selectedLanguage == 'ar'">
+        <div class="d-flex align-items-center justify-content-between">
+          <button
+            (click)="back()"
+            type="button"
+            class="back-button bg-transparent border-0 font_16 fw_400 text_dark"
+          >
+            <img src="../../../../assets/images/school/arrow-left.svg" />
+            {{ "Back" | translate }}
+          </button>
+          <h3 class="font_24 text_dark fw-bold mb-0 text-center">
+            >عقد BYOKUL للبيع عن بعد
+          </h3>
+          <div class="d-md-block d-none"></div>
+        </div>
+        <hr class="about_hr" />
         <ul>
-        <li>المادة 1 - الأطراف</li>
+          <li>المادة 1 - الأطراف</li>
         </ul>
         <p>البائع</p>
         <p>الاسم : ( اسم المدرسة ) ( أو رابط المدرسة )</p>
@@ -217,172 +600,480 @@
         <p>البريد الإلكتروني : [البريد الإلكتروني]</p>
         <p>_____________________________________</p>
         <ul>
-        <li>المادة 2 - موضوع العقد والخدمة والدفع والتسليم</li>
+          <li>المادة 2 - موضوع العقد والخدمة والدفع والتسليم</li>
         </ul>
 
-        <p>2.1 موضوع هذا العقد هو شراء المشتري للمحتوى الرقمي المدفوع و / أو المجاني والفيديو والموسيقى والبث التلفزيوني المباشر والألعاب وخدمات المحتوى المماثلة التي تقدمها Sahneport من خلال عنوان البائع [www.byokul.com] و / أو تطبيقه على الأجهزة المحمولة والتلفزيون الذكي والأجهزة المماثلة، وتحديد حقوق والتزامات الأطراف فيما يتعلق بحق للمشتري مشاهدة المحتويات الرقمية المذكورة في نطاق فترة الخدمة المشتراة اعتبارا من هذا التاريخ، بما في ذلك تاريخ الشراء.</p>
+        <p>
+          2.1 موضوع هذا العقد هو شراء المشتري للمحتوى الرقمي المدفوع و / أو
+          المجاني والفيديو والموسيقى والبث التلفزيوني المباشر والألعاب وخدمات
+          المحتوى المماثلة التي تقدمها Sahneport من خلال عنوان البائع
+          [www.byokul.com] و / أو تطبيقه على الأجهزة المحمولة والتلفزيون الذكي
+          والأجهزة المماثلة، وتحديد حقوق والتزامات الأطراف فيما يتعلق بحق
+          للمشتري مشاهدة المحتويات الرقمية المذكورة في نطاق فترة الخدمة المشتراة
+          اعتبارا من هذا التاريخ، بما في ذلك تاريخ الشراء.
+        </p>
 
-        <p>2.2 يحصل المشتري على الحق في مشاهدة المحتوى الذي يطلبه على الإنترنت على العنوان ([www.byokul.com]) و / أو في التطبيق على جهازه المحمول والتلفزيون الذكي والأجهزة المماثلة من لحظة قيامه بالدفع، ويتم إنهاء وصوله إلى المحتوى ذي الصلة في نهاية نشاط المشاهدة.</p>
+        <p>
+          2.2 يحصل المشتري على الحق في مشاهدة المحتوى الذي يطلبه على الإنترنت
+          على العنوان ([www.byokul.com]) و / أو في التطبيق على جهازه المحمول
+          والتلفزيون الذكي والأجهزة المماثلة من لحظة قيامه بالدفع، ويتم إنهاء
+          وصوله إلى المحتوى ذي الصلة في نهاية نشاط المشاهدة.
+        </p>
 
-        <p>2.3 يمكن للمشتري تلقي الخدمة مباشرة من [www.byokul.com] أو من خلال التطبيق على الأجهزة المحمولة المناسبة عن طريق تسجيل الدخول باستخدام معلومات اسم المستخدم وكلمة المرور المقدمة عند التسجيل على الموقع. بعد موافقة مشتري الخدمة على عملية الدفع، يتم تسليم المنتج إلكترونيا عبر الموقع الإلكتروني في وقت الدفع.</p>
+        <p>
+          2.3 يمكن للمشتري تلقي الخدمة مباشرة من [www.byokul.com] أو من خلال
+          التطبيق على الأجهزة المحمولة المناسبة عن طريق تسجيل الدخول باستخدام
+          معلومات اسم المستخدم وكلمة المرور المقدمة عند التسجيل على الموقع. بعد
+          موافقة مشتري الخدمة على عملية الدفع، يتم تسليم المنتج إلكترونيا عبر
+          الموقع الإلكتروني في وقت الدفع.
+        </p>
 
-        <p>2.4 يشتري المشتري خدمات المحتوى الرقمي الخاضعة للعقد من [www.byokul.com] مع نقاط البيع الافتراضية الوسيطة. لا يمكن إرجاع و / أو تبديل المحتوى الذي تم شراؤه بسبب الاستخدام غير العادل أو غير القانوني لبطاقة ائتمان المشتري من قبل أشخاص غير مصرح لهم بطريقة لا تنتج عن خطأ المشتري. لا يخضع البائع لأي التزام أو تعهد أو مسؤولية أخرى فيما يتعلق بمبيعاته و / أو أنشطته بخلاف رسوم الخدمة التي يتعين دفعها لشركة نقاط البيع الافتراضية و / أو طرف iyzico . يقبل المشتري ويعلن ويتعهد بأن مسؤولية البائع تقتصر على هذه المادة وأنه لا يمكنه تقديم مطالبة من البائع تحت أي اسم، باستثناء حدود المسؤولية في هذه المادة.</p>
+        <p>
+          2.4 يشتري المشتري خدمات المحتوى الرقمي الخاضعة للعقد من
+          [www.byokul.com] مع نقاط البيع الافتراضية الوسيطة. لا يمكن إرجاع و /
+          أو تبديل المحتوى الذي تم شراؤه بسبب الاستخدام غير العادل أو غير
+          القانوني لبطاقة ائتمان المشتري من قبل أشخاص غير مصرح لهم بطريقة لا
+          تنتج عن خطأ المشتري. لا يخضع البائع لأي التزام أو تعهد أو مسؤولية أخرى
+          فيما يتعلق بمبيعاته و / أو أنشطته بخلاف رسوم الخدمة التي يتعين دفعها
+          لشركة نقاط البيع الافتراضية و / أو طرف iyzico . يقبل المشتري ويعلن
+          ويتعهد بأن مسؤولية البائع تقتصر على هذه المادة وأنه لا يمكنه تقديم
+          مطالبة من البائع تحت أي اسم، باستثناء حدود المسؤولية في هذه المادة.
+        </p>
 
         <ul>
-        <li>المادة 3 - حقوق والتزامات الأطراف</li>
+          <li>المادة 3 - حقوق والتزامات الأطراف</li>
         </ul>
 
-        <p>3.1 يجب على البائع تقديم خدمات المحتوى الرقمي التي يقدمها في [www.byokul.com] و / أو من خلال تطبيقه على الأجهزة المحمولة وأجهزة التلفزيون الذكية والأجهزة المماثلة، ضمن قيود الترخيص لفئة الخدمة المحددة، بأسعار وشروط محددة مسبقا، على النحو الذي يحدده مؤسس المدرسة الافتراضية التي تم إنشاؤها في byokul اعتبارا من تاريخ إنشاء العقد. عند مشاهدة كل المحتوى الرقمي، يستمر المشتري في الوصول إلى المحتوى الرقمي حتى نهاية الفترة المحددة.</p>
+        <p>
+          3.1 يجب على البائع تقديم خدمات المحتوى الرقمي التي يقدمها في
+          [www.byokul.com] و / أو من خلال تطبيقه على الأجهزة المحمولة وأجهزة
+          التلفزيون الذكية والأجهزة المماثلة، ضمن قيود الترخيص لفئة الخدمة
+          المحددة، بأسعار وشروط محددة مسبقا، على النحو الذي يحدده مؤسس المدرسة
+          الافتراضية التي تم إنشاؤها في byokul اعتبارا من تاريخ إنشاء العقد. عند
+          مشاهدة كل المحتوى الرقمي، يستمر المشتري في الوصول إلى المحتوى الرقمي
+          حتى نهاية الفترة المحددة.
+        </p>
 
-        <p>3.2 يقبل المشتري ويتعهد بأن جميع المعلومات صحيحة (مثل الاسم واللقب ورقم الهوية التركية والعنوان ورقم الهاتف) والتي تم إخطار البائع بها أثناء إنشاء العضوية واستخدام الخدمات وأن البائع غير مسؤول عن المشاكل التي قد تنشأ عن حقيقة أن هذه المعلومات غير صحيحة أو غير كاملة عند الضرورة. في حالة حدوث تغيير في معلومات المشتري، تقع على عاتق المشتري مسؤولية تحديث المعلومات المعنية.</p>
+        <p>
+          3.2 يقبل المشتري ويتعهد بأن جميع المعلومات صحيحة (مثل الاسم واللقب
+          ورقم الهوية التركية والعنوان ورقم الهاتف) والتي تم إخطار البائع بها
+          أثناء إنشاء العضوية واستخدام الخدمات وأن البائع غير مسؤول عن المشاكل
+          التي قد تنشأ عن حقيقة أن هذه المعلومات غير صحيحة أو غير كاملة عند
+          الضرورة. في حالة حدوث تغيير في معلومات المشتري، تقع على عاتق المشتري
+          مسؤولية تحديث المعلومات المعنية.
+        </p>
 
-        <p>3.3 يحظر وفقا لقانون الأعمال الفكرية والفنية رقم 5846 استخدام المشتري خدمات المحتوى الرقمي بخلاف الاستخدام الفردي، ونقل المحتويات الرقمية إلى الأشخاص و / أو المؤسسات الثالثة، وجعلهم يستخدمونها و / أو ينقلونها عن طريق هؤلاء الأشخاص، من ناحية أخرى، أخذ تسجيلات صوتية أو فيديو وصور فوتوغرافية ونسخها وتغييرها ونشرها من قبل المشتري. لا يمكن جعل الحقوق الخاضعة للعقد موضوعا لأغراض تجارية من قبل المشتري تحت أي ظرف من الظروف. خلاف ذلك، يقبل المشتري ويتعهد بأنه سيعوض جميع الأضرار التي تكبدها البائع.</p>
+        <p>
+          3.3 يحظر وفقا لقانون الأعمال الفكرية والفنية رقم 5846 استخدام المشتري
+          خدمات المحتوى الرقمي بخلاف الاستخدام الفردي، ونقل المحتويات الرقمية
+          إلى الأشخاص و / أو المؤسسات الثالثة، وجعلهم يستخدمونها و / أو ينقلونها
+          عن طريق هؤلاء الأشخاص، من ناحية أخرى، أخذ تسجيلات صوتية أو فيديو وصور
+          فوتوغرافية ونسخها وتغييرها ونشرها من قبل المشتري. لا يمكن جعل الحقوق
+          الخاضعة للعقد موضوعا لأغراض تجارية من قبل المشتري تحت أي ظرف من
+          الظروف. خلاف ذلك، يقبل المشتري ويتعهد بأنه سيعوض جميع الأضرار التي
+          تكبدها البائع.
+        </p>
 
-        <p>3.4 في حالة تسبب المشتري في حدوث انتهاك، يجب على المشتري دفع شرط جزائي قدره 100.000 - ليرة تركية (مائة ألف ليرة تركية) للبائع عن كل انتهاك، بشرط أن تكون حقوق البائع فيما يتعلق بالأضرار المادية وغير المالية التي تكبدها البائع والحقوق المتعلقة بالزيادة محفوظة. نظرا لأن استخدام المحتويات كليا أو جزئيا دون إذن كتابي مسبق من البائع، حتى أثناء البث وبعده، يشكل جريمة في نفس الوقت، سيطلب تطبيق عقوبات جنائية على المشتري عن طريق تقديم الإشعار اللازم والشكوى الجنائية ضد المشتري.</p>
+        <p>
+          3.4 في حالة تسبب المشتري في حدوث انتهاك، يجب على المشتري دفع شرط جزائي
+          قدره 100.000 - ليرة تركية (مائة ألف ليرة تركية) للبائع عن كل انتهاك،
+          بشرط أن تكون حقوق البائع فيما يتعلق بالأضرار المادية وغير المالية التي
+          تكبدها البائع والحقوق المتعلقة بالزيادة محفوظة. نظرا لأن استخدام
+          المحتويات كليا أو جزئيا دون إذن كتابي مسبق من البائع، حتى أثناء البث
+          وبعده، يشكل جريمة في نفس الوقت، سيطلب تطبيق عقوبات جنائية على المشتري
+          عن طريق تقديم الإشعار اللازم والشكوى الجنائية ضد المشتري.
+        </p>
 
         <ul>
-        <li>المادة 4 - حق الانسحاب</li>
+          <li>المادة 4 - حق الانسحاب</li>
         </ul>
 
-        <p>4.1 وفقا لأحكام البند (و) من المادة 15 من لائحة البيع عن بعد "لا يوجد حق الانسحاب في العقود المتعلقة بالخدمات التي يتم إجراؤها على الفور في البيئة الإلكترونية أو السلع غير الملموسة التي يتم تسليمها إلى المستهلك على الفور". لا يحق للمشتري الانسحاب في نطاق هذا العقد لأن الخدمة المباعة ذات طبيعة يتم تنفيذها في البيئة الإلكترونية ويتم تسليمها إلى المستهلك على الفور.</p>
+        <p>
+          4.1 وفقا لأحكام البند (و) من المادة 15 من لائحة البيع عن بعد "لا يوجد
+          حق الانسحاب في العقود المتعلقة بالخدمات التي يتم إجراؤها على الفور في
+          البيئة الإلكترونية أو السلع غير الملموسة التي يتم تسليمها إلى المستهلك
+          على الفور". لا يحق للمشتري الانسحاب في نطاق هذا العقد لأن الخدمة
+          المباعة ذات طبيعة يتم تنفيذها في البيئة الإلكترونية ويتم تسليمها إلى
+          المستهلك على الفور.
+        </p>
 
         <ul>
-        <li>المادة 5 - إنهاء العقد</li>
+          <li>المادة 5 - إنهاء العقد</li>
         </ul>
 
-        <p>5.1 لا يمكن تحميل البائع المسؤولية ولأي سبب لا ينشأ عن البائع عن عدم قدرة المشتري على الوصول إلى المحتوى بسبب انقطاع الخدمة بسبب انقطاع الإنترنت أو مشاكل الجودة أو الاضطرابات الأمنية و / أو ظهور ارتباك عام في البلد أو الحرب أو الإرهاب أو الإضراب أو انقطاع التيار الكهربائي العام أو الزلازل أو الفيضانات أو حالة الطوارئ أو الهجوم السيبراني أو الأجهزة المصابة بالفيروسات أو المشكلات المستندة إلى الخادم أو البنية التحتية للإنترنت أو مشاكل القوة القاهرة المماثلة وأسباب مماثلة.</p>
+        <p>
+          5.1 لا يمكن تحميل البائع المسؤولية ولأي سبب لا ينشأ عن البائع عن عدم
+          قدرة المشتري على الوصول إلى المحتوى بسبب انقطاع الخدمة بسبب انقطاع
+          الإنترنت أو مشاكل الجودة أو الاضطرابات الأمنية و / أو ظهور ارتباك عام
+          في البلد أو الحرب أو الإرهاب أو الإضراب أو انقطاع التيار الكهربائي
+          العام أو الزلازل أو الفيضانات أو حالة الطوارئ أو الهجوم السيبراني أو
+          الأجهزة المصابة بالفيروسات أو المشكلات المستندة إلى الخادم أو البنية
+          التحتية للإنترنت أو مشاكل القوة القاهرة المماثلة وأسباب مماثلة.
+        </p>
 
-        <p>5.2 إذا لم يتمكن المشتري من الوصول إلى المحتوى الذي تم شراؤه بسبب مشكلة فنية يسببها البائع، فيجب على المشتري إخطار البائع كتابيا على الفور بالعطل الذي حدث له. إذا تم الإبلاغ عن مشكلة الوصول الناشئة عن البائع إلى البائع، سيتم التخلص من العيب من قبل البائع وستتم إضافة الوقت المستغرق بين تاريخ الإخطار وتاريخ التخلص من المشكلة إلى مدة استخدام المشتري.</p>
+        <p>
+          5.2 إذا لم يتمكن المشتري من الوصول إلى المحتوى الذي تم شراؤه بسبب
+          مشكلة فنية يسببها البائع، فيجب على المشتري إخطار البائع كتابيا على
+          الفور بالعطل الذي حدث له. إذا تم الإبلاغ عن مشكلة الوصول الناشئة عن
+          البائع إلى البائع، سيتم التخلص من العيب من قبل البائع وستتم إضافة
+          الوقت المستغرق بين تاريخ الإخطار وتاريخ التخلص من المشكلة إلى مدة
+          استخدام المشتري.
+        </p>
 
-        <p>5.3 إذا تم قبول أن المشكلة ناتجة عن مشكلة فنية ناشئة عن البائع ولم يتم حل هذه المشكلة في غضون فترة زمنية معقولة، يحق للمشتري إنهاء العقد لسبب مبرر بسبب عدم القدرة على استخدام المنتج الرقمي الذي اشتراه، أو استخدام حق الوصول في منتج رقمي آخر، أو طلب استرداد الرسوم التي دفعها مع خصم المبلغ المقابل للفترات التي تمكن فيها الوصول إلى المحتوى إذا كان لا يريد الخيارات السابقة.</p>
+        <p>
+          5.3 إذا تم قبول أن المشكلة ناتجة عن مشكلة فنية ناشئة عن البائع ولم يتم
+          حل هذه المشكلة في غضون فترة زمنية معقولة، يحق للمشتري إنهاء العقد لسبب
+          مبرر بسبب عدم القدرة على استخدام المنتج الرقمي الذي اشتراه، أو استخدام
+          حق الوصول في منتج رقمي آخر، أو طلب استرداد الرسوم التي دفعها مع خصم
+          المبلغ المقابل للفترات التي تمكن فيها الوصول إلى المحتوى إذا كان لا
+          يريد الخيارات السابقة.
+        </p>
 
-        <p>5.4 في حالة إنهاء العقد من قبل المشتري، سيتم خصم جميع أنواع مزايا الأسعار والمكاسب الأخرى التي حصل عليها المشتري من السعر المراد إرجاعه. في حالة إنهاء العقد من قبل المشتري دون سبب مبرر، لن يقوم البائع بدفع أي مبالغ مستردة.</p>
+        <p>
+          5.4 في حالة إنهاء العقد من قبل المشتري، سيتم خصم جميع أنواع مزايا
+          الأسعار والمكاسب الأخرى التي حصل عليها المشتري من السعر المراد إرجاعه.
+          في حالة إنهاء العقد من قبل المشتري دون سبب مبرر، لن يقوم البائع بدفع
+          أي مبالغ مستردة.
+        </p>
 
         <ul>
-        <li>المادة 6 - شكاوى المستهلكين وسبل الانتصاف والإشعارات</li>
+          <li>المادة 6 - شكاوى المستهلكين وسبل الانتصاف والإشعارات</li>
         </ul>
 
-        <p>6.1 يجوز للمشتري إعادة توجيه شكاواه حول الخدمة التي يتلقاها عبر عنوان البريد الإلكتروني (<strong>support@byokul.com</strong>).</p>
+        <p>
+          6.1 يجوز للمشتري إعادة توجيه شكاواه حول الخدمة التي يتلقاها عبر عنوان
+          البريد الإلكتروني (<strong>support@byokul.com</strong>).
+        </p>
 
-        <p>6.2 يجب إرسال أي إبلاغ أو إشعار آخر يتم إجراؤه وفقا لهذا العقد عن طريق الفاكس أو البريد الإلكتروني أو البريد الإلكتروني المسجل أو التسليم باليد أو البريد أو الشحن أو البريد السريع إلى عنوان البائع الوارد في المادة 1 من هذا العقد وإلى العناوين المتاحة في عقد البيع حيث يعلن المشتري أنه صحيح، بشرط أن يتم ذلك كتابيا أو إلكترونيا.</p>
+        <p>
+          6.2 يجب إرسال أي إبلاغ أو إشعار آخر يتم إجراؤه وفقا لهذا العقد عن طريق
+          الفاكس أو البريد الإلكتروني أو البريد الإلكتروني المسجل أو التسليم
+          باليد أو البريد أو الشحن أو البريد السريع إلى عنوان البائع الوارد في
+          المادة 1 من هذا العقد وإلى العناوين المتاحة في عقد البيع حيث يعلن
+          المشتري أنه صحيح، بشرط أن يتم ذلك كتابيا أو إلكترونيا.
+        </p>
 
         <ul>
-        <li>المادة 7 - تسوية المنازعات</li>
+          <li>المادة 7 - تسوية المنازعات</li>
         </ul>
 
-        <p>7.1 في الطلبات التي سيتم تقديمها بشأن الشكاوى والاعتراضات المتعلقة بتنفيذ عقد البيع هذا، يتم تفويض لجنة التحكيم في مشاكل المستهلك في أضنة أو محكمة المستهلك في أضنة فقط ضمن الحدود النقدية التي تحددها الوزارة في شهر ديسمبر من كل عام.</p>
+        <p>
+          7.1 في الطلبات التي سيتم تقديمها بشأن الشكاوى والاعتراضات المتعلقة
+          بتنفيذ عقد البيع هذا، يتم تفويض لجنة التحكيم في مشاكل المستهلك في أضنة
+          أو محكمة المستهلك في أضنة فقط ضمن الحدود النقدية التي تحددها الوزارة
+          في شهر ديسمبر من كل عام.
+        </p>
 
-        <p>7.2 في النزاعات الناشئة عن هذا العقد، تشكل دفاتر ومستندات البائع وجميع أنواع السجلات دليلا قاطعا وتكون محاكم ومكاتب التنفيذ في أضنة فقط هي المخولة بحل المنازعات في حالة وجود أي نزاعات أو خلافات.</p>
+        <p>
+          7.2 في النزاعات الناشئة عن هذا العقد، تشكل دفاتر ومستندات البائع وجميع
+          أنواع السجلات دليلا قاطعا وتكون محاكم ومكاتب التنفيذ في أضنة فقط هي
+          المخولة بحل المنازعات في حالة وجود أي نزاعات أو خلافات.
+        </p>
 
-        <p>تمت الموافقة على هذا العقد إلكترونيا وفقا للمبادئ والشروط المنصوص عليها بين الطرفين المذكورين أعلاه.</p>
-        
-     </div>
+        <p>
+          تمت الموافقة على هذا العقد إلكترونيا وفقا للمبادئ والشروط المنصوص
+          عليها بين الطرفين المذكورين أعلاه.
+        </p>
+      </div>
 
-     <div *ngIf="selectedLanguage == 'sp'">
+      <div *ngIf="selectedLanguage == 'sp'">
         <p><strong></strong></p>
-        <div class="d-flex align-items-center justify-content-between ">
+        <div class="d-flex align-items-center justify-content-between">
           <button
-          (click)="back()"
-          type="button"
-          class="back-button bg-transparent border-0 font_16 fw_400 text_dark">
-        <img src="../../../../assets/images/school/arrow-left.svg" />
-        {{ "Back" | translate }}
-      </button>
-          <h3 class="font_24 text_dark fw-bold mb-0 text-center">>BYOKUL DISTANCE SALES CONTRACT</h3>
+            (click)="back()"
+            type="button"
+            class="back-button bg-transparent border-0 font_16 fw_400 text_dark"
+          >
+            <img src="../../../../assets/images/school/arrow-left.svg" />
+            {{ "Back" | translate }}
+          </button>
+          <h3 class="font_24 text_dark fw-bold mb-0 text-center">
+            >BYOKUL DISTANCE SALES CONTRACT
+          </h3>
           <div class="d-md-block d-none"></div>
         </div>
         <hr class="about_hr" />
         <ul>
-        <li><strong>ARTICLE 1 - PARTIES</strong></li>
+          <li><strong>ARTICLE 1 - PARTIES</strong></li>
         </ul>
         <p>SELLER</p>
-        <p>Title &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : (SCHOOL NAME) (OR SCHOOL LINK)</p>
-        <p>Address &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :</p>
-        <p>Tax Office&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :</p>
-        <p>E-Mail&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :</p>
+        <p>
+          Title
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          : (SCHOOL NAME) (OR SCHOOL LINK)
+        </p>
+        <p>
+          Address
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          :
+        </p>
+        <p>
+          Tax
+          Office&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          :
+        </p>
+        <p>
+          E-Mail&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          :
+        </p>
         <p>___________________________________</p>
         <p>BUYER</p>
-        <p>Full Name / Title&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : [invoice-name]</p>
-        <p>TR No&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : [TR-ID-No]</p>
-        <p>Address&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : [invoice-address]</p>
-        <p>Phone&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : [phone]</p>
-        <p>E-Mail&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : [e-mail]</p>
+        <p>
+          Full Name / Title&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :
+          [invoice-name]
+        </p>
+        <p>
+          TR
+          No&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          : [TR-ID-No]
+        </p>
+        <p>
+          Address&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          : [invoice-address]
+        </p>
+        <p>
+          Phone&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          : [phone]
+        </p>
+        <p>
+          E-Mail&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          : [e-mail]
+        </p>
         <p>_____________________________________</p>
 
         <ul>
-        <li><strong>ARTICLE 2 - SUBJECT OF THE CONTRACT, SERVICE, PAYMENT AND DELIVERY</strong></li>
+          <li>
+            <strong
+              >ARTICLE 2 - SUBJECT OF THE CONTRACT, SERVICE, PAYMENT AND
+              DELIVERY</strong
+            >
+          </li>
         </ul>
 
-        <p>2.1 The subject of this contract is the determination of the rights and obligations of the parties and the provisions regarding the right to watch the said digital content within the scope of the service period purchased from this date including the purchase of the paid and/or free digital content, video, music, live TV broadcast, game and similar content services offered by Sahneport by the BUYER and the purchase date of the BUYER via the SELLER&rsquo;s address [www.byokul.com] and/or the application on mobile devices, smart televisions and similar devices.</p>
+        <p>
+          2.1 The subject of this contract is the determination of the rights
+          and obligations of the parties and the provisions regarding the right
+          to watch the said digital content within the scope of the service
+          period purchased from this date including the purchase of the paid
+          and/or free digital content, video, music, live TV broadcast, game and
+          similar content services offered by Sahneport by the BUYER and the
+          purchase date of the BUYER via the SELLER&rsquo;s address
+          [www.byokul.com] and/or the application on mobile devices, smart
+          televisions and similar devices.
+        </p>
 
-        <p>2.2 From the moment of payment, the BUYER has the right to watch the requested content on the internet at the address ([www.byokul.com]) and/or the application on their mobile device, smart television and similar devices, and at the end of the monitoring activity, access to the relevant content is terminated.</p>
+        <p>
+          2.2 From the moment of payment, the BUYER has the right to watch the
+          requested content on the internet at the address ([www.byokul.com])
+          and/or the application on their mobile device, smart television and
+          similar devices, and at the end of the monitoring activity, access to
+          the relevant content is terminated.
+        </p>
 
-        <p>2.3 The BUYER can get service directly from [www.byokul.com] address or through the application on the appropriate mobile devices by logging in with the user name and password information that they provided when registering to the site. After the service buyer approves the payment transaction, the product is delivered electronically via the website at the moment the payment is made.</p>
+        <p>
+          2.3 The BUYER can get service directly from [www.byokul.com] address
+          or through the application on the appropriate mobile devices by
+          logging in with the user name and password information that they
+          provided when registering to the site. After the service buyer
+          approves the payment transaction, the product is delivered
+          electronically via the website at the moment the payment is made.
+        </p>
 
-        <p>2.4 The BUYER purchases the digital content services subject to the contract from [www.byokul.com] with the intermediary virtual pos. Due to the unfair or unlawful use of the BUYER&rsquo;s credit card by unauthorized persons, not due to the BUYER&rsquo;s fault, it is not possible to return and/or exchange purchased content. The SELLER is not under any other liability, undertaking or responsibility regarding its sales and/or activities, except for the service fee to be paid to the contracted intermediary virtual pos company and/or iyzico. The BUYER accepts, declares and undertakes that the responsibility of the SELLER is limited to this article and that it cannot make any demands from the SELLER, regardless of the name, except for the liability limit in this article.</p>
+        <p>
+          2.4 The BUYER purchases the digital content services subject to the
+          contract from [www.byokul.com] with the intermediary virtual pos. Due
+          to the unfair or unlawful use of the BUYER&rsquo;s credit card by
+          unauthorized persons, not due to the BUYER&rsquo;s fault, it is not
+          possible to return and/or exchange purchased content. The SELLER is
+          not under any other liability, undertaking or responsibility regarding
+          its sales and/or activities, except for the service fee to be paid to
+          the contracted intermediary virtual pos company and/or iyzico. The
+          BUYER accepts, declares and undertakes that the responsibility of the
+          SELLER is limited to this article and that it cannot make any demands
+          from the SELLER, regardless of the name, except for the liability
+          limit in this article.
+        </p>
 
         <ul>
-        <li><strong>ARTICLE 3 - RIGHTS AND LIABILITIES OF THE PARTIES</strong></li>
+          <li>
+            <strong>ARTICLE 3 - RIGHTS AND LIABILITIES OF THE PARTIES</strong>
+          </li>
         </ul>
 
-        <p>3.1 The last access date determined by the founder of the virtual school established in byokul as of the date of establishment of the contract with predetermined prices and conditions within the license restrictions for the selected service category of the digital content services determined by the SELLER at its unilateral discretion and offered through the application at [www.byokul.com] and/or mobile devices, smart televisions and similar devices. When all the digital content is watched, the BUYER&rsquo;s right to access the digital content continues until the end of the specified period.</p>
+        <p>
+          3.1 The last access date determined by the founder of the virtual
+          school established in byokul as of the date of establishment of the
+          contract with predetermined prices and conditions within the license
+          restrictions for the selected service category of the digital content
+          services determined by the SELLER at its unilateral discretion and
+          offered through the application at [www.byokul.com] and/or mobile
+          devices, smart televisions and similar devices. When all the digital
+          content is watched, the BUYER&rsquo;s right to access the digital
+          content continues until the end of the specified period.
+        </p>
 
-        <p>3.2 The BUYER accepts and undertakes that all information (such as name, surname, TR identity number, address, telephone number) provided to the SELLER during membership creation and use of the services is correct and the SELLER is not responsible for any problems that may arise from incorrect or incomplete information when necessary. In case of a change in the BUYER&rsquo;s information, it is the BUYER&rsquo;s responsibility to update the said information.</p>
+        <p>
+          3.2 The BUYER accepts and undertakes that all information (such as
+          name, surname, TR identity number, address, telephone number) provided
+          to the SELLER during membership creation and use of the services is
+          correct and the SELLER is not responsible for any problems that may
+          arise from incorrect or incomplete information when necessary. In case
+          of a change in the BUYER&rsquo;s information, it is the BUYER&rsquo;s
+          responsibility to update the said information.
+        </p>
 
-        <p>3.3 The use of digital content services by the BUYER for purposes other than individual use, the transmission of digital content to third parties and/or institutions, their use and/or transfer to such persons and on the other hand, recording, photographing, copying, duplicating, modifying and publishing audio or video by the BUYER is prohibited pursuant to the Law on Intellectual and Artistic Works No. 5846. The rights subject to the contract cannot be made the subject of commercial purposes by the BUYER in any way. Otherwise, the BUYER accepts and undertakes that they will indemnify the SELLER for all damages.</p>
+        <p>
+          3.3 The use of digital content services by the BUYER for purposes
+          other than individual use, the transmission of digital content to
+          third parties and/or institutions, their use and/or transfer to such
+          persons and on the other hand, recording, photographing, copying,
+          duplicating, modifying and publishing audio or video by the BUYER is
+          prohibited pursuant to the Law on Intellectual and Artistic Works No.
+          5846. The rights subject to the contract cannot be made the subject of
+          commercial purposes by the BUYER in any way. Otherwise, the BUYER
+          accepts and undertakes that they will indemnify the SELLER for all
+          damages.
+        </p>
 
-        <p>3.4 In the event that the BUYER causes a violation, the SELLER shall pay a penalty of <strong>100,000 - TRY (hundred thousand Turkish Liras)</strong> for each violation, without prejudice <strong>to the rights of the SELLER</strong> regarding the pecuniary and non-pecuniary damage suffered and the rights regarding the surplus. Since the use of the contents, even partially or completely, during and after the broadcast, without the prior written permission of the seller, constitutes a crime at the same time, the BUYER will be required to notify the BUYER and demand a criminal sanction by making a criminal complaint.</p>
+        <p>
+          3.4 In the event that the BUYER causes a violation, the SELLER shall
+          pay a penalty of
+          <strong>100,000 - TRY (hundred thousand Turkish Liras)</strong> for
+          each violation, without prejudice
+          <strong>to the rights of the SELLER</strong> regarding the pecuniary
+          and non-pecuniary damage suffered and the rights regarding the
+          surplus. Since the use of the contents, even partially or completely,
+          during and after the broadcast, without the prior written permission
+          of the seller, constitutes a crime at the same time, the BUYER will be
+          required to notify the BUYER and demand a criminal sanction by making
+          a criminal complaint.
+        </p>
         <p><strong>&nbsp;</strong></p>
         <ul>
-        <li><strong>ARTICLE 4 - RIGHT OF WITHDRAWAL</strong></li>
+          <li><strong>ARTICLE 4 - RIGHT OF WITHDRAWAL</strong></li>
         </ul>
-   
-        <p>4.1 Pursuant to the clause (ğ) of Article 15 of the Distance Sales Regulation, &ldquo;There is no right of withdrawal in the contracts regarding the services performed instantly in the electronic environment or the intangible goods delivered immediately to the consumer&rdquo;, the BUYER has no right of withdrawal within the scope of this Contract, since the service sold is in the nature of electronic media and delivered instantly to the consumer.</p>
+
+        <p>
+          4.1 Pursuant to the clause (ğ) of Article 15 of the Distance Sales
+          Regulation, &ldquo;There is no right of withdrawal in the contracts
+          regarding the services performed instantly in the electronic
+          environment or the intangible goods delivered immediately to the
+          consumer&rdquo;, the BUYER has no right of withdrawal within the scope
+          of this Contract, since the service sold is in the nature of
+          electronic media and delivered instantly to the consumer.
+        </p>
 
         <ul>
-        <li><strong>ARTICLE 5 - TERMINATION OF CONTRACT</strong></li>
+          <li><strong>ARTICLE 5 - TERMINATION OF CONTRACT</strong></li>
         </ul>
 
-        <p>5.1 The SELLER cannot be held responsible for the BUYER&rsquo;s inability to access the content for any reason not caused by the SELLER for interruptions in service due to disruptions in the internet, quality problems, security disruptions and/or the emergence of a general disturbance in the country, war, terrorism, strike, general power outage, earthquake, flood, state of emergency, cyber-attack, devices infected with viruses, server-based problems, internet infrastructure or similar problems to be experienced due to force majeure and similar reasons.</p>
+        <p>
+          5.1 The SELLER cannot be held responsible for the BUYER&rsquo;s
+          inability to access the content for any reason not caused by the
+          SELLER for interruptions in service due to disruptions in the
+          internet, quality problems, security disruptions and/or the emergence
+          of a general disturbance in the country, war, terrorism, strike,
+          general power outage, earthquake, flood, state of emergency,
+          cyber-attack, devices infected with viruses, server-based problems,
+          internet infrastructure or similar problems to be experienced due to
+          force majeure and similar reasons.
+        </p>
 
-        <p>5.2 In case the BUYER cannot access the purchased content due to a technical problem caused by the SELLER, the BUYER must immediately notify the SELLER in writing of the malfunction. If the access problem caused by the SELLER is notified to the SELLER, the SELLER will fix the problem, and the time between the date of notification and the date the problem is resolved will be added in addition to the BUYER&rsquo;s usage period.</p>
+        <p>
+          5.2 In case the BUYER cannot access the purchased content due to a
+          technical problem caused by the SELLER, the BUYER must immediately
+          notify the SELLER in writing of the malfunction. If the access problem
+          caused by the SELLER is notified to the SELLER, the SELLER will fix
+          the problem, and the time between the date of notification and the
+          date the problem is resolved will be added in addition to the
+          BUYER&rsquo;s usage period.
+        </p>
 
-        <p>5.3 If it is accepted that the problem is caused by a technical problem caused by the SELLER and this problem is not resolved within a reasonable time, The BUYER has the right to terminate the contract for just cause because they cannot use the digital product they have purchased, to use their access right in another digital product, if they do not want this, to request a refund of the fee they have paid, deducting the amount that corresponds to the access time to the content.</p>
+        <p>
+          5.3 If it is accepted that the problem is caused by a technical
+          problem caused by the SELLER and this problem is not resolved within a
+          reasonable time, The BUYER has the right to terminate the contract for
+          just cause because they cannot use the digital product they have
+          purchased, to use their access right in another digital product, if
+          they do not want this, to request a refund of the fee they have paid,
+          deducting the amount that corresponds to the access time to the
+          content.
+        </p>
 
-        <p>5.4 In the event that the Contract is terminated by the BUYER, all kinds of price advantages and other gains obtained by the BUYER shall be deducted from the refunded price. In the event that the contract is terminated by the BUYER without a justified reason, the SELLER will not be subject to any refund.</p>
+        <p>
+          5.4 In the event that the Contract is terminated by the BUYER, all
+          kinds of price advantages and other gains obtained by the BUYER shall
+          be deducted from the refunded price. In the event that the contract is
+          terminated by the BUYER without a justified reason, the SELLER will
+          not be subject to any refund.
+        </p>
 
         <ul>
-        <li><strong>ARTICLE 6 - CONSUMER COMPLAINTS, REMEDIES AND NOTICES</strong></li>
+          <li>
+            <strong
+              >ARTICLE 6 - CONSUMER COMPLAINTS, REMEDIES AND NOTICES</strong
+            >
+          </li>
         </ul>
 
-        <p>6.1 The BUYER can submit their complaints regarding the service they have received or via e-mail address (<a href="mailto:support@byokul.com">support@byokul.com</a>).</p>
+        <p>
+          6.1 The BUYER can submit their complaints regarding the service they
+          have received or via e-mail address (<a
+            href="mailto:support@byokul.com"
+            >support@byokul.com</a
+          >).
+        </p>
 
-        <p>6.2 Provided that any notice or other notification to be made in accordance with this Contract is made in writing or electronically, fax, e-mail, registered e-mail or hand delivery, mail, courier or postal courier to the address of the SELLER in Article 1 of this Contract, and the address of the buyer in the Sales Contract, which is declared to be correct.</p>
+        <p>
+          6.2 Provided that any notice or other notification to be made in
+          accordance with this Contract is made in writing or electronically,
+          fax, e-mail, registered e-mail or hand delivery, mail, courier or
+          postal courier to the address of the SELLER in Article 1 of this
+          Contract, and the address of the buyer in the Sales Contract, which is
+          declared to be correct.
+        </p>
 
         <ul>
-        <li><strong>ARTICLE 7 - RESOLUTION OF DISPUTES</strong></li>
+          <li><strong>ARTICLE 7 - RESOLUTION OF DISPUTES</strong></li>
         </ul>
 
-        <p>7.1 In the applications to be made regarding the complaints and objections regarding the implementation of this Sales Contract, only ADANA arbitration committee for consumer problems or ADANA Consumer Court is authorized within the monetary limits determined by the Ministry in December every year.</p>
+        <p>
+          7.1 In the applications to be made regarding the complaints and
+          objections regarding the implementation of this Sales Contract, only
+          ADANA arbitration committee for consumer problems or ADANA Consumer
+          Court is authorized within the monetary limits determined by the
+          Ministry in December every year.
+        </p>
 
-        <p>7.2 In disputes arising from this contract, the books and documents of the SELLER and all kinds of records constitute definitive evidence, and only ADANA Courts and Enforcement Offices are authorized in case of any dispute or dispute.</p>
+        <p>
+          7.2 In disputes arising from this contract, the books and documents of
+          the SELLER and all kinds of records constitute definitive evidence,
+          and only ADANA Courts and Enforcement Offices are authorized in case
+          of any dispute or dispute.
+        </p>
 
-        <p>This Contract has been approved electronically within the framework of the terms and conditions set forth between the ABOVE parties.</p>
-        
-     </div>
+        <p>
+          This Contract has been approved electronically within the framework of
+          the terms and conditions set forth between the ABOVE parties.
+        </p>
       </div>
-    </main>
-    <footer class="footer">
-      <div class="footer__content">
-        <a [routerLink]="['/user/userFeed']" class="main-logo"><img src="../../../assets/images/logo.svg" /></a>
-        <nav>
-          <a [routerLink]="['/privacyPolicy']">{{ "PrivacyPolicy" | translate }}</a>
-          <a [routerLink]="['/termsOfServices']">{{ "TermsOfService" | translate }}</a>
-          <a [routerLink]="['/aboutUs']">{{ "AboutUs" | translate }}</a>
-          <a [routerLink]="['/faq']">{{ "FAQ" | translate }}</a>
-        </nav>
-      </div>
-    </footer>
-   
-  </section>
-
+    </div>
+  </main>
+  <footer class="footer">
+    <div class="footer__content">
+      <a [routerLink]="['/user/userFeed']" class="main-logo"
+        ><img src="../../../assets/images/logo.svg"
+      /></a>
+      <nav>
+        <a [routerLink]="['/privacyPolicy']">{{
+          "PrivacyPolicy" | translate
+        }}</a>
+        <a [routerLink]="['/termsOfServices']">{{
+          "TermsOfService" | translate
+        }}</a>
+        <a [routerLink]="['/aboutUs']">{{ "AboutUs" | translate }}</a>
+        <a [routerLink]="['/faq']">{{ "FAQ" | translate }}</a>
+      </nav>
+    </div>
+  </footer>
+</section>

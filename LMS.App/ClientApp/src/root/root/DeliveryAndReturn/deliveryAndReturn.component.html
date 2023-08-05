@@ -1,136 +1,349 @@
-<section class="f-poppins main_content about-container" >
-    <header class="header">
-      <div class="header__content">
-        <a [routerLink]="['/user/userFeed']" class="main-logo"><img class="ms-4" src="../../../assets/images/logo.svg" /></a>
-      </div>
-    </header>
-    <main class="static-main min-height w-100 h-auto">
-      <div class="static-content">
-     <div *ngIf="selectedLanguage == 'en'">
-      <div class="d-flex align-items-center justify-content-between ">
-        <button
-        (click)="back()"
-        type="button"
-        class="back-button bg-transparent border-0 font_16 fw_400 text_dark">
-      <img src="../../../../assets/images/school/arrow-left.svg" />
-      {{ "Back" | translate }}
-    </button>
-        <h3 class="font_24 text_dark fw-bold ">Delivery & Return</h3>
-        <div class="d-md-block d-none"></div>
-      </div>
-      <hr class="about_hr" />
-        <p>You agree to use a valid payment method when making a payment. If you are not satisfied with the content, you can request a refund by filling out the return request form within 7 working days.</p>
+<section class="f-poppins main_content about-container">
+  <main class="static-main min-height w-100 h-auto">
+    <div class="static-content">
+      <div *ngIf="selectedLanguage == 'en'">
+        <div class="d-flex align-items-center justify-content-between">
+          <button
+            (click)="back()"
+            type="button"
+            class="back-button bg-transparent border-0 font_16 fw_400 text_dark"
+          >
+            <img src="../../../../assets/images/school/arrow-left.svg" />
+            {{ "Back" | translate }}
+          </button>
+          <h3 class="font_24 text_dark fw-bold">Delivery & Return</h3>
+          <div class="d-md-block d-none"></div>
+        </div>
+        <hr class="about_hr" />
+        <p>
+          You agree to use a valid payment method when making a payment. If you
+          are not satisfied with the content, you can request a refund by
+          filling out the return request form within 7 working days.
+        </p>
         <p><strong>Pricing</strong></p>
-        <p>The prices of the contents in ByOkul are determined based on the <u>Instructor Terms</u>. The instructor sets the price of their content themselves.</p>
-        <p>ByOkul management determines the monthly or annual subscription fee of the virtual school. The founder of the virtual school determines the course or course fees within ByOkul. If you are a student located in a country that has use and sales tax, goods and services tax or value added tax on consumer sales, we are responsible for collecting and reporting this tax to the relevant tax authorities. Depending on your location, the price you see may include such taxes, or tax may be added at checkout.</p>
+        <p>
+          The prices of the contents in ByOkul are determined based on the
+          <u>Instructor Terms</u>. The instructor sets the price of their
+          content themselves.
+        </p>
+        <p>
+          ByOkul management determines the monthly or annual subscription fee of
+          the virtual school. The founder of the virtual school determines the
+          course or course fees within ByOkul. If you are a student located in a
+          country that has use and sales tax, goods and services tax or value
+          added tax on consumer sales, we are responsible for collecting and
+          reporting this tax to the relevant tax authorities. Depending on your
+          location, the price you see may include such taxes, or tax may be
+          added at checkout.
+        </p>
         <p><strong>Payments</strong></p>
-        <p>You agree to pay for the content you purchase and you authorize us to withdraw funds from your debit or credit card or process them in other forms of payment for these fees. ByOkul works with payment service providers to offer you the most convenient payment methods in your country and to keep your payment information secure. We may update your payment methods using information provided by our payment service providers.</p>
+        <p>
+          You agree to pay for the content you purchase and you authorize us to
+          withdraw funds from your debit or credit card or process them in other
+          forms of payment for these fees. ByOkul works with payment service
+          providers to offer you the most convenient payment methods in your
+          country and to keep your payment information secure. We may update
+          your payment methods using information provided by our payment service
+          providers.
+        </p>
         <p><strong>Refunds </strong></p>
-        <p>If the course or course content you purchased does not meet your expectations, you can request ByOkul to refund your account within 7 working days of purchasing the content.</p>
-        <p>We reserve the right, at our sole discretion, to issue a refund to your original payment method, depending on the capabilities of our payment service providers, the platform from which you purchased your content (website, mobile or TV app) or other factors. No refund will be provided to you if you make a claim after 7 working days.</p>
-        <p>ByOkul defends the rights of users. The training school or trainer keeps the payments received from the users for the course or training within the ByOkul system. BYOKUL pays the instructor or school when the training or course is completed. If any suspicious situation is detected during this period, the payments kept in the ByOkul system are returned to the users again.</p>
-        <p>If we believe, in our sole discretion, that you have abused our refund policy (such as if you have used most of the content for which you want a refund, or if you have previously received a refund for the content), we reserve the right to refuse your refund request, restrict any other future refund requests, block your account and/or limit any future use of the Service. If we block your account or block your access to content due to your violation of these Terms, you will not be eligible for any refunds.</p>
-     </div>
-
-     <div *ngIf="selectedLanguage == 'tr'">
-      <div class="d-flex align-items-center justify-content-between ">
-        <button
-        (click)="back()"
-        type="button"
-        class="back-button bg-transparent border-0 font_16 fw_400 text_dark">
-      <img src="../../../../assets/images/school/arrow-left.svg" />
-      {{ "Back" | translate }}
-    </button>
-        <h3 class="font_24 text_dark fw-bold ">TESLİMAT ve İADE</h3>
-        <div class="d-md-block d-none"></div>
+        <p>
+          If the course or course content you purchased does not meet your
+          expectations, you can request ByOkul to refund your account within 7
+          working days of purchasing the content.
+        </p>
+        <p>
+          We reserve the right, at our sole discretion, to issue a refund to
+          your original payment method, depending on the capabilities of our
+          payment service providers, the platform from which you purchased your
+          content (website, mobile or TV app) or other factors. No refund will
+          be provided to you if you make a claim after 7 working days.
+        </p>
+        <p>
+          ByOkul defends the rights of users. The training school or trainer
+          keeps the payments received from the users for the course or training
+          within the ByOkul system. BYOKUL pays the instructor or school when
+          the training or course is completed. If any suspicious situation is
+          detected during this period, the payments kept in the ByOkul system
+          are returned to the users again.
+        </p>
+        <p>
+          If we believe, in our sole discretion, that you have abused our refund
+          policy (such as if you have used most of the content for which you
+          want a refund, or if you have previously received a refund for the
+          content), we reserve the right to refuse your refund request, restrict
+          any other future refund requests, block your account and/or limit any
+          future use of the Service. If we block your account or block your
+          access to content due to your violation of these Terms, you will not
+          be eligible for any refunds.
+        </p>
       </div>
-      <hr class="about_hr" />
-        <p>&Ouml;deme yaparken ge&ccedil;erli bir &ouml;deme y&ouml;ntemi kullanmayı kabul edersiniz. İ&ccedil;erikten memnun değilseniz 7 iş g&uuml;n&uuml; i&ccedil;erisinde iade talep formunu doldurarak iade talebinde bulunabilirsiniz</p>
+
+      <div *ngIf="selectedLanguage == 'tr'">
+        <div class="d-flex align-items-center justify-content-between">
+          <button
+            (click)="back()"
+            type="button"
+            class="back-button bg-transparent border-0 font_16 fw_400 text_dark"
+          >
+            <img src="../../../../assets/images/school/arrow-left.svg" />
+            {{ "Back" | translate }}
+          </button>
+          <h3 class="font_24 text_dark fw-bold">TESLİMAT ve İADE</h3>
+          <div class="d-md-block d-none"></div>
+        </div>
+        <hr class="about_hr" />
+        <p>
+          &Ouml;deme yaparken ge&ccedil;erli bir &ouml;deme y&ouml;ntemi
+          kullanmayı kabul edersiniz. İ&ccedil;erikten memnun değilseniz 7 iş
+          g&uuml;n&uuml; i&ccedil;erisinde iade talep formunu doldurarak iade
+          talebinde bulunabilirsiniz
+        </p>
         <p><strong>Fiyatlandırma</strong></p>
-        <p>ByOkul&rsquo;daki i&ccedil;eriklerin fiyatları <u>Eğitmen şartlarına</u> dayalı olarak belirlenir. <br /> eğitmen i&ccedil;eriğinin fiyatını kendisi belirler.</p>
+        <p>
+          ByOkul&rsquo;daki i&ccedil;eriklerin fiyatları
+          <u>Eğitmen şartlarına</u> dayalı olarak belirlenir. <br />
+          eğitmen i&ccedil;eriğinin fiyatını kendisi belirler.
+        </p>
         <p>&nbsp;</p>
-        <p>Byokul da sanal okul aylık veya yıllık abonelik &uuml;cretini byokul y&ouml;netimi belirler. Ders veya kurs &uuml;cretlerini byokul i&ccedil;erisinde,&nbsp; sanal okulun kurucusu belirler. T&uuml;ketici satışları i&ccedil;in kullanım ve satış vergisi, mal ve hizmet vergisi veya katma değer vergisi uygulanan bir &uuml;lkede bulunan bir &ouml;ğrenciyseniz bu vergiyi tahsil edip ilgili vergi makamlarına iletmekten sorumluyuz. Bulunduğunuz konuma bağlı olarak, g&ouml;rd&uuml;ğ&uuml;n&uuml;z fiyat bu t&uuml;r vergileri i&ccedil;erebilir veya &ouml;deme aşamasında vergi eklenebilir.</p>
+        <p>
+          Byokul da sanal okul aylık veya yıllık abonelik &uuml;cretini byokul
+          y&ouml;netimi belirler. Ders veya kurs &uuml;cretlerini byokul
+          i&ccedil;erisinde,&nbsp; sanal okulun kurucusu belirler. T&uuml;ketici
+          satışları i&ccedil;in kullanım ve satış vergisi, mal ve hizmet vergisi
+          veya katma değer vergisi uygulanan bir &uuml;lkede bulunan bir
+          &ouml;ğrenciyseniz bu vergiyi tahsil edip ilgili vergi makamlarına
+          iletmekten sorumluyuz. Bulunduğunuz konuma bağlı olarak,
+          g&ouml;rd&uuml;ğ&uuml;n&uuml;z fiyat bu t&uuml;r vergileri
+          i&ccedil;erebilir veya &ouml;deme aşamasında vergi eklenebilir.
+        </p>
         <p><strong>&Ouml;demeler</strong></p>
-        <p>Satın aldığınız i&ccedil;eriklerin &uuml;cretlerini &ouml;demeyi kabul edersiniz ve bu &uuml;cretler i&ccedil;in banka ya da kredi kartınızdan para &ccedil;ekmemize veya başka &ouml;deme şekillerinde işlememize yetki verirsiniz. ByOkul, size &uuml;lkenizdeki en uygun &ouml;deme y&ouml;ntemlerini sunmak ve &ouml;deme bilgilerinizi g&uuml;vende tutmak i&ccedil;in &ouml;deme hizmeti sağlayıcılarıyla birlikte &ccedil;alışır. &Ouml;deme hizmeti sağlayıcılarımız tarafından sağlanan bilgileri kullanarak &ouml;deme y&ouml;ntemlerinizi g&uuml;ncelleyebiliriz.</p>
+        <p>
+          Satın aldığınız i&ccedil;eriklerin &uuml;cretlerini &ouml;demeyi kabul
+          edersiniz ve bu &uuml;cretler i&ccedil;in banka ya da kredi
+          kartınızdan para &ccedil;ekmemize veya başka &ouml;deme şekillerinde
+          işlememize yetki verirsiniz. ByOkul, size &uuml;lkenizdeki en uygun
+          &ouml;deme y&ouml;ntemlerini sunmak ve &ouml;deme bilgilerinizi
+          g&uuml;vende tutmak i&ccedil;in &ouml;deme hizmeti sağlayıcılarıyla
+          birlikte &ccedil;alışır. &Ouml;deme hizmeti sağlayıcılarımız
+          tarafından sağlanan bilgileri kullanarak &ouml;deme
+          y&ouml;ntemlerinizi g&uuml;ncelleyebiliriz.
+        </p>
         <p><strong>Geri &Ouml;demeler </strong></p>
-        <p>Satın aldığınız kurs veya ders i&ccedil;eriği beklentilerinizi karşılamıyorsa i&ccedil;eriği satın aldıktan 7 iş g&uuml;n&uuml; i&ccedil;erisinde ByOkul'un hesabınıza geri &ouml;deme yapmasını talep edebilirsiniz.</p>
+        <p>
+          Satın aldığınız kurs veya ders i&ccedil;eriği beklentilerinizi
+          karşılamıyorsa i&ccedil;eriği satın aldıktan 7 iş g&uuml;n&uuml;
+          i&ccedil;erisinde ByOkul'un hesabınıza geri &ouml;deme yapmasını talep
+          edebilirsiniz.
+        </p>
         <p>&nbsp;</p>
-        <p>&Ouml;deme hizmeti sağlayıcılarımızın kapasitelerine, i&ccedil;eriğinizi satın almış olduğunuz platforma (web sitesi, mobil veya TV uygulaması) veya diğer fakt&ouml;rlere g&ouml;re kendi takdirimize bağlı olarak, geri &ouml;demenizi orijinal &ouml;deme y&ouml;nteminize geri &ouml;deme yaparak ger&ccedil;ekleştirme hakkını saklı tutarız. 7 iş g&uuml;n&uuml; s&uuml;resi dolduktan sonra talepte bulunmanız halinde size herhangi bir geri &ouml;deme sağlanmaz.</p>
-        <p>ByOkul kullanıcıların haklarını savunur. Eğitim veren okul veya eğitmen kursu veya eğitimi i&ccedil;in kullanıcılardan aldığı &ouml;demeleri ByOkul sistemi b&uuml;nyesinde muhafaza eder. Eğitim veya kurs tamamlandığında BYOKUL, eğitmene veya okula &ouml;demesini yapar. Bu s&uuml;re zarfında herhangi bir ş&uuml;pheli durum tespit edilirse ByOkul sisteminde muhafaza edilen &ouml;demeler tekrardan kullanıcılara iade edilir.</p>
-        <p>Kendi takdir yetkimize bağlı olarak geri &ouml;deme politikamızı suistimal ettiğinizi d&uuml;ş&uuml;n&uuml;rsek (geri &ouml;deme almak istediğiniz i&ccedil;eriğin b&uuml;y&uuml;k bir kısmını kullanmış olmanız veya daha &ouml;nce i&ccedil;erik i&ccedil;in geri &ouml;deme almış olmanız gibi) geri &ouml;deme talebinizi reddetme, gelecekteki diğer geri &ouml;deme isteklerinizi kısıtlama, hesabınızı bloke etme ve/veya gelecekteki t&uuml;m Hizmet kullanımlarınızı sınırlandırma hakkını saklı tutarız. Bu Şartları&nbsp;ihlal etmeniz nedeniyle hesabınızı bloke etmemiz veya i&ccedil;eriğe erişiminizi engellememiz halinde hi&ccedil;bir geri &ouml;deme almaya hak kazanamazsınız.</p>
-     </div>
-
-     <div *ngIf="selectedLanguage == 'ar'">
-      <div class="d-flex align-items-center justify-content-between ">
-        <button
-        (click)="back()"
-        type="button"
-        class="back-button bg-transparent border-0 font_16 fw_400 text_dark">
-      <img src="../../../../assets/images/school/arrow-left.svg" />
-      {{ "Back" | translate }}
-    </button>
-        <h3 class="font_24 text_dark fw-bold ">التسليم والعودة</h3>
-        <div class="d-md-block d-none"></div>
+        <p>
+          &Ouml;deme hizmeti sağlayıcılarımızın kapasitelerine,
+          i&ccedil;eriğinizi satın almış olduğunuz platforma (web sitesi, mobil
+          veya TV uygulaması) veya diğer fakt&ouml;rlere g&ouml;re kendi
+          takdirimize bağlı olarak, geri &ouml;demenizi orijinal &ouml;deme
+          y&ouml;nteminize geri &ouml;deme yaparak ger&ccedil;ekleştirme hakkını
+          saklı tutarız. 7 iş g&uuml;n&uuml; s&uuml;resi dolduktan sonra talepte
+          bulunmanız halinde size herhangi bir geri &ouml;deme sağlanmaz.
+        </p>
+        <p>
+          ByOkul kullanıcıların haklarını savunur. Eğitim veren okul veya
+          eğitmen kursu veya eğitimi i&ccedil;in kullanıcılardan aldığı
+          &ouml;demeleri ByOkul sistemi b&uuml;nyesinde muhafaza eder. Eğitim
+          veya kurs tamamlandığında BYOKUL, eğitmene veya okula &ouml;demesini
+          yapar. Bu s&uuml;re zarfında herhangi bir ş&uuml;pheli durum tespit
+          edilirse ByOkul sisteminde muhafaza edilen &ouml;demeler tekrardan
+          kullanıcılara iade edilir.
+        </p>
+        <p>
+          Kendi takdir yetkimize bağlı olarak geri &ouml;deme politikamızı
+          suistimal ettiğinizi d&uuml;ş&uuml;n&uuml;rsek (geri &ouml;deme almak
+          istediğiniz i&ccedil;eriğin b&uuml;y&uuml;k bir kısmını kullanmış
+          olmanız veya daha &ouml;nce i&ccedil;erik i&ccedil;in geri &ouml;deme
+          almış olmanız gibi) geri &ouml;deme talebinizi reddetme, gelecekteki
+          diğer geri &ouml;deme isteklerinizi kısıtlama, hesabınızı bloke etme
+          ve/veya gelecekteki t&uuml;m Hizmet kullanımlarınızı sınırlandırma
+          hakkını saklı tutarız. Bu Şartları&nbsp;ihlal etmeniz nedeniyle
+          hesabınızı bloke etmemiz veya i&ccedil;eriğe erişiminizi engellememiz
+          halinde hi&ccedil;bir geri &ouml;deme almaya hak kazanamazsınız.
+        </p>
       </div>
-      <hr class="about_hr" />        
-<p>أنت توافق على استخدام طريقة دفع صالحة عند إجراء الدفع. إذا لم تكن راضيا عن المحتوى، يمكنك طلب استرداد المدفوعات عن طريق ملء نموذج طلب الاسترداد في غضون 7 أيام عمل.</p>
-<p>&nbsp;</p>
-<p>&nbsp;التسعير</p>
-<p>يتم تحديد أسعار المحتويات في ByOkul بناء على <u>شروط المدرب</u>. <br /> يحدد المدرب سعر المحتوى الخاص به.</p>
-<p>&nbsp;</p>
-<p>في Byokul، تحدد إدارة byokul رسوم الاشتراك في المدرسة الافتراضية الشهرية أو السنوية. يتم تحديد رسوم الدرس أو الدورة من قبل مؤسس المدرسة الافتراضية داخل byokul. إذا كنت طالبا مقيما في بلد تفرض فيه ضريبة الاستخدام والمبيعات أو ضريبة السلع والخدمات أو ضريبة القيمة المضافة على مبيعات المستهلك، فنحن مسؤولون عن تحصيل هذه الضريبة وتحويلها إلى السلطات الضريبية المناسبة. اعتمادا على موقعك، قد يشمل السعر الذي تراه هذه الضرائب أو قد تتم إضافة الضريبة عند الدفع.</p>
-<p>&nbsp;المدفوعات</p>
-<p>أنت توافق على الدفع مقابل أي محتوى تشتريه، وتفوضنا بتحصيل أو معالجة الأموال من بطاقة البنك أو بطاقة الائتمان الخاصة بك مقابل هذه الرسوم. تعمل ByOkul مع مزودي خدمة الدفع لتزويدك بطرق الدفع الأكثر ملاءمة في بلدك وللحفاظ على أمان معلومات الدفع الخاصة بك. قد نقوم بتحديث طرق الدفع الخاصة بك باستخدام المعلومات المقدمة من مزودي خدمة الدفع لدينا.</p>
-<p>&nbsp;المبالغ المستردة</p>
-<p>إذا كانت الدورة التدريبية أو محتوى الدرس الذي اشتريته لا يلبي توقعاتك، فيمكنك أن تطلب من ByOkul استرداد مدفوعاتك إلى حسابك في غضون 7 أيام عمل من شراء المحتوى.</p>
-<p>&nbsp;</p>
-<p>نحتفظ بالحق، وفقا لتقديرنا الخاص، بناء على قدرة مزودي خدمة الدفع لدينا، أو المنصة (موقع الويب أو الهاتف المحمول أو تطبيق التلفزيون) التي اشتريت منها المحتوى الخاص بك، أو عوامل أخرى، في إعادة الأموال عن طريق إعادتها بطريقة الدفع الأصلية الخاصة بك. إذا قمت بتقديم مطالبة بعد انتهاء صلاحية 7 أيام عمل، فلن يتم رد أي مبلغ لك.</p>
-<p>ByOkul تدافع عن حقوق المستخدمين. تحتفظ ByOkul بالمدفوعات المستلمة من المستخدمين داخل نظامها الخاص فيما يتعلق بالمدرسة أو المدرب الذي يوفر التعليم للدورة أو التدريب. عند اكتمال التدريب أو الدورة، تقوم BYOKUL بالدفع للمدرب أو المدرسة. إذا تم الكشف عن أي موقف مشبوه خلال هذه الفترة، سيتم إرجاع المدفوعات المحفوظة في نظام ByOkul إلى المستخدمين مرة أخرى.</p>
-<p>إذا كنا نعتقد وفقا لتقديرنا الخاص أنك أساءت استخدام سياسة الاسترداد الخاصة بنا (على سبيل المثال، إذا كنت قد استخدمت جزءا كبيرا من المحتوى الذي ترغب في استرداد الأموال منه أو تلقيت سابقا استردادا للمحتوى)، فإننا نحتفظ بالحق في رفض طلب استرداد الأموال الخاص بك، وتقييد طلبات استرداد الأموال المستقبلية الأخرى، وحظر حسابك، و / أو تقييد جميع الاستخدامات المستقبلية للخدمات. إذا قمنا بحظر حسابك أو حظر وصولك إلى المحتوى بسبب انتهاكك لهذه الشروط، فلن يحق لك استرداد أي أموال.</p>
-     </div>
 
-     <div *ngIf="selectedLanguage == 'sp'">
-      <div class="d-flex align-items-center justify-content-between ">
-        <button
-        (click)="back()"
-        type="button"
-        class="back-button bg-transparent border-0 font_16 fw_400 text_dark">
-      <img src="../../../../assets/images/school/arrow-left.svg" />
-      {{ "Back" | translate }}
-    </button>
-        <h3 class="font_24 text_dark fw-bold ">Delivery & Return</h3>
-        <div class="d-md-block d-none"></div>
+      <div *ngIf="selectedLanguage == 'ar'">
+        <div class="d-flex align-items-center justify-content-between">
+          <button
+            (click)="back()"
+            type="button"
+            class="back-button bg-transparent border-0 font_16 fw_400 text_dark"
+          >
+            <img src="../../../../assets/images/school/arrow-left.svg" />
+            {{ "Back" | translate }}
+          </button>
+          <h3 class="font_24 text_dark fw-bold">التسليم والعودة</h3>
+          <div class="d-md-block d-none"></div>
+        </div>
+        <hr class="about_hr" />
+        <p>
+          أنت توافق على استخدام طريقة دفع صالحة عند إجراء الدفع. إذا لم تكن
+          راضيا عن المحتوى، يمكنك طلب استرداد المدفوعات عن طريق ملء نموذج طلب
+          الاسترداد في غضون 7 أيام عمل.
+        </p>
+        <p>&nbsp;</p>
+        <p>&nbsp;التسعير</p>
+        <p>
+          يتم تحديد أسعار المحتويات في ByOkul بناء على <u>شروط المدرب</u>.
+          <br />
+          يحدد المدرب سعر المحتوى الخاص به.
+        </p>
+        <p>&nbsp;</p>
+        <p>
+          في Byokul، تحدد إدارة byokul رسوم الاشتراك في المدرسة الافتراضية
+          الشهرية أو السنوية. يتم تحديد رسوم الدرس أو الدورة من قبل مؤسس المدرسة
+          الافتراضية داخل byokul. إذا كنت طالبا مقيما في بلد تفرض فيه ضريبة
+          الاستخدام والمبيعات أو ضريبة السلع والخدمات أو ضريبة القيمة المضافة
+          على مبيعات المستهلك، فنحن مسؤولون عن تحصيل هذه الضريبة وتحويلها إلى
+          السلطات الضريبية المناسبة. اعتمادا على موقعك، قد يشمل السعر الذي تراه
+          هذه الضرائب أو قد تتم إضافة الضريبة عند الدفع.
+        </p>
+        <p>&nbsp;المدفوعات</p>
+        <p>
+          أنت توافق على الدفع مقابل أي محتوى تشتريه، وتفوضنا بتحصيل أو معالجة
+          الأموال من بطاقة البنك أو بطاقة الائتمان الخاصة بك مقابل هذه الرسوم.
+          تعمل ByOkul مع مزودي خدمة الدفع لتزويدك بطرق الدفع الأكثر ملاءمة في
+          بلدك وللحفاظ على أمان معلومات الدفع الخاصة بك. قد نقوم بتحديث طرق
+          الدفع الخاصة بك باستخدام المعلومات المقدمة من مزودي خدمة الدفع لدينا.
+        </p>
+        <p>&nbsp;المبالغ المستردة</p>
+        <p>
+          إذا كانت الدورة التدريبية أو محتوى الدرس الذي اشتريته لا يلبي توقعاتك،
+          فيمكنك أن تطلب من ByOkul استرداد مدفوعاتك إلى حسابك في غضون 7 أيام عمل
+          من شراء المحتوى.
+        </p>
+        <p>&nbsp;</p>
+        <p>
+          نحتفظ بالحق، وفقا لتقديرنا الخاص، بناء على قدرة مزودي خدمة الدفع
+          لدينا، أو المنصة (موقع الويب أو الهاتف المحمول أو تطبيق التلفزيون)
+          التي اشتريت منها المحتوى الخاص بك، أو عوامل أخرى، في إعادة الأموال عن
+          طريق إعادتها بطريقة الدفع الأصلية الخاصة بك. إذا قمت بتقديم مطالبة بعد
+          انتهاء صلاحية 7 أيام عمل، فلن يتم رد أي مبلغ لك.
+        </p>
+        <p>
+          ByOkul تدافع عن حقوق المستخدمين. تحتفظ ByOkul بالمدفوعات المستلمة من
+          المستخدمين داخل نظامها الخاص فيما يتعلق بالمدرسة أو المدرب الذي يوفر
+          التعليم للدورة أو التدريب. عند اكتمال التدريب أو الدورة، تقوم BYOKUL
+          بالدفع للمدرب أو المدرسة. إذا تم الكشف عن أي موقف مشبوه خلال هذه
+          الفترة، سيتم إرجاع المدفوعات المحفوظة في نظام ByOkul إلى المستخدمين
+          مرة أخرى.
+        </p>
+        <p>
+          إذا كنا نعتقد وفقا لتقديرنا الخاص أنك أساءت استخدام سياسة الاسترداد
+          الخاصة بنا (على سبيل المثال، إذا كنت قد استخدمت جزءا كبيرا من المحتوى
+          الذي ترغب في استرداد الأموال منه أو تلقيت سابقا استردادا للمحتوى)،
+          فإننا نحتفظ بالحق في رفض طلب استرداد الأموال الخاص بك، وتقييد طلبات
+          استرداد الأموال المستقبلية الأخرى، وحظر حسابك، و / أو تقييد جميع
+          الاستخدامات المستقبلية للخدمات. إذا قمنا بحظر حسابك أو حظر وصولك إلى
+          المحتوى بسبب انتهاكك لهذه الشروط، فلن يحق لك استرداد أي أموال.
+        </p>
       </div>
-      <hr class="about_hr" />        
-        <p>You agree to use a valid payment method when making a payment. If you are not satisfied with the content, you can request a refund by filling out the return request form within 7 working days.</p>
+
+      <div *ngIf="selectedLanguage == 'sp'">
+        <div class="d-flex align-items-center justify-content-between">
+          <button
+            (click)="back()"
+            type="button"
+            class="back-button bg-transparent border-0 font_16 fw_400 text_dark"
+          >
+            <img src="../../../../assets/images/school/arrow-left.svg" />
+            {{ "Back" | translate }}
+          </button>
+          <h3 class="font_24 text_dark fw-bold">Delivery & Return</h3>
+          <div class="d-md-block d-none"></div>
+        </div>
+        <hr class="about_hr" />
+        <p>
+          You agree to use a valid payment method when making a payment. If you
+          are not satisfied with the content, you can request a refund by
+          filling out the return request form within 7 working days.
+        </p>
         <p>&nbsp;&nbsp;</p>
         <p><strong>Pricing</strong></p>
-        <p>The prices of the contents in ByOkul are determined based on the <u>Instructor Terms</u>. The instructor sets the price of their content themselves.</p>
+        <p>
+          The prices of the contents in ByOkul are determined based on the
+          <u>Instructor Terms</u>. The instructor sets the price of their
+          content themselves.
+        </p>
         <p>&nbsp;</p>
-        <p>ByOkul management determines the monthly or annual subscription fee of the virtual school. The founder of the virtual school determines the course or course fees within ByOkul. If you are a student located in a country that has use and sales tax, goods and services tax or value added tax on consumer sales, we are responsible for collecting and reporting this tax to the relevant tax authorities. Depending on your location, the price you see may include such taxes, or tax may be added at checkout.</p>
+        <p>
+          ByOkul management determines the monthly or annual subscription fee of
+          the virtual school. The founder of the virtual school determines the
+          course or course fees within ByOkul. If you are a student located in a
+          country that has use and sales tax, goods and services tax or value
+          added tax on consumer sales, we are responsible for collecting and
+          reporting this tax to the relevant tax authorities. Depending on your
+          location, the price you see may include such taxes, or tax may be
+          added at checkout.
+        </p>
         <p><strong>Payments</strong></p>
-        <p>You agree to pay for the content you purchase and you authorize us to withdraw funds from your debit or credit card or process them in other forms of payment for these fees. ByOkul works with payment service providers to offer you the most convenient payment methods in your country and to keep your payment information secure. We may update your payment methods using information provided by our payment service providers.</p>
+        <p>
+          You agree to pay for the content you purchase and you authorize us to
+          withdraw funds from your debit or credit card or process them in other
+          forms of payment for these fees. ByOkul works with payment service
+          providers to offer you the most convenient payment methods in your
+          country and to keep your payment information secure. We may update
+          your payment methods using information provided by our payment service
+          providers.
+        </p>
         <p><strong>Refunds </strong></p>
-        <p>If the course or course content you purchased does not meet your expectations, you can request ByOkul to refund your account within 7 working days of purchasing the content.</p>
+        <p>
+          If the course or course content you purchased does not meet your
+          expectations, you can request ByOkul to refund your account within 7
+          working days of purchasing the content.
+        </p>
         <p>&nbsp;</p>
-        <p>We reserve the right, at our sole discretion, to issue a refund to your original payment method, depending on the capabilities of our payment service providers, the platform from which you purchased your content (website, mobile or TV app) or other factors. No refund will be provided to you if you make a claim after 7 working days.</p>
-        <p>ByOkul defends the rights of users. The training school or trainer keeps the payments received from the users for the course or training within the ByOkul system. BYOKUL pays the instructor or school when the training or course is completed. If any suspicious situation is detected during this period, the payments kept in the ByOkul system are returned to the users again.</p>
-        <p>If we believe, in our sole discretion, that you have abused our refund policy (such as if you have used most of the content for which you want a refund, or if you have previously received a refund for the content), we reserve the right to refuse your refund request, restrict any other future refund requests, block your account and/or limit any future use of the Service. If we block your account or block your access to content due to your violation of these Terms, you will not be eligible for any refunds.</p>
+        <p>
+          We reserve the right, at our sole discretion, to issue a refund to
+          your original payment method, depending on the capabilities of our
+          payment service providers, the platform from which you purchased your
+          content (website, mobile or TV app) or other factors. No refund will
+          be provided to you if you make a claim after 7 working days.
+        </p>
+        <p>
+          ByOkul defends the rights of users. The training school or trainer
+          keeps the payments received from the users for the course or training
+          within the ByOkul system. BYOKUL pays the instructor or school when
+          the training or course is completed. If any suspicious situation is
+          detected during this period, the payments kept in the ByOkul system
+          are returned to the users again.
+        </p>
+        <p>
+          If we believe, in our sole discretion, that you have abused our refund
+          policy (such as if you have used most of the content for which you
+          want a refund, or if you have previously received a refund for the
+          content), we reserve the right to refuse your refund request, restrict
+          any other future refund requests, block your account and/or limit any
+          future use of the Service. If we block your account or block your
+          access to content due to your violation of these Terms, you will not
+          be eligible for any refunds.
+        </p>
         <p>&nbsp;</p>
-     </div>
       </div>
-    </main>
-    <footer class="footer">
-      <div class="footer__content">
-        <a [routerLink]="['/user/userFeed']" class="main-logo"><img src="../../../assets/images/logo.svg" /></a>
-        <nav>
-          <a [routerLink]="['/privacyPolicy']">{{ "PrivacyPolicy" | translate }}</a>
-          <a [routerLink]="['/termsOfServices']">{{ "TermsOfService" | translate }}</a>
-          <a [routerLink]="['/aboutUs']">{{ "AboutUs" | translate }}</a>
-          <a [routerLink]="['/faq']">{{ "FAQ" | translate }}</a>
-        </nav>
-      </div>
-    </footer>
-   
-  </section>
-
+    </div>
+  </main>
+  <footer class="footer">
+    <div class="footer__content">
+      <a [routerLink]="['/user/userFeed']" class="main-logo"
+        ><img src="../../../assets/images/logo.svg"
+      /></a>
+      <nav>
+        <a [routerLink]="['/privacyPolicy']">{{
+          "PrivacyPolicy" | translate
+        }}</a>
+        <a [routerLink]="['/termsOfServices']">{{
+          "TermsOfService" | translate
+        }}</a>
+        <a [routerLink]="['/aboutUs']">{{ "AboutUs" | translate }}</a>
+        <a [routerLink]="['/faq']">{{ "FAQ" | translate }}</a>
+      </nav>
+    </div>
+  </footer>
+</section>

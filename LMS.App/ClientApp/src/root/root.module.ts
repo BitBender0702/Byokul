@@ -94,6 +94,9 @@ import {LazyLoadImageModule} from 'ng-lazyload-image'
 import { VideoJsComponent } from './root/videojs/videojs.component';
 import { UploadCertificateComponent } from './root/UploadCertificates/uploadCertificate.component';
 
+import { DialogModule } from "primeng/dialog";
+import { SidebarModule } from 'primeng/sidebar';
+
 export const options: Partial<IConfig> = {
   thousandSeparator: "'"
 };
@@ -239,6 +242,8 @@ const routes: Routes = [
     NgxIntlTelInputModule,
     SlickCarouselModule,
     LazyLoadImageModule ,
+    DialogModule,
+    SidebarModule,
     // MetaModule.forRoot(),
     // PickerComponent,
     // PdfJsViewerModule,

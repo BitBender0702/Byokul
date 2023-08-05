@@ -1,8 +1,12 @@
-.table{
-    margin-top: -45px;
-}
-
 .cursorPointer{
     cursor: pointer;
 }
 
+::ng-deep .card.table .p-datatable-wrapper {
+    overflow-x: auto;
+    padding: 0;
+}
+::ng-deep .theading-nowrap table thead tr>th{
+    overflow: hidden;
+    white-space: nowrap;
+}

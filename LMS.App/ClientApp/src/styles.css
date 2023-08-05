@@ -1110,8 +1110,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .teacher-tags {
-  margin-top: 36px;
-  margin-bottom: 25px;
+  margin: 15px 0;
 }
 
 .teacher-content img {
@@ -1227,17 +1226,13 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .school-gridprofile-icon {
   margin-right: 16px;
-  width: 40.59px;
-  height: 40.59px;
+  width: 40px;
+  height: 40px;
+  flex: 0 0 auto;
   border-radius: 50%;
   overflow: hidden;
-  min-width: 40.59px;
   display: flex;
   background: #7c8da7;
-}
-
-.schoolgrid-header h2 {
-  margin-right: 32px;
 }
 
 .schoolgrid-header p span {
@@ -1254,9 +1249,8 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .schoolgrid-header {
-  padding-bottom: 16px;
+  margin-bottom: 16px;
   border-bottom: 1px solid #f5f5f5;
-  padding-right: 40px;
 }
 
 .school-grid-body {
@@ -1351,8 +1345,9 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .school-grid-thumbnail img,
 .school-grid-thumbnail video {
-  object-fit: cover;
+  object-fit: contain;
   max-height: 100%;
+  min-height: 100%;
 }
 
 .medium_thumbox {
@@ -1684,6 +1679,12 @@ body .liv-postbtn .post-attch-btn.active,
   width: 250px !important;
 }
 
+@media screen and (max-width: 767px) {
+  .post-bot-right .lg_btn {
+    max-width: 100%;
+  }
+}
+
 .post-bot-right .delay-btn {
   width: 60px !important;
   background: #fff0e5;
@@ -1825,9 +1826,23 @@ body .liv-postbtn .post-attch-btn.active,
 }
 
 .reels-uploader-img {
-  height: 524px;
-  max-width: 524px;
+  height: 250px;
+  max-width: 100%;
   margin: 0 auto;
+}
+
+@media screen and (min-width: 768px) {
+  .reels-uploader-img {
+    height: 524px;
+    margin: 0 auto;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .reels-uploader-img {
+    height: 524px;
+    max-width: 524px;
+  }
 }
 
 .reels-uploader-img .dropzone-desc {
@@ -2000,6 +2015,14 @@ div#notifi-settingpopup .modal-dialog {
   border: 1px solid #f5f5f5;
   border-radius: 4px;
 }
+
+@media screen and (max-width: 768px) {
+  .message-box {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
 .chat-userleft {
   width: calC(100% - 60px);
 }
@@ -2030,14 +2053,24 @@ main {
 .chat-aside input::placeholder {
   color: #fff;
 }
+
 .chat-aside ul {
-  padding-left: 0;
+  padding: 0;
   margin: 0;
   list-style-type: none;
   overflow-y: auto;
-  height: calC(100vh - 250px);
-  border-right: 1px solid #f5f5f5;
+  height: 100%;
+  margin-bottom: 50px;
 }
+
+@media screen and (min-width: 768px) {
+  .chat-aside ul {
+    height: calc(100vh - 250px);
+    border-right: 1px solid #f5f5f5;
+    margin-bottom: 0;
+  }
+}
+
 .chat-aside li {
   padding: 16px;
 }
@@ -2351,7 +2384,6 @@ input[type="search"] {
   border-left: 1px solid #ff801c;
   box-shadow: 0px 4px 20px rgb(0 0 0 / 15%);
   border-radius: 8px;
-  margin-bottom: 32px;
   width: 100%;
 }
 .foldername {
@@ -2371,13 +2403,20 @@ input[type="search"] {
 .file-action .btn {
   padding: 0 10px;
 }
-.files-sec {
-  margin: 0 -16px;
+
+.folder-wrapper {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-bottom: 25px;
 }
-.files-sec > div {
-  margin: 0 16px 32px;
-  width: calC(20% - 32px);
+
+@media screen and (min-width: 768px) {
+  .folder-wrapper {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
+
 .files-sec .folder-box {
   border: 1px solid rgba(124, 141, 167, 0.5);
 }
@@ -3111,10 +3150,18 @@ p-autocomplete li:before {
 .liveStream {
   margin-top: 27px;
 }
+
 .message-box main {
-  height: calC(100vh - 250px);
-  width: calC(100% - 380px);
+  width: 100%;
 }
+
+@media screen and (min-width: 768px) {
+  .message-box main {
+    height: calc(100vh - 250px);
+    width: calc(100% - 380px);
+  }
+}
+
 .leftuser-chat-icon img {
   background: #7c8da7;
   min-width: 32px;
@@ -3136,7 +3183,43 @@ p-autocomplete li:before {
   opacity: 0.9;
   cursor: no-drop;
 }
-
+.image_full_inner .item {
+  max-height: max-content !important;
+}
+.full_image_card {
+  max-height: 700px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #000;
+  min-height: 700px;
+}
+.full_image_card > img {
+  min-height: 100%;
+  width: auto !important;
+}
+.modal-content {
+  border: none !important;
+}
+.full-pic-img {
+  object-fit: contain;
+}
+.feed-box-preview {
+  min-height: 320px;
+}
+.feed-box-preview {
+  min-height: 320px;
+  max-height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background: #000;
+}
+.live-chat-box.live-chat-padding {
+  padding: 25px 20px;
+}
 @media screen and (min-width: 1200px) {
   .main_content-max-width {
     max-width: 1200px;
@@ -3233,9 +3316,9 @@ p-autocomplete li:before {
     padding: 48px 59px;
   }
   .School-prof-header .school-profile-icon {
-    width: 180px;
-    height: 180px;
-    min-width: 180px;
+    width: 100px;
+    height: 100px;
+    min-width: 100px;
   }
   .font_24 {
     font-size: 22px;
@@ -3392,7 +3475,7 @@ p-autocomplete li:before {
     padding-right: 15px;
   }
   .post-bot-right .lg_btn {
-    width: 175px !important;
+    width: 100% !important;
   }
   .school-list-box .school-large-thumbnail {
     height: auto;
@@ -3486,7 +3569,6 @@ p-autocomplete li:before {
 
 @media (max-width: 575px) {
   .steps_btns button {
-    margin-right: 10px;
     margin-bottom: 8px;
     font-size: 13px !important;
   }
@@ -3531,9 +3613,6 @@ p-autocomplete li:before {
   .create-post-header .custom-btn {
     padding: 11px 46px;
     width: 100%;
-  }
-  .d-flex {
-    flex-wrap: wrap;
   }
   .feedimg-box {
     min-width: 210px;
@@ -3859,6 +3938,5 @@ ngx-intl-tel-input input[disabled] {
   button.back-button {
     min-width: 60px;
     margin-right: 0;
-    margin-bottom: 15px;
   }
 }

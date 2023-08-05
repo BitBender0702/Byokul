@@ -23,7 +23,8 @@ export class VideoJsComponent implements OnInit {
   ngOnInit(): void {
     debugger;
     this.cd.detectChanges();
-    videojs(this.disVideo.nativeElement); 
+    videojs(this.disVideo.nativeElement);
+    
   }
 
 //   ngAfterViewInit(): void {
