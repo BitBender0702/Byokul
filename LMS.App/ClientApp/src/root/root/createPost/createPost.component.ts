@@ -914,7 +914,7 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
     // }
     this.postToUpload.append('postTags', JSON.stringify(this.tagLists))
 
-    postUploadOnBlob.next({postToUpload:this.postToUpload,combineFiles:combinedFiles,videos:this.videos,images:this.images,attachment:this.attachment,type:1,reel:null,uploadedUrls:this.uploadVideoUrlList});
+    postUploadOnBlob.next({postToUpload:this.postToUpload,combineFiles:combinedFiles,videos:this.videos,images:this.images,attachment:this.attachment,type:1,reel:null,uploadedUrls:this.uploadVideoUrlList,videoThumbnails:this.videoThumbnails});
 
     // this._postService.createPost(this.postToUpload).subscribe((response:any) => {
     //   debugger
@@ -1010,8 +1010,11 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
     this.postToUpload.append('title', reel.title);
     this.postToUpload.append('postTags', JSON.stringify(this.reelsTagLists))
 
+    this.videos.push(this.reel);
+    const combinedFiles = [...this.videos,... this.videoThumbnails];
+
     // reelUploadOnBlob.next({postToUpload:this.postToUpload,reel:this.reel});
-    postUploadOnBlob.next({postToUpload:this.postToUpload,combineFiles:null,videos:null,images:null,attachment:null,type:2,reel:this.reel,uploadedUrls:this.uploadVideoUrlList});
+    postUploadOnBlob.next({postToUpload:this.postToUpload,combineFiles:combinedFiles,videos:this.videos,images:null,attachment:null,type:2,reel:this.reel,uploadedUrls:this.uploadVideoUrlList,videoThumbnails:this.videoThumbnails});
     // this._postService.createPost(this.postToUpload).subscribe((response:any) => {
     //   debugger
     //   this.isSubmitted=false;
@@ -1394,12 +1397,12 @@ public async uploadVideosOnBlob(file: File, fileType:number) {
       blobName:blobName,
       fileType:fileType
     }
-    if(fileType != UploadTypeEnum.Thumbnail){
-    this.uploadVideoUrlList.push(uploadVideoObject);
-    }
-   else{
+  //   if(fileType != UploadTypeEnum.Thumbnail){
+  //   this.uploadVideoUrlList.push(uploadVideoObject);
+  //   }
+  //  else{
     this.blobVideoThumbnails = this.uploadVideoUrlList;
-   }
+  //  }
 
 
   })

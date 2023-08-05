@@ -28,7 +28,8 @@ export const postUploadOnBlob = new Subject<{
   attachment:any,
   type:any,
   reel:any,
-  uploadedUrls:any[]
+  uploadedUrls:any[],
+  videoThumbnails?:any
 }>();
 
 
@@ -142,6 +143,10 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
           if(uploadResponse.attachment.includes(file)) {
             return this.uploadVideosOnBlob(file, UploadTypeEnum.Attachment);
           }
+          if(uploadResponse.videoThumbnails.includes(file)) {
+            return this.uploadVideosOnBlob(file, UploadTypeEnum.Thumbnail);
+          }
+
           return "";
           
         });
@@ -151,6 +156,23 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
         createPost.next({postToUpload:uploadResponse.postToUpload,uploadVideoUrlList:this.uploadVideoUrlList,type:1});
         // var uploadUrls = uploadResponse.uploadedUrls.push(...this.uploadVideoUrlList);
         var uploadUrls = [...uploadResponse.uploadedUrls, ...this.uploadVideoUrlList]
+        this.getThumbnailUrl(uploadUrls);
+        // var totalThumbnails = uploadUrls.filter(x => x.fileType == UploadTypeEnum.Thumbnail);
+
+        // totalThumbnails.forEach((item:any) => {
+        //   debugger
+        //   const lastDotIndex = item.blobName.lastIndexOf('.');
+        //   const thumbnailName = item.blobName.substring(0, lastDotIndex);
+        //   var video = uploadUrls.find(x => x.blobName.substring(0,lastDotIndex) == thumbnailName  && x.fileType == 2);
+        //   if(video != null){
+        //     video.fileThumbnail = item.blobUrl;
+        //     var thumbnailIndex = uploadUrls.findIndex(x => x.id == item.id);
+        //     if (thumbnailIndex !== -1) {
+        //       uploadUrls.splice(thumbnailIndex, 1);
+        //     }
+        //   }
+        // });
+
         uploadResponse.postToUpload.append('blobUrlsJson', JSON.stringify(uploadUrls));
         this._postService.createPost(uploadResponse.postToUpload).subscribe((response:any) => {
           debugger
@@ -170,8 +192,24 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
         
       }
       if(uploadResponse.type == 2){
-        await this.uploadVideosOnBlob(uploadResponse.reel,UploadTypeEnum.Video);
+        // await this.uploadVideosOnBlob(uploadResponse.reel,UploadTypeEnum.Video);
+        const uploadPromises = uploadResponse.combineFiles.map((file:any) => {
+          if (uploadResponse.videos.includes(file)) {
+            return this.uploadVideosOnBlob(file, UploadTypeEnum.Video);
+          } 
+          if(uploadResponse.videoThumbnails.includes(file)) {
+            return this.uploadVideosOnBlob(file, UploadTypeEnum.Thumbnail);
+          }
+
+          return "";
+          
+        });
+
+        await Promise.all(uploadPromises);
+        
         createPost.next({postToUpload:uploadResponse.postToUpload,uploadVideoUrlList:this.uploadVideoUrlList,type:1});
+        debugger
+        this.getThumbnailUrl(this.uploadVideoUrlList);
         uploadResponse.postToUpload.append('blobUrlsJson', JSON.stringify(this.uploadVideoUrlList));
         this._postService.createPost(uploadResponse.postToUpload).subscribe((response:any) => {
           debugger
@@ -244,6 +282,7 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
       if(uploadResponse.type == 4){
         const uploadPromises = uploadResponse.combineFiles.map((file:any) => {
           debugger
+          this.uploadVideoUrlList = [];
           var index = file.type.indexOf('/');
           if (index > 0)
             {
@@ -255,25 +294,21 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
               {
                 return this.uploadVideosOnBlob(file, UploadTypeEnum.Video);
               }
-              if (file.type.substring(0, index) == Constant.Pdf)
+              if (file.type == Constant.Pdf)
               {
                 return this.uploadVideosOnBlob(file, UploadTypeEnum.Pdf);
               }
-              if (file.type.substring(0, index) == Constant.Word)
+              if (file.type == Constant.Word)
               {
                 return this.uploadVideosOnBlob(file, UploadTypeEnum.Word);
               }
-              if (file.type.substring(0, index) == Constant.Word)
-              {
-                return this.uploadVideosOnBlob(file, UploadTypeEnum.Word);
-              }
-              if (file.type.substring(0, index) == Constant.Excel)
+              if (file.type == Constant.Excel)
               {
                 return this.uploadVideosOnBlob(file, UploadTypeEnum.Excel);
               }
-              if (file.type.substring(0, index) == Constant.Ppt)
+              if (file.type == Constant.Ppt)
               {
-                return this.uploadVideosOnBlob(file, UploadTypeEnum.Excel);
+                return this.uploadVideosOnBlob(file, UploadTypeEnum.Presentation);
               }
             }
 
@@ -324,8 +359,11 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
   saveFilesInFileStorge(uploadResponse:any){
     debugger
     var files = this.uploadVideoUrlList;
-    uploadResponse.postToUpload.append('blobUrlsJson', JSON.stringify(this.uploadVideoUrlList));
+    uploadResponse.postToUpload.set('blobUrlsJson', JSON.stringify(files));
       this._fileStorageService.saveFiles(uploadResponse.postToUpload).subscribe(response => {
+        debugger
+        this.uploadVideoUrlList = [];
+        uploadResponse.postToUpload = new FormData();
         fileStorageResponse.next({fileStorageResponse:response});
         this.messageService.add({
           severity: 'success',
@@ -393,8 +431,11 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
     var prefix = "attachments";
     if(fileType == UploadTypeEnum.Image)
     prefix = "images";
-    else if(fileType == UploadTypeEnum.Video)
+    if(fileType == UploadTypeEnum.Video)
     prefix = "videos";
+  else if (fileType == UploadTypeEnum.Thumbnail)
+  prefix = "images"
+
     const id = uuidv4();
     const blobName = `${prefix}/${id.toString()}${file.name.substring(file.name.lastIndexOf('.'))}`;
     var containerName = Constant.ContainerName;
@@ -409,8 +450,9 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
       {
         id: id,
         blobUrl:response.blobUrl,
-        blobName:blobName,
-        fileType:fileType
+        blobName:file.name,
+        fileType:fileType,
+        fileThumbnail:""
       }
       this.uploadVideoUrlList.push(uploadVideoObject);
     })
@@ -449,5 +491,23 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
   
       return { success: false, message: 'Error uploading file: ' + error };
     }
+  }
+
+  getThumbnailUrl(uploadUrls:any){
+    var totalThumbnails = uploadUrls.filter((x: { fileType: UploadTypeEnum; }) => x.fileType == UploadTypeEnum.Thumbnail);
+
+    totalThumbnails.forEach((item:any) => {
+      debugger
+      const lastDotIndex = item.blobName.lastIndexOf('.');
+      const thumbnailName = item.blobName.substring(0, lastDotIndex);
+      var video = uploadUrls.find((x: { blobName: string; fileType: number; }) => x.blobName.substring(0,lastDotIndex) == thumbnailName  && x.fileType == 2);
+      if(video != null){
+        video.fileThumbnail = item.blobUrl;
+        var thumbnailIndex = uploadUrls.findIndex((x: { id: any; }) => x.id == item.id);
+        if (thumbnailIndex !== -1) {
+          uploadUrls.splice(thumbnailIndex, 1);
+        }
+      }
+    });
   }
 }

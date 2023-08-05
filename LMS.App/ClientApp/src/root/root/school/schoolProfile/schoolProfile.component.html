@@ -34,7 +34,7 @@
             {{ "GoLive" | translate }}
           </button> -->
           <button
-            *ngIf="(isOwner || hasPostPermission) && school.isSchoolSubscribed"
+            *ngIf="isOwner || hasPostPermission"
             (click)="openPostModal(false)"
             type="button"
             class="btn custom-btn primary_btn earning-btn fw_400 h_44"
@@ -165,7 +165,7 @@
 
               <div class="d-flex align-items-center gap-3">
                 <button
-                  *ngIf="(isOwner || hasUpdateSchoolPermission) && school.isSchoolSubscribed"
+                  *ngIf="isOwner || hasUpdateSchoolPermission"
                   (click)="getSchoolDetails(school.schoolId)"
                   class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins"
                   data-bs-toggle="modal"
@@ -178,7 +178,7 @@
                   {{ "EditProfile" | translate }}
                 </button>
                 <button
-                  *ngIf="isOwner && school.isSchoolSubscribed"
+                  *ngIf="isOwner"
                   class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins"
                   data-bs-toggle="modal"
                   data-bs-target="#deleteschool"
@@ -186,7 +186,7 @@
                   {{ "DeleteSchool" | translate }}
                 </button>
                 <button
-                  *ngIf="isOwner && school.isSchoolSubscribed"
+                  *ngIf="isOwner"
                   class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins"
                   data-bs-toggle="modal"
                   data-bs-target="#enableDisableSchool"
@@ -228,7 +228,7 @@
             ></span>
 
             <span
-              *ngIf="(isOwner || hasManageTeachersPermission) && school.isSchoolSubscribed"
+              *ngIf="isOwner || hasManageTeachersPermission"
               class="custom-tag"
               (click)="resetTeacherModal()"
               data-bs-toggle="modal"
@@ -272,7 +272,7 @@
             ></span>
 
             <span
-              *ngIf="(isOwner || hasAddSchoolCertificatesPermission) && school.isSchoolSubscribed"
+              *ngIf="isOwner || hasAddSchoolCertificatesPermission"
               class="custom-tag"
               (click)="resetCertificateModal()"
               data-bs-toggle="modal"
@@ -363,7 +363,7 @@
           </ng-container>
         </div> -->
         <hr class="hr-gray" />
-        <div *ngIf="school.isSchoolSubscribed"
+        <div 
           class="school-profile-tabs d-flex align-content-center justify-content-center position-relative"
         >
           <div class="custom-tabs">
@@ -920,7 +920,7 @@
           </div>
         </div>
 
-        <div class="feed-section" *ngIf="!isFeedHide && school.isSchoolSubscribed">
+        <div class="feed-section" *ngIf="!isFeedHide">
           <div class="feed-box position-relative">
             <reels-loading-spinner
               [reelsLoadingIcon]="reelsLoadingIcon"
@@ -1020,7 +1020,7 @@
         <div
           class="tab-content scroll-schoolTab"
           id="pills-tabContent"
-          *ngIf="isProfileGrid && school.isSchoolSubscribed"
+          *ngIf="isProfileGrid"
         >
           <div
             class="tab-pane fade show active"
@@ -1497,7 +1497,7 @@
         <div
           class="tab-content scroll-schoolTab"
           id="pills-tabContent"
-          *ngIf="!isProfileGrid && school.isSchoolSubscribed"
+          *ngIf="!isProfileGrid"
         >
           <!-- here is for view -->
           <!-- <div
@@ -2190,7 +2190,7 @@
           </div>
         </div>
 
-        <div *ngIf="school.isSchoolSubscribed"
+        <div
           class="tab-pane fade show"
           id="classes-tab-pane"
           role="tabpanel"

@@ -789,9 +789,9 @@ namespace LMS.Services
                 {
                     item.FileUrl = item.CompressedFileUrl;
                 }
-                item.ByteArray = await _blobService.GetFileContentAsync(this._config.GetValue<string>("Container:PostContainer"), fileName);
+                //item.ByteArray = await _blobService.GetFileContentAsync(this._config.GetValue<string>("Container:PostContainer"), fileName);
 
-                item.FileThumbnail = $"https://byokulstorage.blob.core.windows.net/userpostscompressed/thumbnails/{item.Id}.png";
+                //item.FileThumbnail = $"https://byokulstorage.blob.core.windows.net/userpostscompressed/thumbnails/{item.Id}.png";
 
             }
             return result;

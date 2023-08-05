@@ -26,6 +26,10 @@ export class FileStorageService{
     }
 
     saveFiles(saveFiles:any):Observable<any>{
+        debugger
+        for (const pair of saveFiles.entries()) {
+            console.log(`${pair[0]}, ${pair[1]}`);
+          }
         return this.http.post(`${this.apiUrl}/fileStorage/saveFiles`,saveFiles,{headers: this.headers,reportProgress:true});
     }
 

@@ -51,22 +51,22 @@
           >
             {{ "CreatePost" | translate }}
           </button>
-          <button
+          <!-- <button
             *ngIf="!isOwner && class.price != null && class.price != 0"
             (click)="openPaymentModal()"
             type="button"
             class="btn custom-btn primary_btn earning-btn fw_400 h_44"
           >
             {{ "Buyfor" | translate }} ${{ class.price }}
-          </button>
-          <!-- <button
+          </button> -->
+          <button
           *ngIf="!isOwner && class.price != null && class.price != 0 && !class.isClassAccessable"
           (click)="openPaymentModal()"
           type="button"
           class="btn custom-btn primary_btn earning-btn fw_400 h_44"
         >
           {{ "Buyfor" | translate }} ${{ class.price }}
-        </button> -->
+        </button>
         </div>
         <div
           class="live-header d-flex align-items-center justify-content-between"

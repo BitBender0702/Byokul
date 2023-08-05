@@ -16,10 +16,10 @@ export class Constant {
     public static blobStorageName = "byokulstorage";
     public static Image = "image";
     public static Video = "video";
-    public static Pdf = "pdf";
-    public static Word  = "msword";
-    public static Excel = "vnd.ms-excel";
-    public static Ppt = "vnd.ms-powerpoint";
+    public static Pdf = "application/pdf";
+    public static Word  = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+    public static Excel = "application/vnd.ms-excel";
+    public static Ppt = "application/vnd.openxmlformats-officedocument.presentationml.presentation";
     public static Post = "Post";
     public static Success = "Success";
 

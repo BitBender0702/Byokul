@@ -911,7 +911,7 @@ namespace LMS.Services
                 {
                     isCompressed.FileUrl = isCompressed.CompressedFileUrl;
                 }
-                isCompressed.FileThumbnail = $"https://byokulstorage.blob.core.windows.net/userpostscompressed/thumbnails/{isCompressed.Id}.png";
+                //isCompressed.FileThumbnail = $"https://byokulstorage.blob.core.windows.net/userpostscompressed/thumbnails/{isCompressed.Id}.png";
             }
             var result = _mapper.Map<List<PostAttachmentViewModel>>(attachmentList);
             return result;
@@ -1044,7 +1044,7 @@ namespace LMS.Services
 
         public async Task<bool> IsSchoolNameExist(string schoolName)
         {
-            var result = await _schoolRepository.GetAll().Where(x => x.SchoolName == schoolName).FirstOrDefaultAsync();
+            var result = await _schoolRepository.GetAll().Where(x => x.SchoolName == schoolName && !x.IsDeleted).FirstOrDefaultAsync();
             if (result != null)
             {
                 return false;

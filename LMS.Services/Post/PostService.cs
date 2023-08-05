@@ -102,7 +102,8 @@ namespace LMS.Services
                     FileName = x.BlobName,
                     FileType = Convert.ToInt32(x.FileType),
                     FileUrl = x.BlobUrl,
-                    IsCompressed = false
+                    IsCompressed = false,
+                    FileThumbnail = x.FileThumbnail
                 }).ToList(),
                 Tags = postViewModel.PostTags.Select(x => new PostTag
                 {

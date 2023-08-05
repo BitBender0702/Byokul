@@ -90,6 +90,7 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
     progressSubscription!: Subscription;
     changeLanguageSubscription!: Subscription;
     commentResponseSubscription!:Subscription;
+    fileStorageResponseSubscription!: Subscription;
 
     @ViewChild('closeFileModal') closeFileModal!: ElementRef;
     @ViewChild('closeFolderModal') closeFolderModal!: ElementRef;
@@ -155,8 +156,8 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
 
       this.isOwnerOrNot();
 
-
-      fileStorageResponse.subscribe(result => {
+      if(!this.fileStorageResponseSubscription){
+      this.fileStorageResponseSubscription = fileStorageResponse.subscribe(result => {
         debugger
         this.isSubmitted = false;
         this.loadingIcon = false;
@@ -166,8 +167,9 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
         this.saveFileViewModel.files = [];
         this.filesToUpload.set('files', '');
         this.closeFilesModal();
-    });
-    }
+       });
+      }
+     }
 
     ngOnDestroy() {
       if(this.changeLanguageSubscription){
@@ -178,6 +180,9 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
       }
       if(this.commentResponseSubscription){
         this.commentResponseSubscription.unsubscribe();
+      }
+      if(this.fileStorageResponseSubscription){
+        this.fileStorageResponseSubscription.unsubscribe();
       }
     }
 
@@ -364,13 +369,13 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
     // this.loadingIcon = true;
     this.progressBarValue = 0;
     this.cd.detectChanges();
-    for (var i = 0; i < this.saveFileViewModel.files.length; i++) {
-      this.fileSize += this.saveFileViewModel.files[i].size;
-      this.filesToUpload.append(
-        'files',
-        this.saveFileViewModel.files[i]
-      );
-    }
+    // for (var i = 0; i < this.saveFileViewModel.files.length; i++) {
+    //   this.fileSize += this.saveFileViewModel.files[i].size;
+    //   this.filesToUpload.append(
+    //     'files',
+    //     this.saveFileViewModel.files[i]
+    //   );
+    // }
 
     this.filesToUpload.append('parentId', this.parentId);
       if(this.parentFolderId != ""){

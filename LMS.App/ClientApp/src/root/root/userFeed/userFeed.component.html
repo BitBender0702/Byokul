@@ -1069,11 +1069,10 @@
                                     {{ gridItemInfo.title }}
                                   </a>
                                 </h2>
-                              </div>
-
-                              <!-- <p class="font_14 school-grid-date d-inline-block mb-0">
-                        {{gridItemInfo.dateTime | date : "MMMM d"}} - {{gridItemInfo.dateTime | date : "hh mm"}}
-                      </p> -->
+                              </div><br>
+                              <p class="font_14 school-grid-date d-inline-block mb-0">
+                        {{gridItemInfo.createdOn | date : "MMMM d"}} - {{gridItemInfo.createdOn | date : "hh:mm"}}
+                      </p>
                             </div>
                             <p class="text_sec1 font_14 pt-3">
                               {{ gridItemInfo.description }}
@@ -2312,19 +2311,19 @@
                                     {{ gridItemInfoForGlobal.title }}
                                   </a>
                                 </h2>
-                              </div>
+                              </div><br>
 
                               <p
                                 class="font_14 school-grid-date d-inline-block mb-0"
                               >
                                 {{
-                                  gridItemInfoForGlobal.dateTime
+                                  gridItemInfoForGlobal.createdOn
                                     | date : "MMMM d"
                                 }}
                                 -
                                 {{
-                                  gridItemInfoForGlobal.dateTime
-                                    | date : "hh mm"
+                                  gridItemInfoForGlobal.createdOn
+                                    | date : "hh:mm"
                                 }}
                               </p>
                             </div>

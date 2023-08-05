@@ -238,6 +238,7 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
   }
 
   ngOnInit(): void {
+    debugger
     this.checkScreenSize();
     if(this.isScreenMobile){
       this.profileGrid();
@@ -2107,7 +2108,6 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
 
 
   parseTheTags(tags: any) {
-    debugger
     console.log(tags.postTagValue);
     for (let index = 0; index < tags.length; index++) {
       const element = tags[index].postTagValue;
