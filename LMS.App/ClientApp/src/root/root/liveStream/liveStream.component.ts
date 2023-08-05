@@ -23,6 +23,7 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SharePostComponent } from '../sharePost/sharePost.component';
 import { MessageService } from 'primeng/api';
 import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
+import { Location } from '@angular/common'
 
 @Component({
   selector: 'live-stream',
@@ -92,7 +93,7 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
 
 
 
-  constructor(injector: Injector, private renderer: Renderer2, private modalService: NgbModal, private bsModalService: BsModalService,
+  constructor(injector: Injector, private renderer: Renderer2, private modalService: NgbModal, private bsModalService: BsModalService,private location: Location,
     private cd: ChangeDetectorRef, public messageService: MessageService, private route: ActivatedRoute, private domSanitizer: DomSanitizer, signalrService: SignalrService, postService: PostService, chatService: ChatService, userService: UserService, notificationService: NotificationService, bigBlueButtonService: BigBlueButtonService) {
     super(injector);
     this._signalrService = signalrService;
@@ -333,6 +334,9 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
       lastCommentTime: Date.now()
     };
     localStorage.setItem('lastCommentTime', JSON.stringify(lastComment));
+
+    this.endLiveStreamIfOffline();
+
   }
 
   ngOnDestroy(): void {
@@ -812,8 +816,9 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
       isLike: false,
       commentId: ''
     };
-
   }
+
+
 
   endLiveStream() {
     debugger
@@ -834,9 +839,9 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
       this._postService.saveLiveVideoTime(this.post.id, this.videoTotalTime, this.videoTotalTime).subscribe((result) => {
       });
       this._postService.saveStreamAsPost(this.post.id).subscribe((response) => {
-        debugger
       });
     }
+    this.location.back();
   }
 
   toggleEmojiPicker() {
@@ -976,5 +981,16 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
   streamEndPopup() {
 
   }
+
+  endLiveStreamIfOffline() {
+    window.addEventListener("offline", () => {
+      this.endLiveStream();
+    });
+    window.addEventListener("beforeunload",()=>{
+      this.endLiveStream();
+    })
+  }
+
+
 
 }

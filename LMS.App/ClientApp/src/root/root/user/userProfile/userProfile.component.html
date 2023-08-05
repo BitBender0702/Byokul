@@ -1058,7 +1058,7 @@
                     <button
                       (click)="openPostsViewModal(post)"
                       type="button"
-                      class="bg-transparent border-0 function-btns text-light"
+                      class="bg-transparent border-0 function-btns text-light videoChange"
                     >
                       <img
                         src="../../../../assets/images/Chat-dark.svg"
@@ -1343,7 +1343,7 @@
                           <button
                             (click)="openPostsViewModal(gridItemInfo)"
                             type="button"
-                            class="bg-transparent border-0 function-btns"
+                            class="bg-transparent border-0 function-btns videoChange"
                           >
                             <img
                               src="../../../../assets/images/Chat-dark.svg"
@@ -1701,8 +1701,8 @@
                     </ng-container>
                 </div> -->
                     <div class="teacher-tags tag-box hashtag_box">
-                      <span *ngFor="let tag of post.postTags" class="custom-tag"
-                        >#{{ tag.postTagValue }}</span
+                      <span *ngFor="let tag of parseTheListViewTags(post.postTags)" class="custom-tag"
+                        >#{{ tag }}</span
                       >
                     </div>
                     <div
@@ -2059,7 +2059,7 @@
                     <button
                       (click)="openPostsViewModal(post)"
                       type="button"
-                      class="bg-transparent border-0 function-btns text-light"
+                      class="bg-transparent border-0 function-btns text-light videoChange"
                     >
                       <img
                         src="../../../../assets/images/Chat-dark.svg"
@@ -2386,7 +2386,7 @@
                     <button
                       (click)="openPostsViewModal(savedPostGridInfo)"
                       type="button"
-                      class="bg-transparent border-0 function-btns"
+                      class="bg-transparent border-0 function-btns videoChange"
                     >
                       <img
                         src="../../../../assets/images/Chat-dark.svg"
@@ -3227,7 +3227,7 @@
                         openClassCourseViewModal(savedClassCourseGridInfo)
                       "
                       type="button"
-                      class="bg-transparent border-0 function-btns text-light"
+                      class="bg-transparent border-0 function-btns text-light videoChange"
                     >
                       <img
                         src="../../../../assets/images/Chat-dark.svg"
@@ -3985,7 +3985,7 @@
                     <button
                       (click)="openPostsViewModal(post)"
                       type="button"
-                      class="bg-transparent border-0 function-btns text-light"
+                      class="bg-transparent border-0 function-btns text-light videoChange"
                     >
                       <img
                         src="../../../../assets/images/Chat-dark.svg"
@@ -4315,10 +4315,10 @@
                     <button
                       (click)="openPostsViewModal(sharedPostGridInfo)"
                       type="button"
-                      class="bg-transparent border-0 function-btns"
+                      class="bg-transparent border-0 function-btns videoChange"
                     >
                       <img
-                        src="../../../../assets/images/Chat-dark.svg"
+                        src="../../../../assets/images/Chat-dark.svg "
                         class="d-block mx-auto"
                       />
                       {{ sharedPostGridInfo.commentsCount }}
@@ -4771,8 +4771,8 @@
                       {{ post.description }}
                     </p>
                     <div class="teacher-tags tag-box hashtag_box">
-                      <span *ngFor="let tag of post.postTags" class="custom-tag"
-                        >#{{ tag.postTagValue }}</span
+                      <span *ngFor="let tag of parseTheListViewTags(post.postTags)" class="custom-tag"
+                        >#{{ tag }}</span
                       >
                     </div>
                     <div
@@ -5129,7 +5129,7 @@
                     <button
                       (click)="openPostsViewModal(post)"
                       type="button"
-                      class="bg-transparent border-0 function-btns text-light"
+                      class="bg-transparent border-0 function-btns text-light videoChange"
                     >
                       <img
                         src="../../../../assets/images/Chat-dark.svg"
@@ -5458,7 +5458,7 @@
                     <button
                       (click)="openPostsViewModal(likedPostGridInfo)"
                       type="button"
-                      class="bg-transparent border-0 function-btns"
+                      class="bg-transparent border-0 function-btns videoChange"
                     >
                       <img
                         src="../../../../assets/images/Chat-dark.svg"

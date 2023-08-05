@@ -259,31 +259,40 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
 
     // this.className = this.route.snapshot.paramMap.get('className')??'';
 
-      this._classService.getClassById(this.className.replace(" ","").toLowerCase()).subscribe((response) => {
-        debugger
-        this.postsEndPageNumber = 1;
-        this.reelsPageNumber = 1;
-        this.class = response;
-        this.titleService.setTitle(this.class.className);
-        this.addDescriptionMetaTag(this.class.description);
-        this.classAvatar = this.class.avatar;
-        this.isOwnerOrNot();
-        this.loadingIcon = false;
-        this.isDataLoaded = true;
-        this.cd.detectChanges();
-        this.postLoadingIcon = false;
-        this.scrolled = false;
-        this.addClassView(this.class.classId);
-        this.addEventListnerOnCarousel();
-        this.class.posts = this.getFilteredAttachments(this.class.posts);      
-       
-    //     this.translateService.get(['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'])
-    // .subscribe(translations => {
-    //   debugger
-    //   // Store the translated month names
-    //   this.translateService.set('months', translations);
-    // });
-      });
+    this._classService.getClassById(this.className.replace(" ", "").toLowerCase()).subscribe((response) => {
+      this.postsEndPageNumber = 1;
+      this.reelsPageNumber = 1;
+      this.class = response;
+      this.titleService.setTitle(this.class.className);
+      this.addDescriptionMetaTag(this.class.description);
+      this.classAvatar = this.class.avatar;
+      this.isOwnerOrNot();
+      this.loadingIcon = false;
+      this.isDataLoaded = true;
+      this.cd.detectChanges();
+      this.postLoadingIcon = false;
+      this.scrolled = false;
+      this.addClassView(this.class.classId);
+      this.addEventListnerOnCarousel();
+      this.class.posts = this.getFilteredAttachments(this.class.posts);
+ 
+
+
+      //here is the code
+
+
+      // this.reelsTags = JSON.parse(postValueTag);
+
+
+
+
+      //     this.translateService.get(['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'])
+      // .subscribe(translations => {
+      //   debugger
+      //   // Store the translated month names
+      //   this.translateService.set('months', translations);
+      // });
+    });
 
     this.editClassForm = this.fb.group({
       schoolName: this.fb.control(''),
@@ -1070,8 +1079,6 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
 
 
   convertToCourse(className: string, schoolName: string) {
-    debugger
-    console.log(className.replace(" ", "").toLowerCase())
     this._classService.convertToCourse(className.replace(" ", "").toLowerCase()).subscribe((response) => {
       // localStorage.setItem("isClassConvertIntoCourse", JSON.stringify(true));
       debugger
@@ -1573,7 +1580,6 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
 
 
   parseTheTags(tags: any) {
-    console.log(tags.postTagValue);
     for (let index = 0; index < tags.length; index++) {
       const element = tags[index].postTagValue;
       try {

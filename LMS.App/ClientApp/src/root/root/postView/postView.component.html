@@ -59,7 +59,7 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
               </slide>
               <slide *ngIf="postAttachment.fileType==1">
                 <div class="full_image_card">
-                    <img *ngIf="postAttachment.fileType==1" class="w-100" [src]="postAttachment.fileUrl" />
+                    <img *ngIf="postAttachment.fileType==1" class="w-100" [src]="postAttachment.fileUrl" style="position: fixed;"/>
                  </div>
                 <div class="live-bottom-text p-3">
               <h5 class="font_14 mb-0 fw_600 text_sec1">{{postAttachment.post.title}} 

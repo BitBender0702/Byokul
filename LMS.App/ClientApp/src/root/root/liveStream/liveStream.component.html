@@ -1,74 +1,128 @@
 <div *ngIf="isDataLoaded">
-  <section
-    class="f-poppins main_content"
-  >
-    <div
-      class="create-post-header d-flex justify-content-between d-none d-xl-flex"
-    >
-    <button #streamEndMessage hidden data-bs-toggle="modal"
-    data-bs-target="#streamEndPopup"></button>
-      <button
-        (click)="back()"
-        mat-mini-fab
-        type="button"
-        class="back-button bg-transparent border-0 font_16 fw_400 text_dark"
+  <section class="f-poppins main_content">
+    <div class="main_content-max-width">
+      <div
+        class="create-post-header d-flex justify-content-between d-none d-xl-flex"
       >
-        <img src="../../../../assets/images/arrow-left.svg" />
-        {{ "Back" | translate }}
-      </button>
-      <h1 class="font_22 text_dark fw-bold text-center mb-md-0">
-        {{ "LiveStream" | translate }}
-      </h1>
-      <h2 class="invisible"></h2>
-    </div>
-    <div class="live-header d-flex align-items-center justify-content-between">
-      <button
-        (click)="back()"
-        type="button"
-        class="back-button bg-transparent border-0 font_16 fw_400 text_dark d-xl-none"
-      >
-        <img src="../../../../assets/images/arrow-left.svg" />
-        {{ "Back" | translate }}
-      </button>
-      <span class="logo_mobile d-xl-none">
-        <img src="../../../../assets/images/logo.svg" />
-      </span>
-      <div class="d-xl-none">
         <button
+          #streamEndMessage
+          hidden
+          data-bs-toggle="modal"
+          data-bs-target="#streamEndPopup"
+        ></button>
+        <button
+          (click)="back()"
+          mat-mini-fab
           type="button"
-          class="mobile-search border_btn"
-          (click)="openSidebar()"
+          class="back-button bg-transparent border-0 font_16 fw_400 text_dark"
         >
-          <img src="../../../../assets/images/menu.svg" />
+          <img src="../../../../assets/images/arrow-left.svg" />
+          {{ "Back" | translate }}
         </button>
+        <h1 class="font_22 text_dark fw-bold text-center mb-md-0">
+          {{ "LiveStream" | translate }}
+        </h1>
+        <h2 class="invisible"></h2>
       </div>
-    </div>
-    <div>
-      <div id="reel_content">
-        <div class="row">
-        <div [ngClass]="showCommentsField? '' : 'col-md-12 col-lg-12'" class="col-lg-8 order-lg-2">
-        <div class="live-inner w-100 position-relative">
-          <div>
-            <div class="live-image overflow-hidden position-relative">
-              <div *ngIf="(streamUrl == undefined || streamUrl == null) && (post.coverThumbnail != undefined)" style="align-items: center;
-              flex-direction: column;
-              display: flex;">
-                 <!-- <img class="cover_thumbnail" [src]="post.coverThumbnail"/> -->
-                 <!-- <h3 style="position: relative;bottom: 467px;">{{'StreamStartingIn'| translate }} {{streamCountDown}}</h3> -->
-                 <!-- <p style="position: relative;bottom: 467px;">{{post.coverLetter}}</p> -->
-              </div>
-              <iframe *ngIf="streamUrl != undefined && streamUrl != null && meetingId != ''" width="100%" height="500" [src]="streamUrl" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share;camera;microphone;display-capture" allowfullscreen></iframe>
-              <div class="create-livevideo position-relative">
-              <video id="test12" *ngIf="meetingId == ''" width="100%" height="500" autoplay (ended)="onVideoEnded()" (timeupdate)="onVideoTimeUpdate($event)" preload="auto">
-                <source [src]="post.streamUrl" type="video/mp4" />
-              </video>
-              <button *ngIf="meetingId == ''" class="cr-livedd border-0 shadow-none bg-transparent"><img src="../../../assets/images/add.png" alt="add"/></button>
-              <div *ngIf="meetingId == ''" class="livestream-rightbottom">
-                <button class="border-0 shadow-none bg-transparent me-3"><img src="../../../assets/images/tv-button.png" alt="screen"/></button>
-                <button class="border-0 shadow-none bg-transparent"><img src="../../../assets/images/hand-button.png" alt="hand"/></button>
-              </div>
-            </div>
-              <!-- <div class="overlay" (click)="startVideo()" #startButton>
+      <div
+        class="live-header d-flex align-items-center justify-content-between"
+      >
+        <button
+          (click)="back()"
+          type="button"
+          class="back-button bg-transparent border-0 font_16 fw_400 text_dark d-xl-none"
+        >
+          <img src="../../../../assets/images/arrow-left.svg" />
+          {{ "Back" | translate }}
+        </button>
+        <span class="logo_mobile d-xl-none">
+          <img src="../../../../assets/images/logo.svg" />
+        </span>
+        <div class="d-xl-none">
+          <button
+            type="button"
+            class="mobile-search border_btn"
+            (click)="openSidebar()"
+          >
+            <img src="../../../../assets/images/menu.svg" />
+          </button>
+        </div>
+      </div>
+      <div>
+        <div id="reel_content">
+          <div class="row">
+            <div
+              [ngClass]="showCommentsField ? '' : 'col-md-12 col-lg-12'"
+              class="col-lg-8 order-lg-2"
+            >
+              <div class="live-inner w-100 position-relative">
+                <div>
+                  <div class="live-image overflow-hidden position-relative">
+                    <div
+                      *ngIf="
+                        (streamUrl == undefined || streamUrl == null) &&
+                        post.coverThumbnail != undefined
+                      "
+                      style="
+                        align-items: center;
+                        flex-direction: column;
+                        display: flex;
+                      "
+                    >
+                      <!-- <img class="cover_thumbnail" [src]="post.coverThumbnail"/> -->
+                      <!-- <h3 style="position: relative;bottom: 467px;">{{'StreamStartingIn'| translate }} {{streamCountDown}}</h3> -->
+                      <!-- <p style="position: relative;bottom: 467px;">{{post.coverLetter}}</p> -->
+                    </div>
+                    <iframe
+                      *ngIf="
+                        streamUrl != undefined &&
+                        streamUrl != null &&
+                        meetingId != ''
+                      "
+                      width="100%"
+                      height="500"
+                      [src]="streamUrl"
+                      title="YouTube video player"
+                      frameborder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share;camera;microphone;display-capture"
+                      allowfullscreen
+                    ></iframe>
+                    <div class="create-livevideo position-relative">
+                      <video
+                        id="test12"
+                        *ngIf="meetingId == ''"
+                        width="100%"
+                        height="500"
+                        autoplay
+                        (ended)="onVideoEnded()"
+                        (timeupdate)="onVideoTimeUpdate($event)"
+                        preload="auto"
+                      >
+                        <source [src]="post.streamUrl" type="video/mp4" />
+                      </video>
+                      <button *ngIf="meetingId== ''"
+                        class="cr-livedd border-0 shadow-none bg-transparent"
+                      >
+                        <img src="../../../assets/images/add.png" alt="add" />
+                      </button>
+                      <div *ngIf="meetingId == ''" class="livestream-rightbottom">
+                        <button
+                          class="border-0 shadow-none bg-transparent me-3"
+                        >
+                          <img
+                            src="../../../assets/images/tv-button.png"
+                            alt="screen"
+                          />
+                        </button>
+                        <button class="border-0 shadow-none bg-transparent">
+                          <img
+                            src="../../../assets/images/hand-button.png"
+                            alt="hand"
+                          />
+                        </button>
+                      </div>
+                    </div>
+                    <!-- <div class="overlay" (click)="startVideo()" #startButton>
                 <span>Click to Play</span>
               </div> -->
                     <div class="font_14 p-3 p-md-4">

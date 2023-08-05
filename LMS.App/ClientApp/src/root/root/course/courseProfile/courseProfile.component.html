@@ -160,7 +160,7 @@
                   </button>
                 </div>
                 <div class="hover-double-button">
-                  <button
+                  <!-- <button
                     *ngIf="isOwner && course.isConvertable"
                     (click)="
                       convertToClass(
@@ -173,6 +173,14 @@
                     style="margin-right: 130px"
                   >
                     {{ "ConvertToClass" | translate }}
+                  </button> -->
+                  <button
+                    *ngIf="isOwner"
+                    class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins"
+                    data-bs-toggle="modal"
+                    data-bs-target="#confirm-classChange"
+                  >
+                    {{ "ConvertToCourse" | translate }}
                   </button>
 
                   <button
@@ -2131,6 +2139,227 @@
           </div>
         </div>
 
+
+
+        <!-- <div
+        class="modal fade edit-course-modal"
+        id="add-certificate"
+        tabindex="-1"
+        aria-labelledby="add-certificate"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div
+              class="modal-header border-0 justify-content-center position-relative"
+            >
+              <h1
+                class="modal-title font_22 text_dark fw_700 border-0 text-center"
+              >
+                {{ "AddCertificates" | translate }}
+              </h1>
+              <button
+                type="button"
+                class="btn-close shadow-none"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              >
+                <img src="../../../../assets/images/cross.svg" />
+              </button>
+            </div>
+            <div class="modal-body">
+              <form [formGroup]="courseCertificateForm" class="latest-form">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <input
+                        formControlName="courseId"
+                        type="text"
+                        name="Id"
+                        class="form-control w-100"
+                        [disabled]="true"
+                        [hidden]="true"
+                      />
+                      <label class="font_10"
+                        >{{ "CertificateName" | translate }}*</label
+                      >
+                      <input
+                        formControlName="certificateName"
+                        type="text"
+                        name="CertificateName"
+                        class="form-control w-100"
+                      />
+                    </div>
+                    <small
+                      class="p-error"
+                      style="color: orange"
+                      *ngIf="
+                        isSubmitted &&
+                        courseCertificateForm.get('certificateName')?.errors
+                      "
+                    >
+                      {{ "CertificateNameRequired" | translate }}
+                    </small>
+                  </div>
+
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label class="font_10"
+                        >{{ "ProviderName" | translate }}*</label
+                      >
+                      <input
+                        formControlName="provider"
+                        type="text"
+                        name="provider"
+                        class="form-control w-100"
+                      />
+                    </div>
+                    <small
+                      class="p-error"
+                      style="color: orange"
+                      *ngIf="
+                        isSubmitted &&
+                        courseCertificateForm.get('provider')?.errors
+                      "
+                    >
+                      {{ "ProviderNameRequired" | translate }}
+                    </small>
+                  </div>
+
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label class="font_10"
+                        >{{ "IssuedDate" | translate }}*</label
+                      >
+                      <input
+                        #issuedDate
+                        autocomplete="off"
+                        type="text"
+                        class="form-control w-100 date_calendar"
+                        name="dob"
+                        formControlName="issuedDate"
+                        id="issuedDate"
+                        (click)="getSelectedLanguage()"
+                      />
+                    </div>
+                    <small
+                      class="p-error"
+                      style="color: orange"
+                      *ngIf="
+                        isSubmitted &&
+                        courseCertificateForm.controls.issuedDate.errors
+                      "
+                      >{{ "IssuedDateRequired" | translate }}
+                    </small>
+                  </div>
+
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label class="font_10">{{
+                        "Description" | translate
+                      }}</label>
+                      <textarea
+                        maxlength="200"
+                        type="text"
+                        formControlName="description"
+                        class="form-control resize-none ht_96"
+                      ></textarea>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <div class="preview-zone hidden">
+                      <div class="box box-solid">
+                        <div class="box-header with-border"></div>
+                        <div class="box-body">
+                          <span class="position-relative d-inline-block">
+                            <img
+                              style="width: 200px"
+                              class="mb-3"
+                              [src]="uploadImage"
+                            />
+                            <button
+                              *ngIf="
+                                uploadImage != undefined &&
+                                uploadImage != null
+                              "
+                              (click)="removeUploadCertificateImage()"
+                              type="button"
+                              class="btn dl-course-img d-flex align-items-center justify-content-center rounded-circle position-absolute"
+                              style="height: 27px !important"
+                            >
+                              <i class="fa-solid fa-xmark"></i>
+                            </button>
+                          </span>
+                          <br />
+                          <p>{{ uploadImageName }}</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      *ngIf="uploadImage == null || uploadImage == undefined"
+                      class="dropzone-wrapper"
+                    >
+                      <div class="dropzone-desc">
+                        <i class="glyphicon glyphicon-download-alt"></i>
+                        <p class="text-center fw_400">
+                          {{ "ChooseImageFile" | translate }}
+                          <b>{{ "DragItHere" | translate }}</b>
+                        </p>
+                      </div>
+                      <input
+                        type="file"
+                        id="avatar"
+                        (change)="handleCourseCertificate($event)"
+                        class="dropzone"
+                        accept="image/*"
+                      />
+                    </div>
+                  </div>
+
+                  <small
+                    class="p-error"
+                    style="color: orange; margin-left: 180px"
+                    *ngIf="
+                      isSubmitted &&
+                      (this.uploadImage == undefined ||
+                        this.uploadImage == null)
+                    "
+                  >
+                    {{ "CertificateImageRequired" | translate }}
+                  </small>
+                </div>
+
+                <div
+                  class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 mt-4"
+                >
+                  <button
+                    #closeCertificateModal
+                    id="closeBtn"
+                    type="button"
+                    class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+                    data-bs-dismiss="modal"
+                  >
+                    {{ "DiscardChanges" | translate }}
+                  </button>
+                  <button
+                    (click)="saveCourseCertificate()"
+                    type="button"
+                    class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
+                  >
+                    {{ "Save" | translate }}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+ -->
+
+
+
+
         <div
           class="modal fade edit-school-modal delete-modal"
           id="delete-classCertificate"
@@ -2262,3 +2491,68 @@
     </div>
   </div>
 </ng-template>
+
+
+
+<div
+class="modal fade edit-school-modal delete-modal"
+id="confirm-classChange"
+tabindex="-1"
+aria-labelledby="confirm-classChange"
+aria-hidden="true"
+>
+<div class="modal-dialog modal-dialog-centered">
+  <div class="modal-content">
+    <div
+      class="modal-header border-0 justify-content-center position-relative"
+    >
+      <h1
+        class="modal-title font_22 text_dark fw_700 border-0 text-center"
+      >
+        {{ "ConfirmCourseChange" | translate }}
+      </h1>
+      <button
+        type="button"
+        class="btn-close shadow-none"
+        data-bs-dismiss="modal"
+        aria-label="Close"
+      >
+        <img lazyLoad="../../../../assets/images/cross.svg" />
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <h2 class="text-center font_16 f-poppins">
+          {{ "DoYouWantToChange" | translate }}
+        </h2>
+      </div>
+      <div
+        class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-2 mt-4"
+      >
+        <button
+          type="button"
+          class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+          data-bs-dismiss="modal"
+        >
+          {{ "No" | translate }}
+        </button>
+        <button
+          (click)="
+            convertToClass(
+              course.courseName,
+              course.school.schoolName
+            )
+          "
+          type="button"
+          class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
+          data-bs-dismiss="modal"
+        >
+          {{ "ConvertToClass" | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+

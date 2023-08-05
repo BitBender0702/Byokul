@@ -2,6 +2,7 @@
 using LMS.Common.ViewModels.Class;
 using LMS.Common.ViewModels.Course;
 using LMS.Data.Entity;
+using LMS.Data.Entity.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,6 +35,8 @@ namespace LMS.DataAccess.Automapper
             CreateMap<CourseViews, CourseViewsViewModel>();
             CreateMap<Course, CourseInfoForCertificateViewModel>();
             CreateMap<CourseTeacher, CourseTeacherViewModel>();
+            CreateMap<CourseCertificate, CertificateViewModel>()
+               .ForMember(x => x.Id, opt => opt.MapFrom(o => o.CertificateId));
         }
     }
 }

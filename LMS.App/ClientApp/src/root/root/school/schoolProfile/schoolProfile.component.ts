@@ -2195,7 +2195,6 @@ export class SchoolProfileComponent
 
 
   parseTheTags(tags:any){
-    console.log(tags.postTagValue);
     for (let index = 0; index < tags.length; index++) {
       const element = tags[index].postTagValue;
       try{

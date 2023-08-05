@@ -43,6 +43,14 @@ export const deleteCourseResponse = new BehaviorSubject<string>('');
 import { Dimensions, ImageCroppedEvent, ImageTransform } from 'ngx-image-cropper';
 import { TranslateService } from '@ngx-translate/core';
 
+
+import { DatePipe } from '@angular/common';
+import flatpickr from 'flatpickr';
+import { Arabic } from 'flatpickr/dist/l10n/ar';
+import { Spanish } from 'flatpickr/dist/l10n/es';
+import { Turkish } from 'flatpickr/dist/l10n/tr';
+
+
 @Component({
   selector: 'courseProfile-root',
   templateUrl: './courseProfile.component.html',
@@ -56,6 +64,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
   private _postService;
   private _notificationService;
   private _authService;
+  
   course: any;
   isProfileGrid: boolean = false;
   // isOpenSidebar:boolean = false;
@@ -131,6 +140,8 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
   filteredAttachments: any[] = [];
   courseAvatar: string = '';
 
+  
+
   imageChangedEvent: any = '';
   croppedImage: any = '';
   canvasRotation = 0;
@@ -154,9 +165,15 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
   @ViewChild('videoPlayer') videoPlayer!: ElementRef;
 
   @ViewChild('createPostModal', { static: true }) createPostModal!: CreatePostComponent;
+  courseCertificateForm!: FormGroup;
+
+
+
+
+
 
   isDataLoaded: boolean = false;
-  constructor(injector: Injector, private translateService: TranslateService, private titleService: Title, private meta: Meta, authService: AuthService, notificationService: NotificationService, public messageService: MessageService, postService: PostService, private bsModalService: BsModalService, courseService: CourseService, private route: ActivatedRoute, private domSanitizer: DomSanitizer, private fb: FormBuilder, private router: Router, private http: HttpClient, private activatedRoute: ActivatedRoute, private cd: ChangeDetectorRef) {
+  constructor(injector: Injector, private translateService: TranslateService,private datePipe: DatePipe, private titleService: Title, private meta: Meta, authService: AuthService, notificationService: NotificationService, public messageService: MessageService, postService: PostService, private bsModalService: BsModalService, courseService: CourseService, private route: ActivatedRoute, private domSanitizer: DomSanitizer, private fb: FormBuilder, private router: Router, private http: HttpClient, private activatedRoute: ActivatedRoute, private cd: ChangeDetectorRef) {
     super(injector);
     this._courseService = courseService;
     this._postService = postService;
@@ -242,6 +259,15 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
 
     this.certificateForm = this.fb.group({
       certificates: this.fb.control([], [Validators.required]),
+    });
+
+    this.courseCertificateForm = this.fb.group({
+      courseId: this.fb.control(''),
+      certificateName: this.fb.control('', [Validators.required]),
+      provider: this.fb.control('', [Validators.required]),
+      issuedDate: this.fb.control(new Date().toISOString().substring(0, 10), [Validators.required]),
+      description: this.fb.control(''),
+      certificateId: this.fb.control(''),
     });
 
     this.deleteLanguage = {
@@ -892,6 +918,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
   }
 
   convertToClass(courseName: string, schoolName: string) {
+    debugger;
     this._courseService.convertToClass(courseName.replace(" ", "").toLowerCase()).subscribe((response) => {
       // localStorage.setItem("isCourseConvertIntoClass", JSON.stringify(true));
       convertIntoClassResponse.next({ classId: response.classId, className: response.className, avatar: response.avatar, school: response.school });
@@ -966,7 +993,6 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
 
 
       this.InitializeLikeUnlikePost();
-      console.log("succes");
     });
 
 
@@ -1018,8 +1044,6 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       this.initializeCourseView();
       this.courseView.courseId = courseId;
       this._courseService.courseView(this.courseView).subscribe((response) => {
-
-        console.log('success');
         //this.posts.posts.views.length = response;
       });
     }
@@ -1182,7 +1206,6 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
 
   imageLoaded() {
     this.showCropper = true;
-    console.log('Image loaded');
   }
 
   cropperReady(sourceImageDimensions: Dimensions) {
@@ -1301,7 +1324,6 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
 
 
   parseTheTags(tags: any) {
-    console.log(tags.postTagValue);
     for (let index = 0; index < tags.length; index++) {
       const element = tags[index].postTagValue;
       try {
@@ -1313,4 +1335,128 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
 
   }
 
+
+  editcourseCertificate(courseCertificateInfo: any) {
+    debugger
+    // dob = dob.substring(0, dob.indexOf('T'));     
+
+    var issuedDate = courseCertificateInfo.issuedDate.substring(0, courseCertificateInfo.issuedDate.indexOf('T'));
+    issuedDate = this.datePipe.transform(issuedDate, 'MM/dd/yyyy');
+
+    flatpickr('#issuedDate', {
+      minDate: "1903-12-31",
+      maxDate: new Date(),
+      dateFormat: "m/d/Y",
+      defaultDate: issuedDate
+    });
+
+    this.courseCertificateForm = this.fb.group({
+      courseId: this.fb.control(this.course.courseId),
+      certificateName: this.fb.control(courseCertificateInfo.certificateName, [Validators.required]),
+      provider: this.fb.control(courseCertificateInfo.provider, [Validators.required]),
+      issuedDate: this.fb.control(issuedDate, [Validators.required]),
+      description: this.fb.control(courseCertificateInfo.description),
+      certificateId: this.fb.control(courseCertificateInfo.id)
+    });
+
+    this.uploadImage = courseCertificateInfo.certificateUrl;
+  }
+
+
+  saveCourseCertificate() {
+    debugger
+    this.isSubmitted = true;
+    if (!this.courseCertificateForm.valid) {
+      return;
+    }
+
+    if (this.uploadImage == null) {
+      return;
+    }
+
+    this.loadingIcon = true;
+    var formValue = this.courseCertificateForm.value;
+
+    //here we will add if id has
+    if (formValue.certificateId != "") {
+      this.certificateToUpload.append('certificateId', formValue.certificateId);
+    }
+
+    if (typeof this.uploadImage == "string") {
+      this.certificateToUpload.append('certificateUrl', this.uploadImage);
+    }
+    this.certificateToUpload.append('courseId', this.course.courseId);
+    this.certificateToUpload.append('certificateName', formValue.certificateName);
+    this.certificateToUpload.append('provider', formValue.provider);
+    this.certificateToUpload.append('issuedDate', formValue.issuedDate);
+    this.certificateToUpload.append('description', formValue.description);
+
+    // this.userCertificateForm.updateValueAndValidity();
+
+    this._courseService.saveCourseCertificates(this.certificateToUpload).subscribe((response: any) => {
+      debugger
+      this.closeCertificatesModal();
+      this.isSubmitted = false;
+      this.certificateToUpload = new FormData();
+      this.courseCertificate.certificates = [];
+      // this.certificateToUpload.set('certificateImage', '');
+      if (formValue.certificateId != "") {
+        var translatedSummary = this.translateService.instant('Success');
+        var translatedMessage = this.translateService.instant('CertificateUpdatedSuccessfully');
+      }
+      else {
+        var translatedSummary = this.translateService.instant('Success');
+        var translatedMessage = this.translateService.instant('CertificateAddedSuccessfully');
+      }
+      this.messageService.add({
+        severity: 'success',
+        summary: translatedSummary,
+        life: 3000,
+        detail: translatedMessage,
+      });
+      this.ngOnInit();
+    });
+  }
+
+
+  openCourseCertificate(certificateInfo: any) {
+    debugger
+    this.certificateToUpload.set('certificateImage', '');
+    // this.courseCertificateInfo = certificateInfo;
+    // this.openCourseOwnCertificate.nativeElement.click();
+    this.cd.detectChanges();
+  }
+
+
+  removeUploadCertificateImage() {
+    this.uploadImage = null;
+    this.certificateToUpload.set('certificateImage', '');
+    this.avatarImage = undefined;
+    this.uploadImageName = "";
+
+  }
+  
+  uploadImageName: string = "";
+  avatarImage!: any;
+  handleCourseCertificate(event: any) {
+    debugger
+    this.certificateToUpload.append("certificateImage", event.target.files[0], event.target.files[0].name);
+    this.uploadImageName = event.target.files[0].name;
+    const reader = new FileReader();
+    reader.onload = (_event) => {
+      this.uploadImage = _event.target?.result;
+      this.uploadImage = this.domSanitizer.bypassSecurityTrustUrl(this.uploadImage);
+    }
+    reader.readAsDataURL(event.target.files[0]);
+    this.avatarImage = this.fileToUpload.get('avatarImage');
+  }
+
+
+  getSelectedLanguage() {
+    var selectedLanguage = localStorage.getItem("selectedLanguage");
+    this.translate.use(selectedLanguage ?? '');
+    var locale = selectedLanguage == "ar" ? Arabic : selectedLanguage == "sp" ? Spanish : selectedLanguage == "tr" ? Turkish : null
+    // const dateOfBirthElement = this.founded.nativeElement;
+    // dateOfBirthElement._flatpickr.set("locale", locale);
+  }
 }
