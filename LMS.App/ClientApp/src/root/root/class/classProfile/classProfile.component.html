@@ -60,13 +60,18 @@
             {{ "Buyfor" | translate }} ${{ class.price }}
           </button> -->
           <button
-          *ngIf="!isOwner && class.price != null && class.price != 0 && !class.isClassAccessable"
-          (click)="openPaymentModal()"
-          type="button"
-          class="btn custom-btn primary_btn earning-btn fw_400 h_44"
-        >
-          {{ "Buyfor" | translate }} ${{ class.price }}
-        </button>
+            *ngIf="
+              !isOwner &&
+              class.price != null &&
+              class.price != 0 &&
+              !class.isClassAccessable
+            "
+            (click)="openPaymentModal()"
+            type="button"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44"
+          >
+            {{ "Buyfor" | translate }} ${{ class.price }}
+          </button>
         </div>
         <div
           class="live-header d-flex align-items-center justify-content-between"
@@ -446,7 +451,11 @@
           </div>
         </div>
 
-        <div *ngIf="class.isClassAccessable" class="tab-content" id="pills-tabContent">
+        <div
+          *ngIf="class.isClassAccessable"
+          class="tab-content"
+          id="pills-tabContent"
+        >
           <div
             class="tab-pane fade show active"
             id="school-feed-tab-pane"
@@ -550,8 +559,7 @@
                                     let item of parseTheTags(post.postTags);
                                     let isLast = last
                                   "
-                                  >#{{ item
-                                  }}{{ isLast ? "" : ", " }}</span
+                                  >#{{ item }}{{ isLast ? "" : ", " }}</span
                                 >
                               </div>
                             </div>
@@ -1194,7 +1202,8 @@
                                     lazyLoad="../../../../assets/images/live_img.png"
                                   />
                                 </div>
-                              </div><br>
+                              </div>
+                              <br />
 
                               <p
                                 class="font_14 school-grid-date d-inline-block mb-0"
@@ -1229,11 +1238,11 @@
                               *ngIf="gridItemInfo.postTags.length != 0"
                               class="teacher-tags tag-box hashtag_box"
                             >
-                            <span 
-                            *ngFor="let tag of postsTagValues"
-                            class="custom-tag"
-                            >#{{ tag }}</span
-                          >
+                              <span
+                                *ngFor="let tag of postsTagValues"
+                                class="custom-tag"
+                                >#{{ tag }}</span
+                              >
                             </div>
                             <div
                               class="school-grid-footer preview-right-action"
@@ -1351,20 +1360,22 @@
                       class="school-grid-box position-relative school-list-box mb-0"
                     >
                       <div
-                        class="schoolgrid-header d-flex align-items-center position-relative"
+                        class="schoolgrid-header d-flex align-items-center justify-content-between"
                       >
-                        <div class="school-gridprofile-icon">
-                          <img [lazyLoad]="class.avatar" />
-                        </div>
-                        <h2
-                          class="d-inline-block font_16 fw_600 text_sec1 mb-0"
-                        >
-                          {{ post.title }}
-                        </h2>
-                        <div *ngIf="post.isLive">
-                          <img
-                            lazyLoad="../../../../assets/images/live_img.png"
-                          />
+                        <div class="d-flex align-items-center gap-3">
+                          <div class="school-gridprofile-icon">
+                            <img [lazyLoad]="class.avatar" />
+                          </div>
+                          <h2
+                            class="d-inline-block font_16 fw_600 text_sec1 mb-0"
+                          >
+                            {{ post.title }}
+                          </h2>
+                          <div *ngIf="post.isLive">
+                            <img
+                              lazyLoad="../../../../assets/images/live_img.png"
+                            />
+                          </div>
                         </div>
                         <div class="right-action">
                           <button
@@ -2766,59 +2777,56 @@
   </div>
 </ng-template>
 
-
 <div
-class="modal fade edit-school-modal delete-modal"
-id="confirm-courseChange"
-tabindex="-1"
-aria-labelledby="confirm-courseChange"
-aria-hidden="true"
+  class="modal fade edit-school-modal delete-modal"
+  id="confirm-courseChange"
+  tabindex="-1"
+  aria-labelledby="confirm-courseChange"
+  aria-hidden="true"
 >
-<div class="modal-dialog modal-dialog-centered">
-  <div class="modal-content">
-    <div
-      class="modal-header border-0 justify-content-center position-relative"
-    >
-      <h1
-        class="modal-title font_22 text_dark fw_700 border-0 text-center"
-      >
-        {{ "ConfirmCourseChange" | translate }}
-      </h1>
-      <button
-        type="button"
-        class="btn-close shadow-none"
-        data-bs-dismiss="modal"
-        aria-label="Close"
-      >
-        <img lazyLoad="../../../../assets/images/cross.svg" />
-      </button>
-    </div>
-    <div class="modal-body">
-      <div class="form-group">
-        <h2 class="text-center font_16 f-poppins">
-          {{ "DoYouWantToChange" | translate }}
-        </h2>
-      </div>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
       <div
-        class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-2 mt-4"
+        class="modal-header border-0 justify-content-center position-relative"
       >
+        <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">
+          {{ "ConfirmCourseChange" | translate }}
+        </h1>
         <button
           type="button"
-          class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+          class="btn-close shadow-none"
           data-bs-dismiss="modal"
+          aria-label="Close"
         >
-          {{ "No" | translate }}
+          <img lazyLoad="../../../../assets/images/cross.svg" />
         </button>
-        <button
-          (click)="convertToCourse(class.className, class.school.schoolName)"
-          type="button"
-          class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
-          data-bs-dismiss="modal"
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <h2 class="text-center font_16 f-poppins">
+            {{ "DoYouWantToChange" | translate }}
+          </h2>
+        </div>
+        <div
+          class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-2 mt-4"
         >
-          {{ "Yes" | translate }}
-        </button>
+          <button
+            type="button"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+            data-bs-dismiss="modal"
+          >
+            {{ "No" | translate }}
+          </button>
+          <button
+            (click)="convertToCourse(class.className, class.school.schoolName)"
+            type="button"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
+            data-bs-dismiss="modal"
+          >
+            {{ "Yes" | translate }}
+          </button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 </div>
