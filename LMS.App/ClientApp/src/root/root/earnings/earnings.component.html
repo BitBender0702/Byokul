@@ -392,7 +392,7 @@
                     aria-selected="false"
                     tabindex="-1"
                   >
-                    {{ "GuestSchools" | translate }}
+                    {{ "OwnedClass&Course" | translate }}
                   </button>
                 </li>
                 <li class="nav-item ps-0 mb-0" role="presentation">
@@ -608,11 +608,23 @@
                   class="d-flex align-items-center justify-content-between"
                 >
                   <span class="followers-name font_16 text_sec1">
-                    <img
+                    <img *ngIf="item.user?.avatar != null"
                       [routerLink]="['/user/userProfile', item.user?.id]"
                       [src]="item.user?.avatar"
                       class="rounded-circle me-2 image_style"
                     />
+
+                    <img *ngIf="item.user?.avatar == null && gender == '1'"
+                    [routerLink]="['/user/userProfile', item.user?.id]"
+                    src="../../../assets/images/maleProfile.jfif"
+                    class="rounded-circle me-2 image_style"
+                  />
+                  <img *ngIf="item.user?.avatar == null && (gender == '2' || gender == '3')"
+                  [routerLink]="['/user/userProfile', item.user?.id]"
+                  src="../../../assets/images/femaleProfile.jfif"
+                  class="rounded-circle me-2 image_style"
+                  />
+                    
                     <span [innerHTML]="item.message"></span>
 
                     <span

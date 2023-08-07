@@ -77,6 +77,8 @@ export const deleteSchoolResponse = new BehaviorSubject<string>('');
 
 import { NgxMaskModule } from 'ngx-mask';
 import { v4 as uuidv4 } from 'uuid';
+import { IyizicoService } from 'src/root/service/iyizico.service';
+import { Constant } from 'src/root/interfaces/constant';
 
 
 @Component({
@@ -96,6 +98,7 @@ export class SchoolProfileComponent
   private _authService;
   private _userService;
   private _signalrService;
+  private _iyizicoService;
   school: any;
   isProfileGrid: boolean = false;
   isOpenSidebar: boolean = false;
@@ -254,6 +257,7 @@ export class SchoolProfileComponent
     injector: Injector,
     private translateService: TranslateService,
     public messageService: MessageService,
+    public iyizicoService: IyizicoService,
     postService: PostService,
     private bsModalService: BsModalService,
     private matDialog: MatDialog,
@@ -284,6 +288,7 @@ export class SchoolProfileComponent
     this._notificationService = notificationService;
     this._classService = classService,
       this._courseService = courseService
+      this._iyizicoService = iyizicoService;
     this._authService = authService;
     this._userService = userService;
     this._signalrService = signalRService;
@@ -2203,6 +2208,35 @@ export class SchoolProfileComponent
       return reelsTags
     }
     
+  }
+
+  cancelSchoolSubscriptionId:string = "";
+  getCancelSubscriptionSchoolId(schoolId: string) {
+    this.cancelSchoolSubscriptionId = schoolId;
+  }
+
+  cancelSubscription(){
+    this._iyizicoService.cancelSubscription(this.cancelSchoolSubscriptionId).subscribe((response: any) => {
+      debugger
+      if(response.errorMessage == Constant.Success){
+        var message = "Subscription cenceled successfully"
+        this.messageService.add({ severity: 'success', summary: 'Success', life: 3000, detail: message });
+      }
+      else{
+        this.messageService.add({ severity: 'info', summary: 'Info', life: 3000, detail: response.errorMessage });
+      }
+    });
+  }
+
+  renewSchoolSubscriptionId:string = "";
+  getRenewSubscriptionSchoolId(schoolId: string) {
+    this.renewSchoolSubscriptionId = schoolId;
+  }
+
+  renewSubscription(){
+    this._iyizicoService.renewSubscription(this.renewSchoolSubscriptionId).subscribe((response: any) => {
+      debugger
+    });
   }
 
 }

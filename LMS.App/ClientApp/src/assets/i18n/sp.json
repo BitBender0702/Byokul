@@ -338,7 +338,19 @@
   "FileStorageProgressMessage": "Sus archivos están siendo procesados. Te avisaremos cuando se complete la carga.",
   "FilesUploadedSuccessfully": "Archivos cargados con éxito en el almacenamiento de archivos",
   "DoYouWantToChange":"¿Quieres cambiar entre clase y curso?",
-  "ConfirmCourseChange":"Cambiar Clase-Curso"
+  "ConfirmCourseChange":"Cambiar Clase-Curso",
+  "OwnedClass&Course": "Owned Classes & Courses",
+  "SchoolTransactions": "School Transactions",
+  "ClassCourseTransactions": "Class/Course Transactions",
+  "CancelSubscription": "Cancel Subscription",
+  "RenewSubscription": "RenewSubscription",
+  "Cancel": "Cancel",
+  "Renew": "Renew",
+  "DoYouWantToCancelSubscription": "Do you really want to cancel the subscription",
+  "DoYouWantToRenewSubscription": "Do you really want to renew the subscription",
+  "DoYouWantToRefundPayment": "Do you really want to refund this payment",
+  "RefundPayment": "Refund Payment"
+
 
 
 

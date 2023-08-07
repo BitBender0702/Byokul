@@ -17,6 +17,10 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AuthGuard } from '../service/auth.guard';
 import { InputTextModule } from 'primeng/inputtext';
 import { SideBarComponent } from '../user-template/side-bar/side-bar.component';
+import { SchoolTransactionsComponent } from './SchoolTransactions/schoolTransactions.component';
+import { ClassCourseModalComponent } from '../root/ClassCourseModal/classCourseModal.component';
+import { ClassCourseTransactionsComponent } from './ClassCourseTransactions/classCourseTransactions.component';
+import { ToastModule } from 'primeng/toast';
 
 const routes: Routes = [
   {
@@ -44,7 +48,16 @@ const routes: Routes = [
   {
     path: 'registeredCourses',
     component: RegisteredCoursesComponent, canActivate: [AuthGuard]
+  },
+  {
+    path: 'schoolTransactions',
+    component: SchoolTransactionsComponent, canActivate: [AuthGuard]
+  },
+  {
+    path: 'classCourseTransactions',
+    component: ClassCourseTransactionsComponent, canActivate: [AuthGuard]
   }
+
 ];
 
 
@@ -54,11 +67,15 @@ const routes: Routes = [
     RegisteredUsersComponent,
     RegisteredSchoolsComponent,
     RegisteredClassesComponent,
-    RegisteredCoursesComponent
+    RegisteredCoursesComponent,
+    SchoolTransactionsComponent,
+    ClassCourseTransactionsComponent
+    
   ],
   imports: [
     SharedModule,
     CommonModule,
+    ToastModule,
     [RouterModule.forChild(routes)],
     FormsModule,
     ReactiveFormsModule,

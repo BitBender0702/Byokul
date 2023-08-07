@@ -504,7 +504,19 @@
   "FileStorageProgressMessage": "Dosyalarınız işleniyor. Yükleme tamamlandığında size haber vereceğiz",
   "FilesUploadedSuccessfully": "Dosya deposuna başarıyla yüklenen dosyalar",
   "DoYouWantToChange":"Sınıf ve kurs arasında geçiş yapmak istiyor musunuz?",
-  "ConfirmCourseChange":"Sınıf-Kursu Değiştir"
+  "ConfirmCourseChange":"Sınıf-Kursu Değiştir",
+  "OwnedClass&Course": "Owned Classes & Courses",
+  "SchoolTransactions": "School Transactions",
+  "ClassCourseTransactions": "Class/Course Transactions",
+  "CancelSubscription": "Cancel Subscription",
+  "RenewSubscription": "RenewSubscription",
+  "Cancel": "Cancel",
+  "Renew": "Renew",
+  "DoYouWantToCancelSubscription": "Do you really want to cancel the subscription",
+  "DoYouWantToRenewSubscription": "Do you really want to renew the subscription",
+  "DoYouWantToRefundPayment": "Do you really want to refund this payment",
+  "RefundPayment": "Refund Payment"
+
 
 
 

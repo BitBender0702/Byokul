@@ -63,6 +63,7 @@ export class EarningsComponent extends MultilingualComponent implements OnInit, 
     isOpenAllTab!:boolean;
     isApplieDateFilter!:boolean;
     maxDate:Date = new Date();
+    gender!:string;
     changeLanguageSubscription!: Subscription;
     transactionParamViewModel!: TransactionParamViewModel;
     @ViewChild('dropdownMenu') dropdownMenu!: ElementRef;
@@ -79,6 +80,7 @@ export class EarningsComponent extends MultilingualComponent implements OnInit, 
       debugger
       this.loadingIcon = true;
       this.isOpenOwnedSchoolTab = true;
+      this.gender = localStorage.getItem("gender")??'';
       var selectedLang = localStorage.getItem('selectedLanguage');
       this.translate.use(selectedLang ?? '');
       this.transactionParamViewModel = {
@@ -168,6 +170,7 @@ export class EarningsComponent extends MultilingualComponent implements OnInit, 
     }
 
     initialClassCourseDetails(transactionParamViewModel:TransactionParamViewModel){
+      debugger
       this._paymentService.classCourseTransactionDetails(transactionParamViewModel).subscribe((response) => {
         debugger
         this.classCourseDetails = response.classCourseTransactions;
@@ -530,6 +533,7 @@ this.dropdownMenu.nativeElement.style.display = (display === 'none') ? 'block' :
     }
 
     isClassCourseTab(){
+      debugger
       this.isOpenOwnedSchoolTab = false;
       this.isOpenAllTab = false;
       this.isOpenWithdrawTab = false;

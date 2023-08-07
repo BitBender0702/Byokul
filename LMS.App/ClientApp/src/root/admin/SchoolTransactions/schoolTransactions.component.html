@@ -1,0 +1,396 @@
+<div *ngIf="isDataLoaded">
+    <section class="f-poppins">
+      <div class="main_content">
+        <div class="main_content-max-width">
+          <div
+            class="create-post-header d-flex justify-content-between d-none d-xl-flex align-items-center"
+          >
+            <button
+              type="button"
+              class="back-button bg-transparent border-0 font_16 fw_400 text_dark invisible"
+            >
+              <img src="../../../../assets/images/arrow-left.svg" />{{
+                "Back" | translate
+              }}
+            </button>
+            <h2 class="font_22 fw_700 f-monteserrat mb-md-0">
+              {{ "SchoolTransactions" | translate }}
+            </h2>
+            <button
+              [routerLink]="['/user/auth/logout']"
+              type="button"
+              class="btn custom-btn primary_btn earning-btn fw_400 h_44"
+              data-bs-toggle="modal"
+              data-bs-target="#create-post"
+            >
+              {{ "Logout" | translate }}
+            </button>
+          </div>
+          <div
+            class="live-header d-flex align-items-center justify-content-between position-static"
+          >
+            <button
+              type="button"
+              class="back-button bg-transparent border-0 font_16 fw_400 text_dark d-xl-none invisible"
+            >
+              <img src="../../../../assets/images/arrow-left.svg" />{{
+                "Back" | translate
+              }}
+            </button>
+            <span class="logo_mobile d-xl-none">
+              <img src="../../../../assets/images/logo.svg" />
+            </span>
+            <div class="d-xl-none">
+              <button type="button" class="mobile-search border_btn">
+                <img src="../../../../assets/images/search-lg.svg" />
+              </button>
+              <button
+                (click)="openAdminSideBar()"
+                type="button"
+                class="mobile-search border_btn"
+              >
+                <img src="../../../../assets/images/menu.svg" />
+              </button>
+            </div>
+          </div>
+  
+          <div class="card table">
+            <p-table  class="theading-nowrap"
+              #dt
+              [value]="schoolTransactions"
+              [rows]="10"
+              [paginator]="true"
+              [pageLinks]="3"
+              [rowsPerPageOptions]="[5, 10, 20]"
+              [globalFilterFields]="['courseName']"
+              [rowHover]="true"
+              dataKey="id"
+              currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+              [showCurrentPageReport]="true"
+            >
+              <ng-template pTemplate="caption">
+                <div
+                  class="d-flex justify-content-between p-ai-center p-jc-between"
+                >
+                  <div class="d-flex w-100 justify-content-between">
+                    <h5 class="p-m-0">{{ "SchoolTransactions" | translate }}</h5>
+                    <button
+                      type="button"
+                      (click)="resetSorting()"
+                      class="btn custom-btn primary_btn earning-btn fw_400 h_44 me-3"
+                    >
+                    {{ "ResetTable" | translate }}
+                    </button>
+                  </div>
+                  <span class="p-input-icon-left">
+                    <i class="pi pi-search"></i>
+                    <input
+                      pInputText
+                      type="text"
+                      (input)="search($event)"
+                      placeholder="{{ 'Search' | translate }}"
+                    />
+                  </span>
+                </div>
+              </ng-template>
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>{{ "Avatar" | translate }}</th>
+                  <th pSortableColumn="user.firstName">
+                    {{ "BuyerName" | translate }}
+                    <p-sortIcon field="user.firstName"></p-sortIcon>
+                  </th>
+                  <th pSortableColumn="school.schoolName">
+                    {{ "SchoolName" | translate }}
+                    <p-sortIcon field="school.schoolName"></p-sortIcon>
+                  </th>
+                  <th pSortableColumn="amount">
+                    {{ "Amount" | translate }}
+                    <p-sortIcon field="amount"></p-sortIcon>
+                  </th>
+                  <th pSortableColumn="createdOn">
+                    {{ "PaymentOn" | translate }}
+                    <p-sortIcon field="createdOn"></p-sortIcon>
+                  </th>
+                  <th pSortableColumn="Cancel">
+                    {{ "Cancel" | translate
+                    }}<p-sortIcon field="Cancel"></p-sortIcon>
+                  </th>
+                  <th pSortableColumn="isRefund">
+                    {{ "Refund" | translate
+                    }}<p-sortIcon field="isRefund"></p-sortIcon>
+                  </th>
+                  <th></th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-transaction>
+                <tr>
+                  <td>
+                    <div class="admin-class-icon">
+                      <img
+                        *ngIf="transaction.user.avatar != null"
+                        class="school-profile-icon user-profile-header image"
+                        [src]="transaction.user.avatar"
+                      />
+                      <img
+                        *ngIf="transaction.user.avatar == null && gender == '1'"
+                        class="school-profile-icon user-profile-header image"
+                        src="../../../assets/images/maleProfile.jfif"
+                      />
+                      <img
+                      *ngIf="transaction.user.avatar == null && (gender == '2' || gender == '3')"
+                      class="school-profile-icon user-profile-header image"
+                      src="../../../assets/images/femaleProfile.jfif"
+                    />
+                    </div>
+                  </td>
+                  <td
+                    [routerLink]="[
+                      '/profile/user',
+                      transaction.user.id
+                    ]"
+                    style="cursor: pointer"
+                  >
+                    {{ transaction.user.firstName + " " +   transaction.user.lastName}}
+                  </td>
+                  <td
+                    [routerLink]="['/profile/school', transaction.school.schoolName]"
+                    style="cursor: pointer"
+                  >
+                    {{ transaction.school?.schoolName }}
+                  </td>
+                  <td>{{ transaction.amount }}</td>
+                  <td>
+                    {{ transaction.createdOn | date : "MMMM d, y" }} at
+                    {{ transaction.createdOn | date : "H:mm" }}
+                  </td>  
+                  <td>
+                  <button
+                  *ngIf="transaction.school.isSchoolSubscribed"
+                  (click)="getCancelSubscriptionSchoolId(transaction.schoolId)"
+                  data-bs-toggle="modal"
+                  data-bs-target="#cancelSubscription"
+                  pButton
+                  pRipple
+                  icon="pi pi-pencil"
+                  class="btn custom-btn primary_btn earning-btn fw_400 h_44 pe-4 ps-4 mt-2 mb-2"
+                >
+                  {{ "Cancel" | translate }}
+                </button>
+                </td>
+                <td>
+                  <button
+                  *ngIf="!transaction.isRefund"
+                  (click)="getRefundPaymentId(transaction.paymentId)"
+                  data-bs-toggle="modal"
+                  data-bs-target="#refundPayment"
+                  pButton
+                  pRipple
+                  icon="pi pi-pencil"
+                  class="btn custom-btn primary_btn earning-btn fw_400 h_44 pe-4 ps-4 mt-2 mb-2"
+                >
+                  {{ "Refund" | translate }}
+                </button>
+                <p *ngIf="transaction.isRefund">Refunded</p>
+                </td>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="summary">
+                <div class="p-d-flex p-ai-center p-jc-between">
+                  {{ "InTotalThereAre" | translate }}
+                  {{ schoolTransactions ? schoolTransactions.length : 0 }}
+                  {{ "Transactions" | translate }}.
+                </div>
+              </ng-template>
+            </p-table>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
+  
+
+  <div
+class="modal fade edit-school-modal delete-modal"
+id="cancelSubscription"
+tabindex="-1"
+aria-labelledby="cancelSubscription"
+aria-hidden="true"
+>
+<div class="modal-dialog modal-dialog-centered">
+  <div class="modal-content">
+    <div
+      class="modal-header border-0 justify-content-center position-relative"
+    >
+      <h1
+        class="modal-title font_22 text_dark fw_700 border-0 text-center"
+      >
+        {{ "CancelSubscription" | translate }}
+      </h1>
+      <button
+        type="button"
+        class="btn-close shadow-none"
+        data-bs-dismiss="modal"
+        aria-label="Close"
+      >
+        <img lazyLoad="../../../../assets/images/cross.svg" />
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <h2 class="text-center font_16 f-poppins">
+          {{ "DoYouWantToCancelSubscription" | translate }}
+        </h2>
+      </div>
+      <div
+        class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-2 mt-4"
+      >
+        <button
+          type="button"
+          class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+          data-bs-dismiss="modal"
+        >
+          {{ "No" | translate }}
+        </button>
+        <button
+          (click)="cancelSubscription()"
+          type="button"
+          class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
+          data-bs-dismiss="modal"
+        >
+          {{ "Yes" | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div
+class="modal fade edit-school-modal delete-modal"
+id="refundPayment"
+tabindex="-1"
+aria-labelledby="refundPayment"
+aria-hidden="true"
+>
+<div class="modal-dialog modal-dialog-centered">
+  <div class="modal-content">
+    <div
+      class="modal-header border-0 justify-content-center position-relative"
+    >
+      <h1
+        class="modal-title font_22 text_dark fw_700 border-0 text-center"
+      >
+        {{ "RefundPayment" | translate }}
+      </h1>
+      <button
+        type="button"
+        class="btn-close shadow-none"
+        data-bs-dismiss="modal"
+        aria-label="Close"
+      >
+        <img lazyLoad="../../../../assets/images/cross.svg" />
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <h2 class="text-center font_16 f-poppins">
+          {{ "DoYouWantToRefundPayment" | translate }}
+        </h2>
+      </div>
+      <div
+        class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-2 mt-4"
+      >
+        <button
+          type="button"
+          class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+          data-bs-dismiss="modal"
+        >
+          {{ "No" | translate }}
+        </button>
+        <button
+          (click)="reFundPayment()"
+          type="button"
+          class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
+          data-bs-dismiss="modal"
+        >
+          {{ "Yes" | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+
+<p-toast></p-toast>
+
+
+  <!-- <div
+    class="modal fade edit-school-modal"
+    id="disable-course"
+    tabindex="-1"
+    aria-labelledby="disable-course"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div
+          class="modal-header border-0 justify-content-center position-relative"
+        >
+          <h1
+            *ngIf="enableDisableCourse.isDisable"
+            class="modal-title font_22 text_dark fw_700 border-0 text-center"
+          >
+            {{ "DisableCourse" | translate }}
+          </h1>
+          <h1
+            *ngIf="!enableDisableCourse.isDisable"
+            class="modal-title font_22 text_dark fw_700 border-0 text-center"
+          >
+            {{ "EnableCourse" | translate }}
+          </h1>
+  
+          <button
+            type="button"
+            class="btn-close shadow-none"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          >
+            <img src="../../../assets/images/cross.svg" />
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <h2 *ngIf="enableDisableCourse.isDisable" class="text-center">
+              {{ "DoYouWantToDisableCourse" | translate }} ?
+            </h2>
+            <h2 *ngIf="!enableDisableCourse.isDisable" class="text-center">
+              {{ "DoYouWantToEnableCourse" | translate }} ?
+            </h2>
+          </div>
+          <div
+            class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4"
+          >
+            <button
+              type="button"
+              class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+              data-bs-dismiss="modal"
+            >
+              {{ "No" | translate }}
+            </button>
+            <button
+              (click)="disableCourse()"
+              type="button"
+              class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
+              data-bs-dismiss="modal"
+            >
+              {{ "Yes" | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> -->
+  

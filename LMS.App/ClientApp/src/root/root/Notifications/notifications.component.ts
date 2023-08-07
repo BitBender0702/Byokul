@@ -71,7 +71,7 @@ export const unreadNotificationResponse =new Subject<{type:string}>();
             this.notifications = notificationsResponse;
           
             
-            this.notificationAvatar = this.notifications[0]?.user.avatar
+            // this.notificationAvatar = this.notifications[0]?.user.avatar
             // this.dateForNotification = this.datePipe.transform(this.notifications.dateTime, 'yyyy-MM-dd');
            
             var notifications: any[] = this.notifications;

@@ -19,9 +19,11 @@ namespace LMS.Data.Entity
         public DateTime CreatedOn { get; set; }
         public int Status { get; set; }
         public bool IsActive { get; set; }
+        public int Amount { get; set; }
         public string SubscriptionReferenceCode { get; set; }
         public DateTime SubscriptionStartDate { get; set; }
         public DateTime SubscriptionEndDate { get; set; }
+        public bool IsRefund { get; set; }
 
     }
 }
