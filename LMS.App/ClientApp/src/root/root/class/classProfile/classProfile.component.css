@@ -25,6 +25,10 @@
   right: 0;
 }
 
+.date-view-list {
+  margin-bottom: 0;
+}
+
 .heightForText {
   height: 300px;
 }
