@@ -3113,6 +3113,7 @@ p-autocomplete li:before {
   max-height: 690px;
   overflow-y: auto;
   padding-right: 5px;
+  word-break: break-all;
 }
 .addCommentBox .form-control {
   margin: 0;

@@ -659,7 +659,9 @@
                           src="../../../assets/images/femaleProfile.jfif"
                         />
                       </div>
-                      <h2 class="d-inline-block font_20 fw_600 text_sec1 mb-0">
+                      <h2
+                        class="d-inline-block font_20 fw_600 text_sec1 mb-0 word-break"
+                      >
                         {{ post.title }}
                       </h2>
                       <div *ngIf="post.isLive">
@@ -1262,7 +1264,7 @@
                               />
                             </div>
                             <h2
-                              class="d-inline-block font_16 fw_600 text_sec1 mb-0"
+                              class="d-inline-block font_16 fw_600 text_sec1 mb-0 word-break"
                             >
                               {{ gridItemInfo.title }}
                             </h2>
@@ -1276,7 +1278,7 @@
                             {{ gridItemInfo.createdOn | date : "hh:mm" }}
                           </p>
                         </div>
-                        <p class="text_sec1 font_14 pt-3">
+                        <p class="text_sec1 font_14 pt-3 word-break">
                           {{ gridItemInfo.description }}
                         </p>
                         <!-- <div class="teacher-tags tag-box hashtag_box">
@@ -1660,7 +1662,9 @@
                         />
                       </a>
                     </div>
-                    <h2 class="d-inline-block font_20 fw_600 text_sec1 mb-0">
+                    <h2
+                      class="d-inline-block font_20 fw_600 text_sec1 mb-0 word-break"
+                    >
                       <a
                         *ngIf="post.postAuthorType == 1"
                         [routerLink]="['/profile/school', post.parentName]"
@@ -2292,7 +2296,9 @@
                           />
                         </a>
                       </div>
-                      <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">
+                      <h2
+                        class="d-inline-block font_16 fw_600 text_sec1 mb-0 word-break"
+                      >
                         <a
                           *ngIf="savedPostGridInfo.postAuthorType == 1"
                           [routerLink]="[
@@ -2344,7 +2350,7 @@
                       {{ savedPostGridInfo.createdOn | date : "hh:mm" }}
                     </p>
                   </div>
-                  <p class="text_sec1 font_14 pt-3">
+                  <p class="text_sec1 font_14 pt-3 word-break">
                     {{ savedPostGridInfo.description }}
                   </p>
                   <div
@@ -2576,7 +2582,9 @@
                         />
                       </a>
                     </div>
-                    <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">
+                    <h2
+                      class="d-inline-block font_16 fw_600 text_sec1 mb-0 word-break"
+                    >
                       <a
                         *ngIf="post.postAuthorType == 1"
                         [routerLink]="['/profile/school', post.parentName]"
@@ -2791,7 +2799,7 @@
                           </a>
                         </div>
                         <h2
-                          class="d-inline-block font_16 fw_600 text_sec1 mb-0"
+                          class="d-inline-block font_16 fw_600 text_sec1 mb-0 word-break"
                         >
                           <a
                             *ngIf="item.type == 1"
@@ -3134,7 +3142,9 @@
                           <img [src]="savedClassCourseGridInfo.avatar" />
                         </a>
                       </div>
-                      <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">
+                      <h2
+                        class="d-inline-block font_16 fw_600 text_sec1 mb-0 word-break"
+                      >
                         <a
                           *ngIf="savedClassCourseGridInfo.type == 1"
                           [routerLink]="[
@@ -3170,7 +3180,7 @@
                       {{ savedClassCourseGridInfo?.endDate | date : "MMMM d" }}
                     </p>
                   </div>
-                  <p class="text_sec1 font_14 pt-3">
+                  <p class="text_sec1 font_14 pt-3 word-break">
                     {{ savedClassCourseGridInfo.description }}
                   </p>
                   <div
@@ -3411,7 +3421,9 @@
                         <img [src]="item.avatar" />
                       </a>
                     </div>
-                    <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">
+                    <h2
+                      class="d-inline-block font_16 fw_600 text_sec1 mb-0 word-break"
+                    >
                       <a
                         *ngIf="item.type == 1"
                         [routerLink]="[
@@ -3607,7 +3619,9 @@
                         />
                       </a>
                     </div>
-                    <h2 class="d-inline-block font_20 fw_600 text_sec1 mb-0">
+                    <h2
+                      class="d-inline-block font_20 fw_600 text_sec1 mb-0 word-break"
+                    >
                       <a
                         *ngIf="post.postAuthorType == 1"
                         [routerLink]="['/profile/school', post.parentName]"
@@ -4235,7 +4249,9 @@
                           />
                         </a>
                       </div>
-                      <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">
+                      <h2
+                        class="d-inline-block font_16 fw_600 text_sec1 mb-0 word-break"
+                      >
                         <a
                           *ngIf="sharedPostGridInfo.postAuthorType == 1"
                           [routerLink]="[
@@ -4287,7 +4303,7 @@
                       {{ sharedPostGridInfo.createdOn | date : "hh:mm" }}
                     </p>
                   </div>
-                  <p class="text_sec1 font_14 pt-3">
+                  <p class="text_sec1 font_14 pt-3 word-break">
                     {{ sharedPostGridInfo.description }}
                   </p>
                   <div
@@ -4519,7 +4535,9 @@
                         />
                       </a>
                     </div>
-                    <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">
+                    <h2
+                      class="d-inline-block font_16 fw_600 text_sec1 mb-0 word-break"
+                    >
                       <a
                         *ngIf="post.postAuthorType == 1"
                         [routerLink]="['/profile/school', post.parentName]"
@@ -4758,7 +4776,9 @@
                         />
                       </a>
                     </div>
-                    <h2 class="d-inline-block font_20 fw_600 text_sec1 mb-0">
+                    <h2
+                      class="d-inline-block font_20 fw_600 text_sec1 mb-0 word-break"
+                    >
                       <a
                         *ngIf="post.postAuthorType == 1"
                         [routerLink]="['/profile/school', post.parentName]"
@@ -5387,7 +5407,9 @@
                           />
                         </a>
                       </div>
-                      <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">
+                      <h2
+                        class="d-inline-block font_16 fw_600 text_sec1 mb-0 word-break"
+                      >
                         <a
                           *ngIf="likedPostGridInfo.postAuthorType == 1"
                           [routerLink]="[
@@ -5439,7 +5461,7 @@
                       {{ likedPostGridInfo.createdOn | date : "hh:mm" }}
                     </p>
                   </div>
-                  <p class="text_sec1 font_14 pt-3">
+                  <p class="text_sec1 font_14 pt-3 word-break">
                     {{ likedPostGridInfo.description }}
                   </p>
                   <div
@@ -5671,7 +5693,9 @@
                         />
                       </a>
                     </div>
-                    <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">
+                    <h2
+                      class="d-inline-block font_16 fw_600 text_sec1 mb-0 word-break"
+                    >
                       <a
                         *ngIf="post.postAuthorType == 1"
                         [routerLink]="['/profile/school', post.parentName]"
