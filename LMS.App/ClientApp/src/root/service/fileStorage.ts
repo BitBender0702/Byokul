@@ -21,19 +21,21 @@ export class FileStorageService{
     }
 
     getFolders(parentId:string,searchString:string):Observable<any>{
+        var token = localStorage.getItem("jwt")?? '';
+        this.headers = new HttpHeaders().set("Authorization", "Bearer " + token);
         let queryParams = new HttpParams().append("parentId",parentId).append("searchString",searchString);
         return this.http.get(`${this.apiUrl}/fileStorage/getFolders`, {params:queryParams,headers: this.headers})
     }
 
     saveFiles(saveFiles:any):Observable<any>{
-        debugger
-        for (const pair of saveFiles.entries()) {
-            console.log(`${pair[0]}, ${pair[1]}`);
-          }
+        var token = localStorage.getItem("jwt")?? '';
+        this.headers = new HttpHeaders().set("Authorization", "Bearer " + token);
         return this.http.post(`${this.apiUrl}/fileStorage/saveFiles`,saveFiles,{headers: this.headers,reportProgress:true});
     }
 
     getFiles(parentId:string,searchString:string):Observable<any>{
+        var token = localStorage.getItem("jwt")?? '';
+        this.headers = new HttpHeaders().set("Authorization", "Bearer " + token);
         let queryParams = new HttpParams().append("parentId",parentId).append("searchString",searchString);
         return this.http.get(`${this.apiUrl}/fileStorage/getFiles`, {params:queryParams,headers: this.headers,reportProgress:true})
     }
@@ -44,6 +46,8 @@ export class FileStorageService{
     }
 
     getFileStorageAttachments():Observable<any>{
+        var token = localStorage.getItem("jwt")?? '';
+        this.headers = new HttpHeaders().set("Authorization", "Bearer " + token);
         return this.http.get(`${this.apiUrl}/fileStorage/getAttachments`, {headers: this.headers})
     }
 

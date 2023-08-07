@@ -73,6 +73,7 @@
           <div class="wht_newbox followers_box notification-settingbox">
             <ul class="list-unstyled before-none mb-0">
               <li *ngFor="let item of notifications" class="mb-0">
+                
                 <div
                   *ngIf="item.notificationType == 2"
                   style="cursor: pointer"
@@ -106,7 +107,8 @@
                     </p>
                   </span>
                 </div>
-
+                <!-- <span>{{item.dateTime | date: 'yyyy-MM-dd'}}</span>
+                <span class="mx-3">{{item.dateTime | date:'mm:ss' }}</span> -->
                 <div
                   *ngIf="item.notificationType == 1 && item.reelId == null"
                   style="cursor: pointer"
@@ -147,11 +149,25 @@
                   class="d-flex align-items-center justify-content-between"
                 >
                   <span class="followers-name font_16 text_sec1 fw_600">
-                    <img
+                    <img *ngIf="item.avatar != null"
                       [src]="item.avatar"
                       class="rounded-circle me-2"
                       style="width: 38px; height: 35px"
                     />
+                    <img
+                    *ngIf="item.avatar == null && gender == '1'"
+                    src="../../../assets/images/maleProfile.jfif"
+                    class="rounded-circle me-2"
+                    style="width: 38px; height: 35px"
+                  />
+                  <img
+                    *ngIf="
+                      item.avatar == null && (gender == '2' || gender == '3')
+                    "
+                    src="../../../assets/images/femaleProfile.jfif"
+                    class="rounded-circle me-2"
+                    style="width: 38px; height: 35px"
+                  />
                     <p class="font_16 ms-2 d-inline-block fw_400 mb-0">
                       {{ item.notificationContent }}
                     </p>
@@ -165,11 +181,25 @@
                   class="d-flex align-items-center justify-content-between"
                 >
                   <span class="followers-name font_16 text_sec1 fw_600">
-                    <img
+                    <img *ngIf="item.avatar != null"
                       [src]="item.avatar"
                       class="rounded-circle me-2"
                       style="width: 38px; height: 35px"
                     />
+                    <img
+                    *ngIf="item.avatar == null && gender == '1'"
+                    src="../../../assets/images/maleProfile.jfif"
+                    class="rounded-circle me-2"
+                    style="width: 38px; height: 35px"
+                  />
+                  <img
+                    *ngIf="
+                      item.avatar == null && (gender == '2' || gender == '3')
+                    "
+                    src="../../../assets/images/femaleProfile.jfif"
+                    class="rounded-circle me-2"
+                    style="width: 38px; height: 35px"
+                  />
                     <p class="font_16 ms-2 d-inline-block fw_400 mb-0">
                       {{ item.notificationContent }}
                     </p>
@@ -183,11 +213,25 @@
                   class="d-flex align-items-center justify-content-between"
                 >
                   <span class="followers-name font_16 text_sec1 fw_600">
-                    <img
+                    <img *ngIf="item.avatar != null"
                       [src]="item.avatar"
                       class="rounded-circle me-2"
                       style="width: 38px; height: 35px"
                     />
+                    <img
+                    *ngIf="item.avatar == null && gender == '1'"
+                    src="../../../assets/images/maleProfile.jfif"
+                    class="rounded-circle me-2"
+                    style="width: 38px; height: 35px"
+                  />
+                  <img
+                    *ngIf="
+                      item.avatar == null && (gender == '2' || gender == '3')
+                    "
+                    src="../../../assets/images/femaleProfile.jfif"
+                    class="rounded-circle me-2"
+                    style="width: 38px; height: 35px"
+                  />
                     <p class="font_16 ms-2 d-inline-block fw_400 mb-0">
                       {{ item.notificationContent }}
                     </p>
@@ -236,11 +280,25 @@
                   class="d-flex align-items-center justify-content-between"
                 >
                   <span class="followers-name font_16 text_sec1 fw_600">
-                    <img
+                    <img *ngIf="item.avatar != null"
                       [src]="item.avatar"
                       class="rounded-circle me-2"
                       style="width: 38px; height: 35px"
                     />
+                    <img
+                    *ngIf="item.avatar == null && gender == '1'"
+                    src="../../../assets/images/maleProfile.jfif"
+                    class="rounded-circle me-2"
+                    style="width: 38px; height: 35px"
+                  />
+                  <img
+                    *ngIf="
+                      item.avatar == null && (gender == '2' || gender == '3')
+                    "
+                    src="../../../assets/images/femaleProfile.jfif"
+                    class="rounded-circle me-2"
+                    style="width: 38px; height: 35px"
+                  />
                     <p class="font_16 ms-2 d-inline-block fw_400 mb-0">
                       {{ item.notificationContent }}
                     </p>
@@ -256,11 +314,25 @@
                   class="d-flex align-items-center justify-content-between"
                 >
                   <span class="followers-name font_16 text_sec1 fw_600">
-                    <img
-                      [src]="item.avatar"
-                      class="rounded-circle me-2"
-                      style="width: 38px; height: 35px"
-                    />
+                    <img *ngIf="item.avatar != null"
+                    [src]="item.avatar"
+                    class="rounded-circle me-2"
+                    style="width: 38px; height: 35px"
+                  />
+                  <img
+                  *ngIf="item.avatar == null && gender == '1'"
+                  src="../../../assets/images/maleProfile.jfif"
+                  class="rounded-circle me-2"
+                  style="width: 38px; height: 35px"
+                />
+                <img
+                  *ngIf="
+                    item.avatar == null && (gender == '2' || gender == '3')
+                  "
+                  src="../../../assets/images/femaleProfile.jfif"
+                  class="rounded-circle me-2"
+                  style="width: 38px; height: 35px"
+                />
                     <p class="font_16 ms-2 d-inline-block fw_400 mb-0">
                       {{ item.notificationContent }}
                     </p>
@@ -286,11 +358,25 @@
                   class="d-flex align-items-center justify-content-between"
                 >
                   <span class="followers-name font_16 text_sec1 fw_600">
-                    <img
-                      [src]="item.avatar"
-                      class="rounded-circle me-2"
-                      style="width: 38px; height: 35px"
-                    />
+                    <img *ngIf="item.avatar != null"
+                    [src]="item.avatar"
+                    class="rounded-circle me-2"
+                    style="width: 38px; height: 35px"
+                  />
+                  <img
+                  *ngIf="item.avatar == null && gender == '1'"
+                  src="../../../assets/images/maleProfile.jfif"
+                  class="rounded-circle me-2"
+                  style="width: 38px; height: 35px"
+                />
+                <img
+                  *ngIf="
+                    item.avatar == null && (gender == '2' || gender == '3')
+                  "
+                  src="../../../assets/images/femaleProfile.jfif"
+                  class="rounded-circle me-2"
+                  style="width: 38px; height: 35px"
+                />
                     <p class="font_16 ms-2 d-inline-block fw_400 mb-0">
                       {{ item.notificationContent }}
                     </p>
@@ -303,15 +389,35 @@
                   class="d-flex align-items-center justify-content-between"
                 >
                   <span class="followers-name font_16 text_sec1 fw_600">
-                    <img
-                      [src]="item.avatar"
-                      class="rounded-circle me-2"
-                      style="width: 38px; height: 35px"
-                    />
+                    <img *ngIf="item.avatar != null"
+                    [src]="item.avatar"
+                    class="rounded-circle me-2"
+                    style="width: 38px; height: 35px"
+                  />
+                  <img
+                  *ngIf="item.avatar == null && gender == '1'"
+                  src="../../../assets/images/maleProfile.jfif"
+                  class="rounded-circle me-2"
+                  style="width: 38px; height: 35px"
+                />
+                <img
+                  *ngIf="
+                    item.avatar == null && (gender == '2' || gender == '3')
+                  "
+                  src="../../../assets/images/femaleProfile.jfif"
+                  class="rounded-circle me-2"
+                  style="width: 38px; height: 35px"
+                />
                     <p class="font_16 ms-2 d-inline-block fw_400 mb-0">
                       {{ item.notificationContent }}
                     </p>
                   </span>
+                </div>
+                <div class="mt-2" style="top: -30px;float: right;position: relative;">
+                  <small>
+                    <span>{{item.dateTime | date: 'yyyy-MM-dd'}}</span>
+                    <span class="mx-3">{{item.dateTime | date:'hh:mm:ss a' }}</span>
+                  </small>
                 </div>
               </li>
             </ul>

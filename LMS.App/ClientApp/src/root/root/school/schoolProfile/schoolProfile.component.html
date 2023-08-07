@@ -1892,14 +1892,14 @@
                                     lazyLoad="../../../../assets/images/live_img.png"
                                   />
                                 </div>
-                              </div>
+                              </div><br>
 
                               <p
                                 class="font_14 school-grid-date d-inline-block mb-0"
                               >
-                                {{ gridItemInfo.dateTime | date : "MMMM d" }}
+                                {{ gridItemInfo.createdOn | date : "MMMM d" }}
                                 -
-                                {{ gridItemInfo.dateTime | date : "hh mm" }}
+                                {{ gridItemInfo.createdOn | date : "hh:mm" }}
                               </p>
                             </div>
                             <p class="text_sec1 font_14 pt-3">

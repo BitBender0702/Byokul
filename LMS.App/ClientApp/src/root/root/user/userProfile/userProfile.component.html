@@ -664,7 +664,7 @@
                       </h2>
                       <div *ngIf="post.isLive">
                         <img src="../../../../assets/images/live_img.png" />
-                      </div>
+                      </div><br>
                       <p class="font_14 school-grid-date d-inline-block mb-0">
                         {{ post.createdOn | date : "MMMM d" }} -
                         {{ post.createdOn | date : "hh:mm" }}
@@ -1058,7 +1058,7 @@
                     <button
                       (click)="openPostsViewModal(post)"
                       type="button"
-                      class="bg-transparent border-0 function-btns text-light"
+                      class="bg-transparent border-0 function-btns text-light videoChange"
                     >
                       <img
                         src="../../../../assets/images/Chat-dark.svg"
@@ -1265,9 +1265,9 @@
 
                           <p
                             class="font_14 school-grid-date d-inline-block mb-0"
-                          >
-                            {{ gridItemInfo.dateTime | date : "MMMM d" }} -
-                            {{ gridItemInfo.dateTime | date : "hh mm" }}
+                          ><br>
+                            {{ gridItemInfo.createdOn | date : "MMMM d" }} -
+                            {{ gridItemInfo.createdOn | date : "hh:mm" }}
                           </p>
                         </div>
                         <p class="text_sec1 font_14 pt-3">
@@ -1343,7 +1343,7 @@
                           <button
                             (click)="openPostsViewModal(gridItemInfo)"
                             type="button"
-                            class="bg-transparent border-0 function-btns"
+                            class="bg-transparent border-0 function-btns videoChange"
                           >
                             <img
                               src="../../../../assets/images/Chat-dark.svg"
@@ -1681,7 +1681,7 @@
                       >
                         {{ post.title }}
                       </a>
-                    </h2>
+                    </h2><br>
                     <p class="font_14 school-grid-date d-inline-block mb-0">
                       {{ post.createdOn | date : "MMMM d" }} -
                       {{ post.createdOn | date : "hh:mm" }}
@@ -1701,8 +1701,8 @@
                     </ng-container>
                 </div> -->
                     <div class="teacher-tags tag-box hashtag_box">
-                      <span *ngFor="let tag of post.postTags" class="custom-tag"
-                        >#{{ tag.postTagValue }}</span
+                      <span *ngFor="let tag of parseTheListViewTags(post.postTags)" class="custom-tag"
+                        >#{{ tag }}</span
                       >
                     </div>
                     <div
@@ -2059,7 +2059,7 @@
                     <button
                       (click)="openPostsViewModal(post)"
                       type="button"
-                      class="bg-transparent border-0 function-btns text-light"
+                      class="bg-transparent border-0 function-btns text-light videoChange"
                     >
                       <img
                         src="../../../../assets/images/Chat-dark.svg"
@@ -2312,11 +2312,11 @@
                           {{ savedPostGridInfo.title }}
                         </a>
                       </h2>
-                    </div>
+                    </div><br>
 
                     <p class="font_14 school-grid-date d-inline-block mb-0">
-                      {{ savedPostGridInfo.dateTime | date : "MMMM d" }} -
-                      {{ savedPostGridInfo.dateTime | date : "hh mm" }}
+                      {{ savedPostGridInfo.createdOn | date : "MMMM d" }} -
+                      {{ savedPostGridInfo.createdOn | date : "hh:mm" }}
                     </p>
                   </div>
                   <p class="text_sec1 font_14 pt-3">
@@ -2386,7 +2386,7 @@
                     <button
                       (click)="openPostsViewModal(savedPostGridInfo)"
                       type="button"
-                      class="bg-transparent border-0 function-btns"
+                      class="bg-transparent border-0 function-btns videoChange"
                     >
                       <img
                         src="../../../../assets/images/Chat-dark.svg"
@@ -3227,7 +3227,7 @@
                         openClassCourseViewModal(savedClassCourseGridInfo)
                       "
                       type="button"
-                      class="bg-transparent border-0 function-btns text-light"
+                      class="bg-transparent border-0 function-btns text-light videoChange"
                     >
                       <img
                         src="../../../../assets/images/Chat-dark.svg"
@@ -3612,7 +3612,7 @@
                       >
                         {{ post.title }}
                       </a>
-                    </h2>
+                    </h2><br>
                     <p class="font_14 school-grid-date d-inline-block mb-0">
                       {{ post.createdOn | date : "MMMM d" }} -
                       {{ post.createdOn | date : "hh:mm" }}
@@ -3985,7 +3985,7 @@
                     <button
                       (click)="openPostsViewModal(post)"
                       type="button"
-                      class="bg-transparent border-0 function-btns text-light"
+                      class="bg-transparent border-0 function-btns text-light videoChange"
                     >
                       <img
                         src="../../../../assets/images/Chat-dark.svg"
@@ -4241,11 +4241,11 @@
                           {{ sharedPostGridInfo.title }}
                         </a>
                       </h2>
-                    </div>
+                    </div><br>
 
                     <p class="font_14 school-grid-date d-inline-block mb-0">
-                      {{ sharedPostGridInfo.dateTime | date : "MMMM d" }} -
-                      {{ sharedPostGridInfo.dateTime | date : "hh mm" }}
+                      {{ sharedPostGridInfo.createdOn | date : "MMMM d" }} -
+                      {{ sharedPostGridInfo.createdOn | date : "hh:mm" }}
                     </p>
                   </div>
                   <p class="text_sec1 font_14 pt-3">
@@ -4315,10 +4315,10 @@
                     <button
                       (click)="openPostsViewModal(sharedPostGridInfo)"
                       type="button"
-                      class="bg-transparent border-0 function-btns"
+                      class="bg-transparent border-0 function-btns videoChange"
                     >
                       <img
-                        src="../../../../assets/images/Chat-dark.svg"
+                        src="../../../../assets/images/Chat-dark.svg "
                         class="d-block mx-auto"
                       />
                       {{ sharedPostGridInfo.commentsCount }}
@@ -4756,7 +4756,7 @@
                       >
                         {{ post.title }}
                       </a>
-                    </h2>
+                    </h2><br>
                     <p class="font_14 school-grid-date d-inline-block mb-0">
                       {{ post.createdOn | date : "MMMM d" }} -
                       {{ post.createdOn | date : "hh:mm" }}
@@ -4771,8 +4771,8 @@
                       {{ post.description }}
                     </p>
                     <div class="teacher-tags tag-box hashtag_box">
-                      <span *ngFor="let tag of post.postTags" class="custom-tag"
-                        >#{{ tag.postTagValue }}</span
+                      <span *ngFor="let tag of parseTheListViewTags(post.postTags)" class="custom-tag"
+                        >#{{ tag }}</span
                       >
                     </div>
                     <div
@@ -5129,7 +5129,7 @@
                     <button
                       (click)="openPostsViewModal(post)"
                       type="button"
-                      class="bg-transparent border-0 function-btns text-light"
+                      class="bg-transparent border-0 function-btns text-light videoChange"
                     >
                       <img
                         src="../../../../assets/images/Chat-dark.svg"
@@ -5384,11 +5384,11 @@
                           {{ likedPostGridInfo.title }}
                         </a>
                       </h2>
-                    </div>
+                    </div><br>
 
                     <p class="font_14 school-grid-date d-inline-block mb-0">
-                      {{ likedPostGridInfo.dateTime | date : "MMMM d" }} -
-                      {{ likedPostGridInfo.dateTime | date : "hh mm" }}
+                      {{ likedPostGridInfo.createdOn | date : "MMMM d" }} -
+                      {{ likedPostGridInfo.createdOn | date : "hh:mm" }}
                     </p>
                   </div>
                   <p class="text_sec1 font_14 pt-3">
@@ -5458,7 +5458,7 @@
                     <button
                       (click)="openPostsViewModal(likedPostGridInfo)"
                       type="button"
-                      class="bg-transparent border-0 function-btns"
+                      class="bg-transparent border-0 function-btns videoChange"
                     >
                       <img
                         src="../../../../assets/images/Chat-dark.svg"

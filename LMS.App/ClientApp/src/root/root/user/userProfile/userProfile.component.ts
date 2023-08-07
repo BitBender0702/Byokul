@@ -498,6 +498,16 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
       certificateId: this.fb.control(''),
     });
 
+
+    const buttons = document.querySelectorAll(".videoChange");
+    buttons.forEach(button => {
+      debugger;
+      button.addEventListener("click", () => {
+        let VideoElement:HTMLVideoElement | null = document.getElementById('displayVideo') as HTMLVideoElement
+        VideoElement.pause();
+      });
+    });
+
   }
 
   addDescriptionMetaTag(description: string) {
@@ -1257,6 +1267,7 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
       if (this.videoPlayer != undefined) {
         // videojs(this.videoPlayer.nativeElement, {autoplay: false});
       }
+
       this.addPostView(this.gridItemInfo.id);
     }
     var postValueTag = this.gridItemInfo.postTags[0].postTagValue;
@@ -1874,7 +1885,6 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
           detail: translatedMessage,
         });
         this.ngOnInit();
-        console.log(response);
       });
   }
 
@@ -2108,7 +2118,6 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
 
 
   parseTheTags(tags: any) {
-    console.log(tags.postTagValue);
     for (let index = 0; index < tags.length; index++) {
       const element = tags[index].postTagValue;
       try {

@@ -15,6 +15,10 @@ import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component'
 import { UserService } from 'src/root/service/user.service';
 import { MessageService } from 'primeng/api';
 
+
+import { DatePipe } from '@angular/common';
+
+
 export const unreadNotificationResponse =new Subject<{type:string}>(); 
 
 
@@ -47,7 +51,7 @@ export const unreadNotificationResponse =new Subject<{type:string}>();
     joinMeetingViewModel!:JoinMeetingModel;
 
 
-    constructor(injector: Injector,public messageService: MessageService,userService:UserService,private fb: FormBuilder,notificationService:NotificationService,private router: Router,postService:PostService,private bsModalService: BsModalService,bigBlueButtonService:BigBlueButtonService) {
+    constructor(injector: Injector,public messageService: MessageService,private datePipe: DatePipe,userService:UserService,private fb: FormBuilder,notificationService:NotificationService,private router: Router,postService:PostService,private bsModalService: BsModalService,bigBlueButtonService:BigBlueButtonService) {
        super(injector);
        this._notificationService = notificationService;
        this._postService = postService;
@@ -55,6 +59,8 @@ export const unreadNotificationResponse =new Subject<{type:string}>();
        this._userService = userService;
     }
 
+    notificationAvatar:any;
+    dateForNotification:any;
     ngOnInit(): void {
         this.loadingIcon = true;
         var selectedLang = localStorage.getItem('selectedLanguage');
@@ -63,6 +69,11 @@ export const unreadNotificationResponse =new Subject<{type:string}>();
         this._notificationService.getNotifications(this.notificationPageNumber).subscribe((notificationsResponse) => {
           debugger
             this.notifications = notificationsResponse;
+          
+            
+            this.notificationAvatar = this.notifications[0]?.user.avatar
+            // this.dateForNotification = this.datePipe.transform(this.notifications.dateTime, 'yyyy-MM-dd');
+           
             var notifications: any[] = this.notifications;
             var unreadNotifications = notifications.filter(x => !x.isRead);
             if(unreadNotifications.length > 0){
@@ -73,14 +84,14 @@ export const unreadNotificationResponse =new Subject<{type:string}>();
             this.loadingIcon = false;
             this.isDataLoaded = true;
             });
-
+            try{
       if(!this.notificationResponseSubscription){
       this.notificationResponseSubscription = notificationResponse.subscribe(response => {
       debugger
        this.notifications.push(response);
        unreadNotificationResponse.next({type:"add"});
       });
-    }
+    }} catch{}
 
       this.validToken = localStorage.getItem("jwt")?? '';
       if (this.validToken != null) {
@@ -95,6 +106,9 @@ export const unreadNotificationResponse =new Subject<{type:string}>();
           this.translate.use(response.language);
         })
       }
+
+      // this.notificationAvatar = this.notifications?.user?.avatar
+     
     }
 
     ngOnDestroy(): void {

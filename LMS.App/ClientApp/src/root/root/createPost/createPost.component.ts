@@ -81,7 +81,7 @@ export class CreatePostComponent implements OnInit,OnDestroy {
   private _postService;
   private _fileStorageService;
   private _notificationService;
-  private _blobStorageService;
+  // private _blobStorageService;
   isSubmitted: boolean = false;
   isTagsValid: boolean = true;
   isAttachmentsValid: boolean = true;
@@ -167,11 +167,11 @@ export class CreatePostComponent implements OnInit,OnDestroy {
   @Output() onClose: EventEmitter<any> = new EventEmitter<any>();
 
 
-  constructor(private bsModalRef: BsModalRef,blobStorageService:AzureBlobStorageService,private notificationService:NotificationService, private translateService: TranslateService,private datePipe: DatePipe,private router: Router,private domSanitizer: DomSanitizer,fileStorageService:FileStorageService, public messageService:MessageService,private bsModalService: BsModalService,public options: ModalOptions,private fb: FormBuilder,postService: PostService,private http: HttpClient,private cd: ChangeDetectorRef) {
+  constructor(public postService: PostService,private bsModalRef: BsModalRef,private notificationService:NotificationService, private translateService: TranslateService,private datePipe: DatePipe,private router: Router,private domSanitizer: DomSanitizer,fileStorageService:FileStorageService, public messageService:MessageService,private bsModalService: BsModalService,public options: ModalOptions,private fb: FormBuilder,private http: HttpClient,private cd: ChangeDetectorRef) {
     this._postService = postService;
     this._fileStorageService = fileStorageService;
     this._notificationService = notificationService;
-    this._blobStorageService = blobStorageService;
+    // this._blobStorageService = blobStorageService;
   }
 
   ngOnInit(): void {
@@ -213,6 +213,7 @@ export class CreatePostComponent implements OnInit,OnDestroy {
    if(initialValue?.from == "user"){
     this.userId = initialValue.userId;
     this._postService.getUser(this.userId).subscribe((response) => {
+      debugger
       this.parentDetails = response;
 
     });

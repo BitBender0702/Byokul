@@ -20,6 +20,7 @@ export class PostService{
         return environment.apiUrl;
       }
     constructor(private router: Router, private http: HttpClient, bigBlueButtonService:BigBlueButtonService, userService:UserService) { 
+        debugger
         this._bigBlueButtonService = bigBlueButtonService;
         this._userService = userService;
         this.headers = new HttpHeaders().set("Authorization", "Bearer " + this.token);
@@ -36,8 +37,10 @@ export class PostService{
     }
 
     getUser(userId:string):Observable<any>{
+        debugger
+        var token = localStorage.getItem("jwt")?? '';
+        this.headers = new HttpHeaders().set("Authorization", "Bearer " + token);
         return this.http.get(`${this.apiUrl}/users/getBasicUserInfo` + '?userId=' + userId,{headers: this.headers});
-
     }
 
     getCourse(courseId:string):Observable<any>{
@@ -46,6 +49,8 @@ export class PostService{
     }
 
     createPost(credentials:any): Observable<any> {
+        var token = localStorage.getItem("jwt")?? '';
+        this.headers = new HttpHeaders().set("Authorization", "Bearer " + token);
         return this.http.post(`${this.apiUrl}/posts/uploadPost`, credentials,{headers: this.headers});
     }
 

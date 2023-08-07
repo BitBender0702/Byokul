@@ -6,5 +6,8 @@ export enum UploadTypeEnum{
     Excel = 5,
     Presentation = 6,
     Pdf = 7,
-    Thumbnail = 8
+    Thumbnail = 8,
+    Zip = 9,
+    TextFile = 10,
+    Apk = 11
 }

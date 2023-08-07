@@ -298,7 +298,7 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
               {
                 return this.uploadVideosOnBlob(file, UploadTypeEnum.Pdf);
               }
-              if (file.type == Constant.Word)
+              if (file.type == Constant.Word || file.type == Constant.ExcelSx)
               {
                 return this.uploadVideosOnBlob(file, UploadTypeEnum.Word);
               }
@@ -310,6 +310,27 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
               {
                 return this.uploadVideosOnBlob(file, UploadTypeEnum.Presentation);
               }
+              if (file.type == Constant.TextFile)
+              {
+                return this.uploadVideosOnBlob(file, UploadTypeEnum.TextFile);
+              }
+            }
+            if (file.type == Constant.Ppt)
+            {
+              return this.uploadVideosOnBlob(file, UploadTypeEnum.Presentation);
+            }
+            var index = file.name.lastIndexOf('.');
+            if (index > 0){
+              if(file.name.substring(index + 1) == Constant.RarFile){
+                return this.uploadVideosOnBlob(file, UploadTypeEnum.Zip);
+              }
+              if(file.name.substring(index + 1) == Constant.ZipFile){
+                return this.uploadVideosOnBlob(file, UploadTypeEnum.Zip);
+              }
+              if(file.name.substring(index + 1) == Constant.Apk){
+                return this.uploadVideosOnBlob(file, UploadTypeEnum.Apk);
+              }
+
             }
 
             return "";  

@@ -168,6 +168,7 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
     }
     else {
       this._userService.getMyFeed(1, this.myFeedsPageNumber, this.searchString).subscribe((response) => {
+        try{
         this.isGlobalFeed = false;
         this.postLoadingIcon = false;
         this.myFeeds = response;
@@ -178,7 +179,10 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
           this.isMyFeedsEmpty = true;
           this.getGlobalFeedsData()
         }
-        this.addListenerToNextButton();
+        this.addListenerToNextButton();}
+        catch{
+          this.isMyFeedsEmpty = true;
+        }
         // this.isDataLoaded = true;
       });
 
@@ -314,6 +318,17 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
         }
       });
     }
+
+    const buttons = document.querySelectorAll(".videoChange");
+    buttons.forEach(button => {
+      debugger;
+      button.addEventListener("click", () => {
+        let VideoElement:HTMLVideoElement | null = document.getElementById('#displayVideo') as HTMLVideoElement
+        VideoElement.pause();
+      });
+    });
+
+
   }
 
   checkMyFeedExist() {
@@ -1054,7 +1069,6 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
 
 
   parseTheTags(tags: any) {
-    console.log(tags.postTagValue);
     for (let index = 0; index < tags.length; index++) {
       const element = tags[index].postTagValue;
       try {
@@ -1067,7 +1081,6 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
   }
 
   parseTheListViewTags(tags: any) {
-    console.log(tags.postTagValue);
     for (let index = 0; index < tags.length; index++) {
       const element = tags[index].postTagValue;
       try {

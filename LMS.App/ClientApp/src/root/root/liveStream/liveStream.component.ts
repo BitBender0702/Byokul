@@ -23,6 +23,7 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SharePostComponent } from '../sharePost/sharePost.component';
 import { MessageService } from 'primeng/api';
 import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
+import { Location } from '@angular/common'
 
 @Component({
   selector: 'live-stream',
@@ -92,7 +93,7 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
 
 
 
-  constructor(injector: Injector, private renderer: Renderer2, private modalService: NgbModal, private bsModalService: BsModalService,
+  constructor(injector: Injector, private renderer: Renderer2, private modalService: NgbModal, private bsModalService: BsModalService,private location: Location,
     private cd: ChangeDetectorRef, public messageService: MessageService, private route: ActivatedRoute, private domSanitizer: DomSanitizer, signalrService: SignalrService, postService: PostService, chatService: ChatService, userService: UserService, notificationService: NotificationService, bigBlueButtonService: BigBlueButtonService) {
     super(injector);
     this._signalrService = signalrService;
@@ -266,16 +267,13 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
         else {
           this.streamUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(this.post.streamJoinUrl);
         }
-
-
-        // }, this.timeDifferenceInSeconds * 1000);
-        // this.timer(timeDifferenceInMinutes);
       }
       this._signalrService.notifyLiveUsers(this.post.id + "_group", false);
       this.gender = localStorage.getItem("gender") ?? '';
       this.isDataLoaded = true;
 
       if (this.post.createdBy == this.userId) {
+        debugger
         this.isOwner = true;
         var isSendNotificationInfoExist = sessionStorage.getItem('sendNotificationInfo') !== null;
         var notificationInfoArray;
@@ -333,6 +331,9 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
       lastCommentTime: Date.now()
     };
     localStorage.setItem('lastCommentTime', JSON.stringify(lastComment));
+
+    this.endLiveStreamIfOffline();
+
   }
 
   ngOnDestroy(): void {
@@ -812,8 +813,9 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
       isLike: false,
       commentId: ''
     };
-
   }
+
+
 
   endLiveStream() {
     debugger
@@ -834,9 +836,9 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
       this._postService.saveLiveVideoTime(this.post.id, this.videoTotalTime, this.videoTotalTime).subscribe((result) => {
       });
       this._postService.saveStreamAsPost(this.post.id).subscribe((response) => {
-        debugger
       });
     }
+    this.location.back();
   }
 
   toggleEmojiPicker() {
@@ -976,5 +978,33 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
   streamEndPopup() {
 
   }
+
+  endLiveStreamIfOffline() {
+    window.addEventListener("offline", () => {
+      this.endLiveStream();
+      this.showEndMeetingDialog();
+    });
+    window.addEventListener("beforeunload",()=>{
+      debugger
+      this.endLiveStream();
+      this.showEndMeetingDialog();
+    })
+  }
+
+  showEndMeetingDialog(){
+    debugger
+  if (!this.isOwner) {
+    this.streamEndMessage.nativeElement.click();
+    setTimeout(() => {
+      debugger
+      this.streamEndModalClose.nativeElement.click();
+      window.history.back();
+    }, 5000);
+  }
+  else {
+    window.history.back();
+  }
+  }
+
 
 }

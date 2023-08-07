@@ -98,7 +98,7 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
     @ViewChild('searchInput') searchInput!: ElementRef;
 
 
-    constructor(injector: Injector,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,userService:UserService,fileStorageService:FileStorageService,signalRService:SignalrService,chatService:ChatService,teacherService:TeacherService,public messageService:MessageService,private cd: ChangeDetectorRef) { 
+    constructor(injector: Injector,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,userService:UserService,public fileStorageService:FileStorageService,signalRService:SignalrService,chatService:ChatService,teacherService:TeacherService,public messageService:MessageService,private cd: ChangeDetectorRef) { 
       super(injector);
       this._userService = userService; 
       this._fileStorageService = fileStorageService;

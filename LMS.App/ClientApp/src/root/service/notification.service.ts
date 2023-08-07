@@ -32,10 +32,14 @@ export class NotificationService{
     }
 
     getNotificationSettings(userId:string):Observable<any>{
+      var token = localStorage.getItem("jwt")?? '';
+      this.headers = new HttpHeaders().set("Authorization", "Bearer " + token);
         return this.http.get(`${this.apiUrl}/notifications/getNotificationSettings` + '?userId=' + userId, {headers: this.headers});
     }
 
     getNotifications(pageNumber:number):Observable<any>{
+      var token = localStorage.getItem("jwt")?? '';
+      this.headers = new HttpHeaders().set("Authorization", "Bearer " + token);
       let queryParams = new HttpParams().append("pageNumber",pageNumber);
         return this.http.get(`${this.apiUrl}/notifications/getNotifications`, {params:queryParams,headers: this.headers})
     }
@@ -100,6 +104,8 @@ export class NotificationService{
 
 
   getUserFollowersIds(userId:string):Observable<any>{
+      var token = localStorage.getItem("jwt")?? '';
+      this.headers = new HttpHeaders().set("Authorization", "Bearer " + token);
       return this.http.get(`${this.apiUrl}/notifications/getUserFollowersIds` + '?userId=' + userId, {headers: this.headers});
   }
 

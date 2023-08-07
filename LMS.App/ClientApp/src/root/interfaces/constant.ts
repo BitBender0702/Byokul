@@ -19,9 +19,16 @@ export class Constant {
     public static Pdf = "application/pdf";
     public static Word  = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
     public static Excel = "application/vnd.ms-excel";
+    public static ExcelSx = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
     public static Ppt = "application/vnd.openxmlformats-officedocument.presentationml.presentation";
     public static Post = "Post";
     public static Success = "Success";
+    public static RarFile = "rar";
+    public static ZipFile = "zip";
+    public static TextFile = "text/plain";
+    public static Apk = "apk";
+
+
 
 
 
