@@ -85,6 +85,10 @@
   gap: 10px;
 }
 
+.school-gridprofile-icon {
+  margin-right: 0;
+}
+
 .teacher-tags .teacher-content {
   min-width: 130px;
 }

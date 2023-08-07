@@ -124,6 +124,10 @@
   opacity: 0.75;
 }
 
+.school-gridprofile-icon {
+  margin-right: 0;
+}
+
 .right-action {
   display: flex;
   align-items: center;

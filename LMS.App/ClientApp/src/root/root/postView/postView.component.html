@@ -1,314 +1,916 @@
 <div *ngIf="isDataLoaded">
-<div *ngIf="!postPageView" appBsModal bsModal class="modal fade edit-school-modal show d-block post-view-large" id="modal-post" tabindex="-1"
-aria-labelledby="create-post" aria-hidden="true" area-modal="true">
-<div class="modal-dialog modal-dialog-centered">
-  <div class="modal-content">
-    <div class="modal-header border-0 justify-content-center position-relative">
-      <div class="custom-language-select liv-postbtn">
-      </div>
-      <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center"></h1>
-      <ul *ngIf="post?.createdBy == userId" class="list-unstyled d-flex more-action-btn before-none pe-2 me-1 mb-0" style="position: absolute;right: 50px;top: 10px;">
-        <li class="d-inline-block ps-0 mb-0">
-          <div class="dropdown">
-            <button class="bg-transparent dropdown-toggle border-0 action-more-btn after-none pt-1" type="button" data-bs-toggle="dropdown"
-              aria-expanded="false">
-              <i class="fa-solid fa-ellipsis"></i>
-            </button>
-            <ul class="dropdown-menu">
-              <li><a style="cursor: pointer;" class="dropdown-item"
-                (click)="getDeletedPostId(post?.id)" data-bs-toggle="modal" data-bs-target="#delete-Class">{{'Delete'| translate }}
-              </a>
-              </li>
-              <li><a style="cursor: pointer;" class="dropdown-item"
-                (click)="openPostModal(post)" data-bs-toggle="modal" data-bs-target="#delete-Class">{{'Edit'| translate }}
-                <div *ngIf="post.updatedOn != null">(<span>{{ "UpdatedOn" | translate }} - </span> {{ post.updatedOn | date:'d MMMM y h:mm a' }})</div>
-              </a>
-              </li>
-            </ul>
-          </div>
-        </li>
-      </ul>  
-      <button (click)="close()" type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"><img
-          src="../../../assets/images/cross.svg" /></button>
-    </div>
-    <div class="modal-body">
-  <section class="f-poppins">
-    <div>
-      <div [ngClass]="showCommentsField? '' : 'full-widthreel'" id="reel_content">
-        <div class="row">
-        <div class="col-md-8">
-        <div class="live-inner w-100 image_full_inner" *ngIf="post.postAttachments.length>0">
-          <carousel [interval]="0">
-            <div *ngFor="let postAttachment of post.postAttachments" class="live-image overflow-hidden position-relative">
-              <slide *ngIf="postAttachment.fileType==2">
-                <videoJs-component [postAttachment]="postAttachment" [isView]="true" ></videoJs-component>
+  <div
+    *ngIf="!postPageView"
+    appBsModal
+    bsModal
+    class="modal fade edit-school-modal show d-block post-view-large"
+    id="modal-post"
+    tabindex="-1"
+    aria-labelledby="create-post"
+    aria-hidden="true"
+    area-modal="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div
+          class="modal-header border-0 justify-content-center position-relative"
+        >
+          <div class="custom-language-select liv-postbtn"></div>
+          <h1
+            class="modal-title font_22 text_dark fw_700 border-0 text-center"
+          ></h1>
+          <ul
+            *ngIf="post?.createdBy == userId"
+            class="list-unstyled d-flex more-action-btn before-none pe-2 me-1 mb-0"
+            style="position: absolute; right: 50px; top: 10px"
+          >
+            <li class="d-inline-block ps-0 mb-0">
+              <div class="dropdown">
+                <button
+                  class="bg-transparent dropdown-toggle border-0 action-more-btn after-none pt-1"
+                  type="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <i class="fa-solid fa-ellipsis"></i>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <a
+                      style="cursor: pointer"
+                      class="dropdown-item"
+                      (click)="getDeletedPostId(post?.id)"
+                      data-bs-toggle="modal"
+                      data-bs-target="#delete-Class"
+                      >{{ "Delete" | translate }}
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      style="cursor: pointer"
+                      class="dropdown-item"
+                      (click)="openPostModal(post)"
+                      data-bs-toggle="modal"
+                      data-bs-target="#delete-Class"
+                      >{{ "Edit" | translate }}
+                      <div *ngIf="post.updatedOn != null">
+                        (<span>{{ "UpdatedOn" | translate }} - </span>
+                        {{ post.updatedOn | date : "d MMMM y h:mm a" }})
+                      </div>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+          <button
+            (click)="close()"
+            type="button"
+            class="btn-close shadow-none"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          >
+            <img src="../../../assets/images/cross.svg" />
+          </button>
+        </div>
+        <div class="modal-body">
+          <section class="f-poppins">
+            <div>
+              <div
+                [ngClass]="showCommentsField ? '' : 'full-widthreel'"
+                id="reel_content"
+              >
+                <div class="row">
+                  <div class="col-md-8">
+                    <div
+                      class="live-inner w-100 image_full_inner"
+                      *ngIf="post.postAttachments.length > 0"
+                    >
+                      <carousel [interval]="0">
+                        <div
+                          *ngFor="let postAttachment of post.postAttachments"
+                          class="live-image overflow-hidden position-relative"
+                        >
+                          <slide *ngIf="postAttachment.fileType == 2">
+                            <videoJs-component
+                              [postAttachment]="postAttachment"
+                              [isView]="true"
+                            ></videoJs-component>
 
-                <!-- <video #videoPlayer *ngIf="postAttachment.fileType==2" width="100%" height="700" controls class="video-js vjs-big-play-centered" preload="metadata">
+                            <!-- <video #videoPlayer *ngIf="postAttachment.fileType==2" width="100%" height="700" controls class="video-js vjs-big-play-centered" preload="metadata">
                   <source [src]="postAttachment.fileUrl" type="video/mp4"/>
                 </video> -->
-                <div class="live-bottom-text p-3">
-                  <h5 class="font_14 mb-0 fw_600 text_sec1">{{postAttachment.post.title}} 
-                  </h5>
+                            <div class="live-bottom-text p-3">
+                              <h5 class="font_14 mb-0 fw_600 text_sec1">
+                                {{ postAttachment.post.title }}
+                              </h5>
+                            </div>
+                            <div class="reel-username font_16 white_text">
+                              <img
+                                *ngIf="post.parentImageUrl != null"
+                                [src]="post.parentImageUrl"
+                                class="me-2"
+                              />
+                              <img
+                                *ngIf="
+                                  post.parentImageUrl == null && gender == '1'
+                                "
+                                src="../../../assets/images/maleProfile.jfif"
+                                class="me-2"
+                              />
+                              <img
+                                *ngIf="
+                                  post.parentImageUrl == null &&
+                                  (gender == '2' || gender == '3')
+                                "
+                                src="../../../assets/images/femaleProfile.jfif"
+                                class="me-2"
+                              />
+                              {{ post.parentName }}
+                            </div>
+                          </slide>
+                          <slide *ngIf="postAttachment.fileType == 1">
+                            <div class="full_image_card">
+                              <img
+                                *ngIf="postAttachment.fileType == 1"
+                                class="w-100"
+                                [src]="postAttachment.fileUrl"
+                              />
+                            </div>
+                            <div class="live-bottom-text p-3">
+                              <h5 class="font_14 mb-0 fw_600 text_sec1">
+                                {{ postAttachment.post.title }}
+                              </h5>
+                            </div>
+                            <div class="reel-username font_16 white_text">
+                              <img
+                                *ngIf="post.parentImageUrl != null"
+                                [src]="post.parentImageUrl"
+                                class="me-2"
+                              />
+                              <img
+                                *ngIf="
+                                  post.parentImageUrl == null && gender == '1'
+                                "
+                                src="../../../assets/images/maleProfile.jfif"
+                                class="me-2"
+                              />
+                              <img
+                                *ngIf="
+                                  post.parentImageUrl == null &&
+                                  (gender == '2' || gender == '3')
+                                "
+                                src="../../../assets/images/femaleProfile.jfif"
+                                class="me-2"
+                              />
+                              {{ post.parentName }}
+                            </div>
+                          </slide>
+                        </div>
+                      </carousel>
+                    </div>
+                    <div *ngIf="post.postAttachments.length == 0">
+                      <h2>{{ post.title }}</h2>
+                      <!-- <p *ngIf="post.description != null" class="text_sec1 font_14 pt-3 overflow_paragraph" style="height:400px">{{post.description}}</p> -->
+                    </div>
+                    <div class="teacher-tags tag-box hashtag_box mb-0">
+                      <ng-container
+                        *ngFor="let attachment of posts.postAttachments"
+                      >
+                        <span class="custom-tag cursor_pointer">{{
+                          attachment.fileName
+                        }}</span>
+                      </ng-container>
+                    </div>
+                    <div class="teacher-tags tag-box hashtag_box mt-0">
+                      <span
+                        *ngFor="let tag of postsTagValues"
+                        class="custom-tag"
+                        >#{{ tag }}</span
+                      >
+                    </div>
+                    <p
+                      *ngIf="
+                        post.description != null &&
+                        post.postAttachments.length > 0
+                      "
+                      class="text_sec1 font_14 pt-3"
+                    >
+                      {{ post.description }}
+                    </p>
+                    <div *ngIf="post.postAttachments.length == 0">
+                      <!-- <h2>{{post.title}}</h2> -->
+                      <p
+                        *ngIf="post.description != null"
+                        class="text_sec1 font_14 pt-3"
+                        style="height: 400px"
+                      >
+                        {{ post.description }}
+                      </p>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div>
+                      <div
+                        [ngClass]="
+                          showCommentsField
+                            ? 'accordion-open d-block'
+                            : 'accordion-open d-none'
+                        "
+                        id="live-chat-open"
+                        style="display: none"
+                        class="livechat-box p-0"
+                      >
+                        <div
+                          class="live-action-buttons d-flex justify-content-between"
+                        >
+                          <button
+                            type="button"
+                            class="btn bg-transparent text_ltgray font_12 cursor_auto"
+                          >
+                            <img
+                              src="../../../assets/images/chat-icon.svg"
+                              class="d-block"
+                            />
+                            {{ post.comments.length }}
+                          </button>
+                          <button
+                            type="button"
+                            class="btn bg-transparent text_ltgray font_12 cursor_auto"
+                          >
+                            <img
+                              src="../../../assets/images/eye.svg"
+                              class="d-block"
+                            />
+                            {{ post.views.length }}
+                          </button>
+                          <button
+                            (click)="
+                              likeUnlikePosts(
+                                post.id,
+                                true,
+                                post.postType,
+                                post
+                              )
+                            "
+                            type="button"
+                            class="btn bg-transparent text_ltgray font_12"
+                          >
+                            <img
+                              *ngIf="post.isPostLikedByCurrentUser"
+                              src="../../../assets/images/heart-red.svg"
+                              class="d-block"
+                            />
+                            <img
+                              *ngIf="!post.isPostLikedByCurrentUser"
+                              src="../../../assets/images/Heart-dark.svg"
+                              class="d-block"
+                            />
+
+                            <span
+                              *ngIf="
+                                likesLength != undefined &&
+                                currentLikedPostId == post.id
+                              "
+                              >{{ likesLength }}</span
+                            >
+                            <span *ngIf="currentLikedPostId != post.id">{{
+                              post.likes.length
+                            }}</span>
+                          </button>
+                          <button
+                            (click)="savePost(post.id)"
+                            type="button"
+                            class="btn bg-transparent text_ltgray font_12"
+                          >
+                            <img
+                              *ngIf="!post.isPostSavedByCurrentUser"
+                              src="../../../../assets/images/Bookmark-dark.svg"
+                              class="d-block mx-auto"
+                            />
+                            <img
+                              *ngIf="post.isPostSavedByCurrentUser"
+                              src="../../../../assets/images/Bookmark-dark.svg"
+                              class="d-block mx-auto"
+                            />
+                            {{ post.savedPostsCount }}
+                          </button>
+                          <button
+                            (click)="
+                              openSharePostModal(
+                                post.id,
+                                post.postType,
+                                post.title,
+                                post.description
+                              )
+                            "
+                            type="button"
+                            class="btn bg-transparent text_ltgray font_12"
+                          >
+                            <img
+                              src="../../../assets/images/Upload.svg"
+                              class="d-block"
+                            />
+                            {{ post.postSharedCount }}
+                          </button>
+                        </div>
+                        <div
+                          class="live-chat-box text-center live-chat-padding"
+                        >
+                          <div
+                            *ngIf="
+                              post.createdBy == userId && isCommentsDisabled
+                            "
+                            (click)="showCommentsDiv(true)"
+                            class="chat-enabled d-inline-flex align-items-center cursor_pointer"
+                          >
+                            <img src="../../../assets/images/Unlock.svg" />{{
+                              "ChatDisabled" | translate
+                            }}
+                          </div>
+                          <div
+                            *ngIf="
+                              post.createdBy == userId && !isCommentsDisabled
+                            "
+                            (click)="showCommentsDiv(false)"
+                            class="chat-enabled d-inline-flex align-items-center cursor_pointer"
+                          >
+                            <img src="../../../assets/images/Unlock.svg" />{{
+                              "ChatEnabled" | translate
+                            }}
+                          </div>
+                          <div>
+                            <span
+                              *ngIf="
+                                post.createdBy != userId && isCommentsDisabled
+                              "
+                              >{{ "CommentsAreDisabled" | translate }}</span
+                            >
+                          </div>
+                          <div
+                            *ngIf="!isCommentsDisabled"
+                            #groupChatList
+                            id="groupChat"
+                            class="live-chat-outer position-relative"
+                            (scroll)="scrollHandler($event)"
+                          >
+                            <div
+                              *ngIf="commentsLoadingIcon"
+                              class="postloader-main position-absolute translate-middle"
+                            >
+                              <div
+                                class="postlds-ring"
+                                style="margin-left: 200px; margin-bottom: 214px"
+                              >
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                              </div>
+                            </div>
+                            <div
+                              *ngFor="let item of post.comments"
+                              class="live-message d-flex position-relative align-items-start"
+                            >
+                              <img
+                                (click)="hideCommentModal()"
+                                [routerLink]="[
+                                  '/user/userProfile',
+                                  item.userId
+                                ]"
+                                *ngIf="item.userAvatar != null"
+                                [src]="item.userAvatar"
+                                class="comment-user cursor_pointer"
+                              />
+                              <img
+                                (click)="hideCommentModal()"
+                                [routerLink]="[
+                                  '/user/userProfile',
+                                  item.userId
+                                ]"
+                                *ngIf="item.userAvatar == null && gender == '1'"
+                                src="../../../assets/images/maleProfile.jfif"
+                                class="comment-user cursor_pointer"
+                              />
+                              <img
+                                (click)="hideCommentModal()"
+                                [routerLink]="[
+                                  '/user/userProfile',
+                                  item.userId
+                                ]"
+                                *ngIf="
+                                  item.userAvatar == null &&
+                                  (gender == '2' || gender == '3')
+                                "
+                                src="../../../assets/images/femaleProfile.jfif"
+                                class="comment-user cursor_pointer"
+                              />
+                              <div class="d-flex flex-column">
+                                <p
+                                  (click)="hideCommentModal()"
+                                  [routerLink]="[
+                                    '/user/userProfile',
+                                    item.userId
+                                  ]"
+                                  class="font_12 fw_600 text-start mb-0 cursor_pointer"
+                                >
+                                  {{ item.userName }}
+                                </p>
+                                <p
+                                  class="text_sec1 font_12 fw_400 text-start mb-0"
+                                >
+                                  {{ item.content }}
+                                </p>
+                              </div>
+                              <button
+                                (click)="
+                                  likeUnlikeComments(
+                                    item.id,
+                                    true,
+                                    item.isCommentLikedByCurrentUser,
+                                    item.likeCount
+                                  )
+                                "
+                                type="button"
+                                class="btn bg-transparent text_ltgray font_12 p-0 border-0 reel-like-chat"
+                              >
+                                <img
+                                  *ngIf="item.isCommentLikedByCurrentUser"
+                                  src="../../../assets/images/heart-red.svg"
+                                  class="d-block"
+                                />
+                                <img
+                                  *ngIf="!item.isCommentLikedByCurrentUser"
+                                  src="../../../assets/images/Heart-dark.svg"
+                                  class="d-block"
+                                />
+                                <span>{{ item.likeCount }}</span>
+                              </button>
+                            </div>
+                          </div>
+                          <div
+                            *ngIf="!isCommentsDisabled"
+                            class="add-comment d-flex align-items-center justify-content-between flex-nowrap ng-star-inserted"
+                          >
+                            <span
+                              class="bg-transparent rounded-circle comment-post-user rounded-circle"
+                            >
+                              <img
+                                (click)="hideCommentModal()"
+                                [routerLink]="['/user/userProfile', sender.id]"
+                                *ngIf="sender.avatar != null"
+                                [src]="sender.avatar"
+                                style="max-height: 100%; cursor: pointer"
+                              />
+                              <img
+                                (click)="hideCommentModal()"
+                                [routerLink]="['/user/userProfile', sender.id]"
+                                *ngIf="sender.avatar == null && gender == '1'"
+                                src="../../../assets/images/maleProfile.jfif"
+                                style="max-height: 100%; cursor: pointer"
+                              />
+                              <img
+                                (click)="hideCommentModal()"
+                                [routerLink]="['/user/userProfile', sender.id]"
+                                *ngIf="
+                                  sender.avatar == null &&
+                                  (gender == '2' || gender == '3')
+                                "
+                                src="../../../assets/images/femaleProfile.jfif"
+                                style="max-height: 100%; cursor: pointer"
+                              />
+                            </span>
+                            <input
+                              (keyup.enter)="sendToGroup()"
+                              [(ngModel)]="messageToGroup"
+                              type="text"
+                              class="form-control rounded-8 font_14 fw_400"
+                              placeholder="{{ 'YourMessage' | translate }}"
+                            />
+                            <button
+                              (click)="sendToGroup()"
+                              type="button"
+                              class="comment-btn border-0"
+                            >
+                              <img src="../../../assets/images/arrowup.svg" />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div class="reel-username font_16 white_text">
-                      <img *ngIf="post.parentImageUrl != null" [src]="post.parentImageUrl" class="me-2">
-                      <img *ngIf="post.parentImageUrl == null && gender =='1'" src="../../../assets/images/maleProfile.jfif" class="me-2"/>
-                      <img *ngIf="(post.parentImageUrl == null) && (gender =='2' || gender =='3')" src="../../../assets/images/femaleProfile.jfif" class="me-2"/>
-                      {{post.parentName}}
-                </div>
-              </slide>
-              <slide *ngIf="postAttachment.fileType==1">
-                <div class="full_image_card">
-                    <img *ngIf="postAttachment.fileType==1" class="w-100" [src]="postAttachment.fileUrl" style="position: fixed;"/>
-                 </div>
-                <div class="live-bottom-text p-3">
-              <h5 class="font_14 mb-0 fw_600 text_sec1">{{postAttachment.post.title}} 
-              </h5>
+              </div>
             </div>
-            <div class="reel-username font_16 white_text">
-                  <img *ngIf="post.parentImageUrl != null" [src]="post.parentImageUrl" class="me-2">
-                  <img *ngIf="post.parentImageUrl == null && gender =='1'" src="../../../assets/images/maleProfile.jfif" class="me-2"/>
-                  <img *ngIf="(post.parentImageUrl == null) && (gender =='2' || gender =='3')" src="../../../assets/images/femaleProfile.jfif" class="me-2"/>
-                   {{post.parentName}}
-            </div>
-          </slide>
-            </div>
-        </carousel>
-    </div>
-    <div *ngIf="post.postAttachments.length==0">
-      <h2>{{post.title}}</h2>
-      <!-- <p *ngIf="post.description != null" class="text_sec1 font_14 pt-3 overflow_paragraph" style="height:400px">{{post.description}}</p> -->
-    </div>
-    <div class="teacher-tags tag-box hashtag_box mb-0">
-      <ng-container *ngFor="let attachment of posts.postAttachments">
-      <span class="custom-tag cursor_pointer">{{attachment.fileName}}</span>
-      </ng-container>
-    </div>
-    <div class="teacher-tags tag-box hashtag_box mt-0">
-      <span 
-      *ngFor="let tag of postsTagValues"
-      class="custom-tag"
-      >#{{ tag }}</span
-    >
-    </div>
-    <p *ngIf="post.description != null && post.postAttachments.length>0" class="text_sec1 font_14 pt-3 ">{{post.description}}</p>
-    <div *ngIf="post.postAttachments.length==0">
-      <!-- <h2>{{post.title}}</h2> -->
-      <p *ngIf="post.description != null" class="text_sec1 font_14 pt-3 " style="height:400px">{{post.description}}</p>
+          </section>
+        </div>
+      </div>
     </div>
   </div>
- <div class="col-md-4">
+
+  <section
+    *ngIf="postPageView"
+    class="f-poppins"
+    style="margin-left: 300px; margin-top: 30px"
+  >
     <div>
-      <div [ngClass]="showCommentsField? 'accordion-open d-block' : 'accordion-open d-none'" id="live-chat-open" style="display:none;" class="livechat-box p-0">
-      <div class="live-action-buttons d-flex justify-content-between">
-        <button type="button" class="btn bg-transparent text_ltgray font_12 cursor_auto"><img src="../../../assets/images/chat-icon.svg"
-            class="d-block" /> {{post.comments.length}}</button>
-        <button type="button" class="btn bg-transparent text_ltgray font_12 cursor_auto"><img src="../../../assets/images/eye.svg"
-            class="d-block" /> {{post.views.length}}</button>
-            <button (click)="likeUnlikePosts(post.id,true,post.postType,post)" type="button" class="btn bg-transparent text_ltgray font_12">
-              <img *ngIf="post.isPostLikedByCurrentUser" src="../../../assets/images/heart-red.svg" class="d-block" />
-              <img *ngIf="!post.isPostLikedByCurrentUser" src="../../../assets/images/Heart-dark.svg" class="d-block" />
-
-              <span *ngIf="likesLength != undefined && currentLikedPostId== post.id">{{likesLength}}</span>
-              <span *ngIf="currentLikedPostId!= post.id">{{post.likes.length}}</span>
-            </button>
-        <button (click)="savePost(post.id)" type="button" class="btn bg-transparent text_ltgray font_12">
-          <img *ngIf="!post.isPostSavedByCurrentUser" src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto" />
-          <img *ngIf="post.isPostSavedByCurrentUser" src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto">
-            {{post.savedPostsCount}}
+      <div
+        class="live-header d-flex align-items-center justify-content-between"
+      >
+        <button
+          (click)="back()"
+          type="button"
+          class="back-button bg-transparent border-0 font_16 fw_400 text_dark"
+        >
+          <img src="../../../assets/images/arrow-left.svg" />
+          {{ "Back" | translate }}
         </button>
-        <button (click)="openSharePostModal(post.id, post.postType,post.title,post.description)" type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Upload.svg"
-            class="d-block" /> {{post.postSharedCount}}</button>
+        <h1
+          class="font_22 text_dark fw-bold text-center mb-md-0"
+          style="margin-left: -100px"
+        >
+          {{ "Post" | translate }}
+        </h1>
+        <ul
+          *ngIf="post?.createdBy == userId"
+          class="list-unstyled d-flex more-action-btn before-none pe-2 me-1 mb-0"
+          style="position: absolute; right: 50px; top: 13px"
+        >
+          <li class="d-inline-block ps-0 mb-0">
+            <div class="dropdown">
+              <button
+                class="bg-transparent dropdown-toggle border-0 action-more-btn after-none pt-1"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <i class="fa-solid fa-ellipsis"></i>
+              </button>
+              <ul class="dropdown-menu">
+                <li>
+                  <a
+                    style="cursor: pointer"
+                    class="dropdown-item"
+                    (click)="getDeletedPostId(post?.id)"
+                    data-bs-toggle="modal"
+                    data-bs-target="#delete-Class"
+                    >{{ "Delete" | translate }}
+                  </a>
+                </li>
+                <li>
+                  <a
+                    style="cursor: pointer"
+                    class="dropdown-item"
+                    (click)="openPostModal(post?.id)"
+                    data-bs-toggle="modal"
+                    data-bs-target="#delete-Class"
+                    >{{ "Delete" | translate }}
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </li>
+        </ul>
       </div>
-      <div class="live-chat-box text-center live-chat-padding">
-        <div *ngIf="post.createdBy == userId && isCommentsDisabled" (click)="showCommentsDiv(true)" class="chat-enabled d-inline-flex align-items-center cursor_pointer"><img src="../../../assets/images/Unlock.svg" />{{'ChatDisabled'| translate }}
-        </div>
-        <div *ngIf="post.createdBy == userId && !isCommentsDisabled" (click)="showCommentsDiv(false)" class="chat-enabled d-inline-flex align-items-center cursor_pointer"><img src="../../../assets/images/Unlock.svg" />{{'ChatEnabled'| translate }}
-        </div>
-        <div>
-          <span *ngIf="post.createdBy != userId && isCommentsDisabled">{{'CommentsAreDisabled'| translate }}</span>
-        </div>
-        <div *ngIf="!isCommentsDisabled" #groupChatList id="groupChat" class="live-chat-outer position-relative" (scroll)="scrollHandler($event)">
-          <div *ngIf="commentsLoadingIcon" class="postloader-main position-absolute translate-middle">
-            <div class="postlds-ring" style="margin-left: 200px;margin-bottom: 214px;"><div></div><div></div><div></div><div></div></div>
-          </div>
-        <div *ngFor="let item of post.comments" class="live-message d-flex position-relative align-items-start">
-          <img (click)="hideCommentModal()" [routerLink]="['/user/userProfile',item.userId]"  *ngIf="item.userAvatar != null" [src]="item.userAvatar" class="comment-user cursor_pointer">
-          <img (click)="hideCommentModal()" [routerLink]="['/user/userProfile',item.userId]"  *ngIf="item.userAvatar == null && gender =='1'" src="../../../assets/images/maleProfile.jfif" class="comment-user cursor_pointer"/>
-          <img (click)="hideCommentModal()" [routerLink]="['/user/userProfile',item.userId]"  *ngIf="(item.userAvatar == null) && (gender =='2' || gender =='3')" src="../../../assets/images/femaleProfile.jfif" class="comment-user cursor_pointer"/>
-          <div class="d-flex flex-column"><p (click)="hideCommentModal()" [routerLink]="['/user/userProfile',item.userId]" class="font_12 fw_600 text-start mb-0 cursor_pointer">{{item.userName}}</p>
-          <p class="text_sec1 font_12 fw_400 text-start mb-0">{{item.content}}</p>
-        </div>
-          <button (click)="likeUnlikeComments(item.id,true,item.isCommentLikedByCurrentUser,item.likeCount)" type="button" class="btn bg-transparent text_ltgray font_12 p-0 border-0 reel-like-chat">
-            <img *ngIf="item.isCommentLikedByCurrentUser" src="../../../assets/images/heart-red.svg" class="d-block" />
-            <img *ngIf="!item.isCommentLikedByCurrentUser" src="../../../assets/images/Heart-dark.svg" class="d-block" />
-            <span>{{item.likeCount}}</span>
-          </button>
-        </div>
-      </div>
-        <div *ngIf="!isCommentsDisabled" class="add-comment d-flex align-items-center justify-content-between flex-nowrap ng-star-inserted" >
-          <span class="bg-transparent rounded-circle comment-post-user rounded-circle">
-            <img (click)="hideCommentModal()" [routerLink]="['/user/userProfile',sender.id]" *ngIf="sender.avatar != null" [src]="sender.avatar" style="max-height: 100%;cursor: pointer;">
-            <img (click)="hideCommentModal()" [routerLink]="['/user/userProfile',sender.id]" *ngIf="sender.avatar == null && gender =='1'" src="../../../assets/images/maleProfile.jfif" style="max-height: 100%;cursor: pointer;"/>
-            <img (click)="hideCommentModal()" [routerLink]="['/user/userProfile',sender.id]" *ngIf="(sender.avatar == null) && (gender =='2' || gender =='3')" src="../../../assets/images/femaleProfile.jfif" style="max-height: 100%;cursor: pointer;"/>
-          </span>
-          <input (keyup.enter)="sendToGroup()" [(ngModel)]="messageToGroup" type="text" class="form-control rounded-8 font_14 fw_400" placeholder="{{'YourMessage'| translate }}">
-          <button (click)="sendToGroup()" type="button" class="comment-btn border-0"><img src="../../../assets/images/arrowup.svg" /></button>
-        </div>
-      </div>
-    </div>
-    </div>
-  </div>
-</div>
-</div>
-</div>
-</section>
-    </div>
-  </div>
-</div>
-</div>
+      <div
+        [ngClass]="showCommentsField ? '' : 'full-widthreel'"
+        id="reel_content"
+      >
+        <div class="row">
+          <div class="col-md-8">
+            <div
+              class="live-inner w-100"
+              *ngIf="post.postAttachments.length > 0"
+            >
+              <carousel>
+                <div
+                  *ngFor="let postAttachment of post.postAttachments"
+                  class="live-image overflow-hidden position-relative"
+                >
+                  <slide *ngIf="postAttachment.fileType == 2">
+                    <video
+                      #videoPlayer
+                      *ngIf="postAttachment.fileType == 2"
+                      width="100%"
+                      height="700"
+                      controls
+                      class="video-js vjs-big-play-centered"
+                      preload="metadata"
+                    >
+                      <source [src]="postAttachment.fileUrl" type="video/mp4" />
+                    </video>
+                    <div class="live-bottom-text p-3">
+                      <h5 class="font_14 mb-0 fw_600 text_sec1">
+                        {{ postAttachment.post.title }}
+                      </h5>
+                    </div>
+                    <div class="reel-username font_16 white_text">
+                      <img [src]="post.parentImageUrl" class="me-2" />
+                      {{ post.parentName }}
+                    </div>
+                  </slide>
 
-<section *ngIf="postPageView" class="f-poppins" style="margin-left: 300px;
-margin-top: 30px;">
-  <div>
-    <div class="live-header d-flex align-items-center justify-content-between">
-      <button (click)="back()" type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark"><img
-          src="../../../assets/images/arrow-left.svg" /> {{'Back'| translate }}</button>
-      <h1 class="font_22 text_dark fw-bold text-center mb-md-0" style="margin-left:-100px">{{'Post'| translate }}</h1>
-      <ul *ngIf="post?.createdBy == userId" class="list-unstyled d-flex more-action-btn before-none pe-2 me-1 mb-0" style="position: absolute;right: 50px;top: 13px;">
-        <li class="d-inline-block ps-0 mb-0">
-          <div class="dropdown">
-            <button class="bg-transparent dropdown-toggle border-0 action-more-btn after-none pt-1" type="button" data-bs-toggle="dropdown"
-              aria-expanded="false">
-              <i class="fa-solid fa-ellipsis"></i>
-            </button>
-            <ul class="dropdown-menu">
-              <li><a style="cursor: pointer;" class="dropdown-item"
-                (click)="getDeletedPostId(post?.id)" data-bs-toggle="modal" data-bs-target="#delete-Class">{{'Delete'| translate }}
-              </a>
-              </li>
-              <li><a style="cursor: pointer;" class="dropdown-item"
-                (click)="openPostModal(post?.id)" data-bs-toggle="modal" data-bs-target="#delete-Class">{{'Delete'| translate }}
-              </a>
-              </li>
-            </ul>
-          </div>
-        </li>
-      </ul>      </div>
-    <div [ngClass]="showCommentsField? '' : 'full-widthreel'" id="reel_content">
-      <div class="row">
-      <div class="col-md-8">
-      <div class="live-inner w-100" *ngIf="post.postAttachments.length>0">
-        <carousel>
-          <div *ngFor="let postAttachment of post.postAttachments" class="live-image overflow-hidden position-relative">
-            <slide *ngIf="postAttachment.fileType==2">
-              <video #videoPlayer *ngIf="postAttachment.fileType==2" width="100%" height="700" controls class="video-js vjs-big-play-centered" preload="metadata">
-                <source [src]="postAttachment.fileUrl" type="video/mp4"/>
-              </video>
-              <div class="live-bottom-text p-3">
-                <h5 class="font_14 mb-0 fw_600 text_sec1">{{postAttachment.post.title}} 
-                </h5>
-              </div>
-              <div class="reel-username font_16 white_text">
-                    <img [src]="post.parentImageUrl" class="me-2"/> {{post.parentName}}
-              </div>
-            </slide>
+                  <slide
+                    *ngIf="
+                      postAttachment.fileType != 2 ||
+                      postAttachment.fileType != 1
+                    "
+                  >
+                    <div class="w-100" id="wasCalled">
+                      <p>{{ post.description }}</p>
+                    </div>
+                  </slide>
 
-            <slide *ngIf="postAttachment.fileType!=2 || postAttachment.fileType!=1">
-              <div class="w-100" id="wasCalled">
-                <p>{{post.description}}</p>
-              </div>
-            </slide>
+                  <slide *ngIf="postAttachment.fileType == 1">
+                    <img
+                      *ngIf="postAttachment.fileType == 1"
+                      class="w-100"
+                      [src]="postAttachment.fileUrl"
+                    />
+                    <div class="live-bottom-text p-3">
+                      <h5 class="font_14 mb-0 fw_600 text_sec1">
+                        {{ postAttachment.post.title }}
+                      </h5>
+                    </div>
+                    <div class="reel-username font_16 white_text">
+                      <img [src]="post.parentImageUrl" class="me-2" />
+                      {{ post.parentName }}
+                    </div>
+                  </slide>
+                </div>
+              </carousel>
+            </div>
+            <div *ngIf="post.postAttachments.length == 0">
+              <h2>{{ post.title }}</h2>
+              <br />
+              <p>{{ post.description }}</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div>
+              <div
+                [ngClass]="
+                  showCommentsField
+                    ? 'accordion-open d-block'
+                    : 'accordion-open d-none'
+                "
+                id="live-chat-open"
+                style="display: none"
+              >
+                <div class="live-action-buttons d-flex justify-content-between">
+                  <button
+                    type="button"
+                    class="btn bg-transparent text_ltgray font_12 cursor_auto"
+                  >
+                    <img
+                      src="../../../assets/images/chat-icon.svg"
+                      class="d-block"
+                    />
+                    {{ post.commentsCount }}
+                  </button>
+                  <button
+                    type="button"
+                    class="btn bg-transparent text_ltgray font_12 cursor_auto"
+                  >
+                    <img src="../../../assets/images/eye.svg" class="d-block" />
+                    {{ post.views.length }}
+                  </button>
+                  <button
+                    (click)="
+                      likeUnlikePosts(post.id, true, post.postType, post)
+                    "
+                    type="button"
+                    class="btn bg-transparent text_ltgray font_12"
+                  >
+                    <img
+                      *ngIf="post.isPostLikedByCurrentUser"
+                      src="../../../assets/images/heart-red.svg"
+                      class="d-block"
+                    />
+                    <img
+                      *ngIf="!post.isPostLikedByCurrentUser"
+                      src="../../../assets/images/Heart-dark.svg"
+                      class="d-block"
+                    />
 
-            <slide *ngIf="postAttachment.fileType==1">
-             <img *ngIf="postAttachment.fileType==1" class="w-100" [src]="postAttachment.fileUrl" />
-              <div class="live-bottom-text p-3">
-            <h5 class="font_14 mb-0 fw_600 text_sec1">{{postAttachment.post.title}} 
-            </h5>
-          </div>
-          <div class="reel-username font_16 white_text">
-                <img [src]="post.parentImageUrl" class="me-2"/> {{post.parentName}}
-          </div>
-        </slide>
-          </div>
-      </carousel>
-  </div>
-  <div *ngIf="post.postAttachments.length==0">
-    <h2>{{post.title}}</h2>
-    <br>
-    <p>{{post.description}}</p>
-  </div>
-  </div>
-<div class="col-md-4">
-  <div>
-    <div [ngClass]="showCommentsField? 'accordion-open d-block' : 'accordion-open d-none'" id="live-chat-open" style="display:none;">
-    <div class="live-action-buttons d-flex justify-content-between">
-      <button type="button" class="btn bg-transparent text_ltgray font_12 cursor_auto"><img src="../../../assets/images/chat-icon.svg"
-          class="d-block" /> {{post.commentsCount}}</button>
-      <button type="button" class="btn bg-transparent text_ltgray font_12 cursor_auto"><img src="../../../assets/images/eye.svg"
-          class="d-block" /> {{post.views.length}}</button>
-          <button (click)="likeUnlikePosts(post.id,true,post.postType,post)" type="button" class="btn bg-transparent text_ltgray font_12">
-            <img *ngIf="post.isPostLikedByCurrentUser" src="../../../assets/images/heart-red.svg" class="d-block" />
-            <img *ngIf="!post.isPostLikedByCurrentUser" src="../../../assets/images/Heart-dark.svg" class="d-block" />
-
-            <span *ngIf="likesLength != undefined && currentLikedPostId== post.id">{{likesLength}}</span>
-            <span *ngIf="currentLikedPostId!= post.id">{{post.likes.length}}</span>
-          </button>
-          <button (click)="savePost(post.id)" type="button" class="btn bg-transparent text_ltgray font_12">
-            <img *ngIf="!post.isPostSavedByCurrentUser" src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto" />
-            <img *ngIf="post.isPostSavedByCurrentUser" src="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto">
-              {{post.savedPostsCount}}
-          </button>
-          <button (click)="openSharePostModal(post.id, post.postType,post.title,post.description)" type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Upload.svg"
-              class="d-block" /> {{post.postSharedCount}}</button>
-      <!-- <button type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Bookmark.svg"
+                    <span
+                      *ngIf="
+                        likesLength != undefined &&
+                        currentLikedPostId == post.id
+                      "
+                      >{{ likesLength }}</span
+                    >
+                    <span *ngIf="currentLikedPostId != post.id">{{
+                      post.likes.length
+                    }}</span>
+                  </button>
+                  <button
+                    (click)="savePost(post.id)"
+                    type="button"
+                    class="btn bg-transparent text_ltgray font_12"
+                  >
+                    <img
+                      *ngIf="!post.isPostSavedByCurrentUser"
+                      src="../../../../assets/images/Bookmark-dark.svg"
+                      class="d-block mx-auto"
+                    />
+                    <img
+                      *ngIf="post.isPostSavedByCurrentUser"
+                      src="../../../../assets/images/Bookmark-dark.svg"
+                      class="d-block mx-auto"
+                    />
+                    {{ post.savedPostsCount }}
+                  </button>
+                  <button
+                    (click)="
+                      openSharePostModal(
+                        post.id,
+                        post.postType,
+                        post.title,
+                        post.description
+                      )
+                    "
+                    type="button"
+                    class="btn bg-transparent text_ltgray font_12"
+                  >
+                    <img
+                      src="../../../assets/images/Upload.svg"
+                      class="d-block"
+                    />
+                    {{ post.postSharedCount }}
+                  </button>
+                  <!-- <button type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Bookmark.svg"
           class="d-block" /> 0</button>
       <button (click)="openSharePostModal(post.id)" type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Upload.svg"
           class="d-block" /> 0</button> -->
-    </div>
-    <div class="live-chat-box text-center">
-      <div *ngIf="post.createdBy == userId && isCommentsDisabled" (click)="showCommentsDiv(true)" class="chat-enabled d-inline-flex align-items-center cursor_pointer"><img src="../../../assets/images/Unlock.svg" />{{'ChatDisabled'| translate }}
-      </div>
-      <div *ngIf="post.createdBy == userId && !isCommentsDisabled" (click)="showCommentsDiv(false)" class="chat-enabled d-inline-flex align-items-center cursor_pointer"><img src="../../../assets/images/Unlock.svg" />{{'ChatEnabled'| translate }}
-      </div>
-      <div>
-        <span *ngIf="post.createdBy != userId && isCommentsDisabled">{{'CommentsAreDisabled'| translate }}</span>
-      </div>
-      <div *ngIf="!isCommentsDisabled" #groupChatList id="groupChat" class="live-chat-outer position-relative" (scroll)="scrollHandler($event)">
-        <div *ngIf="commentsLoadingIcon" class="postloader-main position-absolute translate-middle">
-          <div class="postlds-ring" style="margin-left: 200px;margin-bottom: 214px;"><div></div><div></div><div></div><div></div></div>
+                </div>
+                <div class="live-chat-box text-center">
+                  <div
+                    *ngIf="post.createdBy == userId && isCommentsDisabled"
+                    (click)="showCommentsDiv(true)"
+                    class="chat-enabled d-inline-flex align-items-center cursor_pointer"
+                  >
+                    <img src="../../../assets/images/Unlock.svg" />{{
+                      "ChatDisabled" | translate
+                    }}
+                  </div>
+                  <div
+                    *ngIf="post.createdBy == userId && !isCommentsDisabled"
+                    (click)="showCommentsDiv(false)"
+                    class="chat-enabled d-inline-flex align-items-center cursor_pointer"
+                  >
+                    <img src="../../../assets/images/Unlock.svg" />{{
+                      "ChatEnabled" | translate
+                    }}
+                  </div>
+                  <div>
+                    <span
+                      *ngIf="post.createdBy != userId && isCommentsDisabled"
+                      >{{ "CommentsAreDisabled" | translate }}</span
+                    >
+                  </div>
+                  <div
+                    *ngIf="!isCommentsDisabled"
+                    #groupChatList
+                    id="groupChat"
+                    class="live-chat-outer position-relative"
+                    (scroll)="scrollHandler($event)"
+                  >
+                    <div
+                      *ngIf="commentsLoadingIcon"
+                      class="postloader-main position-absolute translate-middle"
+                    >
+                      <div
+                        class="postlds-ring"
+                        style="margin-left: 200px; margin-bottom: 214px"
+                      >
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                      </div>
+                    </div>
+                    <div
+                      *ngFor="let item of post.comments"
+                      class="live-message d-flex position-relative align-items-start"
+                    >
+                      <img
+                        (click)="hideCommentModal()"
+                        [routerLink]="['/user/userProfile', item.userId]"
+                        *ngIf="item.userAvatar != null"
+                        [src]="item.userAvatar"
+                        class="comment-user cursor_pointer"
+                      />
+                      <img
+                        (click)="hideCommentModal()"
+                        [routerLink]="['/user/userProfile', item.userId]"
+                        *ngIf="item.userAvatar == null && gender == '1'"
+                        src="../../../assets/images/maleProfile.jfif"
+                        class="comment-user cursor_pointer"
+                      />
+                      <img
+                        (click)="hideCommentModal()"
+                        [routerLink]="['/user/userProfile', item.userId]"
+                        *ngIf="
+                          item.userAvatar == null &&
+                          (gender == '2' || gender == '3')
+                        "
+                        src="../../../assets/images/femaleProfile.jfif"
+                        class="comment-user cursor_pointer"
+                      />
+                      <div class="d-flex flex-column">
+                        <p
+                          (click)="hideCommentModal()"
+                          [routerLink]="['/user/userProfile', item.userId]"
+                          class="font_12 fw_600 text-start mb-0 cursor_pointer"
+                        >
+                          {{ item.userName }}
+                        </p>
+                        <p class="text_sec1 font_12 fw_400 text-start mb-0">
+                          {{ item.content }}
+                        </p>
+                      </div>
+                      <button
+                        (click)="
+                          likeUnlikeComments(
+                            item.id,
+                            true,
+                            item.isCommentLikedByCurrentUser,
+                            item.likeCount
+                          )
+                        "
+                        type="button"
+                        class="btn bg-transparent text_ltgray font_12 p-0 border-0 reel-like-chat"
+                      >
+                        <img
+                          *ngIf="item.isCommentLikedByCurrentUser"
+                          src="../../../assets/images/heart-red.svg"
+                          class="d-block"
+                        />
+                        <img
+                          *ngIf="!item.isCommentLikedByCurrentUser"
+                          src="../../../assets/images/Heart-dark.svg"
+                          class="d-block"
+                        />
+                        <span>{{ item.likeCount }}</span>
+                      </button>
+                    </div>
+                  </div>
+                  <div
+                    *ngIf="!isCommentsDisabled"
+                    class="add-comment d-flex align-items-center justify-content-between"
+                    style="margin-left: -40px"
+                  >
+                    <span
+                      class="bg-transparent rounded-circle comment-post-user rounded-circle"
+                    >
+                      <img
+                        (click)="hideCommentModal()"
+                        [routerLink]="['/user/userProfile', sender.id]"
+                        *ngIf="sender.avatar != null"
+                        [src]="sender.avatar"
+                        style="max-height: 100%; cursor: pointer"
+                      />
+                      <img
+                        (click)="hideCommentModal()"
+                        [routerLink]="['/user/userProfile', sender.id]"
+                        *ngIf="sender.avatar == null && gender == '1'"
+                        src="../../../assets/images/maleProfile.jfif"
+                        style="max-height: 100%; cursor: pointer"
+                      />
+                      <img
+                        (click)="hideCommentModal()"
+                        [routerLink]="['/user/userProfile', sender.id]"
+                        *ngIf="
+                          sender.avatar == null &&
+                          (gender == '2' || gender == '3')
+                        "
+                        src="../../../assets/images/femaleProfile.jfif"
+                        style="max-height: 100%; cursor: pointer"
+                      />
+                    </span>
+                    <input
+                      (keyup.enter)="sendToGroup()"
+                      [(ngModel)]="messageToGroup"
+                      type="text"
+                      class="form-control rounded-8 font_14 fw_400"
+                      placeholder="{{ 'YourMessage' | translate }}"
+                    />
+                    <button
+                      (click)="sendToGroup()"
+                      type="button"
+                      class="comment-btn border-0"
+                    >
+                      <img src="../../../assets/images/arrowup.svg" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      <div *ngFor="let item of post.comments" class="live-message d-flex position-relative align-items-start">
-        <img (click)="hideCommentModal()" [routerLink]="['/user/userProfile',item.userId]" *ngIf="item.userAvatar != null" [src]="item.userAvatar" class="comment-user cursor_pointer">
-        <img (click)="hideCommentModal()" [routerLink]="['/user/userProfile',item.userId]" *ngIf="item.userAvatar == null && gender =='1'" src="../../../assets/images/maleProfile.jfif" class="comment-user cursor_pointer"/>
-        <img (click)="hideCommentModal()" [routerLink]="['/user/userProfile',item.userId]" *ngIf="(item.userAvatar == null) && (gender =='2' || gender =='3')" src="../../../assets/images/femaleProfile.jfif" class="comment-user cursor_pointer"/>
-        <div class="d-flex flex-column"><p (click)="hideCommentModal()" [routerLink]="['/user/userProfile',item.userId]" class="font_12 fw_600 text-start mb-0 cursor_pointer">{{item.userName}}</p>
-        <p class="text_sec1 font_12 fw_400 text-start mb-0">{{item.content}}</p>
-        </div>
-        <button (click)="likeUnlikeComments(item.id,true,item.isCommentLikedByCurrentUser,item.likeCount)" type="button" class="btn bg-transparent text_ltgray font_12 p-0 border-0 reel-like-chat">
-          <img *ngIf="item.isCommentLikedByCurrentUser" src="../../../assets/images/heart-red.svg" class="d-block" />
-          <img *ngIf="!item.isCommentLikedByCurrentUser" src="../../../assets/images/Heart-dark.svg" class="d-block" />
-          <span>{{item.likeCount}}</span>
-        </button>
       </div>
     </div>
-      <div *ngIf="!isCommentsDisabled" class="add-comment d-flex align-items-center justify-content-between"  style="margin-left:-40px">
-        <span class="bg-transparent rounded-circle comment-post-user rounded-circle">
-          <img (click)="hideCommentModal()" [routerLink]="['/user/userProfile',sender.id]" *ngIf="sender.avatar != null" [src]="sender.avatar" style="max-height: 100%;cursor: pointer;">
-          <img (click)="hideCommentModal()" [routerLink]="['/user/userProfile',sender.id]" *ngIf="sender.avatar == null && gender =='1'" src="../../../assets/images/maleProfile.jfif" style="max-height: 100%;cursor: pointer;"/>
-          <img (click)="hideCommentModal()" [routerLink]="['/user/userProfile',sender.id]" *ngIf="(sender.avatar == null) && (gender =='2' || gender =='3')" src="../../../assets/images/femaleProfile.jfif" style="max-height: 100%;cursor: pointer;"/>
-        </span>
-        <input (keyup.enter)="sendToGroup()" [(ngModel)]="messageToGroup" type="text" class="form-control rounded-8 font_14 fw_400" placeholder="{{'YourMessage'| translate }}">
-        <button (click)="sendToGroup()" type="button" class="comment-btn border-0"><img src="../../../assets/images/arrowup.svg" /></button>
-      </div>
-    </div>
-  </div>
-  </div>
-</div>
-</div>
-    </div>
-  </div>
-</section>
+  </section>
 </div>
 <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
-

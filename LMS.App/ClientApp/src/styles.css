@@ -1303,6 +1303,13 @@ input[type="number"]::-webkit-outer-spin-button {
   bottom: 30px;
 }
 
+@media screen and (max-width: 767px) {
+  .school-grid-footer.above-thumbnail {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
 .shadow-thumnail:after {
   content: "";
   background: linear-gradient(
@@ -3113,6 +3120,7 @@ p-autocomplete li:before {
   max-height: 690px;
   overflow-y: auto;
   padding-right: 5px;
+  word-break: break-all;
 }
 .addCommentBox .form-control {
   margin: 0;
@@ -3615,9 +3623,9 @@ p-autocomplete li:before {
     width: 100%;
   }
   .feedimg-box {
-    min-width: 210px;
-    height: 305px;
-    width: 295px;
+    min-width: 160px;
+    height: 230px;
+    width: 100%;
   }
 }
 
