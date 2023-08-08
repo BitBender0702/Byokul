@@ -2,9 +2,11 @@
 using LMS.Common.ViewModels.Admin;
 using LMS.Common.ViewModels.Class;
 using LMS.Common.ViewModels.Course;
+using LMS.Common.ViewModels.Iyizico;
 using LMS.Common.ViewModels.School;
 using LMS.Common.ViewModels.User;
 using LMS.Data.Entity;
+using LMS.Data.Entity.Common;
 using LMS.DataAccess.Repository;
 using LMS.Services.Admin;
 using Microsoft.EntityFrameworkCore;
@@ -22,15 +24,20 @@ namespace LMS.Services
         private IGenericRepository<School> _schoolRepository;
         private IGenericRepository<Class> _classRepository;
         private IGenericRepository<Course> _courseRepository;
+        private IGenericRepository<SchoolTransaction> _schoolTransactionRepository;
+        private IGenericRepository<ClassCourseTransaction> _classCourseTransactionRepository;
+
         private readonly IMapper _mapper;
 
-        public AdminService(IGenericRepository<User> userRepository, IMapper mapper, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository)
+        public AdminService(IGenericRepository<User> userRepository, IMapper mapper, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<SchoolTransaction> schoolTransactionRepository, IGenericRepository<ClassCourseTransaction> classCourseTransactionRepository)
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _schoolRepository = schoolRepository;
             _classRepository = classRepository;
             _courseRepository = courseRepository;
+            _schoolTransactionRepository = schoolTransactionRepository;
+            _classCourseTransactionRepository = classCourseTransactionRepository;
         }
         public async Task<List<RegisteredUsersViewModel>> GetRegisteredUsers()
         {
@@ -180,6 +187,30 @@ namespace LMS.Services
             model.NoOfCourses = _courseRepository.GetAll().Count();
 
             return model;
+
+        }
+
+        public async Task<List<SchoolTransactionViewModel>> GetAllSchoolTransactions()
+        {
+            try
+            {
+                var schoolTransactions = await _schoolTransactionRepository.GetAll().Include(x => x.User).Include(x => x.School).Where(x => x.PaymentId != null && x.School.IsSchoolSubscribed).ToListAsync();
+                var result =  schoolTransactions.DistinctBy(x => x.ConversationId).ToList();
+                var response = _mapper.Map<List<SchoolTransactionViewModel>>(result);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+        }
+
+        public async Task<List<ClassCourseTransactionViewModel>> GetAllClassCourseTransactions()
+        {
+            var classCourseTransactions = await _classCourseTransactionRepository.GetAll().Include(x => x.User).Include(x => x.Class).ThenInclude(x => x.School).Include(x => x.Course).ThenInclude(x => x.School).ToListAsync();
+            var response = _mapper.Map<List<ClassCourseTransactionViewModel>>(classCourseTransactions);
+            return response;
 
         }
     }

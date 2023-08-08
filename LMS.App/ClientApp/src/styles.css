@@ -1303,6 +1303,13 @@ input[type="number"]::-webkit-outer-spin-button {
   bottom: 30px;
 }
 
+@media screen and (max-width: 767px) {
+  .school-grid-footer.above-thumbnail {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
 .shadow-thumnail:after {
   content: "";
   background: linear-gradient(

@@ -20,6 +20,10 @@ namespace LMS.Services.Iyizico
         Task<TransactionsDetailsViewModel> GetSchoolTransactionDetails(TransactionParamViewModel model, string userId);
         Task<TransactionsDetailsViewModel> GetClassCourseTransactionDetails(TransactionParamViewModel model, string userId);
         void CloseIyizicoThreeDAuthWindow(string userId);
+        Task<string> CancelSubscription(Guid schoolId);
+        Task<string> RenewSubscription(Guid schoolId);
+        Task<string> RefundPayment(string paymentId);
+
 
 
 

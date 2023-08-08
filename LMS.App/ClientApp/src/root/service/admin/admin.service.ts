@@ -66,6 +66,14 @@ export class AdminService{
         return this.http.get(`${this.apiUrl}/admins/getDashboardDetails`);
     }
 
+    getAllClassCourseTransactions():Observable<any>{
+        return this.http.get(`${this.apiUrl}/admins/getAllClassCourseTransactions`);
+    }
+
+    getAllSchoolTransactions():Observable<any>{
+        return this.http.get(`${this.apiUrl}/admins/getAllSchoolTransactions`);
+    }
+
 
 
 

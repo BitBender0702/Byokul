@@ -512,7 +512,18 @@
   "FileStorageProgressMessage": "Your files is being processed. We’ll let you know when upload will completed",
   "FilesUploadedSuccessfully": "Files uploaded successfully in file storage",
   "DoYouWantToChange":"Do you want to change between class and course?",
-  "ConfirmCourseChange":"Change Class-Course"
+  "ConfirmCourseChange":"Change Class-Course",
+  "OwnedClass&Course": "Owned Classes & Courses",
+  "SchoolTransactions": "School Transactions",
+  "ClassCourseTransactions": "Class/Course Transactions",
+  "CancelSubscription": "Cancel Subscription",
+  "RenewSubscription": "RenewSubscription",
+  "Cancel": "Cancel",
+  "Renew": "Renew",
+  "DoYouWantToCancelSubscription": "Do you really want to cancel the subscription",
+  "DoYouWantToRenewSubscription": "Do you really want to renew the subscription",
+  "DoYouWantToRefundPayment": "Do you really want to refund this payment",
+  "RefundPayment": "Refund Payment"
   
 
 

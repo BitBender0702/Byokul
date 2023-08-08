@@ -148,6 +148,7 @@ namespace LMS.App.Controllers
 
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         private async Task<string> ReadRequestBodyAsStringAsync(HttpContext context)
         {
             using (var reader = new StreamReader(context.Request.Body, encoding: Encoding.UTF8))
@@ -185,6 +186,7 @@ namespace LMS.App.Controllers
             return Ok();
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         public async Task RetryPayment(string subscriptionCode)
         {
             RetrySubscriptionRequest request = new RetrySubscriptionRequest
@@ -202,6 +204,7 @@ namespace LMS.App.Controllers
             Subscription.Retry(request, options);
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         public void CancelSubscription(string subscriptionCode)
         {
             RetrieveSubscriptionRequest subRequest = new RetrieveSubscriptionRequest();
@@ -227,6 +230,7 @@ namespace LMS.App.Controllers
 
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         public void HandlePaymentFailure(string paymentId)
         {
             string subReferenceCode = "TestCode";
@@ -254,6 +258,35 @@ namespace LMS.App.Controllers
             var userId = await GetUserIdAsync(this._userManager);
             var response = await _iyizicoService.GetClassCourseTransactionDetails(model, userId);
             return Ok(response);
+        }
+
+        [Route("cancelSubscription")]
+        [HttpPost]
+        public async Task<IActionResult> CancelSubscription(Guid schoolId)
+        {
+            var userId = await GetUserIdAsync(this._userManager);
+            var response = await _iyizicoService.CancelSubscription(schoolId);
+            return Ok(new {errorMessage = response});
+        }
+
+        [AllowAnonymous]
+        [Route("renewSubscription")]
+        [HttpPost]
+        public async Task<IActionResult> RenewSubscription(Guid schoolId)
+        {
+            //var userId = await GetUserIdAsync(this._userManager);
+            var response = await _iyizicoService.RenewSubscription(schoolId);
+            return Ok(response);
+        }
+
+
+        [Route("refundPayment")]
+        [HttpPost]
+        public async Task<IActionResult> RefundPayment(string paymentId)
+        {
+            //var userId = await GetUserIdAsync(this._userManager);
+            var response = await _iyizicoService.RefundPayment(paymentId);
+            return Ok(new { errorMessage = response});
         }
 
     }

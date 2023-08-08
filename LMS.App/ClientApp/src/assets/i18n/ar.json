@@ -500,7 +500,19 @@
   "FileStorageProgressMessage": "تتم معالجة ملفاتك. سنخبرك عندما يكتمل التحميل",
   "FilesUploadedSuccessfully": "تم تحميل الملفات بنجاح في تخزين الملفات",
   "DoYouWantToChange":"هل تريد التغيير بين الفصل والدورة؟",
-  "ConfirmCourseChange":"تغيير الفصل الدراسي"
+  "ConfirmCourseChange":"تغيير الفصل الدراسي",
+  "OwnedClass&Course": "Owned Classes & Courses",
+  "SchoolTransactions": "School Transactions",
+  "ClassCourseTransactions": "Class/Course Transactions",
+  "CancelSubscription": "Cancel Subscription",
+  "RenewSubscription": "RenewSubscription",
+  "Cancel": "Cancel",
+  "Renew": "Renew",
+  "DoYouWantToCancelSubscription": "Do you really want to cancel the subscription",
+  "DoYouWantToRenewSubscription": "Do you really want to renew the subscription",
+  "DoYouWantToRefundPayment": "Do you really want to refund this payment",
+  "RefundPayment": "Refund Payment"
+
 
 
 

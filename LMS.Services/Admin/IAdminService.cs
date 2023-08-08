@@ -1,6 +1,7 @@
 ﻿using LMS.Common.ViewModels.Admin;
 using LMS.Common.ViewModels.Class;
 using LMS.Common.ViewModels.Course;
+using LMS.Common.ViewModels.Iyizico;
 using LMS.Common.ViewModels.School;
 using LMS.Common.ViewModels.User;
 using System;
@@ -24,5 +25,8 @@ namespace LMS.Services.Admin
         Task<bool> DisableClass(DisableClassCourseViewModel model);
         Task<bool> DisableCourse(DisableClassCourseViewModel model);
         Task<AdminDashboardViewModel> GetDashboardDetails();
+        Task<List<SchoolTransactionViewModel>> GetAllSchoolTransactions();
+        Task<List<ClassCourseTransactionViewModel>> GetAllClassCourseTransactions();
+
     }
 }

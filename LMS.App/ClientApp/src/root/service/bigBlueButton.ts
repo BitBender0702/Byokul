@@ -18,10 +18,14 @@ export class BigBlueButtonService{
     }
 
     joinMeeting(model:JoinMeetingModel):Observable<any>{
+        var token = localStorage.getItem("jwt")?? '';
+        this.headers = new HttpHeaders().set("Authorization", "Bearer " + token);
         return this.http.post(`${this.apiUrl}/bigBlueButton/joinMeeting`,model,{headers: this.headers});
     }
 
     endMeeting(model:any):Observable<any>{
+        var token = localStorage.getItem("jwt")?? '';
+        this.headers = new HttpHeaders().set("Authorization", "Bearer " + token);
         return this.http.post(`${this.apiUrl}/bigBlueButton/endMeeting`,model,{headers: this.headers});
     }
 }

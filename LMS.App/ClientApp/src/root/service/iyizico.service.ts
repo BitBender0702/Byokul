@@ -19,4 +19,17 @@ export class IyizicoService{
     getSubscriptionPlans(): Observable<any> {
         return this.http.post(`${this.apiUrl}/iyizico/getSubscriptionPlans`,{headers: this.headers});
     }
+
+    cancelSubscription(schoolId:string): Observable<any> {
+        return this.http.post(`${this.apiUrl}/iyizico/cancelSubscription` + '?schoolId=' + schoolId,'',{headers: this.headers});
+    }
+
+    renewSubscription(schoolId:string): Observable<any> {
+        return this.http.post(`${this.apiUrl}/iyizico/renewSubscription`+ '?schoolId=' + schoolId,'',{headers: this.headers});
+    }
+
+    refundPayment(paymentId:string): Observable<any> {
+        return this.http.post(`${this.apiUrl}/iyizico/refundPayment` + '?paymentId=' + paymentId,'',{headers: this.headers});
+    }
+
 }

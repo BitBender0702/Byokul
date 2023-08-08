@@ -103,5 +103,21 @@ namespace LMS.App.Controllers
             var response = await _adminService.GetDashboardDetails();
             return Ok(response);
         }
+
+        [Route("getAllSchoolTransactions")]
+        [HttpGet]
+        public async Task<IActionResult> GetAllSchoolTransactions()
+        {
+            var response = await _adminService.GetAllSchoolTransactions();
+            return Ok(response);
+        }
+
+        [Route("getAllClassCourseTransactions")]
+        [HttpGet]
+        public async Task<IActionResult> GetAllClassCourseTransactions()
+        {
+            var response = await _adminService.GetAllClassCourseTransactions();
+            return Ok(response);
+        }
     }
 }

@@ -21,5 +21,7 @@ namespace LMS.Data.Entity.Common
         public DateTime CreatedOn { get; set; }
         public int Status { get; set; }
         public bool IsActive { get; set; }
+        public int Amount { get; set; }
+        public bool IsRefund { get; set; }
     }
 }

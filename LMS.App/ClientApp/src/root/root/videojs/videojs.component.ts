@@ -17,14 +17,28 @@ export class VideoJsComponent implements OnInit {
   changeLanguageSubscription!:Subscription;
     @Input() postAttachment:any;
     @Input() isView:boolean=false;
+    @Input() isReelView:boolean=false;
     @ViewChild('disVideo', { read: ElementRef }) disVideo!:ElementRef;
+    player: videojs.Player = new Object as videojs.Player;
+
   constructor(private cd: ChangeDetectorRef,) { }
 
   ngOnInit(): void {
     debugger;
     this.cd.detectChanges();
-    videojs(this.disVideo.nativeElement);
-    
+    if(this.isReelView){
+      this.player = videojs(this.disVideo.nativeElement,{
+        autoplay: 'muted',
+        loop: true
+      });
+    }
+    else{
+      this.player = videojs(this.disVideo.nativeElement);
+    }    
+  }
+
+  pausevideo(){
+    this.player.pause();
   }
 
 //   ngAfterViewInit(): void {

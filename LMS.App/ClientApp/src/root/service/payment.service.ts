@@ -37,6 +37,7 @@ export class PaymentService{
       }
 
       classCourseTransactionDetails(transactionParamViewModel: TransactionParamViewModel):Observable<any>{
+        debugger
         return this.http.post(`${this.apiUrl}/iyizico/classCourseTransactionDetails`,transactionParamViewModel, {headers: this.headers});
       }
 

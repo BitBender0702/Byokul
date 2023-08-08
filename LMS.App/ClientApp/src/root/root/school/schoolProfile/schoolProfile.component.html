@@ -34,13 +34,36 @@
             {{ "GoLive" | translate }}
           </button> -->
           <button
-            *ngIf="isOwner || hasPostPermission"
+            *ngIf="(isOwner || hasPostPermission) && school.isSchoolSubscribed"
             (click)="openPostModal(false)"
             type="button"
             class="btn custom-btn primary_btn earning-btn fw_400 h_44"
           >
             {{ "CreatePost" | translate }}
           </button>
+
+          <button
+          *ngIf="isOwner && school.isSchoolSubscribed"
+          (click)="getCancelSubscriptionSchoolId(school.schoolId)"
+          type="button"
+          class="btn custom-btn primary_btn earning-btn fw_400 h_44"
+          data-bs-toggle="modal"
+          data-bs-target="#cancelSubscription"
+        >
+          {{ "CancelSubscription" | translate }}
+        </button>
+
+        <button
+        *ngIf="isOwner && !school.isSchoolSubscribed"
+        (click)="getRenewSubscriptionSchoolId(school.schoolId)"
+        type="button"
+        class="btn custom-btn primary_btn earning-btn fw_400 h_44"
+        data-bs-toggle="modal"
+        data-bs-target="#renewSubscription"
+      >
+        {{ "RenewSubscription" | translate }}
+      </button>
+
         </div>
         <div
           class="live-header d-flex align-items-center justify-content-between"
@@ -196,7 +219,7 @@
                   }}</span>
                   <span *ngIf="school.isDisableByOwner">{{
                     "EnableSchool" | translate
-                  }}</span> 
+                  }}</span>
                 </button>
               </div>
             </div>
@@ -363,7 +386,7 @@
           </ng-container>
         </div> -->
         <hr class="hr-gray" />
-        <div 
+        <div
           class="school-profile-tabs d-flex align-content-center justify-content-center position-relative"
         >
           <div class="custom-tabs">
@@ -998,14 +1021,13 @@
                           >
                             {{ post.title }}
                             <span
-                                  class="fw-light ms-2"
-                                  *ngFor="
-                                    let item of parseTheTags(post.postTags);
-                                    let isLast = last
-                                  "
-                                  >#{{ item
-                                  }}{{ isLast ? "" : ", " }}</span
-                                >
+                              class="fw-light ms-2"
+                              *ngFor="
+                                let item of parseTheTags(post.postTags);
+                                let isLast = last
+                              "
+                              >#{{ item }}{{ isLast ? "" : ", " }}</span
+                            >
                           </div>
                         </div>
                       </div>
@@ -1039,26 +1061,28 @@
                   class="school-grid-box position-relative"
                 >
                   <div
-                    class="schoolgrid-header d-flex align-items-center position-relative"
+                    class="schoolgrid-header d-flex align-items-center justify-content-between position-relative"
                   >
-                    <div class="school-gridprofile-icon">
-                      <img [lazyLoad]="school.avatar" />
+                    <div class="d-flex align-items-center gap-3">
+                      <div class="school-gridprofile-icon">
+                        <img [lazyLoad]="school.avatar" />
+                      </div>
+                      <h2 class="d-inline-block font_20 fw_600 text_sec1 mb-0">
+                        {{ post.title }}
+                      </h2>
+                      <div *ngIf="post.isLive">
+                        <img
+                          lazyLoad="../../../../assets/images/live_img.png"
+                        />
+                      </div>
+                      <p
+                        *ngIf="post.createdOn != null"
+                        class="font_14 school-grid-date d-inline-block mb-0"
+                      >
+                        {{ post.createdOn | date : "MMMM d" }} -
+                        {{ post.createdOn | date : "hh:mm" }}
+                      </p>
                     </div>
-                    <h2 class="d-inline-block font_20 fw_600 text_sec1 mb-0">
-                      {{ post.title }}
-                    </h2>
-                    <div *ngIf="post.isLive">
-                      <img
-                        lazyLoad="../../../../assets/images/live_img.png"
-                      />
-                    </div>
-                    <p
-                      *ngIf="post.createdOn != null"
-                      class="font_14 school-grid-date d-inline-block mb-0"
-                    >
-                      {{ post.createdOn | date : "MMMM d" }} -
-                      {{ post.createdOn | date : "hh:mm" }}
-                    </p>
                     <button
                       *ngIf="post.isPinned && isOwner"
                       (click)="pinUnpinPost(post.id, false)"
@@ -1109,7 +1133,7 @@
                       </ng-container>
                     </div>
                     <div class="teacher-tags tag-box hashtag_box">
-                      <span 
+                      <span
                         *ngFor="let tag of postsTagValues"
                         class="custom-tag"
                         >#{{ tag }}</span
@@ -1738,39 +1762,46 @@
               <div class="row">
                 <ng-container *ngFor="let post of school.posts; let i = index">
                   <div
-                  class="col-12 imgDisplay" *ngIf="(isScreenPc && i % 3 == 0) || (isScreenTablet && i % 2 == 0) || (isScreenMobile && i % 1 == 0)"
-                  style="display: none;"
-                >
-                  <div
-                    [ngClass]="
-                      isGridItemInfo
-                        ? 'd-block school-grid-box position-relative school-list-box h-100'
-                        : 'd-none school-grid-box position-relative school-list-box h-100'
+                    class="col-12 imgDisplay"
+                    *ngIf="
+                      (isScreenPc && i % 3 == 0) ||
+                      (isScreenTablet && i % 2 == 0) ||
+                      (isScreenMobile && i % 1 == 0)
                     "
-                    *ngIf="gridItemInfo != undefined"
+                    style="display: none"
                   >
-                    <div class="row post-list-preview-sec">
-                      <div
-                        [ngClass]="
-                          gridItemInfo.postAttachments.length > 0
-                            ? 'd-block col-lg-6'
-                            : 'd-none'
-                        "
-                      >
-                        <carousel [interval]="0">
-                          <div
-                            *ngFor="
-                              let postAttachment of gridItemInfo.postAttachments;
-                            "
-                            class="school-grid-thumbnail"
-                          >
-                            <slide *ngIf="postAttachment.fileType == 2">
-                              <div
-                                *ngIf="postAttachment?.fileType == 2"
-                                class="videofile"
-                              >
-                              <videoJs-component [postAttachment]="postAttachment"></videoJs-component>
-                                <!-- <video
+                    <div
+                      [ngClass]="
+                        isGridItemInfo
+                          ? 'd-block school-grid-box position-relative school-list-box h-100'
+                          : 'd-none school-grid-box position-relative school-list-box h-100'
+                      "
+                      *ngIf="gridItemInfo != undefined"
+                    >
+                      <div class="row post-list-preview-sec">
+                        <div
+                          [ngClass]="
+                            gridItemInfo.postAttachments.length > 0
+                              ? 'd-block col-lg-6'
+                              : 'd-none'
+                          "
+                        >
+                          <carousel [interval]="0">
+                            <div
+                              *ngFor="
+                                let postAttachment of gridItemInfo.postAttachments
+                              "
+                              class="school-grid-thumbnail"
+                            >
+                              <slide *ngIf="postAttachment.fileType == 2">
+                                <div
+                                  *ngIf="postAttachment?.fileType == 2"
+                                  class="videofile"
+                                >
+                                  <videoJs-component
+                                    [postAttachment]="postAttachment"
+                                  ></videoJs-component>
+                                  <!-- <video
                                 [id] = "getRandomClass(i,false)"
                                   controls
                                   class="video-js vjs-big-play-centered"
@@ -1892,7 +1923,8 @@
                                     lazyLoad="../../../../assets/images/live_img.png"
                                   />
                                 </div>
-                              </div><br>
+                              </div>
+                              <br />
 
                               <p
                                 class="font_14 school-grid-date d-inline-block mb-0"
@@ -1928,7 +1960,7 @@
                               *ngIf="gridItemInfo.postTags.length != 0"
                               class="teacher-tags tag-box hashtag_box"
                             >
-                              <span 
+                              <span
                                 *ngFor="let tag of postsTagValues"
                                 class="custom-tag"
                                 >#{{ tag }}</span
@@ -2072,8 +2104,7 @@
                           <button
                             type="button"
                             class="view font_12 bg-transparent border-0 cursor_auto"
-                          >
-                          </button>
+                          ></button>
                           <button
                             *ngIf="post.isPinned && isOwner"
                             (click)="pinUnpinPost(post.id, false)"
@@ -2379,11 +2410,11 @@
                         *ngIf="item.tags.length > 0"
                         class="teacher-tags tag-box hashtag_box"
                       >
-                      <span 
-                      *ngFor="let tag of postsTagValues"
-                      class="custom-tag"
-                      >#{{ tag }}</span
-                    >
+                        <span
+                          *ngFor="let tag of postsTagValues"
+                          class="custom-tag"
+                          >#{{ tag }}</span
+                        >
                       </div>
                       <div
                         *ngIf="item.tags.length == 0"
@@ -3929,3 +3960,117 @@
     </div>
   </div>
 </ng-template>
+
+
+
+<div
+class="modal fade edit-school-modal delete-modal"
+id="cancelSubscription"
+tabindex="-1"
+aria-labelledby="cancelSubscription"
+aria-hidden="true"
+>
+<div class="modal-dialog modal-dialog-centered">
+  <div class="modal-content">
+    <div
+      class="modal-header border-0 justify-content-center position-relative"
+    >
+      <h1
+        class="modal-title font_22 text_dark fw_700 border-0 text-center"
+      >
+        {{ "CancelSubscription" | translate }}
+      </h1>
+      <button
+        type="button"
+        class="btn-close shadow-none"
+        data-bs-dismiss="modal"
+        aria-label="Close"
+      >
+        <img lazyLoad="../../../../assets/images/cross.svg" />
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <h2 class="text-center font_16 f-poppins">
+          {{ "DoYouWantToCancelSubscription" | translate }}
+        </h2>
+      </div>
+      <div
+        class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-2 mt-4"
+      >
+        <button
+          type="button"
+          class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+          data-bs-dismiss="modal"
+        >
+          {{ "No" | translate }}
+        </button>
+        <button
+          (click)="cancelSubscription()"
+          type="button"
+          class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
+          data-bs-dismiss="modal"
+        >
+          {{ "Yes" | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div
+class="modal fade edit-school-modal delete-modal"
+id="renewSubscription"
+tabindex="-1"
+aria-labelledby="renewSubscription"
+aria-hidden="true"
+>
+<div class="modal-dialog modal-dialog-centered">
+  <div class="modal-content">
+    <div
+      class="modal-header border-0 justify-content-center position-relative"
+    >
+      <h1
+        class="modal-title font_22 text_dark fw_700 border-0 text-center"
+      >
+        {{ "RenewSubscription" | translate }}
+      </h1>
+      <button
+        type="button"
+        class="btn-close shadow-none"
+        data-bs-dismiss="modal"
+        aria-label="Close"
+      >
+        <img lazyLoad="../../../../assets/images/cross.svg" />
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <h2 class="text-center font_16 f-poppins">
+          {{ "DoYouWantToRenewSubscription" | translate }}
+        </h2>
+      </div>
+      <div
+        class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-2 mt-4"
+      >
+        <button
+          type="button"
+          class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+          data-bs-dismiss="modal"
+        >
+          {{ "No" | translate }}
+        </button>
+        <button
+          (click)="renewSubscription()"
+          type="button"
+          class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
+          data-bs-dismiss="modal"
+        >
+          {{ "Yes" | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
