@@ -1839,6 +1839,24 @@ body .liv-postbtn .post-attch-btn.active,
   max-width: 100%;
   margin: 0 auto;
 }
+.feed_userpicture {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  margin-right: 10px;
+  overflow: hidden;
+  background: #a1a1a1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.feed_userpicture img {
+  width: auto;
+  height: auto;
+  border-radius: 0;
+  margin-right: 0;
+  overflow: auto;
+}
 
 @media screen and (min-width: 768px) {
   .reels-uploader-img {
