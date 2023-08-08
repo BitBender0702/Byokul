@@ -1548,6 +1548,13 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
     const initialState = {
       classCourseItem: item,
     };
+    let videoElement: HTMLVideoElement | null = document.getElementById('displayVideo') as HTMLVideoElement
+    if(videoElement){
+       var vdo: HTMLVideoElement | null = videoElement.children[0]  as HTMLVideoElement
+       if(vdo){
+        vdo.pause();
+       }
+    }
     this.bsModalService.show(ClassCourseModalComponent, { initialState });
   }
 
