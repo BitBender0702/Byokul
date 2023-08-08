@@ -270,7 +270,7 @@
                 class="custom-tag"
                 ><span
                   (click)="
-                    openCertificateViewModal(item.certificateUrl, item.name)
+                  openClassCertificate(item)
                   "
                   >{{ item.name }}</span
                 ><button
@@ -1003,7 +1003,7 @@
                       />
                       <img
                         *ngIf="post.isPostSavedByCurrentUser"
-                        lazyLoad="../../../../assets/images/Bookmark-dark.svg"
+                        lazyLoad="../../../../assets/images/bookmark-dash-fill.svg"
                         class="d-block mx-auto"
                       />
                       <span class="textBlack">{{ post.savedPostsCount }}</span>
@@ -1319,7 +1319,7 @@
                                 />
                                 <img
                                   *ngIf="gridItemInfo.isPostSavedByCurrentUser"
-                                  lazyLoad="../../../../assets/images/Bookmark-dark.svg"
+                                  lazyLoad="../../../../assets/images/bookmark-dash-fill.svg"
                                   class="d-block mx-auto"
                                 />
                                 {{ gridItemInfo.savedPostsCount }}
@@ -2388,6 +2388,14 @@
                   <div class="row">
                     <div class="col-md-12">
                       <div class="form-group">
+                        <input
+                          formControlName="classId"
+                          type="text"
+                          name="ClassId"
+                          class="form-control w-100"
+                          [disabled] = 'true'
+                          [hidden] = "true"
+                        />
                         <label class="font_10"
                           >{{ "CertificateName" | translate }}*</label
                         >

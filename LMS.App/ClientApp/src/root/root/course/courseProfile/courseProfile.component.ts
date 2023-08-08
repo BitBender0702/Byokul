@@ -127,6 +127,11 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
   hasIssueCertificatePermission!: boolean;
   hasManageTeachersPermission!: boolean;
   isOnInitInitialize: boolean = false;
+
+
+  cropTemplate:any;
+
+
   isConvertIntoCourse!: boolean;
   savedPostSubscription!: Subscription;
   savedReelSubscription!: Subscription;
@@ -166,7 +171,9 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
 
   @ViewChild('createPostModal', { static: true }) createPostModal!: CreatePostComponent;
   courseCertificateForm!: FormGroup;
+  courseCertificateInfo: any;
 
+  @ViewChild('openCourseOwnCertificate') openCourseOwnCertificate!: ElementRef;
 
 
 
@@ -936,6 +943,13 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       posts: posts,
       postAttachments: postAttachments
     };
+    let videoElement: HTMLVideoElement | null = document.getElementById('displayVideo') as HTMLVideoElement
+    if(videoElement){
+       var vdo: HTMLVideoElement | null = videoElement.children[0]  as HTMLVideoElement
+       if(vdo){
+        vdo.pause();
+       }
+    }
     this.bsModalService.show(PostViewComponent, { initialState });
   }
 
@@ -1034,6 +1048,13 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
   }
 
   hideGridItemInfo() {
+    let videoElement: HTMLVideoElement | null = document.getElementById('displayVideo') as HTMLVideoElement
+    if(videoElement){
+       var vdo: HTMLVideoElement | null = videoElement.children[0]  as HTMLVideoElement
+       if(vdo){
+        vdo.pause();
+       }
+    }
     this.isGridItemInfo = this.isGridItemInfo ? false : true;
 
   }
@@ -1223,6 +1244,8 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     this.hiddenButtonRef.nativeElement.click();
   }
 
+
+
   cropModalOpen(template: TemplateRef<any>) {
     this.cropModalRef = this.bsModalService.show(template);
   }
@@ -1336,7 +1359,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
   }
 
 
-  editcourseCertificate(courseCertificateInfo: any) {
+  editCourseCertificate(courseCertificateInfo: any) {
     debugger
     // dob = dob.substring(0, dob.indexOf('T'));     
 
@@ -1422,8 +1445,8 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
   openCourseCertificate(certificateInfo: any) {
     debugger
     this.certificateToUpload.set('certificateImage', '');
-    // this.courseCertificateInfo = certificateInfo;
-    // this.openCourseOwnCertificate.nativeElement.click();
+    this.courseCertificateInfo = certificateInfo;
+    this.openCourseOwnCertificate.nativeElement.click();
     this.cd.detectChanges();
   }
 

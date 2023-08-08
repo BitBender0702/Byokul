@@ -836,7 +836,7 @@
                       />
                       <img
                         *ngIf="post.isPostSavedByCurrentUser"
-                        lazyLoad="../../../assets/images/Bookmark-dark.svg"
+                        lazyLoad="../../../assets/images/bookmark-dash-fill.svg"
                         class="d-block mx-auto"
                       />
                       <span class="textBlack">{{ post.savedPostsCount }}</span>
@@ -913,7 +913,7 @@
                                   *ngIf="postAttachment?.fileType == 2"
                                   class="videofile"
                                 >
-                                  <videoJs-component
+                                  <videoJs-component 
                                     [postAttachment]="postAttachment"
                                   ></videoJs-component>
                                   <!-- <video [id] = "getRandomClass(i,false)" controls class="video-js vjs-big-play-centered" preload="metadata">
@@ -1185,7 +1185,7 @@
                                 />
                                 <img
                                   *ngIf="gridItemInfo.isPostSavedByCurrentUser"
-                                  lazyLoad="../../../../assets/images/Bookmark-dark.svg"
+                                  lazyLoad="../../../../assets/images/bookmark-dash-fill.svg"
                                   class="d-block mx-auto"
                                 />
                                 {{ gridItemInfo.savedPostsCount }}
@@ -2059,7 +2059,7 @@
                       />
                       <img
                         *ngIf="post.isPostSavedByCurrentUser"
-                        lazyLoad="../../../assets/images/Bookmark-dark.svg"
+                        lazyLoad="../../../assets/images/bookmark-dash-fill.svg"
                         class="d-block mx-auto"
                       />
                       <span class="textBlack">{{ post.savedPostsCount }}</span>
@@ -2460,7 +2460,7 @@
                                   *ngIf="
                                     gridItemInfoForGlobal.isPostSavedByCurrentUser
                                   "
-                                  lazyLoad="../../../assets/images/Bookmark-dark.svg"
+                                  lazyLoad="../../../assets/images/bookmark-dash-fill.svg"
                                   class="d-block mx-auto"
                                 />
                                 {{ gridItemInfoForGlobal.savedPostsCount }}

@@ -403,7 +403,7 @@ namespace LMS.Services
                     courses.IsConvertable = true;
 
 
-                    courses.CourseCertificates = _mapper.Map<IEnumerable<CourseCertificateViewModel>>(classDetails.ClassCertificates);
+                    courses.Certificates = _mapper.Map<IEnumerable<CertificateViewModel>>(classDetails.ClassCertificates);
 
                     var isCourseAccessible = await _classCourseTransactionRepository.GetAll().Where(x => x.CourseId == model.CourseId && x.UserId == loginUserid).FirstOrDefaultAsync();
 
@@ -425,7 +425,7 @@ namespace LMS.Services
                 model.Teachers = await GetTeachers(course.CourseId);
                 model.Posts = await GetPostsByCourseId(course.CourseId, loginUserid);
                 model.Reels = await GetReelsByCourseId(course.CourseId, loginUserid);
-                model.CourseCertificates = await GetCertificateByCourseId(course.CourseId);
+                model.Certificates = await GetCertificateByCourseId(course.CourseId);
 
 
                 return model;
@@ -472,7 +472,7 @@ namespace LMS.Services
                 courses.IsConvertable = true;
 
 
-                courses.CourseCertificates = _mapper.Map<IEnumerable<CourseCertificateViewModel>>(classDetails.ClassCertificates);
+                courses.Certificates = _mapper.Map<IEnumerable<CertificateViewModel>>(classDetails.ClassCertificates);
 
                 var isCourseAccessible = await _classCourseTransactionRepository.GetAll().Where(x => x.CourseId == model.CourseId && x.UserId == loginUserid).FirstOrDefaultAsync();
 
@@ -493,7 +493,7 @@ namespace LMS.Services
             model.Teachers = await GetTeachers(course.CourseId);
             model.Posts = await GetPostsByCourseId(course.CourseId, loginUserid);
             model.Reels = await GetReelsByCourseId(course.CourseId, loginUserid);
-            model.CourseCertificates = await GetCertificateByCourseId(course.CourseId);
+            model.Certificates = await GetCertificateByCourseId(course.CourseId);
 
 
             return model;
@@ -717,10 +717,10 @@ namespace LMS.Services
             return result;
         }
 
-        async Task<IEnumerable<CourseCertificateViewModel>> GetCertificateByCourseId(Guid courseId)
+        async Task<IEnumerable<CertificateViewModel>> GetCertificateByCourseId(Guid courseId)
         {
             var courseCertificate = _courseCertificateRepository.GetAll().Where(x => x.CourseId == courseId).ToList();
-            var response = _mapper.Map<IEnumerable<CourseCertificateViewModel>>(courseCertificate);
+            var response = _mapper.Map<IEnumerable<CertificateViewModel>>(courseCertificate);
             return response;
         }
 
@@ -804,37 +804,89 @@ namespace LMS.Services
             var result = _mapper.Map<List<PostTagViewModel>>(tagList);
             return result;
         }
+        //public async Task SaveCourseCertificates(SaveCourseCertificateViewModel courseCertificates)
+        //{
+        //    string containerName = "coursecertificates";
+        //    string containerName = this._config.GetValue<string>("Container:CourseContainer");
+
+        //    var courses = await GetAllCourses();
+        //    var isCourseExist = courses.Where(x => x.CourseId == courseCertificates.CourseId).FirstOrDefault();
+        //    if (isCourseExist == null)
+        //    {
+        //        await _classService.SaveClassCertificates(_mapper.Map<SaveClassCertificateViewModel>(courseCertificates));
+        //    }
+        //    else
+        //    {
+        //        foreach (var certificate in courseCertificates.Certificates)
+        //        {
+        //            string certificateUrl = await _blobService.UploadFileAsync(certificate, containerName, false);
+
+        //            string certificateName = certificate.FileName;
+
+        //            var classCertificate = new CourseCertificate
+        //            {
+        //                CertificateUrl = certificateUrl,
+        //                Name = certificateName,
+        //                CourseId = courseCertificates.CourseId
+        //            };
+        //            _courseCertificateRepository.Insert(classCertificate);
+        //            _courseCertificateRepository.Save();
+        //        }
+        //    }
+
+        //}
+
         public async Task SaveCourseCertificates(SaveCourseCertificateViewModel courseCertificates)
         {
-            //string containerName = "coursecertificates";
-            string containerName = this._config.GetValue<string>("Container:CourseContainer");
-
-            var courses = await GetAllCourses();
-            var isCourseExist = courses.Where(x => x.CourseId == courseCertificates.CourseId).FirstOrDefault();
-            if (isCourseExist == null)
+            string certificateUrl = "";
+            string containerName = this._config.GetValue<string>("Container:ClassCourseContainer");
+            //var class = _classRepository.(classCertificates.ClassId);
+            if (courseCertificates.CertificateUrl == null || (courseCertificates.CertificateUrl != null && courseCertificates.CertificateImage != null))
             {
-                await _classService.SaveClassCertificates(_mapper.Map<SaveClassCertificateViewModel>(courseCertificates));
+                certificateUrl = await _blobService.UploadFileAsync(courseCertificates.CertificateImage, containerName, false);
+
             }
             else
             {
-                foreach (var certificate in courseCertificates.Certificates)
+                certificateUrl = courseCertificates.CertificateUrl;
+            }
+
+            //string certificateName = userCertificates.CertificateImage.FileName;
+
+            if (courseCertificates.CertificateId != null)
+            {
+                var editCourseCertificate = _courseCertificateRepository.GetById(courseCertificates.CertificateId);
+                editCourseCertificate.Name = courseCertificates.CertificateName;
+                editCourseCertificate.Provider = courseCertificates.Provider;
+                editCourseCertificate.IssuedDate = courseCertificates.IssuedDate;
+                editCourseCertificate.CertificateUrl = certificateUrl;
+                editCourseCertificate.Name = courseCertificates.CertificateName;
+                editCourseCertificate.CourseId = courseCertificates.CourseId;
+                editCourseCertificate.Description = courseCertificates.Description;
+
+                _courseCertificateRepository.Update(editCourseCertificate);
+                _courseCertificateRepository.Save();
+
+            }
+            else
+            {
+                var courseCertificate = new CourseCertificate
                 {
-                    string certificateUrl = await _blobService.UploadFileAsync(certificate, containerName, false);
-
-                    string certificateName = certificate.FileName;
-
-                    var classCertificate = new CourseCertificate
-                    {
-                        CertificateUrl = certificateUrl,
-                        Name = certificateName,
-                        CourseId = courseCertificates.CourseId
-                    };
-                    _courseCertificateRepository.Insert(classCertificate);
-                    _courseCertificateRepository.Save();
-                }
+                    CertificateName = courseCertificates.CertificateName,
+                    Provider = courseCertificates.Provider,
+                    IssuedDate = courseCertificates.IssuedDate,
+                    CertificateUrl = certificateUrl,
+                    Name = courseCertificates.CertificateName,
+                    CourseId = courseCertificates.CourseId,
+                    Description = courseCertificates.Description
+                };
+                _courseCertificateRepository.Insert(courseCertificate);
+                _courseCertificateRepository.Save();
             }
 
         }
+
+
 
         public async Task DeleteCourseCertificate(CourseCertificateViewModel model)
         {

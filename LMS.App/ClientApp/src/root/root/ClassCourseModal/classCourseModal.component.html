@@ -59,7 +59,7 @@
                     </button>
                     <button (click)="saveClassCourse(classCourseDetails.classCourseItem.id,classCourseDetails.classCourseItem.type)" type="button" class="btn bg-transparent text_ltgray font_12">
                       <img *ngIf="!classCourseDetails.classCourseItem.isClassCourseSavedByCurrentUser" src="../../../../assets/images/Bookmark-dark.svg" class="d-block rightImagesWidth">
-                      <img *ngIf="classCourseDetails.classCourseItem.isClassCourseSavedByCurrentUser" src="../../../../assets/images/Bookmark-dark.svg" class="d-block rightImagesWidth">
+                      <img *ngIf="classCourseDetails.classCourseItem.isClassCourseSavedByCurrentUser" src="../../../../assets/images/bookmark-dash-fill.svg" class="d-block rightImagesWidth">
                       {{classCourseDetails.classCourseItem.savedClassCourseCount}}
                     </button>
                 <button (click)="openShareClassCourseModal(classCourseDetails.classCourseItem.schoolName, classCourseDetails.classCourseItem.name, classCourseDetails.classCourseItem.type)" type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/Upload.svg"

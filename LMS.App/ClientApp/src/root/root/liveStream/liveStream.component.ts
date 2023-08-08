@@ -125,7 +125,8 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
       // this.streamUrl = url + this.streamUrl;
       this.from = this.route.snapshot.paramMap.get('from') ?? '';
       //this.isOwner = Boolean(isOwner);
-      if (this.userId == this.post.createdBy) {
+      if (this.post.createdBy == this.userId) {
+        this.isOwner = true;
         var params = new URLSearchParams(this.post.streamUrl.split('?')[1]);
       }
       else {
@@ -272,8 +273,8 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
       this.gender = localStorage.getItem("gender") ?? '';
       this.isDataLoaded = true;
 
+
       if (this.post.createdBy == this.userId) {
-        debugger
         this.isOwner = true;
         var isSendNotificationInfoExist = sessionStorage.getItem('sendNotificationInfo') !== null;
         var notificationInfoArray;
@@ -703,8 +704,8 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
   addViewResponse() {
     postViewResponse.subscribe(response => {
       debugger
+      try{
       if (response.isAddView) {
-        debugger
         // if(this.currentLikedPostId!= this.post.id){
         // this.post.likes.length = this.post.likes.length + 1;
         // }
@@ -712,7 +713,8 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
         this.post.views.length = this.post.views.length + 1;
         this.liveUsersCount = this.post.views.length;
         // }
-      }
+      }}
+      catch{}
     });
   }
 
@@ -838,7 +840,7 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
       this._postService.saveStreamAsPost(this.post.id).subscribe((response) => {
       });
     }
-    this.location.back();
+    // this.location.back();
   }
 
   toggleEmojiPicker() {
@@ -993,17 +995,14 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
 
   showEndMeetingDialog(){
     debugger
-  if (!this.isOwner) {
-    this.streamEndMessage.nativeElement.click();
-    setTimeout(() => {
-      debugger
-      this.streamEndModalClose.nativeElement.click();
-      window.history.back();
-    }, 5000);
-  }
-  else {
-    window.history.back();
-  }
+    if (!this.isOwner) {
+      this.streamEndMessage.nativeElement.click();
+      setTimeout(() => {
+        debugger
+        this.streamEndModalClose.nativeElement.click();
+        window.history.back();
+      }, 5000);
+    }
   }
 
 

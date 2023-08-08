@@ -1263,11 +1263,13 @@ export class SchoolProfileComponent
         posts: posts,
         postAttachments: postAttachments
       };
-      debugger;
-      const videoElement = document.querySelector('pauseTheDamnVideo') as HTMLVideoElement
-      if(videoElement){
-        videoElement.pause();
-      }
+      let videoElement: HTMLVideoElement | null = document.getElementById('displayVideo') as HTMLVideoElement
+    if(videoElement){
+       var vdo: HTMLVideoElement | null = videoElement.children[0]  as HTMLVideoElement
+       if(vdo){
+        vdo.pause();
+       }
+    }
       this.bsModalService.show(PostViewComponent, { initialState });
     }
   }
@@ -1464,6 +1466,13 @@ export class SchoolProfileComponent
   }
 
   hideGridItemInfo() {
+    let videoElement: HTMLVideoElement | null = document.getElementById('displayVideo') as HTMLVideoElement
+    if(videoElement){
+       var vdo: HTMLVideoElement | null = videoElement.children[0]  as HTMLVideoElement
+       if(vdo){
+        vdo.pause();
+       }
+    }
     this.isGridItemInfo = this.isGridItemInfo ? false : true;
   }
 

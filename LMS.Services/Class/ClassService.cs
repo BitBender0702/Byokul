@@ -653,10 +653,10 @@ namespace LMS.Services
             return result;
         }
 
-        async Task<IEnumerable<ClassCertificateViewModel>> GetCertificateByClassId(Guid classId)
+        async Task<IEnumerable<CertificateViewModel>> GetCertificateByClassId(Guid classId)
         {
             var classCertificate = _classCertificateRepository.GetAll().Where(x => x.ClassId == classId).ToList();
-            var response = _mapper.Map<IEnumerable<ClassCertificateViewModel>>(classCertificate);
+            var response = _mapper.Map<IEnumerable<CertificateViewModel>>(classCertificate);
             return response;
         }
 

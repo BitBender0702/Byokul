@@ -5,6 +5,7 @@ using LMS.Common.ViewModels.School;
 using LMS.Common.ViewModels.ServiceType;
 using LMS.Common.ViewModels.Student;
 using LMS.Common.ViewModels.Teacher;
+using LMS.Data.Entity.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,7 +38,8 @@ namespace LMS.Common.ViewModels.Course
         public IEnumerable<DisciplineViewModel> Disciplines { get; set; }
         public IEnumerable<PostDetailsViewModel> Posts { get; set; }
         public IEnumerable<PostDetailsViewModel> Reels { get; set; }
-        public IEnumerable<CourseCertificateViewModel> CourseCertificates { get; set; }
+        //public IEnumerable<CourseCertificateViewModel> CourseCertificates { get; set; }
+        public IEnumerable<CertificateViewModel> Certificates { get; set; }
         public bool IsConvertable { get; set; }
         public bool? IsDisableByOwner { get; set; }
         public bool IsCommentsDisabled { get; set; }

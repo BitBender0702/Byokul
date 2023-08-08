@@ -510,7 +510,15 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
       posts: posts,
       postAttachments: postAttachments
     };
+    let videoElement: HTMLVideoElement | null = document.getElementById('displayVideo') as HTMLVideoElement
+    if(videoElement){
+       var vdo: HTMLVideoElement | null = videoElement.children[0]  as HTMLVideoElement
+       if(vdo){
+        vdo.pause();
+       }
+    }
     this.bsModalService.show(PostViewComponent, { initialState });
+
   }
 
   getGlobalFeeds() {
@@ -724,6 +732,13 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
   }
 
   hideGridItemInfo(From: string) {
+    let videoElement: HTMLVideoElement | null = document.getElementById('displayVideo') as HTMLVideoElement
+    if(videoElement){
+       var vdo: HTMLVideoElement | null = videoElement.children[0]  as HTMLVideoElement
+       if(vdo){
+        vdo.pause();
+       }
+    }
     if (From == 'FromMyFeeds') {
       this.isGridItemInfo = this.isGridItemInfo ? false : true;
     }
@@ -900,7 +915,7 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
 
   savePost(postId: string) {
     var myFeeds: any[] = this.myFeeds;
-    var isSavedPost = myFeeds.find(x => x.id == postId);
+    var isSavedPost = myFeeds?.find(x => x.id == postId) ?? undefined;
     if (isSavedPost == undefined) {
       var isSavedPost = this.globalFeeds.find((x: { id: string; }) => x.id == postId);
     }

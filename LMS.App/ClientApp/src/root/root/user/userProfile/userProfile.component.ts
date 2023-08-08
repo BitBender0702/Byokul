@@ -1142,8 +1142,16 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
         posts: posts,
         postAttachments: postAttachments
       };
+      let videoElement: HTMLVideoElement | null = document.getElementById('displayVideo') as HTMLVideoElement
+    if(videoElement){
+       var vdo: HTMLVideoElement | null = videoElement.children[0]  as HTMLVideoElement
+       if(vdo){
+        vdo.pause();
+       }
+    }
       this.bsModalService.show(PostViewComponent, { initialState });
     }
+    
   }
 
   openReelsViewModal(postAttachmentId: string, postId: string): void {
@@ -1352,6 +1360,13 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
   }
 
   hideGridItemInfo() {
+    let videoElement: HTMLVideoElement | null = document.getElementById('displayVideo') as HTMLVideoElement
+    if(videoElement){
+       var vdo: HTMLVideoElement | null = videoElement.children[0]  as HTMLVideoElement
+       if(vdo){
+        vdo.pause();
+       }
+    }
     this.isGridItemInfo = this.isGridItemInfo ? false : true;
   }
 

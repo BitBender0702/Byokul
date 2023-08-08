@@ -990,7 +990,7 @@
                       />
                       <img
                         *ngIf="post.isPostSavedByCurrentUser"
-                        lazyLoad="../../../../assets/images/Bookmark-dark.svg"
+                        lazyLoad="../../../../assets/images/bookmark-dash-fill.svg"
                         class="d-block mx-auto"
                       />
                       <span class="textBlack">{{ post.savedPostsCount }}</span>
@@ -1265,73 +1265,73 @@
                                   class="d-block mx-auto"
                                 />
 
-                                <span
-                                  class="textBlack"
-                                  *ngIf="
-                                    likesLength != undefined &&
-                                    currentLikedPostId == gridItemInfo.id
-                                  "
-                                  >{{ likesLength }}</span
-                                >
-                                <span
-                                  class="textBlack"
-                                  *ngIf="currentLikedPostId != gridItemInfo.id"
-                                  >{{ gridItemInfo.likes.length }}</span
-                                >
-                              </button>
-                              <button
-                                (click)="openPostsViewModal(gridItemInfo)"
-                                type="button"
-                                class="bg-transparent border-0 function-btns"
-                              >
-                                <img
-                                  lazyLoad="../../../../assets/images/Chat-dark.svg"
-                                  class="d-block mx-auto"
-                                />
-                                {{ gridItemInfo.commentsCount }}
-                              </button>
-                              <button
-                                (click)="savePost(gridItemInfo.id)"
-                                type="button"
-                                class="bg-transparent border-0 function-btns"
-                              >
-                                <img
-                                  *ngIf="!gridItemInfo.isPostSavedByCurrentUser"
-                                  lazyLoad="../../../../assets/images/Bookmark-dark.svg"
-                                  class="d-block mx-auto"
-                                />
-                                <img
-                                  *ngIf="gridItemInfo.isPostSavedByCurrentUser"
-                                  lazyLoad="../../../../assets/images/Bookmark-dark.svg"
-                                  class="d-block mx-auto"
-                                />
-                                {{ gridItemInfo.savedPostsCount }}
-                              </button>
-                              <button
-                                (click)="
-                                  openSharePostModal(
-                                    gridItemInfo.id,
-                                    gridItemInfo.postType,
-                                    gridItemInfo.title,
-                                    gridItemInfo.description
-                                  )
-                                "
-                                type="button"
-                                class="bg-transparent border-0 function-btns"
-                              >
-                                <img
-                                  lazyLoad="../../../../assets/images/Upload-dark.svg"
-                                  class="d-block mx-auto"
-                                />
-                                {{ gridItemInfo.postSharedCount }}
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                        <!-- </ng-container> -->
-                      </div>
-                    </div>
+                      <span
+                        class="textBlack"
+                        *ngIf="
+                          likesLength != undefined &&
+                          currentLikedPostId == gridItemInfo.id
+                        "
+                        >{{ likesLength }}</span
+                      >
+                      <span
+                        class="textBlack"
+                        *ngIf="currentLikedPostId != gridItemInfo.id"
+                        >{{ gridItemInfo.likes.length }}</span
+                      >
+                    </button>
+                    <button
+                      (click)="openPostsViewModal(gridItemInfo)"
+                      type="button"
+                      class="bg-transparent border-0 function-btns"
+                    >
+                      <img
+                        lazyLoad="../../../../assets/images/Chat-dark.svg"
+                        class="d-block mx-auto"
+                      />
+                      {{ gridItemInfo.commentsCount }}
+                    </button>
+                    <button
+                      (click)="savePost(gridItemInfo.id)"
+                      type="button"
+                      class="bg-transparent border-0 function-btns"
+                    >
+                      <img
+                        *ngIf="!gridItemInfo.isPostSavedByCurrentUser"
+                        lazyLoad="../../../../assets/images/Bookmark-dark.svg"
+                        class="d-block mx-auto"
+                      />
+                      <img
+                        *ngIf="gridItemInfo.isPostSavedByCurrentUser"
+                        lazyLoad="../../../../assets/images/bookmark-dash-fill.svg"
+                        class="d-block mx-auto"
+                      />
+                      {{ gridItemInfo.savedPostsCount }}
+                    </button>
+                    <button
+                      (click)="
+                        openSharePostModal(
+                          gridItemInfo.id,
+                          gridItemInfo.postType,
+                          gridItemInfo.title,
+                          gridItemInfo.description
+                        )
+                      "
+                      type="button"
+                      class="bg-transparent border-0 function-btns"
+                    >
+                      <img
+                        lazyLoad="../../../../assets/images/Upload-dark.svg"
+                        class="d-block mx-auto"
+                      />
+                      {{ gridItemInfo.postSharedCount }}
+                    </button>
                   </div>
+                </div>
+              </div>
+              <!-- </ng-container> -->
+            </div>
+          </div>
+              </div>
                   <div
                     *ngIf="
                       post.postType == 1 &&
@@ -2147,7 +2147,7 @@
           </div>
         </div>
 
-        <div
+        <!-- <div
           class="modal fade edit-school-modal"
           id="add-certificate"
           tabindex="-1"
@@ -2241,9 +2241,11 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
 
-        <!-- <div
+
+
+        <div
         class="modal fade edit-course-modal"
         id="add-certificate"
         tabindex="-1"
@@ -2457,7 +2459,10 @@
           </div>
         </div>
       </div>
- -->
+
+
+
+
 
         <div
           class="modal fade edit-school-modal delete-modal"
@@ -2644,3 +2649,94 @@
     </div>
   </div>
 </div>
+
+
+
+
+<div
+class="modal fade edit-school-modal delete-modal post-view-large"
+id="courseOwnCertificate"
+tabindex="-1"
+aria-labelledby="courseOwnCertificate"
+aria-hidden="true"
+>
+<div class="modal-dialog modal-dialog-centered">
+  <div class="modal-content">
+    <div
+      class="modal-header border-0 justify-content-center position-relative"
+    >
+      <h1
+        class="modal-title font_22 text_dark fw_700 border-0 text-center"
+      >
+        {{ "Certificate" | translate }}
+      </h1>
+      <ul
+        *ngIf="isOwner"
+        class="list-unstyled d-flex more-action-btn before-none pe-2 me-1 mb-0"
+        style="position: absolute; right: 50px; top: 28px"
+      >
+        <li class="d-inline-block ps-0 mb-0">
+          <div class="dropdown">
+            <button
+              class="bg-transparent dropdown-toggle border-0 action-more-btn after-none pt-1"
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <i class="fa-solid fa-ellipsis"></i>
+            </button>
+            <ul class="dropdown-menu">
+              <li>
+                <a
+                  style="cursor: pointer"
+                  class="dropdown-item"
+                  (click)="editCourseCertificate(courseCertificateInfo)"
+                  data-bs-toggle="modal"
+                  data-bs-target="#add-certificate"
+                  >{{ "Edit" | translate }}
+                </a>
+              </li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+      <button
+        type="button"
+        class="btn-close shadow-none"
+        data-bs-dismiss="modal"
+        aria-label="Close"
+      >
+        <img src="../../../../assets/images/cross.svg" />
+      </button>
+    </div>
+    <div class="modal-body" *ngIf="courseCertificateInfo != undefined">
+      <div>
+        <img [src]="courseCertificateInfo.certificateUrl" />
+      </div>
+      <br />
+      <div>
+        <span class="fw-bold"
+          >{{ "CertificateName" | translate }} :</span
+        >
+        {{ courseCertificateInfo.name }}<br />
+        <span class="fw-bold"
+          >{{ "ProviderName" | translate }} :</span
+        >
+        {{ courseCertificateInfo.provider }}<br />
+        <span class="fw-bold">{{ "IssuedDate" | translate }} :</span>
+        {{ courseCertificateInfo.issuedDate | date : "MMMM d, y"
+        }}<br />
+        <span *ngIf="courseCertificateInfo.description != null">
+          <span class="fw-bold"
+            >{{ "Description" | translate }} :</span
+          >
+          {{ courseCertificateInfo.description }}
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+
+

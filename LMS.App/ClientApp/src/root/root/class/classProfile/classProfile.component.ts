@@ -389,7 +389,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
         //   }
         // const translatedSummary = this.translateService.instant('Success');
         // this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage,});        
-        this._classService.getClassById(this.className.replace(" ", "").toLowerCase()).subscribe((response) => {
+        this._classService.getClassById(this.className.replace(" ", "").replace(".","").toLowerCase()).subscribe((response) => {
           this.class = response;
           this.titleService.setTitle(this.class.className);
           this.addDescriptionMetaTag(this.class.description);
@@ -1105,6 +1105,13 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
         serviceType: this.class.serviceType.type,
         accessibility: this.class.accessibility.name
       };
+      let videoElement: HTMLVideoElement | null = document.getElementById('displayVideo') as HTMLVideoElement
+    if(videoElement){
+       var vdo: HTMLVideoElement | null = videoElement.children[0]  as HTMLVideoElement
+       if(vdo){
+        vdo.pause();
+       }
+    }
       this.bsModalRef = this.bsModalService.show(PostViewComponent, { initialState });
 
       this.bsModalRef.content.event.subscribe((res: { data: any; }) => {
@@ -1224,6 +1231,13 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   }
 
   hideGridItemInfo() {
+    let videoElement: HTMLVideoElement | null = document.getElementById('displayVideo') as HTMLVideoElement
+    if(videoElement){
+       var vdo: HTMLVideoElement | null = videoElement.children[0]  as HTMLVideoElement
+       if(vdo){
+        vdo.pause();
+       }
+    }
     this.isGridItemInfo = this.isGridItemInfo ? false : true;
 
   }
@@ -1600,6 +1614,15 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       catch { }
       return reelsTags
     }
+  }
+
+
+  openClassCertificate(certificateInfo: any) {
+    debugger
+    this.certificateToUpload.set('certificateImage', '');
+    this.classCertificateInfo = certificateInfo;
+    this.openClassOwnCertificate.nativeElement.click();
+    this.cd.detectChanges();
   }
 
 }
