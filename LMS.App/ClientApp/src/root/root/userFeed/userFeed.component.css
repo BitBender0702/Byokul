@@ -21,6 +21,7 @@
 .description_scroll {
   overflow-y: auto;
   height: 150px;
+  word-break: break-word;
 }
 
 .description_scroll::-webkit-scrollbar {

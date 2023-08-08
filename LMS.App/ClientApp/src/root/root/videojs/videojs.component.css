@@ -9,3 +9,15 @@
   .reelView {
     height: 725px !important;
    }
+
+   
+   @media (max-width:767px) {
+    video-js {
+      height: 300px;
+    }
+  
+    .abc{
+      height: 300px !important;
+    }
+  
+   }

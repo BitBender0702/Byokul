@@ -584,12 +584,6 @@ hr.earning-hr {
   display: flex;
 }
 
-.live-image {
-  box-shadow: 0px 4px 20px rgb(0 0 0 / 5%);
-  width: 100%;
-  /* max-width: 860px; */
-  margin: 0 auto 26px;
-}
 
 button.live_chats {
   border: 1px solid rgba(124, 141, 167, 0.5);
@@ -1798,10 +1792,18 @@ body .liv-postbtn .post-attch-btn.active,
 }
 
 .live-image {
+  width: 100%;
+  margin: 0 auto;
+}
+.live-image slide.item.carousel-item {
   box-shadow: 0px 4px 20px rgb(0 0 0 / 5%);
-  margin: 0 auto 26px;
+  margin: 0 auto;
   background: rgba(255, 255, 255, 0.8);
+  -webkit-backdrop-filter: blur(35px);
   backdrop-filter: blur(35px);
+}
+.live-image slide.item.carousel-item.active {
+  margin: 0 auto 26px;
 }
 
 .full-widthreel .live-inner .live-image {
