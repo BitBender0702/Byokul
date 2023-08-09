@@ -244,9 +244,11 @@
                                 <a
                                   *ngIf="post.postAuthorType == 1"
                                   (click)="getSelectedSchool(post.parentName)"
-                                  class="routeLink"
+                                  class="routeLink "
                                 >
+                                <div class="feed_userpicture">
                                   <img [lazyLoad]="post.parentImageUrl" />
+                                </div>
                                 </a>
                                 <a
                                   *ngIf="post.postAuthorType == 2"
@@ -262,7 +264,9 @@
                                   ]"
                                   class="routeLink"
                                 >
+                                <div class="feed_userpicture">
                                   <img [lazyLoad]="post.parentImageUrl" />
+                                </div>
                                 </a>
                                 <a
                                   *ngIf="post.postAuthorType == 3"
@@ -274,13 +278,16 @@
                                   "
                                   class="routeLink"
                                 >
+                                <div class="feed_userpicture">
                                   <img [lazyLoad]="post.parentImageUrl" />
+                                </div>
                                 </a>
                                 <a
                                   *ngIf="post.postAuthorType == 4"
                                   (click)="getUserDetails(post.parentId)"
                                   class="routeLink"
                                 >
+                                <div class="feed_userpicture">
                                   <img
                                     *ngIf="post.parentImageUrl != null"
                                     [lazyLoad]="post.parentImageUrl"
@@ -299,6 +306,7 @@
                                     "
                                     lazyLoad="../../../assets/images/femaleProfile.jfif"
                                   />
+                                </div>
                                 </a>
                                 <!-- <img [lazyLoad]="school.avatar"/> {{school.schoolName}} -->
                               </div>
@@ -1498,7 +1506,9 @@
                                   (click)="getSelectedSchool(post.parentName)"
                                   class="routeLink"
                                 >
+                                <div class="feed_userpicture">
                                   <img [lazyLoad]="post.parentImageUrl" />
+                                </div>
                                 </a>
                                 <a
                                   *ngIf="post.postAuthorType == 2"
@@ -1510,7 +1520,9 @@
                                   "
                                   class="routeLink"
                                 >
+                                <div class="feed_userpicture">
                                   <img [lazyLoad]="post.parentImageUrl" />
+                                </div>
                                 </a>
                                 <a
                                   *ngIf="post.postAuthorType == 3"
@@ -1522,13 +1534,16 @@
                                   "
                                   class="routeLink"
                                 >
+                                <div class="feed_userpicture">
                                   <img [lazyLoad]="post.parentImageUrl" />
+                                </div>
                                 </a>
                                 <a
                                   *ngIf="post.postAuthorType == 4"
                                   (click)="getUserDetails(post.parentId)"
                                   class="routeLink"
                                 >
+                                <div class="feed_userpicture">
                                   <img
                                     *ngIf="post.parentImageUrl != null"
                                     [lazyLoad]="post.parentImageUrl"
@@ -1547,6 +1562,7 @@
                                     "
                                     lazyLoad="../../../assets/images/femaleProfile.jfif"
                                   />
+                                  </div>
                                 </a>
                               </div>
                               <div
@@ -1587,7 +1603,9 @@
                         (click)="getSelectedSchool(post.parentName)"
                         class="routeLink"
                       >
+                      <div class="feed_userpicture">
                         <img [lazyLoad]="post.parentImageUrl" />
+                      </div>
                       </a>
                       <a
                         *ngIf="post.postAuthorType == 2"
@@ -1596,7 +1614,9 @@
                         "
                         class="routeLink"
                       >
+                      <div class="feed_userpicture">
                         <img [lazyLoad]="post.parentImageUrl" />
+                      </div>
                       </a>
                       <a
                         *ngIf="post.postAuthorType == 3"
@@ -1605,17 +1625,21 @@
                         "
                         class="routeLink"
                       >
+                      <div class="feed_userpicture">
                         <img [lazyLoad]="post.parentImageUrl" />
+                      </div>
                       </a>
                       <a
                         *ngIf="post.postAuthorType == 4"
                         (click)="getUserDetails(post.parentId)"
                         class="routeLink"
                       >
+                      <div class="feed_userpicture">
                         <img
                           *ngIf="post.parentImageUrl != null"
                           [lazyLoad]="post.parentImageUrl"
                         />
+                      
                         <img
                           *ngIf="post.parentImageUrl == null && gender == '1'"
                           lazyLoad="../../../assets/images/maleProfile.jfif"
@@ -1627,6 +1651,7 @@
                           "
                           lazyLoad="../../../assets/images/femaleProfile.jfif"
                         />
+                      </div>
                       </a>
                     </div>
                     <h2 class="d-inline-block font_20 fw_600 text_sec1 mb-0">
