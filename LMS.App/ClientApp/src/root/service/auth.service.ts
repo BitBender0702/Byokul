@@ -15,6 +15,7 @@ import { ResetPasswordModel } from "../interfaces/reset-password";
 import { environment } from "src/environments/environment";
 import { Subject } from "@microsoft/signalr";
 import { SetPasswordViewModel } from "../interfaces/set-password";
+import { ResendEmailModel } from "../interfaces/resendEmailModel";
 
 @Injectable({providedIn: 'root'})
 
@@ -47,6 +48,11 @@ export class AuthService{
     registerUser(credentials:RegisterModel): Observable<any> {
         const headers = { 'content-type': 'application/json'} 
         return this.http.post<AuthenticatedResponse>(`${this.apiUrl}/auth/register`, credentials, {headers: this.headers});
+    }
+
+    resendEmail(credentials:ResendEmailModel): Observable<any> {
+      const headers = { 'content-type': 'application/json'} 
+      return this.http.post<AuthenticatedResponse>(`${this.apiUrl}/auth/resendEmail`, credentials, {headers: this.headers});
     }
 
     changePassword(credentials:ChangePasswordModel): Observable<any> {

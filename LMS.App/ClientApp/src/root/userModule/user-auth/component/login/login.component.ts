@@ -21,10 +21,11 @@ import { resetPassResponse } from 'src/root/root/sharedModule/reset-password.com
 import { changePassResponse } from '../change-password/change-password.component';
 import { setPassResponse } from '../set-password/set-password.component';
 import { TranslateService } from '@ngx-translate/core';
+import { ResendEmailModel } from 'src/root/interfaces/resendEmailModel';
 
 export const dashboardResponse =new Subject<{token:string}>(); 
 export const feedState =new BehaviorSubject <string>('myFeed');  
-
+declare var $: any;
 
 
 @Component({
@@ -51,6 +52,8 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
     isChangePassword!: boolean;
     isPasswordVisible:boolean=false;
     @ViewChild('passwordInput') passwordInput!: ElementRef<HTMLInputElement>;
+  
+
 
     
     constructor(injector: Injector, private translateService: TranslateService, public messageService:MessageService,private fb: FormBuilder,private router: Router,private signalRService: SignalrService, 
@@ -153,7 +156,7 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
       this.user = this.loginForm.value;
       this._authService.loginUser(this.user).pipe(finalize(()=> this.loadingIcon= false)).subscribe({
         next: (response: AuthenticatedResponse) => {
-          debugger
+
           if(response.errorMessage == "user not found"){
             this._authService.loginState$.next(false);
             this.loginForm.setErrors({ unauthenticated: true });
@@ -165,8 +168,11 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
           }
 
           if(response.errorMessage == "email not confirm"){
+            localStorage.setItem("email",this.user.email);
+            $("#resend-email").modal('show');
             this._authService.loginState$.next(false);
             this.loginForm.setErrors({ emailNotConfirmed: true });
+            
           }
           if(response.errorMessage != "user not found" && response.errorMessage != "email not confirm" && response.errorMessage != "Incorrect password."){
             this.isSubmitted = false;
@@ -220,5 +226,31 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
             }, 500);
     }
     
+
+    sendMail:ResendEmailModel = new Object as ResendEmailModel;
+    invalidRegister:boolean=true;
+    resendEmailToUser(){
+      debugger
+      var email = localStorage.getItem("email")
+        if(email){
+          this.sendMail.email = email;
+        }
+      this._authService.resendEmail(this.sendMail).pipe(finalize(()=> this.loadingIcon = false)).subscribe({
+          next: (response: AuthenticatedResponse) => {
+            debugger
+          if(response.result != "success"){
+          }
+          else{
+          this.isSubmitted = false;
+          const token = response.token;
+          localStorage.setItem("jwt", token); 
+          this.invalidRegister = false;
+          this.router.navigateByUrl("user/auth/login");
+          registrationResponse.next(true); 
+        }
+        },
+        error: (err: HttpErrorResponse) => {}
+      })
+    }
     
   }

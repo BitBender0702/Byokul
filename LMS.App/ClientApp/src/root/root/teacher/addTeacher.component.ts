@@ -13,6 +13,7 @@ import { UserService } from 'src/root/service/user.service';
 import { MultilingualComponent, changeLanguage } from '../sharedModule/Multilingual/multilingual.component';
 import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
+import { NotificationType, NotificationViewModel } from 'src/root/interfaces/notification/notificationViewModel';
 import { SignalrService } from 'src/root/service/signalr.service';
 export const addTeacherResponse =new BehaviorSubject <boolean>(false);  
 
@@ -57,13 +58,16 @@ export class AddTeacherComponent extends MultilingualComponent implements OnInit
     changeLanguageSubscription!: Subscription;
 
 
-    constructor(injector: Injector,private fb: FormBuilder,signalrservice: SignalrService,private router: Router,private route: ActivatedRoute,authService:AuthService,schoolService:SchoolService,teacherService:TeacherService,userService:UserService,public messageService:MessageService, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
+    notificationViewModel!: NotificationViewModel;
+
+    constructor(injector: Injector,private fb: FormBuilder, signalrservice: SignalrService,private router: Router,private route: ActivatedRoute,authService:AuthService,schoolService:SchoolService,teacherService:TeacherService,userService:UserService,public messageService:MessageService, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
         super(injector);
         this._schoolService = schoolService;
         this._teacherService = teacherService;
         this._userService = userService;
         this._authService = authService;
         this._signalrService = signalrservice;
+
     }
   
     ngOnInit(): void {
@@ -213,6 +217,11 @@ export class AddTeacherComponent extends MultilingualComponent implements OnInit
         this._teacherService.addTeacher(this.addTeacherViewmodel).subscribe((result) => {
             debugger
             this.router.navigateByUrl(`user/userProfile/${this.loginUserId}`);
+            var notificationContent = "has added you as Teacher."
+            console.log(notificationContent)
+            var postId = '00000000-0000-0000-0000-000000000000';
+            this.initializeNotificationViewModel(this.existingUserId, NotificationType.TeacherAdded, notificationContent, postId);
+            debugger;
             addTeacherResponse.next(true); 
             this._signalrService.addTeacher(result);
         });
@@ -323,6 +332,7 @@ export class AddTeacherComponent extends MultilingualComponent implements OnInit
         this.schoolIds.push(schoolId);
     }
 
+    existingUserId:string=''
     getExistingUser(){        
         var email =this.createTeacherForm.get("email")?.value;
         if(email != ""){
@@ -334,6 +344,7 @@ export class AddTeacherComponent extends MultilingualComponent implements OnInit
                     gender: result.gender,
                     email: result.email
                 });
+                this.existingUserId = result.id
             }
           });
         }
@@ -345,5 +356,30 @@ export class AddTeacherComponent extends MultilingualComponent implements OnInit
        k = event.charCode;
        return ((k > 64 && k < 91) || (k > 96 && k < 123) || k == 8 || k == 32) && !(k >= 48 && k <= 57);
      }
+
+
+    
+  initializeNotificationViewModel(userid: string, notificationType: NotificationType, notificationContent: string, postId: string, postType?: number, post?: any) {
+    debugger
+    this._userService.getUser(this.loginUserId).subscribe((response) => {
+      this.notificationViewModel = {
+        id: '00000000-0000-0000-0000-000000000000',
+        userId: userid,
+        actionDoneBy: this.loginUserId,
+        avatar: response.avatar,
+        isRead: false,
+        notificationContent: `${response.firstName + ' ' + response.lastName + ' ' + notificationContent}`,
+        notificationType: notificationType,
+        postId: postId,
+        postType: postType,
+        post: post,
+        followersIds: null
+      }
+      debugger;
+      this._signalrService.sendNotification(this.notificationViewModel);
+    });
+  }
+
+
 
 }

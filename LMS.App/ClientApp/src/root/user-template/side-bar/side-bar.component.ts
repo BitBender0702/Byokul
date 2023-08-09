@@ -294,6 +294,7 @@ export class SideBarComponent extends MultilingualComponent implements OnInit, O
   }
 
   openGlobalFeedTab(){
+    debugger
     var feedTab = localStorage.getItem('feedTab')??'';
     if(feedTab != ''){
       localStorage.setItem('feedTab','globalFeed');

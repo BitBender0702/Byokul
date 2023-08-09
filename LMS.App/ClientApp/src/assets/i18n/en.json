@@ -524,7 +524,10 @@
   "DoYouWantToRenewSubscription": "Do you really want to renew the subscription",
   "DoYouWantToRefundPayment": "Do you really want to refund this payment",
   "RefundPayment": "Refund Payment",
-  "CopyLink": "Copy Link"
+  "CopyLink": "Copy Link",
+  "ThankYouForRegistering": "Thank you for registering",
+  "DidNotReceive": "Didn't receive email ?",
+  "ResendEmail": "Resend Email"
   
 
 

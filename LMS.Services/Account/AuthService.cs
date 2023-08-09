@@ -151,6 +151,25 @@ namespace LMS.Services.Account
             return Constants.ForgetEmailSentSuccessfully;
         }
 
+
+        public async Task<string> ResendEmail(string email, User user)
+        {
+            var userByEmail = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+                return Constants.UserDoesNotExist;
+
+            user.UniqueToken = String.Format("{0}-{1}", Guid.NewGuid(), Guid.NewGuid());
+            user.TokenCreatedOn = DateTime.UtcNow;
+            user.ResetTokenExirationTime = DateTime.UtcNow.AddHours(1);
+
+            var response = await _userManager.UpdateAsync(user);
+            if (response.Succeeded)
+                return "";
+
+            return "";
+        }
+
+
         public bool SendEmail(List<string> to, List<string> cc, List<string> bcc, string subject, string body)
         {
             using (var smtpClient = new SmtpClient())

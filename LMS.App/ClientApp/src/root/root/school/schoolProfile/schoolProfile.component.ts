@@ -481,7 +481,8 @@ export class SchoolProfileComponent
         // // this.loadingIcon = true;
         // const translatedSummary = this.translateService.instant('Success');
         // this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage,});
-        this._schoolService.getSchoolById(this.schoolName.replace(' ', '').toLowerCase()).subscribe((response) => {
+        let newSchoolName = this.schoolName.split('.').join("").split(" ").join("").toLowerCase()
+        this._schoolService.getSchoolById(newSchoolName).subscribe((response) => {
           this.school = response;
           this.titleService.setTitle(this.school.schoolName);
           this.addDescriptionMetaTag(this.school.description);
