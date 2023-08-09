@@ -76,6 +76,7 @@ export class CreateClassComponent extends MultilingualComponent implements OnIni
   tagList!: string[];
   isTagsValid: boolean = true;
   minDate:any;
+  classAvatar!:string;
   tagCountExceeded:boolean = false;
   @ViewChild('startDate') startDateRef!: ElementRef;
   @ViewChild('endDate') endDateRef!: ElementRef;
@@ -626,6 +627,21 @@ captureTeacherId(event: any) {
     const endDateElement = this.endDateRef.nativeElement;
     endDateElement._flatpickr.set("locale", locale); 
   }
+
+  // onFileChange(event: any): void {
+  //   debugger
+  //   this.isSelected = true;
+  //   this.imageChangedEvent = event;
+  //   this.hiddenButtonRef.nativeElement.click();
+  // }
+
+  // removeLogo() {
+  //   // if (this.user.avatar != null) {
+  //   //   this.userAvatar = '';
+  //   // }
+  //   this.classAvatar = '';
+  //   this.fileToUpload.set('avatarImage', '');
+  // }
 
 
 }

@@ -42,7 +42,7 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
   messageToGroup!: string;
   likeUnlikePost!: LikeUnlikePost;
   postView!: PostView;
-  isProfileGrid: boolean = false;
+  isProfileGrid: boolean = true;
   myFeeds: any;
   myFeedsReels: any;
   globalFeeds: any;

@@ -12,6 +12,7 @@ import 'videojs-hls-quality-selector';
 import { addPostResponse } from '../createPost/createPost.component';
 import { SignalrService } from 'src/root/service/signalr.service';
 import { Meta } from '@angular/platform-browser';
+import { Tooltip } from 'primeng/tooltip';
 
 export const sharedPostResponse =new Subject<{postType:number,postId:string}>();  
 
@@ -46,7 +47,7 @@ export class SharePostComponent implements OnInit {
     streamId!:string;
 
 
-  constructor(private bsModalService: BsModalService,private meta: Meta,private options: ModalOptions,public messageService: MessageService,postService: PostService,signalrService:SignalrService,private router: Router) {
+  constructor(private bsModalService: BsModalService,private elementRef: ElementRef,private meta: Meta,private options: ModalOptions,public messageService: MessageService,postService: PostService,signalrService:SignalrService,private router: Router) {
     this._postService = postService;
     this._signalrService = signalrService;
   }
@@ -144,6 +145,20 @@ saveUserSharedPost(){
       this._postService.saveUserSharedPost(this.userId,this.streamId).subscribe((result) => {
     });
   }
+}
+
+copyMessage(){
+  var url = this.websiteUrl;
+
+  const inputElement = this.elementRef.nativeElement.appendChild(document.createElement('input'));
+  inputElement.value = url;
+  inputElement.select();
+  
+  // Execute the copy command
+  document.execCommand('copy');
+  
+  // Remove the temporary input element
+  this.elementRef.nativeElement.removeChild(inputElement);
 }
   
 

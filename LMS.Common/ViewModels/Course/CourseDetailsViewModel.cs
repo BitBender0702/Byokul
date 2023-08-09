@@ -39,7 +39,7 @@ namespace LMS.Common.ViewModels.Course
         public IEnumerable<PostDetailsViewModel> Posts { get; set; }
         public IEnumerable<PostDetailsViewModel> Reels { get; set; }
         //public IEnumerable<CourseCertificateViewModel> CourseCertificates { get; set; }
-        public IEnumerable<CertificateViewModel> Certificates { get; set; }
+        public IEnumerable<CertificateViewModel> CourseCertificates { get; set; }
         public bool IsConvertable { get; set; }
         public bool? IsDisableByOwner { get; set; }
         public bool IsCommentsDisabled { get; set; }

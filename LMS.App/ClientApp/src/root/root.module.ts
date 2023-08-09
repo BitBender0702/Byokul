@@ -96,6 +96,7 @@ import { UploadCertificateComponent } from './root/UploadCertificates/uploadCert
 
 import { DialogModule } from "primeng/dialog";
 import { SidebarModule } from 'primeng/sidebar';
+import { TooltipModule } from 'primeng/tooltip';
 
 export const options: Partial<IConfig> = {
   thousandSeparator: "'"
@@ -244,6 +245,7 @@ const routes: Routes = [
     LazyLoadImageModule ,
     DialogModule,
     SidebarModule,
+    TooltipModule,
     // MetaModule.forRoot(),
     // PickerComponent,
     // PdfJsViewerModule,

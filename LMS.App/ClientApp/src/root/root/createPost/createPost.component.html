@@ -589,10 +589,12 @@
                 <label class="font_10">{{ "Title" | translate }}</label>
                 <input
                   formControlName="title"
-                  maxlength="50"
+                  maxlength="45"
                   type="text"
                   class="form-control w-100"
+                  (input)="updateCharacterCount()"
                 />
+                <div class="charecterCountStyle">{{ createPostForm.controls['title'].value.length }}/45</div>
                 <small
                   class="p-error"
                   style="color: orange"

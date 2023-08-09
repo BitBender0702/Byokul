@@ -74,7 +74,7 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
   postLoadingIcon: boolean = false;
   reelsLoadingIcon: boolean = false;
   blockedDocument: boolean = false;
-  isProfileGrid: boolean = false;
+  isProfileGrid: boolean = true;
   userId!: string;
   isFollowed!: boolean;
   likesLength!: number;

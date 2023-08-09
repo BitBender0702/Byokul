@@ -3590,20 +3590,24 @@ p-autocomplete li:before {
     max-width: 110px;
   }
   .live-header .search-header .btn.search-icon {
-    position: static;
-    height: 40px;
-    width: 40px;
-    border: 1px solid #e1e1e1 !important;
+    position: relative;
+    height: 33px;
+    width: 45px;
+    border: none;
+    /* z-index: 999; */
+    right: 216%;
   }
+  
   .live-header .search-header input.form-control[type="search"] {
     padding-left: 14px !important;
     position: absolute;
     right: 0;
     left: auto;
-    min-width: 190px;
-    top: 100%;
+    min-width: 144px;
+    /* top: 100%; */
+    top: -15%;
     margin-top: 5px;
-    display: none;
+    /* display: none; */
   }
   .logo_mobile.d-xl-none ~ .d-xl-none.d-flex .search-header {
     width: auto;

@@ -57,6 +57,34 @@
               [formGroup]="createClassForm1"
               class="latest-form"
             >
+            <!-- <div class="edit-profile-header text-center mb-4">
+              <div
+                class="rounded-circle modal-school-icon text-center mb-2 overflow-hidden new-upload-img"
+              >
+                <div>
+                  <img *ngIf="classAvatar != undefined" src="{{ classAvatar }}" />
+                  <img *ngIf=" (classAvatar == undefined)"
+                    src="../../../../assets/images/schoolLogo.png"/>
+                </div>
+              </div>
+
+              <input
+                #imageFile
+                class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins position-static opacity-100"
+                type="file"
+                name="Edit Picture"
+                id="avatar"
+                (change)="onFileChange($event)"
+                accept="image/*"
+              />
+              <button
+                *ngIf="(classAvatar != undefined)"
+                (click)="removeLogo()"
+                class="btn border-0 font_12 text_dark f-poppins"
+              >
+                {{ "DeletePhoto" | translate }}
+              </button>
+            </div> -->
               <div class="form-group">
                 <label class="font_10">{{ "SchoolName" | translate }}</label>
                 <div *ngIf="fromSchoolProfile != ''">

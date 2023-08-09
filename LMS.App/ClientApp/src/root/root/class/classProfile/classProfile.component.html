@@ -17,6 +17,12 @@
             (click)="cropModalOpen(cropTemplate)"
           ></button>
           <button
+          #openClassOwnCertificate
+          hidden
+          data-bs-toggle="modal"
+          data-bs-target="#classOwnCertificate"
+        ></button>
+          <button
             (click)="back()"
             type="button"
             class="back-button bg-transparent border-0 font_16 fw_400 text_dark"
@@ -274,7 +280,7 @@
                   "
                   >{{ item.name }}</span
                 ><button
-                  (click)="getDeletedCertificate(item.certificateId)"
+                  (click)="getDeletedCertificate(item.id)"
                   class="border-0 bg-transparent p-0 position-absolute delete-tag"
                   data-bs-toggle="modal"
                   data-bs-target="#delete-classCertificate"
@@ -289,14 +295,14 @@
                 *ngIf="isOwner || hasAddClassCertificatesPermission"
                 class="custom-tag"
                 (click)="resetCertificateModal()"
+                data-bs-toggle="modal"
+                data-bs-target="#add-certificate"
                 >{{ "AddCertificates" | translate
                 }}<button
                   (click)="resetCertificateModal()"
                   data-bs-toggle="modal"
                   data-bs-target="#add-certificate"
                   class="border-0 bg-transparent p-0 position-absolute delete-tag"
-                  data-bs-toggle="modal"
-                  data-bs-target="#add-certificate"
                 >
                   <img
                     lazyLoad="../../../../assets/images/school/plus-light.svg"
@@ -424,7 +430,7 @@
             />{{ "FileStorage" | translate }}
           </button>
           <div class="button-list-grid-filter">
-            <button
+            <!-- <button
               (click)="profileList()"
               type="button"
               [ngClass]="
@@ -447,7 +453,7 @@
               id="list-btn"
             >
               <img lazyLoad="../../../../assets/images/Filter.svg" />
-            </button>
+            </button> -->
           </div>
         </div>
 
@@ -1001,7 +1007,7 @@
                         lazyLoad="../../../../assets/images/Bookmark-dark.svg"
                         class="d-block mx-auto"
                       />
-                      <img
+                      <img height="20px"
                         *ngIf="post.isPostSavedByCurrentUser"
                         lazyLoad="../../../../assets/images/bookmark-dash-fill.svg"
                         class="d-block mx-auto"
@@ -1317,7 +1323,7 @@
                                   lazyLoad="../../../../assets/images/Bookmark-dark.svg"
                                   class="d-block mx-auto"
                                 />
-                                <img
+                                <img height="20px"
                                   *ngIf="gridItemInfo.isPostSavedByCurrentUser"
                                   lazyLoad="../../../../assets/images/bookmark-dash-fill.svg"
                                   class="d-block mx-auto"

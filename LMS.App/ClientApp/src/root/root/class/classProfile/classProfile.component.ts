@@ -67,7 +67,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   private _notificationService;
   private _authService;
   class: any;
-  isProfileGrid: boolean = false;
+  isProfileGrid: boolean = true;
   isOpenSidebar: boolean = false;
   isOpenModal: boolean = false;
   loadingIcon: boolean = false;
@@ -332,15 +332,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       certificates: this.fb.control([], [Validators.required]),
     });
 
-    this.classCertificateForm = this.fb.group({
-      classId: this.fb.control(''),
-      certificateName: this.fb.control('', [Validators.required]),
-      provider: this.fb.control('', [Validators.required]),
-      issuedDate: this.fb.control(new Date().toISOString().substring(0, 10), [Validators.required]),
-      description: this.fb.control(''),
-      certificateId: this.fb.control(''),
-    });
-
+    this.initializeClassCertificateForm();
 
     this.deleteLanguage = {
       classId: '',
@@ -531,6 +523,17 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
         })
       }
     }
+  }
+
+  initializeClassCertificateForm(){
+    this.classCertificateForm = this.fb.group({
+      classId: this.fb.control(''),
+      certificateName: this.fb.control('', [Validators.required]),
+      provider: this.fb.control('', [Validators.required]),
+      issuedDate: this.fb.control(new Date().toISOString().substring(0, 10), [Validators.required]),
+      description: this.fb.control(''),
+      certificateId: this.fb.control(''),
+    });
   }
 
   InitializeLikeUnlikePost() {
@@ -821,10 +824,12 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   }
 
   getDeletedCertificate(deletedCertificate: string) {
+    debugger
     this.deleteCertificate.certificateId = deletedCertificate;
   }
 
   deleteClassCertificate() {
+    debugger
     this.loadingIcon = true;
     this.deleteCertificate.classId = this.class.classId;
     this._classService.deleteClassCertificate(this.deleteCertificate).subscribe((response: any) => {
@@ -1006,7 +1011,17 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
 
   resetCertificateModal() {
     this.isSubmitted = false;
-    this.classCertificate.certificates = [];
+    // this.classCertificate.certificates = [];
+
+    this.uploadImage = null;
+    this.initializeClassCertificateForm();
+    this.certificateToUpload.set('certificateImage', '');
+    flatpickr('#issuedDate', {
+      minDate: "1903-12-31",
+      maxDate: new Date(),
+      dateFormat: "m/d/Y",
+      defaultDate: new Date()
+    });
   }
 
   removeTeacher(event: any) {

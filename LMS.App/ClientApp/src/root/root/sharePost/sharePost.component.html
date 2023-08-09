@@ -26,6 +26,19 @@
                 <!-- <button><a href="http://twitter.com/share?text=text goes here&url={{websiteUrl}}&hashtags=hashtag1,hashtag2,hashtag3" target="_blank">Twitter</a>
                 </button> -->
                 </div>
+                <div class="text-center">
+                  {{'CopyLink'| translate }} :
+                  <button
+                  #copyButton
+                  type="button"
+                  (click)="copyMessage()"
+                  class="border-0 bg-transparent shadow-none p-0 copy-link"
+                  pTooltip="Copy Link"
+                  tooltipPosition="top"
+                  >
+                  <img src="../../../../assets/images/school/copy.svg" />
+                </button>
+                </div>
               </div>
             </div>
           </div>

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using EllipticCurve;
 using iText.Kernel.Geom;
 using LMS.Common.Enums;
 using LMS.Common.ViewModels.Class;
@@ -403,11 +404,11 @@ namespace LMS.Services
                     courses.IsConvertable = true;
 
 
-                    courses.Certificates = _mapper.Map<IEnumerable<CertificateViewModel>>(classDetails.ClassCertificates);
+                    courses.CourseCertificates = _mapper.Map<IEnumerable<CertificateViewModel>>(classDetails.ClassCertificates);
 
-                    var isCourseAccessible = await _classCourseTransactionRepository.GetAll().Where(x => x.CourseId == model.CourseId && x.UserId == loginUserid).FirstOrDefaultAsync();
+                    var isClassAccessible = await _classCourseTransactionRepository.GetAll().Where(x => x.CourseId == model.CourseId && x.UserId == loginUserid).FirstOrDefaultAsync();
 
-                    if (isCourseAccessible != null || model.CreatedById == loginUserid)
+                    if (isClassAccessible != null || courses.CreatedById == loginUserid)
                     {
                         model.IsCourseAccessable = true;
                     }
@@ -419,13 +420,20 @@ namespace LMS.Services
                 }
                 model = _mapper.Map<CourseDetailsViewModel>(course);
 
+                var isCourseAccessible = await _classCourseTransactionRepository.GetAll().Where(x => x.CourseId == model.CourseId && x.UserId == loginUserid).FirstOrDefaultAsync();
+
+                if (isCourseAccessible != null || course.CreatedById == loginUserid)
+                {
+                    model.IsCourseAccessable = true;
+                }
+
                 model.Languages = await GetLanguages(course.CourseId);
                 model.Disciplines = await GetDisciplines(course.CourseId);
                 model.Students = await GetStudents(course.CourseId);
                 model.Teachers = await GetTeachers(course.CourseId);
                 model.Posts = await GetPostsByCourseId(course.CourseId, loginUserid);
                 model.Reels = await GetReelsByCourseId(course.CourseId, loginUserid);
-                model.Certificates = await GetCertificateByCourseId(course.CourseId);
+                model.CourseCertificates = await GetCertificateByCourseId(course.CourseId);
 
 
                 return model;
@@ -472,7 +480,7 @@ namespace LMS.Services
                 courses.IsConvertable = true;
 
 
-                courses.Certificates = _mapper.Map<IEnumerable<CertificateViewModel>>(classDetails.ClassCertificates);
+                courses.CourseCertificates = _mapper.Map<IEnumerable<CertificateViewModel>>(classDetails.ClassCertificates);
 
                 var isCourseAccessible = await _classCourseTransactionRepository.GetAll().Where(x => x.CourseId == model.CourseId && x.UserId == loginUserid).FirstOrDefaultAsync();
 
@@ -493,7 +501,7 @@ namespace LMS.Services
             model.Teachers = await GetTeachers(course.CourseId);
             model.Posts = await GetPostsByCourseId(course.CourseId, loginUserid);
             model.Reels = await GetReelsByCourseId(course.CourseId, loginUserid);
-            model.Certificates = await GetCertificateByCourseId(course.CourseId);
+            model.CourseCertificates = await GetCertificateByCourseId(course.CourseId);
 
 
             return model;

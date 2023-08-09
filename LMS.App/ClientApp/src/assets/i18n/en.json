@@ -523,7 +523,8 @@
   "DoYouWantToCancelSubscription": "Do you really want to cancel the subscription",
   "DoYouWantToRenewSubscription": "Do you really want to renew the subscription",
   "DoYouWantToRefundPayment": "Do you really want to refund this payment",
-  "RefundPayment": "Refund Payment"
+  "RefundPayment": "Refund Payment",
+  "CopyLink": "Copy Link"
   
 
 

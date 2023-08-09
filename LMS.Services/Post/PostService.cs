@@ -787,7 +787,7 @@ namespace LMS.Services
             return result;
         }
 
-        public async Task<bool> PinUnpinPost(Guid postId, bool isPinned)
+        public async Task<string> PinUnpinPost(Guid postId, bool isPinned)
         {
             var post = await _postRepository.GetAll().Where(x => x.Id == postId).FirstOrDefaultAsync();
 
@@ -796,10 +796,14 @@ namespace LMS.Services
                 post.IsPinned = isPinned;
                 _postRepository.Update(post);
                 _postRepository.Save();
-                return true;
+                if (isPinned)
+                {
+                    return Constants.PostPinnedSuccessfully;
+                }
+                return Constants.PostUnPinnedSuccessfully;
             }
 
-            return false;
+            return Constants.PostIdInvalid;
 
 
         }
@@ -824,7 +828,7 @@ namespace LMS.Services
                     UserId = model.UserId,
                     PostId = model.PostId,
                     DateTime = DateTime.UtcNow,
-                    CommentId = model.CommentId == Guid.Empty ? null : model.CommentId,
+                    //CommentId = model.CommentId == Guid.Empty ? null : model.CommentId,
 
                 };
 

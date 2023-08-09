@@ -66,7 +66,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
   private _authService;
   
   course: any;
-  isProfileGrid: boolean = false;
+  isProfileGrid: boolean = true;
   // isOpenSidebar:boolean = false;
   // isOpenModal:boolean = false;
   loadingIcon: boolean = false;
@@ -216,6 +216,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     this.translate.use(selectedLang ?? '');
 
     this._courseService.getCourseById(this.courseName.replace(" ", "").toLowerCase()).subscribe((response) => {
+      debugger
       this.postsPageNumber = 1;
       this.reelsPageNumber = 1;
       this.course = response;
@@ -268,14 +269,8 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       certificates: this.fb.control([], [Validators.required]),
     });
 
-    this.courseCertificateForm = this.fb.group({
-      courseId: this.fb.control(''),
-      certificateName: this.fb.control('', [Validators.required]),
-      provider: this.fb.control('', [Validators.required]),
-      issuedDate: this.fb.control(new Date().toISOString().substring(0, 10), [Validators.required]),
-      description: this.fb.control(''),
-      certificateId: this.fb.control(''),
-    });
+    this.initializeCourseCertificateForm();
+
 
     this.deleteLanguage = {
       courseId: '',
@@ -445,6 +440,17 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
         })
       }
     }
+  }
+
+  initializeCourseCertificateForm(){
+    this.courseCertificateForm = this.fb.group({
+      courseId: this.fb.control(''),
+      certificateName: this.fb.control('', [Validators.required]),
+      provider: this.fb.control('', [Validators.required]),
+      issuedDate: this.fb.control(new Date().toISOString().substring(0, 10), [Validators.required]),
+      description: this.fb.control(''),
+      certificateId: this.fb.control(''),
+    });
   }
 
   InitializeLikeUnlikePost() {
@@ -735,7 +741,8 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
 
   }
 
-  getDeletedCertificate(deletedCertificate: string) {
+  getDeletedCertificate(deletedCertificate: string) { 
+    debugger
     this.deleteCertificate.certificateId = deletedCertificate;
   }
 
@@ -854,7 +861,16 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
 
   resetCertificateModal() {
     this.isSubmitted = false;
-    this.courseCertificate.certificates = [];
+    // this.courseCertificate.certificates = [];
+    this.uploadImage = null;
+    this.initializeCourseCertificateForm();
+    this.certificateToUpload.set('certificateImage', '');
+    flatpickr('#issuedDate', {
+      minDate: "1903-12-31",
+      maxDate: new Date(),
+      dateFormat: "m/d/Y",
+      defaultDate: new Date()
+    });
   }
 
   removeTeacher(event: any) {
@@ -1482,4 +1498,5 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     // const dateOfBirthElement = this.founded.nativeElement;
     // dateOfBirthElement._flatpickr.set("locale", locale);
   }
+
 }

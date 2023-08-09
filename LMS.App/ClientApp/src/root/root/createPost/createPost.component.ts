@@ -1432,6 +1432,15 @@ private async uploadBlobTest(content: Blob, name: string, client: ContainerClien
   }
 }
 
+characterCount: number = 0;
+updateCharacterCount(){
+  debugger
+  const titleControl = this.createPostForm.get('title');
+  if (titleControl?.value.length > 45) {
+    titleControl?.setValue(titleControl.value.slice(0, 45));
+  }
+}
+
 
 }
 

@@ -100,7 +100,7 @@ export class SchoolProfileComponent
   private _signalrService;
   private _iyizicoService;
   school: any;
-  isProfileGrid: boolean = false;
+  isProfileGrid: boolean = true;
   isOpenSidebar: boolean = false;
   hideFeedFilters: boolean = true;
   loadingIcon: boolean = false;
@@ -764,6 +764,7 @@ export class SchoolProfileComponent
       this._schoolService
         .saveSchoolFollower(this.followUnfollowSchool)
         .subscribe((response) => {
+          debugger
           console.log(response);
           if (response.result == 'success') {
             this.isSchoolFollowed = true;

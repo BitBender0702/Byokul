@@ -33,6 +33,7 @@ namespace LMS.Common.ViewModels.Class
         public IFormFile Thumbnail { get; set; }
         public string ClassUrl { get; set; }
         public string? Avatar { get; set; }
+        public IFormFile AvatarImage { get; set; }
         public IEnumerable<string> LanguageIds { get; set; }
         public IEnumerable<string> TeacherIds { get; set; }
         public IEnumerable<string> StudentIds { get; set; }

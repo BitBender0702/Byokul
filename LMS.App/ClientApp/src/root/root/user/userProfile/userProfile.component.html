@@ -450,7 +450,7 @@
           </div>
           <div *ngIf="isPostTab" class="filter-main d-flex">
             <div class="btn-filter1 align-items-center">
-              <button
+              <!-- <button
                 [ngClass]="
                   !isProfileGrid
                     ? 'btn border-btn active d-inline-flex align-items-center justify-content-center'
@@ -462,8 +462,8 @@
                 id="grid-btn"
               >
                 <img src="../../../../assets/images/Category.svg" />
-              </button>
-              <button
+              </button> -->
+              <!-- <button
                 [ngClass]="
                   isProfileGrid
                     ? 'btn border-btn active d-inline-flex align-items-center justify-content-center'
@@ -474,12 +474,12 @@
                 id="list-btn"
               >
                 <img src="../../../../assets/images/Filter.svg" />
-              </button>
+              </button> -->
             </div>
           </div>
           <div *ngIf="!isPostTab && isSavedPostTab" class="filter-main d-flex">
             <div class="btn-filter1 align-items-center">
-              <button
+              <!-- <button
                 [ngClass]="
                   isSavedPostList
                     ? 'btn border-btn active d-inline-flex align-items-center justify-content-center'
@@ -503,7 +503,7 @@
                 id="grid-btn"
               >
                 <img src="../../../../assets/images/Category.svg" />
-              </button>
+              </button> -->
             </div>
           </div>
           <div
@@ -511,7 +511,7 @@
             class="filter-main d-flex"
           >
             <div class="btn-filter1 align-items-center">
-              <button
+              <!-- <button
                 [ngClass]="
                   isSavedClassCourseList
                     ? 'btn border-btn active d-inline-flex align-items-center justify-content-center'
@@ -535,7 +535,7 @@
                 id="grid-btn"
               >
                 <img src="../../../../assets/images/Category.svg" />
-              </button>
+              </button> -->
             </div>
           </div>
           <div
@@ -548,7 +548,7 @@
             class="filter-main d-flex"
           >
             <div class="btn-filter1 align-items-center">
-              <button
+              <!-- <button
                 [ngClass]="
                   isSharedPostList
                     ? 'btn border-btn active d-inline-flex align-items-center justify-content-center'
@@ -572,7 +572,7 @@
                 id="grid-btn"
               >
                 <img src="../../../../assets/images/Category.svg" />
-              </button>
+              </button> -->
             </div>
           </div>
 
@@ -587,7 +587,7 @@
             class="filter-main d-flex"
           >
             <div class="btn-filter1 align-items-center">
-              <button
+              <!-- <button
                 [ngClass]="
                   isLikedPostList
                     ? 'btn border-btn active d-inline-flex align-items-center justify-content-center'
@@ -611,7 +611,7 @@
                 id="grid-btn"
               >
                 <img src="../../../../assets/images/Category.svg" />
-              </button>
+              </button> -->
             </div>
           </div>
         </div>
@@ -1083,7 +1083,7 @@
                         src="../../../../assets/images/Bookmark-dark.svg"
                         class="d-block mx-auto"
                       />
-                      <img
+                      <img height="20px"
                         *ngIf="post.isPostSavedByCurrentUser"
                         src="../../../../assets/images/bookmark-dash-fill.svg"
                         class="d-block mx-auto"
@@ -1369,7 +1369,7 @@
                               src="../../../../assets/images/Bookmark-dark.svg"
                               class="d-block mx-auto"
                             />
-                            <img
+                            <img height="20px"
                               *ngIf="gridItemInfo.isPostSavedByCurrentUser"
                               src="../../../../assets/images/bookmark-dash-fill.svg"
                               class="d-block mx-auto"
@@ -2103,7 +2103,7 @@
                         src="../../../../assets/images/Bookmark-dark.svg"
                         class="d-block mx-auto"
                       />
-                      <img
+                      <img height="20px"
                         *ngIf="post.isPostSavedByCurrentUser"
                         src="../../../../assets/images/bookmark-dash-fill.svg"
                         class="d-block mx-auto"
@@ -2435,7 +2435,7 @@
                         src="../../../../assets/images/Bookmark-dark.svg"
                         class="d-block mx-auto"
                       />
-                      <img
+                      <img height="20px"
                         *ngIf="savedPostGridInfo.isPostSavedByCurrentUser"
                         src="../../../../assets/images/bookmark-dash-fill.svg"
                         class="d-block mx-auto"
@@ -3296,7 +3296,7 @@
                         src="../../../../assets/images/Bookmark-dark.svg"
                         class="d-block mx-auto"
                       />
-                      <img
+                      <img height="20px"
                         *ngIf="
                           savedClassCourseGridInfo.isClassCourseSavedByCurrentUser
                         "
@@ -4053,7 +4053,7 @@
                         src="../../../../assets/images/Bookmark-dark.svg"
                         class="d-block mx-auto"
                       />
-                      <img
+                      <img height="20px"
                         *ngIf="post.isPostSavedByCurrentUser"
                         src="../../../../assets/images/bookmark-dash-fill.svg"
                         class="d-block mx-auto"
@@ -4388,7 +4388,7 @@
                         src="../../../../assets/images/Bookmark-dark.svg"
                         class="d-block mx-auto"
                       />
-                      <img
+                      <img height="20px"
                         *ngIf="sharedPostGridInfo.isPostSavedByCurrentUser"
                         src="../../../../assets/images/bookmark-dash-fill.svg"
                         class="d-block mx-auto"
@@ -5212,7 +5212,7 @@
                         src="../../../../assets/images/Bookmark-dark.svg"
                         class="d-block mx-auto"
                       />
-                      <img
+                      <img height="20px"
                         *ngIf="post.isPostSavedByCurrentUser"
                         src="../../../../assets/images/bookmark-dash-fill.svg"
                         class="d-block mx-auto"

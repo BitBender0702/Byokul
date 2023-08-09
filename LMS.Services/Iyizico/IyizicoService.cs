@@ -568,8 +568,10 @@ namespace LMS.Services.FileStorage
             {
                 model.ConversationId = threedsInitialize.ConversationId;
                 await saveClassCourseTransaction(model, userId);
+                return threedsInitialize.HtmlContent;
             }
-            return threedsInitialize.HtmlContent;
+
+            return "ErrorMessage" + threedsInitialize.ErrorMessage + "Status" + threedsInitialize.Status + "ErrorCode" + threedsInitialize.ErrorCode;
         }
 
         public async Task saveClassCourseTransaction(BuyClassCourseViewModel model, string userId)
@@ -616,7 +618,7 @@ namespace LMS.Services.FileStorage
             buyer.GsmNumber = "+905350000000";
             buyer.Email = "sagarnimma7@gmail.com";
             buyer.IdentityNumber = Guid.NewGuid().ToString();
-            buyer.RegistrationDate = DateTime.UtcNow.ToString();
+            buyer.RegistrationDate = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss");
             buyer.RegistrationAddress = "Nidakule Göztepe, Merdivenköy Mah. Bora Sok. No:1";
             buyer.Ip = "85.34.78.112";
             buyer.City = "Istanbul";

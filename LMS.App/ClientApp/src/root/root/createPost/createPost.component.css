@@ -22,3 +22,10 @@ div[role="document"] {
 .create-post-header {
   flex-direction: column;
 }
+
+.charecterCountStyle{
+ font-size: smaller;
+ margin-top: 5px;  
+ margin-right: 10px;
+ float: right;
+}
