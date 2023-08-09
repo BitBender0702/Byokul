@@ -220,5 +220,38 @@ namespace LMS.App.Controllers
         }
 
 
+        [Route("resendEmail")]
+        [HttpPost]
+        public async Task<IActionResult> ResendEmail([FromBody] ResendEmailModel user)
+        {
+            try
+            {
+                User resendEmailToUser = await _userManager.FindByEmailAsync(user.Email);
+                if (resendEmailToUser != null)
+                {
+                    var path = _webHostEnvironment.ContentRootPath;
+                    var filePath = Path.Combine(path, "Email/confirm-email.html");
+                    var imagePath = Path.Combine(path, "Email/images/logo.svg");
+                    var text = System.IO.File.ReadAllText(filePath);
+                    text = text.Replace("[Recipient]", resendEmailToUser.FirstName + " " + resendEmailToUser.LastName);
+                    var token = await _userManager.GenerateEmailConfirmationTokenAsync(resendEmailToUser);
+                    string callBackUrl = $"{_config["AppUrl"]}/user/auth/emailConfirm?token={token}&email={user.Email}";
+                    text = text.Replace("[URL]", callBackUrl);
+                    await _commonService.SendEmail(new List<string> { user.Email }, null, null, "Verify Your Email Address", body: text, null, null);
+
+                    return Ok(new { result = "success" });
+                }
+
+                return Ok(new { result = $"User not found for email: {user.Email}" });
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+
     }
 }

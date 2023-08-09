@@ -258,8 +258,8 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     this.minDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
 
     // this.className = this.route.snapshot.paramMap.get('className')??'';
-
-    this._classService.getClassById(this.className.replace(" ", "").toLowerCase()).subscribe((response) => {
+    let newClassName = this.className.split('.').join("").split(" ").join("").toLowerCase()
+    this._classService.getClassById(newClassName).subscribe((response) => {
       this.postsEndPageNumber = 1;
       this.reelsPageNumber = 1;
       this.class = response;
@@ -380,8 +380,9 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
         //     var translatedMessage = this.translateService.instant('PostUpdatedSuccessfully');
         //   }
         // const translatedSummary = this.translateService.instant('Success');
-        // this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage,});        
-        this._classService.getClassById(this.className.replace(" ", "").replace(".","").toLowerCase()).subscribe((response) => {
+        // this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage,});
+        let newClassName = this.className.split('.').join("").split(" ").join("").toLowerCase()
+        this._classService.getClassById(newClassName).subscribe((response) => {
           this.class = response;
           this.titleService.setTitle(this.class.className);
           this.addDescriptionMetaTag(this.class.description);

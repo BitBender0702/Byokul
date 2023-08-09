@@ -231,6 +231,7 @@ export class RegisterComponent extends MultilingualComponent implements OnInit,A
                       this.registrationForm.setErrors({ unauthenticated: true });
                     }
                     else{
+                      localStorage.setItem("email",this.user.email)
                     this.isSubmitted = false;
                     const token = response.token;
                     localStorage.setItem("jwt", token); 

@@ -1,4 +1,5 @@
 <section class="container pt-3 pt-lg-4">
+  
   <div class="logo mb-3 text-center text-md-start">
     <img src="../../../../../assets/images/logo.svg" alt="logo" />
   </div>
@@ -38,6 +39,14 @@
               "
             >
               {{ "ConfirmEmailSentMessage" | translate }}
+              <br/>
+              <button
+                class="btn btn-outline-primary"
+                data-bs-toggle="modal"
+                data-bs-target="#resend-email"
+              >
+                Resend Email
+              </button>
             </div>
 
             <div
@@ -165,6 +174,72 @@
     </form>
   </div>
 </section>
+
+
+<div
+  class="modal fade edit-school-modal delete-modal"
+  id="resend-email"
+  tabindex="-1"
+  aria-labelledby="resend-email"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div
+        class="modal-header border-0 justify-content-center position-relative"
+      >
+        <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">
+          {{ "ThankYouForRegistering" | translate }}
+        </h1>
+        <button
+          type="button"
+          class="btn-close shadow-none"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        >
+          <img lazyLoad="../../../../assets/images/cross.svg" />
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <h2 class="text-center font_16 f-poppins">
+            {{ "DidNotReceive" | translate }}
+          </h2>
+        </div>
+        <div
+          class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-2 mt-4"
+        >
+          <button
+            type="button"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+            data-bs-dismiss="modal"
+          >
+            {{ "No" | translate }}
+          </button>
+          <button
+            (click)="
+              resendEmailToUser()
+            "
+            type="button"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
+            data-bs-dismiss="modal"
+          >
+            {{ "Send the Mail" | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
 
 <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
 <p-toast></p-toast>

@@ -254,18 +254,23 @@ export class SideBarComponent extends MultilingualComponent implements OnInit, O
   }
 
   getSelectedSchool(schoolName:string){
-    this.router.navigateByUrl(`profile/school/${schoolName.split(" ").join("").toLowerCase()}`);
+    schoolName = schoolName.split('.').join("").split(" ").join("").toLowerCase()
+    this.router.navigateByUrl(`profile/school/${schoolName}`);
     this.closeSidebar()
   }
 
   getSelectedClass(className:string,schoolName:string){
-    this.router.navigateByUrl(`profile/class/${schoolName.split(" ").join("").toLowerCase()}/${className.split(" ").join("").toLowerCase()}`);
+    className = className.split('.').join("").split(" ").join("").toLowerCase()
+    schoolName = schoolName.split('.').join("").split(" ").join("").toLowerCase()
+    this.router.navigateByUrl(`profile/class/${schoolName}/${className}`);
     this.closeSidebar()
 
   }
 
   getSelectedCourse(courseName:string,schoolName:string){
-    this.router.navigateByUrl(`profile/course/${schoolName.split(" ").join("").toLowerCase()}/${courseName.split(" ").join("").toLowerCase()}`);
+    courseName = courseName.split('.').join("").split(" ").join("").toLowerCase()
+    schoolName = schoolName.split('.').join("").split(" ").join("").toLowerCase()
+    this.router.navigateByUrl(`profile/course/${schoolName}/${courseName}`);
     this.closeSidebar()
 
   }
@@ -289,6 +294,7 @@ export class SideBarComponent extends MultilingualComponent implements OnInit, O
   }
 
   openGlobalFeedTab(){
+    debugger
     var feedTab = localStorage.getItem('feedTab')??'';
     if(feedTab != ''){
       localStorage.setItem('feedTab','globalFeed');

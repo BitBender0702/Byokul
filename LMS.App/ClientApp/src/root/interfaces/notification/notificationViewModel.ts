@@ -29,6 +29,7 @@ export enum NotificationType{
     Transaction = 8,
     Report = 9,
     PostUploaded = 10,
-    FilesUploaded = 11
+    FilesUploaded = 11,
+    TeacherAdded = 12
 
 }

@@ -215,7 +215,8 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     var selectedLang = localStorage.getItem("selectedLanguage");
     this.translate.use(selectedLang ?? '');
 
-    this._courseService.getCourseById(this.courseName.replace(" ", "").toLowerCase()).subscribe((response) => {
+    let newCourseName = this.courseName.split('.').join("").split(" ").join("").toLowerCase()
+    this._courseService.getCourseById(newCourseName).subscribe((response) => {
       debugger
       this.postsPageNumber = 1;
       this.reelsPageNumber = 1;
@@ -321,8 +322,9 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
         //     var translatedMessage = this.translateService.instant('PostUpdatedSuccessfully');
         //   }
         // const translatedSummary = this.translateService.instant('Success');
-        // this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage,});         
-        this._courseService.getCourseById(this.courseName.replace(" ", "").toLowerCase()).subscribe((response) => {
+        // this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage,});      
+        let newCourseName = this.courseName.split('.').join("").split(" ").join("").toLowerCase()   
+        this._courseService.getCourseById(newCourseName).subscribe((response) => {
           this.course = response;
           this.titleService.setTitle(this.course.courseName);
           this.addDescriptionMetaTag(this.course.description);
