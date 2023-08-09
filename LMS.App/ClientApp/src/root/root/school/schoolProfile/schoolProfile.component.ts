@@ -72,7 +72,7 @@ import flatpickr from 'flatpickr';
 import { Arabic } from 'flatpickr/dist/l10n/ar';
 import { Spanish } from 'flatpickr/dist/l10n/es';
 import { Turkish } from 'flatpickr/dist/l10n/tr';
-import { SignalrService } from 'src/root/service/signalr.service';
+import { SignalrService, notiFyTeacherResponse } from 'src/root/service/signalr.service';
 export const deleteSchoolResponse = new BehaviorSubject<string>('');
 
 import { NgxMaskModule } from 'ngx-mask';
@@ -353,7 +353,7 @@ export class SchoolProfileComponent
 
 
 
-    this._schoolService.getSchoolById(this.schoolName.replace(' ', '').toLowerCase()).subscribe(async (response) => {
+    this._schoolService.getSchoolById(this.schoolName.split('.').join("").split(" ").join("").toLowerCase()).subscribe(async (response) => {
       debugger
       this.frontEndPageNumber = 1;
       this.reelsPageNumber = 1;
@@ -691,6 +691,7 @@ export class SchoolProfileComponent
   }
 
   isOwnerOrNot() {
+    debugger
     var validToken = localStorage.getItem('jwt');
     if (validToken != null) {
       let jwtData = validToken.split('.')[1];
@@ -709,6 +710,7 @@ export class SchoolProfileComponent
     var userPermissions: any[] = this.userPermissions;
 
     userPermissions.forEach(element => {
+      debugger
       if ((element.typeId == this.school.schoolId || element.typeId == PermissionNameConstant.DefaultSchoolId) && element.ownerId == this.school.createdById && element.permissionType == PermissionTypeEnum.School && element.permission.name == PermissionNameConstant.Post) {
         this.hasPostPermission = true;
       }
@@ -1124,6 +1126,7 @@ export class SchoolProfileComponent
           life: 3000,
           detail: translatedMessage,
         });
+        this._signalrService.addTeacher(this.deleteTeacher.teacherId);
         this.ngOnInit();
       });
   }
@@ -1900,7 +1903,7 @@ export class SchoolProfileComponent
   }
 
   applyCropimage() {
-    this.uploadImage = this.croppedImage;
+    this.uploadImage = this.croppedImage.changingThisBreaksApplicationSecurity;
     this.cropModalRef.hide();
   }
 

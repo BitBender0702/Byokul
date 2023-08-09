@@ -219,4 +219,11 @@ export class UserService{
         return this.http.get(`${this.apiUrl}/users/getGlobalFeedSliderReels`, {params:queryParams,headers: this.headers}
         );
     }
+
+    
+    getUserPermissions(userId:string):Observable<any>{
+        debugger
+        return this.http.get(`${this.apiUrl}/users/getUserPermissions` + '?userId=' + userId,{headers: this.headers});
+        
+    }
 }

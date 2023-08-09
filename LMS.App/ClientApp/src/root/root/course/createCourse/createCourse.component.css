@@ -1,3 +1,50 @@
 .copy-link input {
     padding-right: 80px;
   }
+  
+  .edit-sprofilebtn:hover {
+    background: rgb(124 141 167 / 33%) !important;
+  }
+  
+  .edit-profilehover:hover .edit-sprofilebtn {
+    opacity: 1;
+  }
+
+  .edit-sprofilebtn {
+    background: rgba(124, 141, 167, 0.05) !important;
+    border-radius: 32px;
+    padding: 8px 16px;
+    transition: 0.4s all;
+    cursor: pointer;
+  }
+
+  .edit-sprofilebtn {
+    width: 106px;
+    height: 34px;
+    border: none !important;
+    color: transparent;
+    font-size: 0;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    position: relative !important;
+    overflow: hidden;
+  }
+   .edit-sprofilebtn:before {
+    content: "Upload Image";
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 18px;
+    color: #313131;
+    background: #f8f9fb;
+    width: 100%;
+    height: 100%;
+    z-index: 99;
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 8px 16px;
+  }
+   .edit-sprofilebtn:hover:before {
+    background: rgb(196 202 211) !important;
+  }

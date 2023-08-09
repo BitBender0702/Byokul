@@ -114,6 +114,11 @@ namespace LMS.Services
                 }
             }
 
+            if (classViewModel.AvatarImage != null)
+            {
+                classViewModel.Avatar = await _blobService.UploadFileAsync(classViewModel.AvatarImage, containerName, false);
+            }
+
             var classes = new Class
             {
                 ClassName = classViewModel.ClassName,
@@ -130,7 +135,8 @@ namespace LMS.Services
                 ThumbnailType = classViewModel.ThumbnailType,
                 CreatedById = createdById,
                 CreatedOn = DateTime.UtcNow,
-                IsCommentsDisabled = false
+                IsCommentsDisabled = false,
+                Avatar = classViewModel.Avatar
             };
 
             try
@@ -390,7 +396,7 @@ namespace LMS.Services
                 model.ClassCertificates = await GetCertificateByClassId(classes.ClassId);
 
 
-                var isClassAccessible = await _classCourseTransactionRepository.GetAll().Where(x => x.ClassId == model.ClassId && x.UserId == loginUserId).FirstOrDefaultAsync();
+                var isClassAccessible = await _classCourseTransactionRepository.GetAll().Where(x => x.ClassId == model.ClassId && x.UserId == loginUserId && x.PaymentId != null).FirstOrDefaultAsync();
 
                 if (isClassAccessible != null || model.CreatedById == loginUserId)
                 {

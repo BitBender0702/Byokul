@@ -1505,7 +1505,7 @@
                     </div>
                     <div *ngIf="uploadImage == ''">
                       <img
-                        *ngIf="courseAvatar != 'null'"
+                        *ngIf="(courseAvatar != 'null')  && (courseAvatar != '')"
                         lazyLoad="{{ courseAvatar }}"
                         style="scale: 1.8"
                       />

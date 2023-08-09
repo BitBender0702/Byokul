@@ -1,4 +1,5 @@
 ﻿using Iyzipay.Model;
+using LMS.Common.Enums;
 using LMS.Common.ViewModels.FileStorage;
 using LMS.Common.ViewModels.Iyizico;
 using LMS.Common.ViewModels.Stripe;
@@ -22,7 +23,7 @@ namespace LMS.Services.Iyizico
         void CloseIyizicoThreeDAuthWindow(string userId);
         Task<string> CancelSubscription(Guid schoolId);
         Task<string> RenewSubscription(Guid schoolId);
-        Task<string> RefundPayment(string paymentId);
+        Task<string> RefundPayment(string paymentId, SchoolClassCourseEnum type);
 
 
 

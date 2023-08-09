@@ -69,8 +69,8 @@ namespace LMS.App.Controllers
         public async Task<IActionResult> AddTeacherPermissions([FromBody] AddTeacherViewModel model)
         {
             var userId = await GetUserIdAsync(this._userManager);
-            await _teacherService.AddTeacher(model, userId);
-            return Ok();
+            var response = await _teacherService.AddTeacher(model, userId);
+            return Ok(response);
         }
 
         [Route("getClassTeachers")]

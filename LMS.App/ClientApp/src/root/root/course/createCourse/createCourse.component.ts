@@ -1,4 +1,4 @@
-import { Component, Injector, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, Injector, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { HttpClient, HttpEventType, HttpHeaders } from "@angular/common/http";
 import {MenuItem, MessageService} from 'primeng/api';
@@ -8,10 +8,12 @@ import { CreateCourseModel } from 'src/root/interfaces/course/createCourseModel'
 import { CourseService } from 'src/root/service/course.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, Subscription } from 'rxjs';
-import { BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { SharePostComponent } from '../../sharePost/sharePost.component';
 import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
 import { TranslateService } from '@ngx-translate/core';
+import { Dimensions, ImageCroppedEvent, ImageTransform } from 'ngx-image-cropper';
+import { DomSanitizer } from '@angular/platform-browser';
 
 export const ownedCourseResponse =new Subject<{courseId: string, courseAvatar : string,courseName:string,schoolName:string, action:string}>(); 
 
@@ -67,11 +69,24 @@ export class CreateCourseComponent extends MultilingualComponent implements OnIn
   tagList!: string[];
   isTagsValid: boolean = true;
   tagCountExceeded:boolean = false;
+  selectedImage: any = '';
+  isSelected: boolean = false;
+  imageChangedEvent: any = '';
+  cropModalRef!: BsModalRef;
+  croppedImage: any = '';
+  canvasRotation = 0;
+  rotation = 0;
+  scale = 1;
+  showCropper = false;
+  containWithinAspectRatio = false;
+  courseAvatar:any;
+  transform: ImageTransform = {};
   changeLanguageSubscription!: Subscription;
+  @ViewChild('hiddenButton') hiddenButtonRef!: ElementRef;
 
 
 
-  constructor(injector: Injector,private translateService: TranslateService,private bsModalService: BsModalService,public messageService:MessageService,private router: Router,private route: ActivatedRoute,private fb: FormBuilder,courseService: CourseService,private http: HttpClient) {
+  constructor(injector: Injector,private translateService: TranslateService,private bsModalService: BsModalService,public messageService:MessageService,private router: Router,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,courseService: CourseService,private http: HttpClient) {
     super(injector);
     this._courseService = courseService;
   }
@@ -266,6 +281,7 @@ captureTeacherId(event: any) {
         return;
       }
       else{
+        this.fileToUpload.append("avatarImage", this.selectedImage);
         this.fileToUpload.append('schoolId', this.course.schoolId);
         this.fileToUpload.append('courseName', this.course.courseName);
         this.fileToUpload.append('serviceTypeId',this.course.serviceTypeId);
@@ -528,5 +544,61 @@ captureTeacherId(event: any) {
     };
     this.bsModalService.show(SharePostComponent,{initialState});
   }
+
+  onFileChange(event: any): void {
+    debugger
+    this.isSelected = true;
+    this.imageChangedEvent = event;
+    this.hiddenButtonRef.nativeElement.click();
+  }
+
+  removeLogo() {
+    // if (this.user.avatar != null) {
+    //   this.userAvatar = '';
+    // }
+    this.courseAvatar = '';
+    this.fileToUpload.set('avatarImage', '');
+  }
+
+  cropModalOpen(template: TemplateRef<any>) {
+    this.cropModalRef = this.bsModalService.show(template);
+  }
+
+  closeCropModal() {
+    this.cropModalRef.hide();
+  }
+
+
+  applyCropimage() {
+    debugger
+    this.courseAvatar = this.croppedImage.changingThisBreaksApplicationSecurity;
+    this.cropModalRef.hide();
+  }
+
+  imageCropped(event: ImageCroppedEvent) {
+    debugger
+    this.selectedImage = event.blob;
+    this.croppedImage = this.domSanitizer.bypassSecurityTrustResourceUrl(
+      event.objectUrl!
+    );
+  }
+
+  imageLoaded() {
+    this.showCropper = true;
+    console.log('Image loaded');
+  }
+
+  cropperReady(sourceImageDimensions: Dimensions) {
+    console.log('Cropper ready', sourceImageDimensions);
+  }
+
+  loadImageFailed() {
+    console.log('Load failed');
+  }
+
+
+  sanitize(url:string){
+    return this.domSanitizer.bypassSecurityTrustUrl(url);
+}
 
 }

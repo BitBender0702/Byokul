@@ -46,6 +46,7 @@ import flatpickr from 'flatpickr';
 import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
 import { TranslateService } from '@ngx-translate/core';
 import { Dimensions, ImageCroppedEvent, ImageTransform } from 'ngx-image-cropper';
+import { SignalrService } from 'src/root/service/signalr.service';
 
 
 export const deleteClassResponse = new BehaviorSubject<string>('');
@@ -66,6 +67,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   private _postService;
   private _notificationService;
   private _authService;
+  private _signalrService;
   class: any;
   isProfileGrid: boolean = true;
   isOpenSidebar: boolean = false;
@@ -180,17 +182,19 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   @ViewChild('createPostModal', { static: true }) createPostModal!: CreatePostComponent;
 
   isDataLoaded: boolean = false;
-  constructor(injector: Injector, private translateService: TranslateService, private titleService: Title, private meta: Meta, private datePipe: DatePipe, authService: AuthService, notificationService: NotificationService, public messageService: MessageService, postService: PostService, private bsModalService: BsModalService, classService: ClassService, private route: ActivatedRoute, private domSanitizer: DomSanitizer, private fb: FormBuilder, private router: Router, private http: HttpClient, private activatedRoute: ActivatedRoute, private cd: ChangeDetectorRef) {
+  constructor(injector: Injector, private translateService: TranslateService,private signalrService:SignalrService, private titleService: Title, private meta: Meta, private datePipe: DatePipe, authService: AuthService, notificationService: NotificationService, public messageService: MessageService, postService: PostService, private bsModalService: BsModalService, classService: ClassService, private route: ActivatedRoute, private domSanitizer: DomSanitizer, private fb: FormBuilder, private router: Router, private http: HttpClient, private activatedRoute: ActivatedRoute, private cd: ChangeDetectorRef) {
     super(injector);
     this._classService = classService;
     this._postService = postService;
     this._notificationService = notificationService;
     this._authService = authService;
+    this._signalrService = signalrService;
     this.classParamsData$ = this.route.params.subscribe((routeParams) => {
       if (this.savedPostSubscription) {
         this.savedPostSubscription.unsubscribe;
       }
       this.className = routeParams.className;
+      console.log( "before removing ." + this.className);
       if (!this.loadingIcon && this.isOnInitInitialize) {
         this.ngOnInit();
       }
@@ -257,9 +261,12 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     this.translate.use(this.selectedLang ?? '');
     this.minDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
 
-    // this.className = this.route.snapshot.paramMap.get('className')??'';
 
-    this._classService.getClassById(this.className.replace(" ", "").toLowerCase()).subscribe((response) => {
+    var className = this.className.split('.').join("").split(" ").join("").toLowerCase();
+    console.log( "after removing ." + className);
+
+    // this.className = this.route.snapshot.paramMap.get('className')??'';
+    this._classService.getClassById(this.className.split('.').join("").split(" ").join("").toLowerCase()).subscribe((response) => {
       this.postsEndPageNumber = 1;
       this.reelsPageNumber = 1;
       this.class = response;
@@ -817,6 +824,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     this.deleteTeacher.classId = this.class.classId;
     this._classService.deleteClassTeacher(this.deleteTeacher).subscribe((response: any) => {
       this.messageService.add({ severity: 'success', summary: 'Success', life: 3000, detail: 'Teacher deleted successfully' });
+      this._signalrService.addTeacher(this.deleteTeacher.teacherId);
       this.ngOnInit();
 
     });
@@ -1376,11 +1384,13 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   }
 
   removeLogo() {
+    debugger
     if (this.class.avatar != null) {
       this.classAvatar = '';
     }
     this.uploadImage = '';
     this.fileToUpload.set('avatarImage', '');
+    this.cd.detectChanges();
   }
 
   deleteClass() {
@@ -1467,7 +1477,8 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   }
 
   applyCropimage() {
-    this.uploadImage = this.croppedImage;
+    debugger
+    this.uploadImage = this.croppedImage.changingThisBreaksApplicationSecurity;
     this.cropModalRef.hide();
   }
 

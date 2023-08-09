@@ -2,6 +2,7 @@
 using LMS.Common.ViewModels.Chat;
 using LMS.Common.ViewModels.Class;
 using LMS.Common.ViewModels.Common;
+using LMS.Common.ViewModels.Permission;
 using LMS.Common.ViewModels.User;
 using LMS.Data.Entity;
 using LMS.Data.Entity.Chat;
@@ -409,6 +410,14 @@ namespace LMS.App.Controllers
         public async Task<IActionResult> GetGlobalFeedSliderReels(string userId, Guid postId, ScrollTypesEnum scrollType)
         {
             var response = await _userService.GetGlobalFeedSliderReels(userId, postId, scrollType);
+            return Ok(response);
+        }
+
+        [Route("getUserPermissions")]
+        [HttpGet]
+        public async Task<IActionResult> GetUserPermissions(string userId)
+        {
+            var response = await _userService.GetUserPermissions(userId);
             return Ok(response);
         }
 

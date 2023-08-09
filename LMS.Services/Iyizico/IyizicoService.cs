@@ -81,7 +81,7 @@ namespace LMS.Services.FileStorage
                 {
                     model.SubscriptionReferenceId = IzicoSubscriptions.MonthlyWithFreeTrial;
                     model.SubscriptionStartDate = DateTime.UtcNow.AddDays(30);
-                    model.SubscriptionEndDate   = DateTime.UtcNow.AddDays(60);
+                    model.SubscriptionEndDate = DateTime.UtcNow.AddDays(60);
                 }
 
                 if (userSchoolsCount == 1 && model.SubscriptionReferenceId == IzicoSubscriptions.Yearly)
@@ -218,7 +218,7 @@ namespace LMS.Services.FileStorage
 
 
             ResponseData<SubscriptionCreatedResource> response = Subscription.Initialize(request, options);
-            
+
             return response;
             //if (response.Status == "failure")
             //{
@@ -280,7 +280,7 @@ namespace LMS.Services.FileStorage
                         {
                             int dotIndex = paymentDetails.PaidPrice.IndexOf('.');
 
-                            string paidPrice =  paymentDetails.PaidPrice.Substring(0, dotIndex);
+                            string paidPrice = paymentDetails.PaidPrice.Substring(0, dotIndex);
 
                             amount = int.Parse(paidPrice);
 
@@ -296,7 +296,7 @@ namespace LMS.Services.FileStorage
                             await SendSchoolNotification(transaction, message);
                         }
 
-                        await SaveSchoolTransaction(transaction.UserId, transaction.SchoolId.Value, transaction.ConversationId, transaction.SubscriptionReferenceCode, paymentId, message, isActive,amount);
+                        await SaveSchoolTransaction(transaction.UserId, transaction.SchoolId.Value, transaction.ConversationId, transaction.SubscriptionReferenceCode, paymentId, message, isActive, amount);
 
                         var school = _schoolRepository.GetById(transaction.SchoolId);
                         school.IsSchoolSubscribed = true;
@@ -636,12 +636,12 @@ namespace LMS.Services.FileStorage
                               .Include(x => x.User)
                               .Include(x => x.School).Where(x => x.UserId == userId && x.IsActive && ((string.IsNullOrEmpty(model.SearchString)) || (x.User.FirstName.Contains(model.SearchString)) || (x.User.LastName.Contains(model.SearchString) || (x.User.FirstName + " " + x.User.LastName).ToLower().Contains(model.SearchString.ToLower())) && ((model.StartDate == null) || (model.EndDate == null) || (x.CreatedOn.Date >= model.StartDate.Value.Date && x.CreatedOn.Date <= model.EndDate.Value.Date)))).OrderByDescending(x => x.CreatedOn).Skip((model.pageNumber - 1) * pageSize)
              .Take(pageSize).ToListAsync();
-            transactions = transactions.DistinctBy(x => x.PaymentId).ToList();  
+            transactions = transactions.DistinctBy(x => x.PaymentId).ToList();
             var transactionResponse = _mapper.Map<List<SchoolTransactionViewModel>>(transactions);
             if (transactions.Count != 0)
             {
                 //transactionDetails.MonthlyIncome = await GetMonthlyIncome(userId);
-                transactionDetails.SourceOfIncome = await _classCourseTransactionRepository.GetAll().Include(x => x.Class).Include(x => x.Course).Where(x=> (x.Class != null && x.Class.CreatedById == userId) || (x.Course != null && x.Course.CreatedById == userId)).CountAsync();
+                transactionDetails.SourceOfIncome = await _classCourseTransactionRepository.GetAll().Include(x => x.Class).Include(x => x.Course).Where(x => (x.Class != null && x.Class.CreatedById == userId) || (x.Course != null && x.Course.CreatedById == userId)).CountAsync();
 
             }
 
@@ -744,7 +744,7 @@ namespace LMS.Services.FileStorage
                     SubscriptionReferenceCode = schoolSubscription.SubscriptionReferenceCode,
                 };
 
-                var details = Subscription.Retrieve(subscriptionParams,options);
+                var details = Subscription.Retrieve(subscriptionParams, options);
 
 
                 //var payment = new RetrievePaymentRequest
@@ -760,7 +760,7 @@ namespace LMS.Services.FileStorage
         }
 
 
-        public async Task<string> RefundPayment(string paymentId)
+        public async Task<string> RefundPayment(string paymentId, SchoolClassCourseEnum type)
         {
             Options options = new Options
             {
@@ -771,7 +771,7 @@ namespace LMS.Services.FileStorage
 
             var payment = new RetrievePaymentRequest
             {
-                PaymentId = paymentId         
+                PaymentId = paymentId
             };
             var paymentDetails = Payment.Retrieve(payment, options);
 
@@ -788,11 +788,25 @@ namespace LMS.Services.FileStorage
 
             if (refund.Status == "success")
             {
-                var scholTransaction = await _schoolTransactionRepository.GetAll().Where(x => x.PaymentId == paymentId).FirstAsync();
-                scholTransaction.IsRefund = true;
-                _schoolTransactionRepository.Update(scholTransaction);
-                _schoolTransactionRepository.Save();
-                return Constants.Success;
+                if (type == SchoolClassCourseEnum.School)
+                {
+                    var schoolTransaction = await _schoolTransactionRepository.GetAll().Where(x => x.PaymentId == paymentId).FirstAsync();
+                    schoolTransaction.IsRefund = true;
+                    _schoolTransactionRepository.Update(schoolTransaction);
+                    _schoolTransactionRepository.Save();
+                    return Constants.Success;
+
+                }
+                else
+                {
+                    var classCourseTransaction = await _classCourseTransactionRepository.GetAll().Where(x => x.PaymentId == paymentId).FirstAsync();
+                    classCourseTransaction.IsRefund = true;
+                    _classCourseTransactionRepository.Update(classCourseTransaction);
+                    _classCourseTransactionRepository.Save();
+                    return Constants.Success;
+                }
+
+
             }
             else
             {
@@ -801,7 +815,8 @@ namespace LMS.Services.FileStorage
 
         }
 
-        public void CloseIyizicoThreeDAuthWindow(string userId) {
+        public void CloseIyizicoThreeDAuthWindow(string userId)
+        {
             _hubContext.Clients.All.SendAsync("CloseIyizicoThreeDAuthWindow", true);
         }
 

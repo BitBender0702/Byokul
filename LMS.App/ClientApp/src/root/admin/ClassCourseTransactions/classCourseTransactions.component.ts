@@ -12,6 +12,7 @@ import { MessageService } from 'primeng/api';
 import { IyizicoService } from 'src/root/service/iyizico.service';
 import { Constant } from 'src/root/interfaces/constant';
 import { AuthService } from 'src/root/service/auth.service';
+import { SchoolClassCourseEnum } from 'src/root/Enums/SchoolClassCourseEnum';
 
 @Component({
   selector: 'school-Transactions',
@@ -91,7 +92,7 @@ export class ClassCourseTransactionsComponent extends MultilingualComponent impl
       }
 
       reFundPayment(){
-        this._iyizicoService.refundPayment(this.refundPaymentId).subscribe((response: any) => {
+        this._iyizicoService.refundPayment(this.refundPaymentId,SchoolClassCourseEnum.Class).subscribe((response: any) => {
         debugger
         if(response.errorMessage == Constant.Success){
           var message = "Refunded successfully"
@@ -100,6 +101,7 @@ export class ClassCourseTransactionsComponent extends MultilingualComponent impl
         else{
           this.messageService.add({ severity: 'info', summary: 'Info', life: 3000, detail: response.errorMessage });
         }
+        this.ngOnInit();
         });
       }
     }

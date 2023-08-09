@@ -12,6 +12,11 @@
           <img src="../../../../assets/images/school/arrow-left.svg" />
           {{ "Back" | translate }}
         </button>
+        <button
+        #hiddenButton
+        hidden
+        (click)="cropModalOpen(cropTemplate)"
+      ></button>
         <span class="logo_mobile d-xl-none">
           <img src="../../../../assets/images/logo.svg" />
         </span>
@@ -57,14 +62,14 @@
               [formGroup]="createClassForm1"
               class="latest-form"
             >
-            <!-- <div class="edit-profile-header text-center mb-4">
+            <div class="edit-profile-header text-center mb-4">
               <div
                 class="rounded-circle modal-school-icon text-center mb-2 overflow-hidden new-upload-img"
               >
                 <div>
-                  <img *ngIf="classAvatar != undefined" src="{{ classAvatar }}" />
+                  <img *ngIf="classAvatar != undefined" [src]="sanitize(classAvatar)"/>
                   <img *ngIf=" (classAvatar == undefined)"
-                    src="../../../../assets/images/schoolLogo.png"/>
+                    src="../../../../assets/images/classLogo.png"/>
                 </div>
               </div>
 
@@ -77,14 +82,14 @@
                 (change)="onFileChange($event)"
                 accept="image/*"
               />
-              <button
+              <!-- <button
                 *ngIf="(classAvatar != undefined)"
                 (click)="removeLogo()"
                 class="btn border-0 font_12 text_dark f-poppins"
               >
                 {{ "DeletePhoto" | translate }}
-              </button>
-            </div> -->
+              </button> -->
+            </div>
               <div class="form-group">
                 <label class="font_10">{{ "SchoolName" | translate }}</label>
                 <div *ngIf="fromSchoolProfile != ''">
@@ -668,6 +673,71 @@
     </div>
   </div>
 </section>
+
+
+<ng-template #cropTemplate style="max-width: 700px">
+  <div>
+    <div class="modal-content">
+      <div
+        class="modal-header border-0 justify-content-center position-relative"
+      >
+        <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">
+          {{ "CropImage" | translate }}
+        </h1>
+        <button
+          (click)="closeCropModal()"
+          type="button"
+          class="btn-close shadow-none"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        >
+          <img src="../../../assets/images/cross.svg" />
+        </button>
+      </div>
+      <div class="modal-body">
+        <image-cropper
+          [imageChangedEvent]="imageChangedEvent"
+          [maintainAspectRatio]="true"
+          [containWithinAspectRatio]="containWithinAspectRatio"
+          [aspectRatio]="4 / 4"
+          [resizeToWidth]="256"
+          [cropperMinWidth]="128"
+          [onlyScaleDown]="true"
+          [roundCropper]="true"
+          [canvasRotation]="canvasRotation"
+          [transform]="transform"
+          [alignImage]="'left'"
+          [style.display]="showCropper ? null : 'none'"
+          format="png"
+          (imageCropped)="imageCropped($event)"
+          (imageLoaded)="imageLoaded()"
+          (cropperReady)="cropperReady($event)"
+          (loadImageFailed)="loadImageFailed()"
+        ></image-cropper>
+      </div>
+      <div
+        class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4"
+      >
+        <button
+          (click)="closeCropModal()"
+          type="button"
+          class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+          data-bs-target="#create-post"
+        >
+          {{ "DiscardChanges" | translate }}
+        </button>
+        <button
+          (click)="applyCropimage()"
+          type="button"
+          class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
+          data-bs-target="#create-post"
+        >
+          {{ "Apply" | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>
 
 <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
 <p-toast></p-toast>

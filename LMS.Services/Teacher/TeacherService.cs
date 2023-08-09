@@ -164,7 +164,7 @@ namespace LMS.Services
             return model;
         }
 
-        public async Task AddTeacher(AddTeacherViewModel model, string loginUserId)
+        public async Task<Guid> AddTeacher(AddTeacherViewModel model, string loginUserId)
         {
             var ownerInfo = _userRepository.GetById(model.OwnerId);
             var ownerName = ownerInfo.FirstName + " " + ownerInfo.LastName;
@@ -194,8 +194,9 @@ namespace LMS.Services
                 }
                 userId = isEmailExist.Id;
             }
-            await SaveNewTeacher(model, userId);
+            var teacherId = await SaveNewTeacher(model, userId);
             await SaveTeacherPermissions(model, userId);
+            return teacherId;
         }
 
         public async Task InviteUser(User user, string OwnerName)
@@ -224,7 +225,7 @@ namespace LMS.Services
             await  _commonService.SendEmail(new List<string> { user.Email }, null, null, "Assigned Permissions", body: text, null, null);
         }
 
-        public async Task SaveNewTeacher(AddTeacherViewModel model, string userId)
+        public async Task<Guid> SaveNewTeacher(AddTeacherViewModel model, string userId)
         {
             Guid teacherId = new Guid();
             var isTeacherExist = await _teacherRepository.GetAll().Where(x => x.UserId == userId).FirstOrDefaultAsync();
@@ -252,6 +253,7 @@ namespace LMS.Services
             await SaveTeacherForSchools(model, teacherId);
             await SaveTeacherForClasses(model, teacherId);
             await SaveTeacherForCourses(model, teacherId);
+            return teacherId;
         }
 
         public async Task SaveTeacherForSchools(AddTeacherViewModel model, Guid teacherId)

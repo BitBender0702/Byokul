@@ -33,7 +33,7 @@ import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
 import { PaymentComponent, paymentStatusResponse } from '../../payment/payment.component';
 import { AuthService } from 'src/root/service/auth.service';
-import { commentLikeResponse } from 'src/root/service/signalr.service';
+import { SignalrService, commentLikeResponse } from 'src/root/service/signalr.service';
 import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 import { RolesEnum } from 'src/root/RolesEnum/rolesEnum';
 import { generateCertificateResponse } from '../../generateCertificate/generateCertificate.component';
@@ -63,6 +63,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
   private _courseService;
   private _postService;
   private _notificationService;
+  private _signalrService;
   private _authService;
   
   course: any;
@@ -180,12 +181,13 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
 
 
   isDataLoaded: boolean = false;
-  constructor(injector: Injector, private translateService: TranslateService,private datePipe: DatePipe, private titleService: Title, private meta: Meta, authService: AuthService, notificationService: NotificationService, public messageService: MessageService, postService: PostService, private bsModalService: BsModalService, courseService: CourseService, private route: ActivatedRoute, private domSanitizer: DomSanitizer, private fb: FormBuilder, private router: Router, private http: HttpClient, private activatedRoute: ActivatedRoute, private cd: ChangeDetectorRef) {
+  constructor(injector: Injector, private translateService: TranslateService,private signalrService:SignalrService,private datePipe: DatePipe, private titleService: Title, private meta: Meta, authService: AuthService, notificationService: NotificationService, public messageService: MessageService, postService: PostService, private bsModalService: BsModalService, courseService: CourseService, private route: ActivatedRoute, private domSanitizer: DomSanitizer, private fb: FormBuilder, private router: Router, private http: HttpClient, private activatedRoute: ActivatedRoute, private cd: ChangeDetectorRef) {
     super(injector);
     this._courseService = courseService;
     this._postService = postService;
     this._notificationService = notificationService;
     this._authService = authService;
+    this._signalrService = signalrService;
     this.courseParamsData$ = this.route.params.subscribe((routeParams) => {
       this.courseName = routeParams.courseName;
       if (!this.loadingIcon && this.isOnInitInitialize) {
@@ -215,7 +217,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     var selectedLang = localStorage.getItem("selectedLanguage");
     this.translate.use(selectedLang ?? '');
 
-    this._courseService.getCourseById(this.courseName.replace(" ", "").toLowerCase()).subscribe((response) => {
+    this._courseService.getCourseById(this.courseName.split('.').join("").split(" ").join("").toLowerCase()).subscribe((response) => {
       debugger
       this.postsPageNumber = 1;
       this.reelsPageNumber = 1;
@@ -736,6 +738,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     this.deleteTeacher.courseId = this.course.courseId;
     this._courseService.deleteCourseTeacher(this.deleteTeacher).subscribe((response: any) => {
       this.messageService.add({ severity: 'success', summary: 'Success', life: 3000, detail: 'Teacher deleted successfully' });
+      this._signalrService.addTeacher(this.deleteTeacher.teacherId);
       this.ngOnInit();
     });
 
@@ -1271,7 +1274,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
   }
 
   applyCropimage() {
-    this.uploadImage = this.croppedImage;
+    this.uploadImage = this.croppedImage.changingThisBreaksApplicationSecurity;
     this.cropModalRef.hide();
   }
 

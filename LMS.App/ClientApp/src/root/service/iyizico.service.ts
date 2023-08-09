@@ -28,8 +28,9 @@ export class IyizicoService{
         return this.http.post(`${this.apiUrl}/iyizico/renewSubscription`+ '?schoolId=' + schoolId,'',{headers: this.headers});
     }
 
-    refundPayment(paymentId:string): Observable<any> {
-        return this.http.post(`${this.apiUrl}/iyizico/refundPayment` + '?paymentId=' + paymentId,'',{headers: this.headers});
+    refundPayment(paymentId:string,from:number): Observable<any> {
+        let queryParams = new HttpParams().append("paymentId",paymentId).append("type",from);
+        return this.http.post(`${this.apiUrl}/iyizico/refundPayment`,null, {params:queryParams,headers: this.headers});
     }
 
 }

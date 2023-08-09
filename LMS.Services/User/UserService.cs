@@ -5,6 +5,7 @@ using LMS.Common.ViewModels.Account;
 using LMS.Common.ViewModels.Class;
 using LMS.Common.ViewModels.Common;
 using LMS.Common.ViewModels.Course;
+using LMS.Common.ViewModels.Permission;
 using LMS.Common.ViewModels.Post;
 using LMS.Common.ViewModels.School;
 using LMS.Common.ViewModels.Student;
@@ -57,6 +58,7 @@ namespace LMS.Services
         private IGenericRepository<UserSharedPost> _userSharedPostRepository;
         private IGenericRepository<SavedPost> _savedPostRepository;
         private IGenericRepository<UserCertificate> _userCertificateRepository;
+        private IGenericRepository<UserPermission> _userPermissionRepository;
         private readonly UserManager<User> _userManager;
         private readonly IBlobService _blobService;
         private readonly IPostRepository _postRepositoryCustom;
@@ -64,7 +66,7 @@ namespace LMS.Services
 
 
         public UserService(IMapper mapper, IConfiguration config, IWebHostEnvironment webHostEnvironment, IGenericRepository<User> userRepository, IGenericRepository<UserFollower> userFollowerRepository, IGenericRepository<UserLanguage> userLanguageRepository, IGenericRepository<City> cityRepository, IGenericRepository<Country> countryRepository, IGenericRepository<SchoolFollower> schoolFollowerRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<CourseTeacher> courseTeacherRepository,
-          IGenericRepository<SchoolTeacher> schoolteacherRepository, IGenericRepository<Student> studentRepository, IGenericRepository<Teacher> teacherRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<UserPreference> userPreferenceRepository, IGenericRepository<Like> likeRepository, IGenericRepository<View> viewRepository, IGenericRepository<Comment> commentRepository, IGenericRepository<StudentCertificate> studentCertificateRepository, IGenericRepository<UserSharedPost> userSharedPostRepository, IGenericRepository<SavedPost> savedPostRepository, UserManager<User> userManager, IBlobService blobService, IPostRepository postRepositoryCustom, IGenericRepository<UserCertificate> userCertificateRepository, ICommonService commonService)
+          IGenericRepository<SchoolTeacher> schoolteacherRepository, IGenericRepository<Student> studentRepository, IGenericRepository<Teacher> teacherRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<UserPreference> userPreferenceRepository, IGenericRepository<Like> likeRepository, IGenericRepository<View> viewRepository, IGenericRepository<Comment> commentRepository, IGenericRepository<StudentCertificate> studentCertificateRepository, IGenericRepository<UserSharedPost> userSharedPostRepository, IGenericRepository<SavedPost> savedPostRepository, IGenericRepository<UserPermission> userPermissionRepository, UserManager<User> userManager, IBlobService blobService, IPostRepository postRepositoryCustom, IGenericRepository<UserCertificate> userCertificateRepository, ICommonService commonService)
         {
             _mapper = mapper;
             _config = config;
@@ -95,6 +97,7 @@ namespace LMS.Services
             _studentCertificateRepository = studentCertificateRepository;
             _userSharedPostRepository = userSharedPostRepository;
             _savedPostRepository = savedPostRepository;
+            _userPermissionRepository = userPermissionRepository;
             _userManager = userManager;
             _blobService = blobService;
             _postRepositoryCustom = postRepositoryCustom;
@@ -1845,6 +1848,13 @@ namespace LMS.Services
                 return await GetDefaultFeeds(userId, PostTypeEnum.Reel, 1, 8, null, lastReelId, scrollType);
             }
 
+        }
+
+        public async Task<List<UserPermissionViewModel>> GetUserPermissions(string userId)
+        {
+            var permissions = await _userPermissionRepository.GetAll().Include(x => x.Permission).Where(x => x.UserId == userId).ToListAsync();
+            var userPermissions = _mapper.Map<List<UserPermissionViewModel>>(permissions);
+            return userPermissions;
         }
 
 

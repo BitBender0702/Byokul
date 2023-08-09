@@ -163,7 +163,7 @@ export const paymentStatusResponse =new Subject();
       
       this.closeModal();
       this.loadingIcon = false;
-      paymentStatusResponse.next(true);
+      // paymentStatusResponse.next(true);
       //this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'We will notify when payment will be successful'});
       this.isPaymentConfirmation = true;
       this.paymentConfirmationHtml = response;

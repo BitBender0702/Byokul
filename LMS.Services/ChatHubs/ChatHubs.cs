@@ -24,9 +24,11 @@ public class ChatHubs : Hub
     private IGenericRepository<View> _viewRepository;
     private IGenericRepository<School> _schoolRepository;
     private IGenericRepository<Class> _classRepository;
+    private IGenericRepository<Teacher> _teacherRepository;
 
 
-    public ChatHubs(UserManager<User> userManager, IChatService chatService, IGenericRepository<View> viewRepository, INotificationService notificationService, IGenericRepository<UserFollower> userFollowerRepository, IGenericRepository<User> userRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository)
+
+    public ChatHubs(UserManager<User> userManager, IChatService chatService, IGenericRepository<View> viewRepository, INotificationService notificationService, IGenericRepository<UserFollower> userFollowerRepository, IGenericRepository<User> userRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Teacher> teacherRepository)
     {
         _userManager = userManager;
         _chatService = chatService;
@@ -36,6 +38,7 @@ public class ChatHubs : Hub
         _userRepository = userRepository;
         _schoolRepository = schoolRepository;
         _classRepository = classRepository;
+        _teacherRepository = teacherRepository;
     }
 
     static Dictionary<string, string> UserIDConnectionID = new Dictionary<string, string>();
@@ -133,6 +136,15 @@ public class ChatHubs : Hub
         var currentUserConnectionId = UserIDConnectionID[userId];
 
         await Clients.GroupExcept(groupName, currentUserConnectionId).SendAsync("NotifySaveStreamToReceiver", isSaved);
+    }
+
+
+    public async Task NotifyAddTeacher(Guid teacherId)
+    {
+        var teacher = _teacherRepository.GetById(teacherId);
+        var currentUserConnectionId = UserIDConnectionID[teacher.UserId];
+
+        await Clients.Client(currentUserConnectionId).SendAsync("NotifyAddTeacher", teacher.UserId);
     }
 
     public async Task NotifyCommentThrotlling(string groupName, int noOfComments)

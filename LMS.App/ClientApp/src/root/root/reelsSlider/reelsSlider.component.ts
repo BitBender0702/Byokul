@@ -782,12 +782,16 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       
 
 
-      addPostView(postId:string){
+      addPostView(postId:string,post?:any){
         debugger
         this.postView.postId = postId;
         this._postService.postView(this.postView).subscribe((response) => {
           debugger
-          // this.reels.post.views.length = response;
+          if(post != undefined){
+            post.views.length = response;  
+
+            // test
+          }
          }); 
       }
 
@@ -1014,7 +1018,10 @@ private checkScreenSize() {
 
 
     afterChange(event: any) {
-        const currentSlideIndex = event.currentSlide;  
+      debugger
+      const currentItem = this.reels[event.currentSlide];
+      this.addPostView(currentItem.id,currentItem);    
+          const currentSlideIndex = event.currentSlide;  
         const videoElement:HTMLVideoElement | null = document.querySelector(`#video-${currentSlideIndex}`);
         if (videoElement) {
           videoElement.play();

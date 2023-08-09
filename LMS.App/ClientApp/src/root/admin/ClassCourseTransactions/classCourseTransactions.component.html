@@ -62,7 +62,7 @@
               [paginator]="true"
               [pageLinks]="3"
               [rowsPerPageOptions]="[5, 10, 20]"
-              [globalFilterFields]="['courseName']"
+              [globalFilterFields]="['user.firstName','course.courseName','class.className']"
               [rowHover]="true"
               dataKey="id"
               currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"

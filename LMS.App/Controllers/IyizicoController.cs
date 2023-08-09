@@ -6,6 +6,7 @@ using Iyzipay.Model.V2.Transaction;
 using Iyzipay.Request;
 using Iyzipay.Request.V2;
 using Iyzipay.Request.V2.Subscription;
+using LMS.Common.Enums;
 using LMS.Common.ViewModels;
 using LMS.Common.ViewModels.Iyizico;
 using LMS.Common.ViewModels.Stripe;
@@ -282,10 +283,10 @@ namespace LMS.App.Controllers
 
         [Route("refundPayment")]
         [HttpPost]
-        public async Task<IActionResult> RefundPayment(string paymentId)
+        public async Task<IActionResult> RefundPayment(string paymentId, SchoolClassCourseEnum type)
         {
             //var userId = await GetUserIdAsync(this._userManager);
-            var response = await _iyizicoService.RefundPayment(paymentId);
+            var response = await _iyizicoService.RefundPayment(paymentId,type);
             return Ok(new { errorMessage = response});
         }
 

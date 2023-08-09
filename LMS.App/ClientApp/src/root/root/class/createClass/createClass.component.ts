@@ -1,4 +1,4 @@
-import { Component, ElementRef, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Injector, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { HttpClient, HttpEventType, HttpHeaders } from "@angular/common/http";
 import {MenuItem, MessageService} from 'primeng/api';
@@ -11,13 +11,15 @@ import { IfStmt } from '@angular/compiler';
 import { Subject, Subscription } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { SharePostComponent } from '../../sharePost/sharePost.component';
-import { BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Spanish } from 'flatpickr/dist/l10n/es';
 import { Arabic } from 'flatpickr/dist/l10n/ar';
 import { Turkish } from 'flatpickr/dist/l10n/tr';
 import flatpickr from 'flatpickr';
 import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
 import { TranslateService } from '@ngx-translate/core';
+import { Dimensions, ImageCroppedEvent, ImageTransform } from 'ngx-image-cropper';
+import { DomSanitizer } from '@angular/platform-browser';
 
 export const ownedClassResponse =new Subject<{classId: string, classAvatar : string,className:string,schoolName:string, action:string}>(); 
 
@@ -76,14 +78,26 @@ export class CreateClassComponent extends MultilingualComponent implements OnIni
   tagList!: string[];
   isTagsValid: boolean = true;
   minDate:any;
-  classAvatar!:string;
+  classAvatar:any;
   tagCountExceeded:boolean = false;
+  selectedImage: any = '';
+  isSelected: boolean = false;
+  imageChangedEvent: any = '';
+  cropModalRef!: BsModalRef;
+  croppedImage: any = '';
+  canvasRotation = 0;
+  rotation = 0;
+  scale = 1;
+  showCropper = false;
+  containWithinAspectRatio = false;
+  transform: ImageTransform = {};
+  @ViewChild('hiddenButton') hiddenButtonRef!: ElementRef;
   @ViewChild('startDate') startDateRef!: ElementRef;
   @ViewChild('endDate') endDateRef!: ElementRef;
   changeLanguageSubscription!: Subscription;
 
 
-  constructor(injector: Injector,private translateService: TranslateService,private bsModalService: BsModalService,private datePipe: DatePipe,public messageService:MessageService,private route: ActivatedRoute,private router: Router,private fb: FormBuilder,classService: ClassService,private http: HttpClient) {
+  constructor(injector: Injector,private translateService: TranslateService,private bsModalService: BsModalService,private datePipe: DatePipe,public messageService:MessageService,private route: ActivatedRoute,private router: Router,private fb: FormBuilder,classService: ClassService,private http: HttpClient,private domSanitizer: DomSanitizer) {
     super(injector);
     this._classService = classService;
   }
@@ -336,6 +350,7 @@ captureTeacherId(event: any) {
         return;
       }
       else{
+        this.fileToUpload.append("avatarImage", this.selectedImage);
     // this.class.schoolId = schoolId;
     this.fileToUpload.append('schoolId', this.class.schoolId);
     this.fileToUpload.append('className', this.class.className);
@@ -628,20 +643,59 @@ captureTeacherId(event: any) {
     endDateElement._flatpickr.set("locale", locale); 
   }
 
-  // onFileChange(event: any): void {
-  //   debugger
-  //   this.isSelected = true;
-  //   this.imageChangedEvent = event;
-  //   this.hiddenButtonRef.nativeElement.click();
-  // }
+  onFileChange(event: any): void {
+    debugger
+    this.isSelected = true;
+    this.imageChangedEvent = event;
+    this.hiddenButtonRef.nativeElement.click();
+  }
 
-  // removeLogo() {
-  //   // if (this.user.avatar != null) {
-  //   //   this.userAvatar = '';
-  //   // }
-  //   this.classAvatar = '';
-  //   this.fileToUpload.set('avatarImage', '');
-  // }
+  removeLogo() {
+    // if (this.user.avatar != null) {
+    //   this.userAvatar = '';
+    // }
+    this.classAvatar = '';
+    this.fileToUpload.set('avatarImage', '');
+  }
+
+  cropModalOpen(template: TemplateRef<any>) {
+    this.cropModalRef = this.bsModalService.show(template);
+  }
+
+  closeCropModal() {
+    this.cropModalRef.hide();
+  }
+
+  imageCropped(event: ImageCroppedEvent) {
+    debugger
+    this.selectedImage = event.blob;
+    this.croppedImage = this.domSanitizer.bypassSecurityTrustResourceUrl(
+      event.objectUrl!
+    );
+  }
+
+  imageLoaded() {
+    this.showCropper = true;
+    console.log('Image loaded');
+  }
+
+  cropperReady(sourceImageDimensions: Dimensions) {
+    console.log('Cropper ready', sourceImageDimensions);
+  }
+
+  applyCropimage() {
+    debugger
+    this.classAvatar = this.croppedImage.changingThisBreaksApplicationSecurity;
+    this.cropModalRef.hide();
+  }
+
+  loadImageFailed() {
+    console.log('Load failed');
+  }
+
+  sanitize(url:string){
+    return this.domSanitizer.bypassSecurityTrustUrl(url);
+}
 
 
 }

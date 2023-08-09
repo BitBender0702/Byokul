@@ -1845,6 +1845,7 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
   }
 
   applyCropimage() {
+    debugger
     this.uploadImage = this.croppedImage;
     this.cropModalRef.hide();
   }

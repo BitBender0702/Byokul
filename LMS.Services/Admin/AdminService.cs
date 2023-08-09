@@ -208,7 +208,7 @@ namespace LMS.Services
 
         public async Task<List<ClassCourseTransactionViewModel>> GetAllClassCourseTransactions()
         {
-            var classCourseTransactions = await _classCourseTransactionRepository.GetAll().Include(x => x.User).Include(x => x.Class).ThenInclude(x => x.School).Include(x => x.Course).ThenInclude(x => x.School).ToListAsync();
+            var classCourseTransactions = await _classCourseTransactionRepository.GetAll().Include(x => x.User).Include(x => x.Class).ThenInclude(x => x.School).Include(x => x.Course).ThenInclude(x => x.School).Where(x => x.PaymentId != null).ToListAsync();
             var response = _mapper.Map<List<ClassCourseTransactionViewModel>>(classCourseTransactions);
             return response;
 

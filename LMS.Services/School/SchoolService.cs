@@ -56,6 +56,7 @@ namespace LMS.Services
         private IGenericRepository<UserSharedPost> _userSharedPostRepository;
         private IGenericRepository<SavedClassCourse> _savedClassCourseRepository;
         private IGenericRepository<SavedPost> _savedPostRepository;
+        private IGenericRepository<UserPermission> _userPermissionRepository;
         private readonly UserManager<User> _userManager;
         private readonly IBlobService _blobService;
         private readonly IUserService _userService;
@@ -63,7 +64,7 @@ namespace LMS.Services
         private readonly ICourseService _courseService;
         private readonly IIyizicoService _iyizicoService;
         private IConfiguration _config;
-        public SchoolService(IMapper mapper, IGenericRepository<School> schoolRepository, IGenericRepository<SchoolCertificate> schoolCertificateRepository, IGenericRepository<SchoolTag> schoolTagRepository, IGenericRepository<Country> countryRepository, IGenericRepository<Specialization> specializationRepository, IGenericRepository<Language> languageRepository, IGenericRepository<SchoolUser> schoolUserRepository, IGenericRepository<SchoolFollower> schoolFollowerRepository, IGenericRepository<SchoolLanguage> schoolLanguageRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<SchoolTeacher> schoolTeacherRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<CourseTeacher> courseTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<SchoolDefaultLogo> schoolDefaultLogoRepository, IGenericRepository<UserClassCourseFilter> userClassCourseFilterRepository, IGenericRepository<UserSharedPost> userSharedPostRepository, IGenericRepository<SavedClassCourse> savedClassCourseRepository, IGenericRepository<SavedPost> savedPostRepository, UserManager<User> userManager, IBlobService blobService, IUserService userService, IGenericRepository<ClassTag> classTagRepository, IGenericRepository<CourseTag> courseTagRepository, IClassService classService, ICourseService courseService, IConfiguration config, IIyizicoService iyizicoService)
+        public SchoolService(IMapper mapper, IGenericRepository<School> schoolRepository, IGenericRepository<SchoolCertificate> schoolCertificateRepository, IGenericRepository<SchoolTag> schoolTagRepository, IGenericRepository<Country> countryRepository, IGenericRepository<Specialization> specializationRepository, IGenericRepository<Language> languageRepository, IGenericRepository<SchoolUser> schoolUserRepository, IGenericRepository<SchoolFollower> schoolFollowerRepository, IGenericRepository<SchoolLanguage> schoolLanguageRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<SchoolTeacher> schoolTeacherRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<CourseTeacher> courseTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<SchoolDefaultLogo> schoolDefaultLogoRepository, IGenericRepository<UserClassCourseFilter> userClassCourseFilterRepository, IGenericRepository<UserSharedPost> userSharedPostRepository, IGenericRepository<SavedClassCourse> savedClassCourseRepository, IGenericRepository<SavedPost> savedPostRepository, IGenericRepository<UserPermission> userPermissionRepository, UserManager<User> userManager, IBlobService blobService, IUserService userService, IGenericRepository<ClassTag> classTagRepository, IGenericRepository<CourseTag> courseTagRepository, IClassService classService, ICourseService courseService, IConfiguration config, IIyizicoService iyizicoService)
         {
             _mapper = mapper;
             _schoolRepository = schoolRepository;
@@ -90,6 +91,7 @@ namespace LMS.Services
             _savedClassCourseRepository = savedClassCourseRepository;
             _savedPostRepository = savedPostRepository;
             _userManager = userManager;
+            _userPermissionRepository = userPermissionRepository;
             _blobService = blobService;
             _userService = userService;
             _classTagRepository = classTagRepository;
@@ -993,12 +995,12 @@ namespace LMS.Services
             classTeachers = await _classTeacherRepository.GetAll().Include(x => x.Teacher).Where(x => x.TeacherId == model.TeacherId).ToListAsync();
 
 
-            var requiredClassTeacher = classTeachers.Where(x => classes.Any(y => y.ClassId == x.ClassId && x.TeacherId == model.TeacherId)).FirstOrDefault();
+            var requiredClassTeacher = classTeachers.Where(x => classes.Any(y => y.ClassId == x.ClassId && x.TeacherId == model.TeacherId)).ToList();
 
             //var requiredTeacher = classTeachers.Where(x => x.TeacherId == model.TeacherId).FirstOrDefault();
-            if (requiredClassTeacher != null)
+            if (requiredClassTeacher.Count() != 0)
             {
-                _classTeacherRepository.Delete(requiredClassTeacher.Id);
+                _classTeacherRepository.DeleteAll(requiredClassTeacher);
                 _classTeacherRepository.Save();
             }
 
@@ -1009,13 +1011,21 @@ namespace LMS.Services
 
             var courseTeachers = await _courseTeacherRepository.GetAll().Where(x => x.TeacherId == model.TeacherId).ToListAsync();
 
-            var requiredCourseTeacher = courseTeachers.Where(x => courses.Any(y => y.CourseId == x.CourseId && x.TeacherId == model.TeacherId)).FirstOrDefault();
+            var requiredCourseTeacher = courseTeachers.Where(x => courses.Any(y => y.CourseId == x.CourseId && x.TeacherId == model.TeacherId)).ToList();
 
             if (requiredCourseTeacher != null)
             {
-                _courseTeacherRepository.Delete(requiredCourseTeacher.Id);
+                _courseTeacherRepository.DeleteAll(requiredCourseTeacher);
                 _courseTeacherRepository.Save();
             }
+
+
+            //remove userpermissions
+
+            var userPermissions = await _userPermissionRepository.GetAll().Where(x => x.TypeId == model.SchoolId || x.SchoolId == model.SchoolId).ToListAsync();
+
+            _userPermissionRepository.DeleteAll(userPermissions);
+            _userPermissionRepository.Save();
 
 
 

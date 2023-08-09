@@ -120,6 +120,11 @@ namespace LMS.Services
                 }
             }
 
+            if (courseViewModel.AvatarImage != null)
+            {
+                courseViewModel.Avatar = await _blobService.UploadFileAsync(courseViewModel.AvatarImage, containerName, false);
+            }
+
             var course = new Course
             {
                 CourseName = courseViewModel.CourseName,
@@ -133,7 +138,8 @@ namespace LMS.Services
                 ThumbnailType = courseViewModel.ThumbnailType,
                 CreatedById = createdById,
                 CreatedOn = DateTime.UtcNow,
-                IsCommentsDisabled = false
+                IsCommentsDisabled = false,
+                Avatar = courseViewModel.Avatar
             };
 
             _courseRepository.Insert(course);
@@ -362,7 +368,7 @@ namespace LMS.Services
 
         public async Task<CourseDetailsViewModel> GetCourseByName(string courseName, string loginUserid)
         {
-            CourseDetailsViewModel model = new CourseDetailsViewModel();
+            CourseDetailsViewModel model = new CourseDetailsViewModel();    
 
             if (courseName != null)
             {
@@ -406,7 +412,7 @@ namespace LMS.Services
 
                     courses.CourseCertificates = _mapper.Map<IEnumerable<CertificateViewModel>>(classDetails.ClassCertificates);
 
-                    var isClassAccessible = await _classCourseTransactionRepository.GetAll().Where(x => x.CourseId == model.CourseId && x.UserId == loginUserid).FirstOrDefaultAsync();
+                    var isClassAccessible = await _classCourseTransactionRepository.GetAll().Where(x => x.CourseId == model.CourseId && x.UserId == loginUserid && x.PaymentId != null).FirstOrDefaultAsync();
 
                     if (isClassAccessible != null || courses.CreatedById == loginUserid)
                     {
@@ -420,7 +426,7 @@ namespace LMS.Services
                 }
                 model = _mapper.Map<CourseDetailsViewModel>(course);
 
-                var isCourseAccessible = await _classCourseTransactionRepository.GetAll().Where(x => x.CourseId == model.CourseId && x.UserId == loginUserid).FirstOrDefaultAsync();
+                var isCourseAccessible = await _classCourseTransactionRepository.GetAll().Where(x => x.CourseId == model.CourseId && x.UserId == loginUserid && x.PaymentId != null).FirstOrDefaultAsync();
 
                 if (isCourseAccessible != null || course.CreatedById == loginUserid)
                 {

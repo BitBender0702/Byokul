@@ -1,5 +1,6 @@
 ﻿using LMS.Common.Enums;
 using LMS.Common.ViewModels.Common;
+using LMS.Common.ViewModels.Permission;
 using LMS.Common.ViewModels.Post;
 using LMS.Common.ViewModels.School;
 using LMS.Common.ViewModels.User;
@@ -43,6 +44,8 @@ namespace LMS.Services
         Task<IEnumerable<PostDetailsViewModel>> GetSliderReelsByUserId(string userId, Guid lastReelId, ScrollTypesEnum scrollType);
         Task<IEnumerable<PostDetailsViewModel>> GetMyFeedSliderReels(string userId, Guid lastReelId, ScrollTypesEnum scrollType);
         Task<IEnumerable<GlobalFeedViewModel>> GetGlobalFeedSliderReels(string userId, Guid lastReelId, ScrollTypesEnum scrollType);
+        Task<List<UserPermissionViewModel>> GetUserPermissions(string userId);
+
 
 
 

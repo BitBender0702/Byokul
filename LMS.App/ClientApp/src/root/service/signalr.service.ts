@@ -59,6 +59,7 @@ export const notifyCommentThrotllingResponse = new Subject<{noOfComments: boolea
 export const liveUsersCountResponse = new Subject<{isLeaveStream: boolean;}>();
 export const endMeetingResponse = new Subject<{}>();
 export const shareStreamResponse = new Subject<{}>();
+export const notiFyTeacherResponse = new Subject<{userId:string}>();
 export const notificationResponse = new Subject<NotificationViewModel>();
 export const progressResponse = new Subject<{
   progressCount: number;
@@ -79,7 +80,7 @@ export class SignalrService {
 
   initializeConnection(token: string) {
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl('https://byokul.com/chatHub', {
+      .withUrl('https://localhost:7220/chatHub', {
          httpClient: new CustomXhrHttpClient(token)
       })
       .withAutomaticReconnect()
@@ -230,6 +231,12 @@ export class SignalrService {
     () => {
       shareStreamResponse.next({});
     });
+
+    this.hubConnection?.on('NotifyAddTeacher',
+    (userId) => {
+      debugger
+      notiFyTeacherResponse.next({userId: userId});
+    });
   }
 
   sendToGroup(model: CommentViewModel) {
@@ -281,6 +288,10 @@ export class SignalrService {
     debugger
     this.hubConnection?.invoke('notifyCommentThrotlling', groupName,noOfComments)
       .catch((err) => console.error(err));
+  }
+
+  addTeacher(teacherId:string) {
+    this.hubConnection?.invoke('notifyAddTeacher', teacherId)
   }
 
   sendNotification(model:NotificationViewModel){

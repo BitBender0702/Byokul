@@ -1,7 +1,7 @@
 import { Component, ContentChild, ElementRef, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import { AuthService } from '../service/auth.service';
-import { SignalrService } from '../service/signalr.service';
+import { SignalrService, notiFyTeacherResponse } from '../service/signalr.service';
 import { Meta } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, NavigationExtras, Params, Router } from '@angular/router';
 import { Constant } from '../interfaces/constant';
@@ -17,6 +17,7 @@ import { NotificationService } from '../service/notification.service';
 import { NotificationType } from '../interfaces/notification/notificationViewModel';
 import { FileStorageService } from '../service/fileStorage';
 import { fileStorageResponse } from './fileStorage/fileStorage.component';
+import { UserService } from '../service/user.service';
 
 export const paymentConfirmDialoge = new Subject<{response:any}>();  
 export const postProgressNotification = new Subject<{from:string}>();  
@@ -54,18 +55,21 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
   addPostSubscription!: Subscription;
   paymentConfirmSubscription!: Subscription;
   loginUserId:string = "";
+  notifyTeacherSubscription!:Subscription;
   @ViewChild('paymentConfirmationBtn') paymentConfirmationBtn!: ElementRef;
 
   private _postService;
   private _notificationService;
   private _fileStorageService;
+  private _userService;
   
 
-  constructor(injector: Injector,private fileStorageService: FileStorageService,private notificationService: NotificationService, private signalRService: SignalrService,public messageService:MessageService,private translateService: TranslateService, private meta: Meta,authService: AuthService,private router: Router,private route: ActivatedRoute,postService:PostService) { 
+  constructor(injector: Injector,private fileStorageService: FileStorageService,private userService:UserService,private notificationService: NotificationService, private signalRService: SignalrService,public messageService:MessageService,private translateService: TranslateService, private meta: Meta,authService: AuthService,private router: Router,private route: ActivatedRoute,postService:PostService) { 
     super(injector);
     this._postService = postService;
     this._notificationService = notificationService;
     this._fileStorageService = fileStorageService;
+    this._userService = userService;
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         event.urlAfterRedirects = event.urlAfterRedirects.split('/').slice(0, 3).join('/');
@@ -108,6 +112,17 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
     this.meta.updateTag({ property: 'og:url', content: "byokul.com" });
 
 
+    if (!this.notifyTeacherSubscription) {
+      this.notifyTeacherSubscription = notiFyTeacherResponse.subscribe(response => {
+        debugger
+        this._userService.getUserPermissions(response.userId).subscribe((response) => {
+          debugger 
+          var userPermissions = JSON.parse(localStorage.getItem('userPermissions') ?? '');
+          localStorage.setItem("userPermissions", JSON.stringify(response));
+        });
+         });
+    }
+    
     if(!this.paymentConfirmSubscription){
       this.paymentConfirmSubscription = paymentConfirmDialoge.subscribe(response => {
         debugger

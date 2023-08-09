@@ -13,6 +13,7 @@ import { UserService } from 'src/root/service/user.service';
 import { MultilingualComponent, changeLanguage } from '../sharedModule/Multilingual/multilingual.component';
 import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
+import { SignalrService } from 'src/root/service/signalr.service';
 export const addTeacherResponse =new BehaviorSubject <boolean>(false);  
 
 @Component({
@@ -35,6 +36,7 @@ export class AddTeacherComponent extends MultilingualComponent implements OnInit
     private _teacherService;
     private _userService;
     private _authService;
+    private _signalrService;
     schoolList:any;
     classList:any;
     courseList:any;
@@ -55,12 +57,13 @@ export class AddTeacherComponent extends MultilingualComponent implements OnInit
     changeLanguageSubscription!: Subscription;
 
 
-    constructor(injector: Injector,private fb: FormBuilder,private router: Router,private route: ActivatedRoute,authService:AuthService,schoolService:SchoolService,teacherService:TeacherService,userService:UserService,public messageService:MessageService, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
+    constructor(injector: Injector,private fb: FormBuilder,signalrservice: SignalrService,private router: Router,private route: ActivatedRoute,authService:AuthService,schoolService:SchoolService,teacherService:TeacherService,userService:UserService,public messageService:MessageService, private http: HttpClient,private activatedRoute: ActivatedRoute) { 
         super(injector);
         this._schoolService = schoolService;
         this._teacherService = teacherService;
         this._userService = userService;
         this._authService = authService;
+        this._signalrService = signalrservice;
     }
   
     ngOnInit(): void {
@@ -208,8 +211,10 @@ export class AddTeacherComponent extends MultilingualComponent implements OnInit
     }  
 
         this._teacherService.addTeacher(this.addTeacherViewmodel).subscribe((result) => {
+            debugger
             this.router.navigateByUrl(`user/userProfile/${this.loginUserId}`);
             addTeacherResponse.next(true); 
+            this._signalrService.addTeacher(result);
         });
     }
 
