@@ -76,7 +76,7 @@
             type="button"
             class="btn custom-btn primary_btn earning-btn fw_400 h_44"
           >
-            {{ "Buyfor" | translate }} ${{ class.price }}
+            {{ "Buyfor" | translate }} {{ class.price }} {{class.currency}}
           </button>
         </div>
         <div
@@ -587,20 +587,23 @@
                   class="school-grid-box position-relative"
                 >
                   <div
-                    class="schoolgrid-header d-flex align-items-center position-relative"
+                    class="schoolgrid-header d-flex align-items-center position-relative justify-content-between"
                   >
+                  <div class="d-flex align-items-center gap-2">
                     <div class="school-gridprofile-icon">
                       <img [lazyLoad]="class.avatar" />
                     </div>
                     <h2 class="d-inline-block font_20 fw_600 text_sec1 mb-0">
-                      {{ post.title }}
+                      {{ class.className }}
                     </h2>
+                    </div>
                     <div *ngIf="post.isLive">
                       <img lazyLoad="../../../../assets/images/live_img.png" />
                     </div>
+                    <div>
                     <p
                       *ngIf="post.createdOn != null"
-                      class="font_14 school-grid-date d-inline-block mb-0"
+                      class="font_14 school-grid-date d-inline-block mb-0 me-3"
                     >
                       {{ post.createdOn | date : "MMMM d" }} -
                       {{ post.createdOn | date : "hh:mm" }}
@@ -625,12 +628,14 @@
                         lazyLoad="../../../../assets/images/pinned-gray.svg"
                       />
                     </button>
+                    </div>
                   </div>
 
                   <div
                     class="school-grid-body"
                     (click)="openPostsViewModal(post)"
                   >
+                  <h4 class="d-inline-block font_20 fw_600 text_sec1 mb-3">{{post.title}}</h4>
                     <p class="text_sec1 font_14" style="cursor: pointer">
                       {{ post.description }}
                     </p>
@@ -824,7 +829,7 @@
                                   font-weight: 600;
                                 "
                               >
-                                +{{ post.postAttachments.length - 3 }}
+                                +{{ post.postAttachments.length - 2 }}
                               </div>
                             </div>
                             <div class="medium-thumnail">
@@ -1740,14 +1745,28 @@
                         <label class="font_10"
                           >{{ "Price" | translate }}*</label
                         >
+                        <div class="d-flex">
                         <input
                           formControlName="price"
                           type="number"
                           min="1"
                           placeholder="{{ 'Price' | translate }}"
                           name="price"
-                          class="form-control w-100"
+                          class="form-control priceInputWidth"
                         />
+                        <select
+                        class="form-select rounded-8 w-100"
+                        formControlName="currency"
+                        aria-label="Default select example"
+                      >
+                        <option
+                          *ngFor="let currency of currencies"
+                          [value]="currency.key"
+                        >
+                          {{ currency.value }}
+                        </option>
+                      </select>
+                      </div>
                         <small
                           class="p-error"
                           style="color: orange"

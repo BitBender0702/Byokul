@@ -47,6 +47,8 @@ import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component'
 import { TranslateService } from '@ngx-translate/core';
 import { Dimensions, ImageCroppedEvent, ImageTransform } from 'ngx-image-cropper';
 import { SignalrService } from 'src/root/service/signalr.service';
+import { enumToObjects } from 'src/root/Enums/getEnum';
+import { CurrencyEnum } from 'src/root/Enums/CurrencyEnum';
 
 
 export const deleteClassResponse = new BehaviorSubject<string>('');
@@ -164,6 +166,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
 
   classCertificateForm!: FormGroup;
   classCertificateInfo: any;
+  currencies:any;
 
   @ViewChild('openClassOwnCertificate') openClassOwnCertificate!: ElementRef;
 
@@ -188,6 +191,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     this._postService = postService;
     this._notificationService = notificationService;
     this._authService = authService;
+    this.currencies = enumToObjects(CurrencyEnum);
     this._signalrService = signalrService;
     this.classParamsData$ = this.route.params.subscribe((routeParams) => {
       if (this.savedPostSubscription) {
@@ -310,6 +314,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       endDate: this.fb.control(''),
       accessibilityId: this.fb.control(''),
       price: this.fb.control(''),
+      currency: this.fb.control(''),
       description: this.fb.control(''),
       languageIds: this.fb.control(''),
       serviceTypeId: this.fb.control('')
@@ -687,8 +692,8 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       price: this.fb.control(this.editClass.price),
       description: this.fb.control(this.editClass.description),
       languageIds: this.fb.control(selectedLanguages, [Validators.required]),
-      serviceTypeId: this.fb.control(this.editClass.serviceTypeId, [Validators.required])
-
+      serviceTypeId: this.fb.control(this.editClass.serviceTypeId, [Validators.required]),
+      currency:this.fb.control(this.editClass.currency),
     }, { validator: this.dateLessThan('startDate', 'endDate', this.currentDate) });
 
     if (this.editClass.serviceTypeId == '0d846894-caa4-42f3-8e8a-9dba6467672b') {
@@ -968,6 +973,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     this.fileToUpload.append('noOfStudents', this.updateClassDetails.noOfStudents.toString());
     this.fileToUpload.append('startDate', this.updateClassDetails.startDate);
     this.fileToUpload.append('endDate', this.updateClassDetails.endDate);
+    this.fileToUpload.append('currency', this.updateClassDetails.currency);
     this.fileToUpload.append('price', this.updateClassDetails.price?.toString());
     this.fileToUpload.append('accessibilityId', this.updateClassDetails.accessibilityId);
     this.fileToUpload.append('languageIds', JSON.stringify(this.updateClassDetails.languageIds));
@@ -1298,7 +1304,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   }
 
   openPaymentModal() {
-    var classDetails = { "id": this.class.classId, "name": this.class.className, "avatar": this.class.avatar, "type": 1, "amount": this.class.price }
+    var classDetails = { "id": this.class.classId, "name": this.class.className, "avatar": this.class.avatar, "type": 1, "amount": this.class.price, "currency": this.class.currency }
     const initialState = {
       paymentDetails: classDetails
     };

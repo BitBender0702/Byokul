@@ -69,3 +69,7 @@
 .preserve-line-breaks {
   white-space: pre-wrap;
 }
+
+.priceInputWidth{
+  width: 268%;
+}

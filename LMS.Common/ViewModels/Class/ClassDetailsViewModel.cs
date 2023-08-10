@@ -40,6 +40,7 @@ namespace LMS.Common.ViewModels.Class
         public IEnumerable<CertificateViewModel> ClassCertificates { get; set; }
         public string? Description { get; set; }
         public long? Price { get; set; }
+        public string? Currency { get; set; }
         public Double? Rating { get; set; }
         public string? Avatar { get; set; }
         public string? ThumbnailUrl { get; set; }

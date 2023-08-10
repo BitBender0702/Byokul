@@ -17,6 +17,7 @@ namespace LMS.Common.ViewModels.Post
         public static string UserDoesNotExist = "User does not exist";
         public static string ForgetEmailSentSuccessfully = "Forget Email sent successfully";
         public static string PPT = "vnd.ms-powerpoint";
+        public static string Turkey = "Turkey";
         public static string Success = "Success";
         public static string IncorrectPassword = "Incorrect password.";
         public static string EmailNotConfirmed = "email not confirm";

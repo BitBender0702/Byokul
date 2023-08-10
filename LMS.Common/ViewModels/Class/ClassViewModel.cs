@@ -27,6 +27,7 @@ namespace LMS.Common.ViewModels.Class
         public AccessibilityViewModel Accessibility { get; set; }
         public string? Description { get; set; }
         public long? Price { get; set; }
+        public string? Currency { get; set; }
         public double? Rating { get; set; }
         public string? ThumbnailUrl { get; set; }
         public int? ThumbnailType { get; set; }

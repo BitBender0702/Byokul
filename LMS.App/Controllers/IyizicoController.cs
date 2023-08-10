@@ -177,7 +177,7 @@ namespace LMS.App.Controllers
             }
             if (paymentResponse.Status == "SUCCESS")
             {
-                await _iyizicoService.UpdateSchoolTransaction(conversationId, paymentId);
+                await _iyizicoService.UpdateSchoolTransaction(conversationId, paymentId, false);
             }
             if (paymentResponse.Status == "FAILURE")
             {

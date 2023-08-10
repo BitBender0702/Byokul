@@ -20,6 +20,8 @@ import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component'
 import { TranslateService } from '@ngx-translate/core';
 import { Dimensions, ImageCroppedEvent, ImageTransform } from 'ngx-image-cropper';
 import { DomSanitizer } from '@angular/platform-browser';
+import { enumToObjects } from 'src/root/Enums/getEnum';
+import { CurrencyEnum } from 'src/root/Enums/CurrencyEnum';
 
 export const ownedClassResponse =new Subject<{classId: string, classAvatar : string,className:string,schoolName:string, action:string}>(); 
 
@@ -90,6 +92,7 @@ export class CreateClassComponent extends MultilingualComponent implements OnIni
   scale = 1;
   showCropper = false;
   containWithinAspectRatio = false;
+  currencies:any;
   transform: ImageTransform = {};
   @ViewChild('hiddenButton') hiddenButtonRef!: ElementRef;
   @ViewChild('startDate') startDateRef!: ElementRef;
@@ -100,6 +103,7 @@ export class CreateClassComponent extends MultilingualComponent implements OnIni
   constructor(injector: Injector,private translateService: TranslateService,private bsModalService: BsModalService,private datePipe: DatePipe,public messageService:MessageService,private route: ActivatedRoute,private router: Router,private fb: FormBuilder,classService: ClassService,private http: HttpClient,private domSanitizer: DomSanitizer) {
     super(injector);
     this._classService = classService;
+    this.currencies = enumToObjects(CurrencyEnum);
   }
 
   ngOnInit(): void {
@@ -168,6 +172,7 @@ export class CreateClassComponent extends MultilingualComponent implements OnIni
     accessibilityId: this.fb.control('',[Validators.required]),
     languageIds:this.fb.control('',[Validators.required]),
     price:this.fb.control(''),
+    currency:this.fb.control(this.currencies[0].key),
     tags:this.fb.control('',[Validators.required]),
 
 }, {validator: this.dateLessThan('startDate', 'endDate',this.currentDate)});
@@ -362,6 +367,7 @@ captureTeacherId(event: any) {
     this.fileToUpload.append('accessibilityId',this.class.accessibilityId);
     this.fileToUpload.append('languageIds',JSON.stringify(this.class.languageIds));
     this.fileToUpload.append('price',this.class.price?.toString());
+    this.fileToUpload.append('currency',this.class.currency);
         this.step += 1;
         this.isStepCompleted = false;
         this.nextPage = true;

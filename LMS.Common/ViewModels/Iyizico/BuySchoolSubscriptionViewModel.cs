@@ -19,6 +19,7 @@ namespace LMS.Common.ViewModels.Iyizico
         public string? ConversationId { get; set; }
         public DateTime? SubscriptionStartDate { get; set; }
         public DateTime? SubscriptionEndDate { get; set; }
+        public bool? IsInternationalUser { get; set; }
 
         //public int PlanId { get; set; }
     }

@@ -27,6 +27,7 @@ namespace LMS.Common.ViewModels.Class
         public Guid? AccessibilityId { get; set; }
         public AccessibilityViewModel Accessibility { get; set; }
         public long? Price { get; set; }
+        public string? Currency { get; set; }
         public string? Description { get; set; }
         public IEnumerable<LanguageViewModel> Languages { get; set; }
         public IEnumerable<string> LanguageIds { get; set; }

@@ -3,6 +3,7 @@ export interface CreateCourseModel{
     schoolId:string;
     serviceTypeId:string;
     price:number;
+    currency:string;
     accessibilityId:string;
     languageIds:any;
     teacherIds:any;

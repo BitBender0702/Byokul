@@ -1068,21 +1068,22 @@
                         <img [lazyLoad]="school.avatar" />
                       </div>
                       <h2 class="d-inline-block font_20 fw_600 text_sec1 mb-0">
-                        {{ post.title }}
+                        {{ school.schoolName }}
                       </h2>
                       <div *ngIf="post.isLive">
                         <img
                           lazyLoad="../../../../assets/images/live_img.png"
                         />
                       </div>
-                      <p
-                        *ngIf="post.createdOn != null"
-                        class="font_14 school-grid-date d-inline-block mb-0"
-                      >
-                        {{ post.createdOn | date : "MMMM d" }} -
-                        {{ post.createdOn | date : "hh:mm" }}
-                      </p>
                     </div>
+                    <div>
+                      <p
+                      *ngIf="post.createdOn != null"
+                      class="font_14 school-grid-date d-inline-block mb-0 me-3"
+                    >
+                      {{ post.createdOn | date : "MMMM d" }} -
+                      {{ post.createdOn | date : "hh:mm" }}
+                    </p>
                     <button
                       *ngIf="post.isPinned && isOwner"
                       (click)="pinUnpinPost(post.id, false)"
@@ -1106,10 +1107,12 @@
                       />
                     </button>
                   </div>
+                  </div>
                   <div
                     class="school-grid-body"
                     (click)="openPostsViewModal(post)"
                   >
+                  <h4 class="d-inline-block font_20 fw_600 text_sec1 mb-3">{{post.title}}</h4>
                     <p class="text_sec1 font_14" style="cursor: pointer">
                       {{ post.description }}
                     </p>
@@ -1303,7 +1306,7 @@
                                   font-weight: 600;
                                 "
                               >
-                                +{{ post.postAttachments.length - 3 }}
+                                +{{ post.postAttachments.length - 2 }}
                               </div>
                             </div>
                             <div class="medium-thumnail">
@@ -2248,7 +2251,7 @@
                     class="school-grid-box position-relative school-list-box h-100 mb-0"
                   >
                     <div class="schoolgrid-header pe-0">
-                      <div class="d-flex align-items-center position-relative">
+                      <div class="d-flex align-items-center position-relative gap-3">
                         <div
                           *ngIf="item.type == 1"
                           [routerLink]="[

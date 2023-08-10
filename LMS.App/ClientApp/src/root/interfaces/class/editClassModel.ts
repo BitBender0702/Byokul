@@ -10,7 +10,7 @@ export interface EditClassModel{
     serviceTypeId:string;
     accessibilityId:string;
     price:number;
+    currency:string;
     description:string;
-
     languageIds:any;
 }

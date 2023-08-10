@@ -295,6 +295,7 @@ ngOnDestroy(): void {
     
   }
 
+  paymentConfirmationWindow:any;
   subscriptionStep(){
     debugger
     this.isStepCompleted = true;
@@ -315,7 +316,11 @@ ngOnDestroy(): void {
     this.fileToUpload.append('SubscriptionDetailsJson',JSON.stringify(subscriptionDetails));
 
     this._schoolService.createSchool(this.fileToUpload).subscribe((response:any) => {
-      debugger
+      if(response.subscriptionDetails.isInternationalUser){
+        this.paymentConfirmationWindow = window.open("","_blank", "width=500,height=300");
+        this.paymentConfirmationWindow?.document.write(response.subscriptionDetails.subscriptionMessage);
+      }
+      
          var schoolId =  response;
          this.schoolId = schoolId;
          this.loadingIcon = false;
@@ -328,7 +333,9 @@ ngOnDestroy(): void {
           this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'School created successfully'});
          }
          else{
-          this.messageService.add({severity:'info', summary:'Info',life: 3000, detail:response.subscriptionDetails.subscriptionMessage});
+          if(!response.subscriptionDetails.isInternationalUser){
+          this.messageService.add({severity:'info', summary:'Info',life: 3000, detail:response.subscriptionDetails.subscriptionMessage});         
+          }
          }
     });
 

@@ -21,6 +21,7 @@ namespace LMS.Data.Entity
         public Guid? AccessibilityId { get; set; }
         public Accessibility Accessibility { get; set; }
         public long? Price { get; set; }
+        public string? Currency { get; set; }
         public double? Rating { get; set; }
         public string? Avatar { get; set; }
         public string? ThumbnailUrl { get; set; }

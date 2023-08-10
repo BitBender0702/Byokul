@@ -2,7 +2,10 @@
 using LMS.Common.Enums;
 using LMS.Common.ViewModels.FileStorage;
 using LMS.Common.ViewModels.Iyizico;
+using LMS.Common.ViewModels.School;
 using LMS.Common.ViewModels.Stripe;
+using LMS.Data.Entity;
+using LMS.Services.FileStorage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +19,7 @@ namespace LMS.Services.Iyizico
         Task<BuySchoolSubscriptionViewModel> BuySchoolSubscription(BuySchoolSubscriptionViewModel model,string userId,Guid schoolId);
         Task<List<SchoolSubscriptionPlansViewModel>> GetSubscriptionPlans();
         Task<string> BuyClassCourse(BuyClassCourseViewModel model, string userId);
-        Task UpdateSchoolTransaction(string ConversationId, string paymentId);
+        Task UpdateSchoolTransaction(string ConversationId, string paymentId, bool isInternationalUser);
         Task UpdateClassCourseTransaction(string ConversationId, string paymentId);
         Task<TransactionsDetailsViewModel> GetSchoolTransactionDetails(TransactionParamViewModel model, string userId);
         Task<TransactionsDetailsViewModel> GetClassCourseTransactionDetails(TransactionParamViewModel model, string userId);
@@ -24,6 +27,7 @@ namespace LMS.Services.Iyizico
         Task<string> CancelSubscription(Guid schoolId);
         Task<string> RenewSubscription(Guid schoolId);
         Task<string> RefundPayment(string paymentId, SchoolClassCourseEnum type);
+       Task<string> BuyInternationalSchoolSubscription(BuySchoolSubscriptionViewModel model, string userId, Guid schoolId);
 
 
 
