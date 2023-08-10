@@ -982,15 +982,16 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
   }
 
   endLiveStreamIfOffline() {
-    window.addEventListener("offline", () => {
-      this.endLiveStream();
-      this.showEndMeetingDialog();
-    });
-    window.addEventListener("beforeunload",()=>{
-      debugger
-      this.endLiveStream();
-      this.showEndMeetingDialog();
-    })
+    if(this.isOwner){
+      window.addEventListener("offline", () => {
+        this.endLiveStream();
+        this.showEndMeetingDialog();
+      });
+      window.addEventListener("beforeunload",()=>{
+        this.endLiveStream();
+        this.showEndMeetingDialog();
+      })
+    }
   }
 
   showEndMeetingDialog(){

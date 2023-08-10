@@ -47,6 +47,12 @@
     gap: 10px;
   }
   
+  @media screen and (max-width: 767px) {
+    .hideName {
+      display: none;
+    }
+  }
+  
   .priceInputWidth{
     width: 268%;
   }

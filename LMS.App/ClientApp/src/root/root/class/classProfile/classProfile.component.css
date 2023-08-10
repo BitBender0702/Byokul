@@ -70,6 +70,12 @@
   white-space: pre-wrap;
 }
 
+@media screen and (max-width: 767px) {
+  .hideName {
+    display: none;
+  }
+}
+
 .priceInputWidth{
   width: 268%;
 }

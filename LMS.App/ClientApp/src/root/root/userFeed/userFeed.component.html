@@ -240,7 +240,7 @@
                                   {{ post.views.length }}
                                 </button>
                               </div>
-                              <div class="feed-name font_14 text_sec1">
+                              <div class="feed-name font_14 text_sec1 hideName">
                                 <a
                                   *ngIf="post.postAuthorType == 1"
                                   (click)="getSelectedSchool(post.parentName)"
@@ -1498,7 +1498,7 @@
                                   {{ post.views.length }}
                                 </button>
                               </div>
-                              <div class="feed-name font_14 text_sec1">
+                              <div class="feed-name font_14 text_sec1 hideName">
                                 <a
                                   *ngIf="post.postAuthorType == 1"
                                   (click)="getSelectedSchool(post.parentName)"
