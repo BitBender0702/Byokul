@@ -634,7 +634,7 @@
                 <div
                   *ngIf="
                     (post.postType == 1 && post.postAuthorType == 4) ||
-                    post.isLive
+                    !post.isLive
                   "
                   class="school-grid-box position-relative"
                 >
@@ -5874,7 +5874,7 @@
                               </button>
                             </div>
                             <div
-                              class="profile-name feed-name font_14 text_sec1"
+                              class="profile-name feed-name font_14 text_sec1 hideName"
                             >
                               <img
                                 *ngIf="post.parentImageUrl != null"
@@ -5994,7 +5994,7 @@
                                 />
                               </button>
                             </div>
-                            <div class="feed-name font_14 text_sec1">
+                            <div class="feed-name font_14 text_sec1 hideName">
                               <img
                                 *ngIf="post.parentImageUrl != null"
                                 [src]="post.parentImageUrl"
@@ -6116,7 +6116,7 @@
                                 />
                               </button>
                             </div>
-                            <div class="feed-name font_14 text_sec1">
+                            <div class="feed-name font_14 text_sec1 hideName">
                               <img
                                 *ngIf="post.parentImageUrl != null"
                                 [src]="post.parentImageUrl"
@@ -6238,7 +6238,7 @@
                                 />
                               </button>
                             </div>
-                            <div class="feed-name font_14 text_sec1">
+                            <div class="feed-name font_14 text_sec1 hideName">
                               <img
                                 *ngIf="post.parentImageUrl != null"
                                 [src]="post.parentImageUrl"
