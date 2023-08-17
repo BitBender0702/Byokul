@@ -11,8 +11,8 @@ namespace LMS.Data.Entity
         public Guid Id { get; set; }
         public string? Title { get; set; }
         public int? Status { get; set; }
-        public Guid OwnerId { get; set; }
-        public Guid AuthorId { get; set; }
+        public Guid? OwnerId { get; set; }
+        public Guid? AuthorId { get; set; }
         public DateTime? DateTime { get; set; }
         public int PostType { get; set; }
         public string? Description { get; set; }

@@ -148,4 +148,13 @@ export class CourseService{
         let queryParams = new HttpParams().append("courseId",courseId).append("isHideComments",isHideComments);
         return this.http.post(`${this.apiUrl}/course/enableDisableComments`,null, {params:queryParams,headers: this.headers});
     }
+
+
+    courseRating(courseRating:any):Observable<any>{
+        debugger;
+        return this.http.post(`${this.apiUrl}/course/courseRating`,courseRating, {headers: this.headers});
+    }
+
+
+
 }

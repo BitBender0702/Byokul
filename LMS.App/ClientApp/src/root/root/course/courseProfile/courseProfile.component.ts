@@ -49,6 +49,7 @@ import flatpickr from 'flatpickr';
 import { Arabic } from 'flatpickr/dist/l10n/ar';
 import { Spanish } from 'flatpickr/dist/l10n/es';
 import { Turkish } from 'flatpickr/dist/l10n/tr';
+import { ClassCourseRating } from 'src/root/interfaces/course/addCourseRating';
 
 
 @Component({
@@ -146,7 +147,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
   filteredAttachments: any[] = [];
   courseAvatar: string = '';
 
-  
+   
 
   imageChangedEvent: any = '';
   croppedImage: any = '';
@@ -177,6 +178,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
   @ViewChild('openCourseOwnCertificate') openCourseOwnCertificate!: ElementRef;
 
 
+  courseRatingView!:ClassCourseRating;
 
 
 
@@ -217,7 +219,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     var selectedLang = localStorage.getItem("selectedLanguage");
     this.translate.use(selectedLang ?? '');
 
-    let newCourseName = this.courseName.split('.').join("").split(" ").join("").toLowerCase()
+    let newCourseName = this.courseName.split('.').join("").split(" ").join("").toLowerCase();
     this._courseService.getCourseById(newCourseName).subscribe((response) => {
       debugger
       this.postsPageNumber = 1;
@@ -423,6 +425,13 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
           this.messageService.add({ severity: 'success', summary: 'Success', life: 3000, detail: `Certificate successfully sent to the ${response.studentName}` });
         }
       });
+    }
+
+    this.courseRatingView = {
+      courseId: '',
+      classId: null,
+      userId:'',
+      rating:0
     }
 
   }
@@ -946,12 +955,13 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
   }
 
   convertToClass(courseName: string, schoolName: string) {
-    debugger;
-    this._courseService.convertToClass(courseName.replace(" ", "").toLowerCase()).subscribe((response) => {
+    courseName = courseName.split(" ").join("").toLowerCase();
+    schoolName = schoolName.split(" ").join("").toLowerCase()
+    this._courseService.convertToClass(courseName).subscribe((response) => {
       // localStorage.setItem("isCourseConvertIntoClass", JSON.stringify(true));
       convertIntoClassResponse.next({ classId: response.classId, className: response.className, avatar: response.avatar, school: response.school });
       // convertIntoCourseResponse.next({courseId:response.courseId, courseName:response.courseName, avatar:response.avatar,school:response.school});
-      this.router.navigate([`profile/class/${schoolName.replace(" ", "").toLowerCase()}/${courseName.replace(" ", "").toLowerCase()}`],
+      this.router.navigate([`profile/class/${schoolName}/${courseName}`],
         { state: { convertIntoClass: true } });
       //window.location.href = `profile/class/${schoolName.replace(" ","").toLowerCase()}/${courseName.replace(" ","").toLowerCase()}`;
     });
@@ -1081,7 +1091,6 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
   }
 
   addCourseView(courseId: string) {
-
     if (this.userId != undefined) {
       this.initializeCourseView();
       this.courseView.courseId = courseId;
@@ -1503,5 +1512,27 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     // const dateOfBirthElement = this.founded.nativeElement;
     // dateOfBirthElement._flatpickr.set("locale", locale);
   }
+
+
+  rateTheCourse(courseName:any, schoolName:any){
+    this.courseRatingView = {
+      userId: this.userId,
+      classId:null,
+      courseId: this.course.courseId,
+      rating:this.rateNumber
+    }
+    debugger
+    this._courseService.courseRating(this.courseRatingView).subscribe((response) => {
+      // this.isDataLoaded = true;
+      // this.classCourseDetails.classCourseItem.comments = response;
+      });;
+  }
+
+  rateNumber:number=0
+  ratingNumber(rateNumber:number){
+    this.rateNumber = rateNumber + 1
+  }
+
+  fakeArray = new Array(5);
 
 }

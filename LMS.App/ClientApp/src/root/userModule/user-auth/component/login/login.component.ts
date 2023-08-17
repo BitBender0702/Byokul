@@ -156,13 +156,12 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
       this.user = this.loginForm.value;
       this._authService.loginUser(this.user).pipe(finalize(()=> this.loadingIcon= false)).subscribe({
         next: (response: AuthenticatedResponse) => {
-
-          if(response.errorMessage == "user not found"){
+          if(response.errorMessage == "This email is not registered"){
             this._authService.loginState$.next(false);
             this.loginForm.setErrors({ unauthenticated: true });
           }
 
-          if(response.errorMessage == "Incorrect password."){
+          if(response.errorMessage == "The password you entered is incorrect"){
             this._authService.loginState$.next(false);
             this.loginForm.setErrors({ incorrectPassword: true });
           }
@@ -174,7 +173,7 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
             this.loginForm.setErrors({ emailNotConfirmed: true });
             
           }
-          if(response.errorMessage != "user not found" && response.errorMessage != "email not confirm" && response.errorMessage != "Incorrect password."){
+          if(response.errorMessage != "This email is not registered" && response.errorMessage != "email not confirm" && response.errorMessage != "The password you entered is incorrect"){
             this.isSubmitted = false;
             this.loadingIcon = false;
             this._authService.loginState$.next(true);

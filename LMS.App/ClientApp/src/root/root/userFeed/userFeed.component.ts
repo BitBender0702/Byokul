@@ -177,7 +177,7 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
         this.checkMyFeedExist();
         if (this.myFeeds.length == 0) {
           this.isMyFeedsEmpty = true;
-          this.getGlobalFeedsData()
+          // this.getGlobalFeedsData()
         }
         this.addListenerToNextButton();}
         catch{
@@ -192,7 +192,7 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
         this.checkMyFeedExist();
         if (this.myFeedsReels.length == 0) {
           this.isMyFeedReelsEmpty = true;
-          this.getGlobalFeedsData()
+          // this.getGlobalFeedsData()
         }
         // this.isDataLoaded = true;
         // this.loadingIcon = false;
@@ -748,15 +748,15 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
   }
 
   getSelectedSchool(schoolName: string) {
-    window.location.href = `profile/school/${schoolName.replace(" ", "").toLowerCase()}`;
+    window.location.href = `profile/school/${schoolName.split(" ").join("").toLowerCase()}`;
   }
 
   getSelectedClass(className: string, schoolName: string) {
-    window.location.href = `profile/class/${schoolName.replace(" ", "").toLowerCase()}/${className.replace(" ", "").toLowerCase()}`;
+    window.location.href = `profile/class/${schoolName.split(" ").join("").toLowerCase()}/${className.split(" ").join("").toLowerCase()}`;
   }
 
   getSelectedCourse(courseName: string, schoolName: string) {
-    window.location.href = `profile/course/${schoolName.replace(" ", "").toLowerCase()}/${courseName.replace(" ", "").toLowerCase()}`;
+    window.location.href = `profile/course/${schoolName.split(" ").join("").toLowerCase()}/${courseName.split(" ").join("").toLowerCase()}`;
   }
 
   getUserDetails(userId: string) {
@@ -887,27 +887,31 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
     if (this.myFeeds == undefined && this.myFeedsReels == undefined) {
       this.loadingIcon = true;
       this._userService.getMyFeed(1, this.myFeedsPageNumber, this.searchString).subscribe((response) => {
-        this.isGlobalFeed = false;
-        this.postLoadingIcon = false;
-        this.myFeeds = response;
-        this.myFeeds = this.getFilteredAttachments(this.myFeeds, "myFeed");
-        this.isMyFeedPostsExist = true;
-        this.checkMyFeedExist();
-        if (this.myFeeds.length == 0) {
-          this.isMyFeedsEmpty = true;
-          this.getGlobalFeedsData()
+        if(response){
+          this.isGlobalFeed = false;
+          this.postLoadingIcon = false;
+          this.myFeeds = response;
+          this.myFeeds = this.getFilteredAttachments(this.myFeeds, "myFeed");
+          this.isMyFeedPostsExist = true;
+          this.checkMyFeedExist();
+          if (this.myFeeds.length == 0) {
+            this.isMyFeedsEmpty = true;
+            // this.getGlobalFeedsData()
+          }
         }
       });
 
       this._userService.getMyFeed(3, this.myFeedsPageNumber, this.searchString).subscribe((result) => {
-        this.myFeedsReels = result;
-        this.isMyFeedReelsExist = true;
-        this.checkMyFeedExist();
-        if (this.myFeedsReels.length == 0) {
-          this.isMyFeedReelsEmpty = true;
-          this.getGlobalFeedsData()
+        if(result){
+          this.myFeedsReels = result;
+          this.isMyFeedReelsExist = true;
+          this.checkMyFeedExist();
+          if (this.myFeedsReels.length == 0) {
+            this.isMyFeedReelsEmpty = true;
+            // this.getGlobalFeedsData()
+          }
+          this.addListenerToNextButton();
         }
-        this.addListenerToNextButton();
       });
     }
     this.cd.detectChanges();
@@ -1105,6 +1109,56 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
       return reelsTags
     }
   }
+
+
+
+
+  carouselConfigForReels = {
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    accessibility: true,
+    dots: true,
+    numberOfDots:3,
+    vertical:true,
+    verticalSwiping:true,
+    arrows: false,
+    autoplay: false,
+    infinite:false,
+    autoplaySpeed: 3000,
+    initialSlide: -1,
+    responsive: [
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: 1,
+        },
+      },
+    ],
+  };
+
+
+  carouselConfig = {
+    slidesToShow: this.itemsPerSlide,
+    slidesToScroll: 1,
+    autoplay: false,
+    infinite: false,
+    arrow:true,
+    responsive: [
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          arrow:false
+        },
+      },
+    ],
+  };
+
+
+
+
+
 
 
 }

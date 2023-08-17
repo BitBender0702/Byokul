@@ -52,3 +52,15 @@
       display: none;
     }
   }
+
+
+
+.image-container {
+  display: inline-block; 
+  margin-right: 10px; 
+}
+
+.image-container:last-child {
+  margin-right: 0;
+}
+  

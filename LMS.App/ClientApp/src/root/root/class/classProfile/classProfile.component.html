@@ -216,6 +216,14 @@
                     *ngIf="isOwner"
                     class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins"
                     data-bs-toggle="modal"
+                    data-bs-target="#rate-class"
+                  >
+                    {{ "RateCourse" | translate }}
+                  </button>
+                  <button
+                    *ngIf="isOwner"
+                    class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins"
+                    data-bs-toggle="modal"
                     data-bs-target="#confirm-courseChange"
                   >
                     {{ "ConvertToCourse" | translate }}
@@ -654,8 +662,8 @@
                       </ng-container>
                     </div>
                     <div class="teacher-tags tag-box hashtag_box">
-                      <span *ngFor="let tag of post.postTags" class="custom-tag"
-                        >#{{ tag.postTagValue }}</span
+                      <span *ngFor="let tag of parseTheListTags(post.postTags)" class="custom-tag"
+                        >#{{ tag }}</span
                       >
                     </div>
                     <div
@@ -1245,7 +1253,7 @@
                               class="teacher-tags tag-box hashtag_box"
                             >
                               <span
-                                *ngFor="let tag of postsTagValues"
+                                *ngFor="let tag of parseTheListTags(postsTagValues)"
                                 class="custom-tag"
                                 >#{{ tag }}</span
                               >
@@ -2797,6 +2805,73 @@
     </div>
   </div>
 </ng-template>
+
+
+
+<div
+  class="modal fade edit-school-modal delete-modal"
+  id="rate-class"
+  tabindex="-1"
+  aria-labelledby="rate-class"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div
+        class="modal-header border-0 justify-content-center position-relative"
+      >
+        <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">
+          {{ "RateCourse" | translate }}
+        </h1>
+        <button
+          type="button"
+          class="btn-close shadow-none"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        >
+          <img lazyLoad="../../../../assets/images/cross.svg" />
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <h2 class="text-center font_16 f-poppins">
+            <div class="image-container" *ngFor="let array of fakeArray; let index = index">
+              <button (click)="ratingNumber(index)" style="background-color: white; border: none;">
+                <img src="../../../../assets/images/before-rate-star-svgrepo-com.svg" alt="Star Image" style="height:30px; width:30px;"/>
+              </button>
+            </div>
+          </h2>
+          
+        </div>
+        <div
+          class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-2 mt-4"
+        >
+          <button
+            type="button"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+            data-bs-dismiss="modal"
+          >
+            {{ "Cancel" | translate }}
+          </button>
+          <button
+            (click)="
+              rateTheClass()
+            "
+            type="button"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
+            data-bs-dismiss="modal"
+          >
+            {{ "Rate" | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
 
 <div
   class="modal fade edit-school-modal delete-modal"

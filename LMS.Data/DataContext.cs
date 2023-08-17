@@ -88,7 +88,7 @@ namespace LMS.Data
         public DbSet<SchoolTransaction> SchoolTransactions { get; set; }
         public DbSet<ClassCourseTransaction> ClassCourseTransactions { get; set; }
 
-
+        public DbSet<ClassCourseRating> ClassCourseRatings { get; set; }
 
 
 

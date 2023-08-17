@@ -43,7 +43,7 @@ namespace LMS.Services
         Task EnableDisableCourse(Guid courseId);
         Task<IEnumerable<PostDetailsViewModel>> GetSliderReelsByCourseId(Guid courseId, string loginUserId, Guid lastReelId, ScrollTypesEnum scrollType);
         Task EnableDisableComments(Guid courseId, bool isHideComments);
-
+        Task CourseRating(ClassCourseRatingViewModel courseRating);
 
 
 

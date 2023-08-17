@@ -44,6 +44,8 @@ namespace LMS.DataAccess.Automapper
             CreateMap<SchoolTransaction, SchoolTransactionViewModel>();
             CreateMap<ClassCourseTransaction, ClassCourseTransactionViewModel>();
 
+            CreateMap<ClassCourseRating, ClassCourseRatingViewModel>();
+
 
         }
     }

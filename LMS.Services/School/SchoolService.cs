@@ -110,6 +110,7 @@ namespace LMS.Services
             if (schoolViewModel.AvatarImage != null)
             {
                 schoolViewModel.Avatar = await _blobService.UploadFileAsync(schoolViewModel.AvatarImage, containerName, false);
+                schoolViewModel.IsAvatar = false;
             }
 
             schoolViewModel.SchoolUrl = JsonConvert.DeserializeObject<string>(schoolViewModel.SchoolUrl);
@@ -125,7 +126,11 @@ namespace LMS.Services
                 SpecializationId = schoolViewModel.SpecializationId,
                 CountryName = schoolViewModel.CountryName,
                 SchoolUrl = schoolViewModel.SchoolUrl,
-                PhoneNumber = schoolViewModel.PhoneNumber
+                PhoneNumber = schoolViewModel.PhoneNumber,
+                SchoolSlogan = schoolViewModel.SchoolSlogan,
+                Founded = schoolViewModel.Founded,
+                AccessibilityId = schoolViewModel.AccessibilityId,
+                SchoolEmail = schoolViewModel.SchoolEmail
 
             };
 

@@ -171,7 +171,7 @@ namespace LMS.App.Controllers
             {
                 return Ok(new { result = "Success" });
             }
-            if (result.Errors.FirstOrDefault()?.Description == Constants.IncorrectPassword)
+            if (result.Errors.FirstOrDefault()?.Description == "Incorrect password.")
             {
                 return Ok(new { result = Constants.IncorrectPassword });
             }

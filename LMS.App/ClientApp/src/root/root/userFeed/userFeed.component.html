@@ -124,7 +124,6 @@
                 <button
                   (click)="getGlobalFeeds()"
                   [ngClass]="
-                    (myFeeds?.length == 0 && myFeedsReels?.length == 0) ||
                     feedTab == 'globalFeed'
                       ? 'nav-link active'
                       : 'nav-link'
@@ -199,7 +198,6 @@
                     id="reels-carousel"
                     [itemsPerSlide]="itemsPerSlide"
                     [singleSlideOffset]="singleSlideOffset"
-                    [interval]="0"
                     [noWrap]="noWrap"
                   >
                     <div *ngFor="let post of myFeedsReels">
@@ -1409,7 +1407,6 @@
           </div>
           <div
             [ngClass]="
-              (myFeeds?.length == 0 && myFeedsReels?.length == 0) ||
               feedTab == 'globalFeed'
                 ? 'tab-pane fade show active'
                 : 'tab-pane fade show'

@@ -534,6 +534,30 @@ namespace LMS.Data.Migrations
                     b.ToTable("CommentLikes");
                 });
 
+            modelBuilder.Entity("LMS.Data.Entity.Common.ClassCourseRating", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("ClassId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CourseId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<double?>("Rating")
+                        .HasColumnType("float");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ClassCourseRatings");
+                });
+
             modelBuilder.Entity("LMS.Data.Entity.Common.ClassCourseTransaction", b =>
                 {
                     b.Property<Guid>("Id")
@@ -728,6 +752,9 @@ namespace LMS.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("CertificateName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("CertificateUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -735,7 +762,16 @@ namespace LMS.Data.Migrations
                     b.Property<Guid>("CourseId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("IssuedDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Provider")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("CertificateId");
@@ -1180,7 +1216,7 @@ namespace LMS.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("AuthorId")
+                    b.Property<Guid?>("AuthorId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int?>("CommentsPerMinute")
@@ -1228,7 +1264,7 @@ namespace LMS.Data.Migrations
                     b.Property<bool?>("IsPostSchedule")
                         .HasColumnType("bit");
 
-                    b.Property<Guid>("OwnerId")
+                    b.Property<Guid?>("OwnerId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("ParentId")
@@ -1416,6 +1452,9 @@ namespace LMS.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("IsBan")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDefaultAvatar")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")

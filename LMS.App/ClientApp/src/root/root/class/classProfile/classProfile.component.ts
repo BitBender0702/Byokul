@@ -47,6 +47,7 @@ import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component'
 import { TranslateService } from '@ngx-translate/core';
 import { Dimensions, ImageCroppedEvent, ImageTransform } from 'ngx-image-cropper';
 import { SignalrService } from 'src/root/service/signalr.service';
+import { ClassCourseRating } from 'src/root/interfaces/course/addCourseRating';
 
 
 export const deleteClassResponse = new BehaviorSubject<string>('');
@@ -181,6 +182,9 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   @ViewChild('endDate') endDateRef!: ElementRef;
   @ViewChild('createPostModal', { static: true }) createPostModal!: CreatePostComponent;
 
+
+  classRatingView!:ClassCourseRating;
+
   isDataLoaded: boolean = false;
   constructor(injector: Injector, private translateService: TranslateService,private signalrService:SignalrService, private titleService: Title, private meta: Meta, private datePipe: DatePipe, authService: AuthService, notificationService: NotificationService, public messageService: MessageService, postService: PostService, private bsModalService: BsModalService, classService: ClassService, private route: ActivatedRoute, private domSanitizer: DomSanitizer, private fb: FormBuilder, private router: Router, private http: HttpClient, private activatedRoute: ActivatedRoute, private cd: ChangeDetectorRef) {
     super(injector);
@@ -268,7 +272,9 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     // this.className = this.route.snapshot.paramMap.get('className')??'';
     let newClassName = this.className.split('.').join("").split(" ").join("").toLowerCase()
     this._classService.getClassById(newClassName).subscribe((response) => {
+      debugger;
       this.postsEndPageNumber = 1;
+      this.classId = response.classId;
       this.reelsPageNumber = 1;
       this.class = response;
       this.titleService.setTitle(this.class.className);
@@ -288,6 +294,12 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
 
       //here is the code
 
+      this.classRatingView={
+        courseId: '',
+        classId: null,
+        userId:'',
+        rating:0
+      }
 
       // this.reelsTags = JSON.parse(postValueTag);
 
@@ -1104,12 +1116,13 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
 
 
   convertToCourse(className: string, schoolName: string) {
-    this._classService.convertToCourse(className.replace(" ", "").toLowerCase()).subscribe((response) => {
+    className = className.split(" ").join("").toLowerCase()
+    schoolName = schoolName.split(" ").join("").toLowerCase()
+    this._classService.convertToCourse(className).subscribe((response) => {
       // localStorage.setItem("isClassConvertIntoCourse", JSON.stringify(true));
-      debugger
       convertIntoCourseResponse.next({ courseId: response.classId, courseName: response.className, avatar: response.avatar, school: response.school });
       debugger
-      this.router.navigate([`profile/course/${schoolName.replace(" ", "").toLowerCase()}/${className.replace(" ", "").toLowerCase()}`],
+      this.router.navigate([`profile/course/${schoolName}/${className}`],
         { state: { convertIntoCourse: true } });
       //window.location.href = `profile/course/${schoolName.replace(" ","").toLowerCase()}/${className.replace(" ","").toLowerCase()}`;
     });
@@ -1652,5 +1665,33 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     this.openClassOwnCertificate.nativeElement.click();
     this.cd.detectChanges();
   }
+
+
+
+  rateTheClass(){
+    debugger
+    this.classRatingView = {
+      userId: this.userId,
+      classId: this.classId,
+      courseId: null,
+      rating:this.rateNumber
+    }
+    debugger
+    this._classService.courseRating(this.classRatingView).subscribe((response) => {
+      const translatedInfoSummary = this.translateService.instant('Success');
+      const translatedMessage = this.translateService.instant('ThankYouForYourRating');
+      this.messageService.add({severity:'success', summary:translatedInfoSummary,life: 3000, detail:translatedMessage});
+      // this.isDataLoaded = true;
+      // this.classCourseDetails.classCourseItem.comments = response;
+      });;
+  }
+
+  rateNumber:number=0
+  ratingNumber(rateNumber:number){
+    debugger
+    this.rateNumber = rateNumber + 1
+  }
+
+  fakeArray = new Array(5);
 
 }
