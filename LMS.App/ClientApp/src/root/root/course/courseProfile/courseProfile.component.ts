@@ -49,6 +49,8 @@ import flatpickr from 'flatpickr';
 import { Arabic } from 'flatpickr/dist/l10n/ar';
 import { Spanish } from 'flatpickr/dist/l10n/es';
 import { Turkish } from 'flatpickr/dist/l10n/tr';
+import { CurrencyEnum } from 'src/root/Enums/CurrencyEnum';
+import { enumToObjects } from 'src/root/Enums/getEnum';
 import { ClassCourseRating } from 'src/root/interfaces/course/addCourseRating';
 
 
@@ -160,6 +162,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
   selectedImage: any = '';
   isSelected: boolean = false;
   cropModalRef!: BsModalRef;
+  currencies:any;
   @ViewChild('hiddenButton') hiddenButtonRef!: ElementRef;
 
 
@@ -189,6 +192,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     this._postService = postService;
     this._notificationService = notificationService;
     this._authService = authService;
+    this.currencies = enumToObjects(CurrencyEnum);
     this._signalrService = signalrService;
     this.courseParamsData$ = this.route.params.subscribe((routeParams) => {
       this.courseName = routeParams.courseName;
@@ -246,6 +250,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       accessibilityId: this.fb.control(''),
       description: this.fb.control(''),
       price: this.fb.control(''),
+      currency: this.fb.control(''),
       languageIds: this.fb.control(''),
 
     });
@@ -614,7 +619,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       description: this.fb.control(this.course.description),
       languageIds: this.fb.control(selectedLanguages, [Validators.required]),
       serviceTypeId: this.fb.control(this.course.serviceTypeId, [Validators.required]),
-
+      currency:this.fb.control(this.course.currency),
     });
 
     if (this.course.serviceTypeId == '0d846894-caa4-42f3-8e8a-9dba6467672b') {
@@ -824,6 +829,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     this.fileToUpload.append('courseId', this.course.courseId);
     this.fileToUpload.append('courseName', this.updateCourseDetails.courseName);
     this.fileToUpload.append('price', this.updateCourseDetails.price?.toString());
+    this.fileToUpload.append('currency', this.updateCourseDetails.currency);
     this.fileToUpload.append('accessibilityId', this.updateCourseDetails.accessibilityId);
     this.fileToUpload.append('languageIds', JSON.stringify(this.updateCourseDetails.languageIds));
     this.fileToUpload.append('description', this.updateCourseDetails.description);
@@ -1179,7 +1185,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
   }
 
   openPaymentModal() {
-    var courseDetails = { "id": this.course.courseId, "name": this.course.courseName, "avatar": this.course.avatar, "type": 2, "amount": this.course.price }
+    var courseDetails = { "id": this.course.courseId, "name": this.course.courseName, "avatar": this.course.avatar, "type": 2, "amount": this.course.price, "currency": this.course.currency }
     const initialState = {
       paymentDetails: courseDetails
     };

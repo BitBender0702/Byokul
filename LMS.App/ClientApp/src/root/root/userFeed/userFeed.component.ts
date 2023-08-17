@@ -389,6 +389,7 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
   }
 
   addGlobalFeedListenerToNextButton() {
+    debugger
     if (this.globalReelCarousel != undefined) {
 
       setTimeout(() => {
@@ -535,21 +536,24 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
     if (this.globalFeeds == undefined) {
       this.loadingIcon = true;
       this._userService.getGlobalFeed(1, this.globalFeedsPageNumber, this.searchString).subscribe((response) => {
+        debugger
         this.globalFeeds = response;
         this.globalFeeds = this.getFilteredAttachments(this.globalFeeds, "globalFeed");
         // this.loadingIcon = false;
         // this.isDataLoaded = true;
         this.isGlobalPostsExist = true;
-        this.checkGlobalFeedExist()
+        this.checkGlobalFeedExist();
+        this.addGlobalFeedListenerToNextButton();
       });
     }
     this._userService.getGlobalFeed(3, this.globalReelsPageNumber, this.searchString).subscribe((result) => {
+      debugger
       this.globalFeedReels = result;
       // this.loadingIcon = false;
       // this.isDataLoaded = true;
       this.isGlobalReelsExist = true;
-      this.checkGlobalFeedExist()
-      this.addGlobalFeedListenerToNextButton();
+      this.checkGlobalFeedExist();
+      // this.addGlobalFeedListenerToNextButton();
     });
 
     this.isGlobalFeedLoading = true;
@@ -557,9 +561,11 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
   }
 
   checkGlobalFeedExist() {
+    debugger
     if (this.isGlobalPostsExist && this.isGlobalReelsExist) {
       this.isDataLoaded = true;
       this.loadingIcon = false;
+      this.cd.detectChanges();
     }
   }
 

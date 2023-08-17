@@ -355,8 +355,9 @@
                   class="school-grid-box position-relative"
                 >
                   <div
-                    class="schoolgrid-header flex-row align-items-center gap-3 position-relative"
+                    class="schoolgrid-header flex-row align-items-center gap-3 position-relative justify-content-between"
                   >
+                  <div class="d-flex align-items-center gap-2">
                     <div class="school-gridprofile-icon">
                       <!-- <img [lazyLoad]="post.parentImageUrl"/> -->
                       <a
@@ -412,7 +413,7 @@
                         (click)="getSelectedSchool(post.parentName)"
                         class="routeLink"
                       >
-                        {{ post.title }}
+                        {{ post.parentName }}
                       </a>
                       <a
                         *ngIf="post.postAuthorType == 2"
@@ -421,8 +422,8 @@
                         "
                         class="routeLink"
                       >
-                        {{ post.title }}
-                      </a>
+                      {{ post.parentName }}
+                    </a>
                       <a
                         *ngIf="post.postAuthorType == 3"
                         (click)="
@@ -430,36 +431,33 @@
                         "
                         class="routeLink"
                       >
-                        {{ post.title }}
-                      </a>
+                      {{ post.parentName }}
+                    </a>
                       <a
                         *ngIf="post.postAuthorType == 4"
                         (click)="getUserDetails(post.parentId)"
                         class="routeLink"
                       >
-                        {{ post.title }}
-                      </a>
+                      {{ post.parentName }}
+                    </a>
                     </h2>
+                    </div>
+                    <div>
                     <p
                       *ngIf="post.createdOn != null"
-                      class="font_14 school-grid-date d-inline-block mb-0"
+                      class="font_14 school-grid-date d-inline-block mb-0 me-3"
                     >
                       {{ post.createdOn | date : "MMMM d" }} -
                       {{ post.createdOn | date : "hh:mm" }}
-                      <!-- <span class="fw_600 ">11:30 - 13:50</span> -->
                     </p>
-                    <!-- <button *ngIf="post.isPinned && isOwner" (click)="pinUnpinPost(post.id,false)" type="button" class="bg-transparent border-0 pinned-grid-chat">
-                      <img class="w-auto h-auto" lazyLoad="../../../../assets/images/pinned-orange.svg" />
-                    </button>
-                    <button *ngIf="!post.isPinned && isOwner" (click)="pinUnpinPost(post.id,true)" type="button" class="bg-transparent border-0 pinned-grid-chat">
-                     <img class="w-auto h-auto" lazyLoad="../../../../assets/images/pinned-gray.svg" />
-                    </button>    -->
+                  </div>
                   </div>
 
                   <div
                     class="school-grid-body videoChange"
                     (click)="openPostsViewModal(post, 'myFeeds')"
                   >
+                  <h4 class="d-inline-block font_20 fw_600 text_sec1 mb-3">{{post.title}}</h4>
                     <p
                       class="text_sec1 word-break font_14"
                       style="cursor: pointer"
@@ -663,7 +661,7 @@
                                   font-weight: 600;
                                 "
                               >
-                                +{{ post.postAttachments.length - 3 }}
+                                +{{ post.postAttachments.length - 2 }}
                               </div>
                             </div>
                             <div class="medium-thumnail">
@@ -1592,8 +1590,9 @@
                   class="school-grid-box position-relative"
                 >
                   <div
-                    class="schoolgrid-header flex-row align-items-center gap-3 position-relative"
+                    class="schoolgrid-header flex-row align-items-center gap-3 position-relative justify-content-between"
                   >
+                  <div class="d-flex align-items-center gap-2">
                     <div class="school-gridprofile-icon">
                       <a
                         *ngIf="post.postAuthorType == 1"
@@ -1657,7 +1656,7 @@
                         (click)="getSelectedSchool(post.parentName)"
                         class="routeLink"
                       >
-                        {{ post.title }}
+                        {{ post.parentName }}
                       </a>
                       <a
                         *ngIf="post.postAuthorType == 2"
@@ -1666,8 +1665,8 @@
                         "
                         class="routeLink"
                       >
-                        {{ post.title }}
-                      </a>
+                      {{ post.parentName }}
+                    </a>
                       <a
                         *ngIf="post.postAuthorType == 3"
                         (click)="
@@ -1675,29 +1674,33 @@
                         "
                         class="routeLink"
                       >
-                        {{ post.title }}
-                      </a>
+                      {{ post.parentName }}
+                    </a>
                       <a
                         *ngIf="post.postAuthorType == 4"
                         (click)="getUserDetails(post.parentId)"
                         class="routeLink"
                       >
-                        {{ post.title }}
-                      </a>
+                      {{ post.parentName }}
+                    </a>
                     </h2>
+                    </div>
+                    <div>
                     <p
                       *ngIf="post.createdOn != null"
-                      class="font_14 school-grid-date d-inline-block mb-0"
+                      class="font_14 school-grid-date d-inline-block mb-0 me-3"
                     >
                       {{ post.createdOn | date : "MMMM d" }} -
                       {{ post.createdOn | date : "hh:mm" }}
                     </p>
+                    </div>
                   </div>
 
                   <div
                     class="school-grid-body videoChange"
                     (click)="openPostsViewModal(post, 'globalFeed')"
                   >
+                  <h4 class="d-inline-block font_20 fw_600 text_sec1 mb-3">{{post.title}}</h4>
                     <p class="text_sec1 font_14" style="cursor: pointer">
                       {{ post.description }}
                     </p>
@@ -1891,7 +1894,7 @@
                                   transform: translate(-50%, -50%);
                                 "
                               >
-                                +{{ post.postAttachments.length - 3 }}
+                                +{{ post.postAttachments.length - 2 }}
                               </div>
                             </div>
                             <div class="medium-thumnail">

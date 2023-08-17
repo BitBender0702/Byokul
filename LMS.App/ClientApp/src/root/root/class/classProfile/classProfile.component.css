@@ -76,6 +76,11 @@
   }
 }
 
+.priceInputWidth{
+  width: 268%;
+}
+}
+
 
 .image-container {
   display: inline-block; 

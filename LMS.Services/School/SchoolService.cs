@@ -64,7 +64,7 @@ namespace LMS.Services
         private readonly ICourseService _courseService;
         private readonly IIyizicoService _iyizicoService;
         private IConfiguration _config;
-        public SchoolService(IMapper mapper, IGenericRepository<School> schoolRepository, IGenericRepository<SchoolCertificate> schoolCertificateRepository, IGenericRepository<SchoolTag> schoolTagRepository, IGenericRepository<Country> countryRepository, IGenericRepository<Specialization> specializationRepository, IGenericRepository<Language> languageRepository, IGenericRepository<SchoolUser> schoolUserRepository, IGenericRepository<SchoolFollower> schoolFollowerRepository, IGenericRepository<SchoolLanguage> schoolLanguageRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<SchoolTeacher> schoolTeacherRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<CourseTeacher> courseTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<SchoolDefaultLogo> schoolDefaultLogoRepository, IGenericRepository<UserClassCourseFilter> userClassCourseFilterRepository, IGenericRepository<UserSharedPost> userSharedPostRepository, IGenericRepository<SavedClassCourse> savedClassCourseRepository, IGenericRepository<SavedPost> savedPostRepository, IGenericRepository<UserPermission> userPermissionRepository, UserManager<User> userManager, IBlobService blobService, IUserService userService, IGenericRepository<ClassTag> classTagRepository, IGenericRepository<CourseTag> courseTagRepository, IClassService classService, ICourseService courseService, IConfiguration config, IIyizicoService iyizicoService)
+        public SchoolService(IMapper mapper, IGenericRepository<School> schoolRepository, IGenericRepository<SchoolCertificate> schoolCertificateRepository, IGenericRepository<SchoolTag> schoolTagRepository, IGenericRepository<Country> countryRepository, IGenericRepository<Specialization> specializationRepository, IGenericRepository<Language> languageRepository, IGenericRepository<SchoolUser> schoolUserRepository, IGenericRepository<SchoolFollower> schoolFollowerRepository, IGenericRepository<SchoolLanguage> schoolLanguageRepository, IGenericRepository<User> userRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<SchoolTeacher> schoolTeacherRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<CourseTeacher> courseTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<SchoolDefaultLogo> schoolDefaultLogoRepository, IGenericRepository<UserClassCourseFilter> userClassCourseFilterRepository, IGenericRepository<UserSharedPost> userSharedPostRepository, IGenericRepository<SavedClassCourse> savedClassCourseRepository, IGenericRepository<SavedPost> savedPostRepository, IGenericRepository<UserPermission> userPermissionRepository, UserManager<User> userManager, IBlobService blobService, IUserService userService, IGenericRepository<ClassTag> classTagRepository, IGenericRepository<CourseTag> courseTagRepository, IClassService classService, ICourseService courseService, IConfiguration config, IIyizicoService iyizicoService)
         {
             _mapper = mapper;
             _schoolRepository = schoolRepository;
@@ -74,6 +74,7 @@ namespace LMS.Services
             _specializationRepository = specializationRepository;
             _languageRepository = languageRepository;
             _schoolUserRepository = schoolUserRepository;
+            _userRepository = userRepository;
             _schoolFollowerRepository = schoolFollowerRepository;
             _schoolLanguageRepository = schoolLanguageRepository;
             _classRepository = classRepository;
@@ -144,15 +145,27 @@ namespace LMS.Services
 
             await AddRoleForUser(createdById, "School Owner");
 
-            var subscriptionResponse = await _iyizicoService.BuySchoolSubscription(schoolViewModel.SubscriptionDetails, createdById,school.SchoolId);
-
-            if (subscriptionResponse.SubscriptionMessage != Constants.Success)
+            var user = _userRepository.GetById(createdById);
+            if (user.CountryName == Constants.Turkey)
             {
-                schoolViewModel.SubscriptionDetails.SubscriptionMessage = subscriptionResponse.SubscriptionMessage;
-                return schoolViewModel;
+                var subscriptionResponse = await _iyizicoService.BuySchoolSubscription(schoolViewModel.SubscriptionDetails, createdById, school.SchoolId);
+
+
+                if (subscriptionResponse.SubscriptionMessage != Constants.Success)
+                {
+                    schoolViewModel.SubscriptionDetails.SubscriptionMessage = subscriptionResponse.SubscriptionMessage;
+                    return schoolViewModel;
+                }
+
+                schoolViewModel.SubscriptionDetails.SubscriptionMessage = Constants.Success;
             }
 
-            schoolViewModel.SubscriptionDetails.SubscriptionMessage = Constants.Success;
+            else
+            {
+                var subscriptionResponse = await _iyizicoService.BuyInternationalSchoolSubscription(schoolViewModel.SubscriptionDetails, createdById, school.SchoolId);
+                schoolViewModel.SubscriptionDetails.IsInternationalUser = true;
+                schoolViewModel.SubscriptionDetails.SubscriptionMessage = subscriptionResponse;
+            }
             return schoolViewModel;
         }
 
@@ -387,7 +400,7 @@ namespace LMS.Services
 
             if (schoolName != null)
             {
-                schoolName = System.Web.HttpUtility.UrlEncode(schoolName, Encoding.GetEncoding("iso-8859-7")).Replace("%3f", "").Replace("+", "").Replace(".","").ToLower();
+                schoolName = System.Web.HttpUtility.UrlEncode(schoolName, Encoding.GetEncoding("iso-8859-7")).Replace("%3f", "").Replace("+", "").Replace(".", "").ToLower();
 
                 var schoolLanguages = await _schoolLanguageRepository.GetAll()
                 .Include(x => x.Language)
@@ -1611,7 +1624,7 @@ namespace LMS.Services
 
         }
 
-        public async Task<bool> BanFollower(string followerId,Guid schoolId)
+        public async Task<bool> BanFollower(string followerId, Guid schoolId)
         {
             var follower = await _schoolFollowerRepository.GetAll().Where(x => x.UserId == followerId && x.SchoolId == schoolId).FirstOrDefaultAsync();
 

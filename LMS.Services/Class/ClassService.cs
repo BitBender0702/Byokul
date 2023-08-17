@@ -133,6 +133,7 @@ namespace LMS.Services
                 ServiceTypeId = classViewModel.ServiceTypeId,
                 Description = classViewModel.Description,
                 Price = classViewModel.Price,
+                Currency = classViewModel.Currency,
                 AccessibilityId = classViewModel.AccessibilityId,
                 ClassUrl = classViewModel.ClassUrl,
                 ThumbnailUrl = classViewModel.ThumbnailUrl,
@@ -296,8 +297,8 @@ namespace LMS.Services
             classes.ServiceTypeId = classUpdateViewModel.ServiceTypeId;
             classes.AccessibilityId = classUpdateViewModel.AccessibilityId;
             classes.Price = classUpdateViewModel.Price;
-            classes.Description = classUpdateViewModel.Description;
-
+            classes.Currency = classUpdateViewModel.Currency;
+            classes.Description = classUpdateViewModel.Description; 
             _classRepository.Update(classes);
             _classRepository.Save();
 

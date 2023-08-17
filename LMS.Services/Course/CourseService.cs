@@ -136,6 +136,7 @@ namespace LMS.Services
                 AccessibilityId = courseViewModel.AccessibilityId,
                 Description = courseViewModel.Description,
                 Price = courseViewModel.Price,
+                Currency = courseViewModel.Currency,
                 CourseUrl = courseViewModel.CourseUrl,
                 ThumbnailUrl = courseViewModel.ThumbnailUrl,
                 ThumbnailType = courseViewModel.ThumbnailType,
@@ -287,7 +288,7 @@ namespace LMS.Services
             course.AccessibilityId = courseViewModel.AccessibilityId;
             course.Description = courseViewModel.Description;
             course.Price = courseViewModel.Price;
-
+            course.Currency = courseViewModel.Currency;
             _courseRepository.Update(course);
             _courseRepository.Save();
 

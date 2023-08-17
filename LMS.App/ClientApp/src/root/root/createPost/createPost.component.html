@@ -586,7 +586,7 @@
               </div>
 
               <div class="form-group">
-                <label class="font_10">{{ "Title" | translate }}</label>
+                <label class="font_10">{{ "Title" | translate }}</label><span *ngIf="userId != undefined" class="font_10 ms-1">(optional)</span>
                 <input
                   formControlName="title"
                   maxlength="45"

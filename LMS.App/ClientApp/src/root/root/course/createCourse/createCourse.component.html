@@ -186,14 +186,28 @@
 
                 <div *ngIf="isCoursePaid" class="col-md-6">
                   <label class="font_10">{{ "Price" | translate }}</label>
+                  <div class="d-flex">
                   <input
                     formControlName="price"
                     type="number"
                     min="1"
                     placeholder="{{ 'Price' | translate }}"
                     name="price"
-                    class="form-control w-100"
+                    class="form-control priceInputWidth"
                   />
+                  <select
+                  class="form-select rounded-8 w-100"
+                  formControlName="currency"
+                  aria-label="Default select example"
+                >
+                  <option
+                    *ngFor="let currency of currencies"
+                    [value]="currency.key"
+                  >
+                    {{ currency.value }}
+                  </option>
+                </select>
+              </div>
                   <small
                     class="p-error"
                     style="color: orange"

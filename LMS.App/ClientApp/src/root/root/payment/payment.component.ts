@@ -82,7 +82,8 @@ export const paymentStatusResponse =new Subject();
             parentId: this.fb.control(this.parentInfo.paymentDetails.id),
             parentName: this.fb.control(this.parentInfo.paymentDetails.name),
             parentType: this.fb.control(this.parentInfo.paymentDetails.type),
-            amount: this.fb.control(this.parentInfo.paymentDetails.amount)
+            amount: this.fb.control(this.parentInfo.paymentDetails.amount),
+            currency: this.fb.control(this.parentInfo.paymentDetails.currency)
           }
           , {validator: this.isValidExpiresOn('expiresOn',this.currentDate)}
           );

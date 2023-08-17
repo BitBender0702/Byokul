@@ -662,17 +662,22 @@
                       <h2
                         class="d-inline-block font_20 fw_600 text_sec1 mb-0 word-break"
                       >
-                        {{ post.title }}
+                        {{ post.parentName }}
                       </h2>
                       <div *ngIf="post.isLive">
                         <img src="../../../../assets/images/live_img.png" />
                       </div>
                       <br />
-                      <p class="font_14 school-grid-date d-inline-block mb-0">
+                      <!-- <p class="font_14 school-grid-date d-inline-block mb-0">
                         {{ post.createdOn | date : "MMMM d" }} -
                         {{ post.createdOn | date : "hh:mm" }}
-                      </p>
+                      </p> -->
                     </div>
+                    <div>
+                    <p class="font_14 school-grid-date d-inline-block mb-0 me-3">
+                      {{ post.createdOn | date : "MMMM d" }} -
+                      {{ post.createdOn | date : "hh:mm" }}
+                    </p>
                     <button
                       *ngIf="post.isPinned && isOwner"
                       (click)="pinUnpinPost(post.id, false)"
@@ -695,6 +700,7 @@
                         src="../../../../assets/images/pinned-gray.svg"
                       />
                     </button>
+                    </div>
                     <!-- <div *ngIf="post.updatedOn != null" class="updatedOn_date"><span>{{ "UpdatedOn" | translate }} - </span> {{ post.updatedOn | date:'d MMMM y h:mm a' }} -->
                     <!-- </div> -->
                   </div>
@@ -909,7 +915,7 @@
                                   font-weight: 600;
                                 "
                               >
-                                +{{ post.postAttachments.length - 3 }}
+                                +{{ post.postAttachments.length - 2 }}
                               </div>
                             </div>
                             <div class="medium-thumnail">
@@ -1670,7 +1676,7 @@
                         [routerLink]="['/profile/school', post.parentName]"
                         class="routeLink"
                       >
-                        {{ post.title }}
+                        {{ post.parentName }}
                       </a>
                       <a
                         *ngIf="post.postAuthorType == 2"
@@ -1924,7 +1930,7 @@
                                   font-weight: 600;
                                 "
                               >
-                                +{{ post.postAttachments.length - 3 }}
+                                +{{ post.postAttachments.length - 2 }}
                               </div>
                             </div>
                             <div class="medium-thumnail">
@@ -3638,7 +3644,7 @@
                         ]"
                         class="routeLink"
                       >
-                        {{ post.title }}
+                        {{ post.parentName }} 
                       </a>
                       <a
                         *ngIf="post.postAuthorType == 3"
@@ -3874,7 +3880,7 @@
                                   font-weight: 600;
                                 "
                               >
-                                +{{ post.postAttachments.length - 3 }}
+                                +{{ post.postAttachments.length - 2 }}
                               </div>
                             </div>
                             <div class="medium-thumnail">
@@ -4784,7 +4790,7 @@
                         [routerLink]="['/profile/school', post.parentName]"
                         class="routeLink"
                       >
-                        {{ post.title }}
+                        {{ post.parentName }}
                       </a>
                       <a
                         *ngIf="post.postAuthorType == 2"
@@ -5033,7 +5039,7 @@
                                   font-weight: 600;
                                 "
                               >
-                                +{{ post.postAttachments.length - 3 }}
+                                +{{ post.postAttachments.length - 2 }}
                               </div>
                             </div>
                             <div class="medium-thumnail">
@@ -5701,7 +5707,7 @@
                         [routerLink]="['/profile/school', post.parentName]"
                         class="routeLink"
                       >
-                        {{ post.title }}
+                        {{ post.parentName }}
                       </a>
                       <a
                         *ngIf="post.postAuthorType == 2"

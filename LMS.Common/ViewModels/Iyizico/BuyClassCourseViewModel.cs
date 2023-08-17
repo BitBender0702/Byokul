@@ -19,5 +19,6 @@ namespace LMS.Common.ViewModels.Iyizico
         public ClassCourseEnum ParentType { get; set; }
         public long Amount { get; set; }
         public string? ConversationId { get; set; }
+        public string Currency { get; set; } 
     }
 }

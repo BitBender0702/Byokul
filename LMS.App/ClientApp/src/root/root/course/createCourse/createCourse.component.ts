@@ -14,6 +14,9 @@ import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component'
 import { TranslateService } from '@ngx-translate/core';
 import { Dimensions, ImageCroppedEvent, ImageTransform } from 'ngx-image-cropper';
 import { DomSanitizer } from '@angular/platform-browser';
+import { enumToObjects } from 'src/root/Enums/getEnum';
+import { CurrencyEnum } from 'src/root/Enums/CurrencyEnum';
+
 
 export const ownedCourseResponse =new Subject<{courseId: string, courseAvatar : string,courseName:string,schoolName:string, action:string}>(); 
 
@@ -80,6 +83,7 @@ export class CreateCourseComponent extends MultilingualComponent implements OnIn
   showCropper = false;
   containWithinAspectRatio = false;
   courseAvatar:any;
+  currencies:any;
   transform: ImageTransform = {};
   changeLanguageSubscription!: Subscription;
   @ViewChild('hiddenButton') hiddenButtonRef!: ElementRef;
@@ -89,6 +93,7 @@ export class CreateCourseComponent extends MultilingualComponent implements OnIn
   constructor(injector: Injector,private translateService: TranslateService,private bsModalService: BsModalService,public messageService:MessageService,private router: Router,private route: ActivatedRoute,private domSanitizer: DomSanitizer,private fb: FormBuilder,courseService: CourseService,private http: HttpClient) {
     super(injector);
     this._courseService = courseService;
+    this.currencies = enumToObjects(CurrencyEnum);
   }
 
   ngOnInit(): void {
@@ -150,8 +155,7 @@ export class CreateCourseComponent extends MultilingualComponent implements OnIn
       disciplineIds:this.fb.control(''),
       studentIds:this.fb.control(''),
       teacherIds:this.fb.control(''),
-      price:this.fb.control('')
-
+      price:this.fb.control(''),
   });
 
   this.createCourseForm1 = this.fb.group({
@@ -163,6 +167,7 @@ export class CreateCourseComponent extends MultilingualComponent implements OnIn
     languageIds:this.fb.control('',[Validators.required]),
     description: this.fb.control(''),
     price:this.fb.control(''),
+    currency:this.fb.control(this.currencies[0].key),
     tags:this.fb.control('',[Validators.required])
 
   });
@@ -289,6 +294,7 @@ captureTeacherId(event: any) {
         this.fileToUpload.append('languageIds',JSON.stringify(this.course.languageIds));
         this.fileToUpload.append('description', this.course.description);
         this.fileToUpload.append('price', this.course.price?.toString());
+        this.fileToUpload.append('currency',this.course.currency);
         this.step += 1;
         this.isStepCompleted = false;
         this.nextPage = true;

@@ -795,6 +795,14 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
  blobVideoThumbnails: any[] = [];
   async savePost(){
     debugger
+
+    if (this.userId == undefined) {
+      this.createPostForm.get('title')?.setValidators([Validators.required]);
+    } else {
+      this.createPostForm.get('title')?.clearValidators();
+    }
+    
+    this.createPostForm.get('title')?.updateValueAndValidity();
     // this.uploadVideoUrlList = [];
     this.isSubmitted=true;
     if (!this.createPostForm.valid) {

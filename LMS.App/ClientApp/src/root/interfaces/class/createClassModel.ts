@@ -8,6 +8,7 @@ export interface CreateClassModel{
     accessibilityId:string;
     description:string;
     price:number;
+    currency:string;
     rating:number;
     thumbnailUrl:string;
     languageIds:any;

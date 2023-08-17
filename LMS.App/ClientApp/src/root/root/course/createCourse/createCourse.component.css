@@ -48,3 +48,7 @@
    .edit-sprofilebtn:hover:before {
     background: rgb(196 202 211) !important;
   }
+
+  .priceInputWidth{
+    width: 268%;
+  }

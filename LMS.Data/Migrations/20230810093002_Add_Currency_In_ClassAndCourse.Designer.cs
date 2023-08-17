@@ -4,6 +4,7 @@ using LMS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LMS.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230810093002_Add_Currency_In_ClassAndCourse")]
+    partial class Add_Currency_In_ClassAndCourse
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -535,30 +537,6 @@ namespace LMS.Data.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("CommentLikes");
-                });
-
-            modelBuilder.Entity("LMS.Data.Entity.Common.ClassCourseRating", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("ClassId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("CourseId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<double?>("Rating")
-                        .HasColumnType("float");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ClassCourseRatings");
                 });
 
             modelBuilder.Entity("LMS.Data.Entity.Common.ClassCourseTransaction", b =>
@@ -1222,7 +1200,7 @@ namespace LMS.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("AuthorId")
+                    b.Property<Guid>("AuthorId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int?>("CommentsPerMinute")
@@ -1270,7 +1248,7 @@ namespace LMS.Data.Migrations
                     b.Property<bool?>("IsPostSchedule")
                         .HasColumnType("bit");
 
-                    b.Property<Guid?>("OwnerId")
+                    b.Property<Guid>("OwnerId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("ParentId")
@@ -1458,9 +1436,6 @@ namespace LMS.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("IsBan")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDefaultAvatar")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
@@ -1726,6 +1701,7 @@ namespace LMS.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("SubscriptionReferenceCode")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("SubscriptionStartDate")

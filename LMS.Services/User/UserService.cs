@@ -461,7 +461,7 @@ namespace LMS.Services
                 .Where(x => x.Student.UserId == userId).ToListAsync();
 
             var requiredIds = schoolFollowers.Select(x => new FeedConvertDTO { Id = x.SchoolId, ParentImageUrl = x.School.Avatar, ParentName = x.School.SchoolName, SchoolName = "" }).ToList();
-            var testData = userFollowersData.Where(p => p.UserId != string.Empty).Select(x => new FeedConvertDTO { Id = new Guid(x.UserId), ParentImageUrl = x.User.Avatar, ParentName = x.User.FirstName, SchoolName = "" }).ToList();
+            var testData = userFollowersData.Where(p => p.UserId != string.Empty).Select(x => new FeedConvertDTO { Id = new Guid(x.UserId), ParentImageUrl = x.User.Avatar, ParentName = x.User.FirstName + " " + x.User.LastName, SchoolName = "" }).ToList();
             requiredIds.AddRange(testData);
             requiredIds.AddRange(classStudentsData.Select(c => new FeedConvertDTO { Id = c.ClassId, ParentImageUrl = c.Class.Avatar, ParentName = c.Class.ClassName, SchoolName = c.Class.School.SchoolName }).ToList());
             requiredIds.AddRange(courseStudentsData.Select(c => new FeedConvertDTO { Id = c.CourseId, ParentImageUrl = c.Course.Avatar, ParentName = c.Course.CourseName, SchoolName = c.Course.School.SchoolName }).ToList());

@@ -25,6 +25,8 @@ using LMS.Common.ViewModels.Chat;
 using LMS.Common.ViewModels.Notification;
 using static iText.StyledXmlParser.Jsoup.Select.Evaluator;
 using Microsoft.AspNetCore.SignalR;
+using System.Reflection.Metadata;
+using Hangfire;
 
 namespace LMS.Services.FileStorage
 {
@@ -106,6 +108,11 @@ namespace LMS.Services.FileStorage
 
                 model.SubscriptionStartDate = DateTime.UtcNow;
                 model.SubscriptionEndDate = DateTime.UtcNow.AddDays(365);
+
+
+                var user = _userRepository.GetById(userId);
+                var country = user.CountryName;
+
                 var response = InitializeSubscription(model, userId, model.SubscriptionReferenceId, options);
 
 
@@ -144,6 +151,127 @@ namespace LMS.Services.FileStorage
 
         }
 
+        public async Task<string> BuyInternationalSchoolSubscription(BuySchoolSubscriptionViewModel model, string userId, Guid schoolId)
+        {
+            string amount = "";
+            var user = _userRepository.GetById(userId);
+            Options options = new Options
+            {
+                ApiKey = this._config.GetValue<string>("IyzicoSettings:ApiKey"),
+                SecretKey = this._config.GetValue<string>("IyzicoSettings:SecretKey"),
+                BaseUrl = this._config.GetValue<string>("IyzicoSettings:BaseUrl")
+            };
+
+            var userSchoolsCount = await _schoolRepository.GetAll().Where(x => x.CreatedById == userId && !x.IsSchoolSubscribed).CountAsync();
+
+            if (userSchoolsCount == 1 && model.SubscriptionReferenceId == IzicoSubscriptions.Monthly.ToLower())
+            {
+                model.SubscriptionReferenceId = IzicoSubscriptions.MonthlyWithFreeTrial;
+                model.SubscriptionStartDate = DateTime.UtcNow.AddDays(30);
+                model.SubscriptionEndDate = DateTime.UtcNow.AddDays(60);
+
+                await HandleSchoolSubscription(userId, schoolId);
+                return Constants.Success;
+            }
+
+            if (userSchoolsCount == 1 && model.SubscriptionReferenceId == IzicoSubscriptions.Yearly)
+            {
+                model.SubscriptionReferenceId = IzicoSubscriptions.YearlyWithFreeTrial;
+                model.SubscriptionStartDate = DateTime.UtcNow.AddDays(30);
+                model.SubscriptionEndDate = DateTime.UtcNow.AddDays(395);
+
+                await HandleSchoolSubscription(userId, schoolId);
+                return Constants.Success;
+            }
+
+            else
+            {
+                //var retrievePlanRequest = new RetrievePlanRequest()
+                //{
+                //    PricingPlanReferenceCode = model.SubscriptionReferenceId
+                //};
+                //var plan = Plan.Retrieve(retrievePlanRequest, options);
+
+                ////To Do: here we will doing conversion
+                //amount = plan.Data.Price;
+                amount = "20";
+                CreatePaymentRequest request = new CreatePaymentRequest();
+                request.Locale = Locale.TR.ToString();
+                request.ConversationId = Guid.NewGuid().ToString();
+                request.Price = amount;
+                request.PaidPrice = amount;
+                request.Currency = Currency.TRY.ToString();
+                request.Installment = 1;
+                request.BasketId = Guid.NewGuid().ToString();
+                request.PaymentChannel = PaymentChannel.WEB.ToString();
+                request.PaymentGroup = PaymentGroup.PRODUCT.ToString();
+                request.CallbackUrl = "https://byokul.com/iyizico/callback";
+
+                var expMonth = model.ExpiresOn.Substring(0, Math.Min(2, model.ExpiresOn.Length));
+                int lastTwoStartIndex = Math.Max(0, model.ExpiresOn.Length - 2);
+                var expYear = model.ExpiresOn.Substring(lastTwoStartIndex);
+                var cardNumber = model.CardNumber.Replace("-", "");
+
+                PaymentCard paymentCard = new PaymentCard();
+                paymentCard.CardHolderName = model.AccountHolderName;
+                paymentCard.CardNumber = cardNumber;
+                paymentCard.ExpireMonth = expMonth;
+                paymentCard.ExpireYear = expYear;
+                paymentCard.Cvc = model.SecurityCode;
+                paymentCard.RegisterCard = 0;
+                request.PaymentCard = paymentCard;
+                var buyer = await GetBuyer(user);
+                request.Buyer = buyer;
+
+                var shippingAddress = GetShiipingAddress(user);
+                request.ShippingAddress = shippingAddress;
+                request.BillingAddress = shippingAddress;
+
+                List<BasketItem> basketItems = new List<BasketItem>();
+                BasketItem firstBasketItem = new BasketItem();
+                firstBasketItem.Id = "BI101";
+                firstBasketItem.Name = "Binocular";
+                firstBasketItem.Category1 = "Collectibles";
+                firstBasketItem.Category2 = "Accessories";
+                firstBasketItem.ItemType = BasketItemType.PHYSICAL.ToString();
+                firstBasketItem.Price = amount;
+                basketItems.Add(firstBasketItem);
+                request.BasketItems = basketItems;
+
+                ThreedsInitialize threedsInitialize = ThreedsInitialize.Create(request, options);
+
+                if (threedsInitialize.Status == "success")
+                {
+                    model.ConversationId = threedsInitialize.ConversationId;
+
+                    await SaveSchoolTransaction(userId, schoolId, model.ConversationId, null, null, null, false, 0);
+                    return threedsInitialize.HtmlContent;
+                }
+
+                return "ErrorMessage" + threedsInitialize.ErrorMessage + "Status" + threedsInitialize.Status + "ErrorCode" + threedsInitialize.ErrorCode;
+
+            }
+
+        }
+
+
+        public async Task HandleSchoolSubscription(string userId, Guid schoolId)
+        {
+            await SaveSchoolTransaction(userId, schoolId, string.Empty, null, null, null, false, 0);
+            var school = _schoolRepository.GetById(schoolId);
+            school.IsSchoolSubscribed = true;
+            _schoolRepository.Update(school);
+            _schoolRepository.Save();
+            //var scheduleJobId = BackgroundJob.Schedule(() => BuyInternationalSchoolSubscription(model, userId, schoolId), new DateTimeOffset(postViewModel.DateTime.Value));
+            var scheduleJobId = BackgroundJob.Schedule(() => CancelSubscribedSchoolStatus(schoolId), new DateTimeOffset(DateTime.UtcNow.AddMinutes(4)));
+        }
+        public async Task CancelSubscribedSchoolStatus(Guid schoolId)
+        {
+            var school = _schoolRepository.GetById(schoolId);
+            school.IsSchoolSubscribed = false;
+            _schoolRepository.Update(school);
+            _schoolRepository.Save();
+        }
         public async Task<ResponseData<ProductResource>> CreateProduct(BuySchoolSubscriptionViewModel model, Options oprtions)
         {
             var planName = Guid.NewGuid().ToString();
@@ -248,7 +376,7 @@ namespace LMS.Services.FileStorage
             _schoolTransactionRepository.Save();
         }
 
-        public async Task UpdateSchoolTransaction(string conversationId, string paymentId)
+        public async Task UpdateSchoolTransaction(string conversationId, string paymentId, bool isInternationalUser)
         {
             bool isActive = false;
             string message = "";
@@ -302,6 +430,11 @@ namespace LMS.Services.FileStorage
                         school.IsSchoolSubscribed = true;
                         _schoolRepository.Update(school);
                         _schoolRepository.Save();
+
+                        if (isInternationalUser)
+                        {
+                            var scheduleJobId = BackgroundJob.Schedule(() => CancelSubscribedSchoolStatus(school.SchoolId), new DateTimeOffset(DateTime.UtcNow.AddMinutes(4)));
+                        }
                     }
                 }
             }
@@ -372,6 +505,15 @@ namespace LMS.Services.FileStorage
                     classCourseTransaction.Amount = amount;
                     _classCourseTransactionRepository.Update(classCourseTransaction);
                     _classCourseTransactionRepository.Save();
+
+                }
+                else
+                {
+                    var schoolTransaction = _schoolTransactionRepository.GetAll().Where(x => x.ConversationId == conversationId && x.PaymentId == null).Include(x => x.School).FirstOrDefault();
+                    if (schoolTransaction != null)
+                    {
+                        await UpdateSchoolTransaction(conversationId, paymentId,true);
+                    }
 
                 }
             }
@@ -510,6 +652,7 @@ namespace LMS.Services.FileStorage
 
         public async Task<string> BuyClassCourse(BuyClassCourseViewModel model, string userId)
         {
+            var user = _userRepository.GetById(userId);
             Options options = new Options
             {
                 ApiKey = this._config.GetValue<string>("IyzicoSettings:ApiKey"),
@@ -519,7 +662,7 @@ namespace LMS.Services.FileStorage
 
             CreatePaymentRequest request = new CreatePaymentRequest();
             request.Locale = Locale.TR.ToString();
-            request.ConversationId = userId;
+            request.ConversationId = Guid.NewGuid().ToString();
             request.Price = model.Amount.ToString();
             request.PaidPrice = model.Amount.ToString();
             request.Currency = Currency.TRY.ToString();
@@ -527,29 +670,16 @@ namespace LMS.Services.FileStorage
             request.BasketId = Guid.NewGuid().ToString();
             request.PaymentChannel = PaymentChannel.WEB.ToString();
             request.PaymentGroup = PaymentGroup.PRODUCT.ToString();
-            request.CallbackUrl = "https://byokul.com/iyizico/callback";
+            request.CallbackUrl = "https://2f84-101-0-41-124.ngrok-free.app/iyizico/callback";
 
             var paymentCard = await GetPaymentCard(model);
             request.PaymentCard = paymentCard;
-            var buyer = await GetBuyer(model);
+            var buyer = await GetBuyer(user);
             request.Buyer = buyer;
 
-
-            Address shippingAddress = new Address();
-            shippingAddress.ContactName = "Jane Doe";
-            shippingAddress.City = "Istanbul";
-            shippingAddress.Country = "Turkey";
-            shippingAddress.Description = "Nidakule Göztepe, Merdivenköy Mah. Bora Sok. No:1";
-            shippingAddress.ZipCode = "34742";
+            var shippingAddress = GetShiipingAddress(user);
             request.ShippingAddress = shippingAddress;
-
-            Address billingAddress = new Address();
-            billingAddress.ContactName = "Jane Doe";
-            billingAddress.City = "Istanbul";
-            billingAddress.Country = "Turkey";
-            billingAddress.Description = "Nidakule Göztepe, Merdivenköy Mah. Bora Sok. No:1";
-            billingAddress.ZipCode = "34742";
-            request.BillingAddress = billingAddress;
+            request.BillingAddress = shippingAddress;
 
             List<BasketItem> basketItems = new List<BasketItem>();
             BasketItem firstBasketItem = new BasketItem();
@@ -609,21 +739,33 @@ namespace LMS.Services.FileStorage
             return paymentCard;
         }
 
-        public async Task<Buyer> GetBuyer(BuyClassCourseViewModel model)
+
+        public Address GetShiipingAddress(User user)
+        {
+            Address shippingAddress = new Address();
+            shippingAddress.ContactName = user.FirstName + " " + user.LastName;
+            shippingAddress.City = user.StateName;
+            shippingAddress.Country = user.CountryName;
+            shippingAddress.Description = "Description";  // mendatory?
+            shippingAddress.ZipCode = "34742"; // mendatory?
+            return shippingAddress;
+        }
+
+        public async Task<Buyer> GetBuyer(User user)
         {
             Buyer buyer = new Buyer();
-            buyer.Id = "BY789";
-            buyer.Name = "Nikhil";
-            buyer.Surname = "Vasdev";
-            buyer.GsmNumber = "+905350000000";
-            buyer.Email = "sagarnimma7@gmail.com";
+            buyer.Id = Guid.NewGuid().ToString();
+            buyer.Name = user.FirstName;
+            buyer.Surname = user.LastName;
+            buyer.GsmNumber = "+905350000000";   // check without +
+            buyer.Email = user.Email;
             buyer.IdentityNumber = Guid.NewGuid().ToString();
             buyer.RegistrationDate = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss");
-            buyer.RegistrationAddress = "Nidakule Göztepe, Merdivenköy Mah. Bora Sok. No:1";
+            buyer.RegistrationAddress = "Description";  // is mendatory?
             buyer.Ip = "85.34.78.112";
-            buyer.City = "Istanbul";
-            buyer.Country = "Turkey";
-            buyer.ZipCode = "34732";
+            buyer.City = user.StateName;
+            buyer.Country = user.CountryName;
+            buyer.ZipCode = "34732";   // is mendatory?
 
             return buyer;
         }

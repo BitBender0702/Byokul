@@ -335,7 +335,8 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
 
   }
 
-  subscriptionStep() {
+  paymentConfirmationWindow:any;
+  subscriptionStep(){
     debugger
     this.isStepCompleted = true;
     if (!this.subscriptionForm.valid) {
@@ -354,22 +355,28 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
     }
     this.fileToUpload.append('SubscriptionDetailsJson', JSON.stringify(subscriptionDetails));
 
-    this._schoolService.createSchool(this.fileToUpload).subscribe((response: any) => {
-      debugger
-      var schoolId = response;
-      this.schoolId = schoolId;
-      this.loadingIcon = false;
-      var form1Value = this.createSchoolForm1.value;
-      ownedSchoolResponse.next({ schoolId: response.schoolId, schoolAvatar: response.avatar, schoolName: response.schoolName, action: "add" });
-      this.step += 1;
-      this.isStepCompleted = false;
+    this._schoolService.createSchool(this.fileToUpload).subscribe((response:any) => {
+      if(response.subscriptionDetails.isInternationalUser){
+        this.paymentConfirmationWindow = window.open("","_blank", "width=500,height=300");
+        this.paymentConfirmationWindow?.document.write(response.subscriptionDetails.subscriptionMessage);
+      }
+      
+         var schoolId =  response;
+         this.schoolId = schoolId;
+         this.loadingIcon = false;
+         var form1Value =this.createSchoolForm1.value;
+         ownedSchoolResponse.next({schoolId:response.schoolId, schoolAvatar:response.avatar, schoolName:response.schoolName,action:"add"});
+         this.step += 1;
+         this.isStepCompleted = false;
 
-      if (response.subscriptionDetails.subscriptionMessage == Constant.Success) {
-        this.messageService.add({ severity: 'success', summary: 'Success', life: 3000, detail: 'School created successfully' });
-      }
-      else {
-        this.messageService.add({ severity: 'info', summary: 'Info', life: 3000, detail: response.subscriptionDetails.subscriptionMessage });
-      }
+         if(response.subscriptionDetails.subscriptionMessage == Constant.Success){
+          this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'School created successfully'});
+         }
+         else{
+          if(!response.subscriptionDetails.isInternationalUser){
+          this.messageService.add({severity:'info', summary:'Info',life: 3000, detail:response.subscriptionDetails.subscriptionMessage});         
+          }
+         }
     });
 
   }
