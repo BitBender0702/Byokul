@@ -79,98 +79,106 @@ namespace LMS.Services
         {
             bool scheduleLiveStream = false;
             bool isPostSchedule = false;
-            var post = new Post
-            {
-                Title = postViewModel.Title,
-                Status = postViewModel.Status,
-                OwnerId = postViewModel.OwnerId,
-                AuthorId = postViewModel.AuthorId,
-                DateTime = postViewModel.DateTime,
-                PostType = postViewModel.PostType,
-                Description = postViewModel.Description,
-                PostAuthorType = postViewModel.PostAuthorType,
-                ParentId = postViewModel.ParentId,
-                CoverLetter = postViewModel.CoverLetter,
-                IsPostSchedule = false,
-                IsCommentsDisabled = false,
-                CommentsPerMinute = postViewModel.CommentsPerMinute == 0 ? null : postViewModel.CommentsPerMinute,
-                Attachments = postViewModel.BlobUrls.Select(x => new PostAttachment
-                {
-                    Id = x.Id,
-                    CreatedById = createdById,
-                    CreatedOn = DateTime.UtcNow,
-                    FileName = x.BlobName,
-                    FileType = Convert.ToInt32(x.FileType),
-                    FileUrl = x.BlobUrl,
-                    IsCompressed = false,
-                    FileThumbnail = x.FileThumbnail
-                }).ToList(),
-                Tags = postViewModel.PostTags.Select(x => new PostTag
-                {
-                    PostTagValue = x
-                }).ToList(),
-                CreatedById = createdById,
-                CreatedOn = DateTime.UtcNow
-            };
-
-            if (postViewModel.PostType == (int)PostTypeEnum.Stream && postViewModel.DateTime.HasValue)
-            {
-                post.StreamUrl = postViewModel.BlobUrls[0].BlobUrl;
-                post.IsPostSchedule = true;
-                scheduleLiveStream = true;
-            }
-            else if (postViewModel.PostType == (int)PostTypeEnum.Stream && postViewModel.BlobUrls.Any(x => x.FileType == FileTypeEnum.Video))
-            {
-                post.StreamUrl = postViewModel.BlobUrls.Where(x => x.FileType == FileTypeEnum.Video).Select(x => x.BlobUrl).First();
-                post.IsLive = true;
-            }
-            if (postViewModel.PostType == (int)PostTypeEnum.Stream && postViewModel.BlobUrls.All(x => x.FileType != FileTypeEnum.Video))
-            {
-                var user = _userRepository.GetById(createdById);
-                var model = new NewMeetingViewModel();
-                model.meetingName = postViewModel.Title;
-                model.IsMicrophoneOpen = (bool)postViewModel.IsMicroPhoneOpen;
-                model.ModeratorName = user.FirstName;
-                model.PostId = post.Id;
-                var response = await _bigBlueButtonService.Create(model);
-                postViewModel.StreamUrl = response.StreamUrl;
-                post.StreamUrl = response.StreamUrl;
-                post.ExternalMeetingId = new Guid(response.MeetingID);
-                post.InternalMeetingId = response.InternalMeetingID;
-                post.IsLive = true;
-            }
-
-            if ((postViewModel.PostType == (int)PostTypeEnum.Post || postViewModel.PostType == (int)PostTypeEnum.Reel) && postViewModel.DateTime != null)
-            {
-                post.IsPostSchedule = true;
-                isPostSchedule = true;
-            }
-
             try
             {
-                _postRepository.Insert(post);
-                _postRepository.Save();
+                var post = new Post
+                {
+                    Title = postViewModel.Title,
+                    Status = postViewModel.Status,
+                    OwnerId = postViewModel.OwnerId,
+                    AuthorId = postViewModel.AuthorId,
+                    DateTime = postViewModel.DateTime,
+                    PostType = postViewModel.PostType,
+                    Description = postViewModel.Description,
+                    PostAuthorType = postViewModel.PostAuthorType,
+                    ParentId = postViewModel.ParentId,
+                    CoverLetter = postViewModel.CoverLetter,
+                    IsPostSchedule = false,
+                    IsCommentsDisabled = false,
+                    CommentsPerMinute = postViewModel.CommentsPerMinute == 0 ? null : postViewModel.CommentsPerMinute,
+                    Attachments = postViewModel.BlobUrls.Select(x => new PostAttachment
+                    {
+                        Id = x.Id,
+                        CreatedById = createdById,
+                        CreatedOn = DateTime.UtcNow,
+                        FileName = x.BlobName,
+                        FileType = Convert.ToInt32(x.FileType),
+                        FileUrl = x.BlobUrl,
+                        IsCompressed = false,
+                        FileThumbnail = x.FileThumbnail
+                    }).ToList(),
+                    Tags = postViewModel.PostTags.Select(x => new PostTag
+                    {
+                        PostTagValue = x
+                    }).ToList(),
+                    CreatedById = createdById,
+                    CreatedOn = DateTime.UtcNow
+                };
+
+                if (postViewModel.PostType == (int)PostTypeEnum.Stream && postViewModel.DateTime.HasValue)
+                {
+                    post.StreamUrl = postViewModel.BlobUrls[0].BlobUrl;
+                    post.IsPostSchedule = true;
+                    scheduleLiveStream = true;
+                }
+                else if (postViewModel.PostType == (int)PostTypeEnum.Stream && postViewModel.BlobUrls.Any(x => x.FileType == FileTypeEnum.Video))
+                {
+                    post.StreamUrl = postViewModel.BlobUrls.Where(x => x.FileType == FileTypeEnum.Video).Select(x => x.BlobUrl).First();
+                    post.IsLive = true;
+                }
+                if (postViewModel.PostType == (int)PostTypeEnum.Stream && postViewModel.BlobUrls.All(x => x.FileType != FileTypeEnum.Video))
+                {
+                    var user = _userRepository.GetById(createdById);
+                    var model = new NewMeetingViewModel();
+                    model.meetingName = postViewModel.Title;
+                    model.IsMicrophoneOpen = (bool)postViewModel.IsMicroPhoneOpen;
+                    model.ModeratorName = user.FirstName;
+                    model.PostId = post.Id;
+                    var response = await _bigBlueButtonService.Create(model);
+                    postViewModel.StreamUrl = response.StreamUrl;
+                    post.StreamUrl = response.StreamUrl;
+                    post.ExternalMeetingId = new Guid(response.MeetingID);
+                    post.InternalMeetingId = response.InternalMeetingID;
+                    post.IsLive = true;
+                }
+
+                if ((postViewModel.PostType == (int)PostTypeEnum.Post || postViewModel.PostType == (int)PostTypeEnum.Reel) && postViewModel.DateTime != null)
+                {
+                    post.IsPostSchedule = true;
+                    isPostSchedule = true;
+                }
+
+                try
+                {
+                    _postRepository.Insert(post);
+                    _postRepository.Save();
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+
+                postViewModel.Id = post.Id;
+
+                if (scheduleLiveStream)
+                    await ScheduleLiveStream(postViewModel, createdById, new DateTimeOffset(postViewModel.DateTime.Value));
+                if (isPostSchedule)
+                    BackgroundJob.Schedule(() => SaveSchedulePostInfo(postViewModel.Id), new DateTimeOffset(postViewModel.DateTime.Value));
+
+
+                if (postViewModel.PostType == (int)PostTypeEnum.Reel)
+                {
+                    postViewModel.ReelId = await _postAttachmentRepository.GetAll().Where(x => x.PostId == post.Id).Select(x => x.Id).FirstAsync();
+                }
+
+                return postViewModel;
+
             }
             catch (Exception ex)
             {
                 throw ex;
             }
-
-            postViewModel.Id = post.Id;
-
-            if (scheduleLiveStream)
-                await ScheduleLiveStream(postViewModel, createdById, new DateTimeOffset(postViewModel.DateTime.Value));
-            if (isPostSchedule)
-                BackgroundJob.Schedule(() => SaveSchedulePostInfo(postViewModel.Id), new DateTimeOffset(postViewModel.DateTime.Value));
-
-
-            if (postViewModel.PostType == (int)PostTypeEnum.Reel)
-            {
-                postViewModel.ReelId = await _postAttachmentRepository.GetAll().Where(x => x.PostId == post.Id).Select(x => x.Id).FirstAsync();
             }
-
-            return postViewModel;
-        }
 
         public async Task<List<VideoUploadResponseViewModel>> SaveBlobUrls(List<BlobUrlsViewModel> bloburls, IEnumerable<IFormFile> uploadVideosThumbnail, Guid postId, string createdById, bool isJobRunning)
         {
@@ -810,6 +818,13 @@ namespace LMS.Services
 
         public async Task<List<LikeViewModel>> LikeUnlikePost(LikeUnlikeViewModel model)
         {
+            var isPostExist = _postRepository.GetById(model.PostId);
+            if (isPostExist == null)
+            {
+                var isPostAttachmentExist = _postAttachmentRepository.GetById(model.PostId);
+                if(isPostAttachmentExist == null)
+                return null;
+            }
 
             var userLike = await _likeRepository.GetAll().Where(x => x.UserId == model.UserId && x.PostId == model.PostId).FirstOrDefaultAsync();
 

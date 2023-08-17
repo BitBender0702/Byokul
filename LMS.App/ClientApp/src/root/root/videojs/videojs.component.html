@@ -1,4 +1,4 @@
-<video #disVideo id="displayVideo" [class.abc]="isView" [class.reelView]="isReelView"  controls class="video-js vjs-big-play-centered asdad"  preload="auto">
+<video #disVideo id="displayVideo" [class.classCourseView]="isClassCourseThumbnail"  [class.abc]="isView" [class.reelView]="isReelView"  controls class="video-js vjs-big-play-centered asdad"  preload="auto">
    <source *ngIf="postAttachment?.compressedFileUrl == '' || postAttachment?.compressedFileUrl == null || postAttachment?.compressedFileUrl == undefined"
       [src]="postAttachment?.fileUrl"
       type="video/mp4"
@@ -7,4 +7,8 @@
        [src]="postAttachment?.compressedFileUrl"
     type="video/mp4"
     />
+    <source *ngIf="postAttachment?.thumbnailUrl != ''"
+    [src]="postAttachment?.thumbnailUrl"
+ type="video/mp4"
+ />
 </video>

@@ -659,8 +659,8 @@
                       </ng-container>
                     </div>
                     <div class="teacher-tags tag-box hashtag_box">
-                      <span *ngFor="let tag of post.postTags" class="custom-tag"
-                        >#{{ tag.postTagValue }}</span
+                      <span *ngFor="let tag of parseTheTags(post.postTags)" class="custom-tag"
+                        >#{{ tag }}</span
                       >
                     </div>
                     <div
@@ -1250,7 +1250,7 @@
                               class="teacher-tags tag-box hashtag_box"
                             >
                               <span
-                                *ngFor="let tag of postsTagValues"
+                                *ngFor="let tag of parseTheTags(postsTagValues)"
                                 class="custom-tag"
                                 >#{{ tag }}</span
                               >

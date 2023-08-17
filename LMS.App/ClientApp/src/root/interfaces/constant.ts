@@ -27,6 +27,8 @@ export class Constant {
     public static ZipFile = "zip";
     public static TextFile = "text/plain";
     public static Apk = "apk";
+    public static SchoolNameExist = "School name exists";
+    public static SchoolNameDoesNotExist = "School name does not exists";
 
 
 

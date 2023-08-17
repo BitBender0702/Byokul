@@ -238,8 +238,9 @@ ngOnDestroy(): void {
 
     var form1Value =this.createSchoolForm1.value;
     this.schoolName = form1Value.schoolName.split(' ').join('');
-    this._schoolService.isSchoolNameExist(schoolName).subscribe((response) => {
-      if(!response){
+    this._schoolService.isSchoolNameExist(schoolName).subscribe((response:any) => {
+      debugger
+      if(response.result == Constant.SchoolNameExist){
         this.createSchoolForm1.setErrors({ unauthenticated: true });
         return;
       }

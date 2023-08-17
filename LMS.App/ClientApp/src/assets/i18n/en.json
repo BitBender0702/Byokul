@@ -527,7 +527,9 @@
   "CopyLink": "Copy Link",
   "ThankYouForRegistering": "Thank you for registering",
   "DidNotReceive": "Didn't receive email ?",
-  "ResendEmail": "Resend Email"
+  "ResendEmail": "Resend Email",
+  "ExportToExcel": "Export to Excel",
+  "BuyerName": "Buyer Name"
   
 
 

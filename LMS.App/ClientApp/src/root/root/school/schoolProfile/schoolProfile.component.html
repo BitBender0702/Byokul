@@ -2449,10 +2449,15 @@
                               >
                                 <video preload="metadata" style="height: 300px">
                                   <source
-                                    [lazyLoad]="item.thumbnailUrl"
+                                    [src]="item.thumbnailUrl"
                                     type="video/mp4"
                                   />
                                 </video>
+
+                                <!-- <videoJs-component
+                                [postAttachment]="item"
+                                [isClassCourseThumbnail]="true"
+                              ></videoJs-component> -->
                               </div>
                             </div>
                           </div>

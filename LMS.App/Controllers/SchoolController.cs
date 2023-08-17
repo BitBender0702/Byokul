@@ -123,6 +123,7 @@ namespace LMS.App.Controllers
         }
 
 
+
         [Route("saveSchoolUser")]
         [HttpPost]
         public async Task<IActionResult> SaveSchoolUser([FromBody] SchoolUserViewModel schoolUserViewModel)
@@ -184,8 +185,12 @@ namespace LMS.App.Controllers
         [HttpPost]
         public async Task<IActionResult> DeleteSchoolTeacher([FromBody] SchoolTeacherViewModel model)
         {
-            await _schoolService.DeleteSchoolTeacher(model);
-            return Ok();
+           var result = await _schoolService.DeleteSchoolTeacher(model);
+            if (result)
+            {
+                return Ok(new { Success = true, Message = "Teacher is deleted successfully." });
+            }
+            return BadRequest(new {Success = false, ErrorMessage = "Failed to delete teacher."}); 
         }
 
         [Route("getBasicSchoolInfo")]
@@ -207,7 +212,9 @@ namespace LMS.App.Controllers
         [HttpGet]
         public async Task<IActionResult> IsSchoolNameExist(string schoolName)
         {
-            return Ok(await _schoolService.IsSchoolNameExist(schoolName));
+
+            var response = await _schoolService.IsSchoolNameExist(schoolName);
+            return Ok(new { result = response});
         }
 
         //[Route("getSchoolByName")]
@@ -295,7 +302,7 @@ namespace LMS.App.Controllers
         {
             await _schoolService.SaveClassCourse(userId, id, type);
             return Ok();
-        }
+        }   
 
         [Route("getSavedClassCourse")]
         [HttpPost]

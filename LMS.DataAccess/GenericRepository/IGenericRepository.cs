@@ -15,6 +15,7 @@ namespace LMS.DataAccess.Repository
         void Update(T obj);
         void Delete(object id);
         void Save();
+        Task<Object> SaveAsync();
         void DeleteAll(List<T> obj);
         IEnumerable<T> Includes(params Expression<Func<T, Object>>[] includes);
         IQueryable<T> GetAll();

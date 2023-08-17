@@ -4,6 +4,7 @@ using LMS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LMS.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230816124846_Add_CardUserkey")]
+    partial class Add_CardUserkey
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1035,28 +1037,6 @@ namespace LMS.Data.Migrations
                     b.ToTable("Folders");
                 });
 
-            modelBuilder.Entity("LMS.Data.Entity.Iyizico.CardRenewal", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("CardToken")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CardUserKey")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("SchoolId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("CardRenewals");
-                });
-
             modelBuilder.Entity("LMS.Data.Entity.Iyizico.CardUserKey", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1732,9 +1712,6 @@ namespace LMS.Data.Migrations
 
                     b.Property<string>("PaymentId")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("Plan")
-                        .HasColumnType("int");
 
                     b.Property<Guid?>("SchoolId")
                         .HasColumnType("uniqueidentifier");

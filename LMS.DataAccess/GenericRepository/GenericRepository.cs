@@ -47,6 +47,11 @@ namespace LMS.DataAccess.Repository
             _context.SaveChanges();
         }
 
+        public async Task<Object> SaveAsync()
+        {
+            return await _context.SaveChangesAsync();
+        }
+
         public IEnumerable<T> Includes(params Expression<Func<T, Object>>[] includes)
         {
             IQueryable<T> query = table.Include(includes[0]);

@@ -411,7 +411,7 @@
                       type="radio"
                       id="forFree"
                       name="subscriptionReferenceId"
-                      [value]= "subscriptionPlans[1].planReferenceCode"
+                      [value]= "subscriptionPlans[1]?.planReferenceCode"
                     />
                     <label for="forFree">
                       {{ "Monthly" | translate }}
@@ -423,7 +423,7 @@
                       type="radio"
                       id="forPaid"
                       name="subscriptionReferenceId"
-                      [value]= "subscriptionPlans[0].planReferenceCode"
+                      [value]= "subscriptionPlans[0]?.planReferenceCode"
                     />
                     <label for="forPaid">
                       {{ "Yearly" | translate }}

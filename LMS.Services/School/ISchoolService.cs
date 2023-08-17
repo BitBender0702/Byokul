@@ -32,10 +32,10 @@ namespace LMS.Services
         Task SaveSchoolLanguages(IEnumerable<string> languageIds, Guid schoolId);
         Task DeleteSchoolLanguage(SchoolLanguageViewModel model);
         Task SaveSchoolTeachers(SaveSchoolTeacherViewModel model);
-        Task DeleteSchoolTeacher(SchoolTeacherViewModel model);
+        Task<bool> DeleteSchoolTeacher(SchoolTeacherViewModel model);
         Task<SchoolViewModel> GetBasicSchoolInfo(Guid schoolId);
         Task<List<SchoolFollowerViewModel>> GetSchoolFollowers(Guid schoolId, int pageNumber, string? searchString);
-        Task<bool> IsSchoolNameExist(string schoolName);
+        Task<string> IsSchoolNameExist(string schoolName);
         //Task<SchoolViewModel> GetSchoolByName(string schoolName);
         Task<IEnumerable<CombineClassCourseViewModel>> GetSchoolClassCourse(Guid? schoolId, string userId, int pageNumber);
         Task<bool> PinUnpinClassCourse(Guid id, ClassCourseEnum type, bool isPinned);

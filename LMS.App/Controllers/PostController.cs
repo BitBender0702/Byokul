@@ -1,4 +1,5 @@
-﻿using Hangfire;
+﻿using Abp.Domain.Repositories;
+using Hangfire;
 using iText.IO.Util;
 using LMS.Common.Enums;
 using LMS.Common.ViewModels.Post;
@@ -33,39 +34,39 @@ namespace LMS.App.Controllers
             _webHostEnvironment = webHostEnvironment;
         }
 
-        [DisableRequestSizeLimit, RequestFormLimits(MultipartBodyLengthLimit = long.MaxValue, ValueLengthLimit = int.MaxValue)]
-        [Route("uploadOnBlob")]
-        [HttpPost]
-        public async Task<IActionResult> UploadOnBlob()
-        {
-            var formCollection = await Request.ReadFormAsync();
-            var uploadVideo = formCollection.Files[0];
-            string containerName = "posts";
-            var reponse = await _blobService.UploadFileAsync(uploadVideo, containerName, true);
-            return Ok("success");
+        //[DisableRequestSizeLimit, RequestFormLimits(MultipartBodyLengthLimit = long.MaxValue, ValueLengthLimit = int.MaxValue)]
+        //[Route("uploadOnBlob")]
+        //[HttpPost]
+        //public async Task<IActionResult> UploadOnBlob()
+        //{
+        //    var formCollection = await Request.ReadFormAsync();
+        //    var uploadVideo = formCollection.Files[0];
+        //    string containerName = "posts";
+        //    var reponse = await _blobService.UploadFileAsync(uploadVideo, containerName, true);
+        //    return Ok("success");
 
-        }
+        //}
 
-        [DisableRequestSizeLimit, RequestFormLimits(MultipartBodyLengthLimit = long.MaxValue, ValueLengthLimit = int.MaxValue)]
-        [Route("uploadOnServer")]
-        [HttpPost]
-        public async Task<IActionResult> UploadOnServer()
-        {
-            var formCollection = await Request.ReadFormAsync();
-            var uploadVideo = formCollection.Files[0];
-            byte[] byteArray;
-            using (var memoryStream = new MemoryStream())
-            {
-                await uploadVideo.CopyToAsync(memoryStream);
-                byteArray = memoryStream.ToArray();
-            }
+        //[DisableRequestSizeLimit, RequestFormLimits(MultipartBodyLengthLimit = long.MaxValue, ValueLengthLimit = int.MaxValue)]
+        //[Route("uploadOnServer")]
+        //[HttpPost]
+        //public async Task<IActionResult> UploadOnServer()
+        //{
+        //    var formCollection = await Request.ReadFormAsync();
+        //    var uploadVideo = formCollection.Files[0];
+        //    byte[] byteArray;
+        //    using (var memoryStream = new MemoryStream())
+        //    {
+        //        await uploadVideo.CopyToAsync(memoryStream);
+        //        byteArray = memoryStream.ToArray();
+        //    }
 
-            var path = _webHostEnvironment.ContentRootPath;
-            var tempDirectoryPath = Path.Combine(path, "FfmpegVideos/");
-            var fileName = Guid.NewGuid().ToString();
-            System.IO.File.WriteAllBytes(tempDirectoryPath + fileName + "test.mp4", byteArray);
-            return Ok("success");
-        }
+        //    var path = _webHostEnvironment.ContentRootPath;
+        //    var tempDirectoryPath = Path.Combine(path, "FfmpegVideos/");
+        //    var fileName = Guid.NewGuid().ToString();
+        //    System.IO.File.WriteAllBytes(tempDirectoryPath + fileName + "test.mp4", byteArray);
+        //    return Ok("success");
+        //}
 
         [DisableRequestSizeLimit, RequestFormLimits(MultipartBodyLengthLimit = long.MaxValue, ValueLengthLimit = int.MaxValue)]
         [Route("uploadPost")]
@@ -171,8 +172,19 @@ namespace LMS.App.Controllers
         {
             var userId = await GetUserIdAsync(this._userManager);
             model.UserId = userId;
+            if(userId == null)
+            {
+                return BadRequest($"User doesnot exist for the id: {userId}");
+            }
             var response = await _postService.LikeUnlikePost(model);
-            return Ok(response);
+            if(response != null)
+            {
+                return Ok(response);
+            }
+            else
+            {
+                return BadRequest($"Post does not exist for the postId: {model.PostId}");
+            }
         }
 
         [Route("postView")]

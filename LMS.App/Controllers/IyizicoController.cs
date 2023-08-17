@@ -37,16 +37,16 @@ namespace LMS.App.Controllers
             _iyizicoService = iyizicoService;
         }
 
-        [Route("buySchoolSubscription")]
-        [HttpPost]
-        public async Task<IActionResult> BuySchoolSubscription([FromBody] BuySchoolSubscriptionViewModel model)
-        {
-            var userId = await GetUserIdAsync(this._userManager);
-            var schoolId = new Guid();
-            await _iyizicoService.BuySchoolSubscription(model, userId, schoolId);
+        //[Route("buySchoolSubscription")]
+        //[HttpPost]
+        //public async Task<IActionResult> BuySchoolSubscription([FromBody] BuySchoolSubscriptionViewModel model)
+        //{
+        //    var userId = await GetUserIdAsync(this._userManager);
+        //    var schoolId = new Guid();
+        //    await _iyizicoService.BuySchoolSubscription(model, userId, schoolId);
 
-            return Ok();
-        }
+        //    return Ok();
+        //}
 
         [Route("getSubscriptionPlans")]
         [HttpPost]
@@ -93,6 +93,10 @@ namespace LMS.App.Controllers
 
                     if (threedsPayment.Status == Status.SUCCESS.ToString())
                     {
+
+
+
+
                         _iyizicoService.CloseIyizicoThreeDAuthWindow(request.ConversationId);
                         return base.Content("<div>Payment successful.</div>", "text/html");
                     }
@@ -267,7 +271,7 @@ namespace LMS.App.Controllers
         {
             var userId = await GetUserIdAsync(this._userManager);
             var response = await _iyizicoService.CancelSubscription(schoolId);
-            return Ok(new {errorMessage = response});
+            return Ok(new { errorMessage = response });
         }
 
         [AllowAnonymous]
@@ -286,8 +290,17 @@ namespace LMS.App.Controllers
         public async Task<IActionResult> RefundPayment(string paymentId, SchoolClassCourseEnum type)
         {
             //var userId = await GetUserIdAsync(this._userManager);
-            var response = await _iyizicoService.RefundPayment(paymentId,type);
-            return Ok(new { errorMessage = response});
+            var response = await _iyizicoService.RefundPayment(paymentId, type);
+            return Ok(new { errorMessage = response });
+        }
+
+        [Route("getUserSavedCards")]
+        [HttpGet]
+        public async Task<IActionResult> GetUserSavedCards()
+        {
+            var email = User.Identity.Name;
+            var response = await _iyizicoService.GetUserSavedCards(email);
+            return Ok(new { errorMessage = response });
         }
 
     }

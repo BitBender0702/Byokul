@@ -514,7 +514,11 @@
   "RefundPayment": "Refund Payment",
   "CopyLink": "Copy Link",
   "ThankYouForRegistering": "Thank you for registering",
-  "DidNotReceive": "Didn't receive email ?"
+  "DidNotReceive": "Didn't receive email ?",
+  "ExportToExcel": "Export to Excel",
+  "BuyerName": "Buyer Name"
+
+
   
 
 

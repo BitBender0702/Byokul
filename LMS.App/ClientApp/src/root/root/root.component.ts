@@ -479,7 +479,7 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
     var containerClient =  new BlobServiceClient(`https://${blobStorageName}.blob.core.windows.net?${sasToken}`)
     .getContainerClient("userposts");
   
-    await this.uploadBlobTest(file, blobName, containerClient)
+    await this.uploadToBlob(file, blobName, containerClient)
     .then((response) => {
       debugger
       var uploadVideoObject = 
@@ -510,7 +510,7 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
   
   }
 
-  private async uploadBlobTest(content: Blob, name: string, client: ContainerClient) {
+  private async uploadToBlob(content: Blob, name: string, client: ContainerClient) {
     debugger
     try {
     let blockBlobClient = client.getBlockBlobClient(name);

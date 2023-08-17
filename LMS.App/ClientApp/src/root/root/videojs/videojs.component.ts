@@ -17,6 +17,7 @@ export class VideoJsComponent implements OnInit {
   changeLanguageSubscription!:Subscription;
     @Input() postAttachment:any;
     @Input() isView:boolean=false;
+    @Input() isClassCourseThumbnail:boolean=false;
     @Input() isReelView:boolean=false;
     @ViewChild('disVideo', { read: ElementRef }) disVideo!:ElementRef;
     player: videojs.Player = new Object as videojs.Player;

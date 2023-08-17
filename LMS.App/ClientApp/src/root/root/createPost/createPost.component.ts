@@ -966,9 +966,9 @@ canvasToBlob(canvas: HTMLCanvasElement): Promise<any> {
    }
 
    appendData(authorId:string, parentId:string, ownerId:string, postAuthorType:string){
-      this.postToUpload.append('authorId', authorId);
+      // this.postToUpload.append('authorId', authorId);
       this.postToUpload.append('parentId', parentId);
-      this.postToUpload.append('ownerId', ownerId);
+      // this.postToUpload.append('ownerId', ownerId);
       this.postToUpload.append('postAuthorType', postAuthorType);
       // this.postToUpload.append('postTags', JSON.stringify(this.tagLists))
 

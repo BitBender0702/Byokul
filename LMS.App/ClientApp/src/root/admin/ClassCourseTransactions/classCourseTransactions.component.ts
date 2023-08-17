@@ -13,6 +13,7 @@ import { IyizicoService } from 'src/root/service/iyizico.service';
 import { Constant } from 'src/root/interfaces/constant';
 import { AuthService } from 'src/root/service/auth.service';
 import { SchoolClassCourseEnum } from 'src/root/Enums/SchoolClassCourseEnum';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'school-Transactions',
@@ -103,6 +104,35 @@ export class ClassCourseTransactionsComponent extends MultilingualComponent impl
         }
         this.ngOnInit();
         });
+      }
+
+      exportToExcel(table: Table) {
+        const filteredData = table.filteredValue || table.value;        
+        const flattenedData = filteredData.map(item => ({
+          UserId: item.user.id,
+          UserName: item.user.firstName + " " + item.user.lastName,
+          SchoolName: item.class != null ? item.class.school.schoolName : item.course.school.schoolName,
+          ClassName: item.class?.className,
+          CourseName: item.course?.courseName,
+          Amount: item.amount,
+          ConversationId: item.conversationId,
+          PaymentId: item.paymentId,
+          PaymentOn: item.createdOn,
+          IsRefund: item.isRefund
+        }));
+
+        const workbook = XLSX.utils.book_new();
+        const worksheet = XLSX.utils.json_to_sheet(flattenedData);
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+    
+        const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    
+        const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8' });
+        const fileName = 'exported-data.xlsx';
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = fileName;
+        link.click();
       }
     }
     

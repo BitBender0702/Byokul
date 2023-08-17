@@ -43,6 +43,7 @@ namespace LMS.Common.ViewModels.School
         public string SubscriptionDetailsJson { get; set; }
         public string SubscriptionMessage { get; set; }
         public bool IsSchoolSubscribed { get; set; }
+        public bool IsDefaultAvatar { get; set; }
 
 
 

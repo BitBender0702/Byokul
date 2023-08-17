@@ -111,6 +111,11 @@ namespace LMS.Services
             if (schoolViewModel.AvatarImage != null)
             {
                 schoolViewModel.Avatar = await _blobService.UploadFileAsync(schoolViewModel.AvatarImage, containerName, false);
+                schoolViewModel.IsDefaultAvatar = false;
+            }
+            else
+            {
+                schoolViewModel.IsDefaultAvatar = true;
             }
 
             schoolViewModel.SchoolUrl = JsonConvert.DeserializeObject<string>(schoolViewModel.SchoolUrl);
@@ -126,8 +131,8 @@ namespace LMS.Services
                 SpecializationId = schoolViewModel.SpecializationId,
                 CountryName = schoolViewModel.CountryName,
                 SchoolUrl = schoolViewModel.SchoolUrl,
-                PhoneNumber = schoolViewModel.PhoneNumber
-
+                PhoneNumber = schoolViewModel.PhoneNumber,
+                IsDefaultAvatar = schoolViewModel.IsDefaultAvatar 
             };
 
             _schoolRepository.Insert(school);
@@ -140,27 +145,27 @@ namespace LMS.Services
 
             await AddRoleForUser(createdById, "School Owner");
 
-            var user = _userRepository.GetById(createdById);
-            if (user.CountryName == Constants.Turkey)
-            {
+            //var user = _userRepository.GetById(createdById);
+            //if (user.CountryName == Constants.Turkey)
+            //{
+            //    var subscriptionResponse = await _iyizicoService.BuySchoolSubscription(schoolViewModel.SubscriptionDetails, createdById, school.SchoolId);
+
+
+            //    if (subscriptionResponse.SubscriptionMessage != Constants.Success)
+            //    {
+            //        schoolViewModel.SubscriptionDetails.SubscriptionMessage = subscriptionResponse.SubscriptionMessage;
+            //        return schoolViewModel;
+            //    }
+
+            //    schoolViewModel.SubscriptionDetails.SubscriptionMessage = Constants.Success;
+            //}
+
+            //else
+            //{
                 var subscriptionResponse = await _iyizicoService.BuySchoolSubscription(schoolViewModel.SubscriptionDetails, createdById, school.SchoolId);
-
-
-                if (subscriptionResponse.SubscriptionMessage != Constants.Success)
-                {
-                    schoolViewModel.SubscriptionDetails.SubscriptionMessage = subscriptionResponse.SubscriptionMessage;
-                    return schoolViewModel;
-                }
-
-                schoolViewModel.SubscriptionDetails.SubscriptionMessage = Constants.Success;
-            }
-
-            else
-            {
-                var subscriptionResponse = await _iyizicoService.BuyInternationalSchoolSubscription(schoolViewModel.SubscriptionDetails, createdById, school.SchoolId);
                 schoolViewModel.SubscriptionDetails.IsInternationalUser = true;
                 schoolViewModel.SubscriptionDetails.SubscriptionMessage = subscriptionResponse;
-            }
+            //}
             return schoolViewModel;
         }
 
@@ -992,53 +997,71 @@ namespace LMS.Services
             }
         }
 
-        public async Task DeleteSchoolTeacher(SchoolTeacherViewModel model)
+        public async Task<bool> DeleteSchoolTeacher(SchoolTeacherViewModel model)
         {
-            var classTeachers = new List<ClassTeacher>();
-            var schoolTeacher = await _schoolTeacherRepository.GetAll().Where(x => x.SchoolId == model.SchoolId && x.TeacherId == model.TeacherId).FirstOrDefaultAsync();
-
-            if (schoolTeacher != null)
+            try
             {
-                _schoolTeacherRepository.Delete(schoolTeacher.Id);
-                _schoolTeacherRepository.Save();
+
+
+                var classTeachers = new List<ClassTeacher>();
+                var schoolTeacher = await _schoolTeacherRepository.GetAll().Where(x => x.SchoolId == model.SchoolId && x.TeacherId == model.TeacherId).FirstOrDefaultAsync();
+                bool isDelete = false;
+
+                if (schoolTeacher != null)
+                {
+                    _schoolTeacherRepository.Delete(schoolTeacher.Id);
+                    var res4 = (int)await _schoolTeacherRepository.SaveAsync();
+                    if (res4 > 0)
+                        isDelete = true;
+                }
+
+                var classes = await _classRepository.GetAll().Where(x => x.SchoolId == model.SchoolId).ToListAsync();
+
+                classTeachers = await _classTeacherRepository.GetAll().Include(x => x.Teacher).Where(x => x.TeacherId == model.TeacherId).ToListAsync();
+
+
+                var requiredClassTeacher = classTeachers.Where(x => classes.Any(y => y.ClassId == x.ClassId && x.TeacherId == model.TeacherId)).ToList();
+
+                //var requiredTeacher = classTeachers.Where(x => x.TeacherId == model.TeacherId).FirstOrDefault();
+                if (requiredClassTeacher.Count() != 0)
+                {
+                    _classTeacherRepository.DeleteAll(requiredClassTeacher);
+                    var res2 = (int)await _classTeacherRepository.SaveAsync();
+                    if (res2 > 0)
+                        isDelete = true;
+                }
+
+
+
+
+                var courses = await _courseRepository.GetAll().Where(x => x.SchoolId == model.SchoolId).ToListAsync();
+
+                var courseTeachers = await _courseTeacherRepository.GetAll().Where(x => x.TeacherId == model.TeacherId).ToListAsync();
+
+                var requiredCourseTeacher = courseTeachers.Where(x => courses.Any(y => y.CourseId == x.CourseId && x.TeacherId == model.TeacherId)).ToList();
+
+                if (requiredCourseTeacher.Count() != 0)
+                {
+                    _courseTeacherRepository.DeleteAll(requiredCourseTeacher);
+                    var res1 = (int)await _courseTeacherRepository.SaveAsync();
+                    if (res1 > 0)
+                        isDelete = true;
+                }
+
+
+                //remove userpermissions
+
+                var userPermissions = await _userPermissionRepository.GetAll().Where(x => x.TypeId == model.SchoolId || x.SchoolId == model.SchoolId).ToListAsync();
+
+                _userPermissionRepository.DeleteAll(userPermissions);
+                await _userPermissionRepository.SaveAsync();
+
+                return isDelete;
             }
-
-            var classes = await _classRepository.GetAll().Where(x => x.SchoolId == model.SchoolId).ToListAsync();
-
-            classTeachers = await _classTeacherRepository.GetAll().Include(x => x.Teacher).Where(x => x.TeacherId == model.TeacherId).ToListAsync();
-
-
-            var requiredClassTeacher = classTeachers.Where(x => classes.Any(y => y.ClassId == x.ClassId && x.TeacherId == model.TeacherId)).ToList();
-
-            //var requiredTeacher = classTeachers.Where(x => x.TeacherId == model.TeacherId).FirstOrDefault();
-            if (requiredClassTeacher.Count() != 0)
+            catch (Exception)
             {
-                _classTeacherRepository.DeleteAll(requiredClassTeacher);
-                _classTeacherRepository.Save();
+                throw;
             }
-
-
-
-
-            var courses = await _courseRepository.GetAll().Where(x => x.SchoolId == model.SchoolId).ToListAsync();
-
-            var courseTeachers = await _courseTeacherRepository.GetAll().Where(x => x.TeacherId == model.TeacherId).ToListAsync();
-
-            var requiredCourseTeacher = courseTeachers.Where(x => courses.Any(y => y.CourseId == x.CourseId && x.TeacherId == model.TeacherId)).ToList();
-
-            if (requiredCourseTeacher != null)
-            {
-                _courseTeacherRepository.DeleteAll(requiredCourseTeacher);
-                _courseTeacherRepository.Save();
-            }
-
-
-            //remove userpermissions
-
-            var userPermissions = await _userPermissionRepository.GetAll().Where(x => x.TypeId == model.SchoolId || x.SchoolId == model.SchoolId).ToListAsync();
-
-            _userPermissionRepository.DeleteAll(userPermissions);
-            _userPermissionRepository.Save();
 
 
 
@@ -1065,14 +1088,14 @@ namespace LMS.Services
 
         }
 
-        public async Task<bool> IsSchoolNameExist(string schoolName)
+        public async Task<string> IsSchoolNameExist(string schoolName)
         {
             var result = await _schoolRepository.GetAll().Where(x => x.SchoolName == schoolName && !x.IsDeleted).FirstOrDefaultAsync();
             if (result != null)
             {
-                return false;
+                return Constants.SchoolNameExist;
             }
-            return true;
+            return Constants.SchoolNameDoesNotExist;
         }
 
         //public async Task<SchoolViewModel> GetSchoolByName(string schoolName)

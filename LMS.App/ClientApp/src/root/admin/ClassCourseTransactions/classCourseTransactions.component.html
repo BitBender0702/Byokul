@@ -74,6 +74,14 @@
                 >
                   <div class="d-flex w-100 justify-content-between">
                     <h5 class="p-m-0">{{ "ClassCourseTransactions" | translate }}</h5>
+                    <div>
+                    <button
+                    type="button"
+                    (click)="exportToExcel(dt)"
+                    class="btn custom-btn primary_btn earning-btn fw_400 h_44 me-3"
+                  >
+                    {{ "ExportToExcel" | translate }}
+                  </button>
                     <button
                       type="button"
                       (click)="resetSorting()"
@@ -81,6 +89,7 @@
                     >
                     {{ "ResetTable" | translate }}
                     </button>
+                  </div>
                   </div>
                   <span class="p-input-icon-left">
                     <i class="pi pi-search"></i>

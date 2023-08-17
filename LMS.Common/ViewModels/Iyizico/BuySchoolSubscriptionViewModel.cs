@@ -20,6 +20,10 @@ namespace LMS.Common.ViewModels.Iyizico
         public DateTime? SubscriptionStartDate { get; set; }
         public DateTime? SubscriptionEndDate { get; set; }
         public bool? IsInternationalUser { get; set; }
+        public string CardToken { get; set; }
+        public string CardUserKey { get; set; }
+        public bool IsCardSaved { get; set; }
+
 
         //public int PlanId { get; set; }
     }

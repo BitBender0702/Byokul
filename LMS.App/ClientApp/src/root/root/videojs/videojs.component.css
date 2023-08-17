@@ -10,6 +10,9 @@
     height: 725px !important;
    }
 
+   .classCourseView{
+    height: 700px !important;
+   }
    
    @media (max-width:767px) {
     video-js {

@@ -16,7 +16,7 @@ namespace LMS.Services.Iyizico
 {
     public interface IIyizicoService
     {
-        Task<BuySchoolSubscriptionViewModel> BuySchoolSubscription(BuySchoolSubscriptionViewModel model,string userId,Guid schoolId);
+        //Task<BuySchoolSubscriptionViewModel> BuySchoolSubscription(BuySchoolSubscriptionViewModel model,string userId,Guid schoolId);
         Task<List<SchoolSubscriptionPlansViewModel>> GetSubscriptionPlans();
         Task<string> BuyClassCourse(BuyClassCourseViewModel model, string userId);
         Task UpdateSchoolTransaction(string ConversationId, string paymentId, bool isInternationalUser);
@@ -27,7 +27,9 @@ namespace LMS.Services.Iyizico
         Task<string> CancelSubscription(Guid schoolId);
         Task<string> RenewSubscription(Guid schoolId);
         Task<string> RefundPayment(string paymentId, SchoolClassCourseEnum type);
-       Task<string> BuyInternationalSchoolSubscription(BuySchoolSubscriptionViewModel model, string userId, Guid schoolId);
+        Task<string> BuySchoolSubscription(BuySchoolSubscriptionViewModel model, string userId, Guid schoolId);
+        Task<CardList> GetUserSavedCards(string email);
+
 
 
 

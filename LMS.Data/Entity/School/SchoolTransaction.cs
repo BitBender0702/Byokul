@@ -24,6 +24,13 @@ namespace LMS.Data.Entity
         public DateTime SubscriptionStartDate { get; set; }
         public DateTime SubscriptionEndDate { get; set; }
         public bool IsRefund { get; set; }
+        public Plan? Plan { get; set; }
 
+    }
+
+    public enum Plan
+    {
+        Monthly = 1,
+        Yearly = 2
     }
 }

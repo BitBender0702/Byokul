@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using LMS.Data.Entity.Common;
 using File = LMS.Data.Entity.File;
+using LMS.Data.Entity.Iyizico;
 
 namespace LMS.Data
 {
@@ -87,6 +88,8 @@ namespace LMS.Data
         public DbSet<SchoolSubscriptionPlan> SchoolSubscriptionPlans { get; set; }
         public DbSet<SchoolTransaction> SchoolTransactions { get; set; }
         public DbSet<ClassCourseTransaction> ClassCourseTransactions { get; set; }
+        public DbSet<CardUserKey> CardUserKeys { get; set; }
+        public DbSet<CardRenewal> CardRenewals { get; set; }
 
 
 
