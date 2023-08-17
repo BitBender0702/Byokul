@@ -51,10 +51,11 @@ namespace LMS.Services
         private IGenericRepository<UserSharedPost> _userSharedPostRepository;
         private IGenericRepository<SavedPost> _savedPostRepository;
         private IGenericRepository<ClassCourseTransaction> _classCourseTransactionRepository;
+        private IGenericRepository<ClassCourseRating> _classCourseRatingRepository;
         private IConfiguration _config;
 
 
-        public CourseService(IMapper mapper, IGenericRepository<Course> courseRepository, IGenericRepository<CourseLanguage> courseLanguageRepository, IGenericRepository<CourseDiscipline> courseDisciplineRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<CourseTeacher> courseTeacherRepository, IGenericRepository<Post> postRepository, IGenericRepository<Class> classRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<CourseCertificate> courseCertificateRepository, IGenericRepository<CourseTag> courseTagRepository, UserManager<User> userManager, IBlobService blobService, IClassService classService, IUserService userService, IGenericRepository<CourseLike> courseLikeRepository, IGenericRepository<CourseViews> courseViewsRepository, IGenericRepository<School> schoolRepository, IGenericRepository<ClassCourseFilter> classCourseFilterRepository, IGenericRepository<UserClassCourseFilter> userClassCourseFilterRepository, IGenericRepository<UserSharedPost> userSharedPostRepository, IGenericRepository<SavedPost> savedPostRepository, IGenericRepository<ClassCourseTransaction> classCourseTransactionRepository, IConfiguration config)
+        public CourseService(IMapper mapper, IGenericRepository<Course> courseRepository, IGenericRepository<ClassCourseRating> classCourseRatingRepository, IGenericRepository<CourseLanguage> courseLanguageRepository, IGenericRepository<CourseDiscipline> courseDisciplineRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<CourseTeacher> courseTeacherRepository, IGenericRepository<Post> postRepository, IGenericRepository<Class> classRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<CourseCertificate> courseCertificateRepository, IGenericRepository<CourseTag> courseTagRepository, UserManager<User> userManager, IBlobService blobService, IClassService classService, IUserService userService, IGenericRepository<CourseLike> courseLikeRepository, IGenericRepository<CourseViews> courseViewsRepository, IGenericRepository<School> schoolRepository, IGenericRepository<ClassCourseFilter> classCourseFilterRepository, IGenericRepository<UserClassCourseFilter> userClassCourseFilterRepository, IGenericRepository<UserSharedPost> userSharedPostRepository, IGenericRepository<SavedPost> savedPostRepository, IGenericRepository<ClassCourseTransaction> classCourseTransactionRepository, IConfiguration config)
         {
             _mapper = mapper;
             _courseRepository = courseRepository;
@@ -81,6 +82,8 @@ namespace LMS.Services
             _savedPostRepository = savedPostRepository;
             _classCourseTransactionRepository = classCourseTransactionRepository;
             _config = config;
+            _classCourseRatingRepository = classCourseRatingRepository;
+
         }
 
         public async Task<CourseViewModel> SaveNewCourse(CourseViewModel courseViewModel, string createdById)
@@ -1129,6 +1132,21 @@ namespace LMS.Services
 
         }
 
+        public async Task CourseRating(ClassCourseRatingViewModel courseRating)
+        {
+            var course = _courseRepository.GetById(courseRating.CourseId);
+            var userId = await _userManager.FindByIdAsync(courseRating.UserId);
+            var totalLikes = await _classCourseRatingRepository.GetAll().Where(x => x.CourseId == courseRating.CourseId && x.UserId == courseRating.UserId).FirstOrDefaultAsync();
+            if (totalLikes == null)
+            {
+                ClassCourseRating ratings = new ClassCourseRating();
+                ratings.Rating = courseRating.Rating;
+                ratings.CourseId = courseRating.CourseId;
+                ratings.UserId = courseRating.UserId;
+                _classCourseRatingRepository.Insert(ratings);
+                _classCourseRatingRepository.Save();
+            }
+        }
 
 
 

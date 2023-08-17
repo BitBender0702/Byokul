@@ -168,14 +168,74 @@
       <div class="live-inner w-100 reel_mobile">
         <div class="live-image overflow-hidden position-relative">
           <div class="reel_videoinner">
-            <videoJs-component #videoComp *ngFor="let video of item.postAttachments" 
+            <videoJs-component #videoComp id="video-{{i}}" *ngFor="let video of item.postAttachments" 
             [postAttachment]="video" [isReelView]="true"
           ></videoJs-component>
             <!-- <video [id]="'video-' + i" controls controlsList="nodownload noremoteplayback" *ngFor="let video of item.postAttachments" loop [src]="video.fileUrl"  type="video/mp4" (click)="toggleVideoPlayback($event)"></video> -->
           </div>
-          <div class="reel-username font_16 white_text d-flex">
-            <img [src]="item.parentImageUrl" class="me-2" /> {{item.parentName}}
-          </div>
+          <div class="reel-username font_16 white_text d-flex">            
+            <a
+            *ngIf="item.postAuthorType == 1"
+            (click)="getSelectedSchool(item.parentName)"
+            class="routeLink "
+            >
+              <img [src]="item.parentImageUrl" class="me-2" />
+            </a>
+            
+          <a
+            *ngIf="item.postAuthorType == 2"
+            (click)="
+              getSelectedClass(
+                item.parentName,
+                item.schoolName
+              )
+            "
+            [routerLink]="[
+              '/profile/class',
+              item.parentName
+            ]"
+            class="routeLink"
+          >
+            <img [src]="item.parentImageUrl" class="me-2" />
+          </a>
+          <a
+            *ngIf="item.postAuthorType == 3"
+            (click)="
+              getSelectedCourse(
+                item.parentName,
+                item.schoolName
+              )
+            "
+            class="routeLink"
+          >
+            <img [src]="item.parentImageUrl" class="me-2" /> 
+          </a>
+          <a
+            *ngIf="item.postAuthorType == 4"
+            (click)="getUserDetails(item.parentId)"
+            class="routeLink"
+          >
+            <img
+              *ngIf="item.parentImageUrl != null"
+              [lazyLoad]="item.parentImageUrl"
+            />
+            <img
+              *ngIf="
+                item.parentImageUrl == null &&
+                gender == '1'
+              "
+              lazyLoad="../../../assets/images/maleProfile.jfif"
+            />
+            <img
+              *ngIf="
+                item.parentImageUrl == null &&
+                (gender == '2' || gender == '3')
+              "
+              lazyLoad="../../../assets/images/femaleProfile.jfif"
+            />
+          </a>
+          {{item.parentName}}
+        </div>
           <div class="live-bottom-text p-3">
             <h5 class="font_14 mb-0 fw_600 text_sec1">{{item.title}} <span class="font_14 fw_400  ms-3">{{item.description}}</span></h5>
           </div>

@@ -22,6 +22,7 @@ namespace LMS.Common.ViewModels.School
         public string CreatedById { get; set; }
         public bool IsDeleted { get; set; }
         public Guid? SpecializationId { get; set; }
+        public Guid? AccessibilityId { get; set; }
         public SpecializationViewModel Specialization { get; set; }
         public Guid? CountryId { get; set; }
         public CountryViewModel Country { get; set; }
@@ -44,6 +45,9 @@ namespace LMS.Common.ViewModels.School
         public string SubscriptionMessage { get; set; }
         public bool IsSchoolSubscribed { get; set; }
         public bool IsDefaultAvatar { get; set; }
+        public bool IsAvatar { get; set; }
+        public string SchoolSlogan { get; set; }
+        public string SchoolEmail { get; set; }
 
 
 

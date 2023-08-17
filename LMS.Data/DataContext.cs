@@ -91,7 +91,7 @@ namespace LMS.Data
         public DbSet<CardUserKey> CardUserKeys { get; set; }
         public DbSet<CardRenewal> CardRenewals { get; set; }
 
-
+        public DbSet<ClassCourseRating> ClassCourseRatings { get; set; }
 
 
 

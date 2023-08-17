@@ -26,3 +26,8 @@
     height: 700px !important;
     width: 100% !important;
 }
+
+::ng-deep .carousel-control {
+    opacity: 100% !important;
+    height: 80% !important;
+}

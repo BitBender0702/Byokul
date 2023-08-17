@@ -537,6 +537,30 @@ namespace LMS.Data.Migrations
                     b.ToTable("CommentLikes");
                 });
 
+            modelBuilder.Entity("LMS.Data.Entity.Common.ClassCourseRating", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("ClassId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CourseId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<double?>("Rating")
+                        .HasColumnType("float");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ClassCourseRatings");
+                });
+
             modelBuilder.Entity("LMS.Data.Entity.Common.ClassCourseTransaction", b =>
                 {
                     b.Property<Guid>("Id")

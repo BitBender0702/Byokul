@@ -26,7 +26,9 @@
                 <!-- <button><a href="http://twitter.com/share?text=text goes here&url={{websiteUrl}}&hashtags=hashtag1,hashtag2,hashtag3" target="_blank">Twitter</a>
                 </button> -->
                 </div>
-                <div class="text-center btn custom-btn primary_btn earning-btn fw_400 h_44 share_btn" style="margin-left: 39%;">
+                <div class="text-center">
+                  <div class="btn custom-btn primary_btn earning-btn fw_400 h_44 share_btn">
+                    {{'CopyLink'| translate }}
                   <button
                   #copyButton
                   type="button"
@@ -35,9 +37,8 @@
                   pTooltip="Copy Link"
                   tooltipPosition="top"
                   >
-                  <span style="color: white;">{{'CopyLink'| translate }} :</span>
-                  <img src="../../../../assets/images/school/copy.svg" />
-                </button>
+                  </button>
+                  </div>
                 </div>
               </div>
             </div>

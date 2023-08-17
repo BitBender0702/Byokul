@@ -19,9 +19,9 @@ namespace LMS.Common.ViewModels.Post
         public static string PPT = "vnd.ms-powerpoint";
         public static string Turkey = "Turkey";
         public static string Success = "Success";
-        public static string IncorrectPassword = "Incorrect password.";
+        public static string IncorrectPassword = "The password you entered is incorrect";
         public static string EmailNotConfirmed = "email not confirm";
-        public static string UserNotFound = "user not found";
+        public static string UserNotFound = "This email is not registered";
         public static string ResetTokenExpired = "reset token expired";
         public static string FolderCantDeleted = "folder cant deleted";
         public static string FolderDeleted = "folder deleted";

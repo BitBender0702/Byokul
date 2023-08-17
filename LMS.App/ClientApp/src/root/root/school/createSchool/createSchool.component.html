@@ -134,6 +134,77 @@
                 </small>
               </div>
 
+
+
+              <div class="form-group">
+                <input
+                  placeholder="{{ 'SchoolSlogan' | translate }}"
+                  formControlName="schoolSlogan"
+                  name="schoolslogan"
+                  maxlength="60"
+                  class="form-control w-100"
+                />
+              </div>
+              
+              <div class="form-group">
+                <input
+                  #founded
+                  autocomplete="off"
+                  type="text"
+                  class="form-control w-100 date_calendar"
+                  name="founded"
+                  formControlName="founded"
+                  id="founded"
+                  placeholder="{{ 'Founded' | translate }}"
+                />
+                <small
+                  class="p-error"
+                  style="color: orange"
+                  *ngIf="
+                    isSubmitted &&
+                    createSchoolForm1.controls.founded.errors
+                  "
+                  >{{ "FoundedYearRequired" | translate }}
+                </small>
+                <small
+                  class="p-error"
+                  style="color: orange"
+                  *ngIf="isSubmitted && createSchoolForm1.errors"
+                >
+                  {{ createSchoolForm1.errors.dates }}
+                </small>
+              </div>
+
+              <div class="form-group">
+                <select
+                  class="form-select rounded-8 w-100"
+                  formControlName="accessibilityId"
+                  aria-label="Default select example"
+                >
+                  <option value="" disabled selected hidden>
+                    {{ "Visibility" | translate }}
+                  </option>
+                  <option
+                    *ngFor="let item of visibility; let i = index"
+                    [value]="item.id"
+                    >
+                    {{ item.name }}
+                  </option>
+                  <small
+                    class="p-error"
+                    style="color: orange"
+                    *ngIf="
+                      isSubmitted &&
+                      createSchoolForm1.controls.visibility.errors
+                    "
+                    >{{ "ThisFieldRequired" | translate }}
+                  </small>
+                </select>
+              </div>
+
+
+
+
               <div class="form-group">
                 <div class="custom-language-select">
                   <p-multiSelect
@@ -193,16 +264,20 @@
             >
               {{ "InValidPhoneNumber" | translate }}
             </small>
+
+
+
+
               </div>
-              <!-- <div class="form-group">
-                <input type="text"  class="form-control resize-none" formControlName="phoneNumber" (input)="phoneFormatter($event)"  /> -->
-                <!-- <small class="p-error" style="color: orange"*ngIf="isStepCompleted && createSchoolForm1.get('phoneNumber')?.errors?.required
-                 ">{{ "AtLeastOneLanguageRequired" | translate }}
-              </small>
-              <small class="p-error" style="color: orange"*ngIf="isStepCompleted && createSchoolForm1.get('phoneNumber')?.errors?.pattern
-              ">{{ "AtLeastOneLanguageRequired" | translate }}
-           </small> -->
-              <!-- </div> -->
+              <div class="form-group">
+                <input
+                  formControlName="schoolEmail"
+                  type="text"
+                  name="schoolmail"
+                  class="form-control w-100"
+                  placeholder="{{ 'SchoolEmail' | translate }}"
+                />
+              </div>
               <div class="form-group">
                 <textarea #textarea maxlength="200"
                   formControlName="description"
@@ -217,6 +292,10 @@
               >
                 {{ "SchoolNameAlreadyExists" | translate }}
               </small>
+
+
+
+
               <div
                 class="steps_btns d-flex align-items-center justify-content-center"
               >

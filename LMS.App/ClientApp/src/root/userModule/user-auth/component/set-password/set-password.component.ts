@@ -100,7 +100,7 @@ export class SetPasswordComponent extends MultilingualComponent implements OnIni
        this.isSubmitted = false;
        if(response.result == "Success"){
         this.router.navigateByUrl("user/auth/login");
-        setPassResponse.next(true); 
+        setPassResponse.next(true);  
        }
       });
   }

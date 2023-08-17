@@ -161,4 +161,11 @@ export class ClassService{
         return this.http.post(`${this.apiUrl}/class/enableDisableComments`,null, {params:queryParams,headers: this.headers});
     }
 
+
+    courseRating(classRating:any):Observable<any>{
+        debugger;
+        return this.http.post(`${this.apiUrl}/class/classRating`,classRating, {headers: this.headers});
+    }
+
+
 }

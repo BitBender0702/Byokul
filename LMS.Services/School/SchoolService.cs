@@ -132,7 +132,11 @@ namespace LMS.Services
                 CountryName = schoolViewModel.CountryName,
                 SchoolUrl = schoolViewModel.SchoolUrl,
                 PhoneNumber = schoolViewModel.PhoneNumber,
-                IsDefaultAvatar = schoolViewModel.IsDefaultAvatar 
+                SchoolSlogan = schoolViewModel.SchoolSlogan,
+                Founded = schoolViewModel.Founded,
+                AccessibilityId = schoolViewModel.AccessibilityId,
+                SchoolEmail = schoolViewModel.SchoolEmail
+
             };
 
             _schoolRepository.Insert(school);

@@ -819,6 +819,7 @@ export class SchoolProfileComponent
   }
 
   getSchoolDetails(schoolId: string) {
+    debugger;
     this._schoolService.getSchoolEditDetails(schoolId).subscribe((response) => {
       debugger
       this.editSchool = response;
@@ -827,6 +828,7 @@ export class SchoolProfileComponent
   }
 
   initializeEditFormControls() {
+    debugger
     // if(this.getCountriesSubscription == null){
     this.getCountriesSubscription = this._userService.getCountryList().subscribe((response) => {
       debugger

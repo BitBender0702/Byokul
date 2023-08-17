@@ -79,3 +79,14 @@
 .priceInputWidth{
   width: 268%;
 }
+}
+
+
+.image-container {
+  display: inline-block; 
+  margin-right: 10px; 
+}
+
+.image-container:last-child {
+  margin-right: 0;
+}

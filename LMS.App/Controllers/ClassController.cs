@@ -279,5 +279,26 @@ namespace LMS.App.Controllers
             return Ok();
         }
 
+        [Route("classRating")]
+        [HttpPost]
+        public async Task<IActionResult> ClassRating([FromBody] ClassCourseRatingViewModel classRating)
+        {
+            var userId = await GetUserIdAsync(this._userManager);
+            if (userId == null)
+            {
+                return BadRequest("User is not logged in");
+            }
+            classRating.UserId = userId;
+            var classForRating = await _classService.GetClassById((Guid)classRating.ClassId, userId);
+            if (classForRating == null)
+            {
+                return BadRequest("The CourseId you entered is incorrect");
+            }
+            await _classService.ClassRating(classRating);
+            return Ok("Course is rated");
+        }
+
+
+
     }
 }
