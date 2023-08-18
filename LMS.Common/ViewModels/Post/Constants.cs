@@ -44,14 +44,6 @@ namespace LMS.Common.ViewModels.Post
         public static string FailedToDeleteTeacher = "Failed to delete teacher.";
         public static string ClassOrTeacherIdNotExist = "Class/Teacher id is not exist.";
         public static string CourseOrTeacherIdNotExist = "Course/Teacher id is not exist.";
-        public static string ClassRatedSuccessfully = "Class rated successfully";
-        public static string CourseRatedSuccessfully = "Course rated successfully";
-        public static string UserNotLoggedIn = "User is not logged in";
-        public static string RatingMustBeBetween1To5 = "Rating must be between 1 to 5";
-        public static string ClassNotRatedSuccessfully = "Class not rated successfully";
-        public static string CourseNotRatedSuccessfully = "Course not rated successfully";
-        public static string StudentDeletedSuccessfully = "Student removed successfully from this school";
-        public static string StudentNotExists = "Student not exists in this school";
         public static string FollowerBannedSuccessfully = "Follower banned successfully";
         public static string FollowerOrUserIdNotValid = "FollowerId/UserId not valid";
 
