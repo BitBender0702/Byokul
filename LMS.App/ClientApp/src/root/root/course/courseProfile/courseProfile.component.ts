@@ -241,6 +241,8 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       this.addCourseView(this.course.courseId);
       this.addEventListnerOnCarousel();
       this.course.posts = this.getFilteredAttachments(this.course.posts);
+      this.isRatedByUser = response.isRatedByUser
+
     });
 
     this.editCourseForm = this.fb.group({
@@ -1529,11 +1531,19 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     }
     debugger
     this._courseService.courseRating(this.courseRatingView).subscribe((response) => {
+      debugger;
+      this.isRatedByUser = true;
+      this.cd.detectChanges();
+      const translatedInfoSummary = this.translateService.instant('Success');
+      const translatedMessage = this.translateService.instant('ThankYouForYourRating');
+      this.messageService.add({severity:'success', summary:translatedInfoSummary,life: 3000, detail:translatedMessage});
       // this.isDataLoaded = true;
       // this.classCourseDetails.classCourseItem.comments = response;
       });;
   }
 
+
+  isRatedByUser:boolean=false;
   rateNumber: number = 0;
   isRated: boolean = false;
   fakeArray = new Array(5);
@@ -1543,6 +1553,8 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     this.rateNumber = rateNumber + 1;
     this.isRated = true;
     this.ratedArray[0] = this.rateNumber;
+
+
   }
 
   

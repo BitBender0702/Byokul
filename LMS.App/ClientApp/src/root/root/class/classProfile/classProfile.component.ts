@@ -293,7 +293,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       this.addClassView(this.class.classId);
       this.addEventListnerOnCarousel();
       this.class.posts = this.getFilteredAttachments(this.class.posts);
- 
+      this.isRatedByUser = response.isRatedByUser
 
 
       //here is the code
@@ -1684,6 +1684,9 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     }
     debugger
     this._classService.courseRating(this.classRatingView).subscribe((response) => {
+      debugger;
+      this.isRatedByUser = true;
+      this.cd.detectChanges();
       const translatedInfoSummary = this.translateService.instant('Success');
       const translatedMessage = this.translateService.instant('ThankYouForYourRating');
       this.messageService.add({severity:'success', summary:translatedInfoSummary,life: 3000, detail:translatedMessage});
@@ -1696,7 +1699,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   isRated: boolean = false;
   fakeArray = new Array(5);
   ratedArray: number[] = [];
-
+  isRatedByUser:boolean=false;
   ratingNumber(rateNumber: number) {
     this.rateNumber = rateNumber + 1;
     this.isRated = true;

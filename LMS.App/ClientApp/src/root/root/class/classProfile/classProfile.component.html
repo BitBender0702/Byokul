@@ -213,12 +213,12 @@
                     {{ "ConvertToCourse" | translate }}
                   </button> -->
                   <button
-                    *ngIf="isOwner"
+                    *ngIf="isOwner && !isRatedByUser"
                     class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins"
                     data-bs-toggle="modal"
                     data-bs-target="#rate-class"
                   >
-                    {{ "RateCourse" | translate }}
+                    {{ "RateClass" | translate }}
                   </button>
                   <button
                     *ngIf="isOwner"
@@ -2840,7 +2840,7 @@
         class="modal-header border-0 justify-content-center position-relative"
       >
         <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">
-          {{ "RateCourse" | translate }}
+          {{ "RateClass" | translate }}
         </h1>
         <button
           type="button"

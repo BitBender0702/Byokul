@@ -195,7 +195,7 @@
                   </button> -->
 
                   <button
-                    *ngIf="isOwner"
+                    *ngIf="isOwner && !isRatedByUser"
                     class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins"
                     data-bs-toggle="modal"
                     data-bs-target="#rate-course"

@@ -394,6 +394,16 @@ namespace LMS.Services
                     throw ex;
                 }
 
+                var isClassRated = _classCourseRatingRepository.GetAll().Where(x => x.ClassId == model.ClassId && x.UserId == loginUserId).FirstOrDefault();
+                if (isClassRated == null)
+                {
+                    model.IsRatedByUser = false;
+                }
+                else
+                {
+                    model.IsRatedByUser = true;
+                }
+
                 model.Languages = await GetLanguages(classes.ClassId);
                 model.Disciplines = await GetDisciplines(classes.ClassId);
                 model.Students = await GetStudents(classes.ClassId);
@@ -435,6 +445,16 @@ namespace LMS.Services
             catch (Exception ex)
             {
                 throw ex;
+            }
+
+            var isClassRated = _classCourseRatingRepository.GetAll().Where(x => x.ClassId == model.ClassId && x.UserId == loginUserId).FirstOrDefault();
+            if (isClassRated == null)
+            {
+                model.IsRatedByUser = false;
+            }
+            else
+            {
+                model.IsRatedByUser = true;
             }
 
             model.Languages = await GetLanguages(classes.ClassId);
@@ -1107,11 +1127,12 @@ namespace LMS.Services
                     averageRatingForClass = (int)ratings.Rating;
                 }
                 classTotalLikes.Rating = averageRatingForClass;
+                classTotalLikes.IsRatedByUser = true;
                 _classRepository.Update(classTotalLikes);
                 _classRepository.Save();
                 _classCourseRatingRepository.Insert(ratings);
                 _classCourseRatingRepository.Save();
-                return "Successfully Rated";
+                return Constants.ClassRatedSuccessfully;
             }
             return "User has alreday rated for this course";
         }

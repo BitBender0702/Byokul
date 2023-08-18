@@ -47,6 +47,7 @@ namespace LMS.Common.ViewModels.Class
         public bool? IsDisableByOwner { get; set; }
         public bool IsCommentsDisabled { get; set; }
         public bool IsClassAccessable { get; set; }
+        public bool IsRatedByUser { get; set; }
 
     }
 }

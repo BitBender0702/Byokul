@@ -414,6 +414,16 @@ namespace LMS.Services
                     courses.IsConvertable = true;
 
 
+                    var isCourseRated = _classCourseRatingRepository.GetAll().Where(x => x.ClassId == model.CourseId && x.UserId == loginUserid).FirstOrDefault();
+                    if (isCourseRated == null)
+                    {
+                        model.IsRatedByUser = false;
+                    }
+                    else
+                    {
+                        model.IsRatedByUser = true;
+                    }
+
                     courses.CourseCertificates = _mapper.Map<IEnumerable<CertificateViewModel>>(classDetails.ClassCertificates);
 
                     var isClassAccessible = await _classCourseTransactionRepository.GetAll().Where(x => x.CourseId == model.CourseId && x.UserId == loginUserid && x.PaymentId != null).FirstOrDefaultAsync();
@@ -1163,9 +1173,10 @@ namespace LMS.Services
                     averageRatingForCourse = (int)ratings.Rating;
                 }
                 courseTotalLikes.Rating = averageRatingForCourse;
+                courseTotalLikes.IsRatedByUser = true;
                 _courseRepository.Update(courseTotalLikes);
                 _courseRepository.Save();
-                return "Successfully Rated";
+                return Constants.CourseRatedSuccessfully;
             }
             return "User has alreday rated for this course";
         }

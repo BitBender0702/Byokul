@@ -1,6 +1,7 @@
 ﻿using LMS.Common.Enums;
 using LMS.Common.ViewModels.Class;
 using LMS.Common.ViewModels.Common;
+using LMS.Common.ViewModels.Post;
 using LMS.Data.Entity;
 using LMS.Services;
 using LMS.Services.Common;
@@ -286,23 +287,23 @@ namespace LMS.App.Controllers
             var userId = await GetUserIdAsync(this._userManager);
             if (userId == null)
             {
-                return BadRequest("User is not logged in");
+                return Ok(new { Success = false, Message = Constants.UserNotLoggedIn });
             }
             classRating.UserId = userId;
             if ((int)classRating.Rating > 6 || (int)classRating.Rating <= 1)
             {
-                return BadRequest("Rating must be between 1 to 5");
+                return Ok(new { Success = false, Message = Constants.RatingMustBeBetween1To5 });
             }
             var classRatings = _classService.ClassRating(classRating);
-            if (classRatings.Result == "Successfully Rated")
+            if (classRatings.Result == Constants.ClassRatedSuccessfully)
             {
-                return Ok("Class is rated");
+                return Ok(new { Success = true, Message = Constants.ClassRatedSuccessfully });
             }
             else
             {
-                return BadRequest("Class is not rated");
+                return Ok(new { Success = false, Message = Constants.ClassNotRatedSuccessfully });
             }
-            
+
         }
 
 
