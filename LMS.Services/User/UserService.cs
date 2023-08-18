@@ -784,17 +784,21 @@ namespace LMS.Services
 
         public async Task<bool> BanFollower(string followerId, string userId)
         {
+            bool isUserBan = false;
             var follower = await _userFollowerRepository.GetAll().Where(x => x.FollowerId == followerId && x.UserId == userId).FirstOrDefaultAsync();
 
             if (follower != null)
             {
                 follower.IsBan = true;
                 _userFollowerRepository.Update(follower);
-                _userFollowerRepository.Save();
-                return true;
+                var result = await _userFollowerRepository.SaveAsync();
+                if ((int)result > 0)
+                {
+                    isUserBan = true;
+                }
             }
 
-            return false;
+            return isUserBan;
 
 
 
@@ -938,7 +942,7 @@ namespace LMS.Services
             }
             else
             {
-                return await GetDefaultFeeds(userId, postType, pageNumber, pageSize, searchString,null, null);
+                return await GetDefaultFeeds(userId, postType, pageNumber, pageSize, searchString, null, null);
             }
 
         }
@@ -1493,8 +1497,9 @@ namespace LMS.Services
             return null;
         }
 
-        public async Task DeleteSchoolTeacher(Guid schoolId, string userId)
+        public async Task<bool> DeleteSchoolTeacher(Guid schoolId, string userId)
         {
+            bool isDeleted = false;
             var teacher = await _teacherRepository.GetAll().Where(x => x.UserId == userId).FirstAsync();
 
             var schoolTeacher = await _schoolTeacherRepository.GetAll().Where(x => x.SchoolId == schoolId && x.TeacherId == teacher.TeacherId).FirstOrDefaultAsync();
@@ -1502,7 +1507,11 @@ namespace LMS.Services
             if (schoolTeacher != null)
             {
                 _schoolTeacherRepository.Delete(schoolTeacher.Id);
-                _schoolTeacherRepository.Save();
+                var result = await _schoolTeacherRepository.SaveAsync();
+                if ((int)result > 0)
+                {
+                    isDeleted = true;
+                }
             }
 
             var classTeacher = await _classTeacherRepository.GetAll().Include(x => x.Class).ThenInclude(y => y.School).Where(y => y.Class.School.SchoolId == schoolId && y.TeacherId == teacher.TeacherId).FirstOrDefaultAsync();
@@ -1511,7 +1520,11 @@ namespace LMS.Services
             if (classTeacher != null)
             {
                 _classTeacherRepository.Delete(classTeacher.Id);
-                _classTeacherRepository.Save();
+                var result = await _classTeacherRepository.SaveAsync();
+                if ((int)result > 0)
+                {
+                    isDeleted = true;
+                }
             }
 
             var courseTeacher = await _courseTeacherRepository.GetAll().Include(x => x.Course).ThenInclude(y => y.School).Where(y => y.Course.School.SchoolId == schoolId && y.TeacherId == teacher.TeacherId).FirstOrDefaultAsync();
@@ -1520,12 +1533,19 @@ namespace LMS.Services
             if (courseTeacher != null)
             {
                 _courseTeacherRepository.Delete(courseTeacher.Id);
-                _courseTeacherRepository.Save();
+                var result = await _courseTeacherRepository.SaveAsync();
+                if ((int)result > 0)
+                {
+                    isDeleted = true;
+                }
             }
+
+            return isDeleted;
         }
 
-        public async Task DeleteSchoolStudent(Guid schoolId, string userId)
+        public async Task<bool> DeleteSchoolStudent(Guid schoolId, string userId)
         {
+            bool isDeleted = false;
             var student = await _studentRepository.GetAll().Where(x => x.UserId == userId).FirstAsync();
 
 
@@ -1536,7 +1556,11 @@ namespace LMS.Services
             if (classStudent.Count() != 0)
             {
                 _classStudentRepository.DeleteAll(classStudent);
-                _classStudentRepository.Save();
+                var result = await _classStudentRepository.SaveAsync();
+                if ((int)result > 0)
+                {
+                    isDeleted = true;
+                }
             }
 
             var courseStudent = await _courseStudentRepository.GetAll().Include(x => x.Course).ThenInclude(y => y.School).Where(y => y.Course.School.SchoolId == schoolId && y.StudentId == student.StudentId).ToListAsync();
@@ -1545,8 +1569,14 @@ namespace LMS.Services
             if (courseStudent.Count() != 0)
             {
                 _courseStudentRepository.DeleteAll(courseStudent);
-                _courseStudentRepository.Save();
+                var result = await _courseStudentRepository.SaveAsync();
+                if ((int)result > 0)
+                {
+                    isDeleted = true;
+                }
             }
+
+            return isDeleted;
         }
 
         public async Task ReportFollower(ReportFollowerViewModel model)

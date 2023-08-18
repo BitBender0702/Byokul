@@ -413,6 +413,7 @@ namespace LMS.Services
                 model.ClassCertificates = await GetCertificateByClassId(classes.ClassId);
 
 
+
                 var isClassAccessible = await _classCourseTransactionRepository.GetAll().Where(x => x.ClassId == model.ClassId && x.UserId == loginUserId && x.PaymentId != null).FirstOrDefaultAsync();
 
                 if (isClassAccessible != null || model.CreatedById == loginUserId)

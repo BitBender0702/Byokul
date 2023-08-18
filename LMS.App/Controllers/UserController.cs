@@ -3,6 +3,7 @@ using LMS.Common.ViewModels.Chat;
 using LMS.Common.ViewModels.Class;
 using LMS.Common.ViewModels.Common;
 using LMS.Common.ViewModels.Permission;
+using LMS.Common.ViewModels.Post;
 using LMS.Common.ViewModels.User;
 using LMS.Data.Entity;
 using LMS.Data.Entity.Chat;
@@ -153,7 +154,12 @@ namespace LMS.App.Controllers
         public async Task<IActionResult> BanFollower(string followerId,string userId)
         {
             var reponse = await _userService.BanFollower(followerId, userId);
-            return Ok(reponse);
+            if (reponse)
+            {
+                return Ok(new { Success = true, Message = Constants.FollowerBannedSuccessfully });
+            }
+            return Ok(new { Success = false, Message = Constants.FollowerOrUserIdNotValid });
+
         }
 
         [Route("unBanFollower")]
@@ -325,8 +331,13 @@ namespace LMS.App.Controllers
         public async Task<IActionResult> DeleteSchoolTeacher(Guid schoolId)
         {
             var userId = await GetUserIdAsync(this._userManager);
-            await _userService.DeleteSchoolTeacher(schoolId, userId);
-            return Ok();
+            var response = await _userService.DeleteSchoolTeacher(schoolId, userId);
+            if (response)
+            {
+                return Ok(new { Success = true, Message = Constants.TeacherDeletedSuccesfully });
+
+            }
+            return Ok(new { Success = false, Message = Constants.FailedToDeleteTeacher });
         }
 
         [Route("deleteSchoolStudent")]
@@ -334,8 +345,12 @@ namespace LMS.App.Controllers
         public async Task<IActionResult> deleteSchoolStudent(Guid schoolId)
         {
             var userId = await GetUserIdAsync(this._userManager);
-            await _userService.DeleteSchoolStudent(schoolId, userId);
-            return Ok();
+            var response = await _userService.DeleteSchoolStudent(schoolId, userId);
+            if (response)
+            {
+                return Ok(new {Success = true, Message = Constants.StudentDeletedSuccessfully});
+            }
+            return Ok(new { Success = false, Message = Constants.StudentNotExists });
         }
 
         [Route("reportFollower")]

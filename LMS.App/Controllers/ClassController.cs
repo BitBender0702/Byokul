@@ -1,4 +1,5 @@
 ﻿using LMS.Common.Enums;
+using LMS.Common.ViewModels.Chat;
 using LMS.Common.ViewModels.Class;
 using LMS.Common.ViewModels.Common;
 using LMS.Common.ViewModels.Post;

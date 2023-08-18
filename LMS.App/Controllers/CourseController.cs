@@ -276,13 +276,13 @@ namespace LMS.App.Controllers
                 return Ok(new { Success = false, Message = Constants.RatingMustBeBetween1To5 });
             }
             var courseRatings = _courseService.CourseRating(courseRating);
-            if (courseRatings.Result == Constants.CourseRatedSuccessfully)
+            if(courseRatings.Result == Constants.CourseRatedSuccessfully)
             {
-                return Ok(new { Success = true, Message = Constants.CourseRatedSuccessfully });
+                return Ok(new { Success = true, Message = Constants.CourseRatedSuccessfully});
             }
             else
             {
-                return Ok(new { Success = false, Message = Constants.CourseNotRatedSuccessfully });
+                return Ok(new { Success = false, Message = Constants.CourseNotRatedSuccessfully});
             }
 
         }
