@@ -100,7 +100,7 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
   monthYearMask: string = "00-00"
   subscriptionPlans: any;
   currentDate!: string;
-
+  EMAIL_PATTERN = '[a-zA-Z0-9]+?(\\.[a-zA-Z0-9]+)*@[a-zA-Z]+\\.[a-zA-Z]{2,3}';
 
 
 
@@ -154,7 +154,9 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
       schoolSlogan: this.fb.control(''),
       founded: this.fb.control('', [Validators.required]),
       accessibilityId: this.fb.control('', [Validators.required]),
-      schoolEmail: this.fb.control(''),
+      schoolEmail: this.fb.control('', [
+        Validators.pattern(this.EMAIL_PATTERN),
+      ]),
       description: this.fb.control(''),
       selectedLanguages: this.fb.control('', [Validators.required]),
       phoneNumber: ['', [Validators.required]],
@@ -672,5 +674,9 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
       return {};
     }
   }
+  get schoolEmailValue(): string {
+    return this.createSchoolForm1.get('schoolEmail')?.value;
+  }
+  
 
 }

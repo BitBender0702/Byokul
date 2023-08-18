@@ -23,7 +23,7 @@ namespace LMS.Services
         Task SaveClassLanguages(IEnumerable<string> languageIds, Guid classId);
         Task DeleteClassLanguage(ClassLanguageViewModel model);
         Task SaveClassTeachers(IEnumerable<string> teacherIds, Guid courseId);
-        Task DeleteClassTeacher(ClassTeacherViewModel model);
+        Task<bool> DeleteClassTeacher(ClassTeacherViewModel model);
         Task SaveClassCertificates(SaveClassCertificateViewModel model);
         Task DeleteClassCertificate(ClassCertificateViewModel model);
         Task<ClassViewModel> GetBasicClassInfo(Guid classId);
