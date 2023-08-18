@@ -45,7 +45,6 @@ namespace LMS.Common.ViewModels.School
         public string SubscriptionMessage { get; set; }
         public bool IsSchoolSubscribed { get; set; }
         public bool IsDefaultAvatar { get; set; }
-        public bool IsAvatar { get; set; }
         public string SchoolSlogan { get; set; }
         public string SchoolEmail { get; set; }
 

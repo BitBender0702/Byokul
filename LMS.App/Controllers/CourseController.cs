@@ -130,8 +130,18 @@ namespace LMS.App.Controllers
         [HttpPost]
         public async Task<IActionResult> DeleteCourseTeacher([FromBody] CourseTeacherViewModel model)
         {
-            await _courseService.DeleteCourseTeacher(model);
-            return Ok();
+            try
+            {
+                var res = await _courseService.DeleteCourseTeacher(model);
+                if (res)
+                {
+                    return Ok(new {Success = true, Message = Constants.TeacherDeletedSuccesfully});
+                }
+                throw new Exception(Constants.CourseOrTeacherIdNotExist);
+            }catch (Exception ex)
+            {
+                return BadRequest(new {Success = false, ErrorMessage = ex.Message});
+            }
         }
 
         [Route("saveCourseCertificates")]

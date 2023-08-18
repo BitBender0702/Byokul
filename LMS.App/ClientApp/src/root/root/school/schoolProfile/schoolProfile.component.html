@@ -25,14 +25,14 @@
             <img lazyLoad="../../../../assets/images/arrow-left.svg" />
             {{ "Back" | translate }}
           </button>
-          <!-- <button
+          <button
             *ngIf="isOwner || hasPostPermission"
             (click)="openPostModal(true)"
             type="button"
             class="btn custom-btn primary_btn earning-btn fw_400 h_44"
           >
             {{ "GoLive" | translate }}
-          </button> -->
+          </button>
           <button
             *ngIf="isOwner || hasPostPermission"
             (click)="openPostModal(false)"

@@ -754,12 +754,16 @@ namespace LMS.Services
             }
         }
 
-        public async Task DeleteClassTeacher(ClassTeacherViewModel model)
+        public async Task<bool> DeleteClassTeacher(ClassTeacherViewModel model)
         {
-            var classTeacher = await _classTeacherRepository.GetAll().Where(x => x.ClassId == model.ClassId && x.TeacherId == model.TeacherId).FirstOrDefaultAsync();
+            try
+            {
+                var classTeacher = await _classTeacherRepository.GetAll().Where(x => x.ClassId == model.ClassId && x.TeacherId == model.TeacherId).FirstOrDefaultAsync();
 
-            _classTeacherRepository.Delete(classTeacher.Id);
-            _classTeacherRepository.Save();
+                _classTeacherRepository.Delete(classTeacher.Id);
+                var res = await _classTeacherRepository.SaveAsync();
+                return (int)res > 0;
+            }catch(Exception) { throw new Exception(Constants.ClassOrTeacherIdNotExist); }
 
         }
 

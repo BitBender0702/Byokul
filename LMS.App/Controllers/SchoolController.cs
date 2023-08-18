@@ -188,9 +188,9 @@ namespace LMS.App.Controllers
            var result = await _schoolService.DeleteSchoolTeacher(model);
             if (result)
             {
-                return Ok(new { Success = true, Message = "Teacher is deleted successfully." });
+                return Ok(new { Success = true, Message = Constants.TeacherDeletedSuccesfully });
             }
-            return BadRequest(new {Success = false, ErrorMessage = "Failed to delete teacher."}); 
+            return BadRequest(new {Success = false, ErrorMessage = Constants.FailedToDeleteTeacher}); 
         }
 
         [Route("getBasicSchoolInfo")]
