@@ -289,10 +289,9 @@ namespace LMS.App.Controllers
                 return BadRequest("User is not logged in");
             }
             classRating.UserId = userId;
-            var classForRating = await _classService.GetClassById((Guid)classRating.ClassId, userId);
-            if (classForRating == null)
+            if ((int)classRating.Rating > 6 || (int)classRating.Rating <= 1)
             {
-                return BadRequest("The CourseId you entered is incorrect");
+                return BadRequest("Rating must be between 1 to 5");
             }
             var classRatings = _classService.ClassRating(classRating);
             if (classRatings.Result == "Successfully Rated")
