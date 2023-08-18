@@ -177,9 +177,10 @@
             <a
             *ngIf="item.postAuthorType == 1"
             (click)="getSelectedSchool(item.parentName)"
-            class="routeLink "
+            class="routeLink d-flex align-items-center"
             >
               <img [src]="item.parentImageUrl" class="me-2" />
+              {{item.parentName}}
             </a>
             
           <a
@@ -194,9 +195,10 @@
               '/profile/class',
               item.parentName
             ]"
-            class="routeLink"
+            class="routeLink d-flex align-items-center"
           >
             <img [src]="item.parentImageUrl" class="me-2" />
+            {{item.parentName}}
           </a>
           <a
             *ngIf="item.postAuthorType == 3"
@@ -206,18 +208,20 @@
                 item.schoolName
               )
             "
-            class="routeLink"
+            class="routeLink d-flex align-items-center"
           >
             <img [src]="item.parentImageUrl" class="me-2" /> 
+            {{item.parentName}}
           </a>
           <a
             *ngIf="item.postAuthorType == 4"
             (click)="getUserDetails(item.parentId)"
-            class="routeLink"
+            class="routeLink d-flex align-items-center"
           >
             <img
               *ngIf="item.parentImageUrl != null"
               [lazyLoad]="item.parentImageUrl"
+              class="me-2"
             />
             <img
               *ngIf="
@@ -225,6 +229,7 @@
                 gender == '1'
               "
               lazyLoad="../../../assets/images/maleProfile.jfif"
+              class="me-2"
             />
             <img
               *ngIf="
@@ -232,9 +237,10 @@
                 (gender == '2' || gender == '3')
               "
               lazyLoad="../../../assets/images/femaleProfile.jfif"
+              class="me-2"
             />
+            {{item.parentName}}
           </a>
-          {{item.parentName}}
         </div>
           <div class="live-bottom-text p-3">
             <h5 class="font_14 mb-0 fw_600 text_sec1">{{item.title}} <span class="font_14 fw_400  ms-3">{{item.description}}</span></h5>

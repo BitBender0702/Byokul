@@ -2427,6 +2427,7 @@
                       </div>
                       <div
                         class="school-grid-thumbnail shadow-thumnail position-relative classes-grid overflow-hidden"
+                        id="divForHover"
                       >
                         <div
                           class="row gx-1"
@@ -2447,7 +2448,7 @@
                                 *ngIf="item.thumbnailType == 2"
                                 class="videofile"
                               >
-                                <video preload="metadata" style="height: 300px">
+                                <video preload="metadata" style="height: 300px" id="playVideoOnHover">
                                   <source
                                     [src]="item.thumbnailUrl"
                                     type="video/mp4"

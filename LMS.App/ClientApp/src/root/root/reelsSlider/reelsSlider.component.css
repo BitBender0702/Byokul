@@ -19,3 +19,9 @@
   .cursorPointer{
     cursor: pointer;
 }
+
+a{
+  cursor: pointer;
+  text-decoration: none;
+  color: white;
+}

@@ -1534,11 +1534,16 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       });;
   }
 
-  rateNumber:number=0
-  ratingNumber(rateNumber:number){
-    this.rateNumber = rateNumber + 1
+  rateNumber: number = 0;
+  isRated: boolean = false;
+  fakeArray = new Array(5);
+  ratedArray: number[] = [];
+
+  ratingNumber(rateNumber: number) {
+    this.rateNumber = rateNumber + 1;
+    this.isRated = true;
+    this.ratedArray[0] = this.rateNumber;
   }
 
-  fakeArray = new Array(5);
-
+  
 }

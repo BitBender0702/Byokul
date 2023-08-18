@@ -592,6 +592,16 @@ export class SchoolProfileComponent
     //       }
 
 
+    let videoForHover = document.getElementById('playVideoOnHover') as HTMLVideoElement
+    videoForHover?.addEventListener("mouseover", function(){
+      debugger
+      videoForHover?.play()
+    })
+    videoForHover.addEventListener("mouseout", function (e) {
+      debugger
+      videoForHover.pause();
+    })
+
   }
 
   async convertBlobUrlToStream(blobUrl: string): Promise<any> {
@@ -2254,6 +2264,8 @@ export class SchoolProfileComponent
       debugger
     });
   }
+
+
 
 }
 

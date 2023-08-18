@@ -245,6 +245,7 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
 
   createSchool() {
     this.isSubmitted = true;
+    debugger
     if (!this.createSchoolForm3.valid) {
       return;
     }

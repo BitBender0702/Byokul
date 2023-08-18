@@ -20,6 +20,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static iText.StyledXmlParser.Jsoup.Select.Evaluator;
+using Class = LMS.Data.Entity.Class;
 
 namespace LMS.Services
 {
@@ -1075,20 +1077,43 @@ namespace LMS.Services
         }
 
      
-        public async Task ClassRating(ClassCourseRatingViewModel courseRating)
+        public async Task<string> ClassRating(ClassCourseRatingViewModel classRating)
         {
             //var classForRating = _courseRepository.GetById(courseRating.ClassId);
             //var userId = await _userManager.FindByIdAsync(courseRating.UserId);
-            var totalLikes = await _classCourseRatingRepository.GetAll().Where(x => x.ClassId == courseRating.ClassId && x.UserId == courseRating.UserId).FirstOrDefaultAsync();
+            var totalLikes = await _classCourseRatingRepository.GetAll().Where(x => x.ClassId == classRating.ClassId && x.UserId == classRating.UserId).FirstOrDefaultAsync();
             if (totalLikes == null)
             {
                 ClassCourseRating ratings = new ClassCourseRating();
-                ratings.Rating = courseRating.Rating;
-                ratings.CourseId = courseRating.CourseId;
-                ratings.UserId = courseRating.UserId;
+                ratings.Rating = classRating.Rating;
+                ratings.ClassId = classRating.ClassId;
+                ratings.UserId = classRating.UserId;
+                var classTotalLikes = await _classRepository.GetAll().Where(x => x.ClassId == classRating.ClassId).FirstOrDefaultAsync();
+                var forAverageLikes = await _classCourseRatingRepository.GetAll().Where(x => x.ClassId == classRating.ClassId).ToListAsync();
+                var totalRatingForClass = 0;
+                var averageRatingForClass = 0;
+                if (forAverageLikes.Count() != 0)
+                {
+                    foreach (var rating in forAverageLikes)
+                    {
+                        var allRating = rating.Rating;
+                        totalRatingForClass += (int)allRating;
+                    }
+                    totalRatingForClass += (int)ratings.Rating;
+                    averageRatingForClass = totalRatingForClass / (forAverageLikes.Count() + 1);
+                }
+                else
+                {
+                    averageRatingForClass = (int)ratings.Rating;
+                }
+                classTotalLikes.Rating = averageRatingForClass;
+                _classRepository.Update(classTotalLikes);
+                _classRepository.Save();
                 _classCourseRatingRepository.Insert(ratings);
                 _classCourseRatingRepository.Save();
+                return "Successfully Rated";
             }
+            return "User has alreday rated for this course";
         }
     }
 }

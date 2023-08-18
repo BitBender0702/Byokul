@@ -2856,7 +2856,7 @@
           <h2 class="text-center font_16 f-poppins">
             <div class="image-container" *ngFor="let array of fakeArray; let index = index">
               <button (click)="ratingNumber(index)" style="background-color: white; border: none;">
-                <img src="../../../../assets/images/before-rate-star-svgrepo-com.svg" alt="Star Image" style="height:30px; width:30px;"/>
+                <i class="fa-solid fa-star fa-2xl" [style.color]="index < rateNumber ? '#ff8800' : '#eebe87'"></i>
               </button>
             </div>
           </h2>

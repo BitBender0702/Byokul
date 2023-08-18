@@ -28,6 +28,6 @@
 }
 
 ::ng-deep .carousel-control {
-    opacity: 100% !important;
-    height: 80% !important;
+    opacity: 100% ;
+    height: 80% ;
 }

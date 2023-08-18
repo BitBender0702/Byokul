@@ -260,17 +260,20 @@ namespace LMS.App.Controllers
                 return BadRequest("User is not logged in");
             }
             courseRating.UserId = userId;
-            var course = await _courseService.GetCourseById((Guid)courseRating.CourseId, userId);
-            if(course == null)
+            if ((int)courseRating.Rating > 6 || (int)courseRating.Rating <= 1)
             {
-                return BadRequest("The CourseId you entered is incorrect");
+                return BadRequest("Rating must be between 1 to 5");
             }
-            //if (courseRating.Rating < 6 && courseRating.Rating > 1)
-            //{
-            //    return BadRequest("Rating must be between 1 to 5");
-            //}
-            await _courseService.CourseRating(courseRating);
-            return Ok("Course is rated");
+            var courseRatings = _courseService.CourseRating(courseRating);
+            if(courseRatings.Result == "Successfully Rated")
+            {
+                return Ok("Course is rated");
+            }
+            else
+            {
+                return BadRequest("Course is not rated");
+            }
+            
         }
 
     }

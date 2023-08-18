@@ -27,18 +27,16 @@
                 </button> -->
                 </div>
                 <div class="text-center">
-                  <div class="btn custom-btn primary_btn earning-btn fw_400 h_44 share_btn">
-                    {{'CopyLink'| translate }}
                   <button
                   #copyButton
                   type="button"
                   (click)="copyMessage()"
-                  class="border-0 bg-transparent shadow-none p-0 copy-link"
+                  class="btn custom-btn primary_btn earning-btn fw_400 h_44 share_btn"
                   pTooltip="Copy Link"
                   tooltipPosition="top"
                   >
+                    {{'CopyLink'| translate }}
                   </button>
-                  </div>
                 </div>
               </div>
             </div>

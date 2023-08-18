@@ -294,8 +294,16 @@ namespace LMS.App.Controllers
             {
                 return BadRequest("The CourseId you entered is incorrect");
             }
-            await _classService.ClassRating(classRating);
-            return Ok("Course is rated");
+            var classRatings = _classService.ClassRating(classRating);
+            if (classRatings.Result == "Successfully Rated")
+            {
+                return Ok("Class is rated");
+            }
+            else
+            {
+                return BadRequest("Class is not rated");
+            }
+            
         }
 
 

@@ -148,6 +148,7 @@ saveUserSharedPost(){
 }
 
 copyMessage(){
+  debugger
   var url = this.websiteUrl;
   const inputElement = this.elementRef.nativeElement.appendChild(document.createElement('input'));
   inputElement.value = url;
