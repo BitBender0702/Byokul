@@ -300,28 +300,51 @@ captureTeacherId(event: any) {
   // }
 
   videoLengthExceeded:boolean=false;
+  // handleImageInput(event: any) {
+  //   debugger;
+  
+  //   if (event.target.files[0].type === "video/mp4") {
+  //     const videoElement = document.createElement('video');
+  //     videoElement.src = URL.createObjectURL(event.target.files[0]);
+  
+  //     videoElement.addEventListener('loadedmetadata', () => {
+  //       const videoLengthInSeconds = videoElement.duration;
+  //       console.log(`Video Length (in seconds): ${videoLengthInSeconds}`);
+  //       if(videoLengthInSeconds > 180){
+  //         this.videoLengthExceeded = true
+  //       } else{
+  //         this.videoLengthExceeded = false
+  //       }
+  //     });
+  //   }
+  //   debugger
+  //   this.fileToUpload.append("thumbnail", event.target.files[0], event.target.files[0].name);
+  //   this.uploadImageName = event.target.files[0].name;
+  // }
+  
   handleImageInput(event: any) {
     debugger;
   
     if (event.target.files[0].type === "video/mp4") {
       const videoElement = document.createElement('video');
       videoElement.src = URL.createObjectURL(event.target.files[0]);
-  
       videoElement.addEventListener('loadedmetadata', () => {
         const videoLengthInSeconds = videoElement.duration;
-        console.log(`Video Length (in seconds): ${videoLengthInSeconds}`);
-        if(videoLengthInSeconds > 180){
-          this.videoLengthExceeded = true
-        } else{
-          this.videoLengthExceeded = false
+        if (videoLengthInSeconds > 180) {
+          this.videoLengthExceeded = true;
+        } else {
+          this.videoLengthExceeded = false;
         }
       });
+      const oldVideoElement = document.querySelector('video');
+      if (oldVideoElement) {
+        oldVideoElement.remove();
+      }
     }
-    debugger
+    this.fileToUpload = new FormData();
     this.fileToUpload.append("thumbnail", event.target.files[0], event.target.files[0].name);
     this.uploadImageName = event.target.files[0].name;
   }
-  
 
 
 
