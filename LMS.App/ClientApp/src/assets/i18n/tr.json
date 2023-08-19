@@ -521,6 +521,8 @@
   "DidNotReceive": "Didn't receive email ?",
   "ExportToExcel": "Export to Excel",
   "BuyerName": "Buyer Name",
+  "Rate": "Rate",
+  "VideoThumbnailDurationExceed": "You can not upload a video thumbnail longer than 3 minutes"
   "ThankYouForYourRating":"Thank You For Your Rating!",
   "Rate": "Rate",
   "Officials": "Officials",

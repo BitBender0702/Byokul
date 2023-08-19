@@ -350,6 +350,13 @@
                   *ngIf="isStepCompleted && this.uploadImageName == undefined"
                   >{{ "ImageOrVideoThumbnailRequired" | translate }}
                 </small>
+                <small
+                  class="p-error"
+                  style="color: orange; margin-left: 75px"
+                  *ngIf="isStepCompleted && videoLengthExceeded"
+                >
+                  {{ "VideoThumbnailDurationExceed" | translate }}
+                </small>
               </div>
               <small
                 class="p-error"

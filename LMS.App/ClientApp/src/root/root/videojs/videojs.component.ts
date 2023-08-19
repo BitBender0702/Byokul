@@ -39,6 +39,17 @@ export class VideoJsComponent implements OnInit {
       // } else{
         this.player = videojs(this.disVideo.nativeElement, {
           autoplay: 'muted',
+          loop: true,
+          controlBar: {
+            fullscreenToggle: false
+          },
+          userActions:{
+            doubleClick: false
+          }
+        });
+      } else{
+        this.player = videojs(this.disVideo.nativeElement, {
+          autoplay: 'muted',
           loop: true
         });
       // }

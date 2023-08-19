@@ -532,6 +532,8 @@
   "BuyerName": "Buyer Name",
   "ThankYouForYourRating":"Thank You For Your Rating!",
   "Rate": "Rate",
+  "VideoThumbnailDurationExceed": "You can not upload a video thumbnail longer than 3 minutes"
+  "Rate": "Rate",
   "Officials": "Officials",
   "AddOfficial": "Add Official",
   "SchoolVideoLibrary": "School Video Library",

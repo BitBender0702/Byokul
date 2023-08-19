@@ -241,10 +241,60 @@ captureTeacherId(event: any) {
     this.messageService.add({severity:'success', summary:translatedInfoSummary,life: 3000, detail:translatedMessage});
   }
 
+  // handleImageInput(event: any) {
+  //   this.fileToUpload.append("thumbnail", event.target.files[0], event.target.files[0].name);
+  //   this.uploadImageName = event.target.files[0].name;
+  // }
+
+  videoLengthExceeded:boolean=false;
+  // handleImageInput(event: any) {
+  //   debugger;
+  
+  //   if (event.target.files[0].type === "video/mp4") {
+  //     const videoElement = document.createElement('video');
+  //     videoElement.src = URL.createObjectURL(event.target.files[0]);
+  
+  //     videoElement.addEventListener('loadedmetadata', () => {
+  //       const videoLengthInSeconds = videoElement.duration;
+  //       if(videoLengthInSeconds > 180){
+  //         this.videoLengthExceeded = true
+  //       } else{
+  //         this.videoLengthExceeded = false
+  //       }
+  //     });
+  //   }
+  //   debugger
+  //   this.fileToUpload.append("thumbnail", event.target.files[0], event.target.files[0].name);
+  //   this.uploadImageName = event.target.files[0].name;
+  // }
+
   handleImageInput(event: any) {
+    debugger;
+  
+    if (event.target.files[0].type === "video/mp4") {
+      const videoElement = document.createElement('video');
+      videoElement.src = URL.createObjectURL(event.target.files[0]);
+  
+      videoElement.addEventListener('loadedmetadata', () => {
+        const videoLengthInSeconds = videoElement.duration;
+        if (videoLengthInSeconds > 180) {
+          this.videoLengthExceeded = true;
+        } else {
+          this.videoLengthExceeded = false;
+        }
+      });
+      const oldVideoElement = document.querySelector('video');
+      if (oldVideoElement) {
+        oldVideoElement.remove();
+      }
+      // document.body.appendChild(videoElement);
+    }
+    debugger;
+    this.fileToUpload = new FormData();
     this.fileToUpload.append("thumbnail", event.target.files[0], event.target.files[0].name);
     this.uploadImageName = event.target.files[0].name;
   }
+  
 
   createCourse(){
     this.isSubmitted=true;
@@ -261,8 +311,14 @@ captureTeacherId(event: any) {
   }
 
   forwardStep() {
+
     this.isStepCompleted = true;
     if (!this.createCourseForm1.valid) {
+      return;
+    }
+
+    debugger
+    if(this.videoLengthExceeded){
       return;
     }
 
@@ -364,6 +420,7 @@ captureTeacherId(event: any) {
   }
 
   forwardStep2(){
+    debugger
     this.loadingIcon = true;
     this.isStepCompleted = true;
 
@@ -374,6 +431,7 @@ captureTeacherId(event: any) {
     this.courseUrl = 'byokul.com/profile/course/' + this.selectedSchool.schoolName.split(' ').join('').replace(" ","").toLowerCase() + "/" +  this.courseName.split(' ').join('').replace(" ","").toLowerCase();
     this.fileToUpload.append('courseUrl',JSON.stringify(this.courseUrl));
     this._courseService.createCourse(this.fileToUpload).subscribe((response:any) => {
+      debugger
       this.courseId = response;
       this.loadingIcon = false;
       ownedCourseResponse.next({courseId:response.courseId, courseAvatar:response.avatar, courseName:response.courseName,schoolName:response.school.schoolName,action:"add"});

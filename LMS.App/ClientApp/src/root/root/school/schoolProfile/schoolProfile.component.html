@@ -1011,6 +1011,7 @@
                                 lazyLoad="../../../../assets/images/pinned-gray.svg"
                               />
                             </button>
+                            
                           </div>
                           <div class="feed-name font_14 text_sec1 hideName">
                             <img [lazyLoad]="school.avatar" />
@@ -1137,7 +1138,7 @@
                     </div>
                     <div class="teacher-tags tag-box hashtag_box">
                       <span
-                        *ngFor="let tag of postsTagValues"
+                        *ngFor="let tag of parseTheTags(postsTagValues)"
                         class="custom-tag"
                         >#{{ tag }}</span
                       >
@@ -1964,7 +1965,7 @@
                               class="teacher-tags tag-box hashtag_box"
                             >
                               <span
-                                *ngFor="let tag of postsTagValues"
+                                *ngFor="let tag of parseTheTags (postsTagValues)"
                                 class="custom-tag"
                                 >#{{ tag }}</span
                               >
@@ -2414,7 +2415,7 @@
                         class="teacher-tags tag-box hashtag_box"
                       >
                         <span
-                          *ngFor="let tag of postsTagValues"
+                          *ngFor="let tag of (postsTagValues)"
                           class="custom-tag"
                           >#{{ tag }}</span
                         >
@@ -2423,11 +2424,10 @@
                         *ngIf="item.tags.length == 0"
                         class="teacher-tags tag-box hashtag_box"
                       >
-                        <span class="custom-tag"></span>
+                        <!-- <span class="custom-tag"></span> -->
                       </div>
                       <div
                         class="school-grid-thumbnail shadow-thumnail position-relative classes-grid overflow-hidden"
-                        id="divForHover"
                       >
                         <div
                           class="row gx-1"
@@ -2448,12 +2448,22 @@
                                 *ngIf="item.thumbnailType == 2"
                                 class="videofile"
                               >
-                                <video preload="metadata" style="height: 300px" id="playVideoOnHover">
+                                <video
+                                preload="metadata"
+                                style="height: 300px"
+                                [src]="item.thumbnailUrl"
+                                type="video/mp4"
+                                muted
+                                (mouseenter)="playVideo(item)"
+                                (mouseleave)="pauseVideo(item)"
+                              ></video>
+
+                                <!-- <video preload="metadata" style="height: 300px" [autoplay]="playVideoOnHover">
                                   <source
                                     [src]="item.thumbnailUrl"
                                     type="video/mp4"
                                   />
-                                </video>
+                                </video> -->
 
                                 <!-- <videoJs-component
                                 [postAttachment]="item"

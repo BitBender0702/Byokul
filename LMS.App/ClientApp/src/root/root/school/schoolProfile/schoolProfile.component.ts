@@ -592,17 +592,10 @@ export class SchoolProfileComponent
     //       }
 
 
-    let videoForHover = document.getElementById('playVideoOnHover') as HTMLVideoElement
-    videoForHover?.addEventListener("mouseover", function(){
-      debugger
-      videoForHover?.play()
-    })
-    videoForHover.addEventListener("mouseout", function (e) {
-      debugger
-      videoForHover.pause();
-    })
-
   }
+
+  playVideoOnHover:boolean=false
+  videoAutoplayStates: { [key: string]: boolean } = {};
 
   async convertBlobUrlToStream(blobUrl: string): Promise<any> {
     const response = await fetch(blobUrl);
@@ -2265,7 +2258,20 @@ export class SchoolProfileComponent
     });
   }
 
+  @ViewChild('videoPlayerOnHover') videoPlayerOnHover!: ElementRef;
+  playVideo(item:any) {
+    const video = document.querySelector(`[src="${item.thumbnailUrl}"]`) as HTMLVideoElement;
+    if (video) {
+      video.play();
+    }
+  }
 
+  pauseVideo(item:any) {
+    const video = document.querySelector(`[src="${item.thumbnailUrl}"]`) as HTMLVideoElement;
+    if (video) {
+      video.pause();
+    }
+  }
 
 }
 

@@ -442,12 +442,20 @@
                 />
               </div>
               <div>
+                <!-- here to do the changes -->
                 <p class="text-center">{{ uploadImageName }}</p>
                 <small
                   class="p-error"
                   style="color: orange; margin-left: 144px"
                   *ngIf="isStepCompleted && this.uploadImageName == undefined"
                   >{{ "ImageOrVideoThumbnailRequired" | translate }}
+                </small>
+                <small
+                  class="p-error"
+                  style="color: orange; margin-left: 75px"
+                  *ngIf="isStepCompleted && videoLengthExceeded"
+                >
+                  {{ "VideoThumbnailDurationExceed" | translate }}
                 </small>
               </div>
               <small

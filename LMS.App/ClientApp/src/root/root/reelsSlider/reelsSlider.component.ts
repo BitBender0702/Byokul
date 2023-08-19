@@ -104,7 +104,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   }
 
   ngOnInit() {
-    debugger
+    
     var selectedLang = localStorage.getItem("selectedLanguage");
     this.translate.use(selectedLang ?? '');
     this.post = history.state.post;
@@ -197,13 +197,13 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
 
   getReelsByUser(userId: string) {
     this._userService.GetSliderReelsByUserId(userId, this.reelId, 3).subscribe((response) => {
-      debugger
+      
       this.reels = response;
       this.selectedReel = this.reels[0];
       this.lastPostId = this.reels[this.reels.length - 1].id;
       this.firstPostId = this.reels[0].id;
       this.reels.forEach((reel: any) => {
-        debugger
+        
         // Extract postAttachments from each reel and add them to the allPostAttachments list
         const postAttachments = reel.postAttachments;
         this.videos.push(...postAttachments);
@@ -223,14 +223,14 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   }
 
   getReelsBySchool(schoolId: string) {
-    debugger
+    
     this._schoolService.GetSliderReelsBySchoolId(schoolId, this.reelId, 3).subscribe((response) => {
       this.reels = response;
       this.selectedReel = this.reels[0];
       this.lastPostId = this.reels[this.reels.length - 1].id;
       this.firstPostId = this.reels[0].id;
       this.reels.forEach((reel: any) => {
-        debugger
+        
         // Extract postAttachments from each reel and add them to the allPostAttachments list
         const postAttachments = reel.postAttachments;
         this.videos.push(...postAttachments);
@@ -250,14 +250,14 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   }
 
   getReelsByClass(classId: string) {
-    debugger
+    
     this._classService.GetSliderReelsByClassId(classId, this.reelId, 3).subscribe((response) => {
       this.reels = response;
       this.selectedReel = this.reels[0];
       this.lastPostId = this.reels[this.reels.length - 1].id;
       this.firstPostId = this.reels[0].id;
       this.reels.forEach((reel: any) => {
-        debugger
+        
         // Extract postAttachments from each reel and add them to the allPostAttachments list
         const postAttachments = reel.postAttachments;
         this.videos.push(...postAttachments);
@@ -277,14 +277,14 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   }
 
   getReelsByCourse(courseId: string) {
-    debugger
+    
     this._courseService.GetSliderReelsByCourseId(courseId, this.reelId, 3).subscribe((response) => {
       this.reels = response;
       this.selectedReel = this.reels[0];
       this.lastPostId = this.reels[this.reels.length - 1].id;
       this.firstPostId = this.reels[0].id;
       this.reels.forEach((reel: any) => {
-        debugger
+        
         // Extract postAttachments from each reel and add them to the allPostAttachments list
         const postAttachments = reel.postAttachments;
         this.videos.push(...postAttachments);
@@ -310,7 +310,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       this.lastPostId = this.reels[this.reels.length - 1].id;
       this.firstPostId = this.reels[0].id;
       this.reels.forEach((reel: any) => {
-        debugger
+        
         // Extract postAttachments from each reel and add them to the allPostAttachments list
         const postAttachments = reel.postAttachments;
         this.videos.push(...postAttachments);
@@ -336,7 +336,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       this.lastPostId = this.reels[this.reels.length - 1].id;
       this.firstPostId = this.reels[0].id;
       this.reels.forEach((reel: any) => {
-        debugger
+        
         // Extract postAttachments from each reel and add them to the allPostAttachments list
         const postAttachments = reel.postAttachments;
         this.videos.push(...postAttachments);
@@ -447,7 +447,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
 
 
   //   initializeSlick() {
-  //     debugger
+  //     
   //     var a = this.selectedReelIndex;
   //     this.cd.detectChanges();
   //     const self = this;
@@ -461,14 +461,14 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   //       initialSlide : this.selectedReelIndex,
 
   //       // onBeforeChange: function(slideIndex: any) {
-  //       //   debugger
+  //       //   
   //       //   const previousVideoElement = $(this).find('.item').eq(slideIndex).find('video')[0];
   //       //   if (previousVideoElement) {
   //       //     previousVideoElement.pause();
   //       //   }
   //       // },
   //       // onAfterChange: (slideIndex: any) => {
-  //       //   debugger
+  //       //   
   //       //   const currentItem = self.reels[slideIndex]; // Access the component's `reels` property
   //       //   self.addPostView(currentItem.id);
 
@@ -487,7 +487,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
 
 
   //     // this.slickSlider.on('swipe', function(event:any, slick:any, direction:any) {
-  //     //   debugger
+  //     //   
   //     //   if (direction === 'up') {
   //     //     // User has swiped upwards
   //     //     self.onSlideUp();
@@ -497,7 +497,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   //     //   }
   //     // });
   //     this.slickSlider.on('beforeChange', function(event:any, slick:any, currentSlide:any, nextSlide:any) {
-  //       debugger
+  //       
 
   //       if(self.currentSlide != currentSlide && self.nextSlide != nextSlide){
   //       const direction = nextSlide > currentSlide ? 'down' : 'up';
@@ -531,7 +531,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   //     });
 
   //     this.slickSlider.on('afterChange', function(event:any, slick:any, currentSlide:any) {
-  //       debugger
+  //       
   //       // Find the new video element within the current slide
   //       const newVideo = $(slick.$slides[currentSlide]).find('video')[0];
 
@@ -555,7 +555,6 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   onSlideUp() {
     if (this.from == "user") {
       this._userService.GetSliderReelsByUserId(this.userId, this.firstPostId, 1).subscribe((response: any) => {
-        debugger
         this.reels.unshift(...response);
         this.lastPostId = this.reels[this.reels.length - 1].id;
         this.firstPostId = this.reels[0].id;
@@ -568,7 +567,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
 
     if (this.from == "school") {
       this._schoolService.GetSliderReelsBySchoolId(this.ownerId, this.firstPostId, 1).subscribe((response: any) => {
-        debugger
+        
         this.reels.unshift(...response);
         this.lastPostId = this.reels[this.reels.length - 1].id;
         this.firstPostId = this.reels[0].id;
@@ -581,7 +580,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
 
     if (this.from == "class") {
       this._classService.GetSliderReelsByClassId(this.ownerId, this.firstPostId, 1).subscribe((response: any) => {
-        debugger
+        
         this.reels.unshift(...response);
         this.lastPostId = this.reels[this.reels.length - 1].id;
         this.firstPostId = this.reels[0].id;
@@ -594,7 +593,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
 
     if (this.from == "course") {
       this._courseService.GetSliderReelsByCourseId(this.ownerId, this.firstPostId, 1).subscribe((response: any) => {
-        debugger
+        
         this.reels.unshift(...response);
         this.lastPostId = this.reels[this.reels.length - 1].id;
         this.firstPostId = this.reels[0].id;
@@ -607,7 +606,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
 
     if (this.from == "myFeed") {
       this._userService.getMyFeedSliderReels(this.userId, this.firstPostId, 1).subscribe((response: any) => {
-        debugger
+        
         this.reels.unshift(...response);
         this.lastPostId = this.reels[this.reels.length - 1].id;
         this.firstPostId = this.reels[0].id;
@@ -620,7 +619,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
 
     if (this.from == "globalFeed") {
       this._userService.getGlobalFeedSliderReels(this.userId, this.firstPostId, 1).subscribe((response: any) => {
-        debugger
+        
         this.reels.unshift(...response);
         this.lastPostId = this.reels[this.reels.length - 1].id;
         this.firstPostId = this.reels[0].id;
@@ -636,12 +635,11 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   nextSlide: any;
   currentSlide: any;
   onSlideDown() {
-    debugger
     // if(!this.isReelLoad){
 
     if (this.from == "user" && !this.isFinishDownReels) {
       this._userService.GetSliderReelsByUserId(this.userId, this.lastPostId, 2).subscribe((response: any) => {
-        debugger
+        
         this.reels.push(...response);
         if (response.length == 0) {
           this.isFinishDownReels = true;
@@ -661,7 +659,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
 
     if (this.from == "school") {
       this._schoolService.GetSliderReelsBySchoolId(this.ownerId, this.lastPostId, 2).subscribe((response: any) => {
-        debugger
+        
         this.reels.push(...response);
         const previousSlideCount = this.reels.length;
 
@@ -678,7 +676,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
 
     if (this.from == "class") {
       this._classService.GetSliderReelsByClassId(this.ownerId, this.lastPostId, 2).subscribe((response: any) => {
-        debugger
+        
         this.reels.push(...response);
         const previousSlideCount = this.reels.length;
 
@@ -695,7 +693,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
 
     if (this.from == "course") {
       this._courseService.GetSliderReelsByCourseId(this.ownerId, this.lastPostId, 2).subscribe((response: any) => {
-        debugger
+        
         this.reels.push(...response);
         const previousSlideCount = this.reels.length;
 
@@ -712,7 +710,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
 
     if (this.from == "myFeed") {
       this._userService.getMyFeedSliderReels(this.userId, this.lastPostId, 2).subscribe((response: any) => {
-        debugger
+        
         this.reels.push(...response);
         const previousSlideCount = this.reels.length;
 
@@ -730,7 +728,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
 
     if (this.from == "globalFeed") {
       this._userService.getGlobalFeedSliderReels(this.userId, this.lastPostId, 2).subscribe((response: any) => {
-        debugger
+        
         this.reels.push(...response);
         const previousSlideCount = this.reels.length;
 
@@ -782,10 +780,10 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
 
 
   addPostView(postId: string, post?: any) {
-    debugger
+    
     this.postView.postId = postId;
     this._postService.postView(this.postView).subscribe((response) => {
-      debugger
+      
       if (post != undefined) {
         post.views.length = response;
 
@@ -797,7 +795,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   // for like
 
   likeUnlikePosts(postId: string, isLike: boolean, postType: number, post: any) {
-    debugger
+    
     this.currentLikedPostId = postId;
     var likes: any[] = post.likes;
     var isLiked = likes.filter(x => x.userId == this.userId && x.postId == postId);
@@ -819,7 +817,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
     this.likeUnlikePost.isLike = isLike;
     this.likeUnlikePost.commentId = '00000000-0000-0000-0000-000000000000'
     this._postService.likeUnlikePost(this.likeUnlikePost).subscribe((response) => {
-      debugger
+      
       post.likes = response;
       this.InitializeLikeUnlikePost();
     });
@@ -859,7 +857,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   }
 
   saveReel(postId: string, post: any) {
-    debugger
+    
     if (post.isPostSavedByCurrentUser) {
       post.savedPostsCount -= 1;
       post.isPostSavedByCurrentUser = false;
@@ -881,7 +879,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   }
 
   openSharePostModal(post: any, postType: number, title: string, description: string): void {
-    debugger
+    
     if (post?.name == Constant.Private || post?.serviceType == Constant.Paid) {
       sharePostResponse.next({});
     }
@@ -905,10 +903,10 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   }
 
   openCommentsSection(reel: any) {
-    debugger
+    
     this.reel = reel;
     this._chatService.getComments(reel.id, this.commentsPageNumber).subscribe((response) => {
-      debugger
+      
       this.reel.comments = response;
     });
 
@@ -974,7 +972,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   //   }
 
   sendToGroup(reel: any) {
-    debugger
+    
     var comment: any[] = reel.comments;
     this.InitializeCommentViewModel();
     this.commentViewModel.userId = this.sender.id;
@@ -985,7 +983,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
     this.messageToGroup = "";
     this.commentViewModel.id = Constant.defaultGuid;
     this._chatService.addComments(this.commentViewModel).subscribe((response) => {
-      debugger
+      
       comment.push(response);
       reel.commentsCount = comment.length;
       this.cd.detectChanges();
@@ -1018,8 +1016,9 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   // new from here
 
 
+  getVolume:any;
   afterChange(event: any) {
-    debugger
+    
     const currentItem = this.reels[event.currentSlide];
     this.addPostView(currentItem.id, currentItem);
     const currentSlideIndex = event.currentSlide;
@@ -1030,8 +1029,11 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
         const videoElement = firstElement.children[0] as HTMLVideoElement
         console.log(videoElement)
         if (videoElement) {
-          debugger
-          videoElement.play();
+          try{
+            videoElement.play().then(()=>{
+              videoElement.volume =this.getVolume;
+            });
+          } catch{}
         }
       }
     }
@@ -1054,8 +1056,12 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
         const videoElement = firstElement.children[0] as HTMLVideoElement
         console.log(videoElement)
         if (videoElement) {
-          debugger
-          videoElement.pause();
+          try{
+            videoElement.pause();
+          } catch{}
+          videoElement.addEventListener('volumechange',()=>{
+            this.getVolume = videoElement.volume;
+          })
         }
       }
     }
@@ -1099,7 +1105,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
 
   @HostListener('window:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
-    debugger
+    
     this.cd.detectChanges();
     const slick = this.slickCarouselRef.nativeElement.slick;
     switch (event.key) {
