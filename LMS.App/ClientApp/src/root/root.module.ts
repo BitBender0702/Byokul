@@ -97,6 +97,8 @@ import { UploadCertificateComponent } from './root/UploadCertificates/uploadCert
 import { DialogModule } from "primeng/dialog";
 import { SidebarModule } from 'primeng/sidebar';
 import { TooltipModule } from 'primeng/tooltip';
+import { SchoolVideoLibraryComponent } from './root/schoolVideoLibrary/schoolVideoLibrary.component';
+import { AddOfficialComponent } from './root/addOfficial/addOfficial.component';
 
 export const options: Partial<IConfig> = {
   thousandSeparator: "'"
@@ -212,7 +214,9 @@ const routes: Routes = [
     DSAForSchoolComponent,
     DSAForStudentsComponent,
     UploadCertificateComponent,
-    VideoJsComponent
+    VideoJsComponent,
+    SchoolVideoLibraryComponent,
+    AddOfficialComponent
   ],
   imports: [
     CommonModule,

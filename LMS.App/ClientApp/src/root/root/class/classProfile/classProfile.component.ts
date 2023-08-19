@@ -293,8 +293,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       this.addClassView(this.class.classId);
       this.addEventListnerOnCarousel();
       this.class.posts = this.getFilteredAttachments(this.class.posts);
-      this.isRatedByUser = response.isRatedByUser
-
+      this.isRatedByUser = response.isRatedByUser;
 
       //here is the code
 
@@ -464,13 +463,17 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     }
 
     this.sharedPostSubscription = sharedPostResponse.subscribe(response => {
+      const translatedSummary = this.translateService.instant('Success');
       if (response.postType == 1) {
-        this.messageService.add({ severity: 'success', summary: 'Success', life: 3000, detail: 'Post shared successfully' });
+        const translatedMessage = this.translateService.instant('PostSharedSuccessfully');
+        this.messageService.add({ severity: 'success', summary: translatedSummary, life: 3000, detail: translatedMessage });
         var post = this.class.posts.find((x: { id: string; }) => x.id == response.postId);
         post.postSharedCount++;
       }
-      else
-        this.messageService.add({ severity: 'success', summary: 'Success', life: 3000, detail: 'Reel shared successfully' });
+      else{
+        const translatedMessage = this.translateService.instant('ReelSharedSuccessfully');
+        this.messageService.add({ severity: 'success', summary: translatedSummary, life: 3000, detail: translatedMessage });
+      }
     });
 
     if (!this.changeLanguageSubscription) {
@@ -1686,6 +1689,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     this._classService.courseRating(this.classRatingView).subscribe((response) => {
       debugger;
       this.isRatedByUser = true;
+      this.class.rating = response.classRating;
       this.cd.detectChanges();
       const translatedInfoSummary = this.translateService.instant('Success');
       const translatedMessage = this.translateService.instant('ThankYouForYourRating');

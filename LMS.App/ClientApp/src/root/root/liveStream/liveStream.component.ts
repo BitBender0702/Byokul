@@ -499,6 +499,7 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
     this.commentViewModel.groupName = this.post.id + "_group";
     this.commentViewModel.content = this.messageToGroup;
     this.commentViewModel.userAvatar = this.sender.avatar;
+    this.commentViewModel.isUserVerified = this.sender.isVerified;
     this.commentViewModel.gender = this.gender;
     this.messageToGroup = "";
     this.commentViewModel.id = Constant.defaultGuid;
@@ -521,7 +522,8 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
       userAvatar: '',
       createdOn: new Date(),
       userName: '',
-      gender: ''
+      gender: '',
+      isUserVerified: false
     };
   }
 
@@ -614,7 +616,7 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
             response.senderAvatar = "../../../assets/images/femaleProfile.jfif"
           }
         }
-        var commentObj = { id: response.id, content: response.message, likeCount: 0, isCommentLikedByCurrentUser: false, userAvatar: response.senderAvatar, userName: response.userName, userId: response.userId };
+        var commentObj = { id: response.id, content: response.message, likeCount: 0, isCommentLikedByCurrentUser: false, userAvatar: response.senderAvatar, userName: response.userName, userId: response.userId, isUserVerified: response.isUserVerified };
         comment.push(commentObj);
         this.cd.detectChanges();
         this.groupChatList.nativeElement.scrollTop = this.groupChatList.nativeElement.scrollHeight;

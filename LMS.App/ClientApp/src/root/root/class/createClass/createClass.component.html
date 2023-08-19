@@ -91,7 +91,7 @@
               </button> -->
             </div>
               <div class="form-group">
-                <label class="font_10">{{ "SchoolName" | translate }}</label>
+                <label class="font_10">{{ "SchoolName" | translate }}*</label>
                 <div *ngIf="fromSchoolProfile != ''">
                   <input
                     formControlName="schoolId"
@@ -126,7 +126,7 @@
                 </div>
               </div>
               <div class="form-group">
-                <label class="font_10">{{ "ClassName" | translate }}</label>
+                <label class="font_10">{{ "ClassName" | translate }}*</label>
                 <input
                   formControlName="className"
                   type="text"
@@ -166,7 +166,7 @@
               <div class="form-group">
                 <label class="font_10">{{
                   "NoOfStudents" | translate
-                }}</label>
+                }}*</label>
                 <input
                   formControlName="noOfStudents"
                   type="number"
@@ -189,7 +189,7 @@
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group position-relative">
-                    <label class="font_10">{{ "Start" | translate }}:</label>
+                    <label class="font_10">{{ "Start" | translate }}*</label>
                     <input
                       #startDate
                       autocomplete="off"
@@ -214,7 +214,7 @@
                 </div>
                 <div class="col-md-6">
                   <div class="form-group">
-                    <label class="font_10">{{ "Finish" | translate }}:</label>
+                    <label class="font_10">{{ "Finish" | translate }}*</label>
                     <input
                       #endDate
                       autocomplete="off"
@@ -337,7 +337,7 @@
                   <div class="form-group">
                     <label class="font_10">{{
                       "Visibility" | translate
-                    }}</label>
+                    }}*</label>
                     <select
                       class="form-select rounded-8 w-100"
                       formControlName="accessibilityId"
@@ -358,7 +358,7 @@
               </div>
               <div class="form-group">
                 <div class="custom-language-select">
-                  <label class="font_10">{{ "Language" | translate }}</label>
+                  <label class="font_10">{{ "Language" | translate }}*</label>
                   <p-multiSelect
                     defaultLabel="{{ 'SelectLanguages' | translate }}"
                     [panelStyle]="{ width: '100%' }"
@@ -394,7 +394,7 @@
               </div>
               <div>
                 <div class="form-group latest-form">
-                  <label class="font_10">{{ "Tags" | translate }}</label>
+                  <label class="font_10">{{ "Tags" | translate }}*</label>
                   <input
                     formControlName="tags"
                     (keyup.enter)="onEnter($event)"

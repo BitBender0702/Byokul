@@ -144,7 +144,7 @@ import { Subject, Subscription } from 'rxjs';
           if(!this.commentResponseSubscription){
             this.commentResponseSubscription = commentResponse.subscribe(response => {
             var comment: any[] = this.reels.post.comments;
-            var commentObj = {id:response.id,content:response.message,likeCount:0,isCommentLikedByCurrentUser:false,userAvatar:response.senderAvatar,userName:response.userName,userId:response.userId};
+            var commentObj = {id:response.id,content:response.message,likeCount:0,isCommentLikedByCurrentUser:false,userAvatar:response.senderAvatar,userName:response.userName,userId:response.userId,isUserVerified: response.isUserVerified};
             comment.push(commentObj);
             this.cd.detectChanges();
             this.groupChatList.nativeElement.scrollTop = this.groupChatList.nativeElement.scrollHeight;
@@ -284,7 +284,8 @@ player.play(); // Start playing the video again
         groupName:'',
         userAvatar:'',
         createdOn:new Date(),
-        userName:''
+        userName:'',
+        isUserVerified: false
        };
     }
 
@@ -295,6 +296,7 @@ player.play(); // Start playing the video again
       this.commentViewModel.groupName = this.reels.id + "_group";
       this.commentViewModel.content = this.messageToGroup;
       this.commentViewModel.userAvatar = this.sender.avatar;
+      this.commentViewModel.isUserVerified = this.sender.isVerified;
       this.messageToGroup = "";
       this.commentViewModel.id = '00000000-0000-0000-0000-000000000000';
       this._chatService.addComments(this.commentViewModel).subscribe((response) => {

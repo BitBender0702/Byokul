@@ -39,7 +39,8 @@ export const commentResponse = new Subject<{
   userId: string;
   createdOn: Date,
   userName:string,
-  gender:string
+  gender:string,
+  isUserVerified:boolean
 }>();
 
 export const commentLikeResponse = new Subject<{
@@ -152,7 +153,8 @@ export class SignalrService {
         userId: model.userId,
         createdOn:model.createdOn,
         userName: model.userName,
-        gender: model.gender
+        gender: model.gender,
+        isUserVerified: model.isUserVerified
       });
 
       console.log(`this ${model.userId} send ${model.content}`);

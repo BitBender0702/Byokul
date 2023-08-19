@@ -421,6 +421,9 @@
                             class="font_12 fw_600 text-start mb-0 cursor_pointer"
                           >
                             {{ item.userName }}
+                            <span *ngIf="item.user?.isVarified || item?.isUserVerified" class="verified-badge"
+                            ><img src="../../../../assets/images/green-verified.svg"/>
+                           </span>
                           </p>
                           <p class="text_sec1 font_12 fw_400 text-start mb-0">
                             {{ item.content }}

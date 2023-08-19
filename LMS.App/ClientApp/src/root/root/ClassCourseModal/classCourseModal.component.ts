@@ -111,7 +111,7 @@ export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,ty
         if(!this.commentResponseSubscription){
         this.commentResponseSubscription = commentResponse.subscribe(response => {
           var comment: any[] =this.classCourseDetails.classCourseItem.comments;
-          var commentObj = {id:response.id,content:response.message,likeCount:0,isCommentLikedByCurrentUser:false,userAvatar:response.senderAvatar};
+          var commentObj = {id:response.id,content:response.message,likeCount:0,isCommentLikedByCurrentUser:false,userAvatar:response.senderAvatar,isUserVerified: response.isUserVerified};
           comment.push(commentObj);
         });
       }
@@ -258,6 +258,7 @@ export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,ty
     this.commentViewModel.groupName = this.classCourseDetails.classCourseItem.id + "_group";
     this.commentViewModel.content = this.messageToGroup;
     this.commentViewModel.userAvatar = this.sender.avatar;
+    this.commentViewModel.isUserVerified = this.sender.isUserVerified;
     this.messageToGroup = "";
     this.commentViewModel.id = '00000000-0000-0000-0000-000000000000';
     this._chatService.addComments(this.commentViewModel).subscribe((response) => {
@@ -275,7 +276,8 @@ export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,ty
       groupName:'',
       userAvatar:'',
       createdOn:new Date(),
-      userName:''
+      userName:'',
+      isUserVerified: false
      };
   }
 

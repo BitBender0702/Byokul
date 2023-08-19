@@ -355,7 +355,17 @@
   "DidNotReceive": "Didn't receive email ?",
   "ExportToExcel": "Export to Excel",
   "BuyerName": "Buyer Name",
-  "Rate": "Rate"
+  "ThankYouForYourRating":"Thank You For Your Rating!",
+  "Rate": "Rate",
+  "Officials": "Officials",
+  "AddOfficial": "Add Official",
+  "SchoolVideoLibrary": "School Video Library",
+  "UploadVideo": "Upload Video"
+
+
+
+
+  
 
 
   

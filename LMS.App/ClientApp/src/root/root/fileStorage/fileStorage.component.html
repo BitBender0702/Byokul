@@ -342,12 +342,18 @@
                       class="font_16 fw-bold mb-0 mt-1 text-start text_sec1"
                     >
                       {{ item.user.firstName + item.user.lastName }}
+                      <span *ngIf="item.user?.isVarified || item?.isUserVerified" class="verified-badge"
+                      ><img src="../../../../assets/images/green-verified.svg"/>
+                     </span>
                     </p>
                     <p
                       *ngIf="item.userName != null"
                       class="font_16 fw-bold mb-0 mt-1 text-start text_sec1"
                     >
                       {{ item.userName }}
+                      <span *ngIf="item.user?.isVarified || item?.isUserVerified" class="verified-badge"
+                      ><img src="../../../../assets/images/green-verified.svg"/>
+                     </span>
                     </p>
                   </div>
                   <div>

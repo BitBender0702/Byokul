@@ -190,6 +190,15 @@
                       <b class="fw_700">{{ class.posts.length }}</b>
                     </div>
                   </div>
+
+                  <button
+                  *ngIf="!isOwner && !isRatedByUser"
+                  class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn me-0 minw-142 class-request-msg"
+                  data-bs-toggle="modal"
+                  data-bs-target="#rate-class">
+                  {{ "Rate" | translate }}
+                </button>
+
                   <button
                     *ngIf="!isOwner"
                     type="button"
@@ -212,14 +221,14 @@
                   >
                     {{ "ConvertToCourse" | translate }}
                   </button> -->
-                  <button
-                    *ngIf="isOwner && !isRatedByUser"
+                  <!-- <button
+                    *ngIf="!isOwner && !isRatedByUser"
                     class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins"
                     data-bs-toggle="modal"
                     data-bs-target="#rate-class"
                   >
                     {{ "Rate" | translate }}
-                  </button>
+                  </button> -->
                   <button
                     *ngIf="isOwner"
                     class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins"
@@ -368,7 +377,7 @@
             <div class="teacher-tags tag-box mt-0 hover-tags">
               <div class="teacher-content font_14 d-inline-block">
                 <img lazyLoad="../../../../assets/images/Profile-dark.svg" />{{
-                  "Teachers" | translate
+                  "Officials" | translate
                 }}
               </div>
 
@@ -386,7 +395,7 @@
                   /></button
               ></span>
 
-              <span
+              <!-- <span
                 *ngIf="isOwner || hasManageTeachersPermission"
                 class="custom-tag"
                 (click)="resetTeacherModal()"
@@ -403,7 +412,7 @@
                     lazyLoad="../../../../assets/images/school/plus-light.svg"
                   />
                 </button>
-              </span>
+              </span> -->
             </div>
           </div>
         </div>

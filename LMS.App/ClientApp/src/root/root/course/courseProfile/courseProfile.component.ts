@@ -381,13 +381,17 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     }
 
     this.sharedPostSubscription = sharedPostResponse.subscribe(response => {
+      const translatedSummary = this.translateService.instant('Success');
       if (response.postType == 1) {
-        this.messageService.add({ severity: 'success', summary: 'Success', life: 3000, detail: 'Post shared successfully' });
+        const translatedMessage = this.translateService.instant('PostSharedSuccessfully');
+        this.messageService.add({ severity: 'success', summary: translatedSummary, life: 3000, detail: translatedMessage });
         var post = this.course.posts.find((x: { id: string; }) => x.id == response.postId);
         post.postSharedCount++;
       }
-      else
-        this.messageService.add({ severity: 'success', summary: 'Success', life: 3000, detail: 'Reel shared successfully' });
+      else{
+        const translatedMessage = this.translateService.instant('ReelSharedSuccessfully');
+        this.messageService.add({ severity: 'success', summary: translatedSummary, life: 3000, detail: translatedMessage });
+      }
     });
 
     if (!this.changeLanguageSubscription) {
@@ -1533,6 +1537,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     this._courseService.courseRating(this.courseRatingView).subscribe((response) => {
       debugger;
       this.isRatedByUser = true;
+      this.course.rating = response.courseRating;
       this.cd.detectChanges();
       const translatedInfoSummary = this.translateService.instant('Success');
       const translatedMessage = this.translateService.instant('ThankYouForYourRating');

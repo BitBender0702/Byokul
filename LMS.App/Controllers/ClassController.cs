@@ -302,18 +302,18 @@ namespace LMS.App.Controllers
                 return Ok(new { Success = false, Message = Constants.UserNotLoggedIn });
             }
             classRating.UserId = userId;
-            if ((int)classRating.Rating > 6 || (int)classRating.Rating <= 1)
+            if ((int)classRating.Rating > 5 || (int)classRating.Rating < 1)
             {
                 return Ok(new { Success = false, Message = Constants.RatingMustBeBetween1To5 });
             }
-            var classRatings = _classService.ClassRating(classRating);
-            if (classRatings.Result == Constants.ClassRatedSuccessfully)
+            var classRatings = await _classService.ClassRating(classRating);
+            if (classRatings != null)
             {
-                return Ok(new { Success = true, Message = Constants.ClassRatedSuccessfully });
+                return Ok(new { Success = true, Message = Constants.ClassRatedSuccessfully, ClassRating = classRatings });
             }
             else
             {
-                return Ok(new { Success = false, Message = Constants.ClassNotRatedSuccessfully });
+                return Ok(new { Success = false, Message = Constants.ClassNotRatedSuccessfully,ClassRating = classRatings });
             }
 
         }

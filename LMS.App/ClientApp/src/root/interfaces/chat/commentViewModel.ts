@@ -5,6 +5,7 @@ export interface CommentViewModel {
     groupName:string,
     userAvatar:string,
     createdOn?:Date,
-    userName?:string;
-    gender?: string | null
+    userName?:string,
+    gender?: string | null,
+    isUserVerified:boolean
   }

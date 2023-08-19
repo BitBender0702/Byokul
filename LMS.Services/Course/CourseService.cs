@@ -1154,7 +1154,7 @@ namespace LMS.Services
 
         }
 
-        public async Task<string> CourseRating(ClassCourseRatingViewModel courseRating)
+        public async Task<int?> CourseRating(ClassCourseRatingViewModel courseRating)
         {
             var course = _courseRepository.GetById(courseRating.CourseId);
             var userId = await _userManager.FindByIdAsync(courseRating.UserId);
@@ -1188,9 +1188,9 @@ namespace LMS.Services
                 courseTotalLikes.IsRatedByUser = true;
                 _courseRepository.Update(courseTotalLikes);
                 _courseRepository.Save();
-                return Constants.CourseRatedSuccessfully;
+                return averageRatingForCourse;
             }
-            return "User has alreday rated for this course";
+            return null;
         }
 
 

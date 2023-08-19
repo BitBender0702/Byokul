@@ -285,7 +285,7 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
       this.commentResponseSubscription = commentResponse.subscribe(response => {
         debugger
         var comment: any[] = this.post.comments;
-        var commentObj = { id: response.id, content: response.message, likeCount: 0, isCommentLikedByCurrentUser: false, userAvatar: response.senderAvatar, userName: response.userName, userId: response.userId };
+        var commentObj = { id: response.id, content: response.message, likeCount: 0, isCommentLikedByCurrentUser: false, userAvatar: response.senderAvatar, userName: response.userName, userId: response.userId, isUserVerified: response.isUserVerified };
         comment.push(commentObj);
         this.cd.detectChanges();
         this.groupChatList.nativeElement.scrollTop = this.groupChatList.nativeElement.scrollHeight;
@@ -409,6 +409,7 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   sendToGroup() {
+    debugger
     var comment: any[] = this.post.comments;
     this.InitializeCommentViewModel();
     this.commentViewModel.userId = this.sender.id;
@@ -416,6 +417,7 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
     this.commentViewModel.groupName = this.post.id + "_group";
     this.commentViewModel.content = this.messageToGroup;
     this.commentViewModel.userAvatar = this.sender.avatar;
+    this.commentViewModel.isUserVerified = this.sender.isVarified;
     this.messageToGroup = "";
     this.commentViewModel.id = '00000000-0000-0000-0000-000000000000';
     this._chatService.addComments(this.commentViewModel).subscribe((response) => {
@@ -437,7 +439,8 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
       groupName: '',
       userAvatar: '',
       createdOn: new Date(),
-      userName: ''
+      userName: '',
+      isUserVerified: false
     };
   }
 

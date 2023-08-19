@@ -524,6 +524,7 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
        this.commentViewModel.groupName = this.fileId + "_group";
        this.commentViewModel.content = this.messageToGroup;
        this.commentViewModel.userAvatar = this.sender.avatar;
+       this.commentViewModel.isUserVerified = this.sender.isVerified;
        this.messageToGroup = "";
        this.commentViewModel.id = Constant.defaultGuid;
        this._chatService.addComments(this.commentViewModel).subscribe((response) => {
@@ -545,7 +546,8 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
           groupName:'',
           userAvatar:'',
           createdOn:new Date(),
-          userName:''
+          userName:'',
+          isUserVerified:false
          };
       }
 
@@ -590,7 +592,7 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
     if(!this.commentResponseSubscription){
     this.commentResponseSubscription = commentResponse.subscribe(response => {
       var comment: any[] = this.fileComments;
-      var commentObj = {id:response.id,content:response.message,likeCount:0,isCommentLikedByCurrentUser:false,userAvatar:response.senderAvatar,createdOn:response.createdOn,userName:response.userName};
+      var commentObj = {id:response.id,content:response.message,likeCount:0,isCommentLikedByCurrentUser:false,userAvatar:response.senderAvatar,createdOn:response.createdOn,userName:response.userName,isUserVerified: response.isUserVerified};
       comment.push(commentObj);
       this.cd.detectChanges();
       this.groupChatList.nativeElement.scrollTop = this.groupChatList.nativeElement.scrollHeight;

@@ -62,6 +62,7 @@
             </p>
             <form id="regForm" [formGroup]="createSchoolForm1">
               <div class="form-group">
+                <label class="font_10">{{ "SchoolName" | translate }}*</label>
                 <input
                   placeholder="{{ 'SchoolName' | translate }}"
                   formControlName="schoolName"
@@ -80,6 +81,7 @@
                 </small>
               </div>
               <div class="form-group">
+                <label class="font_10">{{ "Specialization" | translate }}*</label>
                 <select
                   class="form-select rounded-8 w-100"
                   formControlName="specializationId"
@@ -107,6 +109,7 @@
               </div>
 
               <div class="form-group">
+                <label class="font_10">{{ "Location" | translate }}*</label>
                 <select
                   class="form-select rounded-8 w-100"
                   formControlName="countryName"
@@ -135,6 +138,7 @@
               </div>
 
               <div class="form-group">
+                <label class="font_10">{{ "Visibility" | translate }}*</label>
                 <select
                   class="form-select rounded-8 w-100"
                   formControlName="accessibilityId"
@@ -149,22 +153,23 @@
                     >
                     {{ item.name }}
                   </option>
-                  <small
-                    class="p-error"
-                    style="color: orange"
-                    *ngIf="
-                      isSubmitted &&
-                      createSchoolForm1.controls.accessibilityId.errors
-                    "
-                    >{{ "ThisFieldRequired" | translate }}
-                  </small>
                 </select>
+                <small
+                class="p-error"
+                style="color: orange"
+                *ngIf="
+                isStepCompleted &&
+                  createSchoolForm1.controls.accessibilityId.errors
+                "
+                >{{ "ThisFieldRequired" | translate }}
+              </small>
               </div>
 
 
 
 
               <div class="form-group">
+                <label class="font_10">{{ "Languages" | translate }}*</label>
                 <div class="custom-language-select">
                   <p-multiSelect
                     defaultLabel="{{ 'SelectLanguages' | translate }}"
@@ -200,6 +205,7 @@
                 </div>
               </div>
               <div class="form-group">
+                <label class="font_10">{{ "PhoneNumber" | translate }}*</label>
                 <ngx-intl-tel-input [preferredCountries]="preferredCountries"
                   [enableAutoCountrySelect]="true" [enablePlaceholder]="true" [searchCountryFlag]="true"
                   [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]" [selectFirstCountry]="false"
@@ -226,6 +232,7 @@
               </div>
 
               <div class="form-group">
+                <label class="font_10">{{ "Founded" | translate }}*</label>
                 <input
                   #founded
                   autocomplete="off"
@@ -255,6 +262,7 @@
               </div>
 
               <div class="form-group">
+                <label class="font_10">{{ "SchoolEmail" | translate }}</label>
                 <input
                   formControlName="schoolEmail"
                   type="text"
@@ -277,6 +285,7 @@
               </div>
 
               <div class="form-group">
+                <label class="font_10">{{ "SchoolSlogan" | translate }}</label>
                 <input
                   placeholder="{{ 'SchoolSlogan' | translate }}"
                   formControlName="schoolSlogan"
@@ -287,6 +296,7 @@
               </div>
 
               <div class="form-group">
+                <label class="font_10">{{ "SchoolBio" | translate }}</label>
                 <textarea #textarea maxlength="200"
                   formControlName="description"
                   class="form-control resize-none"

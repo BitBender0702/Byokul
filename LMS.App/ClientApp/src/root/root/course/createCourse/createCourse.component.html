@@ -92,7 +92,7 @@
               </button> -->
             </div>
               <div class="form-group">
-                <label class="font_10">{{ "SchoolName" | translate }}</label>
+                <label class="font_10">{{ "SchoolName" | translate }}*</label>
                 <div *ngIf="fromSchoolProfile != ''">
                   <input
                     formControlName="schoolId"
@@ -127,7 +127,7 @@
                 </div>
               </div>
               <div class="form-group">
-                <label class="font_10">{{ "CourseName" | translate }}</label>
+                <label class="font_10">{{ "CourseName" | translate }}*</label>
                 <input
                   formControlName="courseName"
                   type="text"
@@ -225,7 +225,7 @@
                   <div class="form-group">
                     <label class="font_10">{{
                       "Visibility" | translate
-                    }}</label>
+                    }}*</label>
                     <select
                       class="form-select rounded-8 w-100"
                       formControlName="accessibilityId"
@@ -251,7 +251,7 @@
                 </div>
               </div>
               <div class="form-group">
-                <label class="font_10">{{ "Language" | translate }}</label>
+                <label class="font_10">{{ "Language" | translate }}*</label>
                 <div class="custom-language-select">
                   <p-multiSelect
                     defaultLabel="{{ 'SelectLanguages' | translate }}"
@@ -296,7 +296,7 @@
               </div>
 
               <div class="form-group latest-form">
-                <label class="font_10">{{ "Tags" | translate }}</label>
+                <label class="font_10">{{ "Tags" | translate }}*</label>
                 <input
                   formControlName="tags"
                   (keyup.enter)="onEnter($event)"

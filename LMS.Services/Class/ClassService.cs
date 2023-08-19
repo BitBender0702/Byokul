@@ -1102,7 +1102,7 @@ namespace LMS.Services
         }
 
      
-        public async Task<string> ClassRating(ClassCourseRatingViewModel classRating)
+        public async Task<int?> ClassRating(ClassCourseRatingViewModel classRating)
         {
             //var classForRating = _courseRepository.GetById(courseRating.ClassId);
             //var userId = await _userManager.FindByIdAsync(courseRating.UserId);
@@ -1137,9 +1137,9 @@ namespace LMS.Services
                 _classRepository.Save();
                 _classCourseRatingRepository.Insert(ratings);
                 _classCourseRatingRepository.Save();
-                return Constants.ClassRatedSuccessfully;
+                return averageRatingForClass;
             }
-            return "User has alreday rated for this course";
+            return null;
         }
     }
 }

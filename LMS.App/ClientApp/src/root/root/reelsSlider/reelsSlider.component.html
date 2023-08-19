@@ -109,7 +109,12 @@
             <img (click)="hideCommentModal()" [routerLink]="['/user/userProfile',item.userId]" *ngIf="item.userAvatar != null" [src]="item.userAvatar" class="comment-user cursorPointer">
             <img (click)="hideCommentModal()" [routerLink]="['/user/userProfile',item.userId]" *ngIf="item.userAvatar == null && gender =='1'" src="../../../assets/images/maleProfile.jfif" class="comment-user cursorPointer"/>
             <img (click)="hideCommentModal()" [routerLink]="['/user/userProfile',item.userId]" *ngIf="(item.userAvatar == null) && (gender =='2' || gender =='3')" src="../../../assets/images/femaleProfile.jfif" class="comment-user cursorPointer"/>
-            <div><p (click)="hideCommentModal()" [routerLink]="['/user/userProfile',item.userId]" class="d-flex flex-column cursorPointer" class="font_12 fw_600 text-start mb-0">{{item.userName}}</p>
+            <div><p (click)="hideCommentModal()" [routerLink]="['/user/userProfile',item.userId]" class="d-flex flex-column cursorPointer" class="font_12 fw_600 text-start mb-0">
+              {{item.userName}}
+              <span *ngIf="item.user?.isVarified || item?.isUserVerified" class="verified-badge"
+              ><img src="../../../../assets/images/green-verified.svg"/>
+             </span>
+            </p>
               <p class="text_sec1 font_12 fw_400 text-start mb-0">{{item.content}}</p>
             </div>
 

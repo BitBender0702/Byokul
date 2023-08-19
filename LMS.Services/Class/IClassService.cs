@@ -46,7 +46,7 @@ namespace LMS.Services
 
         Task EnableDisableComments(Guid classId, bool isHideComments);
 
-        Task<string> ClassRating(ClassCourseRatingViewModel classRating);
+        Task<int?> ClassRating(ClassCourseRatingViewModel classRating);
 
 
     }

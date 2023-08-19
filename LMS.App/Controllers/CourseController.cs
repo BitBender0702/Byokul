@@ -271,18 +271,18 @@ namespace LMS.App.Controllers
                 return Ok(new { Success = false, Message = Constants.UserNotLoggedIn });
             }
             courseRating.UserId = userId;
-            if ((int)courseRating.Rating > 6 || (int)courseRating.Rating <= 1)
+            if ((int)courseRating.Rating > 5 || (int)courseRating.Rating < 1)
             {
                 return Ok(new { Success = false, Message = Constants.RatingMustBeBetween1To5 });
             }
-            var courseRatings = _courseService.CourseRating(courseRating);
-            if(courseRatings.Result == Constants.CourseRatedSuccessfully)
+            var courseRatings = await _courseService.CourseRating(courseRating);
+            if(courseRatings != null)
             {
-                return Ok(new { Success = true, Message = Constants.CourseRatedSuccessfully});
+                return Ok(new { Success = true, Message = Constants.CourseRatedSuccessfully, CourseRating = courseRatings });
             }
             else
             {
-                return Ok(new { Success = false, Message = Constants.CourseNotRatedSuccessfully});
+                return Ok(new { Success = false, Message = Constants.CourseNotRatedSuccessfully, CourseRating = courseRatings });
             }
 
         }

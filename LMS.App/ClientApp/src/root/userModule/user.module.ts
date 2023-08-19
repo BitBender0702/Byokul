@@ -139,6 +139,9 @@ const routes: Routes = [
   {
     path: 'studentList/:id/:type',component:StudentListComponent, canActivate: [AuthGuard]
   },
+  {
+    path: 'schoolVideoLibrary/:schoolId',component:StudentListComponent, canActivate: [AuthGuard]
+  }
 ];
 
 

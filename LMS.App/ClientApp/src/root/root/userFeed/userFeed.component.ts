@@ -257,7 +257,7 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
     this.sharedPostSubscription = sharedPostResponse.subscribe(response => {
       if (response.postType == 1) {
         const translatedSummary = this.translateService.instant('Success');
-        const translatedMessage = this.translateService.instant('ReelSavedSuccessfully');
+        const translatedMessage = this.translateService.instant('PostSharedSuccessfully');
         this.messageService.add({ severity: 'success', summary: translatedSummary, life: 3000, detail: translatedMessage });
         var post = this.myFeeds.find((x: { id: string; }) => x.id == response.postId);
         if (post == undefined || null) {
@@ -265,8 +265,11 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
         }
         post.postSharedCount++;
       }
-      else
-        this.messageService.add({ severity: 'success', summary: 'Success', life: 3000, detail: 'Reel shared successfully' });
+      else{
+        const translatedSummary = this.translateService.instant('Success');
+        const translatedMessage = this.translateService.instant('ReelSharedSuccessfully');
+        this.messageService.add({ severity: 'success', summary: translatedSummary, life: 3000, detail: translatedMessage });
+      }
     });
 
     if (!this.changeLanguageSubscription) {

@@ -531,7 +531,11 @@
   "ExportToExcel": "Export to Excel",
   "BuyerName": "Buyer Name",
   "ThankYouForYourRating":"Thank You For Your Rating!",
-  "Rate": "Rate"
+  "Rate": "Rate",
+  "Officials": "Officials",
+  "AddOfficial": "Add Official",
+  "SchoolVideoLibrary": "School Video Library",
+  "UploadVideo": "Upload Video"
   
 
 

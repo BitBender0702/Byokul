@@ -20,5 +20,6 @@ namespace LMS.Common.ViewModels.Post
         public DateTime? CreatedOn { get; set; }
         public string? UserName { get; set; }
         public string? Gender { get; set; }
+        public bool IsUserVerified { get; set; }
     }
 }
