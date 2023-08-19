@@ -2219,7 +2219,7 @@ export class SchoolProfileComponent
 
 
   parseTheTags(tags:any){
-    for (let index = 0; index < tags.length; index++) {
+    for (let index = 0; index < tags?.length; index++) {
       const element = tags[index].postTagValue;
       try{
       var reelsTags = JSON.parse(element);}
