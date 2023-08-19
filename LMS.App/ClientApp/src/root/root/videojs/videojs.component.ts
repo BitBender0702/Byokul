@@ -28,15 +28,7 @@ export class VideoJsComponent implements OnInit {
     this.onWindowResize();
     this.cd.detectChanges();
     if (this.isReelView) {
-      // if(this.isScreenMobile){
-      //   this.player = videojs(this.disVideo.nativeElement, {
-      //     autoplay: 'muted',
-      //     loop: true,
-      //     controlBar: {
-      //       fullscreenToggle: false
-      //     }
-      //   });
-      // } else{
+      if(this.isScreenMobile){
         this.player = videojs(this.disVideo.nativeElement, {
           autoplay: 'muted',
           loop: true,
@@ -52,7 +44,7 @@ export class VideoJsComponent implements OnInit {
           autoplay: 'muted',
           loop: true
         });
-      // }
+      }
     }
     else {
       this.player = videojs(this.disVideo.nativeElement);
