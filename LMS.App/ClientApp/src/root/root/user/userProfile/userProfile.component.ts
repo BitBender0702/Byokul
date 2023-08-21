@@ -2163,6 +2163,16 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
     }
   }
 
+  navigateToProfile(sharedProfileUrl: string) {
+    if (sharedProfileUrl) {
+      const urlSegments = sharedProfileUrl.split('/').slice(3); 
+      const routeUrl = '/' + urlSegments.join('/');
+      this.router.navigateByUrl(routeUrl);
+    }
+  }
+  
+  
+
 }
 
 

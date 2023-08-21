@@ -1029,17 +1029,16 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
         const videoElement = firstElement.children[0] as HTMLVideoElement
         console.log(videoElement)
         if (videoElement) {
-          try{
-            videoElement.play().then(()=>{
-              videoElement.volume =this.getVolume;
-            });
-          } catch{}
+          videoElement.play()
+          if(!this.muted)
+          videoElement.muted = false
         }
       }
     }
 
   }
 
+  muted:boolean=true;
   beforeChange(event: any) {
     const currentSlideIndex = event.currentSlide;
     const direction = event.nextSlide > event.currentSlide ? 'down' : 'up';
@@ -1056,12 +1055,13 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
         const videoElement = firstElement.children[0] as HTMLVideoElement
         console.log(videoElement)
         if (videoElement) {
-          try{
-            videoElement.pause();
-          } catch{}
-          videoElement.addEventListener('volumechange',()=>{
-            this.getVolume = videoElement.volume;
-          })
+          videoElement.pause();
+          debugger
+          if(videoElement.muted == false){
+            this.muted = false
+          } else{
+            this.muted = true
+          }
         }
       }
     }

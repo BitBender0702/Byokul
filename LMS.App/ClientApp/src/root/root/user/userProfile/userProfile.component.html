@@ -646,6 +646,7 @@
                         <img
                           *ngIf="post.parentImageUrl != null"
                           [src]="post.parentImageUrl"
+                          class="fit-image"
                         />
                         <img
                           *ngIf="post.parentImageUrl == null && gender == '1'"
@@ -705,10 +706,16 @@
                     <!-- </div> -->
                   </div>
 
+                  <h4 class="d-inline-block font_20 fw_600 text_sec1 mb-3">
+                    <!-- <a [href]="post.sharedProfileUrl">{{post.title}}</a> -->
+                    <a (click)="navigateToProfile(post.sharedProfileUrl)">{{post.title}}</a>
+
+                  </h4>
                   <div
                     class="school-grid-body"
                     (click)="openPostsViewModal(post)"
                   >
+                  
                     <p
                       class="text_sec1 font_14 word-break"
                       style="cursor: pointer"

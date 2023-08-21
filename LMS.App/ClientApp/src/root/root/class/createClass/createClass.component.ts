@@ -323,7 +323,6 @@ captureTeacherId(event: any) {
   // }
   
   handleImageInput(event: any) {
-    debugger;
   
     if (event.target.files[0].type === "video/mp4") {
       const videoElement = document.createElement('video');

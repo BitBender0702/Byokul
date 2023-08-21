@@ -950,11 +950,23 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     }
   }
 
-  openPostModal(): void {
+  // openPostModal(): void {
+  //   const initialState = {
+  //     courseId: this.course.courseId,
+  //     from: "course"
+  //   };
+  //   this.bsModalService.show(CreatePostComponent, { initialState });
+  // }
+
+  openPostModal(isLiveTabOpen?: boolean, isShareProfile?:boolean): void {
     const initialState = {
+      userId: this.userId,
       courseId: this.course.courseId,
-      from: "course"
+      from: "course",
+      isLiveTabOpen: isLiveTabOpen,
+      isShareProfile: isShareProfile
     };
+    debugger
     this.bsModalService.show(CreatePostComponent, { initialState });
   }
 

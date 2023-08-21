@@ -1106,11 +1106,13 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     }
   }
 
-  openPostModal(isLiveTabOpen?: boolean): void {
+  openPostModal(isLiveTabOpen?: boolean, isShareProfile?:boolean): void {
     const initialState = {
+      userId: this.userId,
       classId: this.class.classId,
       from: "class",
-      isLiveTabOpen: isLiveTabOpen
+      isLiveTabOpen: isLiveTabOpen,
+      isShareProfile: isShareProfile
     };
     this.bsModalService.show(CreatePostComponent, { initialState });
   }
@@ -1342,6 +1344,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   }
 
   openSharePostModal(postId: string, postType: number, title: string, description: string): void {
+    debugger;
     if (this.class.accessibility.name == Constant.Private || this.class.serviceType.type == Constant.Paid) {
       this.messageService.add({ severity: 'info', summary: 'Info', life: 3000, detail: 'This class is private/paid, you cant share the post!' });
     }

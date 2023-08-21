@@ -1329,6 +1329,9 @@ namespace LMS.Data.Migrations
                     b.Property<int>("PostType")
                         .HasColumnType("int");
 
+                    b.Property<string>("SharedProfileUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("Status")
                         .HasColumnType("int");
 

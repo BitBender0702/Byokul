@@ -1249,13 +1249,24 @@ export class SchoolProfileComponent
     this.isOpenModal = true;
   }
 
-  openPostModal(isLiveTabOpen?: boolean): void {
+  // openPostModal(isLiveTabOpen?: boolean): void {
+  //   const initialState = {
+  //     schoolId: this.school.schoolId,
+  //     from: 'school',
+  //     isLiveTabOpen: isLiveTabOpen
+  //   };
+  //   this.bsModalService.show(CreatePostComponent, { initialState, backdrop: 'static' });
+  // }
+
+  openPostModal(isLiveTabOpen?: boolean, isShareProfile?:boolean): void {
     const initialState = {
+      userId: this.userId,
       schoolId: this.school.schoolId,
-      from: 'school',
-      isLiveTabOpen: isLiveTabOpen
+      from: "school",
+      isLiveTabOpen: isLiveTabOpen,
+      isShareProfile: isShareProfile
     };
-    this.bsModalService.show(CreatePostComponent, { initialState, backdrop: 'static' });
+    this.bsModalService.show(CreatePostComponent, { initialState });
   }
 
   pinUnpinPost(attachmentId: string, isPinned: boolean) {

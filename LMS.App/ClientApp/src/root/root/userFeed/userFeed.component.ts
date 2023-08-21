@@ -172,6 +172,7 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
         this.isGlobalFeed = false;
         this.postLoadingIcon = false;
         this.myFeeds = response;
+        debugger
         this.myFeeds = this.getFilteredAttachments(this.myFeeds, "myFeed");
         this.isMyFeedPostsExist = true;
         this.checkMyFeedExist();
@@ -188,6 +189,7 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
 
       this._userService.getMyFeed(3, this.myFeedsPageNumber, this.searchString).subscribe((result) => {
         this.myFeedsReels = result;
+        debugger
         this.isMyFeedReelsExist = true;
         this.checkMyFeedExist();
         if (this.myFeedsReels.length == 0) {
@@ -900,6 +902,7 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
           this.isGlobalFeed = false;
           this.postLoadingIcon = false;
           this.myFeeds = response;
+          debugger
           this.myFeeds = this.getFilteredAttachments(this.myFeeds, "myFeed");
           this.isMyFeedPostsExist = true;
           this.checkMyFeedExist();
@@ -1166,6 +1169,13 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
 
 
 
+  navigateToProfile(sharedProfileUrl: string) {
+    if (sharedProfileUrl) {
+      const urlSegments = sharedProfileUrl.split('/').slice(3); 
+      const routeUrl = '/' + urlSegments.join('/');
+      this.router.navigateByUrl(routeUrl);
+    }
+  }
 
 
 

@@ -491,6 +491,7 @@ namespace LMS.Services
                 post.PostAttachments = attachment;
                 post.ParentImageUrl = data.ParentImageUrl;
                 post.ParentName = data.ParentName;
+                //post.SharedProfileUrl = data.sha
                 post.Likes = await GetLikesOnPost(post.Id);
                 post.Views = await GetViewsOnPost(post.Id);
                 post.CommentsCount = await GetCommentsCountOnPost(post.Id);

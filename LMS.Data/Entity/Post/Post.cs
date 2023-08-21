@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LMS.Data.Entity
 {
-    public class Post:ActionAudit
+    public class Post : ActionAudit
     {
         public Guid Id { get; set; }
         public string? Title { get; set; }
@@ -17,7 +17,7 @@ namespace LMS.Data.Entity
         public int PostType { get; set; }
         public string? Description { get; set; }
         public int PostAuthorType { get; set; }
-        public Guid ParentId { get;set; }
+        public Guid ParentId { get; set; }
         public string? CoverLetter { get; set; }
         public bool IsPinned { get; set; }
         public Boolean IsCommentsDisabled { get; set; }
@@ -31,6 +31,7 @@ namespace LMS.Data.Entity
         public DateTime? UpdatedOn { get; set; }
         public List<PostAttachment> Attachments { get; set; }
         public List<PostTag> Tags { get; set; }
+        public string? SharedProfileUrl {get; set;}
 
     }
 }

@@ -95,6 +95,7 @@ namespace LMS.Services
                     CoverLetter = postViewModel.CoverLetter,
                     IsPostSchedule = false,
                     IsCommentsDisabled = false,
+                    SharedProfileUrl = postViewModel.SharedProfileUrl,
                     CommentsPerMinute = postViewModel.CommentsPerMinute == 0 ? null : postViewModel.CommentsPerMinute,
                     Attachments = postViewModel.BlobUrls.Select(x => new PostAttachment
                     {
@@ -360,7 +361,8 @@ namespace LMS.Services
             post.Title = model.Title;
             post.Description = model.Description;
             post.UpdatedOn = DateTime.UtcNow;
-
+            post.SharedProfileUrl = model.SharedProfileUrl;
+            await SavePostTags(model.PostTags, post.Id);
             _postRepository.Update(post);
             _postRepository.Save();
             var attachments = await _postAttachmentRepository.GetAll().Where(x => x.PostId == model.Id).ToListAsync();

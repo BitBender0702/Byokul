@@ -453,11 +453,14 @@
                   </div>
                   </div>
 
+                  <h4 class="d-inline-block font_20 fw_600 text_sec1 mb-3">
+                    <a (click)="navigateToProfile(post.sharedProfileUrl)">{{post.title}}</a>
+                  </h4>
                   <div
                     class="school-grid-body videoChange"
                     (click)="openPostsViewModal(post, 'myFeeds')"
                   >
-                  <h4 class="d-inline-block font_20 fw_600 text_sec1 mb-3">{{post.title}}</h4>
+                  
                     <p
                       class="text_sec1 word-break font_14"
                       style="cursor: pointer"

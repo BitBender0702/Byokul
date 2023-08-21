@@ -35,6 +35,8 @@ namespace LMS.Common.ViewModels.Post
         public Guid? ReelId { get; set; }
         public List<BlobUrlsViewModel> BlobUrls { get; set; }
         public string BlobUrlsJson { get; set; }
+        public string? SharedProfileUrl { get; set; }
+
 
     }
 

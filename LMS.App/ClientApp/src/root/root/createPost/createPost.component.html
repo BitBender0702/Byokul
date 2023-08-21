@@ -19,7 +19,7 @@
           <ul class="nav nav-tabs border-0" id="myTab" role="tablist">
             <li *ngIf="!isEditPost" class="nav-item p-0">
               <button
-                *ngIf="courseId == undefined"
+                *ngIf="courseId == undefined && !profileShare"
                 [ngClass]="
                   isLiveTabopen
                     ? 'nav-link active post-attch-btn d-inline-flex justify-content-center align-items-center'
@@ -127,7 +127,7 @@
             tabindex="0"
           >
             <form class="latest-form" [formGroup]="createLiveForm">
-              <div *ngIf="this.schoolId != undefined" class="form-group">
+              <div *ngIf="this.schoolId != undefined && !profileShare" class="form-group">
                 <label class="font_10">{{ "SchoolName" | translate }}</label>
                 <input
                   hidden
@@ -144,7 +144,7 @@
                 />
               </div>
 
-              <div *ngIf="this.classId != undefined" class="form-group">
+              <div *ngIf="this.classId != undefined && !profileShare" class="form-group">
                 <label class="font_10">{{ "ClassName" | translate }}</label>
                 <input
                   hidden
@@ -161,7 +161,7 @@
                 />
               </div>
 
-              <div *ngIf="this.courseId != undefined" class="form-group">
+              <div *ngIf="this.courseId != undefined && !profileShare" class="form-group">
                 <label class="font_10">{{ "CourseName" | translate }}</label>
                 <input
                   hidden
@@ -366,8 +366,8 @@
               <div
                 class="teacher-tags tag-box hashtag_post mt-4 mb-2 hover-tags"
               >
-                <span *ngFor="let tag of tagLists" class="custom-tag"
-                  >{{ tag }}
+                <span *ngFor="let tag of (tagLists)" class="custom-tag"
+                  >#{{ tag }}
                   <button
                     (click)="removeTags(tag)"
                     class="border-0 bg-transparent p-0 position-absolute delete-tag"
@@ -534,7 +534,7 @@
             tabindex="0"
           >
             <form [formGroup]="createPostForm">
-              <div *ngIf="this.schoolId != undefined" class="form-group">
+              <div *ngIf="this.schoolId != undefined && !profileShare" class="form-group">
                 <label class="font_10">{{ "SchoolName" | translate }}</label>
                 <input
                   hidden
@@ -551,7 +551,7 @@
                 />
               </div>
 
-              <div *ngIf="this.classId != undefined" class="form-group">
+              <div *ngIf="this.classId != undefined && !profileShare" class="form-group">
                 <label class="font_10">{{ "ClassName" | translate }}</label>
                 <input
                   hidden
@@ -568,7 +568,7 @@
                 />
               </div>
 
-              <div *ngIf="this.courseId != undefined" class="form-group">
+              <div *ngIf="this.courseId != undefined && !profileShare" class="form-group">
                 <label class="font_10">{{ "CourseName" | translate }}</label>
                 <input
                   hidden
@@ -586,7 +586,7 @@
               </div>
 
               <div class="form-group">
-                <label class="font_10">{{ "Title" | translate }}</label><span *ngIf="userId != undefined" class="font_10 ms-1">(optional)</span>
+                <label class="font_10">{{ "Title" | translate }}</label><span *ngIf="userId != undefined || profileShare" class="font_10 ms-1">(optional)</span>
                 <input
                   formControlName="title"
                   maxlength="45"
@@ -706,8 +706,8 @@
               <div
                 class="teacher-tags tag-box hashtag_post mt-4 mb-2 hover-tags"
               >
-                <span *ngFor="let tag of tagLists" class="custom-tag"
-                  >{{ tag }}
+                <span *ngFor="let tag of (tagLists)" class="custom-tag"
+                  >#{{ tag }}
                   <button
                     (click)="removeTags(tag)"
                     class="border-0 bg-transparent p-0 position-absolute delete-tag"
@@ -923,7 +923,7 @@
             tabindex="0"
           >
             <form [formGroup]="createReelForm">
-              <div *ngIf="this.schoolId != undefined" class="form-group">
+              <div *ngIf="this.schoolId != undefined && !profileShare" class="form-group">
                 <label class="font_10">{{ "SchoolName" | translate }}</label>
                 <input
                   hidden
@@ -940,7 +940,7 @@
                 />
               </div>
 
-              <div *ngIf="this.classId != undefined" class="form-group">
+              <div *ngIf="this.classId != undefined && !profileShare" class="form-group">
                 <label class="font_10">{{ "ClassName" | translate }}</label>
                 <input
                   hidden
@@ -957,7 +957,7 @@
                 />
               </div>
 
-              <div *ngIf="this.courseId != undefined" class="form-group">
+              <div *ngIf="this.courseId != undefined && !profileShare" class="form-group">
                 <label class="font_10">{{ "CourseName" | translate }}</label>
                 <input
                   hidden
