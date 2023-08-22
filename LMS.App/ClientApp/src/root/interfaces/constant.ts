@@ -29,6 +29,8 @@ export class Constant {
     public static Apk = "apk";
     public static SchoolNameExist = "School name exists";
     public static SchoolNameDoesNotExist = "School name does not exists";
+    public static TeacherAddedSuccessfully = "Teacher added successfully";
+    public static TeacherUpdatedSuccessfully = "Teacher updated successfully";
 
 
 

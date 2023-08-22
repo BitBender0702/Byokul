@@ -11,6 +11,8 @@ namespace LMS.Services
     public interface IPermissionService
     {
         Task<List<PermissionMasterViewModel>> GetAllPermissions();
+        Task<UserPermissionDetailsViewModel> GetTeacherPermissions(string userId, Guid schoolId);
+
 
     }
 }

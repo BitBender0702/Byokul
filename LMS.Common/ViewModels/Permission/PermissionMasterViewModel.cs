@@ -13,6 +13,10 @@ namespace LMS.Common.ViewModels.Permission
         public string Name { get; set; }
         public string DisplayName { get; set; }
         public PermissionTypeEnum PermissionType { get; set; }
+        public bool IsSelectedSchoolPermission { get; set; }
+        public bool IsSelectedClassPermission { get; set; }
+        public bool IsSelectedCoursePermission { get; set; }
+
     }
 }
 

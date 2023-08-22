@@ -527,7 +527,13 @@
   "Officials": "Officials",
   "AddOfficial": "Add Official",
   "SchoolVideoLibrary": "School Video Library",
-  "UploadVideo": "Upload Video"
+  "UploadVideo": "Upload Video",
+  "TeacherUpdatedSuccessfully": "Teacher updated successfully",
+  "EditOfficial": "Edit Official",
+  "UpdateOfficial": "Update Official",
+  "PleaseSelectTheTeacher": "Please select the teacher"
+
+
 
 
 

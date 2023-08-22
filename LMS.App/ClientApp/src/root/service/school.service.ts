@@ -190,4 +190,13 @@ export class SchoolService{
         );
     }
 
+    getAllSchoolFollowers(schoolId:string):Observable<any>{
+        let queryParams = new HttpParams().append("schoolId",schoolId);
+        return this.http.get(`${this.apiUrl}/school/getAllSchoolFollowers`, {params:queryParams,headers: this.headers})
+    }
+
+    getSchoolClassCourseForOfficials(schoolId:string):Observable<any>{
+        let queryParams = new HttpParams().append("schoolId",schoolId);
+        return this.http.get(`${this.apiUrl}/school/getSchoolClassCourseList`, {params:queryParams,headers: this.headers});
+    }
 }

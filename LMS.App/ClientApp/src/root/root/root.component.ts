@@ -18,6 +18,7 @@ import { NotificationType } from '../interfaces/notification/notificationViewMod
 import { FileStorageService } from '../service/fileStorage';
 import { fileStorageResponse } from './fileStorage/fileStorage.component';
 import { UserService } from '../service/user.service';
+import { addTeacherResponse } from './addOfficial/addOfficial.component';
 
 export const paymentConfirmDialoge = new Subject<{response:any}>();  
 export const postProgressNotification = new Subject<{from:string}>();  
@@ -110,7 +111,6 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
     this.meta.updateTag({ property: 'og:description', content: "description" });
     // this.meta.addTag({ property: 'og:image', content: "../../assets/images/logo.svg" });
     this.meta.updateTag({ property: 'og:url', content: "byokul.com" });
-
 
     if (!this.notifyTeacherSubscription) {
       this.notifyTeacherSubscription = notiFyTeacherResponse.subscribe(response => {

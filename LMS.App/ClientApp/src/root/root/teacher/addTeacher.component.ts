@@ -15,7 +15,8 @@ import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
 import { NotificationType, NotificationViewModel } from 'src/root/interfaces/notification/notificationViewModel';
 import { SignalrService } from 'src/root/service/signalr.service';
-export const addTeacherResponse =new BehaviorSubject <boolean>(false);  
+import { addTeacherResponse } from '../addOfficial/addOfficial.component';
+// export const addTeacherResponse =new BehaviorSubject <boolean>(false);  
 
 @Component({
     selector: 'addTeacher-root',
@@ -222,7 +223,7 @@ export class AddTeacherComponent extends MultilingualComponent implements OnInit
             var postId = '00000000-0000-0000-0000-000000000000';
             this.initializeNotificationViewModel(this.existingUserId, NotificationType.TeacherAdded, notificationContent, postId);
             debugger;
-            addTeacherResponse.next(true); 
+            addTeacherResponse.next({isEdit:true}); 
             this._signalrService.addTeacher(result);
         });
     }

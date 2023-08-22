@@ -1178,7 +1178,7 @@ namespace LMS.Services.FileStorage
         }
 
 
-        public async Task<string> RefundPayment(string paymentId, SchoolClassCourseEnum type)
+        public async Task<string> RefundPayment(string paymentId, LMS.Common.Enums.SchoolClassCourseEnum type)
         {
             Options options = new Options
             {
@@ -1206,7 +1206,7 @@ namespace LMS.Services.FileStorage
 
             if (refund.Status == "success")
             {
-                if (type == SchoolClassCourseEnum.School)
+                if (type == LMS.Common.Enums.SchoolClassCourseEnum.School)
                 {
                     var schoolTransaction = await _schoolTransactionRepository.GetAll().Where(x => x.PaymentId == paymentId).FirstAsync();
                     schoolTransaction.IsRefund = true;

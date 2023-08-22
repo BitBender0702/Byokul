@@ -26,7 +26,7 @@ namespace LMS.Services.Iyizico
         void CloseIyizicoThreeDAuthWindow(string userId);
         Task<string> CancelSubscription(Guid schoolId);
         Task<string> RenewSubscription(Guid schoolId);
-        Task<string> RefundPayment(string paymentId, SchoolClassCourseEnum type);
+        Task<string> RefundPayment(string paymentId, LMS.Common.Enums.SchoolClassCourseEnum type);
         Task<string> BuySchoolSubscription(BuySchoolSubscriptionViewModel model, string userId, Guid schoolId);
         Task<CardList> GetUserSavedCards(string email);
 

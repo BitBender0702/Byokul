@@ -1,0 +1,33 @@
+.custom-language-select ::ng-deep .p-component{
+    width: 100% !important;
+}
+
+.custom-language-select .ms-options-wrap > button {
+    border-left: 2px solid #ff821c !important;
+    box-shadow: 0px 4px 20px rgb(0 0 0 / 10%) !important;
+    padding: 5px 16px;
+    border-width: 0px 0px 0px 2px;
+    height: 48px;
+    border-radius: 8px;
+    background-color: #fff;
+    width: 100%;
+    text-align: left;
+  }
+
+  ::ng-deep .p-autocomplete ::ng-deep .p-component {
+    border: 0;
+    /* background: transparent; */
+    outline: none !important;
+    box-shadow: none !important;
+  }
+  
+  /* ::ng-deep .p-autocomplete ::ng-deep .p-component li::before,
+  p-autocomplete li:before {
+    display: none !important;
+  }
+  ::ng-deep .p-autocomplete ::ng-deep .p-component li.p-autocomplete-item {
+    width: 100%;
+    line-height: normal;
+    height: auto;
+    margin-bottom: 0;
+  } */

@@ -72,7 +72,7 @@ namespace LMS.App.Controllers
         [Route("uploadPost")]
         [HttpPost]
         public async Task<IActionResult> UploadPost(PostViewModel postViewModel)
-        {
+       {
             var userId = await GetUserIdAsync(this._userManager);
             postViewModel.BlobUrls = JsonConvert.DeserializeObject<List<BlobUrlsViewModel>>(postViewModel.BlobUrlsJson);
             if (postViewModel.Id != null && postViewModel.Id != new Guid())

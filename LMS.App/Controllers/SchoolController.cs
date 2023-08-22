@@ -26,7 +26,7 @@ namespace LMS.App.Controllers
         private readonly IClassService _classService;
         private readonly ICourseService _courseService;
 
-        public SchoolController(UserManager<User> userManager, ISchoolService schoolService,  IBlobService blobService, IClassService classService, ICourseService courseService)
+        public SchoolController(UserManager<User> userManager, ISchoolService schoolService, IBlobService blobService, IClassService classService, ICourseService courseService)
         {
             _userManager = userManager;
             _schoolService = schoolService;
@@ -65,10 +65,10 @@ namespace LMS.App.Controllers
 
         [Route("getSchoolByName")]
         [HttpGet]
-        public async Task<IActionResult> GetSchoolByName(string schoolName)        
+        public async Task<IActionResult> GetSchoolByName(string schoolName)
         {
             var userId = await GetUserIdAsync(this._userManager);
-            var response = await _schoolService.GetSchoolByName(schoolName, userId);    
+            var response = await _schoolService.GetSchoolByName(schoolName, userId);
             return Ok(response);
         }
 
@@ -159,7 +159,7 @@ namespace LMS.App.Controllers
         // if add languages from school profile
         [Route("saveSchoolLanguages")]
         [HttpPost]
-        public async Task<IActionResult> SaveSchoolLanguages([FromBody]SaveSchoolLanguageViewModel model)
+        public async Task<IActionResult> SaveSchoolLanguages([FromBody] SaveSchoolLanguageViewModel model)
         {
             await _schoolService.SaveSchoolLanguages(model.LanguageIds, new Guid(model.SchoolId));
             return Ok();
@@ -167,7 +167,7 @@ namespace LMS.App.Controllers
 
         [Route("deleteSchoolLanguage")]
         [HttpPost]
-        public async Task<IActionResult> DeleteSchoolLanguage([FromBody]SchoolLanguageViewModel model)
+        public async Task<IActionResult> DeleteSchoolLanguage([FromBody] SchoolLanguageViewModel model)
         {
             await _schoolService.DeleteSchoolLanguage(model);
             return Ok();
@@ -185,12 +185,12 @@ namespace LMS.App.Controllers
         [HttpPost]
         public async Task<IActionResult> DeleteSchoolTeacher([FromBody] SchoolTeacherViewModel model)
         {
-           var result = await _schoolService.DeleteSchoolTeacher(model);
+            var result = await _schoolService.DeleteSchoolTeacher(model);
             if (result)
             {
                 return Ok(new { Success = true, Message = Constants.TeacherDeletedSuccesfully });
             }
-            return BadRequest(new {Success = false, ErrorMessage = Constants.FailedToDeleteTeacher}); 
+            return BadRequest(new { Success = false, ErrorMessage = Constants.FailedToDeleteTeacher });
         }
 
         [Route("getBasicSchoolInfo")]
@@ -205,7 +205,7 @@ namespace LMS.App.Controllers
         [HttpGet]
         public async Task<IActionResult> SchoolFollowers(Guid schoolId, int pageNumber, string? searchString)
         {
-            return Ok(await _schoolService.GetSchoolFollowers(schoolId, pageNumber,searchString));
+            return Ok(await _schoolService.GetSchoolFollowers(schoolId, pageNumber, searchString));
         }
 
         [Route("isSchoolNameExist")]
@@ -214,7 +214,7 @@ namespace LMS.App.Controllers
         {
 
             var response = await _schoolService.IsSchoolNameExist(schoolName);
-            return Ok(new { result = response});
+            return Ok(new { result = response });
         }
 
         //[Route("getSchoolByName")]
@@ -274,7 +274,7 @@ namespace LMS.App.Controllers
         public async Task<IActionResult> GetPostsBySchool(Guid schoolId, int pageNumber, int pageSize = 12)
         {
             var userId = await GetUserIdAsync(this._userManager);
-            var response = await _schoolService.GetPostsBySchool(schoolId,userId, pageNumber, pageSize);
+            var response = await _schoolService.GetPostsBySchool(schoolId, userId, pageNumber, pageSize);
             return Ok(response);
         }
 
@@ -302,7 +302,7 @@ namespace LMS.App.Controllers
         {
             await _schoolService.SaveClassCourse(userId, id, type);
             return Ok();
-        }   
+        }
 
         [Route("getSavedClassCourse")]
         [HttpPost]
@@ -314,10 +314,10 @@ namespace LMS.App.Controllers
 
         [Route("pinUnpinSavedClassCourse")]
         [HttpPost]
-        public async Task<IActionResult> PinUnpinSavedClassCourse(Guid id, bool isPinned,ClassCourseEnum type)
+        public async Task<IActionResult> PinUnpinSavedClassCourse(Guid id, bool isPinned, ClassCourseEnum type)
         {
             var userId = await GetUserIdAsync(this._userManager);
-            var response = await _schoolService.PinUnpinSavedClassCourse(id, isPinned,type, userId);
+            var response = await _schoolService.PinUnpinSavedClassCourse(id, isPinned, type, userId);
             return Ok(response);
         }
 
@@ -331,7 +331,7 @@ namespace LMS.App.Controllers
 
         [Route("banFollower")]
         [HttpPost]
-        public async Task<IActionResult> BanFollower(string followerId,Guid schoolId)
+        public async Task<IActionResult> BanFollower(string followerId, Guid schoolId)
         {
             var reponse = await _schoolService.BanFollower(followerId, schoolId);
             return Ok(reponse);
@@ -358,10 +358,24 @@ namespace LMS.App.Controllers
         public async Task<IActionResult> GetSliderReelsBySchoolId(Guid schoolId, Guid postId, ScrollTypesEnum scrollType)
         {
             var userId = await GetUserIdAsync(this._userManager);
-            var response = await _schoolService.GetSliderReelsBySchoolId(schoolId,userId, postId, scrollType);
+            var response = await _schoolService.GetSliderReelsBySchoolId(schoolId, userId, postId, scrollType);
             return Ok(response);
         }
 
+        [Route("getAllSchoolFollowers")]
+        [HttpGet]
+        public async Task<IActionResult> GetAllSchoolFollowers(Guid schoolId)
+        {
+            return Ok(await _schoolService.GetAllSchoolFollowers(schoolId));
+        }
+
+        [Route("getSchoolClassCourseList")]
+        [HttpGet]
+        public async Task<IActionResult> GetSchoolClassCourseList(Guid schoolId)
+        {
+            var response = await _schoolService.GetSchoolClassCourseList(schoolId);
+            return Ok(response);
+        }
 
     }
 }

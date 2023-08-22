@@ -166,9 +166,9 @@ namespace LMS.Services
 
             //else
             //{
-                var subscriptionResponse = await _iyizicoService.BuySchoolSubscription(schoolViewModel.SubscriptionDetails, createdById, school.SchoolId);
-                schoolViewModel.SubscriptionDetails.IsInternationalUser = true;
-                schoolViewModel.SubscriptionDetails.SubscriptionMessage = subscriptionResponse;
+            var subscriptionResponse = await _iyizicoService.BuySchoolSubscription(schoolViewModel.SubscriptionDetails, createdById, school.SchoolId);
+            schoolViewModel.SubscriptionDetails.IsInternationalUser = true;
+            schoolViewModel.SubscriptionDetails.SubscriptionMessage = subscriptionResponse;
             //}
             return schoolViewModel;
         }
@@ -1694,6 +1694,45 @@ namespace LMS.Services
 
             return schools;
 
+        }
+
+        public async Task<List<AllSchoolFollowersViewModel>> GetAllSchoolFollowers(Guid schoolId)
+        {
+            var followerList = await _schoolFollowerRepository.GetAll().Include(x => x.User)
+             .Where(x => x.SchoolId == schoolId && !x.IsBan).ToListAsync();
+
+            var response = _mapper.Map<List<AllSchoolFollowersViewModel>>(followerList);
+            return response;
+
+        }
+
+        public async Task<SchoolsClassCourseViewModel> GetSchoolClassCourseList(Guid schoolId)
+        {
+            var model = new SchoolsClassCourseViewModel();
+            var classes = await _classRepository.GetAll().ToListAsync();
+            var courses = await _courseRepository.GetAll().ToListAsync();
+
+
+            var requiredClasses = classes.Where(x => x.SchoolId == schoolId).Select(x => new ClassViewModel
+            {
+                ClassId = x.ClassId,
+                ClassName = x.ClassName,
+                SchoolId = x.SchoolId,
+                CreatedById = x.CreatedById
+            }).ToList();
+
+            model.Classes.AddRange(requiredClasses);
+
+            var requiredCourses = courses.Where(x => x.SchoolId == schoolId).Select(x => new CourseViewModel
+            {
+                CourseId = x.CourseId,
+                CourseName = x.CourseName,
+                SchoolId = x.SchoolId,
+                CreatedById = x.CreatedById
+            }).ToList();
+
+            model.Courses.AddRange(requiredCourses);
+            return model;
         }
 
 

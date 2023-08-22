@@ -53,6 +53,10 @@ namespace LMS.Services
         Task<bool> UnBanFollower(string followerId, Guid schoolId);
         Task<IEnumerable<GlobalSearchViewModel>> SchoolsGlobalSearch(string searchString, int pageNumber, int pageSize);
         Task<IEnumerable<PostDetailsViewModel>> GetSliderReelsBySchoolId(Guid schoolId, string loginUserId, Guid lastReelId, ScrollTypesEnum scrollType);
+        Task<List<AllSchoolFollowersViewModel>> GetAllSchoolFollowers(Guid schoolId);
+        Task<SchoolsClassCourseViewModel> GetSchoolClassCourseList(Guid schoolId);
+
+
 
 
 

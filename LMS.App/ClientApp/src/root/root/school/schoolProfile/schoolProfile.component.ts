@@ -79,6 +79,7 @@ import { NgxMaskModule } from 'ngx-mask';
 import { v4 as uuidv4 } from 'uuid';
 import { IyizicoService } from 'src/root/service/iyizico.service';
 import { Constant } from 'src/root/interfaces/constant';
+import { AddOfficialComponent, addTeacherResponse } from '../../addOfficial/addOfficial.component';
 
 
 @Component({
@@ -218,6 +219,7 @@ export class SchoolProfileComponent
   deletePostSubscription!: Subscription;
   deleteReelSubscription!: Subscription;
   getCountriesSubscription!: Subscription;
+  addTeacherSubscription!:Subscription;
   savedMessage!: string;
   removedMessage!: string;
   requiredCountry: any;
@@ -326,6 +328,9 @@ export class SchoolProfileComponent
     }
     if (this.getCountriesSubscription) {
       this.getCountriesSubscription.unsubscribe();
+    }
+    if (this.addTeacherSubscription) {
+      this.addTeacherSubscription.unsubscribe();
     }
   }
   ngOnChanges(): void {
@@ -544,6 +549,28 @@ export class SchoolProfileComponent
     if (!this.changeLanguageSubscription) {
       this.changeLanguageSubscription = changeLanguage.subscribe(response => {
         this.translate.use(response.language);
+      })
+    }
+
+    if (!this.addTeacherSubscription) {
+      this.addTeacherSubscription = addTeacherResponse.subscribe(response => {
+        debugger
+        const translatedSummary = this.translateService.instant('Success');
+        if(!response.isEdit){
+          var translatedMessage = this.translateService.instant('TeacherAddedSuccessfully');
+          var schoolteacher = {
+            userId:response.userId,
+            firstName:response.userName,
+            lastName:"",
+            teacherId:response.teacherId
+          }
+          this.school.teachers.push(schoolteacher);
+        }
+        else{
+          var translatedMessage = this.translateService.instant('TeacherUpdatedSuccessfully');
+        }
+        this.messageService.add({severity:'success', summary:translatedSummary,life: 3000, detail:translatedMessage});
+        this.cd.detectChanges();
       })
     }
 
@@ -2297,6 +2324,19 @@ export class SchoolProfileComponent
       video.play();
     }
   }
+  openOfficialModal(schoolName:string,userId?:string,userName?:string,isEdit?:boolean){
+    const initialState = {
+      loginUserId: this.userId,
+      schoolId: this.school.schoolId,
+      userId: userId,
+      userName: userName,
+      isEdit: isEdit,
+      schoolName:schoolName
+
+    };
+    this.bsModalService.show(AddOfficialComponent, { initialState, backdrop: 'static' });
+  }
+
 
   pauseVideo(item:any) {
     const video = document.querySelector(`[src="${item.thumbnailUrl}"]`) as HTMLVideoElement;

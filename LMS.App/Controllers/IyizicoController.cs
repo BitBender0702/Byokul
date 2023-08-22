@@ -287,7 +287,7 @@ namespace LMS.App.Controllers
 
         [Route("refundPayment")]
         [HttpPost]
-        public async Task<IActionResult> RefundPayment(string paymentId, SchoolClassCourseEnum type)
+        public async Task<IActionResult> RefundPayment(string paymentId, Common.Enums.SchoolClassCourseEnum type)
         {
             //var userId = await GetUserIdAsync(this._userManager);
             var response = await _iyizicoService.RefundPayment(paymentId, type);

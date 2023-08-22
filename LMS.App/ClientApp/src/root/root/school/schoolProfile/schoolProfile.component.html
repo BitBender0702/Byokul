@@ -252,7 +252,18 @@
 
             <span *ngFor="let item of school.teachers" class="custom-tag"
               >{{ item.firstName + " " + item.lastName
-              }}<button
+              }} &nbsp;&nbsp;
+              <div class="d-flex">
+              <button style="margin-right:10%"
+              (click)="openOfficialModal(school.schoolName,item.userId, item.firstName + ' ' + item.lastName,true)"
+              class="border-0 bg-transparent p-0 position-absolute delete-tag"
+            >
+            <img
+            *ngIf="isOwner || hasManageTeachersPermission"
+            lazyLoad="../../../../assets/images/Edit-light.svg"/>
+            </button>
+
+              <button class="ms-2"
                 (click)="getDeletedTeacher(item.teacherId)"
                 class="border-0 bg-transparent p-0 position-absolute delete-tag"
                 data-bs-toggle="modal"
@@ -262,9 +273,11 @@
                   *ngIf="isOwner || hasManageTeachersPermission"
                   lazyLoad="../../../../assets/images/cross-sm-light.svg"
                 /></button
-            ></span>
+            >
+          </div>
+          </span>
 
-            <span
+            <!-- <span
               *ngIf="isOwner || hasManageTeachersPermission"
               class="custom-tag"
               (click)="resetTeacherModal()"
@@ -281,7 +294,20 @@
                   lazyLoad="../../../../assets/images/school/plus-light.svg"
                 />
               </button>
-            </span>
+            </span> -->
+            <span
+            *ngIf="isOwner || hasManageTeachersPermission"
+            class="custom-tag"
+            (click)="openOfficialModal(school.schoolName)"
+            >{{ "AddOfficial" | translate
+            }}<button
+              class="border-0 bg-transparent p-0 position-absolute delete-tag"
+            >
+              <img
+                lazyLoad="../../../../assets/images/school/plus-light.svg"
+              />
+            </button>
+          </span>
           </div>
         </div>
         <div *ngIf="school.schoolCertificates.length != 0 || this.isOwner">

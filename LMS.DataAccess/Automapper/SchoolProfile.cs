@@ -52,6 +52,9 @@ namespace LMS.DataAccess.Automapper
             CreateMap<SchoolCertificate, CertificateViewModel>()
                .ForMember(x => x.Id, opt => opt.MapFrom(o => o.CertificateId));
             CreateMap<SchoolSubscriptionPlan, SchoolSubscriptionPlansViewModel>();
+            CreateMap<SchoolFollower, AllSchoolFollowersViewModel>()
+                .ForMember(x => x.UserId, opt => opt.MapFrom(o => o.User.Id))
+                .ForMember(x => x.UserName, opt => opt.MapFrom(o => o.User.FirstName + " " + o.User.LastName));
 
         }
     }

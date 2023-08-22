@@ -1,4 +1,5 @@
-﻿using LMS.Common.ViewModels.Teacher;
+﻿using LMS.Common.ViewModels.Post;
+using LMS.Common.ViewModels.Teacher;
 using LMS.Data.Entity;
 using LMS.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -23,13 +24,13 @@ namespace LMS.App.Controllers
             _permissionService = permissionService;
         }
 
-        [Route("updateTeacher")]
-        [HttpPost]
-        public async Task<IActionResult> UpdateTeacher([FromBody] TeacherViewModel teacherViewModel)
-        {
-            await _teacherService.UpdateTeacher(teacherViewModel);
-            return Ok("success");
-        }
+        //[Route("updateTeacher")]
+        //[HttpPost]
+        //public async Task<IActionResult> UpdateTeacher([FromBody] TeacherViewModel teacherViewModel)
+        //{
+        //    await _teacherService.UpdateTeacher(teacherViewModel);
+        //    return Ok("success");
+        //}
 
         [Route("getTeacherById")]
         [HttpPost]
@@ -70,7 +71,16 @@ namespace LMS.App.Controllers
         {
             var userId = await GetUserIdAsync(this._userManager);
             var response = await _teacherService.AddTeacher(model, userId);
-            return Ok(response);
+            return Ok(new { Success = true, Message = Constants.TeacherAddedSuccessfully, TeacherId = response });
+        }
+
+        [Route("updateTeacher")]
+        [HttpPost]
+        public async Task<IActionResult> UpdateTeacherPermissions([FromBody] AddTeacherViewModel model)
+        {
+            var userId = await GetUserIdAsync(this._userManager);
+            var response = await _teacherService.AddTeacher(model, userId);
+            return Ok(new { Success = true, Message = Constants.TeacherUpdatedSuccessfully, TeacherId = response });
         }
 
         [Route("getClassTeachers")]
@@ -86,6 +96,14 @@ namespace LMS.App.Controllers
         public async Task<IActionResult> GetCourseTeachers(Guid courseId)
         {
             var response = await _teacherService.GetCourseTeachers(courseId);
+            return Ok(response);
+        }
+
+        [Route("getTeacherPermissions")]
+        [HttpGet]
+        public async Task<IActionResult> GetTeacherPermissions(string userId, Guid schoolId)
+        {
+            var response = await _permissionService.GetTeacherPermissions(userId, schoolId);
             return Ok(response);
         }
     }

@@ -17,7 +17,6 @@ namespace LMS.Data.Entity
         public PermissionTypeEnum PermissionType { get; set; }
         public string OwnerId { get; set; }
         public Guid? SchoolId { get; set; }
-
-
     }
+
 }

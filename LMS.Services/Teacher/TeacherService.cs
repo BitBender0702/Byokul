@@ -169,31 +169,37 @@ namespace LMS.Services
             var ownerInfo = _userRepository.GetById(model.OwnerId);
             var ownerName = ownerInfo.FirstName + " " + ownerInfo.LastName;
             string userId = "";
-            var isEmailExist = await _userRepository.GetAll().Where(x => x.Email == model.Email).FirstOrDefaultAsync();
-            if (isEmailExist == null)
-            {
-                var user = new User
-                {
-                    UserName = model.Email,
-                    Email = model.Email,
-                    FirstName = model.FirstName,
-                    LastName = model.LastName,
-                    Gender = model.Gender,
-                    CreatedOn = DateTime.UtcNow
-                };
-                var result = await _userManager.CreateAsync(user);
-                userId = user.Id;
-                await InviteUser(user, ownerName);
-            }
-            else
-            {
-                var user = _userManager.FindByIdAsync(loginUserId);
-                if (user.Result.Email != model.Email)
-                {
-                    await SendPermissionsEmailToUser(isEmailExist, ownerName);
-                }
-                userId = isEmailExist.Id;
-            }
+            //var isEmailExist = await _userRepository.GetAll().Where(x => x.Email == model.Email).FirstOrDefaultAsync();
+            //if (isEmailExist == null)
+            //{
+            //    var user = new User
+            //    {
+            //        UserName = model.Email,
+            //        Email = model.Email,
+            //        FirstName = model.FirstName,
+            //        LastName = model.LastName,
+            //        Gender = model.Gender,
+            //        CreatedOn = DateTime.UtcNow
+            //    };
+            //    var result = await _userManager.CreateAsync(user);
+            //    userId = user.Id;
+            //    await InviteUser(user, ownerName);
+            //}
+            //else
+            //{
+            //var user = _userManager.FindByIdAsync(loginUserId);
+            //if (user.Result.Email != model.Email)
+            //{
+            //    await SendPermissionsEmailToUser(isEmailExist, ownerName);
+            //}
+            //userId = isEmailExist.Id;
+            //}
+
+            var user = _userRepository.GetById(model.UserId);
+            await SendPermissionsEmailToUser(user, ownerName);
+    
+            userId = user.Id;
+
             var teacherId = await SaveNewTeacher(model, userId);
             await SaveTeacherPermissions(model, userId);
             return teacherId;
@@ -231,10 +237,11 @@ namespace LMS.Services
             var isTeacherExist = await _teacherRepository.GetAll().Where(x => x.UserId == userId).FirstOrDefaultAsync();
             if (isTeacherExist == null)
             {
+                var user = _userRepository.GetById(userId);
                 var teacher = new Teacher
                 {
-                    FirstName = model.FirstName,
-                    LastName = model.LastName,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
                     IsActive = false,
                     UserId = userId
                 };
@@ -279,8 +286,12 @@ namespace LMS.Services
 
         public async Task SaveTeacherForClasses(AddTeacherViewModel model, Guid teacherId)
         {
+            var classTeacherList = await _classTeacherRepository.GetAll().Include(x => x.Class).Where(x => x.TeacherId == teacherId && x.Class.SchoolId == model.SchoolId).ToListAsync();
+            _classTeacherRepository.DeleteAll(classTeacherList);
+            _classTeacherRepository.Save();
+
             var classTeachers = await _classTeacherRepository.GetAll().ToListAsync();
-            foreach (var item in model.Permissions.SchoolPermissions)
+            foreach (var item in model.Permissions.ClassPermissions)
             {
                 var classIds = await _classRepository.GetAll().Where(x => x.SchoolId == item.SchoolId).Select(x => x.ClassId).ToListAsync();
 
@@ -305,8 +316,12 @@ namespace LMS.Services
 
         public async Task SaveTeacherForCourses(AddTeacherViewModel model, Guid teacherId)
         {
+            var courseTeacherList = await _courseTeacherRepository.GetAll().Include(x => x.Course).Where(x => x.TeacherId == teacherId && x.Course.SchoolId == model.SchoolId).ToListAsync();
+            _courseTeacherRepository.DeleteAll(courseTeacherList);
+            _courseTeacherRepository.Save();
+
             var courseTeachers = await _courseTeacherRepository.GetAll().ToListAsync();
-            foreach (var item in model.Permissions.SchoolPermissions)
+            foreach (var item in model.Permissions.CoursePermissions)
             {
                 var courseIds = await _courseRepository.GetAll().Where(x => x.SchoolId == item.SchoolId).Select(x => x.CourseId).ToListAsync();
                 foreach (var courseId in courseIds)
@@ -330,6 +345,12 @@ namespace LMS.Services
 
         public async Task SaveTeacherPermissions(AddTeacherViewModel model, string userId)
         {
+
+            var userPermissions = await _userPermissionRepository.GetAll().Where(x => x.UserId == userId).ToListAsync();
+            _userPermissionRepository.DeleteAll(userPermissions);
+            _userPermissionRepository.Save();
+
+
             var UserPermissions = await _userPermissionRepository.GetAll().Where(x => x.UserId == userId && x.OwnerId == model.OwnerId).ToListAsync();
             if (UserPermissions.Count != 0)
             {
@@ -347,7 +368,8 @@ namespace LMS.Services
                         PermissionId = new Guid(permissionId),
                         TypeId = new Guid(),
                         PermissionType = PermissionTypeEnum.School,
-                        OwnerId = model.OwnerId
+                        OwnerId = model.OwnerId,
+                        SchoolId = model.SchoolId
                     };
                     _userPermissionRepository.Insert(schoolPermission);
                     _userPermissionRepository.Save();
@@ -365,7 +387,7 @@ namespace LMS.Services
                             TypeId = classPermissions.ClassId,
                             PermissionType = PermissionTypeEnum.Class,
                             OwnerId = model.OwnerId,
-                            SchoolId = classPermissions.SchoolId
+                            SchoolId = model.SchoolId
                         };
                         _userPermissionRepository.Insert(classPermission);
                         _userPermissionRepository.Save();
@@ -387,7 +409,8 @@ namespace LMS.Services
                             PermissionId = new Guid(permissionId),
                             TypeId = schoolPermissions.SchoolId,
                             PermissionType = PermissionTypeEnum.School,
-                            OwnerId = model.OwnerId
+                            OwnerId = model.OwnerId,
+                            SchoolId = model.SchoolId
                         };
                         _userPermissionRepository.Insert(schoolPermission);
                         _userPermissionRepository.Save();
@@ -407,7 +430,7 @@ namespace LMS.Services
                             TypeId = classPermissions.ClassId,
                             PermissionType = PermissionTypeEnum.Class,
                             OwnerId = model.OwnerId,
-                            SchoolId = classPermissions.SchoolId
+                            SchoolId = model.SchoolId
                         };
                         _userPermissionRepository.Insert(classPermission);
                         _userPermissionRepository.Save();
@@ -427,7 +450,7 @@ namespace LMS.Services
                             TypeId = coursePermissions.CourseId,
                             PermissionType = PermissionTypeEnum.Course,
                             OwnerId = model.OwnerId,
-                            SchoolId = coursePermissions.SchoolId
+                            SchoolId = model.SchoolId
                         };
                         _userPermissionRepository.Insert(coursePermission);
                         _userPermissionRepository.Save();

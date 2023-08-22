@@ -44,7 +44,7 @@ namespace LMS.Services.BigBlueButton
                     isMicroPhoneOpen = true;
                 }
 
-                string createChecksum = "createname=" + meetingName + "&meetingID=" + meetingId + "&welcome=" + welcome + "&attendeePW=" + attendeePW + "&freeJoin=false" + "&record=true" + "&muteOnStart=" + isMicroPhoneOpen + "&autoStartRecording=true" + "&logoutURL=" + logoutURL + "&guestPolicy=ALWAYS_ACCEPT" + "&moderatorPW=" + moderatorPW + secretKey;
+                string createChecksum = "createname=" + meetingName + "&meetingID=" + meetingId + "&welcome=" + welcome + "&attendeePW=" + attendeePW + "&freeJoin=false" + "&record=true" + "&muteOnStart=" + isMicroPhoneOpen + "&autoStartRecording=true" + "&logoutURL=" + logoutURL + "&guestPolicy=ASK_MODERATOR" + "&moderatorPW=" + moderatorPW + secretKey;
 
                 string checksum = Hash(createChecksum);
 

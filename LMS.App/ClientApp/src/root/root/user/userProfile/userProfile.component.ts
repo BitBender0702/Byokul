@@ -33,7 +33,6 @@ import { LikeUnlikeClassCourse } from 'src/root/interfaces/school/likeUnlikeClas
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
 import { AuthService } from 'src/root/service/auth.service';
-import { addTeacherResponse } from '../../teacher/addTeacher.component';
 import { RolesEnum } from 'src/root/RolesEnum/rolesEnum';
 import { deleteSchoolResponse } from '../../school/schoolProfile/schoolProfile.component';
 import { deleteClassResponse } from '../../class/classProfile/classProfile.component';
@@ -464,17 +463,6 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
         }
       });
     }
-
-    addTeacherResponse.subscribe(response => {
-      this.cd.detectChanges();
-      if (response) {
-        const translatedMessage = this.translateService.instant('TeacherAddedSuccessfully');
-        const translatedSummary = this.translateService.instant('Success');
-        this.messageService.add({
-          severity: 'success', summary: translatedSummary, life: 3000, detail: translatedMessage,
-        });
-      }
-    });
 
     this.deleteCertificate = {
       userId: '',
