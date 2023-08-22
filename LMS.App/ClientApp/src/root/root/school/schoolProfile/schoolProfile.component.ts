@@ -1749,14 +1749,35 @@ export class SchoolProfileComponent
     });
   }
 
+  // getFilteredAttachments(feeds: any): any {
+  //   const allAttachments = feeds.flatMap((post: { postAttachments: any; }) => post.postAttachments);
+  //   var result = allAttachments.filter((attachment: { fileType: number; }) => attachment.fileType === 3);
+  //   this.filteredAttachments = [...this.filteredAttachments, ...result];
+  //   feeds = feeds.map((post: { postAttachments: any[]; }) => {
+  //     const filteredPostAttachments = post.postAttachments.filter(postAttachment => postAttachment.fileType !== 3);
+  //     return { ...post, postAttachments: filteredPostAttachments };
+  //   });
+  //   return feeds;
+  // }
+
   getFilteredAttachments(feeds: any): any {
-    const allAttachments = feeds.flatMap((post: { postAttachments: any; }) => post.postAttachments);
-    var result = allAttachments.filter((attachment: { fileType: number; }) => attachment.fileType === 3);
+    const allAttachments = feeds.flatMap((post: { postAttachments: any[]; }) => post.postAttachments);
+      const result = allAttachments.filter((attachment: { fileType: number; fileName: string; }) => {
+      return attachment.fileType === 3 && 
+             !this.filteredAttachments.some(existingAttachment =>
+               existingAttachment.fileType === 3 &&
+               existingAttachment.fileName === attachment.fileName
+             );
+    });
+  
     this.filteredAttachments = [...this.filteredAttachments, ...result];
-    feeds = feeds.map((post: { postAttachments: any[]; }) => {
-      const filteredPostAttachments = post.postAttachments.filter(postAttachment => postAttachment.fileType !== 3);
+      feeds = feeds.map((post: { postAttachments: any[]; }) => {
+      const filteredPostAttachments = post.postAttachments.filter(
+        postAttachment => postAttachment.fileType !== 3
+      );
       return { ...post, postAttachments: filteredPostAttachments };
     });
+  
     return feeds;
   }
 

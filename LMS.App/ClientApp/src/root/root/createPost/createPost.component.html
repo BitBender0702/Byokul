@@ -366,8 +366,9 @@
               <div
                 class="teacher-tags tag-box hashtag_post mt-4 mb-2 hover-tags"
               >
+              45454646
                 <span *ngFor="let tag of (tagLists)" class="custom-tag"
-                  >#{{ tag }}
+                  >{{ tag }}
                   <button
                     (click)="removeTags(tag)"
                     class="border-0 bg-transparent p-0 position-absolute delete-tag"
@@ -705,9 +706,9 @@
               </div>
               <div
                 class="teacher-tags tag-box hashtag_post mt-4 mb-2 hover-tags"
-              >
-                <span *ngFor="let tag of (tagLists)" class="custom-tag"
-                  >#{{ tag }}
+              >5464
+                <span *ngFor="let tag of tagLists" class="custom-tag"
+                  >{{ tag }}
                   <button
                     (click)="removeTags(tag)"
                     class="border-0 bg-transparent p-0 position-absolute delete-tag"
@@ -789,6 +790,7 @@
                   class="dropzone"
                   accept="image/*,video/*,application/pdf"
                   multiple="multiple"
+                  #fileInput
                 />
               </div>
               <br />

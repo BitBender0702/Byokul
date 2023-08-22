@@ -34,6 +34,7 @@ import { UserService } from 'src/root/service/user.service';
     }
 
     ngOnInit(): void {
+      debugger
       this.certificate = this.options.initialState;
       this.URL = this.certificate.certificateUrl;
       this.from = this.certificate.from;

@@ -30,7 +30,6 @@ export class VideoJsComponent implements OnInit {
     if (this.isReelView) {
       if(this.isScreenMobile){
         this.player = videojs(this.disVideo.nativeElement, {
-          autoplay: 'muted',
           loop: true,
           controlBar: {
             fullscreenToggle: false
@@ -41,7 +40,6 @@ export class VideoJsComponent implements OnInit {
         });
       } else{
         this.player = videojs(this.disVideo.nativeElement, {
-          autoplay: 'muted',
           loop: true
         });
       }

@@ -243,7 +243,7 @@ namespace LMS.App.Controllers
             }
             if (from == 5)
             {
-                containerName = this._config.GetValue<string>("Container:PostContainer");
+                containerName = this._config.GetValue<string>("Container:AttachmentContainer");
             }
             if (from == 6)
             {

@@ -423,8 +423,9 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     // }
   }
 
+  currectTagLists:any;
+  tagsFromEdit:boolean = false;
   initializeEditPostForm() {
-    debugger
     this.createPostForm = this.fb.group({
       title: this.fb.control(this.editPostDetails.title, [Validators.required]),
       bodyText: this.fb.control(this.editPostDetails.description, [Validators.required]),
@@ -434,14 +435,18 @@ export class CreatePostComponent implements OnInit, OnDestroy {
 
     //this.tagLists = this.editPostDetails.postTags;
     debugger
-    this.tagLists = JSON.parse(this.editPostDetails.postTags);
+
     this.tagLists = this.editPostDetails.postTags.map((tagObj: { postTagValue: any; }) => tagObj.postTagValue);
 
-    // this.tagLists = this.editPostDetails.postTags.reduce((tagObject:any, tagObj:any) => {
-    //   tagObject[tagObj.postTagValue] = true;
-    //   return tagObject;
-    // }, {});
-    
+    // if(this.tagLists[0] != '[]'){
+      this.currectTagLists = [...this.tagLists]
+      try {
+        this.currectTagLists = this.parseTheTags(this.currectTagLists)
+        this.tagsFromEdit = true;
+        this.tagLists = this.currectTagLists
+      } catch { }
+    // }
+
 
     this.editPostDetails.postAttachments
       .filter((attachment: { fileType: number; }) => attachment.fileType === 1)
@@ -955,7 +960,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     //   const localTime = dateUtc.toLocaleString();
     //   this.postToUpload.append('dateTime',localTime);
     // }
-    
     this.postToUpload.append('postTags', JSON.stringify(this.tagLists))
 
     postUploadOnBlob.next({ postToUpload: this.postToUpload, combineFiles: combinedFiles, videos: this.videos, images: this.images, attachment: this.attachment, type: 1, reel: null, uploadedUrls: this.uploadVideoUrlList, videoThumbnails: this.videoThumbnails });
@@ -1400,11 +1404,11 @@ export class CreatePostComponent implements OnInit, OnDestroy {
   }
 
 
+  @ViewChild('fileInput') fileInput!: ElementRef;
   handleFileInput(event: any) {
     var files = event.target.files;
     if (files) {
       for (let i = 0; i < files.length; i++) {
-        debugger
         const file: File = files.item(i)!;
         if (file.type.startsWith('image/')) {
           this.handleImageInput2(file);
@@ -1416,6 +1420,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
         }
       }
     }
+    this.fileInput.nativeElement.value = '';
   }
 
   uploadVideoUrlList: any[] = [];
@@ -1514,16 +1519,16 @@ export class CreatePostComponent implements OnInit, OnDestroy {
   }
 
 
-  parseTheTags(tags:any){
-    for (let index = 0; index < tags?.length; index++) {
-      const element = tags[index];
-      try{
-      var reelsTags = JSON.parse(element);}
-      catch{}
+  parseTheTags(tags: any) {
+    for (let index = 0; index < tags.length; index++) {
+      const element = tags[index]
+      try {
+        var reelsTags = JSON.parse(element);
+      }
+      catch { }
       return reelsTags
     }
   }
-
 
 }
 

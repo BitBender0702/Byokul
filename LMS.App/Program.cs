@@ -35,6 +35,7 @@ using Hangfire;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.AspNetCore.Http.Features;
 using LMS.Services.Iyizico;
+using LMS.Services.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -254,12 +255,12 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseCors("EnableCORS");
 app.UseRouting();
-
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseSwagger();
 app.UseSwaggerUI();
 app.UseHangfireDashboard();
+app.UseMiddleware<UrlMiddleware>();
 
 
 

@@ -177,9 +177,22 @@
                       <ng-container
                         *ngFor="let attachment of posts.postAttachments"
                       >
-                        <span class="custom-tag cursor_pointer">{{
+                        <!-- <span class="custom-tag cursor_pointer">{{
                           attachment.fileName
-                        }}</span>
+                        }}</span> -->
+                        <span
+                          *ngIf="attachment.postId == post.id"
+                          class="custom-tag cursor_pointer"
+                          (click)="
+                            openCertificateViewModal(
+                              attachment.fileUrl,
+                              attachment.fileName,
+                              5,
+                              $event
+                            )
+                          "
+                          >{{ attachment.fileName }}</span
+                        >
                       </ng-container>
                     </div>
                     <div class="teacher-tags tag-box hashtag_box mt-0">

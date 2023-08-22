@@ -583,6 +583,7 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   openCertificateViewModal(certificateUrl: string, certificateName: string, from?: number, event?: Event) {
+    debugger
     if (from != undefined) {
       event?.stopPropagation();
     }

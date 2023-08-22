@@ -187,6 +187,30 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
         reqComment.likeCount = reqComment.likeCount - 1;
       }
     });
+
+
+    debugger
+    setTimeout(() => {
+      let videojsElement = document.getElementById('video-3')
+      if (videojsElement) {
+        const firstElement = videojsElement.children[0];
+        if (firstElement) {
+          const videoElement = firstElement.children[0] as HTMLVideoElement
+          console.log(videoElement)
+          debugger
+          if (videoElement) {
+            videoElement.play()
+            videoElement.muted = true;
+          }
+        }
+      }
+    }, 0);
+
+
+
+
+
+
   }
 
   ngOnDestroy(): void {
@@ -1028,10 +1052,10 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       if (firstElement) {
         const videoElement = firstElement.children[0] as HTMLVideoElement
         console.log(videoElement)
+        debugger
         if (videoElement) {
           videoElement.play()
-          if(!this.muted)
-          videoElement.muted = false
+          videoElement.muted = this.muted;
         }
       }
     }
@@ -1056,7 +1080,6 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
         console.log(videoElement)
         if (videoElement) {
           videoElement.pause();
-          debugger
           if(videoElement.muted == false){
             this.muted = false
           } else{
