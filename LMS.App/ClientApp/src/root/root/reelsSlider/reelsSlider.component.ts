@@ -189,7 +189,6 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
     });
 
 
-    debugger
     setTimeout(() => {
       let videojsElement = document.getElementById('video-3')
       if (videojsElement) {
@@ -1052,7 +1051,6 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       if (firstElement) {
         const videoElement = firstElement.children[0] as HTMLVideoElement
         console.log(videoElement)
-        debugger
         if (videoElement) {
           videoElement.play()
           videoElement.muted = this.muted;

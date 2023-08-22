@@ -526,7 +526,6 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
       return;
     }
     this._userService.getPostsByUserId(this.userId, this.frontEndPageNumber).subscribe((response) => {
-      debugger
       var result = this.getFilteredAttachments(response);
       this.user.posts = [...this.user.posts, ...result];
       this.postLoadingIcon = false;
@@ -1395,7 +1394,6 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
   }
 
   openCertificateViewModal(certificateUrl: string, certificateName: string, from?: number, event?: Event) {
-    debugger
     var fromValue = PostAuthorTypeEnum.School;
     if (from != undefined) {
       fromValue = from;

@@ -22,6 +22,7 @@ namespace LMS.Services.Middleware
 
             if (context.Request.Path.ToString().ToLower().Contains("fileStorage/getAttachments"))
             {
+                //context.Response.Redirect(context.Request.Path.ToString());
                 await _next(context);
                 return;
             }
