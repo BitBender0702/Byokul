@@ -531,7 +531,32 @@
   "TeacherUpdatedSuccessfully": "Teacher updated successfully",
   "EditOfficial": "Edit Official",
   "UpdateOfficial": "Update Official",
-  "PleaseSelectTheTeacher": "Please select the teacher"
+  "PleaseSelectTheTeacher": "Please select the teacher",
+  "PleaseSelectTheVideo": "Please select the video to upload",
+  "VideoLibraryProgressMessage": "Your video is being processed. We’ll let you know when upload will completed",
+  "VideoDeletedSuccessfully": "Video deleted successfully",
+  "DeleteVideo": "Delete Video",
+  "VideoUploadedSuccessfully": "Video uploaded successfully in video library",
+  "Stream": "Stream",
+  "FromSchool": "From School",
+  "FromClass": "From Class",
+  "SelectClass": "Select Class",
+  "FilesAddedSuccessfully": "Files added successfully",
+  "SchoolHasNoStorageSpace": "This school has not the required storage space",
+  "AvailableSpace": "Available Space",
+  "VideoLibrary":"Video Library"
+
+
+
+
+
+  
+
+
+
+
+
+
 
 
 

@@ -7,11 +7,12 @@ using System.Threading.Tasks;
 
 namespace LMS.Data.Entity
 {
-    public class VideoLibrary
+    public class VideoLibrary: ActionAudit
     {
         public Guid Id { get; set; }
         public string FileName { get; set; }
         public string FileUrl { get; set; }
+        public string FileThumbnail { get; set; }
         public Guid? SchoolId { get; set; }
         public School School { get; set; }
     }

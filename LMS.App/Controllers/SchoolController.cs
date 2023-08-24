@@ -377,5 +377,25 @@ namespace LMS.App.Controllers
             return Ok(response);
         }
 
+        [Route("getClassListBySchoolId")]
+        [HttpGet]
+        public async Task<IActionResult> GetClassListBySchoolId(Guid schoolId)
+        {
+            var response = await _schoolService.GetClassListBySchoolId(schoolId);
+            return Ok(response);
+        }
+
+        [Route("isAvailableStorageSpace")]
+        [HttpGet]
+        public async Task<IActionResult> IsAvailableStorageSpace(Guid schoolId, double filesSizeInGigabyte)
+        {
+            var availableSpace = await _schoolService.IsAvailableStorageSpace(schoolId, filesSizeInGigabyte);
+            if (availableSpace < 0)
+            {
+                return Ok(new { Success = false, Message = Constants.SchoolHasNotStorageSpace });
+            }
+            return Ok(new { Success = true, Message = Constants.SchoolHasStorageSpace });
+        }
+
     }
 }

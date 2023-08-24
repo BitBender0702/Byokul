@@ -34,6 +34,7 @@ import { Subject } from 'rxjs';
 import { GlobalSearchComponent } from '../root/globalSearch/globalSearch.component';
 import { StudentListComponent } from '../root/students/studentList.componant';
 import { ReelsSliderComponent } from '../root/reelsSlider/reelsSlider.component';
+import { SchoolVideoLibraryComponent } from '../root/schoolVideoLibrary/schoolVideoLibrary.component';
 
 
 const routes: Routes = [
@@ -131,7 +132,7 @@ const routes: Routes = [
     path: 'post/:id',component:PostViewComponent, canActivate: [AuthGuard]
   },
   {
-    path: 'fileStorage/:id/:ownerId/:type',component:FileStorageComponent, canActivate: [AuthGuard]
+    path: 'fileStorage/:id/:ownerId/:schoolId/:type',component:FileStorageComponent, canActivate: [AuthGuard]
   },
   {
     path: 'globalSearch/:searchString/:type',component:GlobalSearchComponent, canActivate: [AuthGuard]
@@ -140,7 +141,7 @@ const routes: Routes = [
     path: 'studentList/:id/:type',component:StudentListComponent, canActivate: [AuthGuard]
   },
   {
-    path: 'schoolVideoLibrary/:schoolId',component:StudentListComponent, canActivate: [AuthGuard]
+    path: 'schoolVideoLibrary/:schoolId',component:SchoolVideoLibraryComponent, canActivate: [AuthGuard]
   }
 ];
 

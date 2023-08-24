@@ -221,7 +221,7 @@
                     "EnableSchool" | translate
                   }}</span>
                 </button>
-                <button
+                <button style="min-width: 50px;"
                     type="button"
                     (click)="
                       openPostModal(
@@ -235,6 +235,15 @@
                       class="d-block mx-auto"
                     />
                   </button>
+
+                  <!-- <button style="min-width: 50px;" type="button"
+                  [routerLink]="['/user/schoolVideoLibrary', school.schoolId]"
+                  class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn me-0 minw-142 class-request-msg">
+                  <img
+                  lazyLoad="../../../../assets/images/Folder.svg"
+                    class="d-block mx-auto"
+                  />
+                </button> -->
               </div>
             </div>
             <p class="font_16 mt-4 preserve-line-breaks">
@@ -425,6 +434,20 @@
             <div class="col-4" [class]="getRandomClass(i,true)" (click)="openDialouge($event)" >1</div>
           </ng-container>
         </div> -->
+
+        <div class="text-center">
+        <button *ngIf="isOwner"
+        type="button"
+        class="btn button-stroage font_16 fw_600 text_dark d-inline-flex align-items-center justify-content-center"
+        [routerLink]="['/user/schoolVideoLibrary', school.schoolId]"
+      >
+        <img
+          lazyLoad="../../../../assets/images/Folder.svg"
+          class="me-2"
+        />{{ "VideoLibrary" | translate }}
+      </button>
+    </div>
+
         <hr class="hr-gray" />
         <div
           class="school-profile-tabs d-flex align-content-center justify-content-center position-relative"

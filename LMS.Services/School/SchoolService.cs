@@ -1735,6 +1735,39 @@ namespace LMS.Services
             return model;
         }
 
+        public async Task<List<ClassesBySchoolViewModel>> GetClassListBySchoolId(Guid schoolId)
+        {
+            var classList = await _classRepository.GetAll().Where(x => x.SchoolId == schoolId && !x.IsCourse).Select(x => new ClassesBySchoolViewModel
+            {
+                ClassId = x.ClassId,
+                ClassName = x.ClassName
+            }).ToListAsync();
+
+            return classList;
+        }
+
+        public async Task<double> IsAvailableStorageSpace(Guid schoolId, double filesSizeInGigabyte)
+        {
+            var school = _schoolRepository.GetById(schoolId);
+            var availableSpace = school.AvailableStorageSpace - filesSizeInGigabyte;
+            if (availableSpace < 0)
+            {
+                return (double)availableSpace;
+            }
+            else
+            {
+                var space = (double)availableSpace;
+                string availableSpaceString = space.ToString("F2");
+                double requiredAvailableSpace = Double.Parse(availableSpaceString);
+                school.AvailableStorageSpace = requiredAvailableSpace;
+                _schoolRepository.Update(school);
+                _schoolRepository.Save();
+                return (double)availableSpace;
+            }
+        }
+
+
+
 
 
     }

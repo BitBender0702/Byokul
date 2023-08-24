@@ -47,6 +47,7 @@ namespace LMS.Common.ViewModels.School
         public bool IsDefaultAvatar { get; set; }
         public string SchoolSlogan { get; set; }
         public string SchoolEmail { get; set; }
+        public double? AvailableStorageSpace { get; set; }
 
 
 

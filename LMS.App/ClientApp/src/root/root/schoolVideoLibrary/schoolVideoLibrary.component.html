@@ -13,7 +13,7 @@
               <img src="../../../assets/images/arrow-left.svg" />
               {{ "Back" | translate }}
             </button>
-            <h2 class="font_22 fw_700 f-monteserrat mb-md-0">
+            <h2 style="margin-left: -5%;" class="font_22 fw_700 f-monteserrat mb-md-0">
               {{ "SchoolVideoLibrary" | translate }}
             </h2>
             <div class="search-header position-relative">
@@ -28,6 +28,11 @@
                 <img src="../../../assets/images/school/search-gray.svg" />
               </button> -->
             </div>
+          </div>
+          <div class="text-center">
+            <span class="line-text font_22 text_ltgray fw_400 text-center">{{
+              "AvailableSpace" | translate}}:{{availableSpace}}
+            </span>
           </div>
           <div
             class="live-header d-flex align-items-center justify-content-between"
@@ -66,7 +71,7 @@
               </button>
             </div>
           </div>
-          <div class="files-main d-md-flex">
+          <div>
             <!-- <div
               [ngClass]="
                 isOpenCommentsSection
@@ -76,13 +81,9 @@
             > -->
             <div>
               <!---- folder html start ------>
-              <div
-                class="text-line-border position-relative text-center mb-5 mt-0"
-              >
-                <span class="line-text font_12 text_ltgray fw_400 text-center">{{
-                  "Files" | translate
-                }}</span>
-              </div>
+             <div class="text-line-border position-relative text-center mb-4">
+               <span class="line-text font_12 text_ltgray fw_400 text-center">{{ "Files" | translate }}</span>
+             </div>
 
               <div>
                 <button
@@ -94,6 +95,83 @@
                 >
                   {{ "UploadVideo" | translate }}
                 </button>
+              </div><br><br>
+
+              <div class="folder-sec">
+                <div class="folder-wrapper">
+                  <div *ngFor="let file of videoRecords" class="folder-box">
+                    <div class="d-flex justify-content-between">
+                      <h3
+                        class="foldername font_14 fw_400 text_sec1 mb-0 text-break"
+                      >
+                        {{ file.fileName }}
+                      </h3>
+                      <!-- <div>
+                        <ul
+                          class="list-unstyled d-flex more-action-btn before-none pe-2 me-1 mb-0"
+                        >
+                          <li class="d-inline-block ps-0 mb-0">
+                            <div class="dropdown">
+                              <button
+                                class="bg-transparent dropdown-toggle border-0 action-more-btn after-none pt-1"
+                                type="button"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                              >
+                                <i class="fa-solid fa-ellipsis"></i>
+                              </button>
+                              <ul class="dropdown-menu">
+                                <li>
+                                  <a
+                                    style="cursor: pointer"
+                                    class="dropdown-item"
+                                    (click)="deleteFile(file.id)"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#delete-Class"
+                                    >{{ "Delete" | translate }}
+                                  </a>
+                                </li>
+                              </ul>
+                            </div>
+                          </li>
+                        </ul>
+                      </div> -->
+                    </div>
+                    <div
+                      class="foldericon d-flex align-items-center justify-content-between"
+                    >
+                      <img src="../../../assets/images/Video-dark.svg"/>
+
+                      <div class="file-action d-flex align-items-center">
+                        <button
+                          type="button"
+                          class="btn border-0 shadow-none"
+                          data-bs-toggle="modal"
+                          data-bs-target="#stream-modal"
+                          (click)="getSelectedVideo(file)"
+                        >
+                        <img src="../../../assets/images/Play-dark.svg" />
+                        </button>
+                        <button
+                          (click)="getDeletedVideoId(file.id)"
+                          type="button"
+                          class="btn border-0 shadow-none"
+                          data-bs-toggle="modal"
+                          data-bs-target="#delete-file"
+                        >
+                        <img style="height:20px" src="../../../assets/images/delete-icon.svg" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div *ngIf="totalVideoRecords != 0" class="col-md-12">
+                  <p-paginator
+                    [rows]="videoItemsPerPage"
+                    [totalRecords]="totalVideoRecords"
+                    (onPageChange)="getFilesSelectedPage($event)"
+                  ></p-paginator>
+                </div>
               </div>
               </div>
               </div>
@@ -115,7 +193,7 @@ aria-hidden="true"
       class="modal-header border-0 justify-content-center position-relative"
     >
       <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">
-        {{ "Add Video" | translate }}
+        {{ "UploadVideo" | translate }}
       </h1>
       <button
         type="button"
@@ -127,6 +205,88 @@ aria-hidden="true"
       </button>
     </div>
     <div class="modal-body">
+      <form [formGroup]="videoLibraryForm">
+      <div class="form-group">
+        <label class="font_10">{{ "Title" | translate }}</label>
+        <input
+          formControlName="title"
+          maxlength="45"
+          type="text"
+          class="form-control w-100"
+        />
+        <small
+          class="p-error"
+          style="color: orange"
+          *ngIf="isSubmitted && videoLibraryForm.controls.title.errors"
+          >{{ "TitleRequired" | translate }}
+        </small>
+      </div>
+      </form>
+
+      <div
+    *ngIf="!isVideoSelected"
+      class="dropzone-wrapper"
+    >
+      <div class="dropzone-desc">
+        <i class="glyphicon glyphicon-download-alt"></i>
+        <p class="text-center fw_400">
+          {{ "ChooseImageFile" | translate }}
+          <b>{{ "DragItHere" | translate }}</b>
+        </p>
+      </div>
+      <input
+        type="file"
+        id="avatar"
+        (change)="handleVideoInput($event)"
+        class="dropzone"
+        accept="video/*"
+      />
+    </div>
+
+    <div *ngIf="uploadVideo != undefined && uploadVideo != ''" class="img-upl-result pt-4">
+      <span class="position-relative d-inline-block">
+        <div class="videofile">
+          <img
+            [src]="uploadVideo?.videoUrl"
+            style="height: 150px; max-width: 100%"
+          />
+        </div>
+        <button
+          (click)="removeUploadVideo(uploadVideo)"
+          type="button"
+          class="btn dl-post-img d-flex align-items-center justify-content-center rounded-circle position-absolute"
+        >
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </span>
+    </div>
+
+    <small
+    class="p-error"
+    style="color: orange; margin-left: 180px"
+    *ngIf="isSubmitted && isError">
+      {{ "PleaseSelectTheVideo" | translate }}
+  </small>
+    <div
+    class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 mt-4"
+  >
+    <button
+      #closeUploadVideoModal
+      type="button"
+      class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+      data-bs-dismiss="modal"
+    >
+      {{ "DiscardChanges" | translate }}
+    </button>
+    <button
+      (click)="saveVideo()"
+      type="button"
+      class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
+    >
+      {{ "Save" | translate }}
+    </button>
+  </div>
+
       <!-- <form [formGroup]="filesForm" class="latest-form add-tag-step">
         <div class="form-group">
           <div class="dropzone-wrapper">
@@ -199,4 +359,184 @@ aria-hidden="true"
 </div>
 </div>
 
+<div
+class="modal fade edit-school-modal delete-modal"
+id="delete-file"
+tabindex="-1"
+aria-labelledby="delete-file"
+aria-hidden="true"
+>
+<div class="modal-dialog modal-dialog-centered">
+  <div class="modal-content">
+    <div
+      class="modal-header border-0 justify-content-center position-relative"
+    >
+      <h1
+        class="modal-title font_22 text_dark fw_700 border-0 text-center"
+      >
+        {{ "DeleteVideo" | translate }}
+      </h1>
+      <button
+        type="button"
+        class="btn-close shadow-none"
+        data-bs-dismiss="modal"
+        aria-label="Close"
+      >
+        <img src="../../../../assets/images/cross.svg" />
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <h2 class="text-center font_16 f-poppins">
+          {{ "DoYouWantToDelete" | translate }}
+        </h2>
+      </div>
+      <div
+        class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4"
+      >
+        <button
+          type="button"
+          class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+          data-bs-dismiss="modal"
+        >
+          {{ "No" | translate }}
+        </button>
+        <button
+          (click)="deleteFile()"
+          type="button"
+          class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
+          data-bs-dismiss="modal"
+        >
+          {{ "Yes" | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div
+class="modal fade edit-school-modal delete-modal"
+id="stream-modal"
+tabindex="-1"
+aria-labelledby="stream-modal"
+aria-hidden="true"
+>
+<div class="modal-dialog modal-dialog-centered">
+  <div class="modal-content">
+    <div
+      class="modal-header border-0 justify-content-center position-relative"
+    >
+      <h1
+        class="modal-title font_22 text_dark fw_700 border-0 text-center"
+      >
+        {{ "Stream" | translate }}
+      </h1>
+      <button
+        type="button"
+        class="btn-close shadow-none"
+        data-bs-dismiss="modal"
+        aria-label="Close"
+      >
+        <img src="../../../../assets/images/cross.svg" />
+      </button>
+    </div>
+    <div class="modal-body">
+      <!-- <div class="form-group">
+        <h2 class="text-center font_16 f-poppins">
+          {{ "DoYouWantToDelete" | translate }}
+        </h2>
+      </div> -->
+
+      <div class="col-md-12">
+        <div class="row">
+          <div class="col mt-3 mb-2">
+            <input
+            checked
+              [(ngModel)]="selectedSchoolForStream"
+              type="radio"
+              id="selectedSchool"
+              name="selectedSchoolForStream"
+              [value]= "schoolId"
+              (click)="schoolSelected()"
+            />
+            <label for="forFree">
+              {{ "FromSchool" | translate }}
+            </label>
+          </div>
+          <div class="col mt-3 mb-2">
+            <input
+              [(ngModel)]="selectedSchoolForStream"
+              type="radio"
+              id="selectedClass"
+              name="selectedSchoolForStream"
+              value= "ab" 
+              (click)="getSchoolClassList()"
+            />
+            <label for="forPaid">
+              {{ "FromClass" | translate }}
+            </label>
+          </div>
+          <!-- <small class="p-error" style="color: orange;"
+          *ngIf="(isStepCompleted && subscriptionForm.controls.subscriptionReferenceId.errors)">{{'ThisFieldRequired'| translate }}
+        </small> -->
+        </div>
+      </div>
+
+      <div *ngIf="classList != undefined && !isSchoolSelected" class="form-group">
+        <label *ngIf="" class="font_10">{{ "SelectClass" | translate }}*</label>
+        <select
+          class="form-select rounded-8 w-100"
+          aria-label="Default select example"
+          (change)="getClassId($event.target)"
+        >
+
+          <option
+            *ngFor="let item of classList; let i = index"
+            [value]="item.classId"
+            [selected]="item[0]"
+            >
+            {{ item.className }}
+          </option>
+        </select>
+        <!-- <small
+        class="p-error"
+        style="color: orange"
+        *ngIf="
+        isStepCompleted &&
+          createSchoolForm1.controls.accessibilityId.errors
+        "
+        >{{ "ThisFieldRequired" | translate }}
+      </small> -->
+      </div>
+
+
+
+      <div
+        class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4"
+      >
+        <button
+          #closeStreamVideoModal
+          type="button"
+          class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+          data-bs-dismiss="modal"
+        >
+          {{ "No" | translate }}
+        </button>
+        <button
+          (click)="streamVideo()"
+          type="button"
+          class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
+        >
+          {{ "Yes" | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+
+<p-toast></p-toast>
+<loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
               

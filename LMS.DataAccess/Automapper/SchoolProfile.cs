@@ -55,6 +55,7 @@ namespace LMS.DataAccess.Automapper
             CreateMap<SchoolFollower, AllSchoolFollowersViewModel>()
                 .ForMember(x => x.UserId, opt => opt.MapFrom(o => o.User.Id))
                 .ForMember(x => x.UserName, opt => opt.MapFrom(o => o.User.FirstName + " " + o.User.LastName));
+            CreateMap<VideoLibrary, VideoLibraryViewModel>();
 
         }
     }

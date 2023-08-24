@@ -199,4 +199,14 @@ export class SchoolService{
         let queryParams = new HttpParams().append("schoolId",schoolId);
         return this.http.get(`${this.apiUrl}/school/getSchoolClassCourseList`, {params:queryParams,headers: this.headers});
     }
+
+    getClassListBySchoolId(schoolId:string):Observable<any>{
+        let queryParams = new HttpParams().append("schoolId",schoolId);
+        return this.http.get(`${this.apiUrl}/school/getClassListBySchoolId`, {params:queryParams,headers: this.headers})
+    }
+
+    isAvailableStorageSpace(schoolId:string,filesSizeInGb:number):Observable<any>{
+        let queryParams = new HttpParams().append("schoolId",schoolId).append("filesSizeInGigabyte",filesSizeInGb);
+        return this.http.get(`${this.apiUrl}/school/isAvailableStorageSpace`, {params:queryParams,headers: this.headers})
+    }
 }

@@ -33,6 +33,7 @@ namespace LMS.Data.Entity
         public string? PhoneNumber { get; set; }
         public bool IsSchoolSubscribed { get; set; }
         public bool IsDefaultAvatar { get; set; }
+        public double? AvailableStorageSpace { get; set; }
 
     }
 }

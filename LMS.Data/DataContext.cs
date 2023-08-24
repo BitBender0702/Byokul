@@ -90,8 +90,9 @@ namespace LMS.Data
         public DbSet<ClassCourseTransaction> ClassCourseTransactions { get; set; }
         public DbSet<CardUserKey> CardUserKeys { get; set; }
         public DbSet<CardRenewal> CardRenewals { get; set; }
-
         public DbSet<ClassCourseRating> ClassCourseRatings { get; set; }
+        public DbSet<VideoLibrary> VideoLibrary { get; set; }
+
 
 
 

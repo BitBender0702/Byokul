@@ -19,6 +19,9 @@ import { FileStorageService } from '../service/fileStorage';
 import { fileStorageResponse } from './fileStorage/fileStorage.component';
 import { UserService } from '../service/user.service';
 import { addTeacherResponse } from './addOfficial/addOfficial.component';
+import { VideoLibraryService } from '../service/videoLibrary.service';
+import { addVideoInLibraryResponse } from './schoolVideoLibrary/schoolVideoLibrary.component';
+import { SchoolService } from '../service/school.service';
 
 export const paymentConfirmDialoge = new Subject<{response:any}>();  
 export const postProgressNotification = new Subject<{from:string}>();  
@@ -31,7 +34,8 @@ export const postUploadOnBlob = new Subject<{
   type:any,
   reel:any,
   uploadedUrls:any[],
-  videoThumbnails?:any
+  videoThumbnails?:any,
+  schoolId?:string
 }>();
 
 
@@ -57,20 +61,26 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
   paymentConfirmSubscription!: Subscription;
   loginUserId:string = "";
   notifyTeacherSubscription!:Subscription;
+  schoolId:string = "";
+  totalUploadFilesSize:number = 0;
   @ViewChild('paymentConfirmationBtn') paymentConfirmationBtn!: ElementRef;
 
   private _postService;
   private _notificationService;
   private _fileStorageService;
   private _userService;
+  private _videoLibraryService;
+  private _schoolService;
   
 
-  constructor(injector: Injector,private fileStorageService: FileStorageService,private userService:UserService,private notificationService: NotificationService, private signalRService: SignalrService,public messageService:MessageService,private translateService: TranslateService, private meta: Meta,authService: AuthService,private router: Router,private route: ActivatedRoute,postService:PostService) { 
+  constructor(injector: Injector,private fileStorageService: FileStorageService,private userService:UserService,private notificationService: NotificationService, private signalRService: SignalrService,public messageService:MessageService,private translateService: TranslateService, private meta: Meta,authService: AuthService,private router: Router,private route: ActivatedRoute,postService:PostService, videoLibraryService:VideoLibraryService,schoolService:SchoolService) { 
     super(injector);
     this._postService = postService;
     this._notificationService = notificationService;
     this._fileStorageService = fileStorageService;
     this._userService = userService;
+    this._videoLibraryService = videoLibraryService;
+    this._schoolService = schoolService;
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         event.urlAfterRedirects = event.urlAfterRedirects.split('/').slice(0, 3).join('/');
@@ -138,6 +148,9 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
         if(response.from == Constant.FileStorage){
           var translatedMessage = this.translateService.instant('FileStorageProgressMessage');
         }
+        if(response.from == Constant.VideoLibrary){
+          var translatedMessage = this.translateService.instant('VideoLibraryProgressMessage');
+        }
         const translatedSummary = this.translateService.instant('Info');
         this.messageService.add({severity:'info', summary:translatedSummary,life: 3000, detail:translatedMessage});
       });
@@ -146,6 +159,15 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
     if(!this.postUploadOnBlobSubscription){
       this.postUploadOnBlobSubscription = postUploadOnBlob.subscribe(async (uploadResponse) => {
         debugger
+
+        
+        for (var pair of uploadResponse.postToUpload.entries()) {
+          console.log(pair[0]+ ', ' + pair[1]); 
+      }
+        this.totalUploadFilesSize = 0;
+        if(uploadResponse.schoolId != undefined){
+          this.schoolId = uploadResponse.schoolId;
+        }
         this.uploadVideoUrlList = [];
         if(uploadResponse.type == 1){
         const uploadPromises = uploadResponse.combineFiles.map((file:any) => {
@@ -355,6 +377,27 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
         this.saveFilesInFileStorge(uploadResponse);
 
       }
+
+      if(uploadResponse.type == 5){
+        debugger
+        // var file = uploadResponse.videos;
+        // await this.uploadVideosOnBlob(file, UploadTypeEnum.Video);
+        const uploadPromises = uploadResponse.combineFiles.map((file:any) => {
+          if (uploadResponse.videos.includes(file)) {
+            return this.uploadVideosOnBlob(file, UploadTypeEnum.Video);
+          } 
+          if(uploadResponse.videoThumbnails.includes(file)) {
+            return this.uploadVideosOnBlob(file, UploadTypeEnum.Thumbnail);
+          }
+
+          return "";
+          
+        });
+
+        await Promise.all(uploadPromises);
+        
+        this.saveFilesInVideoLibrary(uploadResponse);
+      }
       })
     }
 
@@ -394,26 +437,109 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
   
   saveFilesInFileStorge(uploadResponse:any){
     debugger
-    var files = this.uploadVideoUrlList;
-    uploadResponse.postToUpload.set('blobUrlsJson', JSON.stringify(files));
-      this._fileStorageService.saveFiles(uploadResponse.postToUpload).subscribe(response => {
-        debugger
-        this.uploadVideoUrlList = [];
-        uploadResponse.postToUpload = new FormData();
-        fileStorageResponse.next({fileStorageResponse:response});
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Success',
-          life: 3000,
-          detail: 'Files added successfully',
+
+   var filesSizeInGb = this.totalUploadFilesSize / (1024 * 1024 * 1024);
+   this._schoolService.isAvailableStorageSpace(this.schoolId,filesSizeInGb).subscribe(response => {
+    debugger
+    if(response.success){
+      var files = this.uploadVideoUrlList;
+      uploadResponse.postToUpload.set('blobUrlsJson', JSON.stringify(files));
+        this._fileStorageService.saveFiles(uploadResponse.postToUpload).subscribe(response => {
+          debugger
+          this.uploadVideoUrlList = [];
+          uploadResponse.postToUpload = new FormData();
+          fileStorageResponse.next({fileStorageResponse:response,availableSpace:filesSizeInGb});
+          const translatedSummary = this.translateService.instant('Success');
+          const translatedMessage = this.translateService.instant('FilesAddedSuccessfully');
+          this.messageService.add({
+            severity: 'success',
+            summary: translatedSummary,
+            life: 3000,
+            detail: translatedMessage,
+          });
+  
         });
+        var translatedMessage = this.translateService.instant('FilesUploadedSuccessfully');
+        var notificationContent = translatedMessage;
+        this._notificationService.initializeNotificationViewModel(this.loginUserId,NotificationType.FilesUploaded,notificationContent,this.loginUserId,null,0,null,null).subscribe((response) => {
+        });
+    }
+    else{
+      const translatedSummary = this.translateService.instant('Success');
+      const translatedMessage = this.translateService.instant('SchoolHasNoStorageSpace');
+      this.messageService.add({
+        severity: 'success',
+        summary: translatedSummary,
+        life: 3000,
+        detail: translatedMessage,
+      });
+    }
+   });
+
+    // var files = this.uploadVideoUrlList;
+    // uploadResponse.postToUpload.set('blobUrlsJson', JSON.stringify(files));
+    //   this._fileStorageService.saveFiles(uploadResponse.postToUpload).subscribe(response => {
+    //     debugger
+    //     this.uploadVideoUrlList = [];
+    //     uploadResponse.postToUpload = new FormData();
+    //     fileStorageResponse.next({fileStorageResponse:response});
+    //     this.messageService.add({
+    //       severity: 'success',
+    //       summary: 'Success',
+    //       life: 3000,
+    //       detail: 'Files added successfully',
+    //     });
+
+    //   });
+
+
+
+
+
+    //   var translatedMessage = this.translateService.instant('FilesUploadedSuccessfully');
+    //   var notificationContent = translatedMessage;
+    //   this._notificationService.initializeNotificationViewModel(this.loginUserId,NotificationType.FilesUploaded,notificationContent,this.loginUserId,null,0,null,null).subscribe((response) => {
+    //   });
+  }
+
+  saveFilesInVideoLibrary(uploadResponse:any){
+    debugger
+    var filesSizeInGb = this.totalUploadFilesSize / (1024 * 1024 * 1024);
+    this._schoolService.isAvailableStorageSpace(this.schoolId,filesSizeInGb).subscribe(response => {
+     debugger
+     if(response.success){
+    this.getThumbnailUrl(this.uploadVideoUrlList);
+    var files = this.uploadVideoUrlList[0];
+    uploadResponse.postToUpload.set('blobUrlsJson', JSON.stringify(files));
+    for (var pair of uploadResponse.postToUpload.entries()) {
+      console.log(pair[0]+ ', ' + pair[1]); 
+  }
+      this._videoLibraryService.saveFile(uploadResponse.postToUpload).subscribe(response => {
+        debugger
+        uploadResponse.postToUpload = new FormData();
+        addVideoInLibraryResponse.next({addVideoInLibraryResponse:response,availableSpace:filesSizeInGb});
+        const translatedSummary = this.translateService.instant('Success');
+        const translatedMessage = this.translateService.instant('VideoUploadedSuccessfully');
+        this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage});
       });
 
-      var translatedMessage = this.translateService.instant('FilesUploadedSuccessfully');
+      var translatedMessage = this.translateService.instant('VideoUploadedSuccessfully');
       var notificationContent = translatedMessage;
       this._notificationService.initializeNotificationViewModel(this.loginUserId,NotificationType.FilesUploaded,notificationContent,this.loginUserId,null,0,null,null).subscribe((response) => {
       });
-  }
+     }
+     else{
+      const translatedSummary = this.translateService.instant('Success');
+      const translatedMessage = this.translateService.instant('SchoolHasNoStorageSpace');
+      this.messageService.add({
+        severity: 'success',
+        summary: translatedSummary,
+        life: 3000,
+        detail: translatedMessage,
+      });
+    }
+   });
+  } 
 
   ngOnDestroy(): void {
     if(this.postProgressSubscription){
@@ -491,6 +617,9 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
         fileThumbnail:""
       }
       this.uploadVideoUrlList.push(uploadVideoObject);
+      if(this.schoolId != undefined && this.schoolId != "" && fileType != UploadTypeEnum.Thumbnail){
+        this.totalUploadFilesSize  += file.size;
+      }
     })
     .catch((error) => {
       console.error(error);
@@ -546,4 +675,5 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
       }
     });
   }
+
 }

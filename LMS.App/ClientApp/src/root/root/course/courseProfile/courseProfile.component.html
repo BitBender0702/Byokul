@@ -256,7 +256,7 @@
                       "EnableCourse" | translate
                     }}</span>
                   </button>
-                  <button
+                  <button style="min-width: 50px;"
                     type="button"
                     (click)="
                       openPostModal(
@@ -438,6 +438,7 @@
               '/user/fileStorage',
               course.courseId,
               course.createdById,
+              course.schoolId,
               2
             ]"
           >

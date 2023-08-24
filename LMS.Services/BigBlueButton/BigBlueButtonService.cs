@@ -32,6 +32,8 @@ namespace LMS.Services.BigBlueButton
                 string secretKey = this._config.GetValue<string>("BigBlueButtonAPISettings:SharedSecret");
                 string moderatorPW = "mp";
                 string attendeePW = "ap";
+                bool lockSettingsDisableCam = true;
+                bool lockSettingsDisableMic = true;
                 string logoutURL = _config["MeetingLogoutUrl"];
                 bool isMicroPhoneOpen = false;
                 string meetingId = Guid.NewGuid().ToString();
@@ -44,11 +46,11 @@ namespace LMS.Services.BigBlueButton
                     isMicroPhoneOpen = true;
                 }
 
-                string createChecksum = "createname=" + meetingName + "&meetingID=" + meetingId + "&welcome=" + welcome + "&attendeePW=" + attendeePW + "&freeJoin=false" + "&record=true" + "&muteOnStart=" + isMicroPhoneOpen + "&autoStartRecording=true" + "&logoutURL=" + logoutURL + "&guestPolicy=ASK_MODERATOR" + "&moderatorPW=" + moderatorPW + secretKey;
+                string createChecksum = "createname=" + meetingName + "&meetingID=" + meetingId + "&welcome=" + welcome + "&attendeePW=" + attendeePW + "&freeJoin=false" + "&record=true" + "&muteOnStart=" + isMicroPhoneOpen + "&autoStartRecording=true" + "&logoutURL=" + logoutURL + "&guestPolicy=ASK_MODERATOR" + "&moderatorPW=" + moderatorPW + "&lockSettingsDisableCam=true" + "&lockSettingsDisableMic=true" + secretKey;
 
                 string checksum = Hash(createChecksum);
 
-                string finalurl = "create?name=" + meetingName + "&meetingID=" + meetingId + "&welcome=" + welcome + "&attendeePW=" + attendeePW + "&freeJoin=false" + "&record=true" + "&muteOnStart=" + isMicroPhoneOpen + "&autoStartRecording=true" + "&logoutURL=" + logoutURL + "&guestPolicy=ALWAYS_ACCEPT" + "&moderatorPW=" + moderatorPW + "&checksum=" + checksum;
+                string finalurl = "create?name=" + meetingName + "&meetingID=" + meetingId + "&welcome=" + welcome + "&attendeePW=" + attendeePW + "&freeJoin=false" + "&record=true" + "&muteOnStart=" + isMicroPhoneOpen + "&autoStartRecording=true" + "&logoutURL=" + logoutURL + "&guestPolicy=ASK_MODERATOR" + "&moderatorPW=" + moderatorPW + "&lockSettingsDisableCam=true" + "&lockSettingsDisableMic=true" + "&checksum=" + checksum;
 
                 var clients = new HttpClient();
                 clients.BaseAddress = new Uri(baseUrl);

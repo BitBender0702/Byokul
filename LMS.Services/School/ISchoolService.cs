@@ -1,4 +1,5 @@
 ﻿using LMS.Common.Enums;
+using LMS.Common.ViewModels.Class;
 using LMS.Common.ViewModels.Common;
 using LMS.Common.ViewModels.Post;
 using LMS.Common.ViewModels.School;
@@ -55,8 +56,8 @@ namespace LMS.Services
         Task<IEnumerable<PostDetailsViewModel>> GetSliderReelsBySchoolId(Guid schoolId, string loginUserId, Guid lastReelId, ScrollTypesEnum scrollType);
         Task<List<AllSchoolFollowersViewModel>> GetAllSchoolFollowers(Guid schoolId);
         Task<SchoolsClassCourseViewModel> GetSchoolClassCourseList(Guid schoolId);
-
-
+        Task<List<ClassesBySchoolViewModel>> GetClassListBySchoolId(Guid schoolId);
+        Task<double> IsAvailableStorageSpace(Guid schoolId, double filesSizeInGigabyte);
 
 
 

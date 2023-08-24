@@ -17,7 +17,7 @@ import { MultilingualComponent, changeLanguage } from '../sharedModule/Multiling
 import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
 import { postProgressNotification, postUploadOnBlob } from '../root.component';
 
-export const fileStorageResponse = new Subject<{fileStorageResponse:any;}>();
+export const fileStorageResponse = new Subject<{fileStorageResponse:any;availableSpace:number}>();
 
 @Component({
     selector: 'fileStorage',
@@ -33,6 +33,7 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
     private _signalRService;
     private _chatService;
     private _teacherService;
+    private _schoolService;
     saveFolderForm!: FormGroup;
     isSubmitted: boolean = false;
     loadingIcon: boolean = false;
@@ -91,6 +92,8 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
     changeLanguageSubscription!: Subscription;
     commentResponseSubscription!:Subscription;
     fileStorageResponseSubscription!: Subscription;
+    schoolId:string= "";
+    availableSpace:number = 0;
 
     @ViewChild('closeFileModal') closeFileModal!: ElementRef;
     @ViewChild('closeFolderModal') closeFolderModal!: ElementRef;
@@ -98,22 +101,25 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
     @ViewChild('searchInput') searchInput!: ElementRef;
 
 
-    constructor(injector: Injector,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,userService:UserService,public fileStorageService:FileStorageService,signalRService:SignalrService,chatService:ChatService,teacherService:TeacherService,public messageService:MessageService,private cd: ChangeDetectorRef) { 
+    constructor(injector: Injector,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,userService:UserService,public fileStorageService:FileStorageService,signalRService:SignalrService,chatService:ChatService,teacherService:TeacherService,public messageService:MessageService,private cd: ChangeDetectorRef,schoolService:SchoolService) { 
       super(injector);
       this._userService = userService; 
       this._fileStorageService = fileStorageService;
       this._signalRService = signalRService;
       this._chatService = chatService;
       this._teacherService = teacherService;
+      this._schoolService = schoolService;
     }
   
     ngOnInit(): void {
+      debugger
       this.loadingIcon = true;
       this.isFirstPage = true;
       var selectedLang = localStorage.getItem('selectedLanguage');
       this.translate.use(selectedLang ?? '');
       this.parentId = this.activatedRoute.snapshot.paramMap.get('id')??'';
       this.ownerId = this.activatedRoute.snapshot.paramMap.get('ownerId')??'';
+      this.schoolId = this.activatedRoute.snapshot.paramMap.get('schoolId')??'';
       this.fileStorageType = this.activatedRoute.snapshot.paramMap.get('type')??'';
 
       if(this.fileStorageType == "1"){
@@ -162,6 +168,8 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
         this.isSubmitted = false;
         this.loadingIcon = false;
         this.files = result.fileStorageResponse.concat(this.files);
+        this.availableSpace = this.availableSpace - result.availableSpace;
+        this.availableSpace = parseFloat(this.availableSpace.toFixed(2));
         this.getFilesSelectedPage();
         this.totalFolderRecords = this.files.length;
         this.saveFileViewModel.files = [];
@@ -233,6 +241,10 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
         this.parentFolderId = this.folders[0].parentFolderId;
         this.isFoldersEmpty = false;
         this.totalFolderRecords = this.folders.length;
+        this._schoolService.getSchool(this.schoolId).subscribe((response: any) => {
+          debugger
+          this.availableSpace = response.availableStorageSpace;
+        });
         this.getFoldersSelectedPage();
         this.checkFoldersAndFilesExist();
         });
@@ -400,7 +412,7 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
           }, 3000);
         }
 
-    postUploadOnBlob.next({postToUpload:this.filesToUpload,combineFiles:this.saveFileViewModel.files,videos:null,images:null,attachment:null,type:4,reel:null,uploadedUrls:[]});
+    postUploadOnBlob.next({postToUpload:this.filesToUpload,combineFiles:this.saveFileViewModel.files,videos:null,images:null,attachment:null,type:4,reel:null,uploadedUrls:[],schoolId:this.schoolId});
 
     // this._fileStorageService.saveFiles(this.filesToUpload).subscribe(response => {
     //     this.isSubmitted = false;

@@ -162,7 +162,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
   createPostSubscription!: Subscription;
   createReelSubscription!: Subscription;
   createLiveSubscription!: Subscription;
-
+  selectedVideoFromLibrary:any;
 
   @Output() onClose: EventEmitter<any> = new EventEmitter<any>();
 
@@ -179,7 +179,9 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     debugger
     this.isOwnerOrNot();
     var initialValue = this.options.initialState;
+    this.selectedVideoFromLibrary  = initialValue?.selectedVideoFromLibrary;
 
+    
     if (this.editPostId != undefined) {
       this._postService.getPostById(this.editPostId).subscribe((response) => {
         debugger
@@ -207,6 +209,14 @@ export class CreatePostComponent implements OnInit, OnDestroy {
           }
           this.profileShared(shareProfileData, response.avatar)
         }
+
+        if(this.selectedVideoFromLibrary != undefined){
+          debugger
+          this.isVideoUpload = true;
+          this.videoObject.videoUrl = this.selectedVideoFromLibrary.fileThumbnail;
+          this.videoObject.name = this.selectedVideoFromLibrary.fileName;
+          this.uploadVideo.push(this.videoObject);
+        }
       });
     }
 
@@ -221,6 +231,13 @@ export class CreatePostComponent implements OnInit, OnDestroy {
             bodyTest: "Here!"
           }
           this.profileShared(shareProfileData, response.avatar)
+        }
+        if(this.selectedVideoFromLibrary != undefined){
+          debugger
+          this.isVideoUpload = true;
+          this.videoObject.videoUrl = this.selectedVideoFromLibrary.fileThumbnail;
+          this.videoObject.name = this.selectedVideoFromLibrary.fileName;
+          this.uploadVideo.push(this.videoObject);
         }
       });
 
@@ -1326,6 +1343,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     //   this.postToUpload.append('uploadVideosThumbnail', this.videoThumbnails[i]);
     // }
 
+    if(this.selectedVideoFromLibrary == undefined){
     if (this.videos.length == 0) {
       this.loadingIcon = true;
     }
@@ -1337,6 +1355,8 @@ export class CreatePostComponent implements OnInit, OnDestroy {
         postProgressNotification.next({ from: Constant.Post });
       }, 3000);
     }
+    
+  }
 
     var post = this.createLiveForm.value;
     this.postFrom();
@@ -1350,13 +1370,19 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     this.postToUpload.append('isMicroPhoneOpen', this.isMicroPhoneOpen.toString());
 
 
-    for (var i = 0; i < this.images.length; i++) {
-      this.postToUpload.append('uploadImages', this.images[i]);
+    // for (var i = 0; i < this.images.length; i++) {
+    //   this.postToUpload.append('uploadImages', this.images[i]);
+    // }
+
+    if(this.selectedVideoFromLibrary == undefined){
+    const combinedFiles = [...this.videos, ...this.images];
+    postUploadOnBlob.next({ postToUpload: this.postToUpload, combineFiles: combinedFiles, videos: this.videos, images: this.images, attachment: null, type: 3, reel: null, uploadedUrls: [] });
     }
 
-    const combinedFiles = [...this.videos, ...this.images];
-
-    postUploadOnBlob.next({ postToUpload: this.postToUpload, combineFiles: combinedFiles, videos: this.videos, images: this.images, attachment: null, type: 3, reel: null, uploadedUrls: [] });
+    if(this.selectedVideoFromLibrary != undefined){
+      this.loadingIcon = true;
+        this.saveLiveStream(this.selectedVideoFromLibrary);
+    }
     //   this._postService.createPost(this.postToUpload).subscribe((response:any) => {
     //     debugger
     //     this.isSubmitted=false;
@@ -1387,6 +1413,59 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     // }
     //     });
 
+  }
+
+  saveLiveStream(selectedVideoFromLibrary:any){
+    debugger
+    var prefix = "videos";
+    const id = uuidv4();
+    const blobName = `${prefix}/${id.toString()}${selectedVideoFromLibrary.fileName.substring(selectedVideoFromLibrary.fileName.lastIndexOf('.'))}`;
+    var uploadVideoObject = 
+    {
+      id: id,
+      blobUrl:selectedVideoFromLibrary.fileUrl,
+      blobName:blobName,
+      fileType:2,
+      fileThumbnail:selectedVideoFromLibrary.fileThumbnail
+    }
+
+    var uploadVideo = [];
+    uploadVideo.push(uploadVideoObject);
+    this.postToUpload.set('blobUrlsJson', JSON.stringify(uploadVideo));
+
+      this._postService.createPost(this.postToUpload).subscribe((response:any) => {
+        debugger
+        this.isSubmitted=false;
+        this.loadingIcon = false;
+        //addPostResponse.next({response});
+        this.postToUpload = new FormData();
+        this.close();
+      this.router.navigate(
+        [`liveStream`,response.id,this.from]
+    );
+        
+        // if(this.videos.length != 0){
+        // var translatedMessage = this.translateService.instant('VideoReadyToStream');
+        // var notificationContent = translatedMessage;
+        // var chatType = this.from == "user" ? 1 :this.from == "school" ? 3 : this.from == "class" ? 4 : undefined;
+        // this._notificationService.initializeNotificationViewModel(this.loginUserId,NotificationType.PostUploaded,notificationContent,this.loginUserId,response.id,response.postType,response,null,chatType).subscribe((response) => {
+        // });
+      //  }
+    //   else{
+    //     // const fullNameIndex = response.streamUrl.indexOf('fullName='); // find the index of "fullName="
+    //     // const newUrl = response.streamUrl.slice(fullNameIndex);
+    //     // here we need to send schoolId/classId if stream from those.
+    //     if(!response.isPostSchedule){
+    //     this.router.navigate(
+    //         [`liveStream`,response.id,this.from]
+    //         // { state: { stream: {streamUrl: response.streamUrl, userId:this.userId, meetingId: post.title,from:"user"} } });
+
+    //     // }
+    //     );
+
+    //   }
+    // }
+        });
   }
 
   openMicroPhone() {

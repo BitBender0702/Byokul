@@ -31,6 +31,8 @@ export class Constant {
     public static SchoolNameDoesNotExist = "School name does not exists";
     public static TeacherAddedSuccessfully = "Teacher added successfully";
     public static TeacherUpdatedSuccessfully = "Teacher updated successfully";
+    public static VideoLibrary = "videoLibrary";
+
 
 
 
