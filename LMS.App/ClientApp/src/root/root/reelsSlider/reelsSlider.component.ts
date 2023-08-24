@@ -189,21 +189,8 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
     });
 
 
-    setTimeout(() => {
-      let videojsElement = document.getElementById('video-3')
-      if (videojsElement) {
-        const firstElement = videojsElement.children[0];
-        if (firstElement) {
-          const videoElement = firstElement.children[0] as HTMLVideoElement
-          console.log(videoElement)
-          debugger
-          if (videoElement) {
-            videoElement.play()
-            videoElement.muted = true;
-          }
-        }
-      }
-    }, 0);
+    
+    
 
 
 
@@ -419,6 +406,27 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
     //     video.play();
     //   });
     // });
+
+    setTimeout(() => {
+      for (let i = 0; i < this.reels.length; i++) {
+        const videoId = `video-${i}`;
+        let videojsElement = document.getElementById(videoId);
+        if (videojsElement) {
+          const firstElement = videojsElement.children[0];
+          if (firstElement) {
+            const videoElement = firstElement.children[0] as HTMLVideoElement;
+            console.log(videoElement);
+            if (videoElement) {
+              videoElement.play();
+              videoElement.muted = true;
+            }
+          }
+        }
+      }
+    }, 1000);
+
+
+
   }
 
   //   @HostListener('window:resize', ['$event'])

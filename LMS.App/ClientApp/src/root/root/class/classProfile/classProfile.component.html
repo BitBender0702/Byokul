@@ -509,12 +509,16 @@
                   class="position-absolute translate-middle reel_spinner_position"
                 ></reels-loading-spinner>
                 <div class="feedbox-inner d-flex">
+                  <!--<h1 id="swipingTry">Hy</h1>-->
                   <carousel
-                    #carousel
+                    #carouselReels
                     [itemsPerSlide]="itemsPerSlide"
                     [singleSlideOffset]="singleSlideOffset"
                     [interval]="0"
                     [noWrap]="noWrap"
+                    (touchstart)="touchStart($event)" 
+                    (touchover)="touchEnd($event)"
+                    (mousewheel)="onScroll($event)"
                   >
                     <div *ngFor="let post of class.reels">
                       <div

@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, Injector, OnChanges, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, Injector, OnChanges, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { DomSanitizer, Meta, Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -63,7 +63,7 @@ export const convertIntoCourseResponse = new Subject<{ courseId: string, courseN
   providers: [MessageService]
 })
 
-export class ClassProfileComponent extends MultilingualComponent implements OnInit, OnDestroy, OnChanges {
+export class ClassProfileComponent extends MultilingualComponent implements OnInit, OnDestroy, OnChanges, AfterViewInit {
 
   private destroy$: Subject<void> = new Subject();
   private _classService;
@@ -179,7 +179,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   @ViewChild('closeLanguageModal') closeLanguageModal!: ElementRef;
   @ViewChild('closeCertificateModal') closeCertificateModal!: ElementRef;
   @ViewChild('imageFile') imageFile!: ElementRef;
-  @ViewChild('carousel') carousel!: ElementRef;
+  @ViewChild('carouselReels') carouselReels!: ElementRef;
   @ViewChild('videoPlayer') videoPlayer!: ElementRef;
   @ViewChild('startDate') startDateRef!: ElementRef;
   @ViewChild('endDate') endDateRef!: ElementRef;
@@ -537,7 +537,8 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   }
 
   addEventListnerOnCarousel() {
-    if (this.carousel != undefined) {
+    debugger
+    if (this.carouselReels != undefined) {
       if ($('carousel')[0].querySelectorAll('a.carousel-control-next')[0]) {
         $('carousel')[0].querySelectorAll('a.carousel-control-next')[0].addEventListener('click', () => {
           this.reelsPageNumber++;
@@ -1399,16 +1400,40 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     });
   }
 
+  // getFilteredAttachments(feeds: any): any {
+  //   const allAttachments = feeds.flatMap((post: { postAttachments: any; }) => post.postAttachments);
+  //   var result = allAttachments.filter((attachment: { fileType: number; }) => attachment.fileType === 3);
+  //   this.filteredAttachments = [...this.filteredAttachments, ...result];
+  //   feeds = feeds.map((post: { postAttachments: any[]; }) => {
+  //     const filteredPostAttachments = post.postAttachments.filter(postAttachment => postAttachment.fileType !== 3);
+  //     return { ...post, postAttachments: filteredPostAttachments };
+  //   });
+  //   return feeds;
+  // }
+
+
   getFilteredAttachments(feeds: any): any {
-    const allAttachments = feeds.flatMap((post: { postAttachments: any; }) => post.postAttachments);
-    var result = allAttachments.filter((attachment: { fileType: number; }) => attachment.fileType === 3);
+    const allAttachments = feeds.flatMap((post: { postAttachments: any[]; }) => post.postAttachments);
+      const result = allAttachments.filter((attachment: { fileType: number; fileName: string; }) => {
+      return attachment.fileType === 3 && 
+             !this.filteredAttachments.some(existingAttachment =>
+               existingAttachment.fileType === 3 &&
+               existingAttachment.fileName === attachment.fileName
+             );
+    });
+  
     this.filteredAttachments = [...this.filteredAttachments, ...result];
-    feeds = feeds.map((post: { postAttachments: any[]; }) => {
-      const filteredPostAttachments = post.postAttachments.filter(postAttachment => postAttachment.fileType !== 3);
+      feeds = feeds.map((post: { postAttachments: any[]; }) => {
+      const filteredPostAttachments = post.postAttachments.filter(
+        postAttachment => postAttachment.fileType !== 3
+      );
       return { ...post, postAttachments: filteredPostAttachments };
     });
+  
     return feeds;
   }
+
+
 
   removeLogo() {
     debugger
@@ -1711,6 +1736,55 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     this.rateNumber = rateNumber + 1;
     this.isRated = true;
     this.ratedArray[0] = this.rateNumber;
+  }
+
+
+
+  ngAfterViewInit(): void {
+  }
+
+  onScroll(event: any) {
+    debugger
+    let nElement = document.getElementById('swipingTry')
+    if(nElement){
+      if(event.deltaY == 100){
+        nElement.style.color = "red"
+        if (this.carouselReels != undefined) {
+          const nextButton = $('carousel')[0].querySelectorAll('a.carousel-control-next')[0] as HTMLButtonElement
+          if (nextButton) {
+            nextButton.click();
+          }
+        }
+      }
+      if(event.deltaY == -100){
+        nElement.style.color = "black"
+        const nextButton = $('carousel')[0].querySelectorAll('a.carousel-control-prev')[0] as HTMLButtonElement
+        if (nextButton) {
+          nextButton.click();
+        }
+      }
+    }
+    
+  }
+
+  touchEnd(event:any){
+    debugger
+    let nElement = document.getElementById('swipingTry')
+    if(nElement)
+    nElement.style.color = "black"
+  }
+
+  touchStart(event: any) {
+    debugger
+    let nElement = document.getElementById('swipingTry')
+    if(nElement)
+    nElement.style.color = "red"
+    if (this.carouselReels != undefined) {
+      const nextButton = $('carousel')[0].querySelectorAll('a.carousel-control-next')[0] as HTMLButtonElement
+      if (nextButton) {
+        nextButton.click();
+      }
+    }
   }
 
 }

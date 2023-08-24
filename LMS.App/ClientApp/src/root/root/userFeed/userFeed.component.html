@@ -221,6 +221,7 @@
                               >
                                 <div class="videofile">
                                   <img
+                                    class="w-100"
                                     [lazyLoad]="postAttachment.fileThumbnail"
                                   />
                                 </div>
@@ -1532,7 +1533,7 @@
                                   "
                                   class="routeLink"
                                 >
-                                <div class="feed_userpicture">
+                                <div class="feed_userpicture" >
                                   <img [lazyLoad]="post.parentImageUrl" />
                                 </div>
                                 </a>
@@ -1602,7 +1603,7 @@
                         (click)="getSelectedSchool(post.parentName)"
                         class="routeLink"
                       >
-                      <div class="feed_userpicture">
+                      <div class="feed_userpicture" class="fit-image">
                         <img [lazyLoad]="post.parentImageUrl" />
                       </div>
                       </a>
@@ -1613,7 +1614,7 @@
                         "
                         class="routeLink"
                       >
-                      <div class="feed_userpicture">
+                      <div class="feed_userpicture school-img rounded-circle">
                         <img [lazyLoad]="post.parentImageUrl" />
                       </div>
                       </a>
@@ -1624,7 +1625,7 @@
                         "
                         class="routeLink"
                       >
-                      <div class="feed_userpicture">
+                      <div class="feed_userpicture school-img rounded-circle">
                         <img [lazyLoad]="post.parentImageUrl" />
                       </div>
                       </a>
@@ -1633,7 +1634,8 @@
                         (click)="getUserDetails(post.parentId)"
                         class="routeLink"
                       >
-                      <div class="feed_userpicture">
+                      <div class="feed_userpicture fit-image"
+                      >
                         <img
                           *ngIf="post.parentImageUrl != null"
                           [lazyLoad]="post.parentImageUrl"

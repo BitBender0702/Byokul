@@ -145,3 +145,18 @@
 }
 
 
+.fit-image {
+  max-width: 100%; 
+  max-height: 100%; 
+  width: auto; 
+  height: auto; 
+  object-fit: contain; 
+}
+
+.videofile{
+  height: 64%;
+}
+.videofile img{
+  height: 100%;
+  width: 100%;
+}

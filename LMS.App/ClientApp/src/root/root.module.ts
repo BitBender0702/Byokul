@@ -100,6 +100,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { SchoolVideoLibraryComponent } from './root/schoolVideoLibrary/schoolVideoLibrary.component';
 import { AddOfficialComponent } from './root/addOfficial/addOfficial.component';
 
+
 export const options: Partial<IConfig> = {
   thousandSeparator: "'"
 };
