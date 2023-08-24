@@ -997,6 +997,8 @@
                 [singleSlideOffset]="singleSlideOffset"
                 [interval]="0"
                 [noWrap]="noWrap"
+                (touchstart)="touchStart($event)" 
+                (touchend)="touchEnd($event)"
               >
                 <div *ngFor="let post of school.reels">
                   <div *ngIf="post.postType == 3 && post.postAuthorType == 1">

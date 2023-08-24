@@ -2345,5 +2345,29 @@ export class SchoolProfileComponent
     }
   }
 
+  touchStartX:number=0
+  touchStart(event: any) {
+    this.touchStartX = event.touches[0].clientX;
+  }
+
+  touchEnd(event: any) {
+    const touchEndX = event.changedTouches[0].clientX;
+    const deltaX = touchEndX - this.touchStartX;
+
+    if (deltaX > 0) {
+      if (this.carousel != undefined) {
+        const nextButton = $('carousel')[0].querySelectorAll('a.carousel-control-prev')[0] as HTMLButtonElement
+        if (nextButton) {
+          nextButton.click();
+        }
+      }
+    } else if (deltaX < 0) {
+      const nextButton = $('carousel')[0].querySelectorAll('a.carousel-control-next')[0] as HTMLButtonElement
+      if (nextButton) {
+        nextButton.click();
+      }
+    }
+  }
+
 }
 

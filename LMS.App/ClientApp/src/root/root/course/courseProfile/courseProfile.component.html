@@ -499,6 +499,8 @@
                     [singleSlideOffset]="singleSlideOffset"
                     [interval]="0"
                     [noWrap]="noWrap"
+                    (touchstart)="touchStart($event)" 
+                    (touchend)="touchEnd($event)"
                   >
                     <div *ngFor="let post of course.reels">
                       <div *ngIf="post.postType == 3">

@@ -111,7 +111,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
   isGridItemInfo: boolean = false;
   postView!: PostView;
   courseView!: CourseView;
-  itemsPerSlide = 7;
+  itemsPerSlide = 5;
   singleSlideOffset = true;
   noWrap = true;
   courseParamsData$: any;
@@ -206,6 +206,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
   ngOnInit(): void {
     this.checkScreenSize();
     if (this.isScreenMobile) {
+      this.itemsPerSlide = 2;
       this.profileGrid();
     }
     // this.meta.addTag({ rel: 'canonical', href: 'https://www.byokul.com/course' });
@@ -1594,6 +1595,32 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
 
 
   }
+
+
+  touchStartX:number=0
+  touchStart(event: any) {
+    this.touchStartX = event.touches[0].clientX;
+  }
+
+  touchEnd(event: any) {
+    const touchEndX = event.changedTouches[0].clientX;
+    const deltaX = touchEndX - this.touchStartX;
+
+    if (deltaX > 0) {
+      if (this.carousel != undefined) {
+        const nextButton = $('carousel')[0].querySelectorAll('a.carousel-control-prev')[0] as HTMLButtonElement
+        if (nextButton) {
+          nextButton.click();
+        }
+      }
+    } else if (deltaX < 0) {
+      const nextButton = $('carousel')[0].querySelectorAll('a.carousel-control-next')[0] as HTMLButtonElement
+      if (nextButton) {
+        nextButton.click();
+      }
+    }
+  }
+
 
   
 }

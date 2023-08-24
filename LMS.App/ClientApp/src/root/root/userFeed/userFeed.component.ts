@@ -62,7 +62,7 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
   isGridItemInfoForGlobal: boolean = false;
   private _postService;
   private _authService;
-  itemsPerSlide = 7;
+  itemsPerSlide = 5;
   singleSlideOffset = true;
   noWrap = true;
   globalSearchPageNumber = 1;
@@ -141,6 +141,7 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
   ngOnInit(): void {
     this.checkScreenSize();
     if(this.isScreenMobile){
+      this.itemsPerSlide = 2;
       this.profileGrid();
     }
     this.postLoadingIcon = false;
@@ -1174,7 +1175,49 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
     }
   }
 
+  touchStartX:number=0
+  touchStart(event: any) {
+    this.touchStartX = event.touches[0].clientX;
+  }
 
+  touchEnd(event: any) {
+    const touchEndX = event.changedTouches[0].clientX;
+    const deltaX = touchEndX - this.touchStartX;
+
+    if (deltaX > 0) {
+      if (this.globalReelCarousel != undefined) {
+        const nextButton = $('#globalReels-carousel')[0].querySelectorAll('a.carousel-control-prev')[0] as HTMLButtonElement
+        if (nextButton) {
+          nextButton.click();
+        }
+      }
+    } else if (deltaX < 0) {
+      const nextButton = $('#globalReels-carousel')[0].querySelectorAll('a.carousel-control-next')[0] as HTMLButtonElement
+      if (nextButton) {
+        nextButton.click();
+      }
+    }
+  }
+
+
+  touchEndUser(event: any) {
+    const touchEndX = event.changedTouches[0].clientX;
+    const deltaX = touchEndX - this.touchStartX;
+
+    if (deltaX > 0) {
+      if (this.carousel != undefined) {
+        const nextButton = $('carousel')[0].querySelectorAll('a.carousel-control-prev')[0] as HTMLButtonElement
+        if (nextButton) {
+          nextButton.click();
+        }
+      }
+    } else if (deltaX < 0) {
+      const nextButton = $('carousel')[0].querySelectorAll('a.carousel-control-next')[0] as HTMLButtonElement
+      if (nextButton) {
+        nextButton.click();
+      }
+    }
+  }
 
 
 }

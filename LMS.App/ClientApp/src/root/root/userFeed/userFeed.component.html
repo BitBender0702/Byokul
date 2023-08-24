@@ -199,6 +199,8 @@
                     [itemsPerSlide]="itemsPerSlide"
                     [singleSlideOffset]="singleSlideOffset"
                     [noWrap]="noWrap"
+                    (touchstart)="touchStart($event)" 
+                    (touchend)="touchEndUser($event)"
                   >
                     <div *ngFor="let post of myFeedsReels">
                       <div *ngIf="post.postType == 3">
@@ -1459,6 +1461,8 @@
                     [singleSlideOffset]="singleSlideOffset"
                     [interval]="0"
                     [noWrap]="noWrap"
+                    (touchstart)="touchStart($event)" 
+                    (touchend)="touchEnd($event)"
                   >
                     <div *ngFor="let post of globalFeedReels">
                       <div *ngIf="post.postType == 3">

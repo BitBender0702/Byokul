@@ -119,7 +119,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   classView!: ClassView;
   bsModalRef!: BsModalRef;
 
-  itemsPerSlide = 7;
+  itemsPerSlide = 5;
   singleSlideOffset = true;
   noWrap = true;
   classParamsData$: any;
@@ -251,6 +251,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     debugger
     this.checkScreenSize();
     if (this.isScreenMobile) {
+      this.itemsPerSlide = 2;
       this.profileGrid();
     }
     // this.meta.addTag({ rel: 'canonical', href: 'https://www.byokul.com' });
@@ -537,7 +538,6 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   }
 
   addEventListnerOnCarousel() {
-    debugger
     if (this.carouselReels != undefined) {
       if ($('carousel')[0].querySelectorAll('a.carousel-control-next')[0]) {
         $('carousel')[0].querySelectorAll('a.carousel-control-next')[0].addEventListener('click', () => {
@@ -1743,43 +1743,66 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   ngAfterViewInit(): void {
   }
 
-  onScroll(event: any) {
-    debugger
-    let nElement = document.getElementById('swipingTry')
-    if(nElement){
-      if(event.deltaY == 100){
-        nElement.style.color = "red"
-        if (this.carouselReels != undefined) {
-          const nextButton = $('carousel')[0].querySelectorAll('a.carousel-control-next')[0] as HTMLButtonElement
-          if (nextButton) {
-            nextButton.click();
-          }
-        }
-      }
-      if(event.deltaY == -100){
-        nElement.style.color = "black"
+  // onScroll(event: any) {
+  //   let nElement = document.getElementById('swipingTry')
+  //   if(nElement){
+  //     if(event.deltaY == 100){
+  //       nElement.style.color = "red"
+  //       if (this.carouselReels != undefined) {
+  //         const nextButton = $('carousel')[0].querySelectorAll('a.carousel-control-next')[0] as HTMLButtonElement
+  //         if (nextButton) {
+  //           nextButton.click();
+  //         }
+  //       }
+  //     }
+  //     if(event.deltaY == -100){
+  //       nElement.style.color = "black"
+  //       const nextButton = $('carousel')[0].querySelectorAll('a.carousel-control-prev')[0] as HTMLButtonElement
+  //       if (nextButton) {
+  //         nextButton.click();
+  //       }
+  //     }
+  //   }
+    
+  // }
+
+  // touchEnd(event:any){
+  //   debugger
+  //   let nElement = document.getElementById('swipingTry')
+  //   if(nElement)
+  //   nElement.style.color = "black"
+  // }
+
+  // touchStart(event: any) {
+  //   debugger
+  //   let nElement = document.getElementById('swipingTry')
+  //   if(nElement)
+  //   nElement.style.color = "red"
+  //   if (this.carouselReels != undefined) {
+  //     const nextButton = $('carousel')[0].querySelectorAll('a.carousel-control-next')[0] as HTMLButtonElement
+  //     if (nextButton) {
+  //       nextButton.click();
+  //     }
+  //   }
+  // }
+
+  touchStartX:number=0
+  touchStart(event: any) {
+    this.touchStartX = event.touches[0].clientX;
+  }
+
+  touchEnd(event: any) {
+    const touchEndX = event.changedTouches[0].clientX;
+    const deltaX = touchEndX - this.touchStartX;
+
+    if (deltaX > 0) {
+      if (this.carouselReels != undefined) {
         const nextButton = $('carousel')[0].querySelectorAll('a.carousel-control-prev')[0] as HTMLButtonElement
         if (nextButton) {
           nextButton.click();
         }
       }
-    }
-    
-  }
-
-  touchEnd(event:any){
-    debugger
-    let nElement = document.getElementById('swipingTry')
-    if(nElement)
-    nElement.style.color = "black"
-  }
-
-  touchStart(event: any) {
-    debugger
-    let nElement = document.getElementById('swipingTry')
-    if(nElement)
-    nElement.style.color = "red"
-    if (this.carouselReels != undefined) {
+    } else if (deltaX < 0) {
       const nextButton = $('carousel')[0].querySelectorAll('a.carousel-control-next')[0] as HTMLButtonElement
       if (nextButton) {
         nextButton.click();

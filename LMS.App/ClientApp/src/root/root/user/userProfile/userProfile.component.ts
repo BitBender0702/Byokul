@@ -107,7 +107,7 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
   gridItemInfo: any;
   isGridItemInfo: boolean = false;
   userParamsData$: any;
-  itemsPerSlide = 7;
+  itemsPerSlide = 5;
   singleSlideOffset = true;
   noWrap = true;
   frontEndPageNumber: number = 1;
@@ -240,6 +240,7 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
     debugger
     this.checkScreenSize();
     if(this.isScreenMobile){
+      this.itemsPerSlide = 2;
       this.profileGrid();
     }
     this.isOnInitInitialize = true;
@@ -2185,7 +2186,29 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
     }
   }
   
-  
+  touchStartX:number=0
+  touchStart(event: any) {
+    this.touchStartX = event.touches[0].clientX;
+  }
+
+  touchEnd(event: any) {
+    const touchEndX = event.changedTouches[0].clientX;
+    const deltaX = touchEndX - this.touchStartX;
+
+    if (deltaX > 0) {
+      if (this.carousel != undefined) {
+        const nextButton = $('carousel')[0].querySelectorAll('a.carousel-control-prev')[0] as HTMLButtonElement
+        if (nextButton) {
+          nextButton.click();
+        }
+      }
+    } else if (deltaX < 0) {
+      const nextButton = $('carousel')[0].querySelectorAll('a.carousel-control-next')[0] as HTMLButtonElement
+      if (nextButton) {
+        nextButton.click();
+      }
+    }
+  }
 
 }
 
