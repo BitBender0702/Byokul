@@ -88,6 +88,7 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
     this._bigBlueButtonService = bigBlueButtonService;
   }
 
+  isBanned:any;
   ngOnInit(): void {
     debugger
     this.getSenderInfo();
@@ -100,6 +101,9 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
       debugger
       this.posts = this.options.initialState;
       this.post = this.posts.posts;
+
+      this.isBanned = this.posts.isBanned
+
       var postValueTag = this.post.postTags[0]?.postTagValue;
       try{
         this.postsTagValues = JSON.parse(postValueTag);

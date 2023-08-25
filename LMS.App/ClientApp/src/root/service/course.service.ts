@@ -155,6 +155,11 @@ export class CourseService{
         return this.http.post(`${this.apiUrl}/course/courseRating`,courseRating, {headers: this.headers});
     }
 
+    banUnbanStudentFromCourse(banUnbanStudentFromCourse:any):Observable<any>{
+        debugger;
+        return this.http.post(`${this.apiUrl}/course/banUnbanStudentFromCourse`,banUnbanStudentFromCourse, {headers: this.headers});
+    }
+
 
 
 }

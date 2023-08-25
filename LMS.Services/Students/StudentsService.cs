@@ -200,8 +200,14 @@ namespace LMS.Services.Students
                 .Include(x => x.Student)
                 .ThenInclude(x => x.CreatedBy)
                 .Where(x => x.ClassId == id && ((string.IsNullOrEmpty(searchString)) || (x.Student.StudentName.ToLower().Contains(searchString.ToLower())))).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
-
+            //var data = classStudents.Select(x => x.Student);
             var result = _mapper.Map<List<StudentViewModel>>(classStudents.Select(x => x.Student));
+
+            //foreach ( var student in classStudents)
+            //{
+            //    //student.IsStudentBannedFromClass = 
+            //}
+            
             return result;
 
             //var students = classStudents.Where(x => (string.IsNullOrEmpty(searchString)) || (x.StudentName.Contains(searchString))).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();

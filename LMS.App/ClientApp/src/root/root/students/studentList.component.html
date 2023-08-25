@@ -78,6 +78,20 @@
                     >{{ student.studentName }}</a
                   >
                 </span>
+
+                <span *ngIf="type != 1" class="followe_report"
+                  >
+                  <span *ngIf="isBanned">
+                    {{ "Banned" | translate }}
+                  </span>
+                  <button 
+                    (click)="banFollower(student.studentId, id)"
+                    type="button"
+                    class="border-0 bg-transparent font_14 text_dark fw_400"
+                  >
+                    {{ "Ban" | translate }}
+                  </button>
+                </span>
               </div>
             </li>
           </ul>
@@ -90,3 +104,4 @@
 <post-loading-spinner
   [postLoadingIcon]="postLoadingIcon"
 ></post-loading-spinner>
+<p-toast></p-toast>

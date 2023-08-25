@@ -497,6 +497,7 @@
                               />
                             </span>
                             <input
+                              [disabled]="isBanned"
                               (keyup.enter)="sendToGroup()"
                               [(ngModel)]="messageToGroup"
                               type="text"
@@ -504,6 +505,7 @@
                               placeholder="{{ 'YourMessage' | translate }}"
                             />
                             <button
+                              [disabled]="isBanned"
                               (click)="sendToGroup()"
                               type="button"
                               class="comment-btn border-0"
@@ -909,6 +911,7 @@
                       />
                     </span>
                     <input
+                      [disabled]="!isBanned"
                       (keyup.enter)="sendToGroup()"
                       [(ngModel)]="messageToGroup"
                       type="text"
@@ -916,6 +919,7 @@
                       placeholder="{{ 'YourMessage' | translate }}"
                     />
                     <button
+                      [disabled]="!isBanned"
                       (click)="sendToGroup()"
                       type="button"
                       class="comment-btn border-0"

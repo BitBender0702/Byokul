@@ -839,11 +839,15 @@ namespace LMS.Services
             var courseList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == schoolId && x.PostType == (int)PostTypeEnum.Reel && x.IsPostSchedule != true).OrderByDescending(x => x.IsPinned).ThenByDescending(x => x.CreatedOn).ToListAsync();
 
             var result = _mapper.Map<List<PostDetailsViewModel>>(courseList).Skip((pageNumber - 1) * pageSize).Take(pageSize);
-
+            var savedPost = await _savedPostRepository.GetAll().ToListAsync();
+            var sharedPost = await _userSharedPostRepository.GetAll().ToListAsync();
             foreach (var post in result)
             {
                 post.PostAttachments = await GetAttachmentsByPostId(post.Id, loginUserId);
                 post.Likes = await _userService.GetLikesOnPost(post.Id);
+                post.PostSharedCount = sharedPost.Where(x => x.PostId == post.Id).Count();
+                post.SavedPostsCount = savedPost.Where(x => x.PostId == post.Id).Count();
+                post.IsPostSavedByCurrentUser = savedPost.Any(x => x.PostId == post.Id && x.UserId == loginUserId);
                 post.Views = await _userService.GetViewsOnPost(post.Id);
                 if (post.Likes.Any(x => x.UserId == loginUserId && x.PostId == post.Id))
                 {

@@ -167,5 +167,10 @@ export class ClassService{
         return this.http.post(`${this.apiUrl}/class/classRating`,classRating, {headers: this.headers});
     }
 
+    banUnbanStudentFromClass(banUnbanStudentFromClass:any):Observable<any>{
+        debugger;
+        return this.http.post(`${this.apiUrl}/class/banUnbanStudentFromClass`,banUnbanStudentFromClass, {headers: this.headers});
+    }
+
 
 }

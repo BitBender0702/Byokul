@@ -16,5 +16,6 @@ namespace LMS.Common.ViewModels.Student
         public bool IsDeleted { get; set; }
         public string? UserId { get; set; }
         public UserDetailsViewModel User { get; set; }
+        public bool IsBanned { get; set; }
     }
 }

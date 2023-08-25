@@ -41,7 +41,7 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
   private _notificationService;
   private _bigBlueButtonService;
   isDataLoaded: boolean = false;
-  showCommentsField: boolean = true;
+  showCommentsField: boolean = false;
   streamUrl: any;
   streamUrl2: any;
   notificationViewModel!: NotificationViewModel;
@@ -734,16 +734,21 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
   }
 
   endMeetingResponse() {
-    debugger
     endMeetingResponse.subscribe(response => {
       debugger
       if (!this.isOwner) {
-        this.streamEndMessage.nativeElement.click();
-        setTimeout(() => {
-          debugger
-          this.streamEndModalClose.nativeElement.click();
+        if(this.meetingId != ''){
+          this.streamEndMessage.nativeElement.click();
+          setTimeout(() => {
+            debugger
+            this.streamEndModalClose.nativeElement.click();
+            window.history.back();
+            window.history.back();
+          }, 5000);
+        }
+        else {
           window.history.back();
-        }, 5000);
+        }
       }
       else {
         window.history.back();
@@ -1003,6 +1008,7 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
       setTimeout(() => {
         debugger
         this.streamEndModalClose.nativeElement.click();
+        window.history.back();
         window.history.back();
       }, 5000);
     }

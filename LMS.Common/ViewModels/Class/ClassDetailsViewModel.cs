@@ -48,6 +48,6 @@ namespace LMS.Common.ViewModels.Class
         public bool IsCommentsDisabled { get; set; }
         public bool IsClassAccessable { get; set; }
         public bool IsRatedByUser { get; set; }
-
+        public bool IsBannedFromClassCourse { get; set; }
     }
 }

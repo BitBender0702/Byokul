@@ -295,7 +295,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       this.addEventListnerOnCarousel();
       this.class.posts = this.getFilteredAttachments(this.class.posts);
       this.isRatedByUser = response.isRatedByUser;
-
+      this.isBanned = response.isBannedFromClassCourse;
       //here is the code
 
       this.classRatingView={
@@ -1141,6 +1141,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
 
   }
 
+  isBanned:any;
   openPostsViewModal(posts: any): void {
     debugger
     if (posts.isLive) {
@@ -1153,7 +1154,8 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
         posts: posts,
         postAttachments: postAttachments,
         serviceType: this.class.serviceType.type,
-        accessibility: this.class.accessibility.name
+        accessibility: this.class.accessibility.name,
+        isBanned: this.isBanned
       };
       let videoElement: HTMLVideoElement | null = document.getElementById('displayVideo') as HTMLVideoElement
     if(videoElement){
@@ -1315,7 +1317,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   openReelsViewModal(postAttachmentId: string, postId: string): void {
     this.router.navigate(
       [`user/reelsView/${this.class.classId}/class/${postAttachmentId}`],
-      { state: { post: { postId: postId } } });
+      { state: { post: { postId: postId, banned:this.isBanned } } });
     // const initialState = {
     //   postAttachmentId: postAttachmentId
     // };

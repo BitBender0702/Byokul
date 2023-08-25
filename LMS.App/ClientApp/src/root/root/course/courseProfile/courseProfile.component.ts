@@ -203,6 +203,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
   }
 
 
+  isBanned:any;
   ngOnInit(): void {
     this.checkScreenSize();
     if (this.isScreenMobile) {
@@ -242,7 +243,8 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       this.addCourseView(this.course.courseId);
       this.addEventListnerOnCarousel();
       this.course.posts = this.getFilteredAttachments(this.course.posts);
-      this.isRatedByUser = response.isRatedByUser
+      this.isRatedByUser = response.isRatedByUser;
+      this.isBanned = response.isBannedFromClassCourse;
 
     });
 
@@ -993,11 +995,12 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
   }
 
 
-  openPostsViewModal(posts: any): void {
+  openPostsViewModal(posts: any, isBanned?:any): void {
     var postAttachments = this.filteredAttachments.filter(x => x.postId == posts.id);
     const initialState = {
       posts: posts,
-      postAttachments: postAttachments
+      postAttachments: postAttachments,
+      isBanned: this.isBanned
     };
     let videoElement: HTMLVideoElement | null = document.getElementById('displayVideo') as HTMLVideoElement
     if(videoElement){
@@ -1139,7 +1142,8 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
   openReelsViewModal(postAttachmentId: string, postId: string): void {
     this.router.navigate(
       [`user/reelsView/${this.course.courseId}/course/${postAttachmentId}`],
-      { state: { post: { postId: postId } } });
+      // { state: { post: { postId: postId } } });
+      { state: { post: { postId: postId, banned:this.isBanned } } });
     // const initialState = {
     //   postAttachmentId: postAttachmentId
     // };

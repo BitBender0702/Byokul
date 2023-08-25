@@ -32,7 +32,7 @@ import { FileStorageComponent } from '../root/fileStorage/fileStorage.component'
 import { UserFollowingsComponent } from '../root/user/userFollowings/userFollowings.component';
 import { Subject } from 'rxjs';
 import { GlobalSearchComponent } from '../root/globalSearch/globalSearch.component';
-import { StudentListComponent } from '../root/students/studentList.componant';
+import { StudentListComponent } from '../root/students/studentList.component';
 import { ReelsSliderComponent } from '../root/reelsSlider/reelsSlider.component';
 import { SchoolVideoLibraryComponent } from '../root/schoolVideoLibrary/schoolVideoLibrary.component';
 

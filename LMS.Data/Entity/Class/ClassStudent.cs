@@ -13,5 +13,6 @@ namespace LMS.Data.Entity
         public Class Class { get; set; }
         public Guid? StudentId { get; set; }
         public Student Student { get; set; }
+        public bool IsStudentBannedFromClass { get; set; }
     }
 }

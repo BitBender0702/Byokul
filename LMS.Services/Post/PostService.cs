@@ -949,7 +949,7 @@ namespace LMS.Services
             _userSharedPostRepository.Save();
         }
 
-        public async Task SavePostByUser(string userId, Guid postId)
+        public async Task<bool?> SavePostByUser(string userId, Guid postId)
         {
 
             var isSavedPostExist = await _savedPostRepository.GetAll().Where(x => x.UserId == userId && x.PostId == postId).FirstOrDefaultAsync();
@@ -958,6 +958,7 @@ namespace LMS.Services
             {
                 _savedPostRepository.Delete(isSavedPostExist.Id);
                 _savedPostRepository.Save();
+                return false;
             }
 
             else
@@ -972,6 +973,7 @@ namespace LMS.Services
 
                 _savedPostRepository.Insert(savedPost);
                 _savedPostRepository.Save();
+                return true;
             }
         }
 

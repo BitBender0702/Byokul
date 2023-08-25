@@ -404,6 +404,17 @@ namespace LMS.Services
                     model.IsRatedByUser = true;
                 }
 
+
+                var isBanned = _classStudentRepository.GetAll().Where(x => x.ClassId == model.ClassId && x.StudentId == Guid.Parse(loginUserId)).FirstOrDefault();
+                if (isBanned == null)
+                {
+                    model.IsBannedFromClassCourse = false;
+                }
+                else
+                {
+                    model.IsBannedFromClassCourse = true;
+                }
+
                 model.Languages = await GetLanguages(classes.ClassId);
                 model.Disciplines = await GetDisciplines(classes.ClassId);
                 model.Students = await GetStudents(classes.ClassId);
@@ -456,6 +467,17 @@ namespace LMS.Services
             else
             {
                 model.IsRatedByUser = true;
+            }
+
+
+            var isBanned = _classStudentRepository.GetAll().Where(x => x.ClassId == model.ClassId && x.StudentId == Guid.Parse(loginUserId)).FirstOrDefault();
+            if (isBanned == null)
+            {
+                model.IsBannedFromClassCourse = false;
+            }
+            else
+            {
+                model.IsBannedFromClassCourse = true;
             }
 
             model.Languages = await GetLanguages(classes.ClassId);
@@ -600,12 +622,16 @@ namespace LMS.Services
         {
             var courseList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == classId && x.PostType == (int)PostTypeEnum.Reel && x.IsPostSchedule != true).OrderByDescending(x => x.IsPinned).ThenByDescending(x => x.CreatedOn).ToListAsync();
             var result = _mapper.Map<List<PostDetailsViewModel>>(courseList).Skip((pageNumber - 1) * pageSize).Take(pageSize);
-
+            var sharedPost = await _userSharedPostRepository.GetAll().ToListAsync();
+            var savedPost = await _savedPostRepository.GetAll().ToListAsync();
             foreach (var post in result)
             {
                 post.PostAttachments = await GetAttachmentsByPostId(post.Id);
                 post.Likes = await _userService.GetLikesOnPost(post.Id);
                 post.Views = await _userService.GetViewsOnPost(post.Id);
+                post.PostSharedCount = sharedPost.Where(x => x.PostId == post.Id).Count();
+                post.SavedPostsCount = savedPost.Where(x => x.PostId == post.Id).Count();
+                post.IsPostSavedByCurrentUser = savedPost.Any(x => x.PostId == post.Id && x.UserId == loginUserId);
 
                 if (post.Likes.Any(x => x.UserId == loginUserId && x.PostId == post.Id))
                 {
@@ -1141,5 +1167,33 @@ namespace LMS.Services
             }
             return null;
         }
+
+        public async Task<bool?> BanUnbanStudentFromClass(BanUnbanStudentModel banUnbanStudent)
+        {
+            var classForBanUnban = _classRepository.GetById(banUnbanStudent.ClassId);
+            var createdId = classForBanUnban.CreatedById;
+            if (Guid.Parse(classForBanUnban.CreatedById) != banUnbanStudent.ClassCourseBanOwner)
+            {
+                var teacherWithPermission = await _classTeacherRepository.GetAll().Where(x => x.TeacherId == banUnbanStudent.ClassCourseBanOwner).FirstOrDefaultAsync();
+                if (teacherWithPermission == null)
+                {
+                    return false;
+                }
+            }
+
+            var isBanned = await _classStudentRepository.GetAll().Where(x => x.ClassId == banUnbanStudent.ClassId && x.StudentId == banUnbanStudent.StudentId).FirstOrDefaultAsync();
+            if (isBanned == null)
+            {
+                return null;
+            }
+            //var studentClass = _classStudentRepository.GetById(banUnbanStudent.StudentId);
+            isBanned.IsStudentBannedFromClass = true;
+            _classStudentRepository.Update(isBanned);
+            _classStudentRepository.Save();
+            return true;
+
+        }
+
+
     }
 }

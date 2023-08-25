@@ -226,7 +226,15 @@ namespace LMS.App.Controllers
         [HttpPost]
         public async Task<IActionResult> SavePostByUser(string userId, Guid postId)
         {
-            await _postService.SavePostByUser(userId, postId);
+            var isSaved = await _postService.SavePostByUser(userId, postId);
+            if(isSaved == false)
+            {
+                return Ok(new { Success = true, Message = Constants.PostUnsavedSavedSuccessully });
+            } 
+            if(isSaved == true)
+            {
+                return Ok(new { Success = true, Message = Constants.PostSavedSuccessully });
+            }
             return Ok();
         }
 

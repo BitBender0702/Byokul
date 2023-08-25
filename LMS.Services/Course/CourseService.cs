@@ -370,7 +370,7 @@ namespace LMS.Services
             await SaveCourseTeachers(teacherIds, courseId);
         }
 
-        public async Task<CourseDetailsViewModel> GetCourseByName(string courseName, string loginUserid)
+        public async Task<CourseDetailsViewModel> GetCourseByName(string courseName, string loginUserId)
         {
             CourseDetailsViewModel model = new CourseDetailsViewModel();    
 
@@ -392,7 +392,7 @@ namespace LMS.Services
                 if (course == null)
                 {
 
-                    var classDetails = await _classService.GetClassByName(courseName, loginUserid);
+                    var classDetails = await _classService.GetClassByName(courseName, loginUserId);
 
                     var courses = new CourseDetailsViewModel();
                     courses.CourseId = classDetails.ClassId;
@@ -414,7 +414,7 @@ namespace LMS.Services
                     courses.IsConvertable = true;
 
 
-                    var isCourseRated = _classCourseRatingRepository.GetAll().Where(x => x.ClassId == model.CourseId && x.UserId == loginUserid).FirstOrDefault();
+                    var isCourseRated = _classCourseRatingRepository.GetAll().Where(x => x.ClassId == model.CourseId && x.UserId == loginUserId).FirstOrDefault();
                     if (isCourseRated == null)
                     {
                         model.IsRatedByUser = false;
@@ -424,11 +424,21 @@ namespace LMS.Services
                         model.IsRatedByUser = true;
                     }
 
+                    var isBanned = _courseStudentRepository.GetAll().Where(x => x.CourseId == model.CourseId && x.StudentId == Guid.Parse(loginUserId)).FirstOrDefault();
+                    if (isBanned == null)
+                    {
+                        model.IsBannedFromClassCourse = false;
+                    }
+                    else
+                    {
+                        model.IsBannedFromClassCourse = true;
+                    }
+
                     courses.CourseCertificates = _mapper.Map<IEnumerable<CertificateViewModel>>(classDetails.ClassCertificates);
 
-                    var isClassAccessible = await _classCourseTransactionRepository.GetAll().Where(x => x.CourseId == model.CourseId && x.UserId == loginUserid && x.PaymentId != null).FirstOrDefaultAsync();
+                    var isClassAccessible = await _classCourseTransactionRepository.GetAll().Where(x => x.CourseId == model.CourseId && x.UserId == loginUserId && x.PaymentId != null).FirstOrDefaultAsync();
 
-                    if (isClassAccessible != null || courses.CreatedById == loginUserid)
+                    if (isClassAccessible != null || courses.CreatedById == loginUserId)
                     {
                         model.IsCourseAccessable = true;
                     }
@@ -440,9 +450,9 @@ namespace LMS.Services
                 }
                 model = _mapper.Map<CourseDetailsViewModel>(course);
 
-                var isCourseAccessible = await _classCourseTransactionRepository.GetAll().Where(x => x.CourseId == model.CourseId && x.UserId == loginUserid && x.PaymentId != null).FirstOrDefaultAsync();
+                var isCourseAccessible = await _classCourseTransactionRepository.GetAll().Where(x => x.CourseId == model.CourseId && x.UserId == loginUserId && x.PaymentId != null).FirstOrDefaultAsync();
 
-                if (isCourseAccessible != null || course.CreatedById == loginUserid)
+                if (isCourseAccessible != null || course.CreatedById == loginUserId)
                 {
                     model.IsCourseAccessable = true;
                 }
@@ -451,8 +461,8 @@ namespace LMS.Services
                 model.Disciplines = await GetDisciplines(course.CourseId);
                 model.Students = await GetStudents(course.CourseId);
                 model.Teachers = await GetTeachers(course.CourseId);
-                model.Posts = await GetPostsByCourseId(course.CourseId, loginUserid);
-                model.Reels = await GetReelsByCourseId(course.CourseId, loginUserid);
+                model.Posts = await GetPostsByCourseId(course.CourseId, loginUserId);
+                model.Reels = await GetReelsByCourseId(course.CourseId, loginUserId);
                 model.CourseCertificates = await GetCertificateByCourseId(course.CourseId);
 
 
@@ -461,7 +471,7 @@ namespace LMS.Services
             return null;
         }
 
-        public async Task<CourseDetailsViewModel> GetCourseById(Guid courseId, string loginUserid)
+        public async Task<CourseDetailsViewModel> GetCourseById(Guid courseId, string loginUserId)
         {
             CourseDetailsViewModel model = new CourseDetailsViewModel();
 
@@ -478,7 +488,7 @@ namespace LMS.Services
             if (course == null)
             {
 
-                var classDetails = await _classService.GetClassById(courseId, loginUserid);
+                var classDetails = await _classService.GetClassById(courseId, loginUserId);
 
                 var courses = new CourseDetailsViewModel();
                 courses.CourseId = classDetails.ClassId;
@@ -500,11 +510,31 @@ namespace LMS.Services
                 courses.IsConvertable = true;
 
 
+                var isCourseRated = _classCourseRatingRepository.GetAll().Where(x => x.ClassId == model.CourseId && x.UserId == loginUserId).FirstOrDefault();
+                if (isCourseRated == null)
+                {
+                    model.IsRatedByUser = false;
+                }
+                else
+                {
+                    model.IsRatedByUser = true;
+                }
+
+                var isBanned = _courseStudentRepository.GetAll().Where(x => x.CourseId == model.CourseId && x.StudentId == Guid.Parse(loginUserId)).FirstOrDefault();
+                if (isBanned == null)
+                {
+                    model.IsBannedFromClassCourse = false;
+                }
+                else
+                {
+                    model.IsBannedFromClassCourse = true;
+                }
+
                 courses.CourseCertificates = _mapper.Map<IEnumerable<CertificateViewModel>>(classDetails.ClassCertificates);
 
-                var isCourseAccessible = await _classCourseTransactionRepository.GetAll().Where(x => x.CourseId == model.CourseId && x.UserId == loginUserid).FirstOrDefaultAsync();
+                var isCourseAccessible = await _classCourseTransactionRepository.GetAll().Where(x => x.CourseId == model.CourseId && x.UserId == loginUserId).FirstOrDefaultAsync();
 
-                if (isCourseAccessible != null || model.CreatedById == loginUserid)
+                if (isCourseAccessible != null || model.CreatedById == loginUserId)
                 {
                     model.IsCourseAccessable = true;
                 }
@@ -519,8 +549,8 @@ namespace LMS.Services
             model.Disciplines = await GetDisciplines(course.CourseId);
             model.Students = await GetStudents(course.CourseId);
             model.Teachers = await GetTeachers(course.CourseId);
-            model.Posts = await GetPostsByCourseId(course.CourseId, loginUserid);
-            model.Reels = await GetReelsByCourseId(course.CourseId, loginUserid);
+            model.Posts = await GetPostsByCourseId(course.CourseId, loginUserId);
+            model.Reels = await GetReelsByCourseId(course.CourseId, loginUserId);
             model.CourseCertificates = await GetCertificateByCourseId(course.CourseId);
 
 
@@ -720,12 +750,16 @@ namespace LMS.Services
         {
             var courseList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == courseId && x.PostType == (int)PostTypeEnum.Reel && x.IsPostSchedule != true).OrderByDescending(x => x.IsPinned).ThenByDescending(x => x.CreatedOn).ToListAsync();
             var result = _mapper.Map<List<PostDetailsViewModel>>(courseList).Skip((pageNumber - 1) * pageSize).Take(pageSize);
-
+            var sharedPost = await _userSharedPostRepository.GetAll().ToListAsync();
+            var savedPost = await _savedPostRepository.GetAll().ToListAsync();
             foreach (var post in result)
             {
                 post.PostAttachments = await GetAttachmentsByPostId(post.Id);
                 post.Likes = await _userService.GetLikesOnPost(post.Id);
                 post.Views = await _userService.GetViewsOnPost(post.Id);
+                post.PostSharedCount = sharedPost.Where(x => x.PostId == post.Id).Count();
+                post.SavedPostsCount = savedPost.Where(x => x.PostId == post.Id).Count();
+                post.IsPostSavedByCurrentUser = savedPost.Any(x => x.PostId == post.Id && x.UserId == loginUserId);
                 if (post.Likes.Any(x => x.UserId == loginUserId && x.PostId == post.Id))
                 {
                     post.IsPostLikedByCurrentUser = true;
@@ -1193,6 +1227,33 @@ namespace LMS.Services
             return null;
         }
 
+
+
+        public async Task<bool?> BanUnbanStudentFromCourse(BanUnbanStudentModel banUnbanStudent)
+        {
+            var courseForBanUnban = _courseRepository.GetById(banUnbanStudent.CourseId);
+            var createdId = courseForBanUnban.CreatedById;
+            if (Guid.Parse(courseForBanUnban.CreatedById) != banUnbanStudent.ClassCourseBanOwner)
+            {
+                var teacherWithPermission = await _courseTeacherRepository.GetAll().Where(x => x.TeacherId == banUnbanStudent.ClassCourseBanOwner).FirstOrDefaultAsync();
+                if (teacherWithPermission == null)
+                {
+                    return false;
+                }
+            }
+
+            var isBanned = await _courseStudentRepository.GetAll().Where(x => x.CourseId == banUnbanStudent.CourseId && x.StudentId == banUnbanStudent.StudentId).FirstOrDefaultAsync();
+            if (isBanned == null)
+            {
+                return null;
+            }
+            //var studentClass = _classStudentRepository.GetById(banUnbanStudent.StudentId);
+            isBanned.IsStudentBannedFromCourse = true;
+            _courseStudentRepository.Update(isBanned);
+            _courseStudentRepository.Save();
+            return true;
+
+        }
 
 
     }

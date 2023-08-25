@@ -103,8 +103,9 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
     this._signalRService = signalRService;
   }
 
+  isBanned:any;
   ngOnInit() {
-    
+    debugger
     var selectedLang = localStorage.getItem("selectedLanguage");
     this.translate.use(selectedLang ?? '');
     this.post = history.state.post;
@@ -116,6 +117,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
     this.from = this.route.snapshot.paramMap.get('from') ?? '';
     this.reelId = this.route.snapshot.paramMap.get('reelId') ?? '';
 
+    this.isBanned = this.post.isBanned
 
 
 

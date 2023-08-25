@@ -71,7 +71,7 @@ import { LiveStreamComponent } from './root/liveStream/liveStream.component';
 import { AuthGuard } from './service/auth.guard';
 import { GlobalSearchComponent } from './root/globalSearch/globalSearch.component';
 import { PickerModule } from '@ctrl/ngx-emoji-mart'
-import { StudentListComponent } from './root/students/studentList.componant';
+import { StudentListComponent } from './root/students/studentList.component';
 import { ChatVideoComponent } from './root/chatVideo/chatVideo.component';
 import { registerLocaleData } from '@angular/common';
 import localeTr from '@angular/common/locales/tr';

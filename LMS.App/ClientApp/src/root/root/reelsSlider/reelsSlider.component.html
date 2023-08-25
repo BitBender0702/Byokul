@@ -126,7 +126,7 @@
               <img [routerLink]="['/user/userProfile',sender.id]" *ngIf="sender.avatar == null && gender =='1'" src="../../../assets/images/maleProfile.jfif" class="comment-user cursorPointer"/>
               <img [routerLink]="['/user/userProfile',sender.id]" *ngIf="(sender.avatar == null) && (gender =='2' || gender =='3')" src="../../../assets/images/femaleProfile.jfif" class="comment-user cursorPointer"/>
             </span>
-            <input (keyup.enter)="sendToGroup(reel)" [(ngModel)]="messageToGroup" type="text" class="form-control rounded-8 font_14 fw_400" placeholder="{{'YourMessage'| translate }}">
+            <input [disabled]="!isBanned" (keyup.enter)="sendToGroup(reel)" [(ngModel)]="messageToGroup" type="text" class="form-control rounded-8 font_14 fw_400" placeholder="{{'YourMessage'| translate }}">
             <button (click)="sendToGroup(reel)" type="button" class="comment-btn border-0"><img src="../../../assets/images/arrowup.svg" /></button>
           </div>
         </div>

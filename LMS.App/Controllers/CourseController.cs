@@ -286,6 +286,33 @@ namespace LMS.App.Controllers
             }
 
         }
+        [Route("banUnbanStudentFromCourse")]
+        [HttpPost]
+        public async Task<IActionResult> BanUnbanStudentFromClass([FromBody] BanUnbanStudentModel banUnbanStudent)
+        {
+            var user = await GetUserIdAsync(this._userManager);
+            if (user == null)
+            {
+                return Ok(new { Success = false, Message = Constants.UserNotLoggedIn });
+            }
+            banUnbanStudent.ClassCourseBanOwner = Guid.Parse(user);
+
+            var courseBan = await GetCourseById((Guid)banUnbanStudent.CourseId);
+            if (courseBan == null)
+            {
+                return Ok(new { Success = false, Message = "Course doesnot exist" });
+            }
+            var isStudentBanUnbanned = await _courseService.BanUnbanStudentFromCourse(banUnbanStudent);
+            if (isStudentBanUnbanned == true)
+            {
+                return Ok(new { Success = true, Message = Constants.StudentIsBanned });
+            }
+            else if (isStudentBanUnbanned == false)
+            {
+                return Ok(new { Success = true, Message = Constants.StudentIsUnBanned });
+            }
+            return Ok();
+        }
 
     }
 }

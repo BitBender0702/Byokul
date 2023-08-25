@@ -22,7 +22,7 @@ namespace LMS.Services
         Task<bool> LikeUnlikeComment(Guid commentId, bool isLike, string userId);
         Task EnableDisableComments(Guid postId, bool isHideComments);
         Task SaveUserSharedPost(string userId, Guid postId);
-        Task SavePostByUser(string userId, Guid postId);
+        Task<bool?> SavePostByUser(string userId, Guid postId);
         Task<List<PostDetailsViewModel>> GetSavedPostsByUser(string userId, int pageNumber, PostTypeEnum type);
         Task<List<PostDetailsViewModel>> GetSharedPostsByUser(string userId, int pageNumber, PostTypeEnum type);
         Task<List<PostDetailsViewModel>> GetLikedPostsByUser(string userId, int pageNumber, PostTypeEnum type);

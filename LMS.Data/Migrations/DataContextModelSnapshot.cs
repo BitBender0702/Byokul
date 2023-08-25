@@ -415,6 +415,9 @@ namespace LMS.Data.Migrations
                     b.Property<Guid?>("ClassId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<bool>("IsStudentBannedFromClass")
+                        .HasColumnType("bit");
+
                     b.Property<Guid?>("StudentId")
                         .HasColumnType("uniqueidentifier");
 
@@ -867,6 +870,9 @@ namespace LMS.Data.Migrations
 
                     b.Property<Guid?>("CourseId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsStudentBannedFromCourse")
+                        .HasColumnType("bit");
 
                     b.Property<Guid?>("StudentId")
                         .HasColumnType("uniqueidentifier");

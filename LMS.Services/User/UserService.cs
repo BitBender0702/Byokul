@@ -618,7 +618,8 @@ namespace LMS.Services
             var reelList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == new Guid(userId) && x.PostType == (int)PostTypeEnum.Reel && x.PostAuthorType == (int)PostAuthorTypeEnum.User && x.IsPostSchedule != true).OrderByDescending(x => x.IsPinned).ThenByDescending(x => x.CreatedOn).ToListAsync();
 
             var result = _mapper.Map<List<PostDetailsViewModel>>(reelList).Skip((pageNumber - 1) * pageSize).Take(pageSize);
-
+            var sharedPost = await _userSharedPostRepository.GetAll().ToListAsync();
+            var savedPost = await _savedPostRepository.GetAll().ToListAsync();
             foreach (var post in result)
             {
                 if (post.PostAuthorType == (int)PostAuthorTypeEnum.School)
@@ -652,6 +653,9 @@ namespace LMS.Services
                 post.PostAttachments = await GetAttachmentsByPostId(post.Id);
                 post.Likes = await GetLikesOnPost(post.Id);
                 post.Views = await GetViewsOnPost(post.Id);
+                post.PostSharedCount = sharedPost.Where(x => x.PostId == post.Id).Count();
+                post.SavedPostsCount = savedPost.Where(x => x.PostId == post.Id).Count();
+                post.IsPostSavedByCurrentUser = savedPost.Any(x => x.PostId == post.Id && x.UserId == userId);
                 post.CommentsCount = await GetCommentsCountOnPost(post.Id);
                 if (post.Likes.Any(x => x.UserId == userId && x.PostId == post.Id))
                 {
