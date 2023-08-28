@@ -106,27 +106,63 @@
                               </h5>
                             </div>
                             <div class="reel-username font_16 white_text">
-                              <img
-                                *ngIf="post.parentImageUrl != null"
+                              <img *ngIf="post.parentImageUrl != null && post.postAuthorType == 4"
                                 [src]="post.parentImageUrl"
-                                class="me-2"
+                                (click)="hideCommentModal()"
+                                [routerLink]="['/user/userProfile',post.createdBy]"
+                                class="me-2 cursor_pointer"
                               />
+                              <img *ngIf="post.parentImageUrl != null && post.postAuthorType == 1"
+                                [src]="post.parentImageUrl"
+                                (click)="hideCommentModal()"
+                                [routerLink]="['/profile/school', post.parentName]"
+                                class="me-2 cursor_pointer"
+                              />
+                              <img *ngIf="post.parentImageUrl != null && post.postAuthorType == 2"
+                              [src]="post.parentImageUrl"
+                              (click)="hideCommentModal()"
+                              [routerLink]="['/profile/class', post.schoolName, post.parentName]"
+                              class="me-2 cursor_pointer"
+                            />
+                            <img *ngIf="post.parentImageUrl != null && post.postAuthorType == 3"
+                            [src]="post.parentImageUrl"
+                            (click)="hideCommentModal()"
+                            [routerLink]="['/profile/course', post.schoolName, post.parentName]"
+                            class="me-2 cursor_pointer"
+                          />
                               <img
+                              (click)="hideCommentModal()"
+                              [routerLink]="['/user/userProfile',post.createdBy]"
                                 *ngIf="
                                   post.parentImageUrl == null && gender == '1'
                                 "
                                 src="../../../assets/images/maleProfile.jfif"
-                                class="me-2"
+                                class="me-2 cursor_pointer"
                               />
                               <img
+                              (click)="hideCommentModal()"
+                              [routerLink]="['/user/userProfile',post.createdBy]"
                                 *ngIf="
                                   post.parentImageUrl == null &&
                                   (gender == '2' || gender == '3')
                                 "
                                 src="../../../assets/images/femaleProfile.jfif"
-                                class="me-2"
+                                class="me-2 cursor_pointer"
                               />
-                              {{ post.parentName }}
+                              <span *ngIf="post.postAuthorType == 4" class="cursor_pointer" (click)="hideCommentModal()"
+                              [routerLink]="['/user/userProfile',post.createdBy]">{{ post.parentName }}</span>
+
+                              <span *ngIf="post.postAuthorType == 1" class="cursor_pointer" (click)="hideCommentModal()"
+                              [routerLink]="['/profile/school', post.parentName]"
+                              >{{ post.parentName }}</span>
+
+                              <span *ngIf="post.postAuthorType == 2" class="cursor_pointer" (click)="hideCommentModal()"
+                              [routerLink]="['/profile/class', post.schoolName, post.parentName]"
+                              >{{ post.parentName }}</span>
+
+                              <span *ngIf="post.postAuthorType == 3" class="cursor_pointer" (click)="hideCommentModal()"
+                              [routerLink]="['/profile/course', post.schoolName, post.parentName]"
+                              >{{ post.parentName }}</span>
                             </div>
                           </slide>
                           <slide *ngIf="postAttachment.fileType == 1">
@@ -144,26 +180,66 @@
                             </div>
                             <div class="reel-username font_16 white_text">
                               <img
-                                *ngIf="post.parentImageUrl != null"
+                              (click)="hideCommentModal()"
+                              [routerLink]="['/user/userProfile',post.createdBy]"
+                                *ngIf="post.parentImageUrl != null && post.postAuthorType == 4"
                                 [src]="post.parentImageUrl"
-                                class="me-2"
+                                class="me-2 cursor_pointer"
                               />
                               <img
+                              (click)="hideCommentModal()"
+                              [routerLink]="['/profile/school', post.parentName]"
+                              *ngIf="post.parentImageUrl != null && post.postAuthorType == 1"
+                                [src]="post.parentImageUrl"
+                                class="me-2 cursor_pointer"
+                              />
+                              <img
+                              (click)="hideCommentModal()"
+                              [routerLink]="['/profile/class', post.schoolName, post.parentName]"
+                                *ngIf="post.parentImageUrl != null && post.postAuthorType == 2"
+                                [src]="post.parentImageUrl"
+                                class="me-2 cursor_pointer"
+                              />
+                              <img
+                              (click)="hideCommentModal()"
+                              [routerLink]="['/profile/course', post.schoolName, post.parentName]"
+                              *ngIf="post.parentImageUrl != null && post.postAuthorType == 3"
+                                [src]="post.parentImageUrl"
+                                class="me-2 cursor_pointer"
+                              />
+                              <img
+                              (click)="hideCommentModal()"
+                              [routerLink]="['/user/userProfile',post.createdBy]"
                                 *ngIf="
                                   post.parentImageUrl == null && gender == '1'
                                 "
                                 src="../../../assets/images/maleProfile.jfif"
-                                class="me-2"
+                                class="me-2 cursor_pointer"
                               />
                               <img
+                              (click)="hideCommentModal()"
+                              [routerLink]="['/user/userProfile',post.createdBy]"
                                 *ngIf="
                                   post.parentImageUrl == null &&
                                   (gender == '2' || gender == '3')
                                 "
                                 src="../../../assets/images/femaleProfile.jfif"
-                                class="me-2"
+                                class="me-2 cursor_pointer"
                               />
-                              {{ post.parentName }}
+                              <span *ngIf="post.postAuthorType == 4" class="cursor_pointer" (click)="hideCommentModal()"
+                              [routerLink]="['/user/userProfile',post.createdBy]">{{ post.parentName }}</span>
+
+                              <span *ngIf="post.postAuthorType == 1" class="cursor_pointer" (click)="hideCommentModal()"
+                              [routerLink]="['/profile/school', post.parentName]"
+                              >{{ post.parentName }}</span>
+
+                              <span *ngIf="post.postAuthorType == 2" class="cursor_pointer" (click)="hideCommentModal()"
+                              [routerLink]="['/profile/class', post.schoolName, post.parentName]"
+                              >{{ post.parentName }}</span>
+
+                              <span *ngIf="post.postAuthorType == 3" class="cursor_pointer" (click)="hideCommentModal()"
+                              [routerLink]="['/profile/course', post.schoolName, post.parentName]"
+                              >{{ post.parentName }}</span>
                             </div>
                           </slide>
                         </div>
@@ -624,7 +700,10 @@
                     </div>
                     <div class="reel-username font_16 white_text">
                       <img [src]="post.parentImageUrl" class="me-2" />
+                      <span (click)="hideCommentModal()"
+                      [routerLink]="['/user/userProfile',post.createdBy]">
                       {{ post.parentName }}
+                    </span>
                     </div>
                   </slide>
 
@@ -652,7 +731,10 @@
                     </div>
                     <div class="reel-username font_16 white_text">
                       <img [src]="post.parentImageUrl" class="me-2" />
+                      <span (click)="hideCommentModal()"
+                      [routerLink]="['/user/userProfile',post.createdBy]">
                       {{ post.parentName }}
+                    </span>
                     </div>
                   </slide>
                 </div>

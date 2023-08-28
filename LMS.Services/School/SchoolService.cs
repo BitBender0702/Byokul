@@ -640,9 +640,9 @@ namespace LMS.Services
             await AddRoleForUser(schoolUser.UserId, "Teacher");
         }
 
-        public async Task<IEnumerable<ClassViewModel>> GetClassesBySchoolId(Guid? schoolId, string loginUserId)
+        public async Task<IEnumerable<ClassViewModel>> GetClassesBySchoolId(Guid? schoolId, string loginUserId, int pageNumber, int pageSize)
         {
-            var classList = await _classRepository.GetAll().Include(x => x.School).Include(x => x.Accessibility).Include(x => x.ServiceType).Where(x => x.SchoolId == schoolId && !x.IsEnable && !x.IsDeleted).ToListAsync();
+            var classList = await _classRepository.GetAll().Include(x => x.School).Include(x => x.Accessibility).Include(x => x.ServiceType).Where(x => x.SchoolId == schoolId && !x.IsEnable && !x.IsDeleted).OrderByDescending(x => x.IsPinned).ThenByDescending(x => x.CreatedOn).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
             try
             {
                 var result = _mapper.Map<List<ClassViewModel>>(classList);
@@ -674,9 +674,9 @@ namespace LMS.Services
 
         }
 
-        public async Task<IEnumerable<CourseViewModel>> GetCoursesBySchoolId(Guid? schoolId, string loginUserId)
+        public async Task<IEnumerable<CourseViewModel>> GetCoursesBySchoolId(Guid? schoolId, string loginUserId, int pageNumber, int pageSize)
         {
-            var courseList = await _courseRepository.GetAll().Include(x => x.School).Include(x => x.Accessibility).Include(x => x.ServiceType).Where(x => x.SchoolId == schoolId && !x.IsEnable && !x.IsDeleted).ToListAsync();
+            var courseList = await _courseRepository.GetAll().Include(x => x.School).Include(x => x.Accessibility).Include(x => x.ServiceType).Where(x => x.SchoolId == schoolId && !x.IsEnable && !x.IsDeleted).OrderByDescending(x => x.IsPinned).ThenByDescending(x => x.CreatedOn).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
 
             var result = _mapper.Map<List<CourseViewModel>>(courseList);
             var tagList = await _classTagRepository.GetAll().ToListAsync();
@@ -1116,13 +1116,294 @@ namespace LMS.Services
         //    return null;
         //}
 
-        public async Task<IEnumerable<CombineClassCourseViewModel>> GetSchoolClassCourse(Guid? schoolId, string userId, int pageNumber)
+        //public async Task<IEnumerable<CombineClassCourseViewModel>> GetSchoolClassCourse(Guid? schoolId, string userId, int pageNumber)
+        //{
+        //    var filters = await _userClassCourseFilterRepository.GetAll().Include(x => x.ClassCourseFilter).Where(x => x.SchoolId == schoolId && x.IsActive).ToListAsync();
+
+        //    int pageSize = 4;
+        //    var classes = await GetClassesBySchoolId(schoolId, userId,pageNumber,pageSize);
+        //    var courses = await GetCoursesBySchoolId(schoolId, userId);
+        //    var savedClassCourse = await _savedClassCourseRepository.GetAll().ToListAsync();
+
+
+        //    var model = new List<CombineClassCourseViewModel>();
+
+        //    foreach (var classDetails in classes)
+        //    {
+        //        var item = new CombineClassCourseViewModel();
+        //        item.Id = classDetails.ClassId;
+        //        item.Avatar = classDetails.Avatar;
+        //        item.Accessibility = classDetails.Accessibility;
+        //        item.ServiceType = classDetails.ServiceType;
+        //        item.Description = classDetails.Description;
+        //        item.Name = classDetails.ClassName;
+        //        item.SchoolName = classDetails.School.SchoolName;
+        //        item.Price = classDetails.Price;
+        //        item.Rating = classDetails.Rating;
+        //        item.CreatedOn = classDetails.CreatedOn;
+        //        item.CreatedById = classDetails.CreatedById;
+        //        item.Type = ClassCourseEnum.Class;
+        //        item.IsPinned = classDetails.IsPinned;
+        //        item.StartDate = classDetails.StartDate;
+        //        item.EndDate = classDetails.EndDate;
+        //        item.ThumbnailUrl = classDetails.ThumbnailUrl;
+        //        item.Tags = classDetails.ClassTags;
+        //        item.IsLikedByCurrentUser = classDetails.IsClassLikedByCurrentUser;
+        //        item.ClassLikes = classDetails.ClassLike;
+        //        item.ClassViews = classDetails.ClassViews;
+        //        item.CommentsCount = classDetails.CommentsCount;
+        //        item.ThumbnailType = classDetails.ThumbnailType;
+        //        item.NoOfStudents = await _classService.GetStudents(classDetails.ClassId);
+        //        item.Rating = classDetails.Rating;
+        //        item.IsCommentsDisabled = classDetails.IsCommentsDisabled;
+        //        item.IsClassCourseSavedByCurrentUser = savedClassCourse.Any(x => x.ClassId == classDetails.ClassId && x.UserId == userId);
+        //        item.SavedClassCourseCount = savedClassCourse.Where(x => x.ClassId == classDetails.ClassId && x.UserId == userId).Count();
+
+        //        model.Add(item);
+        //    }
+
+        //    foreach (var courseDetails in courses)
+        //    {
+        //        var item = new CombineClassCourseViewModel();
+        //        item.Id = courseDetails.CourseId;
+        //        item.Avatar = courseDetails.Avatar;
+        //        item.Accessibility = courseDetails.Accessibility;
+        //        item.ServiceType = courseDetails.ServiceType;
+        //        item.Description = courseDetails.Description;
+        //        item.Name = courseDetails.CourseName;
+        //        item.SchoolName = courseDetails.School.SchoolName;
+        //        item.Price = courseDetails.Price;
+        //        item.Rating = courseDetails.Rating;
+        //        item.CreatedOn = courseDetails.CreatedOn;
+        //        item.CreatedById = courseDetails.CreatedById;
+        //        item.Type = ClassCourseEnum.Course;
+        //        item.IsPinned = courseDetails.IsPinned;
+        //        item.ThumbnailUrl = courseDetails.ThumbnailUrl;
+        //        item.Tags = courseDetails.CourseTags;
+        //        item.IsLikedByCurrentUser = courseDetails.IsCourseLikedByCurrentUser;
+        //        item.CourseLikes = courseDetails.CourseLike;
+        //        item.CourseViews = courseDetails.CourseViews;
+        //        item.CommentsCount = courseDetails.CommentsCount;
+        //        item.ThumbnailType = courseDetails.ThumbnailType;
+        //        item.NoOfStudents = await _courseService.GetStudents(courseDetails.CourseId);
+        //        item.Rating = courseDetails.Rating;
+        //        item.IsCommentsDisabled = courseDetails.IsCommentsDisabled;
+        //        item.IsClassCourseSavedByCurrentUser = savedClassCourse.Any(x => x.ClassId == courseDetails.CourseId && x.UserId == userId);
+        //        item.SavedClassCourseCount = savedClassCourse.Where(x => x.ClassId == courseDetails.CourseId && x.UserId == userId).Count();
+
+        //        model.Add(item);
+        //    }
+
+
+        //    if (filters.Count() != 0)
+        //    {
+        //        var appliedFilterResult = new List<CombineClassCourseViewModel>();
+        //        foreach (var filter in filters)
+        //        {
+        //            if (filter.ClassCourseFilterType == ClassCourseFilterEnum.Class)
+        //            {
+        //                //if (filter.ClassCourseFilter.FilterType == FilterTypeEnum.Live)
+        //                //{
+        //                //    var liveClassResult = model.Where(x => x.IsLive == "Free" && x.Type == ClassCourseEnum.Class).ToList();
+        //                //    appliedFilterResult.AddRange(freeClassResult);
+        //                //}
+
+        //                if (filter.ClassCourseFilter.FilterType == FilterTypeEnum.Free)
+        //                {
+        //                    var freeClassResult = model.Where(x => x.ServiceType.Type == "Free" && x.Type == ClassCourseEnum.Class).ToList();
+        //                    appliedFilterResult.AddRange(freeClassResult);
+        //                }
+
+        //                if (filter.ClassCourseFilter.FilterType == FilterTypeEnum.Paid)
+        //                {
+        //                    var paidClassResult = model.Where(x => x.ServiceType.Type == "Paid" && x.Type == ClassCourseEnum.Class).ToList();
+        //                    appliedFilterResult.AddRange(paidClassResult);
+        //                }
+
+        //                if (filter.ClassCourseFilter.FilterType == FilterTypeEnum.MostStudents)
+        //                {
+        //                    if (appliedFilterResult.Count() != 0)
+        //                    {
+        //                        if (filters.Any(x => x.ClassCourseFilter.FilterType == FilterTypeEnum.MostStudents && x.ClassCourseFilterType == ClassCourseFilterEnum.Course))
+        //                        {
+        //                            var appliedMostStudentsOnClass = model.Where(x => x.Type == ClassCourseEnum.Class).ToList();
+        //                            appliedFilterResult.AddRange(appliedMostStudentsOnClass);
+        //                            appliedFilterResult = appliedFilterResult.OrderByDescending(x => x.NoOfStudents).ToList();
+
+        //                        }
+        //                        else
+        //                        {
+        //                            appliedFilterResult = appliedFilterResult.Where(x => x.Type == ClassCourseEnum.Class).OrderByDescending(x => x.NoOfStudents).ToList();
+        //                        }
+        //                    }
+        //                    else
+        //                    {
+        //                        appliedFilterResult = model.Where(x => x.Type == ClassCourseEnum.Class).OrderByDescending(x => x.NoOfStudents).ToList();
+        //                    }
+        //                }
+
+
+        //                if (filter.ClassCourseFilter.FilterType == FilterTypeEnum.MostViewed)
+        //                {
+        //                    if (appliedFilterResult.Count() != 0)
+        //                    {
+        //                        if (filters.Any(x => x.ClassCourseFilter.FilterType == FilterTypeEnum.MostViewed && x.ClassCourseFilterType == ClassCourseFilterEnum.Course))
+        //                        {
+        //                            var appliedMostViewedOnClass = model.Where(x => x.Type == ClassCourseEnum.Class).ToList();
+        //                            appliedFilterResult.AddRange(appliedMostViewedOnClass);
+        //                            appliedFilterResult = appliedFilterResult.OrderByDescending(x => (x.ClassViews.Count() + x.CourseLikes.Count())).ToList();
+        //                        }
+        //                        else
+        //                        {
+        //                            appliedFilterResult = appliedFilterResult.Where(x => x.Type == ClassCourseEnum.Class).OrderByDescending(x => x.ClassViews.Count()).ToList();
+        //                        }
+        //                    }
+        //                    else
+        //                    {
+        //                        appliedFilterResult = model.Where(x => x.Type == ClassCourseEnum.Class).OrderByDescending(x => x.ClassViews.Count()).ToList();
+        //                    }
+        //                }
+
+        //                if (filter.ClassCourseFilter.FilterType == FilterTypeEnum.TopRated)
+        //                {
+        //                    if (appliedFilterResult.Count() != 0)
+        //                    {
+        //                        if (filters.Any(x => x.ClassCourseFilter.FilterType == FilterTypeEnum.TopRated && x.ClassCourseFilterType == ClassCourseFilterEnum.Course))
+        //                        {
+        //                            var appliedTopRatedOnClass = model.Where(x => x.Type == ClassCourseEnum.Class).ToList();
+        //                            appliedFilterResult.AddRange(appliedTopRatedOnClass);
+        //                            appliedFilterResult = appliedFilterResult.OrderByDescending(x => x.Rating).ToList();
+        //                        }
+        //                    }
+        //                    else
+        //                    {
+        //                        appliedFilterResult = model.Where(x => x.Type == ClassCourseEnum.Class).OrderByDescending(x => x.Rating).ToList();
+        //                    }
+        //                }
+
+        //                if (filter.ClassCourseFilter.FilterType == FilterTypeEnum.Name)
+        //                {
+        //                    if (appliedFilterResult.Count() != 0 && model.Any(x => x.Type == ClassCourseEnum.Course))
+        //                    {
+        //                        appliedFilterResult = appliedFilterResult.OrderBy(x => x.Name).ToList();
+        //                    }
+
+        //                    else
+        //                    {
+        //                        if (appliedFilterResult.Count() != 0 && !model.Any(x => x.Type == ClassCourseEnum.Course))
+        //                        {
+        //                            appliedFilterResult = appliedFilterResult.Where(x => x.Type == ClassCourseEnum.Class).OrderBy(x => x.Name).ToList();
+        //                        }
+        //                        else
+        //                        {
+        //                            appliedFilterResult = model.OrderBy(x => x.Name).ToList();
+        //                        }
+        //                    }
+        //                }
+        //            }
+
+        //            if (filter.ClassCourseFilterType == ClassCourseFilterEnum.Course)
+        //            {
+        //                if (filter.ClassCourseFilter.FilterType == FilterTypeEnum.Free)
+        //                {
+        //                    var freeCourseResult = model.Where(x => x.ServiceType.Type == "Free" && x.Type == ClassCourseEnum.Course).ToList();
+        //                    appliedFilterResult.AddRange(freeCourseResult);
+        //                }
+
+        //                if (filter.ClassCourseFilter.FilterType == FilterTypeEnum.Paid)
+        //                {
+        //                    var paidCourseResult = model.Where(x => x.ServiceType.Type == "Paid" && x.Type == ClassCourseEnum.Course).ToList();
+        //                    appliedFilterResult.AddRange(paidCourseResult);
+        //                }
+
+        //                if (filter.ClassCourseFilter.FilterType == FilterTypeEnum.MostStudents)
+        //                {
+        //                    if (appliedFilterResult.Count() != 0)
+        //                    {
+        //                        if (filters.Any(x => x.ClassCourseFilter.FilterType == FilterTypeEnum.MostStudents && x.ClassCourseFilterType == ClassCourseFilterEnum.Class))
+        //                        {
+        //                            var appliedMostStudentsOnCourse = model.Where(x => x.Type == ClassCourseEnum.Course).ToList();
+        //                            appliedFilterResult.AddRange(appliedMostStudentsOnCourse);
+        //                            appliedFilterResult = appliedFilterResult.OrderByDescending(x => x.NoOfStudents).ToList();
+        //                        }
+        //                        else
+        //                        {
+        //                            appliedFilterResult = appliedFilterResult.Where(x => x.Type == ClassCourseEnum.Course).OrderByDescending(x => x.NoOfStudents).ToList();
+        //                        }
+        //                    }
+        //                    else
+        //                    {
+        //                        appliedFilterResult = model.Where(x => x.Type == ClassCourseEnum.Course).OrderByDescending(x => x.NoOfStudents).ToList();
+        //                    }
+        //                }
+
+        //                if (filter.ClassCourseFilter.FilterType == FilterTypeEnum.MostViewed)
+        //                {
+        //                    if (appliedFilterResult.Count() != 0)
+        //                    {
+        //                        if (filters.Any(x => x.ClassCourseFilter.FilterType == FilterTypeEnum.MostViewed && x.ClassCourseFilterType == ClassCourseFilterEnum.Class))
+        //                        {
+        //                            var appliedMostViewedOnCourse = model.Where(x => x.Type == ClassCourseEnum.Course).ToList();
+        //                            appliedFilterResult.AddRange(appliedMostViewedOnCourse);
+        //                            appliedFilterResult = appliedFilterResult.OrderByDescending(x => (x.CourseViews.Count() + x.ClassViews.Count())).ToList();
+        //                        }
+        //                        else
+        //                        {
+        //                            appliedFilterResult = appliedFilterResult.Where(x => x.Type == ClassCourseEnum.Course).OrderByDescending(x => x.CourseViews.Count()).ToList();
+        //                        }
+        //                    }
+        //                    else
+        //                    {
+        //                        appliedFilterResult = model.Where(x => x.Type == ClassCourseEnum.Course).OrderByDescending(x => x.CourseViews.Count()).ToList();
+        //                    }
+        //                }
+
+        //                if (filter.ClassCourseFilter.FilterType == FilterTypeEnum.TopRated)
+        //                {
+        //                    if (appliedFilterResult.Count() != 0)
+        //                    {
+        //                        if (filters.Any(x => x.ClassCourseFilter.FilterType == FilterTypeEnum.TopRated && x.ClassCourseFilterType == ClassCourseFilterEnum.Class))
+        //                        {
+        //                            var appliedTopRatedOnCourse = model.Where(x => x.Type == ClassCourseEnum.Course).ToList();
+        //                            appliedFilterResult.AddRange(appliedTopRatedOnCourse);
+        //                            appliedFilterResult = appliedFilterResult.OrderByDescending(x => x.Rating).ToList();
+        //                        }
+        //                    }
+        //                    else
+        //                    {
+        //                        appliedFilterResult = model.Where(x => x.Type == ClassCourseEnum.Course).OrderByDescending(x => x.Rating).ToList();
+        //                    }
+        //                }
+
+        //                if (filter.ClassCourseFilter.FilterType == FilterTypeEnum.Name)
+        //                {
+        //                    if (appliedFilterResult.Count() != 0)
+        //                    {
+        //                        appliedFilterResult = appliedFilterResult.OrderBy(x => x.Name).ToList();
+        //                    }
+        //                    else
+        //                    {
+        //                        appliedFilterResult = model.OrderBy(x => x.Name).ToList();
+        //                    }
+
+        //                }
+        //            }
+        //        }
+        //        return appliedFilterResult.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+        //    }
+        //    //var response = model.OrderByDescending(x => x.IsPinned);
+        //    var response = model.Skip((pageNumber - 1) * pageSize).Take(pageSize).OrderByDescending(x => x.IsPinned).ThenByDescending(x => x.CreatedOn);
+        //    return response;
+
+        //}
+
+        public async Task<IEnumerable<CombineClassCourseViewModel>> GetSchoolClasses(Guid? schoolId, string userId, int pageNumber)
         {
-            var filters = await _userClassCourseFilterRepository.GetAll().Include(x => x.ClassCourseFilter).Where(x => x.SchoolId == schoolId && x.IsActive).ToListAsync();
+            var filters = await _userClassCourseFilterRepository.GetAll().Include(x => x.ClassCourseFilter).Where(x => x.SchoolId == schoolId && x.IsActive && x.ClassCourseFilterType == ClassCourseFilterEnum.Class).ToListAsync();
 
             int pageSize = 4;
-            var classes = await GetClassesBySchoolId(schoolId, userId);
-            var courses = await GetCoursesBySchoolId(schoolId, userId);
+            var classes = await GetClassesBySchoolId(schoolId, userId,pageNumber,pageSize);
+            //var courses = await GetCoursesBySchoolId(schoolId, userId);
             var savedClassCourse = await _savedClassCourseRepository.GetAll().ToListAsync();
 
 
@@ -1161,39 +1442,6 @@ namespace LMS.Services
 
                 model.Add(item);
             }
-
-            foreach (var courseDetails in courses)
-            {
-                var item = new CombineClassCourseViewModel();
-                item.Id = courseDetails.CourseId;
-                item.Avatar = courseDetails.Avatar;
-                item.Accessibility = courseDetails.Accessibility;
-                item.ServiceType = courseDetails.ServiceType;
-                item.Description = courseDetails.Description;
-                item.Name = courseDetails.CourseName;
-                item.SchoolName = courseDetails.School.SchoolName;
-                item.Price = courseDetails.Price;
-                item.Rating = courseDetails.Rating;
-                item.CreatedOn = courseDetails.CreatedOn;
-                item.CreatedById = courseDetails.CreatedById;
-                item.Type = ClassCourseEnum.Course;
-                item.IsPinned = courseDetails.IsPinned;
-                item.ThumbnailUrl = courseDetails.ThumbnailUrl;
-                item.Tags = courseDetails.CourseTags;
-                item.IsLikedByCurrentUser = courseDetails.IsCourseLikedByCurrentUser;
-                item.CourseLikes = courseDetails.CourseLike;
-                item.CourseViews = courseDetails.CourseViews;
-                item.CommentsCount = courseDetails.CommentsCount;
-                item.ThumbnailType = courseDetails.ThumbnailType;
-                item.NoOfStudents = await _courseService.GetStudents(courseDetails.CourseId);
-                item.Rating = courseDetails.Rating;
-                item.IsCommentsDisabled = courseDetails.IsCommentsDisabled;
-                item.IsClassCourseSavedByCurrentUser = savedClassCourse.Any(x => x.ClassId == courseDetails.CourseId && x.UserId == userId);
-                item.SavedClassCourseCount = savedClassCourse.Where(x => x.ClassId == courseDetails.CourseId && x.UserId == userId).Count();
-
-                model.Add(item);
-            }
-
 
             if (filters.Count() != 0)
             {
@@ -1301,7 +1549,65 @@ namespace LMS.Services
                             }
                         }
                     }
+                }
+                //return appliedFilterResult.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+                return appliedFilterResult;
+            }
+            //var response = model.OrderByDescending(x => x.IsPinned);
+            //var response = model.Skip((pageNumber - 1) * pageSize).Take(pageSize).OrderByDescending(x => x.IsPinned).ThenByDescending(x => x.CreatedOn);
+            return model;
 
+        }
+
+        public async Task<IEnumerable<CombineClassCourseViewModel>> GetSchoolCourses(Guid? schoolId, string userId, int pageNumber)
+        {
+            var filters = await _userClassCourseFilterRepository.GetAll().Include(x => x.ClassCourseFilter).Where(x => x.SchoolId == schoolId && x.IsActive && x.ClassCourseFilterType == ClassCourseFilterEnum.Course).ToListAsync();
+
+            int pageSize = 4;
+            var courses = await GetCoursesBySchoolId(schoolId, userId, pageNumber, pageSize);
+            var savedClassCourse = await _savedClassCourseRepository.GetAll().ToListAsync();
+
+
+            var model = new List<CombineClassCourseViewModel>();
+
+            foreach (var courseDetails in courses)
+            {
+                var item = new CombineClassCourseViewModel();
+                item.Id = courseDetails.CourseId;
+                item.Avatar = courseDetails.Avatar;
+                item.Accessibility = courseDetails.Accessibility;
+                item.ServiceType = courseDetails.ServiceType;
+                item.Description = courseDetails.Description;
+                item.Name = courseDetails.CourseName;
+                item.SchoolName = courseDetails.School.SchoolName;
+                item.Price = courseDetails.Price;
+                item.Rating = courseDetails.Rating;
+                item.CreatedOn = courseDetails.CreatedOn;
+                item.CreatedById = courseDetails.CreatedById;
+                item.Type = ClassCourseEnum.Course;
+                item.IsPinned = courseDetails.IsPinned;
+                item.ThumbnailUrl = courseDetails.ThumbnailUrl;
+                item.Tags = courseDetails.CourseTags;
+                item.IsLikedByCurrentUser = courseDetails.IsCourseLikedByCurrentUser;
+                item.CourseLikes = courseDetails.CourseLike;
+                item.CourseViews = courseDetails.CourseViews;
+                item.CommentsCount = courseDetails.CommentsCount;
+                item.ThumbnailType = courseDetails.ThumbnailType;
+                item.NoOfStudents = await _courseService.GetStudents(courseDetails.CourseId);
+                item.Rating = courseDetails.Rating;
+                item.IsCommentsDisabled = courseDetails.IsCommentsDisabled;
+                item.IsClassCourseSavedByCurrentUser = savedClassCourse.Any(x => x.CourseId == courseDetails.CourseId && x.UserId == userId);
+                item.SavedClassCourseCount = savedClassCourse.Where(x => x.CourseId == courseDetails.CourseId && x.UserId == userId).Count();
+
+                model.Add(item);
+            }
+
+
+            if (filters.Count() != 0)
+            {
+                var appliedFilterResult = new List<CombineClassCourseViewModel>();
+                foreach (var filter in filters)
+                {
                     if (filter.ClassCourseFilterType == ClassCourseFilterEnum.Course)
                     {
                         if (filter.ClassCourseFilter.FilterType == FilterTypeEnum.Free)
@@ -1389,11 +1695,12 @@ namespace LMS.Services
                         }
                     }
                 }
-                return appliedFilterResult.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+                //return appliedFilterResult.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+                return appliedFilterResult;
             }
             //var response = model.OrderByDescending(x => x.IsPinned);
-            var response = model.Skip((pageNumber - 1) * pageSize).Take(pageSize).OrderByDescending(x => x.IsPinned).ThenByDescending(x => x.CreatedOn);
-            return response;
+            //var response = model.Skip((pageNumber - 1) * pageSize).Take(pageSize).OrderByDescending(x => x.IsPinned).ThenByDescending(x => x.CreatedOn);
+            return model;
 
         }
 

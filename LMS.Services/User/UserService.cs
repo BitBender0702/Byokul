@@ -1140,157 +1140,165 @@ namespace LMS.Services
 
         async Task<List<GlobalFeedViewModel>> GetFeedResult(Dictionary<Guid, double> postGUIDScore, string loginUserId, PostTypeEnum postType, int pageNumber, int pageSize, string? searchString, Guid? lastPostId, ScrollTypesEnum? scrollType)
         {
-            bool IsPostLikedByCurrentUser;
-            var response = new List<GlobalFeedViewModel>();
-            Guid[] requiredPostIds = null;
-
-            if (lastPostId != null)
+            try
             {
-                if (scrollType == ScrollTypesEnum.None)
+                bool IsPostLikedByCurrentUser;
+                var response = new List<GlobalFeedViewModel>();
+                Guid[] requiredPostIds = null;
+
+                if (lastPostId != null)
                 {
+                    if (scrollType == ScrollTypesEnum.None)
+                    {
 
-                    var attachment = _postAttachmentRepository.GetById(lastPostId);
-                    ////int index = postGUIDScore.FindIndex(x => x.Id == attachment.PostId);
-                    ////int startIndex = Math.Max(0, index - 3);
-                    ////int totalItems = 7;
-                    //requiredPostIds = postGUIDScore.GetRange(startIndex, Math.Min(totalItems, postGUIDScore.Count - startIndex));
+                        var attachment = _postAttachmentRepository.GetById(lastPostId);
+                        ////int index = postGUIDScore.FindIndex(x => x.Id == attachment.PostId);
+                        ////int startIndex = Math.Max(0, index - 3);
+                        ////int totalItems = 7;
+                        //requiredPostIds = postGUIDScore.GetRange(startIndex, Math.Min(totalItems, postGUIDScore.Count - startIndex));
 
 
 
 
-                    // Find the index of lastPostId in the dictionary keys
-                    var keys = postGUIDScore.Keys.ToList();
-                    var index = keys.FindIndex(key => key == attachment.PostId);
+                        // Find the index of lastPostId in the dictionary keys
+                        var keys = postGUIDScore.Keys.ToList();
+                        var index = keys.FindIndex(key => key == attachment.PostId);
 
-                    // Define the range parameters
-                    int startIndex = Math.Max(0, index - 3);
-                    int totalItems = 7;
+                        // Define the range parameters
+                        int startIndex = Math.Max(0, index - 3);
+                        int totalItems = 7;
 
-                    // Get the range of items from the dictionary
-                    requiredPostIds = keys.Skip(startIndex).Take(Math.Min(totalItems, keys.Count - startIndex)).ToArray();
+                        // Get the range of items from the dictionary
+                        requiredPostIds = keys.Skip(startIndex).Take(Math.Min(totalItems, keys.Count - startIndex)).ToArray();
 
+
+                    }
+                    if (scrollType == ScrollTypesEnum.Down)
+                    {
+                        requiredPostIds = postGUIDScore.Keys.SkipWhile(x => x != lastPostId).Skip(1).Take(3).ToArray();
+
+                    }
+                    if (scrollType == ScrollTypesEnum.Up)
+                    {
+                        requiredPostIds = postGUIDScore.Keys.TakeWhile(x => x != lastPostId).Reverse().Take(3).Reverse().ToArray();
+                    }
+                }
+
+                else
+                {
+                    requiredPostIds = postGUIDScore.Keys.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToArray();
 
                 }
-                if (scrollType == ScrollTypesEnum.Down)
+                var postList = await _postRepositoryCustom.GetPostsByIds(requiredPostIds);
+                var postAttachmentList = await _postAttachmentRepository.GetAll().ToListAsync();
+                var postTagsList = await _postTagRepository.GetAll().ToListAsync();
+                var likesList = await _likeRepository.GetAll().ToListAsync();
+                var sharedPostList = await _userSharedPostRepository.GetAll().ToListAsync();
+                var savedPosts = await _savedPostRepository.GetAll().ToListAsync();
+
+                foreach (var post in postList)
                 {
-                    requiredPostIds = postGUIDScore.Keys.SkipWhile(x => x != lastPostId).Skip(1).Take(3).ToArray();
+                    if (post != null)
+                    {
+                        var postAttachment = postAttachmentList.Where(x => x.PostId == post.Id).ToList();
+                        var postTag = postTagsList.Where(x => x.PostId == post.Id).ToList();
+                        var likes = await GetLikesOnPost(post.Id);
+                        var views = await GetViewsOnPost(post.Id);
+                        var commentsCount = await GetCommentsCountOnPost(post.Id);
+                        var sharedPostCount = sharedPostList.Where(x => x.PostId == post.Id).Count();
+                        var isLiked = likesList.Any(x => x.UserId == loginUserId && x.PostId == post.Id);
+
+                        if (isLiked)
+                        {
+                            IsPostLikedByCurrentUser = true;
+                        }
+                        else
+                        {
+                            IsPostLikedByCurrentUser = false;
+                        }
+
+                        string parentName = "";
+                        string parentImageUrl = "";
+                        string schoolName = "";
+                        string parentId = "";
+                        int postAuthorType = 0;
+                        if (post.PostAuthorType == (int)PostAuthorTypeEnum.School)
+                        {
+                            var school = _schoolRepository.GetById(post.ParentId);
+                            parentName = school.SchoolName;
+                            parentImageUrl = school.Avatar;
+                            postAuthorType = (int)PostAuthorTypeEnum.School;
+                            schoolName = "";
+                            parentId = school.SchoolId.ToString();
+
+
+
+                        }
+                        if (post.PostAuthorType == (int)PostAuthorTypeEnum.Class)
+                        {
+                            var classes = await _classRepository.GetAll().Where(x => x.ClassId == post.ParentId).Include(x => x.School).FirstOrDefaultAsync();
+                            parentName = classes.ClassName;
+                            parentImageUrl = classes.Avatar;
+                            postAuthorType = (int)PostAuthorTypeEnum.Class;
+                            schoolName = classes.School.SchoolName;
+                            parentId = classes.ClassId.ToString();
+                        }
+                        if (post.PostAuthorType == (int)PostAuthorTypeEnum.Course)
+                        {
+                            var course = await _courseRepository.GetAll().Where(x => x.CourseId == post.ParentId).Include(x => x.School).FirstOrDefaultAsync();
+                            parentName = course.CourseName;
+                            parentImageUrl = course.Avatar;
+                            postAuthorType = (int)PostAuthorTypeEnum.Course;
+                            schoolName = course.School.SchoolName;
+                            parentId = course.CourseId.ToString();
+                        }
+                        if (post.PostAuthorType == (int)PostAuthorTypeEnum.User)
+                        {
+                            var user = _userRepository.GetById(post.ParentId.ToString());
+                            parentName = user.FirstName + " " + user.LastName;
+                            parentImageUrl = user.Avatar;
+                            postAuthorType = (int)PostAuthorTypeEnum.User;
+                            schoolName = "";
+                            parentId = user.Id;
+                        }
+                        var result = new GlobalFeedViewModel()
+                        {
+                            Id = post.Id,
+                            Title = post.Title,
+                            Description = post.Description,
+                            Likes = likes,
+                            Views = views,
+                            CommentsCount = commentsCount,
+                            PostSharedCount = sharedPostCount,
+                            IsPostLikedByCurrentUser = IsPostLikedByCurrentUser,
+                            PostType = post.PostType,
+                            ParentName = parentName,
+                            ParentImageUrl = parentImageUrl,
+                            PostAuthorType = postAuthorType,
+                            SchoolName = schoolName,
+                            ParentId = parentId,
+                            DateTime = post.DateTime,
+                            PostAttachments = _mapper.Map<List<PostAttachmentViewModel>>(postAttachment),
+                            PostTags = _mapper.Map<List<PostTagViewModel>>(postTag),
+                            CreatedBy = post.CreatedById,
+                            CreatedOn = post.CreatedOn,
+                            IsPostSavedByCurrentUser = savedPosts.Any(x => x.PostId == post.Id && x.UserId == loginUserId),
+                            SavedPostsCount = savedPosts.Where(x => x.PostId == post.Id && x.UserId == loginUserId).Count()
+
+                        };
+
+                        response.Add(result);
+                    }
 
                 }
-                if (scrollType == ScrollTypesEnum.Up)
-                {
-                    requiredPostIds = postGUIDScore.Keys.TakeWhile(x => x != lastPostId).Reverse().Take(3).Reverse().ToArray();
-                }
+                return response;
+
             }
-
-            else
+            catch (Exception ex)
             {
-                requiredPostIds = postGUIDScore.Keys.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToArray();
-
+                throw ex;
             }
-            var postList = await _postRepositoryCustom.GetPostsByIds(requiredPostIds);
-            var postAttachmentList = await _postAttachmentRepository.GetAll().ToListAsync();
-            var postTagsList = await _postTagRepository.GetAll().ToListAsync();
-            var likesList = await _likeRepository.GetAll().ToListAsync();
-            var sharedPostList = await _userSharedPostRepository.GetAll().ToListAsync();
-            var savedPosts = await _savedPostRepository.GetAll().ToListAsync();
-
-            foreach (var post in postList)
-            {
-                if (post != null)
-                {
-                    var postAttachment = postAttachmentList.Where(x => x.PostId == post.Id).ToList();
-                    var postTag = postTagsList.Where(x => x.PostId == post.Id).ToList();
-                    var likes = await GetLikesOnPost(post.Id);
-                    var views = await GetViewsOnPost(post.Id);
-                    var commentsCount = await GetCommentsCountOnPost(post.Id);
-                    var sharedPostCount = sharedPostList.Where(x => x.PostId == post.Id).Count();
-                    var isLiked = likesList.Any(x => x.UserId == loginUserId && x.PostId == post.Id);
-
-                    if (isLiked)
-                    {
-                        IsPostLikedByCurrentUser = true;
-                    }
-                    else
-                    {
-                        IsPostLikedByCurrentUser = false;
-                    }
-
-                    string parentName = "";
-                    string parentImageUrl = "";
-                    string schoolName = "";
-                    string parentId = "";
-                    int postAuthorType = 0;
-                    if (post.PostAuthorType == (int)PostAuthorTypeEnum.School)
-                    {
-                        var school = _schoolRepository.GetById(post.ParentId);
-                        parentName = school.SchoolName;
-                        parentImageUrl = school.Avatar;
-                        postAuthorType = (int)PostAuthorTypeEnum.School;
-                        schoolName = "";
-                        parentId = school.SchoolId.ToString();
-
-
-
-                    }
-                    if (post.PostAuthorType == (int)PostAuthorTypeEnum.Class)
-                    {
-                        var classes = await _classRepository.GetAll().Where(x => x.ClassId == post.ParentId).Include(x => x.School).FirstOrDefaultAsync();
-                        parentName = classes.ClassName;
-                        parentImageUrl = classes.Avatar;
-                        postAuthorType = (int)PostAuthorTypeEnum.Class;
-                        schoolName = classes.School.SchoolName;
-                        parentId = classes.ClassId.ToString();
-                    }
-                    if (post.PostAuthorType == (int)PostAuthorTypeEnum.Course)
-                    {
-                        var course = await _courseRepository.GetAll().Where(x => x.CourseId == post.ParentId).Include(x => x.School).FirstOrDefaultAsync();
-                        parentName = course.CourseName;
-                        parentImageUrl = course.Avatar;
-                        postAuthorType = (int)PostAuthorTypeEnum.Course;
-                        schoolName = course.School.SchoolName;
-                        parentId = course.CourseId.ToString();
-                    }
-                    if (post.PostAuthorType == (int)PostAuthorTypeEnum.User)
-                    {
-                        var user = _userRepository.GetById(post.ParentId.ToString());
-                        parentName = user.FirstName + " " + user.LastName;
-                        parentImageUrl = user.Avatar;
-                        postAuthorType = (int)PostAuthorTypeEnum.User;
-                        schoolName = "";
-                        parentId = user.Id;
-                    }
-                    var result = new GlobalFeedViewModel()
-                    {
-                        Id = post.Id,
-                        Title = post.Title,
-                        Description = post.Description,
-                        Likes = likes,
-                        Views = views,
-                        CommentsCount = commentsCount,
-                        PostSharedCount = sharedPostCount,
-                        IsPostLikedByCurrentUser = IsPostLikedByCurrentUser,
-                        PostType = post.PostType,
-                        ParentName = parentName,
-                        ParentImageUrl = parentImageUrl,
-                        PostAuthorType = postAuthorType,
-                        SchoolName = schoolName,
-                        ParentId = parentId,
-                        DateTime = post.DateTime,
-                        PostAttachments = _mapper.Map<List<PostAttachmentViewModel>>(postAttachment),
-                        PostTags = _mapper.Map<List<PostTagViewModel>>(postTag),
-                        CreatedBy = post.CreatedById,
-                        CreatedOn = post.CreatedOn,
-                        IsPostSavedByCurrentUser = savedPosts.Any(x => x.PostId == post.Id && x.UserId == loginUserId),
-                        SavedPostsCount = savedPosts.Where(x => x.PostId == post.Id && x.UserId == loginUserId).Count()
-
-                    };
-
-                    response.Add(result);
-                }
-
             }
-            return response;
-        }
 
         async Task<List<GlobalFeedViewModel>> GetDefaultFeeds(string loginUserId, PostTypeEnum postType, int pageNumber, int pageSize, string? searchString, Guid? lastPostId, ScrollTypesEnum? scrollType)
         {

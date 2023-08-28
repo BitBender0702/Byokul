@@ -26,7 +26,7 @@ a{
   color: white;
 }
 
-.live-inner,.live-image{
+/* .live-inner,.live-image{
   height: 100%;
   margin: auto;
 }
@@ -48,4 +48,8 @@ a{
 
 .live-action-buttons,.live-bottom-text{
   height: 50%;
+} */
+.dropdown-menu li a{
+  color: black;
 }
+

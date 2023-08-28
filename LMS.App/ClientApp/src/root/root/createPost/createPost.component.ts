@@ -163,6 +163,9 @@ export class CreatePostComponent implements OnInit, OnDestroy {
   createReelSubscription!: Subscription;
   createLiveSubscription!: Subscription;
   selectedVideoFromLibrary:any;
+  type:string = "";
+  isCreatePost:boolean = true;
+  isCreateReel:boolean = false;
 
   @Output() onClose: EventEmitter<any> = new EventEmitter<any>();
 
@@ -187,9 +190,19 @@ export class CreatePostComponent implements OnInit, OnDestroy {
         debugger
         this.editPostDetails = response;
         this.isEditPost = true;
+        // if(this.editPostDetails?.postType == 1){
+        //   this.isCreatePost = false;
+        // }
+        // if(this.editPostDetails?.postType == 3){
+        //   this.isCreateReel = false;
+        // }
         this.initializeEditPostForm();
       });
     }
+    // else{
+    //   this.isCreatePost = true;
+    //   this.isCreateReel = true;
+    // }
     this.from = initialValue?.from;
     this.profileShare = initialValue?.isShareProfile;
     var isLiveTabopen = initialValue?.isLiveTabOpen;

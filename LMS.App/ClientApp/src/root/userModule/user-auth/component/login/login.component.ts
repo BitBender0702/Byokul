@@ -64,6 +64,12 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
     }
   
     ngOnInit(): void {   
+      debugger
+      if(localStorage.getItem("jwt")){
+        this.router.navigate([`/user/userFeed`]);
+      }
+
+      
       this._authService.loginState$.next(false);
       this.selectedLanguage = localStorage.getItem("selectedLanguage");
       if(this.selectedLanguage == null || this.selectedLanguage == ""){

@@ -23,6 +23,7 @@ import { VideoLibraryService } from '../service/videoLibrary.service';
 import { addVideoInLibraryResponse } from './schoolVideoLibrary/schoolVideoLibrary.component';
 import { SchoolService } from '../service/school.service';
 
+export const deleteReelResponse = new Subject();  
 export const paymentConfirmDialoge = new Subject<{response:any}>();  
 export const postProgressNotification = new Subject<{from:string}>();  
 export const postUploadOnBlob = new Subject<{
@@ -121,6 +122,15 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
     this.meta.updateTag({ property: 'og:description', content: "description" });
     // this.meta.addTag({ property: 'og:image', content: "../../assets/images/logo.svg" });
     this.meta.updateTag({ property: 'og:url', content: "byokul.com" });
+
+    if(!this.paymentConfirmSubscription){
+      this.paymentConfirmSubscription = deleteReelResponse.subscribe(response => {
+        debugger
+        const translatedSummary = this.translateService.instant('Success');
+        var translatedMessage = this.translateService.instant('ReelDeletedSuccessfully');
+        this.messageService.add({severity:'success', summary:translatedSummary,life: 3000, detail:translatedMessage});
+      })
+    }
 
     if (!this.notifyTeacherSubscription) {
       this.notifyTeacherSubscription = notiFyTeacherResponse.subscribe(response => {

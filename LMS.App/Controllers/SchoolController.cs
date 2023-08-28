@@ -225,12 +225,30 @@ namespace LMS.App.Controllers
         //    return Ok(response);
         //}
 
-        [Route("getSchoolClassCourse")]
+        //[Route("getSchoolClassCourse")]
+        //[HttpGet]
+        //public async Task<IActionResult> GetSchoolClassCourse(Guid schoolId, int pageNumber)
+        //{
+        //    var userId = await GetUserIdAsync(this._userManager);
+        //    var response = await _schoolService.GetSchoolClassCourse(schoolId, userId, pageNumber);
+        //    return Ok(response);
+        //}
+
+        [Route("getSchoolClasses")]
         [HttpGet]
-        public async Task<IActionResult> GetSchoolClassCourse(Guid schoolId, int pageNumber)
+        public async Task<IActionResult> GetSchoolClasses(Guid schoolId, int pageNumber)
         {
             var userId = await GetUserIdAsync(this._userManager);
-            var response = await _schoolService.GetSchoolClassCourse(schoolId, userId, pageNumber);
+            var response = await _schoolService.GetSchoolClasses(schoolId, userId, pageNumber);
+            return Ok(response);
+        }
+
+        [Route("getSchoolCourses")]
+        [HttpGet]
+        public async Task<IActionResult> GetSchoolCourses(Guid schoolId, int pageNumber)
+        {
+            var userId = await GetUserIdAsync(this._userManager);
+            var response = await _schoolService.GetSchoolCourses(schoolId, userId, pageNumber);
             return Ok(response);
         }
 

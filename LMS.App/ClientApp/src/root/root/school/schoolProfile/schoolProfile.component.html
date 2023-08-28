@@ -428,14 +428,7 @@
           >
         </div>
 
-        <!-- <div class="flex-container row">
-          <ng-container  *ngFor="let post of school.posts; let i=index;">
-            <div class="col-12 imgDisplay" [class]="getRandomClass(i,false)" *ngIf="i%3==0" style="display: none;">abcd</div>
-            <div class="col-4" [class]="getRandomClass(i,true)" (click)="openDialouge($event)" >1</div>
-          </ng-container>
-        </div> -->
-
-        <div class="text-center">
+        <!-- <div class="text-center">
         <button *ngIf="isOwner"
         type="button"
         class="btn button-stroage font_16 fw_600 text_dark d-inline-flex align-items-center justify-content-center"
@@ -446,7 +439,7 @@
           class="me-2"
         />{{ "VideoLibrary" | translate }}
       </button>
-    </div>
+    </div> -->
 
         <hr class="hr-gray" />
         <div
@@ -473,7 +466,7 @@
                   {{ "SchoolFeed" | translate }}
                 </button>
               </li>
-              <li class="nav-item ps-0 mb-0" role="presentation">
+              <!-- <li class="nav-item ps-0 mb-0" role="presentation">
                 <button
                   (click)="GetSchoolClassCourseList(school.schoolId)"
                   class="nav-link"
@@ -487,6 +480,37 @@
                   tabindex="-1"
                 >
                   {{ "Classes&Courses" | translate }}
+                </button>
+              </li> -->
+              <li class="nav-item ps-0 mb-0" role="presentation">
+                <button
+                  (click)="GetSchoolClassesList(school.schoolId)"
+                  class="nav-link"
+                  id="classes-tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#classes-tab-pane"
+                  type="button"
+                  role="tab"
+                  aria-controls="classes-tab-pane"
+                  aria-selected="false"
+                  tabindex="-1"
+                >
+                  {{ "Classes" | translate }}
+                </button>
+              </li>
+              <li class="nav-item ps-0 mb-0" role="presentation">
+                <button
+                  (click)="GetSchoolCoursesList(school.schoolId)"
+                  class="nav-link"
+                  id="courses-tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#courses-tab-pane"
+                  type="button"
+                  role="tab"
+                  aria-controls="courses-tab-pane"
+                  aria-selected="true"
+                >
+                  {{ "Courses" | translate }}
                 </button>
               </li>
             </ul>
@@ -537,7 +561,7 @@
               </button> -->
             </div>
 
-            <div *ngIf="!hideFeedFilters" class="btn-filter align-items-center">
+            <div *ngIf="!hideFeedFilters && isClassList" class="btn-filter align-items-center">
               <svg
                 width="14"
                 height="14"
@@ -570,6 +594,7 @@
                     {{ noOfAppliedClassFilters }}
                   </span>
                 </button>
+
                 <div class="dropdown-menu px-4 py-3">
                   <div
                     class="d-flex align-items-center justify-content-between mb-3"
@@ -777,7 +802,479 @@
                   </div>
                 </div>
               </div>
-              <span class="divider">|</span>
+
+              <!-- <span class="divider">|</span> -->
+
+              <!-- <div class="btn-group dropdown-filter">
+                <button
+                  (click)="getCourseFilters()"
+                  type="button"
+                  class="btn btn-default dropdown-toggle after-none border-0 py-0 h-auto"
+                  data-bs-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  {{ "Courses" | translate }}
+                  <span
+                    class="position-absolute start-100 translate-middle border border-light rounded-circle filter-badge"
+                  >
+                    {{ noOfAppliedCourseFilters }}
+                  </span>
+                </button>
+                <div class="dropdown-menu px-4 py-3">
+                  <div
+                    class="d-flex align-items-center justify-content-between mb-3"
+                  >
+                    <div
+                      class="btn-filter align-items-center dropdown-filter filter-menu-btn position-relative"
+                    >
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 14 14"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="me-1"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          clip-rule="evenodd"
+                          d="M5.19424 13.6654L8.37844 12.1666V8.23893L13.3716 3.17507C13.5597 2.98533 13.6654 2.72492 13.6654 2.45221V1.34373C13.6654 0.78449 13.2265 0.332031 12.685 0.332031H1.31236C0.770872 0.332031 0.332031 0.78449 0.332031 1.34373V2.47756C0.332031 2.7349 0.426494 2.98226 0.596824 3.1697L5.19424 8.23893V13.6654Z"
+                          fill="white"
+                        />
+                      </svg>
+                      <button
+                        type="button"
+                        class="btn btn-default dropdown-toggle after-none border-0 py-0 h-auto"
+                        data-bs-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                      >
+                        {{ "Courses" | translate }}
+                        <span
+                          class="position-absolute start-100 translate-middle border border-light rounded-circle filter-badge"
+                        >
+                          {{ noOfAppliedCourseFilters }}
+                        </span>
+                      </button>
+                    </div>
+                    <button type="button" class="close border-0 bg-transparent">
+                      <svg
+                        width="17"
+                        height="17"
+                        viewBox="0 0 17 17"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M4.27344 12.7266L12.7587 4.24128"
+                          stroke="#151718"
+                          stroke-width="1.5"
+                          stroke-linecap="round"
+                        />
+                        <path
+                          d="M4.27344 4.24219L12.7587 12.7275"
+                          stroke="#151718"
+                          stroke-width="1.5"
+                          stroke-linecap="round"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                  <div
+                    class="text-line-border position-relative text-center mb-2"
+                  >
+                    <span
+                      class="line-text font_12 text_ltgray fw_400 text-center"
+                      >{{ "Time" | translate }}</span
+                    >
+                  </div>
+                  <ng-container *ngFor="let courseFilter of courseFilters">
+                    <div
+                      *ngIf="courseFilter.type == 1"
+                      class="form-group position-relative"
+                    >
+                      <div
+                        class="form-check form-check-inline font_14 fw_500 d-flex align-items-center"
+                      >
+                        <input
+                          *ngIf="courseFilter.isFilterActive"
+                          (change)="
+                            changeCourseFilterSettings(courseFilter.id, false)
+                          "
+                          class="form-check-input"
+                          checked
+                          type="checkbox"
+                          id="inlineCheckbox1"
+                          value="option1"
+                        />
+                        <input
+                          *ngIf="!courseFilter.isFilterActive"
+                          (change)="
+                            changeCourseFilterSettings(courseFilter.id, true)
+                          "
+                          class="form-check-input"
+                          type="checkbox"
+                          id="inlineCheckbox1"
+                          value="option1"
+                        />
+                        {{ courseFilter.name | translate }}
+                      </div>
+                    </div>
+                  </ng-container>
+
+                  <div
+                    class="text-line-border position-relative text-center mb-2"
+                  >
+                    <span
+                      class="line-text font_12 text_ltgray fw_400 text-center"
+                      >{{ "Pricing" | translate }}</span
+                    >
+                  </div>
+
+                  <ng-container *ngFor="let courseFilter of courseFilters">
+                    <div
+                      *ngIf="courseFilter.type == 2"
+                      class="form-group position-relative"
+                    >
+                      <div
+                        class="form-check form-check-inline font_14 fw_500 d-flex align-items-center"
+                      >
+                        <input
+                          *ngIf="courseFilter.isFilterActive"
+                          (change)="
+                            changeCourseFilterSettings(courseFilter.id, false)
+                          "
+                          class="form-check-input"
+                          checked
+                          type="checkbox"
+                          id="inlineCheckbox1"
+                          value="option1"
+                        />
+                        <input
+                          *ngIf="!courseFilter.isFilterActive"
+                          (change)="
+                            changeCourseFilterSettings(courseFilter.id, true)
+                          "
+                          class="form-check-input"
+                          type="checkbox"
+                          id="inlineCheckbox1"
+                          value="option1"
+                        />
+                        {{ courseFilter.name | translate }}
+                      </div>
+                    </div>
+                  </ng-container>
+
+                  <div
+                    class="text-line-border position-relative text-center mb-2"
+                  >
+                    <span
+                      class="line-text font_12 text_ltgray fw_400 text-center"
+                      >{{ "Sorting" | translate }}</span
+                    >
+                  </div>
+
+                  <ng-container *ngFor="let courseFilter of courseFilters">
+                    <div
+                      *ngIf="courseFilter.type == 3"
+                      class="form-group position-relative"
+                    >
+                      <div
+                        class="form-check form-check-inline font_14 fw_500 d-flex align-items-center"
+                      >
+                        <input
+                          *ngIf="courseFilter.isFilterActive"
+                          (change)="
+                            changeCourseFilterSettings(courseFilter.id, false)
+                          "
+                          class="form-check-input"
+                          checked
+                          type="checkbox"
+                          id="inlineCheckbox1"
+                          value="option1"
+                        />
+                        <input
+                          *ngIf="!courseFilter.isFilterActive"
+                          (change)="
+                            changeCourseFilterSettings(courseFilter.id, true)
+                          "
+                          class="form-check-input"
+                          type="checkbox"
+                          id="inlineCheckbox1"
+                          value="option1"
+                        />
+                        {{ courseFilter.name | translate }}
+                      </div>
+                    </div>
+                  </ng-container>
+
+                  <div
+                    class="d-flex align-items-center justify-content-between flex-sm-nowrap border-0"
+                  >
+                    <button
+                      (click)="clearAllCourseFilters($event)"
+                      type="button"
+                      class="btn custom-btn primary_btn earning-btn fw_500 h_44 w-100 font_14 prev-step-btn prev-step me-2"
+                    >
+                      {{ "ClearAll" | translate }}
+                    </button>
+                    <button
+                      (click)="saveCourseFilters()"
+                      type="button"
+                      class="btn custom-btn primary_btn earning-btn fw_500 h_44 w-100 font_14 next-step m-0"
+                    >
+                      {{ "Apply" | translate }}
+                    </button>
+                  </div>
+                </div>
+              </div> -->
+            </div>
+
+            <div *ngIf="!hideFeedFilters && !isClassList" class="btn-filter align-items-center">
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 14 14"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                class="me-2"
+              >
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M5.19424 13.6654L8.37844 12.1666V8.23893L13.3716 3.17507C13.5597 2.98533 13.6654 2.72492 13.6654 2.45221V1.34373C13.6654 0.78449 13.2265 0.332031 12.685 0.332031H1.31236C0.770872 0.332031 0.332031 0.78449 0.332031 1.34373V2.47756C0.332031 2.7349 0.426494 2.98226 0.596824 3.1697L5.19424 8.23893V13.6654Z"
+                  fill="white"
+                />
+              </svg>
+
+              <!-- <div class="btn-group dropdown-filter">
+                <button
+                  (click)="getClassFilters()"
+                  type="button"
+                  class="btn btn-default dropdown-toggle after-none border-0 py-0 h-auto"
+                  data-bs-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  {{ "Classes" | translate }}
+                  <span
+                    class="position-absolute start-100 translate-middle border border-light rounded-circle filter-badge"
+                  >
+                    {{ noOfAppliedClassFilters }}
+                  </span>
+                </button>
+
+                <div class="dropdown-menu px-4 py-3">
+                  <div
+                    class="d-flex align-items-center justify-content-between mb-3"
+                  >
+                    <div
+                      class="btn-filter align-items-center dropdown-filter filter-menu-btn position-relative"
+                    >
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 14 14"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="me-1"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          clip-rule="evenodd"
+                          d="M5.19424 13.6654L8.37844 12.1666V8.23893L13.3716 3.17507C13.5597 2.98533 13.6654 2.72492 13.6654 2.45221V1.34373C13.6654 0.78449 13.2265 0.332031 12.685 0.332031H1.31236C0.770872 0.332031 0.332031 0.78449 0.332031 1.34373V2.47756C0.332031 2.7349 0.426494 2.98226 0.596824 3.1697L5.19424 8.23893V13.6654Z"
+                          fill="white"
+                        />
+                      </svg>
+                      <button
+                        type="button"
+                        class="btn btn-default dropdown-toggle after-none border-0 py-0 h-auto"
+                        data-bs-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                      >
+                        {{ "Classes" | translate }}
+                        <span
+                          class="position-absolute start-100 translate-middle border border-light rounded-circle filter-badge"
+                        >
+                          {{ noOfAppliedClassFilters }}
+                        </span>
+                      </button>
+                    </div>
+                    <button type="button" class="close border-0 bg-transparent">
+                      <svg
+                        width="17"
+                        height="17"
+                        viewBox="0 0 17 17"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M4.27344 12.7266L12.7587 4.24128"
+                          stroke="#151718"
+                          stroke-width="1.5"
+                          stroke-linecap="round"
+                        />
+                        <path
+                          d="M4.27344 4.24219L12.7587 12.7275"
+                          stroke="#151718"
+                          stroke-width="1.5"
+                          stroke-linecap="round"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+
+                  <div
+                    class="text-line-border position-relative text-center mb-2"
+                  >
+                    <span
+                      class="line-text font_12 text_ltgray fw_400 text-center"
+                      >{{ "Time" | translate }}</span
+                    >
+                  </div>
+                  <ng-container *ngFor="let classFilter of classFilters">
+                    <div
+                      *ngIf="classFilter.type == 1"
+                      class="form-group position-relative"
+                    >
+                      <div
+                        class="form-check form-check-inline font_14 fw_500 d-flex align-items-center"
+                      >
+                        <input
+                          *ngIf="classFilter.isFilterActive"
+                          (change)="
+                            changeClassFilterSettings(classFilter.id, false)
+                          "
+                          class="form-check-input"
+                          checked
+                          type="checkbox"
+                          id="inlineCheckbox1"
+                          value="option1"
+                        />
+                        <input
+                          *ngIf="!classFilter.isFilterActive"
+                          (change)="
+                            changeClassFilterSettings(classFilter.id, true)
+                          "
+                          class="form-check-input"
+                          type="checkbox"
+                          id="inlineCheckbox1"
+                          value="option1"
+                        />
+                        {{ classFilter.name | translate }}
+                      </div>
+                    </div>
+                  </ng-container>
+
+                  <div
+                    class="text-line-border position-relative text-center mb-2"
+                  >
+                    <span
+                      class="line-text font_12 text_ltgray fw_400 text-center"
+                      >{{ "Pricing" | translate }}</span
+                    >
+                  </div>
+                  <ng-container *ngFor="let classFilter of classFilters">
+                    <div
+                      *ngIf="classFilter.type == 2"
+                      class="form-group position-relative"
+                    >
+                      <div
+                        class="form-check form-check-inline font_14 fw_500 d-flex align-items-center"
+                      >
+                        <input
+                          *ngIf="classFilter.isFilterActive"
+                          (change)="
+                            changeClassFilterSettings(classFilter.id, false)
+                          "
+                          class="form-check-input"
+                          checked
+                          type="checkbox"
+                          id="inlineCheckbox1"
+                          value="option1"
+                        />
+                        <input
+                          *ngIf="!classFilter.isFilterActive"
+                          (change)="
+                            changeClassFilterSettings(classFilter.id, true)
+                          "
+                          class="form-check-input"
+                          type="checkbox"
+                          id="inlineCheckbox1"
+                          value="option1"
+                        />
+                        {{ classFilter.name | translate }}
+                      </div>
+                    </div>
+                  </ng-container>
+
+                  <div
+                    class="text-line-border position-relative text-center mb-2"
+                  >
+                    <span
+                      class="line-text font_12 text_ltgray fw_400 text-center"
+                      >{{ "Sorting" | translate }}</span
+                    >
+                  </div>
+                  <ng-container *ngFor="let classFilter of classFilters">
+                    <div
+                      *ngIf="classFilter.type == 3"
+                      class="form-group position-relative"
+                    >
+                      <div
+                        class="form-check form-check-inline font_14 fw_500 d-flex align-items-center"
+                      >
+                        <input
+                          *ngIf="classFilter.isFilterActive"
+                          (change)="
+                            changeClassFilterSettings(classFilter.id, false)
+                          "
+                          class="form-check-input"
+                          checked
+                          type="checkbox"
+                          id="inlineCheckbox1"
+                          value="option1"
+                        />
+                        <input
+                          *ngIf="!classFilter.isFilterActive"
+                          (change)="
+                            changeClassFilterSettings(classFilter.id, true)
+                          "
+                          class="form-check-input"
+                          type="checkbox"
+                          id="inlineCheckbox1"
+                          value="option1"
+                        />
+                        {{ classFilter.name | translate }}
+                      </div>
+                    </div>
+                  </ng-container>
+
+                  <div
+                    class="d-flex align-items-center justify-content-between flex-sm-nowrap border-0"
+                  >
+                    <button
+                      (click)="clearAllClassFilters($event)"
+                      type="button"
+                      class="btn custom-btn primary_btn earning-btn fw_500 h_44 w-100 font_14 prev-step-btn prev-step me-2"
+                    >
+                      {{ "ClearAll" | translate }}
+                    </button>
+                    <button
+                      (click)="saveClassFilters()"
+                      type="button"
+                      class="btn custom-btn primary_btn earning-btn fw_500 h_44 w-100 font_14 next-step m-0"
+                    >
+                      {{ "Apply" | translate }}
+                    </button>
+                  </div>
+                </div>
+              </div> -->
+
+              <!-- <span class="divider">|</span> -->
+
               <div class="btn-group dropdown-filter">
                 <button
                   (click)="getCourseFilters()"
@@ -1003,6 +1500,9 @@
                 </div>
               </div>
             </div>
+
+            
+
           </div>
         </div>
 
@@ -2290,7 +2790,7 @@
           </div>
         </div>
 
-        <div
+        <div *ngIf="isClassList"
           class="tab-pane fade show"
           id="classes-tab-pane"
           role="tabpanel"
@@ -2298,7 +2798,7 @@
           tabindex="0"
         >
           <div
-            *ngIf="classCourseList != undefined && classCourseList.length == 0"
+            *ngIf="classList != undefined && classList.length == 0"
             style="
               font-weight: 500;
               color: orange;
@@ -2307,11 +2807,11 @@
             "
             class="text-center font-34"
           >
-            Classes or courses not exists
+            Classes not exists
           </div>
           <div class="list-schol-profile">
             <div class="row">
-              <ng-container *ngFor="let item of classCourseList">
+              <ng-container *ngFor="let item of classList">
                 <div class="col-md-6">
                   <div
                     class="school-grid-box position-relative school-list-box h-100 mb-0"
@@ -2649,6 +3149,366 @@
             </div>
           </div>
         </div>
+
+        <div *ngIf="!isClassList"
+        class="tab-pane fade show"
+        id="courses-tab-pane"
+        role="tabpanel"
+        aria-labelledby="school-feed-tab"
+        tabindex="0"
+      >
+        <div
+          *ngIf="courseList != undefined && courseList.length == 0"
+          style="
+            font-weight: 500;
+            color: orange;
+            margin-top: 40px;
+            font-size: 40px;
+          "
+          class="text-center font-34"
+        >
+          Classes or courses not exists
+        </div>
+        <div class="list-schol-profile">
+          <div class="row">
+            <ng-container *ngFor="let item of courseList">
+              <div class="col-md-6">
+                <div
+                  class="school-grid-box position-relative school-list-box h-100 mb-0"
+                >
+                  <div class="schoolgrid-header pe-0">
+                    <div class="d-flex align-items-center position-relative gap-3">
+                      <div
+                        *ngIf="item.type == 1"
+                        [routerLink]="[
+                          '/profile/class',
+                          item.schoolName,
+                          item.name
+                        ]"
+                        class="school-gridprofile-icon"
+                      >
+                        <!-- <a *ngIf="item.type == 1" [routerLink]="['/profile/class', item.schoolName,item.name]" class="routeLink">
+                          <img [lazyLoad]="item.avatar" />
+                        </a>
+                        <a *ngIf="item.type == 2" [routerLink]="['/profile/course', item.schoolName,item.name]" class="routeLink">
+
+                        </a> -->
+                        <img [lazyLoad]="item.avatar" />
+                      </div>
+                      <div
+                        *ngIf="item.type == 2"
+                        [routerLink]="[
+                          '/profile/course',
+                          item.schoolName,
+                          item.name
+                        ]"
+                        class="school-gridprofile-icon"
+                      >
+                        <!-- <a *ngIf="item.type == 1" [routerLink]="['/profile/class', item.schoolName,item.name]" class="routeLink">
+                          <img [lazyLoad]="item.avatar" />
+                        </a>
+                        <a *ngIf="item.type == 2" [routerLink]="['/profile/course', item.schoolName,item.name]" class="routeLink">
+
+                        </a> -->
+                        <img [lazyLoad]="item.avatar" />
+                      </div>
+                      <h2
+                        class="d-inline-block font_16 fw_600 text_sec1 mb-0"
+                      >
+                        <a
+                          *ngIf="item.type == 1"
+                          [routerLink]="[
+                            '/profile/class',
+                            item.schoolName,
+                            item.name
+                          ]"
+                          class="routeLink"
+                        >
+                          {{ item.name }}
+                        </a>
+                        <a
+                          *ngIf="item.type == 2"
+                          [routerLink]="[
+                            '/profile/course',
+                            item.schoolName,
+                            item.name
+                          ]"
+                          class="routeLink"
+                        >
+                          {{ item.name }}
+                        </a>
+                      </h2>
+                      <div
+                        class="d-flex align-items-center post-right-action"
+                      >
+                        <ul
+                          class="list-unstyled d-flex more-action-btn before-none pe-2 me-1 mb-0"
+                        >
+                          <li class="d-inline-block ps-0 mb-0">
+                            <div class="dropdown">
+                              <button
+                                class="bg-transparent dropdown-toggle border-0 action-more-btn after-none pt-1"
+                                type="button"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                              >
+                                <i class="fa-solid fa-ellipsis"></i>
+                              </button>
+                              <ul class="dropdown-menu">
+                                <li>
+                                  <a
+                                    style="cursor: pointer"
+                                    class="dropdown-item"
+                                    (click)="
+                                      getDeletedId(
+                                        item.id,
+                                        item.type,
+                                        item.noOfStudents
+                                      )
+                                    "
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#delete-Class"
+                                    >{{ "Delete" | translate }}
+                                  </a>
+                                </li>
+                              </ul>
+                            </div>
+                          </li>
+                        </ul>
+                        <button
+                          *ngIf="item.isPinned && isOwner"
+                          (click)="
+                            pinUnpinClassCourse(item.id, item.type, false)
+                          "
+                          type="button"
+                          class="bg-transparent border-0 pinned-grid-chat position-static"
+                        >
+                          <img
+                            class="w-auto h-auto"
+                            lazyLoad="../../../../assets/images/pinned-orange.svg"
+                          />
+                        </button>
+                        <button
+                          *ngIf="!item.isPinned && isOwner"
+                          (click)="
+                            pinUnpinClassCourse(item.id, item.type, true)
+                          "
+                          type="button"
+                          class="bg-transparent border-0 pinned-grid-chat position-static"
+                        >
+                          <img
+                            class="w-auto h-auto"
+                            lazyLoad="../../../../assets/images/pinned-gray.svg"
+                          />
+                        </button>
+                      </div>
+                    </div>
+
+                    <div
+                      class="d-flex justify-content-between date-view-list mt-3 align-items-center mb-0"
+                    >
+                      <p
+                        *ngIf="item.type != 2"
+                        class="font_12 school-grid-date d-inline-block mb-0 text_ltgray"
+                      >
+                        {{ item?.startDate | date : "MMMM d" }} -
+                        {{ item?.endDate | date : "MMMM d" }}
+                      </p>
+                      <div class="profile-star d-flex align-items-center">
+                        <span
+                          *ngIf="item.rating != null"
+                          class="font_14 fw_600 text_sec1 d-inline-flex align-items-center"
+                          ><img
+                            lazyLoad="../../../../assets/images/Star-solid-dark.svg"
+                            class="me-1"
+                          />{{ item.rating }}</span
+                        >
+                        <span
+                          *ngIf="item.price != null && item.price != 0"
+                          class="payment-profile font_12 text_ltgray ms-2"
+                          ><strong class="cost_theme font_14"
+                            >${{ item.price }}</strong
+                          >{{ "OnePayment" | translate }}</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                  <div class="school-grid-body">
+                    <p class="text_sec1 font_14">{{ item.description }}</p>
+                    <div
+                      *ngIf="item.tags.length > 0"
+                      class="teacher-tags tag-box hashtag_box"
+                    >
+                      <span
+                        *ngFor="let tag of (postsTagValues)"
+                        class="custom-tag"
+                        >#{{ tag }}</span
+                      >
+                    </div>
+                    <div
+                      *ngIf="item.tags.length == 0"
+                      class="teacher-tags tag-box hashtag_box"
+                    >
+                      <!-- <span class="custom-tag"></span> -->
+                    </div>
+                    <div
+                      class="school-grid-thumbnail shadow-thumnail position-relative classes-grid overflow-hidden"
+                    >
+                      <div
+                        class="row gx-1"
+                        style="cursor: pointer"
+                        (click)="openClassCourseViewModal(item)"
+                      >
+                        <div class="col-md-12">
+                          <div
+                            class="school-large-thumbnail position-relative"
+                          >
+                            <img
+                              *ngIf="item.thumbnailType == 1"
+                              class="w-100"
+                              [lazyLoad]="item.thumbnailUrl"
+                            />
+
+                            <div
+                              *ngIf="item.thumbnailType == 2"
+                              class="videofile"
+                            >
+                              <video
+                              preload="metadata"
+                              style="height: 300px"
+                              [src]="item.thumbnailUrl"
+                              type="video/mp4"
+                              muted
+                              (mouseenter)="playVideo(item)"
+                              (mouseleave)="pauseVideo(item)"
+                            ></video>
+
+                              <!-- <video preload="metadata" style="height: 300px" [autoplay]="playVideoOnHover">
+                                <source
+                                  [src]="item.thumbnailUrl"
+                                  type="video/mp4"
+                                />
+                              </video> -->
+
+                              <!-- <videoJs-component
+                              [postAttachment]="item"
+                              [isClassCourseThumbnail]="true"
+                            ></videoJs-component> -->
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="school-grid-footer above-thumbnail">
+                        <button
+                          type="button"
+                          class="bg-transparent border-0 function-btns text-light"
+                        >
+                          <img
+                            lazyLoad="../../../../assets/images/eye-light.svg"
+                            class="d-block mx-auto"
+                          />
+                          <span *ngIf="item.type == 1">{{
+                            item.classViews.length
+                          }}</span>
+                          <span *ngIf="item.type == 2">{{
+                            item.courseViews.length
+                          }}</span>
+                        </button>
+                        <button
+                          (click)="
+                            likeUnlikeClassCourse(item.id, true, item.type)
+                          "
+                          type="button"
+                          class="bg-transparent border-0 function-btns text-light"
+                        >
+                          <img
+                            *ngIf="item.isLikedByCurrentUser"
+                            lazyLoad="../../../assets/images/heart-red.svg"
+                            class="d-block mx-auto"
+                          />
+                          <img
+                            *ngIf="!item.isLikedByCurrentUser"
+                            lazyLoad="../../../../assets/images/Heart-light.svg"
+                            class="d-block mx-auto"
+                          />
+
+                          <span
+                            *ngIf="
+                              likesClassCourseLength != undefined &&
+                              currentLikedClassCourseId == item.id
+                            "
+                            >{{ likesClassCourseLength }}</span
+                          >
+                          <span
+                            *ngIf="
+                              currentLikedClassCourseId != item.id &&
+                              item.type == 1
+                            "
+                            >{{ item.classLikes.length }}</span
+                          >
+                          <span
+                            *ngIf="
+                              currentLikedClassCourseId != item.id &&
+                              item.type == 2
+                            "
+                            >{{ item.courseLikes.length }}</span
+                          >
+                        </button>
+                        <button
+                          type="button"
+                          class="bg-transparent border-0 function-btns text-light"
+                        >
+                          <img
+                            lazyLoad="../../../../assets/images/Chat-light.svg"
+                            class="d-block mx-auto"
+                          />
+                          {{ item.commentsCount }}
+                        </button>
+                        <button
+                          (click)="saveClassCourse(item.id, item.type)"
+                          type="button"
+                          class="bg-transparent border-0 function-btns text-light"
+                        >
+                          <img
+                            *ngIf="!item.isClassCourseSavedByCurrentUser"
+                            lazyLoad="../../../../assets/images/Bookmark-light.svg"
+                            class="d-block mx-auto"
+                          />
+                          <img
+                            *ngIf="item.isClassCourseSavedByCurrentUser"
+                            lazyLoad="../../../../assets/images/Bookmark-light.svg"
+                            class="d-block mx-auto"
+                          />
+                          {{ item.savedClassCourseCount }}
+                        </button>
+                        <button
+                          (click)="
+                            openShareClassCourseModal(
+                              item.schoolName,
+                              item.name,
+                              item.type,
+                              item.description,
+                              item.thumbnailUrl
+                            )
+                          "
+                          type="button"
+                          class="bg-transparent border-0 function-btns text-light"
+                        >
+                          <img
+                            lazyLoad="../../../../assets/images/Upload-light.svg"
+                            class="d-block mx-auto"
+                          />
+                          0
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
 
         <!-- Modal -->
         <div

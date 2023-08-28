@@ -20,6 +20,10 @@
     outline: none !important;
     box-shadow: none !important;
   }
+
+  .p-fluid  ::ng-deep .p-autocomplete {
+  width: 94% !important;
+}
   
   /* ::ng-deep .p-autocomplete ::ng-deep .p-component li::before,
   p-autocomplete li:before {

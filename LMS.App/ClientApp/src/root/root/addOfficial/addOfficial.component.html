@@ -41,8 +41,10 @@
             >
           </div>
           <form [formGroup]="createTeacherForm" class="latest-form add-tag-step">
-          <label class="font_10">{{ "UserName" | translate }}</label>
-          <div class="form-group" style="margin-left: 38%;width: 25%;">
+            <div class="col-4 d-flex" style="margin-left: 33%;">
+            <div>
+          <label class="font_10">{{ "OfficialName" | translate }}</label>
+          <div class="form-group">
             <span class="p-fluid">
               <!-- <p-autoComplete
                 formControlName="userId"
@@ -62,11 +64,14 @@
               </p-autoComplete> -->
 
               <p-autoComplete class="form-control w-100" formControlName="user" [suggestions]="filteredUsers" (completeMethod)="filterUsers($event)"
-  field="userName" [minLength]="1" [showEmptyMessage]="true"  [emptyMessage]="'NoResultFound' | translate" [size]="200" placeholder="{{ 'TypeLanguageToAdd' | translate }}"
+  field="userName" [minLength]="1" [showEmptyMessage]="true"  [emptyMessage]="'NoResultFound' | translate" [size]="200"
   ></p-autoComplete>
             </span>
           </div>
+          </div>
+          </div>
           </form>
+          <br>
 
           <div
           class="text-line-border position-relative text-center mb-4"
@@ -243,7 +248,7 @@
           isSubmitted &&
           createTeacherForm.controls.user.errors
           "
-          >{{ "PleaseSelectTheTeacher" | translate }}
+          >{{ "PleaseSelectTheOfficial" | translate }}
         </small>
       </div>
           <div class="row" style="width: 50%;margin-left: 26%;">

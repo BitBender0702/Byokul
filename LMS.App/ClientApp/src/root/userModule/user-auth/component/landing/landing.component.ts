@@ -16,12 +16,15 @@ import { finalize } from 'rxjs';
 
 export class LandingComponent implements OnInit {
   private _authService;
-    constructor(authService:AuthService) { 
+    constructor(authService:AuthService,private router: Router) { 
       this._authService = authService;
     }
   
     ngOnInit(): void {
       this._authService.loginState$.next(false);
+      if(localStorage.getItem("jwt")){
+        this.router.navigate([`/user/userFeed`]);
+      }
     }
 
   }

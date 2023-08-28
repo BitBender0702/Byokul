@@ -177,6 +177,7 @@
                           [postAttachment]="video" [isReelView]="true"></videoJs-component>
                         <!-- <video [id]="'video-' + i" controls controlsList="nodownload noremoteplayback" *ngFor="let video of item.postAttachments" loop [src]="video.fileUrl"  type="video/mp4" (click)="toggleVideoPlayback($event)"></video> -->
                       </div>
+                      <div class="d-flex">
                       <div class="reel-username font_16 white_text d-flex">
                         <a *ngIf="item.postAuthorType == 1" (click)="getSelectedSchool(item.parentName)"
                           class="routeLink d-flex align-items-center">
@@ -219,6 +220,52 @@
                           {{item.parentName}}
                         </a>
                       </div>
+                      <div>
+                        <ul
+                        *ngIf="item?.createdBy == userId"
+                        class="list-unstyled d-flex more-action-btn before-none pe-2 me-1 mb-0"
+                        style="position: absolute;right: 10px;top: 21px;">
+                        <li class="d-inline-block ps-0 mb-0">
+                          <div class="dropdown">
+                            <button
+                              class="bg-transparent dropdown-toggle border-0 action-more-btn after-none pt-1"
+                              type="button"
+                              data-bs-toggle="dropdown"
+                              aria-expanded="false"
+                            >
+                              <i class="fa-solid fa-ellipsis" style="color: white;"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                              <li>
+                                <a
+                                  style="cursor: pointer"
+                                  class="dropdown-item"
+                                  (click)="getDeletedPostId(item?.id)"
+                                  data-bs-toggle="modal"
+                                  data-bs-target="#delete-Class"
+                                  >{{ "Delete" | translate }}
+                                </a>
+                              </li>
+                              <li>
+                                <a
+                                  style="cursor: pointer"
+                                  class="dropdown-item"
+                                  (click)="openPostModal(item)"
+                                  data-bs-toggle="modal"
+                                  data-bs-target="#delete-Class"
+                                  >{{ "Edit" | translate }}
+                                  <div *ngIf="item.updatedOn != null">
+                                    (<span>{{ "UpdatedOn" | translate }} - </span>
+                                    {{ item.updatedOn | date : "d MMMM y h:mm a" }})
+                                  </div>
+                                </a>
+                              </li>
+                            </ul>
+                          </div>
+                        </li>
+                      </ul>
+                      </div>
+                    </div>
                       <div class="live-bottom-text p-3">
                         <h5 class="font_14 mb-0 fw_600 text_sec1">{{item.title}} <span
                           class="font_14 fw_400  ms-3">{{item.description}}</span>

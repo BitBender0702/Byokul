@@ -1150,7 +1150,7 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
     // if (isMobileOrTab) {
     // this.router.navigateByUrl(`user/reelsView/${this.user.id}/user/${postAttachmentId}`);
     this.router.navigate(
-      [`user/reelsView/${this.user.id}/user/${postAttachmentId}`],
+      [`user/reelsView/${this.user.id}/user/${postAttachmentId}/${postId}`],
       { state: { post: { postId: postId } } });
 
     //   } else {

@@ -963,7 +963,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
 
   openPostModal(isLiveTabOpen?: boolean, isShareProfile?:boolean): void {
     const initialState = {
-      userId: this.userId,
+      // userId: this.userId,
       courseId: this.course.courseId,
       from: "course",
       isLiveTabOpen: isLiveTabOpen,
@@ -1141,7 +1141,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
 
   openReelsViewModal(postAttachmentId: string, postId: string): void {
     this.router.navigate(
-      [`user/reelsView/${this.course.courseId}/course/${postAttachmentId}`],
+      [`user/reelsView/${this.course.courseId}/course/${postAttachmentId}/${postId}`],
       // { state: { post: { postId: postId } } });
       { state: { post: { postId: postId, banned:this.isBanned } } });
     // const initialState = {

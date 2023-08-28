@@ -378,7 +378,11 @@
   "FilesAddedSuccessfully": "Files added successfully",
   "SchoolHasNoStorageSpace": "This school has not the required storage space",
   "AvailableSpace": "Available Space",
-  "VideoLibrary":"Video Library"
+  "VideoLibrary":"Video Library",
+  "Official": "Official",
+  "OfficialName": "Official Name"
+
+
 
 
 

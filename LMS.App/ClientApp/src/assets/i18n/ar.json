@@ -468,7 +468,7 @@
   "DistanceSalesAgreementForSchools": "اتفاقية البيع عن بعد للمدارس",
   "DistanceSalesAgreementForStudents": "اتفاقية البيع عن بعد للطلاب",
   "GoLive": "Go Live",
-  "PhoneNumber": "Phone Number",
+  "PhoneNumber": "رقم التليفون",
   "StateOrProvince": "الولاية / المقاطعة",
   "VideoDurationExceed": "You can not upload a reel longer than 3 minutes",
   "PhoneNumberRequired": "Phone number is required",
@@ -519,14 +519,14 @@
   "BuyerName": "Buyer Name",
   "ThankYouForYourRating":"Thank You For Your Rating!",
   "Rate": "Rate",
-  "Officials": "Officials",
-  "AddOfficial": "Add Official",
+  "Officials": "المسؤولين",
+  "AddOfficial": "إضافة الرسمية",
   "SchoolVideoLibrary": "School Video Library",
   "UploadVideo": "Upload Video",
   "TeacherUpdatedSuccessfully": "Teacher updated successfully",
   "EditOfficial": "Edit Official",
   "UpdateOfficial": "Update Official",
-  "PleaseSelectTheTeacher": "Please select the teacher",
+  "PleaseSelectTheOfficial": "الرجاء اختيار المسؤول",
   "PleaseSelectTheVideo": "Please select the video to upload",
   "VideoLibraryProgressMessage": "Your video is being processed. We’ll let you know when upload will completed",
   "VideoDeletedSuccessfully": "Video deleted successfully",
@@ -539,7 +539,12 @@
   "FilesAddedSuccessfully": "Files added successfully",
   "SchoolHasNoStorageSpace": "This school has not the required storage space",
   "AvailableSpace": "Available Space",
-  "VideoLibrary":"Video Library"
+  "VideoLibrary":"Video Library",
+  "Official": "رسمي",
+  "OfficialName": "اسم رسمي"
+
+
+  
 
 
 

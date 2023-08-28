@@ -142,6 +142,8 @@ export class SchoolProfileComponent
   isFollowed!: boolean;
   followersLength!: number;
   classCourseList: any;
+  classList: any;
+  courseList: any;
   likesLength!: number;
   isLiked!: boolean;
   likeUnlikePost!: LikeUnlikePost;
@@ -162,7 +164,12 @@ export class SchoolProfileComponent
   frontEndPageNumber: number = 1;
   scrollFeedResponseCount: number = 1;
   classCoursePageNumber: number = 1;
+  classPageNumber: number = 1;
+  coursePageNumber: number = 1;
   scrollClassCourseResponseCount: number = 1;
+  scrollClassesResponseCount: number = 1;
+  scrollCoursesResponseCount: number = 1;
+
   classCourseItem: any;
   classFilters: any;
   courseFilters: any;
@@ -200,6 +207,8 @@ export class SchoolProfileComponent
   schoolParamsData$: any;
   reelsPageNumber: number = 1;
   scrolled: boolean = false;
+  classScrolled: boolean = false;
+  courseScrolled: boolean = false;
   userPermissions: any;
   hasAllPermission: any;
   hasPostPermission!: boolean;
@@ -342,6 +351,8 @@ export class SchoolProfileComponent
       this.profileGrid();
     }
     this.classCourseList = undefined;
+    this.classList = undefined;
+    this.courseList = undefined;
     if (this._authService.roleUser(RolesEnum.SchoolAdmin)) {
       this._authService.loginState$.next(false);
       this._authService.loginAdminState$.next(true);
@@ -378,10 +389,16 @@ export class SchoolProfileComponent
       this.addEventListnerOnCarousel();
       // const schoolTabButtonElement = this.el.nativeElement.querySelector('#school-tab');
       // this.renderer.addClass(schoolTabButtonElement, 'active');
-      const ClassCourseButtonElement = this.el.nativeElement.querySelector('#classes-tab');
-      const hasActiveClass = ClassCourseButtonElement.classList.contains('active');
+      const classButtonElement = this.el.nativeElement.querySelector('#classes-tab');
+      const hasActiveClass = classButtonElement.classList.contains('active');
       if (hasActiveClass) {
-        this.GetSchoolClassCourseList(this.school.schoolId, undefined, 1);
+        this.GetSchoolClassesList(this.school.schoolId, undefined, 1);
+      }
+
+      const courseButtonElement = this.el.nativeElement.querySelector('#courses-tab');
+      const hasActiveCourse = courseButtonElement.classList.contains('active');
+      if (hasActiveCourse) {
+        this.GetSchoolCoursesList(this.school.schoolId, undefined, 1);
       }
 
       // this.renderer.removeClass(ClassCourseButtonElement, 'active');
@@ -659,20 +676,31 @@ export class SchoolProfileComponent
 
   @HostListener("window:scroll", [])
   onWindowScroll() {
+    debugger
     const scrollPosition = window.pageYOffset;
     const windowSize = window.innerHeight;
     const bodyHeight = document.body.offsetHeight;
 
     if (scrollPosition >= bodyHeight - windowSize) {
       if (this.isFeedHide) {
-        if (!this.scrolled && this.scrollClassCourseResponseCount != 0) {
-          this.scrolled = true;
+        if (!this.classScrolled && this.scrollClassesResponseCount != 0 && this.isClassList) {
+          this.classScrolled = true;
           this.postLoadingIcon = true;
-          this.classCoursePageNumber++;
-          this.GetSchoolClassCourses();
+          // this.classCoursePageNumber++;
+          this.classPageNumber++;
+          // this.GetSchoolClassCourses();
+          this.GetNextSchoolClasses();
+        }
+        if (!this.courseScrolled && this.scrollCoursesResponseCount != 0 && !this.isClassList) {
+          this.courseScrolled = true;
+          this.postLoadingIcon = true;
+          // this.classCoursePageNumber++;
+          this.coursePageNumber++;
+          // this.GetSchoolClassCourses();
+          this.GetNextSchoolCourses();
         }
       }
-      if (!this.scrolled && this.scrollFeedResponseCount != 0) {
+      if (!this.scrolled && this.scrollFeedResponseCount != 0 && this.isClassList == undefined) {
         this.scrolled = true;
         this.postLoadingIcon = true;
         this.frontEndPageNumber++;
@@ -720,6 +748,38 @@ export class SchoolProfileComponent
       this.scrolled = false;
     });
   }
+
+  GetNextSchoolClasses() {
+    if (this.school?.schoolId == undefined) {
+      this.postLoadingIcon = true;
+      return;
+    }
+    this._schoolService.getSchoolClassesList(this.school.schoolId, this.classPageNumber).subscribe((result) => {
+      if (this.classList != undefined) {
+        this.classList = [...this.classList, ...result];
+      }
+      this.postLoadingIcon = false;
+      this.scrollClassesResponseCount = result.length;
+      this.classScrolled = false;
+    });
+  }
+
+  
+  GetNextSchoolCourses() {
+    if (this.school?.schoolId == undefined) {
+      this.postLoadingIcon = true;
+      return;
+    }
+    this._schoolService.getSchoolCoursesList(this.school.schoolId, this.coursePageNumber).subscribe((result) => {
+      if (this.courseList != undefined) {
+        this.courseList = [...this.courseList, ...result];
+      }
+      this.postLoadingIcon = false;
+      this.scrollCoursesResponseCount = result.length;
+      this.courseScrolled = false;
+    });
+  }
+
 
   isOwnerOrNot() {
     debugger
@@ -1341,6 +1401,7 @@ export class SchoolProfileComponent
     } else {
       this.hideFeedFilters = false;
     }
+    this.isClassList = undefined;
   }
 
   GetSchoolClassCourseList(schoolId: string, appliedFilters?: boolean, pageNumber?: number) {
@@ -1360,6 +1421,48 @@ export class SchoolProfileComponent
       });
     }
   }
+
+  isClassList!:boolean | undefined;
+    GetSchoolClassesList(schoolId: string, appliedFilters?: boolean, pageNumber?: number) {
+      debugger
+      this.isClassList = true;
+    // var school = this.school;
+    this.isFeedHide = true;
+    this.hideFeedFilters = false;
+    if (pageNumber != undefined) {
+      this.classPageNumber = pageNumber;
+    }
+    if (this.classList == undefined || appliedFilters) {
+      this.loadingIcon = true;
+      this._schoolService.getSchoolClassesList(schoolId, this.classPageNumber).subscribe((response) => {
+        debugger
+        this.classList = response;
+        this.loadingIcon = false;
+      });
+    }
+  }
+
+  GetSchoolCoursesList(schoolId: string, appliedFilters?: boolean, pageNumber?: number) {
+    debugger
+    this.isClassList = false;
+  // var school = this.school;
+  this.isFeedHide = true;
+  this.hideFeedFilters = false;
+  if (pageNumber != undefined) {
+    this.classPageNumber = pageNumber;
+  }
+  if (this.courseList == undefined || appliedFilters) {
+    this.loadingIcon = true;
+    this._schoolService.getSchoolCoursesList(schoolId, this.coursePageNumber).subscribe((response) => {
+      debugger
+      this.courseList = response;
+      this.loadingIcon = false;
+    });
+  }
+}
+
+
+  
 
   pinUnpinClassCourse(id: string, type: string, isPinned: boolean) {
     this._schoolService
@@ -1531,42 +1634,83 @@ export class SchoolProfileComponent
 
   likeUnlikeClassCourse(Id: string, isLike: boolean, type: number) {
     this.currentLikedClassCourseId = Id;
-    this.classCourseList
+    
+    if(type == 1){
+    this.classList
       .filter((p: any) => p.id == Id)
       .forEach((item: any) => {
         //   // here item.likes is null
-        if (item.type == 1) {
+        // if (item.type == 1) {
           var likes: any[] = item.classLikes;
           var isLiked = likes.filter(
             (x) => x.userId == this.userId && x.classId == Id
           );
-        } else {
-          var likes: any[] = item.courseLikes;
-          var isLiked = likes.filter(
-            (x) => x.userId == this.userId && x.courseId == Id
-          );
-        }
+        // } else {
+        //   var likes: any[] = item.courseLikes;
+        //   var isLiked = likes.filter(
+        //     (x) => x.userId == this.userId && x.courseId == Id
+        //   );
+        // }
         // var likes: any[] = item.likes;
 
         if (isLiked.length != 0) {
           this.isClassCourseLiked = false;
-          if (item.type == 1) {
+          // if (item.type == 1) {
             this.likesClassCourseLength = item.classLikes.length - 1;
-          } else {
-            this.likesClassCourseLength = item.courseLikes.length - 1;
-          }
+          // } else {
+          //   this.likesClassCourseLength = item.courseLikes.length - 1;
+          // }
           item.isLikedByCurrentUser = false;
         } else {
           this.isClassCourseLiked = true;
-          if (item.type == 1) {
+          // if (item.type == 1) {
             this.likesClassCourseLength = item.classLikes.length + 1;
-          } else {
-            this.likesClassCourseLength = item.courseLikes.length + 1;
-          }
+          // } else {
+          //   this.likesClassCourseLength = item.courseLikes.length + 1;
+          // }
 
           item.isLikedByCurrentUser = true;
         }
       });
+    }
+    if(type == 2){
+      this.courseList
+      .filter((p: any) => p.id == Id)
+      .forEach((item: any) => {
+        //   // here item.likes is null
+        // if (item.type == 1) {
+        //   var likes: any[] = item.classLikes;
+        //   var isLiked = likes.filter(
+        //     (x) => x.userId == this.userId && x.classId == Id
+        //   );
+        // } else {
+          var likes: any[] = item.courseLikes;
+          var isLiked = likes.filter(
+            (x) => x.userId == this.userId && x.courseId == Id
+          );
+        // }
+        // var likes: any[] = item.likes;
+
+        if (isLiked.length != 0) {
+          this.isClassCourseLiked = false;
+          // if (item.type == 1) {
+          //   this.likesClassCourseLength = item.classLikes.length - 1;
+          // } else {
+            this.likesClassCourseLength = item.courseLikes.length - 1;
+          // }
+          item.isLikedByCurrentUser = false;
+        } else {
+          this.isClassCourseLiked = true;
+          // if (item.type == 1) {
+          //   this.likesClassCourseLength = item.classLikes.length + 1;
+          // } else {
+            this.likesClassCourseLength = item.courseLikes.length + 1;
+          // }
+
+          item.isLikedByCurrentUser = true;
+        }
+      });
+    }
 
     this.InitializeLikeUnlikeClassCourse();
     this.likeUnlikeClassCourses.Id = Id;
@@ -1577,13 +1721,13 @@ export class SchoolProfileComponent
       .likeUnlikeClassCourse(this.likeUnlikeClassCourses)
       .subscribe((response) => {
         if (type == 1) {
-          this.classCourseList
+          this.classList
             .filter((p: any) => p.id == Id)
             .forEach((item: any) => {
               item.classLikes = response;
             });
         } else {
-          this.classCourseList
+          this.courseList
             .filter((p: any) => p.id == Id)
             .forEach((item: any) => {
               item.courseLikes = response;
@@ -1591,7 +1735,6 @@ export class SchoolProfileComponent
         }
 
         this.InitializeLikeUnlikeClassCourse();
-        console.log('succes');
       });
   }
 
@@ -1606,7 +1749,7 @@ export class SchoolProfileComponent
 
   openReelsViewModal(postAttachmentId: string, postId: string): void {
     this.router.navigate(
-      [`user/reelsView/${this.school.schoolId}/school/${postAttachmentId}`],
+      [`user/reelsView/${this.school.schoolId}/school/${postAttachmentId}/${postId}`],
       { state: { post: { postId: postId } } });
     // const initialState = {
     //   postAttachmentId: postAttachmentId,
@@ -1680,15 +1823,16 @@ export class SchoolProfileComponent
 
   saveClassFilters() {
     this._classService.saveClassFilters(this.classFilterList).subscribe((response) => {
+      debugger
       this.classFilterList = [];
-      this.GetSchoolClassCourseList(this.school.schoolId, true, 1);
+      this.GetSchoolClassesList(this.school.schoolId, true, 1);
     });
   }
 
   saveCourseFilters() {
     this._courseService.saveCourseFilters(this.courseFilterList).subscribe((response) => {
       this.courseFilterList = [];
-      this.GetSchoolClassCourseList(this.school.schoolId, true, 1);
+      this.GetSchoolCoursesList(this.school.schoolId, true, 1);
     });
   }
 
@@ -1750,8 +1894,16 @@ export class SchoolProfileComponent
 
   saveClassCourse(id: string, type: number) {
     const translatedMessage = this.translateService.instant('Success');
-    var classCourseList: any[] = this.classCourseList;
-    var isSavedClassCourse = classCourseList.find(x => x.id == id);
+    if(type == 1){
+      var classList: any[] = this.classList;
+      var isSavedClassCourse = classList.find(x => x.id == id);
+    }
+    else{
+      var courseList: any[] = this.courseList;
+      var isSavedClassCourse = courseList.find(x => x.id == id);
+    }
+    // var classCourseList: any[] = this.classCourseList;
+    // var isSavedClassCourse = classCourseList.find(x => x.id == id);
 
     if (isSavedClassCourse.isClassCourseSavedByCurrentUser) {
       isSavedClassCourse.savedClassCourseCount -= 1;

@@ -112,6 +112,18 @@ export class SchoolService{
         return this.http.get(`${this.apiUrl}/school/getSchoolClassCourse`, {params:queryParams,headers: this.headers});
     }
 
+    getSchoolClassesList(schoolId:any,pageNumber:number):Observable<any>{
+        // return this.http.get(`${this.apiUrl}/school/getSchoolClassCourse` + '?schoolId=' + schoolId);
+        let queryParams = new HttpParams().append("schoolId",schoolId).append("pageNumber",pageNumber);
+        return this.http.get(`${this.apiUrl}/school/getSchoolClasses`, {params:queryParams,headers: this.headers});
+    }
+
+    getSchoolCoursesList(schoolId:any,pageNumber:number):Observable<any>{
+        // return this.http.get(`${this.apiUrl}/school/getSchoolClassCourse` + '?schoolId=' + schoolId);
+        let queryParams = new HttpParams().append("schoolId",schoolId).append("pageNumber",pageNumber);
+        return this.http.get(`${this.apiUrl}/school/getSchoolCourses`, {params:queryParams,headers: this.headers});
+    }
+
     pinUnpinClassCourse(id:string,type:string,isPinned:boolean): Observable<any> {
         let queryParams = new HttpParams().append("id",id).append("type",type).append("isPinned",isPinned);
         return this.http.post(`${this.apiUrl}/school/pinUnpinClassCourse`,null, {params:queryParams,headers: this.headers});

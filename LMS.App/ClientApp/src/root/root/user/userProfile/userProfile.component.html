@@ -309,7 +309,7 @@
             <div class="teacher-tags tag-box mt-0 hover-tags">
               <div class="teacher-content font_14 d-inline-block">
                 <img src="../../../../assets/images/bag-dark.svg" />
-                {{ "Teacher" | translate }}
+                {{ "Official" | translate }}
               </div>
               <span
                 *ngFor="let item of user.schoolsAsTeacher"
@@ -5948,6 +5948,8 @@
                   [singleSlideOffset]="singleSlideOffset"
                   [interval]="0"
                   [noWrap]="noWrap"
+                  (touchstart)="touchStart($event)" 
+                  (touchend)="touchEnd($event)"
                 >
                   <div *ngFor="let post of savedReelsList">
                     <div *ngIf="post.postType == 3">
@@ -6070,6 +6072,8 @@
                   [singleSlideOffset]="singleSlideOffset"
                   [interval]="0"
                   [noWrap]="noWrap"
+                  (touchstart)="touchStart($event)" 
+                  (touchend)="touchEnd($event)"
                 >
                   <div *ngFor="let post of sharedReelsList">
                     <div *ngIf="post.postType == 3">
@@ -6192,6 +6196,8 @@
                   [singleSlideOffset]="singleSlideOffset"
                   [interval]="0"
                   [noWrap]="noWrap"
+                  (touchstart)="touchStart($event)" 
+                  (touchend)="touchEnd($event)"
                 >
                   <div *ngFor="let post of likedReelsList">
                     <div *ngIf="post.postType == 3">

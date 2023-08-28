@@ -38,7 +38,9 @@ namespace LMS.Services
         Task<List<SchoolFollowerViewModel>> GetSchoolFollowers(Guid schoolId, int pageNumber, string? searchString);
         Task<string> IsSchoolNameExist(string schoolName);
         //Task<SchoolViewModel> GetSchoolByName(string schoolName);
-        Task<IEnumerable<CombineClassCourseViewModel>> GetSchoolClassCourse(Guid? schoolId, string userId, int pageNumber);
+        //Task<IEnumerable<CombineClassCourseViewModel>> GetSchoolClassCourse(Guid? schoolId, string userId, int pageNumber);
+        Task<IEnumerable<CombineClassCourseViewModel>> GetSchoolClasses(Guid? schoolId, string userId, int pageNumber);
+        Task<IEnumerable<CombineClassCourseViewModel>> GetSchoolCourses(Guid? schoolId, string userId, int pageNumber);
         Task<bool> PinUnpinClassCourse(Guid id, ClassCourseEnum type, bool isPinned);
         Task<List<SchoolViewModel>> GetUserAllSchools(string userId);
         Task<IEnumerable<PostDetailsViewModel>> GetPostsBySchool(Guid schoolId, string loginUserId, int pageNumber, int pageSize);

@@ -472,7 +472,7 @@
   "DistanceSalesAgreementForSchools": "Mesafeli Satış Sözleşmesi (Okul)",
   "DistanceSalesAgreementForStudents": "Mesafeli Satış Sözleşmesi (Öğrenci)",
   "GoLive": "Go Live",
-  "PhoneNumber": "Phone Number",
+  "PhoneNumber": "Telefon numarası",
   "StateOrProvince": "Eyalet/İl",
   "VideoDurationExceed": "You can not upload a reel longer than 3 minutes",
   "PhoneNumberRequired": "Phone number is required",
@@ -524,14 +524,14 @@
   "Rate": "Rate",
   "VideoThumbnailDurationExceed": "You can not upload a video thumbnail longer than 3 minutes",
   "ThankYouForYourRating":"Thank You For Your Rating!",
-  "Officials": "Officials",
-  "AddOfficial": "Add Official",
+  "Officials": "Yetkililer",
+  "AddOfficial": "Resmi Ekle",
   "SchoolVideoLibrary": "School Video Library",
   "UploadVideo": "Upload Video",
   "TeacherUpdatedSuccessfully": "Teacher updated successfully",
   "EditOfficial": "Edit Official",
   "UpdateOfficial": "Update Official",
-  "PleaseSelectTheTeacher": "Please select the teacher",
+  "PleaseSelectTheOfficial": "Lütfen yetkiliyi seçin",
   "PleaseSelectTheVideo": "Please select the video to upload",
   "VideoLibraryProgressMessage": "Your video is being processed. We’ll let you know when upload will completed",
   "VideoDeletedSuccessfully": "Video deleted successfully",
@@ -544,7 +544,11 @@
   "FilesAddedSuccessfully": "Files added successfully",
   "SchoolHasNoStorageSpace": "This school has not the required storage space",
   "AvailableSpace": "Available Space",
-  "VideoLibrary":"Video Library"
+  "VideoLibrary":"Video Library",
+  "Official": "Resmi",
+  "OfficialName": "Resmi Ad"
+
+
 
 
 

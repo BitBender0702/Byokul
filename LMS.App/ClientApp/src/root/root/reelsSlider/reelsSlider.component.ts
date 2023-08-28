@@ -15,7 +15,7 @@ import { Subject, Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { Constant } from 'src/root/interfaces/constant';
 import { SharePostComponent } from '../sharePost/sharePost.component';
-import { sharePostResponse } from '../postView/postView.component';
+import { deletePostResponse, sharePostResponse } from '../postView/postView.component';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { SchoolService } from 'src/root/service/school.service';
 import { CourseService } from 'src/root/service/course.service';
@@ -25,8 +25,10 @@ import { CommentViewModel } from 'src/root/interfaces/chat/commentViewModel';
 import { SignalrService, commentLikeResponse, commentResponse } from 'src/root/service/signalr.service';
 import { PostView } from 'src/root/interfaces/post/postView';
 import { SlickCarouselComponent } from 'ngx-slick-carousel';
-import { StudentService } from 'src/root/service/student.service';
+import { CreatePostComponent } from '../createPost/createPost.component';
+import { deleteReelResponse } from '../root.component';
 import { ReelsService } from 'src/root/service/reels.service';
+import { StudentService } from 'src/root/service/student.service';
 
 export const savedReelResponse = new Subject<{ isReelSaved: boolean, id: string }>();
 
@@ -90,6 +92,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   lastPostId: string = "";
   ownerId: string = "";
   post: any;
+  postId:string = "";
   @ViewChild('groupChatList') groupChatList!: ElementRef;
 
   private _studentService;
@@ -109,25 +112,19 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
     this._studentService = studentService;
   }
 
-  isBanned:any;
   ngOnInit() {
     debugger
     var selectedLang = localStorage.getItem("selectedLanguage");
     this.translate.use(selectedLang ?? '');
-    this.post = history.state.post;
+    // this.post = history.state.post;
     this.InitializePostView();
     this.getSenderInfo();
-    this.addPostView(this.post.postId);
     this.loadingIcon = true;
     this.ownerId = this.route.snapshot.paramMap.get('id') ?? '';
     this.from = this.route.snapshot.paramMap.get('from') ?? '';
     this.reelId = this.route.snapshot.paramMap.get('reelId') ?? '';
-
-    // this.isBanned = this.post.isBanned
-
-
-
-
+    this.postId = this.route.snapshot.paramMap.get('postId') ?? '';
+    this.addPostView(this.postId);
 
     if (this.from == Constant.User) {
       this.getReelsByUser(this.ownerId);
@@ -215,7 +212,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
 
   getReelsByUser(userId: string) {
     this._userService.GetSliderReelsByUserId(userId, this.reelId, 3).subscribe((response) => {
-      
+      debugger
       this.reels = response;
       this.selectedReel = this.reels[0];
       this.lastPostId = this.reels[this.reels.length - 1].id;
@@ -1191,13 +1188,44 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
     window.location.href = `user/userProfile/${userId}`;
   }
 
+  getDeletedPostId(id:string){
+    debugger
+    this.loadingIcon = true;
+    this._postService.deletePost(id).subscribe((_response) => {
+      // this.close();
+      var deletedPost = this.reels.find((x: { id: string; }) => x.id == id);
+      const index = this.reels.indexOf(deletedPost);
+      if (index > -1) {
+        this.reels.splice(index, 1);
+      }
+      this.loadingIcon = false;
+      deleteReelResponse.next({});
+    });
+  }
+
+  openPostModal(post: any) {
+    debugger
+    // this.bsModalService.hide(this.bsModalService.config.id);
+    // this.cd.detectChanges();
+    const initialState = {
+      editPostId: post.id,
+      type:Constant.Reel,
+      from: post.postAuthorType == 1 ? "school" : post.postAuthorType == 2 ? "class" : post.postAuthorType == 3 ? "course" : post.postAuthorType == 4 ? "user" : undefined
+    };
+    setTimeout(() => {
+      this.bsModalService.show(CreatePostComponent, { initialState });
+    }, 500);
+    //this.bsModalService.show(CreatePostComponent,{initialState});
+  }
+
 
 
   fromForComment:string='';
   postForComment: any;
+  isBanned:any;
   isUserBanned(){
     debugger;
-    this._studentService.isStudentBannedFromClassCourse(this.ownerId, this.fromForComment, this.parentId).subscribe((response)=>{
+    this._studentService.isStudentBannedFromClassCourse(this.ownerId, this.fromForComment, this.parentId).subscribe((response:any)=>{
       debugger;
       if(response == true){
         this.isBanned = true;
@@ -1213,7 +1241,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   parentId:string=''
   getReelsById(){
     debugger;
-    this._reelsService.getReelById(this.reels[this.selectedReelIndex].postAttachments[0].id).subscribe((response) => {
+    this._reelsService.getReelById(this.reels[this.selectedReelIndex].postAttachments[0].id).subscribe((response:any) => {
       this.postForComment = response;
       if(response.class != null || response.course != null){
         if(response.class?.classId != null){

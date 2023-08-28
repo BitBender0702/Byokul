@@ -1075,10 +1075,11 @@ namespace LMS.Services
             {
                 pageSize = 8;
             }
-            var sharedPostList = await _userSharedPostRepository.GetAll().Include(x => x.Post).Where(x => x.UserId == userId && x.Post.PostType == (int)type).OrderByDescending(x => x.CreatedOn).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+            var sharedPostList = await _userSharedPostRepository.GetAll().Include(x => x.Post).Where(x => x.UserId == userId && x.Post.PostType == (int)type).OrderByDescending(x => x.IsPinned).ThenByDescending(x => x.CreatedOn).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
 
 
-            var result = _mapper.Map<List<PostDetailsViewModel>>(sharedPostList.Select(x => x.Post)).OrderByDescending(x => x.IsPinned).ThenByDescending(x => x.CreatedOn).ToList();
+            //var result = _mapper.Map<List<PostDetailsViewModel>>(sharedPostList.Select(x => x.Post)).OrderByDescending(x => x.IsPinned).ThenByDescending(x => x.CreatedOn).ToList();
+            var result = _mapper.Map<List<PostDetailsViewModel>>(sharedPostList.Select(x => x.Post)).ToList();
             var sharedPosts = await _userSharedPostRepository.GetAll().ToListAsync();
             var savedPosts = await _savedPostRepository.GetAll().ToListAsync();
 
