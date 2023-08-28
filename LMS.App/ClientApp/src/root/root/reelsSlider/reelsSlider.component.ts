@@ -25,6 +25,8 @@ import { CommentViewModel } from 'src/root/interfaces/chat/commentViewModel';
 import { SignalrService, commentLikeResponse, commentResponse } from 'src/root/service/signalr.service';
 import { PostView } from 'src/root/interfaces/post/postView';
 import { SlickCarouselComponent } from 'ngx-slick-carousel';
+import { StudentService } from 'src/root/service/student.service';
+import { ReelsService } from 'src/root/service/reels.service';
 
 export const savedReelResponse = new Subject<{ isReelSaved: boolean, id: string }>();
 
@@ -90,8 +92,10 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   post: any;
   @ViewChild('groupChatList') groupChatList!: ElementRef;
 
+  private _studentService;
+  private _reelsService;
 
-  constructor(injector: Injector, private bsModalService: BsModalService, private route: ActivatedRoute, private translateService: TranslateService, public messageService: MessageService, private userService: UserService, private schoolService: SchoolService, private classService: ClassService, private courseService: CourseService, private notificationService: NotificationService, private postService: PostService, private chatService: ChatService, private signalRService: SignalrService, private cd: ChangeDetectorRef) {
+  constructor(injector: Injector, private bsModalService: BsModalService, private route: ActivatedRoute, private translateService: TranslateService, public messageService: MessageService, private userService: UserService,private reelService: ReelsService,private studentService: StudentService, private schoolService: SchoolService, private classService: ClassService, private courseService: CourseService, private notificationService: NotificationService, private postService: PostService, private chatService: ChatService, private signalRService: SignalrService, private cd: ChangeDetectorRef) {
     super(injector);
     this._userService = userService;
     this._schoolService = schoolService;
@@ -101,6 +105,8 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
     this._postService = postService;
     this._chatService = chatService;
     this._signalRService = signalRService;
+    this._reelsService = reelService;
+    this._studentService = studentService;
   }
 
   isBanned:any;
@@ -117,7 +123,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
     this.from = this.route.snapshot.paramMap.get('from') ?? '';
     this.reelId = this.route.snapshot.paramMap.get('reelId') ?? '';
 
-    this.isBanned = this.post.isBanned
+    // this.isBanned = this.post.isBanned
 
 
 
@@ -251,6 +257,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       var index = this.videos.findIndex((x: { id: string; }) => x.id == this.reelId);
       this.selectedReelIndex = index;
       this.carouselConfig.initialSlide = this.selectedReelIndex;
+      this.getReelsById();
       // this.reels.find(x => x.);
       this.initializeReelsSlider();
       const initialVideoElement: HTMLVideoElement | null = document.querySelector(`#video-${this.selectedReelIndex}`);
@@ -262,9 +269,10 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   }
 
   getReelsByClass(classId: string) {
-    
+    debugger;
     this._classService.GetSliderReelsByClassId(classId, this.reelId, 3).subscribe((response) => {
       this.reels = response;
+      this.postForComment = response;
       this.selectedReel = this.reels[0];
       this.lastPostId = this.reels[this.reels.length - 1].id;
       this.firstPostId = this.reels[0].id;
@@ -278,6 +286,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       var index = this.videos.findIndex((x: { id: string; }) => x.id == this.reelId);
       this.selectedReelIndex = index;
       this.carouselConfig.initialSlide = this.selectedReelIndex;
+      this.getReelsById();
       // this.reels.find(x => x.);
       this.initializeReelsSlider();
       const initialVideoElement: HTMLVideoElement | null = document.querySelector(`#video-${this.selectedReelIndex}`);
@@ -285,6 +294,12 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
         initialVideoElement.play();
         initialVideoElement.muted = false;
       }
+
+
+
+
+
+
     });
   }
 
@@ -305,6 +320,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       var index = this.videos.findIndex((x: { id: string; }) => x.id == this.reelId);
       this.selectedReelIndex = index;
       this.carouselConfig.initialSlide = this.selectedReelIndex;
+      this.getReelsById();
       // this.reels.find(x => x.);
       this.initializeReelsSlider();
       const initialVideoElement: HTMLVideoElement | null = document.querySelector(`#video-${this.selectedReelIndex}`);
@@ -312,6 +328,13 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
         initialVideoElement.play();
         initialVideoElement.muted = false;
       }
+
+
+
+      this.postForComment = response;
+
+
+
     });
   }
 
@@ -331,6 +354,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       var index = this.videos.findIndex((x: { id: string; }) => x.id == this.reelId);
       this.selectedReelIndex = index;
       this.carouselConfig.initialSlide = this.selectedReelIndex;
+      this.getReelsById();
       // this.reels.find(x => x.);
       this.initializeReelsSlider();
       const initialVideoElement: HTMLVideoElement | null = document.querySelector(`#video-${this.selectedReelIndex}`);
@@ -357,6 +381,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       var index = this.videos.findIndex((x: { id: string; }) => x.id == this.reelId);
       this.selectedReelIndex = index;
       this.carouselConfig.initialSlide = this.selectedReelIndex;
+      this.getReelsById();
       // this.reels.find(x => x.);
       this.initializeReelsSlider();
       const initialVideoElement: HTMLVideoElement | null = document.querySelector(`#video-${this.selectedReelIndex}`);
@@ -936,7 +961,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   }
 
   openCommentsSection(reel: any) {
-    
+    debugger;
     this.reel = reel;
     this._chatService.getComments(reel.id, this.commentsPageNumber).subscribe((response) => {
       
@@ -1167,6 +1192,43 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   }
 
 
+
+  fromForComment:string='';
+  postForComment: any;
+  isUserBanned(){
+    debugger;
+    this._studentService.isStudentBannedFromClassCourse(this.ownerId, this.fromForComment, this.parentId).subscribe((response)=>{
+      debugger;
+      if(response == true){
+        this.isBanned = true;
+      } else{
+        this.isBanned = false;
+      }
+    });
+    
+
+  }
+
+
+  parentId:string=''
+  getReelsById(){
+    debugger;
+    this._reelsService.getReelById(this.reels[this.selectedReelIndex].postAttachments[0].id).subscribe((response) => {
+      this.postForComment = response;
+      if(response.class != null || response.course != null){
+        if(response.class?.classId != null){
+          this.fromForComment = "class"
+          this.parentId = response.class.classId
+        }
+        if(response.course?.courseId != null){
+          this.fromForComment = "course"
+          this.parentId = response.course.courseId
+        }
+        this.isUserBanned();
+      }
+      
+    })
+  }
 
 }
 

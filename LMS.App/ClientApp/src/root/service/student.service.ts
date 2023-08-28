@@ -35,4 +35,9 @@ export class StudentService{
         let queryParams = new HttpParams().append("id",id).append("pageNumber",pageNumber).append("searchString",searchString);
         return this.http.get(`${this.apiUrl}/students/getCourseStudents`, {params:queryParams,headers: this.headers})
     }
+
+    isStudentBannedFromClassCourse(studentId:string,from:string,classCourseId:string):Observable<any>{
+        let queryParams = new HttpParams().append("studentId",studentId).append("from",from).append("classCourseId",classCourseId);
+        return this.http.get(`${this.apiUrl}/students/isStudentBannedFromClassCourse`, {params:queryParams,headers: this.headers})
+    }
 }

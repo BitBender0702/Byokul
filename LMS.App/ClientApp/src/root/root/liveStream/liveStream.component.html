@@ -484,7 +484,7 @@
                       </span>
                       <div class="position-relative addCommentBox">
                         <input
-                          [disabled]="true"
+                          [disabled]="isBanned"
                           (keyup.enter)="sendToGroup()"
                           [(ngModel)]="messageToGroup"
                           type="text"

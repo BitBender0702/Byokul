@@ -26,3 +26,26 @@ a{
   color: white;
 }
 
+.live-inner,.live-image{
+  height: 100%;
+  margin: auto;
+}
+.reel_videoinner{
+  height: 100%;
+}
+
+
+.carousel_item,.live-outerbox,#reel_content{
+  height: 85vh;
+}
+.video-part{
+  height: 80%;
+}
+
+.video-actions{
+  height: 20%;
+}
+
+.live-action-buttons,.live-bottom-text{
+  height: 50%;
+}

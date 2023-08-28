@@ -24,6 +24,7 @@ import { CertificateViewComponent } from '../certificateView/certificateView.com
 import { JoinMeetingModel } from 'src/root/interfaces/bigBlueButton/joinMeeting';
 import { BigBlueButtonService } from 'src/root/service/bigBlueButton';
 import { CreatePostComponent } from '../createPost/createPost.component';
+import { StudentService } from 'src/root/service/student.service';
 
 export const sharePostResponse = new Subject<{}>();
 export const deletePostResponse = new Subject<{ postId: string }>();
@@ -79,13 +80,17 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
   joinMeetingViewModel!: JoinMeetingModel;
   commentResponseSubscription!: Subscription;
 
-  constructor(private bsModalService: BsModalService, bigBlueButtonService: BigBlueButtonService, public messageService: MessageService, notificationService: NotificationService, chatService: ChatService, public signalRService: SignalrService, public postService: PostService, public options: ModalOptions, private fb: FormBuilder, private router: Router, private http: HttpClient, private activatedRoute: ActivatedRoute, userService: UserService, private cd: ChangeDetectorRef) {
+
+  private _studentService;
+
+  constructor(private bsModalService: BsModalService, bigBlueButtonService: BigBlueButtonService,studentService: StudentService, public messageService: MessageService, notificationService: NotificationService, chatService: ChatService, public signalRService: SignalrService, public postService: PostService, public options: ModalOptions, private fb: FormBuilder, private router: Router, private http: HttpClient, private activatedRoute: ActivatedRoute, userService: UserService, private cd: ChangeDetectorRef) {
     this._postService = postService;
     this._signalRService = signalRService;
     this._userService = userService;
     this._chatService = chatService;
     this._notificationService = notificationService;
     this._bigBlueButtonService = bigBlueButtonService;
+    this._studentService = studentService;
   }
 
   isBanned:any;
@@ -102,7 +107,7 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
       this.posts = this.options.initialState;
       this.post = this.posts.posts;
 
-      this.isBanned = this.posts.isBanned
+      // this.isBanned = this.posts.isBanned
 
       var postValueTag = this.post.postTags[0]?.postTagValue;
       try{
@@ -142,6 +147,8 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
     debugger
     this._postService.getPostById(this.postId).subscribe((response) => {
       debugger
+      this.postForComment = response;
+      this.isUserBanned();
       if (id != null) {
         this.post = response;
         // this.base64String = btoa(String.fromCharCode.apply(null, this.post.postAttachments[0].base64String));
@@ -220,6 +227,7 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
         // this.initializeVideoPlayer();
         //  }        
 
+      setTimeout(() => {
         var modal = document.getElementById('modal-post');
         window.onclick = (event) => {
           if (event.target == modal) {
@@ -228,6 +236,7 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
             }
           }
         }
+      }, 0);
 
         this.isPlayerLoad = true;
         this.cd.detectChanges();
@@ -241,6 +250,9 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
     this.cd.detectChanges();
 
     this.savePreferences(this.post.title, this.post.description, this.post.postTags);
+
+
+
   }
 
   ngOnDestroy(): void {
@@ -318,6 +330,7 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getSenderInfo() {
+    debugger
     var validToken = localStorage.getItem("jwt");
     if (validToken != null) {
       let jwtData = validToken.split('.')[1]
@@ -326,6 +339,7 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
       this.userId = decodedJwtData.jti;
 
       this._userService.getUser(this.userId).subscribe((response) => {
+        debugger;
         this.sender = response;
       });
     }
@@ -355,7 +369,6 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   close(): void {
-    debugger
     this.bsModalService.hide();
   }
 
@@ -401,7 +414,7 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   addPostView(postId: string) {
-
+    debugger;
     if (this.userId != undefined) {
       this.postView.postId = postId;
       this._postService.postView(this.postView).subscribe((response) => {
@@ -615,5 +628,35 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
     }, 500);
     //this.bsModalService.show(CreatePostComponent,{initialState});
   }
+
+
+  from:string='';
+  postForComment: any;
+  isUserBanned(){
+    debugger;
+    if(this.post.postAuthorType ==2 || this.post.postAuthorType ==3){
+      if(this.post.postAuthorType == 2){
+        this.from="class"
+      }
+      if(this.post.postAuthorType == 3){
+        this.from="course"
+      }
+  
+      this._studentService.isStudentBannedFromClassCourse(this.sender.id, this.from, this.postForComment.parentId).subscribe((response)=>{
+        debugger;
+        if(response == true){
+          this.isBanned = true;
+        } else{
+          this.isBanned = false;
+        }
+      });
+    }
+
+  }
+
+
+
+
+
 
 }

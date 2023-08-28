@@ -67,5 +67,13 @@ namespace LMS.App.Controllers
         {
             return Ok(await _studentsService.GetCourseStudents(id, pageNumber, searchString));
         }
+
+        [Route("isStudentBannedFromClassCourse")]
+        [HttpGet]
+        public async Task<IActionResult> IsStudentBannedFromClassCourse(Guid StudentId, string from, string classCourseId)
+        {
+            return Ok(await _studentsService.IsStudentBannedFromClassCourse(StudentId, from, classCourseId));
+        }
+
     }
 }

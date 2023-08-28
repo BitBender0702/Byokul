@@ -20,6 +20,7 @@ using iText.Html2pdf.Resolver.Font;
 using iText.StyledXmlParser.Jsoup;
 using iText.StyledXmlParser.Jsoup.Nodes;
 using iText.Kernel.Pdf;
+using Microsoft.AspNetCore.Mvc;
 
 namespace LMS.Services.Students
 {
@@ -227,6 +228,30 @@ namespace LMS.Services.Students
             return result;
         }
 
+        public async Task<bool?> IsStudentBannedFromClassCourse(Guid StudentId, string from, string classCourseId)
+        {
+            bool isStudentBanned = false;
+            if (from == "class") 
+            {
+                var classStudent = await _classStudentRepository.GetAll().Where(x => x.ClassId == Guid.Parse(classCourseId) && x.StudentId == StudentId)
+                .FirstOrDefaultAsync();
+                if (classStudent != null)
+                {
+                    isStudentBanned = true;
+                }
+            }
+            if(from == "course")
+            {
+                var courseStudent = await _courseStudentRepository.GetAll().Where(x => x.CourseId == Guid.Parse(classCourseId) && x.StudentId == StudentId)
+                .FirstOrDefaultAsync();
+                if (courseStudent != null)
+                {
+                    isStudentBanned = true;
+                }
+            }
+            return isStudentBanned;
+
+        }
 
         }
 }

@@ -310,6 +310,7 @@
                                 </div>
                                 </a>
                                 <!-- <img [lazyLoad]="school.avatar"/> {{school.schoolName}} -->
+                                {{post.parentName}}
                               </div>
                               <div
                                 class="feed-title font_14 text_sec1 d-flex align-content-center fw_600"
@@ -1509,9 +1510,10 @@
                                   (click)="getSelectedSchool(post.parentName)"
                                   class="routeLink"
                                 >
-                                <div class="feed_userpicture">
-                                  <img [lazyLoad]="post.parentImageUrl" />
-                                </div>
+                                  <div class="feed_userpicture">
+                                    <img [lazyLoad]="post.parentImageUrl" />
+                                  </div>
+                                  <!-- {{post.parentName}} -->
                                 </a>
                                 <a
                                   *ngIf="post.postAuthorType == 2"
@@ -1523,9 +1525,10 @@
                                   "
                                   class="routeLink"
                                 >
-                                <div class="feed_userpicture">
-                                  <img [lazyLoad]="post.parentImageUrl" />
-                                </div>
+                                  <div class="feed_userpicture">
+                                    <img [lazyLoad]="post.parentImageUrl" />
+                                  </div>
+                                  <!-- {{post.parentName}} -->
                                 </a>
                                 <a
                                   *ngIf="post.postAuthorType == 3"
@@ -1537,9 +1540,10 @@
                                   "
                                   class="routeLink"
                                 >
-                                <div class="feed_userpicture" >
-                                  <img [lazyLoad]="post.parentImageUrl" />
-                                </div>
+                                  <div class="feed_userpicture" >
+                                    <img [lazyLoad]="post.parentImageUrl" />
+                                  </div>
+                                  <!-- {{post.parentName}} -->
                                 </a>
                                 <a
                                   *ngIf="post.postAuthorType == 4"
@@ -1566,7 +1570,9 @@
                                     lazyLoad="../../../assets/images/femaleProfile.jfif"
                                   />
                                   </div>
+                                  <!-- {{post.parentName}} -->
                                 </a>
+                                {{post.parentName}}
                               </div>
                               <div
                                 class="feed-title font_14 text_sec1 d-flex align-content-center fw_600"
@@ -1598,7 +1604,7 @@
                   class="school-grid-box position-relative"
                 >
                   <div
-                    class="schoolgrid-header flex-row align-items-center gap-3 position-relative justify-content-between"
+                    class="schoolgrid-header flex-row align-items-center position-relative justify-content-between"
                   >
                   <div class="d-flex align-items-center gap-2">
                     <div class="school-gridprofile-icon">
@@ -1618,7 +1624,7 @@
                         "
                         class="routeLink"
                       >
-                      <div class="feed_userpicture school-img rounded-circle">
+                      <div class="feed_userpicture school-img rounded-circle fit-image">
                         <img [lazyLoad]="post.parentImageUrl" />
                       </div>
                       </a>
@@ -1629,7 +1635,7 @@
                         "
                         class="routeLink"
                       >
-                      <div class="feed_userpicture school-img rounded-circle">
+                      <div class="feed_userpicture school-img rounded-circle fit-image">
                         <img [lazyLoad]="post.parentImageUrl" />
                       </div>
                       </a>
@@ -1638,11 +1644,12 @@
                         (click)="getUserDetails(post.parentId)"
                         class="routeLink"
                       >
-                      <div class="feed_userpicture fit-image"
+                      <div class="imageForPostProfile"
                       >
                         <img
                           *ngIf="post.parentImageUrl != null"
                           [lazyLoad]="post.parentImageUrl"
+                          class=" fit-image"
                         />
                       
                         <img

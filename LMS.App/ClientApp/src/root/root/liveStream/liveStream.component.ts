@@ -24,6 +24,7 @@ import { SharePostComponent } from '../sharePost/sharePost.component';
 import { MessageService } from 'primeng/api';
 import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
 import { Location } from '@angular/common'
+import { StudentService } from 'src/root/service/student.service';
 
 @Component({
   selector: 'live-stream',
@@ -92,8 +93,11 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
   @ViewChild('streamEndModalClose') streamEndModalClose!: ElementRef;
 
 
+  private _studentService;
 
-  constructor(injector: Injector, private renderer: Renderer2, private modalService: NgbModal, private bsModalService: BsModalService,private location: Location,
+
+
+  constructor(injector: Injector, private renderer: Renderer2, private modalService: NgbModal, private bsModalService: BsModalService,private location: Location,studentService: StudentService,
     private cd: ChangeDetectorRef, public messageService: MessageService, private route: ActivatedRoute, private domSanitizer: DomSanitizer, signalrService: SignalrService, postService: PostService, chatService: ChatService, userService: UserService, notificationService: NotificationService, bigBlueButtonService: BigBlueButtonService) {
     super(injector);
     this._signalrService = signalrService;
@@ -102,6 +106,7 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
     this._userService = userService;
     this._notificationService = notificationService;
     this._bigBlueButtonService = bigBlueButtonService;
+    this._studentService = studentService;
   }
 
   ngOnInit(): void {
@@ -120,10 +125,12 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
     this._postService.getPostById(this.postId).subscribe((response) => {
       debugger
       this.post = response;
+
       // this.streamUrl = this.route.snapshot.paramMap.get('streamUrl')??'';
       // const url = 'https://byokulstream.northeurope.cloudapp.azure.com/bigbluebutton/api/join?';
       // this.streamUrl = url + this.streamUrl;
       this.from = this.route.snapshot.paramMap.get('from') ?? '';
+      this.isUserBanned();
       //this.isOwner = Boolean(isOwner);
       if (this.post.createdBy == this.userId) {
         this.isOwner = true;
@@ -781,7 +788,6 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
       });
     }
 
-
   }
 
   likeUnlikePosts(postId: string, isLike: boolean, postType: number, post: any) {
@@ -1015,4 +1021,24 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
   }
 
 
+  isBanned:any;
+  fromForComments:any;
+  isUserBanned(){
+    if(this.post.postAuthorType == 2 || this.post.postAuthorType == 3){
+      if(this.post.postAuthorType == 2){
+        this.fromForComments = "class"
+      }
+      if(this.post.postAuthorType == 3){
+        this.fromForComments = "course"
+      }
+      this._studentService.isStudentBannedFromClassCourse(this.userId, this.fromForComments, this.post.parentId).subscribe((response)=>{
+        debugger;
+        if(response == true){
+          this.isBanned = true;
+        } else{
+          this.isBanned = false;
+        }
+      });
+    }
+  }
 }

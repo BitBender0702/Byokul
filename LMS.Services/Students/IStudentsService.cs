@@ -17,6 +17,7 @@ namespace LMS.Services.Students
         Task<List<StudentViewModel>> GetSchoolStudents(Guid id, int pageNumber, string? searchString);
         Task<List<StudentViewModel>> GetClassStudents(Guid id, int pageNumber, string? searchString);
         Task<List<StudentViewModel>> GetCourseStudents(Guid id, int pageNumber, string? searchString);
+        Task<bool?> IsStudentBannedFromClassCourse(Guid StudentId, string from, string classCourseId);
 
 
     }

@@ -25,6 +25,7 @@ export class VideoJsComponent implements OnInit {
   constructor(private cd: ChangeDetectorRef,) { }
 
   ngOnInit(): void {
+    debugger;
     this.onWindowResize();
     this.cd.detectChanges();
     if (this.isReelView) {
@@ -45,6 +46,7 @@ export class VideoJsComponent implements OnInit {
       }
     }
     else {
+      debugger;
       this.player = videojs(this.disVideo.nativeElement);
     }
   }
@@ -68,19 +70,20 @@ export class VideoJsComponent implements OnInit {
   isScreenMobile!: boolean;
 
   private checkScreenSize() {
+    debugger
     const screenWidth = window.innerWidth;
     // this.isScreenPc = screenWidth >= 992;
     // this.isScreenTablet = screenWidth >= 768 && screenWidth < 992;
     this.isScreenMobile = screenWidth < 768
-    if(this.isScreenMobile){
-      this.player = videojs(this.disVideo.nativeElement, {
-        autoplay: 'muted',
-        loop: true,
-        controlBar: {
-          fullscreenToggle: false
-        }
-      });
-    }
+    // if(this.isScreenMobile){
+    //   this.player = videojs(this.disVideo.nativeElement, {
+    //     autoplay: 'muted',
+    //     loop: true,
+    //     controlBar: {
+    //       fullscreenToggle: false
+    //     }
+    //   });
+    // }
   }
 
 
