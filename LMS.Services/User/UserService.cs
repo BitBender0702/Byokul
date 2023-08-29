@@ -171,15 +171,20 @@ namespace LMS.Services
             return result;
         }
 
-        public async Task<bool> FollowUnFollowUser(FollowUnFollowViewModel model, string followerId)
+        public async Task<bool?> FollowUnFollowUser(FollowUnFollowViewModel model, string followerId)
         {
             var userFollowers = new List<UserFollower>();
             userFollowers = await _userFollowerRepository.GetAll().Where(x => x.UserId == model.Id && x.FollowerId == followerId).ToListAsync();
-
+            var isUserExist = _userRepository.GetById(model.Id);
+            if (isUserExist == null)
+            {
+                return null;
+            }
             if (userFollowers.Any(x => x.UserId == model.Id && x.FollowerId == followerId))
             {
                 _userFollowerRepository.DeleteAll(userFollowers);
                 _userFollowerRepository.Save();
+                return false;
             }
 
             else
@@ -195,7 +200,6 @@ namespace LMS.Services
                 _userFollowerRepository.Save();
                 return true;
             }
-            return false;
 
             //if (!model.IsFollowed)
             //{

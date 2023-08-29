@@ -390,7 +390,8 @@ namespace LMS.Services
                         FileType = Convert.ToInt32(item.FileType),
                         FileUrl = item.BlobUrl,
                         IsCompressed = false,
-                        PostId = post.Id
+                        PostId = post.Id,
+                        FileThumbnail = item.FileThumbnail
                     };
                     _postAttachmentRepository.Insert(attachment);
                     //_postAttachmentRepository.Save();
@@ -782,7 +783,7 @@ namespace LMS.Services
                 {
                     isCompressed.FileUrl = isCompressed.CompressedFileUrl;
                 }
-                isCompressed.FileThumbnail = $"https://byokulstorage.blob.core.windows.net/userpostscompressed/thumbnails/{isCompressed.Id}.png";
+                //isCompressed.FileThumbnail = $"https://byokulstorage.blob.core.windows.net/userpostscompressed/thumbnails/{isCompressed.Id}.png";
             }
 
             var result = _mapper.Map<List<PostAttachmentViewModel>>(attacchmentList);

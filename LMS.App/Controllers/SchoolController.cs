@@ -352,7 +352,11 @@ namespace LMS.App.Controllers
         public async Task<IActionResult> BanFollower(string followerId, Guid schoolId)
         {
             var reponse = await _schoolService.BanFollower(followerId, schoolId);
-            return Ok(reponse);
+            if (reponse)
+            {
+                return Ok(new { Success = true, Message = Constants.FollowerBannedSuccessfully });
+            }
+            return Ok(new { Success = false, Message = Constants.FollowerOrSchoolIdNotValid });
         }
 
         [Route("unBanFollower")]
@@ -360,7 +364,11 @@ namespace LMS.App.Controllers
         public async Task<IActionResult> UnBanFollower(string followerId, Guid schoolId)
         {
             var reponse = await _schoolService.UnBanFollower(followerId, schoolId);
-            return Ok(reponse);
+            if (reponse)
+            {
+                return Ok(new { Success = true, Message = Constants.FollowerUnBannedSuccessully });
+            }
+            return Ok(new { Success = false, Message = Constants.FollowerOrSchoolIdNotValid });
         }
 
         [Route("schoolsGlobalSearch")]

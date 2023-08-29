@@ -239,6 +239,7 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
         
       }
       if(uploadResponse.type == 2){
+        debugger
         // await this.uploadVideosOnBlob(uploadResponse.reel,UploadTypeEnum.Video);
         const uploadPromises = uploadResponse.combineFiles.map((file:any) => {
           if (uploadResponse.videos.includes(file)) {
@@ -253,11 +254,12 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
         });
 
         await Promise.all(uploadPromises);
-        
+        debugger
         createPost.next({postToUpload:uploadResponse.postToUpload,uploadVideoUrlList:this.uploadVideoUrlList,type:1});
         debugger
         this.getThumbnailUrl(this.uploadVideoUrlList);
-        uploadResponse.postToUpload.append('blobUrlsJson', JSON.stringify(this.uploadVideoUrlList));
+        var uploadUrls = [...uploadResponse.uploadedUrls, ...this.uploadVideoUrlList]
+        uploadResponse.postToUpload.append('blobUrlsJson', JSON.stringify(uploadUrls));
         this._postService.createPost(uploadResponse.postToUpload).subscribe((response:any) => {
           debugger
             var translatedMessage = this.translateService.instant('ReelCreatedSuccessfully');
@@ -669,6 +671,7 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
   }
 
   getThumbnailUrl(uploadUrls:any){
+    debugger
     var totalThumbnails = uploadUrls.filter((x: { fileType: UploadTypeEnum; }) => x.fileType == UploadTypeEnum.Thumbnail);
 
     totalThumbnails.forEach((item:any) => {

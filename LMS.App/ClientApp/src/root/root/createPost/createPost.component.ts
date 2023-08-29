@@ -178,6 +178,8 @@ export class CreatePostComponent implements OnInit, OnDestroy {
   }
 
   profileShare:any=false;
+  forReel:boolean=false;
+  forPost:boolean=false
   ngOnInit(): void {
     debugger
     this.isOwnerOrNot();
@@ -196,7 +198,16 @@ export class CreatePostComponent implements OnInit, OnDestroy {
         // if(this.editPostDetails?.postType == 3){
         //   this.isCreateReel = false;
         // }
-        this.initializeEditPostForm();
+        if(initialValue?.type=="reel"){
+          this.forReel = true;
+          this.forPost = false;
+          this.initializeEditReelForm(this.editPostDetails.postAttachments[0].fileThumbnail);
+          this.isOpenReelsTab = true;
+        } else{
+          this.forPost = true;
+          this.forReel = false;
+          this.initializeEditPostForm();
+        }
       });
     }
     // else{
@@ -850,9 +861,15 @@ export class CreatePostComponent implements OnInit, OnDestroy {
   }
 
   removeUploadReel(uploadReel: any) {
+    debugger
     this.postToUpload.set('uploadVideos', '');
     this.uploadReel = null;
     this.isVideoDurationExceed = false;
+
+    const blobUrlIndex = this.uploadVideoUrlList.findIndex((item: any) => item.blobName === uploadReel.name);
+    if (blobUrlIndex > -1) {
+      this.uploadVideoUrlList.splice(blobUrlIndex, 1);
+    }
 
   }
 
@@ -1052,7 +1069,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
 
   async saveReels() {
     debugger
-    this.uploadVideoUrlList = [];
+    // this.uploadVideoUrlList = [];
     this.isSubmitted = true;
     this.isShowingProgressBar = true;
     if (this.isVideoDurationExceed) {
@@ -1095,8 +1112,13 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     this.postToUpload.append('title', reel.title);
     this.postToUpload.append('postTags', JSON.stringify(this.reelsTagLists))
 
-    this.videos.push(this.reel);
-    const combinedFiles = [...this.videos, ... this.videoThumbnails];
+    if(this.reel != undefined){
+      this.videos.push(this.reel);
+    }
+    if(this.forReel){
+      this.postToUpload.append('Id', this.editPostDetails.id);
+    }
+    var combinedFiles = [...this.videos, ... this.videoThumbnails];
 
     // reelUploadOnBlob.next({postToUpload:this.postToUpload,reel:this.reel});
     postUploadOnBlob.next({ postToUpload: this.postToUpload, combineFiles: combinedFiles, videos: this.videos, images: null, attachment: null, type: 2, reel: this.reel, uploadedUrls: this.uploadVideoUrlList, videoThumbnails: this.videoThumbnails });
@@ -1148,6 +1170,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
   }
 
   isValidTags() {
+    debugger
     if (this.initialTagList == undefined || this.initialTagList.length == 0) {
       this.isTagsValid = false;
       return;
@@ -1620,6 +1643,45 @@ export class CreatePostComponent implements OnInit, OnDestroy {
       catch { }
       return reelsTags
     }
+  }
+
+
+  initializeEditReelForm(thumbnailUrl?:any) {
+    debugger
+    this.isOpenReelsTab = true;
+    this.createReelForm = this.fb.group({
+      title: this.fb.control(this.editPostDetails.title, [Validators.required]),
+      reelsVideo: this.fb.control(this.editPostDetails.postAttachments[0].fileUrl, [Validators.required]),
+      scheduleTime: this.fb.control(this.editPostDetails.dateTime)
+    });
+
+    this.createReelForm.updateValueAndValidity();
+    this.tagLists = this.editPostDetails.postTags.map((tagObj: { postTagValue: any; }) => tagObj.postTagValue);
+    this.currectTagLists = [...this.tagLists]
+    try {
+      this.currectTagLists = this.parseTheTags(this.currectTagLists)
+      this.tagsFromEdit = true;
+      this.tagLists = this.currectTagLists
+    } 
+    catch { }
+    this.videoObject.videoUrl = thumbnailUrl;
+    this.videoObject.name = this.editPostDetails.postAttachments[0].fileName;
+    this.videoObject.type = this.editPostDetails.postAttachments[0].fileType;
+    this.uploadReel = this.videoObject;
+
+
+    var imageBlobobject = {
+      id: uuidv4(),
+      blobUrl: this.editPostDetails.postAttachments[0].fileUrl,
+      fileType: UploadTypeEnum.Image,
+      blobName: this.editPostDetails.postAttachments[0].fileName,
+      FileThumbnail: this.editPostDetails.postAttachments[0].fileThumbnail
+    }
+    this.uploadVideoUrlList.push(imageBlobobject);
+    this.initializeVideoObject();
+    this.cd.detectChanges();
+
+
   }
 
 }
