@@ -67,7 +67,15 @@ namespace LMS.App.Controllers
         {
             var followerId = await GetUserIdAsync(this._userManager);
             var response = await _userService.FollowUnFollowUser(model, followerId);
-            return Ok(response);
+            if (response == true)
+            {
+                return Ok(new { Success = true, Message = Constants.UserFollowedSuccessully });
+            }
+            else if (response == false)
+            {
+                return Ok(new { Success = true, Message = Constants.UserUnFollowedSuccessully });
+            }
+            return Ok(new { Success = false, Message = Constants.FollowerOrUserIdNotValid });
         }
 
         [Route("saveUserLanguages")]

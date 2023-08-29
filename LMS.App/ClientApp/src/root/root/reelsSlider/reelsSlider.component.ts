@@ -25,7 +25,7 @@ import { CommentViewModel } from 'src/root/interfaces/chat/commentViewModel';
 import { SignalrService, commentLikeResponse, commentResponse } from 'src/root/service/signalr.service';
 import { PostView } from 'src/root/interfaces/post/postView';
 import { SlickCarouselComponent } from 'ngx-slick-carousel';
-import { CreatePostComponent } from '../createPost/createPost.component';
+import { CreatePostComponent, addPostResponse } from '../createPost/createPost.component';
 import { deleteReelResponse } from '../root.component';
 import { ReelsService } from 'src/root/service/reels.service';
 import { StudentService } from 'src/root/service/student.service';
@@ -93,6 +93,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   ownerId: string = "";
   post: any;
   postId:string = "";
+  reelSubscription!:Subscription;
   @ViewChild('groupChatList') groupChatList!: ElementRef;
 
   private _studentService;
@@ -194,19 +195,43 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
     });
 
 
-    
-    
-
-
-
-
-
+    if (!this.reelSubscription) {
+      this.reelSubscription = addPostResponse.subscribe((responses:any) => {
+      let newReel = responses;
+      
+      var isReelExist = this.reels.find((x:any) => x.id == newReel.response)
+      var index = this.reels.findIndex((x:any)=> x.id == newReel.response)
+      if(isReelExist != null){
+        this._postService.getPostById(isReelExist.id).subscribe(response =>{
+          debugger
+          isReelExist = response;
+          // this.reels.splice(index, 1, isReelExist);
+          this.reels[index].title=response.title;
+          this.reels[index].postAttachments[0].fileUrl = response.postAttachments[0].fileUrl;
+          
+          this.cd.detectChanges();
+        })
+      }
+      // let filteredReel = this.reels.forEach((element:any) => {
+      //   debugger
+      //   if(element.id == newReel.response){
+      //     var index = this.reels.findIndex((x:any)=> x.id == element.id)
+      //     this._postService.getPostById(element.id).subscribe(response =>{
+      //       this.reels.splice(index,1, response);
+      //     })
+      //   }
+      // })
+    });
+   }
 
   }
 
   ngOnDestroy(): void {
     if (this.commentResponseSubscription) {
       this.commentResponseSubscription.unsubscribe();
+    }
+    if (this.reelSubscription) {
+      this.reelSubscription.unsubscribe();
     }
   }
 

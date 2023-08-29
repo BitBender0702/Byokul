@@ -42,7 +42,7 @@
                 />{{ "Live" | translate }}
               </button>
             </li>
-            <li class="nav-item p-0">
+            <li *ngIf="!isEditPost || (isEditPost && forPost)" class="nav-item p-0">
               <button
                 (click)="postTab()"
                 [ngClass]="
@@ -68,10 +68,11 @@
                 {{ "Post" | translate }}
               </button>
             </li>
-            <li *ngIf="!isEditPost" class="nav-item p-0">
+            <li *ngIf="!isEditPost || (isEditPost && forReel)" class="nav-item p-0">
               <button
                 (click)="reelsTab()"
-                class="nav-link post-attch-btn d-inline-flex justify-content-center align-items-center"
+                [ngClass]="forReel ? 'nav-link active' : 'nav-link'"
+                class="post-attch-btn d-inline-flex justify-content-center align-items-center"
                 id="reels-tab"
                 data-bs-toggle="tab"
                 data-bs-target="#reels-tab-pane"
@@ -90,6 +91,7 @@
                 {{ "Reels" | translate }}
               </button>
             </li>
+            
           </ul>
         </div>
         <h1
@@ -524,7 +526,12 @@
               </small>
             </form>
           </div>
+
+
+
+
           <div
+            *ngIf="!isEditPost || (isEditPost && forPost)"
             [ngClass]="
               !isLiveTabopen ? 'tab-pane fade show active' : 'tab-pane fade'
             "
@@ -916,8 +923,13 @@
             </form>
           </div>
 
+
+
           <div
-            class="tab-pane fade"
+            *ngIf="!isEditPost || (isEditPost && forReel)"
+            [ngClass]="
+              forReel ? 'tab-pane fade show active' : 'tab-pane fade'
+            "
             id="reels-tab-pane"
             role="tabpanel"
             aria-labelledby="reels-tab"

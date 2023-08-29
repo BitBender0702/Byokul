@@ -11,7 +11,7 @@ namespace LMS.Services
     public interface IUserService
     {
         Task<UserDetailsViewModel> GetUserById(string userId);
-        Task<bool> FollowUnFollowUser(FollowUnFollowViewModel model, string userId);
+        Task<bool?> FollowUnFollowUser(FollowUnFollowViewModel model, string userId);
         Task<UserUpdateViewModel> GetUserEditDetails(string userId);
         Task SaveUserLanguages(UserLanguageViewModel userLanguageViewModel);
         Task DeleteUserLanguage(UserLanguageDeleteViewModel model);

@@ -84,7 +84,7 @@ namespace LMS.App.Controllers
             {
                 postViewModel.CreatedBy = userId;
                 postViewModel.CreatedOn = DateTime.UtcNow;
-                postViewModel.IsDeleted = false;
+                postViewModel.IsDeleted = false;    
                 postViewModel.IsPinned = false;
                 postViewModel.IsCommentsDisabled = false;
                 var response = await _postService.SavePost(postViewModel, userId);
