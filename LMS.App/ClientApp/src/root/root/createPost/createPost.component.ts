@@ -861,7 +861,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
   }
 
   removeUploadReel(uploadReel: any) {
-    debugger
     this.postToUpload.set('uploadVideos', '');
     this.uploadReel = null;
     this.isVideoDurationExceed = false;
@@ -1170,7 +1169,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
   }
 
   isValidTags() {
-    debugger
     if (this.initialTagList == undefined || this.initialTagList.length == 0) {
       this.isTagsValid = false;
       return;
