@@ -27,6 +27,8 @@ namespace LMS.Data.Entity
         public string? CityName { get; set; }
         public string? StateName { get; set; }
         public IEnumerable<UserLanguage> UserLanguage { get; set; }
+        public string? BlobSasToken { get; set; }
+        public DateTime? BlobSasTokenExirationTime { get; set; }
 
 
     }

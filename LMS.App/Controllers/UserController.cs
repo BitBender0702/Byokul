@@ -159,7 +159,7 @@ namespace LMS.App.Controllers
 
         [Route("banFollower")]
         [HttpPost]
-        public async Task<IActionResult> BanFollower(string followerId,string userId)
+        public async Task<IActionResult> BanFollower(string followerId, string userId)
         {
             var reponse = await _userService.BanFollower(followerId, userId);
             if (reponse)
@@ -310,7 +310,7 @@ namespace LMS.App.Controllers
             var response = await _httpClient.SendAsync(request);
 
 
-           // var response = await _httpClient.GetAsync($"https://countriesnow.space/api/v0.1/countries/cities?&country={countryCode.Country}");
+            // var response = await _httpClient.GetAsync($"https://countriesnow.space/api/v0.1/countries/cities?&country={countryCode.Country}");
             var content = await response.Content.ReadAsStringAsync();
             var citiesResponse = JsonConvert.DeserializeObject<CitiesResponse>(content);
             var cities = citiesResponse.Data.OrderBy(city => city);
@@ -330,7 +330,7 @@ namespace LMS.App.Controllers
             // var response = await _httpClient.GetAsync($"https://countriesnow.space/api/v0.1/countries/cities?&country={countryCode.Country}");
             var content = await response.Content.ReadAsStringAsync();
             var statesResponse = JsonConvert.DeserializeObject<StateRoot>(content);
-            var states = statesResponse.Data.States.OrderBy(x=> x.Name).Select(x => x.Name).ToList();
+            var states = statesResponse.Data.States.OrderBy(x => x.Name).Select(x => x.Name).ToList();
             return states;
         }
 
@@ -356,7 +356,7 @@ namespace LMS.App.Controllers
             var response = await _userService.DeleteSchoolStudent(schoolId, userId);
             if (response)
             {
-                return Ok(new {Success = true, Message = Constants.StudentDeletedSuccessfully});
+                return Ok(new { Success = true, Message = Constants.StudentDeletedSuccessfully });
             }
             return Ok(new { Success = false, Message = Constants.StudentNotExists });
         }
@@ -415,7 +415,7 @@ namespace LMS.App.Controllers
             return Ok(user);
         }
 
-        
+
         [Route("getSliderReelsByUserId")]
         [HttpGet]
         public async Task<IActionResult> GetSliderReelsByUserId(string userId, Guid postId, ScrollTypesEnum scrollType)
@@ -446,6 +446,14 @@ namespace LMS.App.Controllers
         {
             var response = await _userService.GetUserPermissions(userId);
             return Ok(response);
+        }
+
+        [Route("getBlobSasToken")]
+        [HttpGet]
+        public async Task<IActionResult> GetBlobSasToken()
+        {
+            var response = await _userService.GetBlobSasToken();
+            return Ok(new { Success = true, SasToken = response });
         }
 
     }

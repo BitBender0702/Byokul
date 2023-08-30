@@ -170,10 +170,9 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
       this.postUploadOnBlobSubscription = postUploadOnBlob.subscribe(async (uploadResponse) => {
         debugger
 
+        this._userService.getBlobSasToken().subscribe(async (response:any) => {
+          debugger
         
-        for (var pair of uploadResponse.postToUpload.entries()) {
-          console.log(pair[0]+ ', ' + pair[1]); 
-      }
         this.totalUploadFilesSize = 0;
         if(uploadResponse.schoolId != undefined){
           this.schoolId = uploadResponse.schoolId;
@@ -182,16 +181,16 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
         if(uploadResponse.type == 1){
         const uploadPromises = uploadResponse.combineFiles.map((file:any) => {
           if (uploadResponse.videos.includes(file)) {
-            return this.uploadVideosOnBlob(file, UploadTypeEnum.Video);
+            return this.uploadVideosOnBlob(file, UploadTypeEnum.Video,response.sasToken);
           } 
           if(uploadResponse.images.includes(file)){
-            return this.uploadVideosOnBlob(file, UploadTypeEnum.Image);
+            return this.uploadVideosOnBlob(file, UploadTypeEnum.Image,response.sasToken);
           }
           if(uploadResponse.attachment.includes(file)) {
-            return this.uploadVideosOnBlob(file, UploadTypeEnum.Attachment);
+            return this.uploadVideosOnBlob(file, UploadTypeEnum.Attachment,response.sasToken);
           }
           if(uploadResponse.videoThumbnails.includes(file)) {
-            return this.uploadVideosOnBlob(file, UploadTypeEnum.Thumbnail);
+            return this.uploadVideosOnBlob(file, UploadTypeEnum.Thumbnail,response.sasToken);
           }
 
           return "";
@@ -242,10 +241,10 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
         // await this.uploadVideosOnBlob(uploadResponse.reel,UploadTypeEnum.Video);
         const uploadPromises = uploadResponse.combineFiles.map((file:any) => {
           if (uploadResponse.videos.includes(file)) {
-            return this.uploadVideosOnBlob(file, UploadTypeEnum.Video);
+            return this.uploadVideosOnBlob(file, UploadTypeEnum.Video,response.sasToken);
           } 
           if(uploadResponse.videoThumbnails.includes(file)) {
-            return this.uploadVideosOnBlob(file, UploadTypeEnum.Thumbnail);
+            return this.uploadVideosOnBlob(file, UploadTypeEnum.Thumbnail,response.sasToken);
           }
 
           return "";
@@ -282,10 +281,10 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
         const uploadPromises = uploadResponse.combineFiles.map((file:any) => {
           debugger
           if (uploadResponse.videos.includes(file)) {
-            return this.uploadVideosOnBlob(file, UploadTypeEnum.Video);
+            return this.uploadVideosOnBlob(file, UploadTypeEnum.Video,response.sasToken);
           } 
           if (uploadResponse.images.includes(file)){
-            return this.uploadVideosOnBlob(file, UploadTypeEnum.Image);
+            return this.uploadVideosOnBlob(file, UploadTypeEnum.Image,response.sasToken);
           }
           return "";
         });
@@ -334,47 +333,47 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
             {
               if (file.type.substring(0, index) == Constant.Image)
               {
-                return this.uploadVideosOnBlob(file, UploadTypeEnum.Image);
+                return this.uploadVideosOnBlob(file, UploadTypeEnum.Image,response.sasToken);
               }
               if (file.type.substring(0, index) == Constant.Video)
               {
-                return this.uploadVideosOnBlob(file, UploadTypeEnum.Video);
+                return this.uploadVideosOnBlob(file, UploadTypeEnum.Video,response.sasToken);
               }
               if (file.type == Constant.Pdf)
               {
-                return this.uploadVideosOnBlob(file, UploadTypeEnum.Pdf);
+                return this.uploadVideosOnBlob(file, UploadTypeEnum.Pdf,response.sasToken);
               }
               if (file.type == Constant.Word || file.type == Constant.ExcelSx)
               {
-                return this.uploadVideosOnBlob(file, UploadTypeEnum.Word);
+                return this.uploadVideosOnBlob(file, UploadTypeEnum.Word,response.sasToken);
               }
               if (file.type == Constant.Excel)
               {
-                return this.uploadVideosOnBlob(file, UploadTypeEnum.Excel);
+                return this.uploadVideosOnBlob(file, UploadTypeEnum.Excel,response.sasToken);
               }
               if (file.type == Constant.Ppt)
               {
-                return this.uploadVideosOnBlob(file, UploadTypeEnum.Presentation);
+                return this.uploadVideosOnBlob(file, UploadTypeEnum.Presentation,response.sasToken);
               }
               if (file.type == Constant.TextFile)
               {
-                return this.uploadVideosOnBlob(file, UploadTypeEnum.TextFile);
+                return this.uploadVideosOnBlob(file, UploadTypeEnum.TextFile,response.sasToken);
               }
             }
             if (file.type == Constant.Ppt)
             {
-              return this.uploadVideosOnBlob(file, UploadTypeEnum.Presentation);
+              return this.uploadVideosOnBlob(file, UploadTypeEnum.Presentation,response.sasToken);
             }
             var index = file.name.lastIndexOf('.');
             if (index > 0){
               if(file.name.substring(index + 1) == Constant.RarFile){
-                return this.uploadVideosOnBlob(file, UploadTypeEnum.Zip);
+                return this.uploadVideosOnBlob(file, UploadTypeEnum.Zip,response.sasToken);
               }
               if(file.name.substring(index + 1) == Constant.ZipFile){
-                return this.uploadVideosOnBlob(file, UploadTypeEnum.Zip);
+                return this.uploadVideosOnBlob(file, UploadTypeEnum.Zip,response.sasToken);
               }
               if(file.name.substring(index + 1) == Constant.Apk){
-                return this.uploadVideosOnBlob(file, UploadTypeEnum.Apk);
+                return this.uploadVideosOnBlob(file, UploadTypeEnum.Apk,response.sasToken);
               }
 
             }
@@ -393,10 +392,10 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
         // await this.uploadVideosOnBlob(file, UploadTypeEnum.Video);
         const uploadPromises = uploadResponse.combineFiles.map((file:any) => {
           if (uploadResponse.videos.includes(file)) {
-            return this.uploadVideosOnBlob(file, UploadTypeEnum.Video);
+            return this.uploadVideosOnBlob(file, UploadTypeEnum.Video,response.sasToken);
           } 
           if(uploadResponse.videoThumbnails.includes(file)) {
-            return this.uploadVideosOnBlob(file, UploadTypeEnum.Thumbnail);
+            return this.uploadVideosOnBlob(file, UploadTypeEnum.Thumbnail,response.sasToken);
           }
 
           return "";
@@ -408,6 +407,7 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
         this.saveFilesInVideoLibrary(uploadResponse);
       }
       })
+    });
     }
 
     // if(!this.addPostSubscription){
@@ -595,10 +595,10 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
     return decodedJwtData;
   }
 
-  public async uploadVideosOnBlob(file: File, fileType:number) {
+  public async uploadVideosOnBlob(file: File, fileType:number,token:string) {
     debugger
     
-    const sasToken = Constant.SASToken;
+    var sasToken = "?" + token;
     var prefix = "attachments";
     if(fileType == UploadTypeEnum.Image)
     prefix = "images";

@@ -1,4 +1,7 @@
 ﻿using AutoMapper;
+using Azure.Storage.Blobs;
+using Azure.Storage.Sas;
+using Azure.Storage;
 using F23.StringSimilarity;
 using LMS.Common.Enums;
 using LMS.Common.ViewModels.Account;
@@ -1302,7 +1305,7 @@ namespace LMS.Services
             {
                 throw ex;
             }
-            }
+        }
 
         async Task<List<GlobalFeedViewModel>> GetDefaultFeeds(string loginUserId, PostTypeEnum postType, int pageNumber, int pageSize, string? searchString, Guid? lastPostId, ScrollTypesEnum? scrollType)
         {
@@ -1906,6 +1909,99 @@ namespace LMS.Services
             return userPermissions;
         }
 
+        public async Task<string> GetBlobSasToken()
+        {
+            var connectionString = "DefaultEndpointsProtocol=https;AccountName=byokulstorage;AccountKey=exYHA69x6yj0g9ET7+0ODXjs1zPYtqAqCkiwUuT7ocLG3qQOFhWKEn9Q+oS6EC6qcT+AJM+Cj8KR+ASt+3Lu5Q==;EndpointSuffix=core.windows.net";
+
+            var user = await _userManager.GetUsersInRoleAsync("Admin");
+            var sasToken = user.FirstOrDefault().BlobSasToken;
+            if (sasToken == null)
+            {
+                var token = await CreateSasToken(connectionString);
+                return token;
+            }
+            else
+            {
+                var expirationTime = user.FirstOrDefault().BlobSasTokenExirationTime;
+                if (expirationTime <= DateTime.UtcNow)
+                {
+                    var token = await CreateSasToken(connectionString);
+                    return token;
+                }
+                else
+                {
+                    return user.FirstOrDefault().BlobSasToken;
+                }
+            }
+        }
+
+
+        public async Task<string> CreateSasToken(string connectionString)
+        {
+            BlobServiceClient serviceClient = new BlobServiceClient(connectionString);
+
+            // Generate a new account-level SAS token.
+            AccountSasBuilder sasBuilder = new AccountSasBuilder
+            {
+                StartsOn = DateTimeOffset.UtcNow,
+                ExpiresOn = DateTimeOffset.UtcNow.AddHours(2), // Adjust validity as needed
+                Services = AccountSasServices.All,
+                ResourceTypes = AccountSasResourceTypes.All, // Adjust this to limit resource types as needed
+                Protocol = SasProtocol.Https
+            };
+
+            // Specify the permissions for the SAS token (e.g., read and list).
+            sasBuilder.SetPermissions(AccountSasPermissions.All);
+
+            // Generate the SAS token as a query string.
+            string sasToken = sasBuilder.ToSasQueryParameters(new StorageSharedKeyCredential(serviceClient.AccountName, "exYHA69x6yj0g9ET7+0ODXjs1zPYtqAqCkiwUuT7ocLG3qQOFhWKEn9Q+oS6EC6qcT+AJM+Cj8KR+ASt+3Lu5Q==")).ToString();
+
+            var user = await _userManager.GetUsersInRoleAsync("Admin");
+            user.FirstOrDefault().BlobSasToken = sasToken;
+            user.FirstOrDefault().BlobSasTokenExirationTime = DateTime.UtcNow.AddHours(1);
+            var result = await _userManager.UpdateAsync(user.FirstOrDefault());
+
+            return sasToken;
+        }
+
+        //public static async Task<string> GetStorageAccountSasTokenIfExistsAsync(string connectionString)
+        //{
+        //    BlobServiceClient serviceClient = new BlobServiceClient(connectionString);
+
+        //    // Check if the service client has account-level SAS tokens enabled.
+        //    if (serviceClient.CanGenerateAccountSasUri)
+        //    {
+        //        // An account-level SAS token already exists; you can choose to fetch it from where you store it.
+        //        // In this example, we return null, but you should retrieve the existing token.
+        //        return null;
+        //    }
+
+        //    return null;
+        //}
+
+        public async Task<string> GetStorageAccountSasTokenIfExistsAsync(string connectionString)
+        {
+            // Replace this with your logic to retrieve or check for the existence of an account-level SAS token.
+            // In this example, we use a placeholder dictionary to store SAS tokens.
+            Dictionary<string, string> sasTokenStore = new Dictionary<string, string>();
+
+            BlobServiceClient serviceClient = new BlobServiceClient(connectionString);
+
+            // Check if the service client has account-level SAS tokens enabled.
+            if (serviceClient.CanGenerateAccountSasUri)
+            {
+                // Example: Retrieve the existing account-level SAS token from the store.
+                var user = await _userManager.GetUsersInRoleAsync("Admin");
+                var sasToken = user.FirstOrDefault().BlobSasToken;
+                string existingSasToken = sasToken;
+                if (sasTokenStore.TryGetValue(serviceClient.AccountName, out existingSasToken))
+                {
+                    return existingSasToken;
+                }
+            }
+
+            return null;
+        }
 
     }
 
