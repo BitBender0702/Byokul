@@ -7,7 +7,6 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
-    <PackageReference Include="Azure.Storage.Blobs" Version="12.13.1" />
     <PackageReference Include="BigBlueButtonAPI.NET" Version="1.0.2" />
     <PackageReference Include="EntityFramework" Version="6.4.4" />
     <PackageReference Include="F23.StringSimilarity" Version="5.1.0" />

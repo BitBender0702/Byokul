@@ -224,6 +224,9 @@ export class UserService{
     getUserPermissions(userId:string):Observable<any>{
         debugger
         return this.http.get(`${this.apiUrl}/users/getUserPermissions` + '?userId=' + userId,{headers: this.headers});
-        
+    }
+
+    getBlobSasToken():Observable<any>{
+        return this.http.get(`${this.apiUrl}/users/getBlobSasToken`,{headers: this.headers});
     }
 }
