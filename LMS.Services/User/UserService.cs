@@ -1595,7 +1595,7 @@ namespace LMS.Services
             return isDeleted;
         }
 
-        public async Task ReportFollower(ReportFollowerViewModel model)
+        public async Task<bool> ReportFollower(ReportFollowerViewModel model)
         {
             var user = _userManager.GetUsersInRoleAsync("Admin");
             var path = _webHostEnvironment.ContentRootPath;
@@ -1607,6 +1607,9 @@ namespace LMS.Services
             string callBackUrl = $"{_config["AppUrl"]}/user/userProfile/{model.FollowerId}";
             text = text.Replace("[URL]", callBackUrl);
             await _commonService.SendEmail(new List<string> { user.Result.First().Email }, null, null, "Report User", body: text, null, null);
+
+            return true;
+
         }
 
         public async Task<IEnumerable<GlobalSearchViewModel>> GlobalSearch(string searchString, int pageNumber, int pageSize)

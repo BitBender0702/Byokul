@@ -35,7 +35,7 @@ namespace LMS.Services
         Task<UserDetailsViewModel> GetUserByEmail(string email);
         Task<bool> DeleteSchoolTeacher(Guid schoolId, string userId);
         Task<bool> DeleteSchoolStudent(Guid schoolId, string userId);
-        Task ReportFollower(ReportFollowerViewModel model);
+        Task<bool> ReportFollower(ReportFollowerViewModel model);
         Task<IEnumerable<GlobalSearchViewModel>> GlobalSearch(string searchString, int pageNumber,int pageSize);
         Task<IEnumerable<GlobalSearchViewModel>> UsersGlobalSearch(string searchString, int pageNumber, int pageSize);
         Task SaveUserCertificates(SaveUserCertificateViewModel model);

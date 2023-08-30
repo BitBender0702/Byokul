@@ -50,6 +50,9 @@ namespace LMS.Common.ViewModels.Post
         public static string TeacherUpdatedSuccessfully = "Teacher updated successfully";
         public static string SchoolHasNotStorageSpace = "School has not the required storage space";
         public static string SchoolHasStorageSpace = "School has the required storage space";
+        public static string FollowerReportedSuccesfully = "Follower reported succesfully";
+        public static string FailedToReport = "Failed to report follower";
+
 
         public static string PostSavedSuccessully = "Post has been saved successfully";
         public static string PostUnsavedSavedSuccessully = "Post has been unsaved successfully";
