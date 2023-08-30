@@ -365,8 +365,12 @@ namespace LMS.App.Controllers
         [HttpPost]
         public async Task<IActionResult> ReportFollower([FromBody] ReportFollowerViewModel model)
         {
-            await _userService.ReportFollower(model);
-            return Ok();
+            var response = await _userService.ReportFollower(model);
+            if (response)
+            {
+                return Ok(new { Success = true, Message = Constants.FollowerReportedSuccesfully });
+            }
+            return Ok(new { Success = false, Message = Constants.FailedToReport });
         }
 
         [Route("globalSearch")]

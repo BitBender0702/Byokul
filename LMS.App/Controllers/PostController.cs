@@ -72,7 +72,7 @@ namespace LMS.App.Controllers
         [Route("uploadPost")]
         [HttpPost]
         public async Task<IActionResult> UploadPost(PostViewModel postViewModel)
-       {
+        {
             var userId = await GetUserIdAsync(this._userManager);
             postViewModel.BlobUrls = JsonConvert.DeserializeObject<List<BlobUrlsViewModel>>(postViewModel.BlobUrlsJson);
             if (postViewModel.Id != null && postViewModel.Id != new Guid())
@@ -163,7 +163,16 @@ namespace LMS.App.Controllers
         public async Task<IActionResult> PinUnpinPost(Guid postId, bool isPinned)
         {
             var response = await _postService.PinUnpinPost(postId, isPinned);
-            return Ok(response);
+            if (response == Constants.PostPinnedSuccessfully)
+            {
+                return Ok(new { Success = true, Message = Constants.PostPinnedSuccessfully });
+            }
+            else if (response == Constants.PostUnPinnedSuccessfully)
+            {
+                return Ok(new { Success = true, Message = Constants.PostUnPinnedSuccessfully });
+            }
+
+            return Ok(new { Success = true, Message = Constants.PostIdInvalid });
         }
 
         [Route("likeUnlikePost")]
@@ -172,12 +181,12 @@ namespace LMS.App.Controllers
         {
             var userId = await GetUserIdAsync(this._userManager);
             model.UserId = userId;
-            if(userId == null)
+            if (userId == null)
             {
                 return BadRequest($"User doesnot exist for the id: {userId}");
             }
             var response = await _postService.LikeUnlikePost(model);
-            if(response != null)
+            if (response != null)
             {
                 return Ok(response);
             }
@@ -227,11 +236,11 @@ namespace LMS.App.Controllers
         public async Task<IActionResult> SavePostByUser(string userId, Guid postId)
         {
             var isSaved = await _postService.SavePostByUser(userId, postId);
-            if(isSaved == false)
+            if (isSaved == false)
             {
                 return Ok(new { Success = true, Message = Constants.PostUnsavedSavedSuccessully });
-            } 
-            if(isSaved == true)
+            }
+            if (isSaved == true)
             {
                 return Ok(new { Success = true, Message = Constants.PostSavedSuccessully });
             }

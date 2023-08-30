@@ -293,7 +293,7 @@ namespace LMS.Services
             var classTeachers = await _classTeacherRepository.GetAll().ToListAsync();
             foreach (var item in model.Permissions.ClassPermissions)
             {
-                var classIds = await _classRepository.GetAll().Where(x => x.SchoolId == item.SchoolId).Select(x => x.ClassId).ToListAsync();
+                var classIds = await _classRepository.GetAll().Where(x => x.SchoolId == model.SchoolId && x.ClassId == item.ClassId).Select(x => x.ClassId).ToListAsync();
 
                 foreach (var classId in classIds)
                 {
@@ -321,9 +321,10 @@ namespace LMS.Services
             _courseTeacherRepository.Save();
 
             var courseTeachers = await _courseTeacherRepository.GetAll().ToListAsync();
+            
             foreach (var item in model.Permissions.CoursePermissions)
             {
-                var courseIds = await _courseRepository.GetAll().Where(x => x.SchoolId == item.SchoolId).Select(x => x.CourseId).ToListAsync();
+                var courseIds = await _courseRepository.GetAll().Where(x => x.SchoolId == model.SchoolId && x.CourseId == item.CourseId).Select(x => x.CourseId).ToListAsync();
                 foreach (var courseId in courseIds)
                 {
                     var isTeacherExist = courseTeachers.Where(x => x.TeacherId == teacherId && x.CourseId == courseId).FirstOrDefault();
