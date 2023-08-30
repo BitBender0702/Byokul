@@ -93,7 +93,7 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
     this._studentService = studentService;
   }
 
-  isBanned:any;
+  isBanned:boolean = true;
   ngOnInit(): void {
     debugger
     this.getSenderInfo();
@@ -634,11 +634,11 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
   postForComment: any;
   isUserBanned(){
     debugger;
-    if(this.post.postAuthorType ==2 || this.post.postAuthorType ==3){
-      if(this.post.postAuthorType == 2){
+    if(this.post?.postAuthorType ==2 || this.post?.postAuthorType ==3){
+      if(this.post?.postAuthorType == 2){
         this.from="class"
       }
-      if(this.post.postAuthorType == 3){
+      if(this.post?.postAuthorType == 3){
         this.from="course"
       }
   

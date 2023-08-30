@@ -9,3 +9,8 @@ max-width: 20px;
 #vjs_video_3{
     width: 100%;
 }
+@media screen and (max-width: 620px) {
+    .live_chats {
+     left: 75%;
+    }
+  }

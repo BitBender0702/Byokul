@@ -404,8 +404,8 @@ namespace LMS.Services
 
             if (schoolName != null)
             {
-                schoolName = System.Web.HttpUtility.UrlEncode(schoolName, Encoding.GetEncoding("iso-8859-7")).Replace("%3f", "").Replace("+", "").Replace(".", "").ToLower();
-
+                var data = Encoding.UTF8.GetBytes(schoolName);
+                //schoolName = System.Web.HttpUtility.UrlEncode(schoolName, Encoding.GetEncoding("iso-8859-1")).Replace("%3f", "").Replace("+", "").Replace(".", "").ToLower();
                 var schoolLanguages = await _schoolLanguageRepository.GetAll()
                 .Include(x => x.Language)
                 .Include(x => x.School)
@@ -415,13 +415,20 @@ namespace LMS.Services
                 .Include(x => x.School)
                 .ThenInclude(x => x.CreatedBy).ToListAsync();
 
-                schoolLanguages = schoolLanguages.Where(x => (System.Web.HttpUtility.UrlEncode(x.School.SchoolName.Replace(" ", "").Replace("+", "").Replace(".", "").ToLower(), Encoding.GetEncoding("iso-8859-7")) == schoolName) && !x.School.IsDeleted).ToList();
+                var singleLanguage = schoolLanguages.Where(x => Encoding.UTF8.GetBytes(x.School.SchoolName.Replace(" ", "").Replace("+", "").Replace(".", "").ToLower()).SequenceEqual(data)  && !x.School.IsDeleted).ToList();
+                //schoolLanguages = schoolLanguages.Where(x => ((x.School.SchoolName.Replace(" ", "").Replace("+", "").Replace(".", "").ToLower()) == schoolName) && !x.School.IsDeleted).ToList();
+                if(!singleLanguage.Any())
+                {
+                    var newSchoolName = System.Web.HttpUtility.UrlEncode(schoolName, Encoding.GetEncoding("iso-8859-1")).Replace("%3f", "").Replace("+", "").Replace(".", "").ToLower();
+                    singleLanguage = schoolLanguages.Where(x => (System.Web.HttpUtility.UrlEncode(x.School.SchoolName.Replace(" ", "").Replace("+", "").Replace(".", "").ToLower(), Encoding.GetEncoding("iso-8859-7")) == newSchoolName) && !x.School.IsDeleted).ToList();
+                }
 
-                var response = _mapper.Map<SchoolDetailsViewModel>(schoolLanguages.First().School);
+
+                var response = _mapper.Map<SchoolDetailsViewModel>(singleLanguage.First().School);
 
                 var languageViewModel = new List<LanguageViewModel>();
 
-                foreach (var res in schoolLanguages)
+                foreach (var res in singleLanguage)
                 {
                     languageViewModel.Add(_mapper.Map<LanguageViewModel>(res.Language));
                 }

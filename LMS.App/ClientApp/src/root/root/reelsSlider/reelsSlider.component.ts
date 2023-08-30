@@ -196,11 +196,10 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
 
 
     if (!this.reelSubscription) {
-      this.reelSubscription = addPostResponse.subscribe((responses:any) => {
-      let newReel = responses;
-      
-      var isReelExist = this.reels.find((x:any) => x.id == newReel.response)
-      var index = this.reels.findIndex((x:any)=> x.id == newReel.response)
+      this.reelSubscription = addPostResponse.subscribe((response:any) => {
+      debugger
+      var isReelExist = this.reels.find((x:any) => x.id == response.response.id)
+      var index = this.reels.findIndex((x:any)=> x.id == response.response.id)
       if(isReelExist != null){
         this._postService.getPostById(isReelExist.id).subscribe(response =>{
           debugger
@@ -208,7 +207,19 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
           // this.reels.splice(index, 1, isReelExist);
           this.reels[index].title=response.title;
           this.reels[index].postAttachments[0].fileUrl = response.postAttachments[0].fileUrl;
-          
+          let videoJsElement = document.getElementById(`video-${index}`);
+          if(videoJsElement){
+            const firstElement = videoJsElement.children[0];
+            if (firstElement) {
+              const videoElement = firstElement.children[0] as HTMLVideoElement;
+              if (videoElement) {
+                videoElement.src = response.postAttachments[0].fileUrl;
+                let newUrl = `/user/reelsView/${this.ownerId}/${this.from}/${response.postAttachments[0].id}/${response.id}`
+                history.replaceState({}, '', newUrl)
+              }
+            }
+          }
+          debugger;
           this.cd.detectChanges();
         })
       }
@@ -236,6 +247,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   }
 
   getReelsByUser(userId: string) {
+    debugger
     this._userService.GetSliderReelsByUserId(userId, this.reelId, 3).subscribe((response) => {
       debugger
       this.reels = response;
@@ -326,7 +338,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   }
 
   getReelsByCourse(courseId: string) {
-    
+    debugger
     this._courseService.GetSliderReelsByCourseId(courseId, this.reelId, 3).subscribe((response) => {
       this.reels = response;
       this.selectedReel = this.reels[0];
@@ -457,14 +469,13 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
     // });
 
     setTimeout(() => {
-      for (let i = 0; i < this.reels.length; i++) {
+      for (let i = 0; i < this.reels?.length; i++) {
         const videoId = `video-${i}`;
         let videojsElement = document.getElementById(videoId);
         if (videojsElement) {
           const firstElement = videojsElement.children[0];
           if (firstElement) {
             const videoElement = firstElement.children[0] as HTMLVideoElement;
-            console.log(videoElement);
             if (videoElement) {
               videoElement.play();
               videoElement.muted = true;
@@ -1107,7 +1118,6 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       const firstElement = videojsElement.children[0];
       if (firstElement) {
         const videoElement = firstElement.children[0] as HTMLVideoElement
-        console.log(videoElement)
         if (videoElement) {
           videoElement.play()
           videoElement.muted = this.muted;
@@ -1132,7 +1142,6 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       const firstElement = videojsElement.children[0];
       if (firstElement) {
         const videoElement = firstElement.children[0] as HTMLVideoElement
-        console.log(videoElement)
         if (videoElement) {
           videoElement.pause();
           if(videoElement.muted == false){
