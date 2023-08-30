@@ -197,7 +197,6 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
 
     if (!this.reelSubscription) {
       this.reelSubscription = addPostResponse.subscribe((response:any) => {
-      debugger
       var isReelExist = this.reels.find((x:any) => x.id == response.response.id)
       var index = this.reels.findIndex((x:any)=> x.id == response.response.id)
       if(isReelExist != null){
@@ -247,7 +246,6 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   }
 
   getReelsByUser(userId: string) {
-    debugger
     this._userService.GetSliderReelsByUserId(userId, this.reelId, 3).subscribe((response) => {
       debugger
       this.reels = response;
@@ -338,7 +336,6 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   }
 
   getReelsByCourse(courseId: string) {
-    debugger
     this._courseService.GetSliderReelsByCourseId(courseId, this.reelId, 3).subscribe((response) => {
       this.reels = response;
       this.selectedReel = this.reels[0];
