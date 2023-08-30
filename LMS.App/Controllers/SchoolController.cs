@@ -66,6 +66,7 @@ namespace LMS.App.Controllers
         [Route("getSchoolByName")]
         [HttpGet]
         public async Task<IActionResult> GetSchoolByName(string schoolName)
+        
         {
             var userId = await GetUserIdAsync(this._userManager);
             var response = await _schoolService.GetSchoolByName(schoolName, userId);

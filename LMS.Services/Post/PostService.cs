@@ -355,7 +355,7 @@ namespace LMS.Services
         //    var blobUrls = await SaveUploadVideos(uploadVideos, uploadThumbnails, postId, createdById, true);
         //}
 
-        public async Task<Guid> UpdatePost(PostViewModel model, string createdById)
+        public async Task<PostViewModel> UpdatePost(PostViewModel model, string createdById)
         {
             var post = await _postRepository.GetAll().FirstAsync(x => x.Id == model.Id);
             post.Title = model.Title;
@@ -408,7 +408,7 @@ namespace LMS.Services
 
             //_postRepository.Update(post);
             //_postRepository.Save();
-            return model.Id;
+            return model;
         }
 
         //public async Task SavePostsInCache(PostViewModel postViewModel)
@@ -681,6 +681,13 @@ namespace LMS.Services
             {
                 result.Post.IsPostLikedByCurrentUser = false;
             }
+
+            //result.Post.ParentImageUrl = 
+            //if (result.Post.PostAuthorType == (int)PostAuthorTypeEnum.User)
+            //{
+            //    var user = _userRepository.GetById(result.Post.ParentId);
+            //    result.Post = _mapper.Map<PostDetailsViewModel>(user);
+            //}
 
             if (result.Post.PostAuthorType == (int)PostAuthorTypeEnum.School)
             {

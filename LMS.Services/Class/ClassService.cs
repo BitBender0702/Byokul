@@ -373,7 +373,8 @@ namespace LMS.Services
             ClassDetailsViewModel model = new ClassDetailsViewModel();
             if (className != null)
             {
-                className = System.Web.HttpUtility.UrlEncode(className, Encoding.GetEncoding("iso-8859-7")).Replace("%3f", "").Replace("+", "").Replace(".","").ToLower();
+                var data = Encoding.UTF8.GetBytes(className);
+                //className = System.Web.HttpUtility.UrlEncode(className, Encoding.GetEncoding("iso-8859-7")).Replace("%3f", "").Replace("+", "").Replace(".","").ToLower();
                 var classesList = await _classRepository.GetAll()
                     .Include(x => x.ServiceType)
                     .Include(x => x.School)
@@ -383,11 +384,20 @@ namespace LMS.Services
                     .Include(x => x.Accessibility)
                     .Include(x => x.CreatedBy).ToListAsync();
 
-                var classes = classesList.Where(x => (System.Web.HttpUtility.UrlEncode(x.ClassName.Replace(" ", "").Replace(".", "").ToLower(), Encoding.GetEncoding("iso-8859-7")) == className) && !x.IsDeleted).FirstOrDefault();
+                var singleLanguage = classesList.Where(x => Encoding.UTF8.GetBytes(x.ClassName.Replace(" ", "").Replace("+", "").Replace(".", "").ToLower()).SequenceEqual(data) && !x.IsDeleted).FirstOrDefault();
+                //var newClassName = "";
+
+                if (singleLanguage == null)
+                {
+                    var newClassName = System.Web.HttpUtility.UrlEncode(className, Encoding.GetEncoding("iso-8859-7")).Replace("%3f", "").Replace("+", "").Replace(".", "").ToLower();
+                    singleLanguage = classesList.Where(x => (System.Web.HttpUtility.UrlEncode(x.ClassName.Replace(" ", "").Replace(".", "").ToLower(), Encoding.GetEncoding("iso-8859-7")) == newClassName) && !x.IsDeleted).FirstOrDefault();
+                }
+
+                //var classes = classesList.Where(x => (System.Web.HttpUtility.UrlEncode(x.ClassName.Replace(" ", "").Replace(".", "").ToLower(), Encoding.GetEncoding("iso-8859-7")) == className) && !x.IsDeleted).FirstOrDefault();
 
                 try
                 {
-                    model = _mapper.Map<ClassDetailsViewModel>(classes);
+                    model = _mapper.Map<ClassDetailsViewModel>(singleLanguage);
                 }
                 catch (Exception ex)
                 {
@@ -415,13 +425,13 @@ namespace LMS.Services
                     model.IsBannedFromClassCourse = true;
                 }
 
-                model.Languages = await GetLanguages(classes.ClassId);
-                model.Disciplines = await GetDisciplines(classes.ClassId);
-                model.Students = await GetStudents(classes.ClassId);
-                model.Teachers = await GetTeachers(classes.ClassId);
-                model.Posts = await GetPostsByClassId(classes.ClassId, loginUserId);
-                model.Reels = await GetReelsByClassId(classes.ClassId, loginUserId);
-                model.ClassCertificates = await GetCertificateByClassId(classes.ClassId);
+                model.Languages = await GetLanguages(singleLanguage.ClassId);
+                model.Disciplines = await GetDisciplines(singleLanguage.ClassId);
+                model.Students = await GetStudents(singleLanguage.ClassId);
+                model.Teachers = await GetTeachers(singleLanguage.ClassId);
+                model.Posts = await GetPostsByClassId(singleLanguage.ClassId, loginUserId);
+                model.Reels = await GetReelsByClassId(singleLanguage.ClassId, loginUserId);
+                model.ClassCertificates = await GetCertificateByClassId(singleLanguage.ClassId);
 
 
 

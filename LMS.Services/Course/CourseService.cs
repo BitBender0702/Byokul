@@ -376,8 +376,8 @@ namespace LMS.Services
 
             if (courseName != null)
             {
-                courseName = System.Web.HttpUtility.UrlEncode(courseName, Encoding.GetEncoding("iso-8859-7")).Replace("%3f", "").Replace("+", "").Replace(".","").ToLower();
-
+                //courseName = System.Web.HttpUtility.UrlEncode(courseName, Encoding.GetEncoding("iso-8859-7")).Replace("%3f", "").Replace("+", "").Replace(".","").ToLower();
+                var data = Encoding.UTF8.GetBytes(courseName);
                 var courseList = await _courseRepository.GetAll()
                     .Include(x => x.ServiceType)
                     .Include(x => x.School)
@@ -387,9 +387,17 @@ namespace LMS.Services
                     .Include(x => x.Accessibility)
                     .Include(x => x.CreatedBy).ToListAsync();
 
-                var course = courseList.Where(x => (System.Web.HttpUtility.UrlEncode(x.CourseName.Replace(" ", "").Replace(".", "").ToLower(), Encoding.GetEncoding("iso-8859-7")) == courseName) && !x.IsDeleted).FirstOrDefault();
 
-                if (course == null)
+                var singleLanguage = courseList.Where(x => Encoding.UTF8.GetBytes(x.CourseName.Replace(" ", "").Replace("+", "").Replace(".", "").ToLower()).SequenceEqual(data) && !x.IsDeleted).FirstOrDefault();
+               // var newCourseName = "";
+                if(singleLanguage == null)
+                {
+                    var newCourseName = System.Web.HttpUtility.UrlEncode(courseName, Encoding.GetEncoding("iso-8859-7")).Replace("%3f", "").Replace("+", "").Replace(".", "").ToLower();
+                    singleLanguage = courseList.Where(x => (System.Web.HttpUtility.UrlEncode(x.CourseName.Replace(" ", "").Replace(".", "").ToLower(), Encoding.GetEncoding("iso-8859-7")) == newCourseName) && !x.IsDeleted).FirstOrDefault();
+                }
+
+
+                if (singleLanguage == null)
                 {
 
                     var classDetails = await _classService.GetClassByName(courseName, loginUserId);
@@ -448,22 +456,22 @@ namespace LMS.Services
 
 
                 }
-                model = _mapper.Map<CourseDetailsViewModel>(course);
+                model = _mapper.Map<CourseDetailsViewModel>(singleLanguage);
 
                 var isCourseAccessible = await _classCourseTransactionRepository.GetAll().Where(x => x.CourseId == model.CourseId && x.UserId == loginUserId && x.PaymentId != null).FirstOrDefaultAsync();
 
-                if (isCourseAccessible != null || course.CreatedById == loginUserId)
+                if (isCourseAccessible != null || singleLanguage.CreatedById == loginUserId)
                 {
                     model.IsCourseAccessable = true;
                 }
 
-                model.Languages = await GetLanguages(course.CourseId);
-                model.Disciplines = await GetDisciplines(course.CourseId);
-                model.Students = await GetStudents(course.CourseId);
-                model.Teachers = await GetTeachers(course.CourseId);
-                model.Posts = await GetPostsByCourseId(course.CourseId, loginUserId);
-                model.Reels = await GetReelsByCourseId(course.CourseId, loginUserId);
-                model.CourseCertificates = await GetCertificateByCourseId(course.CourseId);
+                model.Languages = await GetLanguages(singleLanguage.CourseId);
+                model.Disciplines = await GetDisciplines(singleLanguage.CourseId);
+                model.Students = await GetStudents(singleLanguage.CourseId);
+                model.Teachers = await GetTeachers(singleLanguage.CourseId);
+                model.Posts = await GetPostsByCourseId(singleLanguage.CourseId, loginUserId);
+                model.Reels = await GetReelsByCourseId(singleLanguage.CourseId, loginUserId);
+                model.CourseCertificates = await GetCertificateByCourseId(singleLanguage.CourseId);
 
 
                 return model;
@@ -682,7 +690,8 @@ namespace LMS.Services
         public async Task<IEnumerable<PostDetailsViewModel>> GetSliderReelsByCourseId(Guid courseId, string loginUserId, Guid lastPostId, ScrollTypesEnum scrollType)
         {
             var requiredResults = new List<Post>();
-            var reelList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == courseId && (x.PostType == (int)PostTypeEnum.Post || (x.PostType == (int)PostTypeEnum.Stream) && x.IsLive == true) && x.PostAuthorType == (int)PostAuthorTypeEnum.Course && x.IsPostSchedule != true).OrderByDescending(x => x.IsPinned).ThenByDescending(x => x.CreatedOn).ToListAsync();
+            //var reelList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == courseId && (x.PostType == (int)PostTypeEnum.Reel || (x.PostType == (int)PostTypeEnum.Stream) && x.IsLive == true) && x.PostAuthorType == (int)PostAuthorTypeEnum.Course && x.IsPostSchedule != true).OrderByDescending(x => x.IsPinned).ThenByDescending(x => x.CreatedOn).ToListAsync();
+            var reelList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == courseId && x.PostType == (int)PostTypeEnum.Reel && x.IsPostSchedule != true).OrderByDescending(x => x.IsPinned).ThenByDescending(x => x.CreatedOn).ToListAsync();
             var sharedPost = await _userSharedPostRepository.GetAll().ToListAsync();
             var savedPost = await _savedPostRepository.GetAll().ToListAsync();
 

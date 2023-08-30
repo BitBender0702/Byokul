@@ -103,6 +103,7 @@ export class SchoolService{
     }
 
     getSchoolByName(schoolName:any):Observable<any>{
+        debugger
         return this.http.get(`${this.apiUrl}/school/getSchoolByName` + '?schoolName=' + schoolName,{headers: this.headers});
     }
 

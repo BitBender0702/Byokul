@@ -297,6 +297,15 @@
                         {{ post.description }}
                       </p>
                     </div>
+                    <p
+                    *ngIf="
+                      post.description != null &&
+                      post.postAttachments.length > 0
+                    "
+                    class="text_sec1 font_14 pt-3"
+                  >
+                    {{ post.description }}
+                  </p>
                   </div>
                   <div class="col-md-4">
                     <div>
@@ -573,7 +582,7 @@
                               />
                             </span>
                             <input
-                              [disabled]="isBanned"
+                              [disabled]="!isBanned"
                               (keyup.enter)="sendToGroup()"
                               [(ngModel)]="messageToGroup"
                               type="text"
@@ -581,7 +590,7 @@
                               placeholder="{{ 'YourMessage' | translate }}"
                             />
                             <button
-                              [disabled]="isBanned"
+                              [disabled]="!isBanned"
                               (click)="sendToGroup()"
                               type="button"
                               class="comment-btn border-0"
@@ -605,9 +614,9 @@
   <section
     *ngIf="postPageView"
     class="f-poppins"
-    style="margin-left: 300px; margin-top: 30px"
   >
-    <div>
+  <div class="main_content">
+    <div class="main_content-max-width">
       <div
         class="live-header d-flex align-items-center justify-content-between"
       >
@@ -620,7 +629,7 @@
           {{ "Back" | translate }}
         </button>
         <h1
-          class="font_22 text_dark fw-bold text-center mb-md-0"
+          class="font_22 text_dark fw-bold text-center mb-md-0 m-auto"
           style="margin-left: -100px"
         >
           {{ "Post" | translate }}
@@ -670,19 +679,19 @@
         [ngClass]="showCommentsField ? '' : 'full-widthreel'"
         id="reel_content"
       >
-        <div class="row">
+        <div class="row mt-5">
           <div class="col-md-8">
             <div
               class="live-inner w-100"
               *ngIf="post.postAttachments.length > 0"
             >
-              <carousel>
+              <carousel [interval]="0">
                 <div
                   *ngFor="let postAttachment of post.postAttachments"
                   class="live-image overflow-hidden position-relative"
                 >
                   <slide *ngIf="postAttachment.fileType == 2">
-                    <video
+                    <!-- <video
                       #videoPlayer
                       *ngIf="postAttachment.fileType == 2"
                       width="100%"
@@ -690,9 +699,13 @@
                       controls
                       class="video-js vjs-big-play-centered"
                       preload="metadata"
-                    >
-                      <source [src]="postAttachment.fileUrl" type="video/mp4" />
-                    </video>
+                    > -->
+                    <videoJs-component
+                      [postAttachment]="postAttachment"
+                      [isView]="true"
+                    ></videoJs-component>
+                      <!-- <source [src]="postAttachment.fileUrl" type="video/mp4" /> -->
+                    <!-- </video> -->
                     <div class="live-bottom-text p-3">
                       <h5 class="font_14 mb-0 fw_600 text_sec1">
                         {{ postAttachment.post.title }}
@@ -707,7 +720,7 @@
                     </div>
                   </slide>
 
-                  <slide
+                  <!-- <slide
                     *ngIf="
                       postAttachment.fileType != 2 ||
                       postAttachment.fileType != 1
@@ -716,7 +729,7 @@
                     <div class="w-100" id="wasCalled">
                       <p>{{ post.description }}</p>
                     </div>
-                  </slide>
+                  </slide> -->
 
                   <slide *ngIf="postAttachment.fileType == 1">
                     <img
@@ -730,11 +743,63 @@
                       </h5>
                     </div>
                     <div class="reel-username font_16 white_text">
-                      <img [src]="post.parentImageUrl" class="me-2" />
-                      <span (click)="hideCommentModal()"
-                      [routerLink]="['/user/userProfile',post.createdBy]">
-                      {{ post.parentName }}
-                    </span>
+                      <img *ngIf="post.parentImageUrl != null && post.postAuthorType == 4"
+                        [src]="post.parentImageUrl"
+                        (click)="hideCommentModal()"
+                        [routerLink]="['/user/userProfile',post.createdBy]"
+                        class="me-2 cursor_pointer"
+                      />
+                      <img *ngIf="post.parentImageUrl != null && post.postAuthorType == 1"
+                        [src]="post.parentImageUrl"
+                        (click)="hideCommentModal()"
+                        [routerLink]="['/profile/school', post.parentName]"
+                        class="me-2 cursor_pointer"
+                      />
+                      <img *ngIf="post.parentImageUrl != null && post.postAuthorType == 2"
+                      [src]="post.parentImageUrl"
+                      (click)="hideCommentModal()"
+                      [routerLink]="['/profile/class', post.schoolName, post.parentName]"
+                      class="me-2 cursor_pointer"
+                    />
+                    <img *ngIf="post.parentImageUrl != null && post.postAuthorType == 3"
+                    [src]="post.parentImageUrl"
+                    (click)="hideCommentModal()"
+                    [routerLink]="['/profile/course', post.schoolName, post.parentName]"
+                    class="me-2 cursor_pointer"
+                  />
+                      <img
+                      (click)="hideCommentModal()"
+                      [routerLink]="['/user/userProfile',post.createdBy]"
+                        *ngIf="
+                          post.parentImageUrl == null && gender == '1'
+                        "
+                        src="../../../assets/images/maleProfile.jfif"
+                        class="me-2 cursor_pointer"
+                      />
+                      <img
+                      (click)="hideCommentModal()"
+                      [routerLink]="['/user/userProfile',post.createdBy]"
+                        *ngIf="
+                          post.parentImageUrl == null &&
+                          (gender == '2' || gender == '3')
+                        "
+                        src="../../../assets/images/femaleProfile.jfif"
+                        class="me-2 cursor_pointer"
+                      />
+                      <span *ngIf="post.postAuthorType == 4" class="cursor_pointer" (click)="hideCommentModal()"
+                      [routerLink]="['/user/userProfile',post.createdBy]">{{ post.parentName }}</span>
+
+                      <span *ngIf="post.postAuthorType == 1" class="cursor_pointer" (click)="hideCommentModal()"
+                      [routerLink]="['/profile/school', post.parentName]"
+                      >{{ post.parentName }}</span>
+
+                      <span *ngIf="post.postAuthorType == 2" class="cursor_pointer" (click)="hideCommentModal()"
+                      [routerLink]="['/profile/class', post.schoolName, post.parentName]"
+                      >{{ post.parentName }}</span>
+
+                      <span *ngIf="post.postAuthorType == 3" class="cursor_pointer" (click)="hideCommentModal()"
+                      [routerLink]="['/profile/course', post.schoolName, post.parentName]"
+                      >{{ post.parentName }}</span>
                     </div>
                   </slide>
                 </div>
@@ -755,7 +820,7 @@
                     : 'accordion-open d-none'
                 "
                 id="live-chat-open"
-                style="display: none"
+                style="display: none;margin: 0;padding: 0;"
               >
                 <div class="live-action-buttons d-flex justify-content-between">
                   <button
@@ -962,7 +1027,7 @@
                   <div
                     *ngIf="!isCommentsDisabled"
                     class="add-comment d-flex align-items-center justify-content-between"
-                    style="margin-left: -40px"
+                   
                   >
                     <span
                       class="bg-transparent rounded-circle comment-post-user rounded-circle"
@@ -1016,6 +1081,8 @@
         </div>
       </div>
     </div>
+  </div>
+    
   </section>
 </div>
 <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
