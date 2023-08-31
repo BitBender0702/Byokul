@@ -506,7 +506,7 @@
   "ClassCourseTransactions": "Class/Course Transactions",
   "CancelSubscription": "Cancel Subscription",
   "RenewSubscription": "RenewSubscription",
-  "Cancel": "Cancel",
+  "Cancel": "يلغي",
   "Renew": "Renew",
   "DoYouWantToCancelSubscription": "Do you really want to cancel the subscription",
   "DoYouWantToRenewSubscription": "Do you really want to renew the subscription",
@@ -518,7 +518,7 @@
   "ExportToExcel": "Export to Excel",
   "BuyerName": "Buyer Name",
   "ThankYouForYourRating":"Thank You For Your Rating!",
-  "Rate": "Rate",
+  "Rate": "معدل",
   "Officials": "المسؤولين",
   "AddOfficial": "إضافة الرسمية",
   "SchoolVideoLibrary": "School Video Library",
@@ -541,7 +541,11 @@
   "AvailableSpace": "Available Space",
   "VideoLibrary":"Video Library",
   "Official": "رسمي",
-  "OfficialName": "اسم رسمي"
+  "OfficialName": "اسم رسمي",
+  "RateClass": "فئة المعدل",
+  "RateCourse": "دورة معدل"
+
+
 
 
   
