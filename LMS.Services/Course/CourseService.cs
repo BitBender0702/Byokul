@@ -1242,9 +1242,9 @@ namespace LMS.Services
         {
             var courseForBanUnban = _courseRepository.GetById(banUnbanStudent.CourseId);
             var createdId = courseForBanUnban.CreatedById;
-            if (Guid.Parse(courseForBanUnban.CreatedById) != banUnbanStudent.ClassCourseBanOwner)
+            if (Guid.Parse(courseForBanUnban.CreatedById) != banUnbanStudent.BannerId)
             {
-                var teacherWithPermission = await _courseTeacherRepository.GetAll().Where(x => x.TeacherId == banUnbanStudent.ClassCourseBanOwner).FirstOrDefaultAsync();
+                var teacherWithPermission = await _courseTeacherRepository.GetAll().Where(x => x.TeacherId == banUnbanStudent.BannerId).FirstOrDefaultAsync();
                 if (teacherWithPermission == null)
                 {
                     return false;

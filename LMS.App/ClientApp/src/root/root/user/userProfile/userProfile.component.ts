@@ -238,6 +238,9 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
 
   ngOnInit(): void {
     debugger
+    document.addEventListener('contextmenu', function (e) {
+      e.preventDefault();
+  });
     this.checkScreenSize();
     if(this.isScreenMobile){
       this.itemsPerSlide = 2;

@@ -327,7 +327,7 @@ namespace LMS.App.Controllers
             {
                 return Ok(new { Success = false, Message = Constants.UserNotLoggedIn });
             }
-            banUnbanStudent.ClassCourseBanOwner = Guid.Parse(user);
+            banUnbanStudent.BannerId = Guid.Parse(user);
             var classBan = await GetClassById((Guid)banUnbanStudent.ClassId);
             if (classBan == null)
             {

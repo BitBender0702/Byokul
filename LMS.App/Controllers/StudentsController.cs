@@ -1,4 +1,5 @@
-﻿using LMS.Common.ViewModels;
+﻿using LMS.Common.Enums;
+using LMS.Common.ViewModels;
 using LMS.Common.ViewModels.Student;
 using LMS.Data.Entity;
 using LMS.Services.Blob;
@@ -70,9 +71,9 @@ namespace LMS.App.Controllers
 
         [Route("isStudentBannedFromClassCourse")]
         [HttpGet]
-        public async Task<IActionResult> IsStudentBannedFromClassCourse(Guid StudentId, string from, string classCourseId)
+        public async Task<IActionResult> IsStudentBannedFromClassCourse(Guid StudentId, ClassCourseEnum from, Guid id)
         {
-            return Ok(await _studentsService.IsStudentBannedFromClassCourse(StudentId, from, classCourseId));
+            return Ok(await _studentsService.IsStudentBannedFromClassCourse(StudentId, from, id));
         }
 
     }

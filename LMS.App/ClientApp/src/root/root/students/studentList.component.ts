@@ -213,7 +213,7 @@ export class StudentListComponent extends MultilingualComponent implements OnIni
         studentId: studentId,
         classId: classOrCourseId,
         courseId: null,
-        classCourseBanOwner: this.loginUserId
+        bannerId: this.loginUserId
       }
 
       this._classService.banUnbanStudentFromClass(this.classOrCourseData).subscribe((response) => {
@@ -233,7 +233,7 @@ export class StudentListComponent extends MultilingualComponent implements OnIni
         studentId: studentId,
         classId: null,
         courseId: classOrCourseId,
-        classCourseBanOwner: this.loginUserId
+        bannerId: this.loginUserId
       }
 
 

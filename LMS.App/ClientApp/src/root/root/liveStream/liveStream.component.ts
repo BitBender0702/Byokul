@@ -25,6 +25,8 @@ import { MessageService } from 'primeng/api';
 import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
 import { Location } from '@angular/common'
 import { StudentService } from 'src/root/service/student.service';
+import { SchoolClassCourseEnum } from 'src/root/Enums/SchoolClassCourseEnum';
+import { ClassCourseEnum } from 'src/root/Enums/classCourseEnum';
 
 @Component({
   selector: 'live-stream',
@@ -1026,10 +1028,10 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
   isUserBanned(){
     if(this.post.postAuthorType == 2 || this.post.postAuthorType == 3){
       if(this.post.postAuthorType == 2){
-        this.fromForComments = "class"
+        this.fromForComments = ClassCourseEnum.Class
       }
       if(this.post.postAuthorType == 3){
-        this.fromForComments = "course"
+        this.fromForComments = ClassCourseEnum.Course
       }
       this._studentService.isStudentBannedFromClassCourse(this.userId, this.fromForComments, this.post.parentId).subscribe((response)=>{
         debugger;

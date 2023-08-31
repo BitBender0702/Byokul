@@ -21,6 +21,7 @@ using iText.StyledXmlParser.Jsoup;
 using iText.StyledXmlParser.Jsoup.Nodes;
 using iText.Kernel.Pdf;
 using Microsoft.AspNetCore.Mvc;
+using LMS.Common.Enums;
 
 namespace LMS.Services.Students
 {
@@ -228,28 +229,28 @@ namespace LMS.Services.Students
             return result;
         }
 
-        public async Task<bool?> IsStudentBannedFromClassCourse(Guid StudentId, string from, string classCourseId)
+        public async Task<bool?> IsStudentBannedFromClassCourse(Guid StudentId, ClassCourseEnum from, Guid id)
         {
             bool isStudentBanned = false;
-            if (from == "class") 
+            if (from == ClassCourseEnum.Class) 
             {
-                var classStudent = await _classStudentRepository.GetAll().Where(x => x.ClassId == Guid.Parse(classCourseId) && x.StudentId == StudentId)
+                var classStudent = await _classStudentRepository.GetAll().Where(x => x.ClassId == id && x.StudentId == StudentId)
                 .FirstOrDefaultAsync();
                 if (classStudent != null)
                 {
                     isStudentBanned = true;
                 }
             }
-            if(from == "course")
+            if(from == ClassCourseEnum.Course)
             {
-                var courseStudent = await _courseStudentRepository.GetAll().Where(x => x.CourseId == Guid.Parse(classCourseId) && x.StudentId == StudentId)
+                var courseStudent = await _courseStudentRepository.GetAll().Where(x => x.CourseId == id && x.StudentId == StudentId)
                 .FirstOrDefaultAsync();
                 if (courseStudent != null)
                 {
                     isStudentBanned = true;
                 }
             }
-            return isStudentBanned;
+            return isStudentBanned; 
 
         }
 
