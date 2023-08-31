@@ -25,6 +25,7 @@ import { JoinMeetingModel } from 'src/root/interfaces/bigBlueButton/joinMeeting'
 import { BigBlueButtonService } from 'src/root/service/bigBlueButton';
 import { CreatePostComponent } from '../createPost/createPost.component';
 import { StudentService } from 'src/root/service/student.service';
+import { ClassCourseEnum } from 'src/root/Enums/classCourseEnum';
 
 export const sharePostResponse = new Subject<{}>();
 export const deletePostResponse = new Subject<{ postId: string }>();
@@ -637,16 +638,16 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
 
-  from:string='';
+  from:any;
   postForComment: any;
   isUserBanned(){
     debugger;
     if(this.post?.postAuthorType ==2 || this.post?.postAuthorType ==3){
       if(this.post?.postAuthorType == 2){
-        this.from="class"
+        this.from= ClassCourseEnum.Class
       }
       if(this.post?.postAuthorType == 3){
-        this.from="course"
+        this.from= ClassCourseEnum.Course
       }
   
       this._studentService.isStudentBannedFromClassCourse(this.sender.id, this.from, this.postForComment.parentId).subscribe((response)=>{

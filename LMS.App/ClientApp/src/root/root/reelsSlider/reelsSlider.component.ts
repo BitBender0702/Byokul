@@ -29,6 +29,7 @@ import { CreatePostComponent, addPostResponse } from '../createPost/createPost.c
 import { deleteReelResponse } from '../root.component';
 import { ReelsService } from 'src/root/service/reels.service';
 import { StudentService } from 'src/root/service/student.service';
+import { ClassCourseEnum } from 'src/root/Enums/classCourseEnum';
 
 export const savedReelResponse = new Subject<{ isReelSaved: boolean, id: string }>();
 
@@ -1299,7 +1300,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
 
 
 
-  fromForComment:string='';
+  fromForComment:any;
   postForComment: any;
   isBanned:any;
   isUserBanned(){
@@ -1324,11 +1325,11 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       this.postForComment = response;
       if(response.class != null || response.course != null){
         if(response.class?.classId != null){
-          this.fromForComment = "class"
+          this.fromForComment = ClassCourseEnum.Class
           this.parentId = response.class.classId
         }
         if(response.course?.courseId != null){
-          this.fromForComment = "course"
+          this.fromForComment = ClassCourseEnum.Course
           this.parentId = response.course.courseId
         }
         this.isUserBanned();

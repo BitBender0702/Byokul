@@ -11,6 +11,6 @@ namespace LMS.Common.ViewModels.Common
         public Guid? ClassId { get; set; }
         public Guid? CourseId { get; set; }
         public Guid? StudentId { get; set; }
-        public Guid ClassCourseBanOwner { get; set; }
+        public Guid BannerId { get; set; }
     }
 }
