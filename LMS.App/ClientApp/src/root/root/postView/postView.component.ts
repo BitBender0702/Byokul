@@ -93,7 +93,7 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
     this._studentService = studentService;
   }
 
-  isBanned:boolean = true;
+  isBanned:boolean = false;
   ngOnInit(): void {
     debugger
     this.getSenderInfo();
@@ -251,7 +251,9 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.savePreferences(this.post.title, this.post.description, this.post.postTags);
 
-
+    // setTimeout(() => {
+    //   this.addEventListnerOnCarousel();
+    // }, 1000);
 
   }
 
@@ -263,6 +265,11 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     setTimeout(() => this.scrollToBottom());
+
+    setTimeout(() => {
+      this.addEventListnerOnCarousel();
+    }, 1000);
+    
   }
 
   initializeJoinMeetingViewModel() {
@@ -654,9 +661,54 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
   }
 
+  @ViewChild('carouselForPostView') carouselForPostView!: ElementRef;
+  private previousIndex: number | null = null;
+  addEventListnerOnCarousel() {
+    debugger
+    if (this.carouselForPostView != undefined) {
+      debugger
+      if ($('carousel')[1].querySelectorAll('a.carousel-control')[1]) {
+        let isButton = $('carousel')[1].querySelectorAll('a.carousel-control-next')[0] as HTMLButtonElement;
+
+        isButton.addEventListener('click', () => {
+          debugger
+          const currentIndex = this.previousIndex !== null ? this.previousIndex : 0;
+          const initialVideoElement = document.getElementById(`video-${currentIndex}`);
+          debugger;
+          if(initialVideoElement){
+            const firstElement = initialVideoElement.children[0];
+            if (firstElement) {
+              const videoElement = firstElement.children[0] as HTMLVideoElement;
+              if (videoElement) {
+                videoElement.pause();
+              }
+            }
+          }
+          this.previousIndex = currentIndex;
+        })
+      }
 
 
-
-
-
+      if ($('carousel')[1].querySelectorAll('a.carousel-control')[1]) {
+        let isButton = $('carousel')[1].querySelectorAll('a.carousel-control-prev')[0] as HTMLButtonElement;
+        console.log(isButton)
+        isButton.addEventListener('click', () => {
+          debugger
+          const currentIndex = this.previousIndex !== null ? this.previousIndex : 0;
+          const initialVideoElement = document.getElementById(`video-${currentIndex}`);
+          debugger;
+          if(initialVideoElement){
+            const firstElement = initialVideoElement.children[0];
+            if (firstElement) {
+              const videoElement = firstElement.children[0] as HTMLVideoElement;
+              if (videoElement) {
+                videoElement.pause();
+              }
+            }
+          }
+          this.previousIndex = currentIndex;
+        })
+      }
+    }
+  }
 }

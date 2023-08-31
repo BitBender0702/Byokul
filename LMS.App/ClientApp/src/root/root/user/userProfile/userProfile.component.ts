@@ -645,6 +645,7 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
     if (this.carousel != undefined) {
       if ($('carousel')[0].querySelectorAll('a.carousel-control-next')[0]) {
         $('carousel')[0].querySelectorAll('a.carousel-control-next')[0].addEventListener('click', () => {
+          debugger
           this.reelsPageNumber++;
           if (this.reelsPageNumber == 2) {
             this.reelsLoadingIcon = true;
@@ -2199,6 +2200,7 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
       if (this.carousel != undefined) {
         const nextButton = $('carousel')[0].querySelectorAll('a.carousel-control-prev')[0] as HTMLButtonElement
         if (nextButton) {
+          debugger
           nextButton.click();
         }
       }

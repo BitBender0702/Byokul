@@ -213,6 +213,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
               const videoElement = firstElement.children[0] as HTMLVideoElement;
               if (videoElement) {
                 videoElement.src = response.postAttachments[0].fileUrl;
+                videoElement.play();
                 let newUrl = `/user/reelsView/${this.ownerId}/${this.from}/${response.postAttachments[0].id}/${response.id}`
                 history.replaceState({}, '', newUrl)
               }
@@ -264,11 +265,19 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       this.carouselConfig.initialSlide = this.selectedReelIndex;
       // this.reels.find(x => x.);
       this.initializeReelsSlider();
-      const initialVideoElement: HTMLVideoElement | null = document.querySelector(`#video-${this.selectedReelIndex}`);
-      if (initialVideoElement) {
-        initialVideoElement.play();
-        initialVideoElement.muted = false;
-      }
+      setTimeout(() => {
+        const initialVideoElement = document.querySelector(`#video-${this.selectedReelIndex}`);
+        if(initialVideoElement){
+          const firstElement = initialVideoElement.children[0];
+          if (firstElement) {
+            const videoElement = firstElement.children[0] as HTMLVideoElement;
+            if (videoElement) {
+              videoElement?.play();
+              videoElement.autoplay = true;
+            }
+          }
+        }
+      }, 1000);
     });
   }
 
@@ -292,11 +301,19 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       this.getReelsById();
       // this.reels.find(x => x.);
       this.initializeReelsSlider();
-      const initialVideoElement: HTMLVideoElement | null = document.querySelector(`#video-${this.selectedReelIndex}`);
-      if (initialVideoElement) {
-        initialVideoElement.play();
-        initialVideoElement.muted = false;
-      }
+      setTimeout(() => {
+        const initialVideoElement = document.querySelector(`#video-${this.selectedReelIndex}`);
+        if(initialVideoElement){
+          const firstElement = initialVideoElement.children[0];
+          if (firstElement) {
+            const videoElement = firstElement.children[0] as HTMLVideoElement;
+            if (videoElement) {
+              videoElement?.play();
+              videoElement.autoplay = true;
+            }
+          }
+        }
+      }, 1000);
     });
   }
 
@@ -321,12 +338,19 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       this.getReelsById();
       // this.reels.find(x => x.);
       this.initializeReelsSlider();
-      const initialVideoElement: HTMLVideoElement | null = document.querySelector(`#video-${this.selectedReelIndex}`);
-      if (initialVideoElement) {
-        initialVideoElement.play();
-        initialVideoElement.muted = false;
-      }
-
+      setTimeout(() => {
+        const initialVideoElement = document.querySelector(`#video-${this.selectedReelIndex}`);
+        if(initialVideoElement){
+          const firstElement = initialVideoElement.children[0];
+          if (firstElement) {
+            const videoElement = firstElement.children[0] as HTMLVideoElement;
+            if (videoElement) {
+              videoElement?.play();
+              videoElement.autoplay = true;
+            }
+          }
+        }
+      }, 1000);
 
 
 
@@ -354,11 +378,19 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       this.getReelsById();
       // this.reels.find(x => x.);
       this.initializeReelsSlider();
-      const initialVideoElement: HTMLVideoElement | null = document.querySelector(`#video-${this.selectedReelIndex}`);
-      if (initialVideoElement) {
-        initialVideoElement.play();
-        initialVideoElement.muted = false;
-      }
+      setTimeout(() => {
+        const initialVideoElement = document.querySelector(`#video-${this.selectedReelIndex}`);
+        if(initialVideoElement){
+          const firstElement = initialVideoElement.children[0];
+          if (firstElement) {
+            const videoElement = firstElement.children[0] as HTMLVideoElement;
+            if (videoElement) {
+              videoElement?.play();
+              videoElement.autoplay = true;
+            }
+          }
+        }
+      }, 1000);
 
 
 
@@ -388,11 +420,19 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       this.getReelsById();
       // this.reels.find(x => x.);
       this.initializeReelsSlider();
-      const initialVideoElement: HTMLVideoElement | null = document.querySelector(`#video-${this.selectedReelIndex}`);
-      if (initialVideoElement) {
-        initialVideoElement.play();
-        initialVideoElement.muted = false;
-      }
+      setTimeout(() => {
+        const initialVideoElement = document.querySelector(`#video-${this.selectedReelIndex}`);
+        if(initialVideoElement){
+          const firstElement = initialVideoElement.children[0];
+          if (firstElement) {
+            const videoElement = firstElement.children[0] as HTMLVideoElement;
+            if (videoElement) {
+              videoElement?.play();
+              videoElement.autoplay = true;
+            }
+          }
+        }
+      }, 1000);
     });
   }
 
@@ -415,11 +455,19 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       this.getReelsById();
       // this.reels.find(x => x.);
       this.initializeReelsSlider();
-      const initialVideoElement: HTMLVideoElement | null = document.querySelector(`#video-${this.selectedReelIndex}`);
-      if (initialVideoElement) {
-        initialVideoElement.play();
-        initialVideoElement.muted = false;
-      }
+      setTimeout(() => {
+        const initialVideoElement = document.querySelector(`#video-${this.selectedReelIndex}`);
+        if(initialVideoElement){
+          const firstElement = initialVideoElement.children[0];
+          if (firstElement) {
+            const videoElement = firstElement.children[0] as HTMLVideoElement;
+            if (videoElement) {
+              videoElement?.play();
+              videoElement.autoplay = true;
+            }
+          }
+        }
+      }, 1000);
     });
   }
 
