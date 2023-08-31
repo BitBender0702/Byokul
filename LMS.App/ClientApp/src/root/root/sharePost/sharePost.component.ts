@@ -128,6 +128,7 @@ saveUserSharedPost(){
   debugger
     this._postService.saveUserSharedPost(this.userId, this.postId).subscribe((response) => {
         this.close();
+        debugger;
         sharedPostResponse.next({postType:this.post.postType,postId:this.post.postId}); 
 
         //this.router.navigateByUrl(`user/userProfile/${this.userId}`);

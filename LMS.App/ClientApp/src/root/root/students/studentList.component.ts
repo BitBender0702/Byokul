@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, Injectable, Injector, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import { Component, ElementRef, HostListener, Injectable, Injector, OnDestroy, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { UserService } from "src/root/service/user.service";
 import { Subscription } from "rxjs";
@@ -12,6 +12,7 @@ import { ClassService } from "src/root/service/class.service";
 
 import { TranslateService } from '@ngx-translate/core';
 import { MessageService } from 'primeng/api';
+import { ClassCourseEnum } from "src/root/Enums/classCourseEnum";
 
 
 
@@ -45,6 +46,7 @@ export class StudentListComponent extends MultilingualComponent implements OnIni
 
   constructor(injector: Injector, studentService: StudentService, private route: ActivatedRoute, 
     courseService: CourseService, classService: ClassService, private translateService: TranslateService,
+    private cd: ChangeDetectorRef,
     public messageService: MessageService
     ) {
     super(injector);
@@ -205,7 +207,7 @@ export class StudentListComponent extends MultilingualComponent implements OnIni
 
   // }
 
-  isBanned:any;
+  isBanned:boolean=false;
   banFollower(studentId: string, classOrCourseId: string) {
     debugger;
     if (this.type == 2) {
@@ -218,13 +220,14 @@ export class StudentListComponent extends MultilingualComponent implements OnIni
 
       this._classService.banUnbanStudentFromClass(this.classOrCourseData).subscribe((response) => {
         debugger;
-        if (response.Message == "Student is banned") {
+        if (response.message == "Student is banned") {
           const translatedInfoSummary = this.translateService.instant('Success');
           const translatedMessage = this.translateService.instant('Student is banned');
           this.messageService.add({ severity: 'success', summary: translatedInfoSummary, life: 3000, detail: translatedMessage });
           this.isBanned = true;
+          this.cd.detectChanges();
         }
-      });;
+      });
 
 
     }
@@ -239,15 +242,15 @@ export class StudentListComponent extends MultilingualComponent implements OnIni
 
       this._courseService.banUnbanStudentFromCourse(this.classOrCourseData).subscribe((response) => {
         debugger;
-        if (response.Message == "Student is banned") {
+        if (response.message == "Student is banned") {
           const translatedInfoSummary = this.translateService.instant('Success');
           const translatedMessage = this.translateService.instant('Student is banned');
           this.messageService.add({ severity: 'success', summary: translatedInfoSummary, life: 3000, detail: translatedMessage });
+          this.isBanned = true;
+          this.cd.detectChanges();
+          // this.classOrCourseData.detectChanges();
         }
       });;
-
-
-
     }
   }
 
