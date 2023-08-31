@@ -896,8 +896,10 @@ export class CreatePostComponent implements OnInit, OnDestroy {
         return;
       }
       else {
+        debugger
         const date = new Date(this.scheduleTime);
         this.postToUpload.append('dateTime', date.toISOString());
+        console.log(date.toISOString());
       }
     }
 

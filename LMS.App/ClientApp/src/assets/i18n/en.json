@@ -555,7 +555,10 @@
   "AvailableSpace": "Available Space",
   "VideoLibrary":"Video Library",
   "Official": "Official",
-  "OfficialName": "Official Name"
+  "OfficialName": "Official Name",
+  "RateClass": "Rate Class",
+  "RateCourse": "Rate Course"
+
 
 
   

@@ -240,6 +240,11 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
     debugger
     document.addEventListener('contextmenu', function (e) {
       e.preventDefault();
+      const contextMenu = document.querySelector('.context-menu');
+  const saveAsOption = contextMenu?.querySelector('.save-as');
+  if (saveAsOption) {
+    saveAsOption.remove();
+  }
   });
     this.checkScreenSize();
     if(this.isScreenMobile){

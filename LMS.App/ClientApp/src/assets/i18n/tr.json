@@ -510,7 +510,7 @@
   "ClassCourseTransactions": "Class/Course Transactions",
   "CancelSubscription": "Cancel Subscription",
   "RenewSubscription": "RenewSubscription",
-  "Cancel": "Cancel",
+  "Cancel": "İptal",
   "Renew": "Renew",
   "DoYouWantToCancelSubscription": "Do you really want to cancel the subscription",
   "DoYouWantToRenewSubscription": "Do you really want to renew the subscription",
@@ -521,7 +521,7 @@
   "DidNotReceive": "Didn't receive email ?",
   "ExportToExcel": "Export to Excel",
   "BuyerName": "Buyer Name",
-  "Rate": "Rate",
+  "Rate": "Oran",
   "VideoThumbnailDurationExceed": "You can not upload a video thumbnail longer than 3 minutes",
   "ThankYouForYourRating":"Thank You For Your Rating!",
   "Officials": "Yetkililer",
@@ -546,7 +546,11 @@
   "AvailableSpace": "Available Space",
   "VideoLibrary":"Video Library",
   "Official": "Resmi",
-  "OfficialName": "Resmi Ad"
+  "OfficialName": "Resmi Ad",
+  "RateClass": "Oran Sınıfı",
+  "RateCourse": "Oran Ders"
+
+
 
 
 

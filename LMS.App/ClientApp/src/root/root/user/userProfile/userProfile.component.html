@@ -1757,21 +1757,14 @@
                           <div
                             class="school-large-thumbnail shadow-thumnail position-relative"
                           >
-                            <video
-                              *ngIf="
-                                post.postAttachments.length == 1 &&
-                                post.postAttachments[0]?.fileType == 2
-                              "
-                              controls
-                              preload="auto"
-                              class="w-100"
-                              style="cursor: pointer"
-                            >
-                              <source
-                                [src]="post.postAttachments[0]?.fileUrl"
-                                type="video/mp4"
-                              />
-                            </video>
+
+                            <img
+                            *ngIf="post.postAttachments.length == 1 &&post.postAttachments[0]?.fileType == 2"
+                          class="w-100"
+                          style="cursor: pointer"
+                          [src]="post.postAttachments[0]?.fileThumbnail"
+                        />
+                        
                             <img
                               *ngIf="post.postAttachments[0]?.fileType == 1"
                               style="cursor: pointer"
@@ -1791,18 +1784,13 @@
                             <ng-container
                               *ngFor="let attachment of post.postAttachments"
                             >
-                              <video
-                                *ngIf="attachment?.fileType == 2"
-                                controls
-                                preload="auto"
-                                class="w-100"
-                                style="cursor: pointer"
-                              >
-                                <source
-                                  [src]="attachment?.fileUrl"
-                                  type="video/mp4"
-                                />
-                              </video>
+                              <img
+                              *ngIf="attachment?.fileType == 2"
+                            class="w-100"
+                            style="cursor: pointer"
+                            [src]="attachment?.fileThumbnail"
+                          />
+
                               <img
                                 style="height: 598px; cursor: pointer"
                                 *ngIf="attachment?.fileType == 1"
@@ -1820,18 +1808,14 @@
                           <div
                             class="school-large-thumbnail shadow-thumnail position-relative"
                           >
-                            <video
-                              *ngIf="post.postAttachments[0]?.fileType == 2"
-                              controls
-                              preload="auto"
-                              class="w-100"
-                              style="cursor: pointer; margin-top: -700px"
-                            >
-                              <source
-                                [src]="post.postAttachments[0]?.fileUrl"
-                                type="video/mp4"
-                              />
-                            </video>
+                          
+                            <img
+                            *ngIf="post.postAttachments[0]?.fileType == 2"
+                          class="w-100"
+                          style="cursor: pointer"
+                          [src]="post.postAttachments[0]?.fileThumbnail"
+                        />
+
                             <img
                               *ngIf="post.postAttachments[0]?.fileType == 1"
                               style="cursor: pointer"
@@ -1847,18 +1831,12 @@
                         >
                           <div class="medium_thumbox d-flex">
                             <div class="medium-thumnail">
-                              <video
-                                *ngIf="post.postAttachments[1]?.fileType == 2"
-                                controls
-                                preload="auto"
-                                class="w-100"
-                                style="cursor: pointer"
-                              >
-                                <source
-                                  [src]="post.postAttachments[1]?.fileUrl"
-                                  type="video/mp4"
-                                />
-                              </video>
+                              <img
+                              *ngIf="post.postAttachments[1]?.fileType == 2"
+                            class="w-100"
+                            style="cursor: pointer"
+                            [src]="post.postAttachments[1]?.fileThumbnail"
+                          />
                               <img
                                 *ngIf="post.postAttachments[1]?.fileType == 1"
                                 class="w-100"
@@ -1867,18 +1845,12 @@
                               />
                             </div>
                             <div class="medium-thumnail">
-                              <video
-                                *ngIf="post.postAttachments[2]?.fileType == 2"
-                                controls
-                                preload="auto"
-                                class="w-100"
-                                style="cursor: pointer"
-                              >
-                                <source
-                                  [src]="post.postAttachments[2]?.fileUrl"
-                                  type="video/mp4"
-                                />
-                              </video>
+                              <img
+                              *ngIf="post.postAttachments[2]?.fileType == 2"
+                            class="w-100"
+                            style="cursor: pointer"
+                            [src]="post.postAttachments[2]?.fileThumbnail"
+                          />
                               <img
                                 *ngIf="post.postAttachments[2]?.fileType == 1"
                                 class="w-100"
@@ -1896,18 +1868,12 @@
                           <div
                             class="school-large-thumbnail shadow-thumnail position-relative"
                           >
-                            <video
-                              *ngIf="post.postAttachments[0]?.fileType == 2"
-                              controls
-                              preload="auto"
-                              class="w-100"
-                              style="cursor: pointer"
-                            >
-                              <source
-                                [src]="post.postAttachments[0]?.fileUrl"
-                                type="video/mp4"
-                              />
-                            </video>
+                            <img
+                            *ngIf="post.postAttachments[0]?.fileType == 2"
+                          class="w-100"
+                          style="cursor: pointer"
+                          [src]="post.postAttachments[0]?.fileThumbnail"
+                        />
                             <img
                               *ngIf="post.postAttachments[0]?.fileType == 1"
                               class="w-100"
@@ -1941,18 +1907,13 @@
                               </div>
                             </div>
                             <div class="medium-thumnail">
-                              <video
-                                *ngIf="post.postAttachments[1]?.fileType == 2"
-                                controls
-                                preload="auto"
-                                class="w-100"
-                                style="cursor: pointer"
-                              >
-                                <source
-                                  [src]="post.postAttachments[1]?.fileUrl"
-                                  type="video/mp4"
-                                />
-                              </video>
+                              <img
+                              *ngIf="post.postAttachments[1]?.fileType == 2"
+                            class="w-100"
+                            style="cursor: pointer"
+                            [src]="post.postAttachments[1]?.fileThumbnail"
+                          />
+
                               <img
                                 *ngIf="post.postAttachments[1]?.fileType == 1"
                                 class="w-100"
@@ -3707,21 +3668,15 @@
                           <div
                             class="school-large-thumbnail shadow-thumnail position-relative"
                           >
-                            <video
+                            <img
                               *ngIf="
                                 post.postAttachments.length == 1 &&
                                 post.postAttachments[0]?.fileType == 2
                               "
-                              controls
-                              preload="auto"
                               class="w-100"
                               style="cursor: pointer"
-                            >
-                              <source
-                                [src]="post.postAttachments[0]?.fileUrl"
-                                type="video/mp4"
-                              />
-                            </video>
+                              [src]="post.postAttachments[0]?.fileThumbnail"
+                            />
                             <img
                               *ngIf="post.postAttachments[0]?.fileType == 1"
                               style="cursor: pointer"
@@ -3741,18 +3696,12 @@
                             <ng-container
                               *ngFor="let attachment of post.postAttachments"
                             >
-                              <video
-                                *ngIf="attachment?.fileType == 2"
-                                controls
-                                preload="auto"
-                                class="w-100"
-                                style="cursor: pointer"
-                              >
-                                <source
-                                  [src]="attachment?.fileUrl"
-                                  type="video/mp4"
-                                />
-                              </video>
+                              <img
+                              *ngIf="attachment?.fileType == 2"
+                              class="w-100"
+                              style="cursor: pointer"
+                              [src]="attachment?.fileThumbnail"
+                            />
                               <img
                                 style="height: 598px; cursor: pointer"
                                 *ngIf="attachment?.fileType == 1"
@@ -3770,18 +3719,12 @@
                           <div
                             class="school-large-thumbnail shadow-thumnail position-relative"
                           >
-                            <video
-                              *ngIf="post.postAttachments[0]?.fileType == 2"
-                              controls
-                              preload="auto"
-                              class="w-100"
-                              style="cursor: pointer; margin-top: -700px"
-                            >
-                              <source
-                                [src]="post.postAttachments[0]?.fileUrl"
-                                type="video/mp4"
-                              />
-                            </video>
+                            <img
+                            *ngIf="post.postAttachments[0]?.fileType == 2"
+                            class="w-100"
+                            style="cursor: pointer"
+                            [src]="post.postAttachments[0]?.fileThumbnail"
+                          />
                             <img
                               *ngIf="post.postAttachments[0]?.fileType == 1"
                               style="cursor: pointer"
@@ -3797,18 +3740,12 @@
                         >
                           <div class="medium_thumbox d-flex">
                             <div class="medium-thumnail">
-                              <video
-                                *ngIf="post.postAttachments[1]?.fileType == 2"
-                                controls
-                                preload="auto"
-                                class="w-100"
-                                style="cursor: pointer"
-                              >
-                                <source
-                                  [src]="post.postAttachments[1]?.fileUrl"
-                                  type="video/mp4"
-                                />
-                              </video>
+                              <img
+                            *ngIf="post.postAttachments[1]?.fileType == 2"
+                            class="w-100"
+                            style="cursor: pointer"
+                            [src]="post.postAttachments[1]?.fileThumbnail"
+                          />
                               <img
                                 *ngIf="post.postAttachments[1]?.fileType == 1"
                                 class="w-100"
@@ -3817,18 +3754,13 @@
                               />
                             </div>
                             <div class="medium-thumnail">
-                              <video
-                                *ngIf="post.postAttachments[2]?.fileType == 2"
-                                controls
-                                preload="auto"
-                                class="w-100"
-                                style="cursor: pointer"
-                              >
-                                <source
-                                  [src]="post.postAttachments[2]?.fileUrl"
-                                  type="video/mp4"
-                                />
-                              </video>
+                              <img
+                              *ngIf="post.postAttachments[2]?.fileType == 2"
+                              class="w-100"
+                              style="cursor: pointer"
+                              [src]="post.postAttachments[2]?.fileThumbnail"
+                            />
+
                               <img
                                 *ngIf="post.postAttachments[2]?.fileType == 1"
                                 class="w-100"
@@ -3846,18 +3778,13 @@
                           <div
                             class="school-large-thumbnail shadow-thumnail position-relative"
                           >
-                            <video
-                              *ngIf="post.postAttachments[0]?.fileType == 2"
-                              controls
-                              preload="auto"
-                              class="w-100"
-                              style="cursor: pointer"
-                            >
-                              <source
-                                [src]="post.postAttachments[0]?.fileUrl"
-                                type="video/mp4"
-                              />
-                            </video>
+                            <img
+                            *ngIf="post.postAttachments[0]?.fileType == 2"
+                            class="w-100"
+                            style="cursor: pointer"
+                            [src]="post.postAttachments[0]?.fileThumbnail"
+                          />
+
                             <img
                               *ngIf="post.postAttachments[0]?.fileType == 1"
                               class="w-100"
@@ -3891,18 +3818,12 @@
                               </div>
                             </div>
                             <div class="medium-thumnail">
-                              <video
-                                *ngIf="post.postAttachments[1]?.fileType == 2"
-                                controls
-                                preload="auto"
-                                class="w-100"
-                                style="cursor: pointer"
-                              >
-                                <source
-                                  [src]="post.postAttachments[1]?.fileUrl"
-                                  type="video/mp4"
-                                />
-                              </video>
+                              <img
+                              *ngIf="post.postAttachments[1]?.fileType == 2"
+                            class="w-100"
+                            style="cursor: pointer"
+                            [src]="post.postAttachments[1]?.fileThumbnail"
+                          />
                               <img
                                 *ngIf="post.postAttachments[1]?.fileType == 1"
                                 class="w-100"
@@ -4866,21 +4787,11 @@
                           <div
                             class="school-large-thumbnail shadow-thumnail position-relative"
                           >
-                            <video
-                              *ngIf="
-                                post.postAttachments.length == 1 &&
-                                post.postAttachments[0]?.fileType == 2
-                              "
-                              controls
-                              preload="auto"
-                              class="w-100"
-                              style="cursor: pointer"
-                            >
-                              <source
-                                [src]="post.postAttachments[0]?.fileUrl"
-                                type="video/mp4"
-                              />
-                            </video>
+                            <img *ngIf="post.postAttachments.length == 1 &&post.postAttachments[0]?.fileType == 2"
+                          class="w-100"
+                          style="cursor: pointer"
+                          [src]="post.postAttachments[0]?.fileThumbnail"
+                        />
                             <img
                               *ngIf="post.postAttachments[0]?.fileType == 1"
                               style="cursor: pointer"
@@ -4900,18 +4811,11 @@
                             <ng-container
                               *ngFor="let attachment of post.postAttachments"
                             >
-                              <video
-                                *ngIf="attachment?.fileType == 2"
-                                controls
-                                preload="auto"
-                                class="w-100"
-                                style="cursor: pointer"
-                              >
-                                <source
-                                  [src]="attachment?.fileUrl"
-                                  type="video/mp4"
-                                />
-                              </video>
+                              <img  *ngIf="attachment?.fileType == 2"
+                          class="w-100"
+                          style="cursor: pointer"
+                          [src]="attachment?.fileThumbnail"
+                        />
                               <img
                                 style="height: 598px; cursor: pointer"
                                 *ngIf="attachment?.fileType == 1"
@@ -4929,18 +4833,11 @@
                           <div
                             class="school-large-thumbnail shadow-thumnail position-relative"
                           >
-                            <video
-                              *ngIf="post.postAttachments[0]?.fileType == 2"
-                              controls
-                              preload="auto"
-                              class="w-100"
-                              style="cursor: pointer; margin-top: -700px"
-                            >
-                              <source
-                                [src]="post.postAttachments[0]?.fileUrl"
-                                type="video/mp4"
-                              />
-                            </video>
+                            <img  *ngIf="post.postAttachments[0]?.fileType == 2"
+                            class="w-100"
+                            style="cursor: pointer"
+                            [src]="post.postAttachments[0]?.fileThumbnail"
+                          />
                             <img
                               *ngIf="post.postAttachments[0]?.fileType == 1"
                               style="cursor: pointer"
@@ -4956,18 +4853,11 @@
                         >
                           <div class="medium_thumbox d-flex">
                             <div class="medium-thumnail">
-                              <video
-                                *ngIf="post.postAttachments[1]?.fileType == 2"
-                                controls
-                                preload="auto"
-                                class="w-100"
-                                style="cursor: pointer"
-                              >
-                                <source
-                                  [src]="post.postAttachments[1]?.fileUrl"
-                                  type="video/mp4"
-                                />
-                              </video>
+                              <img  *ngIf="post.postAttachments[1]?.fileType == 2"
+                              class="w-100"
+                              style="cursor: pointer"
+                              [src]="post.postAttachments[1]?.fileThumbnail"
+                            />
                               <img
                                 *ngIf="post.postAttachments[1]?.fileType == 1"
                                 class="w-100"
@@ -4976,18 +4866,11 @@
                               />
                             </div>
                             <div class="medium-thumnail">
-                              <video
-                                *ngIf="post.postAttachments[2]?.fileType == 2"
-                                controls
-                                preload="auto"
-                                class="w-100"
-                                style="cursor: pointer"
-                              >
-                                <source
-                                  [src]="post.postAttachments[2]?.fileUrl"
-                                  type="video/mp4"
-                                />
-                              </video>
+                              <img   *ngIf="post.postAttachments[2]?.fileType == 2"
+                              class="w-100"
+                              style="cursor: pointer"
+                              [src]="post.postAttachments[2]?.fileThumbnail"
+                            />
                               <img
                                 *ngIf="post.postAttachments[2]?.fileType == 1"
                                 class="w-100"
@@ -5005,18 +4888,11 @@
                           <div
                             class="school-large-thumbnail shadow-thumnail position-relative"
                           >
-                            <video
-                              *ngIf="post.postAttachments[0]?.fileType == 2"
-                              controls
-                              preload="auto"
+                            <img *ngIf="post.postAttachments[0]?.fileType == 2"
                               class="w-100"
                               style="cursor: pointer"
-                            >
-                              <source
-                                [src]="post.postAttachments[0]?.fileUrl"
-                                type="video/mp4"
-                              />
-                            </video>
+                              [src]="post.postAttachments[0]?.fileThumbnail"
+                            />
                             <img
                               *ngIf="post.postAttachments[0]?.fileType == 1"
                               class="w-100"
@@ -5050,18 +4926,12 @@
                               </div>
                             </div>
                             <div class="medium-thumnail">
-                              <video
-                                *ngIf="post.postAttachments[1]?.fileType == 2"
-                                controls
-                                preload="auto"
-                                class="w-100"
-                                style="cursor: pointer"
-                              >
-                                <source
-                                  [src]="post.postAttachments[1]?.fileUrl"
-                                  type="video/mp4"
-                                />
-                              </video>
+                              
+                              <img  *ngIf="post.postAttachments[1]?.fileType == 2"
+                              class="w-100"
+                              style="cursor: pointer"
+                              [src]="post.postAttachments[1]?.fileThumbnail"
+                            />
                               <img
                                 *ngIf="post.postAttachments[1]?.fileType == 1"
                                 class="w-100"
