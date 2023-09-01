@@ -1,125 +1,129 @@
-<section class="f-poppins" style="margin-left: 30%;">
-      <header class="header">
-        <div class="header__content">
-          <a [routerLink]="['/user/userFeed']" class="main-logo"><img src="../../../assets/images/logo.svg" /></a>
-        </div>
-      </header>
-      <main class="static-main">
-        <div class="static-content">
-            <button
-            (click)="back()"
-            type="button"
-            class="back-button bg-transparent border-0 font_16 fw_400 text_dark">
+<section class="f-poppins main_content about-container">
+  <div class="main_content-max-width">
+    <main class="static-main min-height w-100 h-auto">
+      <div class="static-content">
+        <button
+          (click)="back()"
+          type="button"
+          class="back-button bg-transparent border-0 font_16 fw_400 text_dark"
+        >
           <img src="../../../../assets/images/school/arrow-left.svg" />
           {{ "Back" | translate }}
         </button>
-          <h1>{{ "FAQ" | translate }}</h1>
-          <div class="accordion" id="accordionExample">
-            <div class="accordion-item">
-              <button
-                id="headingOne"
-                class="accordion-button"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#collapseOne"
-                aria-expanded="true"
-                aria-controls="collapseOne"
-              >
-                Tortor varius risus sed elit a netus mi interdum?
-              </button>
-              <div
-                id="collapseOne"
-                class="accordion-collapse collapse show"
-                aria-labelledby="headingOne"
-                data-bs-parent="#accordionExample"
-              >
-                <div class="accordion-body">
-                  <strong>This is the first item's accordion body.</strong> It
-                  is shown by default, until the collapse plugin adds the
-                  appropriate classes that we use to style each element. These
-                  classes control the overall appearance, as well as the showing
-                  and hiding via CSS transitions. You can modify any of this
-                  with custom CSS or overriding our default variables. It's also
-                  worth noting that just about any HTML can go within the
-                  <code>.accordion-body</code>, though the transition does limit
-                  overflow.
-                </div>
+        <h1>{{ "FAQ" | translate }}</h1>
+        <div class="accordion" id="accordionExample">
+          <div class="accordion-item">
+            <button
+              id="headingOne"
+              class="accordion-button"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapseOne"
+              aria-expanded="true"
+              aria-controls="collapseOne"
+            >
+              Tortor varius risus sed elit a netus mi interdum?
+            </button>
+            <div
+              id="collapseOne"
+              class="accordion-collapse collapse show"
+              aria-labelledby="headingOne"
+              data-bs-parent="#accordionExample"
+            >
+              <div class="accordion-body">
+                <strong>This is the first item's accordion body.</strong> It is
+                shown by default, until the collapse plugin adds the appropriate
+                classes that we use to style each element. These classes control
+                the overall appearance, as well as the showing and hiding via
+                CSS transitions. You can modify any of this with custom CSS or
+                overriding our default variables. It's also worth noting that
+                just about any HTML can go within the
+                <code>.accordion-body</code>, though the transition does limit
+                overflow.
               </div>
             </div>
-            <div class="accordion-item">
-              <button
-                id="headingTwo"
-                class="accordion-button collapsed"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#collapseTwo"
-                aria-expanded="false"
-                aria-controls="collapseTwo"
-              >
-                Tortor varius risus sed elit a netus mi interdum?
-              </button>
-              <div
-                id="collapseTwo"
-                class="accordion-collapse collapse"
-                aria-labelledby="headingTwo"
-                data-bs-parent="#accordionExample"
-              >
-                <div class="accordion-body">
-                  <strong>This is the second item's accordion body.</strong> It
-                  is hidden by default, until the collapse plugin adds the
-                  appropriate classes that we use to style each element. These
-                  classes control the overall appearance, as well as the showing
-                  and hiding via CSS transitions. You can modify any of this
-                  with custom CSS or overriding our default variables. It's also
-                  worth noting that just about any HTML can go within the
-                  <code>.accordion-body</code>, though the transition does limit
-                  overflow.
-                </div>
+          </div>
+          <div class="accordion-item">
+            <button
+              id="headingTwo"
+              class="accordion-button collapsed"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapseTwo"
+              aria-expanded="false"
+              aria-controls="collapseTwo"
+            >
+              Tortor varius risus sed elit a netus mi interdum?
+            </button>
+            <div
+              id="collapseTwo"
+              class="accordion-collapse collapse"
+              aria-labelledby="headingTwo"
+              data-bs-parent="#accordionExample"
+            >
+              <div class="accordion-body">
+                <strong>This is the second item's accordion body.</strong> It is
+                hidden by default, until the collapse plugin adds the
+                appropriate classes that we use to style each element. These
+                classes control the overall appearance, as well as the showing
+                and hiding via CSS transitions. You can modify any of this with
+                custom CSS or overriding our default variables. It's also worth
+                noting that just about any HTML can go within the
+                <code>.accordion-body</code>, though the transition does limit
+                overflow.
               </div>
             </div>
-            <div class="accordion-item">
-              <button
-                id="headingThree"
-                class="accordion-button collapsed"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#collapseThree"
-                aria-expanded="false"
-                aria-controls="collapseThree"
-              >
-                Tortor varius risus sed elit a netus mi interdum?
-              </button>
-              <div
-                id="collapseThree"
-                class="accordion-collapse collapse"
-                aria-labelledby="headingThree"
-                data-bs-parent="#accordionExample"
-              >
-                <div class="accordion-body">
-                  <strong>This is the third item's accordion body.</strong> It
-                  is hidden by default, until the collapse plugin adds the
-                  appropriate classes that we use to style each element. These
-                  classes control the overall appearance, as well as the showing
-                  and hiding via CSS transitions. You can modify any of this
-                  with custom CSS or overriding our default variables. It's also
-                  worth noting that just about any HTML can go within the
-                  <code>.accordion-body</code>, though the transition does limit
-                  overflow.
-                </div>
+          </div>
+          <div class="accordion-item">
+            <button
+              id="headingThree"
+              class="accordion-button collapsed"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapseThree"
+              aria-expanded="false"
+              aria-controls="collapseThree"
+            >
+              Tortor varius risus sed elit a netus mi interdum?
+            </button>
+            <div
+              id="collapseThree"
+              class="accordion-collapse collapse"
+              aria-labelledby="headingThree"
+              data-bs-parent="#accordionExample"
+            >
+              <div class="accordion-body">
+                <strong>This is the third item's accordion body.</strong> It is
+                hidden by default, until the collapse plugin adds the
+                appropriate classes that we use to style each element. These
+                classes control the overall appearance, as well as the showing
+                and hiding via CSS transitions. You can modify any of this with
+                custom CSS or overriding our default variables. It's also worth
+                noting that just about any HTML can go within the
+                <code>.accordion-body</code>, though the transition does limit
+                overflow.
               </div>
             </div>
           </div>
         </div>
-      </main>
-      <footer class="footer">
-        <div class="footer__content">
-          <a [routerLink]="['/user/userFeed']" class="main-logo"><img src="../../../assets/images/logo.svg" /></a>
-          <nav>
-            <a [routerLink]="['/privacyPolicy']">{{ "PrivacyPolicy" | translate }}</a>
-            <a [routerLink]="['/termsOfServices']">{{ "TermsOfService" | translate }}</a>
-            <a [routerLink]="['/aboutUs']">{{ "AboutUs" | translate }}</a>
-            <a [routerLink]="['/faq']">{{ "FAQ" | translate }}</a>
-          </nav>
-        </div>
-      </footer>
-    </section>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="footer__content">
+        <a [routerLink]="['/user/userFeed']" class="main-logo"
+          ><img src="../../../assets/images/logo.svg"
+        /></a>
+        <nav>
+          <a [routerLink]="['/privacyPolicy']">{{
+            "PrivacyPolicy" | translate
+          }}</a>
+          <a [routerLink]="['/termsOfServices']">{{
+            "TermsOfService" | translate
+          }}</a>
+          <a [routerLink]="['/aboutUs']">{{ "AboutUs" | translate }}</a>
+          <a [routerLink]="['/faq']">{{ "FAQ" | translate }}</a>
+        </nav>
+      </div>
+    </footer>
+  </div>
+</section>
