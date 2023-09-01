@@ -3618,7 +3618,7 @@ p-autocomplete li:before {
     /* z-index: 999; */
     right: 216%;
   }
-  
+
   .live-header .search-header input.form-control[type="search"] {
     padding-left: 14px !important;
     position: absolute;
@@ -3924,7 +3924,7 @@ ngx-intl-tel-input input[disabled] {
     max-width: 100%;
   }
   .desktop-slider .reel_videoinner {
-    height: calc(100vh - 230px);
+    height: 100%;
   }
   .desktop-slider .main_content {
     padding-top: 0 !important;
