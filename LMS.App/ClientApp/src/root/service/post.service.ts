@@ -196,4 +196,12 @@ export class PostService{
         let queryParams = new HttpParams().append("postId",postId).append("videoTotalTime",videoTotalTime).append("videoLiveTime",videoLiveTime);
         return this.http.post(`${this.apiUrl}/posts/saveLiveVideoTime`,null, {params:queryParams,headers: this.headers});
     }
+
+    enableLiveStream(postId:any):Observable<any>{
+        let queryParams = new HttpParams().append("postId",postId);
+        return this.http.post(`${this.apiUrl}/posts/enableLiveStream`,null, {params:queryParams,headers: this.headers});
+    }
+
+
+
 }

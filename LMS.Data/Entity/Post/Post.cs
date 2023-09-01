@@ -32,6 +32,7 @@ namespace LMS.Data.Entity
         public List<PostAttachment> Attachments { get; set; }
         public List<PostTag> Tags { get; set; }
         public string? SharedProfileUrl {get; set;}
+        public bool? IsLiveStreamEnded { get; set; }
 
     }
 }

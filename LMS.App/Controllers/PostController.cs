@@ -329,6 +329,17 @@ namespace LMS.App.Controllers
             return Ok();
         }
 
+        [Route("enableLiveStream")]
+        [HttpPost]
+        public async Task<IActionResult> EnableLiveStream(Guid postId)
+        {
+            var isStreamEnable = await _postService.EnableLiveStream(postId);
+            if(isStreamEnable)
+            {
+                return Ok(new { Success = true, Message = Constants.EnabledLiveStreamSuccessully });
+            }
+            return Ok(new { Success = true, Message = Constants.LiveStreamEnableFailed });
+        } 
 
 
     }

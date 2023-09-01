@@ -35,7 +35,7 @@ namespace LMS.Services
         Task SaveLiveVideoTime(Guid postId, float videoTotalTime, float videoLiveTime);
         Task<List<VideoUploadResponseViewModel>> SaveUploadVideos(IEnumerable<IFormFile> uploadVideos, IEnumerable<IFormFile> uploadVideosThumbnail, Guid postId, string createdById,bool isJobRunning);
 
-
+        Task<bool> EnableLiveStream(Guid postId);
 
     }
 }

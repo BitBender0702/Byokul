@@ -125,7 +125,8 @@ namespace LMS.Services
                 else if (postViewModel.PostType == (int)PostTypeEnum.Stream && postViewModel.BlobUrls.Any(x => x.FileType == FileTypeEnum.Video))
                 {
                     post.StreamUrl = postViewModel.BlobUrls.Where(x => x.FileType == FileTypeEnum.Video).Select(x => x.BlobUrl).First();
-                    post.IsLive = true;
+                    post.IsLive = false;
+                    post.IsLiveStreamEnded = false;
                 }
                 if (postViewModel.PostType == (int)PostTypeEnum.Stream && postViewModel.BlobUrls.All(x => x.FileType != FileTypeEnum.Video))
                 {
@@ -777,6 +778,8 @@ namespace LMS.Services
             var tags = await GetTagsByPostId(post.Id);
             post.PostTags = tags;
 
+            post.IsLiveStreamEnded = postResult.IsLiveStreamEnded;
+
             return post;
         }
 
@@ -1351,6 +1354,7 @@ namespace LMS.Services
             var post = _postRepository.GetById(postId);
             post.PostType = (int)PostTypeEnum.Post;
             post.IsLive = false;
+            post.IsLiveStreamEnded = true;
             _postRepository.Update(post);
             _postRepository.Save();
 
@@ -1380,6 +1384,19 @@ namespace LMS.Services
             _postAttachmentRepository.Update(postAttachment);
             _postAttachmentRepository.Save();
 
+        }
+
+        public async Task<bool> EnableLiveStream(Guid postId)
+        {
+            var post = await _postRepository.GetAll().Where(x => x.Id == postId && x.IsLiveStreamEnded == false).FirstOrDefaultAsync();
+            if(post != null)
+            {
+                post.IsLive = true;
+                _postRepository.Update(post);
+                _postRepository.Save();
+                return true;
+            }
+            return false;        
         }
 
 
