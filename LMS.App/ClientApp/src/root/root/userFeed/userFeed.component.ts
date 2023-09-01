@@ -260,11 +260,11 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
         const translatedSummary = this.translateService.instant('Success');
         const translatedMessage = this.translateService.instant('PostSharedSuccessfully');
         this.messageService.add({ severity: 'success', summary: translatedSummary, life: 3000, detail: translatedMessage });
-        var post = this.myFeeds.find((x: { id: string; }) => x.id == response.postId);
+        var post = this.myFeeds?.find((x:any) => x.id == response.postId);
         if (post == undefined || null) {
           var post = this.globalFeeds.find((x: { id: string; }) => x.id == response.postId);
+          post.postSharedCount++;
         }
-        post.postSharedCount++;
       }
       else{
         const translatedSummary = this.translateService.instant('Success');
