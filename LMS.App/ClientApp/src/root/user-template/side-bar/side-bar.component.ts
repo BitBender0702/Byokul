@@ -85,12 +85,14 @@ export class SideBarComponent extends MultilingualComponent implements OnInit, O
     });
 
     unreadChatResponse.subscribe(response => {
+      if(response.readMessagesCount != undefined){
       if(response.type=="add"){
         this.sidebarInfo.unreadMessageCount = this.sidebarInfo.unreadMessageCount + response.readMessagesCount;
       }
       else{
         this.sidebarInfo.unreadMessageCount = this.sidebarInfo.unreadMessageCount - response.readMessagesCount;
       }
+    }
     });
 
     unreadNotificationResponse.subscribe(response => {

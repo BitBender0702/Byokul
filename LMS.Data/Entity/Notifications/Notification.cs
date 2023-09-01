@@ -17,7 +17,7 @@ namespace LMS.Data.Entity
         public User User { get; set; }
         public string? Avatar { get; set; }
         public Boolean IsRead { get; set; }
-        public DateTime DateTime { get; set; }
+        public DateTime? DateTime { get; set; }
         public string NotificationContent { get; set; }
         public NotificationTypeEnum NotificationType { get; set; }
         public Guid? PostId { get; set; }
