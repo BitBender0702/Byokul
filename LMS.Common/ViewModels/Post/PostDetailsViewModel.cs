@@ -57,5 +57,8 @@ namespace LMS.Common.ViewModels.Post
         public DateTime? UpdatedOn { get; set; }
         public string? SharedProfileUrl { get; set; }
 
+        public bool? IsLiveStreamEnded { get; set; }
+
+
     }
 }

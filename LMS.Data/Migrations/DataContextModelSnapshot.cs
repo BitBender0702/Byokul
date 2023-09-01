@@ -1317,6 +1317,9 @@ namespace LMS.Data.Migrations
                     b.Property<bool?>("IsLive")
                         .HasColumnType("bit");
 
+                    b.Property<bool?>("IsLiveStreamEnded")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsPinned")
                         .HasColumnType("bit");
 
