@@ -1,52 +1,55 @@
 <!-- <div *ngIf="isDataLoaded"> -->
-    <div
-      appBsModal
-      bsModal
-      class="modal fade edit-school-modal show d-block post-view-large"
-      id="modal-post"
-      tabindex="-1"
-      aria-labelledby="create-post"
-      aria-hidden="true"
-      area-modal="true"
-    >
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div
-            class="modal-header border-0 justify-content-center position-relative"
-          >
-            <div class="custom-language-select liv-postbtn"></div>
-            <h1 *ngIf="!isEdit"
-              class="modal-title font_22 text_dark fw_700 border-0 text-center"
-            >{{ "AddOfficial" | translate }}</h1>
-            <h1 *ngIf="isEdit"
-              class="modal-title font_22 text_dark fw_700 border-0 text-center"
-            >{{ "EditOfficial" | translate }}</h1>
-            <button
-              (click)="close()"
-              type="button"
-              class="btn-close shadow-none"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            >
-              <img src="../../../assets/images/cross.svg" />
-            </button>
-          </div>
-          <div class="modal-body">
-            <div
-            class="text-line-border position-relative text-center mb-4"
-          >
-            <span
-              class="line-text font_12 text_ltgray fw_400 text-center"
-              >{{ "PersonalInformation" | translate }}</span
-            >
-          </div>
-          <form [formGroup]="createTeacherForm" class="latest-form add-tag-step">
-            <div class="col-4 d-flex" style="margin-left: 33%;">
+<div
+  appBsModal
+  bsModal
+  class="modal fade edit-school-modal show d-block post-view-large"
+  id="modal-post"
+  tabindex="-1"
+  aria-labelledby="create-post"
+  aria-hidden="true"
+  area-modal="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div
+        class="modal-header border-0 justify-content-center position-relative"
+      >
+        <div class="custom-language-select liv-postbtn"></div>
+        <h1
+          *ngIf="!isEdit"
+          class="modal-title font_22 text_dark fw_700 border-0 text-center"
+        >
+          {{ "AddOfficial" | translate }}
+        </h1>
+        <h1
+          *ngIf="isEdit"
+          class="modal-title font_22 text_dark fw_700 border-0 text-center"
+        >
+          {{ "EditOfficial" | translate }}
+        </h1>
+        <button
+          (click)="close()"
+          type="button"
+          class="btn-close shadow-none"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        >
+          <img src="../../../assets/images/cross.svg" />
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="text-line-border position-relative text-center mb-4">
+          <span class="line-text font_12 text_ltgray fw_400 text-center">{{
+            "PersonalInformation" | translate
+          }}</span>
+        </div>
+        <form [formGroup]="createTeacherForm" class="latest-form add-tag-step">
+          <div class="col-4 d-flex" style="margin-left: 33%">
             <div>
-          <label class="font_10">{{ "OfficialName" | translate }}</label>
-          <div class="form-group">
-            <span class="p-fluid">
-              <!-- <p-autoComplete
+              <label class="font_10">{{ "OfficialName" | translate }}</label>
+              <div class="form-group">
+                <span class="p-fluid">
+                  <!-- <p-autoComplete
                 formControlName="userId"
                 [showEmptyMessage]="true"
                 [emptyMessage]="'NoResultFound' | translate"
@@ -63,41 +66,48 @@
               >
               </p-autoComplete> -->
 
-              <p-autoComplete class="form-control w-100" formControlName="user" [suggestions]="filteredUsers" (completeMethod)="filterUsers($event)"
-  field="userName" [minLength]="1" [showEmptyMessage]="true"  [emptyMessage]="'NoResultFound' | translate" [size]="200"
-  ></p-autoComplete>
-            </span>
+                  <p-autoComplete
+                    class="form-control w-100"
+                    formControlName="user"
+                    [suggestions]="filteredUsers"
+                    (completeMethod)="filterUsers($event)"
+                    field="userName"
+                    [minLength]="1"
+                    [showEmptyMessage]="true"
+                    [emptyMessage]="'NoResultFound' | translate"
+                    [size]="200"
+                  ></p-autoComplete>
+                </span>
+              </div>
+            </div>
           </div>
-          </div>
-          </div>
-          </form>
-          <br>
+        </form>
+        <br />
 
-          <div
-          class="text-line-border position-relative text-center mb-4"
-        >
-          <span
-            class="line-text font_12 text_ltgray fw_400 text-center"
-            >{{ "Permissions" | translate }}</span
-          >
+        <div class="text-line-border position-relative text-center mb-4">
+          <span class="line-text font_12 text_ltgray fw_400 text-center">{{
+            "Permissions" | translate
+          }}</span>
         </div>
 
         <div class="row">
-            <div class="col-4">
-              <label class="font_10">{{
-                "SelectSchools" | translate
-              }}</label>
-              <div class="form-group" class="d-flex">
-                <input
+          <div class="col-4">
+            <label class="font_10">{{ "SelectSchools" | translate }}</label>
+            <div class="form-group" class="d-flex">
+              <input
                 [attr.disabled]="disabled"
                 placeholder="{{ 'SchoolName' | translate }}"
                 name="schoolname"
-                [value] = schoolName
+                [value]="schoolName"
                 maxlength="60"
                 class="form-control w-100"
               />
-              <img class="position-relative" style="right: 8%;" src="../../../assets/images/Unlock.svg" />
-                <!-- <div class="custom-language-select">
+              <img
+                class="position-relative"
+                style="right: 8%"
+                src="../../../assets/images/Unlock.svg"
+              />
+              <!-- <div class="custom-language-select">
                   <p-multiSelect
                     defaultLabel="{{ 'SelectSchools' | translate }}"
                     [panelStyle]="{ width: '100%' }"
@@ -124,151 +134,143 @@
                     </ng-template>
                   </p-multiSelect>
                 </div> -->
-              </div>
-              <br />
-              <div *ngFor="let permission of permissions">
-                <div *ngIf="permission.permissionType == 1" class="col-12">
-                  <label class="col-6">{{
-                    permission.displayName | translate
-                  }}</label>
-                  <input
-                    (click)="getSchoolPermissions(permission, $event)"
-                    class="form-check-input col-6"
-                    type="checkbox"
-                    id="inlineCheckbox1"
-                    value="option1"
-                    [checked]="permission.isSelectedSchoolPermission"
-                  />
-                </div>
+            </div>
+            <br />
+            <div *ngFor="let permission of permissions">
+              <div *ngIf="permission.permissionType == 1" class="col-12">
+                <label class="col-6">{{
+                  permission.displayName | translate
+                }}</label>
+                <input
+                  (click)="getSchoolPermissions(permission, $event)"
+                  class="form-check-input col-6"
+                  type="checkbox"
+                  id="inlineCheckbox1"
+                  value="option1"
+                  [checked]="permission.isSelectedSchoolPermission"
+                />
               </div>
             </div>
-            <div *ngIf="!hideClassSection" class="col-4">
-                <label class="font_10">{{
-                  "SelectClasses" | translate
-                }}</label>
-                <div class="form-group">
-                  <div class="custom-language-select">
-                    <p-multiSelect
-                      defaultLabel="{{ 'SelectClasses' | translate }}"
-                      [panelStyle]="{ width: '100%' }"
-                      [filter]="false"
-                      [showToggleAll]="true"
-                      [options]="classList"
-                      optionLabel="className"
-                      optionValue="classId"
-                      name="languageSelect[]"
-                      class="form-control"
-                      multiple
-                      id="languageSelect"
-                      [(ngModel)]="selectedClasses"
-                    >
-                      <ng-template pTemplate="header">
-                        <div
-                          style="position: absolute; left: 48px"
-                          class="checkbox-all-text"
-                        >
-                          {{ "SelectAll" | translate }}
-                        </div>
-                      </ng-template>
-                    </p-multiSelect>
-                  </div>
-                </div>
-                <br />
-                <div *ngFor="let permission of permissions">
-                  <div *ngIf="permission.permissionType == 2" class="col-12">
-                    <label class="col-6">{{
-                      permission.displayName | translate
-                    }}</label>
-                    <input
-                     
-                      (click)="getClassPermissions(permission.id)"
-                      class="form-check-input col-6"
-                      type="checkbox"
-                      id="inlineCheckbox1"
-                      value="option1"
-                      [checked]="permission.isSelectedClassPermission"
-                    />
-                  </div>
-                </div>
+          </div>
+          <div *ngIf="!hideClassSection" class="col-4">
+            <label class="font_10">{{ "SelectClasses" | translate }}</label>
+            <div class="form-group">
+              <div class="custom-language-select">
+                <p-multiSelect
+                  defaultLabel="{{ 'SelectClasses' | translate }}"
+                  [panelStyle]="{ width: '100%' }"
+                  [filter]="false"
+                  [showToggleAll]="true"
+                  [options]="classList"
+                  optionLabel="className"
+                  optionValue="classId"
+                  name="languageSelect[]"
+                  class="form-control"
+                  multiple
+                  id="languageSelect"
+                  [(ngModel)]="selectedClasses"
+                >
+                  <ng-template pTemplate="header">
+                    <div class="checkbox-all-text">
+                      {{ "SelectAll" | translate }}
+                    </div>
+                  </ng-template>
+                </p-multiSelect>
               </div>
-              <div *ngIf="!hideCourseSection" class="col-4">
-                <label class="font_10">{{
-                  "SelectCourses" | translate
+            </div>
+            <br />
+            <div *ngFor="let permission of permissions">
+              <div *ngIf="permission.permissionType == 2" class="col-12">
+                <label class="col-6">{{
+                  permission.displayName | translate
                 }}</label>
-                <div class="form-group">
-                  <div class="custom-language-select">
-                    <p-multiSelect
-                      defaultLabel="{{ 'SelectCourses' | translate }}"
-                      [panelStyle]="{ width: '100%' }"
-                      [filter]="false"
-                      [showToggleAll]="true"
-                      [options]="courseList"
-                      optionLabel="courseName"
-                      optionValue="courseId"
-                      name="languageSelect[]"
-                      class="form-control"
-                      multiple
-                      id="languageSelect"
-                      [(ngModel)]="selectedCourses"
-                    >
-                      <ng-template pTemplate="header">
-                        <div
-                          style="position: absolute; left: 48px"
-                          class="checkbox-all-text"
-                        >
-                          {{ "SelectAll" | translate }}
-                        </div>
-                      </ng-template>
-                    </p-multiSelect>
-                  </div>
-                </div>
-                <br />
-                <div *ngFor="let permission of permissions">
-                  <div *ngIf="permission.permissionType == 3" class="col-12">
-                    <label class="col-6">{{
-                      permission.displayName | translate
-                    }}</label>
-                    <input
-                      (click)="getCoursePermissions(permission.id)"
-                      class="form-check-input col-6"
-                      type="checkbox"
-                      id="inlineCheckbox1"
-                      value="option1"
-                      [checked]="permission.isSelectedCoursePermission"
-                    />
-                  </div>
-                </div>
+                <input
+                  (click)="getClassPermissions(permission.id)"
+                  class="form-check-input col-6"
+                  type="checkbox"
+                  id="inlineCheckbox1"
+                  value="option1"
+                  [checked]="permission.isSelectedClassPermission"
+                />
               </div>
-          </div><br>
-          <div class="text-center">
+            </div>
+          </div>
+          <div *ngIf="!hideCourseSection" class="col-4">
+            <label class="font_10">{{ "SelectCourses" | translate }}</label>
+            <div class="form-group">
+              <div class="custom-language-select">
+                <p-multiSelect
+                  defaultLabel="{{ 'SelectCourses' | translate }}"
+                  [panelStyle]="{ width: '100%' }"
+                  [filter]="false"
+                  [showToggleAll]="true"
+                  [options]="courseList"
+                  optionLabel="courseName"
+                  optionValue="courseId"
+                  name="languageSelect[]"
+                  class="form-control"
+                  multiple
+                  id="languageSelect"
+                  [(ngModel)]="selectedCourses"
+                >
+                  <ng-template pTemplate="header">
+                    <div
+                      style="position: absolute; left: 48px"
+                      class="checkbox-all-text"
+                    >
+                      {{ "SelectAll" | translate }}
+                    </div>
+                  </ng-template>
+                </p-multiSelect>
+              </div>
+            </div>
+            <br />
+            <div *ngFor="let permission of permissions">
+              <div *ngIf="permission.permissionType == 3" class="col-12">
+                <label class="col-6">{{
+                  permission.displayName | translate
+                }}</label>
+                <input
+                  (click)="getCoursePermissions(permission.id)"
+                  class="form-check-input col-6"
+                  type="checkbox"
+                  id="inlineCheckbox1"
+                  value="option1"
+                  [checked]="permission.isSelectedCoursePermission"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <br />
+        <div class="text-center">
           <small
-          class="p-error"
-          style="color: orange"
-          *ngIf="
-          isSubmitted &&
-          createTeacherForm.controls.user.errors
-          "
-          >{{ "PleaseSelectTheOfficial" | translate }}
-        </small>
-      </div>
-          <div class="row" style="width: 50%;margin-left: 26%;">
-            <input *ngIf="!isEdit"
-              (click)="addOfficial()"
-              type="submit"
-              id="nextBtn"
-              class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 text-uppercase"
-              value="{{ 'AddOfficial' | translate }}"
-            />
-            <input *ngIf="isEdit"
+            class="p-error"
+            style="color: orange"
+            *ngIf="isSubmitted && createTeacherForm.controls.user.errors"
+            >{{ "PleaseSelectTheOfficial" | translate }}
+          </small>
+        </div>
+        <div class="row" style="width: 50%; margin-left: 26%">
+          <input
+            *ngIf="!isEdit"
+            (click)="addOfficial()"
+            type="submit"
+            id="nextBtn"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 text-uppercase"
+            value="{{ 'AddOfficial' | translate }}"
+          />
+          <input
+            *ngIf="isEdit"
             (click)="addOfficial()"
             type="submit"
             id="nextBtn"
             class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 text-uppercase"
             value="{{ 'UpdateOfficial' | translate }}"
           />
-          </div>
+        </div>
 
-          <!-- <small
+        <!-- <small
             class="p-error"
             style="color: orange"
             class="text-center d-block"
@@ -278,10 +280,10 @@
           >
             {{ "SelectAtleastOneLanguage" | translate }}
           </small> -->
-            </div>
-            </div>
-            </div>
-            </div>
-            <!-- </div> -->
+      </div>
+    </div>
+  </div>
+</div>
+<!-- </div> -->
 
-            <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
+<loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>

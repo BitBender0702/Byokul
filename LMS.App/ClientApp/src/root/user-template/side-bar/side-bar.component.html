@@ -1,6 +1,10 @@
 <!-- <div  [ngClass]="{'sidemenu d-xl-block d-block':isOpenSidebar === true,'sidemenu d-xl-block d-none':isOpenSidebar === false}" id="side-bar"> -->
-  <p-sidebar [(visible)]="isOpenSidebar" [hidden]="true"></p-sidebar>
-  <p-button (click)="isOpenSidebar = true" icon="pi pi-arrow-right" [hidden]="true"></p-button>
+<p-sidebar [(visible)]="isOpenSidebar" [hidden]="true"></p-sidebar>
+<p-button
+  (click)="isOpenSidebar = true"
+  icon="pi pi-arrow-right"
+  [hidden]="true"
+></p-button>
 <div
   [ngClass]="
     isOpenSidebar
@@ -10,7 +14,11 @@
   id="side-bar"
 >
   <div class="text-center">
-    <a [routerLink]="['/user/userFeed']" (click)="openGlobalFeedTab()" class="main-logo">
+    <a
+      [routerLink]="['/user/userFeed']"
+      (click)="openGlobalFeedTab()"
+      class="main-logo"
+    >
       <img src="../../../assets/images/logo.svg" />
     </a>
   </div>
@@ -36,12 +44,12 @@
     <div class="d-flex text-center notification-box justify-content-center">
       <ul class="list-unstyled d-flex align-items-center">
         <li class="d-inline-block">
-          <button [routerLink]="['/user/userFeed']"
+          <button
+            [routerLink]="['/user/userFeed']"
             type="button"
             class="notification-btn position-relative border-0 bg-transparent"
           >
             <img src="../../../assets/images/school/home-icon.svg" />
-           
           </button>
         </li>
         <li class="d-inline-block">
@@ -87,7 +95,7 @@
                   "
                   (click)="getUserDetails(sidebarInfo.user.id)"
                   class="dropdown-item"
-                  style="cursor: pointer"
+                  style="cursor: pointer; word-break: break-all"
                   >{{ "MyProfile" | translate }}</a
                 >
               </li>
@@ -139,14 +147,16 @@
         </li>
       </ul>
     </div>
-    <button *ngIf="sidebarInfo?.ownedSchools?.length == 0"
-    [routerLink]="['/user/createSchool']"
-    type="button"
-    class="btn custom-btn primary_btn w-100 earning-btn fw_400"
-  >
-    {{ "CreateSchools" | translate }}
-  </button>
-    <button *ngIf="sidebarInfo?.ownedSchools?.length > 0"
+    <button
+      *ngIf="sidebarInfo?.ownedSchools?.length == 0"
+      [routerLink]="['/user/createSchool']"
+      type="button"
+      class="btn custom-btn primary_btn w-100 earning-btn fw_400"
+    >
+      {{ "CreateSchools" | translate }}
+    </button>
+    <button
+      *ngIf="sidebarInfo?.ownedSchools?.length > 0"
       [routerLink]="['/user/earnings']"
       type="button"
       class="btn custom-btn primary_btn w-100 earning-btn fw_400"
@@ -201,9 +211,12 @@
                   type="button"
                   data-bs-toggle="collapse"
                   data-bs-target="#collapseOne"
-                  [ngClass]="{'collapsed': sidebarInfo?.followedSchools?.length > 5}"
-
-        [attr.aria-expanded]="sidebarInfo?.followedSchools?.length <= 5 ? 'true' : 'false'"
+                  [ngClass]="{
+                    collapsed: sidebarInfo?.followedSchools?.length > 5
+                  }"
+                  [attr.aria-expanded]="
+                    sidebarInfo?.followedSchools?.length <= 5 ? 'true' : 'false'
+                  "
                   aria-controls="collapseOne"
                 >
                   <span>{{ "Schools" | translate }} </span>
@@ -212,7 +225,7 @@
               <div
                 id="collapseOne"
                 class="accordion-collapse collapse"
-                [ngClass]="{'show': sidebarInfo?.followedSchools?.length <= 5}"
+                [ngClass]="{ show: sidebarInfo?.followedSchools?.length <= 5 }"
                 aria-labelledby="headingOne"
                 data-bs-parent="#accordionExample"
               >
@@ -236,7 +249,7 @@
                           <img [src]="item.avatar" />
                         </div>
                         <a
-                          style="cursor: pointer"
+                          style="cursor: pointer; word-break: break-all"
                           (click)="getSelectedSchool(item.schoolName)"
                           >{{ item.schoolName }}</a
                         >
@@ -253,9 +266,12 @@
                   type="button"
                   data-bs-toggle="collapse"
                   data-bs-target="#collapseTwo"
-                  [ngClass]="{'collapsed': sidebarInfo?.followedClasses?.length > 5}"
-
-                  [attr.aria-expanded]="sidebarInfo?.followedClasses?.length <= 5 ? 'true' : 'false'"
+                  [ngClass]="{
+                    collapsed: sidebarInfo?.followedClasses?.length > 5
+                  }"
+                  [attr.aria-expanded]="
+                    sidebarInfo?.followedClasses?.length <= 5 ? 'true' : 'false'
+                  "
                   aria-controls="collapseTwo"
                 >
                   <span>{{ "Classes" | translate }} </span>
@@ -264,7 +280,7 @@
               <div
                 id="collapseTwo"
                 class="accordion-collapse collapse"
-                [ngClass]="{'show': sidebarInfo?.followedClasses?.length <= 5}"
+                [ngClass]="{ show: sidebarInfo?.followedClasses?.length <= 5 }"
                 aria-labelledby="headingTwo"
                 data-bs-parent="#accordionExample"
               >
@@ -288,7 +304,7 @@
                           <img [src]="item.avatar" />
                         </div>
                         <a
-                          style="cursor: pointer"
+                          style="cursor: pointer; word-break: break-all"
                           (click)="
                             getSelectedClass(
                               item.className,
@@ -310,9 +326,12 @@
                   type="button"
                   data-bs-toggle="collapse"
                   data-bs-target="#collapseThree"
-                  [ngClass]="{'collapsed': sidebarInfo?.followedCourses?.length > 5}"
-
-                  [attr.aria-expanded]="sidebarInfo?.followedCourses?.length <= 5 ? 'true' : 'false'"   
+                  [ngClass]="{
+                    collapsed: sidebarInfo?.followedCourses?.length > 5
+                  }"
+                  [attr.aria-expanded]="
+                    sidebarInfo?.followedCourses?.length <= 5 ? 'true' : 'false'
+                  "
                   aria-controls="collapseThree"
                 >
                   <span>{{ "Courses" | translate }} </span>
@@ -321,7 +340,7 @@
               <div
                 id="collapseThree"
                 class="accordion-collapse collapse"
-                [ngClass]="{'show': sidebarInfo?.followedCourses?.length <= 5}"
+                [ngClass]="{ show: sidebarInfo?.followedCourses?.length <= 5 }"
                 aria-labelledby="headingThree"
                 data-bs-parent="#accordionExample"
               >
@@ -345,7 +364,7 @@
                           <img [src]="item.avatar" />
                         </div>
                         <a
-                          style="cursor: pointer"
+                          style="cursor: pointer; word-break: break-all"
                           (click)="
                             getSelectedCourse(
                               item.courseName,
@@ -377,9 +396,12 @@
                   type="button"
                   data-bs-toggle="collapse"
                   data-bs-target="#collapseOne"
-                  [ngClass]="{'collapsed': sidebarInfo?.ownedSchools?.length > 5}"
-
-        [attr.aria-expanded]="sidebarInfo?.ownedSchools?.length <= 5 ? 'true' : 'false'"
+                  [ngClass]="{
+                    collapsed: sidebarInfo?.ownedSchools?.length > 5
+                  }"
+                  [attr.aria-expanded]="
+                    sidebarInfo?.ownedSchools?.length <= 5 ? 'true' : 'false'
+                  "
                   aria-controls="collapseOne"
                 >
                   <span>{{ "Schools" | translate }} </span>
@@ -393,8 +415,7 @@
               <div
                 id="collapseOne"
                 class="accordion-collapse collapse"
-                [ngClass]="{'show': sidebarInfo?.ownedSchools?.length <= 5}"
-
+                [ngClass]="{ show: sidebarInfo?.ownedSchools?.length <= 5 }"
                 aria-labelledby="headingOne"
                 data-bs-parent="#accordionExample"
               >
@@ -418,7 +439,7 @@
                           />
                         </div>
                         <a
-                          style="cursor: pointer"
+                          style="cursor: pointer; word-break: break-all"
                           (click)="getSelectedSchool(item.schoolName)"
                           >{{ item.schoolName }}</a
                         >
@@ -435,9 +456,12 @@
                   type="button"
                   data-bs-toggle="collapse"
                   data-bs-target="#collapseTwo"
-                  [ngClass]="{'collapsed': sidebarInfo?.ownedClasses?.length > 5}"
-
-                  [attr.aria-expanded]="sidebarInfo?.ownedClasses?.length <= 5 ? 'true' : 'false'"
+                  [ngClass]="{
+                    collapsed: sidebarInfo?.ownedClasses?.length > 5
+                  }"
+                  [attr.aria-expanded]="
+                    sidebarInfo?.ownedClasses?.length <= 5 ? 'true' : 'false'
+                  "
                   aria-controls="collapseTwo"
                 >
                   <span>{{ "Classes" | translate }} </span>
@@ -451,7 +475,7 @@
               <div
                 id="collapseTwo"
                 class="accordion-collapse collapse"
-                [ngClass]="{'show': sidebarInfo?.ownedClasses?.length <= 5}"
+                [ngClass]="{ show: sidebarInfo?.ownedClasses?.length <= 5 }"
                 aria-labelledby="headingTwo"
                 data-bs-parent="#accordionExample"
               >
@@ -475,7 +499,7 @@
                           />
                         </div>
                         <a
-                          style="cursor: pointer"
+                          style="cursor: pointer; word-break: break-all"
                           (click)="
                             getSelectedClass(
                               item.className,
@@ -497,8 +521,12 @@
                   type="button"
                   data-bs-toggle="collapse"
                   data-bs-target="#collapseThree"
-                  [ngClass]="{'collapsed': sidebarInfo?.ownedCourses?.length > 5}"
-                  [attr.aria-expanded]="sidebarInfo?.ownedCourses?.length <= 5 ? 'true' : 'false'"  
+                  [ngClass]="{
+                    collapsed: sidebarInfo?.ownedCourses?.length > 5
+                  }"
+                  [attr.aria-expanded]="
+                    sidebarInfo?.ownedCourses?.length <= 5 ? 'true' : 'false'
+                  "
                   aria-controls="collapseThree"
                 >
                   <span>{{ "Courses" | translate }} </span>
@@ -512,7 +540,7 @@
               <div
                 id="collapseThree"
                 class="accordion-collapse collapse"
-                [ngClass]="{'show': sidebarInfo?.ownedCourses?.length <= 5}"
+                [ngClass]="{ show: sidebarInfo?.ownedCourses?.length <= 5 }"
                 aria-labelledby="headingThree"
                 data-bs-parent="#accordionExample"
               >
@@ -536,7 +564,7 @@
                           />
                         </div>
                         <a
-                          style="cursor: pointer"
+                          style="cursor: pointer; word-break: break-all"
                           (click)="
                             getSelectedCourse(
                               item.courseName,
@@ -614,17 +642,35 @@
       </div>
       <div class="footer-menu">
         <div class="footer-menu__menu">
-          <a [routerLink]="['/termsOfServices']" class="footer-menu__menu-item">{{ "TermsOfService" | translate }}</a>
-          <a [routerLink]="['/privacyPolicy']" class="footer-menu__menu-item">{{ "PrivacyPolicy" | translate }}</a>
-          <a [routerLink]="['/aboutUs']" class="footer-menu__menu-item">{{ "AboutUs" | translate }}</a>
-          <a [routerLink]="['/contact']" class="footer-menu__menu-item">{{ "Contact" | translate }}</a>
-          <a [routerLink]="['/deliveryAndReturn']" class="footer-menu__menu-item">{{ "Delivery&Return" | translate }}</a>
-          <a [routerLink]="['/distanceSalesAgreementForSchools']" class="footer-menu__menu-item"
+          <a
+            [routerLink]="['/termsOfServices']"
+            class="footer-menu__menu-item"
+            >{{ "TermsOfService" | translate }}</a
+          >
+          <a [routerLink]="['/privacyPolicy']" class="footer-menu__menu-item">{{
+            "PrivacyPolicy" | translate
+          }}</a>
+          <a [routerLink]="['/aboutUs']" class="footer-menu__menu-item">{{
+            "AboutUs" | translate
+          }}</a>
+          <a [routerLink]="['/contact']" class="footer-menu__menu-item">{{
+            "Contact" | translate
+          }}</a>
+          <a
+            [routerLink]="['/deliveryAndReturn']"
+            class="footer-menu__menu-item"
+            >{{ "Delivery&Return" | translate }}</a
+          >
+          <a
+            [routerLink]="['/distanceSalesAgreementForSchools']"
+            class="footer-menu__menu-item"
             >{{ "DistanceSalesAgreementForSchools" | translate }}</a
           >
-          <a [routerLink]="['/distanceSalesAgreementForStudents']" class="footer-menu__menu-item"
-          >{{ "DistanceSalesAgreementForStudents" | translate }}</a
-        >
+          <a
+            [routerLink]="['/distanceSalesAgreementForStudents']"
+            class="footer-menu__menu-item"
+            >{{ "DistanceSalesAgreementForStudents" | translate }}</a
+          >
         </div>
         <!-- <img src="../../../assets/images/logo_band_colored.svg" /> -->
       </div>

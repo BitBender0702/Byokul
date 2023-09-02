@@ -76,6 +76,10 @@
   white-space: pre-wrap;
 }
 
+.prev-step-btn {
+  white-space: nowrap;
+}
+
 .right-action {
   position: absolute;
   right: 0;
