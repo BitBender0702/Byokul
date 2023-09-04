@@ -182,7 +182,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
 
 
   courseRatingView!:ClassCourseRating;
-
+  isAllowedForFileStorage:boolean = false;
 
 
   isDataLoaded: boolean = false;
@@ -245,7 +245,9 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       this.course.posts = this.getFilteredAttachments(this.course.posts);
       this.isRatedByUser = response.isRatedByUser;
       this.isBanned = response.isBannedFromClassCourse;
-
+      
+      this.isAllowedForFileStorage = response.isFileStorageAccessible;
+      this.permissionForFileStorage(response.teachers);
     });
 
     this.editCourseForm = this.fb.group({
@@ -1624,6 +1626,16 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       }
     }
   }
+
+
+
+  permissionForFileStorage(teacherForFileStorage:any){
+    let isAllowedForFileStorage = teacherForFileStorage?.find((x:any) => x?.userId == this.userId);
+    if(isAllowedForFileStorage != undefined || isAllowedForFileStorage != null){
+      this.isAllowedForFileStorage = true;
+    }
+  }
+
 
 
   

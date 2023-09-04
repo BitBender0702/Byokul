@@ -523,6 +523,7 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
       return;
     }
     this._userService.getPostsByUserId(this.userId, this.frontEndPageNumber).subscribe((response) => {
+      debugger;
       var result = this.getFilteredAttachments(response);
       this.user.posts = [...this.user.posts, ...result];
       this.postLoadingIcon = false;
@@ -1757,6 +1758,7 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
 
 
   getFilteredAttachments(feeds: any): any {
+    debugger;
     const allAttachments = feeds.flatMap((post: { postAttachments: any[]; }) => post.postAttachments);
       const result = allAttachments.filter((attachment: { fileType: number; fileName: string; }) => {
       return attachment.fileType === 3 && 

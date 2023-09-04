@@ -451,7 +451,7 @@
   "ReelSharedSuccessfully": "Reel shared successfully",
   "PostDeletedSuccessfully": "Post deleted successfully",
   "ReelDeletedSuccessfully": "Reel deleted successfully",
-  "TeacherAddedSuccessfully": "Teacher added successfully",
+  "OfficialAddedSuccessfully": "Teacher added successfully",
   "LanguageAddedSuccessfully": "Language added successfully",
   "LanguageDeletedSuccessfully": "Language deleted successfully",
   "ClassSavedSuccessfully": "Class saved successfully",
@@ -537,7 +537,7 @@
   "AddOfficial": "Add Official",
   "SchoolVideoLibrary": "School Video Library",
   "UploadVideo": "Upload Video",
-  "TeacherUpdatedSuccessfully": "Teacher updated successfully",
+  "OfficialUpdatedSuccessfully": "Teacher updated successfully",
   "EditOfficial": "Edit Official",
   "UpdateOfficial": "Update Official",
   "PleaseSelectTheOfficial": "Please select the official",
@@ -557,7 +557,8 @@
   "Official": "Official",
   "OfficialName": "Official Name",
   "RateClass": "Rate Class",
-  "RateCourse": "Rate Course"
+  "RateCourse": "Rate Course",
+  "OfficialDeletedSuccessfully":"Official Deleted Successfully"
 
 
 

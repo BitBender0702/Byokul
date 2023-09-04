@@ -574,7 +574,7 @@ export class SchoolProfileComponent
         debugger
         const translatedSummary = this.translateService.instant('Success');
         if(!response.isEdit){
-          var translatedMessage = this.translateService.instant('TeacherAddedSuccessfully');
+          var translatedMessage = this.translateService.instant('OfficialAddedSuccessfully');
           var schoolteacher = {
             userId:response.userId,
             firstName:response.userName,
@@ -584,7 +584,7 @@ export class SchoolProfileComponent
           this.school.teachers.push(schoolteacher);
         }
         else{
-          var translatedMessage = this.translateService.instant('TeacherUpdatedSuccessfully');
+          var translatedMessage = this.translateService.instant('OfficialUpdatedSuccessfully');
         }
         this.messageService.add({severity:'success', summary:translatedSummary,life: 3000, detail:translatedMessage});
         this.cd.detectChanges();
@@ -1188,7 +1188,7 @@ export class SchoolProfileComponent
         this.closeTeachersModal();
         this.isSubmitted = false;
         const translatedSummary = this.translateService.instant('Success');
-        const translatedMessage = this.translateService.instant('TeacherAddedSuccessfully');
+        const translatedMessage = this.translateService.instant('OfficialAddedSuccessfully');
         this.messageService.add({
           severity: 'success',
           summary: translatedSummary,
@@ -1210,7 +1210,7 @@ export class SchoolProfileComponent
       .deleteSchoolTeacher(this.deleteTeacher)
       .subscribe((response: any) => {
         const translatedSummary = this.translateService.instant('Success');
-        const translatedMessage = this.translateService.instant('TeacherDeletedSuccessfully');
+        const translatedMessage = this.translateService.instant('OfficialDeletedSuccessfully');
         this.messageService.add({
           severity: 'success',
           summary: translatedSummary,

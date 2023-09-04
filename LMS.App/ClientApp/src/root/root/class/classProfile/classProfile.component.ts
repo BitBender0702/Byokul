@@ -168,6 +168,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   classCertificateForm!: FormGroup;
   classCertificateInfo: any;
   currencies:any;
+  teacherForFileStorage:any;
 
   @ViewChild('openClassOwnCertificate') openClassOwnCertificate!: ElementRef;
 
@@ -275,9 +276,11 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     console.log( "after removing ." + className);
 
     // this.className = this.route.snapshot.paramMap.get('className')??'';
-    let newClassName = this.className.split('.').join("").split(" ").join("").toLowerCase()
+    let newClassName = this.className.split('.').join("").split(" ").join("").toLowerCase();
+
     this._classService.getClassById(newClassName).subscribe((response) => {
       debugger;
+      this.teacherForFileStorage = response.teachers;
       this.postsEndPageNumber = 1;
       this.classId = response.classId;
       this.reelsPageNumber = 1;
@@ -296,6 +299,10 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       this.class.posts = this.getFilteredAttachments(this.class.posts);
       this.isRatedByUser = response.isRatedByUser;
       this.isBanned = response.isBannedFromClassCourse;
+
+
+      // this.isAllowedForFileStorage = response.isFileStorageAccessible;
+      // this.permissionForFileStorage(this.teacherForFileStorage);
       //here is the code
 
       this.classRatingView={
@@ -420,6 +427,8 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
           this.addClassView(this.class.classId);
           this.class.posts = this.getFilteredAttachments(this.class.posts);
           // this.showPostDiv(postResponse.response.id);    
+
+
         });
       });
     }
@@ -520,6 +529,8 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       }
     });
     // }
+
+
   }
 
   getClassDetails(classId: string) {
@@ -1811,5 +1822,18 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       }
     }
   }
+
+  // isAllowedForFileStorage:boolean=false;
+  // permissionForFileStorage(teacherForFileStorage:any){
+  //   debugger;
+  //   let isAllowedForFileStorage = teacherForFileStorage?.find((x:any) => x?.userId == this.userId);
+  //   if(isAllowedForFileStorage != undefined || isAllowedForFileStorage != null){
+  //     this.isAllowedForFileStorage = true;
+  //   }
+  // }
+
+
+
+
 
 }

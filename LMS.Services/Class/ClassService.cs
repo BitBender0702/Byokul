@@ -433,7 +433,12 @@ namespace LMS.Services
                 model.Reels = await GetReelsByClassId(singleLanguage.ClassId, loginUserId);
                 model.ClassCertificates = await GetCertificateByClassId(singleLanguage.ClassId);
 
-
+                //var id = Guid.Parse(loginUserId);
+                //var isFileStorageaccessible = await _classStudentRepository.GetAll().Where(x => x.ClassId == model.ClassId && x.StudentId == Guid.Parse(loginUserId)).FirstOrDefaultAsync();
+                //if (isFileStorageaccessible != null)
+                //{
+                //    model.IsFileStorageAccessible = true;
+                //}
 
                 var isClassAccessible = await _classCourseTransactionRepository.GetAll().Where(x => x.ClassId == model.ClassId && x.UserId == loginUserId && x.PaymentId != null).FirstOrDefaultAsync();
 
@@ -499,6 +504,12 @@ namespace LMS.Services
             model.ClassCertificates = await GetCertificateByClassId(classes.ClassId);
 
             var isClassAccessible = await _classCourseTransactionRepository.GetAll().Where(x => x.ClassId == model.ClassId && x.UserId == loginUserId).FirstOrDefaultAsync();
+
+            //var isFileStorageaccessible = await _classStudentRepository.GetAll().Where(x => x.ClassId == model.ClassId && x.StudentId == Guid.Parse(loginUserId)).FirstOrDefaultAsync();
+            //if (isFileStorageaccessible != null) 
+            //{
+            //    model.IsFileStorageAccessible = true;
+            //}
 
             if (isClassAccessible != null || model.CreatedById == loginUserId)
             {

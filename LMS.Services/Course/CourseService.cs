@@ -443,12 +443,19 @@ namespace LMS.Services
                     }
 
                     courses.CourseCertificates = _mapper.Map<IEnumerable<CertificateViewModel>>(classDetails.ClassCertificates);
+                    
+                    var isFileStorageaccessibleForSingleLanguage = await _courseStudentRepository.GetAll().Where(x => x.CourseId == model.CourseId && x.StudentId == Guid.Parse(loginUserId)).FirstOrDefaultAsync();
+                    if (isFileStorageaccessibleForSingleLanguage != null)
+                    {
+                        courses.IsFileStorageAccessible = true;
+                    }
 
                     var isClassAccessible = await _classCourseTransactionRepository.GetAll().Where(x => x.CourseId == model.CourseId && x.UserId == loginUserId && x.PaymentId != null).FirstOrDefaultAsync();
 
                     if (isClassAccessible != null || courses.CreatedById == loginUserId)
                     {
                         model.IsCourseAccessable = true;
+                        
                     }
 
                     return courses;
@@ -457,6 +464,12 @@ namespace LMS.Services
 
                 }
                 model = _mapper.Map<CourseDetailsViewModel>(singleLanguage);
+
+                var isFileStorageaccessible = await _courseStudentRepository.GetAll().Where(x => x.CourseId == model.CourseId && x.StudentId == Guid.Parse(loginUserId)).FirstOrDefaultAsync();
+                if (isFileStorageaccessible != null)
+                {
+                    model.IsFileStorageAccessible = true;
+                }
 
                 var isCourseAccessible = await _classCourseTransactionRepository.GetAll().Where(x => x.CourseId == model.CourseId && x.UserId == loginUserId && x.PaymentId != null).FirstOrDefaultAsync();
 
@@ -539,6 +552,14 @@ namespace LMS.Services
                 }
 
                 courses.CourseCertificates = _mapper.Map<IEnumerable<CertificateViewModel>>(classDetails.ClassCertificates);
+
+                var isFileStorageaccessible = await _courseStudentRepository.GetAll().Where(x => x.CourseId == model.CourseId && x.StudentId == Guid.Parse(loginUserId)).FirstOrDefaultAsync();
+                if (isFileStorageaccessible != null)
+                {
+                    model.IsFileStorageAccessible = true;
+                }
+
+
 
                 var isCourseAccessible = await _classCourseTransactionRepository.GetAll().Where(x => x.CourseId == model.CourseId && x.UserId == loginUserId).FirstOrDefaultAsync();
 
