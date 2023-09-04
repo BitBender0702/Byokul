@@ -35,7 +35,7 @@ export class VideoJsComponent implements OnInit {
             fullscreenToggle: false
           },
           userActions:{
-            doubleClick: false
+            doubleClick: false,
           }
         });
       } else{

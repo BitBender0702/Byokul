@@ -857,8 +857,6 @@ export class SchoolProfileComponent
       this._schoolService
         .saveSchoolFollower(this.followUnfollowSchool)
         .subscribe((response) => {
-          debugger
-          console.log(response);
           if (response.result == 'success') {
             this.isSchoolFollowed = true;
           }
@@ -1361,7 +1359,6 @@ export class SchoolProfileComponent
       .pinUnpinPost(attachmentId, isPinned)
       .subscribe((response) => {
         this.ngOnInit();
-        console.log(response);
       });
   }
 
@@ -1416,7 +1413,6 @@ export class SchoolProfileComponent
       this._schoolService.getSchoolClassCourseList(schoolId, this.classCoursePageNumber).subscribe((response) => {
         debugger
         this.classCourseList = response;
-        console.log(this.classCourseList);
         this.loadingIcon = false;
       });
     }
@@ -2312,7 +2308,6 @@ export class SchoolProfileComponent
           detail: translatedMessage,
         });
         this.ngOnInit();
-        console.log(response);
       });
   }
 

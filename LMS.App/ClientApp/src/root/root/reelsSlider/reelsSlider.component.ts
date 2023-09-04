@@ -58,7 +58,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   commentResponseSubscription!: Subscription;
   isFinishDownReels: boolean = false;
   isFinishUpReels: boolean = false;
-  @ViewChild('videoPlayer') videoPlayer!: ElementRef;
+  @ViewChild('videoComp') videoComp: any;
   @ViewChild(SlickCarouselComponent, { static: false }) carousel!: SlickCarouselComponent;
   @ViewChild('slickCarousel') slickCarousel!: ElementRef;
 
@@ -283,7 +283,6 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   }
 
   getReelsBySchool(schoolId: string) {
-    
     this._schoolService.GetSliderReelsBySchoolId(schoolId, this.reelId, 3).subscribe((response) => {
       this.reels = response;
       this.selectedReel = this.reels[0];
@@ -295,11 +294,10 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
         const postAttachments = reel.postAttachments;
         this.videos.push(...postAttachments);
       });
-
       var index = this.videos.findIndex((x: { id: string; }) => x.id == this.reelId);
       this.selectedReelIndex = index;
       this.carouselConfig.initialSlide = this.selectedReelIndex;
-      this.getReelsById();
+      this.getReelsById(this.reels, this.selectedReelIndex);
       // this.reels.find(x => x.);
       this.initializeReelsSlider();
       setTimeout(() => {
@@ -336,7 +334,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       var index = this.videos.findIndex((x: { id: string; }) => x.id == this.reelId);
       this.selectedReelIndex = index;
       this.carouselConfig.initialSlide = this.selectedReelIndex;
-      this.getReelsById();
+      this.getReelsById(this.reels, this.selectedReelIndex);
       // this.reels.find(x => x.);
       this.initializeReelsSlider();
       setTimeout(() => {
@@ -352,11 +350,6 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
           }
         }
       }, 1000);
-
-
-
-
-
     });
   }
 
@@ -376,7 +369,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       var index = this.videos.findIndex((x: { id: string; }) => x.id == this.reelId);
       this.selectedReelIndex = index;
       this.carouselConfig.initialSlide = this.selectedReelIndex;
-      this.getReelsById();
+      this.getReelsById(this.reels, this.selectedReelIndex);
       // this.reels.find(x => x.);
       this.initializeReelsSlider();
       setTimeout(() => {
@@ -418,7 +411,8 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       var index = this.videos.findIndex((x: { id: string; }) => x.id == this.reelId);
       this.selectedReelIndex = index;
       this.carouselConfig.initialSlide = this.selectedReelIndex;
-      this.getReelsById();
+      debugger
+      this.getReelsById(this.reels, this.selectedReelIndex);
       // this.reels.find(x => x.);
       this.initializeReelsSlider();
       setTimeout(() => {
@@ -453,7 +447,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       var index = this.videos.findIndex((x: { id: string; }) => x.id == this.reelId);
       this.selectedReelIndex = index;
       this.carouselConfig.initialSlide = this.selectedReelIndex;
-      this.getReelsById();
+      this.getReelsById(this.reels, this.selectedReelIndex);
       // this.reels.find(x => x.);
       this.initializeReelsSlider();
       setTimeout(() => {
@@ -711,7 +705,6 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
         // this.isReelLoad = true;
         this.cd.detectChanges();
         // this.reels = this.reels.concat(response);
-
       });
     }
 
@@ -1109,7 +1102,10 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   //   }
 
   sendToGroup(reel: any) {
-    
+    let message = this.messageToGroup;
+    if(!message || message.trim().length == 0){
+      return;
+    }
     var comment: any[] = reel.comments;
     this.InitializeCommentViewModel();
     this.commentViewModel.userId = this.sender.id;
@@ -1155,7 +1151,6 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
 
   getVolume:any;
   afterChange(event: any) {
-    
     const currentItem = this.reels[event.currentSlide];
     this.addPostView(currentItem.id, currentItem);
     const currentSlideIndex = event.currentSlide;
@@ -1269,10 +1264,8 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   }
 
   getDeletedPostId(id:string){
-    debugger
     this.loadingIcon = true;
     this._postService.deletePost(id).subscribe((_response) => {
-      // this.close();
       var deletedPost = this.reels.find((x: { id: string; }) => x.id == id);
       const index = this.reels.indexOf(deletedPost);
       if (index > -1) {
@@ -1280,6 +1273,14 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       }
       this.loadingIcon = false;
       deleteReelResponse.next({});
+      if(this.index == this.reels.length){
+        debugger
+        let newUrl = `/user/reelsView/${this.ownerId}/${this.from}/${this.reels[this.index - 1].postAttachments[0].id}/${this.reels[this.index - 1].id}`
+        history.replaceState({}, '', newUrl);
+        return;
+      }
+      let newUrl = `/user/reelsView/${this.ownerId}/${this.from}/${this.reels[this.index + 1].postAttachments[0].id}/${this.reels[this.index + 1].id}`
+      history.replaceState({}, '', newUrl)
     });
   }
 
@@ -1302,7 +1303,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
 
   fromForComment:any;
   postForComment: any;
-  isBanned:any;
+  isBanned:boolean=false;
   isUserBanned(){
     debugger;
     this._studentService.isStudentBannedFromClassCourse(this.ownerId, this.fromForComment, this.parentId).subscribe((response:any)=>{
@@ -1319,9 +1320,9 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
 
 
   parentId:string=''
-  getReelsById(){
+  getReelsById(reels:any, index:any){
     debugger;
-    this._reelsService.getReelById(this.reels[this.selectedReelIndex].postAttachments[0].id).subscribe((response:any) => {
+    this._reelsService.getReelById(reels[index]?.postAttachments[0]?.id).subscribe((response:any) => {
       this.postForComment = response;
       if(response.class != null || response.course != null){
         if(response.class?.classId != null){
@@ -1337,6 +1338,26 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       
     })
   }
+
+  deleteId:any;
+  index:any;
+  getDeleteId(deleteId:any, index?:any){
+    this.deleteId = deleteId;
+    this.index = index;
+  }
+
+  // playPause(e: any) {
+  //   debugger;
+  //   if (e.target.nodeName === 'VIDEO') {
+  //     if (!this.videoComp.player.paused()) {
+  //       this.videoComp.player.pause();
+  //     } else {
+  //       this.videoComp.player.play();
+  //     }
+  //   }
+  // }
+
+
 
 }
 
