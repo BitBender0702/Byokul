@@ -214,7 +214,6 @@ export class AddOfficialComponent extends MultilingualComponent implements OnIni
   }
 
   getSchoolPermissions(permission: any, event: any) {
-    debugger
     if (permission.name == PermissionNameConstant.CreateEditCourse && event.target.checked) {
       this.hideCourseSection = true;
       this.addOfficialViewmodel.isAllCourseSelected = true;
@@ -249,7 +248,6 @@ export class AddOfficialComponent extends MultilingualComponent implements OnIni
     }
 
     if (permission.name == PermissionNameConstant.CreateEditClass && event.target.checked) {
-      debugger
       this.hideClassSection = true;
       var permissions: any[] = this.permissions;
       var classpermissions = permissions.filter(x => x.permissionType === 2);
@@ -369,7 +367,6 @@ export class AddOfficialComponent extends MultilingualComponent implements OnIni
         this.addOfficialViewmodel.permissions.coursePermissions.push(coursePermissions);
       });
     }
-    debugger
     if (this.isEdit) {
       this._teacherService.updateOfficial(this.addOfficialViewmodel).subscribe((result) => {
         debugger
