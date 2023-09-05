@@ -50,10 +50,14 @@ import { SignalrService } from 'src/root/service/signalr.service';
 import { enumToObjects } from 'src/root/Enums/getEnum';
 import { CurrencyEnum } from 'src/root/Enums/CurrencyEnum';
 import { ClassCourseRating } from 'src/root/interfaces/course/addCourseRating';
+import { userPermission } from '../../root.component';
+import { deleteModalPostResponse } from '../../delete-confirmation/delete-confirmation.component';
 
 
 export const deleteClassResponse = new BehaviorSubject<string>('');
 export const convertIntoCourseResponse = new Subject<{ courseId: string, courseName: string, school: any, avatar: string }>();
+
+
 
 
 @Component({
@@ -169,6 +173,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   classCertificateInfo: any;
   currencies:any;
   teacherForFileStorage:any;
+  deleteModalPostSubscription!: Subscription;
 
   @ViewChild('openClassOwnCertificate') openClassOwnCertificate!: ElementRef;
 
@@ -188,6 +193,8 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
 
 
   classRatingView!:ClassCourseRating;
+
+  userPermissionSubscription!:Subscription;
 
   isDataLoaded: boolean = false;
   constructor(injector: Injector, private translateService: TranslateService,private signalrService:SignalrService, private titleService: Title, private meta: Meta, private datePipe: DatePipe, authService: AuthService, notificationService: NotificationService, public messageService: MessageService, postService: PostService, private bsModalService: BsModalService, classService: ClassService, private route: ActivatedRoute, private domSanitizer: DomSanitizer, private fb: FormBuilder, private router: Router, private http: HttpClient, private activatedRoute: ActivatedRoute, private cd: ChangeDetectorRef) {
@@ -211,6 +218,11 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   }
 
   ngOnDestroy(): void {
+
+    if(this.userPermissionSubscription){
+      this.userPermissionSubscription.unsubscribe();
+    }
+
     if (this.savedPostSubscription) {
       this.savedPostSubscription.unsubscribe();
     }
@@ -240,6 +252,9 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     if (this.classParamsData$) {
       this.classParamsData$.unsubscribe();
     }
+    if (this.deleteModalPostSubscription) {
+      this.deleteModalPostSubscription.unsubscribe();
+    }
   }
 
   ngOnChanges(): void {
@@ -248,7 +263,6 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
 
   reelsTags: any;
   ngOnInit(): void {
-
     debugger
     this.checkScreenSize();
     if (this.isScreenMobile) {
@@ -530,6 +544,19 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     });
     // }
 
+    if(!this.userPermissionSubscription){
+      this.userPermissionSubscription = userPermission.subscribe(data=>{
+        debugger;
+        window.location.reload();
+      })
+    }
+   
+    if(!this.deleteModalPostSubscription){
+      this.deleteModalPostSubscription = deleteModalPostResponse.subscribe(response => {
+        this.ngOnInit();
+      })
+    }
+
 
   }
 
@@ -648,7 +675,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
 
     this.userPermissions = JSON.parse(localStorage.getItem('userPermissions') ?? '');
     var userPermissions: any[] = this.userPermissions;
-
+    debugger;
     userPermissions.forEach(element => {
       if ((element.typeId == this.class.classId || element.typeId == PermissionNameConstant.DefaultClassId) && element.ownerId == this.class.school.createdById && element.permissionType == PermissionTypeEnum.Class && element.permission.name == PermissionNameConstant.Post && (element.schoolId == null || element.schoolId == this.class.school.schoolId)) {
         this.hasPostPermission = true;
@@ -657,6 +684,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
         this.hasUpdateClassPermission = true;
       }
       if ((element.typeId == this.class.classId || element.typeId == PermissionNameConstant.DefaultClassId) && element.ownerId == this.class.school.createdById && element.permissionType == PermissionTypeEnum.Class && element.permission.name == PermissionNameConstant.IssueCertificate && (element.schoolId == null || element.schoolId == this.class.school.schoolId)) {
+        debugger;
         this.hasIssueCertificatePermission = true;
       }
       if ((element.typeId == this.class.classId || element.typeId == PermissionNameConstant.DefaultClassId) && element.ownerId == this.class.school.createdById && element.permissionType == PermissionTypeEnum.Class && element.permission.name == PermissionNameConstant.AddClassCertificates && (element.schoolId == null || element.schoolId == this.class.school.schoolId)) {
@@ -847,7 +875,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     this._classService.saveClassTeachers(this.classTeacher).subscribe((response: any) => {
       this.closeTeachersModal();
       this.isSubmitted = false;
-      this.messageService.add({ severity: 'success', summary: 'Success', life: 3000, detail: 'Teacher added successfully' });
+      this.messageService.add({ severity: 'success', summary: 'Success', life: 3000, detail: 'Official added successfully' });
       this.ngOnInit();
 
     });
@@ -857,7 +885,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     this.loadingIcon = true;
     this.deleteTeacher.classId = this.class.classId;
     this._classService.deleteClassTeacher(this.deleteTeacher).subscribe((response: any) => {
-      this.messageService.add({ severity: 'success', summary: 'Success', life: 3000, detail: 'Teacher deleted successfully' });
+      this.messageService.add({ severity: 'success', summary: 'Success', life: 3000, detail: 'Official deleted successfully' });
       this._signalrService.addTeacher(this.deleteTeacher.teacherId);
       this.ngOnInit();
 

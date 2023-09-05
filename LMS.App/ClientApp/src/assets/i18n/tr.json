@@ -81,7 +81,7 @@
     "Post": "Gönderi",
     "Follow": "TAKİP ET",
     "MessageSchool": "OKULA MESAJ GÖNDER",
-    "Teachers": "Öğretmenler",
+    "Teachers": "Yetkililer",
     "Sertificates": "Sertifikalar",
     "Languages": "Diller",
     "Location": "Konum",
@@ -99,7 +99,7 @@
     "AddLanguage": "Dil Ekle",
     "TypeLanguageToAdd": "Eklenecek Dili Yaz",
     "DeleteLanguage": "Dili Sil",
-    "AddTeacher": "Öğretmen Ekle",
+    "AddTeacher": "Resmi Ekle",
     "TypeTeacherToAdd": "Eklenecek Öğretmeni Yaz",
     "DeleteTeacher": "Öğretmeni Sil",
     "AddCertificates": "Sertifika Ekle",
@@ -549,7 +549,8 @@
   "OfficialName": "Resmi Ad",
   "RateClass": "Sınıfı Değerlendir",
   "RateCourse": "Dersi Değerlendir",
-  "OfficialDeletedSuccessfully":"Resmi Başarıyla Silindi"
+  "OfficialDeletedSuccessfully":"Resmi Başarıyla Silindi",
+  "People":"İnsanlar"
 
 
 

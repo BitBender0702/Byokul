@@ -84,7 +84,7 @@
   "Post": "أرسل",
   "Follow": "تتبع",
   "MessageSchool": "إرسال رسالة إلى المدرسة",
-  "Teachers": "المدرسين",
+  "Teachers": "المسؤولين",
   "Sertificates": "الشهادات",
   "Languages": "اللغات",
   "Location": "الموقع",
@@ -101,7 +101,7 @@
   "AddLanguage": "إضافة لغة",
   "TypeLanguageToAdd": "اكتب اللغة المراد إضافتها",
   "DeleteLanguage": "احذف اللغة",
-  "AddTeacher": "اضافة مدرس",
+  "AddTeacher": "إضافة الرسمية",
   "TypeTeacherToAdd": "اكتب المدرس المراد إضافتها",
   "DeleteTeacher": "احذف المدرس",
   "AddCertificates": "أضف شهادة",
@@ -544,7 +544,8 @@
   "OfficialName": "اسم رسمي",
   "RateClass": "فئة المعدل",
   "RateCourse": "دورة معدل",
-  "OfficialDeletedSuccessfully": "تم الحذف الرسمي بنجاح"
+  "OfficialDeletedSuccessfully": "تم الحذف الرسمي بنجاح",
+  "People": "الناس"
 
 
 

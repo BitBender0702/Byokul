@@ -49,6 +49,7 @@ import { DeleteSchoolCertificate } from 'src/root/interfaces/school/deleteSchool
 import { DeleteUserCertificate } from 'src/root/interfaces/user/deleteUserCertificate';
 import { AddUserCertificate } from 'src/root/interfaces/user/addUserCertificate';
 import { defined } from 'chart.js/dist/helpers/helpers.core';
+import { deleteModalPostResponse } from '../../delete-confirmation/delete-confirmation.component';
 export const userImageResponse = new Subject<{ userAvatar: string, gender: number }>();
 export const chatResponse = new Subject<{ receiverId: string, type: string, chatTypeId: string }>();
 
@@ -217,6 +218,7 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
   @ViewChild('openUserOwnCertificate') openUserOwnCertificate!: ElementRef;
 
   isBanFollower!: boolean;
+  deleteModalPostSubscription!:Subscription;
 
 
 
@@ -505,6 +507,12 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
       });
     });
 
+
+    if(!this.deleteModalPostSubscription){
+      this.deleteModalPostSubscription = deleteModalPostResponse.subscribe(response =>{
+        this.ngOnInit();
+      })
+    }
   }
 
   addDescriptionMetaTag(description: string) {
@@ -560,6 +568,9 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
     }
     if (this.userParamsData$) {
       this.userParamsData$.unsubscribe();
+    }
+    if (this.deleteModalPostSubscription) {
+      this.deleteModalPostSubscription.unsubscribe();
     }
   }
 

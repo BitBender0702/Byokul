@@ -53,7 +53,6 @@ export const createLive = new Subject<{
   uploadVideoUrlList: any;
 }>();
 
-
 @Component({
   selector: 'create-post',
   templateUrl: 'createPost.component.html',
@@ -166,6 +165,9 @@ export class CreatePostComponent implements OnInit, OnDestroy {
   type:string = "";
   isCreatePost:boolean = true;
   isCreateReel:boolean = false;
+
+
+  
 
   @Output() onClose: EventEmitter<any> = new EventEmitter<any>();
 

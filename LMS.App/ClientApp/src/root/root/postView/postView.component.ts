@@ -26,6 +26,7 @@ import { BigBlueButtonService } from 'src/root/service/bigBlueButton';
 import { CreatePostComponent } from '../createPost/createPost.component';
 import { StudentService } from 'src/root/service/student.service';
 import { ClassCourseEnum } from 'src/root/Enums/classCourseEnum';
+import { DeleteConfirmationComponent } from '../delete-confirmation/delete-confirmation.component';
 
 
 
@@ -600,14 +601,19 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getDeletedPostId(id: string) {
-    debugger
-    this.loadingIcon = true;
-    this._postService.deletePost(id).subscribe((_response) => {
-      this.close();
-      this.loadingIcon = false;
-      deletePostResponse.next({ postId: id });
+    // debugger
+    // this.loadingIcon = true;
+    // this._postService.deletePost(id).subscribe((_response) => {
+    //   this.close();
+    //   this.loadingIcon = false;
+    //   deletePostResponse.next({ postId: id });
 
-    });
+    // });
+
+    const initialState={id:id}
+    this.bsModalService.show(DeleteConfirmationComponent, { initialState });
+
+
   }
 
   openCertificateViewModal(certificateUrl: string, certificateName: string, from?: number, event?: Event) {

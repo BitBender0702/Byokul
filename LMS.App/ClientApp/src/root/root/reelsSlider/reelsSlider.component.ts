@@ -121,6 +121,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
     // this.post = history.state.post;
     this.InitializePostView();
     this.getSenderInfo();
+    this.checkScreenSize();
     this.loadingIcon = true;
     this.ownerId = this.route.snapshot.paramMap.get('id') ?? '';
     this.from = this.route.snapshot.paramMap.get('from') ?? '';
@@ -235,7 +236,6 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       // })
     });
    }
-
   }
 
   ngOnDestroy(): void {
@@ -925,18 +925,18 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   // for like
 
   likeUnlikePosts(postId: string, isLike: boolean, postType: number, post: any) {
-    
+    debugger;
     this.currentLikedPostId = postId;
     var likes: any[] = post.likes;
-    var isLiked = likes.filter(x => x.userId == this.userId && x.postId == postId);
-    if (isLiked.length != 0) {
+    var isLiked = likes?.filter(x => x.userId == this.userId && x.postId == postId);
+    if (isLiked?.length != 0) {
       //this.isLiked = false;
-      this.likesLength = post.likes.length - 1;
+      this.likesLength = post.likes?.length - 1;
       post.isPostLikedByCurrentUser = false;
     }
     else {
       //this.isLiked = true;
-      this.likesLength = post.likes.length + 1;
+      this.likesLength = post.likes?.length + 1;
       post.isPostLikedByCurrentUser = true;
       var notificationContent = `liked your post(${post.title})`;
       this._notificationService.initializeNotificationViewModel(post.createdBy, NotificationType.Likes, notificationContent, this.userId, postId, postType, post, null).subscribe((_response) => {
@@ -1078,6 +1078,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   }
 
   private checkScreenSize() {
+    debugger;
     const screenWidth = window.innerWidth;
     if (screenWidth >= 992) {
       this.isMobileView = false;
@@ -1357,6 +1358,65 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   //   }
   // }
 
+  touchStartX: number = 0;
+  touchEndX: number = 0;
+  swipeThreshold = 50;
+  isSwiping = false;
+  lastTap = 0;
+  doubleTapDelay = 500;
+
+  onTouchStart(event:any, index?:number, video?:any){
+    if(this.isMobileView){
+      this.touchStartX = event.touches[0].clientX;
+      this.isSwiping = false;
+    }
+  }
+
+  onTouchEnd(event: TouchEvent, index?:number, video?:any) {
+    if(this.isMobileView){
+      this.touchEndX = event.changedTouches[0].clientX;
+      const deltaX = this.touchEndX - this.touchStartX;
+
+      if (Math.abs(deltaX) > this.swipeThreshold) {
+        this.isSwiping = true;
+      } else {
+        const currentTime = new Date().getTime();
+        const tapDelay = currentTime - this.lastTap;
+
+        if (tapDelay < this.doubleTapDelay) {
+          this.likeVideo(index, video);
+        } else {
+          this.togglePlayPause(index);
+        }
+
+        this.lastTap = currentTime;
+      }
+    }
+  }
+
+  togglePlayPause(index?: number, video?:any) {
+    let videoJsElement = document.getElementById(`video-${index}`);
+    if (videoJsElement) {
+      const firstElement = videoJsElement.children[0];
+      if (firstElement) {
+        const videoElement = firstElement.children[0] as HTMLVideoElement;
+        if (videoElement) {
+          if (videoElement.paused) {
+            videoElement.play();
+          } else {
+            videoElement.pause();
+          }
+        }
+      }
+    }
+  }
+  
+
+  likeVideo(index?:number, video?:any){
+    this.likeUnlikePosts(video.id, true, video.postType, video);
+    this.togglePlayPause(index);
+    console.log('hy')
+  }
 
 
 }

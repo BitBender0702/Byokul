@@ -101,7 +101,7 @@
     "Post": "Correo",
     "Follow": "SEGUIR",
     "MessageSchool": "ESCUELA DE MENSAJES",
-    "Teachers": "Profesoras",
+    "Teachers": "Funcionarios",
     "Sertificates": "Certificados",
     "Languages": "Idiomas",
     "Location": "Ubicación",
@@ -119,7 +119,7 @@
     "AddLanguage": "Agregar idioma",
     "TypeLanguageToAdd": "Escriba el idioma para agregar",
     "DeleteLanguage": "Eliminar idioma",
-    "AddTeacher": "Agregar profesor",
+    "AddTeacher": "Agregar Oficial",
     "TypeTeacherToAdd": "Escribe profesor para agregar",
     "DeleteTeacher": "Eliminar profesor",
     "AddCertificates": "Agregar certificados",
@@ -383,7 +383,8 @@
   "OfficialName": "Official Name",
   "RateClass": "Rate Class",
   "RateCourse": "Rate Course",
-  "OfficialDeletedSuccessfully":"Oficial eliminado con éxito"
+  "OfficialDeletedSuccessfully":"Oficial eliminado con éxito",
+  "People":"Gente"
 
 
 

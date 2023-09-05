@@ -99,6 +99,7 @@ import { SidebarModule } from 'primeng/sidebar';
 import { TooltipModule } from 'primeng/tooltip';
 import { SchoolVideoLibraryComponent } from './root/schoolVideoLibrary/schoolVideoLibrary.component';
 import { AddOfficialComponent } from './root/addOfficial/addOfficial.component';
+import { DeleteConfirmationComponent } from './root/delete-confirmation/delete-confirmation.component';
 
 
 export const options: Partial<IConfig> = {
@@ -217,7 +218,8 @@ const routes: Routes = [
     UploadCertificateComponent,
     VideoJsComponent,
     SchoolVideoLibraryComponent,
-    AddOfficialComponent
+    AddOfficialComponent,
+    DeleteConfirmationComponent
   ],
   imports: [
     CommonModule,

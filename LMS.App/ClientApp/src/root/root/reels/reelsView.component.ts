@@ -550,6 +550,7 @@ export class ReelsViewComponent implements OnInit, AfterViewInit, OnDestroy {
     this.bsModalService.hide();
   }
 
+  
 
   
 

@@ -264,6 +264,8 @@
                           *ngFor="let video of item.postAttachments"
                           [postAttachment]="video"
                           [isReelView]="true"
+                          (touchstart)="onTouchStart($event, i, item)"
+                          (touchend)="onTouchEnd($event, i, item)"
                         ></videoJs-component>
                         <!-- <video [id]="'video-' + i" controls controlsList="nodownload noremoteplayback" *ngFor="let video of item.postAttachments" loop [src]="video.fileUrl"  type="video/mp4" (click)="toggleVideoPlayback($event)"></video> -->
                       </div>
@@ -536,13 +538,5 @@
     </div>
   </div>
 </div>
-
-
-
-
-
-
-
-
 
 <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>

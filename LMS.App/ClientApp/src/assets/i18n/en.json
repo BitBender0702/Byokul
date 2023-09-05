@@ -88,7 +88,7 @@
   "Post": "Post",
   "Follow": "FOLLOW",
   "MessageSchool": "MESSAGE SCHOOL",
-  "Teachers": "Teachers",
+  "Teachers": "Officials",
   "Sertificates": "Certificates",
   "Languages": "Languages",
   "Location": "Location",
@@ -105,7 +105,7 @@
   "AddLanguage": "Add Language",
   "TypeLanguageToAdd": "Type Language To Add",
   "DeleteLanguage": "Delete Language",
-  "AddTeacher": "Add Teacher",
+  "AddTeacher": "Add Official",
   "TypeTeacherToAdd": "Type Teacher To Add",
   "DeleteTeacher": "Delete Teacher",
   "AddCertificates": "Add Certificate",
@@ -558,7 +558,8 @@
   "OfficialName": "Official Name",
   "RateClass": "Rate Class",
   "RateCourse": "Rate Course",
-  "OfficialDeletedSuccessfully":"Official Deleted Successfully"
+  "OfficialDeletedSuccessfully":"Official Deleted Successfully",
+  "People": "People"
 
 
 

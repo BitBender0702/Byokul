@@ -80,6 +80,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { IyizicoService } from 'src/root/service/iyizico.service';
 import { Constant } from 'src/root/interfaces/constant';
 import { AddOfficialComponent, addTeacherResponse } from '../../addOfficial/addOfficial.component';
+import { userPermission } from '../../root.component';
+import { deleteModalPostResponse } from '../../delete-confirmation/delete-confirmation.component';
 
 
 @Component({
@@ -249,6 +251,9 @@ export class SchoolProfileComponent
 
   videoFileUrl: string = '';
 
+  userPermissionSubscription!:Subscription;
+
+  deleteModalPostSubscription!: Subscription;
 
 
   mask = '(000) 000-0000';
@@ -314,6 +319,9 @@ export class SchoolProfileComponent
     if (this.savedPostSubscription) {
       this.savedPostSubscription.unsubscribe();
     }
+    if (this.userPermissionSubscription) {
+      this.userPermissionSubscription.unsubscribe();
+    }
     if (this.savedReelSubscription) {
       this.savedReelSubscription.unsubscribe();
     }
@@ -340,6 +348,9 @@ export class SchoolProfileComponent
     }
     if (this.addTeacherSubscription) {
       this.addTeacherSubscription.unsubscribe();
+    }
+    if (this.deleteModalPostSubscription) {
+      this.deleteModalPostSubscription.unsubscribe();
     }
   }
   ngOnChanges(): void {
@@ -635,6 +646,18 @@ export class SchoolProfileComponent
     //         this.meta.addTag({ name: 'robots', content: 'nofollow' });
     //       }
 
+    if(!this.userPermissionSubscription){
+      this.userPermissionSubscription = userPermission.subscribe(data=>{
+        debugger;
+        window.location.reload();
+      })
+    }
+
+    if(!this.deleteModalPostSubscription){
+      this.deleteModalPostSubscription = deleteModalPostResponse.subscribe(response => {
+        this.ngOnInit();
+      })
+    }
 
   }
 

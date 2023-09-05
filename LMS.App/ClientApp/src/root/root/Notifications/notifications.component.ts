@@ -254,11 +254,13 @@ export class NotificationsComponent extends MultilingualComponent implements OnI
   opeStream(postId: string, chatType: number) {
     this._postService.getPostById(postId).subscribe((response) => {
       if(response.isLiveStreamEnded == false){
+        debugger;
         this._postService.enableLiveStream(postId).subscribe((responses)=>{
           if(responses.success){
             response.isLive = true;
           }
           if (response.isLive) {
+            debugger;
             var from = chatType == 1 ? "user" : chatType == 3 ? "school" : chatType == 4 ? "class" : "";
             this.router.navigate(
               [`liveStream`, postId, from]
