@@ -223,7 +223,7 @@
                   </button>
 
                   <button
-                    *ngIf="isOwner"
+                    *ngIf="isOwner || hasUpdateCoursePermission"
                     (click)="initializeEditFormControls()"
                     class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins"
                     data-bs-toggle="modal"
