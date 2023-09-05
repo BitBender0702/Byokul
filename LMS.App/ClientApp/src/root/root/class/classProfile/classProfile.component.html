@@ -299,7 +299,7 @@
             {{ class.description }}
           </p>
         </div>
-        <div *ngIf="class.classCertificates.length != 0 || this.isOwner">
+        <div *ngIf="class.classCertificates.length != 0 || this.isOwner || hasAddClassCertificatesPermission">
           <div class="teacher-tags tag-box hover-tags">
             <div class="teacher-tags tag-box mt-0 hover-tags">
               <div class="teacher-content font_14 d-inline-block">

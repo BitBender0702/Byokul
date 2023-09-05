@@ -933,6 +933,9 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       //this.isLiked = false;
       this.likesLength = post.likes?.length - 1;
       post.isPostLikedByCurrentUser = false;
+      const translatedMessage = this.translateService.instant('ReelUnLikedSuccessfully');
+      const translatedSummary = this.translateService.instant('Success');
+      this.messageService.add({ severity: 'success', summary: translatedSummary, life: 3000, detail: translatedMessage });
     }
     else {
       //this.isLiked = true;
@@ -941,6 +944,9 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       var notificationContent = `liked your post(${post.title})`;
       this._notificationService.initializeNotificationViewModel(post.createdBy, NotificationType.Likes, notificationContent, this.userId, postId, postType, post, null).subscribe((_response) => {
       });
+      const translatedMessage = this.translateService.instant('ReelLikedSuccessfully');
+      const translatedSummary = this.translateService.instant('Success');
+      this.messageService.add({ severity: 'success', summary: translatedSummary, life: 3000, detail: translatedMessage });
     }
 
     this.likeUnlikePost.postId = postId;

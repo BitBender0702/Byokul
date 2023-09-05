@@ -550,7 +550,9 @@
   "RateClass": "Sınıfı Değerlendir",
   "RateCourse": "Dersi Değerlendir",
   "OfficialDeletedSuccessfully":"Resmi Başarıyla Silindi",
-  "People":"İnsanlar"
+  "People":"İnsanlar",
+  "ReelUnLikedSuccessfully":"Reel başarıyla beğenilmedi",
+  "ReelLikedSuccessfully":"Makara Başarıyla Beğenildi"
 
 
 

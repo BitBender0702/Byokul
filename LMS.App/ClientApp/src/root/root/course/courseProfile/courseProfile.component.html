@@ -278,7 +278,7 @@
             {{ course.description }}
           </p>
         </div>
-        <div *ngIf="course.courseCertificates.length != 0 || this.isOwner">
+        <div *ngIf="course.courseCertificates.length != 0 || this.isOwner || hasAddCourseCertificatesPermission">
           <div class="teacher-tags tag-box hover-tags">
             <div class="teacher-tags tag-box mt-0 hover-tags">
               <div class="teacher-content font_14 d-inline-block">
@@ -302,13 +302,13 @@
                   data-bs-target="#delete-classCertificate"
                 >
                   <img
-                    *ngIf="isOwner"
+                  *ngIf="isOwner || hasAddCourseCertificatesPermission"
                     lazyLoad="../../../../assets/images/cross-sm-light.svg"
                   /></button
               ></span>
 
               <span
-                *ngIf="isOwner"
+                *ngIf="isOwner || hasAddCourseCertificatesPermission"
                 class="custom-tag"
                 (click)="resetCertificateModal()"
                 data-bs-toggle="modal"

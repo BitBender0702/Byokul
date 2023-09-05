@@ -384,7 +384,9 @@
   "RateClass": "Rate Class",
   "RateCourse": "Rate Course",
   "OfficialDeletedSuccessfully":"Oficial eliminado con éxito",
-  "People":"Gente"
+  "People":"Gente",
+  "ReelUnLikedSuccessfully":"Carrete no deseado con éxito",
+  "ReelLikedSuccessfully":"Carrete que le gustó con éxito"
 
 
 

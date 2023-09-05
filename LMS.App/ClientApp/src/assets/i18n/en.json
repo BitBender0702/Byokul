@@ -559,7 +559,9 @@
   "RateClass": "Rate Class",
   "RateCourse": "Rate Course",
   "OfficialDeletedSuccessfully":"Official Deleted Successfully",
-  "People": "People"
+  "People": "People",
+  "ReelUnLikedSuccessfully":"Reel Unliked Successfully",
+  "ReelLikedSuccessfully":"Reel Liked Successfully"
 
 
 

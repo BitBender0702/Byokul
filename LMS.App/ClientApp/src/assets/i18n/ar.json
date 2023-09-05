@@ -545,7 +545,9 @@
   "RateClass": "فئة المعدل",
   "RateCourse": "دورة معدل",
   "OfficialDeletedSuccessfully": "تم الحذف الرسمي بنجاح",
-  "People": "الناس"
+  "People": "الناس",
+  "ReelUnLikedSuccessfully":"تم إلغاء الإعجاب بالبكرة بنجاح",
+  "ReelLikedSuccessfully":"تم الإعجاب بالكرة بنجاح"
 
 
 

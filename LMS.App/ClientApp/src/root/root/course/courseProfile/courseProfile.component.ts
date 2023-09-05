@@ -623,7 +623,6 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
         this.hasUpdateCoursePermission = true;
       }
       if ((element.typeId == this.course.courseId || element.typeId == PermissionNameConstant.DefaultCourseId) && element.ownerId == this.course.school.createdById && element.permissionType == PermissionTypeEnum.Course && element.permission.name == PermissionNameConstant.IssueCertificate && (element.schoolId == null || element.schoolId == this.course.school.schoolId)) {
-        debugger;
         this.hasIssueCertificatePermission = true;
       }
       if ((element.typeId == this.course.courseId || element.typeId == PermissionNameConstant.DefaultCourseId) && element.ownerId == this.course.school.createdById && element.permissionType == PermissionTypeEnum.Course && element.permission.name == PermissionNameConstant.AddCourseCertificates && (element.schoolId == null || element.schoolId == this.course.school.schoolId)) {

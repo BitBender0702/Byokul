@@ -1,0 +1,13 @@
+.followers-name {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .followers-name img {
+    flex: 0 0 auto;
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+  }
+  
