@@ -1321,7 +1321,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   parentId:string=''
   getReelsById(){
     debugger;
-    this._reelsService.getReelById(this.reels[this.selectedReelIndex].postAttachments[0].id).subscribe((response:any) => {
+    this._reelsService.getReelById(this.reels[this.selectedReelIndex]?.postAttachments[0]?.id).subscribe((response:any) => {
       this.postForComment = response;
       if(response.class != null || response.course != null){
         if(response.class?.classId != null){

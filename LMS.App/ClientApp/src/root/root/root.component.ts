@@ -219,7 +219,7 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
         //   }
         // });
 
-        uploadResponse.postToUpload.append('blobUrlsJson', JSON.stringify(uploadUrls));
+        uploadResponse.postToUpload.append('blobUrlsJson', JSON.stringify(uploadUrls));      
         this._postService.createPost(uploadResponse.postToUpload).subscribe((response:any) => {
           debugger
             var translatedMessage = this.translateService.instant('PostCreatedSuccessfully');

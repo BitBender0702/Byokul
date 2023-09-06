@@ -55,16 +55,21 @@ export class PostService{
     }
 
     pinUnpinPost(attachmentId:any,isPinned:boolean): Observable<any> {
+        this.token = localStorage.getItem("jwt")?? '';
+        this.headers = new HttpHeaders().set("Authorization", "Bearer " + this.token);
         let queryParams = new HttpParams().append("postId",attachmentId).append("isPinned",isPinned);
         return this.http.post(`${this.apiUrl}/posts/pinUnpinPost`,null, {params:queryParams,headers: this.headers});
     }
 
     likeUnlikePost(likeUnlikePost:any):Observable<any>{
+        this.token = localStorage.getItem("jwt")?? '';
+        this.headers = new HttpHeaders().set("Authorization", "Bearer " + this.token);
         return this.http.post(`${this.apiUrl}/posts/likeUnlikePost`, likeUnlikePost,{headers: this.headers});
     }
 
     postView(postView:any):Observable<any>{
-        debugger
+        this.token = localStorage.getItem("jwt")?? '';
+        this.headers = new HttpHeaders().set("Authorization", "Bearer " + this.token);
         return this.http.post(`${this.apiUrl}/posts/postView`, postView,{headers: this.headers});
 
     }
@@ -75,6 +80,8 @@ export class PostService{
     }
 
     getPostById(id:string):Observable<any>{
+        this.token = localStorage.getItem("jwt")?? '';
+        this.headers = new HttpHeaders().set("Authorization", "Bearer " + this.token);
         return this.http.get(`${this.apiUrl}/posts/getPostById` + '?id=' + id,{headers: this.headers});
     }
 
@@ -109,27 +116,37 @@ export class PostService{
     }
 
     pinUnpinSavedPost(attachmentId:any,isPinned:boolean): Observable<any> {
+        this.token = localStorage.getItem("jwt")?? '';
+        this.headers = new HttpHeaders().set("Authorization", "Bearer " + this.token);
         let queryParams = new HttpParams().append("postId",attachmentId).append("isPinned",isPinned);
         return this.http.post(`${this.apiUrl}/posts/pinUnpinSavedPost`,null, {params:queryParams,headers: this.headers});
     }
 
     pinUnpinSharedPost(attachmentId:any,isPinned:boolean): Observable<any> {
+        this.token = localStorage.getItem("jwt")?? '';
+        this.headers = new HttpHeaders().set("Authorization", "Bearer " + this.token);
         let queryParams = new HttpParams().append("attachmentId",attachmentId).append("isPinned",isPinned);
         return this.http.post(`${this.apiUrl}/posts/pinUnpinSharedPost`,null, {params:queryParams,headers: this.headers});
     }
 
     pinUnpinLikedPost(attachmentId:any,isPinned:boolean): Observable<any> {
+        this.token = localStorage.getItem("jwt")?? '';
+        this.headers = new HttpHeaders().set("Authorization", "Bearer " + this.token);
         let queryParams = new HttpParams().append("postId",attachmentId).append("isPinned",isPinned);
         return this.http.post(`${this.apiUrl}/posts/pinUnpinLikedPost`,null, {params:queryParams,headers: this.headers});
     }
 
     pinUnpinSavedClassCourse(id:any,isPinned:boolean,type:number): Observable<any> {
+        this.token = localStorage.getItem("jwt")?? '';
+        this.headers = new HttpHeaders().set("Authorization", "Bearer " + this.token);
         let queryParams = new HttpParams().append("id",id).append("isPinned",isPinned).append("type",type);
         return this.http.post(`${this.apiUrl}/school/pinUnpinSavedClassCourse`,null, {params:queryParams,headers: this.headers});
     }
 
     deletePost(id:string):Observable<any>{
         debugger
+        this.token = localStorage.getItem("jwt")?? '';
+        this.headers = new HttpHeaders().set("Authorization", "Bearer " + this.token);
         return this.http.post(`${this.apiUrl}/posts/deletePost` + '?id=' + id, '',{headers: this.headers});
     }
 
