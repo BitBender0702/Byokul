@@ -22,6 +22,12 @@ import { addTeacherResponse } from './addOfficial/addOfficial.component';
 import { VideoLibraryService } from '../service/videoLibrary.service';
 import { addVideoInLibraryResponse } from './schoolVideoLibrary/schoolVideoLibrary.component';
 import { SchoolService } from '../service/school.service';
+// import { userPermission } from './class/classProfile/classProfile.component';
+
+
+
+
+export const userPermission = new Subject<{userPermissions:any}>();
 
 export const deleteReelResponse = new Subject();  
 export const paymentConfirmDialoge = new Subject<{response:any}>();  
@@ -38,6 +44,8 @@ export const postUploadOnBlob = new Subject<{
   videoThumbnails?:any,
   schoolId?:string
 }>();
+
+// export const userPermissions = new Subject();
 
 
 export const reelUploadOnBlob = new Subject<{
@@ -139,6 +147,7 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
           debugger 
           var userPermissions = JSON.parse(localStorage.getItem('userPermissions') ?? '');
           localStorage.setItem("userPermissions", JSON.stringify(response));
+          userPermission.next(userPermissions);
         });
          });
     }

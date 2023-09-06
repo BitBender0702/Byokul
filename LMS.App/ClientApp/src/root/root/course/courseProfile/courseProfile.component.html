@@ -134,13 +134,13 @@
                   class="d-flex justify-content-between flex-wrap class_request align-items-center"
                 >
                   <div>
-                    <div class="followers_name d-inline-block font_16 mr-_24">
+                    <div class="followers_name d-inline-flex align-items-center gap-1 font_16 mr-_24">
                       <img
                         lazyLoad="../../../../assets/images/Star-solid-dark.svg"
                       />{{ "Rating" | translate }}:
                       <b class="fw_700">{{ course.rating }}</b>
                     </div>
-                    <div class="followers_name d-inline-block font_16 mr-_24">
+                    <div class="followers_name d-inline-flex align-items-center gap-1 font_16 mr-_24">
                       <img
                         lazyLoad="../../../../assets/images/students-icon.svg"
                       />{{ "Students" | translate }}:
@@ -160,7 +160,7 @@
                         ></b
                       >
                     </div>
-                    <div class="followers_name d-inline-block font_16 mr-_24">
+                    <div class="followers_name d-inline-flex align-items-center gap-1 font_16 mr-_24">
                       <img
                         lazyLoad="../../../../assets/images/Edit-dark.svg"
                       />{{ "Post" | translate }}:
@@ -212,7 +212,7 @@
                   >
                     {{ "Rate" | translate }}
                   </button> -->
-                  
+
                   <button
                     *ngIf="isOwner"
                     class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins"
@@ -223,7 +223,7 @@
                   </button>
 
                   <button
-                    *ngIf="isOwner"
+                    *ngIf="isOwner || hasUpdateCoursePermission"
                     (click)="initializeEditFormControls()"
                     class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins"
                     data-bs-toggle="modal"
@@ -278,7 +278,7 @@
             {{ course.description }}
           </p>
         </div>
-        <div *ngIf="course.courseCertificates.length != 0 || this.isOwner">
+        <div *ngIf="course.courseCertificates.length != 0 || this.isOwner || hasAddCourseCertificatesPermission">
           <div class="teacher-tags tag-box hover-tags">
             <div class="teacher-tags tag-box mt-0 hover-tags">
               <div class="teacher-content font_14 d-inline-block">
@@ -302,13 +302,13 @@
                   data-bs-target="#delete-classCertificate"
                 >
                   <img
-                    *ngIf="isOwner"
+                  *ngIf="isOwner || hasAddCourseCertificatesPermission"
                     lazyLoad="../../../../assets/images/cross-sm-light.svg"
                   /></button
               ></span>
 
               <span
-                *ngIf="isOwner"
+                *ngIf="isOwner || hasAddCourseCertificatesPermission"
                 class="custom-tag"
                 (click)="resetCertificateModal()"
                 data-bs-toggle="modal"
@@ -500,7 +500,7 @@
                     [singleSlideOffset]="singleSlideOffset"
                     [interval]="0"
                     [noWrap]="noWrap"
-                    (touchstart)="touchStart($event)" 
+                    (touchstart)="touchStart($event)"
                     (touchend)="touchEnd($event)"
                   >
                     <div *ngFor="let post of course.reels">
@@ -2959,7 +2959,7 @@
             </div>
 
           </h2>
-          
+
         </div>
         <div
           class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-2 mt-4"

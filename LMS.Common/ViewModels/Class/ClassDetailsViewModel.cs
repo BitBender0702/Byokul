@@ -49,5 +49,6 @@ namespace LMS.Common.ViewModels.Class
         public bool IsClassAccessable { get; set; }
         public bool IsRatedByUser { get; set; }
         public bool IsBannedFromClassCourse { get; set; }
+        //public bool IsFileStorageAccessible { get; set; }
     }
 }

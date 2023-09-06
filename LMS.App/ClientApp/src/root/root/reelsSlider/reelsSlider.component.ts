@@ -58,7 +58,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   commentResponseSubscription!: Subscription;
   isFinishDownReels: boolean = false;
   isFinishUpReels: boolean = false;
-  @ViewChild('videoPlayer') videoPlayer!: ElementRef;
+  @ViewChild('videoComp') videoComp: any;
   @ViewChild(SlickCarouselComponent, { static: false }) carousel!: SlickCarouselComponent;
   @ViewChild('slickCarousel') slickCarousel!: ElementRef;
 
@@ -121,6 +121,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
     // this.post = history.state.post;
     this.InitializePostView();
     this.getSenderInfo();
+    this.checkScreenSize();
     this.loadingIcon = true;
     this.ownerId = this.route.snapshot.paramMap.get('id') ?? '';
     this.from = this.route.snapshot.paramMap.get('from') ?? '';
@@ -235,7 +236,6 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       // })
     });
    }
-
   }
 
   ngOnDestroy(): void {
@@ -283,7 +283,6 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   }
 
   getReelsBySchool(schoolId: string) {
-    
     this._schoolService.GetSliderReelsBySchoolId(schoolId, this.reelId, 3).subscribe((response) => {
       this.reels = response;
       this.selectedReel = this.reels[0];
@@ -295,11 +294,10 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
         const postAttachments = reel.postAttachments;
         this.videos.push(...postAttachments);
       });
-
       var index = this.videos.findIndex((x: { id: string; }) => x.id == this.reelId);
       this.selectedReelIndex = index;
       this.carouselConfig.initialSlide = this.selectedReelIndex;
-      this.getReelsById();
+      this.getReelsById(this.reels, this.selectedReelIndex);
       // this.reels.find(x => x.);
       this.initializeReelsSlider();
       setTimeout(() => {
@@ -336,7 +334,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       var index = this.videos.findIndex((x: { id: string; }) => x.id == this.reelId);
       this.selectedReelIndex = index;
       this.carouselConfig.initialSlide = this.selectedReelIndex;
-      this.getReelsById();
+      this.getReelsById(this.reels, this.selectedReelIndex);
       // this.reels.find(x => x.);
       this.initializeReelsSlider();
       setTimeout(() => {
@@ -352,11 +350,6 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
           }
         }
       }, 1000);
-
-
-
-
-
     });
   }
 
@@ -376,7 +369,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       var index = this.videos.findIndex((x: { id: string; }) => x.id == this.reelId);
       this.selectedReelIndex = index;
       this.carouselConfig.initialSlide = this.selectedReelIndex;
-      this.getReelsById();
+      this.getReelsById(this.reels, this.selectedReelIndex);
       // this.reels.find(x => x.);
       this.initializeReelsSlider();
       setTimeout(() => {
@@ -418,7 +411,8 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       var index = this.videos.findIndex((x: { id: string; }) => x.id == this.reelId);
       this.selectedReelIndex = index;
       this.carouselConfig.initialSlide = this.selectedReelIndex;
-      this.getReelsById();
+      debugger
+      this.getReelsById(this.reels, this.selectedReelIndex);
       // this.reels.find(x => x.);
       this.initializeReelsSlider();
       setTimeout(() => {
@@ -453,7 +447,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       var index = this.videos.findIndex((x: { id: string; }) => x.id == this.reelId);
       this.selectedReelIndex = index;
       this.carouselConfig.initialSlide = this.selectedReelIndex;
-      this.getReelsById();
+      this.getReelsById(this.reels, this.selectedReelIndex);
       // this.reels.find(x => x.);
       this.initializeReelsSlider();
       setTimeout(() => {
@@ -711,7 +705,6 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
         // this.isReelLoad = true;
         this.cd.detectChanges();
         // this.reels = this.reels.concat(response);
-
       });
     }
 
@@ -932,22 +925,28 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   // for like
 
   likeUnlikePosts(postId: string, isLike: boolean, postType: number, post: any) {
-    
+    debugger;
     this.currentLikedPostId = postId;
     var likes: any[] = post.likes;
-    var isLiked = likes.filter(x => x.userId == this.userId && x.postId == postId);
-    if (isLiked.length != 0) {
+    var isLiked = likes?.filter(x => x.userId == this.userId && x.postId == postId);
+    if (isLiked?.length != 0) {
       //this.isLiked = false;
-      this.likesLength = post.likes.length - 1;
+      this.likesLength = post.likes?.length - 1;
       post.isPostLikedByCurrentUser = false;
+      const translatedMessage = this.translateService.instant('ReelUnLikedSuccessfully');
+      const translatedSummary = this.translateService.instant('Success');
+      this.messageService.add({ severity: 'success', summary: translatedSummary, life: 3000, detail: translatedMessage });
     }
     else {
       //this.isLiked = true;
-      this.likesLength = post.likes.length + 1;
+      this.likesLength = post.likes?.length + 1;
       post.isPostLikedByCurrentUser = true;
       var notificationContent = `liked your post(${post.title})`;
       this._notificationService.initializeNotificationViewModel(post.createdBy, NotificationType.Likes, notificationContent, this.userId, postId, postType, post, null).subscribe((_response) => {
       });
+      const translatedMessage = this.translateService.instant('ReelLikedSuccessfully');
+      const translatedSummary = this.translateService.instant('Success');
+      this.messageService.add({ severity: 'success', summary: translatedSummary, life: 3000, detail: translatedMessage });
     }
 
     this.likeUnlikePost.postId = postId;
@@ -1085,6 +1084,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   }
 
   private checkScreenSize() {
+    debugger;
     const screenWidth = window.innerWidth;
     if (screenWidth >= 992) {
       this.isMobileView = false;
@@ -1109,7 +1109,10 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   //   }
 
   sendToGroup(reel: any) {
-    
+    let message = this.messageToGroup;
+    if(!message || message.trim().length == 0){
+      return;
+    }
     var comment: any[] = reel.comments;
     this.InitializeCommentViewModel();
     this.commentViewModel.userId = this.sender.id;
@@ -1155,7 +1158,6 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
 
   getVolume:any;
   afterChange(event: any) {
-    
     const currentItem = this.reels[event.currentSlide];
     this.addPostView(currentItem.id, currentItem);
     const currentSlideIndex = event.currentSlide;
@@ -1269,10 +1271,8 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   }
 
   getDeletedPostId(id:string){
-    debugger
     this.loadingIcon = true;
     this._postService.deletePost(id).subscribe((_response) => {
-      // this.close();
       var deletedPost = this.reels.find((x: { id: string; }) => x.id == id);
       const index = this.reels.indexOf(deletedPost);
       if (index > -1) {
@@ -1280,6 +1280,14 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       }
       this.loadingIcon = false;
       deleteReelResponse.next({});
+      if(this.index == this.reels.length){
+        debugger
+        let newUrl = `/user/reelsView/${this.ownerId}/${this.from}/${this.reels[this.index - 1].postAttachments[0].id}/${this.reels[this.index - 1].id}`
+        history.replaceState({}, '', newUrl);
+        return;
+      }
+      let newUrl = `/user/reelsView/${this.ownerId}/${this.from}/${this.reels[this.index + 1].postAttachments[0].id}/${this.reels[this.index + 1].id}`
+      history.replaceState({}, '', newUrl)
     });
   }
 
@@ -1302,7 +1310,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
 
   fromForComment:any;
   postForComment: any;
-  isBanned:any;
+  isBanned:boolean=false;
   isUserBanned(){
     debugger;
     this._studentService.isStudentBannedFromClassCourse(this.ownerId, this.fromForComment, this.parentId).subscribe((response:any)=>{
@@ -1319,9 +1327,9 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
 
 
   parentId:string=''
-  getReelsById(){
+  getReelsById(reels:any, index:any){
     debugger;
-    this._reelsService.getReelById(this.reels[this.selectedReelIndex]?.postAttachments[0]?.id).subscribe((response:any) => {
+    this._reelsService.getReelById(reels[index]?.postAttachments[0]?.id).subscribe((response:any) => {
       this.postForComment = response;
       if(response.class != null || response.course != null){
         if(response.class?.classId != null){
@@ -1337,6 +1345,85 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       
     })
   }
+
+  deleteId:any;
+  index:any;
+  getDeleteId(deleteId:any, index?:any){
+    this.deleteId = deleteId;
+    this.index = index;
+  }
+
+  // playPause(e: any) {
+  //   debugger;
+  //   if (e.target.nodeName === 'VIDEO') {
+  //     if (!this.videoComp.player.paused()) {
+  //       this.videoComp.player.pause();
+  //     } else {
+  //       this.videoComp.player.play();
+  //     }
+  //   }
+  // }
+
+  touchStartX: number = 0;
+  touchEndX: number = 0;
+  swipeThreshold = 50;
+  isSwiping = false;
+  lastTap = 0;
+  doubleTapDelay = 500;
+
+  onTouchStart(event:any, index?:number, video?:any){
+    if(this.isMobileView){
+      this.touchStartX = event.touches[0].clientX;
+      this.isSwiping = false;
+    }
+  }
+
+  onTouchEnd(event: TouchEvent, index?:number, video?:any) {
+    if(this.isMobileView){
+      this.touchEndX = event.changedTouches[0].clientX;
+      const deltaX = this.touchEndX - this.touchStartX;
+
+      if (Math.abs(deltaX) > this.swipeThreshold) {
+        this.isSwiping = true;
+      } else {
+        const currentTime = new Date().getTime();
+        const tapDelay = currentTime - this.lastTap;
+
+        if (tapDelay < this.doubleTapDelay) {
+          this.likeVideo(index, video);
+        } else {
+          this.togglePlayPause(index);
+        }
+
+        this.lastTap = currentTime;
+      }
+    }
+  }
+
+  togglePlayPause(index?: number, video?:any) {
+    let videoJsElement = document.getElementById(`video-${index}`);
+    if (videoJsElement) {
+      const firstElement = videoJsElement.children[0];
+      if (firstElement) {
+        const videoElement = firstElement.children[0] as HTMLVideoElement;
+        if (videoElement) {
+          if (videoElement.paused) {
+            videoElement.play();
+          } else {
+            videoElement.pause();
+          }
+        }
+      }
+    }
+  }
+  
+
+  likeVideo(index?:number, video?:any){
+    this.likeUnlikePosts(video.id, true, video.postType, video);
+    this.togglePlayPause(index);
+    console.log('hy')
+  }
+
 
 }
 

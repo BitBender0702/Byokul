@@ -440,7 +440,6 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
       this.streamCountDown = `${prefix}${Math.floor(seconds / 60)}:${textSec}`;
 
       if (seconds == 0) {
-        console.log("finished");
         clearInterval(timer);
       }
     }, 1000);
@@ -957,7 +956,6 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
         // const currentTime = this.videoPlayer.currentTime;
         if (roundedTime % 5 === 0) {
           let isLogged = false;
-          console.log('after 5', currentTime);
           this._postService.saveLiveVideoTime(this.post.id, this.videoTotalTime, currentTime).subscribe((result) => {
           });
           isLogged = true;

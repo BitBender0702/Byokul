@@ -25,24 +25,31 @@ export class VideoJsComponent implements OnInit {
   constructor(private cd: ChangeDetectorRef,) { }
 
   ngOnInit(): void {
-    this.onWindowResize();
+    //this.onWindowResize();
     this.cd.detectChanges();
     if (this.isReelView) {
-      if(this.isScreenMobile){
+     // if(this.isScreenMobile){
         this.player = videojs(this.disVideo.nativeElement, {
           loop: true,
           controlBar: {
-            fullscreenToggle: false
+            fullscreenToggle: false,
+            pictureInPictureToggle: false
           },
           userActions:{
-            doubleClick: false
+            doubleClick: false,
           }
         });
-      } else{
-        this.player = videojs(this.disVideo.nativeElement, {
-          loop: true
-        });
-      }
+      // } else{
+      //   this.player = videojs(this.disVideo.nativeElement, {
+      //     loop: true,
+      //     controlBar: {
+      //       fullscreenToggle: false
+      //     },
+      //     userActions:{
+      //       doubleClick: false,
+      //     }
+      //   });
+     // }
     }
     else {
       this.player = videojs(this.disVideo.nativeElement);
@@ -58,32 +65,30 @@ export class VideoJsComponent implements OnInit {
   //     videojs("displayVideo"); 
   //   }
 
-  @HostListener('window:resize')
-  onWindowResize() {
-    this.checkScreenSize();
-  }
+  // @HostListener('window:resize')
+  // onWindowResize() {
+  //   this.checkScreenSize();
+  // }
 
   // isScreenPc!: boolean;
   // isScreenTablet!: boolean;
-  isScreenMobile!: boolean;
+ // isScreenMobile!: boolean;
 
-  private checkScreenSize() {
-    const screenWidth = window.innerWidth;
-    // this.isScreenPc = screenWidth >= 992;
-    // this.isScreenTablet = screenWidth >= 768 && screenWidth < 992;
-    this.isScreenMobile = screenWidth < 768
-    // if(this.isScreenMobile){
-    //   this.player = videojs(this.disVideo.nativeElement, {
-    //     autoplay: 'muted',
-    //     loop: true,
-    //     controlBar: {
-    //       fullscreenToggle: false
-    //     }
-    //   });
-    // }
-  }
-
-
+  // private checkScreenSize() {
+  //   const screenWidth = window.innerWidth;
+  //   // this.isScreenPc = screenWidth >= 992;
+  //   // this.isScreenTablet = screenWidth >= 768 && screenWidth < 992;
+  //   this.isScreenMobile = screenWidth < 768
+  //   // if(this.isScreenMobile){
+  //   //   this.player = videojs(this.disVideo.nativeElement, {
+  //   //     autoplay: 'muted',
+  //   //     loop: true,
+  //   //     controlBar: {
+  //   //       fullscreenToggle: false
+  //   //     }
+  //   //   });
+  //   // }
+  // }
 
 
 

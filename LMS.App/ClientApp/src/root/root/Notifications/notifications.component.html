@@ -36,8 +36,9 @@
             </div>
           </div>
 
+          <!-- class="create-post-header d-flex justify-content-between align-items-center" -->
           <div
-            class="create-post-header d-flex justify-content-between align-items-center"
+            class="create-post-header d-flex justify-content-center justify-content-lg-between align-items-center"
           >
             <button
               (click)="back()"
@@ -87,23 +88,23 @@
                     <img
                       *ngIf="item.avatar != null"
                       [src]="item.avatar"
-                      class="rounded-circle me-2"
-                      style="width: 38px; height: 38px"
-                    />
+                      class="rounded-circle"
+                      />
+                      <!-- style="width: 38px; height: 38px" -->
                     <img
                       *ngIf="item.avatar == null && gender == '1'"
                       src="../../../assets/images/maleProfile.jfif"
-                      class="rounded-circle me-2"
-                      style="width: 38px; height: 38px"
-                    />
+                      class="rounded-circle"
+                      />
+                      <!-- style="width: 38px; height: 38px" -->
                     <img
                       *ngIf="
                         item.avatar == null && (gender == '2' || gender == '3')
                       "
                       src="../../../assets/images/femaleProfile.jfif"
-                      class="rounded-circle me-2"
-                      style="width: 38px; height: 38px"
-                    />
+                      class="rounded-circle"
+                      />
+                      <!-- style="width: 38px; height: 38px" -->
                     <p class="font_16 ms-md-2 d-inline-block fw_400 mb-0">
                       {{ item.notificationContent }}
                     </p>
@@ -121,23 +122,23 @@
                     <img
                       *ngIf="item.avatar != null"
                       [src]="item.avatar"
-                      class="rounded-circle me-2"
-                      style="width: 38px; height: 38px"
-                    />
+                      class="rounded-circle"
+                      />
+                      <!-- style="width: 38px; height: 38px" -->
                     <img
                       *ngIf="item.avatar == null && gender == '1'"
                       src="../../../assets/images/maleProfile.jfif"
-                      class="rounded-circle me-2"
-                      style="width: 38px; height: 38px"
-                    />
+                      class="rounded-circle"
+                      />
+                      <!-- style="width: 38px; height: 38px" -->
                     <img
                       *ngIf="
                         item.avatar == null && (gender == '2' || gender == '3')
                       "
                       src="../../../assets/images/femaleProfile.jfif"
-                      class="rounded-circle me-2"
-                      style="width: 38px; height: 38px"
-                    />
+                      class="rounded-circle"
+                      />
+                      <!-- style="width: 38px; height: 38px" -->
                     <p class="font_16 ms-md-2 d-inline-block fw_400 mb-0">
                       {{ item.notificationContent }}
                     </p>
@@ -154,23 +155,23 @@
                     <img
                       *ngIf="item.avatar != null"
                       [src]="item.avatar"
-                      class="rounded-circle me-2"
-                      style="width: 38px; height: 38px"
-                    />
+                      class="rounded-circle"
+                      />
+                      <!-- style="width: 38px; height: 38px" -->
                     <img
                       *ngIf="item.avatar == null && gender == '1'"
                       src="../../../assets/images/maleProfile.jfif"
-                      class="rounded-circle me-2"
-                      style="width: 38px; height: 38px"
-                    />
+                      class="rounded-circle"
+                      />
+                      <!-- style="width: 38px; height: 38px" -->
                     <img
                       *ngIf="
                         item.avatar == null && (gender == '2' || gender == '3')
                       "
                       src="../../../assets/images/femaleProfile.jfif"
-                      class="rounded-circle me-2"
-                      style="width: 38px; height: 38px"
-                    />
+                      class="rounded-circle"
+                      />
+                      <!-- style="width: 38px; height: 38px" -->
                     <p class="font_16 ms-md-2 d-inline-block fw_400 mb-0">
                       {{ item.notificationContent }}
                     </p>
@@ -187,23 +188,23 @@
                     <img
                       *ngIf="item.avatar != null"
                       [src]="item.avatar"
-                      class="rounded-circle me-2"
-                      style="width: 38px; height: 38px"
-                    />
+                      class="rounded-circle"
+                      />
+                      <!-- style="width: 38px; height: 38px" -->
                     <img
                       *ngIf="item.avatar == null && gender == '1'"
                       src="../../../assets/images/maleProfile.jfif"
-                      class="rounded-circle me-2"
-                      style="width: 38px; height: 38px"
-                    />
+                      class="rounded-circle"
+                      />
+                      <!-- style="width: 38px; height: 38px" -->
                     <img
                       *ngIf="
                         item.avatar == null && (gender == '2' || gender == '3')
                       "
                       src="../../../assets/images/femaleProfile.jfif"
-                      class="rounded-circle me-2"
-                      style="width: 38px; height: 38px"
-                    />
+                      class="rounded-circle"
+                      />
+                      <!-- style="width: 38px; height: 38px" -->
                     <p class="font_16 ms-md-2 d-inline-block fw_400 mb-0">
                       {{ item.notificationContent }}
                     </p>
@@ -220,22 +221,20 @@
                     <img
                       *ngIf="item.avatar != null"
                       [src]="item.avatar"
-                      class="rounded-circle me-2"
-                      style="width: 38px; height: 38px"
-                    />
+                      class="rounded-circle"
+                      />
+                      <!-- style="width: 38px; height: 38px" -->
                     <img
                       *ngIf="item.avatar == null && gender == '1'"
                       src="../../../assets/images/maleProfile.jfif"
-                      class="rounded-circle me-2"
-                      style="width: 38px; height: 38px"
+                      class="rounded-circle"
                     />
                     <img
                       *ngIf="
                         item.avatar == null && (gender == '2' || gender == '3')
                       "
                       src="../../../assets/images/femaleProfile.jfif"
-                      class="rounded-circle me-2"
-                      style="width: 38px; height: 38px"
+                      class="rounded-circle"
                     />
                     <p class="font_16 ms-md-2 d-inline-block fw_400 mb-0">
                       {{ item.notificationContent }}
@@ -253,22 +252,19 @@
                     <img
                       *ngIf="item.avatar != null"
                       [src]="item.avatar"
-                      class="rounded-circle me-2"
-                      style="width: 38px; height: 38px"
+                      class="rounded-circle"
                     />
                     <img
                       *ngIf="item.avatar == null && gender == '1'"
                       src="../../../assets/images/maleProfile.jfif"
-                      class="rounded-circle me-2"
-                      style="width: 38px; height: 38px"
+                      class="rounded-circle"
                     />
                     <img
                       *ngIf="
                         item.avatar == null && (gender == '2' || gender == '3')
                       "
                       src="../../../assets/images/femaleProfile.jfif"
-                      class="rounded-circle me-2"
-                      style="width: 38px; height: 38px"
+                      class="rounded-circle"
                     />
                     <p class="font_16 ms-md-2 d-inline-block fw_400 mb-0">
                       {{ item.notificationContent }}
@@ -288,22 +284,19 @@
                     <img
                       *ngIf="item.avatar != null"
                       [src]="item.avatar"
-                      class="rounded-circle me-2"
-                      style="width: 38px; height: 38px"
+                      class="rounded-circle"
                     />
                     <img
                       *ngIf="item.avatar == null && gender == '1'"
                       src="../../../assets/images/maleProfile.jfif"
-                      class="rounded-circle me-2"
-                      style="width: 38px; height: 38px"
+                      class="rounded-circle"
                     />
                     <img
                       *ngIf="
                         item.avatar == null && (gender == '2' || gender == '3')
                       "
                       src="../../../assets/images/femaleProfile.jfif"
-                      class="rounded-circle me-2"
-                      style="width: 38px; height: 38px"
+                      class="rounded-circle"
                     />
                     <p class="font_16 ms-md-2 d-inline-block fw_400 mb-0">
                       {{ item.notificationContent }}
@@ -323,22 +316,19 @@
                     <img
                       *ngIf="item.avatar != null"
                       [src]="item.avatar"
-                      class="rounded-circle me-2"
-                      style="width: 38px; height: 38px"
+                      class="rounded-circle"
                     />
                     <img
                       *ngIf="item.avatar == null && gender == '1'"
                       src="../../../assets/images/maleProfile.jfif"
-                      class="rounded-circle me-2"
-                      style="width: 38px; height: 38px"
+                      class="rounded-circle"
                     />
                     <img
                       *ngIf="
                         item.avatar == null && (gender == '2' || gender == '3')
                       "
                       src="../../../assets/images/femaleProfile.jfif"
-                      class="rounded-circle me-2"
-                      style="width: 38px; height: 38px"
+                      class="rounded-circle"
                     />
                     <p class="font_16 ms-md-2 d-inline-block fw_400 mb-0">
                       {{ item.notificationContent }}
@@ -368,8 +358,7 @@
                     <img
                       *ngIf="item.avatar != null && item.avatar != 'null'"
                       [src]="item.avatar"
-                      class="rounded-circle me-2"
-                      style="width: 38px; height: 38px"
+                      class="rounded-circle"
                     />
                     <img
                       *ngIf="
@@ -377,8 +366,7 @@
                         gender == '1'
                       "
                       src="../../../assets/images/maleProfile.jfif"
-                      class="rounded-circle me-2"
-                      style="width: 38px; height: 38px"
+                      class="rounded-circle"
                     />
                     <img
                       *ngIf="
@@ -386,8 +374,7 @@
                         (gender == '2' || gender == '3')
                       "
                       src="../../../assets/images/femaleProfile.jfif"
-                      class="rounded-circle me-2"
-                      style="width: 38px; height: 38px"
+                      class="rounded-circle"
                     />
                     <p class="font_16 ms-md-2 d-inline-block fw_400 mb-0">
                       {{ item.notificationContent }}
@@ -404,22 +391,19 @@
                     <img
                       *ngIf="item.avatar != null"
                       [src]="item.avatar"
-                      class="rounded-circle me-2"
-                      style="width: 38px; height: 38px"
+                      class="rounded-circle"
                     />
                     <img
                       *ngIf="item.avatar == null && gender == '1'"
                       src="../../../assets/images/maleProfile.jfif"
-                      class="rounded-circle me-2"
-                      style="width: 38px; height: 38px"
+                      class="rounded-circle"
                     />
                     <img
                       *ngIf="
                         item.avatar == null && (gender == '2' || gender == '3')
                       "
                       src="../../../assets/images/femaleProfile.jfif"
-                      class="rounded-circle me-2"
-                      style="width: 38px; height: 38px"
+                      class="rounded-circle"
                     />
                     <p class="font_16 ms-md-2 d-inline-block fw_400 mb-0">
                       {{ item.notificationContent }}
@@ -437,22 +421,22 @@
                   <img
                     *ngIf="item.avatar != null"
                     [src]="item.avatar"
-                    class="rounded-circle me-2"
-                    style="width: 38px; height: 38px"
+                    class="rounded-circle"
+                    
                   />
                   <img
                     *ngIf="item.avatar == null && gender == '1'"
                     src="../../../assets/images/maleProfile.jfif"
-                    class="rounded-circle me-2"
-                    style="width: 38px; height: 38px"
+                    class="rounded-circle"
+                    
                   />
                   <img
                     *ngIf="
                       item.avatar == null && (gender == '2' || gender == '3')
                     "
                     src="../../../assets/images/femaleProfile.jfif"
-                    class="rounded-circle me-2"
-                    style="width: 38px; height: 38px"
+                    class="rounded-circle"
+                    
                   />
                   <p class="font_16 ms-md-2 d-inline-block fw_400 mb-0">
                     {{ item.notificationContent }}

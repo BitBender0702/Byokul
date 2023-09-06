@@ -13,6 +13,6 @@ export class PermissionNameConstant {
   public static IssueCertificate = "IssueCertificate";
   public static AddClassCertificates = "AddClassCertificates";
   public static UpdateCourse = "UpdateCourse";
-  public static AddCourseCertificates = "AddLanguages";
+  public static AddCourseCertificates = "AddCourseCertificates";
 
   }

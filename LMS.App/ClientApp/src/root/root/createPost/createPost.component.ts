@@ -53,7 +53,6 @@ export const createLive = new Subject<{
   uploadVideoUrlList: any;
 }>();
 
-
 @Component({
   selector: 'create-post',
   templateUrl: 'createPost.component.html',
@@ -167,6 +166,9 @@ export class CreatePostComponent implements OnInit, OnDestroy {
   isCreatePost:boolean = true;
   isCreateReel:boolean = false;
 
+
+  
+
   @Output() onClose: EventEmitter<any> = new EventEmitter<any>();
 
 
@@ -186,7 +188,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     var initialValue = this.options.initialState;
     this.selectedVideoFromLibrary  = initialValue?.selectedVideoFromLibrary;
 
-    
     if (this.editPostId != undefined) {
       this._postService.getPostById(this.editPostId).subscribe((response) => {
         debugger
@@ -465,7 +466,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
   }
 
   currectTagLists:any;
-  tagsFromEdit:boolean = false;
   initializeEditPostForm() {
     this.createPostForm = this.fb.group({
       title: this.fb.control(this.editPostDetails.title, [Validators.required]),
@@ -475,7 +475,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     this.createPostForm.updateValueAndValidity();
 
     //this.tagLists = this.editPostDetails.postTags;
-    debugger
 
     this.tagLists = this.editPostDetails.postTags.map((tagObj: { postTagValue: any; }) => tagObj.postTagValue);
 
@@ -483,11 +482,18 @@ export class CreatePostComponent implements OnInit, OnDestroy {
       this.currectTagLists = [...this.tagLists]
       try {
         this.currectTagLists = this.parseTheTags(this.currectTagLists)
-        this.tagsFromEdit = true;
         this.tagLists = this.currectTagLists
       } catch { }
     // }
 
+    // this.editPostDetails.postAttachments
+    // .filter((attachment: { fileType: number; }) => attachment.fileType === 3)
+    // .forEach((attachment: { fileUrl: any; fileName: any; }) => {
+    //   let attachmentForEdit = attachment
+
+    //   this.attachment.push(attachmentForEdit);
+    // })
+    
 
     this.editPostDetails.postAttachments
       .filter((attachment: { fileType: number; }) => attachment.fileType === 1)
@@ -547,9 +553,10 @@ export class CreatePostComponent implements OnInit, OnDestroy {
         // this.attachment.push(imageObject);
       });
 
-    //   this.uploadImage = this.editPostDetails.postAttachments
-    // .filter((attachment: { fileType: number; }) => attachment.fileType === 1)
-    // .map((attachment: { fileUrl: any; }) => attachment.fileUrl);
+      this.uploadImage = this.editPostDetails.postAttachments
+    .filter((attachment: { fileType: number; }) => attachment.fileType === 1)
+    .map((attachment: { fileUrl: any; }) => attachment.fileUrl);
+
 
 
 
@@ -786,25 +793,24 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     const initialAttachmentIndex = this.initialAttachment.findIndex((item) => item.fileName === attachment.fileName);
     if (initialAttachmentIndex > -1) {
       this.initialAttachment.splice(initialAttachmentIndex, 1);
+    }
 
-      const fileAttachmentIndex = this.uploadFromFileStorage.findIndex((item) => item.fileName === attachment.fileName);
-      if (fileAttachmentIndex > -1) {
-        this.uploadFromFileStorage.splice(fileAttachmentIndex, 1);
-      }
+    const fileAttachmentIndex = this.uploadFromFileStorage.findIndex((item) => item.fileName === attachment.fileName);
+    if (fileAttachmentIndex > -1) {
+      this.uploadFromFileStorage.splice(fileAttachmentIndex, 1);
+    }
 
-      const fileAttachmentUrlIndex = this.attachmentUrls.findIndex((item) => item.fileName === attachment.fileName);
-      if (fileAttachmentUrlIndex > -1) {
-        this.attachmentUrls.splice(fileAttachmentUrlIndex, 1);
-      }
-      this.cd.detectChanges();
+    const fileAttachmentUrlIndex = this.attachmentUrls.findIndex((item) => item.fileName === attachment.fileName);
+    if (fileAttachmentUrlIndex > -1) {
+      this.attachmentUrls.splice(fileAttachmentUrlIndex, 1);
+    }
+    this.cd.detectChanges();
 
       //const input = this.autocomplete.nativeElement;
 
       //const input = this.autoComplete.inputEL.nativeElement;
 
       // this.autocomplete.inputEL.nativeElement.blur();
-
-    }
 
 
     // const unselectedFile = event.value;
@@ -864,12 +870,14 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     this.postToUpload.set('uploadVideos', '');
     this.uploadReel = null;
     this.isVideoDurationExceed = false;
-
     const blobUrlIndex = this.uploadVideoUrlList.findIndex((item: any) => item.blobName === uploadReel.name);
     if (blobUrlIndex > -1) {
       this.uploadVideoUrlList.splice(blobUrlIndex, 1);
     }
-
+    if(this.uploadVideoUrlList.length == 0){
+      this.createReelForm.get('reelsVideo')?.setValue('');
+    }
+    
   }
 
   uploadPromises!: any[];
@@ -1540,7 +1548,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
 
   uploadVideoUrlList: any[] = [];
 
-
   public async uploadVideosOnBlob(file: File, fileType: number) {
     debugger
 
@@ -1660,7 +1667,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     this.currectTagLists = [...this.tagLists]
     try {
       this.currectTagLists = this.parseTheTags(this.currectTagLists)
-      this.tagsFromEdit = true;
       this.tagLists = this.currectTagLists
     } 
     catch { }

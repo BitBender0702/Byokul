@@ -52,6 +52,8 @@ import { Turkish } from 'flatpickr/dist/l10n/tr';
 import { CurrencyEnum } from 'src/root/Enums/CurrencyEnum';
 import { enumToObjects } from 'src/root/Enums/getEnum';
 import { ClassCourseRating } from 'src/root/interfaces/course/addCourseRating';
+import { userPermission } from '../../root.component';
+import { deleteModalPostResponse } from '../../delete-confirmation/delete-confirmation.component';
 
 
 @Component({
@@ -68,6 +70,8 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
   private _notificationService;
   private _signalrService;
   private _authService;
+
+  userPermissionSubscription!:Subscription;
   
   course: any;
   isProfileGrid: boolean = true;
@@ -182,8 +186,9 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
 
 
   courseRatingView!:ClassCourseRating;
+  isAllowedForFileStorage:boolean = false;
 
-
+  deleteModalPostSubscription!: Subscription;
 
   isDataLoaded: boolean = false;
   constructor(injector: Injector, private translateService: TranslateService,private signalrService:SignalrService,private datePipe: DatePipe, private titleService: Title, private meta: Meta, authService: AuthService, notificationService: NotificationService, public messageService: MessageService, postService: PostService, private bsModalService: BsModalService, courseService: CourseService, private route: ActivatedRoute, private domSanitizer: DomSanitizer, private fb: FormBuilder, private router: Router, private http: HttpClient, private activatedRoute: ActivatedRoute, private cd: ChangeDetectorRef) {
@@ -246,6 +251,8 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       this.isRatedByUser = response.isRatedByUser;
       this.isBanned = response.isBannedFromClassCourse;
 
+      this.isAllowedForFileStorage = response.isFileStorageAccessible;
+      this.permissionForFileStorage(response.teachers);
     });
 
     this.editCourseForm = this.fb.group({
@@ -448,6 +455,22 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       rating:0
     }
 
+
+    if(!this.userPermissionSubscription){
+      this.userPermissionSubscription = userPermission.subscribe(data=>{
+        debugger;
+        window.location.reload();
+      })
+    }
+
+       
+    if(!this.deleteModalPostSubscription){
+      this.deleteModalPostSubscription = deleteModalPostResponse.subscribe(response => {
+        this.ngOnInit();
+      })
+    }
+
+
   }
 
   addEventListnerOnCarousel() {
@@ -494,6 +517,11 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     if (this.paymentStatusSubscription) {
       this.paymentStatusSubscription.unsubscribe();
     }
+
+    if (this.userPermissionSubscription) {
+      this.userPermissionSubscription.unsubscribe();
+    }
+
     if (this.savedPostSubscription) {
       this.savedPostSubscription.unsubscribe();
     }
@@ -517,6 +545,9 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     }
     if (this.generateCertificateSubscription) {
       this.generateCertificateSubscription.unsubscribe();
+    }
+    if (this.deleteModalPostSubscription) {
+      this.deleteModalPostSubscription.unsubscribe();
     }
   }
 
@@ -583,7 +614,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
 
     this.userPermissions = JSON.parse(localStorage.getItem('userPermissions') ?? '');
     var userPermissions: any[] = this.userPermissions;
-
+    debugger;
     userPermissions.forEach(element => {
       if ((element.typeId == this.course.courseId || element.typeId == PermissionNameConstant.DefaultCourseId) && element.ownerId == this.course.school.createdById && element.permissionType == PermissionTypeEnum.Course && element.permission.name == PermissionNameConstant.Post && (element.schoolId == null || element.schoolId == this.course.school.schoolId)) {
         this.hasPostPermission = true;
@@ -752,7 +783,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     this._courseService.saveCourseTeachers(this.courseTeacher).subscribe((response: any) => {
       this.closeTeachersModal();
       this.isSubmitted = false;
-      this.messageService.add({ severity: 'success', summary: 'Success', life: 3000, detail: 'Teacher added successfully' });
+      this.messageService.add({ severity: 'success', summary: 'Success', life: 3000, detail: 'Official added successfully' });
       this.ngOnInit();
 
     });
@@ -762,7 +793,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     this.loadingIcon = true;
     this.deleteTeacher.courseId = this.course.courseId;
     this._courseService.deleteCourseTeacher(this.deleteTeacher).subscribe((response: any) => {
-      this.messageService.add({ severity: 'success', summary: 'Success', life: 3000, detail: 'Teacher deleted successfully' });
+      this.messageService.add({ severity: 'success', summary: 'Success', life: 3000, detail: 'Official deleted successfully' });
       this._signalrService.addTeacher(this.deleteTeacher.teacherId);
       this.ngOnInit();
     });
@@ -1624,6 +1655,16 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       }
     }
   }
+
+
+
+  permissionForFileStorage(teacherForFileStorage:any){
+    let isAllowedForFileStorage = teacherForFileStorage?.find((x:any) => x?.userId == this.userId);
+    if(isAllowedForFileStorage != undefined || isAllowedForFileStorage != null){
+      this.isAllowedForFileStorage = true;
+    }
+  }
+
 
 
   

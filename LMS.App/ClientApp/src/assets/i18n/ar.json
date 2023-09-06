@@ -84,7 +84,7 @@
   "Post": "أرسل",
   "Follow": "تتبع",
   "MessageSchool": "إرسال رسالة إلى المدرسة",
-  "Teachers": "المدرسين",
+  "Teachers": "المسؤولين",
   "Sertificates": "الشهادات",
   "Languages": "اللغات",
   "Location": "الموقع",
@@ -101,7 +101,7 @@
   "AddLanguage": "إضافة لغة",
   "TypeLanguageToAdd": "اكتب اللغة المراد إضافتها",
   "DeleteLanguage": "احذف اللغة",
-  "AddTeacher": "اضافة مدرس",
+  "AddTeacher": "إضافة الرسمية",
   "TypeTeacherToAdd": "اكتب المدرس المراد إضافتها",
   "DeleteTeacher": "احذف المدرس",
   "AddCertificates": "أضف شهادة",
@@ -443,7 +443,7 @@
   "ReelSharedSuccessfully": "تمت مشاركة بكرة بنجاح",
   "PostDeletedSuccessfully": "تم حذف المشاركة بنجاح",
   "ReelDeletedSuccessfully": "تم حذف بكرة بنجاح",
-  "TeacherAddedSuccessfully": "تمت إضافة المعلم بنجاح",
+  "OfficialAddedSuccessfully": "تمت إضافة المعلم بنجاح",
   "LanguageAddedSuccessfully": "Language added successfully",
   "LanguageDeletedSuccessfully": "Language deleted successfully",
   "ClassSavedSuccessfully": "Class saved successfully",
@@ -523,7 +523,7 @@
   "AddOfficial": "إضافة الرسمية",
   "SchoolVideoLibrary": "School Video Library",
   "UploadVideo": "Upload Video",
-  "TeacherUpdatedSuccessfully": "Teacher updated successfully",
+  "OfficialUpdatedSuccessfully": "Teacher updated successfully",
   "EditOfficial": "Edit Official",
   "UpdateOfficial": "Update Official",
   "PleaseSelectTheOfficial": "الرجاء اختيار المسؤول",
@@ -543,8 +543,11 @@
   "Official": "رسمي",
   "OfficialName": "اسم رسمي",
   "RateClass": "فئة المعدل",
-  "RateCourse": "دورة معدل"
-
+  "RateCourse": "دورة معدل",
+  "OfficialDeletedSuccessfully": "تم الحذف الرسمي بنجاح",
+  "People": "الناس",
+  "ReelUnLikedSuccessfully":"تم إلغاء الإعجاب بالبكرة بنجاح",
+  "ReelLikedSuccessfully":"تم الإعجاب بالكرة بنجاح"
 
 
 

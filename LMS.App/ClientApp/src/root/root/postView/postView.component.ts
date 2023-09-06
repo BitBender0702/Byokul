@@ -26,6 +26,10 @@ import { BigBlueButtonService } from 'src/root/service/bigBlueButton';
 import { CreatePostComponent } from '../createPost/createPost.component';
 import { StudentService } from 'src/root/service/student.service';
 import { ClassCourseEnum } from 'src/root/Enums/classCourseEnum';
+import { DeleteConfirmationComponent } from '../delete-confirmation/delete-confirmation.component';
+
+
+
 
 export const sharePostResponse = new Subject<{}>();
 export const deletePostResponse = new Subject<{ postId: string }>();
@@ -414,7 +418,6 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
     this._postService.likeUnlikePost(this.likeUnlikePost).subscribe((response) => {
       this.post.likes = response;
       this.InitializeLikeUnlikePost();
-      console.log("succes");
     });
 
 
@@ -426,8 +429,6 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.userId != undefined) {
       this.postView.postId = postId;
       this._postService.postView(this.postView).subscribe((response) => {
-
-        console.log('success');
         this.post.views.length = response;
       });
     }
@@ -435,6 +436,9 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
   sendToGroup() {
     debugger
+    if(!this.messageToGroup || this.messageToGroup.trim().length == 0){
+      return;
+    }
     var comment: any[] = this.post.comments;
     this.InitializeCommentViewModel();
     this.commentViewModel.userId = this.sender.id;
@@ -597,14 +601,19 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getDeletedPostId(id: string) {
-    debugger
-    this.loadingIcon = true;
-    this._postService.deletePost(id).subscribe((_response) => {
-      this.close();
-      this.loadingIcon = false;
-      deletePostResponse.next({ postId: id });
+    // debugger
+    // this.loadingIcon = true;
+    // this._postService.deletePost(id).subscribe((_response) => {
+    //   this.close();
+    //   this.loadingIcon = false;
+    //   deletePostResponse.next({ postId: id });
 
-    });
+    // });
+
+    const initialState={id:id}
+    this.bsModalService.show(DeleteConfirmationComponent, { initialState });
+
+
   }
 
   openCertificateViewModal(certificateUrl: string, certificateName: string, from?: number, event?: Event) {
@@ -692,7 +701,6 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
       if ($('carousel')[1].querySelectorAll('a.carousel-control')[1]) {
         let isButton = $('carousel')[1].querySelectorAll('a.carousel-control-prev')[0] as HTMLButtonElement;
-        console.log(isButton)
         isButton.addEventListener('click', () => {
           debugger
           const currentIndex = this.previousIndex !== null ? this.previousIndex : 0;
@@ -712,4 +720,16 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     }
   }
+  
+
+
+  // deleteId:any;
+  // getDeleteId(deleteId:any){
+  //   this.deleteId = deleteId;
+  //   debugger;
+  // }
+
+
+
+
 }

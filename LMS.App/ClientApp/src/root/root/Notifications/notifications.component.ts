@@ -252,17 +252,15 @@ export class NotificationsComponent extends MultilingualComponent implements OnI
   }
 
   opeStream(postId: string, chatType: number) {
-    debugger
-
     this._postService.getPostById(postId).subscribe((response) => {
-      debugger
       if(response.isLiveStreamEnded == false){
+        debugger;
         this._postService.enableLiveStream(postId).subscribe((responses)=>{
-          debugger
           if(responses.success){
             response.isLive = true;
           }
           if (response.isLive) {
+            debugger;
             var from = chatType == 1 ? "user" : chatType == 3 ? "school" : chatType == 4 ? "class" : "";
             this.router.navigate(
               [`liveStream`, postId, from]
@@ -270,16 +268,18 @@ export class NotificationsComponent extends MultilingualComponent implements OnI
           }
           return;
         })
+      } else{
+        if (response.isLive) {
+          var from = chatType == 1 ? "user" : chatType == 3 ? "school" : chatType == 4 ? "class" : "";
+          this.router.navigate(
+            [`liveStream`, postId, from]
+          );
+        }
+        else {
+          this.messageService.add({ severity: 'info', summary: 'Info', life: 3000, detail: 'This live has ended!', });
+        }
       }
-      if (response.isLive) {
-        var from = chatType == 1 ? "user" : chatType == 3 ? "school" : chatType == 4 ? "class" : "";
-        this.router.navigate(
-          [`liveStream`, postId, from]
-        );
-      }
-      else {
-        this.messageService.add({ severity: 'info', summary: 'Info', life: 3000, detail: 'This live has ended!', });
-      }
+      
 
     });
 

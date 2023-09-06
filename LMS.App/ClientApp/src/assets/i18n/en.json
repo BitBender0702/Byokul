@@ -88,7 +88,7 @@
   "Post": "Post",
   "Follow": "FOLLOW",
   "MessageSchool": "MESSAGE SCHOOL",
-  "Teachers": "Teachers",
+  "Teachers": "Officials",
   "Sertificates": "Certificates",
   "Languages": "Languages",
   "Location": "Location",
@@ -105,7 +105,7 @@
   "AddLanguage": "Add Language",
   "TypeLanguageToAdd": "Type Language To Add",
   "DeleteLanguage": "Delete Language",
-  "AddTeacher": "Add Teacher",
+  "AddTeacher": "Add Official",
   "TypeTeacherToAdd": "Type Teacher To Add",
   "DeleteTeacher": "Delete Teacher",
   "AddCertificates": "Add Certificate",
@@ -451,7 +451,7 @@
   "ReelSharedSuccessfully": "Reel shared successfully",
   "PostDeletedSuccessfully": "Post deleted successfully",
   "ReelDeletedSuccessfully": "Reel deleted successfully",
-  "TeacherAddedSuccessfully": "Teacher added successfully",
+  "OfficialAddedSuccessfully": "Official added successfully",
   "LanguageAddedSuccessfully": "Language added successfully",
   "LanguageDeletedSuccessfully": "Language deleted successfully",
   "ClassSavedSuccessfully": "Class saved successfully",
@@ -537,7 +537,7 @@
   "AddOfficial": "Add Official",
   "SchoolVideoLibrary": "School Video Library",
   "UploadVideo": "Upload Video",
-  "TeacherUpdatedSuccessfully": "Teacher updated successfully",
+  "OfficialUpdatedSuccessfully": "Official updated successfully",
   "EditOfficial": "Edit Official",
   "UpdateOfficial": "Update Official",
   "PleaseSelectTheOfficial": "Please select the official",
@@ -557,7 +557,11 @@
   "Official": "Official",
   "OfficialName": "Official Name",
   "RateClass": "Rate Class",
-  "RateCourse": "Rate Course"
+  "RateCourse": "Rate Course",
+  "OfficialDeletedSuccessfully":"Official Deleted Successfully",
+  "People": "People",
+  "ReelUnLikedSuccessfully":"Reel Unliked Successfully",
+  "ReelLikedSuccessfully":"Reel Liked Successfully"
 
 
 

@@ -26,6 +26,7 @@ import { PostAuthorTypeEnum } from 'src/root/Enums/postAuthorTypeEnum';
 import { CertificateViewComponent } from '../certificateView/certificateView.component';
 import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
 import { TranslateService } from '@ngx-translate/core';
+import { deleteModalPostResponse } from '../delete-confirmation/delete-confirmation.component';
 
 @Component({
   selector: 'post-view',
@@ -111,6 +112,7 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
   modalRef!: any;
   globalSearchField!: string;
 
+  deleteModalPostSubscription!: Subscription;
 
   constructor(injector: Injector, private renderer: Renderer2, private elementRef: ElementRef, private translateService: TranslateService, private authService: AuthService, private bsModalService: BsModalService, notificationService: NotificationService, postService: PostService, public userService: UserService, public options: ModalOptions, private fb: FormBuilder, private router: Router, private http: HttpClient, private activatedRoute: ActivatedRoute, public messageService: MessageService, private cd: ChangeDetectorRef) {
     super(injector);
@@ -282,8 +284,8 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
     feedState.subscribe(response => {
     })
 
-    if (!this.deletePostSubscription) {
-      this.deletePostSubscription = deletePostResponse.subscribe(response => {
+    if (!this.deleteModalPostSubscription) {
+      this.deleteModalPostSubscription = deleteModalPostResponse.subscribe(response => {
         this.isGridItemInfo = false;
         this.messageService.add({ severity: 'success', summary: 'Success', life: 3000, detail: 'Post deleted successfully' });
         var deletedPost = this.myFeeds?.find((x: { id: string; }) => x.id == response.postId);
@@ -332,6 +334,13 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
       });
     });
 
+    if(!this.deleteModalPostSubscription){
+      this.deleteModalPostSubscription = deleteModalPostResponse.subscribe(response =>{
+        this.ngOnInit();
+      })
+    }
+
+
 
   }
 
@@ -362,6 +371,9 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
     }
     if (this.addPostSubscription) {
       this.addPostSubscription.unsubscribe();
+    }
+    if (this.deleteModalPostSubscription) {
+      this.deleteModalPostSubscription.unsubscribe();
     }
   }
 

@@ -44,6 +44,15 @@
                       data-bs-target="#delete-Class"
                       >{{ "Delete" | translate }}
                     </a>
+                    <!-- <a
+                      style="cursor: pointer"
+                      class="dropdown-item"
+                      data-bs-toggle="modal"
+                      data-bs-target="#delete-post"
+                      (click)="getDeleteId(post?.id)"
+                    >
+                      {{ "Delete" | translate }}
+                    </a> -->
                   </li>
                   <li>
                     <a
@@ -1078,4 +1087,59 @@
     
   </section>
 </div>
+
+
+<!-- <div
+  class="modal fade edit-school-modal delete-modal"
+  id="delete-post"
+  tabindex="-1"
+  aria-labelledby="delete-post"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div
+        class="modal-header border-0 justify-content-center position-relative"
+      >
+        <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">
+          {{ "AreYouSureYouWantToDelete" | translate }}
+        </h1>
+        <button
+          type="button"
+          class="btn-close shadow-none"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        >
+          <img lazyLoad="../../../../assets/images/cross.svg" />
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <div
+          class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-2 mt-4"
+        >
+          <button
+            type="button"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+            data-bs-dismiss="modal"
+          >
+            {{ "No" | translate }}
+          </button>
+          <button
+          (click)="getDeletedPostId(deleteId)"
+            type="button"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
+            data-bs-dismiss="modal"
+          >
+            {{ "Delete" | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+
+
+
 <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>

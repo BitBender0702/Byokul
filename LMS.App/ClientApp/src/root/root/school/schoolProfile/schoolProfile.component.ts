@@ -80,6 +80,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { IyizicoService } from 'src/root/service/iyizico.service';
 import { Constant } from 'src/root/interfaces/constant';
 import { AddOfficialComponent, addTeacherResponse } from '../../addOfficial/addOfficial.component';
+import { userPermission } from '../../root.component';
+import { deleteModalPostResponse } from '../../delete-confirmation/delete-confirmation.component';
 
 
 @Component({
@@ -249,6 +251,9 @@ export class SchoolProfileComponent
 
   videoFileUrl: string = '';
 
+  userPermissionSubscription!:Subscription;
+
+  deleteModalPostSubscription!: Subscription;
 
 
   mask = '(000) 000-0000';
@@ -314,6 +319,9 @@ export class SchoolProfileComponent
     if (this.savedPostSubscription) {
       this.savedPostSubscription.unsubscribe();
     }
+    if (this.userPermissionSubscription) {
+      this.userPermissionSubscription.unsubscribe();
+    }
     if (this.savedReelSubscription) {
       this.savedReelSubscription.unsubscribe();
     }
@@ -340,6 +348,9 @@ export class SchoolProfileComponent
     }
     if (this.addTeacherSubscription) {
       this.addTeacherSubscription.unsubscribe();
+    }
+    if (this.deleteModalPostSubscription) {
+      this.deleteModalPostSubscription.unsubscribe();
     }
   }
   ngOnChanges(): void {
@@ -574,7 +585,7 @@ export class SchoolProfileComponent
         debugger
         const translatedSummary = this.translateService.instant('Success');
         if(!response.isEdit){
-          var translatedMessage = this.translateService.instant('TeacherAddedSuccessfully');
+          var translatedMessage = this.translateService.instant('OfficialAddedSuccessfully');
           var schoolteacher = {
             userId:response.userId,
             firstName:response.userName,
@@ -584,7 +595,7 @@ export class SchoolProfileComponent
           this.school.teachers.push(schoolteacher);
         }
         else{
-          var translatedMessage = this.translateService.instant('TeacherUpdatedSuccessfully');
+          var translatedMessage = this.translateService.instant('OfficialUpdatedSuccessfully');
         }
         this.messageService.add({severity:'success', summary:translatedSummary,life: 3000, detail:translatedMessage});
         this.cd.detectChanges();
@@ -635,6 +646,18 @@ export class SchoolProfileComponent
     //         this.meta.addTag({ name: 'robots', content: 'nofollow' });
     //       }
 
+    if(!this.userPermissionSubscription){
+      this.userPermissionSubscription = userPermission.subscribe(data=>{
+        debugger;
+        window.location.reload();
+      })
+    }
+
+    if(!this.deleteModalPostSubscription){
+      this.deleteModalPostSubscription = deleteModalPostResponse.subscribe(response => {
+        this.ngOnInit();
+      })
+    }
 
   }
 
@@ -857,8 +880,6 @@ export class SchoolProfileComponent
       this._schoolService
         .saveSchoolFollower(this.followUnfollowSchool)
         .subscribe((response) => {
-          debugger
-          console.log(response);
           if (response.result == 'success') {
             this.isSchoolFollowed = true;
           }
@@ -1190,7 +1211,7 @@ export class SchoolProfileComponent
         this.closeTeachersModal();
         this.isSubmitted = false;
         const translatedSummary = this.translateService.instant('Success');
-        const translatedMessage = this.translateService.instant('TeacherAddedSuccessfully');
+        const translatedMessage = this.translateService.instant('OfficialAddedSuccessfully');
         this.messageService.add({
           severity: 'success',
           summary: translatedSummary,
@@ -1212,7 +1233,7 @@ export class SchoolProfileComponent
       .deleteSchoolTeacher(this.deleteTeacher)
       .subscribe((response: any) => {
         const translatedSummary = this.translateService.instant('Success');
-        const translatedMessage = this.translateService.instant('TeacherDeletedSuccessfully');
+        const translatedMessage = this.translateService.instant('OfficialDeletedSuccessfully');
         this.messageService.add({
           severity: 'success',
           summary: translatedSummary,
@@ -1361,7 +1382,6 @@ export class SchoolProfileComponent
       .pinUnpinPost(attachmentId, isPinned)
       .subscribe((response) => {
         this.ngOnInit();
-        console.log(response);
       });
   }
 
@@ -1416,7 +1436,6 @@ export class SchoolProfileComponent
       this._schoolService.getSchoolClassCourseList(schoolId, this.classCoursePageNumber).subscribe((response) => {
         debugger
         this.classCourseList = response;
-        console.log(this.classCourseList);
         this.loadingIcon = false;
       });
     }
@@ -2312,7 +2331,6 @@ export class SchoolProfileComponent
           detail: translatedMessage,
         });
         this.ngOnInit();
-        console.log(response);
       });
   }
 

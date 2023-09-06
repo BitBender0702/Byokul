@@ -2716,10 +2716,10 @@
     <ul *ngIf="showSearchResults" class="search-results">
       <div *ngFor="let key of getObjectKeys(globalSearchResult)">
         <h4 *ngIf="key == 'ClassAndCourse'" class="fw_600">
-          {{ "Classes & Courses" }}
+          {{ "Classes&Courses" | translate }}
         </h4>
-        <h4 *ngIf="key == 'User'" class="fw_600">{{ "People" }}</h4>
-        <h4 *ngIf="key == 'School'" class="fw_600">{{ "Schools" }}</h4>
+        <h4 *ngIf="key == 'User'" class="fw_600">{{ "People" | translate }}</h4>
+        <h4 *ngIf="key == 'School'" class="fw_600">{{ "Schools" | translate }}</h4>
         <ng-container *ngFor="let item of globalSearchResult[key]">
           <li *ngIf="item.type == 1" class="search-results__item">
             <div class="d-flex align-items-center justify-content-between">

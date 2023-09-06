@@ -17,11 +17,11 @@
             (click)="cropModalOpen(cropTemplate)"
           ></button>
           <button
-          #openClassOwnCertificate
-          hidden
-          data-bs-toggle="modal"
-          data-bs-target="#classOwnCertificate"
-        ></button>
+            #openClassOwnCertificate
+            hidden
+            data-bs-toggle="modal"
+            data-bs-target="#classOwnCertificate"
+          ></button>
           <button
             (click)="back()"
             type="button"
@@ -76,7 +76,7 @@
             type="button"
             class="btn custom-btn primary_btn earning-btn fw_400 h_44"
           >
-            {{ "Buyfor" | translate }} {{ class.price }} {{class.currency}}
+            {{ "Buyfor" | translate }} {{ class.price }} {{ class.currency }}
           </button>
         </div>
         <div
@@ -114,7 +114,7 @@
           </button>
         </div>
         <div class="School-prof-header school-profile-mobile">
-          <div class="d-flex align-items-center">
+          <div class="d-flex align-items-center flex-wrap flex-md-nowrap">
             <div class="d-flex align-items-center mb-3 mb-md-0">
               <div class="position-relative">
                 <div
@@ -161,13 +161,17 @@
                   class="d-flex justify-content-between flex-wrap class_request align-items-center"
                 >
                   <div>
-                    <div class="followers_name d-inline-block font_16 mr-_24">
+                    <div
+                      class="followers_name d-inline-flex align-items-center gap-1 font_16 mr-_24"
+                    >
                       <img
                         lazyLoad="../../../../assets/images/Star-solid-dark.svg"
                       />{{ "Rating" | translate }}:
                       <b class="fw_700">{{ class.rating }}</b>
                     </div>
-                    <div class="followers_name d-inline-block font_16 mr-_24">
+                    <div
+                      class="followers_name d-inline-flex align-items-center gap-1 font_16 mr-_24"
+                    >
                       <img
                         lazyLoad="../../../../assets/images/students-icon.svg"
                       />{{ "Students" | translate }}:
@@ -183,7 +187,9 @@
                         ></b
                       >
                     </div>
-                    <div class="followers_name d-inline-block font_16 mr-_24">
+                    <div
+                      class="followers_name d-inline-flex align-items-center gap-1 font_16 mr-_24"
+                    >
                       <img
                         lazyLoad="../../../../assets/images/Edit-dark.svg"
                       />{{ "Post" | translate }}:
@@ -192,12 +198,13 @@
                   </div>
 
                   <button
-                  *ngIf="!isOwner && !isRatedByUser"
-                  class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn me-0 minw-142 class-request-msg"
-                  data-bs-toggle="modal"
-                  data-bs-target="#rate-class">
-                  {{ "Rate" | translate }}
-                </button>
+                    *ngIf="!isOwner && !isRatedByUser"
+                    class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn me-0 minw-142 class-request-msg"
+                    data-bs-toggle="modal"
+                    data-bs-target="#rate-class"
+                  >
+                    {{ "Rate" | translate }}
+                  </button>
 
                   <button
                     *ngIf="!isOwner"
@@ -273,20 +280,17 @@
                     }}</span>
                   </button>
 
-                  <button style="min-width: 50px;"
-                  type="button"
-                  (click)="
-                    openPostModal(
-                      false, true
-                    )
-                    "
-                  class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn me-0 minw-142 class-request-msg"
-                >
-                  <img
-                    lazyLoad="../../../../assets/images/Upload-dark.svg"
-                    class="d-block mx-auto"
-                  />
-                </button>
+                  <button
+                    style="min-width: 50px"
+                    type="button"
+                    (click)="openPostModal(false, true)"
+                    class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn me-0 minw-142 class-request-msg"
+                  >
+                    <img
+                      lazyLoad="../../../../assets/images/Upload-dark.svg"
+                      class="d-block mx-auto"
+                    />
+                  </button>
                 </div>
               </div>
             </div>
@@ -295,7 +299,7 @@
             {{ class.description }}
           </p>
         </div>
-        <div *ngIf="class.classCertificates.length != 0 || this.isOwner">
+        <div *ngIf="class.classCertificates.length != 0 || this.isOwner || hasAddClassCertificatesPermission">
           <div class="teacher-tags tag-box hover-tags">
             <div class="teacher-tags tag-box mt-0 hover-tags">
               <div class="teacher-content font_14 d-inline-block">
@@ -307,11 +311,9 @@
               <span
                 *ngFor="let item of class.classCertificates"
                 class="custom-tag"
-                ><span
-                  (click)="
-                  openClassCertificate(item)
-                  "
-                  >{{ item.name }}</span
+                ><span (click)="openClassCertificate(item)">{{
+                  item.name
+                }}</span
                 ><button
                   (click)="getDeletedCertificate(item.id)"
                   class="border-0 bg-transparent p-0 position-absolute delete-tag"
@@ -447,6 +449,7 @@
           class="school-profile-tabs d-flex align-content-center justify-content-center position-relative"
         >
           <div></div>
+          <!-- *ngIf="isOwner || isAllowedForFileStorage" -->
           <button
             type="button"
             class="btn button-stroage font_16 fw_600 text_dark d-inline-flex align-items-center justify-content-center"
@@ -516,7 +519,7 @@
                     [singleSlideOffset]="singleSlideOffset"
                     [interval]="0"
                     [noWrap]="noWrap"
-                    (touchstart)="touchStart($event)" 
+                    (touchstart)="touchStart($event)"
                     (touchend)="touchEnd($event)"
                   >
                     <div *ngFor="let post of class.reels">
@@ -625,45 +628,45 @@
                   <div
                     class="schoolgrid-header d-flex align-items-center position-relative justify-content-between"
                   >
-                  <div class="d-flex align-items-center gap-2">
-                    <div class="school-gridprofile-icon">
-                      <img [lazyLoad]="class.avatar" />
-                    </div>
-                    <h2 class="d-inline-block font_20 fw_600 text_sec1 mb-0">
-                      {{ class.className }}
-                    </h2>
+                    <div class="d-flex align-items-center gap-2">
+                      <div class="school-gridprofile-icon">
+                        <img [lazyLoad]="class.avatar" />
+                      </div>
+                      <h2 class="d-inline-block font_20 fw_600 text_sec1 mb-0">
+                        {{ class.className }}
+                      </h2>
                     </div>
                     <div *ngIf="post.isLive">
                       <img lazyLoad="../../../../assets/images/live_img.png" />
                     </div>
                     <div>
-                    <p
-                      *ngIf="post.createdOn != null"
-                      class="font_14 school-grid-date d-inline-block mb-0 me-3"
-                    >
-                      {{ post.createdOn | date : "MMMM d" }} -
-                      {{ post.createdOn | date : "hh:mm" }}
-                    </p>
-                    <button
-                      *ngIf="post.isPinned && isOwner"
-                      (click)="pinUnpinPost(post.id, false)"
-                      type="button"
-                      class="bg-transparent border-0 pinned-grid-chat"
-                    >
-                      <img
-                        lazyLoad="../../../../assets/images/pinned-orange.svg"
-                      />
-                    </button>
-                    <button
-                      *ngIf="!post.isPinned && isOwner"
-                      (click)="pinUnpinPost(post.id, true)"
-                      type="button"
-                      class="bg-transparent border-0 pinned-grid-chat"
-                    >
-                      <img
-                        lazyLoad="../../../../assets/images/pinned-gray.svg"
-                      />
-                    </button>
+                      <p
+                        *ngIf="post.createdOn != null"
+                        class="font_14 school-grid-date d-inline-block mb-0 me-3"
+                      >
+                        {{ post.createdOn | date : "MMMM d" }} -
+                        {{ post.createdOn | date : "hh:mm" }}
+                      </p>
+                      <button
+                        *ngIf="post.isPinned && isOwner"
+                        (click)="pinUnpinPost(post.id, false)"
+                        type="button"
+                        class="bg-transparent border-0 pinned-grid-chat"
+                      >
+                        <img
+                          lazyLoad="../../../../assets/images/pinned-orange.svg"
+                        />
+                      </button>
+                      <button
+                        *ngIf="!post.isPinned && isOwner"
+                        (click)="pinUnpinPost(post.id, true)"
+                        type="button"
+                        class="bg-transparent border-0 pinned-grid-chat"
+                      >
+                        <img
+                          lazyLoad="../../../../assets/images/pinned-gray.svg"
+                        />
+                      </button>
                     </div>
                   </div>
 
@@ -671,7 +674,9 @@
                     class="school-grid-body"
                     (click)="openPostsViewModal(post)"
                   >
-                  <h4 class="d-inline-block font_20 fw_600 text_sec1 mb-3">{{post.title}}</h4>
+                    <h4 class="d-inline-block font_20 fw_600 text_sec1 mb-3">
+                      {{ post.title }}
+                    </h4>
                     <p class="text_sec1 font_14" style="cursor: pointer">
                       {{ post.description }}
                     </p>
@@ -695,7 +700,9 @@
                       </ng-container>
                     </div>
                     <div class="teacher-tags tag-box hashtag_box">
-                      <span *ngFor="let tag of parseTheTags(post.postTags)" class="custom-tag"
+                      <span
+                        *ngFor="let tag of parseTheTags(post.postTags)"
+                        class="custom-tag"
                         >#{{ tag }}</span
                       >
                     </div>
@@ -1048,7 +1055,8 @@
                         lazyLoad="../../../../assets/images/Bookmark-dark.svg"
                         class="d-block mx-auto"
                       />
-                      <img height="20px"
+                      <img
+                        height="20px"
                         *ngIf="post.isPostSavedByCurrentUser"
                         lazyLoad="../../../../assets/images/bookmark-dash-fill.svg"
                         class="d-block mx-auto"
@@ -1364,7 +1372,8 @@
                                   lazyLoad="../../../../assets/images/Bookmark-dark.svg"
                                   class="d-block mx-auto"
                                 />
-                                <img height="20px"
+                                <img
+                                  height="20px"
                                   *ngIf="gridItemInfo.isPostSavedByCurrentUser"
                                   lazyLoad="../../../../assets/images/bookmark-dash-fill.svg"
                                   class="d-block mx-auto"
@@ -1565,7 +1574,7 @@
                     </div>
                     <div *ngIf="uploadImage == ''">
                       <img
-                        *ngIf="(classAvatar != 'null') && (classAvatar != '')"
+                        *ngIf="classAvatar != 'null' && classAvatar != ''"
                         lazyLoad="{{ classAvatar }}"
                         style="scale: 1.8"
                       />
@@ -1782,27 +1791,27 @@
                           >{{ "Price" | translate }}*</label
                         >
                         <div class="d-flex">
-                        <input
-                          formControlName="price"
-                          type="number"
-                          min="1"
-                          placeholder="{{ 'Price' | translate }}"
-                          name="price"
-                          class="form-control priceInputWidth"
-                        />
-                        <select
-                        class="form-select rounded-8 w-100"
-                        formControlName="currency"
-                        aria-label="Default select example"
-                      >
-                        <option
-                          *ngFor="let currency of currencies"
-                          [value]="currency.key"
-                        >
-                          {{ currency.value }}
-                        </option>
-                      </select>
-                      </div>
+                          <input
+                            formControlName="price"
+                            type="number"
+                            min="1"
+                            placeholder="{{ 'Price' | translate }}"
+                            name="price"
+                            class="form-control priceInputWidth"
+                          />
+                          <select
+                            class="form-select rounded-8 w-100"
+                            formControlName="currency"
+                            aria-label="Default select example"
+                          >
+                            <option
+                              *ngFor="let currency of currencies"
+                              [value]="currency.key"
+                            >
+                              {{ currency.value }}
+                            </option>
+                          </select>
+                        </div>
                         <small
                           class="p-error"
                           style="color: orange"
@@ -2461,8 +2470,8 @@
                           type="text"
                           name="ClassId"
                           class="form-control w-100"
-                          [disabled] = 'true'
-                          [hidden] = "true"
+                          [disabled]="true"
+                          [hidden]="true"
                         />
                         <label class="font_10"
                           >{{ "CertificateName" | translate }}*</label
@@ -2853,8 +2862,6 @@
   </div>
 </ng-template>
 
-
-
 <div
   class="modal fade edit-school-modal delete-modal"
   id="rate-class"
@@ -2882,13 +2889,21 @@
       <div class="modal-body">
         <div class="form-group">
           <h2 class="text-center font_16 f-poppins">
-            <div class="image-container" *ngFor="let array of fakeArray; let index = index">
-              <button (click)="ratingNumber(index)" style="background-color: white; border: none;">
-                <i class="fa-solid fa-star fa-2xl" [style.color]="index < rateNumber ? '#ff8800' : '#eebe87'"></i>
+            <div
+              class="image-container"
+              *ngFor="let array of fakeArray; let index = index"
+            >
+              <button
+                (click)="ratingNumber(index)"
+                style="background-color: white; border: none"
+              >
+                <i
+                  class="fa-solid fa-star fa-2xl"
+                  [style.color]="index < rateNumber ? '#ff8800' : '#eebe87'"
+                ></i>
               </button>
             </div>
           </h2>
-          
         </div>
         <div
           class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-2 mt-4"
@@ -2901,9 +2916,7 @@
             {{ "Cancel" | translate }}
           </button>
           <button
-            (click)="
-              rateTheClass()
-            "
+            (click)="rateTheClass()"
             type="button"
             class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
             data-bs-dismiss="modal"
@@ -2915,10 +2928,6 @@
     </div>
   </div>
 </div>
-
-
-
-
 
 <div
   class="modal fade edit-school-modal delete-modal"

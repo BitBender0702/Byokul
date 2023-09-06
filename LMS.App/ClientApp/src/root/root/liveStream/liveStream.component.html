@@ -464,22 +464,22 @@
                         class="bg-transparent rounded-circle comment-post-user rounded-circle"
                       >
                         <img
-                          *ngIf="sender.avatar != null"
-                          [src]="sender.avatar"
+                          *ngIf="sender?.avatar != null"
+                          [src]="sender?.avatar"
                           style="max-height: 100%"
                         />
                         <img
-                          *ngIf="sender.avatar == null && gender == '1'"
+                          *ngIf="sender?.avatar == null && gender == '1'"
                           src="../../../assets/images/maleProfile.jfif"
                           style="max-height: 100%"
                         />
                         <img
                           *ngIf="
-                            sender.avatar == null &&
+                            sender?.avatar == null &&
                             (gender == '2' || gender == '3')
                           "
                           src="../../../assets/images/femaleProfile.jfif"
-                          [src]="sender.avatar"
+                          [src]="sender?.avatar"
                           style="max-height: 100%"
                         />
                       </span>

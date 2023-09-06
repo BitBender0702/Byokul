@@ -101,7 +101,7 @@
     "Post": "Correo",
     "Follow": "SEGUIR",
     "MessageSchool": "ESCUELA DE MENSAJES",
-    "Teachers": "Profesoras",
+    "Teachers": "Funcionarios",
     "Sertificates": "Certificados",
     "Languages": "Idiomas",
     "Location": "Ubicación",
@@ -119,7 +119,7 @@
     "AddLanguage": "Agregar idioma",
     "TypeLanguageToAdd": "Escriba el idioma para agregar",
     "DeleteLanguage": "Eliminar idioma",
-    "AddTeacher": "Agregar profesor",
+    "AddTeacher": "Agregar Oficial",
     "TypeTeacherToAdd": "Escribe profesor para agregar",
     "DeleteTeacher": "Eliminar profesor",
     "AddCertificates": "Agregar certificados",
@@ -281,7 +281,7 @@
   "ReelSharedSuccessfully": "Reel shared successfully",
   "PostDeletedSuccessfully": "Post deleted successfully",
   "ReelDeletedSuccessfully": "Reel deleted successfully",
-  "TeacherAddedSuccessfully": "Teacher added successfully",
+  "OfficialAddedSuccessfully": "Teacher added successfully",
   "LanguageAddedSuccessfully": "Language added successfully",
   "LanguageDeletedSuccessfully": "Language deleted successfully",
   "ClassSavedSuccessfully": "Class saved successfully",
@@ -362,7 +362,7 @@
   "AddOfficial": "Add Official",
   "SchoolVideoLibrary": "School Video Library",
   "UploadVideo": "Upload Video",
-  "TeacherUpdatedSuccessfully": "Teacher updated successfully",
+  "OfficialUpdatedSuccessfully": "Teacher updated successfully",
   "EditOfficial": "Edit Official",
   "UpdateOfficial": "Update Official",
   "PleaseSelectTheTeacher": "Please select the teacher",
@@ -382,7 +382,11 @@
   "Official": "Official",
   "OfficialName": "Official Name",
   "RateClass": "Rate Class",
-  "RateCourse": "Rate Course"
+  "RateCourse": "Rate Course",
+  "OfficialDeletedSuccessfully":"Oficial eliminado con éxito",
+  "People":"Gente",
+  "ReelUnLikedSuccessfully":"Carrete no deseado con éxito",
+  "ReelLikedSuccessfully":"Carrete que le gustó con éxito"
 
 
 
