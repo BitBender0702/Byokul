@@ -1283,7 +1283,7 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .school-grid-thumbnail .medium-thumnail {
   display: flex;
-  height: 180px;
+  /* height: 180px; */
   overflow: hidden;
 }
 
@@ -1352,7 +1352,7 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .medium_thumbox {
   flex-flow: column;
-  justify-content: space-between;
+  /* justify-content: space-between; */
 }
 
 .medium_thumbox img {
@@ -3279,7 +3279,7 @@ p-autocomplete li:before {
     margin: 0 5px 0 0;
   }
   .live-chat-box {
-    padding: 29px 25px;
+    padding: 29px 0;
   }
 }
 
@@ -3745,7 +3745,7 @@ p-autocomplete li:before {
   position: relative;
   width: 100%;
   object-fit: cover;
-  height: calc(100vh - 140px);
+  height: calc(100vh - 240px);
 }
 .reel_videoinner iframe,
 .reel_videoinner video {
