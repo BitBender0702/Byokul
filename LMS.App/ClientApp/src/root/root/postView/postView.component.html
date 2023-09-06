@@ -331,7 +331,7 @@
                               src="../../../assets/images/chat-icon.svg"
                               class="d-block"
                             />
-                            {{ post.comments.length }}
+                            {{ post.comments?.length }}
                           </button>
                           <button
                             type="button"
@@ -341,7 +341,7 @@
                               src="../../../assets/images/eye.svg"
                               class="d-block"
                             />
-                            {{ post.views.length }}
+                            {{ post.views?.length }}
                           </button>
                           <button
                             (click)="

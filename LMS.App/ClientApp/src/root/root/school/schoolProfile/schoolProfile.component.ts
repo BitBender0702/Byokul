@@ -254,6 +254,7 @@ export class SchoolProfileComponent
   userPermissionSubscription!:Subscription;
 
   deleteModalPostSubscription!: Subscription;
+  isStorageUnAvailable:boolean=false;
 
 
   mask = '(000) 000-0000';
@@ -398,6 +399,11 @@ export class SchoolProfileComponent
       this.noOfAppliedClassFilters = this.school.noOfAppliedClassFilters;
       this.noOfAppliedCourseFilters = this.school.noOfAppliedCourseFilters;
       this.addEventListnerOnCarousel();
+
+      if(response.availableStorageSpace == 0){
+        this.isStorageUnAvailable = true;
+      }
+  
       // const schoolTabButtonElement = this.el.nativeElement.querySelector('#school-tab');
       // this.renderer.addClass(schoolTabButtonElement, 'active');
       const classButtonElement = this.el.nativeElement.querySelector('#classes-tab');
@@ -527,6 +533,11 @@ export class SchoolProfileComponent
           this.loadingIcon = false;
           this.isDataLoaded = true;
           this.school.posts = this.getFilteredAttachments(this.school.posts);
+
+          if(response.availableStorageSpace == 0){
+            this.isStorageUnAvailable = true;
+          }
+
           //  this.showPostDiv(postResponse.response.id);   
         });
       });
@@ -1367,14 +1378,34 @@ export class SchoolProfileComponent
   // }
 
   openPostModal(isLiveTabOpen?: boolean, isShareProfile?:boolean): void {
-    const initialState = {
-      userId: this.userId,
-      schoolId: this.school.schoolId,
-      from: "school",
-      isLiveTabOpen: isLiveTabOpen,
-      isShareProfile: isShareProfile
-    };
-    this.bsModalService.show(CreatePostComponent, { initialState });
+    if(isShareProfile === true){
+      const initialState = {
+        schoolId: this.school.schoolId,
+        from: "school",
+        isLiveTabOpen: isLiveTabOpen,
+        isShareProfile: isShareProfile
+      };
+      this.bsModalService.show(CreatePostComponent, { initialState });
+      return;
+    }
+    if(!this.isStorageUnAvailable){
+      const initialState = {
+        schoolId: this.school.schoolId,
+        from: "school",
+        isLiveTabOpen: isLiveTabOpen,
+        isShareProfile: isShareProfile
+      };
+      this.bsModalService.show(CreatePostComponent, { initialState });
+    } else{
+      const translatedSummary = this.translateService.instant('Info');
+      const translatedMessage = this.translateService.instant('SchoolHasNoStorageSpace');
+      this.messageService.add({
+        severity: 'info',
+        summary: translatedSummary,
+        life: 3000,
+        detail: translatedMessage,
+      });
+    }
   }
 
   pinUnpinPost(attachmentId: string, isPinned: boolean) {

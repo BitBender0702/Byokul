@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using System.Data.SqlTypes;
 using System.Reflection.Metadata;
 using System.Text;
 using Country = LMS.Data.Entity.Country;
@@ -2064,13 +2065,18 @@ namespace LMS.Services
             return classList;
         }
 
-        public async Task<double> IsAvailableStorageSpace(Guid schoolId, double filesSizeInGigabyte)
+        public async Task<StorageSpace> IsAvailableStorageSpace(Guid schoolId, double filesSizeInGigabyte)
         {
             var school = _schoolRepository.GetById(schoolId);
             var availableSpace = school.AvailableStorageSpace - filesSizeInGigabyte;
+
             if (availableSpace < 0)
             {
-                return (double)availableSpace;
+                var storageSpace = new StorageSpace();
+                storageSpace.AvailableSpace = (double)availableSpace;
+                storageSpace.IsStorageFullNotification = true;
+                return storageSpace;
+                //return (double)availableSpace;
             }
             else
             {
@@ -2080,7 +2086,11 @@ namespace LMS.Services
                 school.AvailableStorageSpace = requiredAvailableSpace;
                 _schoolRepository.Update(school);
                 _schoolRepository.Save();
-                return (double)availableSpace;
+                // return (double)availableSpace;
+                var storageSpace = new StorageSpace();
+                storageSpace.AvailableSpace = (double)availableSpace;
+                storageSpace.IsStorageFullNotification = true;
+                return storageSpace;
             }
         }
 

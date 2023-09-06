@@ -209,6 +209,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
 
 
   isBanned:any;
+  isStorageUnAvailable:boolean=false;
   ngOnInit(): void {
     this.checkScreenSize();
     if (this.isScreenMobile) {
@@ -253,6 +254,14 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
 
       this.isAllowedForFileStorage = response.isFileStorageAccessible;
       this.permissionForFileStorage(response.teachers);
+
+
+      if(response.school.availableStorageSpace == 0){
+        this.isStorageUnAvailable = true;
+      }
+
+
+
     });
 
     this.editCourseForm = this.fb.group({
@@ -357,6 +366,11 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
           this.postLoadingIcon = false;
           this.addCourseView(this.course.courseId);
           this.course.posts = this.getFilteredAttachments(this.course.posts);
+
+          if(response.school.availableStorageSpace == 0){
+            this.isStorageUnAvailable = true;
+          }
+    
           // this.showPostDiv(postResponse.response.id);    
         });
       });
@@ -993,15 +1007,37 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
   // }
 
   openPostModal(isLiveTabOpen?: boolean, isShareProfile?:boolean): void {
-    const initialState = {
-      // userId: this.userId,
-      courseId: this.course.courseId,
-      from: "course",
-      isLiveTabOpen: isLiveTabOpen,
-      isShareProfile: isShareProfile
-    };
-    debugger
-    this.bsModalService.show(CreatePostComponent, { initialState });
+    if(isShareProfile === true){
+      const initialState = {
+        courseId: this.course.courseId,
+        from: "course",
+        isLiveTabOpen: isLiveTabOpen,
+        isShareProfile: isShareProfile
+      };
+      debugger
+      this.bsModalService.show(CreatePostComponent, { initialState });
+      return
+    }
+
+    if(!this.isStorageUnAvailable){
+      const initialState = {
+        courseId: this.course.courseId,
+        from: "course",
+        isLiveTabOpen: isLiveTabOpen,
+        isShareProfile: isShareProfile
+      };
+      debugger
+      this.bsModalService.show(CreatePostComponent, { initialState });
+    } else{
+      const translatedSummary = this.translateService.instant('Info');
+      const translatedMessage = this.translateService.instant('SchoolHasNoStorageSpace');
+      this.messageService.add({
+        severity: 'info',
+        summary: translatedSummary,
+        life: 3000,
+        detail: translatedMessage,
+      });
+    }
   }
 
   pinUnpinPost(attachmentId: string, isPinned: boolean) {

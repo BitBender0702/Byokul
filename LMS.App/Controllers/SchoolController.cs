@@ -417,11 +417,11 @@ namespace LMS.App.Controllers
         public async Task<IActionResult> IsAvailableStorageSpace(Guid schoolId, double filesSizeInGigabyte)
         {
             var availableSpace = await _schoolService.IsAvailableStorageSpace(schoolId, filesSizeInGigabyte);
-            if (availableSpace < 0)
+            if (availableSpace.AvailableSpace < 0)
             {
-                return Ok(new { Success = false, Message = Constants.SchoolHasNotStorageSpace });
+                return Ok(new { Success = false, Data = availableSpace, Message = Constants.SchoolHasNotStorageSpace });
             }
-            return Ok(new { Success = true, Message = Constants.SchoolHasStorageSpace });
+            return Ok(new { Success = true, Data = availableSpace, Message = Constants.SchoolHasStorageSpace });
         }
 
     }

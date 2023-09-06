@@ -530,13 +530,16 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
     }
 
     sendToGroup(){
+      if(!this.messageToGroup || this.messageToGroup.trim().length == 0){
+        return;
+      }
        var comment: any[] = this.fileComments;
        this.InitializeCommentViewModel();
        this.commentViewModel.userId = this.sender.id;
        this.commentViewModel.groupName = this.fileId + "_group";
        this.commentViewModel.content = this.messageToGroup;
        this.commentViewModel.userAvatar = this.sender.avatar;
-       this.commentViewModel.isUserVerified = this.sender.isVerified;
+       this.commentViewModel.isUserVerified = this.sender.isVarified;
        this.messageToGroup = "";
        this.commentViewModel.id = Constant.defaultGuid;
        this._chatService.addComments(this.commentViewModel).subscribe((response) => {

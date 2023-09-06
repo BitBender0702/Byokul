@@ -171,8 +171,8 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
 
   classCertificateForm!: FormGroup;
   classCertificateInfo: any;
-  currencies:any;
-  teacherForFileStorage:any;
+  currencies: any;
+  teacherForFileStorage: any;
   deleteModalPostSubscription!: Subscription;
 
   @ViewChild('openClassOwnCertificate') openClassOwnCertificate!: ElementRef;
@@ -192,12 +192,12 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   @ViewChild('createPostModal', { static: true }) createPostModal!: CreatePostComponent;
 
 
-  classRatingView!:ClassCourseRating;
+  classRatingView!: ClassCourseRating;
 
-  userPermissionSubscription!:Subscription;
+  userPermissionSubscription!: Subscription;
 
   isDataLoaded: boolean = false;
-  constructor(injector: Injector, private translateService: TranslateService,private signalrService:SignalrService, private titleService: Title, private meta: Meta, private datePipe: DatePipe, authService: AuthService, notificationService: NotificationService, public messageService: MessageService, postService: PostService, private bsModalService: BsModalService, classService: ClassService, private route: ActivatedRoute, private domSanitizer: DomSanitizer, private fb: FormBuilder, private router: Router, private http: HttpClient, private activatedRoute: ActivatedRoute, private cd: ChangeDetectorRef) {
+  constructor(injector: Injector, private translateService: TranslateService, private signalrService: SignalrService, private titleService: Title, private meta: Meta, private datePipe: DatePipe, authService: AuthService, notificationService: NotificationService, public messageService: MessageService, postService: PostService, private bsModalService: BsModalService, classService: ClassService, private route: ActivatedRoute, private domSanitizer: DomSanitizer, private fb: FormBuilder, private router: Router, private http: HttpClient, private activatedRoute: ActivatedRoute, private cd: ChangeDetectorRef) {
     super(injector);
     this._classService = classService;
     this._postService = postService;
@@ -210,7 +210,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
         this.savedPostSubscription.unsubscribe;
       }
       this.className = routeParams.className;
-      console.log( "before removing ." + this.className);
+      console.log("before removing ." + this.className);
       if (!this.loadingIcon && this.isOnInitInitialize) {
         this.ngOnInit();
       }
@@ -219,7 +219,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
 
   ngOnDestroy(): void {
 
-    if(this.userPermissionSubscription){
+    if (this.userPermissionSubscription) {
       this.userPermissionSubscription.unsubscribe();
     }
 
@@ -262,6 +262,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   }
 
   reelsTags: any;
+  isStorageUnAvailable: boolean = false;
   ngOnInit(): void {
     debugger
     this.checkScreenSize();
@@ -287,7 +288,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
 
 
     var className = this.className.split('.').join("").split(" ").join("").toLowerCase();
-    console.log( "after removing ." + className);
+    console.log("after removing ." + className);
 
     // this.className = this.route.snapshot.paramMap.get('className')??'';
     let newClassName = this.className.split('.').join("").split(" ").join("").toLowerCase();
@@ -314,16 +315,20 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       this.isRatedByUser = response.isRatedByUser;
       this.isBanned = response.isBannedFromClassCourse;
 
+      if (response.school.availableStorageSpace == 0) {
+        this.isStorageUnAvailable = true;
+      }
+
 
       // this.isAllowedForFileStorage = response.isFileStorageAccessible;
       // this.permissionForFileStorage(this.teacherForFileStorage);
       //here is the code
 
-      this.classRatingView={
+      this.classRatingView = {
         courseId: '',
         classId: null,
-        userId:'',
-        rating:0
+        userId: '',
+        rating: 0
       }
 
       // this.reelsTags = JSON.parse(postValueTag);
@@ -442,6 +447,11 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
           this.class.posts = this.getFilteredAttachments(this.class.posts);
           // this.showPostDiv(postResponse.response.id);    
 
+          if (response.school.availableStorageSpace == 0) {
+            this.isStorageUnAvailable = true;
+          }
+
+
 
         });
       });
@@ -494,7 +504,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
         var post = this.class.posts.find((x: { id: string; }) => x.id == response.postId);
         post.postSharedCount++;
       }
-      else{
+      else {
         const translatedMessage = this.translateService.instant('ReelSharedSuccessfully');
         this.messageService.add({ severity: 'success', summary: translatedSummary, life: 3000, detail: translatedMessage });
       }
@@ -544,14 +554,14 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     });
     // }
 
-    if(!this.userPermissionSubscription){
-      this.userPermissionSubscription = userPermission.subscribe(data=>{
+    if (!this.userPermissionSubscription) {
+      this.userPermissionSubscription = userPermission.subscribe(data => {
         debugger;
         window.location.reload();
       })
     }
-   
-    if(!this.deleteModalPostSubscription){
+
+    if (!this.deleteModalPostSubscription) {
       this.deleteModalPostSubscription = deleteModalPostResponse.subscribe(response => {
         this.ngOnInit();
       })
@@ -593,7 +603,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     }
   }
 
-  initializeClassCertificateForm(){
+  initializeClassCertificateForm() {
     this.classCertificateForm = this.fb.group({
       classId: this.fb.control(''),
       certificateName: this.fb.control('', [Validators.required]),
@@ -748,7 +758,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       description: this.fb.control(this.editClass.description),
       languageIds: this.fb.control(selectedLanguages, [Validators.required]),
       serviceTypeId: this.fb.control(this.editClass.serviceTypeId, [Validators.required]),
-      currency:this.fb.control(this.editClass.currency),
+      currency: this.fb.control(this.editClass.currency),
     }, { validator: this.dateLessThan('startDate', 'endDate', this.currentDate) });
 
     if (this.editClass.serviceTypeId == '0d846894-caa4-42f3-8e8a-9dba6467672b') {
@@ -762,7 +772,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     return (group: FormGroup): { [key: string]: any } => {
       let f = group.controls[from];
       let t = group.controls[to];
-      if ((new Date(f.value) > new Date(t.value) && t.value != "" && f.value != "") || new Date(f.value) < new Date(currentDate)) {
+      if ((new Date(f.value) > new Date(t.value) && t.value != "" && f.value != "")) {
         return {
           dates: `Please enter valid date`
         };
@@ -1146,15 +1156,38 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     }
   }
 
-  openPostModal(isLiveTabOpen?: boolean, isShareProfile?:boolean): void {
-    const initialState = {
-      userId: this.userId,
-      classId: this.class.classId,
-      from: "class",
-      isLiveTabOpen: isLiveTabOpen,
-      isShareProfile: isShareProfile
-    };
-    this.bsModalService.show(CreatePostComponent, { initialState });
+  openPostModal(isLiveTabOpen?: boolean, isShareProfile?: boolean): void {
+
+    if(isShareProfile === true){
+      const initialState = {
+        userId: this.userId,
+        classId: this.class.classId,
+        from: "class",
+        isLiveTabOpen: isLiveTabOpen,
+        isShareProfile: isShareProfile
+      };
+      this.bsModalService.show(CreatePostComponent, { initialState });
+      return;
+    }
+    if (!this.isStorageUnAvailable) {
+      const initialState = {
+        userId: this.userId,
+        classId: this.class.classId,
+        from: "class",
+        isLiveTabOpen: isLiveTabOpen,
+        isShareProfile: isShareProfile
+      };
+      this.bsModalService.show(CreatePostComponent, { initialState });
+    } else {
+      const translatedSummary = this.translateService.instant('Info');
+      const translatedMessage = this.translateService.instant('SchoolHasNoStorageSpace');
+      this.messageService.add({
+        severity: 'info',
+        summary: translatedSummary,
+        life: 3000,
+        detail: translatedMessage,
+      });
+    }
   }
 
   pinUnpinPost(attachmentId: string, isPinned: boolean) {
@@ -1180,7 +1213,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
 
   }
 
-  isBanned:any;
+  isBanned: any;
   openPostsViewModal(posts: any): void {
     debugger
     if (posts.isLive) {
@@ -1197,12 +1230,12 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
         isBanned: this.isBanned
       };
       let videoElement: HTMLVideoElement | null = document.getElementById('displayVideo') as HTMLVideoElement
-    if(videoElement){
-       var vdo: HTMLVideoElement | null = videoElement.children[0]  as HTMLVideoElement
-       if(vdo){
-        vdo.pause();
-       }
-    }
+      if (videoElement) {
+        var vdo: HTMLVideoElement | null = videoElement.children[0] as HTMLVideoElement
+        if (vdo) {
+          vdo.pause();
+        }
+      }
       this.bsModalRef = this.bsModalService.show(PostViewComponent, { initialState });
 
       this.bsModalRef.content.event.subscribe((res: { data: any; }) => {
@@ -1323,11 +1356,11 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
 
   hideGridItemInfo() {
     let videoElement: HTMLVideoElement | null = document.getElementById('displayVideo') as HTMLVideoElement
-    if(videoElement){
-       var vdo: HTMLVideoElement | null = videoElement.children[0]  as HTMLVideoElement
-       if(vdo){
+    if (videoElement) {
+      var vdo: HTMLVideoElement | null = videoElement.children[0] as HTMLVideoElement
+      if (vdo) {
         vdo.pause();
-       }
+      }
     }
     this.isGridItemInfo = this.isGridItemInfo ? false : true;
 
@@ -1356,7 +1389,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   openReelsViewModal(postAttachmentId: string, postId: string): void {
     this.router.navigate(
       [`user/reelsView/${this.class.classId}/class/${postAttachmentId}/${postId}`],
-      { state: { post: { postId: postId, banned:this.isBanned } } });
+      { state: { post: { postId: postId, banned: this.isBanned } } });
     // const initialState = {
     //   postAttachmentId: postAttachmentId
     // };
@@ -1455,22 +1488,22 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
 
   getFilteredAttachments(feeds: any): any {
     const allAttachments = feeds.flatMap((post: { postAttachments: any[]; }) => post.postAttachments);
-      const result = allAttachments.filter((attachment: { fileType: number; fileName: string; }) => {
-      return attachment.fileType === 3 && 
-             !this.filteredAttachments.some(existingAttachment =>
-               existingAttachment.fileType === 3 &&
-               existingAttachment.fileName === attachment.fileName
-             );
+    const result = allAttachments.filter((attachment: { fileType: number; fileName: string; }) => {
+      return attachment.fileType === 3 &&
+        !this.filteredAttachments.some(existingAttachment =>
+          existingAttachment.fileType === 3 &&
+          existingAttachment.fileName === attachment.fileName
+        );
     });
-  
+
     this.filteredAttachments = [...this.filteredAttachments, ...result];
-      feeds = feeds.map((post: { postAttachments: any[]; }) => {
+    feeds = feeds.map((post: { postAttachments: any[]; }) => {
       const filteredPostAttachments = post.postAttachments.filter(
         postAttachment => postAttachment.fileType !== 3
       );
       return { ...post, postAttachments: filteredPostAttachments };
     });
-  
+
     return feeds;
   }
 
@@ -1746,13 +1779,13 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
 
 
 
-  rateTheClass(){
+  rateTheClass() {
     debugger
     this.classRatingView = {
       userId: this.userId,
       classId: this.classId,
       courseId: null,
-      rating:this.rateNumber
+      rating: this.rateNumber
     }
     debugger
     this._classService.courseRating(this.classRatingView).subscribe((response) => {
@@ -1762,17 +1795,17 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       this.cd.detectChanges();
       const translatedInfoSummary = this.translateService.instant('Success');
       const translatedMessage = this.translateService.instant('ThankYouForYourRating');
-      this.messageService.add({severity:'success', summary:translatedInfoSummary,life: 3000, detail:translatedMessage});
+      this.messageService.add({ severity: 'success', summary: translatedInfoSummary, life: 3000, detail: translatedMessage });
       // this.isDataLoaded = true;
       // this.classCourseDetails.classCourseItem.comments = response;
-      });;
+    });;
   }
 
   rateNumber: number = 0;
   isRated: boolean = false;
   fakeArray = new Array(5);
   ratedArray: number[] = [];
-  isRatedByUser:boolean=false;
+  isRatedByUser: boolean = false;
   ratingNumber(rateNumber: number) {
     this.rateNumber = rateNumber + 1;
     this.isRated = true;
@@ -1804,7 +1837,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   //       }
   //     }
   //   }
-    
+
   // }
 
   // touchEnd(event:any){
@@ -1827,7 +1860,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   //   }
   // }
 
-  touchStartX:number=0
+  touchStartX: number = 0
   touchStart(event: any) {
     this.touchStartX = event.touches[0].clientX;
   }

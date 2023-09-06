@@ -1018,7 +1018,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     // }
     this.postToUpload.append('postTags', JSON.stringify(this.tagLists))
 
-    postUploadOnBlob.next({ postToUpload: this.postToUpload, combineFiles: combinedFiles, videos: this.videos, images: this.images, attachment: this.attachment, type: 1, reel: null, uploadedUrls: this.uploadVideoUrlList, videoThumbnails: this.videoThumbnails });
+    postUploadOnBlob.next({ postToUpload: this.postToUpload, combineFiles: combinedFiles, videos: this.videos, images: this.images, attachment: this.attachment, type: 1, reel: null, uploadedUrls: this.uploadVideoUrlList, videoThumbnails: this.videoThumbnails, checkLimitSchoolId: this.postCheckForLimitSchoolId });
 
     // this._postService.createPost(this.postToUpload).subscribe((response:any) => {
     //   debugger
@@ -1038,6 +1038,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
 
   }
 
+  postCheckForLimitSchoolId:any;
   postFrom() {
     debugger
     if(this.profileShare){
@@ -1046,9 +1047,11 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     else{
       if (this.schoolId != undefined) {
         this.appendData(this.schoolId, this.schoolId, '', PostAuthorTypeEnum.School.toString());
+        this.postCheckForLimitSchoolId = this.schoolId;
       }
       if (this.classId != undefined) {
         this.appendData('', this.classId, this.parentDetails.school.schoolId, PostAuthorTypeEnum.Class.toString());
+        this.postCheckForLimitSchoolId = this.parentDetails.school.schoolId
       }
   
       if (this.userId != undefined) {
@@ -1058,9 +1061,11 @@ export class CreatePostComponent implements OnInit, OnDestroy {
       if (this.courseId != undefined) {
         if (this.parentDetails?.isConvertable) {
           this.appendData('', this.courseId, this.parentDetails.school.schoolId, PostAuthorTypeEnum.Class.toString());
+          this.postCheckForLimitSchoolId = this.parentDetails.school.schoolId
         }
         else {
           this.appendData('', this.courseId, this.parentDetails.school.schoolId, PostAuthorTypeEnum.Course.toString());
+          this.postCheckForLimitSchoolId = this.parentDetails.school.schoolId
         }
       }
     }
@@ -1130,7 +1135,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     var combinedFiles = [...this.videos, ... this.videoThumbnails];
 
     // reelUploadOnBlob.next({postToUpload:this.postToUpload,reel:this.reel});
-    postUploadOnBlob.next({ postToUpload: this.postToUpload, combineFiles: combinedFiles, videos: this.videos, images: null, attachment: null, type: 2, reel: this.reel, uploadedUrls: this.uploadVideoUrlList, videoThumbnails: this.videoThumbnails });
+    postUploadOnBlob.next({ postToUpload: this.postToUpload, combineFiles: combinedFiles, videos: this.videos, images: null, attachment: null, type: 2, reel: this.reel, uploadedUrls: this.uploadVideoUrlList, videoThumbnails: this.videoThumbnails, checkLimitSchoolId: this.postCheckForLimitSchoolId });
     // this._postService.createPost(this.postToUpload).subscribe((response:any) => {
     //   debugger
     //   this.isSubmitted=false;
@@ -1420,7 +1425,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
 
     if(this.selectedVideoFromLibrary == undefined){
     const combinedFiles = [...this.videos, ...this.images];
-    postUploadOnBlob.next({ postToUpload: this.postToUpload, combineFiles: combinedFiles, videos: this.videos, images: this.images, attachment: null, type: 3, reel: null, uploadedUrls: [] });
+    postUploadOnBlob.next({ postToUpload: this.postToUpload, combineFiles: combinedFiles, videos: this.videos, images: this.images, attachment: null, type: 3, reel: null, uploadedUrls: [], checkLimitSchoolId: this.postCheckForLimitSchoolId });
     }
 
     if(this.selectedVideoFromLibrary != undefined){
