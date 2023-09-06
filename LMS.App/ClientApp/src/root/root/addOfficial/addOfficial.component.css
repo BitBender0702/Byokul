@@ -17,13 +17,28 @@
 .custom-language-select
   ::ng-deep
   .p-multiselect-panel
+  .p-multiselect-items
+  .p-multiselect-item
+  .p-checkbox {
+  margin-right: 0 !important;
+}
+
+.custom-language-select
+  ::ng-deep
+  .p-multiselect-panel
   .p-multiselect-header
   .p-checkbox {
   margin-right: 0;
 }
 
+.custom-language-select ::ng-deep .p-multiselect-item span {
+  text-overflow: ellipsis;
+  max-width: 250px;
+  overflow: hidden;
+}
+
 .custom-language-select ::ng-deep .p-multiselect-header {
-  padding: 0.5rem 2rem 0.5rem 1rem;
+  padding: 0.5rem 1.5rem 0.5rem 1rem;
 }
 
 .custom-language-select ::ng-deep .p-multiselect {
