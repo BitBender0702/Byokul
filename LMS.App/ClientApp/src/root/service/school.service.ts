@@ -1,10 +1,8 @@
 import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core"; 
-import { Router } from "@angular/router";
 import { Observable } from "rxjs";
 import { environment } from "src/environments/environment";
 import { FollowUnfollow } from "../interfaces/FollowUnfollow";
-import { CreateSchoolModel } from "../interfaces/school/createSchoolModel";
 
 
 @Injectable({providedIn: 'root'})
@@ -15,20 +13,18 @@ export class SchoolService{
     get apiUrl(): string {
         return environment.apiUrl;
       }
-    constructor(private router: Router, private http: HttpClient) { 
-        this.headers = new HttpHeaders({'Content-Type': 'application/json; charset=utf-8'});
+    constructor(private http: HttpClient) { 
+        this.token = localStorage.getItem("jwt")?? '';
         this.headers = new HttpHeaders().set("Authorization", "Bearer " + this.token);
     }
     
     createSchool(credentials:any): Observable<any> {
-        for (var pair of credentials.entries()) {
-            console.log(pair[0]+ ', ' + pair[1]); 
-        }
-        // const headers = { 'content-type': 'application/json'} 
         return this.http.post(`${this.apiUrl}/school/saveNewSchool`, credentials,{headers: this.headers});
     }
 
     editSchool(credentials:any): Observable<any> {
+        this.token = localStorage.getItem("jwt")?? '';
+        this.headers = new HttpHeaders().set("Authorization", "Bearer " + this.token);
         return this.http.post(`${this.apiUrl}/school/updateSchool`, credentials,{headers: this.headers});
     }
 
@@ -45,10 +41,14 @@ export class SchoolService{
     }
 
     getLanguageList():Observable<any>{
+        this.token = localStorage.getItem("jwt")?? '';
+        this.headers = new HttpHeaders().set("Authorization", "Bearer " + this.token);
         return this.http.get(`${this.apiUrl}/school/languageList`,{headers: this.headers});
     }
 
     getSchoolById(schoolName:string):Observable<any>{
+        this.token = localStorage.getItem("jwt")?? '';
+        this.headers = new HttpHeaders().set("Authorization", "Bearer " + this.token);
         return this.http.get(`${this.apiUrl}/school/getSchoolByName` + '?schoolName=' + schoolName,{headers: this.headers});
     }
 
@@ -61,6 +61,8 @@ export class SchoolService{
     }
 
     getAccessibility():Observable<any>{
+        this.token = localStorage.getItem("jwt")?? '';
+        this.headers = new HttpHeaders().set("Authorization", "Bearer " + this.token);
         return this.http.get(`${this.apiUrl}/class/getAccessibility`,{headers: this.headers});
     }
 
@@ -73,6 +75,8 @@ export class SchoolService{
     }
 
     getAllTeachers():Observable<any>{
+        this.token = localStorage.getItem("jwt")?? '';
+        this.headers = new HttpHeaders().set("Authorization", "Bearer " + this.token);
         return this.http.get(`${this.apiUrl}/teachers/getAllTeachers`,{headers: this.headers});
     }
 
@@ -103,6 +107,8 @@ export class SchoolService{
     }
 
     getSchoolByName(schoolName:any):Observable<any>{
+        this.token = localStorage.getItem("jwt")?? '';
+        this.headers = new HttpHeaders().set("Authorization", "Bearer " + this.token);
         return this.http.get(`${this.apiUrl}/school/getSchoolByName` + '?schoolName=' + schoolName,{headers: this.headers});
     }
 
