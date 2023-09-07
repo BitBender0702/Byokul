@@ -245,39 +245,56 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
 
             uploadResponse.postToUpload.append('blobUrlsJson', JSON.stringify(uploadUrls));
             var filesSizeInGb = this.totalUploadFilesSizeLimitCheck / (1024 * 1024 * 1024);
-            this._schoolService.isAvailableStorageSpace(this.checkLimitSchoolId, filesSizeInGb).subscribe(response => {
-              debugger
-              if (response.success) {
-                if(response.data.availableSpace < 5 && !response.data.isStorageFullNotification){
-                  var translatedMessage = this.translateService.instant('Your school has storage is less than 5%');
-                    var notificationContent = translatedMessage;
-                    this._notificationService.initializeNotificationViewModel(this.loginUserId, NotificationType.NotifyStorageExceed, notificationContent, this.loginUserId, response.id, response.postType, null, null).subscribe((response) => {
-                    });
-                }
-                this._postService.createPost(uploadResponse.postToUpload).subscribe((response: any) => {
-                  debugger
-                  var translatedMessage = this.translateService.instant('PostCreatedSuccessfully');
-                  const translatedSummary = this.translateService.instant('Success');
-                  this.messageService.add({ severity: 'success', summary: translatedSummary, life: 3000, detail: translatedMessage, });
-                  addPostResponse.next({ response });
-                  if (uploadResponse.videos.length != 0 || uploadResponse.attachment.length != 0) {
-                    var translatedMessage = this.translateService.instant('PostReadyToViewMessage');
-                    var notificationContent = translatedMessage;
-                    this._notificationService.initializeNotificationViewModel(this.loginUserId, NotificationType.PostUploaded, notificationContent, this.loginUserId, response.id, response.postType, null, null).subscribe((response) => {
-                    });
+            
+            if(this.checkLimitSchoolId != null || this.checkLimitSchoolId != undefined){
+              this._schoolService.isAvailableStorageSpace(this.checkLimitSchoolId, filesSizeInGb).subscribe(response => {
+                debugger
+                if (response.success) {
+                  if(response.data.availableSpace < 5 && !response.data.isStorageFullNotification){
+                    var translatedMessage = this.translateService.instant('Your school has storage is less than 5%');
+                      var notificationContent = translatedMessage;
+                      this._notificationService.initializeNotificationViewModel(this.loginUserId, NotificationType.NotifyStorageExceed, notificationContent, this.loginUserId, response.id, response.postType, null, null).subscribe((response) => {
+                      });
                   }
-                });
-              } else{
+                  this._postService.createPost(uploadResponse.postToUpload).subscribe((response: any) => {
+                    debugger
+                    var translatedMessage = this.translateService.instant('PostCreatedSuccessfully');
+                    const translatedSummary = this.translateService.instant('Success');
+                    this.messageService.add({ severity: 'success', summary: translatedSummary, life: 3000, detail: translatedMessage, });
+                    addPostResponse.next({ response });
+                    if (uploadResponse.videos.length != 0 || uploadResponse.attachment.length != 0) {
+                      var translatedMessage = this.translateService.instant('PostReadyToViewMessage');
+                      var notificationContent = translatedMessage;
+                      this._notificationService.initializeNotificationViewModel(this.loginUserId, NotificationType.PostUploaded, notificationContent, this.loginUserId, response.id, response.postType, null, null).subscribe((response) => {
+                      });
+                    }
+                  });
+                } else{
+                  const translatedSummary = this.translateService.instant('Success');
+                  const translatedMessage = this.translateService.instant('SchoolHasNoStorageSpace');
+                  this.messageService.add({
+                    severity: 'success',
+                    summary: translatedSummary,
+                    life: 3000,
+                    detail: translatedMessage,
+                  });
+                }
+              })
+            } else{
+              this._postService.createPost(uploadResponse.postToUpload).subscribe((response: any) => {
+                debugger
+                var translatedMessage = this.translateService.instant('PostCreatedSuccessfully');
                 const translatedSummary = this.translateService.instant('Success');
-                const translatedMessage = this.translateService.instant('SchoolHasNoStorageSpace');
-                this.messageService.add({
-                  severity: 'success',
-                  summary: translatedSummary,
-                  life: 3000,
-                  detail: translatedMessage,
-                });
-              }
-            })
+                this.messageService.add({ severity: 'success', summary: translatedSummary, life: 3000, detail: translatedMessage, });
+                addPostResponse.next({ response });
+                if (uploadResponse.videos.length != 0 || uploadResponse.attachment.length != 0) {
+                  var translatedMessage = this.translateService.instant('PostReadyToViewMessage');
+                  var notificationContent = translatedMessage;
+                  this._notificationService.initializeNotificationViewModel(this.loginUserId, NotificationType.PostUploaded, notificationContent, this.loginUserId, response.id, response.postType, null, null).subscribe((response) => {
+                  });
+                }
+              });
+            }
 
             // this._postService.createPost(uploadResponse.postToUpload).subscribe((response: any) => {
             //   debugger
@@ -318,38 +335,61 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
 
             var filesSizeInGb = this.totalUploadFilesSizeLimitCheck / (1024 * 1024 * 1024);
             debugger;
-            this._schoolService.isAvailableStorageSpace(this.checkLimitSchoolId, filesSizeInGb).subscribe(response => {
-              debugger
-              if (response.success) {
-                this._postService.createPost(uploadResponse.postToUpload).subscribe((response: any) => {
-                  debugger
-                  var translatedMessage = this.translateService.instant('ReelCreatedSuccessfully');
-                  const translatedSummary = this.translateService.instant('Success');
-                  this.messageService.add({ severity: 'success', summary: translatedSummary, life: 3000, detail: translatedMessage, });
-                  // this.isSubmitted=false;
-                  // this.loadingIcon = false;
-                  // this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Reel created successfully'});
-                  addPostResponse.next({ response });
-                  // this.postToUpload = new FormData();
-                  var translatedMessage = this.translateService.instant('PostReadyToViewMessage');
-                  var notificationContent = translatedMessage;
-                  // this.uploadVideoUrlList = [];
-                  this._notificationService.initializeNotificationViewModel(this.loginUserId, NotificationType.PostUploaded, notificationContent, this.loginUserId, response.id, response.postType, null, response.reelId).subscribe((response) => {
+           
+            if(this.checkLimitSchoolId != null || this.checkLimitSchoolId != undefined){
+              this._schoolService.isAvailableStorageSpace(this.checkLimitSchoolId, filesSizeInGb).subscribe(response => {
+                debugger
+                if (response.success) {
+                  this._postService.createPost(uploadResponse.postToUpload).subscribe((response: any) => {
+                    debugger
+                    var translatedMessage = this.translateService.instant('ReelCreatedSuccessfully');
+                    const translatedSummary = this.translateService.instant('Success');
+                    this.messageService.add({ severity: 'success', summary: translatedSummary, life: 3000, detail: translatedMessage, });
+                    // this.isSubmitted=false;
+                    // this.loadingIcon = false;
+                    // this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Reel created successfully'});
+                    addPostResponse.next({ response });
+                    // this.postToUpload = new FormData();
+                    var translatedMessage = this.translateService.instant('PostReadyToViewMessage');
+                    var notificationContent = translatedMessage;
+                    // this.uploadVideoUrlList = [];
+                    this._notificationService.initializeNotificationViewModel(this.loginUserId, NotificationType.PostUploaded, notificationContent, this.loginUserId, response.id, response.postType, null, response.reelId).subscribe((response) => {
+                    });
+                    // this.close();
+                    // this.ngOnInit();
                   });
-                  // this.close();
-                  // this.ngOnInit();
-                });
-              } else{
+                } else{
+                  const translatedSummary = this.translateService.instant('Success');
+                  const translatedMessage = this.translateService.instant('SchoolHasNoStorageSpace');
+                  this.messageService.add({
+                    severity: 'success',
+                    summary: translatedSummary,
+                    life: 3000,
+                    detail: translatedMessage,
+                  });
+                }
+              })
+            } else{
+              debugger
+              this._postService.createPost(uploadResponse.postToUpload).subscribe((response: any) => {
+                debugger
+                var translatedMessage = this.translateService.instant('ReelCreatedSuccessfully');
                 const translatedSummary = this.translateService.instant('Success');
-                const translatedMessage = this.translateService.instant('SchoolHasNoStorageSpace');
-                this.messageService.add({
-                  severity: 'success',
-                  summary: translatedSummary,
-                  life: 3000,
-                  detail: translatedMessage,
+                this.messageService.add({ severity: 'success', summary: translatedSummary, life: 3000, detail: translatedMessage, });
+                // this.isSubmitted=false;
+                // this.loadingIcon = false;
+                // this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Reel created successfully'});
+                addPostResponse.next({ response });
+                // this.postToUpload = new FormData();
+                var translatedMessage = this.translateService.instant('PostReadyToViewMessage');
+                var notificationContent = translatedMessage;
+                // this.uploadVideoUrlList = [];
+                this._notificationService.initializeNotificationViewModel(this.loginUserId, NotificationType.PostUploaded, notificationContent, this.loginUserId, response.id, response.postType, null, response.reelId).subscribe((response) => {
                 });
-              }
-            })
+                // this.close();
+                // this.ngOnInit();
+              });
+            }
 
 
             // this._postService.createPost(uploadResponse.postToUpload).subscribe((response: any) => {
