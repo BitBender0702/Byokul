@@ -2429,7 +2429,7 @@
                           >
                             <ul
                               *ngIf="gridItemInfo?.createdBy == userId"
-                              class="list-unstyled d-flex more-action-btn before-none pe-2 me-1 mb-0"
+                              class="list-unstyled d-flex more-action-btn before-none mb-0 action-button"
                               style="position: absolute; right: 50px"
                             >
                               <li class="d-inline-block ps-0 mb-0">
@@ -2836,73 +2836,73 @@
                   >
                     <div class="schoolgrid-header pe-0">
                       <div
-                        class="d-flex align-items-center position-relative gap-3"
+                        class="d-flex align-items-center position-relative gap-3 justify-content-between"
                       >
-                        <div
-                          *ngIf="item.type == 1"
-                          [routerLink]="[
-                            '/profile/class',
-                            item.schoolName,
-                            item.name
-                          ]"
-                          class="school-gridprofile-icon"
-                        >
-                          <!-- <a *ngIf="item.type == 1" [routerLink]="['/profile/class', item.schoolName,item.name]" class="routeLink">
-                            <img [lazyLoad]="item.avatar" />
-                          </a>
-                          <a *ngIf="item.type == 2" [routerLink]="['/profile/course', item.schoolName,item.name]" class="routeLink">
-
-                          </a> -->
-                          <img [lazyLoad]="item.avatar" />
-                        </div>
-                        <div
-                          *ngIf="item.type == 2"
-                          [routerLink]="[
-                            '/profile/course',
-                            item.schoolName,
-                            item.name
-                          ]"
-                          class="school-gridprofile-icon"
-                        >
-                          <!-- <a *ngIf="item.type == 1" [routerLink]="['/profile/class', item.schoolName,item.name]" class="routeLink">
-                            <img [lazyLoad]="item.avatar" />
-                          </a>
-                          <a *ngIf="item.type == 2" [routerLink]="['/profile/course', item.schoolName,item.name]" class="routeLink">
-
-                          </a> -->
-                          <img [lazyLoad]="item.avatar" />
-                        </div>
-                        <h2
-                          class="d-inline-block font_16 fw_600 text_sec1 mb-0"
-                        >
-                          <a
+                        <div class="d-flex align-items-center gap-3">
+                          <div
                             *ngIf="item.type == 1"
                             [routerLink]="[
                               '/profile/class',
                               item.schoolName,
                               item.name
                             ]"
-                            class="routeLink"
+                            class="school-gridprofile-icon"
                           >
-                            {{ item.name }}
+                            <!-- <a *ngIf="item.type == 1" [routerLink]="['/profile/class', item.schoolName,item.name]" class="routeLink">
+                            <img [lazyLoad]="item.avatar" />
                           </a>
-                          <a
+                          <a *ngIf="item.type == 2" [routerLink]="['/profile/course', item.schoolName,item.name]" class="routeLink">
+
+                          </a> -->
+                            <img [lazyLoad]="item.avatar" />
+                          </div>
+                          <div
                             *ngIf="item.type == 2"
                             [routerLink]="[
                               '/profile/course',
                               item.schoolName,
                               item.name
                             ]"
-                            class="routeLink"
+                            class="school-gridprofile-icon"
                           >
-                            {{ item.name }}
+                            <!-- <a *ngIf="item.type == 1" [routerLink]="['/profile/class', item.schoolName,item.name]" class="routeLink">
+                            <img [lazyLoad]="item.avatar" />
                           </a>
-                        </h2>
-                        <div
-                          class="d-flex align-items-center post-right-action"
-                        >
+                          <a *ngIf="item.type == 2" [routerLink]="['/profile/course', item.schoolName,item.name]" class="routeLink">
+
+                          </a> -->
+                            <img [lazyLoad]="item.avatar" />
+                          </div>
+                          <h2
+                            class="d-inline-block font_16 fw_600 text_sec1 mb-0"
+                          >
+                            <a
+                              *ngIf="item.type == 1"
+                              [routerLink]="[
+                                '/profile/class',
+                                item.schoolName,
+                                item.name
+                              ]"
+                              class="routeLink"
+                            >
+                              {{ item.name }}
+                            </a>
+                            <a
+                              *ngIf="item.type == 2"
+                              [routerLink]="[
+                                '/profile/course',
+                                item.schoolName,
+                                item.name
+                              ]"
+                              class="routeLink"
+                            >
+                              {{ item.name }}
+                            </a>
+                          </h2>
+                        </div>
+                        <div class="d-flex align-items-center">
                           <ul
-                            class="list-unstyled d-flex more-action-btn before-none pe-2 me-1 mb-0"
+                            class="list-unstyled d-flex more-action-btn before-none mb-0 action-button"
                           >
                             <li class="d-inline-block ps-0 mb-0">
                               <div class="dropdown">
@@ -2941,7 +2941,7 @@
                               pinUnpinClassCourse(item.id, item.type, false)
                             "
                             type="button"
-                            class="bg-transparent border-0 pinned-grid-chat position-static"
+                            class="bg-transparent border-0 pinned-grid-chat position-static action-button"
                           >
                             <img
                               class="w-auto h-auto"
@@ -2954,7 +2954,7 @@
                               pinUnpinClassCourse(item.id, item.type, true)
                             "
                             type="button"
-                            class="bg-transparent border-0 pinned-grid-chat position-static"
+                            class="bg-transparent border-0 pinned-grid-chat position-static action-button"
                           >
                             <img
                               class="w-auto h-auto"
@@ -3199,73 +3199,73 @@
                   >
                     <div class="schoolgrid-header pe-0">
                       <div
-                        class="d-flex align-items-center position-relative gap-3"
+                        class="d-flex align-items-center position-relative gap-3 justify-content-between"
                       >
-                        <div
-                          *ngIf="item.type == 1"
-                          [routerLink]="[
-                            '/profile/class',
-                            item.schoolName,
-                            item.name
-                          ]"
-                          class="school-gridprofile-icon"
-                        >
-                          <!-- <a *ngIf="item.type == 1" [routerLink]="['/profile/class', item.schoolName,item.name]" class="routeLink">
-                          <img [lazyLoad]="item.avatar" />
-                        </a>
-                        <a *ngIf="item.type == 2" [routerLink]="['/profile/course', item.schoolName,item.name]" class="routeLink">
-
-                        </a> -->
-                          <img [lazyLoad]="item.avatar" />
-                        </div>
-                        <div
-                          *ngIf="item.type == 2"
-                          [routerLink]="[
-                            '/profile/course',
-                            item.schoolName,
-                            item.name
-                          ]"
-                          class="school-gridprofile-icon"
-                        >
-                          <!-- <a *ngIf="item.type == 1" [routerLink]="['/profile/class', item.schoolName,item.name]" class="routeLink">
-                          <img [lazyLoad]="item.avatar" />
-                        </a>
-                        <a *ngIf="item.type == 2" [routerLink]="['/profile/course', item.schoolName,item.name]" class="routeLink">
-
-                        </a> -->
-                          <img [lazyLoad]="item.avatar" />
-                        </div>
-                        <h2
-                          class="d-inline-block font_16 fw_600 text_sec1 mb-0"
-                        >
-                          <a
+                        <div class="d-flex align-items-center gap-3">
+                          <div
                             *ngIf="item.type == 1"
                             [routerLink]="[
                               '/profile/class',
                               item.schoolName,
                               item.name
                             ]"
-                            class="routeLink"
+                            class="school-gridprofile-icon"
                           >
-                            {{ item.name }}
-                          </a>
-                          <a
+                            <!-- <a *ngIf="item.type == 1" [routerLink]="['/profile/class', item.schoolName,item.name]" class="routeLink">
+                          <img [lazyLoad]="item.avatar" />
+                        </a>
+                        <a *ngIf="item.type == 2" [routerLink]="['/profile/course', item.schoolName,item.name]" class="routeLink">
+
+                        </a> -->
+                            <img [lazyLoad]="item.avatar" />
+                          </div>
+                          <div
                             *ngIf="item.type == 2"
                             [routerLink]="[
                               '/profile/course',
                               item.schoolName,
                               item.name
                             ]"
-                            class="routeLink"
+                            class="school-gridprofile-icon"
                           >
-                            {{ item.name }}
-                          </a>
-                        </h2>
-                        <div
-                          class="d-flex align-items-center post-right-action"
-                        >
+                            <!-- <a *ngIf="item.type == 1" [routerLink]="['/profile/class', item.schoolName,item.name]" class="routeLink">
+                          <img [lazyLoad]="item.avatar" />
+                        </a>
+                        <a *ngIf="item.type == 2" [routerLink]="['/profile/course', item.schoolName,item.name]" class="routeLink">
+
+                        </a> -->
+                            <img [lazyLoad]="item.avatar" />
+                          </div>
+                          <h2
+                            class="d-inline-block font_16 fw_600 text_sec1 mb-0"
+                          >
+                            <a
+                              *ngIf="item.type == 1"
+                              [routerLink]="[
+                                '/profile/class',
+                                item.schoolName,
+                                item.name
+                              ]"
+                              class="routeLink"
+                            >
+                              {{ item.name }}
+                            </a>
+                            <a
+                              *ngIf="item.type == 2"
+                              [routerLink]="[
+                                '/profile/course',
+                                item.schoolName,
+                                item.name
+                              ]"
+                              class="routeLink"
+                            >
+                              {{ item.name }}
+                            </a>
+                          </h2>
+                        </div>
+                        <div class="d-flex align-items-center">
                           <ul
-                            class="list-unstyled d-flex more-action-btn before-none pe-2 me-1 mb-0"
+                            class="list-unstyled d-flex more-action-btn before-none mb-0 action-button"
                           >
                             <li class="d-inline-block ps-0 mb-0">
                               <div class="dropdown">
@@ -3304,7 +3304,7 @@
                               pinUnpinClassCourse(item.id, item.type, false)
                             "
                             type="button"
-                            class="bg-transparent border-0 pinned-grid-chat position-static"
+                            class="bg-transparent border-0 pinned-grid-chat position-static action-button"
                           >
                             <img
                               class="w-auto h-auto"
@@ -3317,7 +3317,7 @@
                               pinUnpinClassCourse(item.id, item.type, true)
                             "
                             type="button"
-                            class="bg-transparent border-0 pinned-grid-chat position-static"
+                            class="bg-transparent border-0 pinned-grid-chat position-static action-button"
                           >
                             <img
                               class="w-auto h-auto"
@@ -3553,7 +3553,7 @@
                 </h1>
                 <ul
                   *ngIf="isOwner"
-                  class="list-unstyled d-flex more-action-btn before-none pe-2 me-1 mb-0"
+                  class="list-unstyled d-flex more-action-btn before-none mb-0 action-button"
                   style="position: absolute; right: 50px; top: 28px"
                 >
                   <li class="d-inline-block ps-0 mb-0">

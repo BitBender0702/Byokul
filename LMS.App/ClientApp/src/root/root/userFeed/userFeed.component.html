@@ -124,9 +124,7 @@
                 <button
                   (click)="getGlobalFeeds()"
                   [ngClass]="
-                    feedTab == 'globalFeed'
-                      ? 'nav-link active'
-                      : 'nav-link'
+                    feedTab == 'globalFeed' ? 'nav-link active' : 'nav-link'
                   "
                   class="nav-link"
                   id="classes-tab"
@@ -199,7 +197,7 @@
                     [itemsPerSlide]="itemsPerSlide"
                     [singleSlideOffset]="singleSlideOffset"
                     [noWrap]="noWrap"
-                    (touchstart)="touchStart($event)" 
+                    (touchstart)="touchStart($event)"
                     (touchend)="touchEndUser($event)"
                   >
                     <div *ngFor="let post of myFeedsReels">
@@ -245,11 +243,11 @@
                                 <a
                                   *ngIf="post.postAuthorType == 1"
                                   (click)="getSelectedSchool(post.parentName)"
-                                  class="routeLink "
+                                  class="routeLink"
                                 >
-                                <div class="feed_userpicture">
-                                  <img [lazyLoad]="post.parentImageUrl" />
-                                </div>
+                                  <div class="feed_userpicture">
+                                    <img [lazyLoad]="post.parentImageUrl" />
+                                  </div>
                                 </a>
                                 <a
                                   *ngIf="post.postAuthorType == 2"
@@ -265,9 +263,9 @@
                                   ]"
                                   class="routeLink"
                                 >
-                                <div class="feed_userpicture">
-                                  <img [lazyLoad]="post.parentImageUrl" />
-                                </div>
+                                  <div class="feed_userpicture">
+                                    <img [lazyLoad]="post.parentImageUrl" />
+                                  </div>
                                 </a>
                                 <a
                                   *ngIf="post.postAuthorType == 3"
@@ -279,38 +277,38 @@
                                   "
                                   class="routeLink"
                                 >
-                                <div class="feed_userpicture">
-                                  <img [lazyLoad]="post.parentImageUrl" />
-                                </div>
+                                  <div class="feed_userpicture">
+                                    <img [lazyLoad]="post.parentImageUrl" />
+                                  </div>
                                 </a>
                                 <a
                                   *ngIf="post.postAuthorType == 4"
                                   (click)="getUserDetails(post.parentId)"
                                   class="routeLink"
                                 >
-                                <div class="feed_userpicture">
-                                  <img
-                                    *ngIf="post.parentImageUrl != null"
-                                    [lazyLoad]="post.parentImageUrl"
-                                  />
-                                  <img
-                                    *ngIf="
-                                      post.parentImageUrl == null &&
-                                      gender == '1'
-                                    "
-                                    lazyLoad="../../../assets/images/maleProfile.jfif"
-                                  />
-                                  <img
-                                    *ngIf="
-                                      post.parentImageUrl == null &&
-                                      (gender == '2' || gender == '3')
-                                    "
-                                    lazyLoad="../../../assets/images/femaleProfile.jfif"
-                                  />
-                                </div>
+                                  <div class="feed_userpicture">
+                                    <img
+                                      *ngIf="post.parentImageUrl != null"
+                                      [lazyLoad]="post.parentImageUrl"
+                                    />
+                                    <img
+                                      *ngIf="
+                                        post.parentImageUrl == null &&
+                                        gender == '1'
+                                      "
+                                      lazyLoad="../../../assets/images/maleProfile.jfif"
+                                    />
+                                    <img
+                                      *ngIf="
+                                        post.parentImageUrl == null &&
+                                        (gender == '2' || gender == '3')
+                                      "
+                                      lazyLoad="../../../assets/images/femaleProfile.jfif"
+                                    />
+                                  </div>
                                 </a>
                                 <!-- <img [lazyLoad]="school.avatar"/> {{school.schoolName}} -->
-                                {{post.parentName}}
+                                {{ post.parentName }}
                               </div>
                               <div
                                 class="feed-title font_14 text_sec1 d-flex align-content-center fw_600"
@@ -322,8 +320,7 @@
                                     let item of parseTheTags(post.postTags);
                                     let isLast = last
                                   "
-                                  >#{{ item
-                                  }}{{ isLast ? "" : ", " }}</span
+                                  >#{{ item }}{{ isLast ? "" : ", " }}</span
                                 >
                               </div>
                             </div>
@@ -361,110 +358,111 @@
                   <div
                     class="schoolgrid-header flex-row align-items-center gap-3 position-relative justify-content-between"
                   >
-                  <div class="d-flex align-items-center gap-2">
-                    <div class="school-gridprofile-icon">
-                      <!-- <img [lazyLoad]="post.parentImageUrl"/> -->
-                      <a
-                        *ngIf="post.postAuthorType == 1"
-                        (click)="getSelectedSchool(post.parentName)"
-                        class="routeLink"
-                      >
-                        <img [lazyLoad]="post.parentImageUrl" />
-                      </a>
-                      <a
-                        *ngIf="post.postAuthorType == 2"
-                        (click)="
-                          getSelectedClass(post.parentName, post.schoolName)
-                        "
-                        class="routeLink"
-                      >
-                        <img [lazyLoad]="post.parentImageUrl" />
-                      </a>
-                      <a
-                        *ngIf="post.postAuthorType == 3"
-                        (click)="
-                          getSelectedCourse(post.parentName, post.schoolName)
-                        "
-                        class="routeLink"
-                      >
-                        <img [lazyLoad]="post.parentImageUrl" />
-                      </a>
-                      <a
-                        *ngIf="post.postAuthorType == 4"
-                        (click)="getUserDetails(post.parentId)"
-                        class="routeLink"
-                      >
-                        <img
-                          *ngIf="post.parentImageUrl != null"
-                          [lazyLoad]="post.parentImageUrl"
-                        />
-                        <img
-                          *ngIf="post.parentImageUrl == null && gender == '1'"
-                          lazyLoad="../../../assets/images/maleProfile.jfif"
-                        />
-                        <img
-                          *ngIf="
-                            post.parentImageUrl == null &&
-                            (gender == '2' || gender == '3')
+                    <div class="d-flex align-items-center gap-2">
+                      <div class="school-gridprofile-icon">
+                        <!-- <img [lazyLoad]="post.parentImageUrl"/> -->
+                        <a
+                          *ngIf="post.postAuthorType == 1"
+                          (click)="getSelectedSchool(post.parentName)"
+                          class="routeLink"
+                        >
+                          <img [lazyLoad]="post.parentImageUrl" />
+                        </a>
+                        <a
+                          *ngIf="post.postAuthorType == 2"
+                          (click)="
+                            getSelectedClass(post.parentName, post.schoolName)
                           "
-                          lazyLoad="../../../assets/images/femaleProfile.jfif"
-                        />
-                      </a>
-                    </div>
-                    <h2 class="d-inline-block font_20 fw_600 text_sec1 mb-0">
-                      <a
-                        *ngIf="post.postAuthorType == 1"
-                        (click)="getSelectedSchool(post.parentName)"
-                        class="routeLink"
-                      >
-                        {{ post.parentName }}
-                      </a>
-                      <a
-                        *ngIf="post.postAuthorType == 2"
-                        (click)="
-                          getSelectedClass(post.parentName, post.schoolName)
-                        "
-                        class="routeLink"
-                      >
-                      {{ post.parentName }}
-                    </a>
-                      <a
-                        *ngIf="post.postAuthorType == 3"
-                        (click)="
-                          getSelectedCourse(post.parentName, post.schoolName)
-                        "
-                        class="routeLink"
-                      >
-                      {{ post.parentName }}
-                    </a>
-                      <a
-                        *ngIf="post.postAuthorType == 4"
-                        (click)="getUserDetails(post.parentId)"
-                        class="routeLink"
-                      >
-                      {{ post.parentName }}
-                    </a>
-                    </h2>
+                          class="routeLink"
+                        >
+                          <img [lazyLoad]="post.parentImageUrl" />
+                        </a>
+                        <a
+                          *ngIf="post.postAuthorType == 3"
+                          (click)="
+                            getSelectedCourse(post.parentName, post.schoolName)
+                          "
+                          class="routeLink"
+                        >
+                          <img [lazyLoad]="post.parentImageUrl" />
+                        </a>
+                        <a
+                          *ngIf="post.postAuthorType == 4"
+                          (click)="getUserDetails(post.parentId)"
+                          class="routeLink"
+                        >
+                          <img
+                            *ngIf="post.parentImageUrl != null"
+                            [lazyLoad]="post.parentImageUrl"
+                          />
+                          <img
+                            *ngIf="post.parentImageUrl == null && gender == '1'"
+                            lazyLoad="../../../assets/images/maleProfile.jfif"
+                          />
+                          <img
+                            *ngIf="
+                              post.parentImageUrl == null &&
+                              (gender == '2' || gender == '3')
+                            "
+                            lazyLoad="../../../assets/images/femaleProfile.jfif"
+                          />
+                        </a>
+                      </div>
+                      <h2 class="d-inline-block font_20 fw_600 text_sec1 mb-0">
+                        <a
+                          *ngIf="post.postAuthorType == 1"
+                          (click)="getSelectedSchool(post.parentName)"
+                          class="routeLink"
+                        >
+                          {{ post.parentName }}
+                        </a>
+                        <a
+                          *ngIf="post.postAuthorType == 2"
+                          (click)="
+                            getSelectedClass(post.parentName, post.schoolName)
+                          "
+                          class="routeLink"
+                        >
+                          {{ post.parentName }}
+                        </a>
+                        <a
+                          *ngIf="post.postAuthorType == 3"
+                          (click)="
+                            getSelectedCourse(post.parentName, post.schoolName)
+                          "
+                          class="routeLink"
+                        >
+                          {{ post.parentName }}
+                        </a>
+                        <a
+                          *ngIf="post.postAuthorType == 4"
+                          (click)="getUserDetails(post.parentId)"
+                          class="routeLink"
+                        >
+                          {{ post.parentName }}
+                        </a>
+                      </h2>
                     </div>
                     <div>
-                    <p
-                      *ngIf="post.createdOn != null"
-                      class="font_14 school-grid-date d-inline-block mb-0 me-3"
-                    >
-                      {{ post.createdOn | date : "MMMM d" }} -
-                      {{ post.createdOn | date : "hh:mm" }}
-                    </p>
-                  </div>
+                      <p
+                        *ngIf="post.createdOn != null"
+                        class="font_14 school-grid-date d-inline-block mb-0 me-3"
+                      >
+                        {{ post.createdOn | date : "MMMM d" }} -
+                        {{ post.createdOn | date : "hh:mm" }}
+                      </p>
+                    </div>
                   </div>
 
                   <h4 class="d-inline-block font_20 fw_600 text_sec1 mb-3">
-                    <a (click)="navigateToProfile(post.sharedProfileUrl)">{{post.title}}</a>
+                    <a (click)="navigateToProfile(post.sharedProfileUrl)">{{
+                      post.title
+                    }}</a>
                   </h4>
                   <div
                     class="school-grid-body videoChange"
                     (click)="openPostsViewModal(post, 'myFeeds')"
                   >
-                  
                     <p
                       class="text_sec1 word-break font_14"
                       style="cursor: pointer"
@@ -491,7 +489,11 @@
                       </ng-container>
                     </div>
                     <div class="teacher-tags tag-box hashtag_box">
-                      <span *ngFor="let item of parseTheListViewTags(post.postTags);" class="custom-tag">#{{ item }}</span>
+                      <span
+                        *ngFor="let item of parseTheListViewTags(post.postTags)"
+                        class="custom-tag"
+                        >#{{ item }}</span
+                      >
                     </div>
                     <div
                       *ngIf="post.postAttachments.length"
@@ -653,7 +655,9 @@
                           class="col-md-4 h-100"
                         >
                           <div class="h-100 medium_thumbox d-flex">
-                            <div class="medium-thumnail">
+                            <div
+                              class="medium-thumnail align-items-center justify-content-center"
+                            >
                               <img
                                 class="w-100 position-relative"
                                 lazyLoad="../../../../assets/images/blurImage.jfif"
@@ -661,12 +665,7 @@
                               />
                               <div
                                 class="position-absolute"
-                                style="
-                                  margin-top: 55px;
-                                  margin-left: 200px;
-                                  font-size: 52px;
-                                  font-weight: 600;
-                                "
+                                style="font-size: 52px; font-weight: 600"
                               >
                                 +{{ post.postAttachments.length - 2 }}
                               </div>
@@ -844,7 +843,8 @@
                         lazyLoad="../../../../assets/images/Bookmark-dark.svg"
                         class="d-block mx-auto"
                       />
-                      <img height="20px"
+                      <img
+                        height="20px"
                         *ngIf="post.isPostSavedByCurrentUser"
                         lazyLoad="../../../assets/images/bookmark-dash-fill.svg"
                         class="d-block mx-auto"
@@ -923,7 +923,7 @@
                                   *ngIf="postAttachment?.fileType == 2"
                                   class="videofile"
                                 >
-                                  <videoJs-component 
+                                  <videoJs-component
                                     [postAttachment]="postAttachment"
                                   ></videoJs-component>
                                   <!-- <video [id] = "getRandomClass(i,false)" controls class="video-js vjs-big-play-centered" preload="metadata">
@@ -1079,10 +1079,14 @@
                                     {{ gridItemInfo.title }}
                                   </a>
                                 </h2>
-                              </div><br>
-                              <p class="font_14 school-grid-date d-inline-block mb-0">
-                        {{gridItemInfo.createdOn | date : "MMMM d"}} - {{gridItemInfo.createdOn | date : "hh:mm"}}
-                      </p>
+                              </div>
+                              <br />
+                              <p
+                                class="font_14 school-grid-date d-inline-block mb-0"
+                              >
+                                {{ gridItemInfo.createdOn | date : "MMMM d" }} -
+                                {{ gridItemInfo.createdOn | date : "hh:mm" }}
+                              </p>
                             </div>
                             <p class="text_sec1 font_14 pt-3">
                               {{ gridItemInfo.description }}
@@ -1193,7 +1197,8 @@
                                   lazyLoad="../../../../assets/images/Bookmark-dark.svg"
                                   class="d-block mx-auto"
                                 />
-                                <img height="20px"
+                                <img
+                                  height="20px"
                                   *ngIf="gridItemInfo.isPostSavedByCurrentUser"
                                   lazyLoad="../../../../assets/images/bookmark-dash-fill.svg"
                                   class="d-block mx-auto"
@@ -1462,7 +1467,7 @@
                     [singleSlideOffset]="singleSlideOffset"
                     [interval]="0"
                     [noWrap]="noWrap"
-                    (touchstart)="touchStart($event)" 
+                    (touchstart)="touchStart($event)"
                     (touchend)="touchEnd($event)"
                   >
                     <div *ngFor="let post of globalFeedReels">
@@ -1540,7 +1545,7 @@
                                   "
                                   class="routeLink"
                                 >
-                                  <div class="feed_userpicture" >
+                                  <div class="feed_userpicture">
                                     <img [lazyLoad]="post.parentImageUrl" />
                                   </div>
                                   <!-- {{post.parentName}} -->
@@ -1550,29 +1555,29 @@
                                   (click)="getUserDetails(post.parentId)"
                                   class="routeLink"
                                 >
-                                <div class="feed_userpicture">
-                                  <img
-                                    *ngIf="post.parentImageUrl != null"
-                                    [lazyLoad]="post.parentImageUrl"
-                                  />
-                                  <img
-                                    *ngIf="
-                                      post.parentImageUrl == null &&
-                                      gender == '1'
-                                    "
-                                    lazyLoad="../../../assets/images/maleProfile.jfif"
-                                  />
-                                  <img
-                                    *ngIf="
-                                      post.parentImageUrl == null &&
-                                      (gender == '2' || gender == '3')
-                                    "
-                                    lazyLoad="../../../assets/images/femaleProfile.jfif"
-                                  />
+                                  <div class="feed_userpicture">
+                                    <img
+                                      *ngIf="post.parentImageUrl != null"
+                                      [lazyLoad]="post.parentImageUrl"
+                                    />
+                                    <img
+                                      *ngIf="
+                                        post.parentImageUrl == null &&
+                                        gender == '1'
+                                      "
+                                      lazyLoad="../../../assets/images/maleProfile.jfif"
+                                    />
+                                    <img
+                                      *ngIf="
+                                        post.parentImageUrl == null &&
+                                        (gender == '2' || gender == '3')
+                                      "
+                                      lazyLoad="../../../assets/images/femaleProfile.jfif"
+                                    />
                                   </div>
                                   <!-- {{post.parentName}} -->
                                 </a>
-                                {{post.parentName}}
+                                {{ post.parentName }}
                               </div>
                               <div
                                 class="feed-title font_14 text_sec1 d-flex align-content-center fw_600"
@@ -1584,8 +1589,7 @@
                                     let item of parseTheTags(post.postTags);
                                     let isLast = last
                                   "
-                                  >#{{ item
-                                  }}{{ isLast ? "" : ", " }}</span
+                                  >#{{ item }}{{ isLast ? "" : ", " }}</span
                                 >
                               </div>
                             </div>
@@ -1606,109 +1610,114 @@
                   <div
                     class="schoolgrid-header flex-row align-items-center position-relative justify-content-between"
                   >
-                  <div class="d-flex align-items-center gap-2">
-                    <div class="school-gridprofile-icon">
-                      <a
-                        *ngIf="post.postAuthorType == 1"
-                        (click)="getSelectedSchool(post.parentName)"
-                        class="routeLink"
-                      >
-                      <div class="feed_userpicture" class="fit-image">
-                        <img [lazyLoad]="post.parentImageUrl" />
-                      </div>
-                      </a>
-                      <a
-                        *ngIf="post.postAuthorType == 2"
-                        (click)="
-                          getSelectedClass(post.parentName, post.schoolName)
-                        "
-                        class="routeLink"
-                      >
-                      <div class="feed_userpicture school-img rounded-circle fit-image">
-                        <img [lazyLoad]="post.parentImageUrl" />
-                      </div>
-                      </a>
-                      <a
-                        *ngIf="post.postAuthorType == 3"
-                        (click)="
-                          getSelectedCourse(post.parentName, post.schoolName)
-                        "
-                        class="routeLink"
-                      >
-                      <div class="feed_userpicture school-img rounded-circle fit-image">
-                        <img [lazyLoad]="post.parentImageUrl" />
-                      </div>
-                      </a>
-                      <a
-                        *ngIf="post.postAuthorType == 4"
-                        (click)="getUserDetails(post.parentId)"
-                        class="routeLink"
-                      >
-                      <div class="imageForPostProfile"
-                      >
-                        <img
-                          *ngIf="post.parentImageUrl != null"
-                          [lazyLoad]="post.parentImageUrl"
-                          class=" fit-image"
-                        />
-                      
-                        <img
-                          *ngIf="post.parentImageUrl == null && gender == '1'"
-                          lazyLoad="../../../assets/images/maleProfile.jfif"
-                        />
-                        <img
-                          *ngIf="
-                            post.parentImageUrl == null &&
-                            (gender == '2' || gender == '3')
+                    <div class="d-flex align-items-center gap-2">
+                      <div class="school-gridprofile-icon">
+                        <a
+                          *ngIf="post.postAuthorType == 1"
+                          (click)="getSelectedSchool(post.parentName)"
+                          class="routeLink"
+                        >
+                          <div class="feed_userpicture" class="fit-image">
+                            <img [lazyLoad]="post.parentImageUrl" />
+                          </div>
+                        </a>
+                        <a
+                          *ngIf="post.postAuthorType == 2"
+                          (click)="
+                            getSelectedClass(post.parentName, post.schoolName)
                           "
-                          lazyLoad="../../../assets/images/femaleProfile.jfif"
-                        />
+                          class="routeLink"
+                        >
+                          <div
+                            class="feed_userpicture school-img rounded-circle fit-image"
+                          >
+                            <img [lazyLoad]="post.parentImageUrl" />
+                          </div>
+                        </a>
+                        <a
+                          *ngIf="post.postAuthorType == 3"
+                          (click)="
+                            getSelectedCourse(post.parentName, post.schoolName)
+                          "
+                          class="routeLink"
+                        >
+                          <div
+                            class="feed_userpicture school-img rounded-circle fit-image"
+                          >
+                            <img [lazyLoad]="post.parentImageUrl" />
+                          </div>
+                        </a>
+                        <a
+                          *ngIf="post.postAuthorType == 4"
+                          (click)="getUserDetails(post.parentId)"
+                          class="routeLink"
+                        >
+                          <div class="imageForPostProfile">
+                            <img
+                              *ngIf="post.parentImageUrl != null"
+                              [lazyLoad]="post.parentImageUrl"
+                              class="fit-image"
+                            />
+
+                            <img
+                              *ngIf="
+                                post.parentImageUrl == null && gender == '1'
+                              "
+                              lazyLoad="../../../assets/images/maleProfile.jfif"
+                            />
+                            <img
+                              *ngIf="
+                                post.parentImageUrl == null &&
+                                (gender == '2' || gender == '3')
+                              "
+                              lazyLoad="../../../assets/images/femaleProfile.jfif"
+                            />
+                          </div>
+                        </a>
                       </div>
-                      </a>
-                    </div>
-                    <h2 class="d-inline-block font_20 fw_600 text_sec1 mb-0">
-                      <a
-                        *ngIf="post.postAuthorType == 1"
-                        (click)="getSelectedSchool(post.parentName)"
-                        class="routeLink"
-                      >
-                        {{ post.parentName }}
-                      </a>
-                      <a
-                        *ngIf="post.postAuthorType == 2"
-                        (click)="
-                          getSelectedClass(post.parentName, post.schoolName)
-                        "
-                        class="routeLink"
-                      >
-                      {{ post.parentName }}
-                    </a>
-                      <a
-                        *ngIf="post.postAuthorType == 3"
-                        (click)="
-                          getSelectedCourse(post.parentName, post.schoolName)
-                        "
-                        class="routeLink"
-                      >
-                      {{ post.parentName }}
-                    </a>
-                      <a
-                        *ngIf="post.postAuthorType == 4"
-                        (click)="getUserDetails(post.parentId)"
-                        class="routeLink"
-                      >
-                      {{ post.parentName }}
-                    </a>
-                    </h2>
+                      <h2 class="d-inline-block font_20 fw_600 text_sec1 mb-0">
+                        <a
+                          *ngIf="post.postAuthorType == 1"
+                          (click)="getSelectedSchool(post.parentName)"
+                          class="routeLink"
+                        >
+                          {{ post.parentName }}
+                        </a>
+                        <a
+                          *ngIf="post.postAuthorType == 2"
+                          (click)="
+                            getSelectedClass(post.parentName, post.schoolName)
+                          "
+                          class="routeLink"
+                        >
+                          {{ post.parentName }}
+                        </a>
+                        <a
+                          *ngIf="post.postAuthorType == 3"
+                          (click)="
+                            getSelectedCourse(post.parentName, post.schoolName)
+                          "
+                          class="routeLink"
+                        >
+                          {{ post.parentName }}
+                        </a>
+                        <a
+                          *ngIf="post.postAuthorType == 4"
+                          (click)="getUserDetails(post.parentId)"
+                          class="routeLink"
+                        >
+                          {{ post.parentName }}
+                        </a>
+                      </h2>
                     </div>
                     <div>
-                    <p
-                      *ngIf="post.createdOn != null"
-                      class="font_14 school-grid-date d-inline-block mb-0 me-3"
-                    >
-                      {{ post.createdOn | date : "MMMM d" }} -
-                      {{ post.createdOn | date : "hh:mm" }}
-                    </p>
+                      <p
+                        *ngIf="post.createdOn != null"
+                        class="font_14 school-grid-date d-inline-block mb-0 me-3"
+                      >
+                        {{ post.createdOn | date : "MMMM d" }} -
+                        {{ post.createdOn | date : "hh:mm" }}
+                      </p>
                     </div>
                   </div>
 
@@ -1716,7 +1725,9 @@
                     class="school-grid-body videoChange"
                     (click)="openPostsViewModal(post, 'globalFeed')"
                   >
-                  <h4 class="d-inline-block font_20 fw_600 text_sec1 mb-3">{{post.title}}</h4>
+                    <h4 class="d-inline-block font_20 fw_600 text_sec1 mb-3">
+                      {{ post.title }}
+                    </h4>
                     <p class="text_sec1 font_14" style="cursor: pointer">
                       {{ post.description }}
                     </p>
@@ -1740,7 +1751,11 @@
                       </ng-container>
                     </div>
                     <div class="teacher-tags tag-box hashtag_box">
-                      <span *ngFor="let item of parseTheListViewTags(post.postTags);" class="custom-tag">#{{ item }}</span>
+                      <span
+                        *ngFor="let item of parseTheListViewTags(post.postTags)"
+                        class="custom-tag"
+                        >#{{ item }}</span
+                      >
                     </div>
                     <div
                       *ngIf="post.postAttachments.length"
@@ -2095,7 +2110,8 @@
                         lazyLoad="../../../assets/images/Bookmark-dark.svg"
                         class="d-block mx-auto"
                       />
-                      <img height="20px"
+                      <img
+                        height="20px"
                         *ngIf="post.isPostSavedByCurrentUser"
                         lazyLoad="../../../assets/images/bookmark-dash-fill.svg"
                         class="d-block mx-auto"
@@ -2349,7 +2365,8 @@
                                     {{ gridItemInfoForGlobal.title }}
                                   </a>
                                 </h2>
-                              </div><br>
+                              </div>
+                              <br />
 
                               <p
                                 class="font_14 school-grid-date d-inline-block mb-0"
@@ -2397,9 +2414,7 @@
                               class="teacher-tags tag-box hashtag_box"
                             >
                               <span
-                                *ngFor="
-                                  let tag of postsTagValues
-                                "
+                                *ngFor="let tag of postsTagValues"
                                 class="custom-tag"
                                 >#{{ tag }}</span
                               >
@@ -2494,7 +2509,8 @@
                                   lazyLoad="../../../assets/images/Bookmark-dark.svg"
                                   class="d-block mx-auto"
                                 />
-                                <img height="20px"
+                                <img
+                                  height="20px"
                                   *ngIf="
                                     gridItemInfoForGlobal.isPostSavedByCurrentUser
                                   "
@@ -2719,7 +2735,9 @@
           {{ "Classes&Courses" | translate }}
         </h4>
         <h4 *ngIf="key == 'User'" class="fw_600">{{ "People" | translate }}</h4>
-        <h4 *ngIf="key == 'School'" class="fw_600">{{ "Schools" | translate }}</h4>
+        <h4 *ngIf="key == 'School'" class="fw_600">
+          {{ "Schools" | translate }}
+        </h4>
         <ng-container *ngFor="let item of globalSearchResult[key]">
           <li *ngIf="item.type == 1" class="search-results__item">
             <div class="d-flex align-items-center justify-content-between">

@@ -72,6 +72,15 @@
   /* Add your desired styling for the div */
 }
 
+.action-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+}
+
 .preserve-line-breaks {
   white-space: pre-wrap;
 }

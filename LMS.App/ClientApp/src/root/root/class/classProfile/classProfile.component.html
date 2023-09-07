@@ -216,6 +216,17 @@
                   >
                     {{ "RequestMessage" | translate }}
                   </button>
+                  <button
+                    style="min-width: 50px"
+                    type="button"
+                    (click)="openPostModal(false, true)"
+                    class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn me-0 minw-142 class-request-msg"
+                  >
+                    <img
+                      lazyLoad="../../../../assets/images/Upload-dark.svg"
+                      class="d-block mx-auto"
+                    />
+                  </button>
                   <!-- // right here -->
                 </div>
                 <div class="hover-double-button">
@@ -279,18 +290,6 @@
                       "EnableClass" | translate
                     }}</span>
                   </button>
-
-                  <button
-                    style="min-width: 50px"
-                    type="button"
-                    (click)="openPostModal(false, true)"
-                    class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn me-0 minw-142 class-request-msg"
-                  >
-                    <img
-                      lazyLoad="../../../../assets/images/Upload-dark.svg"
-                      class="d-block mx-auto"
-                    />
-                  </button>
                 </div>
               </div>
             </div>
@@ -299,7 +298,13 @@
             {{ class.description }}
           </p>
         </div>
-        <div *ngIf="class.classCertificates.length != 0 || this.isOwner || hasAddClassCertificatesPermission">
+        <div
+          *ngIf="
+            class.classCertificates.length != 0 ||
+            this.isOwner ||
+            hasAddClassCertificatesPermission
+          "
+        >
           <div class="teacher-tags tag-box hover-tags">
             <div class="teacher-tags tag-box mt-0 hover-tags">
               <div class="teacher-content font_14 d-inline-block">
