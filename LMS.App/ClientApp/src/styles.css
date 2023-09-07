@@ -3727,16 +3727,27 @@ p-autocomplete li:before {
 }
 
 .create_post_btn {
-  left: 87%;
-  top: 86%;
+  right: 20px;
+  bottom: 20px;
   position: fixed;
   z-index: 999;
-  display: none !important;
 }
 
-@media (max-width: 768px) {
+@media (min-width: 428px) {
   .create_post_btn {
-    display: block !important;
+    bottom: 60px;
+  }
+}
+
+@media (min-width: 768px) {
+  .create_post_btn {
+    bottom: 220px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .create_post_btn {
+    display: none;
   }
 }
 
