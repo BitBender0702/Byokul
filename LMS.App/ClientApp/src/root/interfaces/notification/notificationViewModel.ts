@@ -30,6 +30,7 @@ export enum NotificationType{
     Report = 9,
     PostUploaded = 10,
     FilesUploaded = 11,
-    TeacherAdded = 12
+    TeacherAdded = 12,
+    NotifyStorageExceed = 13
 
 }

@@ -416,7 +416,9 @@ namespace LMS.App.Controllers
         [HttpGet]
         public async Task<IActionResult> IsAvailableStorageSpace(Guid schoolId, double filesSizeInGigabyte)
         {
-            var availableSpace = await _schoolService.IsAvailableStorageSpace(schoolId, filesSizeInGigabyte);
+            var userId = await GetUserIdAsync(this._userManager);
+
+            var availableSpace = await _schoolService.IsAvailableStorageSpace(schoolId, filesSizeInGigabyte, userId);
             if (availableSpace.AvailableSpace < 0)
             {
                 return Ok(new { Success = false, Data = availableSpace, Message = Constants.SchoolHasNotStorageSpace });

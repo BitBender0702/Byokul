@@ -59,7 +59,7 @@ namespace LMS.Services
         Task<List<AllSchoolFollowersViewModel>> GetAllSchoolFollowers(Guid schoolId);
         Task<SchoolsClassCourseViewModel> GetSchoolClassCourseList(Guid schoolId);
         Task<List<ClassesBySchoolViewModel>> GetClassListBySchoolId(Guid schoolId);
-        Task<StorageSpace> IsAvailableStorageSpace(Guid schoolId, double filesSizeInGigabyte);
+        Task<StorageSpace> IsAvailableStorageSpace(Guid schoolId, double filesSizeInGigabyte, string userId);
 
 
 

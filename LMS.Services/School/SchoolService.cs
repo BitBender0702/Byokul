@@ -65,7 +65,12 @@ namespace LMS.Services
         private readonly ICourseService _courseService;
         private readonly IIyizicoService _iyizicoService;
         private IConfiguration _config;
-        public SchoolService(IMapper mapper, IGenericRepository<School> schoolRepository, IGenericRepository<SchoolCertificate> schoolCertificateRepository, IGenericRepository<SchoolTag> schoolTagRepository, IGenericRepository<Country> countryRepository, IGenericRepository<Specialization> specializationRepository, IGenericRepository<Language> languageRepository, IGenericRepository<SchoolUser> schoolUserRepository, IGenericRepository<SchoolFollower> schoolFollowerRepository, IGenericRepository<SchoolLanguage> schoolLanguageRepository, IGenericRepository<User> userRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<SchoolTeacher> schoolTeacherRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<CourseTeacher> courseTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<SchoolDefaultLogo> schoolDefaultLogoRepository, IGenericRepository<UserClassCourseFilter> userClassCourseFilterRepository, IGenericRepository<UserSharedPost> userSharedPostRepository, IGenericRepository<SavedClassCourse> savedClassCourseRepository, IGenericRepository<SavedPost> savedPostRepository, IGenericRepository<UserPermission> userPermissionRepository, UserManager<User> userManager, IBlobService blobService, IUserService userService, IGenericRepository<ClassTag> classTagRepository, IGenericRepository<CourseTag> courseTagRepository, IClassService classService, ICourseService courseService, IConfiguration config, IIyizicoService iyizicoService)
+
+
+        private IGenericRepository<Notification> _notificationRepository;
+
+
+        public SchoolService(IMapper mapper, IGenericRepository<School> schoolRepository, IGenericRepository<SchoolCertificate> schoolCertificateRepository, IGenericRepository<SchoolTag> schoolTagRepository, IGenericRepository<Country> countryRepository, IGenericRepository<Specialization> specializationRepository, IGenericRepository<Language> languageRepository, IGenericRepository<SchoolUser> schoolUserRepository, IGenericRepository<SchoolFollower> schoolFollowerRepository, IGenericRepository<SchoolLanguage> schoolLanguageRepository, IGenericRepository<User> userRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<SchoolTeacher> schoolTeacherRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<CourseTeacher> courseTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<SchoolDefaultLogo> schoolDefaultLogoRepository, IGenericRepository<UserClassCourseFilter> userClassCourseFilterRepository, IGenericRepository<UserSharedPost> userSharedPostRepository, IGenericRepository<SavedClassCourse> savedClassCourseRepository, IGenericRepository<SavedPost> savedPostRepository, IGenericRepository<UserPermission> userPermissionRepository, UserManager<User> userManager, IBlobService blobService, IUserService userService, IGenericRepository<ClassTag> classTagRepository, IGenericRepository<CourseTag> courseTagRepository, IClassService classService, ICourseService courseService, IConfiguration config, IIyizicoService iyizicoService, IGenericRepository<Notification> notificationRepository)
         {
             _mapper = mapper;
             _schoolRepository = schoolRepository;
@@ -103,6 +108,7 @@ namespace LMS.Services
             _courseService = courseService;
             _config = config;
             _iyizicoService = iyizicoService;
+            _notificationRepository = notificationRepository;
         }
 
         public async Task<SchoolViewModel> SaveNewSchool(SchoolViewModel schoolViewModel, string createdById)
@@ -2065,16 +2071,27 @@ namespace LMS.Services
             return classList;
         }
 
-        public async Task<StorageSpace> IsAvailableStorageSpace(Guid schoolId, double filesSizeInGigabyte)
+        public async Task<StorageSpace> IsAvailableStorageSpace(Guid schoolId, double filesSizeInGigabyte, string userId)
         {
             var school = _schoolRepository.GetById(schoolId);
             var availableSpace = school.AvailableStorageSpace - filesSizeInGigabyte;
+
+            //var userId = await getuserby
+
+            var isNotificationSent = await _notificationRepository.GetAll().Where(x => x.NotificationType == NotificationTypeEnum.NotifyStorageExceed && x.UserId == userId).FirstOrDefaultAsync();
 
             if (availableSpace < 0)
             {
                 var storageSpace = new StorageSpace();
                 storageSpace.AvailableSpace = (double)availableSpace;
-                storageSpace.IsStorageFullNotification = true;
+                if(isNotificationSent != null)
+                {
+                    storageSpace.IsStorageFullNotification = false;
+                }
+                else
+                {
+                    storageSpace.IsStorageFullNotification = true;
+                }
                 return storageSpace;
                 //return (double)availableSpace;
             }
@@ -2089,7 +2106,14 @@ namespace LMS.Services
                 // return (double)availableSpace;
                 var storageSpace = new StorageSpace();
                 storageSpace.AvailableSpace = (double)availableSpace;
-                storageSpace.IsStorageFullNotification = true;
+                if (isNotificationSent != null)
+                {
+                    storageSpace.IsStorageFullNotification = false;
+                }
+                else
+                {
+                    storageSpace.IsStorageFullNotification = true;
+                }
                 return storageSpace;
             }
         }

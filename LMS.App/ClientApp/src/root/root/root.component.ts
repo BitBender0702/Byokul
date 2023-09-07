@@ -248,6 +248,12 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
             this._schoolService.isAvailableStorageSpace(this.checkLimitSchoolId, filesSizeInGb).subscribe(response => {
               debugger
               if (response.success) {
+                if(response.data.availableSpace < 5 && !response.data.isStorageFullNotification){
+                  var translatedMessage = this.translateService.instant('Notification exceeded');
+                    var notificationContent = translatedMessage;
+                    this._notificationService.initializeNotificationViewModel(this.loginUserId, NotificationType.NotifyStorageExceed, notificationContent, this.loginUserId, response.id, response.postType, null, null).subscribe((response) => {
+                    });
+                }
                 this._postService.createPost(uploadResponse.postToUpload).subscribe((response: any) => {
                   debugger
                   var translatedMessage = this.translateService.instant('PostCreatedSuccessfully');
