@@ -848,7 +848,7 @@ namespace LMS.Services
 
                             var mostStudentsCourses = _courseRepository.GetAll().Where(c => query.Contains(c.CourseId)).ToList();
                             mostStudentsCourses.AddRange(courseList);
-                            mostStudentsCourses = mostStudentsCourses.DistinctBy(x => x.ClassId).ToList();
+                            mostStudentsCourses = mostStudentsCourses.DistinctBy(x => x.CourseId).ToList();
                             courses.AddRange(mostStudentsCourses);
 
                         }
