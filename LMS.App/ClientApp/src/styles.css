@@ -3763,7 +3763,7 @@ p-autocomplete li:before {
   width: 100% !important;
   height: 100% !important;
   position: absolute;
-  object-fit: cover;
+  object-fit: contain;
   left: 0;
 }
 
