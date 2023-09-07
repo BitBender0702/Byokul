@@ -256,7 +256,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       this.permissionForFileStorage(response.teachers);
 
 
-      if(response.school.availableStorageSpace == 0){
+      if(response.school.availableStorageSpace <= 0){
         this.isStorageUnAvailable = true;
       }
 
@@ -367,7 +367,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
           this.addCourseView(this.course.courseId);
           this.course.posts = this.getFilteredAttachments(this.course.posts);
 
-          if(response.school.availableStorageSpace == 0){
+          if(response.school.availableStorageSpace <= 0){
             this.isStorageUnAvailable = true;
           }
     

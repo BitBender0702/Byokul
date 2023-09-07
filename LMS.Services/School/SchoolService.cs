@@ -142,7 +142,8 @@ namespace LMS.Services
                 SchoolSlogan = schoolViewModel.SchoolSlogan,
                 Founded = schoolViewModel.Founded,
                 AccessibilityId = schoolViewModel.AccessibilityId,
-                SchoolEmail = schoolViewModel.SchoolEmail
+                SchoolEmail = schoolViewModel.SchoolEmail,
+                AvailableStorageSpace = 100
 
             };
 
@@ -2086,11 +2087,11 @@ namespace LMS.Services
                 storageSpace.AvailableSpace = (double)availableSpace;
                 if(isNotificationSent != null)
                 {
-                    storageSpace.IsStorageFullNotification = false;
+                    storageSpace.IsStorageFullNotification = true;
                 }
                 else
                 {
-                    storageSpace.IsStorageFullNotification = true;
+                    storageSpace.IsStorageFullNotification = false;
                 }
                 return storageSpace;
                 //return (double)availableSpace;
@@ -2108,11 +2109,11 @@ namespace LMS.Services
                 storageSpace.AvailableSpace = (double)availableSpace;
                 if (isNotificationSent != null)
                 {
-                    storageSpace.IsStorageFullNotification = false;
+                    storageSpace.IsStorageFullNotification = true;
                 }
                 else
                 {
-                    storageSpace.IsStorageFullNotification = true;
+                    storageSpace.IsStorageFullNotification = false;
                 }
                 return storageSpace;
             }

@@ -249,7 +249,7 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
               debugger
               if (response.success) {
                 if(response.data.availableSpace < 5 && !response.data.isStorageFullNotification){
-                  var translatedMessage = this.translateService.instant('Notification exceeded');
+                  var translatedMessage = this.translateService.instant('Your school has storage is less than 5%');
                     var notificationContent = translatedMessage;
                     this._notificationService.initializeNotificationViewModel(this.loginUserId, NotificationType.NotifyStorageExceed, notificationContent, this.loginUserId, response.id, response.postType, null, null).subscribe((response) => {
                     });
@@ -543,6 +543,12 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
     this._schoolService.isAvailableStorageSpace(this.schoolId, filesSizeInGb).subscribe(response => {
       debugger
       if (response.success) {
+        if(response.data.availableSpace < 5 && !response.data.isStorageFullNotification){
+          var translatedMessage = this.translateService.instant('Your school has storage is less than 5%');
+            var notificationContent = translatedMessage;
+            this._notificationService.initializeNotificationViewModel(this.loginUserId, NotificationType.NotifyStorageExceed, notificationContent, this.loginUserId, response.id, response.postType, null, null).subscribe((response) => {
+            });
+        }
         var files = this.uploadVideoUrlList;
         uploadResponse.postToUpload.set('blobUrlsJson', JSON.stringify(files));
         this._fileStorageService.saveFiles(uploadResponse.postToUpload).subscribe(response => {

@@ -315,7 +315,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       this.isRatedByUser = response.isRatedByUser;
       this.isBanned = response.isBannedFromClassCourse;
 
-      if (response.school.availableStorageSpace == 0) {
+      if (response.school.availableStorageSpace <= 0) {
         this.isStorageUnAvailable = true;
       }
 
@@ -447,7 +447,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
           this.class.posts = this.getFilteredAttachments(this.class.posts);
           // this.showPostDiv(postResponse.response.id);    
 
-          if (response.school.availableStorageSpace == 0) {
+          if (response.school.availableStorageSpace <= 0) {
             this.isStorageUnAvailable = true;
           }
 

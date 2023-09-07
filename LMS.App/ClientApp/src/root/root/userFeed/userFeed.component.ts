@@ -1232,4 +1232,16 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
   }
 
 
+  hideSearchSection(){
+    debugger
+    this.showSearchResults = false;
+  }
+
+  showSearchButtonForMobile:boolean=false;
+
+  openSearch(){
+    debugger;
+    this.showSearchButtonForMobile=true;
+  }
+
 }

@@ -47,16 +47,18 @@
           <span class="logo_mobile d-xl-none">
             <img lazyLoad="../../../assets/images/logo.svg" />
           </span>
-          <div class="d-xl-none d-flex">
-            <!-- <button
+          <div class="d-xl-none d-flex"
+            >
+            <button *ngIf="!showSearchButtonForMobile"
             type="button"
             class="mobile-search border_btn"
-            onclick="openSearch()"
+            (click)="openSearch()"
           >
             <img lazyLoad="../../../assets/images/search-lg.svg" />
-          </button> -->
-            <div class="search-header position-relative me-2">
-              <input
+          </button>
+            <div class="search-header position-relative me-2"
+            >
+              <input *ngIf="showSearchButtonForMobile"
                 [(ngModel)]="searchString"
                 class="form-control h_44"
                 type="search"
@@ -2730,6 +2732,9 @@
 
   <ng-template #globalSearchResults let-showSearchResults="showSearchResults">
     <ul *ngIf="showSearchResults" class="search-results">
+      <div class="crossButton" *ngIf="!searchNotFound">
+        <i class="pi pi-times" (click)="hideSearchSection()"></i>
+      </div>
       <div *ngFor="let key of getObjectKeys(globalSearchResult)">
         <h4 *ngIf="key == 'ClassAndCourse'" class="fw_600">
           {{ "Classes&Courses" | translate }}
@@ -2866,7 +2871,11 @@
         <a class="btn custom-btn primary_btn w-100" [routerLink]="['/user/globalSearch', searchString]">{{ "ShowMore" |
           translate }}</a>
       </li> -->
+      
       <li *ngIf="searchNotFound">
+        <div class="crossButton">
+          <i class="pi pi-times" (click)="hideSearchSection()"></i>
+        </div>
         {{ "NoReultsFound" | translate }}
       </li>
     </ul>

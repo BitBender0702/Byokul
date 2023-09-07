@@ -17,6 +17,10 @@ import { MultilingualComponent, changeLanguage } from '../sharedModule/Multiling
 import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
 import { postProgressNotification, postUploadOnBlob } from '../root.component';
 
+
+import { TranslateService } from '@ngx-translate/core';
+
+
 export const fileStorageResponse = new Subject<{fileStorageResponse:any;availableSpace:number}>();
 
 @Component({
@@ -95,13 +99,16 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
     schoolId:string= "";
     availableSpace:number = 0;
 
+    showModal:boolean = true;
+
+
     @ViewChild('closeFileModal') closeFileModal!: ElementRef;
     @ViewChild('closeFolderModal') closeFolderModal!: ElementRef;
     @ViewChild('groupChatList') groupChatList!: ElementRef;
     @ViewChild('searchInput') searchInput!: ElementRef;
 
 
-    constructor(injector: Injector,private fb: FormBuilder,private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,userService:UserService,public fileStorageService:FileStorageService,signalRService:SignalrService,chatService:ChatService,teacherService:TeacherService,public messageService:MessageService,private cd: ChangeDetectorRef,schoolService:SchoolService) { 
+    constructor(injector: Injector,private fb: FormBuilder,  private translateService: TranslateService, private router: Router, private http: HttpClient,private activatedRoute: ActivatedRoute,userService:UserService,public fileStorageService:FileStorageService,signalRService:SignalrService,chatService:ChatService,teacherService:TeacherService,public messageService:MessageService,private cd: ChangeDetectorRef,schoolService:SchoolService) { 
       super(injector);
       this._userService = userService; 
       this._fileStorageService = fileStorageService;
@@ -238,12 +245,17 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
     getFolders(pageNumber?: number){
       this._fileStorageService.getFolders(this.parentId,this.searchString).subscribe((response: any) => {
         this.folders = response;
-        this.parentFolderId = this.folders[0].parentFolderId;
+        this.parentFolderId = this.folders[0]?.parentFolderId;
         this.isFoldersEmpty = false;
         this.totalFolderRecords = this.folders.length;
         this._schoolService.getSchool(this.schoolId).subscribe((response: any) => {
           debugger
           this.availableSpace = response.availableStorageSpace;
+
+
+          if(response.availableStorageSpace <= 0){
+            this.showModal=false;
+          }
         });
         this.getFoldersSelectedPage();
         this.checkFoldersAndFilesExist();
@@ -503,6 +515,19 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
   }
 
   resetFolderModal(){
+
+    if(this.availableSpace <= 0){
+      const translatedSummary = this.translateService.instant('Info');
+      const translatedMessage = this.translateService.instant('SchoolHasNoStorageSpace');
+      this.messageService.add({
+        severity: 'info',
+        summary: translatedSummary,
+        life: 3000,
+        detail: translatedMessage,
+      });
+      return;
+    }
+
     this.isSubmitted = false;
     this.saveFolderForm.patchValue({
       folderName: ""
@@ -510,6 +535,18 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
   }
 
     resetFilesModal() {
+      if(this.availableSpace <= 0){
+        const translatedSummary = this.translateService.instant('Info');
+        const translatedMessage = this.translateService.instant('SchoolHasNoStorageSpace');
+        this.messageService.add({
+          severity: 'info',
+          summary: translatedSummary,
+          life: 3000,
+          detail: translatedMessage,
+        });
+        return;
+      }
+
       this.fileCount = 1;
       this.isSubmitted = false;
       clearInterval(this.filesModalInterval);

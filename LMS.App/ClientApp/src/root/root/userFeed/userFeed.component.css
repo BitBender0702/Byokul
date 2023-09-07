@@ -174,3 +174,14 @@
   width: 100%;
   object-fit: cover;
 }
+
+
+
+.crossButton{
+  float:right;
+  cursor: pointer;
+}
+
+
+
+
