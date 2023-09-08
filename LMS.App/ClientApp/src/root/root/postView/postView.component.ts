@@ -691,13 +691,10 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
     // });
 
     if (this.carouselForPostView != undefined) {
-      debugger
       let carousel :any
       if ($('carousel')[1].querySelectorAll('a.carousel-control')[1]) {
         let isButton = $('carousel')[1].querySelectorAll('a.carousel-control-next')[0] as HTMLButtonElement;
-
         isButton.addEventListener('click', () => {
-          debugger
           carousel = this.carouselForPostView;
           let index = carousel.customActiveSlide - 1
           const initialVideoElement = document.getElementById(`video-${index}`);
@@ -717,11 +714,9 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
       if ($('carousel')[1].querySelectorAll('a.carousel-control')[1]) {
         let isButton = $('carousel')[1].querySelectorAll('a.carousel-control-prev')[0] as HTMLButtonElement;
         isButton.addEventListener('click', () => {
-          debugger
           carousel = this.carouselForPostView;
           let index = carousel.customActiveSlide + 1
           const initialVideoElement = document.getElementById(`video-${index}`);
-          debugger;
           if(initialVideoElement){
             const firstElement = initialVideoElement.children[0];
             if (firstElement) {
