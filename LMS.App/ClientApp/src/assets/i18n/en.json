@@ -561,7 +561,10 @@
   "OfficialDeletedSuccessfully":"Official Deleted Successfully",
   "People": "People",
   "ReelUnLikedSuccessfully":"Reel Unliked Successfully",
-  "ReelLikedSuccessfully":"Reel Liked Successfully"
+  "ReelLikedSuccessfully":"Reel Liked Successfully",
+  "ClassDoesNotExist": "Class does not exist",
+  "CourseDoesNotExist": "Course does not exist"
+
 
 
 

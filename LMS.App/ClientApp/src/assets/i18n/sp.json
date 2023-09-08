@@ -386,7 +386,9 @@
   "OfficialDeletedSuccessfully":"Oficial eliminado con éxito",
   "People":"Gente",
   "ReelUnLikedSuccessfully":"Carrete no deseado con éxito",
-  "ReelLikedSuccessfully":"Carrete que le gustó con éxito"
+  "ReelLikedSuccessfully":"Carrete que le gustó con éxito",
+  "ClassDoesNotExist": "Class does not exist",
+  "CourseDoesNotExist": "Course does not exist"
 
 
 

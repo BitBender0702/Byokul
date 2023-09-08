@@ -552,7 +552,9 @@
   "OfficialDeletedSuccessfully":"Resmi Başarıyla Silindi",
   "People":"İnsanlar",
   "ReelUnLikedSuccessfully":"Reel başarıyla beğenilmedi",
-  "ReelLikedSuccessfully":"Makara Başarıyla Beğenildi"
+  "ReelLikedSuccessfully":"Makara Başarıyla Beğenildi",
+  "ClassDoesNotExist": "Sınıf mevcut değil",
+  "CourseDoesNotExist": "Kurs mevcut değil"
 
 
 

@@ -547,7 +547,9 @@
   "OfficialDeletedSuccessfully": "تم الحذف الرسمي بنجاح",
   "People": "الناس",
   "ReelUnLikedSuccessfully":"تم إلغاء الإعجاب بالبكرة بنجاح",
-  "ReelLikedSuccessfully":"تم الإعجاب بالكرة بنجاح"
+  "ReelLikedSuccessfully":"تم الإعجاب بالكرة بنجاح",
+  "ClassDoesNotExist": "الطبقة غير موجودة",
+  "CourseDoesNotExist": "الدورة غير موجودة"
 
 
 
