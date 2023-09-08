@@ -32,3 +32,4 @@
 /.vs/LMS.Solution/FileContentIndex/write.lock
 /.vs/ProjectEvaluation/lms.solution.metadata.v7.bin
 /.vs/ProjectEvaluation/lms.solution.projects.v7.bin
+/LMS.App/ClientApp/package-lock.json
