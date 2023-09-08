@@ -673,62 +673,79 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('carouselForPostView') carouselForPostView!: ElementRef;
   addEventListnerOnCarousel() {
-    debugger
-    // const carousels = document.querySelectorAll('.carousel');
-    // carousels.forEach((carousel, index) => {
-    //   const nextButton = carousel.querySelector('a.carousel-control-next');
-    //   const prevButton = carousel.querySelector('a.carousel-control-prev');
-    //   if (nextButton) {
-    //     nextButton.addEventListener('click', () => {
-    //       this.pauseVideo(index);
-    //     });
-    //   }
-    //   if (prevButton) {
-    //     prevButton.addEventListener('click', () => {
-    //       this.pauseVideo(index);
-    //     });
-    //   }
-    // });
-
-    if (this.carouselForPostView != undefined) {
-      let carousel :any
-      if ($('carousel')[1].querySelectorAll('a.carousel-control')[1]) {
-        let isButton = $('carousel')[1].querySelectorAll('a.carousel-control-next')[0] as HTMLButtonElement;
-        isButton.addEventListener('click', () => {
-          carousel = this.carouselForPostView;
-          let index = carousel.customActiveSlide - 1
-          const initialVideoElement = document.getElementById(`video-${index}`);
-          if(initialVideoElement){
-            const firstElement = initialVideoElement.children[0];
-            if (firstElement) {
-              const videoElement = firstElement.children[0] as HTMLVideoElement;
-              if (videoElement) {
-                videoElement.pause();
-              }
-            }
+    const carousels = document.querySelectorAll('.carousel');
+    carousels.forEach((carousel, index) => {
+      const nextButton = carousel.querySelector('a.carousel-control-next');
+      const prevButton = carousel.querySelector('a.carousel-control-prev');
+      let carouselForPause:any = this.carouselForPostView;
+      
+      if (nextButton) {
+        nextButton.addEventListener('click', () => {
+          let indexForPause = carouselForPause.customActiveSlide
+          let length = carouselForPause._slides.length
+          if(indexForPause == 0){
+            indexForPause = length - 1
+          } else{
+            indexForPause--;
           }
-        })
+          this.pauseVideo(indexForPause);
+        });
       }
-
-
-      if ($('carousel')[1].querySelectorAll('a.carousel-control')[1]) {
-        let isButton = $('carousel')[1].querySelectorAll('a.carousel-control-prev')[0] as HTMLButtonElement;
-        isButton.addEventListener('click', () => {
-          carousel = this.carouselForPostView;
-          let index = carousel.customActiveSlide + 1
-          const initialVideoElement = document.getElementById(`video-${index}`);
-          if(initialVideoElement){
-            const firstElement = initialVideoElement.children[0];
-            if (firstElement) {
-              const videoElement = firstElement.children[0] as HTMLVideoElement;
-              if (videoElement) {
-                videoElement.pause();
-              }
-            }
+      if (prevButton) {
+        prevButton.addEventListener('click', () => {
+          let indexForPause = carouselForPause.customActiveSlide
+          let length = carouselForPause._slides.length
+          if(indexForPause == (length-1)){
+            indexForPause = 0
+          } else{
+            indexForPause++;
           }
-        })
+          this.pauseVideo(indexForPause);
+        });
       }
-    }
+    });
+
+    // if (this.carouselForPostView != undefined) {
+    //   let carousel :any
+    //   if ($('carousel')[1].querySelectorAll('a.carousel-control')[1]) {
+    //     debugger;
+    //     let isButton = $('carousel')[1].querySelectorAll('a.carousel-control-next')[0] as HTMLButtonElement;
+    //     isButton.addEventListener('click', () => {
+    //       carousel = this.carouselForPostView;
+    //       let index = carousel.customActiveSlide 
+    //       debugger;
+    //       const initialVideoElement = document.getElementById(`video-${index}`);
+    //       if(initialVideoElement){
+    //         const firstElement = initialVideoElement.children[0];
+    //         if (firstElement) {
+    //           const videoElement = firstElement.children[0] as HTMLVideoElement;
+    //           if (videoElement) {
+    //             videoElement.pause();
+    //           }
+    //         }
+    //       }
+    //     })
+    //   }
+
+
+    //   if ($('carousel')[1].querySelectorAll('a.carousel-control')[1]) {
+    //     let isButton = $('carousel')[1].querySelectorAll('a.carousel-control-prev')[0] as HTMLButtonElement;
+    //     isButton.addEventListener('click', () => {
+    //       carousel = this.carouselForPostView;
+    //       let index = carousel.customActiveSlide 
+    //       const initialVideoElement = document.getElementById(`video-${index}`);
+    //       if(initialVideoElement){
+    //         const firstElement = initialVideoElement.children[0];
+    //         if (firstElement) {
+    //           const videoElement = firstElement.children[0] as HTMLVideoElement;
+    //           if (videoElement) {
+    //             videoElement.pause();
+    //           }
+    //         }
+    //       }
+    //     })
+    //   }
+    // }
   }
 
 
@@ -737,6 +754,19 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
   //   this.deleteId = deleteId;
   //   debugger;
   // }
+
+  pauseVideo(index:any){
+    const initialVideoElement = document.getElementById(`video-${index}`);
+    if(initialVideoElement){
+      const firstElement = initialVideoElement.children[0];
+      if (firstElement) {
+        const videoElement = firstElement.children[0] as HTMLVideoElement;
+        if (videoElement) {
+          videoElement.pause();
+        }
+      }
+    }
+  }
 
 
 
