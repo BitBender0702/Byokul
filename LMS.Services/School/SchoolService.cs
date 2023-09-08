@@ -147,7 +147,7 @@ namespace LMS.Services
                 Founded = schoolViewModel.Founded,
                 AccessibilityId = schoolViewModel.AccessibilityId,
                 SchoolEmail = schoolViewModel.SchoolEmail,
-                AvailableStorageSpace = 100
+                AvailableStorageSpace = 100,
 
             };
 
@@ -895,13 +895,17 @@ namespace LMS.Services
                 courseList = courses;
 
             }
+            //if(pageSize > courseList.Count())
+            //{
+            //    pageNumber = 1;
+            //}
             courseList = courseList.DistinctBy(x => x.CourseId).OrderByDescending(x => x.IsPinned).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
 
             var result = _mapper.Map<List<CourseViewModel>>(courseList);
-            var tagList = await _classTagRepository.GetAll().ToListAsync();
+            var tagList = await _courseTagRepository.GetAll().ToListAsync();
             foreach (var item in result)
             {
-                item.CourseTags = tagList.Where(x => x.ClassId == item.CourseId).Select(x => x.ClassTagValue).ToList();
+                item.CourseTags = tagList.Where(x => x.CourseId == item.CourseId).Select(x => x.CourseTagValue).ToList();
 
                 item.CourseLike = await _courseService.GetLikesOnCourse(item.CourseId);
                 item.CourseViews = await _courseService.GetViewsOnCourse(item.CourseId);

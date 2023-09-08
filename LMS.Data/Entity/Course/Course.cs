@@ -27,7 +27,7 @@ namespace LMS.Data.Entity
         public string? ThumbnailUrl { get; set; }
         public int? ThumbnailType { get; set; }
         public string? StripeProductId { get; set; }
-        public bool? IsDisableByOwner { get; set; }
+        public bool IsDisableByOwner { get; set; }
         public bool IsCommentsDisabled { get; set; }
         public bool IsRatedByUser { get; set; }
 

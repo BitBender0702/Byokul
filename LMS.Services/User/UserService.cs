@@ -1626,7 +1626,7 @@ namespace LMS.Services
 
             }).Take(5).ToListAsync();
 
-            var schools = await _schoolRepository.GetAll().Where(x => x.SchoolName.Contains(searchString)).Select(x => new GlobalSearchViewModel
+            var schools = await _schoolRepository.GetAll().Where(x => x.SchoolName.Contains(searchString) && !x.IsDeleted && !x.IsDisableByOwner).Select(x => new GlobalSearchViewModel
             {
                 Id = x.SchoolId,
                 Name = x.SchoolName,
@@ -1634,7 +1634,7 @@ namespace LMS.Services
                 Avatar = x.Avatar
             }).Take(5).ToListAsync();
 
-            var classes = await _classRepository.GetAll().Include(x => x.School).Where(x => x.ClassName.Contains(searchString)).Select(x => new GlobalSearchViewModel
+            var classes = await _classRepository.GetAll().Include(x => x.School).Where(x => x.ClassName.Contains(searchString) && !x.IsDeleted && !x.IsDisableByOwner).Select(x => new GlobalSearchViewModel
             {
                 Id = x.ClassId,
                 Name = x.ClassName,
@@ -1644,7 +1644,7 @@ namespace LMS.Services
             }).Take(5).ToListAsync();
 
 
-            var courses = await _courseRepository.GetAll().Where(x => x.CourseName.Contains(searchString)).Select(x => new GlobalSearchViewModel
+            var courses = await _courseRepository.GetAll().Where(x => x.CourseName.Contains(searchString) && !x.IsDeleted && !x.IsDisableByOwner).Select(x => new GlobalSearchViewModel
             {
                 Id = x.CourseId,
                 Name = x.CourseName,

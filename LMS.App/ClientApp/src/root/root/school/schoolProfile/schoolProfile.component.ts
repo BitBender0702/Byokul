@@ -1499,7 +1499,7 @@ export class SchoolProfileComponent
   this.isFeedHide = true;
   this.hideFeedFilters = false;
   if (pageNumber != undefined) {
-    this.classPageNumber = pageNumber;
+    this.coursePageNumber = pageNumber;
   }
   if (this.courseList == undefined || appliedFilters) {
     this.loadingIcon = true;
@@ -2067,6 +2067,7 @@ export class SchoolProfileComponent
   }
 
   unableDisableSchool() {
+    debugger;
     this.loadingIcon = true;
     this._schoolService.enableDisableSchool(this.school.schoolId).subscribe((response) => {
       const translatedInfoSummary = this.translateService.instant('Success');

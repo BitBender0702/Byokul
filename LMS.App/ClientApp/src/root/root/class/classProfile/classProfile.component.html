@@ -500,7 +500,7 @@
         </div>
 
         <div
-          *ngIf="class.isClassAccessable"
+          *ngIf="class.isClassAccessable || hasPostPermission"
           class="tab-content"
           id="pills-tabContent"
         >
