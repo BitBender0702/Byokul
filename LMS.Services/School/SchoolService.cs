@@ -427,12 +427,12 @@ namespace LMS.Services
                 .Include(x => x.School)
                 .ThenInclude(x => x.CreatedBy).ToListAsync();
 
-                var singleLanguage = schoolLanguages.Where(x => Encoding.UTF8.GetBytes(x.School.SchoolName.Replace(" ", "").Replace("+", "").Replace(".", "").ToLower()).SequenceEqual(data) && !x.School.IsDeleted).ToList();
+                var singleLanguage = schoolLanguages.Where(x => Encoding.UTF8.GetBytes(x.School.SchoolName.Replace(" ", "").Replace("+", "").Replace(".", "").ToLower()).SequenceEqual(data)).ToList();
                 //schoolLanguages = schoolLanguages.Where(x => ((x.School.SchoolName.Replace(" ", "").Replace("+", "").Replace(".", "").ToLower()) == schoolName) && !x.School.IsDeleted).ToList();
                 if (!singleLanguage.Any())
                 {
                     var newSchoolName = System.Web.HttpUtility.UrlEncode(schoolName, Encoding.GetEncoding("iso-8859-1")).Replace("%3f", "").Replace("+", "").Replace(".", "").ToLower();
-                    singleLanguage = schoolLanguages.Where(x => (System.Web.HttpUtility.UrlEncode(x.School.SchoolName.Replace(" ", "").Replace("+", "").Replace(".", "").ToLower(), Encoding.GetEncoding("iso-8859-7")) == newSchoolName) && !x.School.IsDeleted).ToList();
+                    singleLanguage = schoolLanguages.Where(x => (System.Web.HttpUtility.UrlEncode(x.School.SchoolName.Replace(" ", "").Replace("+", "").Replace(".", "").ToLower(), Encoding.GetEncoding("iso-8859-7")) == newSchoolName)).ToList();
                 }
 
 

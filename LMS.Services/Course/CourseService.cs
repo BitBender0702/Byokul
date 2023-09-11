@@ -388,12 +388,12 @@ namespace LMS.Services
                     .Include(x => x.CreatedBy).ToListAsync();
 
 
-                var singleLanguage = courseList.Where(x => Encoding.UTF8.GetBytes(x.CourseName.Replace(" ", "").Replace("+", "").Replace(".", "").ToLower()).SequenceEqual(data) && !x.IsDeleted).FirstOrDefault();
+                var singleLanguage = courseList.Where(x => Encoding.UTF8.GetBytes(x.CourseName.Replace(" ", "").Replace("+", "").Replace(".", "").ToLower()).SequenceEqual(data)).FirstOrDefault();
                // var newCourseName = "";
                 if(singleLanguage == null)
                 {
                     var newCourseName = System.Web.HttpUtility.UrlEncode(courseName, Encoding.GetEncoding("iso-8859-7")).Replace("%3f", "").Replace("+", "").Replace(".", "").ToLower();
-                    singleLanguage = courseList.Where(x => (System.Web.HttpUtility.UrlEncode(x.CourseName.Replace(" ", "").Replace(".", "").ToLower(), Encoding.GetEncoding("iso-8859-7")) == newCourseName) && !x.IsDeleted).FirstOrDefault();
+                    singleLanguage = courseList.Where(x => (System.Web.HttpUtility.UrlEncode(x.CourseName.Replace(" ", "").Replace(".", "").ToLower(), Encoding.GetEncoding("iso-8859-7")) == newCourseName)).FirstOrDefault();
                 }
 
 

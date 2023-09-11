@@ -8,6 +8,8 @@
 
 .message {
     margin: 10px;
+    margin-left: 24%;
     color:orange;
     font-size: 40px;
+    text-align: center;
 }

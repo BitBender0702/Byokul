@@ -259,14 +259,33 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       if(response.school.availableStorageSpace <= 0){
         this.isStorageUnAvailable = true;
       }
-      
-      if(response.isDisableByOwner && !this.isOwner){
-        this.router.navigate([`/profile/courses/${this.course.courseName}/disabled`]);
-      }
 
-      if(response.isDeletedByOwner && !this.isOwner){
-        this.router.navigate([`/profile/courses/${this.course.courseName}/deleted`]);
-      }   
+
+      if(response.isDisableByOwner && !response.isDeleted && !this.isOwner){
+        this.router.navigate([`/profile/courses/${this.course.courseName}/false/true`]);
+        return;
+       }
+
+       if(!response.isDisableByOwner && response.isDeleted && !this.isOwner){
+        this.router.navigate([`/profile/courses/${this.course.courseName}/true/false`]);
+        return;
+       }
+
+       if(response.isDisableByOwner && response.isDeleted && !this.isOwner){
+        this.router.navigate([`/profile/courses/${this.course.courseName}/true/true`]);
+        return;
+       }
+
+
+      
+      // if(response.isDisableByOwner && !this.isOwner){
+      //   this.router.navigate([`/profile/courses/${this.course.courseName}/disabled`]);
+      // }
+
+      // if(response.isDeleted && !this.isOwner){
+      //   debugger;
+      //   this.router.navigate([`/profile/courses/${this.course.courseName}/deleted`]);
+      // }   
 
 
     });

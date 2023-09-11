@@ -7,19 +7,30 @@
         {{ "SchoolDeleted" | translate }}
     </div>
 
+    <div *ngIf="schoolDisabledAndDeleted" class="message">
+        {{ "SchoolDeletedAndDisabled" | translate }}
+    </div>
+
     <div *ngIf="classDisabled" class="message">
         {{ "ClassDisabled" | translate }}
     </div>
 
     <div *ngIf="classDeleted" class="message">
-        {{ "ClassDisabled" | translate }}
+        {{ "ClassDeleted" | translate }}
     </div>
+    <div *ngIf="classDisabledAndDeleted" class="message">
+        {{ "ClassDeletedAndDisabled" | translate }}
+    </div>
+
 
     <div *ngIf="courseDisabled" class="message">
         {{ "CourseDisabled" | translate }}
     </div>
 
     <div *ngIf="courseDeleted" class="message">
-        {{ "CourseDisabled" | translate }}
+        {{ "CourseDeleted" | translate }}
+    </div>
+    <div *ngIf="courseDisabledAndDeleted" class="message">
+        {{ "CourseDeletedAndDisabled" | translate }}
     </div>
 </div>

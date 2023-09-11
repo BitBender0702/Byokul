@@ -1,8 +1,9 @@
-import { Component, Injector, OnInit } from "@angular/core";
+import { Component, Injector, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { TranslateService } from '@ngx-translate/core';
 import { MessageService } from 'primeng/api';
 import { MultilingualComponent, changeLanguage } from "../sharedModule/Multilingual/multilingual.component";
+import { Subscription } from "rxjs";
 
 @Component({
     selector: 'app-delete-or-disable',
@@ -11,7 +12,7 @@ import { MultilingualComponent, changeLanguage } from "../sharedModule/Multiling
     providers: [MessageService],
 })
 
-export class DeleteOrDisableComponent extends MultilingualComponent implements OnInit{
+export class DeleteOrDisableComponent extends MultilingualComponent implements OnInit, OnDestroy {
 
     constructor(private translateService: TranslateService, private route: ActivatedRoute, public messageService: MessageService, injector: Injector) {
         super(injector);
@@ -19,56 +20,126 @@ export class DeleteOrDisableComponent extends MultilingualComponent implements O
 
     schoolDeleted: boolean = false;
     schoolDisabled: boolean = false;
+    schoolDisabledAndDeleted:boolean=false;
+
     classDeleted: boolean = false;
+    classDisabled: boolean = false;
+    classDisabledAndDeleted:boolean=false;
+
     courseDeleted: boolean = false;
     courseDisabled: boolean = false;
-    classDisabled: boolean = false;
-
+    courseDisabledAndDeleted:boolean=false;
+    
+  
     schoolName:string=''
     className:string=''
     courseName:string=''
     disabledOrDeleted:string=''
+    isDeleted:string=''
+    isDisabled:string=''
+    changeLanguageSubscription!:Subscription;
 
     ngOnInit(): void {
         debugger;
-
+        var selectedLang = localStorage.getItem('selectedLanguage');
+        this.translate.use(selectedLang ?? '');
         this.route.params.subscribe(params => {
             const schoolName = params['schoolName'];
             const className = params['className'];
             const courseName = params['courseName'];
             let disabledOrDeleted = params['disabledOrDeleted'];
+            let isDeleted = params['isDeleted']
+            let isDisabled = params['isDisabled']
             disabledOrDeleted = disabledOrDeleted?.toLowerCase();
+            isDeleted = isDeleted?.toLowerCase();
+            isDisabled = isDisabled?.toLowerCase();
 
             this.schoolName = schoolName;
             this.className = className;
             this.courseName = courseName;
             this.disabledOrDeleted = disabledOrDeleted;
+            this.isDeleted = isDeleted;
+            this.isDisabled = isDisabled;
         });
 
-        if(this.schoolName != undefined && this.disabledOrDeleted == "disabled"){
+        // if(this.schoolName != undefined && this.disabledOrDeleted == "disabled"){
+        //     this.schoolDisabled = true;
+        // }
+
+        // if(this.schoolName != undefined && this.disabledOrDeleted == "deleted"){
+        //     this.schoolDeleted = true;
+        // }
+
+
+        if(this.schoolName != undefined && this.isDeleted=="false" && this.isDisabled=="true"){
             this.schoolDisabled = true;
         }
 
-        if(this.schoolName != undefined && this.disabledOrDeleted == "deleted"){
+        if(this.schoolName != undefined && this.isDeleted=="true" && this.isDisabled=="false"){
             this.schoolDeleted = true;
         }
 
-        if(this.className != undefined && this.disabledOrDeleted == "disabled"){
+        if(this.schoolName != undefined && this.isDeleted=="true" && this.isDisabled=="true"){
+            this.schoolDisabledAndDeleted = true;
+        }
+
+
+
+        // if(this.className != undefined && this.disabledOrDeleted == "disabled"){
+        //     this.classDisabled = true;
+        // }
+
+        // if(this.className != undefined && this.disabledOrDeleted == "deleted"){
+        //     this.classDeleted = true;
+        // }
+
+        if(this.className != undefined && this.isDeleted=="false" && this.isDisabled=="true"){
             this.classDisabled = true;
         }
 
-        if(this.className != undefined && this.disabledOrDeleted == "deleted"){
+        if(this.className != undefined && this.isDeleted=="true" && this.isDisabled=="false"){
             this.classDeleted = true;
         }
 
-        if(this.courseName != undefined && this.disabledOrDeleted == "disabled"){
+        if(this.className != undefined && this.isDeleted=="true" && this.isDisabled=="true"){
+           this.classDisabledAndDeleted = true
+        }
+
+
+
+
+        // if(this.courseName != undefined && this.disabledOrDeleted == "disabled"){
+        //     this.courseDisabled = true;
+        // }
+
+        // if(this.courseName != undefined && this.disabledOrDeleted == "deleted"){
+        //     this.courseDeleted = true;
+        // }
+       
+        if(this.courseName != undefined && this.isDeleted=="false" && this.isDisabled=="true"){
             this.courseDisabled = true;
         }
 
-        if(this.courseName != undefined && this.disabledOrDeleted == "deleted"){
+        if(this.courseName != undefined && this.isDeleted=="true" && this.isDisabled=="false"){
             this.courseDeleted = true;
         }
-        debugger
 
+        if(this.courseName != undefined && this.isDeleted=="true" && this.isDisabled=="true"){
+           this.courseDisabledAndDeleted = true
+        }
+
+        if(!this.changeLanguageSubscription){
+            this.changeLanguageSubscription = changeLanguage.subscribe(response => {
+              this.translate.use(response.language);
+            })
+          }
     }
+
+    ngOnDestroy(): void {
+        if(this.changeLanguageSubscription){
+            this.changeLanguageSubscription.unsubscribe();
+          }
+    }
+
+    
 }

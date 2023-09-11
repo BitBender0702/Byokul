@@ -406,19 +406,20 @@ export class SchoolProfileComponent
         this.isStorageUnAvailable = true;
       }
 
-      if(response.isDisableByOwner && !this.isOwner){
-        const currentUrl = this.router.url;
-        const disabledUrl = currentUrl + '/disabled';
-        this.router.navigateByUrl(disabledUrl);
-        return;
-      }
+        if(response.isDisableByOwner && !response.isDeleted && !this.isOwner){
+          this.router.navigate([`/profile/school/${this.school.schoolName}/false/true`]);
+          return;
+         }
 
-      if(response.isDeletedByOwner && !this.isOwner){
-        const currentUrl = this.router.url;
-        const disabledUrl = currentUrl + '/deleted';
-        this.router.navigateByUrl(disabledUrl);
-        return;
-      }
+         if(!response.isDisableByOwner && response.isDeleted && !this.isOwner){
+          this.router.navigate([`/profile/school/${this.school.schoolName}/true/false`]);
+          return;
+         }
+
+         if(response.isDisableByOwner && response.isDeleted && !this.isOwner){
+          this.router.navigate([`/profile/school/${this.school.schoolName}/true/true`]);
+          return;
+         }
   
       // const schoolTabButtonElement = this.el.nativeElement.querySelector('#school-tab');
       // this.renderer.addClass(schoolTabButtonElement, 'active');

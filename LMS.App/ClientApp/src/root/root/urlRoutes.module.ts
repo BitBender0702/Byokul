@@ -42,14 +42,24 @@ import { DeleteOrDisableComponent } from './deleteOrDisableSCC/delete-or-disable
             path: 'course/:schoolName/:courseName',component:CourseProfileComponent, canActivate: [AuthGuard]
           },
 
+          // {
+          //   path: 'school/:schoolName/:disabledOrDeleted',component:DeleteOrDisableComponent, canActivate: [AuthGuard]
+          // },
+          // {
+          //   path: 'classes/:className/:disabledOrDeleted',component:DeleteOrDisableComponent, canActivate: [AuthGuard]
+          // },
+          // {
+          //   path: 'courses/:courseName/:disabledOrDeleted',component:DeleteOrDisableComponent, canActivate: [AuthGuard]
+          // }
+
           {
-            path: 'school/:schoolName/:disabledOrDeleted',component:DeleteOrDisableComponent, canActivate: [AuthGuard]
+            path: 'school/:schoolName/:isDeleted/:isDisabled',component:DeleteOrDisableComponent, canActivate: [AuthGuard]
           },
           {
-            path: 'classes/:className/:disabledOrDeleted',component:DeleteOrDisableComponent, canActivate: [AuthGuard]
+            path: 'classes/:className/:isDeleted/:isDisabled',component:DeleteOrDisableComponent, canActivate: [AuthGuard]
           },
           {
-            path: 'courses/:courseName/:disabledOrDeleted',component:DeleteOrDisableComponent, canActivate: [AuthGuard]
+            path: 'courses/:courseName/:isDeleted/:isDisabled',component:DeleteOrDisableComponent, canActivate: [AuthGuard]
           }
     ]}]),
     FormsModule,

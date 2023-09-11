@@ -43,6 +43,7 @@ namespace LMS.Common.ViewModels.Course
         public IEnumerable<CertificateViewModel> CourseCertificates { get; set; }
         public bool IsConvertable { get; set; }
         public bool IsDisableByOwner { get; set; }
+        public bool IsDeleted { get; set; }
         public bool IsCommentsDisabled { get; set; }
         public bool IsCourseAccessable { get; set; }
         public bool IsRatedByUser { get; set; }

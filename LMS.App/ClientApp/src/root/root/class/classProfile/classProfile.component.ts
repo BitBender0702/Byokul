@@ -319,12 +319,20 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
         this.isStorageUnAvailable = true;
       }
 
-      if(response.isDisableByOwner && !this.isOwner){
-        this.router.navigate([`/profile/classes/${this.class.className}/disabled`]);
-      }
 
-      if(response.isDeletedByOwner && !this.isOwner){
-        this.router.navigate([`/profile/classes/${this.class.className}/deleted`]);
+      if(response.isDisableByOwner && !response.isDeleted && !this.isOwner){
+        this.router.navigate([`/profile/classes/${this.class.className}/false/true`]);
+        return;
+       }
+
+       if(!response.isDisableByOwner && response.isDeleted && !this.isOwner){
+        this.router.navigate([`/profile/classes/${this.class.className}/true/false`]);
+        return;
+       }
+
+       if(response.isDisableByOwner && response.isDeleted && !this.isOwner){
+        this.router.navigate([`/profile/classes/${this.class.className}/true/true`]);
+        return;
       }
 
       this.classRatingView = {

@@ -555,12 +555,15 @@
   "ReelLikedSuccessfully":"Makara Başarıyla Beğenildi",
   "ClassDoesNotExist": "Sınıf mevcut değil",
   "CourseDoesNotExist": "Kurs mevcut değil",
-  "SchoolDisabled":"Erişmeye Çalıştığınız Okul Devre Dışı",
-  "SchoolDeleted":"Erişmeye Çalıştığınız Okul Silindi",
-  "ClassDisabled":"Erişmeye Çalıştığınız Sınıf Devre Dışı",
-  "ClassDeleted":"Erişmeye Çalıştığınız Sınıf Silindi",
-  "CourseDisabled":"Erişmeye Çalıştığınız Kurs Devre Dışı",
-  "CourseDeleted":"Erişmeye Çalıştığınız Ders Silindi"
+  "SchoolDisabled":"Erişmeye çalıştığınız okul devre dışı",
+  "SchoolDeleted":"Erişmeye çalıştığınız okul silindi",
+  "SchoolDeletedAndDisabled":"Erişmeye çalıştığınız okul devre dışı bırakıldı/silindi",
+  "ClassDisabled":"Erişmeye çalıştığınız sınıf devre dışı",
+  "ClassDeleted":"Erişmeye çalıştığınız sınıf silindi",
+  "ClassDeletedAndDisabled":"Erişmeye çalıştığınız sınıf devre dışı bırakıldı/silindi",
+  "CourseDisabled":"Erişmeye çalıştığınız kurs devre dışıdır",
+  "CourseDeleted":"Erişmeye çalıştığınız ders silinmiştir",
+  "CourseDeletedAndDisabled":"Erişmeye çalıştığınız ders devre dışı bırakıldı/silindi"
   
 
 

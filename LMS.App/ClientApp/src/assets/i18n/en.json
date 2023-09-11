@@ -564,13 +564,15 @@
   "ReelLikedSuccessfully":"Reel Liked Successfully",
   "ClassDoesNotExist": "Class does not exist",
   "CourseDoesNotExist": "Course does not exist",
-  "SchoolDisabled":"The School You Are Trying To Access Is Disabled",
-  "SchoolDeleted":"The School You Are Trying To Access Is Deleted",
-  "ClassDisabled":"The Class You Are Trying To Access Is Disabled",
-  "ClassDeleted":"The Class You Are Trying To Access Is Deleted",
-  "CourseDisabled":"The Course You Are Trying To Access Is Disabled",
-  "CourseDeleted":"The Course You Are Trying To Access Is Deleted"
-
+  "SchoolDisabled":"The school you are trying to access is disabled",
+  "SchoolDeleted":"The school you are trying to access is deleted",
+  "SchoolDeletedAndDisabled":"The school you are trying to access is disabled/deleted",
+  "ClassDisabled":"The class you are trying to access is disabled",
+  "ClassDeleted":"The class you are trying to access is deleted",
+  "ClassDeletedAndDisabled":"The class you are trying to access is disabled/deleted",
+  "CourseDisabled":"The course you are trying to access is disabled",
+  "CourseDeleted":"The course you are trying to access is deleted",
+  "CourseDeletedAndDisabled":"The course you are trying to access is disabled/deleted"
 
 
 
