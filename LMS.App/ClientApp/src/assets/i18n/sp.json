@@ -388,7 +388,13 @@
   "ReelUnLikedSuccessfully":"Carrete no deseado con éxito",
   "ReelLikedSuccessfully":"Carrete que le gustó con éxito",
   "ClassDoesNotExist": "Class does not exist",
-  "CourseDoesNotExist": "Course does not exist"
+  "CourseDoesNotExist": "Course does not exist",
+  "SchoolDisabled":"La escuela a la que intentas acceder está deshabilitada",
+  "SchoolDeleted":"La escuela a la que intentas acceder está eliminada",
+  "ClassDisabled":"La clase a la que intenta acceder está deshabilitada",
+  "ClassDeleted":"La clase a la que intentas acceder está eliminada",
+  "CourseDisabled":"El curso al que intenta acceder está deshabilitado",
+  "CourseDeleted":"El curso al que intenta acceder está eliminado"
 
 
 

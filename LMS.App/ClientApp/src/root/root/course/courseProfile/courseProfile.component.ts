@@ -259,7 +259,14 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       if(response.school.availableStorageSpace <= 0){
         this.isStorageUnAvailable = true;
       }
+      
+      if(response.isDisableByOwner && !this.isOwner){
+        this.router.navigate([`/profile/courses/${this.course.courseName}/disabled`]);
+      }
 
+      if(response.isDeletedByOwner && !this.isOwner){
+        this.router.navigate([`/profile/courses/${this.course.courseName}/deleted`]);
+      }   
 
 
     });
@@ -370,6 +377,14 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
           if(response.school.availableStorageSpace <= 0){
             this.isStorageUnAvailable = true;
           }
+
+          if(response.isDisableByOwner && !this.isOwner){
+            this.router.navigate([`/profile/courses/${this.course.courseName}/disabled`]);
+          }
+    
+          if(response.isDeletedByOwner && !this.isOwner){
+            this.router.navigate([`/profile/courses/${this.course.courseName}/deleted`]);
+          }   
     
           // this.showPostDiv(postResponse.response.id);    
         });

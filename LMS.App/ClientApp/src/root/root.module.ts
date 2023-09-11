@@ -100,6 +100,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { SchoolVideoLibraryComponent } from './root/schoolVideoLibrary/schoolVideoLibrary.component';
 import { AddOfficialComponent } from './root/addOfficial/addOfficial.component';
 import { DeleteConfirmationComponent } from './root/delete-confirmation/delete-confirmation.component';
+import { DeleteOrDisableComponent } from './root/deleteOrDisableSCC/delete-or-disable.component';
 
 
 export const options: Partial<IConfig> = {
@@ -219,7 +220,14 @@ const routes: Routes = [
     VideoJsComponent,
     SchoolVideoLibraryComponent,
     AddOfficialComponent,
-    DeleteConfirmationComponent
+    DeleteConfirmationComponent,
+
+
+    DeleteOrDisableComponent
+
+
+
+
   ],
   imports: [
     CommonModule,

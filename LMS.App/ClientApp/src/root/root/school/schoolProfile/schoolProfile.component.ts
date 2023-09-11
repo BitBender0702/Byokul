@@ -82,6 +82,7 @@ import { Constant } from 'src/root/interfaces/constant';
 import { AddOfficialComponent, addTeacherResponse } from '../../addOfficial/addOfficial.component';
 import { userPermission } from '../../root.component';
 import { deleteModalPostResponse } from '../../delete-confirmation/delete-confirmation.component';
+import { DeleteOrDisableComponent } from '../../deleteOrDisableSCC/delete-or-disable.component';
 
 
 @Component({
@@ -383,6 +384,7 @@ export class SchoolProfileComponent
 
     this._schoolService.getSchoolById(this.schoolName.split('.').join("").split(" ").join("").toLowerCase()).subscribe(async (response) => {
       debugger
+
       this.frontEndPageNumber = 1;
       this.reelsPageNumber = 1;
       this.school = response;
@@ -402,6 +404,20 @@ export class SchoolProfileComponent
 
       if(response.availableStorageSpace == 0){
         this.isStorageUnAvailable = true;
+      }
+
+      if(response.isDisableByOwner && !this.isOwner){
+        const currentUrl = this.router.url;
+        const disabledUrl = currentUrl + '/disabled';
+        this.router.navigateByUrl(disabledUrl);
+        return;
+      }
+
+      if(response.isDeletedByOwner && !this.isOwner){
+        const currentUrl = this.router.url;
+        const disabledUrl = currentUrl + '/deleted';
+        this.router.navigateByUrl(disabledUrl);
+        return;
       }
   
       // const schoolTabButtonElement = this.el.nativeElement.querySelector('#school-tab');
@@ -523,6 +539,21 @@ export class SchoolProfileComponent
         let newSchoolName = this.schoolName.split('.').join("").split(" ").join("").toLowerCase()
         this._schoolService.getSchoolById(newSchoolName).subscribe((response) => {
           this.school = response;
+
+          if(response.isDisableByOwner && !this.isOwner){
+            const currentUrl = this.router.url;
+            const disabledUrl = currentUrl + '/disabled';
+            this.router.navigateByUrl(disabledUrl);
+            return;
+          }
+    
+          if(response.isDeletedByOwner && !this.isOwner){
+            const currentUrl = this.router.url;
+            const disabledUrl = currentUrl + '/deleted';
+            this.router.navigateByUrl(disabledUrl);
+            return;
+          }
+
           this.titleService.setTitle(this.school.schoolName);
           this.addDescriptionMetaTag(this.school.description);
           this.loadingIcon = false;

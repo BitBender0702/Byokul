@@ -554,7 +554,15 @@
   "ReelUnLikedSuccessfully":"Reel başarıyla beğenilmedi",
   "ReelLikedSuccessfully":"Makara Başarıyla Beğenildi",
   "ClassDoesNotExist": "Sınıf mevcut değil",
-  "CourseDoesNotExist": "Kurs mevcut değil"
+  "CourseDoesNotExist": "Kurs mevcut değil",
+  "SchoolDisabled":"Erişmeye Çalıştığınız Okul Devre Dışı",
+  "SchoolDeleted":"Erişmeye Çalıştığınız Okul Silindi",
+  "ClassDisabled":"Erişmeye Çalıştığınız Sınıf Devre Dışı",
+  "ClassDeleted":"Erişmeye Çalıştığınız Sınıf Silindi",
+  "CourseDisabled":"Erişmeye Çalıştığınız Kurs Devre Dışı",
+  "CourseDeleted":"Erişmeye Çalıştığınız Ders Silindi"
+  
+
 
 
 

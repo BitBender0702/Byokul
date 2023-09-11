@@ -1,0 +1,25 @@
+<div class="container">
+    <div *ngIf="schoolDisabled" class="message">
+        {{ "SchoolDisabled" | translate }}
+    </div>
+
+    <div *ngIf="schoolDeleted" class="message">
+        {{ "SchoolDeleted" | translate }}
+    </div>
+
+    <div *ngIf="classDisabled" class="message">
+        {{ "ClassDisabled" | translate }}
+    </div>
+
+    <div *ngIf="classDeleted" class="message">
+        {{ "ClassDisabled" | translate }}
+    </div>
+
+    <div *ngIf="courseDisabled" class="message">
+        {{ "CourseDisabled" | translate }}
+    </div>
+
+    <div *ngIf="courseDeleted" class="message">
+        {{ "CourseDisabled" | translate }}
+    </div>
+</div>

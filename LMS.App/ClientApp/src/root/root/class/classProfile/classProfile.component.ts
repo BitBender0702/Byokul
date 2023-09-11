@@ -319,10 +319,13 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
         this.isStorageUnAvailable = true;
       }
 
+      if(response.isDisableByOwner && !this.isOwner){
+        this.router.navigate([`/profile/classes/${this.class.className}/disabled`]);
+      }
 
-      // this.isAllowedForFileStorage = response.isFileStorageAccessible;
-      // this.permissionForFileStorage(this.teacherForFileStorage);
-      //here is the code
+      if(response.isDeletedByOwner && !this.isOwner){
+        this.router.navigate([`/profile/classes/${this.class.className}/deleted`]);
+      }
 
       this.classRatingView = {
         courseId: '',
@@ -450,8 +453,14 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
           if (response.school.availableStorageSpace <= 0) {
             this.isStorageUnAvailable = true;
           }
-
-
+          
+          if(response.isDisableByOwner && !this.isOwner){
+            this.router.navigate([`/profile/classes/${this.class.className}/disabled`]);
+          }
+    
+          if(response.isDeletedByOwner && !this.isOwner){
+            this.router.navigate([`/profile/classes/${this.class.className}/deleted`]);
+          }
 
         });
       });

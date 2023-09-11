@@ -563,7 +563,13 @@
   "ReelUnLikedSuccessfully":"Reel Unliked Successfully",
   "ReelLikedSuccessfully":"Reel Liked Successfully",
   "ClassDoesNotExist": "Class does not exist",
-  "CourseDoesNotExist": "Course does not exist"
+  "CourseDoesNotExist": "Course does not exist",
+  "SchoolDisabled":"The School You Are Trying To Access Is Disabled",
+  "SchoolDeleted":"The School You Are Trying To Access Is Deleted",
+  "ClassDisabled":"The Class You Are Trying To Access Is Disabled",
+  "ClassDeleted":"The Class You Are Trying To Access Is Deleted",
+  "CourseDisabled":"The Course You Are Trying To Access Is Disabled",
+  "CourseDeleted":"The Course You Are Trying To Access Is Deleted"
 
 
 

@@ -21,6 +21,7 @@ import { ChatComponent } from '../root/chat/chat.component';
 import { UrlRoutesComponent } from './urlRoutes.component';
 import { CourseProfileComponent } from './course/courseProfile/courseProfile.component';
 import { AuthGuard } from '../service/auth.guard';
+import { DeleteOrDisableComponent } from './deleteOrDisableSCC/delete-or-disable.component';
 
 @NgModule({
   declarations: [UrlRoutesComponent],
@@ -40,6 +41,16 @@ import { AuthGuard } from '../service/auth.guard';
           {
             path: 'course/:schoolName/:courseName',component:CourseProfileComponent, canActivate: [AuthGuard]
           },
+
+          {
+            path: 'school/:schoolName/:disabledOrDeleted',component:DeleteOrDisableComponent, canActivate: [AuthGuard]
+          },
+          {
+            path: 'classes/:className/:disabledOrDeleted',component:DeleteOrDisableComponent, canActivate: [AuthGuard]
+          },
+          {
+            path: 'courses/:courseName/:disabledOrDeleted',component:DeleteOrDisableComponent, canActivate: [AuthGuard]
+          }
     ]}]),
     FormsModule,
     ReactiveFormsModule,

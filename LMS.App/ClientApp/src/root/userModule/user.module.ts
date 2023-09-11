@@ -35,6 +35,7 @@ import { GlobalSearchComponent } from '../root/globalSearch/globalSearch.compone
 import { StudentListComponent } from '../root/students/studentList.component';
 import { ReelsSliderComponent } from '../root/reelsSlider/reelsSlider.component';
 import { SchoolVideoLibraryComponent } from '../root/schoolVideoLibrary/schoolVideoLibrary.component';
+import { DeleteOrDisableComponent } from '../root/deleteOrDisableSCC/delete-or-disable.component';
 
 
 const routes: Routes = [
@@ -142,7 +143,10 @@ const routes: Routes = [
   },
   {
     path: 'schoolVideoLibrary/:schoolId',component:SchoolVideoLibraryComponent, canActivate: [AuthGuard]
-  }
+  },
+
+
+
 ];
 
 
