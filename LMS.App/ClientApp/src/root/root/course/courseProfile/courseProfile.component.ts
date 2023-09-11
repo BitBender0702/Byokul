@@ -276,18 +276,6 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
         return;
        }
 
-
-      
-      // if(response.isDisableByOwner && !this.isOwner){
-      //   this.router.navigate([`/profile/courses/${this.course.courseName}/disabled`]);
-      // }
-
-      // if(response.isDeleted && !this.isOwner){
-      //   debugger;
-      //   this.router.navigate([`/profile/courses/${this.course.courseName}/deleted`]);
-      // }   
-
-
     });
 
     this.editCourseForm = this.fb.group({

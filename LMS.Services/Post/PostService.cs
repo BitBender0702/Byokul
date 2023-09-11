@@ -409,6 +409,7 @@ namespace LMS.Services
 
             //_postRepository.Update(post);
             //_postRepository.Save();
+            model.UpdatedOn = post.UpdatedOn;
             return model;
         }
 

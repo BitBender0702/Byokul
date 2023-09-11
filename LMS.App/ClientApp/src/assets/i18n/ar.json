@@ -558,6 +558,12 @@
   "ClassDeletedAndDisabled":"الفصل الذي تحاول الوصول إليه معطل/محذوف",
   "CourseDisabled":"الدورة التدريبية التي تحاول الوصول إليها معطلة",
   "CourseDeleted":"تم حذف الدورة التدريبية التي تحاول الوصول إليها",
-  "CourseDeletedAndDisabled":"الدورة التدريبية التي تحاول الوصول إليها معطلة/محذوفة"
+  "CourseDeletedAndDisabled":"الدورة التدريبية التي تحاول الوصول إليها معطلة/محذوفة",
+  "DeleteReel":"حذف بكرة",
+  "DeletePost":"حذف آخر",
+  "ReelUpdatedSuccessfully":"تم تحديث البكرة بنجاح",
+  "PostUpdatedSuccessfully": "تم تحديث المشاركة بنجاح"
+
+
 
 }

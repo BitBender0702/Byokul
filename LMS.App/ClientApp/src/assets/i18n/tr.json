@@ -563,8 +563,13 @@
   "ClassDeletedAndDisabled":"Erişmeye çalıştığınız sınıf devre dışı bırakıldı/silindi",
   "CourseDisabled":"Erişmeye çalıştığınız kurs devre dışıdır",
   "CourseDeleted":"Erişmeye çalıştığınız ders silinmiştir",
-  "CourseDeletedAndDisabled":"Erişmeye çalıştığınız ders devre dışı bırakıldı/silindi"
-  
+  "CourseDeletedAndDisabled":"Erişmeye çalıştığınız ders devre dışı bırakıldı/silindi",
+  "DeleteReel":"Makarayı Sil",
+  "DeletePost":"Gönderiyi Sil",
+  "ReelUpdatedSuccessfully":"Makara başarıyla güncellendi",
+  "PostUpdatedSuccessfully": "Gönderi başarıyla güncellendi"
+
+
 
 
 
