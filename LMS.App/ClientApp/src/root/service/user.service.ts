@@ -229,4 +229,8 @@ export class UserService{
     getBlobSasToken():Observable<any>{
         return this.http.get(`${this.apiUrl}/users/getBlobSasToken`,{headers: this.headers});
     }
+
+    checkAllNotificationSettings(userId:string):Observable<any>{
+        return this.http.post(`${this.apiUrl}/users/checkAllNotificationSettings`+ '?userId=' + userId,'',{headers: this.headers});
+    }
 }

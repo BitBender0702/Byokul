@@ -238,6 +238,8 @@ export class RegisterComponent extends MultilingualComponent implements OnInit,A
                     this.invalidRegister = false; 
                     this.router.navigateByUrl("user/auth/login");
                     registrationResponse.next(true); 
+                    this._userService.checkAllNotificationSettings(response.userId).subscribe((response) => {
+                    });
                   }
                   },
                   error: (err: HttpErrorResponse) => this.invalidRegister = true

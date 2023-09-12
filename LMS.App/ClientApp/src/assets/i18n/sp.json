@@ -389,15 +389,21 @@
   "ReelLikedSuccessfully":"Carrete que le gustó con éxito",
   "ClassDoesNotExist": "Class does not exist",
   "CourseDoesNotExist": "Course does not exist",
-  "SchoolDisabled":"The school you are trying to access is disabled",
-  "SchoolDeleted":"The school you are trying to access is deleted",
-  "SchoolDeletedAndDisabled":"The school you are trying to access is disabled/deleted",
-  "ClassDisabled":"The class you are trying to access is disabled",
-  "ClassDeleted":"The class you are trying to access is deleted",
   "ClassDeletedAndDisabled":"The class you are trying to access is disabled/deleted",
-  "CourseDisabled":"The course you are trying to access is disabled",
-  "CourseDeleted":"The course you are trying to access is deleted",
-  "CourseDeletedAndDisabled":"The course you are trying to access is disabled/deleted"
+  "CourseDeletedAndDisabled":"The course you are trying to access is disabled/deleted",
+  "SchoolDisabled":"La escuela a la que intentas acceder está deshabilitada",
+  "SchoolDeleted":"La escuela a la que intentas acceder está eliminada",
+  "ClassDisabled":"La clase a la que intenta acceder está deshabilitada",
+  "ClassDeleted":"La clase a la que intentas acceder está eliminada",
+  "CourseDisabled":"El curso al que intenta acceder está deshabilitado",
+  "CourseDeleted":"El curso al que intenta acceder está eliminado",
+  "Lecture Start": "Lecture Start",
+  "Status Changes": "Status Changes",
+  "From Students": "From Students",
+  "Likes": "Likes",
+  "Only New Messages": "Only New Messages",
+  "From Teachers": "From Teachers",
+  "From SchoolOwners": "From SchoolOwners"
 
 
 

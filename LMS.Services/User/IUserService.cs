@@ -46,7 +46,7 @@ namespace LMS.Services
         Task<IEnumerable<GlobalFeedViewModel>> GetGlobalFeedSliderReels(string userId, Guid lastReelId, ScrollTypesEnum scrollType);
         Task<List<UserPermissionViewModel>> GetUserPermissions(string userId);
         Task<string> GetBlobSasToken();
-
+        Task<bool> CheckAllNotificationSettings(string userId);
 
     }
 }

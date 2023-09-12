@@ -141,6 +141,7 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
   }
 
   ngOnInit(): void {
+    debugger
     this.checkScreenSize();
     if(this.isScreenMobile){
       this.itemsPerSlide = 2;
@@ -162,6 +163,10 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
       //   this.feedTab = localStorage.getItem('feedTab')??'';
       // }
     }
+    else{
+        localStorage.setItem('feedTab', 'globalFeed');
+        this.feedTab = "globalFeed";
+      }
     this.gender = localStorage.getItem("gender") ?? '';
     this.translate.use(selectedLang ?? '');
     this.isOwnerOrNot();
@@ -182,7 +187,10 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
           this.isMyFeedsEmpty = true;
           // this.getGlobalFeedsData()
         }
-        this.addListenerToNextButton();}
+        else{
+          this.addListenerToNextButton();
+        }
+       }
         catch{
           this.isMyFeedsEmpty = true;
         }
@@ -199,7 +207,9 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
         }
         // this.isDataLoaded = true;
         // this.loadingIcon = false;
-        this.addListenerToNextButton();
+        else{
+          this.addListenerToNextButton();
+        }
       });
     }
 
@@ -345,11 +355,19 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
   }
 
   checkMyFeedExist() {
+    debugger
     if (this.isMyFeedPostsExist && this.isMyFeedReelsExist) {
       this.isDataLoaded = true;
       this.loadingIcon = false;
       this.cd.detectChanges();
-      localStorage.setItem('feedTab', 'myFeed');
+      var feedTabEmpty = localStorage.getItem('feedTab') ?? '';
+      if(feedTabEmpty == ''){
+        localStorage.setItem('feedTab', 'globalFeed');
+        this.cd.detectChanges();
+      }
+      else{
+        localStorage.setItem('feedTab', 'myFeed');
+      }
     }
   }
 
@@ -932,7 +950,9 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
             this.isMyFeedReelsEmpty = true;
             // this.getGlobalFeedsData()
           }
-          this.addListenerToNextButton();
+          else{
+            this.addListenerToNextButton();
+          }
         }
       });
     }

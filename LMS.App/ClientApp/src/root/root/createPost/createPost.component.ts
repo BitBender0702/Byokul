@@ -699,7 +699,6 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     const video = document.createElement('video');
     video.preload = 'metadata';
     video.src = videoUrl;
-    video.currentTime = 4;
     video.addEventListener('loadedmetadata', () => {
       const canvas = document.createElement('canvas');
       canvas.width = video.videoWidth;
@@ -712,7 +711,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
         this.saveCanvasToFile(canvas, fileName);
         callback(thumbnailUrl);
       });
-      video.currentTime = 4;
+      video.currentTime = 0;
     });
   }
 
@@ -1042,7 +1041,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
   postFrom() {
     debugger
     if(this.profileShare){
-      this.appendData(this.userId, this.userId, this.userId, PostAuthorTypeEnum.User.toString());
+      this.appendData(this.loginUserId, this.loginUserId, this.loginUserId, PostAuthorTypeEnum.User.toString());
     }
     else{
       if (this.schoolId != undefined) {
@@ -1635,6 +1634,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     const imageObject = {
       imageUrl: thumbnailUrl
     };
+    if(thumbnailUrl != null){
     var imageBlobobject = {
       id: uuidv4(),
       blobUrl: thumbnailUrl,
@@ -1642,6 +1642,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
       blobName: initialValue.title
     }
     this.uploadVideoUrlList.push(imageBlobobject);
+  }
     this.uploadImageUrls.push(imageObject);
   }
 

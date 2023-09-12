@@ -430,7 +430,7 @@
                     <div *ngFor="let item of sidebarInfo.ownedSchools">
                       <div
                         *ngIf="!item.isBan"
-                        class="school-name d-flex align-items-center font_16"
+                        [ngClass]="item.isDisableByOwner ? 'school-name d-flex align-items-center font_16 text-danger':'school-name d-flex align-items-center font_16'"
                       >
                         <div class="school-img rounded-circle me-3">
                           <img
@@ -490,7 +490,7 @@
                     <div *ngFor="let item of sidebarInfo.ownedClasses">
                       <div
                         *ngIf="!item.isEnable"
-                        class="school-name d-flex align-items-center font_16"
+                        [ngClass]="item.isDisableByOwner ? 'school-name d-flex align-items-center font_16 text-danger':'school-name d-flex align-items-center font_16'"
                       >
                         <div class="school-img rounded-circle me-3">
                           <img
@@ -555,8 +555,7 @@
                     <div *ngFor="let item of sidebarInfo.ownedCourses">
                       <div
                         *ngIf="!item.isEnable"
-                        class="school-name d-flex align-items-center font_16"
-                      >
+                        [ngClass]="item.isDisableByOwner ? 'school-name d-flex align-items-center font_16 text-danger':'school-name d-flex align-items-center font_16'">
                         <div class="school-img rounded-circle me-3">
                           <img
                             *ngIf="item.avatar != null && item.avatar != 'null'"

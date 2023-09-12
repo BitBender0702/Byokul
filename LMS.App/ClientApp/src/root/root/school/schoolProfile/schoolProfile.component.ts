@@ -62,7 +62,7 @@ import { AuthService } from 'src/root/service/auth.service';
 import { RolesEnum } from 'src/root/RolesEnum/rolesEnum';
 import { ownedClassResponse } from '../../class/createClass/createClass.component';
 import { ownedCourseResponse } from '../../course/createCourse/createCourse.component';
-import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
+import { OpenSideBar, enableDisableScc } from 'src/root/user-template/side-bar/side-bar.component';
 import { TranslateService } from '@ngx-translate/core';
 import { UserService } from 'src/root/service/user.service';
 import { Dimensions, ImageCroppedEvent, ImageTransform } from 'ngx-image-cropper';
@@ -1952,6 +1952,17 @@ export class SchoolProfileComponent
     this.bsModalService.show(SharePostComponent, { initialState });
   }
 
+  openProfileShareModal(): void {
+    debugger
+    const initialState = {
+      schoolId: this.school.schoolId,
+      schoolName: this.school.schoolName,
+      from: "school",
+      isShareProfile: true
+    };
+    this.bsModalService.show(SharePostComponent, { initialState });
+  }
+  
   savePost(postId: string) {
     const translatedMessage = this.translateService.instant('Success');
     var posts: any[] = this.school.posts;
@@ -2105,13 +2116,13 @@ export class SchoolProfileComponent
       const translatedInfoSummary = this.translateService.instant('Success');
       if (this.school.isDisableByOwner) {
         const translatedMessage = this.translateService.instant('SchoolEnabledSuccessfully');
-
         this.messageService.add({ severity: 'success', summary: translatedInfoSummary, life: 3000, detail: translatedMessage });
+        enableDisableScc.next({isDisable:false,schoolId:this.school.schoolId});
       }
       else {
         const translatedMessage = this.translateService.instant('SchoolDisabledSuccessfully');
-
         this.messageService.add({ severity: 'success', summary: translatedInfoSummary, life: 3000, detail: translatedMessage });
+        enableDisableScc.next({isDisable:true,schoolId:this.school.schoolId});
       }
       this.ngOnInit();
     });

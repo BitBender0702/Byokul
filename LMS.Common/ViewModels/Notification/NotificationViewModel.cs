@@ -12,7 +12,7 @@ namespace LMS.Common.ViewModels.Notification
 {
     public class NotificationViewModel
     {
-        public Guid Id { get; set; }
+        public Guid? Id { get; set; }
         public string? UserId { get; set; }
         public string? ActionDoneBy { get; set; }
         public UserDetailsViewModel? User { get; set; }

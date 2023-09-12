@@ -201,10 +201,12 @@ export class NotificationsComponent extends MultilingualComponent implements OnI
 
   getNotifications() {
     this._notificationService.getNotifications(this.notificationPageNumber).subscribe((notificationsResponse) => {
-      this.notifications = [...this.notifications, ...notificationsResponse];
+      if(notificationsResponse.length > 0){
+        this.notifications = [...this.notifications, ...notificationsResponse];
       this.notificationLoadingIcon = false;
       this.scrollNotificationResponseCount = notificationsResponse.length;
       this.scrolled = false;
+     }
     });
   }
 

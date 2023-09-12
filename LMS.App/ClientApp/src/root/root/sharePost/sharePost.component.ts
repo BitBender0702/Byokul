@@ -9,7 +9,7 @@ import videojs from 'video.js';
 import 'video.js/dist/video-js.css'
 import 'videojs-contrib-quality-levels';
 import 'videojs-hls-quality-selector';
-import { addPostResponse } from '../createPost/createPost.component';
+import { CreatePostComponent, addPostResponse } from '../createPost/createPost.component';
 import { SignalrService } from 'src/root/service/signalr.service';
 import { Meta } from '@angular/platform-browser';
 import { Tooltip } from 'primeng/tooltip';
@@ -38,6 +38,7 @@ export class SharePostComponent implements OnInit {
     schoolName!:string;
     className!:string;
     coursename!:string;
+    courseName!:string;
     userId!:string;
     private _postService;
     private _signalrService;
@@ -45,6 +46,12 @@ export class SharePostComponent implements OnInit {
     websiteUrl:any;
     streamUrl!:any;
     streamId!:string;
+
+    schoolId!: string;
+    classId!: string;
+    courseId!: string;
+    from!: string;
+    isShareProfile!: boolean;
 
 
   constructor(private bsModalService: BsModalService,private elementRef: ElementRef,private meta: Meta,private options: ModalOptions,public messageService: MessageService,postService: PostService,signalrService:SignalrService,private router: Router) {
@@ -77,6 +84,18 @@ export class SharePostComponent implements OnInit {
 
     if(this.streamUrl != undefined){
       this.websiteUrl = this.streamUrl;
+    }
+
+    if(this.schoolId != undefined && this.schoolName != undefined){
+      this.websiteUrl = `${this.apiUrl}/profile/school/` + this.schoolName;
+    }
+    
+    if(this.classId != undefined && this.schoolName != undefined && this.className != undefined){
+      this.websiteUrl = `${this.apiUrl}/profile/class/` + this.schoolName + '/' + this.className;
+    }
+
+    if(this.courseId != undefined && this.schoolName != undefined && this.courseName != undefined){
+      this.websiteUrl = `${this.apiUrl}/profile/course/` + this.schoolName + '/' + this.courseName;
     }
 
     var validToken = localStorage.getItem('jwt');
@@ -159,6 +178,21 @@ copyMessage(){
   
   // Remove the temporary input element
   this.elementRef.nativeElement.removeChild(inputElement);
+}
+
+
+openSharePostModal(){
+  debugger
+  // this.bsModalService.hide(this.bsModalService.config.id);
+  const initialState = {
+    schoolId: this.schoolId,
+    classId: this.classId,
+    courseId: this.courseId,
+    from: this.from,
+    isLiveTabOpen: false,
+    isShareProfile: true
+  };
+  this.bsModalService.show(CreatePostComponent, { initialState });
 }
   
 

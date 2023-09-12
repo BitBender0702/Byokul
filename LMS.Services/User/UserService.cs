@@ -62,6 +62,8 @@ namespace LMS.Services
         private IGenericRepository<SavedPost> _savedPostRepository;
         private IGenericRepository<UserCertificate> _userCertificateRepository;
         private IGenericRepository<UserPermission> _userPermissionRepository;
+        private IGenericRepository<NotificationSeeting> _notificationSettingRepository;
+        private IGenericRepository<UserNotificationSetting> _userNotificationSettingRepository;
         private readonly UserManager<User> _userManager;
         private readonly IBlobService _blobService;
         private readonly IPostRepository _postRepositoryCustom;
@@ -69,7 +71,7 @@ namespace LMS.Services
 
 
         public UserService(IMapper mapper, IConfiguration config, IWebHostEnvironment webHostEnvironment, IGenericRepository<User> userRepository, IGenericRepository<UserFollower> userFollowerRepository, IGenericRepository<UserLanguage> userLanguageRepository, IGenericRepository<City> cityRepository, IGenericRepository<Country> countryRepository, IGenericRepository<SchoolFollower> schoolFollowerRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<CourseTeacher> courseTeacherRepository,
-          IGenericRepository<SchoolTeacher> schoolteacherRepository, IGenericRepository<Student> studentRepository, IGenericRepository<Teacher> teacherRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<UserPreference> userPreferenceRepository, IGenericRepository<Like> likeRepository, IGenericRepository<View> viewRepository, IGenericRepository<Comment> commentRepository, IGenericRepository<StudentCertificate> studentCertificateRepository, IGenericRepository<UserSharedPost> userSharedPostRepository, IGenericRepository<SavedPost> savedPostRepository, IGenericRepository<UserPermission> userPermissionRepository, UserManager<User> userManager, IBlobService blobService, IPostRepository postRepositoryCustom, IGenericRepository<UserCertificate> userCertificateRepository, ICommonService commonService)
+          IGenericRepository<SchoolTeacher> schoolteacherRepository, IGenericRepository<Student> studentRepository, IGenericRepository<Teacher> teacherRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<UserPreference> userPreferenceRepository, IGenericRepository<Like> likeRepository, IGenericRepository<View> viewRepository, IGenericRepository<Comment> commentRepository, IGenericRepository<StudentCertificate> studentCertificateRepository, IGenericRepository<UserSharedPost> userSharedPostRepository, IGenericRepository<SavedPost> savedPostRepository, IGenericRepository<UserPermission> userPermissionRepository, IGenericRepository<NotificationSeeting> notificationSettingRepository, IGenericRepository<UserNotificationSetting> userNotificationSettingRepository, UserManager<User> userManager, IBlobService blobService, IPostRepository postRepositoryCustom, IGenericRepository<UserCertificate> userCertificateRepository, ICommonService commonService)
         {
             _mapper = mapper;
             _config = config;
@@ -101,6 +103,8 @@ namespace LMS.Services
             _userSharedPostRepository = userSharedPostRepository;
             _savedPostRepository = savedPostRepository;
             _userPermissionRepository = userPermissionRepository;
+            _notificationSettingRepository = notificationSettingRepository;
+            _userNotificationSettingRepository = userNotificationSettingRepository;
             _userManager = userManager;
             _blobService = blobService;
             _postRepositoryCustom = postRepositoryCustom;
@@ -2001,6 +2005,27 @@ namespace LMS.Services
             }
 
             return null;
+        }
+
+        public async Task<bool> CheckAllNotificationSettings(string userId)
+        {
+            var notificationSettings = await _notificationSettingRepository.GetAll().ToListAsync();
+
+            foreach (var notificationSetting in notificationSettings)
+            {
+                var userNotificationSetting = new UserNotificationSetting
+                {
+                    UserId = userId,
+                    NotificationSettingId = notificationSetting.Id,
+                    IsActive = true
+                };
+
+                _userNotificationSettingRepository.Insert(userNotificationSetting);
+                _userNotificationSettingRepository.Save();
+            }
+
+            return true;
+
         }
 
     }

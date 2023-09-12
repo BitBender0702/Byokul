@@ -3,6 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { Subject } from 'rxjs';
 import { PostService } from 'src/root/service/post.service';
+import { deletePostResponse } from '../postView/postView.component';
 
 export const deleteModalPostResponse = new Subject<{ postId: string }>();
 
@@ -29,7 +30,7 @@ export class DeleteConfirmationComponent implements OnInit {
         this._postService.deletePost(this.id).subscribe((_response) => {
             this.close();
             this.loadingIcon = false;
-            deleteModalPostResponse.next({ postId: this.id });
+            deletePostResponse.next({ postId: this.id });
         });
 
     }

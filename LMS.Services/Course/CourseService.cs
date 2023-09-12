@@ -1203,10 +1203,19 @@ namespace LMS.Services
         public async Task EnableDisableCourse(Guid courseId)
         {
             var course = _courseRepository.GetById(courseId);
-            course.IsDisableByOwner = !course.IsDisableByOwner;
-            _courseRepository.Update(course);
-            _courseRepository.Save();
-
+            if (course != null)
+            {
+                course.IsDisableByOwner = !course.IsDisableByOwner;
+                _courseRepository.Update(course);
+                _courseRepository.Save();
+            }
+            else
+            {
+                var classes = _classRepository.GetById(courseId);
+                classes.IsDisableByOwner = !classes.IsDisableByOwner;
+                _classRepository.Update(classes);
+                _classRepository.Save();
+            }
         }
 
         public async Task EnableDisableComments(Guid courseId, bool isHideComments)

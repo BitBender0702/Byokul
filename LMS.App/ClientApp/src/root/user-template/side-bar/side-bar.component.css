@@ -15,3 +15,7 @@
   text-decoration: none;
   cursor: pointer;
 }
+
+.disablebackground{
+  color: rgb(198, 7, 7);
+}

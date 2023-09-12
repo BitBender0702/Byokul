@@ -148,6 +148,7 @@ namespace LMS.Services
                 AccessibilityId = schoolViewModel.AccessibilityId,
                 SchoolEmail = schoolViewModel.SchoolEmail,
                 AvailableStorageSpace = 100,
+                IsDefaultAvatar = schoolViewModel.IsDefaultAvatar
 
             };
 

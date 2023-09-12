@@ -216,17 +216,6 @@
                   >
                     {{ "RequestMessage" | translate }}
                   </button>
-                  <button
-                    style="min-width: 50px"
-                    type="button"
-                    (click)="openPostModal(false, true)"
-                    class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn me-0 minw-142 class-request-msg"
-                  >
-                    <img
-                      lazyLoad="../../../../assets/images/Upload-dark.svg"
-                      class="d-block mx-auto"
-                    />
-                  </button>
                   <!-- // right here -->
                 </div>
                 <div class="hover-double-button">
@@ -290,6 +279,17 @@
                       "EnableClass" | translate
                     }}</span>
                   </button>
+                  <button
+                  style="min-width: 50px"
+                  type="button"
+                  (click)="openProfileShareModal()"
+                  class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn me-0 minw-142 class-request-msg"
+                >
+                  <img
+                    lazyLoad="../../../../assets/images/Upload-dark.svg"
+                    class="d-block mx-auto"
+                  />
+                </button>
                 </div>
               </div>
             </div>

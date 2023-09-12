@@ -90,7 +90,7 @@ namespace LMS.App.Controllers
                         text = text.Replace("[URL]", callBackUrl);
                         await _commonService.SendEmail(new List<string> { user.Email }, null, null, "Verify Your Email Address", body: text, null, null);
 
-                        return Ok(new { result = "success" });
+                        return Ok(new { result = "success" , userId = user.Id});
                     }
 
                     return Ok(new { result = result.Errors.FirstOrDefault()?.Description });

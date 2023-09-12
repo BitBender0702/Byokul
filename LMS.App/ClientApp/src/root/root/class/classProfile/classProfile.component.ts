@@ -43,7 +43,7 @@ import { Arabic } from 'flatpickr/dist/l10n/ar';
 import { Spanish } from 'flatpickr/dist/l10n/es';
 import { Turkish } from 'flatpickr/dist/l10n/tr';
 import flatpickr from 'flatpickr';
-import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
+import { OpenSideBar, enableDisableScc } from 'src/root/user-template/side-bar/side-bar.component';
 import { TranslateService } from '@ngx-translate/core';
 import { Dimensions, ImageCroppedEvent, ImageTransform } from 'ngx-image-cropper';
 import { SignalrService } from 'src/root/service/signalr.service';
@@ -1460,6 +1460,18 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     }
   }
 
+  openProfileShareModal(): void {
+    debugger
+    const initialState = {
+      classId: this.class.classId,
+      schoolName: this.class.school.schoolName,
+      className: this.class.className,
+      from: "class",
+      isShareProfile: true
+    };
+    this.bsModalService.show(SharePostComponent, { initialState });
+  }
+
   savePost(postId: string) {
     var posts: any[] = this.class.posts;
     var isSavedPost = posts.find(x => x.id == postId);
@@ -1558,9 +1570,11 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     this._classService.enableDisableClass(this.class.classId).subscribe((response) => {
       if (this.class.isDisableByOwner) {
         this.messageService.add({ severity: 'success', summary: 'Success', life: 3000, detail: 'Class enabled successfully' });
+        enableDisableScc.next({isDisable:false,classId:this.class.classId});
       }
       else {
         this.messageService.add({ severity: 'success', summary: 'Success', life: 3000, detail: 'Class disabled successfully' });
+        enableDisableScc.next({isDisable:true,classId:this.class.classId});
       }
       this.ngOnInit();
     });

@@ -37,7 +37,7 @@ import { SignalrService, commentLikeResponse } from 'src/root/service/signalr.se
 import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 import { RolesEnum } from 'src/root/RolesEnum/rolesEnum';
 import { generateCertificateResponse } from '../../generateCertificate/generateCertificate.component';
-import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
+import { OpenSideBar, enableDisableScc } from 'src/root/user-template/side-bar/side-bar.component';
 export const convertIntoClassResponse = new Subject<{ classId: string, className: string, school: any, avatar: string }>();
 export const deleteCourseResponse = new BehaviorSubject<string>('');
 import { Dimensions, ImageCroppedEvent, ImageTransform } from 'ngx-image-cropper';
@@ -1289,6 +1289,18 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     }
   }
 
+  openProfileShareModal(): void {
+    debugger
+    const initialState = {
+      courseId: this.course.courseId,
+      schoolName: this.course.school.schoolName,
+      courseName: this.course.courseName,
+      from: "course",
+      isShareProfile: true
+    };
+    this.bsModalService.show(SharePostComponent, { initialState });
+  }
+
   savePost(postId: string) {
     var posts: any[] = this.course.posts;
     var isSavedPost = posts.find(x => x.id == postId);
@@ -1388,11 +1400,14 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
   unableDisableCourse() {
     this.loadingIcon = true;
     this._courseService.enableDisableCourse(this.course.courseId).subscribe((response) => {
+      debugger
       if (this.course.isDisableByOwner) {
         this.messageService.add({ severity: 'success', summary: 'Success', life: 3000, detail: 'Course enabled successfully' });
+        enableDisableScc.next({isDisable:false,courseId:this.course.courseId});
       }
       else {
         this.messageService.add({ severity: 'success', summary: 'Success', life: 3000, detail: 'Course disabled successfully' });
+        enableDisableScc.next({isDisable:true,courseId:this.course.courseId});
       }
       this.ngOnInit();
     });

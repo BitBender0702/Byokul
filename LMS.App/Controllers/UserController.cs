@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
+using System.Reflection.Metadata;
 using System.Text;
 using Country = LMS.Common.ViewModels.Common.Country;
 
@@ -454,6 +455,19 @@ namespace LMS.App.Controllers
         {
             var response = await _userService.GetBlobSasToken();
             return Ok(new { Success = true, SasToken = response });
+        }
+
+        [Route("checkAllNotificationSettings")]
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> CheckAllNotificationSettings(string userId)
+        {
+            var response = await _userService.CheckAllNotificationSettings(userId);
+            if (response)
+            {
+                return Ok(new { Success = true, Message = Constants.NotificationSettingsCheckedSuccessfully });
+            }
+            return Ok(new { Success = false, Message = Constants.NotificationSettingsCheckedSuccessfully });
         }
 
     }

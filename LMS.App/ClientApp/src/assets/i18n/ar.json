@@ -558,6 +558,14 @@
   "ClassDeletedAndDisabled":"الفصل الذي تحاول الوصول إليه معطل/محذوف",
   "CourseDisabled":"الدورة التدريبية التي تحاول الوصول إليها معطلة",
   "CourseDeleted":"تم حذف الدورة التدريبية التي تحاول الوصول إليها",
-  "CourseDeletedAndDisabled":"الدورة التدريبية التي تحاول الوصول إليها معطلة/محذوفة"
+  "CourseDeletedAndDisabled":"الدورة التدريبية التي تحاول الوصول إليها معطلة/محذوفة",
+  "Lecture Start": "بداية المحاضرة",
+  "Status Changes": "تغييرات الحالة",
+  "From Students": "من الطلاب",
+  "Likes": "الإعجابات",
+  "Only New Messages": "الرسائل الجديدة فقط",
+  "From Teachers": "من المعلمين",
+  "From SchoolOwners": "من أصحاب المدارس"
+
 
 }

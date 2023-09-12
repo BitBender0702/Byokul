@@ -15,6 +15,7 @@
               <div class="modal-body">
                 <div class="share_div">
                 <button *ngIf="post.postId!= undefined" (click)="saveUserSharedPost()" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 share_btn">{{'MyWall'| translate }}</button>
+                <button *ngIf="post.schoolId!= undefined || post.classId!= undefined || post.courseId!= undefined" (click)="openSharePostModal()" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 share_btn">{{'MyWall'| translate }}</button>
                 <button (click)="shareStream()" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 share_btn">
                     <a class="social_icon" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u={{websiteUrl}}&amp;src=sdkpreparse">Facebook</a>
                 </button> 

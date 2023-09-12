@@ -258,7 +258,7 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
                   }
                   this._postService.createPost(uploadResponse.postToUpload).subscribe((response: any) => {
                     debugger
-                    var translatedMessage = this.translateService.instant('PostCreatedSuccessfully');
+                    var translatedMessage = this.translateService.instant('PostCreatedSuccessfully');                 
                     const translatedSummary = this.translateService.instant('Success');
                     this.messageService.add({ severity: 'success', summary: translatedSummary, life: 3000, detail: translatedMessage, });
                     addPostResponse.next({ response });

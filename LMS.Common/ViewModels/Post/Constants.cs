@@ -52,11 +52,10 @@ namespace LMS.Common.ViewModels.Post
         public static string SchoolHasStorageSpace = "School has the required storage space";
         public static string FollowerReportedSuccesfully = "Follower reported succesfully";
         public static string FailedToReport = "Failed to report follower";
-
-
+        public static string NotificationSettingsCheckedSuccessfully = "Notification settings checked successfully";
+        public static string NotificationSettingsNotChecked = "Notification settings not checked successfully";
         public static string PostSavedSuccessully = "Post has been saved successfully";
         public static string PostUnsavedSavedSuccessully = "Post has been unsaved successfully";
-
         public static string StudentIsBanned = "Student is banned";
         public static string StudentIsUnBanned = "You do not have the permission to ban the student";
         public static string FollowerBannedSuccessully = "Follower banned successully";

@@ -16,6 +16,7 @@ import { Subject, Subscription } from 'rxjs';
 import { notificationResponse } from 'src/root/service/signalr.service';
 
 export const OpenSideBar =new Subject<{isOpenSideBar:boolean}>(); 
+export const enableDisableScc =new Subject<{isDisable:boolean,schoolId?:string,classId?:string,courseId?:string}>(); 
 
 @Component({
   selector: 'side-bar',
@@ -32,6 +33,7 @@ export class SideBarComponent extends MultilingualComponent implements OnInit, O
   loginUserId!:string;
   isOpenSidebar: boolean = false;
   notificationResponseSubscription!:Subscription;
+  enableDisableSccSubscription!:Subscription;
   // @Input() isOpenSidebar!:boolean;
 
   constructor(injector: Injector,userService: UserService,private router: Router,private cd: ChangeDetectorRef, private elementRef: ElementRef) {
@@ -58,11 +60,46 @@ export class SideBarComponent extends MultilingualComponent implements OnInit, O
     this.selectedLanguage = localStorage.getItem("selectedLanguage");
     this.translate.use(this.selectedLanguage ?? '');
     this._userService.getSidebarInfo().subscribe((response) => {
+      debugger
       this.sidebarInfo = response;
       this.cd.detectChanges();
       this.loadingIcon = false;
       this.isDataLoaded = true;
     });
+
+    if(!this.enableDisableSccSubscription){
+      this.enableDisableSccSubscription = enableDisableScc.subscribe(response => {
+      debugger
+      if(response.schoolId){
+        var disableSchool = this.sidebarInfo.ownedSchools.find((x: { schoolId: string; })=> x.schoolId == response.schoolId);
+        if(response.isDisable){
+          disableSchool.isDisableByOwner = true;
+        }
+        else{
+          disableSchool.isDisableByOwner = false;
+        }
+      }
+      if(response.classId){
+        var disableClass = this.sidebarInfo.ownedClasses.find((x: { classId: string; })=> x.classId == response.classId);
+        if(response.isDisable){
+          disableClass.isDisableByOwner = true;
+        }
+        else{
+          disableClass.isDisableByOwner = false;
+        }
+      }
+      if(response.courseId){
+        var disableCourse = this.sidebarInfo.ownedCourses.find((x: { courseId: string; })=> x.courseId == response.courseId);
+        if(response.isDisable){
+          disableCourse.isDisableByOwner = true;
+        }
+        else{
+          disableCourse.isDisableByOwner = false;
+        }
+      }
+
+      });
+    }
 
     if(!this.notificationResponseSubscription){
       this.notificationResponseSubscription = notificationResponse.subscribe(response => {
@@ -248,6 +285,9 @@ export class SideBarComponent extends MultilingualComponent implements OnInit, O
   ngOnDestroy(): void {
     if(this.notificationResponseSubscription){
       this.notificationResponseSubscription.unsubscribe();
+    }
+    if(this.enableDisableSccSubscription){
+      this.enableDisableSccSubscription.unsubscribe();
     }
   }
 
