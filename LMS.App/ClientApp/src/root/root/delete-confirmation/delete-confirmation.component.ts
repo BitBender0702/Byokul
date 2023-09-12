@@ -28,7 +28,7 @@ export class DeleteConfirmationComponent implements OnInit {
 
         this.loadingIcon = true;
         this._postService.deletePost(this.id).subscribe((_response) => {
-            this.close();
+            this.bsModalService.hide();
             this.loadingIcon = false;
             deletePostResponse.next({ postId: this.id });
         });
@@ -36,7 +36,7 @@ export class DeleteConfirmationComponent implements OnInit {
     }
 
     close() {
-        this.bsModalService.hide()
+        this.bsModalService.hide(this.bsModalService.config.id)
     }
 
 }

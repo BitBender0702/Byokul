@@ -579,7 +579,10 @@
   "ClassDeletedAndDisabled":"The class you are trying to access is disabled/deleted",
   "CourseDisabled":"The course you are trying to access is disabled",
   "CourseDeleted":"The course you are trying to access is deleted",
-  "CourseDeletedAndDisabled":"The course you are trying to access is disabled/deleted"
+  "CourseDeletedAndDisabled":"The course you are trying to access is disabled/deleted",
+  "DeleteReel":"Delete Reel",
+  "DeletePost":"Delete Post",
+  "ReelUpdatedSuccessfully":"Reel updated successfully"
 
 
 

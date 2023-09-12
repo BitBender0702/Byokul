@@ -403,7 +403,13 @@
   "Likes": "Likes",
   "Only New Messages": "Only New Messages",
   "From Teachers": "From Teachers",
-  "From SchoolOwners": "From SchoolOwners"
+  "From SchoolOwners": "From SchoolOwners",
+  "DeleteReel":"Eliminar carrete",
+  "DeletePost":"Eliminar mensaje",
+  "ReelUpdatedSuccessfully":"Carrete actualizado con éxito",
+  "PostUpdatedSuccessfully": "Publicación actualizada exitosamente"
+
+
 
 
 

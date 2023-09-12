@@ -565,7 +565,12 @@
   "Likes": "الإعجابات",
   "Only New Messages": "الرسائل الجديدة فقط",
   "From Teachers": "من المعلمين",
-  "From SchoolOwners": "من أصحاب المدارس"
+  "From SchoolOwners": "من أصحاب المدارس",
+  "DeleteReel":"حذف بكرة",
+  "DeletePost":"حذف آخر",
+  "ReelUpdatedSuccessfully":"تم تحديث البكرة بنجاح",
+  "PostUpdatedSuccessfully": "تم تحديث المشاركة بنجاح"
+
 
 
 }

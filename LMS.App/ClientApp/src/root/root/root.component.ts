@@ -258,7 +258,13 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
                   }
                   this._postService.createPost(uploadResponse.postToUpload).subscribe((response: any) => {
                     debugger
-                    var translatedMessage = this.translateService.instant('PostCreatedSuccessfully');                 
+                    if(response.updatedOn==null){
+                      var translatedMessage = this.translateService.instant('PostCreatedSuccessfully');
+                    }
+                    else{
+                      var translatedMessage = this.translateService.instant('PostUpdatedSuccessfully');
+                    }
+                    
                     const translatedSummary = this.translateService.instant('Success');
                     this.messageService.add({ severity: 'success', summary: translatedSummary, life: 3000, detail: translatedMessage, });
                     addPostResponse.next({ response });
@@ -283,7 +289,12 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
             } else{
               this._postService.createPost(uploadResponse.postToUpload).subscribe((response: any) => {
                 debugger
-                var translatedMessage = this.translateService.instant('PostCreatedSuccessfully');
+                if(response.updatedOn==null){
+                  var translatedMessage = this.translateService.instant('PostCreatedSuccessfully');
+                }
+                else{
+                  var translatedMessage = this.translateService.instant('PostUpdatedSuccessfully');
+                }
                 const translatedSummary = this.translateService.instant('Success');
                 this.messageService.add({ severity: 'success', summary: translatedSummary, life: 3000, detail: translatedMessage, });
                 addPostResponse.next({ response });
@@ -342,7 +353,13 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
                 if (response.success) {
                   this._postService.createPost(uploadResponse.postToUpload).subscribe((response: any) => {
                     debugger
-                    var translatedMessage = this.translateService.instant('ReelCreatedSuccessfully');
+                    // var translatedMessage = this.translateService.instant('ReelCreatedSuccessfully');
+                    if(response.updatedOn==null){
+                      var translatedMessage = this.translateService.instant('ReelCreatedSuccessfully');
+                    }
+                    else{
+                      var translatedMessage = this.translateService.instant('ReelUpdatedSuccessfully');
+                    }
                     const translatedSummary = this.translateService.instant('Success');
                     this.messageService.add({ severity: 'success', summary: translatedSummary, life: 3000, detail: translatedMessage, });
                     // this.isSubmitted=false;
@@ -373,7 +390,12 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
               debugger
               this._postService.createPost(uploadResponse.postToUpload).subscribe((response: any) => {
                 debugger
-                var translatedMessage = this.translateService.instant('ReelCreatedSuccessfully');
+                if(response.updatedOn==null){
+                  var translatedMessage = this.translateService.instant('ReelCreatedSuccessfully');
+                }
+                else{
+                  var translatedMessage = this.translateService.instant('ReelUpdatedSuccessfully');
+                }
                 const translatedSummary = this.translateService.instant('Success');
                 this.messageService.add({ severity: 'success', summary: translatedSummary, life: 3000, detail: translatedMessage, });
                 // this.isSubmitted=false;
