@@ -46,6 +46,13 @@ export class UserFollowersComponent extends MultilingualComponent implements OnI
     reportFollowerViewModel!:ReportFollowerViewModel
     @ViewChild('closeReportModal') closeReportModal!: ElementRef;
 
+
+
+    userBannedFollowersPageNumber:number = 1;
+    userBannedFollowers:any;
+    followersTab:boolean=true;
+
+
     constructor(injector: Injector,private translateService: TranslateService,public messageService:MessageService,userService: UserService,signalrService:SignalrService,private route: ActivatedRoute,private fb: FormBuilder) { 
       super(injector);
       this._userService = userService;
@@ -71,6 +78,12 @@ export class UserFollowersComponent extends MultilingualComponent implements OnI
           this.translate.use(response.language);
         })
       }
+
+      this._userService.getUserBannedFollowers(this.userId,this.userBannedFollowersPageNumber,this.searchString).subscribe(response => {
+        this.userBannedFollowers = response.data;
+        // this.followersTab = false;
+        // debugger
+      })
 
       this.reportFollowerForm = this.fb.group({
         reportContent:this.fb.control([],[Validators.required]),
@@ -164,11 +177,13 @@ export class UserFollowersComponent extends MultilingualComponent implements OnI
   }
 
   getUserFollowers(){
+    debugger
     this._userService.getUserFollowers(this.userId,this.userFollowersPageNumber,this.searchString).subscribe((response) => {
       this.userFollowers =[...this.userFollowers, ...response];
       this.postLoadingIcon = false;
       this.scrollFollowersResponseCount = response.length; 
       this.scrolled = false;
+      this.followersTab = true;
     });
   }
 
@@ -225,4 +240,39 @@ export class UserFollowersComponent extends MultilingualComponent implements OnI
       this._signalrService.sendNotification(this.notificationViewModel);
     });
   }
+
+  getFollowers(){
+    debugger
+    this._userService.getUserFollowers(this.userId,this.userFollowersPageNumber,this.searchString).subscribe((response) => {
+      this.userFollowers =[...this.userFollowers];
+      this.postLoadingIcon = false;
+      this.scrollFollowersResponseCount = response.length; 
+      this.scrolled = false;
+      this.followersTab = true;
+    });
+  }
+
+  getBannedUser(){
+    debugger;
+    this._userService.getUserBannedFollowers(this.userId,this.userBannedFollowersPageNumber,this.searchString).subscribe(response => {
+      this.userBannedFollowers = response.data;
+      this.followersTab = false;
+      debugger
+    })
+  }
+
+  unBanFollower(followerId:string,userId:string){
+    debugger
+    this.loadingIcon = true;
+    this._userService.unBanFollower(followerId,userId).subscribe((response) => {
+      debugger
+      this.ngOnInit();
+      const translatedMessage = this.translateService.instant('UnBannedSuccessfully');
+      const translatedSummary = this.translateService.instant('Success');
+        this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage});
+    });
+
+  }
+
+
 }

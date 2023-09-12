@@ -66,7 +66,7 @@ namespace LMS.App.Controllers
         [Route("getSchoolByName")]
         [HttpGet]
         public async Task<IActionResult> GetSchoolByName(string schoolName)
-        
+
         {
             var userId = await GetUserIdAsync(this._userManager);
             var response = await _schoolService.GetSchoolByName(schoolName, userId);
@@ -426,5 +426,17 @@ namespace LMS.App.Controllers
             return Ok(new { Success = true, Data = availableSpace, Message = Constants.SchoolHasStorageSpace });
         }
 
+        [Route("getBannedUser")]
+        [HttpGet]
+        public async Task<IActionResult> GetBannedUser(Guid schoolId, int pageNumber, string searchString)
+        {
+            //var userId = await GetUserIdAsync(this._userManager);
+            var allBannedUsers = await _schoolService.GetBannedUser(schoolId, pageNumber, searchString);
+            if (allBannedUsers == null)
+            {
+                return Ok(new { Success = false, Data = allBannedUsers, Message = Constants.HasAllBannedUser });
+            }
+            return Ok(new { Success = true, Data = allBannedUsers, Message = Constants.HasAllBannedUser });
+        }
     }
 }

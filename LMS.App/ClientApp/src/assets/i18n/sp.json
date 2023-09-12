@@ -297,7 +297,7 @@
   "SchoolDeletedSuccessfully": "School deleted successfully",
   "SchoolEnabledSuccessfully": "School enabled successfully",
   "SchoolDisabledSuccessfully": "School disabled successfully",
-  "BannedSuccessfully": "Banned successfully",
+  "BannedSuccessfully": "Prohibido con éxito",
   "MessageForwardedSuccessfully": "Message forwarded successfully",
   "ChooseThumbnail": "Elija miniatura o",
   "CopiedToClipboard": "Copiada al portapapeles",
@@ -407,7 +407,9 @@
   "DeleteReel":"Eliminar carrete",
   "DeletePost":"Eliminar mensaje",
   "ReelUpdatedSuccessfully":"Carrete actualizado con éxito",
-  "PostUpdatedSuccessfully": "Publicación actualizada exitosamente"
+  "PostUpdatedSuccessfully": "Publicación actualizada exitosamente",
+  "UnBannedSuccessfully":"El usuario ha sido desbaneado exitosamente",
+  "BannedUser":"Usuario prohibido"
 
 
 

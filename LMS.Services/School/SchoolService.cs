@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+//using System.Data.Entity;
 using System.Data.SqlTypes;
 using System.Reflection.Metadata;
 using System.Text;
@@ -2334,6 +2335,30 @@ namespace LMS.Services
                 }
                 return storageSpace;
             }
+        }
+
+        //public async Task<List<SchoolFollower>> GetBannedUser(Guid schoolId, string userId)
+        //{
+        //    var isAllowed = await _schoolRepository.GetAll().Where(x => x.CreatedById == userId && x.SchoolId == schoolId).FirstOrDefaultAsync();
+        //    if (isAllowed == null)
+        //    {
+        //        return null;
+        //    }
+        //    var allUsers = await _schoolFollowerRepository.GetAll().Where(x => x.SchoolId == schoolId && x.IsBan).ToListAsync();
+        //    return allUsers;
+        //}
+
+
+        public async Task<List<SchoolFollowerViewModel>> GetBannedUser(Guid schoolId, int pageNumber, string? searchString)
+        {
+            int pageSize = 13;
+            var followerList = await _schoolFollowerRepository.GetAll().Include(x => x.User).Include(x => x.School)
+             .Where(x => x.SchoolId == schoolId && x.IsBan && ((string.IsNullOrEmpty(searchString)) || (x.User.FirstName.Contains(searchString) || x.User.LastName.Contains(searchString)))).Skip((pageNumber - 1) * pageSize)
+             .Take(pageSize).ToListAsync();
+
+            var response = _mapper.Map<List<SchoolFollowerViewModel>>(followerList);
+            return response;
+
         }
 
 

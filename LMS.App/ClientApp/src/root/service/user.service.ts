@@ -233,4 +233,19 @@ export class UserService{
     checkAllNotificationSettings(userId:string):Observable<any>{
         return this.http.post(`${this.apiUrl}/users/checkAllNotificationSettings`+ '?userId=' + userId,'',{headers: this.headers});
     }
+
+
+
+    getUserBannedFollowers(userId:string,pageNumber:number,searchString:string):Observable<any>{
+        let queryParams = new HttpParams().append("userId",userId).append("pageNumber",pageNumber).append("searchString",searchString);
+        return this.http.get(`${this.apiUrl}/users/getUserBannedFollowers`, {params:queryParams,headers: this.headers})
+    }
+
+
+    unBanFollower(followerId:any,userId:string): Observable<any> {
+        let queryParams = new HttpParams().append("followerId",followerId).append("userId",userId);
+        return this.http.post(`${this.apiUrl}/users/unBanFollower`,null, {params:queryParams,headers: this.headers});
+    }
+
+
 }

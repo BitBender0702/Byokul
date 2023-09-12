@@ -207,7 +207,6 @@ export class StudentListComponent extends MultilingualComponent implements OnIni
 
   // }
 
-  isBanned:boolean=false;
   banFollower(studentId: string, classOrCourseId: string) {
     debugger;
     if (this.type == 2) {
@@ -224,7 +223,13 @@ export class StudentListComponent extends MultilingualComponent implements OnIni
           const translatedInfoSummary = this.translateService.instant('Success');
           const translatedMessage = this.translateService.instant('Student is banned');
           this.messageService.add({ severity: 'success', summary: translatedInfoSummary, life: 3000, detail: translatedMessage });
-          this.isBanned = true;
+          this.ngOnInit();
+          this.cd.detectChanges();
+        } else if(response.message == "Student is unbanned"){
+          const translatedInfoSummary = this.translateService.instant('Success');
+          const translatedMessage = this.translateService.instant('Student is unbanned');
+          this.messageService.add({ severity: 'success', summary: translatedInfoSummary, life: 3000, detail: translatedMessage });
+          this.ngOnInit();
           this.cd.detectChanges();
         }
       });
@@ -246,9 +251,14 @@ export class StudentListComponent extends MultilingualComponent implements OnIni
           const translatedInfoSummary = this.translateService.instant('Success');
           const translatedMessage = this.translateService.instant('Student is banned');
           this.messageService.add({ severity: 'success', summary: translatedInfoSummary, life: 3000, detail: translatedMessage });
-          this.isBanned = true;
+          this.ngOnInit();
           this.cd.detectChanges();
-          // this.classOrCourseData.detectChanges();
+        } else if(response.message == "Student is unbanned"){
+          const translatedInfoSummary = this.translateService.instant('Success');
+          const translatedMessage = this.translateService.instant('Student is unbanned');
+          this.messageService.add({ severity: 'success', summary: translatedInfoSummary, life: 3000, detail: translatedMessage });
+          this.ngOnInit();
+          this.cd.detectChanges();
         }
       });;
     }

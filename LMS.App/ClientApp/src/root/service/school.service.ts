@@ -227,4 +227,21 @@ export class SchoolService{
         let queryParams = new HttpParams().append("schoolId",schoolId).append("filesSizeInGigabyte",filesSizeInGb);
         return this.http.get(`${this.apiUrl}/school/isAvailableStorageSpace`, {params:queryParams,headers: this.headers})
     }
+
+
+    // getBannedUser(schoolId:string):Observable<any>{
+    //     let queryParams = new HttpParams().append("schoolId",schoolId);
+    //     return this.http.get(`${this.apiUrl}/school/getBannedUser`, {params:queryParams,headers: this.headers})
+    // }
+
+    getBannedUser(schoolId:string,pageNumber:number,searchString:string):Observable<any>{
+        let queryParams = new HttpParams().append("schoolId",schoolId).append("pageNumber",pageNumber).append("searchString",searchString);
+        return this.http.get(`${this.apiUrl}/school/getBannedUser`, {params:queryParams,headers: this.headers})
+    }
+
+    unBanFollower(followerId:any,schoolId:string): Observable<any> {
+        let queryParams = new HttpParams().append("followerId",followerId).append("schoolId",schoolId);
+        return this.http.post(`${this.apiUrl}/school/unBanFollower`,null, {params:queryParams,headers: this.headers});
+    }
+
 }

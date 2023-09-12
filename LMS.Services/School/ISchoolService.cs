@@ -4,6 +4,7 @@ using LMS.Common.ViewModels.Common;
 using LMS.Common.ViewModels.Post;
 using LMS.Common.ViewModels.School;
 using LMS.Common.ViewModels.Student;
+using LMS.Data.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -61,6 +62,9 @@ namespace LMS.Services
         Task<List<ClassesBySchoolViewModel>> GetClassListBySchoolId(Guid schoolId);
         Task<StorageSpace> IsAvailableStorageSpace(Guid schoolId, double filesSizeInGigabyte, string userId);
 
+        //Task<List<SchoolFollower>> GetBannedUser(Guid schoolId, string userId);
+
+        Task<List<SchoolFollowerViewModel>> GetBannedUser(Guid schoolId, int pageNumber, string? searchString);
 
 
     }

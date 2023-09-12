@@ -461,7 +461,7 @@
   "SchoolDeletedSuccessfully": "School deleted successfully",
   "SchoolEnabledSuccessfully": "School enabled successfully",
   "SchoolDisabledSuccessfully": "School disabled successfully",
-  "BannedSuccessfully": "Banned successfully",
+  "BannedSuccessfully": "Başarıyla yasaklandı",
   "MessageForwardedSuccessfully": "Message forwarded successfully",
   "June": "abc turkish",
   "ChooseThumbnail": "Küçük resmi seçin veya",
@@ -574,7 +574,9 @@
   "DeleteReel":"Makarayı Sil",
   "DeletePost":"Gönderiyi Sil",
   "ReelUpdatedSuccessfully":"Makara başarıyla güncellendi",
-  "PostUpdatedSuccessfully": "Gönderi başarıyla güncellendi"
+  "PostUpdatedSuccessfully": "Gönderi başarıyla güncellendi",
+  "UnBannedSuccessfully":"Kullanıcının yasağı başarıyla kaldırıldı",
+  "BannedUser":"Yasaklanan Kullanıcı"
 
 
 

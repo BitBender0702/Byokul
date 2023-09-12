@@ -1198,7 +1198,7 @@ namespace LMS.Services
                 var teacherWithPermission = await _classTeacherRepository.GetAll().Where(x => x.TeacherId == banUnbanStudent.BannerId).FirstOrDefaultAsync();
                 if (teacherWithPermission == null)
                 {
-                    return false;
+                    return null;
                 }
             }
 
@@ -1208,9 +1208,13 @@ namespace LMS.Services
                 return null;
             }
             //var studentClass = _classStudentRepository.GetById(banUnbanStudent.StudentId);
-            isBanned.IsStudentBannedFromClass = true;
+            isBanned.IsStudentBannedFromClass = !isBanned.IsStudentBannedFromClass;
             _classStudentRepository.Update(isBanned);
             _classStudentRepository.Save();
+            if (!isBanned.IsStudentBannedFromClass)
+            {
+                return false;
+            }
             return true;
 
         }

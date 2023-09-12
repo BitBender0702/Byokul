@@ -582,7 +582,9 @@
   "CourseDeletedAndDisabled":"The course you are trying to access is disabled/deleted",
   "DeleteReel":"Delete Reel",
   "DeletePost":"Delete Post",
-  "ReelUpdatedSuccessfully":"Reel updated successfully"
+  "ReelUpdatedSuccessfully":"Reel updated successfully",
+  "UnBannedSuccessfully":"User has been unbanned successfully",
+  "BannedUser":"Banned User"
 
 
 

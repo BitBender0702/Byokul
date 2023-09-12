@@ -13,9 +13,24 @@
             <img src="../../../../assets/images/arrow-left.svg" />
             {{ "Back" | translate }}
           </button>
-          <h2 class="font_22 fw_700 f-monteserrat mb-md-0">
-            {{ "Followers" | translate }}
-          </h2>
+
+          <div class="buttonTab">
+            <button class="font_22 fw_700 f-monteserrat mb-md-0"
+            (click)="getFollowers()"
+            style="background-color: white; border-radius: 10px; border-width: 4px; padding: 5px 10px;"
+            [ngStyle]="{'border-color': followersTab ? 'orange' : 'transparent'}"
+            >
+              {{ "Followers" | translate }}
+            </button>
+  
+            <button class="font_22 fw_700 f-monteserrat mb-md-0"
+            (click)="getBannedUser()"
+            style="background-color: white; border-radius: 10px; border-width: 4px; padding: 5px 10px;"
+            [ngStyle]="{'border-color': !followersTab ? 'orange' : 'transparent'}"
+            >
+              {{ "BannedUser" | translate }}
+            </button>
+          </div>
           <div class="search-header position-relative">
             <input
               [(ngModel)]="searchString"
@@ -64,51 +79,124 @@
         <!---- Followers list html start ------>
         <div class="wht_newbox followers_box">
           <ul class="list-unstyled before-none mb-0">
-            <li *ngFor="let userfollower of userFollowers" class="mb-0">
-              <div class="d-flex align-items-center justify-content-between">
-                <span class="followers-name font_16 text_sec1 fw_600">
-                  <img
-                    [src]="userfollower.follower.avatar"
-                    class="rounded-circle me-2"
-                    style="max-height: 30px"
-                  />
-                  <a
-                    style="cursor: pointer"
-                    (click)="getSelectedFollower(userfollower.follower.id)"
-                    >{{
-                      userfollower.follower.firstName +
-                        " " +
-                        userfollower.follower.lastName
-                    }}</a
-                  ></span
-                >
-                <span *ngIf="isOwner" class="report_follower">
-                  <button
-                    (click)="
-                      getReportFollower(
-                        userfollower.follower.id,
+            <div *ngIf="followersTab">
+              <li *ngFor="let userfollower of userFollowers" class="mb-0">
+                <div class="d-flex align-items-center justify-content-between">
+                  <span class="followers-name font_16 text_sec1 fw_600">
+                    <img
+                      [src]="userfollower.follower.avatar"
+                      class="rounded-circle me-2"
+                      style="max-height: 30px"
+                    />
+                    <a
+                      style="cursor: pointer"
+                      (click)="getSelectedFollower(userfollower.follower.id)"
+                      >{{
                         userfollower.follower.firstName +
-                          ' ' +
+                          " " +
                           userfollower.follower.lastName
-                      )
-                    "
-                    type="button"
-                    data-bs-toggle="modal"
-                    data-bs-target="#report-follower"
-                    class="border-0 bg-transparent font_14 text_dark fw_400 me-3"
+                      }}</a
+                    ></span
                   >
-                    {{ "Report" | translate }}
-                  </button>
-                  <button
-                    (click)="banFollower(userfollower.follower.id,userfollower.userId)"
+                  <span *ngIf="isOwner && followersTab" class="report_follower">
+                    <button
+                      (click)="
+                        getReportFollower(
+                          userfollower.follower.id,
+                          userfollower.follower.firstName +
+                            ' ' +
+                            userfollower.follower.lastName
+                        )
+                      "
+                      type="button"
+                      data-bs-toggle="modal"
+                      data-bs-target="#report-follower"
+                      class="border-0 bg-transparent font_14 text_dark fw_400 me-3"
+                    >
+                      {{ "Report" | translate }}
+                    </button>
+                    <button
+                      (click)="banFollower(userfollower.follower.id,userfollower.userId)"
+                      type="button"
+                      class="border-0 bg-transparent font_14 text_dark fw_400"
+                    >
+                      {{ "Ban" | translate }}
+                    </button>
+                  </span>
+                </div>
+              </li>
+            </div>
+
+
+
+            <div *ngIf="!followersTab">
+              <li *ngFor="let userfollower of userBannedFollowers" class="mb-0">
+                <div class="d-flex align-items-center justify-content-between">
+                  <span class="followers-name font_16 text_sec1 fw_600">
+                    <img
+                      [src]="userfollower.follower.avatar"
+                      class="rounded-circle me-2"
+                      style="max-height: 30px"
+                    />
+                    <a
+                      style="cursor: pointer"
+                      (click)="getSelectedFollower(userfollower.follower.id)"
+                      >{{
+                        userfollower.follower.firstName +
+                          " " +
+                          userfollower.follower.lastName
+                      }}</a
+                    ></span
+                  >
+                  <span *ngIf="isOwner && followersTab" class="report_follower">
+                    <button
+                      (click)="
+                        getReportFollower(
+                          userfollower.follower.id,
+                          userfollower.follower.firstName +
+                            ' ' +
+                            userfollower.follower.lastName
+                        )
+                      "
+                      type="button"
+                      data-bs-toggle="modal"
+                      data-bs-target="#report-follower"
+                      class="border-0 bg-transparent font_14 text_dark fw_400 me-3"
+                    >
+                      {{ "Report" | translate }}
+                    </button>
+                    <button
+                      (click)="banFollower(userfollower.follower.id,userfollower.userId)"
+                      type="button"
+                      class="border-0 bg-transparent font_14 text_dark fw_400"
+                    >
+                      {{ "Ban" | translate }}
+                    </button>
+                  </span>
+
+                  <span *ngIf="isOwner && !followersTab" class="report_follower">
+                    <button
+                    (click)="unBanFollower(userfollower.follower.id,userfollower.userId)"
                     type="button"
                     class="border-0 bg-transparent font_14 text_dark fw_400"
-                  >
-                    {{ "Ban" | translate }}
-                  </button>
-                </span>
-              </div>
-            </li>
+                    >
+                      {{ "UnBan" | translate }}
+                    </button>
+                  </span>
+
+
+
+
+                </div>
+              </li>
+            </div>
+
+
+
+
+
+
+
           </ul>
         </div>
       </div>

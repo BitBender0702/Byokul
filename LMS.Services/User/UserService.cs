@@ -827,6 +827,7 @@ namespace LMS.Services
             {
                 follower.IsBan = false;
                 _userFollowerRepository.Update(follower);
+                //_userFollowerRepository.Delete(follower);
                 _userFollowerRepository.Save();
                 return true;
             }
@@ -2025,6 +2026,20 @@ namespace LMS.Services
             }
 
             return true;
+
+        }
+
+
+
+        public async Task<List<UserFollowerViewModel>> GetUserBannedFollowers(string userId, int pageNumber, string? searchString)
+        {
+            int pageSize = 13;
+            var followerList = await _userFollowerRepository.GetAll().Include(x => x.Follower)
+                .Where(x => x.UserId == userId && x.IsBan && ((string.IsNullOrEmpty(searchString)) || (x.Follower.FirstName.Contains(searchString) || x.Follower.LastName.Contains(searchString) || (x.Follower.FirstName + " " + x.Follower.LastName).ToLower().Contains(searchString.ToLower())))).Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize).ToListAsync();
+
+            var response = _mapper.Map<List<UserFollowerViewModel>>(followerList);
+            return response;
 
         }
 

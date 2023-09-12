@@ -13,9 +13,23 @@
             <img src="../../../../assets/images/arrow-left.svg" />
             {{ "Back" | translate }}
           </button>
-          <h2 class="font_22 fw_700 f-monteserrat mb-md-0">
+          <div class="buttonTab">
+            <button class="font_22 fw_700 f-monteserrat mb-md-0"
+                  [ngStyle]="{'border-color': isFollowersTab ? 'orange' : 'transparent'}"
+                  (click)="schoolFollower()"
+                  style="background-color: white; border-radius: 10px; border-width: 4px; padding: 5px 10px;"
+          >
             {{ "Followers" | translate }}
-          </h2>
+          </button>
+          <button class="font_22 fw_700 f-monteserrat mb-md-0"
+                  [ngStyle]="{'border-color': !isFollowersTab ? 'orange' : 'transparent'}"
+                  (click)="getBannedUser()"
+                  style="background-color: white; border-radius: 10px; border-width: 4px; padding: 5px 10px;"
+          >
+            {{ "BannedUser" | translate }}
+          </button>
+          </div>
+
           <div class="search-header position-relative">
             <input
               (keyup)="schoolFollowersSearch()"
@@ -63,51 +77,131 @@
         <!---- Followers list html start ------>
         <div class="wht_newbox followers_box">
           <ul class="list-unstyled before-none mb-0">
-            <li *ngFor="let schoolfollower of schoolFollowers" class="mb-0">
-              <div class="d-flex align-items-center justify-content-between">
-                <span class="followers-name font_16 text_sec1 fw_600">
-                  <img
-                    [src]="schoolfollower.user.avatar"
-                    class="rounded-circle me-2"
-                    style="max-height: 30px"
-                  />
-                  <a
-                    style="cursor: pointer"
-                    (click)="getSelectedFollower(schoolfollower.user.id)"
-                    >{{
-                      schoolfollower.user.firstName +
-                        " " +
-                        schoolfollower.user.lastName
-                    }}</a
-                  ></span
-                >
-                <span *ngIf="isOwner" class="followe_report"
-                  >
-                  <button
-                    (click)="
-                      getReportFollower(
-                        schoolfollower.user.id,
+            <div *ngIf="isFollowersTab">
+              <li *ngFor="let schoolfollower of schoolFollowers" class="mb-0">
+                <div class="d-flex align-items-center justify-content-between">
+                  <span class="followers-name font_16 text_sec1 fw_600">
+                    <img
+                      [src]="schoolfollower.user.avatar"
+                      class="rounded-circle me-2"
+                      style="max-height: 30px"
+                    />
+                    <a
+                      style="cursor: pointer"
+                      (click)="getSelectedFollower(schoolfollower.user.id)"
+                      >{{
                         schoolfollower.user.firstName +
-                          ' ' +
+                          " " +
                           schoolfollower.user.lastName
-                      )
-                    "
-                    type="button"
-                    data-bs-toggle="modal"
-                    data-bs-target="#report-follower"
-                    class="border-0 bg-transparent font_14 text_dark fw_400 me-3"
+                      }}</a
+                    ></span
                   >
-                    {{ "Report" | translate }}
-                  </button>
-                  <button (click)="banFollower(schoolfollower.user.id,schoolfollower.schoolId)"
-                    type="button"
-                    class="border-0 bg-transparent font_14 text_dark fw_400"
+                  <span *ngIf="isOwner && isFollowersTab" class="followe_report"
+                    >
+                    <button
+                      (click)="
+                        getReportFollower(
+                          schoolfollower.user.id,
+                          schoolfollower.user.firstName +
+                            ' ' +
+                            schoolfollower.user.lastName
+                        )
+                      "
+                      type="button"
+                      data-bs-toggle="modal"
+                      data-bs-target="#report-follower"
+                      class="border-0 bg-transparent font_14 text_dark fw_400 me-3"
+                    >
+                      {{ "Report" | translate }}
+                    </button>
+                    <button (click)="banFollower(schoolfollower.user.id,schoolfollower.schoolId)"
+                      type="button"
+                      class="border-0 bg-transparent font_14 text_dark fw_400"
+                    >
+                      {{ "Ban" | translate }}
+                    </button></span
                   >
-                    {{ "Ban" | translate }}
-                  </button></span
-                >
-              </div>
-            </li>
+  
+  
+                  <span *ngIf="isOwner && !isFollowersTab" class="followe_report"
+                    >
+                    <button (click)="banFollower(schoolfollower.user.id,schoolfollower.schoolId)"
+                      type="button"
+                      class="border-0 bg-transparent font_14 text_dark fw_400"
+                    >
+                      {{ "UnBan" | translate }}
+                    </button></span
+                  >
+  
+                </div>
+              </li>
+            </div>
+
+
+            <div *ngIf="!isFollowersTab">
+              <li *ngFor="let schoolfollower of bannedFollower" class="mb-0">
+                <div class="d-flex align-items-center justify-content-between">
+                  <span class="followers-name font_16 text_sec1 fw_600">
+                    <img
+                      [src]="schoolfollower.user.avatar"
+                      class="rounded-circle me-2"
+                      style="max-height: 30px"
+                    />
+                    <a
+                      style="cursor: pointer"
+                      (click)="getSelectedFollower(schoolfollower.user.id)"
+                      >{{
+                        schoolfollower.user.firstName +
+                          " " +
+                          schoolfollower.user.lastName
+                      }}</a
+                    ></span
+                  >
+                  <span *ngIf="isOwner && isFollowersTab" class="followe_report"
+                    >
+                    <button
+                      (click)="
+                        getReportFollower(
+                          schoolfollower.user.id,
+                          schoolfollower.user.firstName +
+                            ' ' +
+                            schoolfollower.user.lastName
+                        )
+                      "
+                      type="button"
+                      data-bs-toggle="modal"
+                      data-bs-target="#report-follower"
+                      class="border-0 bg-transparent font_14 text_dark fw_400 me-3"
+                    >
+                      {{ "Report" | translate }}
+                    </button>
+                    <button (click)="banFollower(schoolfollower.user.id,schoolfollower.schoolId)"
+                      type="button"
+                      class="border-0 bg-transparent font_14 text_dark fw_400"
+                    >
+                      {{ "Ban" | translate }}
+                    </button></span
+                  >
+  
+  
+                  <span *ngIf="isOwner && !isFollowersTab" class="followe_report"
+                    >
+                    <button (click)="unBanFollower(schoolfollower.user.id,schoolfollower.schoolId)"
+                      type="button"
+                      class="border-0 bg-transparent font_14 text_dark fw_400"
+                    >
+                      {{ "UnBan" | translate }}
+                    </button></span
+                  >
+  
+                </div>
+              </li>
+            </div>
+
+
+
+
+            
           </ul>
         </div>
       </div>
@@ -189,6 +283,8 @@ aria-hidden="true"
   </div>
 </div>
 </div>
+
+
 
 <post-loading-spinner
   [postLoadingIcon]="postLoadingIcon"

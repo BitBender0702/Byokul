@@ -459,7 +459,7 @@
   "SchoolDeletedSuccessfully": "School deleted successfully",
   "SchoolEnabledSuccessfully": "School enabled successfully",
   "SchoolDisabledSuccessfully": "School disabled successfully",
-  "BannedSuccessfully": "Banned successfully",
+  "BannedSuccessfully": "تم الحظر بنجاح",
   "MessageForwardedSuccessfully": "Message forwarded successfully",
   "CopiedToClipboard": "نسخ إلى الحافظة",
   "CreateSchools": "إنشاء مدارس",
@@ -569,7 +569,9 @@
   "DeleteReel":"حذف بكرة",
   "DeletePost":"حذف آخر",
   "ReelUpdatedSuccessfully":"تم تحديث البكرة بنجاح",
-  "PostUpdatedSuccessfully": "تم تحديث المشاركة بنجاح"
+  "PostUpdatedSuccessfully": "تم تحديث المشاركة بنجاح",
+  "UnBannedSuccessfully":"تم إلغاء حظر المستخدم بنجاح",
+  "BannedUser":"مستخدم محظور"
 
 
 

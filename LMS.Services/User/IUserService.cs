@@ -48,5 +48,8 @@ namespace LMS.Services
         Task<string> GetBlobSasToken();
         Task<bool> CheckAllNotificationSettings(string userId);
 
+
+        Task<List<UserFollowerViewModel>> GetUserBannedFollowers(string userId, int pageNumber, string? searchString);
+
     }
 }

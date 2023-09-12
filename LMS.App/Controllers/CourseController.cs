@@ -311,6 +311,10 @@ namespace LMS.App.Controllers
             {
                 return Ok(new { Success = true, Message = Constants.StudentIsUnBanned });
             }
+            else if (isStudentBanUnbanned == null)
+            {
+                return Ok(new { Success = false, Message = Constants.NoPermissionForBan });
+            }
             return Ok();
         }
 

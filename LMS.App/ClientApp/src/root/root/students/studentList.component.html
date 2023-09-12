@@ -81,15 +81,18 @@
 
                 <span *ngIf="type != 1" class="followe_report"
                   >
-                  <span *ngIf="student?.isBanned && !isBanned">
-                    {{ "Banned" | translate }}
-                  </span>
-                  <span *ngIf="isBanned">
-                    {{ "Banned" | translate }}
+                  <span *ngIf="student?.isBanned">
+                    <button 
+                    (click)="banFollower(student.studentId, id)"
+                    type="button"
+                    class="border-0 bg-transparent font_14 text_dark fw_400"
+                    >
+                      {{ "UnBan" | translate }}
+                    </button>
                   </span>
                   <button 
-                    *ngIf="!student?.isBanned && !isBanned"
-                    (click)="banFollower(student.studentId, id)"
+                  (click)="banFollower(student.studentId, id)"
+                  *ngIf="!student?.isBanned"
                     type="button"
                     class="border-0 bg-transparent font_14 text_dark fw_400"
                   >

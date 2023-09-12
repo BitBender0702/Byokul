@@ -46,9 +46,13 @@ export class SchoolFollowersComponent extends MultilingualComponent implements O
     reportFollowerViewModel!:ReportFollowerViewModel;
     notificationViewModel!:NotificationViewModel;
     changeLanguageSubscription!: Subscription;
+
+    isFollowersTab:boolean=true;
+
     @ViewChild('closeReportModal') closeReportModal!: ElementRef;
 
-    
+    bannedFollower:any;
+    schoolBannedPageNumber:number = 1;
     
 
     constructor(injector: Injector,userService: UserService,signalrService:SignalrService,private translateService: TranslateService,public messageService:MessageService,schoolService: SchoolService,private route: ActivatedRoute,private fb: FormBuilder) { 
@@ -74,6 +78,13 @@ export class SchoolFollowersComponent extends MultilingualComponent implements O
         this.isOwnerOrNot(this.schoolFollowers[0].school.createdById);
         this.initializeReportFollowerViewModel();
       });
+
+
+      this._schoolService.getBannedUser(this.schoolId, this.schoolBannedPageNumber,this.searchString).subscribe(response =>{
+        this.bannedFollower = response.data;
+      })
+
+
 
       if(!this.changeLanguageSubscription){
         this.changeLanguageSubscription = changeLanguage.subscribe(response => {
@@ -125,8 +136,14 @@ export class SchoolFollowersComponent extends MultilingualComponent implements O
         if(!this.scrolled && this.scrollFollowersResponseCount != 0){
         this.scrolled = true;
         this.postLoadingIcon = true;
-        this.schoolFollowersPageNumber++;
-        this.getSchoolFollowers();
+        if(this.isFollowersTab){
+          this.schoolFollowersPageNumber++;
+          this.getSchoolFollowers();
+        } else{
+          this.schoolBannedPageNumber++;
+          this.getBannedUser();
+        }
+        
        }
       }
   }
@@ -137,6 +154,7 @@ export class SchoolFollowersComponent extends MultilingualComponent implements O
       this.postLoadingIcon = false;
       this.scrollFollowersResponseCount = response.length; 
       this.scrolled = false;
+      this.isFollowersTab = true;
     });
   }
 
@@ -232,6 +250,41 @@ export class SchoolFollowersComponent extends MultilingualComponent implements O
       userName:'',
       reportReason:''
     }
+  }
+
+
+  getBannedUser(){
+    debugger;
+    this._schoolService.getBannedUser(this.schoolId, this.schoolBannedPageNumber,this.searchString).subscribe(response =>{
+      this.bannedFollower = response.data;
+      this.isFollowersTab = false;
+      debugger;
+    })
+  }
+
+
+  unBanFollower(userId:string,schoolId:string){
+    debugger
+    this.loadingIcon = true;
+    this._schoolService.unBanFollower(userId,schoolId).subscribe((response) => {
+      debugger
+      const translatedMessage = this.translateService.instant('UnBannedSuccessfully');
+      const translatedSummary = this.translateService.instant('Success');
+      this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage});
+      this.ngOnInit();
+    });
+
+  }
+
+
+  schoolFollower(){
+    this._schoolService.getSchoolFollowers(this.schoolId,this.schoolFollowersPageNumber,this.searchString).subscribe((response) => {
+      this.schoolFollowers =[...this.schoolFollowers];
+      this.postLoadingIcon = false;
+      this.scrollFollowersResponseCount = response.length; 
+      this.scrolled = false;
+      this.isFollowersTab = true;
+    });
   }
 
 

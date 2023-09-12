@@ -470,5 +470,18 @@ namespace LMS.App.Controllers
             return Ok(new { Success = false, Message = Constants.NotificationSettingsCheckedSuccessfully });
         }
 
+
+        [Route("getUserBannedFollowers")]
+        [HttpGet]
+        public async Task<IActionResult> GetUserBannedFollowers(string userId, int pageNumber, string? searchString)
+        {
+            var userBannedFollower = await _userService.GetUserBannedFollowers(userId, pageNumber, searchString);
+            if(userBannedFollower == null)
+            {
+                return Ok(new { Success = false, Data = userBannedFollower, Message = Constants.HasAllBannedUser });
+            }
+            return Ok(new { Success = true, Data = userBannedFollower, Message = Constants.HasAllBannedUser });
+        }
+
     }
 }

@@ -1288,9 +1288,13 @@ namespace LMS.Services
                 return null;
             }
             //var studentClass = _classStudentRepository.GetById(banUnbanStudent.StudentId);
-            isBanned.IsStudentBannedFromCourse = true;
+            isBanned.IsStudentBannedFromCourse = !isBanned.IsStudentBannedFromCourse;
             _courseStudentRepository.Update(isBanned);
             _courseStudentRepository.Save();
+            if (!isBanned.IsStudentBannedFromCourse)
+            {
+                return false;
+            }
             return true;
 
         }
