@@ -1669,11 +1669,11 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     });
 
     this.createReelForm.updateValueAndValidity();
-    this.tagLists = this.editPostDetails.postTags.map((tagObj: { postTagValue: any; }) => tagObj.postTagValue);
-    this.currectTagLists = [...this.tagLists]
+    this.reelsTagLists = this.editPostDetails.postTags.map((tagObj: { postTagValue: any; }) => tagObj.postTagValue);
+    this.currectTagLists = [...this.reelsTagLists]
     try {
       this.currectTagLists = this.parseTheTags(this.currectTagLists)
-      this.tagLists = this.currectTagLists
+      this.reelsTagLists = this.currectTagLists
     } 
     catch { }
     this.videoObject.videoUrl = thumbnailUrl;

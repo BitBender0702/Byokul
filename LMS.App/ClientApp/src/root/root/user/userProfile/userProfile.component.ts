@@ -1771,14 +1771,14 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
   getFilteredAttachments(feeds: any): any {
     debugger;
     const allAttachments = feeds.flatMap((post: { postAttachments: any[]; }) => post.postAttachments);
-      const result = allAttachments.filter((attachment: { fileType: number; fileName: string; }) => {
+    this.filteredAttachments = allAttachments.filter((attachment: { fileType: number; }) => attachment.fileType === 3);
+      let result = allAttachments.filter((attachment: { fileType: number; fileName: string; }) => {
       return attachment.fileType === 3 && 
              !this.filteredAttachments.some(existingAttachment =>
                existingAttachment.fileType === 3 &&
                existingAttachment.fileName === attachment.fileName
              );
     });
-  
     this.filteredAttachments = [...this.filteredAttachments, ...result];
       feeds = feeds.map((post: { postAttachments: any[]; }) => {
       const filteredPostAttachments = post.postAttachments.filter(
@@ -1786,7 +1786,6 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
       );
       return { ...post, postAttachments: filteredPostAttachments };
     });
-  
     return feeds;
   }
   

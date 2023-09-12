@@ -49,6 +49,6 @@ import { UserService } from 'src/root/service/user.service';
     }
 
     close(): void {
-      this.bsModalService.hide();
+      this.bsModalService.hide(this.bsModalService.config.id);
     }
 }

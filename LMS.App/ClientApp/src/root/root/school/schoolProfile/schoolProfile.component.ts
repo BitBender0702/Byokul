@@ -2034,6 +2034,7 @@ export class SchoolProfileComponent
 
   getFilteredAttachments(feeds: any): any {
     const allAttachments = feeds.flatMap((post: { postAttachments: any[]; }) => post.postAttachments);
+    this.filteredAttachments = allAttachments.filter((attachment: { fileType: number; }) => attachment.fileType === 3);
       const result = allAttachments.filter((attachment: { fileType: number; fileName: string; }) => {
       return attachment.fileType === 3 && 
              !this.filteredAttachments.some(existingAttachment =>
