@@ -1,5 +1,6 @@
 <!-- <div  [ngClass]="{'sidemenu d-xl-block d-block':isOpenSidebar === true,'sidemenu d-xl-block d-none':isOpenSidebar === false}" id="side-bar"> -->
-<p-sidebar [(visible)]="isOpenSidebar" [hidden]="true"></p-sidebar>
+<div *ngIf="!isUserBanned">
+  <p-sidebar [(visible)]="isOpenSidebar" [hidden]="true"></p-sidebar>
 <p-button
   (click)="isOpenSidebar = true"
   icon="pi pi-arrow-right"
@@ -675,5 +676,6 @@
       </div>
     </div>
   </div>
+</div>
 </div>
 <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>

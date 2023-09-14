@@ -35,6 +35,7 @@ export class SideBarComponent extends MultilingualComponent implements OnInit, O
   enableDisableSccSubscription!:Subscription;
   unreadChatSubscription!: Subscription;
   // @Input() isOpenSidebar!:boolean;
+  isUserBanned:boolean= false
 
   constructor(injector: Injector,userService: UserService,private router: Router,private cd: ChangeDetectorRef, private elementRef: ElementRef) {
     super(injector);
@@ -62,6 +63,7 @@ export class SideBarComponent extends MultilingualComponent implements OnInit, O
     this._userService.getSidebarInfo().subscribe((response) => {
       debugger
       this.sidebarInfo = response;
+      this.isUserBanned = response.user.isBan
       this.cd.detectChanges();
       this.loadingIcon = false;
       this.isDataLoaded = true;

@@ -456,7 +456,7 @@ namespace LMS.App.Controllers
             {
                 return Ok(new { Success = true, Message = Constants.ClassOrCourseSharedSuccessfully });
             }
-            return Ok(new { Success = true, Message = Constants.ClassOrCourseNotSharedSuccessfully });
+            return Ok(new { Success = false, Message = Constants.ClassOrCourseNotSharedSuccessfully });
         }
     }
 }
