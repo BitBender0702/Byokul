@@ -33,3 +33,4 @@
 /.vs/ProjectEvaluation/lms.solution.metadata.v7.bin
 /.vs/ProjectEvaluation/lms.solution.projects.v7.bin
 /LMS.App/ClientApp/package-lock.json
+/LMS.App/ClientApp/package.json
