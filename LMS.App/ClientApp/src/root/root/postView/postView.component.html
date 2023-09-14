@@ -64,7 +64,7 @@
                       >{{ "Edit" | translate }}
                       <div *ngIf="post.updatedOn != null">
                         (<span>{{ "UpdatedOn" | translate }} - </span>
-                        {{ post.updatedOn | date : "d MMMM y h:mm a" }})
+                        {{ post.updatedOn | ChangeTimeZonePipe | date : "d MMMM y h:mm a" }})
                       </div>
                     </a>
                   </li>

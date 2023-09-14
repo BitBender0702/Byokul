@@ -1673,8 +1673,8 @@
                         *ngIf="post.createdOn != null"
                         class="font_14 school-grid-date d-inline-block mb-0 me-3"
                       >
-                        {{ post.createdOn | date : "MMMM d" }} -
-                        {{ post.createdOn | date : "hh:mm" }}
+                        {{ post.createdOn | ChangeTimeZonePipe | date : "MMMM d" }} -
+                        {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm" }}
                       </p>
                       <button
                         *ngIf="post.isPinned && isOwner"
@@ -2527,9 +2527,9 @@
                               <p
                                 class="font_14 school-grid-date d-inline-block mb-0"
                               >
-                                {{ gridItemInfo.createdOn | date : "MMMM d" }}
+                                {{ gridItemInfo.createdOn | ChangeTimeZonePipe | date : "MMMM d" }}
                                 -
-                                {{ gridItemInfo.createdOn | date : "hh:mm" }}
+                                {{ gridItemInfo.createdOn | ChangeTimeZonePipe | date : "hh:mm" }}
                               </p>
                             </div>
                             <p class="text_sec1 font_14 pt-3">
@@ -2734,8 +2734,8 @@
                             *ngIf="post.createdOn != null"
                             class="font_14 school-grid-date d-inline-block mb-0"
                           >
-                            {{ post.createdOn | date : "MMMM d" }} -
-                            {{ post.createdOn | date : "hh:mm" }}
+                            {{ post.createdOn | ChangeTimeZonePipe | date : "MMMM d" }} -
+                            {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm" }}
                           </p>
                           <button
                             type="button"

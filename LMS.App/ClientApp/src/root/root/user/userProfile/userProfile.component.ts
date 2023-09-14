@@ -825,6 +825,7 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
   }
 
   followUser(userId: string, from: string) {
+    debugger;
     if (this.validToken == '') {
       window.open('user/auth/login', '_blank');
     }
