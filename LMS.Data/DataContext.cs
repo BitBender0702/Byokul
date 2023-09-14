@@ -92,6 +92,9 @@ namespace LMS.Data
         public DbSet<CardRenewal> CardRenewals { get; set; }
         public DbSet<ClassCourseRating> ClassCourseRatings { get; set; }
         public DbSet<VideoLibrary> VideoLibrary { get; set; }
+        public DbSet<SharedClassCourse> SharedClassCourse { get; set; }
+
+ 
 
 
 

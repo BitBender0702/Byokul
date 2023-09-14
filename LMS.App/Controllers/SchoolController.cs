@@ -269,15 +269,15 @@ namespace LMS.App.Controllers
             model.UserId = userId;
             if (model.Type == ClassCourseEnum.Class)
             {
-                var response = await _classService.LikeUnlikeClass(model);
-                return Ok(response);
+                var result = await _classService.LikeUnlikeClass(model);
+                return Ok(new { Success = true, response = result });
             }
             if (model.Type == ClassCourseEnum.Course)
             {
-                var response = await _courseService.LikeUnlikeCourse(model);
-                return Ok(response);
+                var result = await _courseService.LikeUnlikeCourse(model);
+                return Ok(new { Success = true, response = result });
             }
-            return Ok();
+            return Ok(new { Success = false, Message = Constants.ClassOrCourseIdInvalid });
         }
 
         [Route("getUserAllSchools")]
@@ -319,8 +319,12 @@ namespace LMS.App.Controllers
         [HttpPost]
         public async Task<IActionResult> SaveClassCourse(string userId, Guid id, ClassCourseEnum type)
         {
-            await _schoolService.SaveClassCourse(userId, id, type);
-            return Ok();
+            var response = await _schoolService.SaveClassCourse(userId, id, type);
+            if (response)
+            {
+                return Ok(new { Success = true, Message = Constants.ClassCourseSavedSuccessully });
+            }
+            return Ok(new { Success = true, Message = Constants.ClassCourseUnSavedSuccessully });
         }
 
         [Route("getSavedClassCourse")]
@@ -337,7 +341,11 @@ namespace LMS.App.Controllers
         {
             var userId = await GetUserIdAsync(this._userManager);
             var response = await _schoolService.PinUnpinSavedClassCourse(id, isPinned, type, userId);
-            return Ok(response);
+            if (response)
+            {
+                return Ok(new { Success = true, Message = Constants.ClassOrCoursePinnedSuccessfully });
+            }
+            return Ok(new { Success = true, Message = Constants.ClassOrCourseUnPinnedSuccessfully });
         }
 
         [Route("enableDisableSchool")]
@@ -437,6 +445,18 @@ namespace LMS.App.Controllers
                 return Ok(new { Success = false, Data = allBannedUsers, Message = Constants.HasAllBannedUser });
             }
             return Ok(new { Success = true, Data = allBannedUsers, Message = Constants.HasAllBannedUser });
+        }
+
+        [Route("saveSharedClassCourse")]
+        [HttpPost]
+        public async Task<IActionResult> SaveSharedClassCourse(string userId, Guid Id, ClassCourseEnum type)
+        {
+            var response = await _schoolService.SaveSharedClassCourse(userId, Id, type);
+            if (response)
+            {
+                return Ok(new { Success = true, Message = Constants.ClassOrCourseSharedSuccessfully });
+            }
+            return Ok(new { Success = true, Message = Constants.ClassOrCourseNotSharedSuccessfully });
         }
     }
 }

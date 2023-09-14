@@ -67,7 +67,8 @@ namespace LMS.Services.Chat
                     UnreadMessageCount = 1,
                     ReceiverId = chatViewModel.Receiver.ToString(),
                     SenderId = chatViewModel.Sender.ToString(),
-                    LastMessage = chatViewModel.Message
+                    LastMessage = chatViewModel.Message,
+                    SchoolId = chatViewModel.SchoolId
                 });
             }
             else
@@ -480,6 +481,278 @@ namespace LMS.Services.Chat
             return users;
         }
 
+
+        public async Task<List<ChatUsersViewModel>> GetAllSchoolChatHeads(Guid userId, Guid schoolId, int pageNumber, string? searchString)
+        {
+            int pageSize = 10;
+            List<ChatUsersViewModel> users = new List<ChatUsersViewModel>();
+            var chatHeads = new List<ChatHead>();
+            chatHeads = _chatHeadRepository.GetAll().Include(x => x.Receiver).Where(x => x.SenderId == userId.ToString() || x.ReceiverId == userId.ToString()).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+
+            if (searchString != null)
+            {
+                var schoolList = new List<School>();
+                var classList = new List<Class>();
+                var courseList = new List<Course>();
+                var userList = new List<User>();
+
+                foreach (var chatHead in chatHeads)
+                {
+                    if (chatHead.ChatType == ChatType.School)
+                    {
+                        var school = _schoolRepository.GetById(chatHead.ChatTypeId);
+                        schoolList.Add(school);
+                    }
+                }
+
+                foreach (var chatHead in chatHeads)
+                {
+                    if (chatHead.ChatType == ChatType.Class)
+                    {
+                        var classes = _classRepository.GetById(chatHead.ChatTypeId);
+                        classList.Add(classes);
+                    }
+                }
+
+                foreach (var chatHead in chatHeads)
+                {
+                    if (chatHead.ChatType == ChatType.Course)
+                    {
+                        var course = _courseRepository.GetById(chatHead.ChatTypeId);
+                        courseList.Add(course);
+                    }
+                }
+
+    //            var userChatHeads = chatHeads.Where(x => x.ChatType == ChatType.Personal).ToList();
+    //            foreach (var chatHead in userChatHeads)
+    //            {
+    //                if (chatHead.ChatType == ChatType.Personal)
+    //                {
+    //                    //var user = await _userRepository.GetAll().Where(x => x.Id == chatHead.SenderId || x.Id == chatHead.ReceiverId).FirstAsync();
+    //                    var user = await _userRepository.GetAll()
+    //.Where(x => (x.Id == chatHead.SenderId && chatHead.SenderId != userId.ToString() && chatHead.ChatType == ChatType.Personal) || (x.Id == chatHead.ReceiverId && chatHead.ReceiverId != userId.ToString() && chatHead.ChatType == ChatType.Personal))
+    //.FirstAsync();
+
+    //                    userList.Add(user);
+    //                }
+    //            }
+
+                try
+                {
+                    chatHeads = _chatHeadRepository.GetAll()
+                      .Include(x => x.Receiver)
+                      .Include(x => x.Sender)
+                      .AsEnumerable()
+                      .Where(x => (x.SenderId == userId.ToString() || x.ReceiverId == userId.ToString()) && (x.SchoolId == schoolId || x.SchoolId == x.ChatTypeId)
+                      && (string.IsNullOrEmpty(searchString) || (userList.Any(u => (u.Id == x.SenderId || u.Id == x.ReceiverId) && ((u.FirstName.ToLower().Contains(searchString.ToLower())) || (u.LastName.ToLower().Contains(searchString.ToLower())) || ((u.FirstName.ToLower() + " " + u.LastName.ToLower()).Contains(searchString.ToLower())))) && x.ChatType == ChatType.Personal)))
+                      .Skip((pageNumber - 1) * pageSize)
+                      .Take(pageSize)
+                      .ToList();
+
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            //var first = chatHeads.Where(x => x.ReceiverId == userId.ToString() && x.ChatType == ChatType.Personal).Select(x => new ChatUsersViewModel
+            //{
+            //    UserID = new Guid(x.SenderId),
+            //    User2ID = new Guid(x.ReceiverId),
+            //    LastMessage = x.LastMessage,
+            //    ChatHeadId = x.Id,
+            //    ChatType = x.ChatType,
+            //    ChatTypeId = x.ChatTypeId,
+            //    UnreadMessageCount = x.UnreadMessageCount
+            //}).ToList();
+
+            //users = users.Concat(first).ToList();
+
+            //var second = chatHeads.Where(x => x.SenderId == userId.ToString() && x.ChatType == ChatType.Personal).Select(x => new ChatUsersViewModel
+            //{
+            //    UserID = new Guid(x.ReceiverId),
+            //    User2ID = new Guid(x.SenderId),
+            //    LastMessage = x.LastMessage,
+            //    ChatHeadId = x.Id,
+            //    ChatType = x.ChatType,
+            //    ChatTypeId = x.ChatTypeId,
+            //    /*, UnreadMessageCount = x.UnreadMessageCount */
+            //}).ToList();
+
+            //users = users.Concat(second).ToList();
+
+
+
+
+            var third = chatHeads.Where(x => x.ReceiverId == userId.ToString() && x.ChatType == ChatType.School && x.ChatTypeId == schoolId).Select(x => new ChatUsersViewModel
+            {
+                UserID = new Guid(x.SenderId),
+                User2ID = new Guid(x.ReceiverId),
+                LastMessage = x.LastMessage,
+                ChatHeadId = x.Id,
+                School = GetSchoolInfo(x.ChatTypeId),
+                ChatType = x.ChatType,
+                ChatTypeId = x.ChatTypeId,
+
+                UnreadMessageCount = x.UnreadMessageCount
+            }).ToList();
+
+            users = users.Concat(third).ToList();
+
+            var fourth = chatHeads.Where(x => x.SenderId == userId.ToString() && x.ChatType == ChatType.School && x.ChatTypeId == schoolId).Select(x => new ChatUsersViewModel
+            {
+                UserID = new Guid(x.ReceiverId),
+                User2ID = new Guid(x.SenderId),
+                LastMessage = x.LastMessage,
+                ChatHeadId = x.Id,
+                School = GetSchoolInfo(x.ChatTypeId),
+                ChatType = x.ChatType,
+                ChatTypeId = x.ChatTypeId,
+
+                //UnreadMessageCount = x.UnreadMessageCount
+            }).ToList();
+
+            users = users.Concat(fourth).ToList();
+
+
+
+            var five = chatHeads.Where(x => x.ReceiverId == userId.ToString() && x.ChatType == ChatType.Class && x.SchoolId == schoolId).Select(x => new ChatUsersViewModel
+            {
+                UserID = new Guid(x.SenderId),
+                User2ID = new Guid(x.ReceiverId),
+                LastMessage = x.LastMessage,
+                ChatHeadId = x.Id,
+                Class = GetClassInfo(x.ChatTypeId),
+                ChatType = x.ChatType,
+                ChatTypeId = x.ChatTypeId,
+
+                UnreadMessageCount = x.UnreadMessageCount
+            }).ToList();
+
+            users = users.Concat(five).ToList();
+
+            var six = chatHeads.Where(x => x.SenderId == userId.ToString() && x.ChatType == ChatType.Class && x.SchoolId == schoolId).Select(x => new ChatUsersViewModel
+            {
+                UserID = new Guid(x.ReceiverId),
+                User2ID = new Guid(x.SenderId),
+                LastMessage = x.LastMessage,
+                ChatHeadId = x.Id,
+                Class = GetClassInfo(x.ChatTypeId),
+                ChatType = x.ChatType,
+                ChatTypeId = x.ChatTypeId,
+
+                //UnreadMessageCount = x.UnreadMessageCount
+            }).ToList();
+
+            users = users.Concat(six).ToList();
+
+            var seven = chatHeads.Where(x => x.ReceiverId == userId.ToString() && x.ChatType == ChatType.Course && x.SchoolId == schoolId).Select(x => new ChatUsersViewModel
+            {
+                UserID = new Guid(x.SenderId),
+                User2ID = new Guid(x.ReceiverId),
+                LastMessage = x.LastMessage,
+                ChatHeadId = x.Id,
+                Course = GetCourseInfo(x.ChatTypeId),
+                ChatType = x.ChatType,
+                ChatTypeId = x.ChatTypeId,
+
+                UnreadMessageCount = x.UnreadMessageCount
+            }).ToList();
+
+            users = users.Concat(seven).ToList();
+
+            var eight = chatHeads.Where(x => x.SenderId == userId.ToString() && x.ChatType == ChatType.Course && x.SchoolId == schoolId).Select(x => new ChatUsersViewModel
+            {
+                UserID = new Guid(x.ReceiverId),
+                User2ID = new Guid(x.SenderId),
+                LastMessage = x.LastMessage,
+                ChatHeadId = x.Id,
+                Course = GetCourseInfo(x.ChatTypeId),
+                ChatType = x.ChatType,
+                ChatTypeId = x.ChatTypeId,
+
+                //UnreadMessageCount = x.UnreadMessageCount
+            }).ToList();
+
+            users = users.Concat(eight).ToList();
+
+            var chatRepo = _chatMessageRepository.GetAll();
+            var attachRepo = _attachmentRepository.GetAll();
+            foreach (var chatUser in users)
+            {
+                if (chatHeads.First(x => x.Id == chatUser.ChatHeadId).SenderId == userId.ToString() && chatHeads.First(x => x.Id == chatUser.ChatHeadId).IsPinnedUser1)
+                {
+                    chatUser.IsPinned = true;
+                }
+                if (chatHeads.First(x => x.Id == chatUser.ChatHeadId).ReceiverId == userId.ToString() && chatHeads.First(x => x.Id == chatUser.ChatHeadId).IsPinnedUser2)
+                {
+                    chatUser.IsPinned = true;
+                }
+
+                var LastChatObject = chatRepo.Where(x => x.ChatHeadId == chatUser.ChatHeadId).OrderByDescending(x => x.CreatedOn).First();
+                var chatId = LastChatObject.Id;
+                LastChatObject.Attachments = await attachRepo.Where(x => x.ChatMessageId == chatId).ToListAsync();
+
+
+                var receiverUser = await _userManager.FindByIdAsync(LastChatObject.ReceiverId == userId ? LastChatObject.SenderId.ToString() : LastChatObject.ReceiverId.ToString());
+
+                if (chatUser.LastMessage is null)
+                {
+                    chatUser.FileName = attachRepo.Where(x => x.ChatMessageId == chatId).First().FileName;
+                }
+                chatUser.Time = LastChatObject.CreatedOn;
+
+                if (chatUser.ChatType == ChatType.School)
+                {
+                    chatUser.ProfileURL = chatUser.School.Avatar;
+                    chatUser.UserName = chatUser.School.SchoolName;
+                }
+                else if (chatUser.ChatType == ChatType.Class)
+                {
+                    chatUser.ProfileURL = chatUser.Class.Avatar;
+                    chatUser.UserName = chatUser.Class.ClassName;
+                }
+                else if (chatUser.ChatType == ChatType.Course)
+                {
+                    chatUser.ProfileURL = chatUser.Course.Avatar;
+                    chatUser.UserName = chatUser.Course.CourseName;
+                }
+                else
+                {
+                    chatUser.ProfileURL = receiverUser.Avatar;
+                    chatUser.UserName = receiverUser.FirstName + " " + receiverUser.LastName;
+                }
+            }
+            users = users.OrderByDescending(x => x.IsPinned).ThenByDescending(x => x.Time).ToList();
+
+            //var firstUser = users.Where(x => x.ChatType == ChatType.Personal).FirstOrDefault();
+            //if (firstUser != null)
+            //{
+            //    firstUser.Chats = await GetParticularUserChat(firstUser.ChatHeadId, userId, firstUser.UserID, ChatType.Personal);
+            //    await RemoveUnreadMessageCount(userId, firstUser.UserID, ChatType.Personal);
+
+            //}
+
+            var firstSchool = users.Where(x => x.ChatType == ChatType.School).FirstOrDefault();
+            if (firstSchool != null)
+            {
+                firstSchool.Chats = await GetParticularUserChat(firstSchool.ChatHeadId, userId, firstSchool.UserID, ChatType.School);
+            }
+
+            var firstClass = users.Where(x => x.ChatType == ChatType.Class).FirstOrDefault();
+            if (firstClass != null)
+            {
+                firstClass.Chats = await GetParticularUserChat(firstClass.ChatHeadId, userId, firstClass.UserID, ChatType.Class);
+            }
+
+            var firstCourse = users.Where(x => x.ChatType == ChatType.Course).FirstOrDefault();
+            if (firstCourse != null)
+            {
+                firstCourse.Chats = await GetParticularUserChat(firstCourse.ChatHeadId, userId, firstCourse.UserID, ChatType.Course);
+            }
+            return users;
+        }
+
         public SchoolUpdateViewModel GetSchoolInfo(Guid? schoolId)
         {
             var school = _schoolRepository.GetById(schoolId);
@@ -529,7 +802,7 @@ namespace LMS.Services.Chat
                 partChat.Text = item.Message;
                 partChat.Id = item.Id;
                 partChat.IsForwarded = item.IsForwarded;
-
+                partChat.ChatHeadId = item.ChatHeadId;
                 // here we will add reply message content
                 var replyTextMessage = _chatMessageRepository.GetById(item.ReplyMessageId);
                 if (replyTextMessage != null)

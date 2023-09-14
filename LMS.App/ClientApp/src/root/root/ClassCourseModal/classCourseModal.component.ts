@@ -196,11 +196,11 @@ export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,ty
 
     this._schoolService
       .likeUnlikeClassCourse(this.likeUnlikeClassCourses)
-      .subscribe((response) => {
+      .subscribe((result) => {
         if (type == 1) {
-          this.classCourseDetails.classCourseItem.classLikes = response;
+          this.classCourseDetails.classCourseItem.classLikes = result.response;
         } else {
-          this.classCourseDetails.classCourseItem.courseLikes = response;
+          this.classCourseDetails.classCourseItem.courseLikes = result.response;
         }
 
         this.InitializeLikeUnlikeClassCourse();

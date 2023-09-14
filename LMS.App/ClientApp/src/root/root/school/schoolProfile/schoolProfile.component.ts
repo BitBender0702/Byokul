@@ -1801,18 +1801,18 @@ export class SchoolProfileComponent
 
     this._schoolService
       .likeUnlikeClassCourse(this.likeUnlikeClassCourses)
-      .subscribe((response) => {
+      .subscribe((result) => {
         if (type == 1) {
           this.classList
             .filter((p: any) => p.id == Id)
             .forEach((item: any) => {
-              item.classLikes = response;
+              item.classLikes = result.response;
             });
         } else {
           this.courseList
             .filter((p: any) => p.id == Id)
             .forEach((item: any) => {
-              item.courseLikes = response;
+              item.courseLikes = result.response;
             });
         }
 

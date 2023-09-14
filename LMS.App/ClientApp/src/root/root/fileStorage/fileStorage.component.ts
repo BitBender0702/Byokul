@@ -717,7 +717,7 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
     this.loadingIcon = true;
     this._fileStorageService.deleteFolder(folderId).subscribe((response: any) => {
       this.loadingIcon = false;
-      if(response.result == Constant.FolderCantDeleted){
+      if(response.message == Constant.FolderCantDeleted){
         this.messageService.add({severity: 'info',summary: 'Info',life: 3000,detail: 'You cant delete folder without deleting the folders/files under it',});
       }
       else{

@@ -21,6 +21,7 @@ using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 //using System.Data.Entity;
 using System.Data.SqlTypes;
+using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
 using Country = LMS.Data.Entity.Country;
@@ -57,6 +58,7 @@ namespace LMS.Services
         private IGenericRepository<UserClassCourseFilter> _userClassCourseFilterRepository;
         private IGenericRepository<UserSharedPost> _userSharedPostRepository;
         private IGenericRepository<SavedClassCourse> _savedClassCourseRepository;
+        private IGenericRepository<SharedClassCourse> _sharedClassCourseRepository;
         private IGenericRepository<SavedPost> _savedPostRepository;
         private IGenericRepository<UserPermission> _userPermissionRepository;
         private readonly UserManager<User> _userManager;
@@ -73,7 +75,7 @@ namespace LMS.Services
         private IGenericRepository<Notification> _notificationRepository;
 
 
-        public SchoolService(IMapper mapper, IGenericRepository<School> schoolRepository, IGenericRepository<SchoolCertificate> schoolCertificateRepository, IGenericRepository<SchoolTag> schoolTagRepository, IGenericRepository<Country> countryRepository, IGenericRepository<Specialization> specializationRepository, IGenericRepository<Language> languageRepository, IGenericRepository<SchoolUser> schoolUserRepository, IGenericRepository<SchoolFollower> schoolFollowerRepository, IGenericRepository<SchoolLanguage> schoolLanguageRepository, IGenericRepository<User> userRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<SchoolTeacher> schoolTeacherRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<CourseTeacher> courseTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<SchoolDefaultLogo> schoolDefaultLogoRepository, IGenericRepository<UserClassCourseFilter> userClassCourseFilterRepository, IGenericRepository<UserSharedPost> userSharedPostRepository, IGenericRepository<SavedClassCourse> savedClassCourseRepository, IGenericRepository<SavedPost> savedPostRepository, IGenericRepository<UserPermission> userPermissionRepository, UserManager<User> userManager, IGenericRepository<ClassViews> ClassViewsRepository, IGenericRepository<CourseViews> CourseViewsRepository, IBlobService blobService, IUserService userService, IGenericRepository<ClassTag> classTagRepository, IGenericRepository<CourseTag> courseTagRepository, IClassService classService, ICourseService courseService, IConfiguration config, IIyizicoService iyizicoService, IGenericRepository<Notification> notificationRepository)
+        public SchoolService(IMapper mapper, IGenericRepository<School> schoolRepository, IGenericRepository<SchoolCertificate> schoolCertificateRepository, IGenericRepository<SchoolTag> schoolTagRepository, IGenericRepository<Country> countryRepository, IGenericRepository<Specialization> specializationRepository, IGenericRepository<Language> languageRepository, IGenericRepository<SchoolUser> schoolUserRepository, IGenericRepository<SchoolFollower> schoolFollowerRepository, IGenericRepository<SchoolLanguage> schoolLanguageRepository, IGenericRepository<User> userRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<SchoolTeacher> schoolTeacherRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<CourseTeacher> courseTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<SchoolDefaultLogo> schoolDefaultLogoRepository, IGenericRepository<UserClassCourseFilter> userClassCourseFilterRepository, IGenericRepository<UserSharedPost> userSharedPostRepository, IGenericRepository<SavedClassCourse> savedClassCourseRepository, IGenericRepository<SavedPost> savedPostRepository, IGenericRepository<SharedClassCourse> sharedClassCourseRepository, IGenericRepository<UserPermission> userPermissionRepository, UserManager<User> userManager, IGenericRepository<ClassViews> ClassViewsRepository, IGenericRepository<CourseViews> CourseViewsRepository, IBlobService blobService, IUserService userService, IGenericRepository<ClassTag> classTagRepository, IGenericRepository<CourseTag> courseTagRepository, IClassService classService, ICourseService courseService, IConfiguration config, IIyizicoService iyizicoService, IGenericRepository<Notification> notificationRepository)
         {
             _mapper = mapper;
             _schoolRepository = schoolRepository;
@@ -99,6 +101,7 @@ namespace LMS.Services
             _schoolDefaultLogoRepository = schoolDefaultLogoRepository;
             _userClassCourseFilterRepository = userClassCourseFilterRepository;
             _savedClassCourseRepository = savedClassCourseRepository;
+            _sharedClassCourseRepository = sharedClassCourseRepository;
             _savedPostRepository = savedPostRepository;
             _userManager = userManager;
             _ClassViewsRepository = ClassViewsRepository;
@@ -863,7 +866,7 @@ namespace LMS.Services
 
             }
 
-            if (filters.Any(x => x.ClassCourseFilter.FilterType == FilterTypeEnum.Free)  && filters.Any(x => x.ClassCourseFilter.FilterType == FilterTypeEnum.Paid))
+            if (filters.Any(x => x.ClassCourseFilter.FilterType == FilterTypeEnum.Free) && filters.Any(x => x.ClassCourseFilter.FilterType == FilterTypeEnum.Paid))
             {
 
             }
@@ -1630,6 +1633,7 @@ namespace LMS.Services
             var classes = await GetClassesBySchoolId(schoolId, userId, pageNumber, pageSize, filters);
             //var courses = await GetCoursesBySchoolId(schoolId, userId);
             var savedClassCourse = await _savedClassCourseRepository.GetAll().ToListAsync();
+            var sharedClassCourse = await _sharedClassCourseRepository.GetAll().ToListAsync();
 
 
             var model = new List<CombineClassCourseViewModel>();
@@ -1664,7 +1668,7 @@ namespace LMS.Services
                 item.IsCommentsDisabled = classDetails.IsCommentsDisabled;
                 item.IsClassCourseSavedByCurrentUser = savedClassCourse.Any(x => x.ClassId == classDetails.ClassId && x.UserId == userId);
                 item.SavedClassCourseCount = savedClassCourse.Where(x => x.ClassId == classDetails.ClassId && x.UserId == userId).Count();
-
+                item.SharedClassCourseCount = sharedClassCourse.Where(x => x.ClassId == classDetails.ClassId).Count();
                 model.Add(item);
             }
 
@@ -1799,6 +1803,7 @@ namespace LMS.Services
             int pageSize = 4;
             var courses = await GetCoursesBySchoolId(schoolId, userId, pageNumber, pageSize, filters);
             var savedClassCourse = await _savedClassCourseRepository.GetAll().ToListAsync();
+            var sharedClassCourse = await _sharedClassCourseRepository.GetAll().ToListAsync();
 
 
             var model = new List<CombineClassCourseViewModel>();
@@ -1831,7 +1836,7 @@ namespace LMS.Services
                 item.IsCommentsDisabled = courseDetails.IsCommentsDisabled;
                 item.IsClassCourseSavedByCurrentUser = savedClassCourse.Any(x => x.CourseId == courseDetails.CourseId && x.UserId == userId);
                 item.SavedClassCourseCount = savedClassCourse.Where(x => x.CourseId == courseDetails.CourseId && x.UserId == userId).Count();
-
+                item.SharedClassCourseCount = sharedClassCourse.Where(x => x.CourseId == courseDetails.CourseId).Count();
                 model.Add(item);
             }
 
@@ -2007,7 +2012,7 @@ namespace LMS.Services
             return model;
         }
 
-        public async Task SaveClassCourse(string userId, Guid id, ClassCourseEnum type)
+        public async Task<bool> SaveClassCourse(string userId, Guid id, ClassCourseEnum type)
         {
 
             var isSavedClassCourseExist = await _savedClassCourseRepository.GetAll().Where(x => x.UserId == userId && (x.ClassId == id || x.CourseId == id)).FirstOrDefaultAsync();
@@ -2016,6 +2021,7 @@ namespace LMS.Services
             {
                 _savedClassCourseRepository.Delete(isSavedClassCourseExist.Id);
                 _savedClassCourseRepository.Save();
+                return false;
             }
 
             else
@@ -2042,6 +2048,8 @@ namespace LMS.Services
                     _savedClassCourseRepository.Insert(savedClassCourse);
                     _savedClassCourseRepository.Save();
                 }
+
+                return true;
 
             }
         }
@@ -2242,8 +2250,14 @@ namespace LMS.Services
 
         public async Task<List<AllSchoolFollowersViewModel>> GetAllSchoolFollowers(Guid schoolId)
         {
+            //var followerList = await _schoolFollowerRepository.GetAll().Include(x => x.User)
+            // .Where(x => x.SchoolId == schoolId && !x.IsBan).ToListAsync();
+
+
+            var schoolTeacherUserids = await _schoolTeacherRepository.GetAll().Include(x => x.Teacher).Where(x => x.SchoolId == schoolId).Select(x => x.Teacher.UserId).ToListAsync();
+
             var followerList = await _schoolFollowerRepository.GetAll().Include(x => x.User)
-             .Where(x => x.SchoolId == schoolId && !x.IsBan).ToListAsync();
+ .Where(x => (!schoolTeacherUserids.Contains(x.UserId)) && x.SchoolId == schoolId && !x.IsBan).ToListAsync();
 
             var response = _mapper.Map<List<AllSchoolFollowersViewModel>>(followerList);
             return response;
@@ -2358,6 +2372,40 @@ namespace LMS.Services
 
             var response = _mapper.Map<List<SchoolFollowerViewModel>>(followerList);
             return response;
+
+        }
+
+        public async Task<bool> SaveSharedClassCourse(string userId, Guid id, ClassCourseEnum type)
+        {
+            if (type == ClassCourseEnum.Class)
+            {
+                var sharedClassCourse = new SharedClassCourse
+                {
+                    UserId = userId,
+                    ClassId = id,
+                    CreatedOn = DateTime.UtcNow
+                };
+
+                _sharedClassCourseRepository.Insert(sharedClassCourse);
+                _sharedClassCourseRepository.Save();
+                return true;
+            }
+
+            if (type == ClassCourseEnum.Course)
+            {
+                var sharedClassCourse = new SharedClassCourse
+                {
+                    UserId = userId,
+                    CourseId = id,
+                    CreatedOn = DateTime.UtcNow
+                };
+
+                _sharedClassCourseRepository.Insert(sharedClassCourse);
+                _sharedClassCourseRepository.Save();
+                return true;
+            }
+
+            return false;
 
         }
 

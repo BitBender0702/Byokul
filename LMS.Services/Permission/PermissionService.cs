@@ -81,16 +81,16 @@ namespace LMS.Services
             try
             {
                 var model = new UserPermissionDetailsViewModel();
-                var schoolPermissionIds = await _userPermissionRepository.GetAll().Where(x => x.SchoolId == schoolId && x.PermissionType == PermissionTypeEnum.School).Select(x => x.PermissionId).ToListAsync();
+                var schoolPermissionIds = await _userPermissionRepository.GetAll().Where(x => x.SchoolId == schoolId && x.PermissionType == PermissionTypeEnum.School && x.UserId == userId).Select(x => x.PermissionId).ToListAsync();
                 schoolPermissionIds = schoolPermissionIds.DistinctBy(x => x.Value).ToList();
 
-                var classPermissionIds = await _userPermissionRepository.GetAll().Where(x => x.SchoolId == schoolId && x.PermissionType == PermissionTypeEnum.Class).Select(x => x.PermissionId).ToListAsync();
+                var classPermissionIds = await _userPermissionRepository.GetAll().Where(x => x.SchoolId == schoolId && x.PermissionType == PermissionTypeEnum.Class && x.UserId == userId).Select(x => x.PermissionId).ToListAsync();
                 classPermissionIds = classPermissionIds.DistinctBy(x => x.Value).ToList();
 
-                var coursePermissionIds = await _userPermissionRepository.GetAll().Where(x => x.SchoolId == schoolId && x.PermissionType == PermissionTypeEnum.Course).Select(x => x.PermissionId).ToListAsync();
+                var coursePermissionIds = await _userPermissionRepository.GetAll().Where(x => x.SchoolId == schoolId && x.PermissionType == PermissionTypeEnum.Course && x.UserId == userId).Select(x => x.PermissionId).ToListAsync();
                 coursePermissionIds = coursePermissionIds.DistinctBy(x => x.Value).ToList();
 
-                var classIds = await _userPermissionRepository.GetAll().Where(x => x.SchoolId == schoolId && x.PermissionType == PermissionTypeEnum.Class).Select(x => x.TypeId).ToListAsync();
+                var classIds = await _userPermissionRepository.GetAll().Where(x => x.SchoolId == schoolId && x.PermissionType == PermissionTypeEnum.Class && x.UserId == userId).Select(x => x.TypeId).ToListAsync();
                 if (classIds.Count() > 0 && classIds[0] == new Guid())
                 {
                     var classIdList = await _classRepository.GetAll().Where(x => x.SchoolId == schoolId).Select(x => x.ClassId).ToListAsync();
@@ -99,7 +99,7 @@ namespace LMS.Services
                 }
                 classIds = classIds.DistinctBy(x => x).ToList();
 
-                var courseIds = await _userPermissionRepository.GetAll().Where(x => x.SchoolId == schoolId && x.PermissionType == PermissionTypeEnum.Course).Select(x => x.TypeId).ToListAsync();
+                var courseIds = await _userPermissionRepository.GetAll().Where(x => x.SchoolId == schoolId && x.PermissionType == PermissionTypeEnum.Course && x.UserId == userId).Select(x => x.TypeId).ToListAsync();
 
                 if (courseIds.Count() > 0 && courseIds[0] == new Guid())
                 {

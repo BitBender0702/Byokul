@@ -19,6 +19,7 @@ namespace LMS.Data.Entity.Chat
         public Guid? ChatTypeId { get; set; }
         public bool IsPinnedUser1 { get; set; } = false;
         public bool IsPinnedUser2 { get; set; } = false;
+        public Guid? SchoolId { get; set; }
     }
 
     public enum ChatType

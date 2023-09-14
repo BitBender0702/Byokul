@@ -16,5 +16,7 @@ namespace LMS.Common.ViewModels.Chat
         public int UnreadMessageCount { get; set; }
         public ChatType ChatType { get; set; }
         public Guid? ChatTypeId { get; set; }
+        public Guid? SchoolId { get; set; }
+
     }
 }

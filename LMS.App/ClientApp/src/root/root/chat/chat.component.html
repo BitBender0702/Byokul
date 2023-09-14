@@ -1178,8 +1178,8 @@
                           *ngIf="item.chatType == 4"
                           [routerLink]="[
                             '/profile/class',
-                            item.class.school.schoolName,
-                            item.class.className
+                            item.class?.school?.schoolName,
+                            item.class?.className
                           ]"
                           class="mb-0 cursor_pointer"
                         >

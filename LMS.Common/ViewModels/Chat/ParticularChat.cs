@@ -20,6 +20,7 @@ namespace LMS.Common.ViewModels.Chat
         public int? ReplyMessageType { get; set; }
         public string FileName { get; set; }
         public bool? IsForwarded { get; set; }
+        public Guid ChatHeadId { get; set; }
 
     }
 }

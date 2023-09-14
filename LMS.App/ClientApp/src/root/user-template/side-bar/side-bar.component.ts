@@ -1,7 +1,6 @@
 import { ChangeDetectorRef, Component, ElementRef, Injector, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
-import { unreadChatResponse } from 'src/root/root/chat/chat.component';
 import { convertIntoCourseResponse } from 'src/root/root/class/classProfile/classProfile.component';
 import { ownedClassResponse } from 'src/root/root/class/createClass/createClass.component';
 import { convertIntoClassResponse } from 'src/root/root/course/courseProfile/courseProfile.component';
@@ -14,7 +13,7 @@ import { UserService } from 'src/root/service/user.service';
 import { dashboardResponse } from 'src/root/userModule/user-auth/component/login/login.component';
 import { Subject, Subscription } from 'rxjs';
 import { notificationResponse } from 'src/root/service/signalr.service';
-
+export const unreadChatResponse =new Subject<{readMessagesCount: number,type:string,chatHeadId?:string}>(); 
 export const OpenSideBar =new Subject<{isOpenSideBar:boolean}>(); 
 export const enableDisableScc =new Subject<{isDisable:boolean,schoolId?:string,classId?:string,courseId?:string}>(); 
 
@@ -34,6 +33,7 @@ export class SideBarComponent extends MultilingualComponent implements OnInit, O
   isOpenSidebar: boolean = false;
   notificationResponseSubscription!:Subscription;
   enableDisableSccSubscription!:Subscription;
+  unreadChatSubscription!: Subscription;
   // @Input() isOpenSidebar!:boolean;
 
   constructor(injector: Injector,userService: UserService,private router: Router,private cd: ChangeDetectorRef, private elementRef: ElementRef) {
@@ -121,7 +121,9 @@ export class SideBarComponent extends MultilingualComponent implements OnInit, O
     }
     });
 
-    unreadChatResponse.subscribe(response => {
+    if(!this.unreadChatSubscription){
+      this.unreadChatSubscription = unreadChatResponse.subscribe(response => {
+        debugger
       if(response.readMessagesCount != undefined){
       if(response.type=="add"){
         this.sidebarInfo.unreadMessageCount = this.sidebarInfo.unreadMessageCount + response.readMessagesCount;
@@ -131,6 +133,7 @@ export class SideBarComponent extends MultilingualComponent implements OnInit, O
       }
     }
     });
+  }
 
     unreadNotificationResponse.subscribe(response => {
       if(response.type =="remove"){
@@ -288,6 +291,9 @@ export class SideBarComponent extends MultilingualComponent implements OnInit, O
     }
     if(this.enableDisableSccSubscription){
       this.enableDisableSccSubscription.unsubscribe();
+    }
+    if (this.unreadChatSubscription) {
+      this.unreadChatSubscription.unsubscribe();
     }
   }
 

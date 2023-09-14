@@ -18,6 +18,7 @@ export interface ChatViewModel {
     forwardedFileURL:string | null,
     forwardedFileType:number | null,
     attachments: FileUploadResult[];
+    schoolId: string | null
 
   }
 

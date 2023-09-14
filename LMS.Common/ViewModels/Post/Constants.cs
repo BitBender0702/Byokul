@@ -24,13 +24,15 @@ namespace LMS.Common.ViewModels.Post
         public static string EmailNotConfirmed = "email not confirm";
         public static string UserNotFound = "This email is not registered";
         public static string ResetTokenExpired = "reset token expired";
-        public static string FolderCantDeleted = "folder cant deleted";
+        public static string FolderCantDeleted = "folder can not be deleted";
         public static string FolderDeleted = "folder deleted";
         public static string PostPinnedSuccessfully = "Post pinned successfully";
         public static string PostUnPinnedSuccessfully = "Post unpinned successfully";
         public static string PostIdInvalid = "Invalid postId";
         public const string RequiresAction = "You must complete an additional authentication step.";
         public static string SchoolNameExist = "School name exists";
+        public static string ClassOrCourseSharedSuccessfully = "Class/course shared Successfully";
+        public static string ClassOrCourseNotSharedSuccessfully = "user/class/course id invalid";
         public static string SchoolNameDoesNotExist = "School name does not exists";
         public static string ClassRatedSuccessfully = "Class rated successfully";
         public static string CourseRatedSuccessfully = "Course rated successfully";
@@ -40,11 +42,15 @@ namespace LMS.Common.ViewModels.Post
         public static string CourseNotRatedSuccessfully = "Course not rated successfully";
         public static string StudentDeletedSuccessfully = "Student removed successfully from this school";
         public static string StudentNotExists = "Student not exists in this school";
+        public static string ClassOrCourseIdInvalid = "Class/course id invalid";
         public static string TeacherDeletedSuccesfully = "Teacher deleted successfully.";
         public static string FailedToDeleteTeacher = "Failed to delete teacher.";
         public static string ClassOrTeacherIdNotExist = "Class/Teacher id is not exist.";
         public static string CourseOrTeacherIdNotExist = "Course/Teacher id is not exist.";
         public static string FollowerBannedSuccessfully = "Follower banned successfully";
+        public static string ClassOrCoursePinnedSuccessfully = "Class/course pinned successfully";
+        public static string ClassOrCourseUnPinnedSuccessfully = "Class/course unpinned successfully";
+
         public static string FollowerOrUserIdNotValid = "FollowerId/UserId not valid";
         public static string TeacherAddedSuccessfully = "Teacher added successfully";
         public static string TeacherUpdatedSuccessfully = "Teacher updated successfully";
@@ -69,7 +75,8 @@ namespace LMS.Common.ViewModels.Post
         public static string FollowerOrSchoolIdNotValid = "FollowerId/SchoolId not valid";
         public static string UserFollowedSuccessully = "User followed successully";
         public static string UserUnFollowedSuccessully = "User unfollowed successully";
-
+        public static string ClassCourseSavedSuccessully = "Class/course saved successully";
+        public static string ClassCourseUnSavedSuccessully = "Class/course unSaved successully";
         public static string EnabledLiveStreamSuccessully = "Live Stream Enabled Successully";
         public static string LiveStreamEnableFailed = "Live Stream Enable Failed";
 

@@ -5,6 +5,7 @@ using LMS.Common.ViewModels.Post;
 using LMS.Common.ViewModels.School;
 using LMS.Common.ViewModels.Student;
 using LMS.Data.Entity;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,7 +48,7 @@ namespace LMS.Services
         Task<IEnumerable<PostDetailsViewModel>> GetPostsBySchool(Guid schoolId, string loginUserId, int pageNumber, int pageSize);
         Task<IEnumerable<PostDetailsViewModel>> GetReelsBySchool(Guid schoolId, string loginUserId, int pageNumber, int pageSize);
         Task<SchoolsClassCourseViewModel> GetSchoolsClassCourse(IEnumerable<string> schoolIds);
-        Task SaveClassCourse(string userId, Guid id, ClassCourseEnum type);
+        Task<bool> SaveClassCourse(string userId, Guid id, ClassCourseEnum type);
         Task<IEnumerable<CombineClassCourseViewModel>> GetSavedClassCourse(string userId, int pageNumber);
         Task<bool> PinUnpinSavedClassCourse(Guid id, bool isPinned,ClassCourseEnum type, string userId);
         Task<IEnumerable<StudentViewModel>> GetClassStudentsBySchoolId(Guid schoolId);
@@ -65,6 +66,7 @@ namespace LMS.Services
         //Task<List<SchoolFollower>> GetBannedUser(Guid schoolId, string userId);
 
         Task<List<SchoolFollowerViewModel>> GetBannedUser(Guid schoolId, int pageNumber, string? searchString);
+        Task<bool> SaveSharedClassCourse(string userId, Guid Id, ClassCourseEnum type);
 
 
     }

@@ -1611,18 +1611,18 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
 
     this._schoolService
       .likeUnlikeClassCourse(this.likeUnlikeClassCourses)
-      .subscribe((response) => {
+      .subscribe((result) => {
         if (type == 1) {
           this.savedClassCourseList
             .filter((p: any) => p.id == Id)
             .forEach((item: any) => {
-              item.classLikes = response;
+              item.classLikes = result.response;
             });
         } else {
           this.savedClassCourseList
             .filter((p: any) => p.id == Id)
             .forEach((item: any) => {
-              item.courseLikes = response;
+              item.courseLikes = result.response;
             });
         }
 

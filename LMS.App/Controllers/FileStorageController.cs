@@ -94,7 +94,11 @@ namespace LMS.App.Controllers
         public async Task<IActionResult> DeleteFolder(Guid folderId)
         {
             var response = await _fileStorageService.DeleteFolder(folderId);
-            return Ok(new { result = response });
+            if (response == Constants.FolderCantDeleted)
+            {
+                return Ok(new { Success = false, Message = response });
+            }
+            return Ok(new { Success = true, Message = response });
         }
 
         [Route("deleteFile")]

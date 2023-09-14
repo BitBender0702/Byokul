@@ -45,6 +45,11 @@ export class ChatService{
         return this.http.get(`${this.apiUrl}/chats/getAllChatUsers`, {params:queryParams,headers: this.headers});
     }
 
+    getAllSchoolChatUsers(senderId:string,schoolId:string,pageNumber:number,searchString:string):Observable<any>{
+        let queryParams = new HttpParams().append("senderId",senderId).append("schoolId",schoolId).append("pageNumber",pageNumber).append("searchString",searchString);
+        return this.http.get(`${this.apiUrl}/chats/getAllSchoolChatUsers`, {params:queryParams,headers: this.headers});
+    }
+
     getUsersChat(chatHeadId:string,senderId:string,receiverId:string,chatType:number,pageSize:number,pageNumber:number):Observable<any>{
         let queryParams = new HttpParams().append("chatHeadId",chatHeadId).append("senderId",senderId).append("receiverId",receiverId).append("chatType",chatType).append("pageSize",pageSize).append("pageNumber",pageNumber);
         return this.http.get(`${this.apiUrl}/chats/GetUsersChat`, {params:queryParams,headers: this.headers});

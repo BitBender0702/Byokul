@@ -26,11 +26,10 @@ import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
 import { ChatVideoComponent } from '../chatVideo/chatVideo.component';
 import { UploadVideo } from 'src/root/interfaces/post/uploadVideo';
-import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
+import { OpenSideBar, unreadChatResponse } from 'src/root/user-template/side-bar/side-bar.component';
 import { MessageService } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
-
-export const unreadChatResponse =new Subject<{readMessagesCount: number,type:string}>(); 
+// export const unreadChatResponse =new Subject<{readMessagesCount: number,type:string}>(); 
 
 
 
@@ -148,6 +147,7 @@ export class ChatComponent extends MultilingualComponent implements OnInit, Afte
 
   searchString:string = "";
   changeLanguageSubscription!: Subscription;
+  unreadChatSubscription!: Subscription;
   videoObject!:UploadVideo;
   disabledSendButton!:boolean;
   uploadVideo:any[] = [];
@@ -292,15 +292,14 @@ export class ChatComponent extends MultilingualComponent implements OnInit, Afte
     
     signalRResponse.subscribe(response => {
       debugger
+      // unreadChatResponse.next({readMessagesCount:1,type:"add"});
      if(this.chatHeadId == response.chatHeadId){         
          this._chatService.removeUnreadMessageCount(response.receiverId,response.senderId,Number(response.chatType)).subscribe((result) => {
          });
      }
      else{
       if(this.chatHeadId != "1"){
-
-    
-      unreadChatResponse.next({readMessagesCount:1,type:"add"});
+      // unreadChatResponse.next({readMessagesCount:1,type:"add"});
       var chatUsers: any[] = this.allChatUsers;
       var chatUser = chatUsers.find(x => x.userID == response.senderId && x.chatType == response.chatType && x.chatHeadId == response.chatHeadId);
       if(chatUser == undefined){
@@ -316,7 +315,7 @@ export class ChatComponent extends MultilingualComponent implements OnInit, Afte
         }
       }
       if(chatUser!=undefined){
-        chatUser.unreadMessageCount = chatUser.unreadMessageCount + 1;
+        // chatUser.unreadMessageCount = chatUser.unreadMessageCount + 1;
       }
      }
     }
@@ -795,6 +794,26 @@ this.addChatAttachments = {
   })
 }
 
+if(!this.unreadChatSubscription){
+  this.unreadChatSubscription = unreadChatResponse.subscribe(response => {
+    debugger
+  if(response.readMessagesCount != undefined){
+  if(response.type=="add"){
+    var firstDate = Object.keys(this.firstuserChats)[0];
+    if (firstDate) {
+      var chats = this.firstuserChats[firstDate];
+    var isChatHeadActive = chats.find((x: { chatHeadId: string | undefined; }) => x.chatHeadId == response.chatHeadId);
+    if(isChatHeadActive == null){
+    var reqChatHead = this.allChatUsers.find((x: { chatHeadId: string | undefined; }) => x.chatHeadId == response.chatHeadId);
+    reqChatHead.unreadMessageCount += 1;
+
+    }
+  }
+  }
+}
+});
+}
+
   }
 
   ngAfterViewInit() {        
@@ -803,6 +822,9 @@ this.addChatAttachments = {
   ngOnDestroy() {
     if(this.changeLanguageSubscription){
       this.changeLanguageSubscription.unsubscribe();
+    }
+    if(this.unreadChatSubscription){
+      this.unreadChatSubscription.unsubscribe();
     }
   }
 
@@ -999,6 +1021,14 @@ this.addChatAttachments = {
   }
 
     getSelectedSchoolInbox(schoolId?:string){
+
+      // if(schoolId){
+      //   this._chatService.getAllSchoolChatUsers(this.senderId, schoolId, 1, this.searchString).subscribe((response) => {
+      //    debugger
+      //   });
+      // }
+
+
       this.schoolInboxList = this.schoolInboxes;
       this.showMySchoolInbox = true;
       this.showMyInbox = false;
@@ -1325,7 +1355,8 @@ this.addChatAttachments = {
       forwardedFileName:null,
       forwardedFileURL:null,
       forwardedFileType:null,
-      attachments:[]
+      attachments:[],
+      schoolId: null
   
      };
   }
@@ -1536,13 +1567,13 @@ if(this.uploadAttachments != undefined){
 });
 }
 
-getTextMessage(evant:any,receiverId:string){
+getTextMessage(event:any,receiverId:string){
   if(this.messageToUser ==""){
    this.invalidMessage = true;
   }
   else{
     this.invalidMessage = false;
-    if(evant.code == "Enter"){
+    if(event.code == "Enter" || event.keyCode === 13 || event.keyCode === 108){
       this.sendToUser(receiverId);
    }
   }
@@ -1579,10 +1610,12 @@ getTextMessage(evant:any,receiverId:string){
     }
     if(this.receiverInfo.class!= null){
       this.chatViewModel.chatTypeId = this.receiverInfo?.class.classId;
+      this.chatViewModel.schoolId = this.receiverInfo?.class.schoolId;
       chatTypeId = this.receiverInfo?.class.classId;
     }
     if(this.receiverInfo.course!= null){
       this.chatViewModel.chatTypeId = this.receiverInfo?.course.courseId;
+      this.chatViewModel.schoolId = this.receiverInfo?.course.courseId;
       chatTypeId = this.receiverInfo?.course.courseId;
     }
     // this.chatViewModel.chatTypeId = this.receiverInfo?.chatTypeId;
@@ -1636,6 +1669,7 @@ getTextMessage(evant:any,receiverId:string){
     user = classUsers.find(x => x.userID == receiverId && x.chatType == this.chatType && x.chatHeadId == this.chatHeadId);
     this.receiverInfo = user;
     this.chatViewModel.chatTypeId = this.receiverInfo?.class?.classId;
+    this.chatViewModel.schoolId = this.receiverInfo?.class?.schoolId;
     chatTypeId =  this.receiverInfo?.class?.classId;
     if(this.receiverInfo.class?.ownerId == this.sender.id || this.receiverInfo.class?.createdById == this.sender.id){
       this.isSchoolOwner = true;
@@ -1651,6 +1685,7 @@ getTextMessage(evant:any,receiverId:string){
     user = courseUsers.find(x => x.userID == receiverId && x.chatType == this.chatType && x.chatHeadId == this.chatHeadId);
     this.receiverInfo = user;
     this.chatViewModel.chatTypeId = this.receiverInfo?.course?.courseId;
+    this.chatViewModel.schoolId = this.receiverInfo?.course?.courseId;
     chatTypeId =  this.receiverInfo?.course?.courseId;
     if(this.receiverInfo.course?.ownerId == this.sender.id || this.receiverInfo.course?.createdById == this.sender.id){
       this.isSchoolOwner = true;

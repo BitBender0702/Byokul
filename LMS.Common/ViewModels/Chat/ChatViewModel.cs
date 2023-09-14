@@ -28,6 +28,7 @@ namespace LMS.Common.ViewModels.Chat
         public string? ForwardedFileURL { get; set; }
         public FileTypeEnum? ForwardedFileType { get; set; }
         public List<AttachmentViewModel>? Attachments { get; set; }
+        public Guid? SchoolId { get; set; }
     }
 
     public class AttachmentViewModel

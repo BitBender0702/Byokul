@@ -10,6 +10,7 @@ import { NotificationViewModel } from '../interfaces/notification/notificationVi
 import { NotificationService } from './notification.service';
 import { CustomXhrHttpClient } from './signalr.httpclient';
 import { UserService } from './user.service';
+import { unreadChatResponse } from '../user-template/side-bar/side-bar.component';
 
 export const signalRResponse = new Subject<{
   id:string;
@@ -81,7 +82,7 @@ export class SignalrService {
 
   initializeConnection(token: string) {
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl('https://byokul.com/chatHub', {
+      .withUrl('https://localhost:7220/chatHub', {
          httpClient: new CustomXhrHttpClient(token)
       })
       .withAutomaticReconnect()
@@ -120,6 +121,7 @@ export class SignalrService {
 
   askServerListener() {
     this.hubConnection?.on('ReceiveMessage', (user, message) => {
+      debugger
       signalRResponse.next({
         id: user.id,
         receiver: 'test',
@@ -141,7 +143,7 @@ export class SignalrService {
         forwardedFileType: user.forwardedFileType
 
       });
-      console.log(`this ${user} send ${message}`);
+      unreadChatResponse.next({readMessagesCount:1,type:"add",chatHeadId: user.chatHeadId});
     });
 
     this.hubConnection?.on('ReceiveMessageFromGroup', (model) => {
