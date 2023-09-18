@@ -474,7 +474,7 @@
   "PhoneNumberRequired": "Phone number is required",
   "InValidPhoneNumber": "Phone number is invalid",
   "Edit": "يحرر",
-  "UpdatePost": "Update Post",
+  "UpdatePost": "تحديث المشاركة",
   "UpdatedOn": "Updated On",
   "ReelCreatedSuccessfully": "تم إنشاء بكرة بنجاح",
   "SchoolList": "قائمة المدرسة",
@@ -593,7 +593,8 @@
   "PaymentOn":"الدفع على",
   "Refund":"استرداد",
   "Refunded":"ردها",
-  "Showing {first} to {last} of {totalRecords} entries": "عرض {first} إلى {last} من {totalRecords} مدخلة"
+  "Showing {first} to {last} of {totalRecords} entries": "عرض {first} إلى {last} من {totalRecords} مدخلة",
+  "UpdateReel":"تحديث بكرة"
 
 
 

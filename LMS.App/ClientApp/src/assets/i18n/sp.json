@@ -313,7 +313,7 @@
   "PhoneNumberRequired": "Phone number is required",
   "InValidPhoneNumber": "Phone number is invalid",
   "Edit": "Editar",
-  "UpdatePost": "Update Post",
+  "UpdatePost": "Actualizar publicación",
   "UpdatedOn": "Updated On",
   "ReelCreatedSuccessfully": "Carrete creado con éxito",
   "SchoolList": "School List",
@@ -421,7 +421,8 @@
   "September": "septiembre",
   "October": "octubre",
   "November": "noviembre",
-  "December": "diciembre"
+  "December": "diciembre",
+  "UpdateReel":"Carrete de actualización"
 
 
 

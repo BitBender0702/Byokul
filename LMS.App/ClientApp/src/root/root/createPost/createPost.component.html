@@ -101,11 +101,17 @@
           {{ "CreatePost" | translate }}
         </h1>
         <h1
-          *ngIf="isEditPost"
+          *ngIf="isEditPost && forPost"
           class="modal-title font_22 text_dark fw_700 border-0 text-center"
         >
           {{ "UpdatePost" | translate }}
         </h1>
+        <h1
+        *ngIf="isEditPost && forReel"
+        class="modal-title font_22 text_dark fw_700 border-0 text-center"
+      >
+        {{ "UpdateReel" | translate }}
+      </h1>
         
         <div></div>
         <button
