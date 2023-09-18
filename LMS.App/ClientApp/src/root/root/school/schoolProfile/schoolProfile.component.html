@@ -1606,7 +1606,7 @@
                           </div>
                           <div class="feed-name font_14 text_sec1 hideName">
                             <img [lazyLoad]="school.avatar" />
-                            {{ school.schoolName }}
+                            {{ school.schoolName }} 
                           </div>
                           <div
                             class="feed-title font_14 text_sec1 d-flex align-content-center fw_600"
@@ -1660,7 +1660,9 @@
                         <img [lazyLoad]="school.avatar" />
                       </div>
                       <h2 class="d-inline-block font_20 fw_600 text_sec1 mb-0">
-                        {{ school.schoolName }}
+                        {{ school.schoolName }} <span *ngIf="school.isVarified" class="verified-badge"
+                        ><img lazyLoad="../../../../assets/images/verified-badge.svg"
+                      /></span>
                       </h2>
                       <div *ngIf="post.isLive">
                         <img

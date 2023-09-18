@@ -48,6 +48,7 @@ export class ClassCourseTransactionsComponent extends MultilingualComponent impl
 
   ngOnInit(): void {
     this._authService.loginState$.next(false);
+    this._authService.loginAdminState$.next(true);
     this.loadingIcon = true;
     this.gender = localStorage.getItem("gender")??'';
     this.selectedLanguage = localStorage.getItem("selectedLanguage");
@@ -128,7 +129,7 @@ export class ClassCourseTransactionsComponent extends MultilingualComponent impl
         const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
     
         const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8' });
-        const fileName = 'exported-data.xlsx';
+        const fileName = 'ClassAndCourseTransactions.xlsx';
         const link = document.createElement('a');
         link.href = window.URL.createObjectURL(blob);
         link.download = fileName;

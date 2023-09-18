@@ -119,15 +119,6 @@ namespace LMS.Services
             result.Followers = await GetFollowers(userId);
 
             var item = user.UserLanguage.Select(x => x.Language);
-
-
-
-
-
-
-
-
-
             result.Languages = await GetLanguages(userId);
             result.Followings = await GetFollowings(userId);
             result.Posts = await GetPostsByUserId(userId);
@@ -428,6 +419,7 @@ namespace LMS.Services
             public string ParentImageUrl { get; set; }
             public string ParentName { get; set; }
             public string SchoolName { get; set; }
+            public bool IsParentVerified { get; set; }
         }
 
         public async Task<IEnumerable<PostDetailsViewModel>> GetMyFeed(string userId, PostTypeEnum postType, string? searchString, int pageNumber = 1)
@@ -471,19 +463,19 @@ namespace LMS.Services
                 .ThenInclude(x => x.School)
                 .Where(x => x.Student.UserId == userId).ToListAsync();
 
-            var requiredIds = schoolFollowers.Select(x => new FeedConvertDTO { Id = x.SchoolId, ParentImageUrl = x.School.Avatar, ParentName = x.School.SchoolName, SchoolName = "" }).ToList();
-            var testData = userFollowersData.Where(p => p.UserId != string.Empty).Select(x => new FeedConvertDTO { Id = new Guid(x.UserId), ParentImageUrl = x.User.Avatar, ParentName = x.User.FirstName + " " + x.User.LastName, SchoolName = "" }).ToList();
+            var requiredIds = schoolFollowers.Select(x => new FeedConvertDTO { Id = x.SchoolId, ParentImageUrl = x.School.Avatar, ParentName = x.School.SchoolName, SchoolName = "", IsParentVerified = x.School.IsVarified }).ToList();
+            var testData = userFollowersData.Where(p => p.UserId != string.Empty).Select(x => new FeedConvertDTO { Id = new Guid(x.UserId), ParentImageUrl = x.User.Avatar, ParentName = x.User.FirstName + " " + x.User.LastName, SchoolName = "", IsParentVerified = x.User.IsVarified }).ToList();
             requiredIds.AddRange(testData);
-            requiredIds.AddRange(classStudentsData.Select(c => new FeedConvertDTO { Id = c.ClassId, ParentImageUrl = c.Class.Avatar, ParentName = c.Class.ClassName, SchoolName = c.Class.School.SchoolName }).ToList());
-            requiredIds.AddRange(courseStudentsData.Select(c => new FeedConvertDTO { Id = c.CourseId, ParentImageUrl = c.Course.Avatar, ParentName = c.Course.CourseName, SchoolName = c.Course.School.SchoolName }).ToList());
+            requiredIds.AddRange(classStudentsData.Select(c => new FeedConvertDTO { Id = c.ClassId, ParentImageUrl = c.Class.Avatar, ParentName = c.Class.ClassName, SchoolName = c.Class.School.SchoolName, IsParentVerified = false }).ToList());
+            requiredIds.AddRange(courseStudentsData.Select(c => new FeedConvertDTO { Id = c.CourseId, ParentImageUrl = c.Course.Avatar, ParentName = c.Course.CourseName, SchoolName = c.Course.School.SchoolName, IsParentVerified = false }).ToList());
 
-            requiredIds.AddRange(myData.Select(c => new FeedConvertDTO { Id = new Guid(c.Id), ParentImageUrl = c.Avatar, ParentName = c.FirstName, SchoolName = "" }).ToList());
+            requiredIds.AddRange(myData.Select(c => new FeedConvertDTO { Id = new Guid(c.Id), ParentImageUrl = c.Avatar, ParentName = c.FirstName, SchoolName = "", IsParentVerified = c.IsVarified }).ToList());
 
-            requiredIds.AddRange(mySchoolData.Select(c => new FeedConvertDTO { Id = c.SchoolId, ParentImageUrl = c.Avatar, ParentName = c.SchoolName, SchoolName = "" }).ToList());
+            requiredIds.AddRange(mySchoolData.Select(c => new FeedConvertDTO { Id = c.SchoolId, ParentImageUrl = c.Avatar, ParentName = c.SchoolName, SchoolName = "", IsParentVerified = c.IsVarified }).ToList());
 
-            requiredIds.AddRange(myClassData.Select(c => new FeedConvertDTO { Id = c.ClassId, ParentImageUrl = c.Avatar, ParentName = c.ClassName, SchoolName = c.School.SchoolName }).ToList());
+            requiredIds.AddRange(myClassData.Select(c => new FeedConvertDTO { Id = c.ClassId, ParentImageUrl = c.Avatar, ParentName = c.ClassName, SchoolName = c.School.SchoolName, IsParentVerified = false }).ToList());
 
-            requiredIds.AddRange(myCourseData.Select(c => new FeedConvertDTO { Id = c.CourseId, ParentImageUrl = c.Avatar, ParentName = c.CourseName, SchoolName = c.School.SchoolName }).ToList());
+            requiredIds.AddRange(myCourseData.Select(c => new FeedConvertDTO { Id = c.CourseId, ParentImageUrl = c.Avatar, ParentName = c.CourseName, SchoolName = c.School.SchoolName, IsParentVerified = false }).ToList());
 
 
             var postList = _postRepository.GetAll().Include(x => x.CreatedBy);
@@ -501,6 +493,7 @@ namespace LMS.Services
                 var attachment = await GetAttachmentsByPostId(post.Id);
                 post.PostAttachments = attachment;
                 post.ParentImageUrl = data.ParentImageUrl;
+                post.IsParentVerified = data.IsParentVerified;
                 post.ParentName = data.ParentName;
                 post.Likes = await GetLikesOnPost(post.Id);
                 post.Views = await GetViewsOnPost(post.Id);
@@ -575,6 +568,7 @@ namespace LMS.Services
                     var school = _schoolRepository.GetById(post.ParentId);
                     post.ParentName = school.SchoolName;
                     post.ParentImageUrl = school.Avatar;
+                    post.IsParentVerified = school.IsVarified;
                 }
 
                 if (post.PostAuthorType == (int)PostAuthorTypeEnum.Class)
@@ -596,6 +590,7 @@ namespace LMS.Services
                     var user = _userRepository.GetById(post.ParentId.ToString());
                     post.ParentName = user.FirstName + " " + user.LastName;
                     post.ParentImageUrl = user.Avatar;
+                    post.IsParentVerified = user.IsVarified;
                 }
 
                 post.PostAttachments = await GetAttachmentsByPostId(post.Id);
@@ -638,6 +633,7 @@ namespace LMS.Services
                     var school = _schoolRepository.GetById(post.ParentId);
                     post.ParentName = school.SchoolName;
                     post.ParentImageUrl = school.Avatar;
+                    post.IsParentVerified = school.IsVarified;
                 }
 
                 if (post.PostAuthorType == (int)PostAuthorTypeEnum.Class)
@@ -659,6 +655,7 @@ namespace LMS.Services
                     var user = _userRepository.GetById(post.ParentId.ToString());
                     post.ParentName = user.FirstName + " " + user.LastName;
                     post.ParentImageUrl = user.Avatar;
+                    post.IsParentVerified = user.IsVarified;
                 }
 
                 post.PostAttachments = await GetAttachmentsByPostId(post.Id);
@@ -724,6 +721,7 @@ namespace LMS.Services
                     var school = _schoolRepository.GetById(post.ParentId);
                     post.ParentName = school.SchoolName;
                     post.ParentImageUrl = school.Avatar;
+                    post.IsParentVerified = school.IsVarified;
                 }
 
                 if (post.PostAuthorType == (int)PostAuthorTypeEnum.Class)
@@ -745,6 +743,7 @@ namespace LMS.Services
                     var user = _userRepository.GetById(post.ParentId.ToString());
                     post.ParentName = user.FirstName + " " + user.LastName;
                     post.ParentImageUrl = user.Avatar;
+                    post.IsParentVerified = user.IsVarified;
                 }
 
                 post.PostAttachments = await GetAttachmentsByPostId(post.Id);
@@ -772,7 +771,7 @@ namespace LMS.Services
         public async Task<List<UserFollowerViewModel>> GetUserFollowers(string userId, int pageNumber, string? searchString)
         {
             int pageSize = 13;
-            var followerList = await _userFollowerRepository.GetAll().Include(x => x.Follower)
+            var followerList = await _userFollowerRepository.GetAll().Include(x => x.Follower).Include(x=>x.User)
                 .Where(x => x.UserId == userId && !x.IsBan && ((string.IsNullOrEmpty(searchString)) || (x.Follower.FirstName.Contains(searchString) || x.Follower.LastName.Contains(searchString) || (x.Follower.FirstName + " " + x.Follower.LastName).ToLower().Contains(searchString.ToLower())))).Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize).ToListAsync();
 
@@ -1242,17 +1241,17 @@ namespace LMS.Services
                         string parentImageUrl = "";
                         string schoolName = "";
                         string parentId = "";
+                        bool isParentVerified = false;
                         int postAuthorType = 0;
                         if (post.PostAuthorType == (int)PostAuthorTypeEnum.School)
                         {
                             var school = _schoolRepository.GetById(post.ParentId);
                             parentName = school.SchoolName;
                             parentImageUrl = school.Avatar;
+                            isParentVerified = school.IsVarified;
                             postAuthorType = (int)PostAuthorTypeEnum.School;
                             schoolName = "";
                             parentId = school.SchoolId.ToString();
-
-
 
                         }
                         if (post.PostAuthorType == (int)PostAuthorTypeEnum.Class)
@@ -1278,6 +1277,7 @@ namespace LMS.Services
                             var user = _userRepository.GetById(post.ParentId.ToString());
                             parentName = user.FirstName + " " + user.LastName;
                             parentImageUrl = user.Avatar;
+                            isParentVerified = user.IsVarified;
                             postAuthorType = (int)PostAuthorTypeEnum.User;
                             schoolName = "";
                             parentId = user.Id;
@@ -1295,6 +1295,7 @@ namespace LMS.Services
                             PostType = post.PostType,
                             ParentName = parentName,
                             ParentImageUrl = parentImageUrl,
+                            IsParentVerified = isParentVerified,
                             PostAuthorType = postAuthorType,
                             SchoolName = schoolName,
                             ParentId = parentId,
@@ -1389,12 +1390,14 @@ namespace LMS.Services
                 string parentImageUrl = "";
                 string schoolName = "";
                 string parentId = "";
+                bool isParentVerified = false;
                 int postAuthorType = 0;
                 if (post.PostAuthorType == (int)PostAuthorTypeEnum.School)
                 {
                     var school = _schoolRepository.GetById(post.ParentId);
                     parentName = school.SchoolName;
                     parentImageUrl = school.Avatar;
+                    isParentVerified = school.IsVarified;
                     postAuthorType = (int)PostAuthorTypeEnum.School;
                     schoolName = "";
                     parentId = school.SchoolId.ToString();
@@ -1423,6 +1426,7 @@ namespace LMS.Services
                     var user = _userRepository.GetById(post.ParentId.ToString());
                     parentName = user.FirstName + " " + user.LastName;
                     parentImageUrl = user.Avatar;
+                    isParentVerified = user.IsVarified;
                     postAuthorType = (int)PostAuthorTypeEnum.User;
                     schoolName = "";
                     parentId = user.Id;
@@ -1441,6 +1445,7 @@ namespace LMS.Services
                     PostType = post.PostType,
                     ParentName = parentName,
                     ParentImageUrl = parentImageUrl,
+                    IsParentVerified = isParentVerified,
                     PostAuthorType = postAuthorType,
                     SchoolName = schoolName,
                     ParentId = parentId,
@@ -1802,19 +1807,19 @@ namespace LMS.Services
                 .ThenInclude(x => x.School)
                 .Where(x => x.Student.UserId == userId).ToListAsync();
 
-            var requiredIds = schoolFollowers.Select(x => new FeedConvertDTO { Id = x.SchoolId, ParentImageUrl = x.School.Avatar, ParentName = x.School.SchoolName, SchoolName = "" }).ToList();
-            var testData = userFollowersData.Where(p => p.UserId != string.Empty).Select(x => new FeedConvertDTO { Id = new Guid(x.UserId), ParentImageUrl = x.User.Avatar, ParentName = x.User.FirstName, SchoolName = "" }).ToList();
+            var requiredIds = schoolFollowers.Select(x => new FeedConvertDTO { Id = x.SchoolId, ParentImageUrl = x.School.Avatar, ParentName = x.School.SchoolName, SchoolName = "", IsParentVerified = x.School.IsVarified}).ToList();
+            var testData = userFollowersData.Where(p => p.UserId != string.Empty).Select(x => new FeedConvertDTO { Id = new Guid(x.UserId), ParentImageUrl = x.User.Avatar, ParentName = x.User.FirstName, SchoolName = "", IsParentVerified = x.User.IsVarified }).ToList();
             requiredIds.AddRange(testData);
-            requiredIds.AddRange(classStudentsData.Select(c => new FeedConvertDTO { Id = c.ClassId, ParentImageUrl = c.Class.Avatar, ParentName = c.Class.ClassName, SchoolName = c.Class.School.SchoolName }).ToList());
-            requiredIds.AddRange(courseStudentsData.Select(c => new FeedConvertDTO { Id = c.CourseId, ParentImageUrl = c.Course.Avatar, ParentName = c.Course.CourseName, SchoolName = c.Course.School.SchoolName }).ToList());
+            requiredIds.AddRange(classStudentsData.Select(c => new FeedConvertDTO { Id = c.ClassId, ParentImageUrl = c.Class.Avatar, ParentName = c.Class.ClassName, SchoolName = c.Class.School.SchoolName, IsParentVerified = false }).ToList());
+            requiredIds.AddRange(courseStudentsData.Select(c => new FeedConvertDTO { Id = c.CourseId, ParentImageUrl = c.Course.Avatar, ParentName = c.Course.CourseName, SchoolName = c.Course.School.SchoolName, IsParentVerified = false }).ToList());
 
-            requiredIds.AddRange(myData.Select(c => new FeedConvertDTO { Id = new Guid(c.Id), ParentImageUrl = c.Avatar, ParentName = c.FirstName, SchoolName = "" }).ToList());
+            requiredIds.AddRange(myData.Select(c => new FeedConvertDTO { Id = new Guid(c.Id), ParentImageUrl = c.Avatar, ParentName = c.FirstName, SchoolName = "", IsParentVerified = c.IsVarified }).ToList());
 
-            requiredIds.AddRange(mySchoolData.Select(c => new FeedConvertDTO { Id = c.SchoolId, ParentImageUrl = c.Avatar, ParentName = c.SchoolName, SchoolName = "" }).ToList());
+            requiredIds.AddRange(mySchoolData.Select(c => new FeedConvertDTO { Id = c.SchoolId, ParentImageUrl = c.Avatar, ParentName = c.SchoolName, SchoolName = "", IsParentVerified = c.IsVarified }).ToList());
 
-            requiredIds.AddRange(myClassData.Select(c => new FeedConvertDTO { Id = c.ClassId, ParentImageUrl = c.Avatar, ParentName = c.ClassName, SchoolName = c.School.SchoolName }).ToList());
+            requiredIds.AddRange(myClassData.Select(c => new FeedConvertDTO { Id = c.ClassId, ParentImageUrl = c.Avatar, ParentName = c.ClassName, SchoolName = c.School.SchoolName, IsParentVerified = false }).ToList());
 
-            requiredIds.AddRange(myCourseData.Select(c => new FeedConvertDTO { Id = c.CourseId, ParentImageUrl = c.Avatar, ParentName = c.CourseName, SchoolName = c.School.SchoolName }).ToList());
+            requiredIds.AddRange(myCourseData.Select(c => new FeedConvertDTO { Id = c.CourseId, ParentImageUrl = c.Avatar, ParentName = c.CourseName, SchoolName = c.School.SchoolName, IsParentVerified = false }).ToList());
 
 
             var postList = _postRepository.GetAll().Include(x => x.CreatedBy);
@@ -1859,6 +1864,7 @@ namespace LMS.Services
                 var attachment = await GetAttachmentsByPostId(post.Id);
                 post.PostAttachments = attachment;
                 post.ParentImageUrl = data.ParentImageUrl;
+                post.IsParentVerified = data.IsParentVerified;
                 post.ParentName = data.ParentName;
                 post.Likes = await GetLikesOnPost(post.Id);
                 post.Views = await GetViewsOnPost(post.Id);

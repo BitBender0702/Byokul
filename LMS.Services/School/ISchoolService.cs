@@ -23,6 +23,7 @@ namespace LMS.Services
         Task<SchoolDetailsViewModel> GetSchoolById(Guid schoolId, string loginUserId);
         Task<IEnumerable<SchoolViewModel>> GetAllSchools(string userId);
         Task DeleteSchoolById(Guid schoolId, string deletedById);
+        Task RestoreSchoolById(Guid schoolId, string deletedById);
         Task<IEnumerable<SpecializationViewModel>> SpecializationList();
         Task<IEnumerable<LanguageViewModel>> LanguageList();
         //Task<IEnumerable<SchoolFollowerViewModel>> FollowerList(Guid schoolId);

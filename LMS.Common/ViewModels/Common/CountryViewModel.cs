@@ -31,6 +31,20 @@ namespace LMS.Common.ViewModels.Common
         public string CountryName { get; set; }
         public string CountryCode { get; set; }
     }
+    public class Datum
+    {
+        public string country { get; set; }
+        public string iso3 { get; set; }
+        public string iso2 { get; set; }
+        public List<State> states { get; set; }
+    }
+
+    public class CountryResponse
+    {
+        public bool error { get; set; }
+        public string msg { get; set; }
+        public List<Datum> data { get; set; }
+    }
 
     public class CitiesResponse
     {

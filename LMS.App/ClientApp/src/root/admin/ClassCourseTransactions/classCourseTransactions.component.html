@@ -65,7 +65,7 @@
               [globalFilterFields]="['user.firstName','course.courseName','class.className']"
               [rowHover]="true"
               dataKey="id"
-              currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+              currentPageReportTemplate="{{ 'Showing {first} to {last} of {totalRecords} entries' | translate }}"
               [showCurrentPageReport]="true"
             >
               <ng-template pTemplate="caption">
@@ -176,8 +176,12 @@
               </td>
               <td>{{ transaction.amount }}</td>
               <td>
-                {{ transaction.createdOn | date : "MMMM d, y" }} at
-                {{ transaction.createdOn | date : "H:mm" }}
+                <!-- {{ transaction.createdOn | date : "MMMM d, y" }} at
+                {{ transaction.createdOn | date : "H:mm" }} -->
+
+                {{ transaction.createdOn | date : "MMMM" | translate}}
+                  {{transaction.createdOn| date:"d, y"}}
+                  {{ "at" | translate }} {{ transaction.createdOn | date : "H:mm" }}
               </td> 
               <td>
                 <button
@@ -192,7 +196,7 @@
               >
                 {{ "Refund" | translate }}
               </button>
-              <p *ngIf="transaction.isRefund">Refunded</p>
+              <p *ngIf="transaction.isRefund">{{"Refunded"|translate}}</p>
               </td> 
                 </tr>
               </ng-template>

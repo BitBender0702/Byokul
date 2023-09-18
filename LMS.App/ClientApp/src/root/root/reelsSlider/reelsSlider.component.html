@@ -277,7 +277,9 @@
                             class="routeLink d-flex align-items-center"
                           >
                             <img [src]="item.parentImageUrl" class="me-2" />
-                            {{ item.parentName }}
+                            {{ item.parentName }} <span *ngIf="item.isParentVerified" class="verified-badge"
+                            ><img src="../../../../assets/images/verified-badge.svg"
+                          /></span>
                           </a>
 
                         <a *ngIf="item.postAuthorType == 2" (click)="
@@ -312,7 +314,9 @@
                           item.parentImageUrl == null &&
                           (gender == '2' || gender == '3')
                           " lazyLoad="../../../assets/images/femaleProfile.jfif" class="me-2" />
-                          {{item.parentName}}
+                          {{item.parentName}} <span *ngIf="item.isParentVerified" class="verified-badge"
+                          ><img src="../../../../assets/images/green-verified.svg"
+                        /></span>
                         </a>
                       </div>
                       <div>

@@ -162,6 +162,7 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
       this.user = this.loginForm.value;
       this._authService.loginUser(this.user).pipe(finalize(()=> this.loadingIcon= false)).subscribe({
         next: (response: AuthenticatedResponse) => {
+          debugger
           if(response.errorMessage == "This email is not registered"){
             this._authService.loginState$.next(false);
             this.loginForm.setErrors({ unauthenticated: true });
@@ -200,7 +201,9 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
         }
         else{
           if(decodeData.isBan == 'True'){
+            this._authService.loginState$.next(false);
             this.loginForm.setErrors({ banUserMessage: true });
+            localStorage.removeItem("jwt"); 
           }
 
           else{

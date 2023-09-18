@@ -66,7 +66,7 @@
             [(selection)]="selectedCourses"
             [rowHover]="true"
             dataKey="id"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            currentPageReportTemplate="{{ 'Showing {first} to {last} of {totalRecords} entries' | translate }}"
             [showCurrentPageReport]="true"
           >
             <ng-template pTemplate="caption">
@@ -168,8 +168,8 @@
                 >
                   {{ course.school?.schoolName }}
                 </td>
-                <td>{{ course.serviceType?.type }}</td>
-                <td>{{ course.accessibility?.name }}</td>
+                <td>{{ course.serviceType?.type | translate}}</td>
+                <td>{{ course.accessibility?.name | translate}}</td>
                 <td>{{ course.price }}</td>
                 <td>
                   <a href="https://{{ course.courseUrl }}" target="_blank"
@@ -179,8 +179,12 @@
                   /></a>
                 </td>
                 <td>
-                  {{ course.createdOn | date : "MMMM d, y" }} at
-                  {{ course.createdOn | date : "H:mm" }}
+                  <!-- {{ course.createdOn | date : "MMMM d, y" }} at
+                  {{ course.createdOn | date : "H:mm" }} -->
+
+                  {{ course.createdOn | date : "MMMM" | translate}}
+                  {{course.createdOn| date:"d, y"}}
+                  {{ "at" | translate }} {{ course.createdOn | date : "H:mm" }}
                 </td>
                 <td>{{ course.createdBy }}</td>
 
@@ -269,7 +273,7 @@
             {{ "DoYouWantToDisableCourse" | translate }}
           </h2>
           <h2 *ngIf="!enableDisableCourse.isDisable" class="text-center">
-            {{ "DoYouWantToEnableCourse" | translate }}
+            {{ "DoYouWantToUnableCourse" | translate }} 
           </h2>
         </div>
         <div

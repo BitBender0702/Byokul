@@ -65,7 +65,7 @@
               [globalFilterFields]="['courseName']"
               [rowHover]="true"
               dataKey="id"
-              currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+              currentPageReportTemplate="{{ 'Showing {first} to {last} of {totalRecords} entries' | translate }}"
               [showCurrentPageReport]="true"
             >
               <ng-template pTemplate="caption">
@@ -200,7 +200,7 @@
                 >
                   {{ "Refund" | translate }}
                 </button>
-                <p *ngIf="transaction.isRefund">Refunded</p>
+                <p *ngIf="transaction.isRefund">{{"Refunded"|translate}}</p>
                 </td>
                 </tr>
               </ng-template>

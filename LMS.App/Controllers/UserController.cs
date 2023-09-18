@@ -301,6 +301,47 @@ namespace LMS.App.Controllers
         }
 
 
+        //[AllowAnonymous]
+        //[Route("getCountries")]
+        //[HttpGet]
+        //public async Task<IEnumerable<Country>> GetCountries()
+        //{
+        //    try
+        //    {
+        //        //var response = await _httpClient.GetFromJsonAsync<List<dynamic>>("https://restcountries.com/v3.1/all");
+        //        var uriBuilder = new UriBuilder("https://countriesnow.space/api/v0.1/countries");
+
+        //        var response = await _httpClient.GetAsync(uriBuilder.Uri);
+        //        var content = await response.Content.ReadAsStringAsync();
+        //        var countries = JsonConvert.DeserializeObject<CountryResponse>(content);
+        //        var countryList = new List<Country>();
+        //        if (countries.data.Any())
+        //        {
+        //            foreach(var country in countries.data) {
+        //                var countrydetails = new Country()
+        //                {
+        //                    CountryName=country.country,
+        //                    CountryCode=country.iso2
+        //                };
+        //                countryList.Add(countrydetails);
+        //            }
+        //        }
+
+                
+        //        return countryList;
+               
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+
+        //}
+
+
+
+
+
         [AllowAnonymous]
         [Route("getCities")]
         [HttpPost]
@@ -321,22 +362,28 @@ namespace LMS.App.Controllers
         [AllowAnonymous]
         [Route("getStates")]
         [HttpPost]
-        public async Task<IEnumerable<string>> GetStates(string countryName)
+        public async Task<IActionResult> GetStates(string countryName)
         {
-            var request = new HttpRequestMessage(HttpMethod.Post, "https://countriesnow.space/api/v0.1/countries/states");
-            request.Content = new StringContent($"{{ \"country\": \"{countryName}\" }}", Encoding.UTF8, "application/json");
-            var response = await _httpClient.SendAsync(request);
-
-
-            // var response = await _httpClient.GetAsync($"https://countriesnow.space/api/v0.1/countries/cities?&country={countryCode.Country}");
-            var content = await response.Content.ReadAsStringAsync();
-            var statesResponse = JsonConvert.DeserializeObject<StateRoot>(content);
-            if(statesResponse.Data == null)
+            try
             {
-                return Enumerable.Empty<string>();
+                var request = new HttpRequestMessage(HttpMethod.Post, "https://countriesnow.space/api/v0.1/countries/states");
+                request.Content = new StringContent($"{{ \"country\": \"{countryName}\" }}", Encoding.UTF8, "application/json");
+                var response = await _httpClient.SendAsync(request);
+
+
+                // var response = await _httpClient.GetAsync($"https://countriesnow.space/api/v0.1/countries/cities?&country={countryCode.Country}");
+                var content = await response.Content.ReadAsStringAsync();
+                var statesResponse = JsonConvert.DeserializeObject<StateRoot>(content);
+                if (statesResponse.Data == null)
+                    throw new Exception(Constants.StatesDoesnotExist);
+
+                var states = statesResponse.Data.States.OrderBy(x => x.Name).Select(x => x.Name).ToList();
+                return Ok(states);
+            }catch(Exception ex)
+            {
+                //return BadRequest(new { Success = false, Message = ex.Message });
+                return Ok(new { Success = false, Message = ex.Message });
             }
-            var states = statesResponse.Data.States.OrderBy(x => x.Name).Select(x => x.Name).ToList();
-            return states;
         }
 
         [Route("deleteSchoolTeacher")]

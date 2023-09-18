@@ -15,7 +15,8 @@
           <h2 class="font_22 fw_700 f-monteserrat mb-md-0">
             {{ "Dashboard" | translate }}
           </h2>
-          <button
+          <div class="d-flex justify-content-between" style="width: 30%;">
+            <button
             [routerLink]="['/user/auth/logout']"
             type="button"
             class="btn custom-btn primary_btn earning-btn fw_400 h_44"
@@ -24,6 +25,15 @@
           >
             {{ "Logout" | translate }}
           </button>
+
+          <button (abort)="hideSidebar()"
+          [routerLink]="['/user/auth/change-password']"
+            type="button"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44"
+          >
+            {{ "ChangePassword" | translate }}
+          </button>
+          </div>
         </div>
         <div
           class="live-header d-flex align-items-center justify-content-between"

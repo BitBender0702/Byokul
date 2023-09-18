@@ -54,10 +54,15 @@ export class AdminHomeComponent extends MultilingualComponent implements OnInit,
       if(this.changeLanguageSubscription){
         this.changeLanguageSubscription.unsubscribe();
       }
+      this._authService.loginAdminState$.next(false);
     }
 
     openAdminSideBar(){
       OpenAdminSideBar.next({isOpenSideBar:true})
+    }
+
+    hideSidebar(){
+      // this._authService.loginAdminState$.next(false);
     }
     
   }

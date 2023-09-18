@@ -43,7 +43,7 @@ export class AdminService{
     }
 
     varifySchool(verifySchool:VerifySchools):Observable<any>{
-        return this.http.post(`${this.apiUrl}/admins/varifySchool`, verifySchool);
+        return this.http.post(`${this.apiUrl}/admins/verifySchool`, verifySchool);
     }
 
     getRegClasses():Observable<any>{

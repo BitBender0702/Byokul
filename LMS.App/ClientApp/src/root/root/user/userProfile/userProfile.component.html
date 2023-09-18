@@ -669,7 +669,9 @@
                       <h2
                         class="d-inline-block font_20 fw_600 text_sec1 mb-0 word-break"
                       >
-                        {{ post.parentName }}
+                        {{ post.parentName }}<span *ngIf="post.isParentVerified" class="verified-badge"
+                        ><img src="../../../../assets/images/green-verified.svg"
+                      /></span>
                       </h2>
                       <div *ngIf="post.isLive">
                         <img src="../../../../assets/images/live_img.png" />
@@ -1591,7 +1593,9 @@
                       />
                     </div>
                     <h4 class="fw_600 ms-2 font_16 mt-2">
-                      {{ user.firstName + " " + user.lastName }}
+                      {{ user.firstName + " " + user.lastName }} <span *ngIf="user.isVarified" class="verified-badge"
+                      ><img src="../../../../assets/images/green-verified.svg"
+                    /></span>
                     </h4>
                     <img
                       class="ms-5"
@@ -1690,7 +1694,12 @@
                         [routerLink]="['/profile/school', post.parentName]"
                         class="routeLink"
                       >
-                        {{ post.parentName }}
+                        {{ post.parentName }} <span *ngIf="post.isParentVerified && post.postAuthorType==1" class="verified-badge"
+                          ><img src="../../../../assets/images/verified-badge.svg"
+                        /></span>
+                        <span *ngIf="post.isParentVerified && post.postAuthorType==4" class="verified-badge"
+                          ><img src="../../../../assets/images/green-verified.svg"
+                        /></span>
                       </a>
                       <a
                         *ngIf="post.postAuthorType == 2"
@@ -2711,7 +2720,9 @@
                         />
                       </div>
                       <h4 class="fw_600 ms-2 font_16 mt-2">
-                        {{ user.firstName + " " + user.lastName }}
+                        {{ user.firstName + " " + user.lastName }} <span *ngIf="user.isVarified" class="verified-badge"
+                        ><img src="../../../../assets/images/green-verified.svg"
+                      /></span>
                       </h4>
                       <img
                         class="ms-5"
@@ -3079,7 +3090,7 @@
                       />
                     </div>
                     <h4 class="fw_600 ms-2 font_16 mt-2">
-                      {{ user.firstName + " " + user.lastName }}
+                      {{ user.firstName + " " + user.lastName }} 
                     </h4>
                     <img
                       class="ms-5"
@@ -3511,7 +3522,9 @@
                       />
                     </div>
                     <h4 class="fw_600 ms-2 font_16 mt-2">
-                      {{ user.firstName + " " + user.lastName }}
+                      {{ user.firstName + " " + user.lastName }} <span *ngIf="user.isVarified" class="verified-badge"
+                      ><img src="../../../../assets/images/green-verified.svg"
+                    /></span>
                     </h4>
                     <img
                       class="ms-5"
@@ -4115,7 +4128,9 @@
                       />
                     </div>
                     <h4 class="fw_600 ms-2 font_16 mt-2">
-                      {{ user.firstName + " " + user.lastName }}
+                      {{ user.firstName + " " + user.lastName }} <span *ngIf="user.isVarified" class="verified-badge"
+                      ><img src="../../../../assets/images/green-verified.svg"
+                    /></span>
                     </h4>
                     <img
                       class="ms-5"
@@ -4388,7 +4403,9 @@
                       />
                     </div>
                     <h4 class="fw_600 ms-2 font_16 mt-2">
-                      {{ user.firstName + " " + user.lastName }}
+                      {{ user.firstName + " " + user.lastName }} <span *ngIf="user.isVarified" class="verified-badge"
+                      ><img src="../../../../assets/images/green-verified.svg"
+                    /></span>
                     </h4>
                     <img
                       class="ms-5"
@@ -4629,7 +4646,9 @@
                       />
                     </div>
                     <h4 class="fw_600 ms-2 font_16 mt-2">
-                      {{ user.firstName + " " + user.lastName }}
+                      {{ user.firstName + " " + user.lastName }} <span *ngIf="user.isVarified" class="verified-badge"
+                      ><img src="../../../../assets/images/green-verified.svg"
+                    /></span>
                     </h4>
                     <img
                       class="ms-5"
@@ -4727,7 +4746,9 @@
                         [routerLink]="['/profile/school', post.parentName]"
                         class="routeLink"
                       >
-                        {{ post.parentName }}
+                        {{ post.parentName }}  <span *ngIf="post.isParentVerified && post.postAuthorType==1" class="verified-badge"
+                        ><img src="../../../../assets/images/verified-badge.svg"
+                      /></span>
                       </a>
                       <a
                         *ngIf="post.postAuthorType == 2"
@@ -5794,7 +5815,17 @@
                                 "
                                 src="../../../assets/images/femaleProfile.jfif"
                               />
-                              {{ post.parentName }}
+                              <!-- <span>
+                                {{ post.parentName }}  <span *ngIf="post.isParentVerified && post.postAuthorType == 4" class="verified-badge"
+                                ><img src="../../../../assets/images/green-verified.svg" style="height: 20px;"
+                              /></span>
+                              </span> -->
+
+                              <span class="verified-badge"
+                              >{{ post.parentName }}
+                              <img *ngIf="post.isParentVerified && post.postAuthorType == 4" src="../../../../assets/images/green-verified.svg" style="height: 20px;"/>
+                              <img *ngIf="post.isParentVerified && post.postAuthorType == 1" src="../../../../assets/images/verified-badge.svg" style="height: 20px;"/>
+                              </span>
                             </div>
                             <div
                               class="feed-title font_14 text_sec1 d-flex align-content-center fw_600"
@@ -5918,7 +5949,17 @@
                                 "
                                 src="../../../assets/images/femaleProfile.jfif"
                               />
-                              {{ post.parentName }}
+                              <!-- {{ post.parentName }} -->
+                              <!-- <span class="verified-badge"
+                              >{{ post.parentName }}<img *ngIf="post.isParentVerified && post.postAuthorType == 4" src="../../../../assets/images/green-verified.svg" style="height: 20px;"
+                            /></span> -->
+                            
+                            <span class="verified-badge"
+                            >{{ post.parentName }}
+                            <img *ngIf="post.isParentVerified && post.postAuthorType == 4" src="../../../../assets/images/green-verified.svg" style="height: 20px;"/>
+                            <img *ngIf="post.isParentVerified && post.postAuthorType == 1" src="../../../../assets/images/verified-badge.svg" style="height: 20px;"/>
+                            </span>
+                            
                             </div>
                             <div
                               class="feed-title font_14 text_sec1 d-flex align-content-center fw_600"
@@ -6042,7 +6083,11 @@
                                 "
                                 src="../../../assets/images/femaleProfile.jfif"
                               />
-                              {{ post.parentName }}
+                              <span class="verified-badge"
+                              >{{ post.parentName }}
+                              <img *ngIf="post.isParentVerified && post.postAuthorType == 4" src="../../../../assets/images/green-verified.svg" style="height: 20px;"/>
+                              <img *ngIf="post.isParentVerified && post.postAuthorType == 1" src="../../../../assets/images/verified-badge.svg" style="height: 20px;"/>
+                              </span>
                             </div>
                             <div
                               class="feed-title font_14 text_sec1 d-flex align-content-center fw_600"
@@ -6166,7 +6211,11 @@
                                 "
                                 src="../../../assets/images/femaleProfile.jfif"
                               />
-                              {{ post.parentName }}
+                              <span class="verified-badge"
+                            >{{ post.parentName }}
+                            <img *ngIf="post.isParentVerified && post.postAuthorType == 4" src="../../../../assets/images/green-verified.svg" style="height: 20px;"/>
+                            <img *ngIf="post.isParentVerified && post.postAuthorType == 1" src="../../../../assets/images/verified-badge.svg" style="height: 20px;"/>
+                            </span>
                             </div>
                             <div
                               class="feed-title font_14 text_sec1 d-flex align-content-center fw_600"

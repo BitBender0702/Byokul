@@ -627,6 +627,7 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
 
   getNextSavedPosts() {
     this._postService.getSavedPostsByUser(this.userId, this.savedPostsPageNumber, 1).subscribe((response) => {
+      debugger;
       this.savedPostsList = [...this.savedPostsList, ...response];
       this.postLoadingIcon = false;
       this.scrollSavedPostResponseCount = response.length;
@@ -679,6 +680,7 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
 
           if (this.isSavedPostTab) {
             this._postService.getSavedPostsByUser(this.user.id, this.reelsPageNumber, 3).subscribe((response) => {
+              debugger;
               this.savedReelsList = [...this.savedReelsList, ...response];
               this.reelsLoadingIcon = false;
             });
@@ -1428,6 +1430,7 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
   }
 
   GetSavedPostsByUser(userId: string, isSavedPostList?: boolean) {
+    debugger
     this.loadingIcon = true;
     this.isPostTab = false;
     this.isSavedClassCourseTab = false;
@@ -1454,6 +1457,7 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
     });
 
     this._postService.getSavedPostsByUser(userId, this.savedPostsPageNumber, 3).subscribe((response) => {
+      debugger
       this.savedReelsList = response;
       this.cd.detectChanges();
       this.addEventListnerOnCarousel();

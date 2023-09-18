@@ -40,6 +40,7 @@ export class RegisteredClassesComponent extends MultilingualComponent implements
   ngOnInit(): void {
     this.loadingIcon = true;
     this.selectedLanguage = localStorage.getItem("selectedLanguage");
+    this._authService.loginAdminState$.next(true);
     this.translate.use(this.selectedLanguage ?? '');
         this._adminService.getRegClasses().subscribe((response) => {
           this.registeredClasses = response;

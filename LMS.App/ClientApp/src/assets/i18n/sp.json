@@ -409,7 +409,19 @@
   "ReelUpdatedSuccessfully":"Carrete actualizado con éxito",
   "PostUpdatedSuccessfully": "Publicación actualizada exitosamente",
   "UnBannedSuccessfully":"El usuario ha sido desbaneado exitosamente",
-  "BannedUser":"Usuario prohibido"
+  "BannedUser":"Usuario prohibido",
+  "January": "enero",
+  "February": "febrero",
+  "March": "marzo",
+  "April": "abril",
+  "May": "mayo",
+  "June": "junio",
+  "July": "julio",
+  "August": "agosto",
+  "September": "septiembre",
+  "October": "octubre",
+  "November": "noviembre",
+  "December": "diciembre"
 
 
 

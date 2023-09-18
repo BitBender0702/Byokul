@@ -64,7 +64,7 @@
             [(selection)]="selectedSchools"
             [rowHover]="true"
             dataKey="id"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            currentPageReportTemplate="{{ 'Showing {first} to {last} of {totalRecords} entries' | translate }}"
             [showCurrentPageReport]="true"
           >
             <ng-template pTemplate="caption">
@@ -131,6 +131,10 @@
                   {{ "IsVerify" | translate
                   }}<p-sortIcon field="isVarified"></p-sortIcon>
                 </th>
+                <th pSortableColumn="isDeleted">
+                  {{ "isDeleted" | translate
+                  }}<p-sortIcon field="isDeleted"></p-sortIcon>
+                </th>
                 <th></th>
               </tr>
             </ng-template>
@@ -156,7 +160,11 @@
                 >
                   {{ school.schoolName }}
                 </td>
-                <td>{{ school.founded | date : "MMMM d, y" }}</td>
+                <td>
+                  {{school.founded | date : "MMMM" | translate}}
+                  {{school.founded| date:"d, y"}}
+                  <!-- {{ school.founded | date : "MMMM d, y" }} -->
+                </td>
                 <td>{{ school.specialization?.name }}</td>
                 <td>
                   <a href="https://{{ school.schoolUrl }}" target="_blank"
@@ -167,8 +175,11 @@
                 </td>
                 <td>{{ school.country?.name }}</td>
                 <td>
-                  {{ school.createdOn | date : "MMMM d, y" }} at
-                  {{ school.createdOn | date : "H:mm" }}
+                  {{ school.createdOn | date : "MMMM" | translate}}
+                  {{school.createdOn| date:"d, y"}}
+                  {{ "at" | translate }} {{ school.createdOn | date : "H:mm" }}
+                  <!-- {{ school.createdOn | date : "MMMM d, y" }} at
+                  {{ school.createdOn | date : "H:mm" }} -->
                 </td>
                 <td>{{ school.createdBy }}</td>
                 <td>
@@ -225,6 +236,33 @@
                     {{ "UnVerify" | translate }}
                   </button>
                 </td>
+                <td>
+                  <button
+                    *ngIf="!school.isDeleted"
+                    (click)="getDeleteSchoolDetails(school.schoolId,'notDeleted')"
+                    data-bs-toggle="modal"
+                    data-bs-target="#deleteschool"
+                    pButton
+                    pRipple
+                    icon="pi pi-pencil"
+                    class="btn custom-btn primary_btn earning-btn fw_400 h_44 pe-4 ps-4 mt-2 mb-2"
+                  >
+                    {{ "Delete" | translate }}
+                  </button>
+                  <button
+                    *ngIf="school.isDeleted"
+                    (click)="getDeleteSchoolDetails(school.schoolId,'Deleted')"
+                    data-bs-toggle="modal"
+                    data-bs-target="#deleteschool"
+                    pButton
+                    pRipple
+                    icon="pi pi-pencil"
+                    class="btn custom-btn primary_btn earning-btn fw_400 h_44 pe-4 ps-4 mt-2 mb-2"
+                  >
+                    {{ "Restore" | translate }}
+                  </button>
+                </td>
+              
               </tr>
             </ng-template>
             <ng-template pTemplate="summary">
@@ -325,13 +363,15 @@
           *ngIf="verifySchool.isVerify"
           class="modal-title font_22 text_dark fw_700 border-0 text-center"
         >
-          {{ "Verify" | translate }} {{ "School" | translate }}
+          <!-- {{ "Verify" | translate }} {{ "School" | translate }} -->
+          {{ "VerifySchool" | translate }}
         </h1>
         <h1
           *ngIf="!verifySchool.isVerify"
           class="modal-title font_22 text_dark fw_700 border-0 text-center"
         >
-          {{ "Unverify" | translate }} {{ "School" | translate }}
+          <!-- {{ "Unverify" | translate }} {{ "School" | translate }} -->
+          {{ "UnVerifySchool" | translate }}
         </h1>
 
         <button
@@ -374,4 +414,65 @@
       </div>
     </div>
   </div>
+</div>
+
+<div
+class="modal fade edit-school-modal delete-modal"
+id="deleteschool"
+tabindex="-1"
+aria-labelledby="deleteschool"
+aria-hidden="true"
+>
+<div class="modal-dialog modal-dialog-centered">
+  <div class="modal-content">
+    <div
+      class="modal-header border-0 justify-content-center position-relative"
+    >
+      <h1
+      *ngIf="deleteRestoreSchool.isDeleted" class="modal-title font_22 text_dark fw_700 border-0 text-center"
+      >
+        {{ "DeleteSchool" | translate }}
+      </h1>
+      <h1
+      *ngIf="!deleteRestoreSchool.isDeleted" class="modal-title font_22 text_dark fw_700 border-0 text-center"
+      >
+        {{ "RestoreSchool" | translate }}
+      </h1>
+      <button
+        type="button"
+        class="btn-close shadow-none"
+        data-bs-dismiss="modal"
+        aria-label="Close"
+      >
+        <img lazyLoad="../../../../assets/images/cross.svg" />
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <h2 class="text-center font_16 f-poppins">
+          {{ "DoYouWantToDelete" | translate }}
+        </h2>
+      </div>
+      <div
+        class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-2 mt-4"
+      >
+        <button
+          type="button"
+          class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+          data-bs-dismiss="modal"
+        >
+          {{ "No" | translate }}
+        </button>
+        <button
+          (click)="deleteSchool()"
+          type="button"
+          class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
+          data-bs-dismiss="modal"
+        >
+          {{ "Yes" | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 </div>

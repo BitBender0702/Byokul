@@ -121,7 +121,6 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
         }
       }
     });
-
     authService.loginState$.asObservable().subscribe(x => { this.displaySideBar = x; });
     authService.loginAdminState$.asObservable().subscribe(x => { this.displayAdminSideBar = x; });
   }

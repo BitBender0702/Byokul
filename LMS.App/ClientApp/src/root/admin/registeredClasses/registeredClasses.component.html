@@ -64,7 +64,7 @@
             [(selection)]="selectedClasses"
             [rowHover]="true"
             dataKey="id"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            currentPageReportTemplate="{{ 'Showing {first} to {last} of {totalRecords} entries' | translate }}"
             [showCurrentPageReport]="true"
           >
             <ng-template pTemplate="caption">
@@ -172,8 +172,16 @@
                 >
                   {{ class.className }}
                 </td>
-                <td>{{ class.startDate | date : "MMMM d, y" }}</td>
-                <td>{{ class.endDate | date : "MMMM d, y" }}</td>
+                <td>
+                  <!-- {{ class.startDate | date : "MMMM d, y" }} -->
+                  {{ class.startDate | date : "MMMM" | translate}}
+                  {{class.startDate| date:"d, y"}}
+                </td>
+                <td>
+                  <!-- {{ class.endDate | date : "MMMM d, y" }} -->
+                  {{ class.endDate | date : "MMMM" | translate}}
+                  {{class.endDate| date:"d, y"}}
+                </td>
                 <td>{{ class.noOfStudents }}</td>
                 <td
                   [routerLink]="['/profile/school', class.school.schoolName]"
@@ -181,8 +189,8 @@
                 >
                   {{ class.school?.schoolName }}
                 </td>
-                <td>{{ class.serviceType?.type }}</td>
-                <td>{{ class.accessibility?.name }}</td>
+                <td>{{ class.serviceType?.type |translate }}</td>
+                <td>{{ class.accessibility?.name|translate }}</td>
                 <td>{{ class.price }}</td>
                 <td>
                   <a href="https://{{ class.classUrl }}" target="_blank"
@@ -192,7 +200,10 @@
                   /></a>
                 </td>
                 <td>
-                  {{ class.createdOn | date : "MMMM d, y" }}
+                  <!-- {{ class.createdOn | date : "MMMM d, y" }}
+                  {{ "at" | translate }} {{ class.createdOn | date : "H:mm" }} -->
+                  {{ class.createdOn | date : "MMMM" | translate}}
+                  {{class.createdOn| date:"d, y"}}
                   {{ "at" | translate }} {{ class.createdOn | date : "H:mm" }}
                 </td>
                 <td>{{ class.createdBy }}</td>

@@ -928,6 +928,7 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
       this.loadingIcon = true;
       this._userService.getMyFeed(1, this.myFeedsPageNumber, this.searchString).subscribe((response) => {
         if(response){
+          debugger;
           this.isGlobalFeed = false;
           this.postLoadingIcon = false;
           this.myFeeds = response;

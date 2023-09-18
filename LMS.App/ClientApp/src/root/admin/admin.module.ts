@@ -21,6 +21,7 @@ import { SchoolTransactionsComponent } from './SchoolTransactions/schoolTransact
 import { ClassCourseModalComponent } from '../root/ClassCourseModal/classCourseModal.component';
 import { ClassCourseTransactionsComponent } from './ClassCourseTransactions/classCourseTransactions.component';
 import { ToastModule } from 'primeng/toast';
+// import { ChangePasswordForAdminComponent } from './change-password-for-admin/change-password-for-admin.component';
 
 const routes: Routes = [
   {
@@ -69,7 +70,8 @@ const routes: Routes = [
     RegisteredClassesComponent,
     RegisteredCoursesComponent,
     SchoolTransactionsComponent,
-    ClassCourseTransactionsComponent
+    ClassCourseTransactionsComponent,
+    // ChangePasswordForAdminComponent
     
   ],
   imports: [

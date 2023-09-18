@@ -11,6 +11,11 @@ import { AuthService } from 'src/root/service/auth.service';
 import { OpenAdminSideBar } from '../admin-template/side-bar/adminSide-bar.component';
 import { MultilingualComponent, changeLanguage } from 'src/root/root/sharedModule/Multilingual/multilingual.component';
 import { Subscription } from 'rxjs';
+import { DeleteRestoreSchools } from 'src/root/interfaces/admin/deleteRestoreSchools';
+import { SchoolService } from 'src/root/service/school.service';
+import { TranslateService } from '@ngx-translate/core';
+import { ownedSchoolResponse } from 'src/root/root/school/createSchool/createSchool.component';
+import { MessageService } from 'primeng/api';
 
 
 @Component({
@@ -22,6 +27,7 @@ export class RegisteredSchoolsComponent extends MultilingualComponent implements
 
   private _adminService;
   private _authService;
+  private _schoolService;
   isSubmitted: boolean = false;
   registeredSchools!:RegisteredSchools[];
   selectedSchools!: RegisteredSchools[];
@@ -31,13 +37,16 @@ export class RegisteredSchoolsComponent extends MultilingualComponent implements
   isDataLoaded:boolean = false;
   myPaginationString!:string;
   cloned!:any;
+  deleteRestoreSchool!:DeleteRestoreSchools
+  schoolId!:string
   @ViewChild('dt') table!: Table;
   changeLanguageSubscription!:Subscription;
   
-  constructor(injector: Injector,private fb: FormBuilder,private http: HttpClient,adminService: AdminService,authService: AuthService) {
+  constructor(injector: Injector,private fb: FormBuilder,private http: HttpClient,adminService: AdminService,authService: AuthService,schoolService:SchoolService,private translateService: TranslateService,public messageService: MessageService) {
     super(injector);
     this._adminService = adminService;
     this._authService = authService;
+    this._schoolService = schoolService
   }
 
   ngOnInit(): void {
@@ -118,6 +127,68 @@ export class RegisteredSchoolsComponent extends MultilingualComponent implements
         }); 
       }
      
+      getDeleteSchoolDetails(schoolid:string,from:string){
+        debugger;
+        
+        this.schoolId = schoolid
+        this.deleteRestoreSchool.schoolId = schoolid
+
+        if(from == "notDeleted"){
+          this.deleteRestoreSchool.isDeleted = true;
+        }
+        else{
+          this.deleteRestoreSchool.isDeleted=false;
+        }
+      }
+
+      RestoreSchool(){
+        this.loadingIcon = true;
+        this._schoolService.restoreSchool(this.schoolId).subscribe((response) => {
+          //ownedSchoolResponse.next({ schoolId: this.schoolId, schoolAvatar: "", schoolName: "", action: "delete" });
+          const translatedSuccessSummary = this.translateService.instant('Success');
+          const translatedMessage = this.translateService.instant('SchoolRestoredSuccessfully');
+          this.messageService.add({ severity: 'success', summary: translatedSuccessSummary, life: 3000, detail: translatedMessage });
+          this.loadingIcon = false;
+          // deleteSchoolResponse.next('delete');
+        });
+      }
+
+
+
+      deleteSchool(){
+        this.loadingIcon = true;
+        debugger;
+        this._schoolService.deleteSchool(this.schoolId).subscribe((response) => {
+          ownedSchoolResponse.next({ schoolId: this.schoolId, schoolAvatar: "", schoolName: "", action: "delete" });
+          const translatedSuccessSummary = this.translateService.instant('Success');
+          const translatedMessage = this.translateService.instant('SchoolDeletedSuccessfully');
+          this.messageService.add({ severity: 'success', summary: translatedSuccessSummary, life: 3000, detail: translatedMessage });
+          this.loadingIcon = false;
+          // deleteSchoolResponse.next('delete');
+        });
+
+      
+       
+        // if (this.school.students > 0) {
+        //   const translatedInfoSummary = this.translateService.instant('Info');
+        //   const translatedMessage = this.translateService.instant('SchoolNotAutomaticallyDeleted');
+        //   this.messageService.add({ severity: 'info', summary: translatedInfoSummary, life: 3000, detail: translatedMessage });
+        // }
+        // else {
+        //   this._schoolService.deleteSchool(this.school.schoolId).subscribe((response) => {
+        //     ownedSchoolResponse.next({ schoolId: this.school.schoolId, schoolAvatar: "", schoolName: "", action: "delete" });
+        //     const translatedSuccessSummary = this.translateService.instant('Success');
+        //     const translatedMessage = this.translateService.instant('SchoolDeletedSuccessfully');
+        //     this.messageService.add({ severity: 'success', summary: translatedSuccessSummary, life: 3000, detail: translatedMessage });
+        //     setTimeout(() => {
+        //       this.router.navigateByUrl(`user/userProfile/${this.userId}`);
+        //     }, 3000);
+        //     // deleteSchoolResponse.next('delete');
+        //   });
+        // }
+      }
+
+      
       viewSchoolProfile(schoolId:string){
         window.location.href=`user/schoolProfile/${schoolId}`;
       }
@@ -134,6 +205,9 @@ export class RegisteredSchoolsComponent extends MultilingualComponent implements
       openAdminSideBar(){
         OpenAdminSideBar.next({isOpenSideBar:true})
       }
+     
+
+     
     }
     
   

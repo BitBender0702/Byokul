@@ -185,6 +185,10 @@ export class SchoolService{
         return this.http.post(`${this.apiUrl}/school/deleteSchoolById` + '?schoolId=' + schoolId,'',{headers: this.headers});
     }
 
+    restoreSchool(schoolId:any):Observable<any>{
+        return this.http.post(`${this.apiUrl}/school/restoreSchoolById` + '?schoolId=' + schoolId,'',{headers: this.headers});
+    }
+
     enableDisableSchool(schoolId:string):Observable<any>{
         debugger
         return this.http.post(`${this.apiUrl}/school/enableDisableSchool`+ '?schoolId=' + schoolId,'',{headers: this.headers});

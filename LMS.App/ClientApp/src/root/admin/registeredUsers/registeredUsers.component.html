@@ -67,7 +67,7 @@
             [(selection)]="selectedUsers"
             [rowHover]="true"
             dataKey="id"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            currentPageReportTemplate="{{ 'Showing {first} to {last} of {totalRecords} entries' | translate }}"
             [showCurrentPageReport]="true"
           >
             <ng-template pTemplate="caption">
@@ -160,7 +160,8 @@
                 <td>{{ user.email }}</td>
                 <td>{{ user.contactEmail }}</td>
                 <td>
-                  {{ user.createdOn | date : "MMMM d, y" }}
+                  {{ user.createdOn | date : "MMMM" | translate}}
+                  {{user.createdOn| date:"d, y"}}
                   {{ "at" | translate }} {{ user.createdOn | date : "H:mm" }}
                 </td>
                 <td>
@@ -248,13 +249,13 @@
           *ngIf="this.banUnbanUser.isBan"
           class="modal-title font_22 text_dark fw_700 border-0 text-center"
         >
-          {{ "Ban" | translate }} {{ "User" | translate }}
+          {{ "BanUser" | translate }}
         </h1>
         <h1
           *ngIf="!this.banUnbanUser.isBan"
           class="modal-title font_22 text_dark fw_700 border-0 text-center"
         >
-          {{ "UnBan" | translate }} {{ "User" | translate }}
+          {{ "UnBanUser" | translate }}
         </h1>
         <button
           type="button"
@@ -314,13 +315,13 @@
           *ngIf="this.verifyUsers.isVerify"
           class="modal-title font_22 text_dark fw_700 border-0 text-center"
         >
-          {{ "Verify" | translate }} {{ "User" | translate }}
+          {{ "VerifyUser" | translate }}
         </h1>
         <h1
           *ngIf="!this.verifyUsers.isVerify"
           class="modal-title font_22 text_dark fw_700 border-0 text-center"
         >
-          {{ "UnVerify" | translate }} {{ "User" | translate }}
+          {{ "UnVerifyUser" | translate }}
         </h1>
         <button
           type="button"

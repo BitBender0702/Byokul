@@ -10,6 +10,7 @@ import { Table } from 'primeng/table';
 import { OpenAdminSideBar } from '../admin-template/side-bar/adminSide-bar.component';
 import { MultilingualComponent, changeLanguage } from 'src/root/root/sharedModule/Multilingual/multilingual.component';
 import { Subscription } from 'rxjs';
+import { AuthService } from 'src/root/service/auth.service';
 
 
 @Component({
@@ -20,6 +21,7 @@ import { Subscription } from 'rxjs';
 export class RegisteredUsersComponent extends MultilingualComponent implements OnInit, OnDestroy {
 
   private _adminService;
+  private _authService;
   isSubmitted: boolean = false;
   registeredUsers!:RegisteredUsers[];
   selectedUsers!: RegisteredUsers[];
@@ -34,14 +36,16 @@ export class RegisteredUsersComponent extends MultilingualComponent implements O
 
 
   
-  constructor(injector: Injector,private fb: FormBuilder,private http: HttpClient,adminService: AdminService) {
+  constructor(injector: Injector,authService: AuthService,private fb: FormBuilder,private http: HttpClient,adminService: AdminService) {
     super(injector);
     this._adminService = adminService;
+    this._authService = authService;
   }
 
   ngOnInit(): void {
     this.loadingIcon = true;
     this.selectedLanguage = localStorage.getItem("selectedLanguage");
+    this._authService.loginAdminState$.next(true);
     this.translate.use(this.selectedLanguage ?? '');
         this._adminService.getRegUsers().subscribe((response) => {
           this.registeredUsers = response;

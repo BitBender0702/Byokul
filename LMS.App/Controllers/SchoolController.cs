@@ -100,6 +100,15 @@ namespace LMS.App.Controllers
             return Ok();
         }
 
+        [Route("restoreSchoolById")]
+        [HttpPost]
+        public async Task<IActionResult> RestoreSchoolById(Guid schoolId)
+        {
+            var userId = await GetUserIdAsync(this._userManager);
+            await _schoolService.RestoreSchoolById(schoolId, userId);
+            return Ok();
+        }
+
         [Route("specializationList")]
         [HttpGet]
         public async Task<IActionResult> SpecializationList()

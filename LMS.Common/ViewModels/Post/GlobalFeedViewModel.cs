@@ -11,6 +11,7 @@ namespace LMS.Common.ViewModels.Post
         public Guid Id { get; set; }
         public int PostType { get; set; }
         public string ParentImageUrl { get; set; }
+        public bool IsParentVerified { get; set; }
         public string ParentName { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }

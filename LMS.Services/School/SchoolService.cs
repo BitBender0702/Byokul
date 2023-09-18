@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using Stripe;
 //using System.Data.Entity;
 using System.Data.SqlTypes;
 using System.Linq;
@@ -412,6 +413,11 @@ namespace LMS.Services
             await SaveSchoolLanguages(languageIds, schoolId);
         }
 
+        static string RemoveSpecialCharacters(string input)
+        {
+            return new string(input.Where(c => char.IsLetterOrDigit(c) || char.IsWhiteSpace(c)).ToArray());
+        }
+
 
 
 
@@ -439,7 +445,12 @@ namespace LMS.Services
                     var newSchoolName = System.Web.HttpUtility.UrlEncode(schoolName, Encoding.GetEncoding("iso-8859-1")).Replace("%3f", "").Replace("+", "").Replace(".", "").ToLower();
                     singleLanguage = schoolLanguages.Where(x => (System.Web.HttpUtility.UrlEncode(x.School.SchoolName.Replace(" ", "").Replace("+", "").Replace(".", "").ToLower(), Encoding.GetEncoding("iso-8859-7")) == newSchoolName)).ToList();
                 }
-
+                if (!singleLanguage.Any())
+                {
+                    var newSchoolName2 = System.Web.HttpUtility.UrlEncode(schoolName, Encoding.GetEncoding("iso-8859-1")).Replace("%3f", "").Replace("+", "").Replace(".", "").ToLower();
+                    singleLanguage = schoolLanguages.Where(x => (System.Web.HttpUtility.UrlEncode(x.School.SchoolName.Replace(" ", "").Replace("+", "").Replace(".", "").ToLower(), Encoding.GetEncoding("iso-8859-1")) == newSchoolName2)).ToList();
+                    //singleLanguage = schoolLanguages.Where(x => (System.Web.HttpUtility.UrlEncode(x.School.SchoolName, Encoding.GetEncoding("iso-8859-1")).Replace("%3f", "").Replace("+", "").Replace(".", "").ToLower() == newSchoolName2)).ToList();
+                }
 
                 var response = _mapper.Map<SchoolDetailsViewModel>(singleLanguage.First().School);
 
@@ -588,6 +599,16 @@ namespace LMS.Services
         {
             School school = _schoolRepository.GetById(schoolId);
             school.IsDeleted = true;
+            school.DeletedById = deletedByid;
+            school.DeletedOn = DateTime.UtcNow;
+            _schoolRepository.Update(school);
+            _schoolRepository.Save();
+        }
+
+        public async Task RestoreSchoolById(Guid schoolId, string deletedByid)
+        {
+            School school = _schoolRepository.GetById(schoolId);
+            school.IsDeleted = false;
             school.DeletedById = deletedByid;
             school.DeletedOn = DateTime.UtcNow;
             _schoolRepository.Update(school);
@@ -1133,6 +1154,7 @@ namespace LMS.Services
                     var school = _schoolRepository.GetById(post.ParentId);
                     post.ParentName = school.SchoolName;
                     post.ParentImageUrl = school.Avatar;
+                    post.IsParentVerified = school.IsVarified;
                 }
 
                 post.PostAttachments = await GetAttachmentsByPostId(post.Id, loginUserId);

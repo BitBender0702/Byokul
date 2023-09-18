@@ -310,7 +310,14 @@
                                   </div>
                                 </a>
                                 <!-- <img [lazyLoad]="school.avatar"/> {{school.schoolName}} -->
-                                {{ post.parentName }}
+                                <span  class="verified-badge" style="font-size: 90%;"
+                                >{{ post.parentName }}<img *ngIf="post.isParentVerified && post.postAuthorType == 4" src="../../../../assets/images/green-verified.svg" style="height: 20px;"
+                              />
+                              <img *ngIf="post.isParentVerified && post.postAuthorType == 1" src="../../../../assets/images/verified-badge.svg" style="height: 20px;"
+                              />
+                            
+                            </span>
+                              
                               </div>
                               <div
                                 class="feed-title font_14 text_sec1 d-flex align-content-center fw_600"
@@ -416,7 +423,9 @@
                           (click)="getSelectedSchool(post.parentName)"
                           class="routeLink"
                         >
-                          {{ post.parentName }}
+                          {{ post.parentName }} <span *ngIf="post.isParentVerified" class="verified-badge"
+                          ><img src="../../../../assets/images/verified-badge.svg"
+                        /></span>
                         </a>
                         <a
                           *ngIf="post.postAuthorType == 2"
@@ -425,7 +434,7 @@
                           "
                           class="routeLink"
                         >
-                          {{ post.parentName }}
+                          {{ post.parentName }} 
                         </a>
                         <a
                           *ngIf="post.postAuthorType == 3"
@@ -441,7 +450,9 @@
                           (click)="getUserDetails(post.parentId)"
                           class="routeLink"
                         >
-                          {{ post.parentName }}
+                          {{ post.parentName }} <span *ngIf="post.isParentVerified" class="verified-badge"
+                          ><img src="../../../../assets/images/green-verified.svg"
+                        /></span>
                         </a>
                       </h2>
                     </div>
@@ -1579,7 +1590,13 @@
                                   </div>
                                   <!-- {{post.parentName}} -->
                                 </a>
-                                {{ post.parentName }}
+                                <span  class="verified-badge" style="font-size: 90%;"
+                                >{{ post.parentName }}<img *ngIf="post.isParentVerified && post.postAuthorType == 4" src="../../../../assets/images/green-verified.svg" style="height: 20px;"
+                              />
+                              <img *ngIf="post.isParentVerified && post.postAuthorType == 1" src="../../../../assets/images/verified-badge.svg" style="height: 20px;"
+                              />
+                            
+                            </span>
                               </div>
                               <div
                                 class="feed-title font_14 text_sec1 d-flex align-content-center fw_600"
@@ -1683,7 +1700,9 @@
                           (click)="getSelectedSchool(post.parentName)"
                           class="routeLink"
                         >
-                          {{ post.parentName }}
+                          {{ post.parentName }} <span *ngIf="post.isParentVerified" class="verified-badge"
+                          ><img src="../../../../assets/images/verified-badge.svg"
+                        /></span>
                         </a>
                         <a
                           *ngIf="post.postAuthorType == 2"
@@ -1708,7 +1727,9 @@
                           (click)="getUserDetails(post.parentId)"
                           class="routeLink"
                         >
-                          {{ post.parentName }}
+                          {{ post.parentName }} <span *ngIf="post.isParentVerified" class="verified-badge"
+                          ><img src="../../../../assets/images/green-verified.svg"
+                        /></span>
                         </a>
                       </h2>
                     </div>

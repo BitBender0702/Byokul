@@ -743,6 +743,7 @@ namespace LMS.Services
                 var user = _userRepository.GetById(post.ParentId.ToString());
                 post.ParentName = user.FirstName + " " + user.LastName;
                 post.ParentImageUrl = user.Avatar;
+                post.IsParentVerified = user.IsVarified;
             }
 
             if (post.PostAuthorType == (int)PostAuthorTypeEnum.School)
@@ -750,6 +751,7 @@ namespace LMS.Services
                 var school = _schoolRepository.GetById(post.ParentId);
                 post.ParentName = school.SchoolName;
                 post.ParentImageUrl = school.Avatar;
+                post.IsParentVerified = school.IsVarified;
             }
 
             post.PostAttachments = await GetAttachmentsByPostId(post.Id);
@@ -1018,6 +1020,7 @@ namespace LMS.Services
                 post.SavedPostsCount = savedPosts.Where(x => x.PostId == post.Id).Count();
                 post.IsPostSharedByCurrentUser = sharedPosts.Any(x => x.PostId == post.Id && x.UserId == userId);
                 post.PostSharedCount = sharedPosts.Where(x => x.PostId == post.Id).Count();
+        
                 if (post.Likes.Any(x => x.UserId == userId && x.PostId == post.Id))
                 {
                     post.IsPostLikedByCurrentUser = true;
@@ -1035,6 +1038,7 @@ namespace LMS.Services
                     post.PostAuthorType = (int)PostAuthorTypeEnum.School;
                     post.SchoolName = "";
                     post.ParentId = school.SchoolId;
+                    post.IsParentVerified = school.IsVarified;
                 }
                 if (post.PostAuthorType == (int)PostAuthorTypeEnum.Class)
                 {
@@ -1062,6 +1066,7 @@ namespace LMS.Services
                     post.PostAuthorType = (int)PostAuthorTypeEnum.User;
                     post.SchoolName = "";
                     post.ParentId = new Guid(user.Id);
+                    post.IsParentVerified = user.IsVarified;
                 }
 
             }
@@ -1129,6 +1134,7 @@ namespace LMS.Services
                     post.PostAuthorType = (int)PostAuthorTypeEnum.School;
                     post.SchoolName = "";
                     post.ParentId = school.SchoolId;
+                    post.IsParentVerified = school.IsVarified;
                 }
                 if (post.PostAuthorType == (int)PostAuthorTypeEnum.Class)
                 {
@@ -1156,6 +1162,7 @@ namespace LMS.Services
                     post.PostAuthorType = (int)PostAuthorTypeEnum.User;
                     post.SchoolName = "";
                     post.ParentId = new Guid(user.Id);
+                    post.IsParentVerified = user.IsVarified;
                 }
 
             }
@@ -1216,6 +1223,7 @@ namespace LMS.Services
                     post.PostAuthorType = (int)PostAuthorTypeEnum.School;
                     post.SchoolName = "";
                     post.ParentId = school.SchoolId;
+                    post.IsParentVerified = school.IsVarified;
                 }
                 if (post.PostAuthorType == (int)PostAuthorTypeEnum.Class)
                 {
@@ -1243,6 +1251,7 @@ namespace LMS.Services
                     post.PostAuthorType = (int)PostAuthorTypeEnum.User;
                     post.SchoolName = "";
                     post.ParentId = new Guid(user.Id);
+                    post.IsParentVerified = user.IsVarified;
                 }
 
             }

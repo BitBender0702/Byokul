@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Component, ElementRef, Injector, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Injector, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/root/service/auth.service';
@@ -35,12 +35,14 @@ export class ChangePasswordComponent extends MultilingualComponent implements On
 
     credentials: ChangePasswordModel = {email:'', currentPassword:'',password:'', confirmPassword:''};
     private _authService;
-    constructor(injector: Injector,private fb: FormBuilder,private router: Router, authService:AuthService,private route:ActivatedRoute) { 
+    constructor(injector: Injector,private fb: FormBuilder,private cd: ChangeDetectorRef,private router: Router, authService:AuthService,private route:ActivatedRoute) { 
       super(injector);
         this._authService = authService;
     }
     ngOnInit(): void {
+     debugger;
       this._authService.loginState$.next(false);
+      this._authService.loginAdminState$.next(false);
       const passwordValidators = [
         Validators.minLength(6),
         Validators.required,
