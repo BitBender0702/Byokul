@@ -362,28 +362,22 @@ namespace LMS.App.Controllers
         [AllowAnonymous]
         [Route("getStates")]
         [HttpPost]
-        public async Task<IActionResult> GetStates(string countryName)
+        public async Task<IEnumerable<string>> GetStates(string countryName)
         {
-            try
+            var request = new HttpRequestMessage(HttpMethod.Post, "https://countriesnow.space/api/v0.1/countries/states");
+            request.Content = new StringContent($"{{ \"country\": \"{countryName}\" }}", Encoding.UTF8, "application/json");
+            var response = await _httpClient.SendAsync(request);
+
+
+            // var response = await _httpClient.GetAsync($"https://countriesnow.space/api/v0.1/countries/cities?&country={countryCode.Country}");
+            var content = await response.Content.ReadAsStringAsync();
+            var statesResponse = JsonConvert.DeserializeObject<StateRoot>(content);
+            if (statesResponse.Data == null)
             {
-                var request = new HttpRequestMessage(HttpMethod.Post, "https://countriesnow.space/api/v0.1/countries/states");
-                request.Content = new StringContent($"{{ \"country\": \"{countryName}\" }}", Encoding.UTF8, "application/json");
-                var response = await _httpClient.SendAsync(request);
-
-
-                // var response = await _httpClient.GetAsync($"https://countriesnow.space/api/v0.1/countries/cities?&country={countryCode.Country}");
-                var content = await response.Content.ReadAsStringAsync();
-                var statesResponse = JsonConvert.DeserializeObject<StateRoot>(content);
-                if (statesResponse.Data == null)
-                    throw new Exception(Constants.StatesDoesnotExist);
-
-                var states = statesResponse.Data.States.OrderBy(x => x.Name).Select(x => x.Name).ToList();
-                return Ok(states);
-            }catch(Exception ex)
-            {
-                //return BadRequest(new { Success = false, Message = ex.Message });
-                return Ok(new { Success = false, Message = ex.Message });
+                return Enumerable.Empty<string>();
             }
+            var states = statesResponse.Data.States.OrderBy(x => x.Name).Select(x => x.Name).ToList();
+            return states;
         }
 
         [Route("deleteSchoolTeacher")]
