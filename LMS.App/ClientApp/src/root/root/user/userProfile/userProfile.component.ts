@@ -1144,6 +1144,7 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
 
   openPostsViewModal(posts: any): void {
     if (posts.isLive) {
+      localStorage.setItem("urlBeforeLiveStream",window.location.href)
       this._postService.openLiveStream(posts, this.loginUserId).subscribe((response) => {
       });
     }

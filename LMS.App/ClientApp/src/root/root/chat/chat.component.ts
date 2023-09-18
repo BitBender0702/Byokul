@@ -190,6 +190,7 @@ export class ChatComponent extends MultilingualComponent implements OnInit, Afte
   }
 
   ngOnInit() {
+    debugger;
     this.loadingIcon = true;
     var selectedLang = localStorage.getItem('selectedLanguage');
     this.gender = localStorage.getItem("gender")??'';

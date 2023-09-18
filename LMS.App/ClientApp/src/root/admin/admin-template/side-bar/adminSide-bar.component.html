@@ -5,40 +5,40 @@
         </div>
         <hr class="earning-hr" />
         <div style="margin-left: 10px;" class="admin-sidebar">
-          <div class="school-name d-flex align-items-center font_16">
+          <div class="school-name d-flex align-items-center font_16 active" (click)="selectTab($event)">
             <span class="bg-transparent rounded-circle comment-post-user rounded-circle image"><img src="../../../../assets/images/dashboardLogo.png" style="max-height: 100%;"/>
             </span>
             <a [routerLink]="['/administration/adminHome']" class="routeLink">{{'Dashboard'| translate }}</a>
           </div>
-        <div class="school-name d-flex align-items-center font_16">
+        <div class="school-name d-flex align-items-center font_16" (click)="selectTab($event)">
           <span class="bg-transparent rounded-circle comment-post-user rounded-circle image"><img src="../../../../assets/images/userLogo2.png" style="max-height: 100%;"/>
           </span>
           <a [routerLink]="['/administration/registeredUsers']" class="routeLink">{{'Users'| translate }}</a>
         </div>
-        <div class="school-name d-flex align-items-center font_16">
+        <div class="school-name d-flex align-items-center font_16" (click)="selectTab($event)">
           <span class="bg-transparent rounded-circle comment-post-user rounded-circle image"><img src="../../../../assets/images/schoolLogo2.png" style="max-height: 100%;"/>
           </span>
           <a [routerLink]="['/administration/registeredSchools']" class="routeLink">{{'Schools'| translate }}</a>
         </div>
-        <div class="school-name d-flex align-items-center font_16">
+        <div class="school-name d-flex align-items-center font_16" (click)="selectTab($event)">
           <span class="bg-transparent rounded-circle comment-post-user rounded-circle image"><img src="../../../../assets/images/classLogo.png" style="max-height: 96%;"/>
           </span>
           <a [routerLink]="['/administration/registeredClasses']" class="routeLink">{{'Classes'| translate }}</a>
         </div>
-        <div class="school-name d-flex align-items-center font_16">
+        <div class="school-name d-flex align-items-center font_16" (click)="selectTab($event)">
           <span class="bg-transparent rounded-circle comment-post-user rounded-circle image"><img src="../../../../assets/images/classLogo.png" style="max-height: 96%;"/>
           </span>
           <a [routerLink]="['/administration/registeredCourses']" class="routeLink">{{'Courses'| translate }}</a>
         </div>
-        <div class="school-name d-flex align-items-center font_16">
+        <div class="school-name d-flex align-items-center font_16" (click)="selectTab($event)">
           <span class="bg-transparent rounded-circle comment-post-user rounded-circle image"><img src="../../../../assets/images/transactionImage.png" style="max-height: 96%;"/>
           </span>
-          <a [routerLink]="['/administration/schoolTransactions']" class="routeLink">{{'SchoolTransactions'| translate }}</a>
+          <a [routerLink]="['/administration/schoolTransactions']" class="routeLink" >{{'SchoolTransactions'| translate }}</a>
         </div>
-        <div class="school-name d-flex align-items-center font_16">
+        <div class="school-name d-flex align-items-center font_16" (click)="selectTab($event)">
           <span class="bg-transparent rounded-circle comment-post-user rounded-circle image"><img src="../../../../assets/images/transactionImage.png" style="max-height: 96%;"/>
           </span>
-          <a [routerLink]="['/administration/classCourseTransactions']" class="routeLink">{{'ClassCourseTransactions'| translate }}</a>
+          <a [routerLink]="['/administration/classCourseTransactions']" class="routeLink" >{{'ClassCourseTransactions'| translate }}</a>
         </div>
       </div>
       <multi-lingual></multi-lingual>

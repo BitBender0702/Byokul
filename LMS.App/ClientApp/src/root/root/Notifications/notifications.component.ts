@@ -221,6 +221,7 @@ export class NotificationsComponent extends MultilingualComponent implements OnI
           this.joinMeetingViewModel.name = result.firstName + " " + result.lastName;
           this.joinMeetingViewModel.meetingId = meetingId;
           this.joinMeetingViewModel.postId = postId;
+          localStorage.setItem("urlBeforeLiveStream",window.location.href)
           this._bigBlueButtonService.joinMeeting(this.joinMeetingViewModel).subscribe((response) => {
             //  const fullNameIndex = response.url.indexOf('fullName='); // find the index of "fullName="
             //  const newUrl = response.url.slice(fullNameIndex);

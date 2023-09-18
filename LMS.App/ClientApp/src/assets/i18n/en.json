@@ -106,8 +106,8 @@
   "TypeLanguageToAdd": "Type Language To Add",
   "DeleteLanguage": "Delete Language",
   "AddTeacher": "Add Official",
-  "TypeTeacherToAdd": "Type Teacher To Add",
-  "DeleteTeacher": "Delete Teacher",
+  "TypeTeacherToAdd": "Type Official To Add",
+  "DeleteTeacher": "Delete Official",
   "AddCertificates": "Add Certificate",
   "DeleteCertificate": "Delete Certificate",
   "EditProfile": "Edit Profile",
@@ -584,7 +584,8 @@
   "DeletePost":"Delete Post",
   "ReelUpdatedSuccessfully":"Reel updated successfully",
   "UnBannedSuccessfully":"User has been unbanned successfully",
-  "BannedUser":"Banned User"
+  "BannedUser":"Banned Users",
+  "UpdateReel":"Update Reel"
 
 
 

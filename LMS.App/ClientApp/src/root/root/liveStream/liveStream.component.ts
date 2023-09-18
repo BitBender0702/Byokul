@@ -750,16 +750,27 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
           setTimeout(() => {
             debugger
             this.streamEndModalClose.nativeElement.click();
-            window.history.back();
-            window.history.back();
+            let url = localStorage.getItem('urlBeforeLiveStream');
+            if(url){
+              window.location.href = url;
+            }
           }, 5000);
         }
         else {
-          window.history.back();
+          let url = localStorage.getItem('urlBeforeLiveStream');
+          if(url){
+            window.location.href = url;
+          }
         }
       }
       else {
-        window.history.back();
+        let url = localStorage.getItem("beforeLiveStreamUrl");
+        if(url){
+          // this.router
+          window.location.href = url
+        } else{
+          window.history.back();
+        }
       }
     });
   }
@@ -1014,8 +1025,10 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
       setTimeout(() => {
         debugger
         this.streamEndModalClose.nativeElement.click();
-        window.history.back();
-        window.history.back();
+        let url = localStorage.getItem('urlBeforeLiveStream');
+        if(url){
+          window.location.href = url;
+        }
       }, 5000);
     }
   }

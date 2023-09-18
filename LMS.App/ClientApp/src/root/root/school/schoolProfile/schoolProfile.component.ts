@@ -1450,6 +1450,7 @@ export class SchoolProfileComponent
 
   openPostsViewModal(posts: any): void {
     if (posts.isLive) {
+      localStorage.setItem("urlBeforeLiveStream",window.location.href)
       this._postService.openLiveStream(posts, this.userId).subscribe((response) => {
       });
     }

@@ -370,7 +370,7 @@ namespace LMS.App.Controllers
 
         [Route("unBanFollower")]
         [HttpPost]
-        public async Task<IActionResult> UnBanFollower(string followerId, Guid schoolId)
+        public async Task<IActionResult> UnBanFollower(string followerId, string schoolId)
         {
             var reponse = await _schoolService.UnBanFollower(followerId, schoolId);
             if (reponse)

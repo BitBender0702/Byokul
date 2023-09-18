@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, Injector, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
-import { Subject, Subscription } from 'rxjs';
+import { Subject, Subscription, last } from 'rxjs';
 import { MultilingualComponent, changeLanguage } from 'src/root/root/sharedModule/Multilingual/multilingual.component';
 import { AuthService } from 'src/root/service/auth.service';
 import { UserService } from 'src/root/service/user.service';
@@ -78,5 +78,17 @@ export class AdminSideBarComponent extends MultilingualComponent implements OnIn
   getUserDetails(userId:string){
     window.location.href=`user/userProfile/${userId}`;
   }
+
+
+  selectTab(event?:Event){
+    let clickedTab = event?.currentTarget as HTMLElement
+    let allTabs = document.querySelectorAll('.school-name');
+    allTabs.forEach(tab => {
+      tab.classList.remove('active');
+    });
+
+    clickedTab?.classList.add('active')
+  }
+
 
 }

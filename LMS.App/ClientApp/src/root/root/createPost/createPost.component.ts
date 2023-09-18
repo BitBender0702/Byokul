@@ -1347,6 +1347,10 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     this.uploadVideoUrlList = [];
     this.isSubmitted = true;
 
+
+    localStorage.setItem("beforeLiveStreamUrl",window.location.href);
+
+
     if (this.scheduleTime != undefined) {
       if (this.scheduleTime < new Date()) {
         this.createPostForm.setErrors({ unauthenticated: true });

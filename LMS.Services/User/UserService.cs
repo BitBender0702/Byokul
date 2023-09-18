@@ -829,6 +829,15 @@ namespace LMS.Services
                 _userFollowerRepository.Update(follower);
                 //_userFollowerRepository.Delete(follower);
                 _userFollowerRepository.Save();
+
+                var unFollowUser = new FollowUnFollowViewModel()
+                {
+                    Id = userId
+                };
+
+                await FollowUnFollowUser(unFollowUser, followerId);
+
+
                 return true;
             }
 

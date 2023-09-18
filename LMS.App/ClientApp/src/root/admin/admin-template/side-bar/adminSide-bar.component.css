@@ -8,3 +8,9 @@
     margin-right: 10px;
     background: #adadad;
 }
+
+.active{
+    color: blue;
+    font-weight: bold;
+}
+

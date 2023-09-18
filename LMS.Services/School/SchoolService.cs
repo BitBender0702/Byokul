@@ -2216,15 +2216,22 @@ namespace LMS.Services
 
         }
 
-        public async Task<bool> UnBanFollower(string followerId, Guid schoolId)
+        public async Task<bool> UnBanFollower(string followerId, string schoolId)
         {
-            var follower = await _schoolFollowerRepository.GetAll().Where(x => x.UserId == followerId && x.SchoolId == schoolId).FirstOrDefaultAsync();
+            var follower = await _schoolFollowerRepository.GetAll().Where(x => x.UserId == followerId && x.SchoolId == Guid.Parse(schoolId)).FirstOrDefaultAsync();
 
             if (follower != null)
             {
                 follower.IsBan = false;
                 _schoolFollowerRepository.Update(follower);
                 _schoolFollowerRepository.Save();
+
+                var unfollow = new FollowUnFollowViewModel
+                {
+                    Id = schoolId
+                };
+                await FollowUnFollowSchool(unfollow, followerId);
+
                 return true;
             }
 

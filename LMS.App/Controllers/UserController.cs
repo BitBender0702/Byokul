@@ -331,6 +331,10 @@ namespace LMS.App.Controllers
             // var response = await _httpClient.GetAsync($"https://countriesnow.space/api/v0.1/countries/cities?&country={countryCode.Country}");
             var content = await response.Content.ReadAsStringAsync();
             var statesResponse = JsonConvert.DeserializeObject<StateRoot>(content);
+            if(statesResponse.Data == null)
+            {
+                return Enumerable.Empty<string>();
+            }
             var states = statesResponse.Data.States.OrderBy(x => x.Name).Select(x => x.Name).ToList();
             return states;
         }
