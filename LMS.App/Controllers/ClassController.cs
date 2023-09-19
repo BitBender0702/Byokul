@@ -61,6 +61,15 @@ namespace LMS.App.Controllers
             return Ok();
         }
 
+        [Route("restoreClassById")]
+        [HttpPost]
+        public async Task<IActionResult> RestoreClassById(Guid classId)
+        {
+            var userId = await GetUserIdAsync(this._userManager);
+            await _classService.RestoreClassById(classId, userId);
+            return Ok();
+        }
+
         [Route("getClassByName")]
         [HttpGet]
         public async Task<IActionResult> GetClassByName(string className)

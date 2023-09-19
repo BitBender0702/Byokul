@@ -17,6 +17,7 @@ namespace LMS.Services
         Task<CourseViewModel> SaveNewCourse(CourseViewModel courseViewModel, string createdById);
         Task<CourseViewModel> UpdateCourse(CourseViewModel courseViewModel);
         Task DeleteCourseById(Guid classId, string deletedById);
+        Task RestoreCourseById(Guid classId, string deletedById);
         Task<CourseDetailsViewModel> GetCourseByName(string courseName,string loginUserid);
         Task<CourseDetailsViewModel> GetCourseById(Guid courseId, string loginUserid);
         Task<IEnumerable<CourseViewModel>> GetAllCourses();

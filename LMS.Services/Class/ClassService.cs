@@ -571,19 +571,19 @@ namespace LMS.Services
 
         public async Task DeleteClassById(Guid classId, string deletedByid)
         {
-            var classStudents = await _classStudentRepository.GetAll().Where(x => x.ClassId == classId).ToListAsync();
-            if (classStudents.Count > 0)
-            {
-                _classStudentRepository.DeleteAll(classStudents);
-                _classStudentRepository.Save();
-            }
+            //var classStudents = await _classStudentRepository.GetAll().Where(x => x.ClassId == classId).ToListAsync();
+            //if (classStudents.Count > 0)
+            //{
+            //    _classStudentRepository.DeleteAll(classStudents);
+            //    _classStudentRepository.Save();
+            //}
 
-            var classTeachers = await _classTeacherRepository.GetAll().Where(x => x.ClassId == classId).ToListAsync();
-            if (classTeachers.Count > 0)
-            {
-                _classTeacherRepository.DeleteAll(classTeachers);
-                _classTeacherRepository.Save();
-            }
+            //var classTeachers = await _classTeacherRepository.GetAll().Where(x => x.ClassId == classId).ToListAsync();
+            //if (classTeachers.Count > 0)
+            //{
+            //    _classTeacherRepository.DeleteAll(classTeachers);
+            //    _classTeacherRepository.Save();
+            //}
             Class classes = _classRepository.GetById(classId);
             classes.IsDeleted = true;
             classes.DeletedById = deletedByid;
@@ -592,7 +592,19 @@ namespace LMS.Services
             _classRepository.Save();
         }
 
-        public async Task<IEnumerable<ClassViewModel>> GetAllClasses()
+        public async Task RestoreClassById(Guid classId, string deletedByid)
+        {
+            Class classes = _classRepository.GetById(classId);
+            classes.IsDeleted = false;
+            classes.DeletedById = deletedByid;
+            classes.DeletedOn = DateTime.UtcNow;
+            _classRepository.Update(classes);
+            _classRepository.Save();
+
+        }
+
+
+            public async Task<IEnumerable<ClassViewModel>> GetAllClasses()
         {
             IEnumerable<ClassViewModel> model = _classRepository.GetAll().Where(x => !x.IsDeleted).Select(x => new ClassViewModel
             {

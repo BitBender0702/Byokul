@@ -9,6 +9,9 @@ import { AuthService } from 'src/root/service/auth.service';
 import { OpenAdminSideBar } from '../admin-template/side-bar/adminSide-bar.component';
 import { MultilingualComponent, changeLanguage } from 'src/root/root/sharedModule/Multilingual/multilingual.component';
 import { Subscription } from 'rxjs';
+import { ClassService } from 'src/root/service/class.service';
+import { TranslateService } from '@ngx-translate/core';
+import { MessageService } from 'primeng/api';
 
 
 @Component({
@@ -20,6 +23,7 @@ export class RegisteredClassesComponent extends MultilingualComponent implements
 
   private _adminService;
   private _authService;
+  private _classService;
   isSubmitted: boolean = false;
   registeredClasses!:RegisteredClasses[];
   selectedClasses!: RegisteredClasses[];
@@ -29,12 +33,15 @@ export class RegisteredClassesComponent extends MultilingualComponent implements
   cloned!:any;
   @ViewChild('dt') table!: Table;
   changeLanguageSubscription!:Subscription;
+  classId!:string
+  classDeletedOrNot!:boolean
 
   
-  constructor(injector: Injector,private fb: FormBuilder,private http: HttpClient,adminService: AdminService,authService: AuthService) {
+  constructor(injector: Injector,private fb: FormBuilder,private http: HttpClient,adminService: AdminService,authService: AuthService,classService:ClassService,private translateService: TranslateService,public messageService: MessageService) {
     super(injector);
     this._adminService = adminService;
     this._authService = authService;
+    this._classService = classService
   }
 
   ngOnInit(): void {
@@ -43,6 +50,7 @@ export class RegisteredClassesComponent extends MultilingualComponent implements
     this._authService.loginAdminState$.next(true);
     this.translate.use(this.selectedLanguage ?? '');
         this._adminService.getRegClasses().subscribe((response) => {
+          debugger
           this.registeredClasses = response;
           this.cloned = response.slice(0);
           this.loadingIcon = false;
@@ -74,6 +82,42 @@ export class RegisteredClassesComponent extends MultilingualComponent implements
           this.enableDisableClass.isDisable = false;
 
         }
+      }
+
+      getDeleteClassDetails(classId:string,from:string){
+        this.classId = classId
+        if(from == "notDeleted"){
+          this.classDeletedOrNot = false
+        }
+        else{ 
+          this.classDeletedOrNot = true
+        }
+      }
+
+      deleteClass(){
+        this._classService.deleteClass(this.classId).subscribe((response) => {
+          //ownedClassResponse.next({ classId: this.class.classId, classAvatar: "", className: "", schoolName: "", action: "delete" });
+          // const translatedSuccessSummary = this.translateService.instant('Success');
+          // const translatedMessage = this.translateService.instant('SchoolRestoredSuccessfully');
+          // this.messageService.add({ severity: 'success', summary: translatedSuccessSummary, life: 3000, detail: translatedMessage });
+          // this.loadingIcon = false;
+          this.messageService.add({ severity: 'success', summary: 'Success', life: 3000, detail: 'Class deleted successfully' });
+          this.loadingIcon = false;
+          // deleteClassResponse.next('delete');
+        });
+      }
+
+      restoreClass(){
+        this._classService.restoreClass(this.classId).subscribe((response) => {
+          //ownedClassResponse.next({ classId: this.class.classId, classAvatar: "", className: "", schoolName: "", action: "delete" });
+          // const translatedSuccessSummary = this.translateService.instant('Success');
+          // const translatedMessage = this.translateService.instant('SchoolRestoredSuccessfully');
+          // this.messageService.add({ severity: 'success', summary: translatedSuccessSummary, life: 3000, detail: translatedMessage });
+          // this.loadingIcon = false;
+          this.messageService.add({ severity: 'success', summary: 'Success', life: 3000, detail: 'Class Restored successfully' });
+          this.loadingIcon = false;
+          // deleteClassResponse.next('delete');
+        });
       }
 
       ngOnDestroy(): void {

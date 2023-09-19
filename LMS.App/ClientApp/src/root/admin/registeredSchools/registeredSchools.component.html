@@ -429,12 +429,12 @@ aria-hidden="true"
       class="modal-header border-0 justify-content-center position-relative"
     >
       <h1
-      *ngIf="deleteRestoreSchool.isDeleted" class="modal-title font_22 text_dark fw_700 border-0 text-center"
+       *ngIf="!isDeletedOrNot" class="modal-title font_22 text_dark fw_700 border-0 text-center"
       >
         {{ "DeleteSchool" | translate }}
       </h1>
       <h1
-      *ngIf="!deleteRestoreSchool.isDeleted" class="modal-title font_22 text_dark fw_700 border-0 text-center"
+       *ngIf="isDeletedOrNot" class="modal-title font_22 text_dark fw_700 border-0 text-center"
       >
         {{ "RestoreSchool" | translate }}
       </h1>
@@ -449,8 +449,11 @@ aria-hidden="true"
     </div>
     <div class="modal-body">
       <div class="form-group">
-        <h2 class="text-center font_16 f-poppins">
+        <h2 *ngIf="!isDeletedOrNot" class="text-center font_16 f-poppins">
           {{ "DoYouWantToDelete" | translate }}
+        </h2>
+        <h2 *ngIf="isDeletedOrNot" class="text-center font_16 f-poppins">
+          {{ "DoYouWantToRestore" | translate }}
         </h2>
       </div>
       <div
@@ -464,6 +467,7 @@ aria-hidden="true"
           {{ "No" | translate }}
         </button>
         <button
+          *ngIf="!isDeletedOrNot"
           (click)="deleteSchool()"
           type="button"
           class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
@@ -471,6 +475,15 @@ aria-hidden="true"
         >
           {{ "Yes" | translate }}
         </button>
+        <button
+        *ngIf="isDeletedOrNot"
+        (click)="RestoreSchool()"
+        type="button"
+        class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
+        data-bs-dismiss="modal"
+      >
+        {{ "Restore" | translate }}
+      </button>
       </div>
     </div>
   </div>

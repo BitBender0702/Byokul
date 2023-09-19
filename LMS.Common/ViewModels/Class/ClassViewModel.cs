@@ -50,6 +50,7 @@ namespace LMS.Common.ViewModels.Class
         public bool IsClassLikedByCurrentUser { get; set; }
         public bool IsDisableByOwner { get; set; }
         public bool IsCommentsDisabled { get; set; }
+        public bool IsDeleted { get; set; }
 
 
 

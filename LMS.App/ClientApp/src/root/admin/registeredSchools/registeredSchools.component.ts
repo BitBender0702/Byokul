@@ -38,6 +38,7 @@ export class RegisteredSchoolsComponent extends MultilingualComponent implements
   myPaginationString!:string;
   cloned!:any;
   deleteRestoreSchool!:DeleteRestoreSchools
+  isDeletedOrNot!:boolean
   schoolId!:string
   @ViewChild('dt') table!: Table;
   changeLanguageSubscription!:Subscription;
@@ -131,17 +132,24 @@ export class RegisteredSchoolsComponent extends MultilingualComponent implements
         debugger;
         
         this.schoolId = schoolid
-        this.deleteRestoreSchool.schoolId = schoolid
-
         if(from == "notDeleted"){
-          this.deleteRestoreSchool.isDeleted = true;
+          this.isDeletedOrNot = false
         }
-        else{
-          this.deleteRestoreSchool.isDeleted=false;
+        else{ 
+          this.isDeletedOrNot = true
         }
+        // this.deleteRestoreSchool.schoolId = schoolid
+
+        // if(from == "notDeleted"){
+        //   this.deleteRestoreSchool.isDeleted = true;
+        // }
+        // else{
+        //   this.deleteRestoreSchool.isDeleted=false;
+        // }
       }
 
       RestoreSchool(){
+        debugger
         this.loadingIcon = true;
         this._schoolService.restoreSchool(this.schoolId).subscribe((response) => {
           //ownedSchoolResponse.next({ schoolId: this.schoolId, schoolAvatar: "", schoolName: "", action: "delete" });
@@ -149,7 +157,7 @@ export class RegisteredSchoolsComponent extends MultilingualComponent implements
           const translatedMessage = this.translateService.instant('SchoolRestoredSuccessfully');
           this.messageService.add({ severity: 'success', summary: translatedSuccessSummary, life: 3000, detail: translatedMessage });
           this.loadingIcon = false;
-          // deleteSchoolResponse.next('delete');
+          //deleteSchoolResponse.next('delete');
         });
       }
 

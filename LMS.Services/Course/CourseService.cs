@@ -642,21 +642,33 @@ namespace LMS.Services
 
         public async Task DeleteCourseById(Guid courseId, string deletedByid)
         {
-            var courseStudents = await _courseStudentRepository.GetAll().Where(x => x.CourseId == courseId).ToListAsync();
-            if (courseStudents.Count > 0)
-            {
-                _courseStudentRepository.DeleteAll(courseStudents);
-                _courseStudentRepository.Save();
-            }
+            //var courseStudents = await _courseStudentRepository.GetAll().Where(x => x.CourseId == courseId).ToListAsync();
+            //if (courseStudents.Count > 0)
+            //{
+            //    _courseStudentRepository.DeleteAll(courseStudents);
+            //    _courseStudentRepository.Save();
+            //}
 
-            var courseTeachers = await _courseTeacherRepository.GetAll().Where(x => x.CourseId == courseId).ToListAsync();
-            if (courseTeachers.Count > 0)
-            {
-                _courseTeacherRepository.DeleteAll(courseTeachers);
-                _courseTeacherRepository.Save();
-            }
+            //var courseTeachers = await _courseTeacherRepository.GetAll().Where(x => x.CourseId == courseId).ToListAsync();
+            //if (courseTeachers.Count > 0)
+            //{
+            //    _courseTeacherRepository.DeleteAll(courseTeachers);
+            //    _courseTeacherRepository.Save();
+            //}
             Course course = _courseRepository.GetById(courseId);
             course.IsDeleted = true;
+            course.DeletedById = deletedByid;
+            course.DeletedOn = DateTime.UtcNow;
+            _courseRepository.Update(course);
+            _courseRepository.Save();
+        }
+
+
+        public async Task RestoreCourseById(Guid courseId, string deletedByid)
+        {
+           
+            Course course = _courseRepository.GetById(courseId);
+            course.IsDeleted = false;
             course.DeletedById = deletedByid;
             course.DeletedOn = DateTime.UtcNow;
             _courseRepository.Update(course);

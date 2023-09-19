@@ -131,6 +131,9 @@ export class CourseService{
     deleteCourse(courseId:any): Observable<any> {
         return this.http.post(`${this.apiUrl}/course/deleteCourseById` + '?courseId=' + courseId,'',{headers: this.headers});
     }
+    restoreCourse(courseId:any): Observable<any> {
+        return this.http.post(`${this.apiUrl}/course/restoreCourseById` + '?courseId=' + courseId,'',{headers: this.headers});
+    }
 
     enableDisableCourse(courseId:string):Observable<any>{
         debugger

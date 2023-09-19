@@ -17,6 +17,7 @@ namespace LMS.Services
         Task<ClassUpdateViewModel> GetClassEditDetails(Guid classId);
         Task<ClassUpdateViewModel> UpdateClass(ClassUpdateViewModel classUpdateViewModel);
         Task DeleteClassById(Guid classId, string deletedById);
+        Task RestoreClassById(Guid classId, string deletedById);
         Task<ClassDetailsViewModel> GetClassByName(string className, string loginUserId);
         Task<ClassDetailsViewModel> GetClassById(Guid classId, string loginUserId);
         Task<IEnumerable<ClassViewModel>> GetAllClasses();

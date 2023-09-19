@@ -137,6 +137,9 @@ export class ClassService{
     deleteClass(classId:any): Observable<any> {
         return this.http.post(`${this.apiUrl}/class/deleteClassById` + '?classId=' + classId,'',{headers: this.headers});
     }
+    restoreClass(classId:any): Observable<any> {
+        return this.http.post(`${this.apiUrl}/class/restoreClassById` + '?classId=' + classId,'',{headers: this.headers});
+    }
 
     enableDisableClass(classId:string):Observable<any>{
         debugger
