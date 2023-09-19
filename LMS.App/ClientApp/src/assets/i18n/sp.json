@@ -422,7 +422,8 @@
   "October": "octubre",
   "November": "noviembre",
   "December": "diciembre",
-  "UpdateReel":"Carrete de actualización"
+  "UpdateReel":"Carrete de actualización",
+  "AudioOrVideoTypeNotAllowed":"No se permiten archivos de tipo vídeo o audio."
 
 
 

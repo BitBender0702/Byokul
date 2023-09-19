@@ -594,7 +594,8 @@
   "Refund":"استرداد",
   "Refunded":"ردها",
   "Showing {first} to {last} of {totalRecords} entries": "عرض {first} إلى {last} من {totalRecords} مدخلة",
-  "UpdateReel":"تحديث بكرة"
+  "UpdateReel":"تحديث بكرة",
+  "AudioOrVideoTypeNotAllowed":"غير مسموح بملف نوع الفيديو أو الصوت"
 
 
 

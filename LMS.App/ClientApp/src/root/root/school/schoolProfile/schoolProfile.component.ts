@@ -636,6 +636,7 @@ export class SchoolProfileComponent
             teacherId:response.teacherId
           }
           this.school.teachers.push(schoolteacher);
+          
         }
         else{
           var translatedMessage = this.translateService.instant('OfficialUpdatedSuccessfully');

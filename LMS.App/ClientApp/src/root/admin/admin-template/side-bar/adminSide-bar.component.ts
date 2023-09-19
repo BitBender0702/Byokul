@@ -90,5 +90,17 @@ export class AdminSideBarComponent extends MultilingualComponent implements OnIn
     clickedTab?.classList.add('active')
   }
 
+  chechFromUrl(){
+    let allTabs = document.querySelectorAll('.school-name');
+    allTabs.forEach(tab => {
+      tab.classList.remove('active');
+    });
+    let url = window.location.href;
+    let lastOccurance = url.lastIndexOf('/');
+    let whichTab = url.substring(lastOccurance + 1);
+    let reloadedTab = "";
+    // clickedTab?.classList.add('active')
+  }
+
 
 }

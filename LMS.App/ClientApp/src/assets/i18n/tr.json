@@ -598,7 +598,8 @@
   "Refund":"Geri ödemek",
   "Refunded":"Geri ödeme yapıldı",
   "Showing {first} to {last} of {totalRecords} entries": "{totalRecords} girişten {first} - {last} arası gösteriliyor",
-  "UpdateReel":"Makarayı Güncelle"
+  "UpdateReel":"Makarayı Güncelle",
+  "AudioOrVideoTypeNotAllowed":"Video veya ses türü dosyaya izin verilmiyor"
 
 
 
