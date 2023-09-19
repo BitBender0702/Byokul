@@ -39,8 +39,8 @@ export class RegisteredClassesComponent extends MultilingualComponent implements
   classDeletedOrNot!:boolean
 
   
-  constructor(injector: Injector,private fb: FormBuilder,private http: HttpClient,adminService: AdminService,authService: AuthService, signalRService: SignalrService) {
-  constructor(injector: Injector,private fb: FormBuilder,private http: HttpClient,adminService: AdminService,authService: AuthService,classService:ClassService,private translateService: TranslateService,public messageService: MessageService) {
+  // constructor(injector: Injector,private fb: FormBuilder,private http: HttpClient,adminService: AdminService,authService: AuthService, signalRService: SignalrService) {
+  constructor(injector: Injector,private fb: FormBuilder,signalRService: SignalrService,private http: HttpClient,adminService: AdminService,authService: AuthService,classService:ClassService,private translateService: TranslateService,public messageService: MessageService) {
     super(injector);
     this._adminService = adminService;
     this._authService = authService;
