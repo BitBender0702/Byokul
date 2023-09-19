@@ -22,6 +22,7 @@ import { addTeacherResponse } from './addOfficial/addOfficial.component';
 import { VideoLibraryService } from '../service/videoLibrary.service';
 import { addVideoInLibraryResponse } from './schoolVideoLibrary/schoolVideoLibrary.component';
 import { SchoolService } from '../service/school.service';
+import { banUnbanUserProgression } from '../admin/registeredUsers/registeredUsers.component';
 // import { userPermission } from './class/classProfile/classProfile.component';
 export const userPermission = new Subject<{ userPermissions: any }>();
 
@@ -69,6 +70,8 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
   loginUserId: string = "";
   notifyTeacherSubscription!: Subscription;
   schoolId: string = "";
+
+  banUnbanUserSubscription!:Subscription;
 
 
   checkLimitSchoolId:any;
@@ -142,6 +145,16 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
         this.messageService.add({ severity: 'success', summary: translatedSummary, life: 3000, detail: translatedMessage });
       })
     }
+
+    if(!this.banUnbanUserSubscription){
+      this.banUnbanUserSubscription = banUnbanUserProgression.subscribe(response =>{
+        this.loginUserInfo();
+        if(this.loginUserId == response.userId){
+          this.router.navigate([`/user/auth/logout`]);
+        }
+      })
+    }
+
 
     if (!this.notifyTeacherSubscription) {
       this.notifyTeacherSubscription = notiFyTeacherResponse.subscribe(response => {
@@ -720,6 +733,9 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
     }
     if (this.paymentConfirmSubscription) {
       this.paymentConfirmSubscription.unsubscribe();
+    }
+    if (this.banUnbanUserSubscription) {
+      this.banUnbanUserSubscription.unsubscribe();
     }
   }
 

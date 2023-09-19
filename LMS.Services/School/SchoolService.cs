@@ -464,6 +464,7 @@ namespace LMS.Services
                 response.Languages = languageViewModel;
                 response.SchoolCertificates = await GetCertificateBySchoolId(response.SchoolId);
                 response.SchoolFollowers = await FollowerList(response.SchoolId);
+                //response.SchoolSlogan = 
                 //response.Classes = await GetClassesBySchoolId(response.SchoolId,loginUserId);
                 //response.Courses = await GetCoursesBySchoolId(response.SchoolId,loginUserId);
                 response.Posts = await GetPostsBySchool(response.SchoolId, loginUserId);

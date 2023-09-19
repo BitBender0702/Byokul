@@ -234,7 +234,7 @@ namespace LMS.App.Controllers
         {
             var userId = await GetUserIdAsync(this._userManager);
             await _courseService.SaveCourseFilters(model, userId);
-            return Ok();
+            return Ok(new { Success = true, Message = "Course Filter Saved" });
         }
 
         [Route("getCourseInfoForCertificate")]

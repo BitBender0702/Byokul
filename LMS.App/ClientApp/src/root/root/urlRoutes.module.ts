@@ -49,6 +49,9 @@ import { DeleteOrDisableComponent } from './deleteOrDisableSCC/delete-or-disable
           },
           {
             path: 'courses/:courseName/:isDeleted/:isDisabled',component:DeleteOrDisableComponent, canActivate: [AuthGuard]
+          },
+          {
+            path: 'userProfile/:userId/:isDeleted/:isDisabled',component:DeleteOrDisableComponent, canActivate: [AuthGuard]
           }
     ]}]),
     FormsModule,

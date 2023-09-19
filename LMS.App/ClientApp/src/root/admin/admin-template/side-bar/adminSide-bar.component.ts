@@ -51,6 +51,8 @@ export class AdminSideBarComponent extends MultilingualComponent implements OnIn
       })
     }
 
+    this.chechFromUrl();
+
   }
 
   ngOnDestroy(): void {
@@ -81,24 +83,59 @@ export class AdminSideBarComponent extends MultilingualComponent implements OnIn
 
 
   selectTab(event?:Event){
+    debugger;
     let clickedTab = event?.currentTarget as HTMLElement
-    let allTabs = document.querySelectorAll('.school-name');
+    let allTabs = document.querySelectorAll('.routeLink');
     allTabs.forEach(tab => {
       tab.classList.remove('active');
     });
-
+    allTabs[4];
     clickedTab?.classList.add('active')
   }
 
   chechFromUrl(){
-    let allTabs = document.querySelectorAll('.school-name');
+    debugger
+    let allTabs = document.querySelectorAll('.routeLink');
     allTabs.forEach(tab => {
       tab.classList.remove('active');
     });
     let url = window.location.href;
     let lastOccurance = url.lastIndexOf('/');
-    let whichTab = url.substring(lastOccurance + 1);
-    let reloadedTab = "";
+    let reloadedTab = url.substring(lastOccurance + 1);
+    if(reloadedTab == "registeredUsers"){
+      allTabs[1].classList.add('active');
+    }
+
+    if(reloadedTab == "registeredSchools"){
+      allTabs[2].classList.add('active');
+    }
+
+    if(reloadedTab == "registeredClasses"){
+      allTabs[3].classList.add('active');
+    }
+
+    if(reloadedTab == "registeredCourses"){
+      allTabs[4].classList.add('active');
+    }
+
+    if(reloadedTab == "schoolTransactions"){
+      allTabs[5].classList.add('active');
+    }
+
+    if(reloadedTab == "classCourseTransactions"){
+      allTabs[6].classList.add('active');
+    }
+
+    if(reloadedTab == "adminHome"){
+      allTabs[0].classList.add('active');
+    }
+
+
+
+
+
+
+
     // clickedTab?.classList.add('active')
   }
 

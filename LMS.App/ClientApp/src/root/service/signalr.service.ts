@@ -11,6 +11,8 @@ import { NotificationService } from './notification.service';
 import { CustomXhrHttpClient } from './signalr.httpclient';
 import { UserService } from './user.service';
 import { unreadChatResponse } from '../user-template/side-bar/side-bar.component';
+import { banUnbanUserProgression } from '../admin/registeredUsers/registeredUsers.component';
+import { disableEnableResponse } from '../admin/registeredCourses/registeredCourses.component';
 
 export const signalRResponse = new Subject<{
   id:string;
@@ -82,7 +84,7 @@ export class SignalrService {
 
   initializeConnection(token: string) {
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl('https://byokul.com/chatHub', {
+      .withUrl('https://localhost:7220/chatHub', {
          httpClient: new CustomXhrHttpClient(token)
       })
       .withAutomaticReconnect()
@@ -241,6 +243,19 @@ export class SignalrService {
       debugger
       notiFyTeacherResponse.next({userId: userId});
     });
+
+
+    this.hubConnection?.on('LogoutBanUser', (userId)=>{
+      debugger;
+      banUnbanUserProgression.next({userId: userId})
+    })
+
+    this.hubConnection?.on('ReloadClassCourseProfile', (reloadClassCourseProfile)=>{
+      debugger;
+      disableEnableResponse.next({reloadClassCourseProfile: reloadClassCourseProfile})
+    })
+
+
   }
 
   sendToGroup(model: CommentViewModel) {
@@ -338,5 +353,19 @@ export class SignalrService {
   // for testing live stream only i can remove this after testing;
   // this.hubConnection?.invoke('SendNotification', model)
   //       .catch((err) => console.error(err));
+  }
+
+  logoutBanUser(userId:string){
+    debugger
+    this.hubConnection?.invoke('logoutBanUser', userId)
+      .catch((err => console.error(err)));
+    // banUnbanUserProgression.next({userId: userId})
+  }
+
+  reloadClassCourseProfile(classCourseId:string){
+    debugger;
+    this.hubConnection?.invoke('reloadClassCourseProfile', classCourseId)
+      .catch((err => console.error(err)));
+    // banUnbanUserProgression.next({userId: userId})
   }
 }

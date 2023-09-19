@@ -9,8 +9,12 @@ import { VerifyUsers } from 'src/root/interfaces/admin/verifyUser';
 import { Table } from 'primeng/table';
 import { OpenAdminSideBar } from '../admin-template/side-bar/adminSide-bar.component';
 import { MultilingualComponent, changeLanguage } from 'src/root/root/sharedModule/Multilingual/multilingual.component';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { AuthService } from 'src/root/service/auth.service';
+import { SignalrService } from 'src/root/service/signalr.service';
+
+
+export const banUnbanUserProgression = new Subject<{userId: string}>();
 
 
 @Component({
@@ -21,6 +25,8 @@ import { AuthService } from 'src/root/service/auth.service';
 export class RegisteredUsersComponent extends MultilingualComponent implements OnInit, OnDestroy {
 
   private _adminService;
+  private _signalRService;
+
   private _authService;
   isSubmitted: boolean = false;
   registeredUsers!:RegisteredUsers[];
@@ -36,10 +42,11 @@ export class RegisteredUsersComponent extends MultilingualComponent implements O
 
 
   
-  constructor(injector: Injector,authService: AuthService,private fb: FormBuilder,private http: HttpClient,adminService: AdminService) {
+  constructor(injector: Injector,authService: AuthService,private fb: FormBuilder,private http: HttpClient,adminService: AdminService, signalRService:SignalrService) {
     super(injector);
     this._adminService = adminService;
     this._authService = authService;
+    this._signalRService = signalRService
   }
 
   ngOnInit(): void {
@@ -83,8 +90,10 @@ export class RegisteredUsersComponent extends MultilingualComponent implements O
          };
       }
 
+      userIdForLogout:string=''
       getBanUserDetails(userid:string,from:string){
         this.banUnbanUser.userId = userid;
+        this.userIdForLogout = userid;
         if(from == BanUnbanEnum.Ban){
           this.banUnbanUser.isBan = true;
         }
@@ -99,6 +108,8 @@ export class RegisteredUsersComponent extends MultilingualComponent implements O
         this._adminService.banUnbanUser(this.banUnbanUser).subscribe((response) => {
           this.InitializeBanUnbanUser();
           this.ngOnInit();
+          debugger
+          this._signalRService.logoutBanUser(this.userIdForLogout)
         });  
 
       }

@@ -51,6 +51,7 @@ namespace LMS.Common.ViewModels.Course
         public bool IsBannedFromClassCourse { get; set; }
 
         //public bool IsFileStorageAccessible { get; set; }
+        public bool IsEnable { get; set; }
 
 
     }

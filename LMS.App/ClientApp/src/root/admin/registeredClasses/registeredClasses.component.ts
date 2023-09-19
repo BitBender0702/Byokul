@@ -12,6 +12,7 @@ import { Subscription } from 'rxjs';
 import { ClassService } from 'src/root/service/class.service';
 import { TranslateService } from '@ngx-translate/core';
 import { MessageService } from 'primeng/api';
+import { SignalrService } from 'src/root/service/signalr.service';
 
 
 @Component({
@@ -24,6 +25,7 @@ export class RegisteredClassesComponent extends MultilingualComponent implements
   private _adminService;
   private _authService;
   private _classService;
+  private _signalRService;
   isSubmitted: boolean = false;
   registeredClasses!:RegisteredClasses[];
   selectedClasses!: RegisteredClasses[];
@@ -37,10 +39,12 @@ export class RegisteredClassesComponent extends MultilingualComponent implements
   classDeletedOrNot!:boolean
 
   
+  constructor(injector: Injector,private fb: FormBuilder,private http: HttpClient,adminService: AdminService,authService: AuthService, signalRService: SignalrService) {
   constructor(injector: Injector,private fb: FormBuilder,private http: HttpClient,adminService: AdminService,authService: AuthService,classService:ClassService,private translateService: TranslateService,public messageService: MessageService) {
     super(injector);
     this._adminService = adminService;
     this._authService = authService;
+    this._signalRService = signalRService;
     this._classService = classService
   }
 
@@ -75,6 +79,7 @@ export class RegisteredClassesComponent extends MultilingualComponent implements
 
       getDisableClassDetails(classId:string,from:string){
         this.enableDisableClass.Id = classId;
+        this.classIdForReload = classId;
         if(from == "Enable"){
           this.enableDisableClass.isDisable = true;
         }
@@ -126,11 +131,14 @@ export class RegisteredClassesComponent extends MultilingualComponent implements
         }
       }
 
+      classIdForReload='';
       disableClass(){
         this.loadingIcon = true;
         this._adminService.enableDisableClass(this.enableDisableClass).subscribe((response) => {
           this.InitializeEnableDisableClass();
           this.ngOnInit();
+          debugger;
+          this._signalRService.reloadClassCourseProfile(this.classIdForReload)
         });  
 
       }

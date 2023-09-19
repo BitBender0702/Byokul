@@ -54,6 +54,7 @@ import { enumToObjects } from 'src/root/Enums/getEnum';
 import { ClassCourseRating } from 'src/root/interfaces/course/addCourseRating';
 import { userPermission } from '../../root.component';
 import { deleteModalPostResponse } from '../../delete-confirmation/delete-confirmation.component';
+import { disableEnableResponse } from 'src/root/admin/registeredCourses/registeredCourses.component';
 
 
 @Component({
@@ -189,6 +190,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
   isAllowedForFileStorage:boolean = false;
 
   deleteModalPostSubscription!: Subscription;
+  disableEnableResponseSubsciption!: Subscription;
 
   isDataLoaded: boolean = false;
   constructor(injector: Injector, private translateService: TranslateService,private signalrService:SignalrService,private datePipe: DatePipe, private titleService: Title, private meta: Meta, authService: AuthService, notificationService: NotificationService, public messageService: MessageService, postService: PostService, private bsModalService: BsModalService, courseService: CourseService, private route: ActivatedRoute, private domSanitizer: DomSanitizer, private fb: FormBuilder, private router: Router, private http: HttpClient, private activatedRoute: ActivatedRoute, private cd: ChangeDetectorRef) {
@@ -260,6 +262,10 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
         this.isStorageUnAvailable = true;
       }
 
+      if(response.isEnable){
+        this.router.navigate([`/profile/courses/${this.course.courseName}/null/null`]);
+        return;
+       }
 
       if(response.isDisableByOwner && !response.isDeleted && !this.isOwner){
         this.router.navigate([`/profile/courses/${this.course.courseName}/false/true`]);
@@ -506,6 +512,13 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       })
     }
 
+    if(!this.disableEnableResponseSubsciption){
+      this.disableEnableResponseSubsciption = disableEnableResponse.subscribe(response => {
+        debugger;
+        this.ngOnInit();
+      })
+    }
+
 
   }
 
@@ -584,6 +597,9 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     }
     if (this.deleteModalPostSubscription) {
       this.deleteModalPostSubscription.unsubscribe();
+    }
+    if (this.disableEnableResponseSubsciption) {
+      this.disableEnableResponseSubsciption.unsubscribe();
     }
   }
 

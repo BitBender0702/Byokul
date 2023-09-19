@@ -423,7 +423,11 @@
   "November": "noviembre",
   "December": "diciembre",
   "UpdateReel":"Carrete de actualización",
-  "AudioOrVideoTypeNotAllowed":"No se permiten archivos de tipo vídeo o audio."
+  "AudioOrVideoTypeNotAllowed":"No se permiten archivos de tipo vídeo o audio.",
+  "ClassDisabledByAdmin":"La clase a la que intentas acceder está inhabilitada por el administrador.",
+  "CourseDisabledByAdmin":"El curso al que intentas acceder está inhabilitado por el administrador.",
+  "UserBanned":"El usuario que está intentando acceder está prohibido."
+
 
 
 

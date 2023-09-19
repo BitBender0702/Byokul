@@ -285,6 +285,13 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
       this.cd.detectChanges();
       this.addEventListnerOnCarousel();
       this.user.posts = this.getFilteredAttachments(this.user.posts);
+
+      if(response.isBan){
+        this.router.navigate([`/profile/userProfile/${response.id}/true/true`]);
+        return;
+      }
+
+
     });
 
     this._userService.getLanguageList().subscribe((response) => {

@@ -607,7 +607,10 @@
   "Refunded":"Refunded",
   "Showing {first} to {last} of {totalRecords} entries": "Showing {first} to {last} of {totalRecords} entries",
   "UpdateReel":"Update Reel",
-  "AudioOrVideoTypeNotAllowed":"Video or audio type file is not allowed"
+  "AudioOrVideoTypeNotAllowed":"Video or audio type file is not allowed",
+  "ClassDisabledByAdmin":"The class you are trying to access is disabled by admin",
+  "CourseDisabledByAdmin":"The course you are trying to access is disabled by admin",
+  "UserBanned":"The user are trying to access is banned"
 
 
 

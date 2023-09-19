@@ -143,7 +143,7 @@ namespace LMS.Services
                 CreatedById = createdById,
                 CreatedOn = DateTime.UtcNow,
                 IsCommentsDisabled = false,
-                Avatar = classViewModel.Avatar
+                Avatar = classViewModel.Avatar,
             };
 
             try

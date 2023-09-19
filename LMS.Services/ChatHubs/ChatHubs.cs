@@ -1,4 +1,5 @@
-﻿using LMS.Common.Enums;
+﻿using iText.Html2pdf.Attach;
+using LMS.Common.Enums;
 using LMS.Common.ViewModels.Chat;
 using LMS.Common.ViewModels.Notification;
 using LMS.Common.ViewModels.Post;
@@ -26,9 +27,11 @@ public class ChatHubs : Hub
     private IGenericRepository<Class> _classRepository;
     private IGenericRepository<Teacher> _teacherRepository;
 
+    private IGenericRepository<Course> _courseRepository;
 
 
-    public ChatHubs(UserManager<User> userManager, IChatService chatService, IGenericRepository<View> viewRepository, INotificationService notificationService, IGenericRepository<UserFollower> userFollowerRepository, IGenericRepository<User> userRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Teacher> teacherRepository)
+
+    public ChatHubs(UserManager<User> userManager, IGenericRepository<Course> courseRepository, IChatService chatService, IGenericRepository<View> viewRepository, INotificationService notificationService, IGenericRepository<UserFollower> userFollowerRepository, IGenericRepository<User> userRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Teacher> teacherRepository)
     {
         _userManager = userManager;
         _chatService = chatService;
@@ -39,6 +42,7 @@ public class ChatHubs : Hub
         _schoolRepository = schoolRepository;
         _classRepository = classRepository;
         _teacherRepository = teacherRepository;
+        _courseRepository = courseRepository;
     }
 
     static Dictionary<string, string> UserIDConnectionID = new Dictionary<string, string>();
@@ -262,6 +266,26 @@ public class ChatHubs : Hub
     //        await Clients.Client(a).SendAsync("ReceiveMessage", chatMessageViewModel, "success");
 
     //}
+    public async Task LogoutBanUser(string userId)
+    {
+        var user = _userRepository.GetById(userId);
+        var currentUserConnectionId = UserIDConnectionID[user.Id];
+        await Clients.Client(currentUserConnectionId).SendAsync("logoutBanUser", userId);
+    }
+
+    public async Task ReloadClassCourseProfile(string classCourseId)
+    {
+        var classOrCourse = _classRepository.GetById(classCourseId);
+        if(classOrCourse == null)
+        {
+            var courseOrClass = _courseRepository.GetById(classCourseId);
+            var currentCourseConnectionId = UserIDConnectionID[courseOrClass.CourseId.ToString()];
+            await Clients.Client(currentCourseConnectionId).SendAsync("reloadClassCourseProfile", classCourseId);
+            return;
+        }
+        var currentClassConnectionId = UserIDConnectionID[classOrCourse.ClassId.ToString()];
+        await Clients.Client(currentClassConnectionId).SendAsync("ReloadClassCourseProfile", classCourseId);
+    }
 
 }
 

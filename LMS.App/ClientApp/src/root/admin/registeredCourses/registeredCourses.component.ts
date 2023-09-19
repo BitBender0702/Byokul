@@ -7,8 +7,11 @@ import { RegisteredCourses } from 'src/root/interfaces/admin/registeredCourses';
 import { Table } from 'primeng/table';
 import { OpenAdminSideBar } from '../admin-template/side-bar/adminSide-bar.component';
 import { MultilingualComponent, changeLanguage } from 'src/root/root/sharedModule/Multilingual/multilingual.component';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { AuthService } from 'src/root/service/auth.service';
+import { SignalrService } from 'src/root/service/signalr.service';
+
+export const disableEnableResponse = new Subject<{reloadClassCourseProfile:string}>();
 
 @Component({
   selector: 'registered-courses',
@@ -19,6 +22,7 @@ export class RegisteredCoursesComponent extends MultilingualComponent implements
 
   private _adminService;
   private _authService;
+  private _signalRService;
   isSubmitted: boolean = false;
   registeredCourses!:RegisteredCourses[];
   selectedCourses!: RegisteredCourses[];
@@ -31,10 +35,11 @@ export class RegisteredCoursesComponent extends MultilingualComponent implements
   
 
 
-  constructor(injector: Injector,authService: AuthService,private fb: FormBuilder,private http: HttpClient,adminService: AdminService) {
+  constructor(injector: Injector,authService: AuthService,private fb: FormBuilder,private http: HttpClient,adminService: AdminService, signalRService: SignalrService) {
     super(injector);
     this._adminService = adminService;
     this._authService = authService;
+    this._signalRService = signalRService
   }
 
   ngOnInit(): void {
@@ -70,9 +75,10 @@ export class RegisteredCoursesComponent extends MultilingualComponent implements
           this.changeLanguageSubscription.unsubscribe();
         }
       }
-      
+      courseIdForReload = '';
       getDisableCourseDetails(courseId:string,from:string){
         this.enableDisableCourse.Id = courseId;
+        this.courseIdForReload = courseId
         if(from == "Enable"){
           this.enableDisableCourse.isDisable = true;
         }
@@ -87,6 +93,8 @@ export class RegisteredCoursesComponent extends MultilingualComponent implements
         this._adminService.enableDisableCourse(this.enableDisableCourse).subscribe((response) => {
           this.InitializeEnableDisableCourse();
           this.ngOnInit();
+          // disableEnableResponse.next({});
+          this._signalRService.reloadClassCourseProfile(this.courseIdForReload)
         });  
 
       }

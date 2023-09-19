@@ -595,7 +595,11 @@
   "Refunded":"ردها",
   "Showing {first} to {last} of {totalRecords} entries": "عرض {first} إلى {last} من {totalRecords} مدخلة",
   "UpdateReel":"تحديث بكرة",
-  "AudioOrVideoTypeNotAllowed":"غير مسموح بملف نوع الفيديو أو الصوت"
+  "AudioOrVideoTypeNotAllowed":"غير مسموح بملف نوع الفيديو أو الصوت",
+  "ClassDisabledByAdmin":"تم تعطيل الفصل الذي تحاول الوصول إليه من قبل المشرف",
+  "CourseDisabledByAdmin":"تم تعطيل الدورة التدريبية التي تحاول الوصول إليها من قبل المشرف",
+  "UserBanned":"المستخدم الذي يحاول الوصول محظور"
+
 
 
 

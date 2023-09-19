@@ -25,10 +25,16 @@ export class DeleteOrDisableComponent extends MultilingualComponent implements O
     classDeleted: boolean = false;
     classDisabled: boolean = false;
     classDisabledAndDeleted:boolean=false;
+    classDisabledByAdmin:boolean=false;
 
     courseDeleted: boolean = false;
     courseDisabled: boolean = false;
+    courseDisabledByAdmin: boolean = false;
+
     courseDisabledAndDeleted:boolean=false;
+
+    userBan:boolean = false;
+    userId=''
     
   
     schoolName:string=''
@@ -47,6 +53,7 @@ export class DeleteOrDisableComponent extends MultilingualComponent implements O
             const schoolName = params['schoolName'];
             const className = params['className'];
             const courseName = params['courseName'];
+            const userId = params['userId'];
             let disabledOrDeleted = params['disabledOrDeleted'];
             let isDeleted = params['isDeleted']
             let isDisabled = params['isDisabled']
@@ -60,6 +67,7 @@ export class DeleteOrDisableComponent extends MultilingualComponent implements O
             this.disabledOrDeleted = disabledOrDeleted;
             this.isDeleted = isDeleted;
             this.isDisabled = isDisabled;
+            this.userId = userId;
         });
 
         // if(this.schoolName != undefined && this.disabledOrDeleted == "disabled"){
@@ -101,9 +109,17 @@ export class DeleteOrDisableComponent extends MultilingualComponent implements O
             this.classDeleted = true;
         }
 
+        if(this.className != undefined && this.isDeleted=="null" && this.isDisabled=="null"){
+            this.classDisabledByAdmin = true;
+        }
+
         if(this.className != undefined && this.isDeleted=="true" && this.isDisabled=="true"){
            this.classDisabledAndDeleted = true
         }
+
+        if(this.userId != undefined && this.isDeleted=="true" && this.isDisabled=="true"){
+            this.userBan = true
+         }
 
 
 
@@ -122,6 +138,10 @@ export class DeleteOrDisableComponent extends MultilingualComponent implements O
 
         if(this.courseName != undefined && this.isDeleted=="true" && this.isDisabled=="false"){
             this.courseDeleted = true;
+        }
+
+        if(this.courseName != undefined && this.isDeleted=="null" && this.isDisabled=="null"){
+            this.courseDisabledByAdmin = true;
         }
 
         if(this.courseName != undefined && this.isDeleted=="true" && this.isDisabled=="true"){

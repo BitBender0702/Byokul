@@ -367,7 +367,7 @@ namespace LMS.App.Controllers
             var request = new HttpRequestMessage(HttpMethod.Post, "https://countriesnow.space/api/v0.1/countries/states");
             request.Content = new StringContent($"{{ \"country\": \"{countryName}\" }}", Encoding.UTF8, "application/json");
             var response = await _httpClient.SendAsync(request);
-
+            
 
             // var response = await _httpClient.GetAsync($"https://countriesnow.space/api/v0.1/countries/cities?&country={countryCode.Country}");
             var content = await response.Content.ReadAsStringAsync();

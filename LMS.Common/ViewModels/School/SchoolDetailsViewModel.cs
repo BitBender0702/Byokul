@@ -50,7 +50,7 @@ namespace LMS.Common.ViewModels.School
         public string? PhoneNumber { get; set; }
         public bool IsSchoolSubscribed { get; set; }
         public double? AvailableStorageSpace { get; set; }
-
+        public string? SchoolSlogan { get; set; }
 
     }
 }

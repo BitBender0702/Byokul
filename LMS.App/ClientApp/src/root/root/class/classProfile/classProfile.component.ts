@@ -52,6 +52,7 @@ import { CurrencyEnum } from 'src/root/Enums/CurrencyEnum';
 import { ClassCourseRating } from 'src/root/interfaces/course/addCourseRating';
 import { userPermission } from '../../root.component';
 import { deleteModalPostResponse } from '../../delete-confirmation/delete-confirmation.component';
+import { disableEnableResponse } from 'src/root/admin/registeredCourses/registeredCourses.component';
 
 
 export const deleteClassResponse = new BehaviorSubject<string>('');
@@ -175,6 +176,8 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   teacherForFileStorage: any;
   deleteModalPostSubscription!: Subscription;
 
+  disableEnableSubscription!: Subscription;
+
   @ViewChild('openClassOwnCertificate') openClassOwnCertificate!: ElementRef;
 
 
@@ -255,6 +258,9 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     if (this.deleteModalPostSubscription) {
       this.deleteModalPostSubscription.unsubscribe();
     }
+    if (this.disableEnableSubscription) {
+      this.disableEnableSubscription.unsubscribe();
+    }
   }
 
   ngOnChanges(): void {
@@ -319,6 +325,10 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
         this.isStorageUnAvailable = true;
       }
 
+      if(response.isEnable){
+        this.router.navigate([`/profile/classes/${this.class.className}/null/null`]);
+        return;
+      }
 
       if(response.isDisableByOwner && !response.isDeleted && !this.isOwner){
         this.router.navigate([`/profile/classes/${this.class.className}/false/true`]);
@@ -580,6 +590,14 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
 
     if (!this.deleteModalPostSubscription) {
       this.deleteModalPostSubscription = deleteModalPostResponse.subscribe(response => {
+        this.ngOnInit();
+      })
+    }
+
+    if (!this.disableEnableSubscription) {
+      this.disableEnableSubscription = disableEnableResponse.subscribe(response => {
+        debugger;
+        
         this.ngOnInit();
       })
     }
