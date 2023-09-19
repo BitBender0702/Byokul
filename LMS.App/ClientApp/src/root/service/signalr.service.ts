@@ -356,14 +356,11 @@ export class SignalrService {
   }
 
   logoutBanUser(userId:string){
-    debugger
     this.hubConnection?.invoke('logoutBanUser', userId)
       .catch((err => console.error(err)));
-    // banUnbanUserProgression.next({userId: userId})
   }
 
   reloadClassCourseProfile(classCourseId:string){
-    debugger;
     this.hubConnection?.invoke('reloadClassCourseProfile', classCourseId)
       .catch((err => console.error(err)));
     // banUnbanUserProgression.next({userId: userId})
