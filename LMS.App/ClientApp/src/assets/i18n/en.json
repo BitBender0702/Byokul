@@ -612,9 +612,9 @@
   "CourseDisabledByAdmin":"The course you are trying to access is disabled by admin",
   "UserBanned":"The user are trying to access is banned",
   "ImagesMustBeLessThanFifteen":"Images Must Be Less Than Fifteen",
-  "VideoMustBeOnlyOne":"Video Must Be Only One"
-  "UserBanned":"The user are trying to access is banned",
-  "CurrentpasswordAndPasswordCantMatch":"Current password can not match new password"
+  "VideoMustBeOnlyOne":"Video Must Be Only One",
+  "CurrentpasswordAndPasswordCantMatch":"Current password can not match new password",
+  "SchoolBanned":"The school you are trying to access is banned"
 
 
 

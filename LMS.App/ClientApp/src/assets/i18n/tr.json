@@ -603,10 +603,10 @@
   "ClassDisabledByAdmin":"Erişmeye çalıştığınız sınıf yönetici tarafından devre dışı bırakıldı",
   "CourseDisabledByAdmin":"Erişmeye çalıştığınız kurs yönetici tarafından devre dışı bırakıldı",
   "UserBanned":"Erişmeye çalışan kullanıcı yasaklandı",
-  "ImagesMustBeLessThanFifteen":"Images Must Be Less Than Fifteen",
-  "VideoMustBeOnlyOne":"Video Must Be Only One"
-  "UserBanned":"Erişmeye çalışan kullanıcı yasaklandı",
-  "CurrentpasswordAndPasswordCantMatch":"Mevcut şifre yeni şifreyle eşleşmiyor"
+  "ImagesMustBeLessThanFifteen":"Resimler On Beşten Az Olmalı",
+  "VideoMustBeOnlyOne":"Video Yalnızca Bir Olmalıdır",
+  "CurrentpasswordAndPasswordCantMatch":"Mevcut şifre yeni şifreyle eşleşmiyor",
+  "SchoolBanned":"Erişmeye çalıştığınız okul yasaklandı"
 
 
 

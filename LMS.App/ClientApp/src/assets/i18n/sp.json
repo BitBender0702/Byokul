@@ -427,8 +427,9 @@
   "ClassDisabledByAdmin":"La clase a la que intentas acceder está inhabilitada por el administrador.",
   "CourseDisabledByAdmin":"El curso al que intentas acceder está inhabilitado por el administrador.",
   "UserBanned":"El usuario que está intentando acceder está prohibido.",
-  "ImagesMustBeLessThanFifteen":"Images Must Be Less Than Fifteen",
-  "VideoMustBeOnlyOne":"Video Must Be Only One"
+  "ImagesMustBeLessThanFifteen":"Las imágenes deben tener menos de quince",
+  "VideoMustBeOnlyOne":"El video debe ser solo uno",
+  "SchoolBanned":"La escuela a la que intentas acceder está prohibida"
 
 
 
