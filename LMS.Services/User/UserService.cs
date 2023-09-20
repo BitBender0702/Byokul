@@ -947,7 +947,7 @@ namespace LMS.Services
                 pageSize = 8;
             }
             var tokenList = new List<string>();
-            var result = await _userPreferenceRepository.GetAll().Where(x => x.UserId == userId && !x.User.IsBan).FirstOrDefaultAsync();
+            var result = await _userPreferenceRepository.GetAll().Where(x => x.UserId == userId).FirstOrDefaultAsync();
 
             if (result != null)
             {
@@ -974,15 +974,15 @@ namespace LMS.Services
         async Task<List<string>> GetDefaultGlobalfeeds(string userId)
         {
             // for one school
-            var isUserInSchool = await _schoolFollowerRepository.GetAll().Where(x => x.UserId == userId && !x.School.IsBan && !x.School.IsDisableByOwner && !x.School.IsDeleted && !x.User.IsBan).FirstOrDefaultAsync();
+            var isUserInSchool = await _schoolFollowerRepository.GetAll().Where(x => x.UserId == userId).FirstOrDefaultAsync();
 
             if (isUserInSchool == null)
             {
-                var isUserInClass = await _classStudentRepository.GetAll().Include(x => x.Student).Where(x => x.Student.UserId == userId && !x.Class.IsEnable && !x.Class.IsDeleted && !x.Class.IsDisableByOwner && x.Student.User.IsBan).FirstOrDefaultAsync();
+                var isUserInClass = await _classStudentRepository.GetAll().Include(x => x.Student).Where(x => x.Student.UserId == userId).FirstOrDefaultAsync();
 
                 if (isUserInClass == null)
                 {
-                    var isUserInCourse = await _courseStudentRepository.GetAll().Include(x => x.Student).Where(x => x.Student.UserId == userId && !x.Course.IsEnable && !x.Course.IsDeleted && !x.Course.IsDisableByOwner && !x.Student.User.IsBan).FirstOrDefaultAsync();
+                    var isUserInCourse = await _courseStudentRepository.GetAll().Include(x => x.Student).Where(x => x.Student.UserId == userId ).FirstOrDefaultAsync();
 
                     if (isUserInCourse == null)
                     {
@@ -992,7 +992,7 @@ namespace LMS.Services
 
                     else
                     {
-                        var sameUserList = await _courseStudentRepository.GetAll().Include(x => x.Student).Where(x => x.Student.UserId == userId && !x.Course.IsDeleted && !x.Course.IsDisableByOwner && !x.Course.IsEnable && !x.Student.User.IsBan).ToListAsync();
+                        var sameUserList = await _courseStudentRepository.GetAll().Include(x => x.Student).Where(x => x.Student.UserId == userId ).ToListAsync();
 
                         sameUserList.Remove(isUserInCourse);
 
@@ -1014,7 +1014,7 @@ namespace LMS.Services
                 else
                 {
                     // if user in class
-                    var sameUserList = await _classStudentRepository.GetAll().Include(x => x.Student).Where(x => x.Student.UserId == userId && !x.Class.IsEnable && !x.Class.IsDeleted && !x.Class.IsDisableByOwner && !x.Student.User.IsBan).ToListAsync();
+                    var sameUserList = await _classStudentRepository.GetAll().Include(x => x.Student).Where(x => x.Student.UserId == userId).ToListAsync();
 
                     sameUserList.Remove(isUserInClass);
 
@@ -1040,7 +1040,7 @@ namespace LMS.Services
 
             else
             {
-                var sameUserList = await _schoolFollowerRepository.GetAll().Where(x => x.SchoolId == isUserInSchool.SchoolId && !x.School.IsBan && !x.School.IsDisableByOwner && !x.School.IsDeleted && !x.User.IsBan).ToListAsync();
+                var sameUserList = await _schoolFollowerRepository.GetAll().Where(x => x.SchoolId == isUserInSchool.SchoolId).ToListAsync();
 
                 sameUserList.Remove(isUserInSchool);
 
@@ -1054,7 +1054,7 @@ namespace LMS.Services
 
                 if (tokenList.Count == 0)
                 {
-                    var school = await _schoolRepository.GetAll().Where(x => x.SchoolId == isUserInSchool.SchoolId && !x.IsBan && !x.IsDisableByOwner && !x.IsDeleted).Include(x => x.Specialization).FirstAsync();
+                    var school = await _schoolRepository.GetAll().Where(x => x.SchoolId == isUserInSchool.SchoolId).Include(x => x.Specialization).FirstAsync();
                     if(school != null)
                     {
                         return new List<string>() { school.Specialization.Name + school.Description };
@@ -1248,7 +1248,7 @@ namespace LMS.Services
                         if (post.PostAuthorType == (int)PostAuthorTypeEnum.School)
                         {
                             var school = _schoolRepository.GetById(post.ParentId);
-                            if(!school.IsBan || !school.IsDisableByOwner || school.IsDeleted)
+                            //if(!school.IsBan || !school.IsDisableByOwner || school.IsDeleted)
                             {
                                 parentName = school.SchoolName;
                                 parentImageUrl = school.Avatar;
@@ -1262,7 +1262,7 @@ namespace LMS.Services
                         }
                         if (post.PostAuthorType == (int)PostAuthorTypeEnum.Class)
                         {
-                            var classes = await _classRepository.GetAll().Where(x => x.ClassId == post.ParentId && !x.IsEnable && !x.IsDisableByOwner && !x.IsDeleted && !x.School.IsBan && !x.School.IsDeleted && !x.School.IsDisableByOwner).Include(x => x.School).FirstOrDefaultAsync();
+                            var classes = await _classRepository.GetAll().Where(x => x.ClassId == post.ParentId ).Include(x => x.School).FirstOrDefaultAsync();
                             parentName = classes.ClassName;
                             parentImageUrl = classes.Avatar;
                             postAuthorType = (int)PostAuthorTypeEnum.Class;
@@ -1271,7 +1271,7 @@ namespace LMS.Services
                         }
                         if (post.PostAuthorType == (int)PostAuthorTypeEnum.Course)
                         {
-                            var course = await _courseRepository.GetAll().Where(x => x.CourseId == post.ParentId && !x.IsEnable && !x.IsDisableByOwner && !x.IsDeleted && !x.School.IsBan && !x.School.IsDeleted && !x.School.IsDisableByOwner).Include(x => x.School).FirstOrDefaultAsync();
+                            var course = await _courseRepository.GetAll().Where(x => x.CourseId == post.ParentId ).Include(x => x.School).FirstOrDefaultAsync();
                             parentName = course.CourseName;
                             parentImageUrl = course.Avatar;
                             postAuthorType = (int)PostAuthorTypeEnum.Course;
@@ -1281,7 +1281,7 @@ namespace LMS.Services
                         if (post.PostAuthorType == (int)PostAuthorTypeEnum.User)
                         {
                             var user = _userRepository.GetById(post.ParentId.ToString());
-                            if (!user.IsBan)
+                            //if (!user.IsBan)
                             {
                                 parentName = user.FirstName + " " + user.LastName;
                                 parentImageUrl = user.Avatar;
@@ -1405,7 +1405,7 @@ namespace LMS.Services
                 if (post.PostAuthorType == (int)PostAuthorTypeEnum.School)
                 {
                     var school = _schoolRepository.GetById(post.ParentId);
-                    if (!school.IsBan || !school.IsDisableByOwner || school.IsDeleted)
+                    //if (!school.IsBan || !school.IsDisableByOwner || school.IsDeleted)
                     {
                         parentName = school.SchoolName;
                         parentImageUrl = school.Avatar;
@@ -1418,7 +1418,7 @@ namespace LMS.Services
                 }
                 if (post.PostAuthorType == (int)PostAuthorTypeEnum.Class)
                 {
-                    var classes = await _classRepository.GetAll().Include(x => x.School).Where(x => x.ClassId == post.ParentId && !x.IsEnable && !x.IsDisableByOwner && !x.IsDeleted && !x.School.IsBan && !x.School.IsDeleted && !x.School.IsDisableByOwner).FirstOrDefaultAsync();
+                    var classes = await _classRepository.GetAll().Include(x => x.School).Where(x => x.ClassId == post.ParentId ).FirstOrDefaultAsync();
                     parentName = classes.ClassName;
                     parentImageUrl = classes.Avatar;
                     postAuthorType = (int)PostAuthorTypeEnum.Class;
@@ -1427,7 +1427,7 @@ namespace LMS.Services
                 }
                 if (post.PostAuthorType == (int)PostAuthorTypeEnum.Course)
                 {
-                    var course = await _courseRepository.GetAll().Include(x => x.School).Where(x => x.CourseId == post.ParentId && !x.IsEnable && !x.IsDisableByOwner && !x.IsDeleted && !x.School.IsBan && !x.School.IsDeleted && !x.School.IsDisableByOwner ).FirstOrDefaultAsync();
+                    var course = await _courseRepository.GetAll().Include(x => x.School).Where(x => x.CourseId == post.ParentId  ).FirstOrDefaultAsync();
                     parentName = course.CourseName;
                     parentImageUrl = course.Avatar;
                     postAuthorType = (int)PostAuthorTypeEnum.Course;
@@ -1437,7 +1437,7 @@ namespace LMS.Services
                 if (post.PostAuthorType == (int)PostAuthorTypeEnum.User)
                 {
                     var user = _userRepository.GetById(post.ParentId.ToString());
-                    if (user.IsBan)
+                    //if (user.IsBan)
                     {
                         parentName = user.FirstName + " " + user.LastName;
                         parentImageUrl = user.Avatar;
@@ -1652,7 +1652,7 @@ namespace LMS.Services
 
         public async Task<IEnumerable<GlobalSearchViewModel>> GlobalSearch(string searchString, int pageNumber, int pageSize)
         {
-            var users = await _userRepository.GetAll().Where(x => x.FirstName.Contains(searchString) || x.LastName.Contains(searchString) || (x.FirstName + " " + x.LastName).Contains(searchString) && !x.IsBan).Select(x => new GlobalSearchViewModel()
+            var users = await _userRepository.GetAll().Where(x => x.FirstName.Contains(searchString) || x.LastName.Contains(searchString) || (x.FirstName + " " + x.LastName).Contains(searchString)).Select(x => new GlobalSearchViewModel()
             {
                 Id = new Guid(x.Id),
                 Name = x.FirstName + " " + x.LastName,
@@ -1661,7 +1661,7 @@ namespace LMS.Services
 
             }).Take(5).ToListAsync();
 
-            var schools = await _schoolRepository.GetAll().Where(x => x.SchoolName.Contains(searchString) && !x.IsDeleted && !x.IsDisableByOwner && !x.IsBan).Select(x => new GlobalSearchViewModel
+            var schools = await _schoolRepository.GetAll().Where(x => x.SchoolName.Contains(searchString) ).Select(x => new GlobalSearchViewModel
             {
                 Id = x.SchoolId,
                 Name = x.SchoolName,
@@ -1669,7 +1669,7 @@ namespace LMS.Services
                 Avatar = x.Avatar
             }).Take(5).ToListAsync();
 
-            var classes = await _classRepository.GetAll().Include(x => x.School).Where(x => x.ClassName.Contains(searchString) && !x.IsDeleted && !x.IsDisableByOwner && !x.IsEnable).Select(x => new GlobalSearchViewModel
+            var classes = await _classRepository.GetAll().Include(x => x.School).Where(x => x.ClassName.Contains(searchString)).Select(x => new GlobalSearchViewModel
             {
                 Id = x.ClassId,
                 Name = x.ClassName,
@@ -1679,7 +1679,7 @@ namespace LMS.Services
             }).Take(5).ToListAsync();
 
 
-            var courses = await _courseRepository.GetAll().Where(x => x.CourseName.Contains(searchString) && !x.IsDeleted && !x.IsDisableByOwner && !x.IsEnable).Select(x => new GlobalSearchViewModel
+            var courses = await _courseRepository.GetAll().Where(x => x.CourseName.Contains(searchString)).Select(x => new GlobalSearchViewModel
             {
                 Id = x.CourseId,
                 Name = x.CourseName,
@@ -1697,7 +1697,7 @@ namespace LMS.Services
 
         public async Task<IEnumerable<GlobalSearchViewModel>> UsersGlobalSearch(string searchString, int pageNumber, int pageSize)
         {
-            var users = await _userRepository.GetAll().Where(x => x.FirstName.Contains(searchString) || x.LastName.Contains(searchString) || (x.FirstName + " " + x.LastName).Contains(searchString) && !x.IsBan).Select(x => new GlobalSearchViewModel()
+            var users = await _userRepository.GetAll().Where(x => x.FirstName.Contains(searchString) || x.LastName.Contains(searchString) || (x.FirstName + " " + x.LastName).Contains(searchString)).Select(x => new GlobalSearchViewModel()
             {
                 Id = new Guid(x.Id),
                 Name = x.FirstName + " " + x.LastName,
