@@ -610,7 +610,8 @@
   "AudioOrVideoTypeNotAllowed":"Video or audio type file is not allowed",
   "ClassDisabledByAdmin":"The class you are trying to access is disabled by admin",
   "CourseDisabledByAdmin":"The course you are trying to access is disabled by admin",
-  "UserBanned":"The user are trying to access is banned"
+  "UserBanned":"The user are trying to access is banned",
+  "CurrentpasswordAndPasswordCantMatch":"Current password can not match new password"
 
 
 

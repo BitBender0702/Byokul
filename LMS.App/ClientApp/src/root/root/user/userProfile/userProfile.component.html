@@ -683,12 +683,31 @@
                       </p> -->
                     </div>
                     <div>
-                      <p
+                      <!-- <p
                         class="font_14 school-grid-date d-inline-block mb-0 me-3"
                       >
                         {{ post.createdOn | ChangeTimeZonePipe | date : "MMMM d" }} -
                         {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm" }}
-                      </p>
+                      </p> -->
+                      <p
+                      *ngIf="post.createdOn != null"
+                      class="font_14 school-grid-date d-inline-block mb-0 me-1"
+                    >
+                      {{ post.createdOn | ChangeTimeZonePipe | date : "dd" }}
+                      {{ post.createdOn | ChangeTimeZonePipe | date : "MMMM"|translate }}
+                    </p>
+                    <p
+                      *ngIf="post.createdOn != null"
+                      class="font_14 school-grid-date d-inline-block mb-0 me-3"
+                    >
+                      {{post.createdOn | ChangeTimeZonePipe | date : "yyyy"}}
+                    </p>
+                    <p
+                      *ngIf="post.createdOn != null"
+                      class="font_14 school-grid-date d-inline-block mb-0 me-3"
+                    >
+                      {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm" }}
+                    </p>
                       <button
                         *ngIf="post.isPinned && isOwner"
                         (click)="pinUnpinPost(post.id, false)"
@@ -1467,13 +1486,32 @@
                       <div
                         class="d-flex justify-content-between date-view-list"
                       >
-                        <p
+                        <!-- <p
                           *ngIf="post.createdOn != null"
                           class="font_14 school-grid-date d-inline-block mb-0"
                         >
                           {{ post.createdOn | ChangeTimeZonePipe | date : "MMMM d" }} -
                           {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm" }}
-                        </p>
+                        </p> -->
+                        <p
+                        *ngIf="post.createdOn != null"
+                        class="font_14 school-grid-date d-inline-block mb-0 me-1"
+                      >
+                        {{ post.createdOn | ChangeTimeZonePipe | date : "dd" }}
+                        {{ post.createdOn | ChangeTimeZonePipe | date : "MMMM"|translate }}
+                      </p>
+                      <p
+                        *ngIf="post.createdOn != null"
+                        class="font_14 school-grid-date d-inline-block mb-0 me-3"
+                      >
+                        {{post.createdOn | ChangeTimeZonePipe | date : "yyyy"}}
+                      </p>
+                      <p
+                        *ngIf="post.createdOn != null"
+                        class="font_14 school-grid-date d-inline-block mb-0 me-3"
+                      >
+                        {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm" }}
+                      </p>
                       </div>
                       <div class="right-action">
                         <button
@@ -1732,10 +1770,29 @@
                       </a>
                     </h2>
                     <br />
-                    <p class="font_14 school-grid-date d-inline-block mb-0">
+                    <!-- <p class="font_14 school-grid-date d-inline-block mb-0">
                       {{ post.createdOn | ChangeTimeZonePipe | date : "MMMM d" }} -
                       {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm" }}
-                    </p>
+                    </p> -->
+                    <p
+                    *ngIf="post.createdOn != null"
+                    class="font_14 school-grid-date d-inline-block mb-0 me-1"
+                  >
+                    {{ post.createdOn | ChangeTimeZonePipe | date : "dd" }}
+                    {{ post.createdOn | ChangeTimeZonePipe | date : "MMMM"|translate }}
+                  </p>
+                  <p
+                    *ngIf="post.createdOn != null"
+                    class="font_14 school-grid-date d-inline-block mb-0 me-3"
+                  >
+                    {{post.createdOn | ChangeTimeZonePipe | date : "yyyy"}}
+                  </p>
+                  <p
+                    *ngIf="post.createdOn != null"
+                    class="font_14 school-grid-date d-inline-block mb-0 me-3"
+                  >
+                    {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm" }}
+                  </p>
                   </div>
 
                   <div
@@ -2821,13 +2878,30 @@
                       <div
                         class="d-flex justify-content-between date-view-list mt-3 align-items-center mb-0"
                       >
-                        <p
+                        <!-- <p
                           *ngIf="item.type != 2"
                           class="font_12 school-grid-date d-inline-block mb-0 text_ltgray"
                         >
                           {{ item?.startDate | date : "MMMM d" }} -
                           {{ item?.endDate | date : "MMMM d" }}
+
+                        </p> -->
+                        <div *ngIf="item.type != 2" class="d-inline-block">
+                          <p
+                         
+                          class="font_12 school-grid-date d-inline-block mb-0 text_ltgray"
+                        >
+                          {{ item?.startDate | date : "d" }} {{ item?.startDate | date : "MMMM" | translate }} -&nbsp;
+                          
                         </p>
+                        <p
+                          
+                          class="font_12 school-grid-date d-inline-block mb-0 text_ltgray"
+                        >
+                        {{ item?.endDate | date : "d" }} {{ item?.endDate | date : "MMMM" | translate }}
+                        </p>
+                        </div>
+                       
                         <div class="profile-star d-flex align-items-center">
                           <span
                             *ngIf="item.rating != null"
@@ -3655,10 +3729,26 @@
                       </a>
                     </h2>
                     <br />
-                    <p class="font_14 school-grid-date d-inline-block mb-0">
+                    <!-- <p class="font_14 school-grid-date d-inline-block mb-0">
                       {{ post.createdOn | ChangeTimeZonePipe | date : "MMMM d" }} -
                       {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm" }}
-                    </p>
+                    </p> -->
+                    <p
+                    class="font_14 school-grid-date d-inline-block mb-0"
+                  >
+                    {{ post.createdOn | ChangeTimeZonePipe | date : "dd" }}
+                    {{ post.createdOn | ChangeTimeZonePipe | date : "MMMM"|translate }}
+                  </p>
+                  <p
+                    class="font_14 school-grid-date d-inline-block mb-0 me-3"
+                  >
+                    {{post.createdOn | ChangeTimeZonePipe | date : "yyyy"}}
+                  </p>
+                  <p 
+                    class="font_14 school-grid-date d-inline-block mb-0 me-3"
+                  >
+                    {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm" }}
+                  </p>
                   </div>
 
                   <div
@@ -4781,10 +4871,26 @@
                       </a>
                     </h2>
                     <br />
-                    <p class="font_14 school-grid-date d-inline-block mb-0">
+                    <!-- <p class="font_14 school-grid-date d-inline-block mb-0">
                       {{ post.createdOn | ChangeTimeZonePipe | date : "MMMM d" }} -
                       {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm" }}
-                    </p>
+                    </p> -->
+                    <p
+                    class="font_14 school-grid-date d-inline-block mb-0"
+                  >
+                    {{ post.createdOn | ChangeTimeZonePipe | date : "dd" }}
+                    {{ post.createdOn | ChangeTimeZonePipe | date : "MMMM"|translate }}
+                  </p>
+                  <p
+                    class="font_14 school-grid-date d-inline-block mb-0 me-3"
+                  >
+                    {{post.createdOn | ChangeTimeZonePipe | date : "yyyy"}}
+                  </p>
+                  <p 
+                    class="font_14 school-grid-date d-inline-block mb-0 me-3"
+                  >
+                    {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm" }}
+                  </p>
                   </div>
 
                   <div

@@ -1456,6 +1456,7 @@ export class SchoolProfileComponent
       });
     }
     else {
+      debugger;
       var postAttachments = this.filteredAttachments.filter(x => x.postId == posts.id);
       const initialState = {
         posts: posts,

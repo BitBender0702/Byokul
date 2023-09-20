@@ -116,18 +116,19 @@
                               </h5>
                             </div>
                             <div class="reel-username font_16 white_text">
-                              <img *ngIf="post.parentImageUrl != null && post.postAuthorType == 4"
-                                [src]="post.parentImageUrl"
-                                (click)="hideCommentModal()"
-                                [routerLink]="['/user/userProfile',post.createdBy]"
-                                class="me-2 cursor_pointer"
-                              />
+                             
                               <img *ngIf="post.parentImageUrl != null && post.postAuthorType == 1"
                                 [src]="post.parentImageUrl"
                                 (click)="hideCommentModal()"
                                 [routerLink]="['/profile/school', post.parentName]"
                                 class="me-2 cursor_pointer"
                               />
+                              <img *ngIf="post.parentImageUrl != null && post.postAuthorType == 4"
+                              [src]="post.parentImageUrl"
+                              (click)="hideCommentModal()"
+                              [routerLink]="['/user/userProfile',post.createdBy]"
+                              class="me-2 cursor_pointer"
+                            />
                               <img *ngIf="post.parentImageUrl != null && post.postAuthorType == 2"
                               [src]="post.parentImageUrl"
                               (click)="hideCommentModal()"

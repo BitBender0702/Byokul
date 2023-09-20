@@ -457,13 +457,33 @@
                       </h2>
                     </div>
                     <div>
-                      <p
+                      <!-- <p
                         *ngIf="post.createdOn != null"
                         class="font_14 school-grid-date d-inline-block mb-0 me-3"
                       >
                         {{ post.createdOn | ChangeTimeZonePipe | date : "MMMM d" }} -
                         {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm" }}
-                      </p>
+                      </p> -->
+
+                      <p
+                      *ngIf="post.createdOn != null"
+                      class="font_14 school-grid-date d-inline-block mb-0 me-1"
+                    >
+                      {{ post.createdOn | ChangeTimeZonePipe | date : "dd" }}
+                      {{ post.createdOn | ChangeTimeZonePipe | date : "MMMM"|translate }}
+                    </p>
+                    <p
+                      *ngIf="post.createdOn != null"
+                      class="font_14 school-grid-date d-inline-block mb-0 me-3"
+                    >
+                      {{post.createdOn | ChangeTimeZonePipe | date : "yyyy"}}
+                    </p>
+                    <p
+                      *ngIf="post.createdOn != null"
+                      class="font_14 school-grid-date d-inline-block mb-0 me-3"
+                    >
+                      {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm" }}
+                    </p>
                     </div>
                   </div>
 
@@ -1352,13 +1372,32 @@
                         <hr />
                         <div class="right-action">
                           <div>
-                            <p
+                            <!-- <p
                               *ngIf="post.createdOn != null"
                               class="font_14 school-grid-date d-inline-block mb-0"
                             >
                               {{ post.createdOn | ChangeTimeZonePipe | date : "MMMM d" }} -
                               {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm" }}
-                            </p>
+                            </p> -->
+                            <p
+                            *ngIf="post.createdOn != null"
+                            class="font_14 school-grid-date d-inline-block mb-0 me-1"
+                          >
+                            {{ post.createdOn | ChangeTimeZonePipe | date : "dd" }}
+                            {{ post.createdOn | ChangeTimeZonePipe | date : "MMMM"|translate }}
+                          </p>
+                          <p
+                            *ngIf="post.createdOn != null"
+                            class="font_14 school-grid-date d-inline-block mb-0 me-3"
+                          >
+                            {{post.createdOn | ChangeTimeZonePipe | date : "yyyy"}}
+                          </p>
+                          <p
+                            *ngIf="post.createdOn != null"
+                            class="font_14 school-grid-date d-inline-block mb-0 me-3"
+                          >
+                            {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm" }}
+                          </p>
                           </div>
                           <button
                             type="button"
@@ -1734,11 +1773,27 @@
                       </h2>
                     </div>
                     <div>
+                      <!-- <p *ngIf="post.createdOn != null" class="font_14 school-grid-date d-inline-block mb-0 me-3">
+                        {{ post.createdOn | ChangeTimeZonePipe | date : "dd/MM/yyyy" }} -
+                        {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm" }}
+                      </p> -->
+                      <p
+                        *ngIf="post.createdOn != null"
+                        class="font_14 school-grid-date d-inline-block mb-0 me-1"
+                      >
+                        {{ post.createdOn | ChangeTimeZonePipe | date : "dd" }}
+                        {{ post.createdOn | ChangeTimeZonePipe | date : "MMMM"|translate }}
+                      </p>
                       <p
                         *ngIf="post.createdOn != null"
                         class="font_14 school-grid-date d-inline-block mb-0 me-3"
                       >
-                        {{ post.createdOn | ChangeTimeZonePipe | date : "MMMM d" }} -
+                        {{post.createdOn | ChangeTimeZonePipe | date : "yyyy"}}
+                      </p>
+                      <p
+                        *ngIf="post.createdOn != null"
+                        class="font_14 school-grid-date d-inline-block mb-0 me-3"
+                      >
                         {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm" }}
                       </p>
                     </div>
@@ -2676,13 +2731,33 @@
                         <hr />
                         <div class="right-action">
                           <div>
-                            <p
+                            <!-- <p
                               *ngIf="post.createdOn != null"
                               class="font_14 school-grid-date d-inline-block mb-0"
                             >
                               {{ post.createdOn | ChangeTimeZonePipe | date : "MMMM d" }} -
                               {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm" }}
-                            </p>
+                            </p> -->
+
+                            <p
+                            *ngIf="post.createdOn != null"
+                            class="font_14 school-grid-date d-inline-block mb-0 me-1"
+                          >
+                            {{ post.createdOn | ChangeTimeZonePipe | date : "dd" }}
+                            {{ post.createdOn | ChangeTimeZonePipe | date : "MMMM"|translate }}
+                          </p>
+                          <p
+                            *ngIf="post.createdOn != null"
+                            class="font_14 school-grid-date d-inline-block mb-0 me-3"
+                          >
+                            {{post.createdOn | ChangeTimeZonePipe | date : "yyyy"}}
+                          </p>
+                          <p
+                            *ngIf="post.createdOn != null"
+                            class="font_14 school-grid-date d-inline-block mb-0 me-3"
+                          >
+                            {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm" }}
+                          </p>
                           </div>
                           <button
                             type="button"

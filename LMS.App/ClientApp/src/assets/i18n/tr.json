@@ -602,7 +602,8 @@
   "AudioOrVideoTypeNotAllowed":"Video veya ses türü dosyaya izin verilmiyor",
   "ClassDisabledByAdmin":"Erişmeye çalıştığınız sınıf yönetici tarafından devre dışı bırakıldı",
   "CourseDisabledByAdmin":"Erişmeye çalıştığınız kurs yönetici tarafından devre dışı bırakıldı",
-  "UserBanned":"Erişmeye çalışan kullanıcı yasaklandı"
+  "UserBanned":"Erişmeye çalışan kullanıcı yasaklandı",
+  "CurrentpasswordAndPasswordCantMatch":"Mevcut şifre yeni şifreyle eşleşmiyor"
 
 
 

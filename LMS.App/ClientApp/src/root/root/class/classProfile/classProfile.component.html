@@ -91,8 +91,8 @@
                     <!-- {{ translateDate(class.startDate) }} -->
                     <!-- {{ formatLocalizedDate(class.startDate) }} -->
 
-                    {{ class.startDate | date : "MMMM d, y" }} -
-                    {{ class.endDate | date : "MMMM d, y" }}
+                    {{ class.startDate | date : "dd/MM/yyyy" }} -
+                    {{ class.endDate | date : "dd/MM/yyyy" }}
                   </span>
                   <span class="sepearator mx-4">|</span>
                   <span class="date-class text_ltgray font_14">{{ class.posts.length }} {{ "Lectures" | translate
@@ -436,10 +436,30 @@
                       <img lazyLoad="../../../../assets/images/live_img.png" />
                     </div>
                     <div>
-                      <p *ngIf="post.createdOn != null" class="font_14 school-grid-date d-inline-block mb-0 me-3">
-                        {{ post.createdOn | ChangeTimeZonePipe | date : "MMMM d" }} -
+                      <!-- <p *ngIf="post.createdOn != null" class="font_14 school-grid-date d-inline-block mb-0 me-3">
+                        {{ post.createdOn | ChangeTimeZonePipe | date : "dd/MM/yyyy" }} -
                         {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm" }}
-                      </p>
+                      </p> -->
+
+                      <p
+                      *ngIf="post.createdOn != null"
+                      class="font_14 school-grid-date d-inline-block mb-0 me-1"
+                    >
+                      {{ post.createdOn | ChangeTimeZonePipe | date : "dd" }}
+                      {{ post.createdOn | ChangeTimeZonePipe | date : "MMMM"|translate }}
+                    </p>
+                    <p
+                      *ngIf="post.createdOn != null"
+                      class="font_14 school-grid-date d-inline-block mb-0 me-3"
+                    >
+                      {{post.createdOn | ChangeTimeZonePipe | date : "yyyy"}}
+                    </p>
+                    <p
+                      *ngIf="post.createdOn != null"
+                      class="font_14 school-grid-date d-inline-block mb-0 me-3"
+                    >
+                      {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm" }}
+                    </p>
                       <button *ngIf="post.isPinned && isOwner" (click)="pinUnpinPost(post.id, false)" type="button"
                         class="bg-transparent border-0 pinned-grid-chat">
                         <img lazyLoad="../../../../assets/images/pinned-orange.svg" />
@@ -902,10 +922,30 @@
                         <hr />
                         <div class="d-flex align-items-center justify-content-between">
                           <div class="d-flex justify-content-between date-view-list">
-                            <p *ngIf="post.createdOn != null" class="font_14 school-grid-date d-inline-block mb-0">
+                            <!-- <p *ngIf="post.createdOn != null" class="font_14 school-grid-date d-inline-block mb-0">
                               {{ post.createdOn | ChangeTimeZonePipe | date : "MMMM d" }} -
                               {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm" }}
-                            </p>
+                            </p> -->
+
+                            <p
+                            *ngIf="post.createdOn != null"
+                            class="font_14 school-grid-date d-inline-block mb-0 me-1"
+                          >
+                            {{ post.createdOn | ChangeTimeZonePipe | date : "dd" }}
+                            {{ post.createdOn | ChangeTimeZonePipe | date : "MMMM"|translate }}
+                          </p>
+                          <p
+                            *ngIf="post.createdOn != null"
+                            class="font_14 school-grid-date d-inline-block mb-0 me-3"
+                          >
+                            {{post.createdOn | ChangeTimeZonePipe | date : "yyyy"}}
+                          </p>
+                          <p
+                            *ngIf="post.createdOn != null"
+                            class="font_14 school-grid-date d-inline-block mb-0 me-3"
+                          >
+                            {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm" }}
+                          </p>
                           </div>
                           <button type="button" class="view font_12 bg-transparent border-0 cursor_auto">
                             <img lazyLoad="../../../../assets/images/eye.svg" class="me-2" />

@@ -100,6 +100,7 @@ export class RegisteredClassesComponent extends MultilingualComponent implements
       }
 
       deleteClass(){
+        this.loadingIcon=true;
         this._classService.deleteClass(this.classId).subscribe((response) => {
           //ownedClassResponse.next({ classId: this.class.classId, classAvatar: "", className: "", schoolName: "", action: "delete" });
           // const translatedSuccessSummary = this.translateService.instant('Success');
@@ -108,11 +109,12 @@ export class RegisteredClassesComponent extends MultilingualComponent implements
           // this.loadingIcon = false;
           this.messageService.add({ severity: 'success', summary: 'Success', life: 3000, detail: 'Class deleted successfully' });
           this.loadingIcon = false;
-          // deleteClassResponse.next('delete');
+         this.ngOnInit()
         });
       }
 
       restoreClass(){
+        this.loadingIcon = true;
         this._classService.restoreClass(this.classId).subscribe((response) => {
           //ownedClassResponse.next({ classId: this.class.classId, classAvatar: "", className: "", schoolName: "", action: "delete" });
           // const translatedSuccessSummary = this.translateService.instant('Success');
@@ -121,7 +123,7 @@ export class RegisteredClassesComponent extends MultilingualComponent implements
           // this.loadingIcon = false;
           this.messageService.add({ severity: 'success', summary: 'Success', life: 3000, detail: 'Class Restored successfully' });
           this.loadingIcon = false;
-          // deleteClassResponse.next('delete');
+          this.ngOnInit()
         });
       }
 

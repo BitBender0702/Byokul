@@ -133,6 +133,10 @@
                   {{ "IsEnable" | translate
                   }}<p-sortIcon field="isEnable"></p-sortIcon>
                 </th>
+                <th pSortableColumn="isDeleted">
+                  {{ "isDeleted" | translate
+                  }}<p-sortIcon field="isDeleted"></p-sortIcon>
+                </th>
                 <th></th>
               </tr>
             </ng-template>
@@ -216,6 +220,35 @@
                     {{ "Enable" | translate }}
                   </button>
                 </td>
+
+
+                <td>
+                  <button
+                    *ngIf="!course.isDeleted"
+                    (click)="getDeleteCourseDetails(course.courseId,'notDeleted')"
+                    data-bs-toggle="modal"
+                    data-bs-target="#deletecourse"
+                    pButton
+                    pRipple
+                    icon="pi pi-pencil"
+                    class="btn custom-btn primary_btn earning-btn fw_400 h_44 pe-4 ps-4 mt-2 mb-2"
+                  >
+                    {{ "Delete" | translate }}
+                  </button>
+                  <button
+                  *ngIf="course.isDeleted"
+                  (click)="getDeleteCourseDetails(course.courseId,'Deleted')"
+                    data-bs-toggle="modal"
+                    data-bs-target="#deletecourse"
+                    pButton
+                    pRipple
+                    icon="pi pi-pencil"
+                    class="btn custom-btn primary_btn earning-btn fw_400 h_44 pe-4 ps-4 mt-2 mb-2"
+                  >
+                    {{ "Restore" | translate }}
+                  </button>
+                </td>
+              
               </tr>
             </ng-template>
             <ng-template pTemplate="summary">
@@ -298,4 +331,81 @@
       </div>
     </div>
   </div>
+</div>
+
+
+
+
+<div
+class="modal fade edit-school-modal delete-modal"
+id="deletecourse"
+tabindex="-1"
+aria-labelledby="deletecourse"
+aria-hidden="true"
+>
+<div class="modal-dialog modal-dialog-centered">
+  <div class="modal-content">
+    <div
+      class="modal-header border-0 justify-content-center position-relative"
+    >
+      <h1
+       *ngIf="!courseDeletedOrNot" class="modal-title font_22 text_dark fw_700 border-0 text-center"
+      >
+        {{ "DeleteCourse" | translate }}
+      </h1>
+      <h1
+       *ngIf="courseDeletedOrNot" class="modal-title font_22 text_dark fw_700 border-0 text-center"
+      >
+        {{ "RestoreCourse" | translate }}
+      </h1>
+      <button
+        type="button"
+        class="btn-close shadow-none"
+        data-bs-dismiss="modal"
+        aria-label="Close"
+      >
+        <img lazyLoad="../../../../assets/images/cross.svg" />
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <h2 *ngIf="!courseDeletedOrNot" class="text-center font_16 f-poppins">
+          {{ "DoYouWantToDelete" | translate }}
+        </h2>
+        <h2 *ngIf="courseDeletedOrNot" class="text-center font_16 f-poppins">
+          {{ "DoYouWantToRestore" | translate }}
+        </h2>
+      </div>
+      <div
+        class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-2 mt-4"
+      >
+        <button
+          type="button"
+          class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+          data-bs-dismiss="modal"
+        >
+          {{ "No" | translate }}
+        </button>
+        <button
+          *ngIf="!courseDeletedOrNot"
+          (click)="deleteCourse()"
+          type="button"
+          class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
+          data-bs-dismiss="modal"
+        >
+          {{ "Yes" | translate }}
+        </button>
+        <button
+        *ngIf="courseDeletedOrNot"
+        (click)="restoreCourse()"
+        type="button"
+        class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
+        data-bs-dismiss="modal"
+      >
+        {{ "Restore" | translate }}
+      </button>
+      </div>
+    </div>
+  </div>
+</div>
 </div>

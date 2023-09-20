@@ -10,6 +10,9 @@ import { MultilingualComponent, changeLanguage } from 'src/root/root/sharedModul
 import { Subject, Subscription } from 'rxjs';
 import { AuthService } from 'src/root/service/auth.service';
 import { SignalrService } from 'src/root/service/signalr.service';
+import { TranslateService } from '@ngx-translate/core';
+import { MessageService } from 'primeng/api';
+import { CourseService } from 'src/root/service/course.service';
 
 export const disableEnableResponse = new Subject<{reloadClassCourseProfile:string}>();
 
@@ -23,6 +26,7 @@ export class RegisteredCoursesComponent extends MultilingualComponent implements
   private _adminService;
   private _authService;
   private _signalRService;
+  private  _courseService;
   isSubmitted: boolean = false;
   registeredCourses!:RegisteredCourses[];
   selectedCourses!: RegisteredCourses[];
@@ -32,14 +36,18 @@ export class RegisteredCoursesComponent extends MultilingualComponent implements
   cloned!:any;
   @ViewChild('dt') table!: Table;
   changeLanguageSubscription!:Subscription;
+  courseId!:string
+  courseDeletedOrNot!:boolean
+
   
 
 
-  constructor(injector: Injector,authService: AuthService,private fb: FormBuilder,private http: HttpClient,adminService: AdminService, signalRService: SignalrService) {
+  constructor(injector: Injector,authService: AuthService,private fb: FormBuilder,private http: HttpClient,adminService: AdminService, signalRService: SignalrService,courseService:CourseService,private translateService: TranslateService,public messageService: MessageService) {
     super(injector);
     this._adminService = adminService;
     this._authService = authService;
     this._signalRService = signalRService
+    this._courseService = courseService
   }
 
   ngOnInit(): void {
@@ -97,6 +105,35 @@ export class RegisteredCoursesComponent extends MultilingualComponent implements
           this._signalRService.reloadClassCourseProfile(this.courseIdForReload)
         });  
 
+      }
+
+
+      getDeleteCourseDetails(courseId:string,from:string){
+        this.courseId = courseId
+        if(from == "notDeleted"){
+          this.courseDeletedOrNot = false
+        }
+        else{ 
+          this.courseDeletedOrNot = true
+        }
+      }
+
+      deleteCourse(){
+        this.loadingIcon=true;
+        this._courseService.deleteCourse(this.courseId).subscribe((response) => {
+          this.messageService.add({ severity: 'success', summary: 'Success', life: 3000, detail: 'Course deleted successfully' });
+          this.loadingIcon = false;
+         this.ngOnInit()
+        });
+      }
+
+      restoreCourse(){
+        this.loadingIcon = true;
+        this._courseService.restoreCourse(this.courseId).subscribe((response) => {
+          this.messageService.add({ severity: 'success', summary: 'Success', life: 3000, detail: 'Course Restored successfully' });
+          this.loadingIcon = false;
+          this.ngOnInit()
+        });
       }
 
       search(event: any) {

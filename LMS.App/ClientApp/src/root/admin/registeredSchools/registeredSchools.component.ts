@@ -10,7 +10,7 @@ import { Table } from 'primeng/table';
 import { AuthService } from 'src/root/service/auth.service';
 import { OpenAdminSideBar } from '../admin-template/side-bar/adminSide-bar.component';
 import { MultilingualComponent, changeLanguage } from 'src/root/root/sharedModule/Multilingual/multilingual.component';
-import { Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { DeleteRestoreSchools } from 'src/root/interfaces/admin/deleteRestoreSchools';
 import { SchoolService } from 'src/root/service/school.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -157,7 +157,7 @@ export class RegisteredSchoolsComponent extends MultilingualComponent implements
           const translatedMessage = this.translateService.instant('SchoolRestoredSuccessfully');
           this.messageService.add({ severity: 'success', summary: translatedSuccessSummary, life: 3000, detail: translatedMessage });
           this.loadingIcon = false;
-          //deleteSchoolResponse.next('delete');
+          this.ngOnInit();
         });
       }
 
@@ -172,7 +172,7 @@ export class RegisteredSchoolsComponent extends MultilingualComponent implements
           const translatedMessage = this.translateService.instant('SchoolDeletedSuccessfully');
           this.messageService.add({ severity: 'success', summary: translatedSuccessSummary, life: 3000, detail: translatedMessage });
           this.loadingIcon = false;
-          // deleteSchoolResponse.next('delete');
+          this.ngOnInit();
         });
 
       
