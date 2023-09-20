@@ -51,6 +51,7 @@ namespace LMS.Common.ViewModels.School
         public bool IsSchoolSubscribed { get; set; }
         public double? AvailableStorageSpace { get; set; }
         public string? SchoolSlogan { get; set; }
+        public bool IsBan { get; set; }
 
     }
 }

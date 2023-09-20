@@ -227,7 +227,7 @@ namespace LMS.App.Controllers
 
         [Route("getPostsByClass")]
         [HttpGet]
-        public async Task<IActionResult> GetPostsByClass(Guid classId, int pageNumber, int pageSize = 12)
+        public async Task<IActionResult> GetPostsByClass(Guid classId, int pageNumber, int pageSize = 6)
         {
             var userId = await GetUserIdAsync(this._userManager);
             var response = await _classService.GetPostsByClassId(classId, userId, pageNumber, pageSize);

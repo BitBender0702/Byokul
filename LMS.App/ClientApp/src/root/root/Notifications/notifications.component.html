@@ -475,6 +475,38 @@
               </span>
             </div>
 
+            <div
+              *ngIf="item.notificationType == 14"
+              style="cursor: pointer"
+              class="d-flex align-items-center justify-content-between"
+              (click)="openPostsViewModel(item.post.id, item.postType)"
+            >
+              <span class="followers-name font_16 text_sec1 fw_600">
+                <img
+                  *ngIf="item.avatar != null"
+                  [src]="item.avatar"
+                  class="rounded-circle"
+                />
+                <img
+                  *ngIf="item.avatar == null && gender == '1'"
+                  src="../../../assets/images/maleProfile.jfif"
+                  class="rounded-circle"
+                  
+                />
+                <img
+                  *ngIf="
+                    item.avatar == null && (gender == '2' || gender == '3')
+                  "
+                  src="../../../assets/images/femaleProfile.jfif"
+                  class="rounded-circle"
+                  
+                />
+
+                <p class="font_16 ms-md-2 d-inline-block fw_400 mb-0">
+                  {{ item.notificationContent }}
+                </p>
+              </span>
+            </div>
               
                 <div class="position-relative">
                   <small>

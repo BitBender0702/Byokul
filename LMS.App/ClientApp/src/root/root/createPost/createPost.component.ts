@@ -161,13 +161,13 @@ export class CreatePostComponent implements OnInit, OnDestroy {
   createPostSubscription!: Subscription;
   createReelSubscription!: Subscription;
   createLiveSubscription!: Subscription;
-  selectedVideoFromLibrary:any;
-  type:string = "";
-  isCreatePost:boolean = true;
-  isCreateReel:boolean = false;
+  selectedVideoFromLibrary: any;
+  type: string = "";
+  isCreatePost: boolean = true;
+  isCreateReel: boolean = false;
 
 
-  
+
 
   @Output() onClose: EventEmitter<any> = new EventEmitter<any>();
 
@@ -179,14 +179,14 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     // this._blobStorageService = blobStorageService;
   }
 
-  profileShare:any=false;
-  forReel:boolean=false;
-  forPost:boolean=false
+  profileShare: any = false;
+  forReel: boolean = false;
+  forPost: boolean = false
   ngOnInit(): void {
     debugger
     this.isOwnerOrNot();
     var initialValue = this.options.initialState;
-    this.selectedVideoFromLibrary  = initialValue?.selectedVideoFromLibrary;
+    this.selectedVideoFromLibrary = initialValue?.selectedVideoFromLibrary;
 
     if (this.editPostId != undefined) {
       this._postService.getPostById(this.editPostId).subscribe((response) => {
@@ -199,12 +199,12 @@ export class CreatePostComponent implements OnInit, OnDestroy {
         // if(this.editPostDetails?.postType == 3){
         //   this.isCreateReel = false;
         // }
-        if(initialValue?.type=="reel"){
+        if (initialValue?.type == "reel") {
           this.forReel = true;
           this.forPost = false;
           this.initializeEditReelForm(this.editPostDetails.postAttachments[0].fileThumbnail);
           this.isOpenReelsTab = true;
-        } else{
+        } else {
           this.forPost = true;
           this.forReel = false;
           this.initializeEditPostForm();
@@ -235,7 +235,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
           this.profileShared(shareProfileData, response.avatar)
         }
 
-        if(this.selectedVideoFromLibrary != undefined){
+        if (this.selectedVideoFromLibrary != undefined) {
           debugger
           this.isVideoUpload = true;
           this.videoObject.videoUrl = this.selectedVideoFromLibrary.fileThumbnail;
@@ -257,7 +257,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
           }
           this.profileShared(shareProfileData, response.avatar)
         }
-        if(this.selectedVideoFromLibrary != undefined){
+        if (this.selectedVideoFromLibrary != undefined) {
           debugger
           this.isVideoUpload = true;
           this.videoObject.videoUrl = this.selectedVideoFromLibrary.fileThumbnail;
@@ -465,7 +465,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     // }
   }
 
-  currectTagLists:any;
+  currectTagLists: any;
   initializeEditPostForm() {
     this.createPostForm = this.fb.group({
       title: this.fb.control(this.editPostDetails.title, [Validators.required]),
@@ -479,11 +479,11 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     this.tagLists = this.editPostDetails.postTags.map((tagObj: { postTagValue: any; }) => tagObj.postTagValue);
 
     // if(this.tagLists[0] != '[]'){
-      this.currectTagLists = [...this.tagLists]
-      try {
-        this.currectTagLists = this.parseTheTags(this.currectTagLists)
-        this.tagLists = this.currectTagLists
-      } catch { }
+    this.currectTagLists = [...this.tagLists]
+    try {
+      this.currectTagLists = this.parseTheTags(this.currectTagLists)
+      this.tagLists = this.currectTagLists
+    } catch { }
     // }
 
     // this.editPostDetails.postAttachments
@@ -493,7 +493,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
 
     //   this.attachment.push(attachmentForEdit);
     // })
-    
+
 
     this.editPostDetails.postAttachments
       .filter((attachment: { fileType: number; }) => attachment.fileType === 1)
@@ -553,9 +553,9 @@ export class CreatePostComponent implements OnInit, OnDestroy {
         // this.attachment.push(imageObject);
       });
 
-      this.uploadImage = this.editPostDetails.postAttachments
-    .filter((attachment: { fileType: number; }) => attachment.fileType === 1)
-    .map((attachment: { fileUrl: any; }) => attachment.fileUrl);
+    this.uploadImage = this.editPostDetails.postAttachments
+      .filter((attachment: { fileType: number; }) => attachment.fileType === 1)
+      .map((attachment: { fileUrl: any; }) => attachment.fileUrl);
 
 
 
@@ -596,7 +596,11 @@ export class CreatePostComponent implements OnInit, OnDestroy {
   }
 
   handleImageInput(event: any) {
-    debugger
+    this.numberOfImages++;
+    if (this.numberOfImages >= 16) {
+      this.messageService.add({ severity: 'info', summary: 'Info', life: 3000, detail: 'Images Must Be Less Than Fifteen' });
+      return;
+    }
     var selectedFiles = event.target.files;
     for (let i = 0; i < selectedFiles.length; i++) {
       this.images.push(selectedFiles[i]);
@@ -617,7 +621,10 @@ export class CreatePostComponent implements OnInit, OnDestroy {
   }
 
   handleImageInput2(file: any) {
-    debugger
+    if (this.numberOfImages >= 16) {
+      this.messageService.add({ severity: 'info', summary: 'Info', life: 3000, detail: 'ImagesMustBeLessThanFifteen' });
+      return;
+    }
     this.images.push(file);
     const reader = new FileReader();
 
@@ -634,8 +641,14 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     reader.readAsDataURL(file);
   }
 
+  numberOfVideo: number = 0;
+  numberOfImages: number = 0
   handleVideoInput2(file: any) {
     debugger
+    if (this.numberOfVideo >= 2) {
+      this.messageService.add({ severity: 'info', summary: 'Info', life: 3000, detail: 'Video Must Be Only One' });
+      return;
+    }
     this.videos.push(file);
     const videoUrl = URL.createObjectURL(file);
     this.getVideoThumbnail(videoUrl, file.name, (thumbnailUrl) => {
@@ -653,6 +666,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
 
   removeUploadImage(image: any) {
     debugger
+    this.numberOfImages--
     const blobUrlIndex = this.uploadVideoUrlList.findIndex((item: any) => item.blobName === image.name);
     if (blobUrlIndex > -1) {
       this.uploadVideoUrlList.splice(blobUrlIndex, 1);
@@ -677,6 +691,11 @@ export class CreatePostComponent implements OnInit, OnDestroy {
   }
 
   handleVideoInput(event: any) {
+    this.numberOfVideo++;
+    if (this.numberOfVideo >= 2) {
+      this.messageService.add({ severity: 'info', summary: 'Info', life: 3000, detail: 'VideoMustBeOnlyOne' });
+      return;
+    }
     var selectedFiles = event.target.files;
     for (let i = 0; i < selectedFiles.length; i++) {
       this.videos.push(selectedFiles[i]);
@@ -693,6 +712,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     }
     this.scheduleVideoRequired = false;
     this.isVideoUpload = true;
+    this.isThumbnailUpload = true;
   }
 
   getVideoThumbnail(videoUrl: string, fileName: string, callback: (thumbnailUrl: string) => void) {
@@ -744,6 +764,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
   }
 
   removeUploadVideo(video: any) {
+    this.numberOfVideo--;
     const blobUrlIndex = this.uploadVideoUrlList.findIndex((item: any) => item.blobName === video.name);
     if (blobUrlIndex > -1) {
       this.uploadVideoUrlList.splice(blobUrlIndex, 1);
@@ -764,6 +785,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
       this.uploadVideoUrls.splice(videoUrlIndex, 1);
     }
     this.isVideoUpload = false;
+    this.isThumbnailUpload = false;
   }
 
   handleAttachmentInput(event: any) {
@@ -805,11 +827,11 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     }
     this.cd.detectChanges();
 
-      //const input = this.autocomplete.nativeElement;
+    //const input = this.autocomplete.nativeElement;
 
-      //const input = this.autoComplete.inputEL.nativeElement;
+    //const input = this.autoComplete.inputEL.nativeElement;
 
-      // this.autocomplete.inputEL.nativeElement.blur();
+    // this.autocomplete.inputEL.nativeElement.blur();
 
 
     // const unselectedFile = event.value;
@@ -873,10 +895,10 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     if (blobUrlIndex > -1) {
       this.uploadVideoUrlList.splice(blobUrlIndex, 1);
     }
-    if(this.uploadVideoUrlList.length == 0){
+    if (this.uploadVideoUrlList.length == 0) {
       this.createReelForm.get('reelsVideo')?.setValue('');
     }
-    
+
   }
 
   uploadPromises!: any[];
@@ -932,7 +954,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
       this.postToUpload.append('UploadAttachmentsUrls', JSON.stringify(this.attachmentUrls));
     }
 
-    if(this.profileShare){
+    if (this.profileShare) {
       this.postToUpload.append('SharedProfileUrl', window.location.href)
     }
 
@@ -1037,13 +1059,13 @@ export class CreatePostComponent implements OnInit, OnDestroy {
 
   }
 
-  postCheckForLimitSchoolId:any;
+  postCheckForLimitSchoolId: any;
   postFrom() {
     debugger
-    if(this.profileShare){
+    if (this.profileShare) {
       this.appendData(this.loginUserId, this.loginUserId, this.loginUserId, PostAuthorTypeEnum.User.toString());
     }
-    else{
+    else {
       if (this.schoolId != undefined) {
         this.appendData(this.schoolId, this.schoolId, '', PostAuthorTypeEnum.School.toString());
         this.postCheckForLimitSchoolId = this.schoolId;
@@ -1052,11 +1074,11 @@ export class CreatePostComponent implements OnInit, OnDestroy {
         this.appendData('', this.classId, this.parentDetails.school.schoolId, PostAuthorTypeEnum.Class.toString());
         this.postCheckForLimitSchoolId = this.parentDetails.school.schoolId
       }
-  
+
       if (this.userId != undefined) {
         this.appendData(this.userId, this.userId, this.userId, PostAuthorTypeEnum.User.toString());
       }
-  
+
       if (this.courseId != undefined) {
         if (this.parentDetails?.isConvertable) {
           this.appendData('', this.courseId, this.parentDetails.school.schoolId, PostAuthorTypeEnum.Class.toString());
@@ -1125,10 +1147,10 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     this.postToUpload.append('title', reel.title);
     this.postToUpload.append('postTags', JSON.stringify(this.reelsTagLists))
 
-    if(this.reel != undefined){
+    if (this.reel != undefined) {
       this.videos.push(this.reel);
     }
-    if(this.forReel){
+    if (this.forReel) {
       this.postToUpload.append('Id', this.editPostDetails.id);
     }
     var combinedFiles = [...this.videos, ... this.videoThumbnails];
@@ -1243,6 +1265,8 @@ export class CreatePostComponent implements OnInit, OnDestroy {
   }
 
   close(): void {
+    this.numberOfVideo = 0;
+    this.numberOfImages = 0;
     this.bsModalService.hide();
   }
 
@@ -1347,8 +1371,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     this.uploadVideoUrlList = [];
     this.isSubmitted = true;
 
-
-    localStorage.setItem("beforeLiveStreamUrl",window.location.href);
+    localStorage.setItem("beforeLiveStreamUrl", window.location.href);
 
 
     if (this.scheduleTime != undefined) {
@@ -1377,10 +1400,11 @@ export class CreatePostComponent implements OnInit, OnDestroy {
       }
     }
 
-    if (this.images.length < 1) {
-      this.thumbnailRequired = true;
-      return;
-    }
+    // if (this.images.length < 1) {
+    //   this.thumbnailRequired = true;
+    //   return;
+    // }
+
 
     if (!this.createLiveForm.valid) {
       return;
@@ -1395,20 +1419,20 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     //   this.postToUpload.append('uploadVideosThumbnail', this.videoThumbnails[i]);
     // }
 
-    if(this.selectedVideoFromLibrary == undefined){
-    if (this.videos.length == 0) {
-      this.loadingIcon = true;
+    if (this.selectedVideoFromLibrary == undefined) {
+      if (this.videos.length == 0) {
+        this.loadingIcon = true;
+      }
+      else {
+        this.loadingIcon = true;
+        setTimeout(() => {
+          this.close();
+          this.loadingIcon = false;
+          postProgressNotification.next({ from: Constant.Post });
+        }, 3000);
+      }
+
     }
-    else {
-      this.loadingIcon = true;
-      setTimeout(() => {
-        this.close();
-        this.loadingIcon = false;
-        postProgressNotification.next({ from: Constant.Post });
-      }, 3000);
-    }
-    
-  }
 
     var post = this.createLiveForm.value;
     this.postFrom();
@@ -1426,14 +1450,14 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     //   this.postToUpload.append('uploadImages', this.images[i]);
     // }
 
-    if(this.selectedVideoFromLibrary == undefined){
-    const combinedFiles = [...this.videos, ...this.images];
-    postUploadOnBlob.next({ postToUpload: this.postToUpload, combineFiles: combinedFiles, videos: this.videos, images: this.images, attachment: null, type: 3, reel: null, uploadedUrls: [], checkLimitSchoolId: this.postCheckForLimitSchoolId });
+    if (this.selectedVideoFromLibrary == undefined) {
+      const combinedFiles = [...this.videos, ...this.images];
+      postUploadOnBlob.next({ postToUpload: this.postToUpload, combineFiles: combinedFiles, videos: this.videos, images: this.images, attachment: null, type: 3, reel: null, uploadedUrls: [], checkLimitSchoolId: this.postCheckForLimitSchoolId });
     }
 
-    if(this.selectedVideoFromLibrary != undefined){
+    if (this.selectedVideoFromLibrary != undefined) {
       this.loadingIcon = true;
-        this.saveLiveStream(this.selectedVideoFromLibrary);
+      this.saveLiveStream(this.selectedVideoFromLibrary);
     }
     //   this._postService.createPost(this.postToUpload).subscribe((response:any) => {
     //     debugger
@@ -1467,57 +1491,57 @@ export class CreatePostComponent implements OnInit, OnDestroy {
 
   }
 
-  saveLiveStream(selectedVideoFromLibrary:any){
+  saveLiveStream(selectedVideoFromLibrary: any) {
     debugger
     var prefix = "videos";
     const id = uuidv4();
     const blobName = `${prefix}/${id.toString()}${selectedVideoFromLibrary.fileName.substring(selectedVideoFromLibrary.fileName.lastIndexOf('.'))}`;
-    var uploadVideoObject = 
+    var uploadVideoObject =
     {
       id: id,
-      blobUrl:selectedVideoFromLibrary.fileUrl,
-      blobName:blobName,
-      fileType:2,
-      fileThumbnail:selectedVideoFromLibrary.fileThumbnail
+      blobUrl: selectedVideoFromLibrary.fileUrl,
+      blobName: blobName,
+      fileType: 2,
+      fileThumbnail: selectedVideoFromLibrary.fileThumbnail
     }
 
     var uploadVideo = [];
     uploadVideo.push(uploadVideoObject);
     this.postToUpload.set('blobUrlsJson', JSON.stringify(uploadVideo));
 
-      this._postService.createPost(this.postToUpload).subscribe((response:any) => {
-        debugger
-        this.isSubmitted=false;
-        this.loadingIcon = false;
-        //addPostResponse.next({response});
-        this.postToUpload = new FormData();
-        this.close();
+    this._postService.createPost(this.postToUpload).subscribe((response: any) => {
+      debugger
+      this.isSubmitted = false;
+      this.loadingIcon = false;
+      //addPostResponse.next({response});
+      this.postToUpload = new FormData();
+      this.close();
       this.router.navigate(
-        [`liveStream`,response.id,this.from]
-    );
-        
-        // if(this.videos.length != 0){
-        // var translatedMessage = this.translateService.instant('VideoReadyToStream');
-        // var notificationContent = translatedMessage;
-        // var chatType = this.from == "user" ? 1 :this.from == "school" ? 3 : this.from == "class" ? 4 : undefined;
-        // this._notificationService.initializeNotificationViewModel(this.loginUserId,NotificationType.PostUploaded,notificationContent,this.loginUserId,response.id,response.postType,response,null,chatType).subscribe((response) => {
-        // });
+        [`liveStream`, response.id, this.from]
+      );
+
+      // if(this.videos.length != 0){
+      // var translatedMessage = this.translateService.instant('VideoReadyToStream');
+      // var notificationContent = translatedMessage;
+      // var chatType = this.from == "user" ? 1 :this.from == "school" ? 3 : this.from == "class" ? 4 : undefined;
+      // this._notificationService.initializeNotificationViewModel(this.loginUserId,NotificationType.PostUploaded,notificationContent,this.loginUserId,response.id,response.postType,response,null,chatType).subscribe((response) => {
+      // });
       //  }
-    //   else{
-    //     // const fullNameIndex = response.streamUrl.indexOf('fullName='); // find the index of "fullName="
-    //     // const newUrl = response.streamUrl.slice(fullNameIndex);
-    //     // here we need to send schoolId/classId if stream from those.
-    //     if(!response.isPostSchedule){
-    //     this.router.navigate(
-    //         [`liveStream`,response.id,this.from]
-    //         // { state: { stream: {streamUrl: response.streamUrl, userId:this.userId, meetingId: post.title,from:"user"} } });
+      //   else{
+      //     // const fullNameIndex = response.streamUrl.indexOf('fullName='); // find the index of "fullName="
+      //     // const newUrl = response.streamUrl.slice(fullNameIndex);
+      //     // here we need to send schoolId/classId if stream from those.
+      //     if(!response.isPostSchedule){
+      //     this.router.navigate(
+      //         [`liveStream`,response.id,this.from]
+      //         // { state: { stream: {streamUrl: response.streamUrl, userId:this.userId, meetingId: post.title,from:"user"} } });
 
-    //     // }
-    //     );
+      //     // }
+      //     );
 
-    //   }
-    // }
-        });
+      //   }
+      // }
+    });
   }
 
   openMicroPhone() {
@@ -1542,8 +1566,10 @@ export class CreatePostComponent implements OnInit, OnDestroy {
       for (let i = 0; i < files.length; i++) {
         const file: File = files.item(i)!;
         if (file.type.startsWith('image/')) {
+          this.numberOfImages++;
           this.handleImageInput2(file);
         } else if (file.type.startsWith('video/')) {
+          this.numberOfVideo++;
           this.handleVideoInput2(file);
         }
         else if (file.type.startsWith('application/pdf')) {
@@ -1628,7 +1654,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
 
 
 
-  profileShared(initialValue:any, thumbnailUrl:any){
+  profileShared(initialValue: any, thumbnailUrl: any) {
     debugger
     this.createPostForm = this.fb.group({
       title: this.fb.control(initialValue?.title, [Validators.required]),
@@ -1638,15 +1664,15 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     const imageObject = {
       imageUrl: thumbnailUrl
     };
-    if(thumbnailUrl != null){
-    var imageBlobobject = {
-      id: uuidv4(),
-      blobUrl: thumbnailUrl,
-      fileType: UploadTypeEnum.Image,
-      blobName: initialValue.title
+    if (thumbnailUrl != null) {
+      var imageBlobobject = {
+        id: uuidv4(),
+        blobUrl: thumbnailUrl,
+        fileType: UploadTypeEnum.Image,
+        blobName: initialValue.title
+      }
+      this.uploadVideoUrlList.push(imageBlobobject);
     }
-    this.uploadVideoUrlList.push(imageBlobobject);
-  }
     this.uploadImageUrls.push(imageObject);
   }
 
@@ -1663,7 +1689,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
   }
 
 
-  initializeEditReelForm(thumbnailUrl?:any) {
+  initializeEditReelForm(thumbnailUrl?: any) {
     debugger
     this.isOpenReelsTab = true;
     this.createReelForm = this.fb.group({
@@ -1678,7 +1704,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     try {
       this.currectTagLists = this.parseTheTags(this.currectTagLists)
       this.reelsTagLists = this.currectTagLists
-    } 
+    }
     catch { }
     this.videoObject.videoUrl = thumbnailUrl;
     this.videoObject.name = this.editPostDetails.postAttachments[0].fileName;

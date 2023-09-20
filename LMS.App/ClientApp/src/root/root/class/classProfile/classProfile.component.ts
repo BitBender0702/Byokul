@@ -335,12 +335,12 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
         return;
        }
 
-       if(!response.isDisableByOwner && response.isDeleted && !this.isOwner){
+       if(!response.isDisableByOwner && response.isDeleted){
         this.router.navigate([`/profile/classes/${this.class.className}/true/false`]);
         return;
        }
 
-       if(response.isDisableByOwner && response.isDeleted && !this.isOwner){
+       if(response.isDisableByOwner && response.isDeleted){
         this.router.navigate([`/profile/classes/${this.class.className}/true/true`]);
         return;
       }

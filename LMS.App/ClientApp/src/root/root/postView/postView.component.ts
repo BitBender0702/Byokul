@@ -28,7 +28,7 @@ import { StudentService } from 'src/root/service/student.service';
 import { ClassCourseEnum } from 'src/root/Enums/classCourseEnum';
 import { DeleteConfirmationComponent } from '../delete-confirmation/delete-confirmation.component';
 
-
+import { TranslateService } from '@ngx-translate/core';
 
 
 export const sharePostResponse = new Subject<{}>();
@@ -88,7 +88,7 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private _studentService;
 
-  constructor(private bsModalService: BsModalService, bigBlueButtonService: BigBlueButtonService,studentService: StudentService, public messageService: MessageService, notificationService: NotificationService, chatService: ChatService, public signalRService: SignalrService, public postService: PostService, public options: ModalOptions, private fb: FormBuilder, private router: Router, private http: HttpClient, private activatedRoute: ActivatedRoute, userService: UserService, private cd: ChangeDetectorRef) {
+  constructor(private bsModalService: BsModalService,private translateService: TranslateService, bigBlueButtonService: BigBlueButtonService,studentService: StudentService, public messageService: MessageService, notificationService: NotificationService, chatService: ChatService, public signalRService: SignalrService, public postService: PostService, public options: ModalOptions, private fb: FormBuilder, private router: Router, private http: HttpClient, private activatedRoute: ActivatedRoute, userService: UserService, private cd: ChangeDetectorRef) {
     this._postService = postService;
     this._signalRService = signalRService;
     this._userService = userService;
@@ -457,6 +457,13 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
       this.groupChatList.nativeElement.scrollTop = this.groupChatList.nativeElement.scrollHeight;
       this.commentViewModel.id = response.id;
       this._signalRService.sendToGroup(this.commentViewModel);
+      var translatedMessage = this.translateService.instant('commented your post');
+      var notificationContent = translatedMessage;
+      this._notificationService.initializeNotificationViewModel(this.post.parentId, NotificationType.CommentSent, notificationContent, this.userId, this.post.id, this.post.postType, null, null).subscribe((response) => {
+        debugger;
+      });
+      // initializeNotificationViewModel(userid:string,notificationType:NotificationType,notificationContent:string,loginUserId:string,postId?:string | null,postType?:number,post?:any,reelId?:string | null,chatType?:number,chatTypeId?:string| null):Observable<any>{
+  
     });
   }
 
@@ -474,6 +481,7 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   likeUnlikeComments(commentId: string, _isLike: boolean, _isCommentLikedByCurrentUser: boolean, _likeCount: number) {
+    debugger;
     var comment: any[] = this.post.comments;
     var isCommentLiked = comment.find(x => x.id == commentId);
     this.initializeCommentLikeUnlike();
@@ -494,6 +502,7 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
       this.commentLikeUnlike.likeCount = isCommentLiked.likeCount;
     }
     this.signalRService.notifyCommentLike(this.commentLikeUnlike);
+    // this._signalRService.sendNotification();
   }
 
   initializeCommentLikeUnlike() {

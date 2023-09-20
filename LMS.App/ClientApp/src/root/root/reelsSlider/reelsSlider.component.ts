@@ -31,6 +31,8 @@ import { ReelsService } from 'src/root/service/reels.service';
 import { StudentService } from 'src/root/service/student.service';
 import { ClassCourseEnum } from 'src/root/Enums/classCourseEnum';
 
+// import { TranslateService } from '@ngx-translate/core';
+
 export const savedReelResponse = new Subject<{ isReelSaved: boolean, id: string }>();
 
 
@@ -1109,6 +1111,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   //   }
 
   sendToGroup(reel: any) {
+    debugger;
     let message = this.messageToGroup;
     if(!message || message.trim().length == 0){
       return;
@@ -1130,6 +1133,11 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       this.groupChatList.nativeElement.scrollTop = this.groupChatList.nativeElement.scrollHeight;
       this.commentViewModel.id = response.id;
       this._signalRService.sendToGroup(this.commentViewModel);
+      var translatedMessage = this.translateService.instant('commented in your reel');
+      var notificationContent = translatedMessage;
+      this._notificationService.initializeNotificationViewModel(reel.parentId, NotificationType.CommentSent, notificationContent, this.userId, reel.id, reel.postType, null, null).subscribe((response) => {
+        debugger;
+      });
     });
   }
 

@@ -599,6 +599,10 @@
   "ClassDisabledByAdmin":"تم تعطيل الفصل الذي تحاول الوصول إليه من قبل المشرف",
   "CourseDisabledByAdmin":"تم تعطيل الدورة التدريبية التي تحاول الوصول إليها من قبل المشرف",
   "UserBanned":"المستخدم الذي يحاول الوصول محظور",
+  "ImagesMustBeLessThanFifteen":"Images Must Be Less Than Fifteen",
+  "VideoMustBeOnlyOne":"Video Must Be Only One"
+
+  "UserBanned":"المستخدم الذي يحاول الوصول محظور",
   "CurrentpasswordAndPasswordCantMatch":"كلمة المرور الحالية لا يمكن أن تتطابق مع كلمة المرور الجديدة"
 
 

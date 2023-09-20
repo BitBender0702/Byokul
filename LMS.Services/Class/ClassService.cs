@@ -615,7 +615,7 @@ namespace LMS.Services
             return model;
         }
 
-        public async Task<IEnumerable<PostDetailsViewModel>> GetPostsByClassId(Guid classId, string loginUserId, int pageNumber = 1, int pageSize = 12)
+        public async Task<IEnumerable<PostDetailsViewModel>> GetPostsByClassId(Guid classId, string loginUserId, int pageNumber = 1, int pageSize = 6)
         {
             var courseList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == classId && (x.PostType == (int)PostTypeEnum.Post || (x.PostType == (int)PostTypeEnum.Stream) && x.IsLive == true) && x.PostAuthorType == (int)PostAuthorTypeEnum.Class && x.IsPostSchedule != true).OrderByDescending(x => x.IsPinned).ThenByDescending(x => x.CreatedOn).ToListAsync();
 

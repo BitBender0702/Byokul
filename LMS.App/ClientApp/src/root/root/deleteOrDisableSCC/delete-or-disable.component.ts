@@ -21,6 +21,7 @@ export class DeleteOrDisableComponent extends MultilingualComponent implements O
     schoolDeleted: boolean = false;
     schoolDisabled: boolean = false;
     schoolDisabledAndDeleted:boolean=false;
+    schoolBanByAdmin:boolean=false;
 
     classDeleted: boolean = false;
     classDisabled: boolean = false;
@@ -85,6 +86,10 @@ export class DeleteOrDisableComponent extends MultilingualComponent implements O
 
         if(this.schoolName != undefined && this.isDeleted=="true" && this.isDisabled=="false"){
             this.schoolDeleted = true;
+        }
+
+        if(this.schoolName != undefined && this.isDeleted=="null" && this.isDisabled=="null"){
+            this.schoolBanByAdmin = true;
         }
 
         if(this.schoolName != undefined && this.isDeleted=="true" && this.isDisabled=="true"){

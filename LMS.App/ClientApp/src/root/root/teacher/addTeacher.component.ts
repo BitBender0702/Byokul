@@ -351,12 +351,21 @@ export class AddTeacherComponent extends MultilingualComponent implements OnInit
         }
     }
 
-    omit_special_char(event:any)
-    {   
-       var k;  
-       k = event.charCode;
-       return ((k > 64 && k < 91) || (k > 96 && k < 123) || k == 8 || k == 32) && !(k >= 48 && k <= 57);
-     }
+    // omit_special_char(event:any)
+    // {   
+    //    var k;  
+    //    k = event.charCode;
+    //    return ((k > 64 && k < 91) || (k > 96 && k < 123) || k == 8 || k == 32) && !(k >= 48 && k <= 57);
+    //  }
+
+    omit_special_char(event: any) {
+        debugger
+        const regex = /[\p{L}\p{M}\s]/u;
+        if (event.key && event.key.match(regex)) {
+            return true;
+        }
+        return false;
+    }
 
 
     

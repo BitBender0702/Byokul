@@ -15,18 +15,16 @@
           </button>
 
           <div class="buttonTab">
-            <button class="font_22 fw_700 f-monteserrat mb-md-0"
+            <button class="font_22 fw_700 f-monteserrat mb-md-0 btn custom-btn primary_btn earning-btn fw_400 h_44 me-4 ps-4 pe-4"
             (click)="getFollowers()"
-            style="background-color: white; border-radius: 10px; border-width: 4px; padding: 5px 10px;"
-            [ngStyle]="{'border-color': followersTab ? 'orange' : 'transparent'}"
+            
             >
               {{ "Followers" | translate }}
             </button>
   
-            <button class="font_22 fw_700 f-monteserrat mb-md-0"
+            <button class="font_22 fw_700 f-monteserrat mb-md-0 btn custom-btn primary_btn earning-btn fw_400 h_44 me-4 ps-4 pe-4"
             (click)="getBannedUser()"
-            style="background-color: white; border-radius: 10px; border-width: 4px; padding: 5px 10px;"
-            [ngStyle]="{'border-color': !followersTab ? 'orange' : 'transparent'}"
+            
             >
               {{ "BannedUser" | translate }}
             </button>
@@ -111,14 +109,14 @@
                       type="button"
                       data-bs-toggle="modal"
                       data-bs-target="#report-follower"
-                      class="border-0 bg-transparent font_14 text_dark fw_400 me-3"
+                      class="border-0 bg-transparent font_14 text_dark fw_400 me-3 btn custom-btn primary_btn earning-btn fw_400 h_44 me-4 ps-4 pe-4"
                     >
                       {{ "Report" | translate }}
                     </button>
                     <button
                       (click)="banFollower(userfollower.follower.id,userfollower.userId)"
                       type="button"
-                      class="border-0 bg-transparent font_14 text_dark fw_400"
+                      class="border-0 bg-transparent font_14 text_dark fw_400 btn custom-btn primary_btn earning-btn fw_400 h_44 me-4 ps-4 pe-4"
                     >
                       {{ "Ban" | translate }}
                     </button>
@@ -178,7 +176,7 @@
                     <button
                     (click)="unBanFollower(userfollower.follower.id,userfollower.userId)"
                     type="button"
-                    class="border-0 bg-transparent font_14 text_dark fw_400"
+                    class="border-0 bg-transparent font_14 text_dark fw_400 btn custom-btn primary_btn earning-btn fw_400 h_44 me-4 ps-4 pe-4"
                     >
                       {{ "UnBan" | translate }}
                     </button>

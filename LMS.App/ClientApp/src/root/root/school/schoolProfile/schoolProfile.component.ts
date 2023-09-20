@@ -406,17 +406,21 @@ export class SchoolProfileComponent
         this.isStorageUnAvailable = true;
       }
 
+      if(response.isBan){
+        this.router.navigate([`/profile/school/${this.school.schoolName}/null/null`]);
+        return;
+      }
         if(response.isDisableByOwner && !response.isDeleted && !this.isOwner){
           this.router.navigate([`/profile/school/${this.school.schoolName}/false/true`]);
           return;
          }
 
-         if(!response.isDisableByOwner && response.isDeleted && !this.isOwner){
+         if(!response.isDisableByOwner && response.isDeleted){
           this.router.navigate([`/profile/school/${this.school.schoolName}/true/false`]);
           return;
          }
 
-         if(response.isDisableByOwner && response.isDeleted && !this.isOwner){
+         if(response.isDisableByOwner && response.isDeleted){
           this.router.navigate([`/profile/school/${this.school.schoolName}/true/true`]);
           return;
          }

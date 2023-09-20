@@ -426,7 +426,9 @@
   "AudioOrVideoTypeNotAllowed":"No se permiten archivos de tipo vídeo o audio.",
   "ClassDisabledByAdmin":"La clase a la que intentas acceder está inhabilitada por el administrador.",
   "CourseDisabledByAdmin":"El curso al que intentas acceder está inhabilitado por el administrador.",
-  "UserBanned":"El usuario que está intentando acceder está prohibido."
+  "UserBanned":"El usuario que está intentando acceder está prohibido.",
+  "ImagesMustBeLessThanFifteen":"Images Must Be Less Than Fifteen",
+  "VideoMustBeOnlyOne":"Video Must Be Only One"
 
 
 

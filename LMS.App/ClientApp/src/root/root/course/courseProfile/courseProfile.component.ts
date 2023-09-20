@@ -272,12 +272,12 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
         return;
        }
 
-       if(!response.isDisableByOwner && response.isDeleted && !this.isOwner){
+       if(!response.isDisableByOwner && response.isDeleted){
         this.router.navigate([`/profile/courses/${this.course.courseName}/true/false`]);
         return;
        }
 
-       if(response.isDisableByOwner && response.isDeleted && !this.isOwner){
+       if(response.isDisableByOwner && response.isDeleted){
         this.router.navigate([`/profile/courses/${this.course.courseName}/true/true`]);
         return;
        }
