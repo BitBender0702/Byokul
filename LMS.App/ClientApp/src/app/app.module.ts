@@ -11,9 +11,12 @@ import { AuthGuard } from 'src/root/service/auth.guard';
 import { CommonModule } from '@angular/common';
 import { ModalModule } from 'ngx-bootstrap/modal';
 
+
+
 @NgModule({
   declarations: [
-    NavMenuComponent
+    NavMenuComponent,
+   
   ],
   imports: [
     CommonModule,

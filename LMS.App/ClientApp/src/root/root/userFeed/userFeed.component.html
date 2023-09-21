@@ -482,7 +482,7 @@
                       *ngIf="post.createdOn != null"
                       class="font_14 school-grid-date d-inline-block mb-0 me-3"
                     >
-                      {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm" }}
+                      {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm a" }}
                     </p>
                     </div>
                   </div>
@@ -1118,7 +1118,7 @@
                                 class="font_14 school-grid-date d-inline-block mb-0"
                               >
                                 {{ gridItemInfo.createdOn | ChangeTimeZonePipe | date : "MMMM d" }} -
-                                {{ gridItemInfo.createdOn | ChangeTimeZonePipe | date : "hh:mm" }}
+                                {{ gridItemInfo.createdOn | ChangeTimeZonePipe | date : "hh:mm a" }}
                               </p>
                             </div>
                             <p class="text_sec1 font_14 pt-3">
@@ -1396,7 +1396,7 @@
                             *ngIf="post.createdOn != null"
                             class="font_14 school-grid-date d-inline-block mb-0 me-3"
                           >
-                            {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm" }}
+                            {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm a" }}
                           </p>
                           </div>
                           <button
@@ -1794,7 +1794,7 @@
                         *ngIf="post.createdOn != null"
                         class="font_14 school-grid-date d-inline-block mb-0 me-3"
                       >
-                        {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm" }}
+                        {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm a" }}
                       </p>
                     </div>
                   </div>
@@ -2456,7 +2456,7 @@
                                 -
                                 {{
                                   gridItemInfoForGlobal.createdOn | ChangeTimeZonePipe
-                                    | date : "hh:mm"
+                                    | date : "hh:mm a"
                                 }}
                               </p>
                             </div>
@@ -2756,7 +2756,7 @@
                             *ngIf="post.createdOn != null"
                             class="font_14 school-grid-date d-inline-block mb-0 me-3"
                           >
-                            {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm" }}
+                            {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm a" }}
                           </p>
                           </div>
                           <button

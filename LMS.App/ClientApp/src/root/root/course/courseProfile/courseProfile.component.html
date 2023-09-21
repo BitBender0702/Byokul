@@ -469,7 +469,7 @@
                       *ngIf="post.createdOn != null"
                       class="font_14 school-grid-date d-inline-block mb-0 me-3"
                     >
-                      {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm" }}
+                      {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm a" }}
                     </p>
                       <button *ngIf="post.isPinned && isOwner" (click)="pinUnpinPost(post.id, false)" type="button"
                         class="bg-transparent border-0 pinned-grid-chat">
@@ -808,7 +808,7 @@
                               class="bg-transparent border-0 close-preview">
                               <img lazyLoad="../../../../assets/images/cross.svg" />
                             </button>
-                            <div class="schoolgrid-header">
+                            <div class="schoolgrid-header ds">
                               <div class="d-flex align-items-center position-relative">
                                 <div class="school-gridprofile-icon">
                                   <img [lazyLoad]="course.avatar" />
@@ -821,7 +821,7 @@
 
                               <p class="font_14 school-grid-date d-inline-block mb-0">
                                 {{ gridItemInfo.createdOn | ChangeTimeZonePipe | date : "MMMM d" }} -
-                                {{ gridItemInfo.createdOn | ChangeTimeZonePipe | date : "hh:mm" }}
+                                {{ gridItemInfo.createdOn | ChangeTimeZonePipe | date : "hh:mm a" }}
                               </p>
                             </div>
                             <p class="text_sec1 font_14 pt-3">
@@ -956,7 +956,7 @@
                           *ngIf="post.createdOn != null"
                           class="font_14 school-grid-date d-inline-block mb-0 me-3"
                         >
-                          {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm" }}
+                          {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm a" }}
                         </p>
                           <button type="button" class="view font_12 bg-transparent border-0 cursor_auto">
                             <img lazyLoad="../../../../assets/images/eye.svg" class="me-2" />

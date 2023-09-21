@@ -101,7 +101,7 @@ import { SchoolVideoLibraryComponent } from './root/schoolVideoLibrary/schoolVid
 import { AddOfficialComponent } from './root/addOfficial/addOfficial.component';
 import { DeleteConfirmationComponent } from './root/delete-confirmation/delete-confirmation.component';
 import { DeleteOrDisableComponent } from './root/deleteOrDisableSCC/delete-or-disable.component';
-import { ChangeTimeZonePipe } from './root/ChangeTimeZonePipe';
+import { ChangeTimeZonePipe } from './ChangeTimeZonePipe';
 
 
 export const options: Partial<IConfig> = {

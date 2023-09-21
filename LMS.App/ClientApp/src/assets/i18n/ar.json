@@ -475,7 +475,7 @@
   "InValidPhoneNumber": "Phone number is invalid",
   "Edit": "يحرر",
   "UpdatePost": "تحديث المشاركة",
-  "UpdatedOn": "Updated On",
+  "UpdatedOn": "تحديث في",
   "ReelCreatedSuccessfully": "تم إنشاء بكرة بنجاح",
   "SchoolList": "قائمة المدرسة",
   "ClassList": "قائمة الطبقة",
@@ -602,7 +602,8 @@
   "ImagesMustBeLessThanFifteen":"يجب أن تكون الصور أقل من خمسة عشر",
   "VideoMustBeOnlyOne":"يجب أن يكون الفيديو واحدًا فقط",
   "CurrentpasswordAndPasswordCantMatch":"كلمة المرور الحالية لا يمكن أن تتطابق مع كلمة المرور الجديدة",
-  "SchoolBanned":"المدرسة التي تحاول الوصول إليها محظورة"
+  "SchoolBanned":"المدرسة التي تحاول الوصول إليها محظورة",
+  "PostReels":"نشر بكرات"
 
 
 

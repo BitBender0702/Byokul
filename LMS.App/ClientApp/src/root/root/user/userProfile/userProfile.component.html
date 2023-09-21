@@ -706,7 +706,7 @@
                       *ngIf="post.createdOn != null"
                       class="font_14 school-grid-date d-inline-block mb-0 me-3"
                     >
-                      {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm" }}
+                      {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm a" }}
                     </p>
                       <button
                         *ngIf="post.isPinned && isOwner"
@@ -1315,7 +1315,7 @@
                           >
                             <br />
                             {{ gridItemInfo.createdOn | ChangeTimeZonePipe | date : "MMMM d" }} -
-                            {{ gridItemInfo.createdOn | ChangeTimeZonePipe | date : "hh:mm" }}
+                            {{ gridItemInfo.createdOn | ChangeTimeZonePipe | date : "hh:mm a" }}
                           </p>
                         </div>
                         <p class="text_sec1 font_14 pt-3 word-break">
@@ -1510,7 +1510,7 @@
                         *ngIf="post.createdOn != null"
                         class="font_14 school-grid-date d-inline-block mb-0 me-3"
                       >
-                        {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm" }}
+                        {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm a" }}
                       </p>
                       </div>
                       <div class="right-action">
@@ -1791,7 +1791,7 @@
                     *ngIf="post.createdOn != null"
                     class="font_14 school-grid-date d-inline-block mb-0 me-3"
                   >
-                    {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm" }}
+                    {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm a" }}
                   </p>
                   </div>
 
@@ -2393,7 +2393,7 @@
 
                     <p class="font_14 school-grid-date d-inline-block mb-0">
                       {{ savedPostGridInfo.createdOn | ChangeTimeZonePipe | date : "MMMM d" }} -
-                      {{ savedPostGridInfo.createdOn | ChangeTimeZonePipe | date : "hh:mm" }}
+                      {{ savedPostGridInfo.createdOn | ChangeTimeZonePipe | date : "hh:mm a" }}
                     </p>
                   </div>
                   <p class="text_sec1 font_14 pt-3 word-break">
@@ -2677,7 +2677,7 @@
                         class="font_14 school-grid-date d-inline-block mb-0"
                       >
                         {{ post.createdOn | ChangeTimeZonePipe | date : "MMMM d" }} -
-                        {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm" }}
+                        {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm a" }}
                       </p>
                       <button
                         type="button"
@@ -3747,7 +3747,7 @@
                   <p 
                     class="font_14 school-grid-date d-inline-block mb-0 me-3"
                   >
-                    {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm" }}
+                    {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm a" }}
                   </p>
                   </div>
 
@@ -4347,7 +4347,7 @@
 
                     <p class="font_14 school-grid-date d-inline-block mb-0">
                       {{ sharedPostGridInfo.createdOn | ChangeTimeZonePipe | date : "MMMM d" }} -
-                      {{ sharedPostGridInfo.createdOn | ChangeTimeZonePipe | date : "hh:mm" }}
+                      {{ sharedPostGridInfo.createdOn | ChangeTimeZonePipe | date : "hh:mm a" }}
                     </p>
                   </div>
                   <p class="text_sec1 font_14 pt-3 word-break">
@@ -4633,7 +4633,7 @@
                         class="font_14 school-grid-date d-inline-block mb-0"
                       >
                         {{ post.createdOn | ChangeTimeZonePipe | date : "MMMM d" }} -
-                        {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm" }}
+                        {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm a" }}
                       </p>
                       <button
                         type="button"
@@ -4889,7 +4889,7 @@
                   <p 
                     class="font_14 school-grid-date d-inline-block mb-0 me-3"
                   >
-                    {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm" }}
+                    {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm a" }}
                   </p>
                   </div>
 
@@ -5484,7 +5484,7 @@
 
                     <p class="font_14 school-grid-date d-inline-block mb-0">
                       {{ likedPostGridInfo.createdOn | ChangeTimeZonePipe | date : "MMMM d" }} -
-                      {{ likedPostGridInfo.createdOn | ChangeTimeZonePipe | date : "hh:mm" }}
+                      {{ likedPostGridInfo.createdOn | ChangeTimeZonePipe | date : "hh:mm a" }}
                     </p>
                   </div>
                   <p class="text_sec1 font_14 pt-3 word-break">
@@ -5767,7 +5767,7 @@
                         class="font_14 school-grid-date d-inline-block mb-0"
                       >
                         {{ post.createdOn | ChangeTimeZonePipe | date : "MMMM d" }} -
-                        {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm" }}
+                        {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm a" }}
                       </p>
                       <button
                         type="button"

@@ -614,7 +614,8 @@
   "ImagesMustBeLessThanFifteen":"Images Must Be Less Than Fifteen",
   "VideoMustBeOnlyOne":"Video Must Be Only One",
   "CurrentpasswordAndPasswordCantMatch":"Current password can not match new password",
-  "SchoolBanned":"The school you are trying to access is banned"
+  "SchoolBanned":"The school you are trying to access is banned",
+  "PostReels":"Post Reels"
 
 
 

@@ -18,7 +18,7 @@ import { RouterModule } from '@angular/router';
       LoadingSpinnerComponent,
       PostLoadingSpinnerComponent,
       ReelsLoadingSpinnerComponent,
-      AdminSideBarComponent
+      AdminSideBarComponent,
     ],
     imports: [
       RouterModule,

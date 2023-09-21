@@ -1057,6 +1057,11 @@ namespace LMS.Services
 
             foreach (var post in result)
             {
+                var school = _schoolRepository.GetById(post.ParentId);
+                post.ParentName = school.SchoolName;
+                post.ParentImageUrl = school.Avatar;
+                post.IsParentVerified = school.IsVarified;
+
                 post.PostAttachments = await GetAttachmentsByPostId(post.Id, loginUserId);
                 post.Likes = await _userService.GetLikesOnPost(post.Id);
                 post.Views = await _userService.GetViewsOnPost(post.Id);
