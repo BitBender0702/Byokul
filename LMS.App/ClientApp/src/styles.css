@@ -3747,7 +3747,7 @@ p-autocomplete li:before {
 
 @media (min-width: 1024px) {
   .create_post_btn {
-    display: none;
+    display: none !important;
   }
 }
 
