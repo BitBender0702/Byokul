@@ -21,7 +21,7 @@ using Hangfire;
 using Microsoft.AspNetCore.Hosting;
 using System.Collections;
 using LMS.DataAccess.GenericRepository;
-
+using System.Text.RegularExpressions;
 
 namespace LMS.Services
 {
@@ -79,6 +79,7 @@ namespace LMS.Services
         {
             bool scheduleLiveStream = false;
             bool isPostSchedule = false;
+            //postViewModel.BlobUrls[0].BlobName = postViewModel.BlobUrls[0].BlobName + "_index0";
             try
             {
                 var post = new Post
@@ -788,9 +789,14 @@ namespace LMS.Services
 
         public async Task<IEnumerable<PostAttachmentViewModel>> GetAttachmentsByPostId(Guid postId)
         {
-            var attacchmentList = await _postAttachmentRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.PostId == postId).OrderByDescending(x => x.IsPinned).ToListAsync();
-
-            foreach (var isCompressed in attacchmentList)
+            var attachmentList = await _postAttachmentRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.PostId == postId).OrderByDescending(x => x.IsPinned).ToListAsync();
+            var sortedAttachmentList = attachmentList
+    .OrderBy(x =>
+    {
+        var match = Regex.Match(x.FileName, @"_index(\d+)$");
+        return match.Success ? int.Parse(match.Groups[1].Value) : int.MaxValue;
+    }).ToList();
+            foreach (var isCompressed in sortedAttachmentList)
             {
                 if (!string.IsNullOrEmpty(isCompressed.CompressedFileUrl))
                 {
@@ -799,7 +805,7 @@ namespace LMS.Services
                 //isCompressed.FileThumbnail = $"https://byokulstorage.blob.core.windows.net/userpostscompressed/thumbnails/{isCompressed.Id}.png";
             }
 
-            var result = _mapper.Map<List<PostAttachmentViewModel>>(attacchmentList);
+            var result = _mapper.Map<List<PostAttachmentViewModel>>(sortedAttachmentList);
             return result;
         }
 

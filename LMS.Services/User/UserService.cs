@@ -25,6 +25,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
 using Country = LMS.Data.Entity.Country;
+using System.Text.RegularExpressions;
 
 namespace LMS.Services
 {
@@ -557,6 +558,10 @@ namespace LMS.Services
             var postList = await _postRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.ParentId == new Guid(userId) && (x.PostType == (int)PostTypeEnum.Post || (x.PostType == (int)PostTypeEnum.Stream && x.IsLive == true)) && x.PostAuthorType == (int)PostAuthorTypeEnum.User && x.IsPostSchedule != true).OrderByDescending(x => x.IsPinned).ToListAsync();
 
             var requiredPostList = postList.OrderByDescending(x => x.IsPinned).ThenByDescending(x => x.CreatedOn).ToList();
+            foreach (var item in requiredPostList)
+            {
+                //item.Attachments;
+            }
 
             var result = _mapper.Map<List<PostDetailsViewModel>>(requiredPostList).Skip((pageNumber - 1) * pageSize).Take(pageSize);
             var savedPosts = await _savedPostRepository.GetAll().ToListAsync();
@@ -863,6 +868,12 @@ namespace LMS.Services
         public async Task<IEnumerable<PostAttachmentViewModel>> GetAttachmentsByPostId(Guid postId)
         {
             var attachmentList = await _postAttachmentRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.PostId == postId).OrderByDescending(x => x.IsPinned).ToListAsync();
+            var sortedAttachmentList = attachmentList
+    .OrderBy(x =>
+    {
+        var match = Regex.Match(x.FileName, @"_index(\d+)$");
+        return match.Success ? int.Parse(match.Groups[1].Value) : int.MaxValue; 
+    }).ToList();
 
             foreach (var isCompressed in attachmentList)
             {
@@ -870,10 +881,11 @@ namespace LMS.Services
                 {
                     isCompressed.FileUrl = isCompressed.CompressedFileUrl;
                 }
+
                 //isCompressed.FileThumbnail = $"https://byokulstorage.blob.core.windows.net/userpostscompressed/thumbnails/{isCompressed.Id}.png";
             }
 
-            var result = _mapper.Map<List<PostAttachmentViewModel>>(attachmentList);
+            var result = _mapper.Map<List<PostAttachmentViewModel>>(sortedAttachmentList);
             return result;
         }
 

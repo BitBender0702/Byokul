@@ -119,3 +119,9 @@
 .context-menu .save-as {
   display: none;
 }
+
+.fas.fa-play {
+  color: white;
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+

@@ -90,3 +90,8 @@
 .image-container:last-child {
   margin-right: 0;
 }
+
+.fas.fa-play {
+  color: white;
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}

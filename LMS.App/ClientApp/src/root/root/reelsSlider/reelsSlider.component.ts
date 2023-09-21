@@ -1136,7 +1136,6 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       var translatedMessage = this.translateService.instant('commented in your reel');
       var notificationContent = translatedMessage;
       this._notificationService.initializeNotificationViewModel(reel.parentId, NotificationType.CommentSent, notificationContent, this.userId, reel.id, reel.postType, null, null).subscribe((response) => {
-        debugger;
       });
     });
   }

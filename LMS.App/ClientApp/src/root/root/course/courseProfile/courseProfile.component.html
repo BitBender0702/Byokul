@@ -516,6 +516,9 @@
                               " class="w-100" style="cursor: pointer" [lazyLoad]="
                                 post.postAttachments[0]?.fileThumbnail
                               " />
+                              <div class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
+                                <i class="fas fa-play fa-5x" *ngIf="post.postAttachments[0]?.fileType == 2"></i>
+                              </div>
                             <img *ngIf="post.postAttachments[0]?.fileType == 1" class="w-100"
                               [lazyLoad]="post.postAttachments[0]?.fileUrl" />
                           </div>
@@ -526,6 +529,9 @@
                             <ng-container *ngFor="let attachment of post.postAttachments">
                               <img *ngIf="attachment?.fileType == 2" class="w-100" style="cursor: pointer"
                                 [lazyLoad]="attachment?.fileThumbnail" />
+                                <div class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
+                                  <i class="fas fa-play fa-5x" *ngIf="attachment?.fileType == 2"></i>
+                                </div>
                               <img style="height: 598px; width: 50% !important" *ngIf="attachment?.fileType == 1"
                                 class="w-100" [lazyLoad]="attachment?.fileUrl" />
                             </ng-container>
@@ -538,6 +544,9 @@
                               style="cursor: pointer; margin-top: -700px" [lazyLoad]="
                                 post.postAttachments[0]?.fileThumbnail
                               " />
+                              <div class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
+                                <i class="fas fa-play fa-5x" *ngIf="post.postAttachments[0]?.fileType == 2"></i>
+                              </div>
                             <img *ngIf="post.postAttachments[0]?.fileType == 1" class="w-100"
                               [lazyLoad]="post.postAttachments[0]?.fileUrl" />
                           </div>
@@ -570,6 +579,9 @@
                               [lazyLoad]="
                                 post.postAttachments[0]?.fileThumbnail
                               " />
+                              <div class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
+                                <i class="fas fa-play fa-5x" *ngIf="post.postAttachments[0]?.fileType == 2"></i>
+                              </div>
                             <img *ngIf="post.postAttachments[0]?.fileType == 1" class="w-100"
                               [lazyLoad]="post.postAttachments[0]?.fileUrl" />
                           </div>
@@ -980,6 +992,9 @@
                                   <img preload="metadata" style="height: 300px" [lazyLoad]="
                                       post.postAttachments[0]?.fileThumbnail
                                     " />
+                                    <div class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
+                                      <i class="fas fa-play fa-5x" *ngIf="post.postAttachments[0]?.fileType == 2"></i>
+                                    </div>
                                 </div>
                                 <img *ngIf="post.postAttachments[0]?.fileType == 1" class="w-100"
                                   [lazyLoad]="post.postAttachments[0]?.fileUrl" />

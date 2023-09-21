@@ -466,9 +466,10 @@
                   </div>
 
                   <div class="school-grid-body" (click)="openPostsViewModal(post)">
-                    <h4 class="d-inline-block font_20 fw_600 text_sec1 mb-3">
-                      {{ post.title }}
-                    </h4>
+                    <div class="d-flex justify-content-between align-items-center">
+                      <h4 class="font_20 fw_600 text_sec1 mb-3">{{ post.title }}</h4>
+                      <h4 *ngIf="post?.isLiveStreamEnded || post?.externalMeetingId != null" style="color:red">Streamed</h4>
+                    </div>
                     <p class="text_sec1 font_14" style="cursor: pointer">
                       {{ post.description }}
                     </p>
@@ -498,6 +499,9 @@
                               " class="w-100" style="cursor: pointer" [lazyLoad]="
                                 post.postAttachments[0]?.fileThumbnail
                               " />
+                              <div class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
+                                <i class="fas fa-play fa-5x" *ngIf="post.postAttachments[0]?.fileType == 2"></i>
+                              </div>
                             <img *ngIf="post.postAttachments[0]?.fileType == 1" class="w-100"
                               [lazyLoad]="post.postAttachments[0]?.fileUrl" />
                           </div>
@@ -508,6 +512,9 @@
                             <ng-container *ngFor="let attachment of post.postAttachments">
                               <img *ngIf="attachment?.fileType == 2" preload="metadata" class="w-100"
                                 style="cursor: pointer" [lazyLoad]="attachment?.fileThumbnail" />
+                                <div class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
+                                  <i class="fas fa-play fa-5x" *ngIf="attachment?.fileType == 2"></i>
+                                </div>
                               <img style="height: 598px; width: 50% !important" *ngIf="attachment?.fileType == 1"
                                 class="w-100" [lazyLoad]="attachment?.fileUrl" />
                             </ng-container>
@@ -520,6 +527,9 @@
                               style="cursor: pointer; margin-top: -700px" [lazyLoad]="
                                 post.postAttachments[0]?.fileThumbnail
                               " />
+                              <div class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
+                                <i class="fas fa-play fa-5x" *ngIf="post.postAttachments[0]?.fileType == 2"></i>
+                              </div>
                             <img *ngIf="post.postAttachments[0]?.fileType == 1" class="w-100"
                               [lazyLoad]="post.postAttachments[0]?.fileUrl" />
                           </div>
@@ -552,6 +562,9 @@
                               [lazyLoad]="
                                 post.postAttachments[0]?.fileThumbnail
                               " />
+                              <div class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
+                                <i class="fas fa-play fa-5x" *ngIf="post.postAttachments[0]?.fileType == 2"></i>
+                              </div>
                             <img *ngIf="post.postAttachments[0]?.fileType == 1" class="w-100"
                               [lazyLoad]="post.postAttachments[0]?.fileUrl" />
                           </div>
@@ -965,6 +978,9 @@
                                   <img style="height: 300px" [lazyLoad]="
                                       post.postAttachments[0]?.fileThumbnail
                                     " />
+                                    <div class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
+                                      <i class="fas fa-play fa-5x" *ngIf="post.postAttachments[0]?.fileType == 2"></i>
+                                    </div>
                                 </div>
                                 <img *ngIf="post.postAttachments[0]?.fileType == 1" class="w-100"
                                   [lazyLoad]="post.postAttachments[0]?.fileUrl" />

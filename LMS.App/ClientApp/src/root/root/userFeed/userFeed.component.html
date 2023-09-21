@@ -84,7 +84,7 @@
             </button>
           </div>
         </div>
-        <div class="d-flex justify-content-end mt-5 create_post_btn">
+        <!-- <div class="d-flex justify-content-end mt-5 create_post_btn">
           <button
             (click)="openPostModal()"
             type="button"
@@ -92,7 +92,7 @@
           >
             <img lazyLoad="../../../assets/images/Edit-light.svg" alt="edit" />
           </button>
-        </div>
+        </div> -->
         <div
           class="school-profile-tabs d-flex align-content-center justify-content-center position-relative"
         >
@@ -487,11 +487,18 @@
                     </div>
                   </div>
 
-                  <h4 class="d-inline-block font_20 fw_600 text_sec1 mb-3">
+                  <!-- <h4 class="d-inline-block font_20 fw_600 text_sec1 mb-3">
                     <a (click)="navigateToProfile(post.sharedProfileUrl)">{{
                       post.title
                     }}</a>
-                  </h4>
+                  </h4> -->
+                  <div class="d-flex justify-content-between align-items-center">
+                    <!-- <h4 class="font_20 fw_600 text_sec1 mb-3">{{ post.title }}</h4> -->
+                    <h4 class="d-inline-block font_20 fw_600 text_sec1 mb-3">
+                      {{ post.title }}
+                    </h4>
+                    <h4 *ngIf="post?.isLiveStreamEnded || post?.externalMeetingId != null" style="color:red">Streamed</h4>
+                  </div>
                   <div
                     class="school-grid-body videoChange"
                     (click)="openPostsViewModal(post, 'myFeeds')"
@@ -552,6 +559,9 @@
                                 post.postAttachments[0]?.fileThumbnail
                               "
                             />
+                            <div class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
+                              <i class="fas fa-play fa-5x" *ngIf="post.postAttachments[0]?.fileType == 2"></i>
+                            </div>
                             <img
                               *ngIf="post.postAttachments[0]?.fileType == 1"
                               style="cursor: pointer"
@@ -582,6 +592,9 @@
                                   style="cursor: pointer"
                                   [lazyLoad]="attachment?.fileThumbnail"
                                 />
+                                <div class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
+                                  <i class="fas fa-play fa-5x" *ngIf="attachment?.fileType == 2"></i>
+                                </div>
                               </div>
                               <div style="width: 50%">
                                 <img
@@ -610,6 +623,9 @@
                                 post.postAttachments[0]?.fileThumbnail
                               "
                             />
+                            <div class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
+                              <i class="fas fa-play fa-5x" *ngIf="post.postAttachments[0]?.fileType == 2"></i>
+                            </div>
                             <img
                               *ngIf="post.postAttachments[0]?.fileType == 1"
                               style="cursor: pointer"
@@ -674,6 +690,9 @@
                                 post.postAttachments[0]?.fileThumbnail
                               "
                             />
+                            <div class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
+                              <i class="fas fa-play fa-5x" *ngIf="post.postAttachments[0]?.fileType == 2"></i>
+                            </div>
                             <img
                               *ngIf="post.postAttachments[0]?.fileType == 1"
                               class="w-100"
@@ -1368,6 +1387,7 @@
                               {{ post.title }}
                             </a>
                           </h2>
+                          12344
                         </div>
                         <hr />
                         <div class="right-action">
@@ -1450,6 +1470,9 @@
                                       post.postAttachments[0]?.fileThumbnail
                                     "
                                   />
+                                  <div class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
+                                    <i class="fas fa-play fa-5x" *ngIf="post.postAttachments[0]?.fileType == 2"></i>
+                                  </div>
                                 </div>
                                 <img
                                   *ngIf="post.postAttachments[0]?.fileType == 1"
@@ -1803,9 +1826,14 @@
                     class="school-grid-body videoChange"
                     (click)="openPostsViewModal(post, 'globalFeed')"
                   >
-                    <h4 class="d-inline-block font_20 fw_600 text_sec1 mb-3">
-                      {{ post.title }}
-                    </h4>
+                    
+                    <div class="d-flex justify-content-between align-items-center">
+                      <!-- <h4 class="font_20 fw_600 text_sec1 mb-3">{{ post.title }}</h4> -->
+                      <h4 class="d-inline-block font_20 fw_600 text_sec1 mb-3">
+                        {{ post.title }}
+                      </h4>
+                      <h4 *ngIf="post?.postAttachments[0]?.post.isLiveStreamEnded || post?.postAttachments[0]?.post?.externalMeetingId != null" style="color:red">Streamed</h4>
+                    </div>
                     <p class="text_sec1 font_14" style="cursor: pointer">
                       {{ post.description }}
                     </p>
@@ -1859,6 +1887,9 @@
                                 post.postAttachments[0]?.fileThumbnail
                               "
                             />
+                            <div class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
+                              <i class="fas fa-play fa-5x" *ngIf="post.postAttachments[0]?.fileType == 2"></i>
+                            </div>
                             <img
                               *ngIf="post.postAttachments[0]?.fileType == 1"
                               style="cursor: pointer"
@@ -1884,6 +1915,9 @@
                                 style="cursor: pointer"
                                 [lazyLoad]="attachment?.fileThumbnail"
                               />
+                              <div class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
+                                <i class="fas fa-play fa-5x" *ngIf="attachment.fileType == 2"></i>
+                              </div>
                               <img
                                 style="cursor: pointer"
                                 *ngIf="attachment?.fileType == 1"
@@ -1909,6 +1943,9 @@
                                 post.postAttachments[0]?.fileThumbnail
                               "
                             />
+                            <div class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
+                              <i class="fas fa-play fa-5x" *ngIf="post.postAttachments[0]?.fileType == 2"></i>
+                            </div>
                             <img
                               *ngIf="post.postAttachments[0]?.fileType == 1"
                               style="cursor: pointer"
@@ -1975,6 +2012,9 @@
                                 post.postAttachments[0]?.fileThumbnail
                               "
                             />
+                            <div class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
+                              <i class="fas fa-play fa-5x" *ngIf="post.postAttachments[0]?.fileType == 2"></i>
+                            </div>
                             <img
                               *ngIf="post.postAttachments[0]?.fileType == 1"
                               class="w-100"
@@ -2804,6 +2844,9 @@
                                       post.postAttachments[0]?.fileThumbnail
                                     "
                                   />
+                                  <div class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
+                                    <i class="fas fa-play fa-5x" *ngIf="post.postAttachments[0]?.fileType == 2"></i>
+                                  </div>
                                 </div>
                                 <img
                                   *ngIf="post.postAttachments[0]?.fileType == 1"

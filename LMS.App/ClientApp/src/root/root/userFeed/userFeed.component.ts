@@ -535,6 +535,7 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
   }
 
   openPostsViewModal(posts: any, postType?: string): void {
+    debugger;
     if (postType == "myFeeds") {
       var postAttachments = this.filteredMyFeedAttachments.filter(x => x.postId == posts.id);
     }
