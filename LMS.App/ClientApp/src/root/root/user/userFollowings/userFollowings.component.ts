@@ -31,6 +31,7 @@ export class UserFollowingsComponent extends MultilingualComponent implements On
     loginUserId!:string;
     isOwner:boolean = false;
     changeLanguageSubscription!: Subscription;
+    gender!: string;
 
     constructor(injector: Injector,userService: UserService,private route: ActivatedRoute) { 
       super(injector);
@@ -42,6 +43,7 @@ export class UserFollowingsComponent extends MultilingualComponent implements On
 
       this.loadingIcon = true;
       var selectedLang = localStorage.getItem('selectedLanguage');
+      this.gender = localStorage.getItem("gender") ?? '';
       this.translate.use(selectedLang ?? '');
       this.userId = this.route.snapshot.paramMap.get('userId') ?? '';
 

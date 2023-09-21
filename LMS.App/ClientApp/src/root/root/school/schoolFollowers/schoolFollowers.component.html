@@ -81,11 +81,26 @@
               <li *ngFor="let schoolfollower of schoolFollowers" class="mb-0">
                 <div class="d-flex align-items-center justify-content-between">
                   <span class="followers-name font_16 text_sec1 fw_600">
-                    <img
+                    <img 
+                    *ngIf="schoolfollower.user.avatar != null"
+                    (click)="getSelectedFollower(schoolfollower.user.id)"
                       [src]="schoolfollower.user.avatar"
-                      class="rounded-circle me-2"
+                      class="rounded-circle me-2 cursor_pointer"
                       style="max-height: 30px"
                     />
+                    <img
+                    *ngIf="schoolfollower.user.avatar == null && gender == '1'"
+                    (click)="getSelectedFollower(schoolfollower.user.id)"
+                    src="../../../assets/images/maleProfile.jfif"
+                    class="rounded-circle me-2 cursor_pointer"
+                    style="max-height: 30px"                />
+                  <img
+                    *ngIf="
+                    schoolfollower.user.avatar == null &&(gender == '2' || gender == '3')"
+                    (click)="getSelectedFollower(schoolfollower.user.id)"
+                    src="../../../assets/images/femaleProfile.jfif"
+                    class="rounded-circle me-2 cursor_pointer"
+                    style="max-height: 30px"                />
                     <a
                       style="cursor: pointer"
                       (click)="getSelectedFollower(schoolfollower.user.id)"
@@ -142,11 +157,25 @@
               <li *ngFor="let schoolfollower of bannedFollower" class="mb-0">
                 <div class="d-flex align-items-center justify-content-between">
                   <span class="followers-name font_16 text_sec1 fw_600">
-                    <img
+                    <img *ngIf="schoolfollower.user.avatar != null"
+                    (click)="getSelectedFollower(schoolfollower.user.id)"
                       [src]="schoolfollower.user.avatar"
-                      class="rounded-circle me-2"
+                      class="rounded-circle me-2 cursor_pointer"
                       style="max-height: 30px"
                     />
+                    <img
+                    *ngIf="schoolfollower.user.avatar == null && gender == '1'"
+                    (click)="getSelectedFollower(schoolfollower.user.id)"
+                    src="../../../assets/images/maleProfile.jfif"
+                    class="rounded-circle me-2 cursor_pointer"
+                    style="max-height: 30px"                />
+                  <img
+                    *ngIf="
+                    schoolfollower.user.avatar &&(gender == '2' || gender == '3')"
+                    (click)="getSelectedFollower(schoolfollower.user.id)"
+                    src="../../../assets/images/femaleProfile.jfif"
+                    class="rounded-circle me-2 cursor_pointer"
+                    style="max-height: 30px"                />
                     <a
                       style="cursor: pointer"
                       (click)="getSelectedFollower(schoolfollower.user.id)"

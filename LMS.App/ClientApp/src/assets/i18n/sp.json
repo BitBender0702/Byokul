@@ -429,7 +429,13 @@
   "UserBanned":"El usuario que está intentando acceder está prohibido.",
   "ImagesMustBeLessThanFifteen":"Las imágenes deben tener menos de quince",
   "VideoMustBeOnlyOne":"El video debe ser solo uno",
-  "SchoolBanned":"La escuela a la que intentas acceder está prohibida"
+  "SchoolBanned":"La escuela a la que intentas acceder está prohibida",
+  "Restore": "Restore",
+  "RestoreSchool": "Restore School",
+  "RestoreClass": "Restore Class",
+  "RestoreCourse": "Restore Course",
+  "DoYouWantToRestore": "Do you really want to restore this?"
+
 
 
 

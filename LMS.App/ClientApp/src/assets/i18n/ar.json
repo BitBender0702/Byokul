@@ -602,7 +602,13 @@
   "ImagesMustBeLessThanFifteen":"يجب أن تكون الصور أقل من خمسة عشر",
   "VideoMustBeOnlyOne":"يجب أن يكون الفيديو واحدًا فقط",
   "CurrentpasswordAndPasswordCantMatch":"كلمة المرور الحالية لا يمكن أن تتطابق مع كلمة المرور الجديدة",
-  "SchoolBanned":"المدرسة التي تحاول الوصول إليها محظورة"
+  "SchoolBanned":"المدرسة التي تحاول الوصول إليها محظورة",
+  "Restore": "يعيد",
+  "RestoreSchool": "استعادة المدرسة",
+  "RestoreClass": "استعادة الصف",
+  "RestoreCourse": "استعادة الدورة",
+  "DoYouWantToRestore": "هل تريد حقا استعادة هذا؟"
+
 
 
 

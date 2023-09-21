@@ -23,6 +23,7 @@ using LMS.Common.ViewModels.Post;
 using LMS.Common.ViewModels.User;
 using LMS.Common.Enums;
 using Microsoft.IdentityModel.Tokens;
+using Org.BouncyCastle.Crypto;
 
 namespace LMS.Services.Chat
 {
@@ -296,7 +297,8 @@ namespace LMS.Services.Chat
                 ChatHeadId = x.Id,
                 ChatType = x.ChatType,
                 ChatTypeId = x.ChatTypeId,
-                UnreadMessageCount = x.UnreadMessageCount
+                UnreadMessageCount = x.UnreadMessageCount,
+                IsVerified=x.Receiver.IsVarified
             }).ToList();
 
             users = users.Concat(first).ToList();
@@ -309,6 +311,7 @@ namespace LMS.Services.Chat
                 ChatHeadId = x.Id,
                 ChatType = x.ChatType,
                 ChatTypeId = x.ChatTypeId,
+                IsVerified = x.Sender.IsVarified
                 /*, UnreadMessageCount = x.UnreadMessageCount */
             }).ToList();
 
@@ -324,7 +327,8 @@ namespace LMS.Services.Chat
                 ChatType = x.ChatType,
                 ChatTypeId = x.ChatTypeId,
 
-                UnreadMessageCount = x.UnreadMessageCount
+                UnreadMessageCount = x.UnreadMessageCount,
+                IsVerified = GetSchoolInfo(x.ChatTypeId).IsVarified
             }).ToList();
 
             users = users.Concat(third).ToList();
@@ -338,7 +342,7 @@ namespace LMS.Services.Chat
                 School = GetSchoolInfo(x.ChatTypeId),
                 ChatType = x.ChatType,
                 ChatTypeId = x.ChatTypeId,
-
+                IsVerified = GetSchoolInfo(x.ChatTypeId).IsVarified
                 //UnreadMessageCount = x.UnreadMessageCount
             }).ToList();
 
@@ -756,7 +760,7 @@ namespace LMS.Services.Chat
         public SchoolUpdateViewModel GetSchoolInfo(Guid? schoolId)
         {
             var school = _schoolRepository.GetById(schoolId);
-            return new SchoolUpdateViewModel { SchoolId = school.SchoolId, SchoolName = school.SchoolName, Avatar = school.Avatar, OwnerId = school.CreatedById };
+            return new SchoolUpdateViewModel { SchoolId = school.SchoolId, SchoolName = school.SchoolName, Avatar = school.Avatar, OwnerId = school.CreatedById ,IsVarified=school.IsVarified };
         }
 
         public ClassViewModel GetClassInfo(Guid? classId)

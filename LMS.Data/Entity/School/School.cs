@@ -34,6 +34,8 @@ namespace LMS.Data.Entity
         public bool IsSchoolSubscribed { get; set; }
         public bool IsDefaultAvatar { get; set; }
         public double? AvailableStorageSpace { get; set; }
+        public string? DialCode { get; set; }
+        public string? CountryCode { get; set; }
 
     }
 }

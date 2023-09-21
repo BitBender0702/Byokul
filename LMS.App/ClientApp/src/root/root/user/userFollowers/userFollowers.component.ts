@@ -51,6 +51,7 @@ export class UserFollowersComponent extends MultilingualComponent implements OnI
     userBannedFollowersPageNumber:number = 1;
     userBannedFollowers:any;
     followersTab:boolean=true;
+    gender!: string;
 
 
     constructor(injector: Injector,private translateService: TranslateService,public messageService:MessageService,userService: UserService,signalrService:SignalrService,private route: ActivatedRoute,private fb: FormBuilder) { 
@@ -63,6 +64,7 @@ export class UserFollowersComponent extends MultilingualComponent implements OnI
     ngOnInit(): void {
       this.loadingIcon = true;
       var selectedLang = localStorage.getItem('selectedLanguage');
+      this.gender = localStorage.getItem("gender") ?? '';
       this.translate.use(selectedLang ?? '');
       this.userId = this.route.snapshot.paramMap.get('userId') ?? '';
 

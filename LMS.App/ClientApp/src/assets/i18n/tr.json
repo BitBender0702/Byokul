@@ -201,7 +201,7 @@
   "EditCourseProfile": "Ders Profilini Düzenle",
   "CourseBio": "Ders Biyografisi",
   "SchoolFeed": "Okul Akışı",
-  "Delete": "Kaldır",
+  "Delete": "Sil",
   "DeleteClass": "Dersi Kaldır",
   "Buyfor": "Satın Al",
   "Class/Course": "Sınıf/Dersler",
@@ -606,7 +606,13 @@
   "ImagesMustBeLessThanFifteen":"Resimler On Beşten Az Olmalı",
   "VideoMustBeOnlyOne":"Video Yalnızca Bir Olmalıdır",
   "CurrentpasswordAndPasswordCantMatch":"Mevcut şifre yeni şifreyle eşleşmiyor",
-  "SchoolBanned":"Erişmeye çalıştığınız okul yasaklandı"
+  "SchoolBanned":"Erişmeye çalıştığınız okul yasaklandı",
+  "Restore": "Eski haline getirmek",
+  "RestoreSchool": "Okulu Geri Yükle",
+  "RestoreClass": "Sınıfı Geri Yükle",
+  "RestoreCourse": "Kursu Geri Yükle",
+  "DoYouWantToRestore": "Bunu gerçekten geri yüklemek istiyor musun?"
+
 
 
 

@@ -26,6 +26,7 @@ import { Constant } from 'src/root/interfaces/constant';
 import { DatePipe } from '@angular/common';
 
 import flatpickr from 'flatpickr';
+import { Country } from 'ngx-intl-tel-input/lib/model/country.model';
 
 export const ownedSchoolResponse = new Subject<{ schoolId: string, schoolAvatar: string, schoolName: string, action: string }>();
 
@@ -103,6 +104,14 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
   EMAIL_PATTERN = '[a-zA-Z0-9]+?(\\.[a-zA-Z0-9]+)*@[a-zA-Z]+\\.[a-zA-Z]{2,3}';
 
 
+  countryCode: string = '+91'; 
+  countryCode2: string = '91'; 
+
+  countryFlag: string = '';
+  countryFlag2: string = '';
+
+
+
 
   constructor(injector: Injector,  private datePipe: DatePipe, private iyizicoService: IyizicoService, private blobService: AzureBlobStorageService, private translateService: TranslateService, private bsModalService: BsModalService, public messageService: MessageService, private domSanitizer: DomSanitizer, private router: Router, private fb: FormBuilder, schoolService: SchoolService, private http: HttpClient) {
     super(injector);
@@ -113,6 +122,21 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
 
   ngOnInit(): void {
     debugger
+
+
+    // Use the PhoneNumberUtil class to parse the cleaned country code
+   
+
+    // Get the country flag using the country code
+    // this.countryFlag = `https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/flags/4x3/${country.toLowerCase()}.svg`;
+    // this.countryFlag = `https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/flags/4x3/${this.countryCode.toLowerCase()}.svg`;
+    // var country2: Country;
+    // this.countryFlag = `https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/flags/4x3/${this.countryCode2.toLowerCase()}.svg`;
+    // const country: Country = Country.getCountryDataByCode(this.countryCode, CountryISO.Alpha2);
+    // var flagclass = country2.flagClass;
+   
+      // Get the flag URL from the country data
+
     this.currentDate = this.getCurrentDate();
     this.selectedCountryISO = CountryISO.Turkey;
     this.step = 0;
@@ -283,7 +307,10 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
         let value = this.textarea.nativeElement.value;
         this.fileToUpload.append('schoolName', form1Value.schoolName);
         this.fileToUpload.append('description', value);
-        this.fileToUpload.append('phoneNumber', form1Value.phoneNumber.number)
+        this.fileToUpload.append('phoneNumber', form1Value.phoneNumber.number);
+        this.fileToUpload.append('dialCode', form1Value.phoneNumber.dialCode);
+        this.fileToUpload.append('countryCode', form1Value.phoneNumber.countryCode.toLowerCase());
+
         // this.fileToUpload.append('countryId',form1Value.countryId);
         this.fileToUpload.append('countryName', form1Value.countryName);
         this.fileToUpload.append('specializationId', form1Value.specializationId);

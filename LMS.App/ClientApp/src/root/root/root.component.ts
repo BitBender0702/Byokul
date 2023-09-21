@@ -456,12 +456,15 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
               if (uploadResponse.images.includes(file)) {
                 return this.uploadVideosOnBlob(file, UploadTypeEnum.Image, response.sasToken);
               }
+              if (uploadResponse.videoThumbnails.includes(file)) {
+                return this.uploadVideosOnBlob(file, UploadTypeEnum.Thumbnail, response.sasToken);
+              }
               return "";
             });
 
             await Promise.all(uploadPromises);
             createPost.next({ postToUpload: uploadResponse.postToUpload, uploadVideoUrlList: this.uploadVideoUrlList, type: 1 });
-
+            this.getThumbnailUrl(this.uploadVideoUrlList);
             uploadResponse.postToUpload.append('blobUrlsJson', JSON.stringify(this.uploadVideoUrlList));
             
             this._postService.createPost(uploadResponse.postToUpload).subscribe((response: any) => {
@@ -480,7 +483,7 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
                 var translatedMessage = this.translateService.instant('VideoReadyToStream');
                 var notificationContent = translatedMessage;
                 //var chatType = this.from == "user" ? 1 :this.from == "school" ? 3 : this.from == "class" ? 4 : undefined;
-                this._notificationService.initializeNotificationViewModel(this.loginUserId, NotificationType.PostUploaded, notificationContent, this.loginUserId, response.id, response.postType, null, null, chatType).subscribe((response) => {
+                this._notificationService.initializeNotificationViewModel(this.loginUserId, NotificationType.PostUploaded, notificationContent, this.loginUserId, response.id, response.postType, null, null, chatType,null).subscribe((response) => {
                 });
               }
               else {

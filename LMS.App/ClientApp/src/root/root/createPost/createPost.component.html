@@ -18,7 +18,7 @@
         <div class="custom-language-select liv-postbtn">
           <ul class="nav nav-tabs border-0" id="myTab" role="tablist">
             <li *ngIf="!isEditPost" class="nav-item p-0">
-              <button
+              <button (click)="liveTabSelected()"
                 *ngIf="courseId == undefined && !profileShare"
                 [ngClass]="
                   isLiveTabopen

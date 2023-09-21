@@ -687,7 +687,12 @@ export class CreatePostComponent implements OnInit, OnDestroy {
       this.uploadImageUrls.splice(imageUrlIndex, 1);
     }
 
-    this.isThumbnailUpload = false;
+    // if(this.isLiveTabopen && this.videos.length >0){
+    //   this.isThumbnailUpload = true;
+    // }
+    // else{
+      this.isThumbnailUpload = false;
+    // }
   }
 
   handleVideoInput(event: any) {
@@ -713,6 +718,15 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     this.scheduleVideoRequired = false;
     this.isVideoUpload = true;
     this.isThumbnailUpload = true;
+    var test = this.isLiveTabopen;
+    if(this.isLiveTabopen && this.videos.length > 0){
+      this.images = [];
+      this.uploadImage = [];
+    }
+  }
+
+  liveTabSelected(){
+    this.isLiveTabopen = true;
   }
 
   getVideoThumbnail(videoUrl: string, fileName: string, callback: (thumbnailUrl: string) => void) {
@@ -1323,10 +1337,12 @@ export class CreatePostComponent implements OnInit, OnDestroy {
   reelsTab() {
     this.totalFilesLength = 0;
     this.isOpenReelsTab = true;
+    this.isLiveTabopen = false;
   }
 
   postTab() {
     this.isOpenReelsTab = false;
+    this.isLiveTabopen = false;
   }
 
   captureAttachmentUrl(event: any) {
@@ -1451,8 +1467,8 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     // }
 
     if (this.selectedVideoFromLibrary == undefined) {
-      const combinedFiles = [...this.videos, ...this.images];
-      postUploadOnBlob.next({ postToUpload: this.postToUpload, combineFiles: combinedFiles, videos: this.videos, images: this.images, attachment: null, type: 3, reel: null, uploadedUrls: [], checkLimitSchoolId: this.postCheckForLimitSchoolId });
+      const combinedFiles = [...this.videos, ...this.images,... this.videoThumbnails];
+      postUploadOnBlob.next({ postToUpload: this.postToUpload, combineFiles: combinedFiles, videos: this.videos, images: this.images, attachment: null, type: 3, reel: null, uploadedUrls: [],videoThumbnails: this.videoThumbnails, checkLimitSchoolId: this.postCheckForLimitSchoolId });
     }
 
     if (this.selectedVideoFromLibrary != undefined) {

@@ -106,6 +106,13 @@
   min-width: 130px;
 }
 
+.flag_style{
+width: 25px;
+height: 25px;
+}
+
+
+
 /* .flex-container {
   display: flex;
   background-color: DodgerBlue;

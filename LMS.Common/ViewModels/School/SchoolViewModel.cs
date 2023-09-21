@@ -40,6 +40,8 @@ namespace LMS.Common.ViewModels.School
         public Guid? ClassStudentId { get; set; }
         public Guid? CourseStudentId { get; set; }
         public string? PhoneNumber { get; set; }
+        public string? DialCode { get; set; }
+        public string? CountryCode { get; set; }
         public BuySchoolSubscriptionViewModel SubscriptionDetails { get; set; }
         public string SubscriptionDetailsJson { get; set; }
         public string SubscriptionMessage { get; set; }

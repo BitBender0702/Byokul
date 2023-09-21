@@ -53,6 +53,7 @@ export class SchoolFollowersComponent extends MultilingualComponent implements O
 
     bannedFollower:any;
     schoolBannedPageNumber:number = 1;
+    gender!: string;
     
 
     constructor(injector: Injector,userService: UserService,signalrService:SignalrService,private translateService: TranslateService,public messageService:MessageService,schoolService: SchoolService,private route: ActivatedRoute,private fb: FormBuilder) { 
@@ -66,6 +67,7 @@ export class SchoolFollowersComponent extends MultilingualComponent implements O
 
       this.loadingIcon = true;
       var selectedLang = localStorage.getItem('selectedLanguage');
+      this.gender = localStorage.getItem("gender") ?? '';
       this.translate.use(selectedLang ?? '');
       this.schoolId = this.route.snapshot.paramMap.get('schoolId') ?? '';
 

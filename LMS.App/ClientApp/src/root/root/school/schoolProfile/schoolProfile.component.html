@@ -453,7 +453,9 @@
             }}
           </div>
           <span class="custom-tag d-inline-flex align-items-center"
-            ><span class="vr-border"></span>{{ school.phoneNumber }}</span
+            ><span class="vr-border"></span>
+            <img class="flag_style me-2" [src]="'https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/flags/4x3/' + school.countryCode + '.svg'">
+            {{ school.dialCode }} {{ school.phoneNumber }}</span
           >
         </div>
 

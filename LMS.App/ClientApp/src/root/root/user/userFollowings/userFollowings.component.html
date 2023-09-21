@@ -68,10 +68,25 @@
               <div class="d-flex align-items-center justify-content-between">
                 <span class="followers-name font_16 text_sec1 fw_600">
                   <img
+                  *ngIf="userfollowing.user.avatar != null"
+                  (click)="getSelectedFollowing(userfollowing.user.id)"
                     [src]="userfollowing.user.avatar"
-                    class="rounded-circle me-2"
+                    class="rounded-circle me-2 cursor_pointer"
                     style="max-height: 30px"
                   />
+                  <img
+                  *ngIf="userfollowing.user.avatar == null && gender == '1'"
+                  (click)="getSelectedFollowing(userfollowing.user.id)"
+                  src="../../../assets/images/maleProfile.jfif"
+                  class="rounded-circle me-2 cursor_pointer"
+                  style="max-height: 30px"                />
+                <img
+                  *ngIf="
+                  userfollowing.user.avatar == null &&(gender == '2' || gender == '3')"
+                  (click)="getSelectedFollowing(userfollowing.user.id)"
+                  src="../../../assets/images/femaleProfile.jfif"
+                  class="rounded-circle me-2 cursor_pointer"
+                  style="max-height: 30px"                />
                   <a
                     style="cursor: pointer"
                     (click)="getSelectedFollowing(userfollowing.user.id)"

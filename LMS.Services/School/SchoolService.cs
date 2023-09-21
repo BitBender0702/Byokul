@@ -148,6 +148,8 @@ namespace LMS.Services
                 CountryName = schoolViewModel.CountryName,
                 SchoolUrl = schoolViewModel.SchoolUrl,
                 PhoneNumber = schoolViewModel.PhoneNumber,
+                DialCode = schoolViewModel.DialCode,
+                CountryCode = schoolViewModel.CountryCode,
                 SchoolSlogan = schoolViewModel.SchoolSlogan,
                 Founded = schoolViewModel.Founded,
                 AccessibilityId = schoolViewModel.AccessibilityId,
@@ -378,14 +380,15 @@ namespace LMS.Services
 
         public async Task<SchoolUpdateViewModel> UpdateSchool(SchoolUpdateViewModel schoolUpdateViewModel)
         {
+            School school = _schoolRepository.GetById(schoolUpdateViewModel.SchoolId);
             if (schoolUpdateViewModel.AvatarImage != null)
             {
                 schoolUpdateViewModel.Avatar = await _blobService.UploadFileAsync(schoolUpdateViewModel.AvatarImage, containerName, false);
+                  school.Avatar = schoolUpdateViewModel.Avatar;            
             }
 
-            School school = _schoolRepository.GetById(schoolUpdateViewModel.SchoolId);
+           
             school.SchoolName = schoolUpdateViewModel.SchoolName;
-            school.Avatar = schoolUpdateViewModel.Avatar;
             school.SchoolSlogan = schoolUpdateViewModel.SchoolSlogan;
             school.Founded = schoolUpdateViewModel.Founded;
             school.SchoolEmail = schoolUpdateViewModel.SchoolEmail;
@@ -393,11 +396,14 @@ namespace LMS.Services
             school.Description = schoolUpdateViewModel.Description;
             school.CountryName = schoolUpdateViewModel.CountryName;
             school.PhoneNumber = schoolUpdateViewModel.PhoneNumber;
+            school.DialCode = schoolUpdateViewModel.DialCode;
+            school.CountryCode = schoolUpdateViewModel.CountryCode;
 
             _schoolRepository.Update(school);
             _schoolRepository.Save();
 
             schoolUpdateViewModel.SchoolId = school.SchoolId;
+            schoolUpdateViewModel.Avatar = school.Avatar;
             //await AddRoleForUser(schoolUpdateViewModel.OwnerId, "School Owner");
             return schoolUpdateViewModel;
         }
@@ -1057,6 +1063,7 @@ namespace LMS.Services
 
             foreach (var post in result)
             {
+
                 post.PostAttachments = await GetAttachmentsByPostId(post.Id, loginUserId);
                 post.Likes = await _userService.GetLikesOnPost(post.Id);
                 post.Views = await _userService.GetViewsOnPost(post.Id);

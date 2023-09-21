@@ -81,11 +81,25 @@
               <li *ngFor="let userfollower of userFollowers" class="mb-0">
                 <div class="d-flex align-items-center justify-content-between">
                   <span class="followers-name font_16 text_sec1 fw_600">
-                    <img
+                    <img *ngIf="userfollower.follower.avatar != null"
+                    (click)="getSelectedFollower(userfollower.follower.id)"
                       [src]="userfollower.follower.avatar"
-                      class="rounded-circle me-2"
+                      class="rounded-circle me-2 cursor_pointer"
                       style="max-height: 30px"
                     />
+                    <img
+                    (click)="getSelectedFollower(userfollower.follower.id)"
+                    *ngIf="userfollower.follower.avatar == null && gender == '1'"
+                    src="../../../assets/images/maleProfile.jfif"
+                    class="rounded-circle me-2 cursor_pointer"
+                    style="max-height: 30px"                  />
+                  <img
+                  (click)="getSelectedFollower(userfollower.follower.id)"
+                    *ngIf="
+                    userfollower.follower.avatar == null &&(gender == '2' || gender == '3')"
+                    src="../../../assets/images/femaleProfile.jfif"
+                    class="rounded-circle me-2 cursor_pointer"
+                    style="max-height: 30px"                  />
                     <a
                       style="cursor: pointer"
                       (click)="getSelectedFollower(userfollower.follower.id)"
@@ -131,11 +145,26 @@
               <li *ngFor="let userfollower of userBannedFollowers" class="mb-0">
                 <div class="d-flex align-items-center justify-content-between">
                   <span class="followers-name font_16 text_sec1 fw_600">
-                    <img
+                    <img 
+                    *ngIf="userfollower.follower.avatar != null"
+                    (click)="getSelectedFollower(userfollower.follower.id)"
                       [src]="userfollower.follower.avatar"
-                      class="rounded-circle me-2"
+                      class="rounded-circle me-2 cursor_pointer"
                       style="max-height: 30px"
                     />
+                    <img
+                    *ngIf="userfollower.follower.avatar == null && gender == '1'"
+                    (click)="getSelectedFollower(userfollower.follower.id)"
+                    src="../../../assets/images/maleProfile.jfif"
+                    class="rounded-circle me-2 cursor_pointer"
+                    style="max-height: 30px"                />
+                  <img
+                    *ngIf="
+                    userfollower.follower.avatar == null &&(gender == '2' || gender == '3')"
+                    (click)="getSelectedFollower(userfollower.follower.id)"
+                    src="../../../assets/images/femaleProfile.jfif"
+                    class="rounded-circle me-2 cursor_pointer"
+                    style="max-height: 30px"                />
                     <a
                       style="cursor: pointer"
                       (click)="getSelectedFollower(userfollower.follower.id)"

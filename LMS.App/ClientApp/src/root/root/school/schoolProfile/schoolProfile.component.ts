@@ -1090,11 +1090,15 @@ export class SchoolProfileComponent
       this.updateSchoolDetails.description
     );
     this.fileToUpload.append('countryName', this.updateSchoolDetails.country);
-    this.fileToUpload.append('phoneNumber', phoneNumber.number)
+    this.fileToUpload.append('phoneNumber', phoneNumber.number);
+    this.fileToUpload.append('dialCode', phoneNumber.dialCode);
+    this.fileToUpload.append('countryCode', phoneNumber.countryCode.toLowerCase());
+
 
     this._schoolService
       .editSchool(this.fileToUpload)
       .subscribe((response: any) => {
+        debugger
         this.closeModal();
         this.isSubmitted = false;
         this.schoolName = this.updateSchoolDetails.schoolName;
