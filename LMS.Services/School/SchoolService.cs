@@ -2014,7 +2014,7 @@ namespace LMS.Services
         }
         public async Task<List<SchoolViewModel>> GetUserAllSchools(string userId)
         {
-            var schools = await _schoolRepository.GetAll().Where(x => x.CreatedById == userId).Select(x => new SchoolViewModel { SchoolId = x.SchoolId, SchoolName = x.SchoolName, Avatar = x.Avatar }).ToListAsync();
+            var schools = await _schoolRepository.GetAll().Where(x => x.CreatedById == userId).Select(x => new SchoolViewModel { SchoolId = x.SchoolId, SchoolName = x.SchoolName, Avatar = x.Avatar,IsVarified=x.IsVarified }).ToListAsync();
             return schools;
 
         }
