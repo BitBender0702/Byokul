@@ -685,6 +685,10 @@ namespace LMS.Services
             {
                 result.Post.IsPostLikedByCurrentUser = false;
             }
+            var post = await GetPostById(result.Post.Id, userId);
+            result.Post.ParentName = post.ParentName;
+            result.Post.ParentImageUrl = post.ParentImageUrl;
+            result.Post.IsParentVerified = post.IsParentVerified;
 
             //result.Post.ParentImageUrl = 
             //if (result.Post.PostAuthorType == (int)PostAuthorTypeEnum.User)

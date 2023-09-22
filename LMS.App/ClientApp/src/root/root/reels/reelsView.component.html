@@ -332,11 +332,13 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
                       class="me-2 cursor_pointer"
                     />
                     <span *ngIf="reels.post?.postAuthorType == 4" class="cursor_pointer" (click)="hideCommentModal()"
-                    [routerLink]="['/user/userProfile',reels.post?.createdBy]">{{ reels.post?.parentName }}</span>
+                    [routerLink]="['/user/userProfile',reels.post?.createdBy]">{{ reels.post?.parentName }} <img *ngIf="reels.post.isParentVerified" src="../../../../assets/images/green-verified.svg" style="height: 20px;"
+                    /></span>
 
                     <span *ngIf="reels.post?.postAuthorType == 1" class="cursor_pointer" (click)="hideCommentModal()"
                     [routerLink]="['/profile/school', reels.post?.parentName]"
-                    >{{ reels.post?.parentName }}</span>
+                    >{{ reels.post?.parentName }}   <img *ngIf="reels.post.isParentVerified" src="../../../../assets/images/verified-badge.svg" style="height: 20px;"
+                    /></span>
 
                     <span *ngIf="reels.post?.postAuthorType == 2" class="cursor_pointer" (click)="hideCommentModal()"
                     [routerLink]="['/profile/class', reels.post?.schoolName, reels.post.parentName]"

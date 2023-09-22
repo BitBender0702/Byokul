@@ -62,7 +62,13 @@
                           aria-selected="false"
                           tabindex="-1"
                           style="cursor: pointer"
-                          >{{ item.schoolName }}</a
+                          >{{ item.schoolName }}
+                          <span  class="verified-badge" style="font-size: 90%;" *ngIf="item.isVarified">
+                        <img  src="../../../../assets/images/verified-badge.svg" style="height: 20px;"
+                        />
+                      
+                      </span>
+                          </a
                         >
                       </li>
                     </ul>
@@ -246,6 +252,14 @@
                         class="mb-0 cursor_pointer"
                       >
                         {{ item?.userName }}
+
+                        <span  class="verified-badge" *ngIf="item.isVerified" style="font-size: 90%;"
+                        ><img src="../../../../assets/images/green-verified.svg" style="height: 20px;"
+                      />
+                      <!-- <img *ngIf="post.isParentVerified && post.postAuthorType == 1" src="../../../../assets/images/verified-badge.svg" style="height: 20px;"
+                      /> -->
+                    
+                    </span>
                       </h2>
                       <h2
                         *ngIf="item.chatType == 3"
@@ -1170,7 +1184,7 @@
                             '/profile/school',
                             item.school.schoolName
                           ]"
-                          class="mb-0 cursor_pointer"
+                          class="mb-0 cursor_pointer schoolHead"
                         >
                           {{ item?.userName }}
                         </h2>

@@ -722,7 +722,10 @@
                       <img [src]="post.parentImageUrl" class="me-2" />
                       <span (click)="hideCommentModal()"
                       [routerLink]="['/user/userProfile',post.createdBy]">
-                      {{ post.parentName }}
+                      {{ post.parentName }}  <img *ngIf="post.isParentVerified && post.postAuthorType == 1" src="../../../../assets/images/verified-badge.svg" style="height: 20px;"
+                      />
+                      <img *ngIf="post.isParentVerified && post.postAuthorType == 4" src="../../../../assets/images/green-verified.svg" style="height: 20px;"
+                              />
                     </span>
                     </div>
                   </slide>
@@ -794,11 +797,13 @@
                         class="me-2 cursor_pointer"
                       />
                       <span *ngIf="post.postAuthorType == 4" class="cursor_pointer" (click)="hideCommentModal()"
-                      [routerLink]="['/user/userProfile',post.createdBy]">{{ post.parentName }}</span>
+                      [routerLink]="['/user/userProfile',post.createdBy]">{{ post.parentName }} <img *ngIf="post.isParentVerified" src="../../../../assets/images/green-verified.svg" style="height: 20px;"
+                      /></span>
 
                       <span *ngIf="post.postAuthorType == 1" class="cursor_pointer" (click)="hideCommentModal()"
                       [routerLink]="['/profile/school', post.parentName]"
-                      >{{ post.parentName }}</span>
+                      >{{ post.parentName }} <img *ngIf="post.isParentVerified" src="../../../../assets/images/verified-badge.svg" style="height: 20px;"
+                      /></span>
 
                       <span *ngIf="post.postAuthorType == 2" class="cursor_pointer" (click)="hideCommentModal()"
                       [routerLink]="['/profile/class', post.schoolName, post.parentName]"
