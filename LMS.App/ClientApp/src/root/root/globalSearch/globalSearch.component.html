@@ -62,11 +62,10 @@
           </div>
         </div>
 
-        <!---- Followers list html start ------>
         <div class="wht_newbox followers_box">
           <ul class="list-unstyled before-none mb-0">
             <ng-container *ngFor="let item of globalSearchResult">
-              <li class="mb-0" *ngIf="item.type == 4">
+              <li class="mb-0" *ngIf="item.type == 4 && !item.isPost">
                 <div class="d-flex align-items-center justify-content-between">
                   <span class="followers-name font_16 text_sec1 fw_600">
                     <img
@@ -81,7 +80,7 @@
                   >
                 </div>
               </li>
-              <li class="mb-0" *ngIf="item.type == 1">
+              <li class="mb-0" *ngIf="item.type == 1 && !item.isPost">
                 <div class="d-flex align-items-center justify-content-between">
                   <span class="followers-name font_16 text_sec1 fw_600">
                     <img
@@ -96,7 +95,7 @@
                   >
                 </div>
               </li>
-              <li class="mb-0" *ngIf="item.type == 2">
+              <li class="mb-0" *ngIf="item.type == 2 && !item.isPost">
                 <div class="d-flex align-items-center justify-content-between">
                   <span class="followers-name font_16 text_sec1 fw_600">
                     <img
@@ -115,7 +114,7 @@
                   >
                 </div>
               </li>
-              <li class="mb-0" *ngIf="item.type == 3">
+              <li class="mb-0" *ngIf="item.type == 3 && !item.isPost">
                 <div class="d-flex align-items-center justify-content-between">
                   <span class="followers-name font_16 text_sec1 fw_600">
                     <img
@@ -131,6 +130,33 @@
                       ]"
                       >{{ item.name }}</a
                     ></span
+                  >
+                </div>
+              </li>
+              <li class="mb-0" *ngIf="item.isPost">
+                <div class="d-flex align-items-center justify-content-between">
+                  <span class="followers-name font_16 text_sec1 fw_600">
+                    <img
+                      [src]="item.avatar"
+                      class="rounded-circle me-3 img_style"
+                    />
+                    <a *ngIf="item.type == 1"
+                      class="routeLink"
+                      [routerLink]="[
+                        '/user/post',
+                        item.id
+                      ]"
+                      >{{ item.name }}</a
+                    >
+                    <a *ngIf="item.type == 3"
+                    class="routeLink"
+                    [routerLink]="[
+                      '/user/reels',
+                      item.id,
+                    ]"
+                    >{{ item.name }}</a
+                  >
+                    </span
                   >
                 </div>
               </li>

@@ -84,7 +84,7 @@ namespace LMS.App.Controllers
             {
                 postViewModel.CreatedBy = userId;
                 postViewModel.CreatedOn = DateTime.UtcNow;
-                postViewModel.IsDeleted = false;    
+                postViewModel.IsDeleted = false;
                 postViewModel.IsPinned = false;
                 postViewModel.IsCommentsDisabled = false;
                 var response = await _postService.SavePost(postViewModel, userId);
@@ -334,12 +334,20 @@ namespace LMS.App.Controllers
         public async Task<IActionResult> EnableLiveStream(Guid postId)
         {
             var isStreamEnable = await _postService.EnableLiveStream(postId);
-            if(isStreamEnable)
+            if (isStreamEnable)
             {
                 return Ok(new { Success = true, Message = Constants.EnabledLiveStreamSuccessully });
             }
             return Ok(new { Success = true, Message = Constants.LiveStreamEnableFailed });
-        } 
+        }
+
+        [Route("postsGlobalSearch")]
+        [HttpGet]
+        public async Task<IActionResult> PostsGlobalSearch(string searchString, int pageNumber, int pageSize)
+        {
+            var user = await _postService.PostsGlobalSearch(searchString, pageNumber, pageSize);
+            return Ok(user);
+        }
 
 
     }

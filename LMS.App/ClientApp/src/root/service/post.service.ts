@@ -219,6 +219,12 @@ export class PostService{
         return this.http.post(`${this.apiUrl}/posts/enableLiveStream`,null, {params:queryParams,headers: this.headers});
     }
 
+    postsGlobalSearch(searchString:string,pageNumber:number,pageSize:number){
+        let queryParams = new HttpParams().append("searchString",searchString).append("pageNumber",pageNumber).append("pageSize",pageSize);
+        return this.http.get(`${this.apiUrl}/posts/postsGlobalSearch`, {params:queryParams,headers: this.headers}
+        );
+    }
+
 
 
 }

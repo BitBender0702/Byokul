@@ -2875,15 +2875,15 @@
         <i class="pi pi-times" (click)="hideSearchSection()"></i>
       </div>
       <div *ngFor="let key of getObjectKeys(globalSearchResult)">
+        <h4 *ngIf="key == 'Posts'" class="fw_600">
+          {{ "PostsWithTags" | translate }}
+        </h4>
         <h4 *ngIf="key == 'ClassAndCourse'" class="fw_600">
           {{ "Classes&Courses" | translate }}
         </h4>
         <h4 *ngIf="key == 'User'" class="fw_600">{{ "People" | translate }}</h4>
         <h4 *ngIf="key == 'School'" class="fw_600">
           {{ "Schools" | translate }}
-        </h4>
-        <h4 *ngIf="key == 'Posts'" class="fw_600">
-          {{ "Posts" | translate }}
         </h4>
         <ng-container *ngFor="let item of globalSearchResult[key]">
           <li *ngIf="item.type == 1 && !item.isPost" class="search-results__item">
@@ -2966,12 +2966,12 @@
                 </span>
                 <a *ngIf="item.type == 1"
                   class="routeLink"
-                  (click)="openPostsViewModel(item.id, item.type)"
+                  [routerLink]="['/user/post', item.id]"
                   >{{ item.name }}</a
                 >
                 <a *ngIf="item.type == 3"
                 class="routeLink"
-                (click)="openReelsViewModel(item.type, item.reelId)"
+                [routerLink]="['/user/reels', item.id]"
                 >{{ item.name }}</a
               >
                 </span

@@ -612,7 +612,9 @@
   "RestoreClass": "Sınıfı Geri Yükle",
   "RestoreCourse": "Kursu Geri Yükle",
   "DoYouWantToRestore": "Bunu gerçekten geri yüklemek istiyor musun?",
-  "PostReels":"Gönderi Makaraları"
+  "PostReels":"Gönderi Makaraları",
+  "PostsWithTags": "Etiketli gönderiler"
+
 
 
 

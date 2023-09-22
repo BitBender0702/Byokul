@@ -22,6 +22,7 @@ using Microsoft.AspNetCore.Hosting;
 using System.Collections;
 using LMS.DataAccess.GenericRepository;
 using System.Text.RegularExpressions;
+using LMS.Common.ViewModels.Common;
 
 namespace LMS.Services
 {
@@ -181,7 +182,7 @@ namespace LMS.Services
             {
                 throw ex;
             }
-            }
+        }
 
         public async Task<List<VideoUploadResponseViewModel>> SaveBlobUrls(List<BlobUrlsViewModel> bloburls, IEnumerable<IFormFile> uploadVideosThumbnail, Guid postId, string createdById, bool isJobRunning)
         {
@@ -844,8 +845,8 @@ namespace LMS.Services
             if (isPostExist == null)
             {
                 var isPostAttachmentExist = _postAttachmentRepository.GetById(model.PostId);
-                if(isPostAttachmentExist == null)
-                return null;
+                if (isPostAttachmentExist == null)
+                    return null;
             }
 
             var userLike = await _likeRepository.GetAll().Where(x => x.UserId == model.UserId && x.PostId == model.PostId).FirstOrDefaultAsync();
@@ -1026,7 +1027,7 @@ namespace LMS.Services
                 post.SavedPostsCount = savedPosts.Where(x => x.PostId == post.Id).Count();
                 post.IsPostSharedByCurrentUser = sharedPosts.Any(x => x.PostId == post.Id && x.UserId == userId);
                 post.PostSharedCount = sharedPosts.Where(x => x.PostId == post.Id).Count();
-        
+
                 if (post.Likes.Any(x => x.UserId == userId && x.PostId == post.Id))
                 {
                     post.IsPostLikedByCurrentUser = true;
@@ -1405,14 +1406,50 @@ namespace LMS.Services
         public async Task<bool> EnableLiveStream(Guid postId)
         {
             var post = await _postRepository.GetAll().Where(x => x.Id == postId && x.IsLiveStreamEnded == false).FirstOrDefaultAsync();
-            if(post != null)
+            if (post != null)
             {
                 post.IsLive = true;
                 _postRepository.Update(post);
                 _postRepository.Save();
                 return true;
             }
-            return false;        
+            return false;
+        }
+
+        public async Task<IEnumerable<GlobalSearchViewModel>> PostsGlobalSearch(string searchString, int pageNumber, int pageSize)
+        {
+
+            var posts = await _postRepository.GetAll().Where(x => x.Tags.Any(x => x.PostTagValue.Contains(searchString))).Select(x => new
+            {
+                x.Id,
+                x.Title,
+                x.PostType,
+                x.ParentId,
+                x.PostAuthorType
+            }).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            var postViewModel = new List<GlobalSearchViewModel>();
+            var postAttachment = new PostAttachment();
+            foreach (var post in posts)
+            {
+                string avatar = _userService.GetPostParentImage(post.ParentId, post.PostAuthorType);
+                if (post.PostType == 3)
+                {
+                    postAttachment = await _postAttachmentRepository.GetAll().Where(x => x.PostId == post.Id).FirstAsync();
+                }
+                postViewModel.Add(new GlobalSearchViewModel
+                {
+                    Id = post.PostType == 1 ? post.Id : postAttachment.Id,
+                    Name = post.Title,
+                    SchoolName = null,
+                    Type = post.PostType,
+                    Avatar = avatar,
+                    IsPost = true
+                });
+            }
+
+            return postViewModel;
+
         }
 
 

@@ -1271,20 +1271,4 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
     this.showSearchButtonForMobile=true;
   }
 
-  openPostsViewModel(postId: string, postType: number, reelId?: string) {
-    this._postService.getPostById(postId).subscribe((postResponse) => {
-      const initialState = {
-        posts: postResponse,
-      };
-      this.bsModalService.show(PostViewComponent, { initialState });
-    });
-  }
-
-  openReelsViewModel(postType: number, reelId: string) {
-    const initialState = {
-      postAttachmentId: reelId,
-    };
-    this.bsModalService.show(ReelsViewComponent, { initialState });
-  }
-
 }

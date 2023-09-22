@@ -23,7 +23,7 @@ namespace LMS.Services
         Task<UserDetailsViewModel> GetBasicUserInfo(string userId);
         Task<List<UserFollowerViewModel>> GetUserFollowers(string userId, int pageNumber, string? searchString);
         Task<List<UserFollowingViewModel>> GetUserFollowings(string userId, int pageNumber, string? searchString);
-        Task<bool> BanFollower(string followerId,string userId);
+        Task<bool> BanFollower(string followerId, string userId);
         Task<bool> UnBanFollower(string userId, string followerId);
         Task<IEnumerable<GlobalFeedViewModel>> GetGlobalFeed(string userId, PostTypeEnum postType, int pageNumber, string? searchString);
         Task<Guid> SaveUserPreference(string userId, string preferenceString);
@@ -36,7 +36,7 @@ namespace LMS.Services
         Task<bool> DeleteSchoolTeacher(Guid schoolId, string userId);
         Task<bool> DeleteSchoolStudent(Guid schoolId, string userId);
         Task<bool> ReportFollower(ReportFollowerViewModel model);
-        Task<IEnumerable<GlobalSearchViewModel>> GlobalSearch(string searchString, int pageNumber,int pageSize);
+        Task<IEnumerable<GlobalSearchViewModel>> GlobalSearch(string searchString, int pageNumber, int pageSize);
         Task<IEnumerable<GlobalSearchViewModel>> UsersGlobalSearch(string searchString, int pageNumber, int pageSize);
         Task SaveUserCertificates(SaveUserCertificateViewModel model);
         Task DeleteUserCertificate(UserCertificateViewModel model);
@@ -47,9 +47,7 @@ namespace LMS.Services
         Task<List<UserPermissionViewModel>> GetUserPermissions(string userId);
         Task<string> GetBlobSasToken();
         Task<bool> CheckAllNotificationSettings(string userId);
-
-
         Task<List<UserFollowerViewModel>> GetUserBannedFollowers(string userId, int pageNumber, string? searchString);
-
+        string GetPostParentImage(Guid parentId, int postAuthorType);
     }
 }

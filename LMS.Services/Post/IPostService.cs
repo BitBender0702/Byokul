@@ -1,4 +1,5 @@
 ﻿using LMS.Common.Enums;
+using LMS.Common.ViewModels.Common;
 using LMS.Common.ViewModels.Post;
 using LMS.Data.Entity;
 using Microsoft.AspNetCore.Http;
@@ -34,8 +35,9 @@ namespace LMS.Services
         Task SaveStreamAsPost(Guid postId);
         Task SaveLiveVideoTime(Guid postId, float videoTotalTime, float videoLiveTime);
         Task<List<VideoUploadResponseViewModel>> SaveUploadVideos(IEnumerable<IFormFile> uploadVideos, IEnumerable<IFormFile> uploadVideosThumbnail, Guid postId, string createdById,bool isJobRunning);
-
         Task<bool> EnableLiveStream(Guid postId);
+        Task<IEnumerable<GlobalSearchViewModel>> PostsGlobalSearch(string searchString, int pageNumber, int pageSize);
+
 
     }
 }
