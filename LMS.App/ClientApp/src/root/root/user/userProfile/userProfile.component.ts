@@ -293,6 +293,15 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
 
     });
 
+    // if(this.userId != this.loginUserId){
+    //   this._userService.getUserBannedFollowers(this.userId,1,this.searchString).subscribe(response => {
+    //     this.userBannedFollowers = response.data;
+    //     // this.followersTab = false;
+    //     // debugger
+    //   })
+    // }
+    
+
     this._userService.getLanguageList().subscribe((response) => {
       this.languages = response;
     });
@@ -1236,9 +1245,12 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
         this.isLiked = true;
         this.likesLength = item.likes.length + 1;
         item.isPostLikedByCurrentUser = true;
-        var notificationType = NotificationType.Likes;
-        var notificationContent = "liked your post";
-        this.initializeNotificationViewModel(post.createdBy, notificationType, notificationContent, postId, postType, post);
+        debugger
+        if(post.createdBy != this.loginUserId){
+          var notificationType = NotificationType.Likes;
+          var notificationContent = "liked your post";
+          this.initializeNotificationViewModel(post.createdBy, notificationType, notificationContent, postId, postType, post);
+        }
       }
     });
 

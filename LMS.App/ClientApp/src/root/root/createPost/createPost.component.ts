@@ -182,10 +182,14 @@ export class CreatePostComponent implements OnInit, OnDestroy {
   profileShare: any = false;
   forReel: boolean = false;
   forPost: boolean = false
+  noLive:boolean=true
   ngOnInit(): void {
     debugger
     this.isOwnerOrNot();
     var initialValue = this.options.initialState;
+    if(initialValue?.from == "user"){
+      this.noLive = false
+    }
     this.selectedVideoFromLibrary = initialValue?.selectedVideoFromLibrary;
 
     if (this.editPostId != undefined) {
@@ -596,8 +600,14 @@ export class CreatePostComponent implements OnInit, OnDestroy {
   }
 
   handleImageInput(event: any) {
-    this.numberOfImages++;
-    
+    debugger;
+    let numberOfImagesFromEvent = event.target.files.length;
+    // if(this.images.length == 0){
+      this.numberOfImages = this.images.length;
+    // }
+    for (let index = 0; index < numberOfImagesFromEvent; index++) {
+     this.numberOfImages++
+    }
     if (this.numberOfImages >= 16) {
       this.messageService.add({ severity: 'info', summary: 'Info', life: 3000, detail: 'Images Must Be Less Than 15' });
       return;
@@ -615,7 +625,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
         return () => {
           debugger
           const imageUrl = reader.result?.toString();
-          const imageName = selectedFiles[fileIndex].name;
+          const imageName = newFile.name;
           const imageObject = { imageUrl, name: imageName };
           this.uploadImage.push(imageObject);
         };
@@ -641,7 +651,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
 
     reader.onload = () => {
       const imageUrl = reader.result as string;
-      const imageName = file.name;
+      const imageName = newFile.name;
       const imageObject = { imageUrl, name: imageName };
       this.uploadImage.push(imageObject);
 
@@ -666,12 +676,12 @@ export class CreatePostComponent implements OnInit, OnDestroy {
       this.videos.push(newFile);
       this.postIndexing++;
     // this.videos.push(file);
-    const videoUrl = URL.createObjectURL(file);
-    this.getVideoThumbnail(videoUrl, file.name, (thumbnailUrl) => {
+    const videoUrl = URL.createObjectURL(newFile);
+    this.getVideoThumbnail(videoUrl, newFile.name, (thumbnailUrl) => {
       debugger
       this.videoObject.videoUrl = thumbnailUrl;
-      this.videoObject.name = file.name;
-      this.videoObject.type = file.type;
+      this.videoObject.name = newFile.name;
+      this.videoObject.type = newFile.type;
       this.uploadVideo.push(this.videoObject);
       this.initializeVideoObject();
     });
@@ -713,7 +723,13 @@ export class CreatePostComponent implements OnInit, OnDestroy {
 
   postIndexing:number=0;
   handleVideoInput(event: any) {
-    this.numberOfVideo++;
+    let numberOfImagesFromEvent = event.target.files.length;
+    // if(this.images.length == 0){
+      this.numberOfVideo = this.videos.length;
+    // }
+    for (let index = 0; index < numberOfImagesFromEvent; index++) {
+      this.numberOfVideo++;
+    }
     if (this.numberOfVideo >= 2) {
       this.messageService.add({ severity: 'info', summary: 'Info', life: 3000, detail: 'Only 1 video per post is allowed' });
       return;
@@ -728,12 +744,12 @@ export class CreatePostComponent implements OnInit, OnDestroy {
       // this.videos.push(selectedFiles[i]);
       const file = newFile;
       this.postIndexing++;
-      const videoUrl = URL.createObjectURL(file);
-      this.getVideoThumbnail(videoUrl, file.name, (thumbnailUrl) => {
+      const videoUrl = URL.createObjectURL(newFile);
+      this.getVideoThumbnail(videoUrl, newFile.name, (thumbnailUrl) => {
         debugger
         this.videoObject.videoUrl = thumbnailUrl;
-        this.videoObject.name = file.name + "_index0";
-        this.videoObject.type = file.type;
+        this.videoObject.name = newFile.name;
+        this.videoObject.type = newFile.type;
         this.uploadVideo.push(this.videoObject);
         this.initializeVideoObject();
       });
@@ -802,6 +818,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
 
   removeUploadVideo(video: any) {
     this.numberOfVideo = 0;
+
     const blobUrlIndex = this.uploadVideoUrlList.findIndex((item: any) => item.blobName === video.name);
     if (blobUrlIndex > -1) {
       this.uploadVideoUrlList.splice(blobUrlIndex, 1);
@@ -810,6 +827,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     const index = this.videos.findIndex((item: any) => item.name === video.name);
     if (index > -1) {
       this.videos.splice(index, 1);
+      this.videoThumbnails.splice(index, 1);
     }
 
     const imageIndex = this.uploadVideo.findIndex((item: any) => item.name === video.name);
@@ -821,6 +839,10 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     if (videoUrlIndex > -1) {
       this.uploadVideoUrls.splice(videoUrlIndex, 1);
     }
+
+    // const videoThumbnaiIndex = this.videoThumbnails.findIndex(item: any)
+    
+
     this.isVideoUpload = false;
     this.isThumbnailUpload = false;
   }

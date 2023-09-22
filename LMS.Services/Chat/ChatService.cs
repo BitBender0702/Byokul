@@ -960,6 +960,28 @@ namespace LMS.Services.Chat
             return null;
         }
 
+        public async Task<bool?> DeleteCommentById(CommentLikeUnlikeViiewModel model)
+        {
+            var commentLike = await _commentRepository.GetAll()
+                                                      .FirstOrDefaultAsync(x => x.Id == Guid.Parse(model.CommentId) && x.UserId == model.UserId);
+            if (commentLike != null)
+            {
+                try
+                {
+                    _commentRepository.Delete(commentLike.Id);
+                    _commentRepository.Save();
+                }
+                catch (Exception ex)
+                {
+                    // Handle exception here. It's a good practice to at least log the exception.
+                }
+
+                return true;
+            }
+            return false;
+        }
+
+
 
 
     }

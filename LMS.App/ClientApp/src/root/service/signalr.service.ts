@@ -52,6 +52,11 @@ export const commentLikeResponse = new Subject<{
 }>();
 
 
+export const commentDeleteResponse = new Subject<{
+  commentId: string;
+}>();
+
+
 export const closeIyizicoThreeDAuthWindow = new Subject<{
   isClose: boolean;
 }>();
@@ -173,6 +178,14 @@ export class SignalrService {
       console.log(`this ${model.commentId}`);
     });
 
+    this.hubConnection?.on('NotifyCommentDelete',
+    (commentId) => {
+      debugger;
+      commentDeleteResponse.next({
+        commentId: commentId
+      });
+    });
+
     this.hubConnection?.on('NotifyPostLikeToReceiver',
     (isLiked) => {
       postLikeResponse.next({
@@ -272,6 +285,12 @@ export class SignalrService {
   notifyCommentLike(model:CommentLikeUnlike) {
     debugger;
     this.hubConnection?.invoke('NotifyCommentLike', model)
+      .catch((err) => console.error(err));
+  }
+
+  notifyCommentDelete(model:CommentLikeUnlike) {
+    debugger;
+    this.hubConnection?.invoke('DeleteCommentById', model)
       .catch((err) => console.error(err));
   }
 

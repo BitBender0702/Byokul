@@ -14,7 +14,7 @@ import { ChatService } from 'src/root/service/chatService';
 import { NotificationService } from 'src/root/service/notification.service';
 import { PostService } from 'src/root/service/post.service';
 import { SchoolService } from 'src/root/service/school.service';
-import { commentLikeResponse, commentResponse, SignalrService } from 'src/root/service/signalr.service';
+import { commentDeleteResponse, commentLikeResponse, commentResponse, SignalrService } from 'src/root/service/signalr.service';
 import { UserService } from 'src/root/service/user.service';
 import { SharePostComponent } from '../sharePost/sharePost.component';
 import videojs from 'video.js';
@@ -29,6 +29,7 @@ import { ClassCourseEnum } from 'src/root/Enums/classCourseEnum';
 import { DeleteConfirmationComponent } from '../delete-confirmation/delete-confirmation.component';
 
 import { TranslateService } from '@ngx-translate/core';
+import { response } from 'express';
 
 
 export const sharePostResponse = new Subject<{}>();
@@ -85,6 +86,7 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
   joinMeetingViewModel!: JoinMeetingModel;
   commentResponseSubscription!: Subscription;
 
+  commentDeletdResponseSubscription!: Subscription
 
   private _studentService;
 
@@ -260,11 +262,23 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
     //   this.addEventListnerOnCarousel();
     // }, 1000);
 
+    if(!this.commentDeletdResponseSubscription){
+      commentDeleteResponse.subscribe(response =>{
+        let indexOfComment = this.post.comments.findIndex((x:any) => x.id == response.commentId)
+        this.post.comments.splice(indexOfComment, 1)
+      })
+    }
+
+    
+
   }
 
   ngOnDestroy(): void {
     if (this.commentResponseSubscription) {
       this.commentResponseSubscription.unsubscribe();
+    }
+    if (this.commentDeletdResponseSubscription) {
+      this.commentDeletdResponseSubscription.unsubscribe();
     }
   }
 
@@ -408,9 +422,11 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
       this.isLiked = true;
       this.likesLength = this.post.likes.length + 1;
       this.post.isPostLikedByCurrentUser = true;
-      var notificationContent = `liked your post(${post.title})`;
-      this._notificationService.initializeNotificationViewModel(post.createdBy, NotificationType.Likes, notificationContent, this.userId, postId, postType, post, null).subscribe((_response) => {
-      });
+      if(post.createdBy != this.userId){
+        var notificationContent = `liked your post(${post.title})`;
+        this._notificationService.initializeNotificationViewModel(post.createdBy, NotificationType.Likes, notificationContent, this.userId, postId, postType, post, null).subscribe((_response) => {
+        });
+      }
     }
 
     this.likeUnlikePost.postId = postId;
@@ -786,6 +802,20 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
           videoElement.pause();
         }
       }
+    }
+  }
+
+
+  deleteComment(item:any){
+    debugger;
+    this.initializeCommentLikeUnlike();
+    this.commentLikeUnlike.userId = this.userId;
+    this.commentLikeUnlike.commentId = item.id;
+    this.commentLikeUnlike.groupName = item.groupName;
+    if(this.userId == item.userId){
+      this._signalRService.notifyCommentDelete(this.commentLikeUnlike);
+      let indexOfComment = this.post.comments.findIndex((x:any) => x.id == this.commentLikeUnlike.commentId)
+      this.post.comments.splice(indexOfComment, 1)
     }
   }
 

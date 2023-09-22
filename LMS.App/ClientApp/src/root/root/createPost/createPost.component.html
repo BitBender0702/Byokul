@@ -19,7 +19,7 @@
           <ul class="nav nav-tabs border-0" id="myTab" role="tablist">
             <li *ngIf="!isEditPost" class="nav-item p-0">
               <button (click)="liveTabSelected()"
-                *ngIf="courseId == undefined && !profileShare"
+                *ngIf="courseId == undefined && !profileShare && noLive"
                 [ngClass]="
                   isLiveTabopen
                     ? 'nav-link active post-attch-btn d-inline-flex justify-content-center align-items-center'

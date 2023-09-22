@@ -1631,8 +1631,11 @@ export class SchoolProfileComponent
           else {
             var notificationContent = "liked your post";
           }
-          this._notificationService.initializeNotificationViewModel(post.createdBy, NotificationType.Likes, notificationContent, this.userId, postId, postType, post, null).subscribe((response) => {
-          });
+          if(post.createdBy != this.userId){
+            this._notificationService.initializeNotificationViewModel(post.createdBy, NotificationType.Likes, notificationContent, this.userId, postId, postType, post, null).subscribe((response) => {
+            });
+          }
+          
         }
       });
 

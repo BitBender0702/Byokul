@@ -27,11 +27,14 @@ public class ChatHubs : Hub
     private IGenericRepository<Class> _classRepository;
     private IGenericRepository<Teacher> _teacherRepository;
 
+
     private IGenericRepository<Course> _courseRepository;
 
+    private readonly IPostService _postService;
 
 
-    public ChatHubs(UserManager<User> userManager, IGenericRepository<Course> courseRepository, IChatService chatService, IGenericRepository<View> viewRepository, INotificationService notificationService, IGenericRepository<UserFollower> userFollowerRepository, IGenericRepository<User> userRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Teacher> teacherRepository)
+
+    public ChatHubs(UserManager<User> userManager, IGenericRepository<Course> courseRepository, IPostService postService, IChatService chatService, IGenericRepository<View> viewRepository, INotificationService notificationService, IGenericRepository<UserFollower> userFollowerRepository, IGenericRepository<User> userRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Teacher> teacherRepository)
     {
         _userManager = userManager;
         _chatService = chatService;
@@ -43,6 +46,7 @@ public class ChatHubs : Hub
         _classRepository = classRepository;
         _teacherRepository = teacherRepository;
         _courseRepository = courseRepository;
+        _postService = postService;
     }
 
     static Dictionary<string, string> UserIDConnectionID = new Dictionary<string, string>();
@@ -124,6 +128,15 @@ public class ChatHubs : Hub
         var currentUserConnectionId = UserIDConnectionID[model.UserId.ToString()];
 
         await Clients.GroupExcept(model.GroupName, currentUserConnectionId).SendAsync("NotifyCommentLikeToReceiver", reposnseMessage);
+    }
+
+    public async Task DeleteCommentById(CommentLikeUnlikeViiewModel model)
+    {
+        var reposnseMessage = await _chatService.DeleteCommentById(model);
+
+        var currentUserConnectionId = UserIDConnectionID[model.UserId.ToString()];
+
+        await Clients.GroupExcept(model.GroupName, currentUserConnectionId).SendAsync("NotifyCommentDelete", model.CommentId);
     }
 
     public async Task NotifyPostLike(string groupName, string userId, bool isLiked)

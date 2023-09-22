@@ -22,7 +22,7 @@ import { CourseService } from 'src/root/service/course.service';
 import { ClassService } from 'src/root/service/class.service';
 import { ChatService } from 'src/root/service/chatService';
 import { CommentViewModel } from 'src/root/interfaces/chat/commentViewModel';
-import { SignalrService, commentLikeResponse, commentResponse } from 'src/root/service/signalr.service';
+import { SignalrService, commentDeleteResponse, commentLikeResponse, commentResponse } from 'src/root/service/signalr.service';
 import { PostView } from 'src/root/interfaces/post/postView';
 import { SlickCarouselComponent } from 'ngx-slick-carousel';
 import { CreatePostComponent, addPostResponse } from '../createPost/createPost.component';
@@ -30,6 +30,7 @@ import { deleteReelResponse } from '../root.component';
 import { ReelsService } from 'src/root/service/reels.service';
 import { StudentService } from 'src/root/service/student.service';
 import { ClassCourseEnum } from 'src/root/Enums/classCourseEnum';
+import { CommentLikeUnlike } from 'src/root/interfaces/chat/commentsLike';
 
 // import { TranslateService } from '@ngx-translate/core';
 
@@ -63,6 +64,8 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   @ViewChild('videoComp') videoComp: any;
   @ViewChild(SlickCarouselComponent, { static: false }) carousel!: SlickCarouselComponent;
   @ViewChild('slickCarousel') slickCarousel!: ElementRef;
+
+  commentDeletdResponseSubscription!: Subscription;
 
 
   @ViewChild('slickCarouselRef', { read: ElementRef }) slickCarouselRef!: ElementRef;
@@ -98,6 +101,9 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   postId:string = "";
   reelSubscription!:Subscription;
   @ViewChild('groupChatList') groupChatList!: ElementRef;
+
+
+  commentLikeUnlike!: CommentLikeUnlike;
 
   private _studentService;
   private _reelsService;
@@ -187,6 +193,14 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       });
     }
 
+    if(!this.commentDeletdResponseSubscription){
+      commentDeleteResponse.subscribe(response =>{
+        debugger;
+        let indexOfComment = this.reel.comments.findIndex((x:any) => x.id == response.commentId)
+        this.reel.comments.splice(indexOfComment, 1)
+      })
+    }
+
     commentLikeResponse.subscribe(response => {
       var comments: any[] = this.reels.post.comments;
       var reqComment = comments.find(x => x.id == response.commentId);
@@ -246,6 +260,9 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
     }
     if (this.reelSubscription) {
       this.reelSubscription.unsubscribe();
+    }
+    if (this.commentDeletdResponseSubscription) {
+      this.commentDeletdResponseSubscription.unsubscribe();
     }
   }
 
@@ -943,9 +960,11 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       //this.isLiked = true;
       this.likesLength = post.likes?.length + 1;
       post.isPostLikedByCurrentUser = true;
-      var notificationContent = `liked your post(${post.title})`;
-      this._notificationService.initializeNotificationViewModel(post.createdBy, NotificationType.Likes, notificationContent, this.userId, postId, postType, post, null).subscribe((_response) => {
-      });
+      if(post.createdBy != this.userId){
+        var notificationContent = `liked your post(${post.title})`;
+        this._notificationService.initializeNotificationViewModel(post.createdBy, NotificationType.Likes, notificationContent, this.userId, postId, postType, post, null).subscribe((_response) => {
+        });
+      }
       const translatedMessage = this.translateService.instant('ReelLikedSuccessfully');
       const translatedSummary = this.translateService.instant('Success');
       this.messageService.add({ severity: 'success', summary: translatedSummary, life: 3000, detail: translatedMessage });
@@ -1133,10 +1152,12 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       this.groupChatList.nativeElement.scrollTop = this.groupChatList.nativeElement.scrollHeight;
       this.commentViewModel.id = response.id;
       this._signalRService.sendToGroup(this.commentViewModel);
-      var translatedMessage = this.translateService.instant('commented in your reel');
-      var notificationContent = translatedMessage;
-      this._notificationService.initializeNotificationViewModel(reel.parentId, NotificationType.CommentSent, notificationContent, this.userId, reel.id, reel.postType, null, null).subscribe((response) => {
-      });
+      if(reel.parentId != this.userId){
+        var translatedMessage = this.translateService.instant('commented in your reel');
+        var notificationContent = translatedMessage;
+        this._notificationService.initializeNotificationViewModel(reel.parentId, NotificationType.CommentSent, notificationContent, this.userId, reel.id, reel.postType, null, null).subscribe((response) => {
+        });
+      }
     });
   }
 
@@ -1330,6 +1351,31 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
     });
     
 
+  }
+
+  initializeCommentLikeUnlike() {
+    this.commentLikeUnlike = {
+      commentId: "",
+      userId: "",
+      likeCount: 0,
+      isLike: false,
+      groupName: ""
+    }
+
+  }
+
+  deleteComment(item:any){
+    debugger;
+    this.initializeCommentLikeUnlike();
+    this.commentLikeUnlike.userId = this.userId;
+    this.commentLikeUnlike.commentId = item.id;
+    this.commentLikeUnlike.groupName = item.groupName;
+    if(this.userId == item.userId){
+      this._signalRService.notifyCommentDelete(this.commentLikeUnlike);
+      let indexOfComment = this.reel.comments.findIndex((x:any) => x.id == this.commentLikeUnlike.commentId)
+      this.reel.comments.splice(indexOfComment, 1)
+    }
+   
   }
 
 

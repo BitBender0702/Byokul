@@ -386,10 +386,10 @@ export class ReelsViewComponent implements OnInit, AfterViewInit, OnDestroy {
       else {
         var notificationContent = "liked your post";
       }
-      this._notificationService.initializeNotificationViewModel(this.reels.user.id, notificationType, notificationContent, this.loginUserId, postId, postType, null, reelId).subscribe((response) => {
-
-      });
-
+      if(this.reels.user.id != this.loginUserId){
+        this._notificationService.initializeNotificationViewModel(this.reels.user.id, notificationType, notificationContent, this.loginUserId, postId, postType, null, reelId).subscribe((response) => {
+        });
+      }
     }
 
     this.likeUnlikePost.postId = postId;

@@ -529,6 +529,9 @@
                                   {{ item.content }}
                                 </p>
                               </div>
+                              <button (click)="deleteComment(item)" style="border: 0;">
+                                <i class="fa-solid fa-trash"></i>
+                              </button>
                               <button
                                 (click)="
                                   likeUnlikeComments(
@@ -1010,6 +1013,9 @@
                           {{ item.content }}
                         </p>
                       </div>
+                      <button (click)="deleteComment(item)" style="border: 0;">
+                        <i class="fa-solid fa-trash"></i>
+                      </button>
                       <button
                         (click)="
                           likeUnlikeComments(
