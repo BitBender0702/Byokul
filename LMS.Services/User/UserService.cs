@@ -65,6 +65,8 @@ namespace LMS.Services
         private IGenericRepository<UserPermission> _userPermissionRepository;
         private IGenericRepository<NotificationSeeting> _notificationSettingRepository;
         private IGenericRepository<UserNotificationSetting> _userNotificationSettingRepository;
+        private IGenericRepository<ClassTag> _classTagRepository;
+        private IGenericRepository<CourseTag> _courseTagRepository;
         private readonly UserManager<User> _userManager;
         private readonly IBlobService _blobService;
         private readonly IPostRepository _postRepositoryCustom;
@@ -72,7 +74,7 @@ namespace LMS.Services
 
 
         public UserService(IMapper mapper, IConfiguration config, IWebHostEnvironment webHostEnvironment, IGenericRepository<User> userRepository, IGenericRepository<UserFollower> userFollowerRepository, IGenericRepository<UserLanguage> userLanguageRepository, IGenericRepository<City> cityRepository, IGenericRepository<Country> countryRepository, IGenericRepository<SchoolFollower> schoolFollowerRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<CourseStudent> courseStudentRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<CourseTeacher> courseTeacherRepository,
-          IGenericRepository<SchoolTeacher> schoolteacherRepository, IGenericRepository<Student> studentRepository, IGenericRepository<Teacher> teacherRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<UserPreference> userPreferenceRepository, IGenericRepository<Like> likeRepository, IGenericRepository<View> viewRepository, IGenericRepository<Comment> commentRepository, IGenericRepository<StudentCertificate> studentCertificateRepository, IGenericRepository<UserSharedPost> userSharedPostRepository, IGenericRepository<SavedPost> savedPostRepository, IGenericRepository<UserPermission> userPermissionRepository, IGenericRepository<NotificationSeeting> notificationSettingRepository, IGenericRepository<UserNotificationSetting> userNotificationSettingRepository, UserManager<User> userManager, IBlobService blobService, IPostRepository postRepositoryCustom, IGenericRepository<UserCertificate> userCertificateRepository, ICommonService commonService)
+          IGenericRepository<SchoolTeacher> schoolteacherRepository, IGenericRepository<Student> studentRepository, IGenericRepository<Teacher> teacherRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<UserPreference> userPreferenceRepository, IGenericRepository<Like> likeRepository, IGenericRepository<View> viewRepository, IGenericRepository<Comment> commentRepository, IGenericRepository<StudentCertificate> studentCertificateRepository, IGenericRepository<UserSharedPost> userSharedPostRepository, IGenericRepository<SavedPost> savedPostRepository, IGenericRepository<UserPermission> userPermissionRepository, IGenericRepository<NotificationSeeting> notificationSettingRepository, IGenericRepository<UserNotificationSetting> userNotificationSettingRepository, IGenericRepository<ClassTag> classTagRepository, IGenericRepository<CourseTag> courseTagRepository, UserManager<User> userManager, IBlobService blobService, IPostRepository postRepositoryCustom, IGenericRepository<UserCertificate> userCertificateRepository, ICommonService commonService)
         {
             _mapper = mapper;
             _config = config;
@@ -106,6 +108,8 @@ namespace LMS.Services
             _userPermissionRepository = userPermissionRepository;
             _notificationSettingRepository = notificationSettingRepository;
             _userNotificationSettingRepository = userNotificationSettingRepository;
+            _classTagRepository = classTagRepository;
+            _courseTagRepository = courseTagRepository;
             _userManager = userManager;
             _blobService = blobService;
             _postRepositoryCustom = postRepositoryCustom;
@@ -1673,7 +1677,7 @@ namespace LMS.Services
 
             }).Take(5).ToListAsync();
 
-            var schools = await _schoolRepository.GetAll().Where(x => x.SchoolName.Contains(searchString) ).Select(x => new GlobalSearchViewModel
+            var schools = await _schoolRepository.GetAll().Where(x => x.SchoolName.Contains(searchString)).Select(x => new GlobalSearchViewModel
             {
                 Id = x.SchoolId,
                 Name = x.SchoolName,
@@ -1681,7 +1685,9 @@ namespace LMS.Services
                 Avatar = x.Avatar
             }).Take(5).ToListAsync();
 
-            var classes = await _classRepository.GetAll().Include(x => x.School).Where(x => x.ClassName.Contains(searchString)).Select(x => new GlobalSearchViewModel
+            var classIds = await _classTagRepository.GetAll().Where(x => x.ClassTagValue.Contains(searchString)).Select(x => x.ClassId).ToListAsync();
+
+            var classes = await _classRepository.GetAll().Include(x => x.School).Where(x => x.ClassName.Contains(searchString) || classIds.Contains(x.ClassId)).Select(x => new GlobalSearchViewModel
             {
                 Id = x.ClassId,
                 Name = x.ClassName,
@@ -1691,7 +1697,9 @@ namespace LMS.Services
             }).Take(5).ToListAsync();
 
 
-            var courses = await _courseRepository.GetAll().Where(x => x.CourseName.Contains(searchString)).Select(x => new GlobalSearchViewModel
+            var courseIds = await _courseTagRepository.GetAll().Where(x => x.CourseTagValue.Contains(searchString)).Select(x => x.CourseId).ToListAsync();
+
+            var courses = await _courseRepository.GetAll().Where(x => x.CourseName.Contains(searchString) || courseIds.Contains(x.CourseId)).Select(x => new GlobalSearchViewModel
             {
                 Id = x.CourseId,
                 Name = x.CourseName,
@@ -1700,12 +1708,71 @@ namespace LMS.Services
                 Avatar = x.Avatar
             }).Take(5).ToListAsync();
 
-            var result = courses.Concat(classes).Concat(schools).Concat(users).OrderBy(x => x.Type).ToList();
+            var posts = await _postRepository.GetAll().Where(x => x.Tags.Any(x => x.PostTagValue.Contains(searchString))).Select(x => new
+            {
+                x.Id,
+                x.Title,
+                x.PostType,
+                x.ParentId,
+                x.PostAuthorType
+            }).Take(5).ToListAsync();
+
+            var postViewModel = new List<GlobalSearchViewModel>();
+            var postAttachment = new PostAttachment();
+            foreach (var post in posts)
+            {
+                string avatar = GetPostParentImage(post.ParentId, post.PostAuthorType);
+                if (post.PostType == 3)
+                {
+                    postAttachment = await _postAttachmentRepository.GetAll().Where(x => x.PostId == post.Id).FirstAsync();
+                }
+                postViewModel.Add(new GlobalSearchViewModel
+                {
+                    Id = post.PostType == 1 ? post.Id : postAttachment.Id,
+                    Name = post.Title,
+                    SchoolName = null,
+                    Type = post.PostType,
+                    Avatar = avatar,
+                    IsPost = true
+                });
+            }
+
+            var result = courses.Concat(classes).Concat(schools).Concat(users).Concat(postViewModel).OrderBy(x => x.Type).ToList();
 
             return result;
 
 
         }
+        public string GetPostParentImage(Guid parentId, int postAuthorType)
+        {
+            var postParentImage = "";
+            if (postAuthorType == (int)PostAuthorTypeEnum.User)
+            {
+                var user = _userRepository.GetById(parentId.ToString());
+                postParentImage = user.Avatar;
+            }
+
+            if (postAuthorType == (int)PostAuthorTypeEnum.School)
+            {
+                var school = _schoolRepository.GetById(parentId);
+                postParentImage = school.Avatar;
+            }
+
+            if (postAuthorType == (int)PostAuthorTypeEnum.Class)
+            {
+                var classes = _classRepository.GetById(parentId);
+                postParentImage = classes.Avatar;
+            }
+
+            if (postAuthorType == (int)PostAuthorTypeEnum.Course)
+            {
+                var course = _courseRepository.GetById(parentId);
+                postParentImage = course.Avatar;
+            }
+
+            return postParentImage;
+        }
+
 
         public async Task<IEnumerable<GlobalSearchViewModel>> UsersGlobalSearch(string searchString, int pageNumber, int pageSize)
         {

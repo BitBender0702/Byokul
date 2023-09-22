@@ -2882,8 +2882,11 @@
         <h4 *ngIf="key == 'School'" class="fw_600">
           {{ "Schools" | translate }}
         </h4>
+        <h4 *ngIf="key == 'Posts'" class="fw_600">
+          {{ "Posts" | translate }}
+        </h4>
         <ng-container *ngFor="let item of globalSearchResult[key]">
-          <li *ngIf="item.type == 1" class="search-results__item">
+          <li *ngIf="item.type == 1 && !item.isPost" class="search-results__item">
             <div class="d-flex align-items-center justify-content-between">
               <span class="followers-name font_16 text_sec1">
                 <span class="serch-follow-image">
@@ -2900,7 +2903,7 @@
               >
             </div>
           </li>
-          <li *ngIf="item.type == 2" class="search-results__item">
+          <li *ngIf="item.type == 2 && !item.isPost" class="search-results__item">
             <div class="d-flex align-items-center justify-content-between">
               <span class="followers-name font_16 text_sec1">
                 <span class="serch-follow-image">
@@ -2917,7 +2920,7 @@
               >
             </div>
           </li>
-          <li *ngIf="item.type == 3" class="search-results__item">
+          <li *ngIf="item.type == 3 && !item.isPost" class="search-results__item">
             <div class="d-flex align-items-center justify-content-between">
               <span class="followers-name font_16 text_sec1">
                 <span class="serch-follow-image">
@@ -2934,7 +2937,7 @@
               >
             </div>
           </li>
-          <li *ngIf="item.type == 4" class="search-results__item">
+          <li *ngIf="item.type == 4 && !item.isPost" class="search-results__item">
             <div class="d-flex align-items-center justify-content-between">
               <span class="followers-name font_16 text_sec1">
                 <span class="serch-follow-image">
@@ -2948,6 +2951,30 @@
                   [routerLink]="['/user/userProfile', item.id]"
                   >{{ item.name }}</a
                 ></span
+              >
+            </div>
+          </li>
+
+          <li *ngIf="item.isPost" class="search-results__item">
+            <div class="d-flex align-items-center justify-content-between">
+              <span class="followers-name font_16 text_sec1">
+                <span class="serch-follow-image">
+                  <img
+                    [lazyLoad]="item.avatar"
+                    class="rounded-circle img_style"
+                  />
+                </span>
+                <a *ngIf="item.type == 1"
+                  class="routeLink"
+                  (click)="openPostsViewModel(item.id, item.type)"
+                  >{{ item.name }}</a
+                >
+                <a *ngIf="item.type == 3"
+                class="routeLink"
+                (click)="openReelsViewModel(item.type, item.reelId)"
+                >{{ item.name }}</a
+              >
+                </span
               >
             </div>
           </li>
@@ -2970,6 +2997,12 @@
           class="show-more-button show_more"
           >{{ "ShowMore" | translate }}</a
         >
+        <a
+        *ngIf="key == 'Posts' && globalSearchResult[key].length == 5"
+        [routerLink]="['/user/globalSearch', searchString, 4]"
+        class="show-more-button show_more"
+        >{{ "ShowMore" | translate }}</a
+      >
         <hr />
       </div>
       <!-- <ng-container *ngFor="let item of globalSearchResult">

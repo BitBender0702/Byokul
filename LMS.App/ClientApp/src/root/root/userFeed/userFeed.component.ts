@@ -295,9 +295,12 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
     })
 
     if (!this.deleteModalPostSubscription) {
-      this.deleteModalPostSubscription = deleteModalPostResponse.subscribe(response => {
+      this.deleteModalPostSubscription = deletePostResponse.subscribe(response => {
+        debugger
+        const translatedSummary = this.translateService.instant('Success');
+        const translatedMessage = this.translateService.instant('PostDeletedSuccessfully');
         this.isGridItemInfo = false;
-        this.messageService.add({ severity: 'success', summary: 'Success', life: 3000, detail: 'Post deleted successfully' });
+        this.messageService.add({ severity: 'success', summary: translatedSummary, life: 3000, detail: translatedMessage });
         var deletedPost = this.myFeeds?.find((x: { id: string; }) => x.id == response.postId);
         if (deletedPost != null) {
           const index = this.myFeeds.indexOf(deletedPost);
@@ -837,14 +840,17 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
         this.loadingIcon = false;
         this.globalSearchResult = {};
         response.forEach((item: any) => {
-          if (item.type == 4) {
+          if (item.type == 4 && !item.isPost) {
             this.globalSearchField = "User";
           }
-          if (item.type == 1) {
+          if (item.type == 1 && !item.isPost) {
             this.globalSearchField = "School";
           }
-          if (item.type == 2 || item.type == 3) {
+          if ((item.type == 2 || item.type == 3) && !item.isPost) {
             this.globalSearchField = "ClassAndCourse";
+          }
+          if (item.isPost) {
+            this.globalSearchField = "Posts";
           }
           if (this.globalSearchResult[this.globalSearchField]) {
             if (this.globalSearchResult[this.globalSearchField].length < 5) {
@@ -1263,6 +1269,22 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
   openSearch(){
     debugger;
     this.showSearchButtonForMobile=true;
+  }
+
+  openPostsViewModel(postId: string, postType: number, reelId?: string) {
+    this._postService.getPostById(postId).subscribe((postResponse) => {
+      const initialState = {
+        posts: postResponse,
+      };
+      this.bsModalService.show(PostViewComponent, { initialState });
+    });
+  }
+
+  openReelsViewModel(postType: number, reelId: string) {
+    const initialState = {
+      postAttachmentId: reelId,
+    };
+    this.bsModalService.show(ReelsViewComponent, { initialState });
   }
 
 }

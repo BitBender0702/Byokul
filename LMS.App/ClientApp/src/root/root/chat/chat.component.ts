@@ -1753,9 +1753,9 @@ getTextMessage(event:any,receiverId:string){
         this.chatViewModel.chatTypeId = null;
       }
 
-      var notificationContent = "sent you a message";
-      this._notificationService.initializeNotificationViewModel(receiverId,NotificationType.Messages,notificationContent,this.senderId,null,0,null,null, this.chatViewModel.chatType,this.chatViewModel.chatTypeId).subscribe((response) => {
-      });    
+      // var notificationContent = "sent you a message";
+      // this._notificationService.initializeNotificationViewModel(receiverId,NotificationType.Messages,notificationContent,this.senderId,null,0,null,null, this.chatViewModel.chatType,this.chatViewModel.chatTypeId).subscribe((response) => {
+      // });    
 
       this.chatViewModel.fileName = this.fileName;
       this.chatViewModel.replyMessageType = this.replyMessageType;

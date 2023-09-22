@@ -13,5 +13,6 @@ namespace LMS.Common.ViewModels.Common
         public string? SchoolName { get; set; }
         public int Type { get; set; }
         public string Avatar { get; set; }
+        public bool IsPost { get; set; }
     }
 }
