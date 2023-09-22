@@ -98,7 +98,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
   postToUpload = new FormData();
 
   imageToUpload = new FormData();
-  images: string[] = [];
+  images: any[] = [];
   uploadImage: any[] = [];
   imageObject!: UploadImage;
 
@@ -597,13 +597,19 @@ export class CreatePostComponent implements OnInit, OnDestroy {
 
   handleImageInput(event: any) {
     this.numberOfImages++;
+    
     if (this.numberOfImages >= 16) {
-      this.messageService.add({ severity: 'info', summary: 'Info', life: 3000, detail: 'Images Must Be Less Than Fifteen' });
+      this.messageService.add({ severity: 'info', summary: 'Info', life: 3000, detail: 'Images Must Be Less Than 15' });
       return;
     }
     var selectedFiles = event.target.files;
     for (let i = 0; i < selectedFiles.length; i++) {
-      this.images.push(selectedFiles[i]);
+      debugger;
+      const originalFile = selectedFiles[i];
+      const alteredName = originalFile.name + `_index${this.postIndexing}`;
+      const newFile = new File([originalFile], alteredName, { type: originalFile.type });
+      this.images.push(newFile);
+      this.postIndexing++;
       const reader = new FileReader();
       reader.onload = ((fileIndex) => {
         return () => {
@@ -622,10 +628,15 @@ export class CreatePostComponent implements OnInit, OnDestroy {
 
   handleImageInput2(file: any) {
     if (this.numberOfImages >= 16) {
-      this.messageService.add({ severity: 'info', summary: 'Info', life: 3000, detail: 'ImagesMustBeLessThanFifteen' });
+      this.messageService.add({ severity: 'info', summary: 'Info', life: 3000, detail: 'Images Must Be Less Than 15' });
       return;
     }
-    this.images.push(file);
+    const originalFile = file;
+      const alteredName = originalFile.name + `_index${this.postIndexing}`;
+      const newFile = new File([originalFile], alteredName, { type: originalFile.type });
+      this.images.push(newFile);
+      this.postIndexing++;
+    // this.images.push(file);
     const reader = new FileReader();
 
     reader.onload = () => {
@@ -646,10 +657,15 @@ export class CreatePostComponent implements OnInit, OnDestroy {
   handleVideoInput2(file: any) {
     debugger
     if (this.numberOfVideo >= 2) {
-      this.messageService.add({ severity: 'info', summary: 'Info', life: 3000, detail: 'Video Must Be Only One' });
+      this.messageService.add({ severity: 'info', summary: 'Info', life: 3000, detail: 'Only 1 video per post is allowed' });
       return;
     }
-    this.videos.push(file);
+    const originalFile = file;
+      const alteredName = originalFile.name + `_index${this.postIndexing}`;
+      const newFile = new File([originalFile], alteredName, { type: originalFile.type });
+      this.videos.push(newFile);
+      this.postIndexing++;
+    // this.videos.push(file);
     const videoUrl = URL.createObjectURL(file);
     this.getVideoThumbnail(videoUrl, file.name, (thumbnailUrl) => {
       debugger
@@ -695,21 +711,28 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     // }
   }
 
+  postIndexing:number=0;
   handleVideoInput(event: any) {
     this.numberOfVideo++;
     if (this.numberOfVideo >= 2) {
-      this.messageService.add({ severity: 'info', summary: 'Info', life: 3000, detail: 'VideoMustBeOnlyOne' });
+      this.messageService.add({ severity: 'info', summary: 'Info', life: 3000, detail: 'Only 1 video per post is allowed' });
       return;
     }
     var selectedFiles = event.target.files;
     for (let i = 0; i < selectedFiles.length; i++) {
-      this.videos.push(selectedFiles[i]);
-      const file = selectedFiles[i];
+      debugger;
+      const originalFile = selectedFiles[i];
+      const alteredName = originalFile.name + `_index${this.postIndexing}`;
+      const newFile = new File([originalFile], alteredName, { type: originalFile.type });
+      this.videos.push(newFile);
+      // this.videos.push(selectedFiles[i]);
+      const file = newFile;
+      this.postIndexing++;
       const videoUrl = URL.createObjectURL(file);
       this.getVideoThumbnail(videoUrl, file.name, (thumbnailUrl) => {
         debugger
         this.videoObject.videoUrl = thumbnailUrl;
-        this.videoObject.name = file.name;
+        this.videoObject.name = file.name + "_index0";
         this.videoObject.type = file.type;
         this.uploadVideo.push(this.videoObject);
         this.initializeVideoObject();
@@ -778,7 +801,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
   }
 
   removeUploadVideo(video: any) {
-    this.numberOfVideo--;
+    this.numberOfVideo = 0;
     const blobUrlIndex = this.uploadVideoUrlList.findIndex((item: any) => item.blobName === video.name);
     if (blobUrlIndex > -1) {
       this.uploadVideoUrlList.splice(blobUrlIndex, 1);
@@ -978,6 +1001,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     //   this.postToUpload.append('uploadImages', this.images[i]);
     // }
 
+    debugger;
     const combinedFiles = [...this.videos, ...this.images, ...this.attachment, ... this.videoThumbnails];
 
     // const uploadPromises = combinedFiles.map((file) => {

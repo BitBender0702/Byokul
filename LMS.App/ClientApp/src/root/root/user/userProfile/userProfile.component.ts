@@ -218,7 +218,7 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
   @ViewChild('openUserOwnCertificate') openUserOwnCertificate!: ElementRef;
 
   isBanFollower!: boolean;
-  deleteModalPostSubscription!:Subscription;
+  deleteModalPostSubscription!: Subscription;
 
 
 
@@ -243,13 +243,13 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
     document.addEventListener('contextmenu', function (e) {
       e.preventDefault();
       const contextMenu = document.querySelector('.context-menu');
-  const saveAsOption = contextMenu?.querySelector('.save-as');
-  if (saveAsOption) {
-    saveAsOption.remove();
-  }
-  });
+      const saveAsOption = contextMenu?.querySelector('.save-as');
+      if (saveAsOption) {
+        saveAsOption.remove();
+      }
+    });
     this.checkScreenSize();
-    if(this.isScreenMobile){
+    if (this.isScreenMobile) {
       this.itemsPerSlide = 2;
       this.profileGrid();
     }
@@ -286,11 +286,10 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
       this.addEventListnerOnCarousel();
       this.user.posts = this.getFilteredAttachments(this.user.posts);
 
-      if(response.isBan){
+      if (response.isBan) {
         this.router.navigate([`/profile/userProfile/${response.id}/true/true`]);
         return;
       }
-
 
     });
 
@@ -509,14 +508,14 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
     buttons.forEach(button => {
       debugger;
       button.addEventListener("click", () => {
-        let VideoElement:HTMLVideoElement | null = document.getElementById('displayVideo') as HTMLVideoElement
+        let VideoElement: HTMLVideoElement | null = document.getElementById('displayVideo') as HTMLVideoElement
         VideoElement.pause();
       });
     });
 
 
-    if(!this.deleteModalPostSubscription){
-      this.deleteModalPostSubscription = deleteModalPostResponse.subscribe(response =>{
+    if (!this.deleteModalPostSubscription) {
+      this.deleteModalPostSubscription = deleteModalPostResponse.subscribe(response => {
         this.ngOnInit();
       })
     }
@@ -1162,7 +1161,7 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
 
   openPostsViewModal(posts: any): void {
     if (posts.isLive) {
-      localStorage.setItem("urlBeforeLiveStream",window.location.href)
+      localStorage.setItem("urlBeforeLiveStream", window.location.href)
       this._postService.openLiveStream(posts, this.loginUserId).subscribe((response) => {
       });
     }
@@ -1173,15 +1172,15 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
         postAttachments: postAttachments
       };
       let videoElement: HTMLVideoElement | null = document.getElementById('displayVideo') as HTMLVideoElement
-    if(videoElement){
-       var vdo: HTMLVideoElement | null = videoElement.children[0]  as HTMLVideoElement
-       if(vdo){
-        vdo.pause();
-       }
-    }
+      if (videoElement) {
+        var vdo: HTMLVideoElement | null = videoElement.children[0] as HTMLVideoElement
+        if (vdo) {
+          vdo.pause();
+        }
+      }
       this.bsModalService.show(PostViewComponent, { initialState });
     }
-    
+
   }
 
   openReelsViewModal(postAttachmentId: string, postId: string): void {
@@ -1391,11 +1390,11 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
 
   hideGridItemInfo() {
     let videoElement: HTMLVideoElement | null = document.getElementById('displayVideo') as HTMLVideoElement
-    if(videoElement){
-       var vdo: HTMLVideoElement | null = videoElement.children[0]  as HTMLVideoElement
-       if(vdo){
+    if (videoElement) {
+      var vdo: HTMLVideoElement | null = videoElement.children[0] as HTMLVideoElement
+      if (vdo) {
         vdo.pause();
-       }
+      }
     }
     this.isGridItemInfo = this.isGridItemInfo ? false : true;
   }
@@ -1581,11 +1580,11 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
       classCourseItem: item,
     };
     let videoElement: HTMLVideoElement | null = document.getElementById('displayVideo') as HTMLVideoElement
-    if(videoElement){
-       var vdo: HTMLVideoElement | null = videoElement.children[0]  as HTMLVideoElement
-       if(vdo){
+    if (videoElement) {
+      var vdo: HTMLVideoElement | null = videoElement.children[0] as HTMLVideoElement
+      if (vdo) {
         vdo.pause();
-       }
+      }
     }
     this.bsModalService.show(ClassCourseModalComponent, { initialState });
   }
@@ -1794,15 +1793,15 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
     debugger;
     const allAttachments = feeds.flatMap((post: { postAttachments: any[]; }) => post.postAttachments);
     this.filteredAttachments = allAttachments.filter((attachment: { fileType: number; }) => attachment.fileType === 3);
-      let result = allAttachments.filter((attachment: { fileType: number; fileName: string; }) => {
-      return attachment.fileType === 3 && 
-             !this.filteredAttachments.some(existingAttachment =>
-               existingAttachment.fileType === 3 &&
-               existingAttachment.fileName === attachment.fileName
-             );
+    let result = allAttachments.filter((attachment: { fileType: number; fileName: string; }) => {
+      return attachment.fileType === 3 &&
+        !this.filteredAttachments.some(existingAttachment =>
+          existingAttachment.fileType === 3 &&
+          existingAttachment.fileName === attachment.fileName
+        );
     });
     this.filteredAttachments = [...this.filteredAttachments, ...result];
-      feeds = feeds.map((post: { postAttachments: any[]; }) => {
+    feeds = feeds.map((post: { postAttachments: any[]; }) => {
       const filteredPostAttachments = post.postAttachments.filter(
         postAttachment => postAttachment.fileType !== 3
       );
@@ -1810,7 +1809,7 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
     });
     return feeds;
   }
-  
+
 
 
 
@@ -2223,13 +2222,13 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
 
   navigateToProfile(sharedProfileUrl: string) {
     if (sharedProfileUrl) {
-      const urlSegments = sharedProfileUrl.split('/').slice(3); 
+      const urlSegments = sharedProfileUrl.split('/').slice(3);
       const routeUrl = '/' + urlSegments.join('/');
       this.router.navigateByUrl(routeUrl);
     }
   }
-  
-  touchStartX:number=0
+
+  touchStartX: number = 0
   touchStart(event: any) {
     this.touchStartX = event.touches[0].clientX;
   }
@@ -2253,6 +2252,8 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
       }
     }
   }
+
+
 
 }
 

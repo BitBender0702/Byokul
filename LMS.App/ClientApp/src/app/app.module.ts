@@ -13,7 +13,8 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 
 @NgModule({
   declarations: [
-    NavMenuComponent
+    NavMenuComponent,
+   
   ],
   imports: [
     CommonModule,

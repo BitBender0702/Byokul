@@ -25,6 +25,7 @@ using System.Data.SqlTypes;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
+using System.Text.RegularExpressions;
 using Country = LMS.Data.Entity.Country;
 
 namespace LMS.Services
@@ -1063,6 +1064,10 @@ namespace LMS.Services
 
             foreach (var post in result)
             {
+                var school = _schoolRepository.GetById(post.ParentId);
+                post.ParentName = school.SchoolName;
+                post.ParentImageUrl = school.Avatar;
+                post.IsParentVerified = school.IsVarified;
 
                 post.PostAttachments = await GetAttachmentsByPostId(post.Id, loginUserId);
                 post.Likes = await _userService.GetLikesOnPost(post.Id);
@@ -1191,6 +1196,12 @@ namespace LMS.Services
         public async Task<IEnumerable<PostAttachmentViewModel>> GetAttachmentsByPostId(Guid postId, string loginUserId)
         {
             var attachmentList = await _postAttachmentRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.PostId == postId).OrderByDescending(x => x.IsPinned).ToListAsync();
+            var sortedAttachmentList = attachmentList
+     .OrderBy(x =>
+     {
+         var match = Regex.Match(x.FileName, @"_index(\d+)$");
+         return match.Success ? int.Parse(match.Groups[1].Value) : int.MaxValue;
+     }).ToList();
             foreach (var isCompressed in attachmentList)
             {
                 if (!string.IsNullOrEmpty(isCompressed.CompressedFileUrl))
@@ -1199,7 +1210,7 @@ namespace LMS.Services
                 }
                 //isCompressed.FileThumbnail = $"https://byokulstorage.blob.core.windows.net/userpostscompressed/thumbnails/{isCompressed.Id}.png";
             }
-            var result = _mapper.Map<List<PostAttachmentViewModel>>(attachmentList);
+            var result = _mapper.Map<List<PostAttachmentViewModel>>(sortedAttachmentList);
             return result;
         }
 

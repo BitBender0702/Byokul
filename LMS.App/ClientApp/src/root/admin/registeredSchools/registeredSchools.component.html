@@ -161,8 +161,8 @@
                   {{ school.schoolName }}
                 </td>
                 <td>
-                  {{school.founded | date : "MMMM" | translate}}
-                  {{school.founded| date:"d, y"}}
+                  {{school.founded | ChangeTimeZonePipe | date : "MMMM" | translate}}
+                  {{school.founded | ChangeTimeZonePipe| date:"d, y"}}
                   <!-- {{ school.founded | date : "MMMM d, y" }} -->
                 </td>
                 <td>{{ school.specialization?.name }}</td>
@@ -175,9 +175,9 @@
                 </td>
                 <td>{{ school.country?.name }}</td>
                 <td>
-                  {{ school.createdOn | date : "MMMM" | translate}}
-                  {{school.createdOn| date:"d, y"}}
-                  {{ "at" | translate }} {{ school.createdOn | date : "H:mm" }}
+                  {{ school.createdOn| ChangeTimeZonePipe | date : "MMMM" | translate}}
+                  {{school.createdOn| ChangeTimeZonePipe| date:"d, y"}}
+                  {{ "at" | translate }} {{ school.createdOn| ChangeTimeZonePipe | date : "H:mm a" }}
                   <!-- {{ school.createdOn | date : "MMMM d, y" }} at
                   {{ school.createdOn | date : "H:mm" }} -->
                 </td>

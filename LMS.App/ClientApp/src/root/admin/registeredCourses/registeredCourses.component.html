@@ -186,9 +186,9 @@
                   <!-- {{ course.createdOn | date : "MMMM d, y" }} at
                   {{ course.createdOn | date : "H:mm" }} -->
 
-                  {{ course.createdOn | date : "MMMM" | translate}}
-                  {{course.createdOn| date:"d, y"}}
-                  {{ "at" | translate }} {{ course.createdOn | date : "H:mm" }}
+                  {{ course.createdOn| ChangeTimeZonePipe | date : "MMMM" | translate}}
+                  {{course.createdOn| ChangeTimeZonePipe | date:"d, y"}}
+                  {{ "at" | translate }} {{ course.createdOn| ChangeTimeZonePipe | date : "H:mm a" }}
                 </td>
                 <td>{{ course.createdBy }}</td>
 

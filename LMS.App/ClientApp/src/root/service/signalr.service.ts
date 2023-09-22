@@ -270,6 +270,7 @@ export class SignalrService {
   }
 
   notifyCommentLike(model:CommentLikeUnlike) {
+    debugger;
     this.hubConnection?.invoke('NotifyCommentLike', model)
       .catch((err) => console.error(err));
   }

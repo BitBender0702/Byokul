@@ -615,6 +615,7 @@
   "VideoMustBeOnlyOne":"Video Must Be Only One",
   "CurrentpasswordAndPasswordCantMatch":"Current password can not match new password",
   "SchoolBanned":"The school you are trying to access is banned",
+  "PostReels":"Post Reels",
   "Restore": "Restore",
   "RestoreSchool": "Restore School",
   "RestoreClass": "Restore Class",

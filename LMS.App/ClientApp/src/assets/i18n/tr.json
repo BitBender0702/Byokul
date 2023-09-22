@@ -347,7 +347,7 @@
   "DisableSchool": "Okulu Devre Dışı Bırak",
     "CurrentPasswordRequired": "Mevcut şifre gerekli",
     "Live": "Canlı ",
-  "Reels": "Reels",
+  "Reels": "Makaralar",
   "SelectValidDate": "Lütfen geçerli bir tarih seçin",
   "AddMax7Tags": "En fazla 7 etiket ekleyebilirsiniz.",
   "AddVideoForScheduleStream": "Lütfen program akışı için bir video ekleyin",
@@ -478,7 +478,7 @@
   "InValidPhoneNumber": "Phone number is invalid",
   "Edit": "Düzenlemek",
   "UpdatePost": "Gönderiyi Güncelle",
-  "UpdatedOn": "Updated On",
+  "UpdatedOn": "Tarihinde güncellendi",
   "ReelCreatedSuccessfully": "Makara başarıyla oluşturuldu",
   "SchoolList": "Okul Listesi",
   "ClassList": "Sınıf Listesi",
@@ -611,8 +611,8 @@
   "RestoreSchool": "Okulu Geri Yükle",
   "RestoreClass": "Sınıfı Geri Yükle",
   "RestoreCourse": "Kursu Geri Yükle",
-  "DoYouWantToRestore": "Bunu gerçekten geri yüklemek istiyor musun?"
-
+  "DoYouWantToRestore": "Bunu gerçekten geri yüklemek istiyor musun?",
+  "PostReels":"Gönderi Makaraları"
 
 
 

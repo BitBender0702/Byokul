@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace LMS.Services
@@ -695,6 +696,10 @@ namespace LMS.Services
 
             foreach (var post in result)
             {
+                var course = _courseRepository.GetById(post.ParentId);
+                post.ParentName = course.CourseName;
+                post.ParentImageUrl = course.Avatar;
+
                 post.PostAttachments = await GetAttachmentsByPostId(post.Id);
                 post.Likes = await _userService.GetLikesOnPost(post.Id);
                 post.Views = await _userService.GetViewsOnPost(post.Id);
@@ -894,9 +899,14 @@ namespace LMS.Services
 
         public async Task<IEnumerable<PostAttachmentViewModel>> GetAttachmentsByPostId(Guid postId)
         {
-            var attacchmentList = await _postAttachmentRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.PostId == postId).ToListAsync();
-
-            var result = _mapper.Map<List<PostAttachmentViewModel>>(attacchmentList);
+            var attachmentList = await _postAttachmentRepository.GetAll().Include(x => x.CreatedBy).Where(x => x.PostId == postId).ToListAsync();
+            var sortedAttachmentList = attachmentList
+    .OrderBy(x =>
+    {
+        var match = Regex.Match(x.FileName, @"_index(\d+)$");
+        return match.Success ? int.Parse(match.Groups[1].Value) : int.MaxValue;
+    }).ToList();
+            var result = _mapper.Map<List<PostAttachmentViewModel>>(sortedAttachmentList);
 
             foreach (var item in result)
             {

@@ -323,6 +323,7 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
   commentLikeResponse() {
     commentLikeResponse.subscribe(response => {
+      debugger;
       var comments: any[] = this.post.comments;
       var reqComment = comments.find(x => x.id == response.commentId);
       if (response.isLike) {
@@ -457,11 +458,13 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
       this.groupChatList.nativeElement.scrollTop = this.groupChatList.nativeElement.scrollHeight;
       this.commentViewModel.id = response.id;
       this._signalRService.sendToGroup(this.commentViewModel);
-      var translatedMessage = this.translateService.instant('commented your post');
+      if(this.post.parentId != this.userId){
+        var translatedMessage = this.translateService.instant('commented your post');
       var notificationContent = translatedMessage;
       this._notificationService.initializeNotificationViewModel(this.post.parentId, NotificationType.CommentSent, notificationContent, this.userId, this.post.id, this.post.postType, null, null).subscribe((response) => {
         debugger;
       });
+      }
       // initializeNotificationViewModel(userid:string,notificationType:NotificationType,notificationContent:string,loginUserId:string,postId?:string | null,postType?:number,post?:any,reelId?:string | null,chatType?:number,chatTypeId?:string| null):Observable<any>{
   
     });
@@ -501,7 +504,16 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
       this.commentLikeUnlike.isLike = true;
       this.commentLikeUnlike.likeCount = isCommentLiked.likeCount;
     }
-    this.signalRService.notifyCommentLike(this.commentLikeUnlike);
+    // if(this.sender.id != isCommentLiked.user.id){
+      this.signalRService.notifyCommentLike(this.commentLikeUnlike);
+      if(isCommentLiked.user.id != this.sender.id && this.commentLikeUnlike.isLike){
+        var translatedMessage = this.translateService.instant('liked your comment');
+        var notificationContent = translatedMessage;
+        this._notificationService.initializeNotificationViewModel(isCommentLiked.user.id, NotificationType.CommentSent, notificationContent, this.sender.id, this.post.id, this.post.postType, null, null).subscribe((response) => {
+      });
+    }
+
+    // }
     // this._signalRService.sendNotification();
   }
 

@@ -160,9 +160,9 @@
                 <td>{{ user.email }}</td>
                 <td>{{ user.contactEmail }}</td>
                 <td>
-                  {{ user.createdOn | date : "MMMM" | translate}}
-                  {{user.createdOn| date:"d, y"}}
-                  {{ "at" | translate }} {{ user.createdOn | date : "H:mm" }}
+                  {{ user.createdOn| ChangeTimeZonePipe | date : "MMMM" | translate}}
+                  {{user.createdOn| ChangeTimeZonePipe| date:"d, y"}}
+                  {{ "at" | translate }} {{ user.createdOn| ChangeTimeZonePipe | date : "H:mm a" }}
                 </td>
                 <td>
                   <button

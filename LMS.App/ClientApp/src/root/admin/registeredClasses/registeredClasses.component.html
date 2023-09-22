@@ -178,13 +178,13 @@
                 </td>
                 <td>
                   <!-- {{ class.startDate | date : "MMMM d, y" }} -->
-                  {{ class.startDate | date : "MMMM" | translate}}
-                  {{class.startDate| date:"d, y"}}
+                  {{ class.startDate| ChangeTimeZonePipe | date : "MMMM" | translate}}
+                  {{class.startDate| ChangeTimeZonePipe| date:"d, y"}}
                 </td>
                 <td>
                   <!-- {{ class.endDate | date : "MMMM d, y" }} -->
-                  {{ class.endDate | date : "MMMM" | translate}}
-                  {{class.endDate| date:"d, y"}}
+                  {{ class.endDate| ChangeTimeZonePipe | date : "MMMM" | translate}}
+                  {{class.endDate | ChangeTimeZonePipe | date:"d, y"}}
                 </td>
                 <td>{{ class.noOfStudents }}</td>
                 <td
@@ -206,9 +206,9 @@
                 <td>
                   <!-- {{ class.createdOn | date : "MMMM d, y" }}
                   {{ "at" | translate }} {{ class.createdOn | date : "H:mm" }} -->
-                  {{ class.createdOn | date : "MMMM" | translate}}
-                  {{class.createdOn| date:"d, y"}}
-                  {{ "at" | translate }} {{ class.createdOn | date : "H:mm" }}
+                  {{ class.createdOn|ChangeTimeZonePipe | date : "MMMM" | translate}}
+                  {{class.createdOn| ChangeTimeZonePipe| date:"d, y"}}
+                  {{ "at" | translate }} {{ class.createdOn| ChangeTimeZonePipe | date : "H:mm a" }}
                 </td>
                 <td>{{ class.createdBy }}</td>
 

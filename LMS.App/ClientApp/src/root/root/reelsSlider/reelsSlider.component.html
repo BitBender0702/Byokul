@@ -363,8 +363,10 @@
                                   data-bs-target="#delete-Class"
                                   >{{ "Edit" | translate }}
                                   <div *ngIf="item.updatedOn != null">
-                                    (<span>{{ "UpdatedOn" | translate }} - </span>
-                                    {{ item.updatedOn | date : "d MMMM y h:mm a" }})
+                                    (<p class="d-inline-block">{{ "UpdatedOn" | translate }} - </p>
+                                    <p class="d-inline-block me-1">{{ item.updatedOn|ChangeTimeZonePipe | date : "d"}}</p>
+                                    <p class="d-inline-block me-1">{{ item.updatedOn|ChangeTimeZonePipe | date : "MMMM" | translate}}</p>
+                                    <p class="d-inline-block">{{ item.updatedOn|ChangeTimeZonePipe | date : "y h:mm a"}}</p>)
                                   </div>
                                 </a>
                               </li>
