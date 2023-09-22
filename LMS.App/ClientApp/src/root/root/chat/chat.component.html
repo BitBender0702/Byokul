@@ -335,7 +335,7 @@
                     </button>
                     <div class="chat-timedate d-block">
                       <span class="font_12 text_ltgray d-block">{{
-                        item.time| ChangeTimeZonePipe | date : "HH:mm"
+                        item.time| ChangeTimeZonePipe | date : "hh:mm a"
                       }}</span>
                       <span class="font_12 text_ltgray d-block">{{
                         item.time| ChangeTimeZonePipe | date : "dd/MM/yyyy"
@@ -371,7 +371,7 @@
                     class="line-date d-flex align-items-center justify-content-between"
                   >
                     <hr />
-                    <span>{{ key| ChangeTimeZonePipe | date : "MMMM d" }}</span>
+                    <span>{{ key | ChangeTimeZonePipe |date : "MMMM" |translate}} {{key | ChangeTimeZonePipe |date : "dd" |translate}}</span>
                     <hr />
                   </div>
                   <li
@@ -765,7 +765,7 @@
                           : 'message-time text-start text_ltgray font_12'
                       "
                     >
-                      {{ userChat.time| ChangeTimeZonePipe | date : "HH:mm" }}
+                      {{ userChat.time| ChangeTimeZonePipe | date : "hh:mm a" }}
                     </div>
 
                     <div
@@ -1245,7 +1245,7 @@
                       </button>
                       <div class="chat-timedate d-block">
                         <span class="font_12 text_ltgray d-block">{{
-                          item.time| ChangeTimeZonePipe | date : "HH:mm"
+                          item.time| ChangeTimeZonePipe | date : "hh:mm a"
                         }}</span>
                         <span class="font_12 text_ltgray d-block">{{
                           item.time | ChangeTimeZonePipe | date : "dd/MM/yyyy"
@@ -1291,7 +1291,7 @@
                         margin-right: 10px;
                       "
                     />
-                    <span>{{ key | ChangeTimeZonePipe |date : "MMMM d" }}</span>
+                    <span>{{ key | ChangeTimeZonePipe |date : "MMMM" |translate}} {{key | ChangeTimeZonePipe |date : "dd" |translate}}</span>
                     <hr
                       style="
                         width: 40%;
@@ -1660,7 +1660,7 @@
                           : 'message-time text-start text_ltgray font_12'
                       "
                     >
-                      {{ userChat.time| ChangeTimeZonePipe | date : "HH:mm" }}
+                      {{ userChat.time| ChangeTimeZonePipe | date : "hh:mm a" }}
                     </div>
 
                     <div
