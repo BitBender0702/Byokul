@@ -638,7 +638,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
 
   handleImageInput2(file: any) {
     if (this.numberOfImages >= 16) {
-      this.messageService.add({ severity: 'info', summary: 'Info', life: 3000, detail: 'Images Must Be Less Than 15' });
+      // this.messageService.add({ severity: 'info', summary: 'Info', life: 3000, detail: 'Images Must Be Less Than 15' });
       return;
     }
     const originalFile = file;
@@ -667,7 +667,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
   handleVideoInput2(file: any) {
     debugger
     if (this.numberOfVideo >= 2) {
-      this.messageService.add({ severity: 'info', summary: 'Info', life: 3000, detail: 'Only 1 video per post is allowed' });
+      // this.messageService.add({ severity: 'info', summary: 'Info', life: 3000, detail: 'Only 1 video per post is allowed' });
       return;
     }
     const originalFile = file;
@@ -1624,14 +1624,28 @@ export class CreatePostComponent implements OnInit, OnDestroy {
   @ViewChild('fileInput') fileInput!: ElementRef;
   handleFileInput(event: any) {
     var files = event.target.files;
+    let showValidation = false;
+    let showValidationVideo = false;
+
+    this.numberOfImages = this.images.length;
+    this.numberOfVideo = this.videos.length;
+    debugger;
     if (files) {
       for (let i = 0; i < files.length; i++) {
         const file: File = files.item(i)!;
         if (file.type.startsWith('image/')) {
           this.numberOfImages++;
+          if(this.numberOfImages >= 16 && !showValidation){
+            this.messageService.add({ severity: 'info', summary: 'Info', life: 3000, detail: 'Images Must Be Less Than 15' });
+            showValidation = true;
+          }
           this.handleImageInput2(file);
         } else if (file.type.startsWith('video/')) {
           this.numberOfVideo++;
+          if(this.numberOfVideo >= 2 && !showValidationVideo){
+            this.messageService.add({ severity: 'info', summary: 'Info', life: 3000, detail: 'Only 1 video per post is allowed' });
+            showValidationVideo = true;
+          }
           this.handleVideoInput2(file);
         }
         else if (file.type.startsWith('application/pdf')) {

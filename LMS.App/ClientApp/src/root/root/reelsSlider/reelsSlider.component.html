@@ -195,21 +195,21 @@
               class="bg-transparent rounded-circle comment-post-user rounded-circle"
             >
               <img
-                [routerLink]="['/user/userProfile', sender.id]"
-                *ngIf="sender.avatar != null"
-                [src]="sender.avatar"
+                [routerLink]="['/user/userProfile', sender?.id]"
+                *ngIf="sender?.avatar != null"
+                [src]="sender?.avatar"
                 class="comment-user cursorPointer"
               />
               <img
-                [routerLink]="['/user/userProfile', sender.id]"
-                *ngIf="sender.avatar == null && gender == '1'"
+                [routerLink]="['/user/userProfile', sender?.id]"
+                *ngIf="sender?.avatar == null && gender == '1'"
                 src="../../../assets/images/maleProfile.jfif"
                 class="comment-user cursorPointer"
               />
               <img
-                [routerLink]="['/user/userProfile', sender.id]"
+                [routerLink]="['/user/userProfile', sender?.id]"
                 *ngIf="
-                  sender.avatar == null && (gender == '2' || gender == '3')
+                  sender?.avatar == null && (gender == '2' || gender == '3')
                 "
                 src="../../../assets/images/femaleProfile.jfif"
                 class="comment-user cursorPointer"
