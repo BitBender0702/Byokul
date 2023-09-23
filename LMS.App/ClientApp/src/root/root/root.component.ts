@@ -788,7 +788,7 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
     var containerClient = new BlobServiceClient(`https://${blobStorageName}.blob.core.windows.net?${sasToken}`)
       .getContainerClient("userposts");
 
-    await this.uploadToBlob(file, blobName, containerClient)
+    await this.uploadToBlob(file, blobName, containerClient,file.name)
       .then((response) => {
         debugger
         var uploadVideoObject =
@@ -807,28 +807,17 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
       .catch((error) => {
         console.error(error);
       });
-
-
-
-
-    // var uploadVideoObject = 
-    // {
-    //   id: uuidv4(),
-    //   blobUrl:"https://byokulstorage.blob.core.windows.net/userposts/videos/e1079a43-243b-4dac-8acc-28a887b9a496.mp4",
-    //   blobName:"TestName",
-    //   fileType:2
-    // }
-    // this.uploadVideoUrlList.push(uploadVideoObject);
-
   }
 
-  private async uploadToBlob(content: Blob, name: string, client: ContainerClient) {
+  private async uploadToBlob(content: Blob, name: string, client: ContainerClient,fileName: string) {
     debugger
     try {
       let blockBlobClient = client.getBlockBlobClient(name);
-      // blockBlobClient.uploadData(content, { blobHTTPHeaders: { blobContentType: content.type } })
-
-      await blockBlobClient.uploadData(content, { blobHTTPHeaders: { blobContentType: content.type } });
+      const blobHTTPHeaders = {
+      blobContentType: content.type,
+      blobContentDisposition: `attachment; filename="${fileName}"`
+      };
+      await blockBlobClient.uploadData(content, { blobHTTPHeaders});
       let parts = blockBlobClient.url.split("?");
       let blobUrl = parts[0];
       console.log('File uploaded successfully.');

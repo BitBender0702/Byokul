@@ -506,16 +506,18 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
     this.isOpenCommentsSection = false;
   }
 
-  downloadFile(fileUrl:string){
+  downloadFile(fileUrl: string, fileName: string) {
     const link = document.createElement('a');
     link.href = fileUrl;
-    link.download = 'filename.ext';
+    link.download = fileName;
+    link.style.display = 'none';
+    document.body.appendChild(link);
     link.click();
+    document.body.removeChild(link);
     URL.revokeObjectURL(fileUrl);
   }
-
+  
   resetFolderModal(){
-
     if(this.availableSpace <= 0){
       const translatedSummary = this.translateService.instant('Info');
       const translatedMessage = this.translateService.instant('SchoolHasNoStorageSpace');
