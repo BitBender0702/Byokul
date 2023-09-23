@@ -184,7 +184,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
     this.gender = localStorage.getItem("gender") ?? '';
     if (!this.commentResponseSubscription) {
       this.commentResponseSubscription = commentResponse.subscribe(response => {
-        debugger
+        debugger;
         var comment: any[] = this.reels.post.comments;
         var commentObj = { id: response.id, content: response.message, likeCount: 0, isCommentLikedByCurrentUser: false, userAvatar: response.senderAvatar, userName: response.userName, userId: response.userId, isUserVerified: response.isUserVerified };
         comment.push(commentObj);
@@ -1139,13 +1139,14 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
     this.InitializeCommentViewModel();
     this.commentViewModel.userId = this.sender.id;
     this.commentViewModel.groupName = reel.id + "_group";
+    this.commentViewModel.userName = this.sender.firstName + " " + this.sender.lastName;
     this.commentViewModel.content = this.messageToGroup;
     this.commentViewModel.userAvatar = this.sender.avatar;
     this.commentViewModel.isUserVerified = this.sender.isVerified;
     this.messageToGroup = "";
     this.commentViewModel.id = Constant.defaultGuid;
     this._chatService.addComments(this.commentViewModel).subscribe((response) => {
-      
+      debugger;
       comment.push(response);
       reel.commentsCount = comment.length;
       this.cd.detectChanges();
