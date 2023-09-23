@@ -234,7 +234,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
         if (initialValue?.isShareProfile) {
           let shareProfileData = {
             title: response.schoolName,
-            bodyTest: "Here!",
+            bodyTest: "Check this school!",
           }
           this.profileShared(shareProfileData, response.avatar)
         }
@@ -257,7 +257,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
         if (initialValue?.isShareProfile) {
           let shareProfileData = {
             title: response.className,
-            bodyTest: "Here!"
+            bodyTest: "Check this class!"
           }
           this.profileShared(shareProfileData, response.avatar)
         }
@@ -288,7 +288,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
         if (initialValue?.isShareProfile) {
           let shareProfileData = {
             title: response.courseName,
-            bodyTest: "Here!"
+            bodyTest: "Check this course!"
           }
           this.profileShared(shareProfileData, response.avatar)
         }

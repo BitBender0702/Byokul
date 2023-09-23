@@ -69,7 +69,7 @@
               </button>
             </li>
             <li *ngIf="!isEditPost || (isEditPost && forReel)" class="nav-item p-0">
-              <button
+              <button *ngIf="!profileShare"
                 (click)="reelsTab()"
                 [ngClass]="forReel ? 'nav-link active' : 'nav-link'"
                 class="post-attch-btn d-inline-flex justify-content-center align-items-center"
@@ -95,19 +95,25 @@
           </ul>
         </div>
         <h1
-          *ngIf="!isEditPost"
+          *ngIf="!isEditPost && !profileShare"
           class="modal-title font_22 text_dark fw_700 border-0 text-center"
         >
           {{ "CreatePost" | translate }}
         </h1>
         <h1
-          *ngIf="isEditPost && forPost && !forReel"
+        *ngIf="profileShare"
+        class="modal-title font_22 text_dark fw_700 border-0 text-center"
+      >
+        {{ "ShareProfile" | translate }}
+      </h1>
+        <h1
+          *ngIf="isEditPost && forPost && !forReel && !profileShare"
           class="modal-title font_22 text_dark fw_700 border-0 text-center"
         >
           {{ "UpdatePost" | translate }}
         </h1>
         <h1
-        *ngIf="isEditPost && forReel && !forPost"
+        *ngIf="isEditPost && forReel && !forPost && !profileShare"
         class="modal-title font_22 text_dark fw_700 border-0 text-center"
       >
         {{ "UpdateReel" | translate }}
