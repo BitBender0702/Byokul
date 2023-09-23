@@ -404,6 +404,7 @@ export class ChatComponent
               chats: [],
             };
 
+            debugger
             this.allChatUsers.unshift(userDetails);
 
             this.senderID = userDetails.userID;

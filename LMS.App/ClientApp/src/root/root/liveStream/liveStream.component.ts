@@ -8,7 +8,7 @@ import { UserService } from 'src/root/service/user.service';
 import { MultilingualComponent } from '../sharedModule/Multilingual/multilingual.component';
 import { NotificationType, NotificationViewModel } from 'src/root/interfaces/notification/notificationViewModel';
 import { Constant } from 'src/root/interfaces/constant';
-import { SignalrService, commentLikeResponse, commentResponse, endMeetingResponse, liveUsersCountResponse, notifyCommentThrotllingResponse, postLikeResponse, postViewResponse, saveStreamResponse, shareStreamResponse } from 'src/root/service/signalr.service';
+import { SignalrService, commentDeleteResponse, commentLikeResponse, commentResponse, endMeetingResponse, liveUsersCountResponse, notifyCommentThrotllingResponse, postLikeResponse, postViewResponse, saveStreamResponse, shareStreamResponse } from 'src/root/service/signalr.service';
 import { ActivatedRoute, NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { PostService } from 'src/root/service/post.service';
 import { ChatService } from 'src/root/service/chatService';
@@ -343,6 +343,11 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
     localStorage.setItem('lastCommentTime', JSON.stringify(lastComment));
 
     this.endLiveStreamIfOffline();
+
+    commentDeleteResponse.subscribe(response =>{
+      let indexOfComment = this.post.comments.findIndex((x:any) => x.id == response.commentId)
+      this.post.comments.splice(indexOfComment, 1)
+    })
 
   }
 
@@ -1054,4 +1059,20 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
       });
     }
   }
+
+
+  deleteComment(item:any){
+    debugger;
+    this.initializeCommentLikeUnlike();
+    this.commentLikeUnlike.userId = item.userId;
+    this.commentLikeUnlike.commentId = item.id;
+    this.commentLikeUnlike.groupName = item.groupName;
+    if(this.userId == item.userId){
+      this._signalrService.notifyCommentDelete(this.commentLikeUnlike);
+      let indexOfComment = this.post.comments.findIndex((x:any) => x.id == this.commentLikeUnlike.commentId);
+      this.post.comments.splice(indexOfComment, 1);
+    }
+  }
+
+
 }

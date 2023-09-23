@@ -443,30 +443,30 @@ namespace LMS.Services
             var myFeeds = new List<PostDetailsViewModel>();
 
             var myData = await _userRepository.GetAll().Where(x => x.Id == userId).ToListAsync();
-            var mySchoolData = await _schoolRepository.GetAll().Where(x => x.CreatedById == userId).ToListAsync();
-            var myClassData = await _classRepository.GetAll().Include(x => x.School).Where(x => x.CreatedById == userId).ToListAsync();
-            var myCourseData = await _courseRepository.GetAll().Include(x => x.School).Where(x => x.CreatedById == userId).ToListAsync();
+            var mySchoolData = await _schoolRepository.GetAll().Where(x => x.CreatedById == userId && !x.IsBan && !x.IsDeleted && !x.IsDisableByOwner).ToListAsync();
+            var myClassData = await _classRepository.GetAll().Include(x => x.School).Where(x => x.CreatedById == userId && !x.IsEnable && !x.IsDisableByOwner && !x.IsDeleted).ToListAsync();
+            var myCourseData = await _courseRepository.GetAll().Include(x => x.School).Where(x => x.CreatedById == userId && !x.IsEnable && !x.IsDeleted && !x.IsDisableByOwner).ToListAsync();
 
 
             // feeds from schools user follow
             var schoolFollowers = await _schoolFollowerRepository.GetAll()
                 .Include(x => x.User)
                 .Include(x => x.School)
-                .Where(x => x.UserId == userId).ToListAsync();
+                .Where(x => x.UserId == userId && !x.IsBan && !x.School.IsBan && !x.School.IsDisableByOwner && !x.School.IsDeleted && !x.User.IsBan).ToListAsync();
 
-            var userFollowersData = await _userFollowerRepository.GetAll().Include(x => x.User).Where(x => x.FollowerId == userId).ToListAsync();
+            var userFollowersData = await _userFollowerRepository.GetAll().Include(x => x.User).Where(x => x.FollowerId == userId && !x.IsBan).ToListAsync();
 
             var classStudentsData = await _classStudentRepository.GetAll()
                 .Include(x => x.Student)
                 .Include(x => x.Class)
                 .ThenInclude(x => x.School)
-                .Where(x => x.Student.UserId == userId).ToListAsync();
+                .Where(x => x.Student.UserId == userId && !x.IsStudentBannedFromClass && !x.Class.School.IsBan && !x.Class.School.IsDeleted && !x.Class.School.IsDisableByOwner && !x.Class.IsEnable && !x.Class.IsDisableByOwner && !x.Class.IsDeleted && !x.Student.User.IsBan).ToListAsync();
 
             var courseStudentsData = await _courseStudentRepository.GetAll()
                 .Include(x => x.Student)
                 .Include(x => x.Course)
                 .ThenInclude(x => x.School)
-                .Where(x => x.Student.UserId == userId).ToListAsync();
+                .Where(x => x.Student.UserId == userId && !x.IsStudentBannedFromCourse && !x.Course.School.IsBan && !x.Course.School.IsDisableByOwner && !x.Course.School.IsDeleted && !x.Course.IsDeleted && !x.Course.IsDisableByOwner && !x.Course.IsEnable && !x.Student.User.IsBan).ToListAsync();
 
             var requiredIds = schoolFollowers.Select(x => new FeedConvertDTO { Id = x.SchoolId, ParentImageUrl = x.School.Avatar, ParentName = x.School.SchoolName, SchoolName = "", IsParentVerified = x.School.IsVarified }).ToList();
             var testData = userFollowersData.Where(p => p.UserId != string.Empty).Select(x => new FeedConvertDTO { Id = new Guid(x.UserId), ParentImageUrl = x.User.Avatar, ParentName = x.User.FirstName + " " + x.User.LastName, SchoolName = "", IsParentVerified = x.User.IsVarified }).ToList();
@@ -963,7 +963,7 @@ namespace LMS.Services
                 pageSize = 8;
             }
             var tokenList = new List<string>();
-            var result = await _userPreferenceRepository.GetAll().Where(x => x.UserId == userId).FirstOrDefaultAsync();
+            var result = await _userPreferenceRepository.GetAll().Where(x => x.UserId == userId && !x.User.IsBan).FirstOrDefaultAsync();
 
             if (result != null)
             {
@@ -990,15 +990,15 @@ namespace LMS.Services
         async Task<List<string>> GetDefaultGlobalfeeds(string userId)
         {
             // for one school
-            var isUserInSchool = await _schoolFollowerRepository.GetAll().Where(x => x.UserId == userId).FirstOrDefaultAsync();
+            var isUserInSchool = await _schoolFollowerRepository.GetAll().Where(x => x.UserId == userId && !x.School.IsBan && !x.School.IsDisableByOwner && !x.School.IsDeleted).FirstOrDefaultAsync();
 
             if (isUserInSchool == null)
             {
-                var isUserInClass = await _classStudentRepository.GetAll().Include(x => x.Student).Where(x => x.Student.UserId == userId).FirstOrDefaultAsync();
+                var isUserInClass = await _classStudentRepository.GetAll().Include(x => x.Student).Where(x => x.Student.UserId == userId && !x.Class.IsEnable && !x.Class.IsDeleted && !x.Class.IsDisableByOwner).FirstOrDefaultAsync();
 
                 if (isUserInClass == null)
                 {
-                    var isUserInCourse = await _courseStudentRepository.GetAll().Include(x => x.Student).Where(x => x.Student.UserId == userId ).FirstOrDefaultAsync();
+                    var isUserInCourse = await _courseStudentRepository.GetAll().Include(x => x.Student).Where(x => x.Student.UserId == userId && !x.Course.IsEnable && !x.Course.IsDisableByOwner && !x.Course.IsDeleted).FirstOrDefaultAsync();
 
                     if (isUserInCourse == null)
                     {
@@ -1008,7 +1008,7 @@ namespace LMS.Services
 
                     else
                     {
-                        var sameUserList = await _courseStudentRepository.GetAll().Include(x => x.Student).Where(x => x.Student.UserId == userId ).ToListAsync();
+                        var sameUserList = await _courseStudentRepository.GetAll().Include(x => x.Student).Where(x => x.Student.UserId == userId && !x.Course.IsEnable ).ToListAsync();
 
                         sameUserList.Remove(isUserInCourse);
 
