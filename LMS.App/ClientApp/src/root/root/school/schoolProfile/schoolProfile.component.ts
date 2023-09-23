@@ -160,7 +160,7 @@ export class SchoolProfileComponent
   postView!: PostView;
   likesClassCourseLength!: number;
   isClassCourseLiked!: boolean;
-  itemsPerSlide = 7;
+  itemsPerSlide = 5;
   singleSlideOffset = true;
   noWrap = true;
   isFeedHide: boolean = false;
@@ -721,6 +721,7 @@ export class SchoolProfileComponent
   }
 
   addEventListnerOnCarousel() {
+    debugger
     if (this.carousel != undefined) {
       if ($('carousel')[0].querySelectorAll('a.carousel-control-next')[0]) {
         $('carousel')[0].querySelectorAll('a.carousel-control-next')[0].addEventListener('click', () => {
@@ -729,6 +730,7 @@ export class SchoolProfileComponent
             this.reelsLoadingIcon = true;
           }
           this._schoolService.getReelsBySchoolId(this.school.schoolId, this.reelsPageNumber).subscribe((response) => {
+            debugger
             this.school.reels = [...this.school.reels, ...response];
             this.reelsLoadingIcon = false;
           });
