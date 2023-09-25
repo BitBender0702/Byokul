@@ -435,7 +435,11 @@
   "RestoreClass": "Restore Class",
   "RestoreCourse": "Restore Course",
   "DoYouWantToRestore": "Do you really want to restore this?",
-  "PostsWithTags": "Posts with tags"
+  "PostsWithTags": "Posts with tags",
+  "AreYouSureYouWantToDeleteThisFolder":"Are You Sure You Want To Delete This Folder?",
+  "AreYouSureYouWantToDeleteThisFile":"Are You Sure You Want To Delete This File?",
+  "DeleteFolder":"Delete Folder",
+  "DeleteFiles":"Delete File"
 
 
 

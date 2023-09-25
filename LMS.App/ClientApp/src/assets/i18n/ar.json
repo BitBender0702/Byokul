@@ -610,7 +610,11 @@
   "RestoreCourse": "استعادة الدورة",
   "DoYouWantToRestore": "هل تريد حقا استعادة هذا؟",
   "PostsWithTags": "المشاركات مع العلامات",
-  "ShareProfile": "مشاركة الملف الشخصي"
+  "ShareProfile": "مشاركة الملف الشخصي",
+  "AreYouSureYouWantToDeleteThisFolder":"هل أنت متأكد أنك تريد حذف هذا المجلد?",
+  "AreYouSureYouWantToDeleteThisFile":"هل أنت متأكد أنك تريد حذف هذا الملف?",
+  "DeleteFolder":"احذف المجلد",
+  "DeleteFiles":"حذف ملف"
 
 
 

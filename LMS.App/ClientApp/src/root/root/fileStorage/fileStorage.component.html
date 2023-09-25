@@ -130,9 +130,9 @@
                                 <a
                                   style="cursor: pointer"
                                   class="dropdown-item"
-                                  (click)="deleteFolder(item.id)"
+                                  (click)="openFileDeleteModel(item.id, 'folder')"
                                   data-bs-toggle="modal"
-                                  data-bs-target="#delete-Class"
+                                  data-bs-target="#delete-folder"
                                   >{{ "Delete" | translate }}
                                 </a>
                               </li>
@@ -209,9 +209,9 @@
                                 <a
                                   style="cursor: pointer"
                                   class="dropdown-item"
-                                  (click)="deleteFile(file.id)"
                                   data-bs-toggle="modal"
-                                  data-bs-target="#delete-Class"
+                                  (click)="openFileDeleteModel(file.id, 'file')"
+                                  data-bs-target="#delete-folder"
                                   >{{ "Delete" | translate }}
                                 </a>
                               </li>
@@ -383,7 +383,7 @@
               >
                 <span
                   class="bg-transparent rounded-circle comment-post-user rounded-circle"
-                  ><img [src]="sender.avatar" style="max-height: 100%" />
+                  ><img [src]="sender?.avatar" style="max-height: 100%" />
                 </span>
                 <input
                   (keyup.enter)="sendToGroup()"
@@ -595,6 +595,61 @@
     </div>
   </div>
 </div>
+
+
+
+
+<div class="modal fade edit-school-modal delete-modal" id="delete-folder" tabindex="-1"
+  aria-labelledby="delete-folder" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header border-0 justify-content-center position-relative">
+        <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center" *ngIf="forFile">
+          {{ "DeleteFiles" | translate }}
+        </h1>
+        <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center" *ngIf="!forFile">
+          {{ "DeleteFolder" | translate }}
+        </h1>
+        <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close">
+          <img lazyLoad="../../../../assets/images/cross.svg" />
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <h2 class="text-center font_16 f-poppins" *ngIf="forFile">
+            {{ "AreYouSureYouWantToDeleteThisFile" | translate }}
+          </h2>
+          <h2 class="text-center font_16 f-poppins" *ngIf="!forFile">
+            {{ "AreYouSureYouWantToDeleteThisFolder" | translate }}
+          </h2>
+        </div>
+        <div class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-2 mt-4">
+          <button type="button"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+            data-bs-dismiss="modal">
+            {{ "No" | translate }}
+          </button>
+          <button
+            (click)="deleteFile()"
+            type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
+            data-bs-dismiss="modal" *ngIf="forFile">
+            {{ "Delete" | translate }}
+          </button>
+          <button
+          (click)="deleteFolder()"
+          type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
+          data-bs-dismiss="modal" *ngIf="!forFile">
+          {{ "Delete" | translate }}
+        </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
 
 <p-toast></p-toast>
 <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>

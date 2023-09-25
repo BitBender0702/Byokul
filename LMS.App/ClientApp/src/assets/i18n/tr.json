@@ -614,7 +614,11 @@
   "DoYouWantToRestore": "Bunu gerçekten geri yüklemek istiyor musun?",
   "PostReels":"Gönderi Makaraları",
   "PostsWithTags": "Etiketli gönderiler",
-  "ShareProfile": "Profili Paylaş"
+  "ShareProfile": "Profili Paylaş",
+  "AreYouSureYouWantToDeleteThisFolder":"Bu Klasörü Silmek İstediğinizden Emin misiniz?",
+  "AreYouSureYouWantToDeleteThisFile":"Bu Dosyayı Silmek İstediğinizden Emin misiniz?",
+  "DeleteFolder":"Klasörü Sil",
+  "DeleteFiles":"Dosyayı sil"
 
 
 
