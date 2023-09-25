@@ -626,7 +626,9 @@
   "AreYouSureYouWantToDeleteThisFolder":"Are You Sure You Want To Delete This Folder?",
   "AreYouSureYouWantToDeleteThisFile":"Are You Sure You Want To Delete This File?",
   "DeleteFolder":"Delete Folder",
-  "DeleteFiles":"Delete File"
+  "DeleteFiles":"Delete File",
+  "DoYouWantToDeleteComment":"Do You Want To Delete Comment?",
+  "DeleteComment":"Delete Comment"
 
 
 

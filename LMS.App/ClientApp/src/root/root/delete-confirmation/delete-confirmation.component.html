@@ -65,8 +65,15 @@ class="modal fade edit-school-modal delete-modal show d-block"
     >
       <h1
         class="modal-title font_22 text_dark fw_700 border-0 text-center"
+        *ngIf="!isDeleteComment"
       >
         {{ "DeletePost" | translate }}
+      </h1>
+      <h1
+        class="modal-title font_22 text_dark fw_700 border-0 text-center"
+        *ngIf="!isDeleteComment"
+      >
+        {{ "DeleteComment" | translate }}
       </h1>
       <button
         type="button"
@@ -80,8 +87,11 @@ class="modal fade edit-school-modal delete-modal show d-block"
     </div>
     <div class="modal-body">
       <div class="form-group">
-        <h2 class="text-center font_16 f-poppins">
+        <h2 class="text-center font_16 f-poppins" *ngIf="!isDeleteComment">
           {{ "DoYouWantToDelete" | translate }}
+        </h2>
+        <h2 class="text-center font_16 f-poppins" *ngIf="isDeleteComment">
+          {{ "DoYouWantToDeleteComment" | translate }}
         </h2>
       </div>
       <div
@@ -96,7 +106,17 @@ class="modal fade edit-school-modal delete-modal show d-block"
           {{ "No" | translate }}
         </button>
         <button
+          *ngIf="!isDeleteComment"
           (click)="deleteItemById()"
+          type="button"
+          class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
+          data-bs-dismiss="modal"
+        >
+          {{ "Yes" | translate }}
+        </button>
+        <button
+          *ngIf="isDeleteComment"
+          (click)="deleteComment()"
           type="button"
           class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
           data-bs-dismiss="modal"

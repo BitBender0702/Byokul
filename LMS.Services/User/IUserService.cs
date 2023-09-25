@@ -49,5 +49,6 @@ namespace LMS.Services
         Task<bool> CheckAllNotificationSettings(string userId);
         Task<List<UserFollowerViewModel>> GetUserBannedFollowers(string userId, int pageNumber, string? searchString);
         string GetPostParentImage(Guid parentId, int postAuthorType);
+        Task<bool> IsUserBanned(string userId, string id, PostAuthorTypeEnum from);
     }
 }

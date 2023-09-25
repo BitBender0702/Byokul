@@ -36,6 +36,7 @@ export const sharePostResponse = new Subject<{}>();
 export const deletePostResponse = new Subject<{ postId: string }>();
 export const savedPostResponse = new Subject<{ isPostSaved: boolean, postId: string }>();
 
+export const deleteCommentResponse = new Subject<{ commentId: string }>();
 
 @Component({
   selector: 'post-view',
@@ -280,6 +281,9 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.commentDeletdResponseSubscription) {
       this.commentDeletdResponseSubscription.unsubscribe();
     }
+    // if (this.commentDeletdResponseSubscription) {
+    //   this.commentDeletdResponseSubscription.unsubscribe();
+    // }
   }
 
   ngAfterViewInit() {
@@ -653,6 +657,7 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
   }
 
+
   openCertificateViewModal(certificateUrl: string, certificateName: string, from?: number, event?: Event) {
     if (from != undefined) {
       event?.stopPropagation();
@@ -808,15 +813,27 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
   deleteComment(item:any){
     debugger;
-    this.initializeCommentLikeUnlike();
-    this.commentLikeUnlike.userId = this.userId;
-    this.commentLikeUnlike.commentId = item.id;
-    this.commentLikeUnlike.groupName = item.groupName;
-    if(this.userId == item.userId){
-      this._signalRService.notifyCommentDelete(this.commentLikeUnlike);
-      let indexOfComment = this.post.comments.findIndex((x:any) => x.id == this.commentLikeUnlike.commentId)
-      this.post.comments.splice(indexOfComment, 1)
-    }
+    // this.initializeCommentLikeUnlike();
+    // this.commentLikeUnlike.userId = this.userId;
+    // this.commentLikeUnlike.commentId = item.id;
+    // this.commentLikeUnlike.groupName = item.groupName;
+    // if(this.userId == item.userId){
+    //   this._signalRService.notifyCommentDelete(this.commentLikeUnlike);
+    //   let indexOfComment = this.post.comments.findIndex((x:any) => x.id == this.commentLikeUnlike.commentId)
+    //   this.post.comments.splice(indexOfComment, 1)
+    // }
+    const initialState = { item : item, from : "deleteComment" };
+    this.bsModalService.show(DeleteConfirmationComponent, { initialState });
+    // if(!this.deleteCommentResponseSubscription){
+    //   deleteCommentResponse.subscribe(response =>{
+    //     debugger;
+    //     setTimeout(() => {
+    //       let indexOfComment = this.post.comments.findIndex((x:any) => x.id == this.commentLikeUnlike.commentId)
+    //       this.post.comments.splice(indexOfComment, 1)
+    //     }, 0);
+    //   })
+    // }
+
   }
 
 

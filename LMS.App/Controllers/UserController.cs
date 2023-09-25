@@ -527,6 +527,18 @@ namespace LMS.App.Controllers
             }
             return Ok(new { Success = true, Data = userBannedFollower, Message = Constants.HasAllBannedUser });
         }
+        [Route("isUserBanned")]
+        [HttpPost]
+        public async Task<IActionResult> IsUserBanned(string userId, string id, PostAuthorTypeEnum from)
+        {
+            userId = await GetUserIdAsync(this._userManager);
+            var userBanned = await _userService.IsUserBanned(userId, id, from);
 
+            if (userBanned == false)
+            {
+                return Ok(new { Success = true, Data = userBanned, Message = "User is not banned" });
+            }
+            return Ok(new { Success = true, Data = userBanned, Message = "User is banned" });
+        }
     }
 }

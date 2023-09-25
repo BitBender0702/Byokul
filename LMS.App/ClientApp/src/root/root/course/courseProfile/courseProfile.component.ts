@@ -55,6 +55,7 @@ import { ClassCourseRating } from 'src/root/interfaces/course/addCourseRating';
 import { userPermission } from '../../root.component';
 import { deleteModalPostResponse } from '../../delete-confirmation/delete-confirmation.component';
 import { disableEnableResponse } from 'src/root/admin/registeredCourses/registeredCourses.component';
+import { UserService } from 'src/root/service/user.service';
 
 
 @Component({
@@ -192,8 +193,10 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
   deleteModalPostSubscription!: Subscription;
   disableEnableResponseSubsciption!: Subscription;
 
+  private _userService;
+
   isDataLoaded: boolean = false;
-  constructor(injector: Injector, private translateService: TranslateService,private signalrService:SignalrService,private datePipe: DatePipe, private titleService: Title, private meta: Meta, authService: AuthService, notificationService: NotificationService, public messageService: MessageService, postService: PostService, private bsModalService: BsModalService, courseService: CourseService, private route: ActivatedRoute, private domSanitizer: DomSanitizer, private fb: FormBuilder, private router: Router, private http: HttpClient, private activatedRoute: ActivatedRoute, private cd: ChangeDetectorRef) {
+  constructor(injector: Injector,userService: UserService, private translateService: TranslateService,private signalrService:SignalrService,private datePipe: DatePipe, private titleService: Title, private meta: Meta, authService: AuthService, notificationService: NotificationService, public messageService: MessageService, postService: PostService, private bsModalService: BsModalService, courseService: CourseService, private route: ActivatedRoute, private domSanitizer: DomSanitizer, private fb: FormBuilder, private router: Router, private http: HttpClient, private activatedRoute: ActivatedRoute, private cd: ChangeDetectorRef) {
     super(injector);
     this._courseService = courseService;
     this._postService = postService;
@@ -201,6 +204,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     this._authService = authService;
     this.currencies = enumToObjects(CurrencyEnum);
     this._signalrService = signalrService;
+    this._userService = userService;
     this.courseParamsData$ = this.route.params.subscribe((routeParams) => {
       this.courseName = routeParams.courseName;
       if (!this.loadingIcon && this.isOnInitInitialize) {
@@ -253,6 +257,11 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       this.course.posts = this.getFilteredAttachments(this.course.posts);
       this.isRatedByUser = response.isRatedByUser;
       this.isBanned = response.isBannedFromClassCourse;
+
+      this.isUserBannedId = response.courseId
+
+      this.checkIfUserIsBanned();
+
 
       this.isAllowedForFileStorage = response.isFileStorageAccessible;
       this.permissionForFileStorage(response.teachers);
@@ -1756,6 +1765,18 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     }
   }
 
+
+  userIsBanned:boolean=false;
+  isUserBannedId:string='';
+  checkIfUserIsBanned(){
+    debugger;
+    this._userService.isUserBanned(this.userId, this.isUserBannedId, PostAuthorTypeEnum.Course).subscribe((response)=>{
+      debugger;
+      if(response.data == true){
+        this.userIsBanned = true
+      }
+    })
+  }
 
 
   

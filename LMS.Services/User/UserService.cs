@@ -26,6 +26,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using Country = LMS.Data.Entity.Country;
 using System.Text.RegularExpressions;
+using Microsoft.Extensions.Hosting;
 
 namespace LMS.Services
 {
@@ -2175,7 +2176,48 @@ namespace LMS.Services
             return response;
 
         }
-        //public async Task<bool?> 
+        public async Task<bool> IsUserBanned(string userId, string id, PostAuthorTypeEnum from)
+        {
+            if(from == PostAuthorTypeEnum.User)
+            {
+                var isUserBanned = await _userFollowerRepository.GetAll().Where(x => x.IsBan && x.Follower.Id == userId && x.User.Id == id).FirstOrDefaultAsync();
+                if(isUserBanned == null)
+                {
+                    return false;
+                }
+                return true;
+
+            }
+            else if(from == PostAuthorTypeEnum.School)
+            {
+                var isUserBanFromSchool = await _schoolFollowerRepository.GetAll().Where(x => x.IsBan && x.UserId == userId && x.SchoolId == Guid.Parse(id)).FirstOrDefaultAsync();
+                if( isUserBanFromSchool == null)
+                {
+                    return false;
+                }
+                return true;
+            }
+            else if(from == PostAuthorTypeEnum.Class)
+            {
+                var isUserBanFromClass = await _classStudentRepository.GetAll().Where(x => x.IsStudentBannedFromClass && x.Student.UserId == (userId) && x.ClassId == Guid.Parse(id)).FirstOrDefaultAsync();
+                if( isUserBanFromClass == null)
+                {
+                    return false;
+                }
+                return true;
+            }
+            else if(from == PostAuthorTypeEnum.Course)
+            {
+                var isUserBanFromCourse = await _courseStudentRepository.GetAll().Where(x => x.IsStudentBannedFromCourse && x.Student.UserId == (userId) && x.CourseId == Guid.Parse(id)).FirstOrDefaultAsync();
+                if( isUserBanFromCourse == null)
+                {
+                    return false;
+                }
+                return true;
+
+            }
+            return false;
+        }
 
     }
 

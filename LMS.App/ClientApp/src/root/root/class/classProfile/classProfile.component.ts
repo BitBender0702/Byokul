@@ -54,6 +54,7 @@ import { ClassCourseRating } from 'src/root/interfaces/course/addCourseRating';
 import { userPermission } from '../../root.component';
 import { deleteModalPostResponse } from '../../delete-confirmation/delete-confirmation.component';
 import { disableEnableResponse } from 'src/root/admin/registeredCourses/registeredCourses.component';
+import { UserService } from 'src/root/service/user.service';
 
 
 export const deleteClassResponse = new BehaviorSubject<string>('');
@@ -200,8 +201,10 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
 
   userPermissionSubscription!: Subscription;
 
+  private _userService;
+
   isDataLoaded: boolean = false;
-  constructor(injector: Injector, private translateService: TranslateService, private signalrService: SignalrService, private titleService: Title, private meta: Meta, private datePipe: DatePipe, authService: AuthService, notificationService: NotificationService, public messageService: MessageService, postService: PostService, private bsModalService: BsModalService, classService: ClassService, private route: ActivatedRoute, private domSanitizer: DomSanitizer, private fb: FormBuilder, private router: Router, private http: HttpClient, private activatedRoute: ActivatedRoute, private cd: ChangeDetectorRef) {
+  constructor(injector: Injector, private userService: UserService, private translateService: TranslateService, private signalrService: SignalrService, private titleService: Title, private meta: Meta, private datePipe: DatePipe, authService: AuthService, notificationService: NotificationService, public messageService: MessageService, postService: PostService, private bsModalService: BsModalService, classService: ClassService, private route: ActivatedRoute, private domSanitizer: DomSanitizer, private fb: FormBuilder, private router: Router, private http: HttpClient, private activatedRoute: ActivatedRoute, private cd: ChangeDetectorRef) {
     super(injector);
     this._classService = classService;
     this._postService = postService;
@@ -209,6 +212,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     this._authService = authService;
     this.currencies = enumToObjects(CurrencyEnum);
     this._signalrService = signalrService;
+    this._userService = userService;
     this.classParamsData$ = this.route.params.subscribe((routeParams) => {
       if (this.savedPostSubscription) {
         this.savedPostSubscription.unsubscribe;
@@ -321,6 +325,10 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
       this.class.posts = this.getFilteredAttachments(this.class.posts);
       this.isRatedByUser = response.isRatedByUser;
       this.isBanned = response.isBannedFromClassCourse;
+
+      this.isUserBannedId = response.classId
+      this.checkIfUserIsBanned()
+
 
       if (response.school.availableStorageSpace <= 0) {
         this.isStorageUnAvailable = true;
@@ -1945,6 +1953,17 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   //   }
   // }
 
+  userIsBanned:boolean=false;
+  isUserBannedId:string='';
+  checkIfUserIsBanned(){
+    debugger;
+    this._userService.isUserBanned(this.userId, this.isUserBannedId, PostAuthorTypeEnum.Class).subscribe((response)=>{
+      debugger;
+      if(response.data == true){
+        this.userIsBanned = true
+      }
+    })
+  }
 
 
 

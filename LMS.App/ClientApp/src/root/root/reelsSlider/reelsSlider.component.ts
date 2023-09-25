@@ -32,6 +32,7 @@ import { StudentService } from 'src/root/service/student.service';
 import { ClassCourseEnum } from 'src/root/Enums/classCourseEnum';
 import { CommentLikeUnlike } from 'src/root/interfaces/chat/commentsLike';
 import { ChatType } from 'src/root/interfaces/chat/chatType';
+import { DeleteConfirmationComponent } from '../delete-confirmation/delete-confirmation.component';
 
 // import { TranslateService } from '@ngx-translate/core';
 
@@ -1368,15 +1369,18 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
 
   deleteComment(item:any){
     debugger;
-    this.initializeCommentLikeUnlike();
-    this.commentLikeUnlike.userId = this.userId;
-    this.commentLikeUnlike.commentId = item.id;
-    this.commentLikeUnlike.groupName = item.groupName;
-    if(this.userId == item.userId){
-      this._signalRService.notifyCommentDelete(this.commentLikeUnlike);
-      let indexOfComment = this.reel.comments.findIndex((x:any) => x.id == this.commentLikeUnlike.commentId)
-      this.reel.comments.splice(indexOfComment, 1)
-    }
+    // this.initializeCommentLikeUnlike();
+    // this.commentLikeUnlike.userId = this.userId;
+    // this.commentLikeUnlike.commentId = item.id;
+    // this.commentLikeUnlike.groupName = item.groupName;
+    // if(this.userId == item.userId){
+    //   this._signalRService.notifyCommentDelete(this.commentLikeUnlike);
+    //   let indexOfComment = this.reel.comments.findIndex((x:any) => x.id == this.commentLikeUnlike.commentId)
+    //   this.reel.comments.splice(indexOfComment, 1)
+    // }
+
+    const initialState = { item : item, from : "deleteComment" };
+    this.bsModalService.show(DeleteConfirmationComponent, { initialState });
    
   }
 
