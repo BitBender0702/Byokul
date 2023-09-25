@@ -316,6 +316,7 @@
                       />
                       {{ post.views.length }}
                     </button>
+                    
                     <button
                       (click)="
                         likeUnlikePosts(post.id, true, post.postType, post)
@@ -455,6 +456,9 @@
                             {{ item.content }}
                           </p>
                         </div>
+                        <button (click)="deleteComment(item)" style="border: 0;" *ngIf="userId == item.userId">
+                          <i class="fa-solid fa-trash"></i>
+                        </button>
                         <button
                           (click)="
                             likeUnlikeComments(

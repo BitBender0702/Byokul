@@ -10,12 +10,15 @@ import { ChatService } from 'src/root/service/chatService';
 import { NotificationService } from 'src/root/service/notification.service';
 import { PostService } from 'src/root/service/post.service';
 import { ReelsService } from 'src/root/service/reels.service';
-import { commentLikeResponse, commentResponse, signalRResponse, SignalrService } from 'src/root/service/signalr.service';
+import { commentDeleteResponse, commentLikeResponse, commentResponse, signalRResponse, SignalrService } from 'src/root/service/signalr.service';
 import { UserService } from 'src/root/service/user.service';
 import { SharePostComponent } from '../sharePost/sharePost.component';
 export const savedReelResponse = new Subject<{ isReelSaved: boolean, id: string }>();
 export const deleteReelResponse = new Subject<{ postId: string }>();
 
+
+
+import { TranslateService } from '@ngx-translate/core';
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
 import 'videojs-contrib-quality-levels';
@@ -70,7 +73,7 @@ export class ReelsViewComponent implements OnInit, AfterViewInit, OnDestroy {
   loadingIcon: boolean = false;
   commentResponseSubscription!: Subscription;
 
-  constructor(private bsModalService: BsModalService, notificationService: NotificationService, chatService: ChatService, private renderer: Renderer2, public options: ModalOptions, private userService: UserService, postService: PostService, public signalRService: SignalrService, private route: ActivatedRoute, reelsService: ReelsService, private activatedRoute: ActivatedRoute, private cd: ChangeDetectorRef) {
+  constructor(private bsModalService: BsModalService,private translateService: TranslateService, notificationService: NotificationService, chatService: ChatService, private renderer: Renderer2, public options: ModalOptions, private userService: UserService, postService: PostService, public signalRService: SignalrService, private route: ActivatedRoute, reelsService: ReelsService, private activatedRoute: ActivatedRoute, private cd: ChangeDetectorRef) {
     this._reelsService = reelsService;
     this._signalRService = signalRService;
     this._userService = userService;
@@ -164,6 +167,15 @@ export class ReelsViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.gender = localStorage.getItem("gender") ?? '';
     this.cd.detectChanges();
+
+
+    commentDeleteResponse.subscribe(response =>{
+      debugger;
+      let indexOfComment = this.reels.post.comments.findIndex((x:any) => x.id == response.commentId)
+      this.reels.post.comments.splice(indexOfComment, 1)
+    })
+
+
   }
 
   ngOnDestroy(): void {
@@ -425,6 +437,14 @@ export class ReelsViewComponent implements OnInit, AfterViewInit, OnDestroy {
       this.commentLikeUnlike.likeCount = isCommentLiked.likeCount;
     }
     this.signalRService.notifyCommentLike(this.commentLikeUnlike);
+    if(isCommentLiked.user.id != this.sender.id && this.commentLikeUnlike.isLike){
+      debugger
+      var translatedMessage = this.translateService.instant('liked your comment');
+      var notificationContent = translatedMessage;
+      this._notificationService.initializeNotificationViewModel(isCommentLiked.user.id, NotificationType.CommentSent, notificationContent, this.sender.id, this.reels.post.id, this.reels.post.postType, null, null).subscribe((response) => {
+      });
+    }
+
   }
 
   initializeCommentLikeUnlike() {
@@ -550,6 +570,20 @@ export class ReelsViewComponent implements OnInit, AfterViewInit, OnDestroy {
     this.bsModalService.hide();
   }
 
+
+  deleteComment(item:any){
+    debugger;
+    this.initializeCommentLikeUnlike();
+    this.commentLikeUnlike.userId = item.userId;
+    this.commentLikeUnlike.commentId = item.id;
+    this.commentLikeUnlike.groupName = item.groupName;
+    if(this.loginUserId == item.userId){
+      this._signalRService.notifyCommentDelete(this.commentLikeUnlike);
+      let indexOfComment = this.reels.post.comments.findIndex((x:any) => x.id == this.commentLikeUnlike.commentId);
+      this.reels.post.comments.splice(indexOfComment, 1);
+    }
+   
+  }
   
 
   

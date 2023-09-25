@@ -117,11 +117,14 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
               </p>
                 <p class="text_sec1 font_12 fw_400 text-start mb-0">{{item.content}}</p>
               </div>
-              <button (click)="likeUnlikeComments(item.id,true,item.isCommentLikedByCurrentUser,item.likeCount)" type="button" class="btn bg-transparent text_ltgray font_12 p-0 border-0 reel-like-chat">
+              <button (click)="deleteComment(item)" style="border: 0;">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+              <!-- <button (click)="likeUnlikeComments(item.id,true,item.isCommentLikedByCurrentUser,item.likeCount)" type="button" class="btn bg-transparent text_ltgray font_12 p-0 border-0 reel-like-chat">
                 <img *ngIf="item.isCommentLikedByCurrentUser" src="../../../assets/images/heart-red.svg" class="d-block" />
                 <img *ngIf="!item.isCommentLikedByCurrentUser" src="../../../assets/images/Heart-dark.svg" class="d-block" />
                 <span>{{item.likeCount}}</span>
-              </button>
+              </button> -->
               <!-- <button type="button" class="border-0 bg-transparent pinned-chat"><img src="../../../assets/images/pinned.svg" /></button> -->
             </div>
           </div>
@@ -381,6 +384,7 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
                       class="d-block rightImagesWidth" /> {{reels.post.comments.length}}</button>
                   <button type="button" class="btn bg-transparent text_ltgray font_12 cursor_auto"><img src="../../../assets/images/eye.svg"
                       class="d-block rightImagesWidth" /> {{reels.post.views.length}}</button>
+                      
                       <button (click)="likeUnlikePosts(reels.post.id,true,reels.post.postType,reels.id,reels.post)" type="button" class="btn bg-transparent text_ltgray font_12">
                         <img *ngIf="reels.post.isPostLikedByCurrentUser" src="../../../assets/images/heart-red.svg" class="d-block rightImagesWidth" />
                         <img *ngIf="!reels.post.isPostLikedByCurrentUser" src="../../../assets/images/Heart-dark.svg" class="d-block rightImagesWidth" />
@@ -412,6 +416,9 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
                     <div class="d-flex flex-column"><p (click)="hideCommentModal()" [routerLink]="['/user/userProfile',item.userId]" class="font_12 fw_600 text-start mb-0 cursorPointer">{{item.userName}}</p>
                       <p class="text_sec1 font_12 fw_400 text-start mb-0">{{item.content}}</p>
                     </div>
+                    <button (click)="deleteComment(item)" style="border: 0;" *ngIf="item.userId == loginUserId">
+                      <i class="fa-solid fa-trash"></i>
+                    </button>
                     <button (click)="likeUnlikeComments(item.id,true,item.isCommentLikedByCurrentUser,item.likeCount)" type="button" class="btn bg-transparent text_ltgray font_12 p-0 border-0 reel-like-chat">
                       <img *ngIf="item.isCommentLikedByCurrentUser" src="../../../assets/images/heart-red.svg" class="d-block" />
                       <img *ngIf="!item.isCommentLikedByCurrentUser" src="../../../assets/images/Heart-dark.svg" class="d-block" />

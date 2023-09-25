@@ -529,7 +529,7 @@
                                   {{ item.content }}
                                 </p>
                               </div>
-                              <button (click)="deleteComment(item)" style="border: 0;">
+                              <button (click)="deleteComment(item)" style="border: 0;" *ngIf="userId == item.userId">
                                 <i class="fa-solid fa-trash"></i>
                               </button>
                               <button
@@ -1013,7 +1013,7 @@
                           {{ item.content }}
                         </p>
                       </div>
-                      <button (click)="deleteComment(item)" style="border: 0;">
+                      <button (click)="deleteComment(item)" style="border: 0;" *ngIf="userId == item.userId">
                         <i class="fa-solid fa-trash"></i>
                       </button>
                       <button
