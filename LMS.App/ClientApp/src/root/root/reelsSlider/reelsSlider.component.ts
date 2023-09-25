@@ -31,6 +31,7 @@ import { ReelsService } from 'src/root/service/reels.service';
 import { StudentService } from 'src/root/service/student.service';
 import { ClassCourseEnum } from 'src/root/Enums/classCourseEnum';
 import { CommentLikeUnlike } from 'src/root/interfaces/chat/commentsLike';
+import { ChatType } from 'src/root/interfaces/chat/chatType';
 
 // import { TranslateService } from '@ngx-translate/core';
 
@@ -1142,7 +1143,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
     this.commentViewModel.userName = this.sender.firstName + " " + this.sender.lastName;
     this.commentViewModel.content = this.messageToGroup;
     this.commentViewModel.userAvatar = this.sender.avatar;
-    this.commentViewModel.isUserVerified = this.sender.isVerified;
+    this.commentViewModel.isUserVerified = this.sender.isVarified;
     this.messageToGroup = "";
     this.commentViewModel.id = Constant.defaultGuid;
     this._chatService.addComments(this.commentViewModel).subscribe((response) => {
@@ -1156,7 +1157,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       if(reel.parentId != this.userId){
         var translatedMessage = this.translateService.instant('commented in your reel');
         var notificationContent = translatedMessage;
-        this._notificationService.initializeNotificationViewModel(reel.parentId, NotificationType.CommentSent, notificationContent, this.userId, reel.id, reel.postType, null, null).subscribe((response) => {
+        this._notificationService.initializeNotificationViewModel(reel.parentId, NotificationType.CommentSent, notificationContent, this.userId, reel.id, reel.postType, null, null,null,null).subscribe((response) => {
         });
       }
     });

@@ -248,6 +248,7 @@ export class ChatComponent
             chatTypeId: this.chatTypeId,
             school: result,
             chats: [],
+            isPinned: false,
             unreadMessageCount: 0,
           };
         });
@@ -263,6 +264,7 @@ export class ChatComponent
             chatTypeId: this.chatTypeId,
             class: result,
             chats: [],
+            isPinned: false
           };
         });
       }
@@ -277,6 +279,7 @@ export class ChatComponent
             chatTypeId: this.chatTypeId,
             course: result,
             chats: [],
+            isPinned: false
           };
         });
       }
@@ -383,6 +386,7 @@ export class ChatComponent
         }
       }
       if (response.chatType == '1') {
+        debugger
         if (this.allChatUsers == undefined) {
           this.allChatUsers = [];
         }
@@ -405,10 +409,8 @@ export class ChatComponent
             };
 
             this.allChatUsers.unshift(userDetails);
-
             this.senderID = userDetails.userID;
             this.chatType = response.chatType;
-
             var users: any[] = this.allChatUsers;
             var user = users.find((x) => x.chatHeadId == response.chatHeadId);
             if (response.message != '') {
@@ -444,6 +446,15 @@ export class ChatComponent
         } else {
           var users: any[] = this.allChatUsers;
           var user = users.find((x) => x.chatHeadId == response.chatHeadId);
+          const userIndex = this.allChatUsers.findIndex((x: { chatHeadId: string; }) => x.chatHeadId === response.chatHeadId);
+          if (userIndex !== -1) {
+            let insertIndex = this.allChatUsers.findIndex((x: { isPinned: boolean; }) => x.isPinned === false);
+            if (insertIndex === -1) {
+              insertIndex = this.allChatUsers.length;
+            }
+            const userToMove = this.allChatUsers.splice(userIndex, 1)[0];
+            this.allChatUsers.splice(insertIndex, 0, userToMove);
+          }
           if (this.receiverName == undefined) {
             this.receiverName = user.userName;
           }
@@ -1323,6 +1334,7 @@ export class ChatComponent
               chats: [],
               unreadMessageCount: 0,
               chatHeadId: '1',
+              isPinned: false
             };
 
             this.allChatUsers.unshift(user);
@@ -2350,6 +2362,24 @@ export class ChatComponent
         this.isSubmitted = true;
         this.replyMessageType = null;
         this.isForwarded = false;
+       debugger
+        const userIndex = this.allChatUsers.findIndex((x: { chatHeadId: string; }) => x.chatHeadId === this.chatHeadId);
+        if (userIndex !== -1) {
+          let insertIndex = this.allChatUsers.findIndex((x: { isPinned: boolean; }) => x.isPinned === false);
+          if (insertIndex === -1) {
+            insertIndex = this.allChatUsers.length;
+          }
+          const userToMove = this.allChatUsers.splice(userIndex, 1)[0];
+          this.allChatUsers.splice(insertIndex, 0, userToMove);
+        }
+
+        const schoolIndex = this.schoolInboxList.findIndex((x: { chatHeadId: string; }) => x.chatHeadId === this.chatHeadId);
+        if (schoolIndex !== -1) {
+          const userToMove = this.schoolInboxList.splice(schoolIndex, 1)[0];
+          this.schoolInboxList.unshift(userToMove);
+        }
+
+
         //  setTimeout(() => {
         //   this.replyChat =  "";
         // }, 5000);

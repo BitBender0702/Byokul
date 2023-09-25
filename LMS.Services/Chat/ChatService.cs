@@ -220,7 +220,7 @@ namespace LMS.Services.Chat
             int pageSize = 10;
             List<ChatUsersViewModel> users = new List<ChatUsersViewModel>();
             var chatHeads = new List<ChatHead>();
-            chatHeads = _chatHeadRepository.GetAll().Include(x => x.Receiver).Where(x => x.SenderId == userId.ToString() || x.ReceiverId == userId.ToString()).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+            chatHeads = _chatHeadRepository.GetAll().Include(x => x.Receiver).Include(x => x.Sender).Where(x => x.SenderId == userId.ToString() || x.ReceiverId == userId.ToString()).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
 
             if (searchString != null)
             {
@@ -276,6 +276,7 @@ namespace LMS.Services.Chat
                 {
                     chatHeads = _chatHeadRepository.GetAll()
                       .Include(x => x.Receiver)
+                      .Include(x => x.Sender)
                       .AsEnumerable()
                       .Where(x => (x.SenderId == userId.ToString() || x.ReceiverId == userId.ToString())
                       && (string.IsNullOrEmpty(searchString) || (userList.Any(u => (u.Id == x.SenderId || u.Id == x.ReceiverId) && ((u.FirstName.ToLower().Contains(searchString.ToLower())) || (u.LastName.ToLower().Contains(searchString.ToLower())) || ((u.FirstName.ToLower() + " " + u.LastName.ToLower()).Contains(searchString.ToLower())))) && x.ChatType == ChatType.Personal)))
