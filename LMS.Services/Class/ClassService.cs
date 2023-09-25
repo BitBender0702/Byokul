@@ -40,6 +40,7 @@ namespace LMS.Services
         private IGenericRepository<PostAttachment> _postAttachmentRepository;
         private IGenericRepository<PostTag> _postTagRepository;
         private IGenericRepository<ClassTag> _classTagRepository;
+        private IGenericRepository<CourseTag> _courseTagRepository;
         private IGenericRepository<ClassCertificate> _classCertificateRepository;
         private readonly UserManager<User> _userManager;
         private IGenericRepository<ClassLike> _classLikeRepository;
@@ -56,7 +57,7 @@ namespace LMS.Services
 
         private IGenericRepository<ClassCourseRating> _classCourseRatingRepository;
 
-        public ClassService(IMapper mapper, IGenericRepository<Class> classRepository, IGenericRepository<ClassCourseRating> classCourseRatingRepository, IGenericRepository<Course> courseRepository, IGenericRepository<ClassLanguage> classLanguageRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<ClassDiscipline> classDisciplineRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<ClassTag> classTagRepository, IGenericRepository<ClassCertificate> classCertificateRepository, UserManager<User> userManager, IBlobService blobService, IUserService userService, IGenericRepository<ClassLike> classLikeRepository, IGenericRepository<ClassViews> classViewsRepository, IGenericRepository<School> schoolRepository, IGenericRepository<ClassCourseFilter> classCourseFilterRepository, IGenericRepository<UserClassCourseFilter> userClassCourseFilterRepository, IGenericRepository<UserSharedPost> userSharedPostRepository, IGenericRepository<SavedPost> savedPostRepository, IConfiguration config, IGenericRepository<ClassCourseTransaction> classCourseTransactionRepository)
+        public ClassService(IMapper mapper, IGenericRepository<Class> classRepository, IGenericRepository<ClassCourseRating> classCourseRatingRepository, IGenericRepository<Course> courseRepository, IGenericRepository<ClassLanguage> classLanguageRepository, IGenericRepository<ClassTeacher> classTeacherRepository, IGenericRepository<ClassStudent> classStudentRepository, IGenericRepository<ClassDiscipline> classDisciplineRepository, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<ClassTag> classTagRepository, IGenericRepository<CourseTag> courseTagRepository, IGenericRepository<ClassCertificate> classCertificateRepository, UserManager<User> userManager, IBlobService blobService, IUserService userService, IGenericRepository<ClassLike> classLikeRepository, IGenericRepository<ClassViews> classViewsRepository, IGenericRepository<School> schoolRepository, IGenericRepository<ClassCourseFilter> classCourseFilterRepository, IGenericRepository<UserClassCourseFilter> userClassCourseFilterRepository, IGenericRepository<UserSharedPost> userSharedPostRepository, IGenericRepository<SavedPost> savedPostRepository, IConfiguration config, IGenericRepository<ClassCourseTransaction> classCourseTransactionRepository)
         {
             _mapper = mapper;
             _classRepository = classRepository;
@@ -70,6 +71,7 @@ namespace LMS.Services
             _postTagRepository = postTagRepository;
             _classCertificateRepository = classCertificateRepository;
             _classTagRepository = classTagRepository;
+            _courseTagRepository = courseTagRepository;
             _userManager = userManager;
             _blobService = blobService;
             _userService = userService;
@@ -1135,7 +1137,8 @@ namespace LMS.Services
 
         public async Task<IEnumerable<GlobalSearchViewModel>> ClassAndCoursesGlobalSearch(string searchString, int pageNumber, int pageSize)
         {
-            var classes = await _classRepository.GetAll().Include(x => x.School).Where(x => x.ClassName.Contains(searchString)).Select(x => new GlobalSearchViewModel
+            var classIds = await _classTagRepository.GetAll().Where(x => x.ClassTagValue.Contains(searchString)).Select(x => x.ClassId).ToListAsync();
+            var classes = await _classRepository.GetAll().Include(x => x.School).Where(x => x.ClassName.Contains(searchString) || classIds.Contains(x.ClassId)).Select(x => new GlobalSearchViewModel
             {
                 Id = x.ClassId,
                 Name = x.ClassName,
@@ -1144,8 +1147,8 @@ namespace LMS.Services
                 Avatar = x.Avatar
             }).ToListAsync();
 
-
-            var courses = await _courseRepository.GetAll().Where(x => x.CourseName.Contains(searchString)).Select(x => new GlobalSearchViewModel
+            var courseIds = await _courseTagRepository.GetAll().Where(x => x.CourseTagValue.Contains(searchString)).Select(x => x.CourseId).ToListAsync();
+            var courses = await _courseRepository.GetAll().Where(x => x.CourseName.Contains(searchString) || courseIds.Contains(x.CourseId)).Select(x => new GlobalSearchViewModel
             {
                 Id = x.CourseId,
                 Name = x.CourseName,

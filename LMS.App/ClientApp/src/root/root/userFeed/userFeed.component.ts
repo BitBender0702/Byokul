@@ -24,7 +24,7 @@ import { BehaviorSubject, Subscribable, Subscription } from 'rxjs';
 import { feedState } from 'src/root/userModule/user-auth/component/login/login.component';
 import { PostAuthorTypeEnum } from 'src/root/Enums/postAuthorTypeEnum';
 import { CertificateViewComponent } from '../certificateView/certificateView.component';
-import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
+import { OpenSideBar, totalMessageAndNotificationCount } from 'src/root/user-template/side-bar/side-bar.component';
 import { TranslateService } from '@ngx-translate/core';
 import { deleteModalPostResponse } from '../delete-confirmation/delete-confirmation.component';
 
@@ -336,6 +336,13 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
           }
         }
       });
+    }
+
+    if (!this.changeLanguageSubscription) {
+      this.changeLanguageSubscription = totalMessageAndNotificationCount.subscribe(response => {
+        debugger
+        var count = response.hamburgerCount;
+      })
     }
 
     const buttons = document.querySelectorAll(".videoChange");

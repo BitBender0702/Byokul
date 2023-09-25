@@ -124,7 +124,9 @@ import { PostService } from 'src/root/service/post.service';
       debugger
       if(this.searchType == "1"){
         this._userService.usersGlobalSearch(this.searchString,this.globalSearchPageNumber,this.globalSearchPageSize).subscribe((response:any) => {
-          this.globalSearchResult =[...this.globalSearchResult, ...response];
+          if(response.length != 0){
+            this.globalSearchResult =[...this.globalSearchResult, ...response];
+          }
           this.postLoadingIcon = false;
           this.scrollSearchResponseCount = response.length; 
           this.scrolled = false;
@@ -133,7 +135,9 @@ import { PostService } from 'src/root/service/post.service';
       }
       if(this.searchType == "2"){
         this._schoolService.schoolsGlobalSearch(this.searchString,this.globalSearchPageNumber,this.globalSearchPageSize).subscribe((response:any) => {
-          this.globalSearchResult =[...this.globalSearchResult, ...response];
+          if(response.length != 0){
+            this.globalSearchResult =[...this.globalSearchResult, ...response];
+          }
           this.postLoadingIcon = false;
           this.scrollSearchResponseCount = response.length; 
           this.scrolled = false;
@@ -142,7 +146,9 @@ import { PostService } from 'src/root/service/post.service';
 
       if(this.searchType == "3"){
         this._classService.classAndCoursesGlobalSearch(this.searchString,this.globalSearchPageNumber,this.globalSearchPageSize).subscribe((response:any) => {
-          this.globalSearchResult =[...this.globalSearchResult, ...response];
+          if(response.length != 0){
+            this.globalSearchResult =[...this.globalSearchResult, ...response];
+          }
           this.postLoadingIcon = false;
           this.scrollSearchResponseCount = response.length; 
           this.scrolled = false;
@@ -151,10 +157,13 @@ import { PostService } from 'src/root/service/post.service';
 
       if(this.searchType == "4"){
         this._postService.postsGlobalSearch(this.searchString,this.globalSearchPageNumber,this.globalSearchPageSize).subscribe((response:any) => {
-          this.globalSearchResult =[...this.globalSearchResult, ...response];
+          if(response.length != 0){
+            this.globalSearchResult =[...this.globalSearchResult, ...response];
+          }
           this.postLoadingIcon = false;
           this.scrollSearchResponseCount = response.length; 
           this.scrolled = false;
+
         });
       }
       }

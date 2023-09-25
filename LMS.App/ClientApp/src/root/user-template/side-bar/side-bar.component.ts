@@ -16,6 +16,7 @@ import { notificationResponse } from 'src/root/service/signalr.service';
 export const unreadChatResponse =new Subject<{readMessagesCount: number,type:string,chatHeadId?:string}>(); 
 export const OpenSideBar =new Subject<{isOpenSideBar:boolean}>(); 
 export const enableDisableScc =new Subject<{isDisable:boolean,schoolId?:string,classId?:string,courseId?:string}>(); 
+export const totalMessageAndNotificationCount =new Subject<{hamburgerCount:number}>(); 
 
 @Component({
   selector: 'side-bar',
@@ -34,8 +35,10 @@ export class SideBarComponent extends MultilingualComponent implements OnInit, O
   notificationResponseSubscription!:Subscription;
   enableDisableSccSubscription!:Subscription;
   unreadChatSubscription!: Subscription;
+  messageAndNotificationCountSubscription!: Subscription;
   // @Input() isOpenSidebar!:boolean;
-  isUserBanned:boolean= false
+  isUserBanned:boolean= false;
+  // hamburgerCount:number = 0;
 
   constructor(injector: Injector,userService: UserService,private router: Router,private cd: ChangeDetectorRef, private elementRef: ElementRef) {
     super(injector);
@@ -110,7 +113,17 @@ export class SideBarComponent extends MultilingualComponent implements OnInit, O
       });
     }
 
+    // if(!this.messageAndNotificationCountSubscription){
+    //   this.messageAndNotificationCountSubscription = totalMessageAndNotificationCount.subscribe(response => {
+    //   debugger
+    debugger
+        var totalCount = this.sidebarInfo?.unreadNotificationCount + this.sidebarInfo?.unreadMessageCount;
+        totalMessageAndNotificationCount.next({hamburgerCount:totalCount});
+    //   });
+    // }
+
     OpenSideBar.subscribe(response => {
+      debugger
       this.isOpenSidebar = response.isOpenSideBar;
     });
     dashboardResponse.subscribe(response => {
@@ -296,6 +309,9 @@ export class SideBarComponent extends MultilingualComponent implements OnInit, O
     }
     if (this.unreadChatSubscription) {
       this.unreadChatSubscription.unsubscribe();
+    }
+    if (this.messageAndNotificationCountSubscription) {
+      this.messageAndNotificationCountSubscription.unsubscribe();
     }
   }
 
