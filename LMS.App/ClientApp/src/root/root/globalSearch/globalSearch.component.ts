@@ -31,7 +31,7 @@ import { PostService } from 'src/root/service/post.service';
     searchString:string = '';
     globalSearchPageNumber:number = 1;
     scrollSearchResponseCount:number = 1;
-    globalSearchPageSize:number = 12;
+    globalSearchPageSize:number = 22;
     globalSearchResult:any;
     scrolled:boolean = false;
     searchType:any;
