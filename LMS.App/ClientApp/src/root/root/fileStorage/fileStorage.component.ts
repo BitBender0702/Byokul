@@ -386,11 +386,14 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
     for (let i = 0; i < selectedFiles.length; i++) {
       const file = selectedFiles[i];
 
-      // Check if the file is a video or audio
-      if (!file.type.startsWith('video/') && !file.type.startsWith('audio/')) {
-        this.saveFileViewModel.files.push(file);
+      if (file.type === 'application/vnd.ms-powerpoint' || 
+        file.type === 'application/pdf' || 
+        file.type.startsWith('application/msword') || 
+        file.type.startsWith('application/vnd.openxmlformats-officedocument.wordprocessingml') || 
+        file.type.startsWith('text/') || 
+        file.type.startsWith('image/')) {
+          this.saveFileViewModel.files.push(file);
       } else {
-        // Optional: Provide feedback to the user if needed
         const translatedSummary = this.translateService.instant('Info');
         const translatedMessage = this.translateService.instant('AudioOrVideoTypeNotAllowed');
         this.messageService.add({
@@ -748,7 +751,7 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
     this._fileStorageService.deleteFolder(folderId).subscribe((response: any) => {
       this.loadingIcon = false;
       if (response.message == Constant.FolderCantDeleted) {
-        this.messageService.add({ severity: 'info', summary: 'Info', life: 3000, detail: 'You cant delete folder without deleting the folders/files under it', });
+        this.messageService.add({ severity: 'info', summary: 'Info', life: 3000, detail: 'You can not delete folder without deleting the folders/files under it', });
       }
       else {
         this.folders = this.folders.filter((x: { id: any; }) => x.id !== folderId);
