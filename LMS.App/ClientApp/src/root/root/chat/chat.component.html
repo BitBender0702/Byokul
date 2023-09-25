@@ -253,13 +253,16 @@
                       >
                         {{ item?.userName }}
 
-                        <span  class="verified-badge" *ngIf="item.isVerified" style="font-size: 90%;"
+                        <span  class="verified-badge" *ngIf="item.isUserVerified" style="font-size: 90%;"
                         ><img src="../../../../assets/images/green-verified.svg" style="height: 20px;"
-                      />
+                          />
+                        </span>
+                      
+                     
                       <!-- <img *ngIf="post.isParentVerified && post.postAuthorType == 1" src="../../../../assets/images/verified-badge.svg" style="height: 20px;"
                       /> -->
                     
-                    </span>
+                 
                       </h2>
                       <h2
                         *ngIf="item.chatType == 3"
@@ -270,6 +273,9 @@
                         class="mb-0 cursor_pointer"
                       >
                         {{ item?.userName }}
+                        <span  class="verified-badge" *ngIf="item.isVerified" style="font-size: 90%;"
+                        ><img src="../../../../assets/images/verified-badge.svg" style="height: 20px;"
+                     /></span>
                       </h2>
                       <h2
                         *ngIf="item.chatType == 4"
@@ -1185,8 +1191,13 @@
                             item.school.schoolName
                           ]"
                           class="mb-0 cursor_pointer schoolHead"
+                          [innerHTML]="item?.userName"
                         >
-                          {{ item?.userName }}
+                          <!-- {{ item?.userName }} ( {{item.school.schoolName}}
+                          <span *ngIf="item.isVerified" class="verified-badge " style="font-size: 90%;">
+                            <img src="../../../../assets/images/verified-badge.svg" style="height: 20px;" class="m-0"/>
+                          </span> 
+                          ) -->
                         </h2>
                         <h2
                           *ngIf="item.chatType == 4"
