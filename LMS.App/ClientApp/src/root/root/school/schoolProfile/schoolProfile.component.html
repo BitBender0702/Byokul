@@ -86,9 +86,11 @@
             >
               <img lazyLoad="../../../../assets/images/menu.svg" />
               <span
-              *ngIf="hamburgerCount != 0" style="right: 0px;top: 2px;"
-              class="badge rounded-circle d-inline-flex align-items-center justify-content-center fw_700 font_12"
-              >{{ hamburgerCount }}</span>
+                *ngIf="hamburgerCount != 0"
+                style="right: 0px; top: 2px"
+                class="badge rounded-circle d-inline-flex align-items-center justify-content-center fw_700 font_12"
+                >{{ hamburgerCount }}</span
+              >
             </button>
           </div>
         </div>
@@ -113,8 +115,6 @@
                 ><img lazyLoad="../../../../assets/images/verified-badge.svg"
               /></span>
             </h2>
-            
-            
           </div>
 
           <div class="school-profile-content edit-profilehover">
@@ -123,8 +123,8 @@
               <span *ngIf="school.isVarified" class="verified-badge"
                 ><img lazyLoad="../../../../assets/images/verified-badge.svg"
               /></span>
-              <h4 style=" color: gray;">
-                {{school.schoolSlogan}}
+              <h4 style="color: gray">
+                {{ school.schoolSlogan }}
               </h4>
             </h2>
             <div
@@ -251,18 +251,17 @@
                 </button> -->
 
                 <button
-                style="min-width: 50px"
-                type="button"
-                (click)="openProfileShareModal()"
-                class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn me-0 minw-142 class-request-msg"
-                *ngIf="!userIsBanned"
-              >
-                <img
-                  lazyLoad="../../../../assets/images/Upload-dark.svg"
-                  class="d-block mx-auto"
-                />
-              </button>
-
+                  style="min-width: 50px"
+                  type="button"
+                  (click)="openProfileShareModal()"
+                  class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn me-0 minw-142 class-request-msg"
+                  *ngIf="!userIsBanned"
+                >
+                  <img
+                    lazyLoad="../../../../assets/images/Upload-dark.svg"
+                    class="d-block mx-auto"
+                  />
+                </button>
 
                 <!-- <button style="min-width: 50px;" type="button"
                   [routerLink]="['/user/schoolVideoLibrary', school.schoolId]"
@@ -462,7 +461,14 @@
           </div>
           <span class="custom-tag d-inline-flex align-items-center"
             ><span class="vr-border"></span>
-            <img class="flag_style me-2" [src]="'https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/flags/4x3/' + school.countryCode + '.svg'">
+            <img
+              class="flag_style me-2"
+              [src]="
+                'https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/flags/4x3/' +
+                school.countryCode +
+                '.svg'
+              "
+            />
             {{ school.dialCode }} {{ school.phoneNumber }}</span
           >
         </div>
@@ -481,8 +487,12 @@
     </div> -->
 
         <hr class="hr-gray" />
-        <h3 *ngIf="userIsBanned" class="school-profile-tabs d-flex align-content-center justify-content-center position-relative" style="color:orange">
-          {{"BannedFromSchool" | translate}}
+        <h3
+          *ngIf="userIsBanned"
+          class="school-profile-tabs d-flex align-content-center justify-content-center position-relative"
+          style="color: orange"
+        >
+          {{ "BannedFromSchool" | translate }}
         </h3>
         <div
           class="school-profile-tabs d-flex align-content-center justify-content-center position-relative"
@@ -1625,7 +1635,7 @@
                           </div>
                           <div class="feed-name font_14 text_sec1 hideName">
                             <img [lazyLoad]="school.avatar" />
-                            {{ school.schoolName }} 
+                            {{ school.schoolName }}
                           </div>
                           <div
                             class="feed-title font_14 text_sec1 d-flex align-content-center fw_600"
@@ -1670,7 +1680,6 @@
                     post.isLive
                   "
                   class="school-grid-box position-relative"
-                  
                 >
                   <div
                     class="schoolgrid-header d-flex align-items-center justify-content-between position-relative"
@@ -1680,9 +1689,11 @@
                         <img [lazyLoad]="school.avatar" />
                       </div>
                       <h2 class="d-inline-block font_20 fw_600 text_sec1 mb-0">
-                        {{ school.schoolName }} <span *ngIf="school.isVarified" class="verified-badge"
-                        ><img lazyLoad="../../../../assets/images/verified-badge.svg"
-                      /></span>
+                        {{ school.schoolName }}
+                        <span *ngIf="school.isVarified" class="verified-badge"
+                          ><img
+                            lazyLoad="../../../../assets/images/verified-badge.svg"
+                        /></span>
                       </h2>
                       <div *ngIf="post.isLive">
                         <img
@@ -1700,24 +1711,33 @@
                       </p> -->
 
                       <p
-                      *ngIf="post.createdOn != null"
-                      class="font_14 school-grid-date d-inline-block mb-0 me-1"
-                    >
-                      {{ post.createdOn | ChangeTimeZonePipe | date : "dd" }}
-                      {{ post.createdOn | ChangeTimeZonePipe | date : "MMMM"|translate }}
-                    </p>
-                    <p
-                      *ngIf="post.createdOn != null"
-                      class="font_14 school-grid-date d-inline-block mb-0 me-3"
-                    >
-                      {{post.createdOn | ChangeTimeZonePipe | date : "yyyy"}}
-                    </p>
-                    <p
-                      *ngIf="post.createdOn != null"
-                      class="font_14 school-grid-date d-inline-block mb-0 me-3"
-                    >
-                      {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm a" }}
-                    </p>
+                        *ngIf="post.createdOn != null"
+                        class="font_14 school-grid-date d-inline-block mb-0 me-1"
+                      >
+                        {{ post.createdOn | ChangeTimeZonePipe | date : "dd" }}
+                        {{
+                          post.createdOn
+                            | ChangeTimeZonePipe
+                            | date : "MMMM"
+                            | translate
+                        }}
+                      </p>
+                      <p
+                        *ngIf="post.createdOn != null"
+                        class="font_14 school-grid-date d-inline-block mb-0 me-3"
+                      >
+                        {{
+                          post.createdOn | ChangeTimeZonePipe | date : "yyyy"
+                        }}
+                      </p>
+                      <p
+                        *ngIf="post.createdOn != null"
+                        class="font_14 school-grid-date d-inline-block mb-0 me-3"
+                      >
+                        {{
+                          post.createdOn | ChangeTimeZonePipe | date : "hh:mm a"
+                        }}
+                      </p>
                       <button
                         *ngIf="post.isPinned && isOwner"
                         (click)="pinUnpinPost(post.id, false)"
@@ -1746,11 +1766,23 @@
                     class="school-grid-body"
                     (click)="openPostsViewModal(post)"
                   >
-                  <div class="d-flex justify-content-between align-items-center">
-                    <h4 class="font_20 fw_600 text_sec1 mb-3">{{ post.title }}</h4>
-                    <h4 *ngIf="post?.isLiveStreamEnded || post?.externalMeetingId != null" style="color:red">Streamed</h4>
-                  </div>
-                
+                    <div
+                      class="d-flex justify-content-between align-items-center"
+                    >
+                      <h4 class="font_20 fw_600 text_sec1 mb-3">
+                        {{ post.title }}
+                      </h4>
+                      <h4
+                        *ngIf="
+                          post?.isLiveStreamEnded ||
+                          post?.externalMeetingId != null
+                        "
+                        style="color: red"
+                      >
+                        Streamed
+                      </h4>
+                    </div>
+
                     <p class="text_sec1 font_14" style="cursor: pointer">
                       {{ post.description }}
                     </p>
@@ -1804,8 +1836,13 @@
                                 post.postAttachments[0]?.fileThumbnail
                               "
                             />
-                            <div class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
-                              <i class="fas fa-play fa-5x" *ngIf="post.postAttachments[0]?.fileType == 2"></i>
+                            <div
+                              class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
+                            >
+                              <i
+                                class="fas fa-play fa-5x"
+                                *ngIf="post.postAttachments[0]?.fileType == 2"
+                              ></i>
                             </div>
                             <img
                               *ngIf="post.postAttachments[0]?.fileType == 1"
@@ -1830,8 +1867,13 @@
                                 style="cursor: pointer"
                                 [lazyLoad]="attachment?.fileThumbnail"
                               />
-                              <div class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
-                                <i class="fas fa-play fa-5x" *ngIf="attachment?.fileType == 2"></i>
+                              <div
+                                class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
+                              >
+                                <i
+                                  class="fas fa-play fa-5x"
+                                  *ngIf="attachment?.fileType == 2"
+                                ></i>
                               </div>
                               <img
                                 style="height: 598px; width: 50% !important"
@@ -1858,8 +1900,13 @@
                                 post.postAttachments[0]?.fileThumbnail
                               "
                             />
-                            <div class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
-                              <i class="fas fa-play fa-5x" *ngIf="post.postAttachments[0]?.fileType == 2"></i>
+                            <div
+                              class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
+                            >
+                              <i
+                                class="fas fa-play fa-5x"
+                                *ngIf="post.postAttachments[0]?.fileType == 2"
+                              ></i>
                             </div>
                             <img
                               *ngIf="post.postAttachments[0]?.fileType == 1"
@@ -1873,7 +1920,7 @@
                           *ngIf="post.postAttachments.length == 3"
                           class="col-md-4 h-100"
                         >
-                          <div class="medium_thumbox d-flex">
+                          <div class="medium_thumbox d-flex h-100">
                             <div class="medium-thumnail">
                               <img
                                 *ngIf="post.postAttachments[1]?.fileType == 2"
@@ -1924,8 +1971,13 @@
                                 post.postAttachments[0]?.fileThumbnail
                               "
                             />
-                            <div class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
-                              <i class="fas fa-play fa-5x" *ngIf="post.postAttachments[0]?.fileType == 2"></i>
+                            <div
+                              class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
+                            >
+                              <i
+                                class="fas fa-play fa-5x"
+                                *ngIf="post.postAttachments[0]?.fileType == 2"
+                              ></i>
                             </div>
                             <img
                               *ngIf="post.postAttachments[0]?.fileType == 1"
@@ -1939,7 +1991,7 @@
                           *ngIf="post.postAttachments.length > 3"
                           class="col-md-4 h-100"
                         >
-                          <div class="medium_thumbox d-flex">
+                          <div class="medium_thumbox d-flex h-100">
                             <div class="medium-thumnail position-relative">
                               <img
                                 class="w-100 position-relative"
@@ -2583,9 +2635,17 @@
                               <p
                                 class="font_14 school-grid-date d-inline-block mb-0"
                               >
-                                {{ gridItemInfo.createdOn | ChangeTimeZonePipe | date : "MMMM d" }}
+                                {{
+                                  gridItemInfo.createdOn
+                                    | ChangeTimeZonePipe
+                                    | date : "MMMM d"
+                                }}
                                 -
-                                {{ gridItemInfo.createdOn | ChangeTimeZonePipe | date : "hh:mm a" }}
+                                {{
+                                  gridItemInfo.createdOn
+                                    | ChangeTimeZonePipe
+                                    | date : "hh:mm a"
+                                }}
                               </p>
                             </div>
                             <p class="text_sec1 font_14 pt-3">
@@ -2794,24 +2854,39 @@
                             {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm" }}
                           </p> -->
                           <p
-                          *ngIf="post.createdOn != null"
-                          class="font_14 school-grid-date d-inline-block mb-0 me-1"
-                        >
-                          {{ post.createdOn | ChangeTimeZonePipe | date : "dd" }}
-                          {{ post.createdOn | ChangeTimeZonePipe | date : "MMMM"|translate }}
-                        </p>
-                        <p
-                          *ngIf="post.createdOn != null"
-                          class="font_14 school-grid-date d-inline-block mb-0 me-3"
-                        >
-                          {{post.createdOn | ChangeTimeZonePipe | date : "yyyy"}}
-                        </p>
-                        <p
-                          *ngIf="post.createdOn != null"
-                          class="font_14 school-grid-date d-inline-block mb-0 me-3"
-                        >
-                          {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm a" }}
-                        </p>
+                            *ngIf="post.createdOn != null"
+                            class="font_14 school-grid-date d-inline-block mb-0 me-1"
+                          >
+                            {{
+                              post.createdOn | ChangeTimeZonePipe | date : "dd"
+                            }}
+                            {{
+                              post.createdOn
+                                | ChangeTimeZonePipe
+                                | date : "MMMM"
+                                | translate
+                            }}
+                          </p>
+                          <p
+                            *ngIf="post.createdOn != null"
+                            class="font_14 school-grid-date d-inline-block mb-0 me-3"
+                          >
+                            {{
+                              post.createdOn
+                                | ChangeTimeZonePipe
+                                | date : "yyyy"
+                            }}
+                          </p>
+                          <p
+                            *ngIf="post.createdOn != null"
+                            class="font_14 school-grid-date d-inline-block mb-0 me-3"
+                          >
+                            {{
+                              post.createdOn
+                                | ChangeTimeZonePipe
+                                | date : "hh:mm a"
+                            }}
+                          </p>
                           <button
                             type="button"
                             class="view font_12 bg-transparent border-0 cursor_auto"
@@ -2858,8 +2933,15 @@
                                       post.postAttachments[0]?.fileThumbnail
                                     "
                                   />
-                                  <div class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
-                                    <i class="fas fa-play fa-5x" *ngIf="post.postAttachments[0]?.fileType == 2"></i>
+                                  <div
+                                    class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
+                                  >
+                                    <i
+                                      class="fas fa-play fa-5x"
+                                      *ngIf="
+                                        post.postAttachments[0]?.fileType == 2
+                                      "
+                                    ></i>
                                   </div>
                                 </div>
                                 <img
@@ -2916,7 +2998,7 @@
             "
             class="text-center font-34"
           >
-            {{'ClassDoesNotExist'| translate }}
+            {{ "ClassDoesNotExist" | translate }}
           </div>
           <div class="list-schol-profile">
             <div class="row">
@@ -3068,18 +3150,20 @@
 
                         <div *ngIf="item.type != 2" class="d-inline-block">
                           <p
-                         
-                          class="font_12 school-grid-date d-inline-block mb-0 text_ltgray"
-                        >
-                          {{ item?.startDate | date : "d" }} {{ item?.startDate | date : "MMMM" | translate }} -&nbsp;
-                          
-                        </p>
-                        <p
-                          
-                          class="font_12 school-grid-date d-inline-block mb-0 text_ltgray"
-                        >
-                        {{ item?.endDate | date : "d" }} {{ item?.endDate | date : "MMMM" | translate }}
-                        </p>
+                            class="font_12 school-grid-date d-inline-block mb-0 text_ltgray"
+                          >
+                            {{ item?.startDate | date : "d" }}
+                            {{
+                              item?.startDate | date : "MMMM" | translate
+                            }}
+                            -&nbsp;
+                          </p>
+                          <p
+                            class="font_12 school-grid-date d-inline-block mb-0 text_ltgray"
+                          >
+                            {{ item?.endDate | date : "d" }}
+                            {{ item?.endDate | date : "MMMM" | translate }}
+                          </p>
                         </div>
                         <div class="profile-star d-flex align-items-center">
                           <span
@@ -3295,8 +3379,8 @@
             "
             class="text-center font-34"
           >
-          {{'CourseDoesNotExist'| translate }}
-        </div>
+            {{ "CourseDoesNotExist" | translate }}
+          </div>
           <div class="list-schol-profile">
             <div class="row">
               <ng-container *ngFor="let item of courseList">
@@ -4963,7 +5047,7 @@
       </div>
     </div>
   </section>
-  
+
   <post-loading-spinner
     [postLoadingIcon]="postLoadingIcon"
   ></post-loading-spinner>
