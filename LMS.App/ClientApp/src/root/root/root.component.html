@@ -1,32 +1,21 @@
 <side-bar *ngIf="displaySideBar"></side-bar>
 <adminSide-bar *ngIf="displayAdminSideBar"></adminSide-bar>
-<button #openProgressBar hidden data-bs-toggle="modal" data-bs-target="#progressBar"></button>
+<button
+  #openProgressBar
+  hidden
+  data-bs-toggle="modal"
+  data-bs-target="#progressBar"
+></button>
 <router-outlet>
-    <!-- <h1>test.............................................................test</h1> -->
-    <p-toast></p-toast>
+  <!-- <h1>test.............................................................test</h1> -->
+  <p-toast></p-toast>
 
-  <div *ngIf= "overallProgress > 0" class="text-center" style="
-    width: 23%;
-    position: absolute;
-    margin-left: 74%;
-    margin-top: 7%;">
-  <div>
-    Uploading
-  </div>
-    <div class="progress">
-    <!-- <div *ngIf= "overallProgress >0" class="progress"> -->
-      <div
-        class="progress-bar bg-success"
-        role="progressbar"
-        [style.width.%]="overallProgress"
-      >
-        {{ overallProgress }}%
-      </div>
-      <br />
-    </div>
+  <div *ngIf="overallProgress > 0" class="upload-notification">
+    <h6 class="upload-notification__title">Uploading</h6>
+    <p class="upload-notification__percentage">{{ overallProgress }}%</p>
   </div>
 
-    <div
+  <div
     class="modal fade edit-school-modal delete-modal"
     id="progressBar"
     tabindex="-1"
@@ -38,9 +27,7 @@
         <div
           class="modal-header border-0 justify-content-center position-relative"
         >
-          <h1
-            class="modal-title font_22 text_dark fw_700 border-0 text-center"
-          >
+          <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">
             {{ "DeleteSchool" | translate }}
           </h1>
           <button
@@ -67,7 +54,7 @@
       </div>
     </div>
   </div>
-    <!-- <div
+  <!-- <div
 class="modal fade edit-school-modal delete-modal"
 id="paymentConfirmationModal"
 tabindex="-1"
@@ -101,5 +88,9 @@ aria-hidden="true"
 </div>
 </div> -->
 </router-outlet>
-<button #paymentConfirmationBtn hidden data-bs-toggle="modal"
-data-bs-target="#paymentConfirmationModal"></button>
+<button
+  #paymentConfirmationBtn
+  hidden
+  data-bs-toggle="modal"
+  data-bs-target="#paymentConfirmationModal"
+></button>

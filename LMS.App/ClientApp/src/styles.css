@@ -161,6 +161,35 @@ a.text_dark:hover {
   min-width: auto;
 }
 
+.upload-notification {
+  position: fixed;
+  top: 50px;
+  right: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 400px;
+  background: linear-gradient(90.02deg, #ff7b1c 0.02%, #ffa41c 99.98%);
+  padding: 12px 40px;
+  font-family: "Poppins", sans-serif;
+  border-radius: 16px;
+  z-index: 9999;
+}
+
+.upload-notification__title {
+  margin-bottom: 16px;
+  color: #fff;
+  font-size: 24px;
+}
+
+.upload-notification__percentage {
+  color: #fff;
+  margin-bottom: 0;
+  font-size: 24px;
+  font-weight: bold;
+}
+
 .form-control,
 select.form-select,
 .custom-language-select .ms-options-wrap > button {
