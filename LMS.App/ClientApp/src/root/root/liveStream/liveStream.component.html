@@ -102,6 +102,7 @@
                       <!-- <h3 style="position: relative;bottom: 467px;">{{'StreamStartingIn'| translate }} {{streamCountDown}}</h3> -->
                       <!-- <p style="position: relative;bottom: 467px;">{{post.coverLetter}}</p> -->
                     </div>
+                    
                     <iframe
                       *ngIf="
                         streamUrl != undefined &&
@@ -121,7 +122,7 @@
                         id="test12"
                         *ngIf="meetingId == ''"
                         width="100%"
-                        height="500"
+                        height="800"
                         autoplay
                         (ended)="onVideoEnded()"
                         (timeupdate)="onVideoTimeUpdate($event)"
@@ -158,6 +159,7 @@
                       <strong>{{ post.title }}</strong> {{ post.description }}
                     </div>
                   </div>
+                  
                   <button
                   style="left:75px !important;top: 9px !important;"
                     (click)="showComments()"
@@ -184,7 +186,8 @@
 
                   <div
                     class="d-flex"
-                    style="margin-left: 120px; position: absolute; top: 575px"
+                    style="margin-left: 494px; position: absolute; top: 575px; margin-top: -558px;"
+                    *ngIf="isSimpleStream"
                   >
                     <img
                       src="../../../assets/images/eye-light.svg"
@@ -192,6 +195,19 @@
                     />
                     <span class="ms-1 text-white">{{ liveUsersCount }}</span>
                   </div>
+
+                  <div
+                    class="d-flex"
+                    style="margin-left: 535px; position: absolute; top: 575px; margin-top: -558px;"
+                    *ngIf="!isSimpleStream"
+                  >
+                    <img
+                      src="../../../assets/images/eye-light.svg"
+                      class="d-block"
+                    />
+                    <span class="ms-1 text-white">{{ liveUsersCount }}</span>
+                  </div>
+                  
                 </div>
                 <!-- <div class="text-line-border position-relative text-center my-4">
               <span class="line-text font_12 text_ltgray fw_400 text-center">{{'SelectMediaSources'| translate }}</span>

@@ -114,6 +114,8 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
     this._studentService = studentService;
   }
 
+  isSimpleStream:boolean=false;
+
   ngOnInit(): void {
     debugger
     // this.loadingIcon = true;
@@ -130,7 +132,11 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
     this._postService.getPostById(this.postId).subscribe((response) => {
       debugger
       this.post = response;
-
+      if(response?.externalMeetingId){
+        this.isSimpleStream = true;
+      } else{
+        this.isSimpleStream = false;
+      }
       // this.streamUrl = this.route.snapshot.paramMap.get('streamUrl')??'';
       // const url = 'https://byokulstream.northeurope.cloudapp.azure.com/bigbluebutton/api/join?';
       // this.streamUrl = url + this.streamUrl;
@@ -801,6 +807,7 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
 
   liveUsersCountResponse() {
     liveUsersCountResponse.subscribe(response => {
+      debugger;
       if (response.isLeaveStream) {
         this.liveUsersCount = this.liveUsersCount - 1;
       }
