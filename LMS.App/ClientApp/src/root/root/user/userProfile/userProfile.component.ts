@@ -213,7 +213,7 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
   certificateToUpload = new FormData();
   userCertificateInfo: any;
   hamburgerCountSubscription!: Subscription;
-  hamburgerCount:number = 0;
+  hamburgerCount: number = 0;
   @ViewChild('closeCertificateModal') closeCertificateModal!: ElementRef;
 
   @ViewChild('hiddenButton') hiddenButtonRef!: ElementRef;
@@ -240,7 +240,7 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
     });
   }
 
-  isUserBannedId:string='';
+  isUserBannedId: string = '';
   ngOnInit(): void {
     this.checkScreenSize();
     if (this.isScreenMobile) {
@@ -279,9 +279,9 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
       this.isDataLoaded = true;
       this.cd.detectChanges();
 
-      if(this.loginUserId != this.isUserBannedId){
-        this.checkIfUserIsBanned();
-      }
+      // if(this.loginUserId != this.isUserBannedId){
+      this.checkIfUserIsBanned();
+      // }
 
       this.addEventListnerOnCarousel();
       this.user.posts = this.getFilteredAttachments(this.user.posts);
@@ -300,7 +300,7 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
     //     // debugger
     //   })
     // }
-    
+
 
     this._userService.getLanguageList().subscribe((response) => {
       this.languages = response;
@@ -373,7 +373,7 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
         });
       });
     }
-    
+
 
     if (!this.savedPostSubscription) {
       this.savedPostSubscription = savedPostResponse.subscribe(response => {
@@ -539,7 +539,7 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
       })
     }
 
-    
+
   }
 
   addDescriptionMetaTag(description: string) {
@@ -1261,7 +1261,7 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
         this.likesLength = item.likes.length + 1;
         item.isPostLikedByCurrentUser = true;
         debugger
-        if(post.createdBy != this.loginUserId){
+        if (post.createdBy != this.loginUserId) {
           var notificationType = NotificationType.Likes;
           var notificationContent = "liked your post";
           this.initializeNotificationViewModel(post.createdBy, notificationType, notificationContent, postId, postType, post);
@@ -2281,14 +2281,37 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
     }
   }
 
-  userIsBanned:boolean=false;
-  checkIfUserIsBanned(){
+  userIsBanned: boolean = false;
+  checkIfUserIsBanned() {
     debugger;
-    this._userService.isUserBanned(this.loginUserId, this.isUserBannedId, PostAuthorTypeEnum.User).subscribe((response)=>{
+    this.loadingIcon = true;
+    this._userService.isUserBanned(this.loginUserId, this.isUserBannedId, PostAuthorTypeEnum.User).subscribe((response) => {
       debugger;
-      if(response.data == true){
-        this.userIsBanned = true
+      this.loadingIcon = false;
+      if (response.data == true) {
+        this.userIsBanned = true;
+
+        const bannedElements = document.getElementsByClassName('userIsBannedTrue');
+        for (let i = 0; i < bannedElements.length; i++) {
+          (bannedElements[i] as HTMLElement).style.display = 'none';
+        }
+
+        const styleDownElement = document.getElementById('styleDown');
+        if (styleDownElement) {
+          styleDownElement.style.marginTop = '17px';
+        }
+      } else {
+        this.userIsBanned = false;
+        const bannedElements = document.getElementsByClassName('userIsBannedTrue');
+        for (let i = 0; i < bannedElements.length; i++) {
+          (bannedElements[i] as HTMLElement).style.display = '';
+        }
+        const styleDownElement = document.getElementById('styleDown');
+        if (styleDownElement) {
+          styleDownElement.style.marginTop = '';
+        }
       }
+
     })
   }
 

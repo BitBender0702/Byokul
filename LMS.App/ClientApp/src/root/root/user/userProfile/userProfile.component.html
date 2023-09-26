@@ -71,14 +71,14 @@
                 src="../../../assets/images/femaleProfile.jfif"
               />
             </div>
-            <div class="school-profile-content edit-profilehover w-100">
+            <div class="school-profile-content edit-profilehover w-100" id="styleDown">
               <h2 class="font_24 fw_700 mb-2">
                 {{ user.firstName + " " + user.lastName }}
                 <span *ngIf="user.isVarified" class="verified-badge"
                   ><img src="../../../../assets/images/green-verified.svg"
                 /></span>
               </h2>
-              <div class="position-relative">
+              <div class="position-relative userIsBannedTrue">
                 <div
                   class="followers_name d-inline-flex align-items-center gap-1 font_16 mr-_24"
                 >
@@ -328,10 +328,13 @@
           </span>
         </div>
         <hr class="hr-gray" />
+        <h3 id="userIsBannedTrue" class="school-profile-tabs d-flex align-content-center justify-content-center position-relative" style="color:orange">
+          {{"BannedByUser" | translate}}
+        </h3>
         <div
-          class="school-profile-tabs d-flex align-content-center justify-content-center position-relative"
+          class="school-profile-tabs d-flex align-content-center justify-content-center position-relative userIsBannedTrue"
         >
-          <div class="custom-tabs">
+          <div class="custom-tabs userIsBannedTrue">
             <ul
               class="nav nav-tabs mb-3 border-0 before-none justify-content-center"
               id="myTab"
@@ -430,7 +433,7 @@
               </li>
             </ul>
           </div>
-          <div *ngIf="isPostTab" class="filter-main d-flex">
+          <div *ngIf="isPostTab" class="filter-main d-flex userIsBannedTrue">
             <div class="btn-filter1 align-items-center">
               <!-- <button
                 [ngClass]="
@@ -610,7 +613,7 @@
             aria-labelledby="school-feed-tab"
             tabindex="0"
           >
-            <div class="accordion" id="accordionPanelsStayOpenExample">
+            <div class="accordion userIsBannedTrue" id="accordionPanelsStayOpenExample">
               <ng-container *ngTemplateOutlet="postFeedSection"></ng-container>
               <ng-container *ngFor="let post of user.posts">
                 <div

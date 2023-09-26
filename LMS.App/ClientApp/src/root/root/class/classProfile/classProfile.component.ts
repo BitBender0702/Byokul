@@ -1966,8 +1966,10 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   isUserBannedId:string='';
   checkIfUserIsBanned(){
     debugger;
+    this.loadingIcon = true;
     this._userService.isUserBanned(this.userId, this.isUserBannedId, PostAuthorTypeEnum.Class).subscribe((response)=>{
       debugger;
+      this.loadingIcon = false;
       if(response.data == true){
         this.userIsBanned = true
       }

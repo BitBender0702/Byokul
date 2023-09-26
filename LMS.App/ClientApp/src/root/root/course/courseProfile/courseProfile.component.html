@@ -14,13 +14,13 @@
             {{ "Back" | translate }}
           </button>
           <button *ngIf="
-              (isOwner || hasIssueCertificatePermission) &&
+              (isOwner || (hasIssueCertificatePermission && !userIsBanned)) &&
               course.serviceType.type == 'Paid'
             " (click)="createCertificate(course.courseId, '2')" type="button"
             class="btn custom-btn primary_btn earning-btn fw_400 h_44">
             {{ "CreateCertificate" | translate }}
           </button>
-          <button *ngIf="isOwner || hasPostPermission" (click)="openPostModal()" type="button"
+          <button *ngIf="isOwner ||  (hasPostPermission && !userIsBanned)" (click)="openPostModal()" type="button"
             class="btn custom-btn primary_btn earning-btn fw_400 h_44">
             {{ "CreatePost" | translate }}
           </button>
@@ -84,7 +84,7 @@
                 </div>
               </div>
 
-              <div class="position-relative">
+              <div class="position-relative" *ngIf="!userIsBanned">
                 <div class="d-flex justify-content-between flex-wrap class_request align-items-center">
                   <div>
                     <div class="followers_name d-inline-flex align-items-center gap-1 font_16 mr-_24">
@@ -324,7 +324,10 @@
           </span>
         </div>
         <hr class="hr-gray" />
-        <div class="school-profile-tabs d-flex align-content-center justify-content-center position-relative">
+        <h3 *ngIf="userIsBanned" class="school-profile-tabs d-flex align-content-center justify-content-center position-relative" style="color:orange">
+          {{"BannedFromCourse" | translate}}
+        </h3>
+        <div class="school-profile-tabs d-flex align-content-center justify-content-center position-relative" *ngIf="!userIsBanned">
           <div></div>
           <button type="button"
             class="btn button-stroage font_16 fw_600 text_dark d-inline-flex align-items-center justify-content-center"
@@ -365,7 +368,7 @@
           </div>
         </div>
 
-        <div *ngIf="course.isCourseAccessable" class="tab-content" id="pills-tabContent">
+        <div *ngIf="course.isCourseAccessable && !userIsBanned" class="tab-content" id="pills-tabContent">
           <div class="tab-pane fade show active" id="school-feed-tab-pane" role="tabpanel"
             aria-labelledby="school-feed-tab" tabindex="0">
             <div class="feed-section">
