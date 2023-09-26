@@ -601,6 +601,10 @@ export class CreatePostComponent implements OnInit, OnDestroy {
 
   handleImageInput(event: any) {
     debugger;
+    if(this.videos.length >= 1){
+      this.messageService.add({ severity: 'info', summary: 'Info', life: 3000, detail: 'Only Videos or Images can be can be made' });
+      return;
+    }
     let numberOfImagesFromEvent = event.target.files.length;
     // if(this.images.length == 0){
       this.numberOfImages = this.images.length;

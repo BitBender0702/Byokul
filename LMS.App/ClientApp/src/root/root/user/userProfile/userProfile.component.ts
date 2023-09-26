@@ -2310,6 +2310,11 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
         if (styleDownElement) {
           styleDownElement.style.marginTop = '';
         }
+        const x = document.getElementById('userBanned');
+        if(x){
+          x.parentNode?.removeChild(x);
+        }
+        debugger;
       }
 
     })

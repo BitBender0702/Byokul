@@ -27,6 +27,7 @@ using System;
 using Country = LMS.Data.Entity.Country;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Hosting;
+using System.Linq;
 
 namespace LMS.Services
 {
@@ -1692,7 +1693,7 @@ namespace LMS.Services
 
         public async Task<IEnumerable<GlobalSearchViewModel>> GlobalSearch(string searchString, int pageNumber, int pageSize)
         {
-            var users = await _userRepository.GetAll().Where(x => x.FirstName.Contains(searchString) || x.LastName.Contains(searchString) || (x.FirstName + " " + x.LastName).Contains(searchString)).Select(x => new GlobalSearchViewModel()
+            var users = await _userRepository.GetAll().Where(x => !x.IsBan && x.FirstName.Contains(searchString) || x.LastName.Contains(searchString) || (x.FirstName + " " + x.LastName).Contains(searchString)).Select(x => new GlobalSearchViewModel()
             {
                 Id = new Guid(x.Id),
                 Name = x.FirstName + " " + x.LastName,
@@ -1701,7 +1702,7 @@ namespace LMS.Services
 
             }).Take(5).ToListAsync();
 
-            var schools = await _schoolRepository.GetAll().Where(x => x.SchoolName.Contains(searchString)).Select(x => new GlobalSearchViewModel
+            var schools = await _schoolRepository.GetAll().Where(x => !x.IsBan && !x.IsDisableByOwner && !x.IsDeleted && x.SchoolName.Contains(searchString)).Select(x => new GlobalSearchViewModel
             {
                 Id = x.SchoolId,
                 Name = x.SchoolName,
@@ -1709,9 +1710,9 @@ namespace LMS.Services
                 Avatar = x.Avatar
             }).Take(5).ToListAsync();
 
-            var classIds = await _classTagRepository.GetAll().Where(x => x.ClassTagValue.Contains(searchString)).Select(x => x.ClassId).ToListAsync();
+            var classIds = await _classTagRepository.GetAll().Where(x => !x.Class.IsDisableByOwner && !x.Class.IsDeleted && !x.Class.IsEnable && x.ClassTagValue.Contains(searchString)).Select(x => x.ClassId).ToListAsync();
 
-            var classes = await _classRepository.GetAll().Include(x => x.School).Where(x => x.ClassName.Contains(searchString) || classIds.Contains(x.ClassId)).Select(x => new GlobalSearchViewModel
+            var classes = await _classRepository.GetAll().Include(x => x.School).Where(x => !x.School.IsBan && !x.School.IsDisableByOwner && !x.School.IsDeleted && !x.IsDisableByOwner && !x.IsDeleted && !x.IsEnable && x.ClassName.Contains(searchString) || classIds.Contains(x.ClassId)).Select(x => new GlobalSearchViewModel
             {
                 Id = x.ClassId,
                 Name = x.ClassName,
@@ -1721,9 +1722,9 @@ namespace LMS.Services
             }).Take(5).ToListAsync();
 
 
-            var courseIds = await _courseTagRepository.GetAll().Where(x => x.CourseTagValue.Contains(searchString)).Select(x => x.CourseId).ToListAsync();
+            var courseIds = await _courseTagRepository.GetAll().Where(x => !x.Course.IsDisableByOwner && !x.Course.IsDeleted && !x.Course.IsEnable && x.CourseTagValue.Contains(searchString)).Select(x => x.CourseId).ToListAsync();
 
-            var courses = await _courseRepository.GetAll().Where(x => x.CourseName.Contains(searchString) || courseIds.Contains(x.CourseId)).Select(x => new GlobalSearchViewModel
+            var courses = await _courseRepository.GetAll().Where(x => !x.School.IsBan && !x.School.IsDisableByOwner && !x.School.IsDeleted && !x.IsDisableByOwner && !x.IsDeleted && !x.IsEnable && x.CourseName.Contains(searchString) || courseIds.Contains(x.CourseId)).Select(x => new GlobalSearchViewModel
             {
                 Id = x.CourseId,
                 Name = x.CourseName,
@@ -1732,19 +1733,48 @@ namespace LMS.Services
                 Avatar = x.Avatar
             }).Take(5).ToListAsync();
 
-            var posts = await _postRepository.GetAll().Where(x => x.Tags.Any(x => x.PostTagValue.Contains(searchString))).Select(x => new
-            {
-                x.Id,
-                x.Title,
-                x.PostType,
-                x.ParentId,
-                x.PostAuthorType
-            }).Take(5).ToListAsync();
+            //var posts = await _postRepository.GetAll().Where(x => x.Tags.Any(x => x.PostTagValue.Contains(searchString))).Select(x => new
+            //{
+            //    x.Id,
+            //    x.Title,
+            //    x.PostType,
+            //    x.ParentId,
+            //    x.PostAuthorType
+            //}).Take(5).ToListAsync();
+
+
+            var userBannedUser = await _userRepository.GetAll().Where(x => x.IsBan).ToListAsync();
+            var schoolBannedUser = await _schoolRepository.GetAll().Where(x => x.IsBan || x.IsDisableByOwner || x.IsDeleted).ToListAsync();
+            var classBannedUser = await _classRepository.GetAll().Where(x => x.IsDeleted || x.IsDisableByOwner || x.IsEnable).ToListAsync();
+            var courseBannedUser = await _courseRepository.GetAll().Where(x => x.IsDeleted || x.IsDisableByOwner || x.IsEnable).ToListAsync();
+            var bannedSchoolIds = schoolBannedUser.Select(b => b.SchoolId.ToString()).ToList();
+            var bannedClassIds = classBannedUser.Select(c => c.ClassId.ToString()).ToList();
+            var bannedCourseIds = courseBannedUser.Select(x => x.CourseId.ToString()).ToList();
+            var userBannedIds = userBannedUser.Select(x => x.Id.ToString()).ToList();
+            var bannedUserIds = bannedSchoolIds.Concat(bannedClassIds).Concat(bannedCourseIds).Concat(userBannedIds).ToList();
+            //bannedUserIds = 
+
+
+            var posts = await _postRepository.GetAll()
+                            .Where(x =>
+                                !bannedUserIds.Contains(x.ParentId.ToString()) &&
+                                x.Tags.Any(t => t.PostTagValue.Contains(searchString)))
+                            .Select(x => new
+                            {
+                                x.Id,
+                                x.Title,
+                                x.PostType,
+                                x.ParentId,
+                                x.PostAuthorType
+                            })
+                            .Take(5)
+                            .ToListAsync();
 
             var postViewModel = new List<GlobalSearchViewModel>();
             var postAttachment = new PostAttachment();
             foreach (var post in posts)
             {
+                
                 string avatar = GetPostParentImage(post.ParentId, post.PostAuthorType);
                 if (post.PostType == 3)
                 {
@@ -1800,7 +1830,7 @@ namespace LMS.Services
 
         public async Task<IEnumerable<GlobalSearchViewModel>> UsersGlobalSearch(string searchString, int pageNumber, int pageSize)
         {
-            var users = await _userRepository.GetAll().Where(x => x.FirstName.Contains(searchString) || x.LastName.Contains(searchString) || (x.FirstName + " " + x.LastName).Contains(searchString)).Select(x => new GlobalSearchViewModel()
+            var users = await _userRepository.GetAll().Where(x => x.FirstName.Contains(searchString) || x.LastName.Contains(searchString) || (x.FirstName + " " + x.LastName).Contains(searchString) && !x.IsBan).Select(x => new GlobalSearchViewModel()
             {
                 Id = new Guid(x.Id),
                 Name = x.FirstName + " " + x.LastName,
