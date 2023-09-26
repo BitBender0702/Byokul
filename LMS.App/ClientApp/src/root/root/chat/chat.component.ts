@@ -46,6 +46,8 @@ import { ChatVideoComponent } from '../chatVideo/chatVideo.component';
 import { UploadVideo } from 'src/root/interfaces/post/uploadVideo';
 import {
   OpenSideBar,
+  notifyMessageAndNotificationCount,
+  totalMessageAndNotificationCount,
   unreadChatResponse,
 } from 'src/root/user-template/side-bar/side-bar.component';
 import { MessageService } from 'primeng/api';
@@ -167,6 +169,8 @@ export class ChatComponent
 
   searchString: string = '';
   changeLanguageSubscription!: Subscription;
+  hamburgerCountSubscription!: Subscription;
+  hamburgerCount:number = 0;
   unreadChatSubscription!: Subscription;
   videoObject!: UploadVideo;
   disabledSendButton!: boolean;
@@ -1134,6 +1138,14 @@ export class ChatComponent
       });
     }
 
+    if (!this.hamburgerCountSubscription) {
+      this.hamburgerCountSubscription = totalMessageAndNotificationCount.subscribe(response => {
+        debugger
+        this.hamburgerCount = response.hamburgerCount;
+      });
+    }
+    notifyMessageAndNotificationCount.next({});
+
     if (!this.unreadChatSubscription) {
       this.unreadChatSubscription = unreadChatResponse.subscribe((response) => {
         debugger;
@@ -1168,6 +1180,9 @@ export class ChatComponent
     }
     if (this.unreadChatSubscription) {
       this.unreadChatSubscription.unsubscribe();
+    }
+    if (this.hamburgerCountSubscription) {
+      this.hamburgerCountSubscription.unsubscribe();
     }
   }
 

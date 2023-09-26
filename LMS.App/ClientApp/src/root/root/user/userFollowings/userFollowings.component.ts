@@ -5,7 +5,7 @@ import { MultilingualComponent, changeLanguage } from "../../sharedModule/Multil
 import { Subscription } from "rxjs";
 import { FollowUnfollow } from "src/root/interfaces/FollowUnfollow";
 import { FollowUnFollowEnum } from "src/root/Enums/FollowUnFollowEnum";
-import { OpenSideBar } from "src/root/user-template/side-bar/side-bar.component";
+import { OpenSideBar, notifyMessageAndNotificationCount, totalMessageAndNotificationCount } from "src/root/user-template/side-bar/side-bar.component";
 
 @Component({
   selector: 'user-Followers',
@@ -32,6 +32,8 @@ export class UserFollowingsComponent extends MultilingualComponent implements On
     isOwner:boolean = false;
     changeLanguageSubscription!: Subscription;
     gender!: string;
+    hamburgerCountSubscription!: Subscription;
+    hamburgerCount:number = 0;
 
     constructor(injector: Injector,userService: UserService,private route: ActivatedRoute) { 
       super(injector);
@@ -59,12 +61,27 @@ export class UserFollowingsComponent extends MultilingualComponent implements On
         })
       }
 
+      if (!this.hamburgerCountSubscription) {
+        this.hamburgerCountSubscription = totalMessageAndNotificationCount.subscribe(response => {
+          debugger
+          this.hamburgerCount = response.hamburgerCount;
+        });
+      }
+  
+      notifyMessageAndNotificationCount.next({});
+
       this.isOwnerOrNot();
     }
 
     ngOnDestroy(): void {
       if(this.changeLanguageSubscription){
         this.changeLanguageSubscription.unsubscribe();
+      }
+      if (!this.hamburgerCountSubscription) {
+        this.hamburgerCountSubscription = totalMessageAndNotificationCount.subscribe(response => {
+          debugger
+          this.hamburgerCount = response.hamburgerCount;
+        });
       }
     }
 

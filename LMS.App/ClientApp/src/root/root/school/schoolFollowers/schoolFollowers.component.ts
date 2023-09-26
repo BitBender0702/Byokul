@@ -4,7 +4,7 @@ import { Subscription } from "rxjs";
 import { SchoolService } from "src/root/service/school.service";
 import { UserService } from "src/root/service/user.service";
 import { MultilingualComponent, changeLanguage } from "../../sharedModule/Multilingual/multilingual.component";
-import { OpenSideBar } from "src/root/user-template/side-bar/side-bar.component";
+import { OpenSideBar, notifyMessageAndNotificationCount, totalMessageAndNotificationCount } from "src/root/user-template/side-bar/side-bar.component";
 import { TranslateService } from "@ngx-translate/core";
 import { MessageService } from "primeng/api";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
@@ -45,6 +45,8 @@ export class SchoolFollowersComponent extends MultilingualComponent implements O
     isOwner:boolean = false;
     reportFollowerViewModel!:ReportFollowerViewModel;
     notificationViewModel!:NotificationViewModel;
+    hamburgerCountSubscription!: Subscription;
+    hamburgerCount:number = 0;
     changeLanguageSubscription!: Subscription;
 
     isFollowersTab:boolean=true;
@@ -94,6 +96,14 @@ export class SchoolFollowersComponent extends MultilingualComponent implements O
         })
       }
 
+      if (!this.hamburgerCountSubscription) {
+        this.hamburgerCountSubscription = totalMessageAndNotificationCount.subscribe(response => {
+          debugger
+          this.hamburgerCount = response.hamburgerCount;
+        });
+      }
+
+      notifyMessageAndNotificationCount.next({});
       this.reportFollowerForm = this.fb.group({
         reportContent:this.fb.control([],[Validators.required]),
         followerId:this.fb.control('')
@@ -104,6 +114,9 @@ export class SchoolFollowersComponent extends MultilingualComponent implements O
     ngOnDestroy(): void {
       if(this.changeLanguageSubscription){
         this.changeLanguageSubscription.unsubscribe();
+      }
+      if (this.hamburgerCountSubscription) {
+        this.hamburgerCountSubscription.unsubscribe();
       }
     }
 

@@ -12,7 +12,7 @@ import { UserService } from 'src/root/service/user.service';
 import { TransactionParamViewModel } from 'src/root/interfaces/payment/transactionParamViewModel';
 import { TransactionTypeEnum } from 'src/root/Enums/transactionTypeEnum';
 import { Subscription } from 'rxjs';
-import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
+import { OpenSideBar, notifyMessageAndNotificationCount, totalMessageAndNotificationCount } from 'src/root/user-template/side-bar/side-bar.component';
 
 @Component({
     selector: 'earnings',
@@ -64,6 +64,8 @@ export class EarningsComponent extends MultilingualComponent implements OnInit, 
     isApplieDateFilter!:boolean;
     maxDate:Date = new Date();
     gender!:string;
+    hamburgerCountSubscription!: Subscription;
+    hamburgerCount:number = 0;
     changeLanguageSubscription!: Subscription;
     transactionParamViewModel!: TransactionParamViewModel;
     @ViewChild('dropdownMenu') dropdownMenu!: ElementRef;
@@ -125,6 +127,14 @@ export class EarningsComponent extends MultilingualComponent implements OnInit, 
         })
       }
 
+      if (!this.hamburgerCountSubscription) {
+        this.hamburgerCountSubscription = totalMessageAndNotificationCount.subscribe(response => {
+          debugger
+          this.hamburgerCount = response.hamburgerCount;
+        });
+      }
+      notifyMessageAndNotificationCount.next({});
+
     //   window.onclick = (event) => {
     //     this.cd.detectChanges();
     //     var filterDropdown = document.getElementById('dropdown-earningFilter');
@@ -147,6 +157,9 @@ export class EarningsComponent extends MultilingualComponent implements OnInit, 
     ngOnDestroy(): void {
       if(this.changeLanguageSubscription){
         this.changeLanguageSubscription.unsubscribe();
+      }
+      if (this.hamburgerCountSubscription) {
+        this.hamburgerCountSubscription.unsubscribe();
       }
     }
 

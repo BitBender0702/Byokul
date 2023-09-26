@@ -10,7 +10,7 @@ import { NotificationType, NotificationViewModel } from "src/root/interfaces/not
 import { SignalrService } from "src/root/service/signalr.service";
 import { ReportFollowerViewModel } from "src/root/interfaces/user/reportFollowerViewModel";
 import { MessageService } from "primeng/api";
-import { OpenSideBar } from "src/root/user-template/side-bar/side-bar.component";
+import { OpenSideBar, notifyMessageAndNotificationCount, totalMessageAndNotificationCount } from "src/root/user-template/side-bar/side-bar.component";
 import { TranslateService } from "@ngx-translate/core";
 
 @Component({
@@ -52,6 +52,8 @@ export class UserFollowersComponent extends MultilingualComponent implements OnI
     userBannedFollowers:any;
     followersTab:boolean=true;
     gender!: string;
+    hamburgerCountSubscription!: Subscription;
+    hamburgerCount:number = 0;
 
 
     constructor(injector: Injector,private translateService: TranslateService,public messageService:MessageService,userService: UserService,signalrService:SignalrService,private route: ActivatedRoute,private fb: FormBuilder) { 
@@ -81,6 +83,15 @@ export class UserFollowersComponent extends MultilingualComponent implements OnI
         })
       }
 
+      if (!this.hamburgerCountSubscription) {
+        this.hamburgerCountSubscription = totalMessageAndNotificationCount.subscribe(response => {
+          debugger
+          this.hamburgerCount = response.hamburgerCount;
+        });
+      }
+  
+      notifyMessageAndNotificationCount.next({});
+
       this._userService.getUserBannedFollowers(this.userId,this.userBannedFollowersPageNumber,this.searchString).subscribe(response => {
         this.userBannedFollowers = response.data;
         // this.followersTab = false;
@@ -99,6 +110,12 @@ export class UserFollowersComponent extends MultilingualComponent implements OnI
     ngOnDestroy(): void {
       if(this.changeLanguageSubscription){
         this.changeLanguageSubscription.unsubscribe();
+      }
+      if (!this.hamburgerCountSubscription) {
+        this.hamburgerCountSubscription = totalMessageAndNotificationCount.subscribe(response => {
+          debugger
+          this.hamburgerCount = response.hamburgerCount;
+        });
       }
     }
 

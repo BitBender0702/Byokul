@@ -962,6 +962,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
 
   uploadPromises!: any[];
   blobVideoThumbnails: any[] = [];
+  totalUploadFilesSize:number = 0;
   async savePost() {
     debugger
 
@@ -991,7 +992,12 @@ export class CreatePostComponent implements OnInit, OnDestroy {
       }
     }
 
-    if (this.videos.length == 0 && this.attachment.length == 0) {
+    const combinedFiles = [...this.videos, ...this.images, ...this.attachment, ... this.videoThumbnails];
+    for (const file of combinedFiles) {
+      // Add the size of the current file to the totalSize variable
+      this.totalUploadFilesSize += file.size;
+    }
+    if (this.totalUploadFilesSize < 5000000) {
       this.loadingIcon = true;
     }
     else {
@@ -1017,14 +1023,12 @@ export class CreatePostComponent implements OnInit, OnDestroy {
       this.postToUpload.append('SharedProfileUrl', window.location.href)
     }
 
-    this.totalFilesLength = this.images.length + this.videos.length + this.attachment.length;
     // for images
     // for(var i=0; i<this.images.length; i++){
     //   this.postToUpload.append('uploadImages', this.images[i]);
     // }
 
     debugger;
-    const combinedFiles = [...this.videos, ...this.images, ...this.attachment, ... this.videoThumbnails];
 
     // const uploadPromises = combinedFiles.map((file) => {
     //   if (this.videos.includes(file)) {

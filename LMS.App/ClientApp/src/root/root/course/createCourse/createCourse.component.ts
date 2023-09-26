@@ -10,7 +10,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, Subscription } from 'rxjs';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { SharePostComponent } from '../../sharePost/sharePost.component';
-import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
+import { OpenSideBar, notifyMessageAndNotificationCount, totalMessageAndNotificationCount } from 'src/root/user-template/side-bar/side-bar.component';
 import { TranslateService } from '@ngx-translate/core';
 import { Dimensions, ImageCroppedEvent, ImageTransform } from 'ngx-image-cropper';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -86,6 +86,8 @@ export class CreateCourseComponent extends MultilingualComponent implements OnIn
   currencies:any;
   transform: ImageTransform = {};
   changeLanguageSubscription!: Subscription;
+  hamburgerCountSubscription!: Subscription;
+  hamburgerCount:number = 0;
   @ViewChild('hiddenButton') hiddenButtonRef!: ElementRef;
 
 
@@ -190,11 +192,22 @@ export class CreateCourseComponent extends MultilingualComponent implements OnIn
       this.translate.use(response.language);
     })
   }
+
+  if (!this.hamburgerCountSubscription) {
+    this.hamburgerCountSubscription = totalMessageAndNotificationCount.subscribe(response => {
+      debugger
+      this.hamburgerCount = response.hamburgerCount;
+    });
+  }
+  notifyMessageAndNotificationCount.next({});
 }
 
 ngOnDestroy(): void {
   if(this.changeLanguageSubscription){
     this.changeLanguageSubscription.unsubscribe();
+  }
+  if (this.hamburgerCountSubscription) {
+    this.hamburgerCountSubscription.unsubscribe();
   }
 }
 

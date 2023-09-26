@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 import { MultilingualComponent, changeLanguage } from '../sharedModule/Multilingual/multilingual.component';
 import { JoinMeetingModel } from 'src/root/interfaces/bigBlueButton/joinMeeting';
 import { BigBlueButtonService } from 'src/root/service/bigBlueButton';
-import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
+import { OpenSideBar, notifyMessageAndNotificationCount, totalMessageAndNotificationCount } from 'src/root/user-template/side-bar/side-bar.component';
 import { UserService } from 'src/root/service/user.service';
 import { MessageService } from 'primeng/api';
 
@@ -49,6 +49,8 @@ export class NotificationsComponent extends MultilingualComponent implements OnI
   scrollNotificationResponseCount: number = 1;
   notificationLoadingIcon: boolean = false;
   joinMeetingViewModel!: JoinMeetingModel;
+  hamburgerCountSubscription!: Subscription;
+  hamburgerCount:number = 0;
 
 
   constructor(injector: Injector, public messageService: MessageService, private datePipe: DatePipe, userService: UserService, private fb: FormBuilder, notificationService: NotificationService, private router: Router, postService: PostService, private bsModalService: BsModalService, bigBlueButtonService: BigBlueButtonService) {
@@ -108,7 +110,13 @@ export class NotificationsComponent extends MultilingualComponent implements OnI
       })
     }
 
-    // this.notificationAvatar = this.notifications?.user?.avatar
+    if (!this.hamburgerCountSubscription) {
+      this.hamburgerCountSubscription = totalMessageAndNotificationCount.subscribe(response => {
+        debugger
+        this.hamburgerCount = response.hamburgerCount;
+      });
+    }
+    notifyMessageAndNotificationCount.next({});
 
   }
 
@@ -118,6 +126,9 @@ export class NotificationsComponent extends MultilingualComponent implements OnI
     }
     if (this.notificationResponseSubscription) {
       this.notificationResponseSubscription.unsubscribe();
+    }
+    if (this.hamburgerCountSubscription) {
+      this.hamburgerCountSubscription.unsubscribe();
     }
   }
 

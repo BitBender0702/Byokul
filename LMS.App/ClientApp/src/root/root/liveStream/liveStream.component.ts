@@ -22,7 +22,7 @@ import { BigBlueButtonService } from 'src/root/service/bigBlueButton';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SharePostComponent } from '../sharePost/sharePost.component';
 import { MessageService } from 'primeng/api';
-import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
+import { OpenSideBar, notifyMessageAndNotificationCount, totalMessageAndNotificationCount } from 'src/root/user-template/side-bar/side-bar.component';
 import { Location } from '@angular/common'
 import { StudentService } from 'src/root/service/student.service';
 import { SchoolClassCourseEnum } from 'src/root/Enums/SchoolClassCourseEnum';
@@ -87,6 +87,8 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
   videoTotalTime: any;
   startVideoTime: any;
   cacheBuster: number = Math.random();
+  hamburgerCountSubscription!: Subscription;
+  hamburgerCount:number = 0;
   commentResponseSubscription!: Subscription;
   @ViewChild('groupChatList') groupChatList!: ElementRef;
   @ViewChild('startButton') startButton!: ElementRef;
@@ -349,12 +351,22 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
       this.post.comments.splice(indexOfComment, 1)
     })
 
+    if (!this.hamburgerCountSubscription) {
+      this.hamburgerCountSubscription = totalMessageAndNotificationCount.subscribe(response => {
+        debugger
+        this.hamburgerCount = response.hamburgerCount;
+      });
+    }
+    notifyMessageAndNotificationCount.next({});
   }
 
   ngOnDestroy(): void {
     this._signalrService.notifyLiveUsers(this.post.id + "_group", true);
     if (this.commentResponseSubscription) {
       this.commentResponseSubscription.unsubscribe();
+    }
+    if (this.hamburgerCountSubscription) {
+      this.hamburgerCountSubscription.unsubscribe();
     }
   }
 

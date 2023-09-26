@@ -1,14 +1,14 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, HostListener, Injector, OnInit } from '@angular/core';
+import { Component, HostListener, Injector, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { UserService } from 'src/root/service/user.service';
-import { MultilingualComponent } from '../sharedModule/Multilingual/multilingual.component';
+import { MultilingualComponent, changeLanguage } from '../sharedModule/Multilingual/multilingual.component';
 import { ActivatedRoute } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
+import { OpenSideBar, notifyMessageAndNotificationCount, totalMessageAndNotificationCount } from 'src/root/user-template/side-bar/side-bar.component';
 import { SchoolService } from 'src/root/service/school.service';
 import { ClassService } from 'src/root/service/class.service';
 import { PostService } from 'src/root/service/post.service';
@@ -20,7 +20,7 @@ import { PostService } from 'src/root/service/post.service';
     providers: [MessageService]
   })
 
-  export class GlobalSearchComponent extends MultilingualComponent implements OnInit {
+  export class GlobalSearchComponent extends MultilingualComponent implements OnInit , OnDestroy{
     private _userService;
     private _schoolService;
     private _classService;
@@ -35,6 +35,9 @@ import { PostService } from 'src/root/service/post.service';
     globalSearchResult:any;
     scrolled:boolean = false;
     searchType:any;
+    hamburgerCountSubscription!: Subscription;
+    hamburgerCount:number = 0;
+    changeLanguageSubscription!: Subscription;
 
     constructor( injector: Injector,private route: ActivatedRoute,userService:UserService,schoolService:SchoolService,classService:ClassService,postService:PostService) {
         super(injector);
@@ -45,12 +48,36 @@ import { PostService } from 'src/root/service/post.service';
     }
 
     ngOnInit(): void {
-      debugger
+      var selectedLang = localStorage.getItem('selectedLanguage');
+      this.translate.use(selectedLang ?? '');
       this.globalSearchPageNumber = 1;
         this.loadingIcon = true;
         this.searchString = this.route.snapshot.paramMap.get('searchString')??'';
         this.searchType = this.route.snapshot.paramMap.get('type')??'';
         this.getGlobalSearch(this.searchString,this.globalSearchPageNumber,this.globalSearchPageSize);
+
+        if (!this.hamburgerCountSubscription) {
+          this.hamburgerCountSubscription = totalMessageAndNotificationCount.subscribe(response => {
+            debugger
+            this.hamburgerCount = response.hamburgerCount;
+          });
+        }
+        notifyMessageAndNotificationCount.next({});
+
+        if (!this.changeLanguageSubscription) {
+          this.changeLanguageSubscription = changeLanguage.subscribe(response => {
+            this.translate.use(response.language);
+          })
+        }
+    }
+
+    ngOnDestroy(): void {
+      if (this.hamburgerCountSubscription) {
+        this.hamburgerCountSubscription.unsubscribe();
+      }
+      if (this.changeLanguageSubscription) {
+        this.changeLanguageSubscription.unsubscribe();
+      }
     }
 
     getGlobalSearch(searchString:string,pageNumber:number,pageSize:number){

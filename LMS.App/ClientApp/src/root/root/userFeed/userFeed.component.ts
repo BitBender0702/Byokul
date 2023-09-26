@@ -24,7 +24,7 @@ import { BehaviorSubject, Subscribable, Subscription } from 'rxjs';
 import { feedState } from 'src/root/userModule/user-auth/component/login/login.component';
 import { PostAuthorTypeEnum } from 'src/root/Enums/postAuthorTypeEnum';
 import { CertificateViewComponent } from '../certificateView/certificateView.component';
-import { OpenSideBar, totalMessageAndNotificationCount } from 'src/root/user-template/side-bar/side-bar.component';
+import { OpenSideBar, notifyMessageAndNotificationCount, totalMessageAndNotificationCount } from 'src/root/user-template/side-bar/side-bar.component';
 import { TranslateService } from '@ngx-translate/core';
 import { deleteModalPostResponse } from '../delete-confirmation/delete-confirmation.component';
 
@@ -111,8 +111,9 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
   searchNotFound: boolean = false;
   modalRef!: any;
   globalSearchField!: string;
-
   deleteModalPostSubscription!: Subscription;
+  hamburgerCountSubscription!: Subscription;
+  hamburgerCount:number = 0;
 
   constructor(injector: Injector, private renderer: Renderer2, private elementRef: ElementRef, private translateService: TranslateService, private authService: AuthService, private bsModalService: BsModalService, notificationService: NotificationService, postService: PostService, public userService: UserService, public options: ModalOptions, private fb: FormBuilder, private router: Router, private http: HttpClient, private activatedRoute: ActivatedRoute, public messageService: MessageService, private cd: ChangeDetectorRef) {
     super(injector);
@@ -338,12 +339,13 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
       });
     }
 
-    if (!this.changeLanguageSubscription) {
-      this.changeLanguageSubscription = totalMessageAndNotificationCount.subscribe(response => {
+    if (!this.hamburgerCountSubscription) {
+      this.hamburgerCountSubscription = totalMessageAndNotificationCount.subscribe(response => {
         debugger
-        var count = response.hamburgerCount;
-      })
+        this.hamburgerCount = response.hamburgerCount;
+      });
     }
+    notifyMessageAndNotificationCount.next({});
 
     const buttons = document.querySelectorAll(".videoChange");
     buttons.forEach(button => {
@@ -402,6 +404,9 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
     }
     if (this.deleteModalPostSubscription) {
       this.deleteModalPostSubscription.unsubscribe();
+    }
+    if (this.hamburgerCountSubscription) {
+      this.hamburgerCountSubscription.unsubscribe();
     }
   }
 

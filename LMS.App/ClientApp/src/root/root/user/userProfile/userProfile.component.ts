@@ -42,7 +42,7 @@ import { Arabic } from 'flatpickr/dist/l10n/ar';
 import { Spanish } from 'flatpickr/dist/l10n/es';
 import { Turkish } from 'flatpickr/dist/l10n/tr';
 import { DatePipe } from '@angular/common';
-import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
+import { OpenSideBar, notifyMessageAndNotificationCount, totalMessageAndNotificationCount } from 'src/root/user-template/side-bar/side-bar.component';
 import { savedReelResponse } from '../../reelsSlider/reelsSlider.component';
 import { Dimensions, ImageCroppedEvent, ImageTransform } from 'ngx-image-cropper';
 import { DeleteSchoolCertificate } from 'src/root/interfaces/school/deleteSchoolCertificate';
@@ -212,6 +212,8 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
   certificateForm!: FormGroup;
   certificateToUpload = new FormData();
   userCertificateInfo: any;
+  hamburgerCountSubscription!: Subscription;
+  hamburgerCount:number = 0;
   @ViewChild('closeCertificateModal') closeCertificateModal!: ElementRef;
 
   @ViewChild('hiddenButton') hiddenButtonRef!: ElementRef;
@@ -239,15 +241,6 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
   }
 
   ngOnInit(): void {
-    debugger
-    document.addEventListener('contextmenu', function (e) {
-      e.preventDefault();
-      const contextMenu = document.querySelector('.context-menu');
-      const saveAsOption = contextMenu?.querySelector('.save-as');
-      if (saveAsOption) {
-        saveAsOption.remove();
-      }
-    });
     this.checkScreenSize();
     if (this.isScreenMobile) {
       this.itemsPerSlide = 2;
@@ -490,6 +483,15 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
       });
     }
 
+    if (!this.hamburgerCountSubscription) {
+      this.hamburgerCountSubscription = totalMessageAndNotificationCount.subscribe(response => {
+        debugger
+        this.hamburgerCount = response.hamburgerCount;
+      });
+    }
+
+    notifyMessageAndNotificationCount.next({});
+
     this.deleteCertificate = {
       userId: '',
       certificateId: '',
@@ -586,6 +588,9 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
     }
     if (this.deleteModalPostSubscription) {
       this.deleteModalPostSubscription.unsubscribe();
+    }
+    if (this.hamburgerCountSubscription) {
+      this.hamburgerCountSubscription.unsubscribe();
     }
   }
 

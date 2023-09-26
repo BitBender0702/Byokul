@@ -14,7 +14,7 @@ import { commentResponse, progressResponse, SignalrService } from 'src/root/serv
 import { TeacherService } from 'src/root/service/teacher.service';
 import { UserService } from 'src/root/service/user.service';
 import { MultilingualComponent, changeLanguage } from '../sharedModule/Multilingual/multilingual.component';
-import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
+import { OpenSideBar, notifyMessageAndNotificationCount, totalMessageAndNotificationCount } from 'src/root/user-template/side-bar/side-bar.component';
 import { postProgressNotification, postUploadOnBlob } from '../root.component';
 
 
@@ -98,8 +98,9 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
   fileStorageResponseSubscription!: Subscription;
   schoolId: string = "";
   availableSpace: number = 0;
-
   showModal: boolean = true;
+  hamburgerCountSubscription!: Subscription;
+  hamburgerCount:number = 0;
 
 
   @ViewChild('closeFileModal') closeFileModal!: ElementRef;
@@ -167,6 +168,14 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
       })
     }
 
+    if (!this.hamburgerCountSubscription) {
+      this.hamburgerCountSubscription = totalMessageAndNotificationCount.subscribe(response => {
+        debugger
+        this.hamburgerCount = response.hamburgerCount;
+      });
+    }
+    notifyMessageAndNotificationCount.next({});
+
     this.isOwnerOrNot();
 
     if (!this.fileStorageResponseSubscription) {
@@ -198,6 +207,9 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
     }
     if (this.fileStorageResponseSubscription) {
       this.fileStorageResponseSubscription.unsubscribe();
+    }
+    if (this.hamburgerCountSubscription) {
+      this.hamburgerCountSubscription.unsubscribe();
     }
   }
 
@@ -438,7 +450,7 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
       this.totalUploadFilesSize += file.size;
     }
 
-    if (this.totalUploadFilesSize < 10000000) {
+    if (this.totalUploadFilesSize < 5000000) {
       this.loadingIcon = true;
     }
     else {

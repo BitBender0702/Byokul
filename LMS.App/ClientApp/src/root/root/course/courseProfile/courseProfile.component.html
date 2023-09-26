@@ -43,8 +43,13 @@
             <img lazyLoad="../../../../assets/images/logo.svg" />
           </span>
           <div class="d-xl-none">
-            <button type="button" class="mobile-search border_btn" (click)="openSidebar()">
+            <button type="button" class="mobile-search border_btn notification-btn position-relative border-0 bg-transparent"
+            (click)="openSidebar()">
               <img lazyLoad="../../../../assets/images/menu.svg" />
+              <span
+              *ngIf="hamburgerCount != 0" style="right: 0px;top: 2px;"
+              class="badge rounded-circle d-inline-flex align-items-center justify-content-center fw_700 font_12"
+              >{{ hamburgerCount }}</span>
             </button>
           </div>
         </div>

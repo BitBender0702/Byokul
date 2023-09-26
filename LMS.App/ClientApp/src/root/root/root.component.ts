@@ -1,4 +1,4 @@
-import { Component, ContentChild, ElementRef, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ContentChild, ElementRef, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import { AuthService } from '../service/auth.service';
 import { SignalrService, notiFyTeacherResponse } from '../service/signalr.service';
@@ -70,15 +70,15 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
   loginUserId: string = "";
   notifyTeacherSubscription!: Subscription;
   schoolId: string = "";
-
   banUnbanUserSubscription!:Subscription;
-
-
   checkLimitSchoolId:any;
-
   totalUploadFilesSize: number = 0;
   totalUploadFilesSizeLimitCheck: number = 0;
-
+  totalFileSize: number = 0;
+  overallProgress: number = 0;
+  loadBytes:any = 0;
+  progressValue: number = 0;
+  @ViewChild('openProgressBar') openProgressBar!: ElementRef;
   @ViewChild('paymentConfirmationBtn') paymentConfirmationBtn!: ElementRef;
 
   private _postService;
@@ -89,7 +89,7 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
   private _schoolService;
 
 
-  constructor(injector: Injector, private fileStorageService: FileStorageService, private userService: UserService, private notificationService: NotificationService, private signalRService: SignalrService, public messageService: MessageService, private translateService: TranslateService, private meta: Meta, authService: AuthService, private router: Router, private route: ActivatedRoute, postService: PostService, videoLibraryService: VideoLibraryService, schoolService: SchoolService) {
+  constructor(injector: Injector, private cd: ChangeDetectorRef,private fileStorageService: FileStorageService, private userService: UserService, private notificationService: NotificationService, private signalRService: SignalrService, public messageService: MessageService, private translateService: TranslateService, private meta: Meta, authService: AuthService, private router: Router, private route: ActivatedRoute, postService: PostService, videoLibraryService: VideoLibraryService, schoolService: SchoolService) {
     super(injector);
     this._postService = postService;
     this._notificationService = notificationService;
@@ -194,10 +194,16 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
     if (!this.postUploadOnBlobSubscription) {
       this.postUploadOnBlobSubscription = postUploadOnBlob.subscribe(async (uploadResponse) => {
         debugger
-
+        // this.cd.detectChanges();
+        // this.openProgressBar.nativeElement.click();
         this._userService.getBlobSasToken().subscribe(async (response: any) => {
           debugger
-
+          this.cd.detectChanges();
+          this.loadBytes = 0;
+          this.totalFileSize = 0;
+          this.overallProgress = 0;
+          this.fileUploadProgress = {};
+          // this.openProgressBar.nativeElement.click();
           this.totalUploadFilesSize = 0;
           if (uploadResponse.schoolId != undefined) {
             this.schoolId = uploadResponse.schoolId;
@@ -210,19 +216,24 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
           }
           this.uploadVideoUrlList = [];
 
+          uploadResponse.combineFiles.forEach((file: { size: any; }) => {
+            debugger;
+            this.totalFileSize += file.size;
+          });
+
           if (uploadResponse.type == 1) {
             const uploadPromises = uploadResponse.combineFiles.map((file: any) => {
               if (uploadResponse.videos.includes(file)) {
-                return this.uploadVideosOnBlob(file, UploadTypeEnum.Video, response.sasToken);
+                return this.uploadVideosOnBlob(file, UploadTypeEnum.Video, response.sasToken,this.totalFileSize);
               }
               if (uploadResponse.images.includes(file)) {
-                return this.uploadVideosOnBlob(file, UploadTypeEnum.Image, response.sasToken);
+                return this.uploadVideosOnBlob(file, UploadTypeEnum.Image, response.sasToken,this.totalFileSize);
               }
               if (uploadResponse.attachment.includes(file)) {
-                return this.uploadVideosOnBlob(file, UploadTypeEnum.Attachment, response.sasToken);
+                return this.uploadVideosOnBlob(file, UploadTypeEnum.Attachment, response.sasToken,this.totalFileSize);
               }
               if (uploadResponse.videoThumbnails.includes(file)) {
-                return this.uploadVideosOnBlob(file, UploadTypeEnum.Thumbnail, response.sasToken);
+                return this.uploadVideosOnBlob(file, UploadTypeEnum.Thumbnail, response.sasToken,this.totalFileSize);
               }
 
               return "";
@@ -266,6 +277,8 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
                   }
                   this._postService.createPost(uploadResponse.postToUpload).subscribe((response: any) => {
                     debugger
+                    this.totalFileSize = 0;
+                    this.overallProgress = 0;
                     if(response.updatedOn==null){
                       var translatedMessage = this.translateService.instant('PostCreatedSuccessfully');
                     }
@@ -336,10 +349,10 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
             // await this.uploadVideosOnBlob(uploadResponse.reel,UploadTypeEnum.Video);
             const uploadPromises = uploadResponse.combineFiles.map((file: any) => {
               if (uploadResponse.videos.includes(file)) {
-                return this.uploadVideosOnBlob(file, UploadTypeEnum.Video, response.sasToken);
+                return this.uploadVideosOnBlob(file, UploadTypeEnum.Video, response.sasToken,this.totalFileSize);
               }
               if (uploadResponse.videoThumbnails.includes(file)) {
-                return this.uploadVideosOnBlob(file, UploadTypeEnum.Thumbnail, response.sasToken);
+                return this.uploadVideosOnBlob(file, UploadTypeEnum.Thumbnail, response.sasToken,this.totalFileSize);
               }
 
               return "";
@@ -361,6 +374,8 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
                 if (response.success) {
                   this._postService.createPost(uploadResponse.postToUpload).subscribe((response: any) => {
                     debugger
+                    this.totalUploadFilesSize = 0;
+                    this.overallProgress = 0;
                     // var translatedMessage = this.translateService.instant('ReelCreatedSuccessfully');
                     if(response.updatedOn==null){
                       var translatedMessage = this.translateService.instant('ReelCreatedSuccessfully');
@@ -451,13 +466,13 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
             const uploadPromises = uploadResponse.combineFiles.map((file: any) => {
               debugger
               if (uploadResponse.videos.includes(file)) {
-                return this.uploadVideosOnBlob(file, UploadTypeEnum.Video, response.sasToken);
+                return this.uploadVideosOnBlob(file, UploadTypeEnum.Video, response.sasToken,this.totalFileSize);
               }
               if (uploadResponse.images.includes(file)) {
-                return this.uploadVideosOnBlob(file, UploadTypeEnum.Image, response.sasToken);
+                return this.uploadVideosOnBlob(file, UploadTypeEnum.Image, response.sasToken,this.totalFileSize);
               }
               if (uploadResponse.videoThumbnails.includes(file)) {
-                return this.uploadVideosOnBlob(file, UploadTypeEnum.Thumbnail, response.sasToken);
+                return this.uploadVideosOnBlob(file, UploadTypeEnum.Thumbnail, response.sasToken,this.totalFileSize);
               }
               return "";
             });
@@ -480,8 +495,10 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
               // this.close();
               // this.uploadVideoUrlList = [];
               if (uploadResponse.videos.length != 0) {
+                const translatedSummary = this.translateService.instant('Success');
                 var translatedMessage = this.translateService.instant('VideoReadyToStream');
                 var notificationContent = translatedMessage;
+                this.messageService.add({ severity: 'success', summary: translatedSummary, life: 3000, detail: translatedMessage });
                 //var chatType = this.from == "user" ? 1 :this.from == "school" ? 3 : this.from == "class" ? 4 : undefined;
                 this._notificationService.initializeNotificationViewModel(this.loginUserId, NotificationType.PostUploaded, notificationContent, this.loginUserId, response.id, response.postType, null, null, chatType,null).subscribe((response) => {
                 });
@@ -505,40 +522,40 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
               var index = file.type.indexOf('/');
               if (index > 0) {
                 if (file.type.substring(0, index) == Constant.Image) {
-                  return this.uploadVideosOnBlob(file, UploadTypeEnum.Image, response.sasToken);
+                  return this.uploadVideosOnBlob(file, UploadTypeEnum.Image, response.sasToken,this.totalFileSize);
                 }
                 if (file.type.substring(0, index) == Constant.Video) {
-                  return this.uploadVideosOnBlob(file, UploadTypeEnum.Video, response.sasToken);
+                  return this.uploadVideosOnBlob(file, UploadTypeEnum.Video, response.sasToken,this.totalFileSize);
                 }
                 if (file.type == Constant.Pdf) {
-                  return this.uploadVideosOnBlob(file, UploadTypeEnum.Pdf, response.sasToken);
+                  return this.uploadVideosOnBlob(file, UploadTypeEnum.Pdf, response.sasToken,this.totalFileSize);
                 }
                 if (file.type == Constant.Word || file.type == Constant.ExcelSx) {
-                  return this.uploadVideosOnBlob(file, UploadTypeEnum.Word, response.sasToken);
+                  return this.uploadVideosOnBlob(file, UploadTypeEnum.Word, response.sasToken,this.totalFileSize);
                 }
                 if (file.type == Constant.Excel) {
-                  return this.uploadVideosOnBlob(file, UploadTypeEnum.Excel, response.sasToken);
+                  return this.uploadVideosOnBlob(file, UploadTypeEnum.Excel, response.sasToken,this.totalFileSize);
                 }
                 if (file.type == Constant.Ppt) {
-                  return this.uploadVideosOnBlob(file, UploadTypeEnum.Presentation, response.sasToken);
+                  return this.uploadVideosOnBlob(file, UploadTypeEnum.Presentation, response.sasToken,this.totalFileSize);
                 }
                 if (file.type == Constant.TextFile) {
-                  return this.uploadVideosOnBlob(file, UploadTypeEnum.TextFile, response.sasToken);
+                  return this.uploadVideosOnBlob(file, UploadTypeEnum.TextFile, response.sasToken,this.totalFileSize);
                 }
               }
               if (file.type == Constant.Ppt) {
-                return this.uploadVideosOnBlob(file, UploadTypeEnum.Presentation, response.sasToken);
+                return this.uploadVideosOnBlob(file, UploadTypeEnum.Presentation, response.sasToken,this.totalFileSize);
               }
               var index = file.name.lastIndexOf('.');
               if (index > 0) {
                 if (file.name.substring(index + 1) == Constant.RarFile) {
-                  return this.uploadVideosOnBlob(file, UploadTypeEnum.Zip, response.sasToken);
+                  return this.uploadVideosOnBlob(file, UploadTypeEnum.Zip, response.sasToken,this.totalFileSize);
                 }
                 if (file.name.substring(index + 1) == Constant.ZipFile) {
-                  return this.uploadVideosOnBlob(file, UploadTypeEnum.Zip, response.sasToken);
+                  return this.uploadVideosOnBlob(file, UploadTypeEnum.Zip, response.sasToken,this.totalFileSize);
                 }
                 if (file.name.substring(index + 1) == Constant.Apk) {
-                  return this.uploadVideosOnBlob(file, UploadTypeEnum.Apk, response.sasToken);
+                  return this.uploadVideosOnBlob(file, UploadTypeEnum.Apk, response.sasToken,this.totalFileSize);
                 }
 
               }
@@ -557,10 +574,10 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
             // await this.uploadVideosOnBlob(file, UploadTypeEnum.Video);
             const uploadPromises = uploadResponse.combineFiles.map((file: any) => {
               if (uploadResponse.videos.includes(file)) {
-                return this.uploadVideosOnBlob(file, UploadTypeEnum.Video, response.sasToken);
+                return this.uploadVideosOnBlob(file, UploadTypeEnum.Video, response.sasToken,this.totalFileSize);
               }
               if (uploadResponse.videoThumbnails.includes(file)) {
-                return this.uploadVideosOnBlob(file, UploadTypeEnum.Thumbnail, response.sasToken);
+                return this.uploadVideosOnBlob(file, UploadTypeEnum.Thumbnail, response.sasToken,this.totalFileSize);
               }
 
               return "";
@@ -769,7 +786,26 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
     return decodedJwtData;
   }
 
-  public async uploadVideosOnBlob(file: File, fileType: number, token: string) {
+  // calculateCombinedProgress(totalWeights:number) {
+  //   // Calculate the combined progress based on the weightage of images and videos
+  //   const totalImageWeight = this.imageProgress * (/* weightage for images */);
+  //   const totalVideoWeight = this.videoProgress * (/* weightage for videos */);
+  //   const totalWeight = totalWeights;
+  
+  //   // Calculate the combined progress percentage
+  //   const combinedProgress = (totalImageWeight + totalVideoWeight) / totalWeight;
+  
+  //   // Update the combined progress variable
+  //   this.combinedProgress = combinedProgress;
+  // }
+
+  
+  imageProgress:number = 0;
+  videoProgress:number = 0;
+  combinedProgress:number = 0;
+
+fileUploadProgress: { [key: string]: number } = {};
+  public async uploadVideosOnBlob(file: File, fileType: number, token: string, totalFileSize:number) {
     debugger
 
     var sasToken = "?" + token;
@@ -788,36 +824,131 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
     var containerClient = new BlobServiceClient(`https://${blobStorageName}.blob.core.windows.net?${sasToken}`)
       .getContainerClient("userposts");
 
-    await this.uploadToBlob(file, blobName, containerClient,file.name)
-      .then((response) => {
-        debugger
-        var uploadVideoObject =
-        {
+      const response = await this.uploadToBlob(
+        file,
+        blobName,
+        containerClient,
+        file.name,
+        totalFileSize,
+        (percentage, key) => {
+          this.fileUploadProgress[key] = percentage;
+          const progressValues = Object.values(this.fileUploadProgress);
+          const totalProgress = progressValues.reduce((sum, val) => sum + val, 0);
+          if(progressValues.length == 1){
+            this.overallProgress = Number((totalProgress / progressValues.length).toFixed(2));
+          }
+          else{
+            this.overallProgress = Number(totalProgress.toFixed(2));
+          }
+          if(this.overallProgress >= 100){
+            setTimeout(() => {
+              this.overallProgress = 0;
+            }, 5000);
+          }
+          this.cd.detectChanges();
+        }
+      );
+      
+      if (response.success) {
+        const uploadVideoObject = {
           id: id,
           blobUrl: response.blobUrl,
           blobName: file.name,
           fileType: fileType,
           fileThumbnail: ""
-        }
+        };
         this.uploadVideoUrlList.push(uploadVideoObject);
+      
         if (this.schoolId != undefined && this.schoolId != "" && fileType != UploadTypeEnum.Thumbnail) {
           this.totalUploadFilesSize += file.size;
         }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+      
+        console.log('File uploaded successfully.');
+      } else {
+        console.error(response.message);
+      }
   }
 
-  private async uploadToBlob(content: Blob, name: string, client: ContainerClient,fileName: string) {
-    debugger
+  loadedBytes:number = 0;
+  percentForLoading:number=0;
+
+  private async uploadToBlob(content: Blob, name: string, client: ContainerClient,fileName: string,
+    totalFileSize: number,
+    progressCallback: (percentage: number, fileName: string) => void
+  ): Promise<{ success: boolean, message: string, blobUrl?: string }> {
     try {
       let blockBlobClient = client.getBlockBlobClient(name);
       const blobHTTPHeaders = {
       blobContentType: content.type,
       blobContentDisposition: `attachment; filename="${fileName}"`
       };
-      await blockBlobClient.uploadData(content, { blobHTTPHeaders});
+
+      const uploadOptions = {
+        blobHTTPHeaders,
+        onProgress: (event: any) => {
+          // Calculate the percentage progress
+          const percentage = (event.loadedBytes / totalFileSize) * 100;
+          
+          // Call the progressCallback with the percentage and fileKey
+          progressCallback(percentage, fileName);
+        }
+      };
+
+      // const uploadOptions = {
+      //   blobHTTPHeaders,
+      //   onProgress: (event:any) => {
+      //     debugger
+      //     // var loadBytes = this.loadBytes;
+      //     // this.loadBytes = event.loadedBytes; 
+      //     // let newLoadedBytes = event.loadedBytes - this.loadBytes;
+      //     // this.loadBytes += newLoadedBytes;
+      //     this.loadedBytes += event.loadedBytes - this.loadBytes;
+      //     // let x = this.loadBytes
+      //     // console.log(x);
+      //     this.loadBytes = event.loadedBytes;
+         
+      //     const percentage = (this.loadedBytes / this.totalFileSize) * 100;
+      //     let initialPercentage = percentage;
+      //     if(this.percentForLoading != 0){
+      //       if(this.percentForLoading > initialPercentage){
+      //         debugger;
+      //         // const percentage = (this.loadedBytes / this.totalFileSize) * 100;
+      //         this.percentForLoading += percentage;
+      //       } else{
+      //         this.percentForLoading = initialPercentage
+      //       }
+      //     } else{
+      //       this.percentForLoading = initialPercentage
+      //     }
+          
+      //     // this.percentForLoading = initialPercentage
+      //     // this.loadBytes = x;
+          
+      //     // if(percentage < 100){
+      //     //   this.overallProgress += percentage;
+      //     //   progressCallback(this.overallProgress);
+      //     // }
+      //     // else{
+      //       // progressCallback(this.percentForLoading);
+      //     // }
+      //   }
+      // //   onProgress: (event:any) => {
+      // //     // Increment the cumulative bytes loaded with the newly loaded bytes from the current event.
+      // //     this.loadedBytes += event.loadedBytes - this.loadBytes;
+      
+      // //     // Update the loadBytes for the next onProgress call.
+      // //     this.loadBytes = event.loadedBytes;
+      
+      // //     // Calculate the overall percentage.
+      // //     const percentage = (this.loadedBytes / this.totalFileSize) * 100;
+      
+      // //     // Call progressCallback with the overall percentage.
+      // //     progressCallback(percentage);
+      // // }
+      
+      // };
+
+      await blockBlobClient.uploadData(content, uploadOptions);
       let parts = blockBlobClient.url.split("?");
       let blobUrl = parts[0];
       console.log('File uploaded successfully.');

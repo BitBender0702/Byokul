@@ -44,7 +44,7 @@ import { Arabic } from 'flatpickr/dist/l10n/ar';
 import { Spanish } from 'flatpickr/dist/l10n/es';
 import { Turkish } from 'flatpickr/dist/l10n/tr';
 import flatpickr from 'flatpickr';
-import { OpenSideBar, enableDisableScc } from 'src/root/user-template/side-bar/side-bar.component';
+import { OpenSideBar, enableDisableScc, notifyMessageAndNotificationCount, totalMessageAndNotificationCount } from 'src/root/user-template/side-bar/side-bar.component';
 import { TranslateService } from '@ngx-translate/core';
 import { Dimensions, ImageCroppedEvent, ImageTransform } from 'ngx-image-cropper';
 import { SignalrService } from 'src/root/service/signalr.service';
@@ -194,13 +194,12 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   @ViewChild('startDate') startDateRef!: ElementRef;
   @ViewChild('endDate') endDateRef!: ElementRef;
   @ViewChild('createPostModal', { static: true }) createPostModal!: CreatePostComponent;
-
-
   classRatingView!: ClassCourseRating;
-
   userPermissionSubscription!: Subscription;
-
   isDataLoaded: boolean = false;
+  hamburgerCountSubscription!: Subscription;
+  hamburgerCount:number = 0;
+
   constructor(injector: Injector, private translateService: TranslateService, private signalrService: SignalrService, private titleService: Title, private meta: Meta, private datePipe: DatePipe, authService: AuthService, notificationService: NotificationService, public messageService: MessageService, postService: PostService, private bsModalService: BsModalService, classService: ClassService, private route: ActivatedRoute, private domSanitizer: DomSanitizer, private fb: FormBuilder, private router: Router, private http: HttpClient, private activatedRoute: ActivatedRoute, private cd: ChangeDetectorRef) {
     super(injector);
     this._classService = classService;
@@ -247,6 +246,9 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     }
     if (this.deleteReelSubscription) {
       this.deleteReelSubscription.unsubscribe();
+    }
+    if (this.hamburgerCountSubscription) {
+      this.hamburgerCountSubscription.unsubscribe();
     }
     if (this.generateCertificateSubscription) {
       this.generateCertificateSubscription.unsubscribe();
@@ -602,6 +604,14 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
         this.ngOnInit();
       })
     }
+
+    if (!this.hamburgerCountSubscription) {
+      this.hamburgerCountSubscription = totalMessageAndNotificationCount.subscribe(response => {
+        debugger
+        this.hamburgerCount = response.hamburgerCount;
+      });
+    }
+    notifyMessageAndNotificationCount.next({});
 
 
   }

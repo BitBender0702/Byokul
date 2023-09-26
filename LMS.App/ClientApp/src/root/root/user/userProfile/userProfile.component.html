@@ -27,15 +27,6 @@
             <img src="../../../../assets/images/arrow-left.svg" />
             {{ "Back" | translate }}
           </button>
-          <!-- <button
-            *ngIf="isOwner"
-            [routerLink]="['/user/addTeacher', user.id]"
-            type="button"
-            class="btn custom-btn primary_btn earning-btn fw_400 h_44"
-          >
-            {{ "AddTeacher" | translate }}
-          </button> -->
-
           <button
             *ngIf="isOwner"
             (click)="openPostModal()"
@@ -61,27 +52,12 @@
             <img src="../../../../assets/images/logo.svg" />
           </span>
           <div class="d-xl-none">
-            <button
-              type="button"
-              class="mobile-search border_btn"
-              (click)="openSidebar()"
-            >
+            <button type="button" class="mobile-search border_btn notification-btn position-relative border-0 bg-transparent"(click)="openSidebar()">
               <img src="../../../../assets/images/menu.svg" />
+              <!-- <span *ngIf="hamburgerCount != 0" style="right: 0px;top: 2px;" class="badge rounded-circle d-inline-flex align-items-center justify-content-center fw_700 font_12">{{ hamburgerCount }}</span> -->
             </button>
           </div>
         </div>
-
-        <!-- <div class="d-flex justify-content-end mt-5 create_post_btn">
-          <button
-            *ngIf="isOwner"
-            (click)="openPostModal()"
-            type="button"
-            class="step-edit-button btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase next-step"
-          >
-            <img src="../../../assets/images/Edit-light.svg" alt="edit" />
-          </button>
-        </div> -->
-
         <div class="School-prof-header">
           <div class="d-flex">
             <div class="school-profile-icon rounded-circle user-profile-header">
@@ -677,18 +653,8 @@
                         <img src="../../../../assets/images/live_img.png" />
                       </div>
                       <br />
-                      <!-- <p class="font_14 school-grid-date d-inline-block mb-0">
-                        {{ post.createdOn | date : "MMMM d" }} -
-                        {{ post.createdOn | date : "hh:mm" }}
-                      </p> -->
                     </div>
                     <div>
-                      <!-- <p
-                        class="font_14 school-grid-date d-inline-block mb-0 me-3"
-                      >
-                        {{ post.createdOn | ChangeTimeZonePipe | date : "MMMM d" }} -
-                        {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm" }}
-                      </p> -->
                       <p
                       *ngIf="post.createdOn != null"
                       class="font_14 school-grid-date d-inline-block mb-0 me-1"
@@ -740,10 +706,7 @@
                     <a (click)="navigateToProfile(post.sharedProfileUrl)">{{
                       post.title
                     }}</a>
-                    <!-- <div class="d-flex justify-content-between align-items-center"> -->
-                      <!-- <h4 class="font_20 fw_600 text_sec1 mb-3">{{ post.title }}</h4> -->
                       <h4 *ngIf="post?.isLiveStreamEnded || post?.externalMeetingId != null" style="color:red">Streamed</h4>
-                    <!-- </div> -->
                   </h4>
                   <div
                     class="school-grid-body"
@@ -1224,17 +1187,6 @@
                               <videoJs-component
                                 [postAttachment]="postAttachment"
                               ></videoJs-component>
-                              <!-- <video
-                          [id] = "postAttachment.id"
-                          controls
-                            class="video-js vjs-big-play-centered"
-                            controls preload="auto"
-                          >
-                            <source
-                              [src]="postAttachment?.fileUrl"
-                              type="video/mp4"
-                            />
-                          </video> -->
                             </div>
                           </slide>
                           <slide *ngIf="postAttachment?.fileType == 1">
@@ -1350,12 +1302,6 @@
                         <p class="text_sec1 font_14 pt-3 word-break">
                           {{ gridItemInfo.description }}
                         </p>
-                        <!-- <div class="teacher-tags tag-box hashtag_box">
-                        <ng-container *ngFor="let attachment of filteredAttachments">
-                        <span *ngIf="attachment.postId == gridItemInfo.id" class="custom-tag cursor_pointer" (click)="openCertificateViewModal(attachment.fileUrl,attachment.fileName,5,$event)">{{attachment.fileName}}</span>
-                        </ng-container>
-                      </div> -->
-
                         <div
                           *ngIf="gridItemInfo.postTags.length != 0"
                           class="teacher-tags tag-box hashtag_box"
@@ -1515,13 +1461,6 @@
                       <div
                         class="d-flex justify-content-between date-view-list"
                       >
-                        <!-- <p
-                          *ngIf="post.createdOn != null"
-                          class="font_14 school-grid-date d-inline-block mb-0"
-                        >
-                          {{ post.createdOn | ChangeTimeZonePipe | date : "MMMM d" }} -
-                          {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm" }}
-                        </p> -->
                         <p
                         *ngIf="post.createdOn != null"
                         class="font_14 school-grid-date d-inline-block mb-0 me-1"
@@ -1804,13 +1743,8 @@
                     </h2>
                     
                     <br />
-                    <!-- <p class="font_14 school-grid-date d-inline-block mb-0">
-                      {{ post.createdOn | ChangeTimeZonePipe | date : "MMMM d" }} -
-                      {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm" }}
-                    </p> -->
                     
                   <div class="d-flex justify-content-between align-items-center">
-                    <!-- <h4 class="font_20 fw_600 text_sec1 mb-3">{{ post.title }}</h4> -->
                     <div>
                       <p
                     *ngIf="post.createdOn != null"
@@ -1847,11 +1781,6 @@
                     >
                       {{ post.description }}
                     </p>
-                    <!-- <div class="teacher-tags tag-box hashtag_box">
-                    <ng-container *ngFor="let attachment of filteredSavedPostAttachments">
-                    <span *ngIf="attachment.postId == post.id" class="custom-tag cursor_pointer" (click)="openCertificateViewModal(attachment.fileUrl,attachment.fileName,5,$event)">{{attachment.fileName}}</span>
-                    </ng-container>
-                </div> -->
                     <div class="teacher-tags tag-box hashtag_box">
                       <span
                         *ngFor="let tag of parseTheListViewTags(post.postTags)"
@@ -7340,34 +7269,21 @@
   >
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
-        <div
-          class="modal-header border-0 justify-content-center position-relative"
-        >
+        <div class="modal-header border-0 justify-content-center position-relative">
           <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">
             {{ "Certificate" | translate }}
           </h1>
-          <ul
-            *ngIf="isOwner"
-            class="list-unstyled d-flex more-action-btn before-none pe-2 me-1 mb-0"
-            style="position: absolute; right: 50px; top: 28px"
-          >
+          <ul *ngIf="isOwner" class="list-unstyled d-flex more-action-btn before-none pe-2 me-1 mb-0" style="position: absolute; right: 50px; top: 28px">
             <li class="d-inline-block ps-0 mb-0">
               <div class="dropdown">
-                <button
-                  class="bg-transparent dropdown-toggle border-0 action-more-btn after-none pt-1"
-                  type="button"
-                  data-bs-toggle="dropdown"
+                <button class="bg-transparent dropdown-toggle border-0 action-more-btn after-none pt-1" type="button" data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
                   <i class="fa-solid fa-ellipsis"></i>
                 </button>
                 <ul class="dropdown-menu">
                   <li>
-                    <a
-                      style="cursor: pointer"
-                      class="dropdown-item"
-                      (click)="editUserCertificate(userCertificateInfo)"
-                      data-bs-toggle="modal"
+                    <a (click)="editUserCertificate(userCertificateInfo)" style="cursor: pointer" class="dropdown-item" data-bs-toggle="modal"
                       data-bs-target="#add-certificate"
                       >{{ "Edit" | translate }}
                     </a>

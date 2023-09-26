@@ -37,7 +37,7 @@ import { SignalrService, commentLikeResponse } from 'src/root/service/signalr.se
 import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 import { RolesEnum } from 'src/root/RolesEnum/rolesEnum';
 import { generateCertificateResponse } from '../../generateCertificate/generateCertificate.component';
-import { OpenSideBar, enableDisableScc } from 'src/root/user-template/side-bar/side-bar.component';
+import { OpenSideBar, enableDisableScc, notifyMessageAndNotificationCount, totalMessageAndNotificationCount } from 'src/root/user-template/side-bar/side-bar.component';
 export const convertIntoClassResponse = new Subject<{ classId: string, className: string, school: any, avatar: string }>();
 export const deleteCourseResponse = new BehaviorSubject<string>('');
 import { Dimensions, ImageCroppedEvent, ImageTransform } from 'ngx-image-cropper';
@@ -182,17 +182,15 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
   @ViewChild('createPostModal', { static: true }) createPostModal!: CreatePostComponent;
   courseCertificateForm!: FormGroup;
   courseCertificateInfo: any;
-
   @ViewChild('openCourseOwnCertificate') openCourseOwnCertificate!: ElementRef;
-
-
   courseRatingView!:ClassCourseRating;
   isAllowedForFileStorage:boolean = false;
-
   deleteModalPostSubscription!: Subscription;
   disableEnableResponseSubsciption!: Subscription;
-
   isDataLoaded: boolean = false;
+  hamburgerCountSubscription!: Subscription;
+  hamburgerCount:number = 0;
+  
   constructor(injector: Injector, private translateService: TranslateService,private signalrService:SignalrService,private datePipe: DatePipe, private titleService: Title, private meta: Meta, authService: AuthService, notificationService: NotificationService, public messageService: MessageService, postService: PostService, private bsModalService: BsModalService, courseService: CourseService, private route: ActivatedRoute, private domSanitizer: DomSanitizer, private fb: FormBuilder, private router: Router, private http: HttpClient, private activatedRoute: ActivatedRoute, private cd: ChangeDetectorRef) {
     super(injector);
     this._courseService = courseService;
@@ -519,6 +517,14 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
       })
     }
 
+    if (!this.hamburgerCountSubscription) {
+      this.hamburgerCountSubscription = totalMessageAndNotificationCount.subscribe(response => {
+        debugger
+        this.hamburgerCount = response.hamburgerCount;
+      });
+    }
+    notifyMessageAndNotificationCount.next({});
+
 
   }
 
@@ -600,6 +606,9 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     }
     if (this.disableEnableResponseSubsciption) {
       this.disableEnableResponseSubsciption.unsubscribe();
+    }
+    if (this.hamburgerCountSubscription) {
+      this.hamburgerCountSubscription.unsubscribe();
     }
   }
 

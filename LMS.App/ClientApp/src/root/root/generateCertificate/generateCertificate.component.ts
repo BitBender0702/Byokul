@@ -1,9 +1,9 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Injector, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { CertificateTemplateEnum } from 'src/root/Enums/certificateTemplateEnum';
 import { PostAuthorTypeEnum } from 'src/root/Enums/postAuthorTypeEnum';
 import { NotificationType } from 'src/root/interfaces/notification/notificationViewModel';
@@ -12,7 +12,8 @@ import { ClassService } from 'src/root/service/class.service';
 import { CourseService } from 'src/root/service/course.service';
 import { NotificationService } from 'src/root/service/notification.service';
 import { StudentService } from 'src/root/service/student.service';
-import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
+import { OpenSideBar, notifyMessageAndNotificationCount, totalMessageAndNotificationCount } from 'src/root/user-template/side-bar/side-bar.component';
+import { MultilingualComponent, changeLanguage } from '../sharedModule/Multilingual/multilingual.component';
 export const generateCertificateResponse =new Subject<{isCertificateSendToAll: boolean,studentName:string}>(); 
 
 @Component({
@@ -22,7 +23,7 @@ export const generateCertificateResponse =new Subject<{isCertificateSendToAll: b
     providers: [MessageService]
   })
 
-  export class GenerateCertificateComponent {
+  export class GenerateCertificateComponent extends MultilingualComponent implements OnInit, OnDestroy{
     isSubmitted: boolean = false;
     isStepCompleted: boolean = false;
     step: number = 0;
@@ -55,10 +56,14 @@ export const generateCertificateResponse =new Subject<{isCertificateSendToAll: b
     loginUserId!:string;
     certificateTitle!:string;
     certificateReason!:string;
+    hamburgerCountSubscription!: Subscription;
+    hamburgerCount:number = 0;
+    changeLanguageSubscription!: Subscription;
 
 
 
-    constructor(private fb: FormBuilder,private route: ActivatedRoute,private router: Router,public messageService:MessageService,classService:ClassService,courseService:CourseService,studentService:StudentService,notificationService:NotificationService,private domSanitizer: DomSanitizer,private cd: ChangeDetectorRef) {
+    constructor(injector: Injector,private fb: FormBuilder,private route: ActivatedRoute,private router: Router,public messageService:MessageService,classService:ClassService,courseService:CourseService,studentService:StudentService,notificationService:NotificationService,private domSanitizer: DomSanitizer,private cd: ChangeDetectorRef) {
+        super(injector);
         this._classService = classService;
         this._courseService = courseService;
         this._studentService = studentService;
@@ -66,6 +71,8 @@ export const generateCertificateResponse =new Subject<{isCertificateSendToAll: b
     }
 
     ngOnInit(): void {
+      var selectedLang = localStorage.getItem('selectedLanguage');
+      this.translate.use(selectedLang ?? '');
       let certificateInfo = history.state.certificateInfo;
         this.step = 0;
         this.loadingIcon = true;
@@ -115,6 +122,29 @@ export const generateCertificateResponse =new Subject<{isCertificateSendToAll: b
             date: this.fb.control('',[Validators.required]),
         }, {validator: this.dateLessThan('date',this.currentDate)});
         this.getCurrentuserId();
+
+        if (!this.hamburgerCountSubscription) {
+          this.hamburgerCountSubscription = totalMessageAndNotificationCount.subscribe(response => {
+            debugger
+            this.hamburgerCount = response.hamburgerCount;
+          });
+        }
+        notifyMessageAndNotificationCount.next({});
+
+        if (!this.changeLanguageSubscription) {
+          this.changeLanguageSubscription = changeLanguage.subscribe(response => {
+            this.translate.use(response.language);
+          })
+        }
+    }
+
+    ngOnDestroy(): void {
+      if (this.hamburgerCountSubscription) {
+        this.hamburgerCountSubscription.unsubscribe();
+      }
+      if (this.changeLanguageSubscription) {
+        this.changeLanguageSubscription.unsubscribe();
+      }
     }
 
     getCurrentuserId(){

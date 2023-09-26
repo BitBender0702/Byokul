@@ -62,7 +62,7 @@ import { AuthService } from 'src/root/service/auth.service';
 import { RolesEnum } from 'src/root/RolesEnum/rolesEnum';
 import { ownedClassResponse } from '../../class/createClass/createClass.component';
 import { ownedCourseResponse } from '../../course/createCourse/createCourse.component';
-import { OpenSideBar, enableDisableScc } from 'src/root/user-template/side-bar/side-bar.component';
+import { OpenSideBar, enableDisableScc, notifyMessageAndNotificationCount, totalMessageAndNotificationCount } from 'src/root/user-template/side-bar/side-bar.component';
 import { TranslateService } from '@ngx-translate/core';
 import { UserService } from 'src/root/service/user.service';
 import { Dimensions, ImageCroppedEvent, ImageTransform } from 'ngx-image-cropper';
@@ -193,6 +193,8 @@ export class SchoolProfileComponent
   preferredCountries: CountryISO[] = [CountryISO.UnitedStates, CountryISO.UnitedKingdom];
   selectedCountryISO: any;
   notificationViewModel!: NotificationViewModel;
+  hamburgerCountSubscription!: Subscription;
+  hamburgerCount:number = 0;
 
   @ViewChild('closeEditModal') closeEditModal!: ElementRef;
   @ViewChild('closeTeacherModal') closeTeacherModal!: ElementRef;
@@ -353,6 +355,9 @@ export class SchoolProfileComponent
     }
     if (this.deleteModalPostSubscription) {
       this.deleteModalPostSubscription.unsubscribe();
+    }
+    if (this.hamburgerCountSubscription) {
+      this.hamburgerCountSubscription.unsubscribe();
     }
   }
   ngOnChanges(): void {
@@ -706,6 +711,14 @@ export class SchoolProfileComponent
         this.ngOnInit();
       })
     }
+
+    if (!this.hamburgerCountSubscription) {
+      this.hamburgerCountSubscription = totalMessageAndNotificationCount.subscribe(response => {
+        debugger
+        this.hamburgerCount = response.hamburgerCount;
+      });
+    }
+    notifyMessageAndNotificationCount.next({});
 
   }
 

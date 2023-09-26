@@ -16,7 +16,7 @@ import { Spanish } from 'flatpickr/dist/l10n/es';
 import { Arabic } from 'flatpickr/dist/l10n/ar';
 import { Turkish } from 'flatpickr/dist/l10n/tr';
 import flatpickr from 'flatpickr';
-import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
+import { OpenSideBar, notifyMessageAndNotificationCount, totalMessageAndNotificationCount } from 'src/root/user-template/side-bar/side-bar.component';
 import { TranslateService } from '@ngx-translate/core';
 import { Dimensions, ImageCroppedEvent, ImageTransform } from 'ngx-image-cropper';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -98,6 +98,8 @@ export class CreateClassComponent extends MultilingualComponent implements OnIni
   @ViewChild('startDate') startDateRef!: ElementRef;
   @ViewChild('endDate') endDateRef!: ElementRef;
   changeLanguageSubscription!: Subscription;
+  hamburgerCountSubscription!: Subscription;
+  hamburgerCount:number = 0;
 
 
   constructor(injector: Injector,private translateService: TranslateService,private bsModalService: BsModalService,private datePipe: DatePipe,public messageService:MessageService,private route: ActivatedRoute,private router: Router,private fb: FormBuilder,classService: ClassService,private http: HttpClient,private domSanitizer: DomSanitizer) {
@@ -205,11 +207,22 @@ if(!this.changeLanguageSubscription){
     this.translate.use(response.language);
   })
 }
+
+if (!this.hamburgerCountSubscription) {
+  this.hamburgerCountSubscription = totalMessageAndNotificationCount.subscribe(response => {
+    debugger
+    this.hamburgerCount = response.hamburgerCount;
+  });
+}
+notifyMessageAndNotificationCount.next({});
 }
 
 ngOnDestroy(): void {
   if(this.changeLanguageSubscription){
     this.changeLanguageSubscription.unsubscribe();
+  }
+  if (this.hamburgerCountSubscription) {
+    this.hamburgerCountSubscription.unsubscribe();
   }
 }
 

@@ -6,7 +6,7 @@ import { FollowUnfollow } from "src/root/interfaces/FollowUnfollow";
 import { FollowUnFollowEnum } from "src/root/Enums/FollowUnFollowEnum";
 import { MultilingualComponent, changeLanguage } from "../sharedModule/Multilingual/multilingual.component";
 import { StudentService } from "src/root/service/student.service";
-import { OpenSideBar } from "src/root/user-template/side-bar/side-bar.component";
+import { OpenSideBar, notifyMessageAndNotificationCount, totalMessageAndNotificationCount } from "src/root/user-template/side-bar/side-bar.component";
 import { CourseService } from "src/root/service/course.service";
 import { ClassService } from "src/root/service/class.service";
 
@@ -42,6 +42,8 @@ export class StudentListComponent extends MultilingualComponent implements OnIni
   postLoadingIcon: boolean = false;
   loginUserId!: string;
   isOwner: boolean = false;
+  hamburgerCountSubscription!: Subscription;
+  hamburgerCount:number = 0;
   changeLanguageSubscription!: Subscription;
 
   constructor(injector: Injector, studentService: StudentService, private route: ActivatedRoute, 
@@ -97,12 +99,23 @@ export class StudentListComponent extends MultilingualComponent implements OnIni
       })
     }
 
+    if (!this.hamburgerCountSubscription) {
+      this.hamburgerCountSubscription = totalMessageAndNotificationCount.subscribe(response => {
+        debugger
+        this.hamburgerCount = response.hamburgerCount;
+      });
+    }
+
+    notifyMessageAndNotificationCount.next({});
     this.isOwnerOrNot();
   }
 
   ngOnDestroy(): void {
     if (this.changeLanguageSubscription) {
       this.changeLanguageSubscription.unsubscribe();
+    }
+    if (this.hamburgerCountSubscription) {
+      this.hamburgerCountSubscription.unsubscribe();
     }
   }
 

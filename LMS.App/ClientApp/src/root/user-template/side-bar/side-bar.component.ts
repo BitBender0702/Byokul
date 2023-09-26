@@ -17,6 +17,8 @@ export const unreadChatResponse =new Subject<{readMessagesCount: number,type:str
 export const OpenSideBar =new Subject<{isOpenSideBar:boolean}>(); 
 export const enableDisableScc =new Subject<{isDisable:boolean,schoolId?:string,classId?:string,courseId?:string}>(); 
 export const totalMessageAndNotificationCount =new Subject<{hamburgerCount:number}>(); 
+export const notifyMessageAndNotificationCount =new Subject<{}>(); 
+
 
 @Component({
   selector: 'side-bar',
@@ -35,7 +37,7 @@ export class SideBarComponent extends MultilingualComponent implements OnInit, O
   notificationResponseSubscription!:Subscription;
   enableDisableSccSubscription!:Subscription;
   unreadChatSubscription!: Subscription;
-  messageAndNotificationCountSubscription!: Subscription;
+  notifyMessageAndNotificationSubscription!: Subscription;
   // @Input() isOpenSidebar!:boolean;
   isUserBanned:boolean= false;
   // hamburgerCount:number = 0;
@@ -70,7 +72,26 @@ export class SideBarComponent extends MultilingualComponent implements OnInit, O
       this.cd.detectChanges();
       this.loadingIcon = false;
       this.isDataLoaded = true;
+      
     });
+
+     if (!this.notifyMessageAndNotificationSubscription) {
+      this.notifyMessageAndNotificationSubscription = notifyMessageAndNotificationCount.subscribe(response => {
+        debugger
+        if(this.sidebarInfo == undefined){
+          this._userService.getSidebarInfo().subscribe((response) => {
+            debugger
+            this.sidebarInfo = response;
+            var totalCount = this.sidebarInfo?.unreadNotificationCount + this.sidebarInfo?.unreadMessageCount;
+            totalMessageAndNotificationCount.next({hamburgerCount:totalCount});
+          });
+        }
+        else{
+          var totalCount = this.sidebarInfo?.unreadNotificationCount + this.sidebarInfo?.unreadMessageCount;
+          totalMessageAndNotificationCount.next({hamburgerCount:totalCount});
+        }
+      })
+    }  
 
     if(!this.enableDisableSccSubscription){
       this.enableDisableSccSubscription = enableDisableScc.subscribe(response => {
@@ -110,17 +131,10 @@ export class SideBarComponent extends MultilingualComponent implements OnInit, O
       this.notificationResponseSubscription = notificationResponse.subscribe(response => {
       debugger
         this.sidebarInfo.unreadNotificationCount = this.sidebarInfo?.unreadNotificationCount + 1;
-      });
-    }
-
-    // if(!this.messageAndNotificationCountSubscription){
-    //   this.messageAndNotificationCountSubscription = totalMessageAndNotificationCount.subscribe(response => {
-    //   debugger
-    debugger
         var totalCount = this.sidebarInfo?.unreadNotificationCount + this.sidebarInfo?.unreadMessageCount;
         totalMessageAndNotificationCount.next({hamburgerCount:totalCount});
-    //   });
-    // }
+      });
+    }
 
     OpenSideBar.subscribe(response => {
       debugger
@@ -142,9 +156,13 @@ export class SideBarComponent extends MultilingualComponent implements OnInit, O
       if(response.readMessagesCount != undefined){
       if(response.type=="add"){
         this.sidebarInfo.unreadMessageCount = this.sidebarInfo.unreadMessageCount + response.readMessagesCount;
+        var totalCount = this.sidebarInfo?.unreadNotificationCount + this.sidebarInfo?.unreadMessageCount;
+        totalMessageAndNotificationCount.next({hamburgerCount:totalCount});
       }
       else{
         this.sidebarInfo.unreadMessageCount = this.sidebarInfo.unreadMessageCount - response.readMessagesCount;
+        var totalCount = this.sidebarInfo?.unreadNotificationCount + this.sidebarInfo?.unreadMessageCount;
+        totalMessageAndNotificationCount.next({hamburgerCount:totalCount});
       }
     }
     });
@@ -310,8 +328,8 @@ export class SideBarComponent extends MultilingualComponent implements OnInit, O
     if (this.unreadChatSubscription) {
       this.unreadChatSubscription.unsubscribe();
     }
-    if (this.messageAndNotificationCountSubscription) {
-      this.messageAndNotificationCountSubscription.unsubscribe();
+    if (this.notifyMessageAndNotificationSubscription) {
+      this.notifyMessageAndNotificationSubscription.unsubscribe();
     }
   }
 

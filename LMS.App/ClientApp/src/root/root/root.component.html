@@ -1,9 +1,72 @@
 <side-bar *ngIf="displaySideBar"></side-bar>
 <adminSide-bar *ngIf="displayAdminSideBar"></adminSide-bar>
-
+<button #openProgressBar hidden data-bs-toggle="modal" data-bs-target="#progressBar"></button>
 <router-outlet>
     <!-- <h1>test.............................................................test</h1> -->
     <p-toast></p-toast>
+
+  <div *ngIf= "overallProgress > 0" class="text-center" style="
+    width: 23%;
+    position: absolute;
+    margin-left: 74%;
+    margin-top: 7%;">
+  <div>
+    Uploading
+  </div>
+    <div class="progress">
+    <!-- <div *ngIf= "overallProgress >0" class="progress"> -->
+      <div
+        class="progress-bar bg-success"
+        role="progressbar"
+        [style.width.%]="overallProgress"
+      >
+        {{ overallProgress }}%
+      </div>
+      <br />
+    </div>
+  </div>
+
+    <div
+    class="modal fade edit-school-modal delete-modal"
+    id="progressBar"
+    tabindex="-1"
+    aria-labelledby="progressBar"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div
+          class="modal-header border-0 justify-content-center position-relative"
+        >
+          <h1
+            class="modal-title font_22 text_dark fw_700 border-0 text-center"
+          >
+            {{ "DeleteSchool" | translate }}
+          </h1>
+          <button
+            type="button"
+            class="btn-close shadow-none"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          >
+            <img lazyLoad="../../../../assets/images/cross.svg" />
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="progress">
+            <div
+              class="progress-bar bg-success"
+              role="progressbar"
+              [style.width.%]="overallProgress"
+            >
+              {{ overallProgress }}%
+            </div>
+            <br />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
     <!-- <div
 class="modal fade edit-school-modal delete-modal"
 id="paymentConfirmationModal"
@@ -38,6 +101,5 @@ aria-hidden="true"
 </div>
 </div> -->
 </router-outlet>
-
 <button #paymentConfirmationBtn hidden data-bs-toggle="modal"
 data-bs-target="#paymentConfirmationModal"></button>

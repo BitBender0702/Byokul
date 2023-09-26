@@ -12,7 +12,7 @@ import { Subject, Subscription } from 'rxjs';
 import { environment } from "src/environments/environment";
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { SharePostComponent } from '../../sharePost/sharePost.component';
-import { OpenSideBar } from 'src/root/user-template/side-bar/side-bar.component';
+import { OpenSideBar, notifyMessageAndNotificationCount, totalMessageAndNotificationCount } from 'src/root/user-template/side-bar/side-bar.component';
 import { TranslateService } from '@ngx-translate/core';
 import { Dimensions, ImageCroppedEvent, ImageTransform } from 'ngx-image-cropper';
 import { CountryISO, SearchCountryField } from 'ngx-intl-tel-input';
@@ -109,6 +109,8 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
 
   countryFlag: string = '';
   countryFlag2: string = '';
+  hamburgerCountSubscription!: Subscription;
+  hamburgerCount:number = 0;
 
 
 
@@ -222,6 +224,15 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
       })
     }
 
+    if (!this.hamburgerCountSubscription) {
+      this.hamburgerCountSubscription = totalMessageAndNotificationCount.subscribe(response => {
+        debugger
+        this.hamburgerCount = response.hamburgerCount;
+      });
+    }
+
+    notifyMessageAndNotificationCount.next({});
+
     this.subscriptionForm = this.fb.group({
       cardNumber: this.fb.control('', [Validators.required, Validators.minLength(16)]),
       expiresOn: this.fb.control('', [Validators.required, Validators.minLength(4)]),
@@ -238,6 +249,9 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
   ngOnDestroy(): void {
     if (this.changeLanguageSubscription) {
       this.changeLanguageSubscription.unsubscribe();
+    }
+    if (this.hamburgerCountSubscription) {
+      this.hamburgerCountSubscription.unsubscribe();
     }
   }
 
