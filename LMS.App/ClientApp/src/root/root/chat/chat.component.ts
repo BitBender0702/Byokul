@@ -254,7 +254,7 @@ export class ChatComponent
             chatTypeId: this.chatTypeId,
             school: result,
             chats: [],
-            isPinned: false,
+            // isPinned: false,
             unreadMessageCount: 0,
           };
         });
@@ -270,7 +270,7 @@ export class ChatComponent
             chatTypeId: this.chatTypeId,
             class: result,
             chats: [],
-            isPinned: false
+            // isPinned: false
           };
         });
       }
@@ -285,7 +285,7 @@ export class ChatComponent
             chatTypeId: this.chatTypeId,
             course: result,
             chats: [],
-            isPinned: false
+            // isPinned: false
           };
         });
       }
@@ -1352,7 +1352,7 @@ export class ChatComponent
               chats: [],
               unreadMessageCount: 0,
               chatHeadId: '1',
-              isPinned: false
+              // isPinned: false
             };
 
             this.allChatUsers.unshift(user);
@@ -2432,12 +2432,15 @@ export class ChatComponent
        debugger
         const userIndex = this.allChatUsers.findIndex((x: { chatHeadId: string; }) => x.chatHeadId === this.chatHeadId);
         if (userIndex !== -1) {
-          let insertIndex = this.allChatUsers.findIndex((x: { isPinned: boolean; }) => x.isPinned === false);
-          if (insertIndex === -1) {
-            insertIndex = this.allChatUsers.length;
+          const user = this.allChatUsers.find((x: { chatHeadId: string; }) => x.chatHeadId === this.chatHeadId);
+          if(!user.isPinned){
+            let insertIndex = this.allChatUsers.findIndex((x: { isPinned: boolean; }) => x.isPinned === false);
+            if (insertIndex === -1) {
+              insertIndex = this.allChatUsers.length;
+            }
+            const userToMove = this.allChatUsers.splice(userIndex, 1)[0];
+            this.allChatUsers.splice(insertIndex, 0, userToMove);
           }
-          const userToMove = this.allChatUsers.splice(userIndex, 1)[0];
-          this.allChatUsers.splice(insertIndex, 0, userToMove);
         }
 
         const schoolIndex = this.schoolInboxList.findIndex((x: { chatHeadId: string; }) => x.chatHeadId === this.chatHeadId);
