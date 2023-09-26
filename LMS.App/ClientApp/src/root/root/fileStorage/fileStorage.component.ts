@@ -228,7 +228,6 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
     if (this.commentDeletdResponseSubscription) {
       this.commentDeletdResponseSubscription.unsubscribe();
     }
-  }
     if (this.hamburgerCountSubscription) {
       this.hamburgerCountSubscription.unsubscribe();
     }

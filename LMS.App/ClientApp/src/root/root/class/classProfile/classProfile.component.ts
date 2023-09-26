@@ -200,10 +200,8 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   isDataLoaded: boolean = false;
   hamburgerCountSubscription!: Subscription;
   hamburgerCount:number = 0;
-
   private _userService;
 
-  isDataLoaded: boolean = false;
   constructor(injector: Injector, private userService: UserService, private translateService: TranslateService, private signalrService: SignalrService, private titleService: Title, private meta: Meta, private datePipe: DatePipe, authService: AuthService, notificationService: NotificationService, public messageService: MessageService, postService: PostService, private bsModalService: BsModalService, classService: ClassService, private route: ActivatedRoute, private domSanitizer: DomSanitizer, private fb: FormBuilder, private router: Router, private http: HttpClient, private activatedRoute: ActivatedRoute, private cd: ChangeDetectorRef) {
     super(injector);
     this._classService = classService;
