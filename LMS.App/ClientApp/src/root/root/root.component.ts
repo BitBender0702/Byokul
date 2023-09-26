@@ -87,14 +87,15 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
   private _userService;
   private _videoLibraryService;
   private _schoolService;
+  private _authService;
 
-
-  constructor(injector: Injector, private cd: ChangeDetectorRef,private fileStorageService: FileStorageService, private userService: UserService, private notificationService: NotificationService, private signalRService: SignalrService, public messageService: MessageService, private translateService: TranslateService, private meta: Meta, authService: AuthService, private router: Router, private route: ActivatedRoute, postService: PostService, videoLibraryService: VideoLibraryService, schoolService: SchoolService) {
+  constructor(injector: Injector, private cd: ChangeDetectorRef,private fileStorageService: FileStorageService, private userService: UserService, private notificationService: NotificationService, private signalRService: SignalrService, public messageService: MessageService, private translateService: TranslateService, private meta: Meta,private authService: AuthService, private router: Router, private route: ActivatedRoute, postService: PostService, videoLibraryService: VideoLibraryService, schoolService: SchoolService) {
     super(injector);
     this._postService = postService;
     this._notificationService = notificationService;
     this._fileStorageService = fileStorageService;
     this._userService = userService;
+    this._authService = authService;
     this._videoLibraryService = videoLibraryService;
     this._schoolService = schoolService;
     this.router.events.subscribe((event) => {
@@ -124,11 +125,12 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
         }
       }
     });
-    authService.loginState$.asObservable().subscribe(x => { this.displaySideBar = x; });
-    authService.loginAdminState$.asObservable().subscribe(x => { this.displayAdminSideBar = x; });
+    this._authService.loginState$.asObservable().subscribe(x => { this.displaySideBar = x; });
+    this._authService.loginAdminState$.asObservable().subscribe(x => { this.displayAdminSideBar = x; });
   }
 
   ngOnInit(): void {
+    this._authService.redirectAfterTokenExpired();
     this.loginUserInfo();
     this.connectSignalR();
     this.meta.updateTag({ property: 'og:title', content: "test" });

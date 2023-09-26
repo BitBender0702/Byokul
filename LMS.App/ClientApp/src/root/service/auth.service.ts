@@ -90,6 +90,16 @@ export class AuthService{
             return true;
         }
     }
+    redirectAfterTokenExpired(){
+      const helper = new JwtHelperService();
+        const token = localStorage.getItem("jwt");
+        const decodedToken = helper.decodeToken(token!);
+        const expirationDate = helper.getTokenExpirationDate(token!);
+        const isExpired = helper.isTokenExpired(token!);
+        if(isExpired){
+           this.router.navigate(['/user/auth/login'])
+        } 
+    }
 
     get loginRequired(): boolean {
         var validToken = localStorage.getItem("jwt");
