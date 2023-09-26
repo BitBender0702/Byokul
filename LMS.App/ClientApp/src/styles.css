@@ -514,6 +514,7 @@ h3.subhead-btn {
   height: 44px;
   border-radius: 8px !important;
   font-size: 14px;
+  white-space: nowrap;
 }
 
 hr.earning-hr {
