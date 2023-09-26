@@ -132,9 +132,11 @@
             >
               <div
                 class="d-flex align-items-start align-items-xxl-center flex-lg-column flex-xxl-row gap-2"
+                *ngIf="!userIsBanned"
               >
                 <div
                   class="followers_name d-inline-flex align-items-center font_16 mr-_24 gap-1"
+                  *ngIf="!userIsBanned"
                 >
                   <img lazyLoad="../../../../assets/images/followers.svg" />
                   {{ "Followers" | translate }}:
@@ -152,6 +154,7 @@
                 </div>
                 <div
                   class="followers_name d-inline-flex align-items-center font_16 mr-_24 gap-1"
+                  *ngIf="!userIsBanned"
                 >
                   <img lazyLoad="../../../../assets/images/students-icon.svg" />
                   {{ "Students" | translate }}:
@@ -252,6 +255,7 @@
                 type="button"
                 (click)="openProfileShareModal()"
                 class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn me-0 minw-142 class-request-msg"
+                *ngIf="!userIsBanned"
               >
                 <img
                   lazyLoad="../../../../assets/images/Upload-dark.svg"
@@ -477,8 +481,12 @@
     </div> -->
 
         <hr class="hr-gray" />
+        <h3 *ngIf="userIsBanned" class="school-profile-tabs d-flex align-content-center justify-content-center position-relative" style="color:orange">
+          You are banned from this schoool
+        </h3>
         <div
           class="school-profile-tabs d-flex align-content-center justify-content-center position-relative"
+          *ngIf="!userIsBanned"
         >
           <div class="custom-tabs">
             <ul
@@ -1544,7 +1552,7 @@
           </div>
         </div>
 
-        <div class="feed-section" *ngIf="!isFeedHide">
+        <div class="feed-section" *ngIf="!isFeedHide && !userIsBanned">
           <div class="feed-box position-relative">
             <reels-loading-spinner
               [reelsLoadingIcon]="reelsLoadingIcon"
@@ -1645,7 +1653,7 @@
         <div
           class="tab-content scroll-schoolTab"
           id="pills-tabContent"
-          *ngIf="isProfileGrid"
+          *ngIf="isProfileGrid && !userIsBanned"
         >
           <div
             class="tab-pane fade show active"

@@ -628,7 +628,9 @@
   "DeleteFolder":"Delete Folder",
   "DeleteFiles":"Delete File",
   "DoYouWantToDeleteComment":"Do You Want To Delete Comment?",
-  "DeleteComment":"Delete Comment"
+  "DeleteComment":"Delete Comment",
+  "BannedFromCourse":"You are banned from this course",
+  "BannedByUser":"You are banned by this user"
 
 
 

@@ -19,11 +19,11 @@
             class="btn custom-btn primary_btn earning-btn fw_400 h_44">
             {{ "CreateCertificate" | translate }}
           </button>
-          <button *ngIf="isOwner || hasPostPermission" (click)="openPostModal(true)" type="button"
+          <button *ngIf="isOwner || (hasPostPermission && !userIsBanned)" (click)="openPostModal(true)" type="button"
             class="btn custom-btn primary_btn earning-btn fw_400 h_44">
             {{ "GoLive" | translate }}
           </button>
-          <button *ngIf="isOwner || hasPostPermission" (click)="openPostModal(false)" type="button"
+          <button *ngIf="isOwner || (hasPostPermission && !userIsBanned)" (click)="openPostModal(false)" type="button"
             class="btn custom-btn primary_btn earning-btn fw_400 h_44">
             {{ "CreatePost" | translate }}
           </button>
@@ -40,6 +40,7 @@
               class.price != null &&
               class.price != 0 &&
               !class.isClassAccessable
+              && !userIsBanned
             " (click)="openPaymentModal()" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44">
             {{ "Buyfor" | translate }} {{ class.price }} {{ class.currency }}
           </button>
@@ -105,7 +106,7 @@
                 </div>
               </div>
 
-              <div class="position-relative">
+              <div class="position-relative" *ngIf="!userIsBanned">
                 <div class="d-flex justify-content-between flex-wrap class_request align-items-center">
                   <div>
                     <div class="followers_name d-inline-flex align-items-center gap-1 font_16 mr-_24">
@@ -126,7 +127,7 @@
                     </div>
                   </div>
 
-                  <div class="hover-double-button" style="margin-top: -15px;">
+                  <div class="hover-double-button" style="margin-top: -15px;" *ngIf="!userIsBanned">
                     <!-- <button
                       *ngIf="isOwner"
                       (click)="
@@ -175,7 +176,7 @@
                   </div>
 
                   <!-- // right here -->
-                  <div *ngIf="!isOwner">
+                  <div *ngIf="!isOwner && !userIsBanned">
                     <button *ngIf="!isOwner && !isRatedByUser"
                       class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn me-0 minw-142 class-request-msg"
                       data-bs-toggle="modal" data-bs-target="#rate-class">
@@ -308,7 +309,10 @@
           </span>
         </div>
         <hr class="hr-gray" />
-        <div class="school-profile-tabs d-flex align-content-center justify-content-center position-relative">
+        <h3 *ngIf="userIsBanned" class="school-profile-tabs d-flex align-content-center justify-content-center position-relative" style="color:orange">
+          {{"BannedFromClass" | translate}}
+        </h3>
+        <div class="school-profile-tabs d-flex align-content-center justify-content-center position-relative" *ngIf="!userIsBanned">
           <div></div>
           <!-- *ngIf="isOwner || isAllowedForFileStorage" -->
           <button type="button"

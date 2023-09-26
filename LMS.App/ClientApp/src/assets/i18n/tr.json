@@ -620,7 +620,11 @@
   "DeleteFolder":"Klasörü Sil",
   "DeleteFiles":"Dosyayı sil",
   "DoYouWantToDeleteComment":"Yorumu Silmek İster misiniz?",
-  "DeleteComment":"Yorumu Sil"
+  "DeleteComment":"Yorumu Sil",
+  "BannedFromCourse":"Bu dersten yasaklandınız",
+  "BannedFromClass":"Bu dersten yasaklandınız",
+  "BannedFromSchool":"Bu okuldan yasaklandın",
+  "BannedByUser":"Bu kullanıcı tarafından yasaklandınız"
 
 
 

@@ -2651,10 +2651,19 @@ export class SchoolProfileComponent
   isUserBannedId:string='';
   checkIfUserIsBanned(){
     debugger;
+    this.loadingIcon = true
     this._userService.isUserBanned(this.userId, this.isUserBannedId, PostAuthorTypeEnum.School).subscribe((response)=>{
       debugger;
+      this.loadingIcon = false;
       if(response.data == true){
-        this.userIsBanned = true
+        this.userIsBanned = true;
+        // if(this.hasPostPermission){
+          this.hasPostPermission = false;
+          this.hasAddLanguagesPermission = false;
+          this.hasAddSchoolCertificatesPermission = false;
+        // }
+      } else{
+        this.userIsBanned = false;
       }
     })
   }

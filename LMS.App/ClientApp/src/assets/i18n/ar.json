@@ -616,7 +616,13 @@
   "DeleteFolder":"احذف المجلد",
   "DeleteFiles":"حذف ملف",
   "DoYouWantToDeleteComment":"هل تريد حذف التعليق؟",
-  "DeleteComment":"حذف تعليق"
+  "DeleteComment":"حذف تعليق",
+  "BannedFromCourse":"أنت محظور من هذه الدورة",
+  "BannedFromClass":"أنت محظور من هذه الفئة",
+  "BannedFromSchool":"أنت محظور من هذه المدرسة",
+  "BannedByUser":"لقد تم حظرك من قبل هذا المستخدم"
+
+
 
 
 
