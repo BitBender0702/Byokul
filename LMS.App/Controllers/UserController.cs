@@ -423,7 +423,8 @@ namespace LMS.App.Controllers
         [HttpGet]
         public async Task<IActionResult> GlobalSearch(string searchString, int pageNumber, int pageSize)
         {
-            var user = await _userService.GlobalSearch(searchString, pageNumber, pageSize);
+            var loginUserId = await GetUserIdAsync(this._userManager);
+            var user = await _userService.GlobalSearch(searchString, pageNumber, pageSize, loginUserId);
             return Ok(user);
         }
 

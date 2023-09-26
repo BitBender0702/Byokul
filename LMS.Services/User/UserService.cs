@@ -1691,7 +1691,7 @@ namespace LMS.Services
 
         }
 
-        public async Task<IEnumerable<GlobalSearchViewModel>> GlobalSearch(string searchString, int pageNumber, int pageSize)
+        public async Task<IEnumerable<GlobalSearchViewModel>> GlobalSearch(string searchString, int pageNumber, int pageSize, string? loginUserId)
         {
             var users = await _userRepository.GetAll().Where(x => !x.IsBan && x.FirstName.Contains(searchString) || x.LastName.Contains(searchString) || (x.FirstName + " " + x.LastName).Contains(searchString)).Select(x => new GlobalSearchViewModel()
             {
@@ -1741,19 +1741,21 @@ namespace LMS.Services
             //    x.ParentId,
             //    x.PostAuthorType
             //}).Take(5).ToListAsync();
-
-
+          
             var userBannedUser = await _userRepository.GetAll().Where(x => x.IsBan).ToListAsync();
             var schoolBannedUser = await _schoolRepository.GetAll().Where(x => x.IsBan || x.IsDisableByOwner || x.IsDeleted).ToListAsync();
             var classBannedUser = await _classRepository.GetAll().Where(x => x.IsDeleted || x.IsDisableByOwner || x.IsEnable).ToListAsync();
             var courseBannedUser = await _courseRepository.GetAll().Where(x => x.IsDeleted || x.IsDisableByOwner || x.IsEnable).ToListAsync();
-            var bannedSchoolIds = schoolBannedUser.Select(b => b.SchoolId.ToString()).ToList();
-            var bannedClassIds = classBannedUser.Select(c => c.ClassId.ToString()).ToList();
-            var bannedCourseIds = courseBannedUser.Select(x => x.CourseId.ToString()).ToList();
-            var userBannedIds = userBannedUser.Select(x => x.Id.ToString()).ToList();
-            var bannedUserIds = bannedSchoolIds.Concat(bannedClassIds).Concat(bannedCourseIds).Concat(userBannedIds).ToList();
-            //bannedUserIds = 
-
+            var bannedSchoolIds = schoolBannedUser.Select(b => b.SchoolId.ToString().ToLower()).ToList();
+            var bannedClassIds = classBannedUser.Select(c => c.ClassId.ToString().ToLower()).ToList();
+            var bannedCourseIds = courseBannedUser.Select(x => x.CourseId.ToString().ToLower()).ToList();
+            var userBannedIds = userBannedUser.Select(x => x.Id.ToString().ToLower()).ToList();
+            var isUserBanned = await _userFollowerRepository.GetAll().Where(x => x.IsBan && x.Follower.Id == loginUserId).Select(x => x.UserId.ToString().ToLower()).ToListAsync();
+            var isUserBanFromCourse = await _courseStudentRepository.GetAll().Where(x => x.IsStudentBannedFromCourse && x.Student.UserId == (loginUserId)).Select(x => x.CourseId.ToString().ToLower()).ToListAsync();
+            var isUserBanFromClass = await _classStudentRepository.GetAll().Where(x => x.IsStudentBannedFromClass && x.Student.UserId == (loginUserId)).Select(x => x.ClassId.ToString().ToLower()).ToListAsync();
+            var isUserBanFromSchool = await _schoolFollowerRepository.GetAll().Where(x => x.IsBan && x.UserId == loginUserId).Select(x => x.SchoolId.ToString().ToLower()).ToListAsync();
+            var bannedUserIds = bannedSchoolIds.Concat(bannedClassIds).Concat(isUserBanned).Concat(isUserBanFromClass).Concat(isUserBanFromCourse).Concat(isUserBanFromSchool).Concat(bannedCourseIds).Concat(userBannedIds).ToList();
+            //bannedUserIds = bannedUserIds.tolo
 
             var posts = await _postRepository.GetAll()
                             .Where(x =>
@@ -1769,6 +1771,7 @@ namespace LMS.Services
                             })
                             .Take(5)
                             .ToListAsync();
+
 
             var postViewModel = new List<GlobalSearchViewModel>();
             var postAttachment = new PostAttachment();
@@ -1792,8 +1795,8 @@ namespace LMS.Services
             }
 
             var result = courses.Concat(classes).Concat(schools).Concat(users).Concat(postViewModel).OrderBy(x => x.Type).ToList();
-
-            return result;
+            var filteredResult = result.Where(x => !bannedUserIds.Contains(x.Id.ToString().ToLower())).ToList();
+            return filteredResult;
 
 
         }
