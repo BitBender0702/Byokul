@@ -794,6 +794,7 @@
               >
                 {{ "AddMax7Tags" | translate }}
               </small>
+              <div class="dropzone-wrapper" style="height: 80px" *ngIf="profileShare == null || profileShare == undefined">
               <div *ngIf="!isVideoSelected" class="dropzone-wrapper" style="height: 80px">
                 <div class="dropzone-desc">
                   <i class="glyphicon glyphicon-download-alt"></i>
@@ -816,6 +817,10 @@
               <div
                 class="steps_btns d-flex flex-column flex-md-row gap-3 align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 cr-postfooter pt-0"
               >
+                <div class="post-bot-left d-flex"
+                *ngIf="profileShare == null || profileShare == undefined"
+                >
+                  <label
                 <div class="post-bot-left d-flex">
                   <label *ngIf="!isVideoSelected"
                     class="custom-file-upload post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center"
