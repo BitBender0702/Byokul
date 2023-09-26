@@ -10,7 +10,7 @@ import { SaveFilesViewModel } from 'src/root/interfaces/fileStorage/saveFilesVie
 import { ChatService } from 'src/root/service/chatService';
 import { FileStorageService } from 'src/root/service/fileStorage';
 import { SchoolService } from 'src/root/service/school.service';
-import { commentResponse, progressResponse, SignalrService } from 'src/root/service/signalr.service';
+import { commentDeleteResponse, commentResponse, progressResponse, SignalrService } from 'src/root/service/signalr.service';
 import { TeacherService } from 'src/root/service/teacher.service';
 import { UserService } from 'src/root/service/user.service';
 import { MultilingualComponent, changeLanguage } from '../sharedModule/Multilingual/multilingual.component';
@@ -19,6 +19,11 @@ import { postProgressNotification, postUploadOnBlob } from '../root.component';
 
 
 import { TranslateService } from '@ngx-translate/core';
+import { DeleteConfirmationComponent } from '../delete-confirmation/delete-confirmation.component';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { CommentLikeUnlike } from 'src/root/interfaces/chat/commentsLike';
+import { NotificationService } from 'src/root/service/notification.service';
+import { NotificationType } from 'src/root/interfaces/notification/notificationViewModel';
 
 
 export const fileStorageResponse = new Subject<{ fileStorageResponse: any; availableSpace: number }>();
@@ -102,6 +107,10 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
   hamburgerCountSubscription!: Subscription;
   hamburgerCount:number = 0;
 
+  commentDeletdResponseSubscription!:Subscription;
+
+  private _notificationService;
+
 
   @ViewChild('closeFileModal') closeFileModal!: ElementRef;
   @ViewChild('closeFolderModal') closeFolderModal!: ElementRef;
@@ -109,7 +118,7 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
   @ViewChild('searchInput') searchInput!: ElementRef;
 
 
-  constructor(injector: Injector, private fb: FormBuilder, private translateService: TranslateService, private router: Router, private http: HttpClient, private activatedRoute: ActivatedRoute, userService: UserService, public fileStorageService: FileStorageService, signalRService: SignalrService, chatService: ChatService, teacherService: TeacherService, public messageService: MessageService, private cd: ChangeDetectorRef, schoolService: SchoolService) {
+  constructor(injector: Injector, private fb: FormBuilder,notificationService: NotificationService,private bsModalService: BsModalService, private translateService: TranslateService, private router: Router, private http: HttpClient, private activatedRoute: ActivatedRoute, userService: UserService, public fileStorageService: FileStorageService, signalRService: SignalrService, chatService: ChatService, teacherService: TeacherService, public messageService: MessageService, private cd: ChangeDetectorRef, schoolService: SchoolService) {
     super(injector);
     this._userService = userService;
     this._fileStorageService = fileStorageService;
@@ -117,6 +126,7 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
     this._chatService = chatService;
     this._teacherService = teacherService;
     this._schoolService = schoolService;
+    this._notificationService = notificationService;
   }
 
   ngOnInit(): void {
@@ -193,6 +203,13 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
         this.closeFilesModal();
       });
     }
+    if(!this.commentDeletdResponseSubscription){
+      commentDeleteResponse.subscribe(response =>{
+        debugger;
+        let indexOfComment = this.fileComments.findIndex((x:any) => x.id == response.commentId)
+        this.fileComments.splice(indexOfComment, 1)
+      })
+    }
   }
 
   ngOnDestroy() {
@@ -208,11 +225,16 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
     if (this.fileStorageResponseSubscription) {
       this.fileStorageResponseSubscription.unsubscribe();
     }
+    if (this.commentDeletdResponseSubscription) {
+      this.commentDeletdResponseSubscription.unsubscribe();
+    }
+  }
     if (this.hamburgerCountSubscription) {
       this.hamburgerCountSubscription.unsubscribe();
     }
   }
 
+  userId:string='' 
   isOwnerOrNot() {
     var validToken = localStorage.getItem('jwt');
     if (validToken != null) {
@@ -220,12 +242,14 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
       let decodedJwtJsonData = window.atob(jwtData);
       let decodedJwtData = JSON.parse(decodedJwtJsonData);
       var loginUserId = decodedJwtData.jti;
+      this.userId = loginUserId;
       if (loginUserId == this.ownerId) {
         this.isOwner = true;
       } else {
         this.isOwner = false;
       }
     }
+    debugger;
   }
 
   getClassTeachers(classId: string) {
@@ -398,11 +422,14 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
     for (let i = 0; i < selectedFiles.length; i++) {
       const file = selectedFiles[i];
 
-      // Check if the file is a video or audio
-      if (!file.type.startsWith('video/') && !file.type.startsWith('audio/')) {
-        this.saveFileViewModel.files.push(file);
+      if (file.type === 'application/vnd.ms-powerpoint' || 
+        file.type === 'application/pdf' || 
+        file.type.startsWith('application/msword') || 
+        file.type.startsWith('application/vnd.openxmlformats-officedocument.wordprocessingml') || 
+        file.type.startsWith('text/') || 
+        file.type.startsWith('image/')) {
+          this.saveFileViewModel.files.push(file);
       } else {
-        // Optional: Provide feedback to the user if needed
         const translatedSummary = this.translateService.instant('Info');
         const translatedMessage = this.translateService.instant('AudioOrVideoTypeNotAllowed');
         this.messageService.add({
@@ -760,7 +787,7 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
     this._fileStorageService.deleteFolder(folderId).subscribe((response: any) => {
       this.loadingIcon = false;
       if (response.message == Constant.FolderCantDeleted) {
-        this.messageService.add({ severity: 'info', summary: 'Info', life: 3000, detail: 'You cant delete folder without deleting the folders/files under it', });
+        this.messageService.add({ severity: 'info', summary: 'Info', life: 3000, detail: 'You can not delete folder without deleting the folders/files under it', });
       }
       else {
         this.folders = this.folders.filter((x: { id: any; }) => x.id !== folderId);
@@ -790,5 +817,69 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
       this.messageService.add({ severity: 'success', summary: 'Success', life: 3000, detail: 'File deleted successfully', });
     });
   }
+
+
+  deleteComment(item:any){
+    debugger;
+    // this.initializeCommentLikeUnlike();
+    // this.commentLikeUnlike.userId = item.userId;
+    // this.commentLikeUnlike.commentId = item.id;
+    // this.commentLikeUnlike.groupName = item.groupName;
+    // if(this.userId == item.userId){
+    //   this._signalrService.notifyCommentDelete(this.commentLikeUnlike);
+    //   let indexOfComment = this.post.comments.findIndex((x:any) => x.id == this.commentLikeUnlike.commentId);
+    //   this.post.comments.splice(indexOfComment, 1);
+    // }
+    const initialState = { item : item, from : "deleteComment" };
+    this.bsModalService.show(DeleteConfirmationComponent, { initialState });
+  }
+
+  likeUnlikeComments(commentId: string, _isLike: boolean, _isCommentLikedByCurrentUser: boolean, _likeCount: number) {
+    debugger;
+    var comment: any[] = this.fileComments;
+    var isCommentLiked = comment.find(x => x.id == commentId);
+    this.initializeCommentLikeUnlike();
+    this.commentLikeUnlike.userId = this.sender.id;
+    this.commentLikeUnlike.commentId = commentId;
+    this.commentLikeUnlike.groupName = comment[0].groupName;
+    if (isCommentLiked.isCommentLikedByCurrentUser) {
+      isCommentLiked.isCommentLikedByCurrentUser = false;
+      isCommentLiked.likeCount = isCommentLiked.likeCount - 1;
+      this.commentLikeUnlike.isLike = false;
+      this.commentLikeUnlike.likeCount = isCommentLiked.likeCount;
+    }
+    else {
+      isCommentLiked.isCommentLikedByCurrentUser = true;
+      isCommentLiked.likeCount = isCommentLiked.likeCount + 1;
+
+      this.commentLikeUnlike.isLike = true;
+      this.commentLikeUnlike.likeCount = isCommentLiked.likeCount;
+    }
+    // if(this.sender.id != isCommentLiked.user.id){
+      this._signalRService.notifyCommentLike(this.commentLikeUnlike);
+      debugger;
+      if(isCommentLiked.user.id != this.sender.id && this.commentLikeUnlike.isLike){
+        debugger;
+        var translatedMessage = this.translateService.instant('liked your comment');
+        var notificationContent = translatedMessage;
+        this._notificationService.initializeNotificationViewModel(isCommentLiked.user.id, NotificationType.CommentSent, notificationContent, this.sender.id, this.files.id, this.files, null, null).subscribe((response) => {
+      });
+    }
+
+    // }
+    // this._signalRService.sendNotification();
+  }
+  initializeCommentLikeUnlike() {
+    this.commentLikeUnlike = {
+      commentId: "",
+      userId: "",
+      likeCount: 0,
+      isLike: false,
+      groupName: ""
+    }
+
+  }
+
+  commentLikeUnlike!: CommentLikeUnlike;
 
 }

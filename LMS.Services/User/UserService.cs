@@ -26,6 +26,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using Country = LMS.Data.Entity.Country;
 using System.Text.RegularExpressions;
+using Microsoft.Extensions.Hosting;
 
 namespace LMS.Services
 {
@@ -1008,7 +1009,7 @@ namespace LMS.Services
 
                     else
                     {
-                        var sameUserList = await _courseStudentRepository.GetAll().Include(x => x.Student).Where(x => x.Student.UserId == userId && !x.Course.IsEnable ).ToListAsync();
+                        var sameUserList = await _courseStudentRepository.GetAll().Include(x => x.Student).Where(x => x.Student.UserId == userId && !x.Course.School.IsBan && !x.Course.School.IsDeleted && !x.Course.School.IsDisableByOwner && !x.Student.User.IsBan && !x.Course.IsEnable && !x.Course.IsDeleted && !x.Course.IsDisableByOwner).ToListAsync();
 
                         sameUserList.Remove(isUserInCourse);
 
@@ -1264,78 +1265,101 @@ namespace LMS.Services
                         if (post.PostAuthorType == (int)PostAuthorTypeEnum.School)
                         {
                             var school = _schoolRepository.GetById(post.ParentId);
-                            //if(!school.IsBan || !school.IsDisableByOwner || school.IsDeleted)
+                            if (!school.IsBan && !school.IsDisableByOwner && !school.IsDeleted)
                             {
-                                parentName = school.SchoolName;
-                                parentImageUrl = school.Avatar;
-                                isParentVerified = school.IsVarified;
-                                postAuthorType = (int)PostAuthorTypeEnum.School;
-                                schoolName = "";
-                                parentId = school.SchoolId.ToString();
+                                var isUserBanFromSchool = await _schoolFollowerRepository.GetAll().Where(x => x.IsBan && x.UserId == loginUserId && x.SchoolId == post.ParentId).FirstOrDefaultAsync();
+                                if(isUserBanFromSchool == null)
+                                {
+                                    parentName = school.SchoolName;
+                                    parentImageUrl = school.Avatar;
+                                    isParentVerified = school.IsVarified;
+                                    postAuthorType = (int)PostAuthorTypeEnum.School;
+                                    schoolName = "";
+                                    parentId = school.SchoolId.ToString();
+                                }
                             }
-                            
-
                         }
                         if (post.PostAuthorType == (int)PostAuthorTypeEnum.Class)
                         {
-                            var classes = await _classRepository.GetAll().Where(x => x.ClassId == post.ParentId ).Include(x => x.School).FirstOrDefaultAsync();
-                            parentName = classes.ClassName;
-                            parentImageUrl = classes.Avatar;
-                            postAuthorType = (int)PostAuthorTypeEnum.Class;
-                            schoolName = classes.School.SchoolName;
-                            parentId = classes.ClassId.ToString();
+                            var classes = await _classRepository.GetAll().Where(x => x.ClassId == post.ParentId && !x.IsEnable && !x.IsDisableByOwner && !x.IsDeleted && !x.School.IsBan && !x.School.IsDeleted && !x.School.IsDisableByOwner).Include(x => x.School).FirstOrDefaultAsync();
+                            if(classes != null)
+                            {
+                                var isUserBanFromClass = await _classStudentRepository.GetAll().Where(x => x.IsStudentBannedFromClass && x.Student.UserId == (loginUserId) && x.ClassId == post.ParentId).FirstOrDefaultAsync();
+                                if(isUserBanFromClass == null)
+                                {
+                                    parentName = classes.ClassName;
+                                    parentImageUrl = classes.Avatar;
+                                    postAuthorType = (int)PostAuthorTypeEnum.Class;
+                                    schoolName = classes.School.SchoolName;
+                                    parentId = classes.ClassId.ToString();
+                                }
+                            }
                         }
                         if (post.PostAuthorType == (int)PostAuthorTypeEnum.Course)
                         {
-                            var course = await _courseRepository.GetAll().Where(x => x.CourseId == post.ParentId ).Include(x => x.School).FirstOrDefaultAsync();
-                            parentName = course.CourseName;
-                            parentImageUrl = course.Avatar;
-                            postAuthorType = (int)PostAuthorTypeEnum.Course;
-                            schoolName = course.School.SchoolName;
-                            parentId = course.CourseId.ToString();
+                            var course = await _courseRepository.GetAll().Where(x => x.CourseId == post.ParentId && !x.IsEnable && !x.IsDisableByOwner && !x.IsDeleted && !x.School.IsBan && !x.School.IsDeleted && !x.School.IsDisableByOwner).Include(x => x.School).FirstOrDefaultAsync();
+                            if(course != null)
+                            {
+                                var isUserBanFromCourse = await _courseStudentRepository.GetAll().Where(x => x.IsStudentBannedFromCourse && x.Student.UserId == (loginUserId) && x.CourseId == post.ParentId).FirstOrDefaultAsync();
+                                if(isUserBanFromCourse == null)
+                                {
+                                    parentName = course.CourseName;
+                                    parentImageUrl = course.Avatar;
+                                    postAuthorType = (int)PostAuthorTypeEnum.Course;
+                                    schoolName = course.School.SchoolName;
+                                    parentId = course.CourseId.ToString();
+                                }
+                            }
                         }
                         if (post.PostAuthorType == (int)PostAuthorTypeEnum.User)
                         {
                             var user = _userRepository.GetById(post.ParentId.ToString());
-                            //if (!user.IsBan)
+                            if (!user.IsBan)
                             {
-                                parentName = user.FirstName + " " + user.LastName;
-                                parentImageUrl = user.Avatar;
-                                isParentVerified = user.IsVarified;
-                                postAuthorType = (int)PostAuthorTypeEnum.User;
-                                schoolName = "";
-                                parentId = user.Id;
+                                var isUserBanned = await _userFollowerRepository.GetAll().Where(x => x.IsBan && x.Follower.Id == loginUserId && x.User.Id == post.ParentId.ToString()).FirstOrDefaultAsync();
+                                if(isUserBanned == null)
+                                {
+                                    parentName = user.FirstName + " " + user.LastName;
+                                    parentImageUrl = user.Avatar;
+                                    isParentVerified = user.IsVarified;
+                                    postAuthorType = (int)PostAuthorTypeEnum.User;
+                                    schoolName = "";
+                                    parentId = user.Id;
+                                }
                             }
                             
                         }
-                        var result = new GlobalFeedViewModel()
+                        if (!string.IsNullOrEmpty(parentName))
                         {
-                            Id = post.Id,
-                            Title = post.Title,
-                            Description = post.Description,
-                            Likes = likes,
-                            Views = views,
-                            CommentsCount = commentsCount,
-                            PostSharedCount = sharedPostCount,
-                            IsPostLikedByCurrentUser = IsPostLikedByCurrentUser,
-                            PostType = post.PostType,
-                            ParentName = parentName,
-                            ParentImageUrl = parentImageUrl,
-                            IsParentVerified = isParentVerified,
-                            PostAuthorType = postAuthorType,
-                            SchoolName = schoolName,
-                            ParentId = parentId,
-                            DateTime = post.DateTime,
-                            PostAttachments = _mapper.Map<List<PostAttachmentViewModel>>(postAttachment),
-                            PostTags = _mapper.Map<List<PostTagViewModel>>(postTag),
-                            CreatedBy = post.CreatedById,
-                            CreatedOn = post.CreatedOn,
-                            IsPostSavedByCurrentUser = savedPosts.Any(x => x.PostId == post.Id && x.UserId == loginUserId),
-                            SavedPostsCount = savedPosts.Where(x => x.PostId == post.Id && x.UserId == loginUserId).Count()
+                            var result = new GlobalFeedViewModel()
+                            {
+                                Id = post.Id,
+                                Title = post.Title,
+                                Description = post.Description,
+                                Likes = likes,
+                                Views = views,
+                                CommentsCount = commentsCount,
+                                PostSharedCount = sharedPostCount,
+                                IsPostLikedByCurrentUser = IsPostLikedByCurrentUser,
+                                PostType = post.PostType,
+                                ParentName = parentName,
+                                ParentImageUrl = parentImageUrl,
+                                IsParentVerified = isParentVerified,
+                                PostAuthorType = postAuthorType,
+                                SchoolName = schoolName,
+                                ParentId = parentId,
+                                DateTime = post.DateTime,
+                                PostAttachments = _mapper.Map<List<PostAttachmentViewModel>>(postAttachment),
+                                PostTags = _mapper.Map<List<PostTagViewModel>>(postTag),
+                                CreatedBy = post.CreatedById,
+                                CreatedOn = post.CreatedOn,
+                                IsPostSavedByCurrentUser = savedPosts.Any(x => x.PostId == post.Id && x.UserId == loginUserId),
+                                SavedPostsCount = savedPosts.Where(x => x.PostId == post.Id && x.UserId == loginUserId).Count()
 
-                        };
+                            };
+                            response.Add(result);
+                        }
 
-                        response.Add(result);
                     }
 
                 }
@@ -2151,6 +2175,48 @@ namespace LMS.Services
             var response = _mapper.Map<List<UserFollowerViewModel>>(followerList);
             return response;
 
+        }
+        public async Task<bool> IsUserBanned(string userId, string id, PostAuthorTypeEnum from)
+        {
+            if(from == PostAuthorTypeEnum.User)
+            {
+                var isUserBanned = await _userFollowerRepository.GetAll().Where(x => x.IsBan && x.Follower.Id == userId && x.User.Id == id).FirstOrDefaultAsync();
+                if(isUserBanned == null)
+                {
+                    return false;
+                }
+                return true;
+
+            }
+            else if(from == PostAuthorTypeEnum.School)
+            {
+                var isUserBanFromSchool = await _schoolFollowerRepository.GetAll().Where(x => x.IsBan && x.UserId == userId && x.SchoolId == Guid.Parse(id)).FirstOrDefaultAsync();
+                if( isUserBanFromSchool == null)
+                {
+                    return false;
+                }
+                return true;
+            }
+            else if(from == PostAuthorTypeEnum.Class)
+            {
+                var isUserBanFromClass = await _classStudentRepository.GetAll().Where(x => x.IsStudentBannedFromClass && x.Student.UserId == (userId) && x.ClassId == Guid.Parse(id)).FirstOrDefaultAsync();
+                if( isUserBanFromClass == null)
+                {
+                    return false;
+                }
+                return true;
+            }
+            else if(from == PostAuthorTypeEnum.Course)
+            {
+                var isUserBanFromCourse = await _courseStudentRepository.GetAll().Where(x => x.IsStudentBannedFromCourse && x.Student.UserId == (userId) && x.CourseId == Guid.Parse(id)).FirstOrDefaultAsync();
+                if( isUserBanFromCourse == null)
+                {
+                    return false;
+                }
+                return true;
+
+            }
+            return false;
         }
 
     }

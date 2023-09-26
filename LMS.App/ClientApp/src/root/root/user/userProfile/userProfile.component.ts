@@ -240,6 +240,7 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
     });
   }
 
+  isUserBannedId:string='';
   ngOnInit(): void {
     this.checkScreenSize();
     if (this.isScreenMobile) {
@@ -261,6 +262,7 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
     this.translate.use(selectedLang ?? '');
     var id = this.route.snapshot.paramMap.get('userId');
     this.userId = id ?? '';
+    this.isUserBannedId = id ?? "";
 
     this._userService.getUserById(this.userId).subscribe((response) => {
       debugger
@@ -276,6 +278,11 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
       this.postLoadingIcon = false;
       this.isDataLoaded = true;
       this.cd.detectChanges();
+
+      if(this.loginUserId != this.isUserBannedId){
+        this.checkIfUserIsBanned();
+      }
+
       this.addEventListnerOnCarousel();
       this.user.posts = this.getFilteredAttachments(this.user.posts);
 
@@ -366,6 +373,7 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
         });
       });
     }
+    
 
     if (!this.savedPostSubscription) {
       this.savedPostSubscription = savedPostResponse.subscribe(response => {
@@ -530,6 +538,8 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
         this.ngOnInit();
       })
     }
+
+    
   }
 
   addDescriptionMetaTag(description: string) {
@@ -2270,6 +2280,16 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
     }
   }
 
+  userIsBanned:boolean=false;
+  checkIfUserIsBanned(){
+    debugger;
+    this._userService.isUserBanned(this.loginUserId, this.isUserBannedId, PostAuthorTypeEnum.User).subscribe((response)=>{
+      debugger;
+      if(response.data == true){
+        this.userIsBanned = true
+      }
+    })
+  }
 
 
 }

@@ -614,7 +614,9 @@
   "AreYouSureYouWantToDeleteThisFolder":"هل أنت متأكد أنك تريد حذف هذا المجلد?",
   "AreYouSureYouWantToDeleteThisFile":"هل أنت متأكد أنك تريد حذف هذا الملف?",
   "DeleteFolder":"احذف المجلد",
-  "DeleteFiles":"حذف ملف"
+  "DeleteFiles":"حذف ملف",
+  "DoYouWantToDeleteComment":"هل تريد حذف التعليق؟",
+  "DeleteComment":"حذف تعليق"
 
 
 

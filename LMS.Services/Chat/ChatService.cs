@@ -299,7 +299,7 @@ namespace LMS.Services.Chat
                 ChatType = x.ChatType,
                 ChatTypeId = x.ChatTypeId,
                 UnreadMessageCount = x.UnreadMessageCount,
-                IsVerified=x.Sender.IsVarified
+                IsUserVerified=x.Sender.IsVarified
             }).ToList();
 
             users = users.Concat(first).ToList();
@@ -312,7 +312,7 @@ namespace LMS.Services.Chat
                 ChatHeadId = x.Id,
                 ChatType = x.ChatType,
                 ChatTypeId = x.ChatTypeId,
-                IsVerified = x.Receiver.IsVarified
+                IsUserVerified = x.Receiver.IsVarified
                 /*, UnreadMessageCount = x.UnreadMessageCount */
             }).ToList();
 
@@ -329,7 +329,9 @@ namespace LMS.Services.Chat
                 ChatTypeId = x.ChatTypeId,
 
                 UnreadMessageCount = x.UnreadMessageCount,
-                IsVerified = GetSchoolInfo(x.ChatTypeId).IsVarified
+                IsVerified = GetSchoolInfo(x.ChatTypeId).IsVarified,
+                IsUserVerified = GetUserInfo(x.SenderId).IsVarified
+
             }).ToList();
 
             users = users.Concat(third).ToList();
@@ -343,7 +345,8 @@ namespace LMS.Services.Chat
                 School = GetSchoolInfo(x.ChatTypeId),
                 ChatType = x.ChatType,
                 ChatTypeId = x.ChatTypeId,
-                IsVerified = GetSchoolInfo(x.ChatTypeId).IsVarified
+                IsVerified = GetSchoolInfo(x.ChatTypeId).IsVarified,
+                IsUserVerified = GetUserInfo(x.ReceiverId).IsVarified
                 //UnreadMessageCount = x.UnreadMessageCount
             }).ToList();
 
@@ -359,7 +362,9 @@ namespace LMS.Services.Chat
                 ChatType = x.ChatType,
                 ChatTypeId = x.ChatTypeId,
 
-                UnreadMessageCount = x.UnreadMessageCount
+                UnreadMessageCount = x.UnreadMessageCount,
+                IsUserVerified = GetUserInfo(x.SenderId).IsVarified
+                //IsUserVerified = x.Sender.IsVarified
             }).ToList();
 
             users = users.Concat(five).ToList();
@@ -373,6 +378,8 @@ namespace LMS.Services.Chat
                 Class = GetClassInfo(x.ChatTypeId),
                 ChatType = x.ChatType,
                 ChatTypeId = x.ChatTypeId,
+                IsUserVerified = GetUserInfo(x.ReceiverId).IsVarified
+                //IsUserVerified = x.Receiver.IsVarified
 
                 //UnreadMessageCount = x.UnreadMessageCount
             }).ToList();
@@ -389,7 +396,9 @@ namespace LMS.Services.Chat
                 ChatType = x.ChatType,
                 ChatTypeId = x.ChatTypeId,
 
-                UnreadMessageCount = x.UnreadMessageCount
+                UnreadMessageCount = x.UnreadMessageCount,
+                IsUserVerified = GetUserInfo(x.SenderId).IsVarified
+                //IsUserVerified = x.Sender.IsVarified
             }).ToList();
 
             users = users.Concat(seven).ToList();
@@ -403,6 +412,8 @@ namespace LMS.Services.Chat
                 Course = GetCourseInfo(x.ChatTypeId),
                 ChatType = x.ChatType,
                 ChatTypeId = x.ChatTypeId,
+                IsUserVerified = GetUserInfo(x.ReceiverId).IsVarified
+                //IsUserVerified = x.Receiver.IsVarified
 
                 //UnreadMessageCount = x.UnreadMessageCount
             }).ToList();
@@ -756,6 +767,12 @@ namespace LMS.Services.Chat
                 firstCourse.Chats = await GetParticularUserChat(firstCourse.ChatHeadId, userId, firstCourse.UserID, ChatType.Course);
             }
             return users;
+        }
+
+        public UserDetailsViewModel GetUserInfo(string? userId)
+        {
+            var user = _userRepository.GetById(userId);
+            return new UserDetailsViewModel { Id = user.Id, FirstName = user.FirstName, LastName = user.LastName, IsVarified = user.IsVarified };
         }
 
         public SchoolUpdateViewModel GetSchoolInfo(Guid? schoolId)

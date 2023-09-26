@@ -407,6 +407,8 @@ export class SchoolProfileComponent
       this.noOfAppliedCourseFilters = this.school.noOfAppliedCourseFilters;
       this.addEventListnerOnCarousel();
 
+      this.isUserBannedId = response.schoolId
+      this.checkIfUserIsBanned();
       if(response.availableStorageSpace == 0){
         this.isStorageUnAvailable = true;
       }
@@ -2642,6 +2644,19 @@ export class SchoolProfileComponent
         nextButton.click();
       }
     }
+  }
+
+
+  userIsBanned:boolean=false;
+  isUserBannedId:string='';
+  checkIfUserIsBanned(){
+    debugger;
+    this._userService.isUserBanned(this.userId, this.isUserBannedId, PostAuthorTypeEnum.School).subscribe((response)=>{
+      debugger;
+      if(response.data == true){
+        this.userIsBanned = true
+      }
+    })
   }
 
 }

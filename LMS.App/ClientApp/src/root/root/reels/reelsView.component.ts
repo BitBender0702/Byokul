@@ -23,6 +23,7 @@ import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
 import 'videojs-contrib-quality-levels';
 import { Subject, Subscription } from 'rxjs';
+import { DeleteConfirmationComponent } from '../delete-confirmation/delete-confirmation.component';
 
 @Component({
   selector: 'reels-view',
@@ -573,15 +574,18 @@ export class ReelsViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
   deleteComment(item:any){
     debugger;
-    this.initializeCommentLikeUnlike();
-    this.commentLikeUnlike.userId = item.userId;
-    this.commentLikeUnlike.commentId = item.id;
-    this.commentLikeUnlike.groupName = item.groupName;
-    if(this.loginUserId == item.userId){
-      this._signalRService.notifyCommentDelete(this.commentLikeUnlike);
-      let indexOfComment = this.reels.post.comments.findIndex((x:any) => x.id == this.commentLikeUnlike.commentId);
-      this.reels.post.comments.splice(indexOfComment, 1);
-    }
+    // this.initializeCommentLikeUnlike();
+    // this.commentLikeUnlike.userId = item.userId;
+    // this.commentLikeUnlike.commentId = item.id;
+    // this.commentLikeUnlike.groupName = item.groupName;
+    // if(this.loginUserId == item.userId){
+    //   this._signalRService.notifyCommentDelete(this.commentLikeUnlike);
+    //   let indexOfComment = this.reels.post.comments.findIndex((x:any) => x.id == this.commentLikeUnlike.commentId);
+    //   this.reels.post.comments.splice(indexOfComment, 1);
+    // }
+
+    const initialState = { item : item, from : "deleteComment" };
+    this.bsModalService.show(DeleteConfirmationComponent, { initialState });
    
   }
   

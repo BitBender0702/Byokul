@@ -27,6 +27,7 @@ import { Location } from '@angular/common'
 import { StudentService } from 'src/root/service/student.service';
 import { SchoolClassCourseEnum } from 'src/root/Enums/SchoolClassCourseEnum';
 import { ClassCourseEnum } from 'src/root/Enums/classCourseEnum';
+import { DeleteConfirmationComponent } from '../delete-confirmation/delete-confirmation.component';
 
 @Component({
   selector: 'live-stream',
@@ -1075,15 +1076,17 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
 
   deleteComment(item:any){
     debugger;
-    this.initializeCommentLikeUnlike();
-    this.commentLikeUnlike.userId = item.userId;
-    this.commentLikeUnlike.commentId = item.id;
-    this.commentLikeUnlike.groupName = item.groupName;
-    if(this.userId == item.userId){
-      this._signalrService.notifyCommentDelete(this.commentLikeUnlike);
-      let indexOfComment = this.post.comments.findIndex((x:any) => x.id == this.commentLikeUnlike.commentId);
-      this.post.comments.splice(indexOfComment, 1);
-    }
+    // this.initializeCommentLikeUnlike();
+    // this.commentLikeUnlike.userId = item.userId;
+    // this.commentLikeUnlike.commentId = item.id;
+    // this.commentLikeUnlike.groupName = item.groupName;
+    // if(this.userId == item.userId){
+    //   this._signalrService.notifyCommentDelete(this.commentLikeUnlike);
+    //   let indexOfComment = this.post.comments.findIndex((x:any) => x.id == this.commentLikeUnlike.commentId);
+    //   this.post.comments.splice(indexOfComment, 1);
+    // }
+    const initialState = { item : item, from : "deleteComment" };
+    this.bsModalService.show(DeleteConfirmationComponent, { initialState });
   }
 
 

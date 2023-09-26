@@ -78,7 +78,9 @@ export class ChatComponent
   @ViewChild('chatList') chatList!: ElementRef;
   @ViewChild('schoolChatList') schoolChatList!: ElementRef;
   @ViewChild('videoPlayer', { static: false }) videoPlayer!: ElementRef;
-
+//   batch = `<span class="verified-badge " style="font-size: 90%;">
+//   <img src="../../../../assets/images/verified-badge.svg" style="height: 20px;" class="m-0"/>
+// </span>`
   chartOptions: ChartConfiguration['options'] = {
     responsive: true,
     scales: {
@@ -1473,35 +1475,84 @@ export class ChatComponent
     this.schoolInboxList = inboxList;
     let newList: any[] = [];
     var schoolIbList: any[] = this.schoolInboxList;
+   
+
+    schoolIbList.forEach((item) => {
+      if (item.school != null && !(item.userName.indexOf('(') >= 0)) {
+          let schoolVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
+                       <img src="../../../../assets/images/verified-badge.svg" style="height: 20px;" class="m-0"/>
+                        </span>`
+          var userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
+          <img src="../../../../assets/images/green-verified.svg" style="height: 20px;" class="m-0"/>
+           </span>`
+            //item.userName = item.userName + '(' + item.school.schoolName;
+            if(item.isVerified && !item.isUserVerified){
+              item.userName = item.userName +'(' + item.school.schoolName + schoolVerifiedBatch;
+            }
+            else if(!item.isVerified && item.isUserVerified){
+              item.userName = item.userName+ userVerifiedBatch +'(' + item.school.schoolName;
+            }
+            else if(item.isVerified && item.isUserVerified){
+              item.userName = item.userName+ userVerifiedBatch +'(' + item.school.schoolName + schoolVerifiedBatch;
+            }
+            else{
+              item.userName = item.userName +'(' + item.school.schoolName
+            }
+            item.userName = item.userName +")";
+          // }
+      }
+      if (item.class != null && !(item.userName.indexOf('(') >= 0)) {
+        item.userName = item.userName + '(' + item.class.className + ')';
+      }
+      if (item.course != null && !(item.userName.indexOf('(') >= 0)) {
+        item.userName = item.userName + '(' + item.course.courseName + ')';
+      }
+    });
 
     // Point: here we will differentiate school, class, course individually
-    const schoolInboxChatHeads = document.getElementsByClassName('schoolHead');
-    const len = schoolInboxChatHeads.length;
-    
-    for (let schoolInboxChatIndex = 0; schoolInboxChatIndex < len; schoolInboxChatIndex++) {
-        const item = schoolIbList[schoolInboxChatIndex];
-    
-        if (item.school != null && !(item.userName.includes('('))) {
-            if (item.isVerified) {
-                schoolInboxChatHeads[schoolInboxChatIndex].innerHTML = `
-                    ${item.userName} (${item.school.schoolName}
-                    <span class="verified-badge " style="font-size: 90%;">
-                        <img src="../../../../assets/images/verified-badge.svg" style="height: 20px;" class="m-0"/>
-                    </span>)`;
-            } else {
-                item.userName += `(${item.school.schoolName})`;
-            }
-        }
-    
-        if (item.class != null && !(item.userName.includes('('))) {
-            item.userName += `(${item.class.className})`;
-        }
-        
-        if (item.course != null && !(item.userName.includes('('))) {
-            item.userName += `(${item.course.courseName})`;
-        }
-    }
-    
+    // const schoolInboxChatHeads = document.getElementsByClassName('schoolHead');
+    // const len = schoolInboxChatHeads.length;
+
+    // for (let schoolInboxChatIndex = 0; schoolInboxChatIndex < len; schoolInboxChatIndex++) {
+    //     const item = schoolIbList[schoolInboxChatIndex];
+
+    //     if (item.school != null && !(item.userName.includes('('))) {
+    //         if (item.isVerified && !item.isUserVerified) {
+    //             schoolInboxChatHeads[schoolInboxChatIndex].innerHTML = `
+    //                 ${item.userName} (${item.school.schoolName}
+    //                 <span class="verified-badge " style="font-size: 90%;">
+    //                     <img src="../../../../assets/images/verified-badge.svg" style="height: 20px;" class="m-0"/>
+    //                 </span>)`;
+    //         }
+    //         else if (item.isUserVerified && !item.isVerified) {
+    //           schoolInboxChatHeads[schoolInboxChatIndex].innerHTML = `
+    //               ${item.userName}  <span class="verified-badge " style="font-size: 90%;">
+    //               <img src="../../../../assets/images/green-verified.svg" style="height: 20px;" class="m-0"/>
+    //               </span> (${item.school.schoolName}
+    //              )`;
+    //       }
+    //       else if(item.isUserVerified && item.isVerified){
+    //         schoolInboxChatHeads[schoolInboxChatIndex].innerHTML = `
+    //               ${item.userName}  <span class="verified-badge " style="font-size: 90%;">
+    //               <img *ngIf="${item.isUserVerified}" src="../../../../assets/images/green-verified.svg" style="height: 20px;" class="m-0"/>
+    //                (${item.school.schoolName} <img *ngIf="${item.isVerified}" src="../../../../assets/images/verified-badge.svg" style="height: 20px;" class="m-0"/>
+    //              </span>)`;
+    //       }
+    //       else {
+    //             item.userName += `(${item.school.schoolName})`;
+    //         }
+
+    //     }
+
+    //     if (item.class != null && !(item.userName.includes('('))) {
+    //         item.userName += `(${item.class.className})`;
+    //     }
+
+    //     if (item.course != null && !(item.userName.includes('('))) {
+    //         item.userName += `(${item.course.courseName})`;
+    //     }
+    //}
+
     // schoolIbList.forEach(item => {
     //   let isExist = newList.findIndex(x => x.userID == item.userID);
     //   if (!(isExist >= 0)) {
@@ -2296,9 +2347,9 @@ export class ChatComponent
           this.chatViewModel.chatTypeId = null;
         }
 
-      // var notificationContent = "sent you a message";
-      // this._notificationService.initializeNotificationViewModel(receiverId,NotificationType.Messages,notificationContent,this.senderId,null,0,null,null, this.chatViewModel.chatType,this.chatViewModel.chatTypeId).subscribe((response) => {
-      // });    
+        // var notificationContent = "sent you a message";
+        // this._notificationService.initializeNotificationViewModel(receiverId,NotificationType.Messages,notificationContent,this.senderId,null,0,null,null, this.chatViewModel.chatType,this.chatViewModel.chatTypeId).subscribe((response) => {
+        // });
 
         this.chatViewModel.fileName = this.fileName;
         this.chatViewModel.replyMessageType = this.replyMessageType;

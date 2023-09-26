@@ -89,7 +89,7 @@
                     <button 
                     (click)="banFollower(student.studentId, id)"
                     type="button"
-                    class="border-0 bg-transparent font_14 text_dark fw_400"
+                    class="border-0 bg-transparent font_14 text_dark fw_400 btn custom-btn primary_btn earning-btn fw_400 h_44 me-4 ps-4 pe-4"
                     >
                       {{ "UnBan" | translate }}
                     </button>
@@ -98,7 +98,7 @@
                   (click)="banFollower(student.studentId, id)"
                   *ngIf="!student?.isBanned"
                     type="button"
-                    class="border-0 bg-transparent font_14 text_dark fw_400"
+                    class="border-0 bg-transparent font_14 text_dark fw_400 btn custom-btn primary_btn earning-btn fw_400 h_44 me-4 ps-4 pe-4"
                   >
                     {{ "Ban" | translate }}
                   </button>

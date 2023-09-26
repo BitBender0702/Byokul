@@ -5,6 +5,7 @@ import { Observable, Subject } from "rxjs";
 import { environment } from "src/environments/environment";
 import { FollowUnfollow } from "../interfaces/FollowUnfollow";
 import { ReportFollowerViewModel } from "../interfaces/user/reportFollowerViewModel";
+import { PostAuthorTypeEnum } from "../Enums/postAuthorTypeEnum";
 
 
 @Injectable({providedIn: 'root'})
@@ -247,5 +248,10 @@ export class UserService{
         return this.http.post(`${this.apiUrl}/users/unBanFollower`,null, {params:queryParams,headers: this.headers});
     }
 
+    isUserBanned(userId:string,id:string, from: PostAuthorTypeEnum): Observable<any> {
+        debugger;
+        let queryParams = new HttpParams().append("userId",userId).append("id",id).append("from",from);
+        return this.http.post(`${this.apiUrl}/users/isUserBanned`,null, {params:queryParams,headers: this.headers});
+    }
 
 }
