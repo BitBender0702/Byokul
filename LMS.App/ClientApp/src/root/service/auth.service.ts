@@ -91,13 +91,15 @@ export class AuthService{
         }
     }
     redirectAfterTokenExpired(){
+      debugger
       const helper = new JwtHelperService();
         const token = localStorage.getItem("jwt");
         const decodedToken = helper.decodeToken(token!);
         const expirationDate = helper.getTokenExpirationDate(token!);
         const isExpired = helper.isTokenExpired(token!);
+        console.log("expiration date", expirationDate);
         if(isExpired){
-           this.router.navigate(['/user/auth/login'])
+          this.router.navigate(['/user/auth/logout'])
         } 
     }
 
