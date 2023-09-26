@@ -1,26 +1,32 @@
-.carousel {
-    /* height: 100vh; */
-    overflow: hidden;
-  }
-  
-  .video-container {
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  video {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-  }
-
-  .cursorPointer{
-    cursor: pointer;
+.verified-badge img {
+  width: 24px;
+  height: 24px;
+  margin-left: 8px;
 }
 
-a{
+.carousel {
+  /* height: 100vh; */
+  overflow: hidden;
+}
+
+.video-container {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+video {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.cursorPointer {
+  cursor: pointer;
+}
+
+a {
   cursor: pointer;
   text-decoration: none;
   color: white;
@@ -49,7 +55,6 @@ a{
 .live-action-buttons,.live-bottom-text{
   height: 50%;
 } */
-.dropdown-menu li a{
+.dropdown-menu li a {
   color: black;
 }
-
