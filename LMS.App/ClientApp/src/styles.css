@@ -3612,6 +3612,7 @@ p-autocomplete li:before {
     max-width: 110px;
   }
   .live-header .search-header .btn.search-icon {
+    display: none;
     position: relative;
     height: 33px;
     width: 45px;
