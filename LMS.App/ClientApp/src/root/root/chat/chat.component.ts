@@ -1426,7 +1426,6 @@ export class ChatComponent
           var messageList: any = [];
           localStorage.setItem('messages', JSON.stringify(messageList));
         }
-
         this.selectedChatHeadId = this.allChatUsers[0].chatHeadId;
       });
   }
@@ -1758,6 +1757,7 @@ export class ChatComponent
         var test = groupedItems;
         this.groupedMessages = groupedItems;
         // this.groupedMessages.push(test);
+        this.chatHeadId = chatHeadId;
         this.cd.detectChanges();
         console.log(this.groupedMessages);
         if (chatType == '4' && From == 'FromSchoolInbox') {
