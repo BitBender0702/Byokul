@@ -620,7 +620,13 @@
   "BannedFromCourse":"أنت محظور من هذه الدورة",
   "BannedFromClass":"أنت محظور من هذه الفئة",
   "BannedFromSchool":"أنت محظور من هذه المدرسة",
-  "BannedByUser":"لقد تم حظرك من قبل هذا المستخدم"
+  "BannedByUser":"لقد تم حظرك من قبل هذا المستخدم",
+  "NoOfSelectedImagesExceeds": "يمكنك إضافة 15 صورة كحد أقصى",
+  "ImagesMustBeLessThan15": "يجب أن تكون الصور أقل من 15",
+  "OnlyOneVideoPerPostAllowed": "يُسمح بفيديو واحد فقط في كل مشاركة"
+
+
+
 
 
 

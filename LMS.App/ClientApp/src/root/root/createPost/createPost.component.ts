@@ -599,8 +599,21 @@ export class CreatePostComponent implements OnInit, OnDestroy {
 
   }
 
+  isImageSelected:boolean = false;
+  isVideoSelected:boolean = false;
+  noOfSelectedImagesExceeds:boolean = false;
   handleImageInput(event: any) {
     debugger;
+    if(this.images.length  >= 15){
+      var translatedMessage = this.translateService.instant('ImagesMustBeLessThan15');
+      var translateSummery = this.translateService.instant('Info');
+      this.messageService.add({ severity: 'info', summary: translateSummery, life: 3000, detail: translatedMessage });
+      // this.noOfSelectedImagesExceeds = true;
+      // setTimeout(() => {
+      //   this.noOfSelectedImagesExceeds = false;
+      // }, 5000);
+      return;
+    }
     let numberOfImagesFromEvent = event.target.files.length;
     // if(this.images.length == 0){
       this.numberOfImages = this.images.length;
@@ -609,7 +622,9 @@ export class CreatePostComponent implements OnInit, OnDestroy {
      this.numberOfImages++
     }
     if (this.numberOfImages >= 16) {
-      this.messageService.add({ severity: 'info', summary: 'Info', life: 3000, detail: 'Images Must Be Less Than 15' });
+      var translatedMessage = this.translateService.instant('ImagesMustBeLessThan15');
+      var translateSummery = this.translateService.instant('Info');
+      this.messageService.add({ severity: 'info', summary: translateSummery, life: 3000, detail: translatedMessage });
       return;
     }
     var selectedFiles = event.target.files;
@@ -634,13 +649,25 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     }
     this.thumbnailRequired = false;
     this.isThumbnailUpload = true;
+    this.isImageSelected = true;
+    this.isVideoSelected = false;
   }
 
   handleImageInput2(file: any) {
-    if (this.numberOfImages >= 16) {
+    if(this.images.length  >= 15){
       // this.messageService.add({ severity: 'info', summary: 'Info', life: 3000, detail: 'Images Must Be Less Than 15' });
+
+      // this.noOfSelectedImagesExceeds = true;
+      // setTimeout(() => {
+      //   this.noOfSelectedImagesExceeds = false;
+      // }, 5000);
       return;
     }
+
+    // if (this.numberOfImages >= 16) {
+    //   // this.messageService.add({ severity: 'info', summary: 'Info', life: 3000, detail: 'Images Must Be Less Than 15' });
+    //   return;
+    // }
     const originalFile = file;
       const alteredName = originalFile.name + `_index${this.postIndexing}`;
       const newFile = new File([originalFile], alteredName, { type: originalFile.type });
@@ -657,6 +684,8 @@ export class CreatePostComponent implements OnInit, OnDestroy {
 
       this.thumbnailRequired = false;
       this.isThumbnailUpload = true;
+      this.isImageSelected = true;
+      this.isVideoSelected = false;
     };
 
     reader.readAsDataURL(file);
@@ -687,11 +716,23 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     });
     this.scheduleVideoRequired = false;
     this.isVideoUpload = true;
+    this.isImageSelected = false;
+    this.isVideoSelected = true;
   }
 
 
   removeUploadImage(image: any) {
     debugger
+    var noOfImages = this.images.length;
+    if(noOfImages == 1){
+     this.isVideoSelected = false;
+     this.isImageSelected = false;
+    }
+
+
+
+    
+
     this.numberOfImages--
     const blobUrlIndex = this.uploadVideoUrlList.findIndex((item: any) => item.blobName === image.name);
     if (blobUrlIndex > -1) {
@@ -757,6 +798,8 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     this.scheduleVideoRequired = false;
     this.isVideoUpload = true;
     this.isThumbnailUpload = true;
+    this.isVideoSelected = true;
+    this.isImageSelected = false;
     var test = this.isLiveTabopen;
     if(this.isLiveTabopen && this.videos.length > 0){
       this.images = [];
@@ -818,6 +861,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
 
   removeUploadVideo(video: any) {
     this.numberOfVideo = 0;
+    this.isVideoSelected = false;
 
     const blobUrlIndex = this.uploadVideoUrlList.findIndex((item: any) => item.blobName === video.name);
     if (blobUrlIndex > -1) {
@@ -1631,8 +1675,10 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     let showValidation = false;
     let showValidationVideo = false;
 
-    this.numberOfImages = this.images.length;
-    this.numberOfVideo = this.videos.length;
+    var numberOfImages = this.images.length;
+    var numberOfVideo = this.videos.length;
+    // this.numberOfImages = this.images.length;
+    // this.numberOfVideo = this.videos.length;
     debugger;
     if (files) {
       for (let i = 0; i < files.length; i++) {
@@ -1640,7 +1686,9 @@ export class CreatePostComponent implements OnInit, OnDestroy {
         if (file.type.startsWith('image/')) {
           this.numberOfImages++;
           if(this.numberOfImages >= 16 && !showValidation){
-            this.messageService.add({ severity: 'info', summary: 'Info', life: 3000, detail: 'Images Must Be Less Than 15' });
+            var translatedMessage = this.translateService.instant('ImagesMustBeLessThan15');
+            var translateSummery = this.translateService.instant('Info');
+            this.messageService.add({ severity: 'info', summary: translateSummery, life: 3000, detail: translatedMessage });
             showValidation = true;
           }
           this.handleImageInput2(file);

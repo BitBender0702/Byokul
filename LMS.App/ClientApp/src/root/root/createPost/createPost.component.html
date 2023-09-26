@@ -794,7 +794,7 @@
               >
                 {{ "AddMax7Tags" | translate }}
               </small>
-              <div class="dropzone-wrapper" style="height: 80px">
+              <div *ngIf="!isVideoSelected" class="dropzone-wrapper" style="height: 80px">
                 <div class="dropzone-desc">
                   <i class="glyphicon glyphicon-download-alt"></i>
                   <p class="text-center fw_400" style="padding: 15px">
@@ -817,7 +817,7 @@
                 class="steps_btns d-flex flex-column flex-md-row gap-3 align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 cr-postfooter pt-0"
               >
                 <div class="post-bot-left d-flex">
-                  <label
+                  <label *ngIf="!isVideoSelected"
                     class="custom-file-upload post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center"
                   >
                     <input
@@ -835,7 +835,7 @@
                       class="light-attach"
                     />
                   </label>
-                  <label
+                  <label *ngIf="(!isImageSelected && !isVideoSelected)"
                     class="custom-file-upload post-attch-btn rounded-circle d-inline-flex justify-content-center align-items-center"
                   >
                     <input
@@ -933,6 +933,13 @@
               >
                 {{ "AddMax7Tags" | translate }}
               </small>
+              <small
+              class="p-error"
+              style="color: orange; margin-left: 350px"
+              *ngIf="noOfSelectedImagesExceeds"
+            >
+              {{ "NoOfSelectedImagesExceeds" | translate }}
+            </small>
             </form>
           </div>
 

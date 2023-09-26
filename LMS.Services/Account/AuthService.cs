@@ -108,7 +108,7 @@ namespace LMS.Services.Account
             var token = new JwtSecurityToken(_config["Jwt:Issuer"],
               _config["Jwt:Audience"],
               identity.Claims,
-              expires: DateTime.Now.AddDays(2),
+              expires: DateTime.Now.AddMinutes(5),
               signingCredentials: credentials);
 
 

@@ -242,11 +242,15 @@
                                 class="me-2 cursor_pointer"
                               />
                               <span *ngIf="post.postAuthorType == 4" class="cursor_pointer" (click)="hideCommentModal()"
-                              [routerLink]="['/user/userProfile',post.createdBy]">{{ post.parentName }}</span>
+                              [routerLink]="['/user/userProfile',post.createdBy]">{{ post.parentName }}<span *ngIf="post.isParentVerified && post.postAuthorType == 4" class="verified-badge"
+                              ><img src="../../../../assets/images/green-verified.svg" style="height: 22px;"
+                            /></span></span>
 
                               <span *ngIf="post.postAuthorType == 1" class="cursor_pointer" (click)="hideCommentModal()"
                               [routerLink]="['/profile/school', post.parentName]"
-                              >{{ post.parentName }}</span>
+                              >{{ post.parentName }}<span *ngIf="post.isParentVerified && post.postAuthorType == 1" class="verified-badge"
+                              ><img src="../../../../assets/images/verified-badge.svg" style="height: 22px;"
+                            /></span></span>
 
                               <span *ngIf="post.postAuthorType == 2" class="cursor_pointer" (click)="hideCommentModal()"
                               [routerLink]="['/profile/class', post.schoolName, post.parentName]"

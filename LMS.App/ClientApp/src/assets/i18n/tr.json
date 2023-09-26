@@ -624,7 +624,12 @@
   "BannedFromCourse":"Bu dersten yasaklandınız",
   "BannedFromClass":"Bu dersten yasaklandınız",
   "BannedFromSchool":"Bu okuldan yasaklandın",
-  "BannedByUser":"Bu kullanıcı tarafından yasaklandınız"
+  "BannedByUser":"Bu kullanıcı tarafından yasaklandınız",
+  "NoOfSelectedImagesExceeds": "En fazla 15 görsel ekleyebilirsiniz",
+  "ImagesMustBeLessThan15": "Resimler 15'ten az olmalıdır",
+  "OnlyOneVideoPerPostAllowed": "Gönderi başına yalnızca 1 videoya izin verilir"
+
+
 
 
 

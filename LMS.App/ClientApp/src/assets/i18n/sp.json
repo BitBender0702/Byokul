@@ -445,7 +445,13 @@
   "BannedFromCourse":"You are banned from this course",
   "BannedFromClass":"You are banned from this class",
   "BannedFromSchool":"You are banned from this school",
-  "BannedByUser":"You are banned by this user"
+  "BannedByUser":"You are banned by this user",
+  "NoOfSelectedImagesExceeds": "You can add max 15 images",
+  "ImagesMustBeLessThan15": "Images must be less than 15",
+  "OnlyOneVideoPerPostAllowed": "Only 1 video per post is allowed"
+
+
+
 
 
 
