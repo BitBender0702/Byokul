@@ -54,7 +54,7 @@
           <div class="d-xl-none">
             <button type="button" class="mobile-search border_btn notification-btn position-relative border-0 bg-transparent"(click)="openSidebar()">
               <img src="../../../../assets/images/menu.svg" />
-              <!-- <span *ngIf="hamburgerCount != 0" style="right: 0px;top: 2px;" class="badge rounded-circle d-inline-flex align-items-center justify-content-center fw_700 font_12">{{ hamburgerCount }}</span> -->
+              <span *ngIf="hamburgerCount != 0" style="right: 0px;top: 2px;" class="badge rounded-circle d-inline-flex align-items-center justify-content-center fw_700 font_12">{{ hamburgerCount }}</span>
             </button>
           </div>
         </div>
@@ -7283,7 +7283,8 @@
                 </button>
                 <ul class="dropdown-menu">
                   <li>
-                    <a (click)="editUserCertificate(userCertificateInfo)" style="cursor: pointer" class="dropdown-item" data-bs-toggle="modal"
+                    <a 
+                     style="cursor: pointer" class="dropdown-item" data-bs-toggle="modal"
                       data-bs-target="#add-certificate"
                       >{{ "Edit" | translate }}
                     </a>

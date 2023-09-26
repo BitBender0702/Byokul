@@ -2179,6 +2179,7 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
     this.certificateToUpload.set('certificateImage', '');
     this.userCertificateInfo = certificateInfo;
     this.openUserOwnCertificate.nativeElement.click();
+    this.editUserCertificate(certificateInfo);
     this.cd.detectChanges();
   }
 
