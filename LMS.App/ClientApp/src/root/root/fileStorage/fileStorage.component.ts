@@ -572,6 +572,7 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
   }
 
   downloadFile(fileUrl: string, fileName: string) {
+    debugger
     const link = document.createElement('a');
     link.href = fileUrl;
     link.download = fileName;

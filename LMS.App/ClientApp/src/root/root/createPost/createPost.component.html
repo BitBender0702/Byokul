@@ -794,7 +794,7 @@
               >
                 {{ "AddMax7Tags" | translate }}
               </small>
-              <div *ngIf="!isVideoSelected && profileShare == null || profileShare == undefined" class="dropzone-wrapper" style="height: 80px">
+              <div *ngIf="!isVideoSelected && (profileShare == null || profileShare == undefined)" class="dropzone-wrapper" style="height: 80px">
                 <div class="dropzone-desc">
                   <i class="glyphicon glyphicon-download-alt"></i>
                   <p class="text-center fw_400" style="padding: 15px">

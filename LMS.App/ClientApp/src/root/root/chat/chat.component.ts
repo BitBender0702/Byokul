@@ -3038,6 +3038,18 @@ export class ChatComponent
     });
     return this.schoolInboxList[0].chats;
   }
+
+  downloadFile(fileUrl: string, fileName: string) {
+    debugger
+    const link = document.createElement('a');
+    link.href = fileUrl;
+    link.download = fileName;
+    link.style.display = 'none';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(fileUrl);
+  }
 }
 
 export enum ChartTypeEnum {

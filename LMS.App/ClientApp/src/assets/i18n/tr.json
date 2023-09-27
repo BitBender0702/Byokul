@@ -627,7 +627,9 @@
   "BannedByUser":"Bu kullanıcı tarafından yasaklandınız",
   "NoOfSelectedImagesExceeds": "En fazla 15 görsel ekleyebilirsiniz",
   "ImagesMustBeLessThan15": "Resimler 15'ten az olmalıdır",
-  "OnlyOneVideoPerPostAllowed": "Gönderi başına yalnızca 1 videoya izin verilir"
+  "OnlyOneVideoPerPostAllowed": "Gönderi başına yalnızca 1 videoya izin verilir",
+  "EitherSelectImagesOrVideo": "Resim veya video seçebilirsiniz"
+
 
 
 

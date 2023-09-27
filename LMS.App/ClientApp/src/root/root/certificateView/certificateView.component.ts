@@ -51,4 +51,15 @@ import { UserService } from 'src/root/service/user.service';
     close(): void {
       this.bsModalService.hide(this.bsModalService.config.id);
     }
+
+    downloadFile(fileUrl: string, fileName: string) {
+      const link = document.createElement('a');
+      link.href = fileUrl;
+      link.download = fileName;
+      link.style.display = 'none';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(fileUrl);
+    }
 }

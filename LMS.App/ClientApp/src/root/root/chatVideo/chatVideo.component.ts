@@ -38,5 +38,16 @@ export class ChatVideoComponent implements OnInit {
     close(){
        this.bsModalService.hide();
     }
+
+    downloadFile(fileUrl: string, fileName: string) {
+      const link = document.createElement('a');
+      link.href = fileUrl;
+      link.download = fileName;
+      link.style.display = 'none';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(fileUrl);
+    }
   
 }

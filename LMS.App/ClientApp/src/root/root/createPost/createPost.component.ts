@@ -1698,7 +1698,15 @@ export class CreatePostComponent implements OnInit, OnDestroy {
             this.messageService.add({ severity: 'info', summary: 'Info', life: 3000, detail: 'Only 1 video per post is allowed' });
             showValidationVideo = true;
           }
-          this.handleVideoInput2(file);
+          if(this.images.length !=0){
+            var translatedMessage = this.translateService.instant('EitherSelectImagesOrVideo');
+            var translateSummery = this.translateService.instant('Info');
+            this.messageService.add({ severity: 'info', summary: translateSummery, life: 3000, detail: translatedMessage });
+          }
+          if(this.images.length == 0){
+            this.handleVideoInput2(file);
+          }
+          
         }
         else if (file.type.startsWith('application/pdf')) {
           this.handleAttachmentInput2(file);
