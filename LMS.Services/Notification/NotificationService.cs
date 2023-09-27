@@ -189,25 +189,25 @@ namespace LMS.Services
 
         public async Task<List<string>> GetUserFollowersIds(string userId)
         {
-            var userFollwers = await _userFollowerRepository.GetAll().Where(x => x.UserId == userId).Select(x => x.FollowerId).ToListAsync();
+            var userFollwers = await _userFollowerRepository.GetAll().Where(x => x.UserId == userId && !x.IsBan).Select(x => x.FollowerId).ToListAsync();
             return userFollwers;
         }
 
         public async Task<List<string>> GetSchoolFollowersIds(Guid schoolId)
         {
-            var schoolFollowers = await _schoolFollowerRepository.GetAll().Where(x => x.SchoolId == schoolId).Select(x => x.UserId).ToListAsync();
+            var schoolFollowers = await _schoolFollowerRepository.GetAll().Where(x => x.SchoolId == schoolId && !x.IsBan).Select(x => x.UserId).ToListAsync();
 
             var schoolTeachers = await _schoolTeacherRepository.GetAll().Include(x => x.Teacher).Where(x => x.SchoolId == schoolId).Select(x => x.Teacher.UserId).ToListAsync();
 
             // class students
             var classList = await _classRepository.GetAll().Where(x => x.SchoolId == schoolId).ToListAsync();
-            var classStudentsList = await _classStudentRepository.GetAll().Include(x => x.Student).Distinct().ToListAsync();
+            var classStudentsList = await _classStudentRepository.GetAll().Where(x => !x.IsStudentBannedFromClass).Include(x => x.Student).Distinct().ToListAsync();
             var classStudents = classStudentsList.Where(x => classList.Any(y => y.ClassId == x.ClassId)).DistinctBy(x => x.StudentId).Select(x => x.Student.UserId);
 
 
             //course students
             var courseList = await _courseRepository.GetAll().Where(x => x.SchoolId == schoolId).ToListAsync();
-            var courseStudentsList = await _courseStudentRepository.GetAll().Include(x => x.Student).Distinct().ToListAsync();
+            var courseStudentsList = await _courseStudentRepository.GetAll().Where(x => !x.IsStudentBannedFromCourse).Include(x => x.Student).Distinct().ToListAsync();
             var courseStudents = courseStudentsList.Where(x => courseList.Any(y => y.CourseId == x.CourseId)).DistinctBy(x => x.StudentId).Select(x => x.Student.UserId);
 
             //class teachers
@@ -226,7 +226,7 @@ namespace LMS.Services
         public async Task<List<string>> GetClassFollowersIds(Guid classId)
         {
             //class students
-            var classStudents = await _classStudentRepository.GetAll().Include(x => x.Student).Where(x => x.ClassId == classId).Distinct().Select(x => x.Student.UserId).ToListAsync();
+            var classStudents = await _classStudentRepository.GetAll().Include(x => x.Student).Where(x => x.ClassId == classId && !x.IsStudentBannedFromClass).Distinct().Select(x => x.Student.UserId).ToListAsync();
 
             var classTeachers = await _classTeacherRepository.GetAll().Include(x => x.Teacher).Where(x => x.ClassId == classId).Distinct().Select(x => x.Teacher.UserId).ToListAsync();
 

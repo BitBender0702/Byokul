@@ -267,7 +267,7 @@ export class ChatComponent
             chatTypeId: this.chatTypeId,
             school: result,
             chats: [],
-            // isPinned: false,
+            isPinned: false,
             unreadMessageCount: 0,
           };
         });
@@ -283,7 +283,8 @@ export class ChatComponent
             chatTypeId: this.chatTypeId,
             class: result,
             chats: [],
-            // isPinned: false
+            isPinned: false, 
+            unreadMessageCount: 0,
           };
         });
       }
@@ -298,7 +299,8 @@ export class ChatComponent
             chatTypeId: this.chatTypeId,
             course: result,
             chats: [],
-            // isPinned: false
+            isPinned: false,
+            unreadMessageCount: 0,
           };
         });
       }
@@ -425,6 +427,9 @@ export class ChatComponent
               profileURL: result.avatar,
               chatType: response.chatType,
               chats: [],
+              chatHeadId: response.chatHeadId,
+              isPinned: false,
+              unreadMessageCount: 1
             };
 
             debugger
@@ -1369,7 +1374,7 @@ export class ChatComponent
               chats: [],
               unreadMessageCount: 0,
               chatHeadId: '1',
-              // isPinned: false
+              isPinned: false
             };
 
             this.allChatUsers.unshift(user);
@@ -1621,6 +1626,8 @@ export class ChatComponent
     this.topChatViewName = this.schoolInboxList[0].userName
     this.topChatViewIcon = this.senderAvatar
     this.loadingIcon = false;
+
+    this.topSchoolInboxChatHeadUser = this.schoolInboxList[0];
 
     // this.schoolChatList.nativeElement.scrollTop = this.schoolChatList.nativeElement.scrollHeight;
     this._chatService
@@ -1911,6 +1918,8 @@ export class ChatComponent
         //   this.userChats = response;
         //  }
       });
+      debugger
+      //this.ngOnInit();
   }
 
   pinUnpinChat(recieverId: string, chatType: string, isPinned: boolean) {
@@ -2572,7 +2581,7 @@ export class ChatComponent
             ? response.forwardedFileType
             : this.forwardedFileType,
       };
-
+      debugger;
       if (chatType == '1' || (chatType == '3' && !response.isSchoolOwner)) {
         const chatExists = this.firstuserChats.hasOwnProperty(today);
         if (chatExists) {
@@ -3075,7 +3084,7 @@ export class ChatComponent
 
   getObjectKeys(obj: any): string[] {
     if (obj != null) {
-      console.log(Object.keys(obj));
+      // console.log(Object.keys(obj));
       return Object.keys(obj).sort();
     }
     return [];
