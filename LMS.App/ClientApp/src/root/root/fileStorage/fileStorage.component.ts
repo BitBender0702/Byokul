@@ -421,13 +421,17 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
     for (let i = 0; i < selectedFiles.length; i++) {
       const file = selectedFiles[i];
 
-      if (file.type === 'application/vnd.ms-powerpoint' || 
-        file.type === 'application/pdf' || 
-        file.type.startsWith('application/msword') || 
-        file.type.startsWith('application/vnd.openxmlformats-officedocument.wordprocessingml') || 
+      if (
+        file.type === 'application/vnd.ms-powerpoint' ||
         file.type === 'application/vnd.openxmlformats-officedocument.presentationml.presentation' ||
-        file.type.startsWith('text/') || 
-        file.type.startsWith('image/')) {
+        file.type === 'application/pdf' ||
+        file.type.startsWith('application/msword') ||
+        file.type.startsWith('application/vnd.openxmlformats-officedocument.wordprocessingml') ||
+        file.type === 'application/vnd.ms-excel' ||
+        file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
+        file.type.startsWith('text/') ||
+        file.type.startsWith('image/')
+      ) {
           this.saveFileViewModel.files.push(file);
       } else {
         const translatedSummary = this.translateService.instant('Info');
