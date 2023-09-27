@@ -425,6 +425,7 @@ export class FileStorageComponent extends MultilingualComponent implements OnIni
         file.type === 'application/pdf' || 
         file.type.startsWith('application/msword') || 
         file.type.startsWith('application/vnd.openxmlformats-officedocument.wordprocessingml') || 
+        file.type === 'application/vnd.openxmlformats-officedocument.presentationml.presentation' ||
         file.type.startsWith('text/') || 
         file.type.startsWith('image/')) {
           this.saveFileViewModel.files.push(file);
