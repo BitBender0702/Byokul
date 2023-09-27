@@ -1627,6 +1627,8 @@ export class ChatComponent
     this.topChatViewIcon = this.senderAvatar
     this.loadingIcon = false;
 
+    this.topSchoolInboxChatHeadUser = this.schoolInboxList[0];
+
     // this.schoolChatList.nativeElement.scrollTop = this.schoolChatList.nativeElement.scrollHeight;
     this._chatService
       .getUsersChat(
@@ -1916,6 +1918,8 @@ export class ChatComponent
         //   this.userChats = response;
         //  }
       });
+      debugger
+      //this.ngOnInit();
   }
 
   pinUnpinChat(recieverId: string, chatType: string, isPinned: boolean) {
@@ -2577,7 +2581,7 @@ export class ChatComponent
             ? response.forwardedFileType
             : this.forwardedFileType,
       };
-
+      debugger;
       if (chatType == '1' || (chatType == '3' && !response.isSchoolOwner)) {
         const chatExists = this.firstuserChats.hasOwnProperty(today);
         if (chatExists) {
