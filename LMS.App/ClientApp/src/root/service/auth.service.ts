@@ -94,6 +94,9 @@ export class AuthService{
       debugger
       const helper = new JwtHelperService();
         const token = localStorage.getItem("jwt");
+        if(!token){
+          return;
+        }
         const decodedToken = helper.decodeToken(token!);
         const expirationDate = helper.getTokenExpirationDate(token!);
         const isExpired = helper.isTokenExpired(token!);
