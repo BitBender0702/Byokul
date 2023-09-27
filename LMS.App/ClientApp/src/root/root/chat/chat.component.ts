@@ -267,7 +267,7 @@ export class ChatComponent
             chatTypeId: this.chatTypeId,
             school: result,
             chats: [],
-            // isPinned: false,
+            isPinned: false,
             unreadMessageCount: 0,
           };
         });
@@ -283,7 +283,8 @@ export class ChatComponent
             chatTypeId: this.chatTypeId,
             class: result,
             chats: [],
-            // isPinned: false
+            isPinned: false, 
+            unreadMessageCount: 0,
           };
         });
       }
@@ -298,7 +299,8 @@ export class ChatComponent
             chatTypeId: this.chatTypeId,
             course: result,
             chats: [],
-            // isPinned: false
+            isPinned: false,
+            unreadMessageCount: 0,
           };
         });
       }
