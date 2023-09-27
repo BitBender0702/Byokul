@@ -17,7 +17,7 @@ import {
 } from 'src/root/service/signalr.service';
 import { HttpClient } from '@angular/common/http';
 import { ChartConfiguration, ChartType } from 'chart.js';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from 'src/root/service/user.service';
 import { DOCUMENT } from '@angular/common';
 import { ChatViewModel } from 'src/root/interfaces/chat/chatViwModel';
@@ -97,6 +97,18 @@ export class ChatComponent
   sender: any;
   messageToUser: string = '';
   recieverMessageInfo!: any;
+
+  topChatHeadUser:any
+  topSchoolInboxChatHeadUser:any
+
+  topChatViewIcon:any;
+  topChatViewName:any;
+  topChatViewIsUserVerified:boolean=false;
+  topChatViewIsSchoolVerified:boolean=false;
+  topChatViewChatType:any;
+  initialChatUsersData:any;
+
+
   private _userService;
   private _schoolService;
   private _classService;
@@ -213,7 +225,8 @@ export class ChatComponent
     private http: HttpClient,
     private route: ActivatedRoute,
     private userService: UserService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private router:Router
   ) {
     super(injector);
     this._userService = userService;
@@ -541,6 +554,7 @@ export class ChatComponent
                 userDetails.userName =
                   userDetails.userName + '(' + schoolDeatail.schoolName + ')';
 
+                  debugger;
                 this.schoolInboxList.unshift(userDetails);
 
                 var users: any[] = this.allChatUsers;
@@ -1196,8 +1210,11 @@ export class ChatComponent
       .subscribe((response) => {
         debugger;
         this.allChatUsers = response;
+      
         this.loadingIcon = false;
         this.isDataLoaded = true;
+
+        this.initialChatUsersData = response;
 
         var chatUsers: any[] = this.allChatUsers;
         this.schoolInboxList = chatUsers.filter(
@@ -1427,6 +1444,13 @@ export class ChatComponent
           localStorage.setItem('messages', JSON.stringify(messageList));
         }
         this.selectedChatHeadId = this.allChatUsers[0].chatHeadId;
+
+        this.topChatHeadUser = this.allChatUsers[0];
+        this.topChatViewIcon=this.allChatUsers[0]?.profileURL;
+        this.topChatViewName=this.allChatUsers[0].userName;
+        this.topChatViewIsSchoolVerified=this.allChatUsers[0].isVerified;
+        this.topChatViewIsUserVerified=this.allChatUsers[0].isUserVerified;
+        this.topChatViewChatType = this.allChatUsers[0].chatType;
       });
   }
 
@@ -1469,6 +1493,11 @@ export class ChatComponent
       (x) => x.course?.schoolId == schoolId
     );
     var inboxList = [...inboxList, ...classInboxList, ...courseInboxList];
+
+    if(inboxList.length<=0){
+      this.topChatViewName=null
+      this.topChatViewIcon=null
+    }
 
     // if(inboxList.length > 0){
     this.schoolInboxList = inboxList;
@@ -1588,6 +1617,9 @@ export class ChatComponent
     this.schoolInboxUserAvatar = this.schoolInboxList[0].profileURL;
     this.schoolInboxReceiverId = this.schoolInboxList[0].userID;
     this.chatType = this.schoolInboxList[0].chatType;
+    
+    this.topChatViewName = this.schoolInboxList[0].userName
+    this.topChatViewIcon = this.senderAvatar
     this.loadingIcon = false;
 
     // this.schoolChatList.nativeElement.scrollTop = this.schoolChatList.nativeElement.scrollHeight;
@@ -1644,6 +1676,26 @@ export class ChatComponent
     school?: any
   ) {
     debugger;
+    this.topChatViewIcon=receiverAvatar;
+    this.topChatViewName=username;
+    
+
+    
+    if(From=="FromMyInbox"){
+      this.topChatHeadUser = this.allChatUsers.find((item:any)=>item.chatHeadId == chatHeadId)
+      
+    }
+    if(From=="FromSchoolInbox"){
+      this.topSchoolInboxChatHeadUser = this.schoolInboxList.find((item:any)=>item.userID == recieverId)
+      let data = this.initialChatUsersData.find((item:any)=>item.userID == recieverId)
+    }
+    this.topChatViewIsUserVerified = this.topChatHeadUser.isUserVerified;
+      this.topChatViewIsSchoolVerified = this.topChatHeadUser.isVerified;
+
+    this.topChatViewChatType=chatType;
+
+
+
     if (this.messageToUser != '') {
       var dynamicMessages = localStorage.getItem('messages') ?? '';
       if (dynamicMessages != '') {
@@ -1772,8 +1824,8 @@ export class ChatComponent
           );
           var schoolChats = this.groupBySchoolChat(response);
           this.schoolInboxList[0].chats = schoolChats;
-          this.senderAvatar = currentChatHead.class.avatar;
-          this.senderName = currentChatHead.class.className;
+          this.senderAvatar = currentChatHead.class?.avatar;
+          this.senderName = currentChatHead.class?.className;
           this.loadingIcon = false;
           this.schoolInboxUserName = currentChatHead.userName;
           this.schoolInboxUserAvatar = currentChatHead.profileURL;
@@ -2701,9 +2753,16 @@ export class ChatComponent
     this.showMyInbox = true;
     this.showMySchoolInbox = false;
     this.chatType = this.allChatUsers[0].chatType;
+    
+    this.topChatViewIcon=this.allChatUsers[0]?.profileURL;
+    this.topChatViewName=this.allChatUsers[0].userName;
+    this.topChatViewIsSchoolVerified=this.allChatUsers[0].isVerified;
+    this.topChatViewIsUserVerified=this.allChatUsers[0].isUserVerified;
+    this.topChatViewChatType = this.allChatUsers[0].chatType;
   }
 
   showSchoolInboxDiv() {
+    debugger;
     this.chatType = this.schoolInboxList[0].chatType;
   }
 
@@ -3037,6 +3096,11 @@ export class ChatComponent
       }
     });
     return this.schoolInboxList[0].chats;
+  }
+
+  redirectToUser(userID:any){
+    debugger;
+    this.router.navigate(['/user/userProfile', userID]);
   }
 
   downloadFile(fileUrl: string, fileName: string) {
