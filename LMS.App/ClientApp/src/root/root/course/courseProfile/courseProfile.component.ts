@@ -558,11 +558,16 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
   }
 
   initializeCourseCertificateForm(){
+    const formattedDate = new Date().toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
     this.courseCertificateForm = this.fb.group({
       courseId: this.fb.control(''),
       certificateName: this.fb.control('', [Validators.required]),
       provider: this.fb.control('', [Validators.required]),
-      issuedDate: this.fb.control(new Date().toISOString().substring(0, 10), [Validators.required]),
+      issuedDate: this.fb.control(formattedDate, [Validators.required]),
       description: this.fb.control(''),
       certificateId: this.fb.control(''),
     });
@@ -991,6 +996,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
   }
 
   resetCertificateModal() {
+    debugger
     this.isSubmitted = false;
     // this.courseCertificate.certificates = [];
     this.uploadImage = null;
@@ -999,7 +1005,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     flatpickr('#issuedDate', {
       minDate: "1903-12-31",
       maxDate: new Date(),
-      dateFormat: "m/d/Y",
+      dateFormat: "d/m/Y",
       defaultDate: new Date()
     });
   }
@@ -1585,12 +1591,12 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     // dob = dob.substring(0, dob.indexOf('T'));     
 
     var issuedDate = courseCertificateInfo.issuedDate.substring(0, courseCertificateInfo.issuedDate.indexOf('T'));
-    issuedDate = this.datePipe.transform(issuedDate, 'MM/dd/yyyy');
+    issuedDate = this.datePipe.transform(issuedDate, 'dd/MM/yyyy');
 
     flatpickr('#issuedDate', {
       minDate: "1903-12-31",
       maxDate: new Date(),
-      dateFormat: "m/d/Y",
+      dateFormat: "d/m/Y",
       defaultDate: issuedDate
     });
 
@@ -1620,7 +1626,8 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
 
     this.loadingIcon = true;
     var formValue = this.courseCertificateForm.value;
-
+    const dateParts = formValue.issuedDate.split('/');
+    formValue.issuedDate = `${dateParts[1]}/${dateParts[0]}/${dateParts[2]}`;
     //here we will add if id has
     if (formValue.certificateId != "") {
       this.certificateToUpload.append('certificateId', formValue.certificateId);

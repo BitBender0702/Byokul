@@ -108,20 +108,36 @@ export class RegisterComponent extends MultilingualComponent implements OnInit,A
         // if(selectedLanguage == "ar"){
         //   var locale = Arabic;
         // }
-        const currentDate = new Date().toLocaleDateString('en-US', {
-          month: '2-digit',
+        // const currentDate = new Date().toLocaleDateString('en-US', {
+        //   month: '2-digit',
+        //   day: '2-digit',
+        //   year: 'numeric'
+        // });
+
+        const currentDate = new Date().toLocaleDateString('en-GB', {
           day: '2-digit',
+          month: '2-digit',
           year: 'numeric'
         });
 
+        debugger
+
+        // flatpickr('#date_of_birth',{
+        //   minDate:"1903-12-31",
+        //   maxDate:this.registrationForm.controls.dob.value,
+        //   dateFormat: "m/d/Y",
+        //   defaultDate: currentDate
+        // });
+
         flatpickr('#date_of_birth',{
           minDate:"1903-12-31",
-          maxDate:this.registrationForm.controls.dob.value,
-          dateFormat: "m/d/Y",
+          maxDate:new Date(),
+          dateFormat: "d/m/Y",
           defaultDate: currentDate
         });
       });
-
+      debugger
+      // const currentDate = this.getCurrentDate();
       const currentDate = new Date().toISOString().substring(0, 10);
       const formattedDate = currentDate.split('/').reverse().join('/');
       this.currentDate = this.getCurrentDate();
@@ -131,7 +147,7 @@ export class RegisterComponent extends MultilingualComponent implements OnInit,A
         lastName: this.fb.control('', [Validators.required]),
         email: this.fb.control('',[Validators.required,Validators.pattern(this.EMAIL_PATTERN)]),
         gender: this.fb.control('',[Validators.required]),
-        dob: this.fb.control(formattedDate,[Validators.required]),
+        dob: this.fb.control('',[Validators.required]),
         password: this.fb.control('', [...passwordValidators]),
         confirmPassword: this.fb.control('', [...passwordValidators]),
         countryName: this.fb.control('', [Validators.required]),
@@ -146,7 +162,8 @@ export class RegisterComponent extends MultilingualComponent implements OnInit,A
         var dd = String(today. getDate()). padStart(2, '0');
         var mm = String(today. getMonth() + 1). padStart(2, '0');
         var yyyy = today. getFullYear();
-      ​  var currentDate = yyyy + '-' + mm + '-' + dd;
+        ​var currentDate = dd + '/' + mm + '/' + yyyy;
+        // var currentDate = yyyy + '-' + mm + '-' + dd;
         return currentDate;
       }
 
@@ -209,6 +226,7 @@ export class RegisterComponent extends MultilingualComponent implements OnInit,A
   get confirmPassword() { return this.registrationForm.get('confirmPassword'); }
 
     register(){
+      debugger
       this.user = this.registrationForm.value;
 
       const str = "example-string";
@@ -217,8 +235,8 @@ export class RegisterComponent extends MultilingualComponent implements OnInit,A
       if(!this.user.dob.includes("-")){
        const dateParts = this.user.dob.split('/');
        const year = parseInt(dateParts[2]);
-       const month = parseInt(dateParts[0]) - 1;
-       const day = parseInt(dateParts[1]);
+       const month = parseInt(dateParts[1]) - 1;
+       const day = parseInt(dateParts[0]) + 1;
        const date = new Date(year, month, day);
        const convertedDateString = date.toISOString().substring(0, 10);
        this.user.dob = convertedDateString;

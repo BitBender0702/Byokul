@@ -192,13 +192,13 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
     var founded = this.createSchoolForm1.get("founded")?.value;
     if (founded != null) {
       founded = founded.substring(0, founded.indexOf('T'));
-      founded = this.datePipe.transform(founded, 'MM/dd/yyyy');
+      founded = this.datePipe.transform(founded, 'dd/MM/yyyy');
     }
 
     flatpickr('#founded', {
       minDate: "1903-12-31",
       maxDate: new Date(),
-      dateFormat: "m/d/Y",
+      dateFormat: "d/m/Y",
       defaultDate: founded
     });
 
@@ -310,6 +310,8 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
 
 
     var form1Value = this.createSchoolForm1.value;
+    const dateParts = form1Value.founded.split('/');
+    form1Value.founded = `${dateParts[1]}/${dateParts[0]}/${dateParts[2]}`;
     this.schoolName = form1Value.schoolName.split(' ').join('');
     this._schoolService.isSchoolNameExist(schoolName).subscribe((response:any) => {
       debugger

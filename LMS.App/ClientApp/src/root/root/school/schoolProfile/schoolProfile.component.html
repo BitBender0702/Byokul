@@ -3801,7 +3801,7 @@
                   >
                   {{ schoolCertificateInfo.provider }}<br />
                   <span class="fw-bold">{{ "IssuedDate" | translate }} :</span>
-                  {{ schoolCertificateInfo.issuedDate | date : "MMMM d, y"
+                  {{ schoolCertificateInfo.issuedDate | date : "dd/MM/yyyy"
                   }}<br />
                   <span *ngIf="schoolCertificateInfo.description != null">
                     <span class="fw-bold"

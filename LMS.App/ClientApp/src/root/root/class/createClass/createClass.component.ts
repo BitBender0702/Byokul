@@ -194,12 +194,12 @@ this.tagList = [];
 
 flatpickr('#start_date',{
   minDate:new Date(),
-  dateFormat: "m/d/Y"
+  dateFormat: "d/m/Y"
 });
 
 flatpickr('#end_date',{
   minDate:new Date(),
-  dateFormat: "m/d/Y"
+  dateFormat: "d/m/Y"
 });
 
 if(!this.changeLanguageSubscription){
@@ -245,6 +245,7 @@ getSelectedSchool(schoolId:string){
 
 
 dateLessThan(from: string, to: string, currentDate:string) {
+  debugger
   return (group: FormGroup): {[key: string]: any} => {
    let f = group.controls[from];
    let t = group.controls[to];
@@ -430,6 +431,12 @@ captureTeacherId(event: any) {
         return;
       }
       else{
+        const startDateParts = this.class.startDate.split('/');
+        this.class.startDate = `${startDateParts[1]}/${startDateParts[0]}/${startDateParts[2]}`;
+        const endDateParts = this.class.endDate.split('/');
+        this.class.endDate = `${endDateParts[1]}/${endDateParts[0]}/${endDateParts[2]}`;
+
+
         this.fileToUpload.append("avatarImage", this.selectedImage);
     // this.class.schoolId = schoolId;
     this.fileToUpload.append('schoolId', this.class.schoolId);

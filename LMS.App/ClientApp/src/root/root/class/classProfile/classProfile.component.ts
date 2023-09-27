@@ -657,11 +657,16 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   }
 
   initializeClassCertificateForm() {
+    const formattedDate = new Date().toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
     this.classCertificateForm = this.fb.group({
       classId: this.fb.control(''),
       certificateName: this.fb.control('', [Validators.required]),
       provider: this.fb.control('', [Validators.required]),
-      issuedDate: this.fb.control(new Date().toISOString().substring(0, 10), [Validators.required]),
+      issuedDate: this.fb.control(formattedDate, [Validators.required]),
       description: this.fb.control(''),
       certificateId: this.fb.control(''),
     });
@@ -774,11 +779,11 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
 
     var startDate = this.editClass.startDate;
     startDate = startDate.substring(0, startDate.indexOf('T'));
-    startDate = this.datePipe.transform(startDate, 'MM/dd/yyyy');
+    startDate = this.datePipe.transform(startDate, 'dd/MM/yyyy');
 
     var endDate = this.editClass.endDate;
     endDate = endDate.substring(0, endDate.indexOf('T'));
-    endDate = this.datePipe.transform(endDate, 'MM/dd/yyyy');
+    endDate = this.datePipe.transform(endDate, 'dd/MM/yyyy');
 
     var selectedLanguages: string[] = [];
 
@@ -790,13 +795,13 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
 
     flatpickr('#start_date', {
       minDate: new Date(),
-      dateFormat: "m/d/Y",
+      dateFormat: "d/m/Y",
       defaultDate: startDate
     });
 
     flatpickr('#end_date', {
       minDate: new Date(),
-      dateFormat: "m/d/Y",
+      dateFormat: "d/m/Y",
       defaultDate: endDate
     });
 
@@ -822,6 +827,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   }
 
   dateLessThan(from: string, to: string, currentDate: string) {
+    debugger
     return (group: FormGroup): { [key: string]: any } => {
       let f = group.controls[from];
       let t = group.controls[to];
@@ -1019,8 +1025,8 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
 
     this.loadingIcon = true;
     var formValue = this.classCertificateForm.value;
-
-    //here we will add if id has
+    const dateParts = formValue.issuedDate.split('/');
+    formValue.issuedDate = `${dateParts[1]}/${dateParts[0]}/${dateParts[2]}`;
     if (formValue.certificateId != "") {
       this.certificateToUpload.append('certificateId', formValue.certificateId);
     }
@@ -1085,6 +1091,10 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     this.fileToUpload.append("avatarImage", this.selectedImage);
 
     this.updateClassDetails = this.editClassForm.value;
+    const startDateParts = this.updateClassDetails.startDate.split('/');
+    this.updateClassDetails.startDate = `${startDateParts[1]}/${startDateParts[0]}/${startDateParts[2]}`;
+    const endDateParts = this.updateClassDetails.endDate.split('/');
+    this.updateClassDetails.endDate = `${endDateParts[1]}/${endDateParts[0]}/${endDateParts[2]}`;
     this.schoolName = this.editClassForm.get('schoolName')?.value;
     this.fileToUpload.append('classId', this.class.classId);
     this.fileToUpload.append('className', this.updateClassDetails.className);
@@ -1153,7 +1163,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     flatpickr('#issuedDate', {
       minDate: "1903-12-31",
       maxDate: new Date(),
-      dateFormat: "m/d/Y",
+      dateFormat: "d/m/Y",
       defaultDate: new Date()
     });
   }
@@ -1766,12 +1776,12 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     // dob = dob.substring(0, dob.indexOf('T'));     
 
     var issuedDate = classCertificateInfo.issuedDate.substring(0, classCertificateInfo.issuedDate.indexOf('T'));
-    issuedDate = this.datePipe.transform(issuedDate, 'MM/dd/yyyy');
+    issuedDate = this.datePipe.transform(issuedDate, 'dd/MM/yyyy');
 
     flatpickr('#issuedDate', {
       minDate: "1903-12-31",
       maxDate: new Date(),
-      dateFormat: "m/d/Y",
+      dateFormat: "d/m/Y",
       defaultDate: issuedDate
     });
 

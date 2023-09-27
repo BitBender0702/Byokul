@@ -7757,7 +7757,7 @@
             <span class="fw-bold">{{ "ProviderName" | translate }} :</span>
             {{ userCertificateInfo.provider }}<br />
             <span class="fw-bold">{{ "IssuedDate" | translate }} :</span>
-            {{ userCertificateInfo.issuedDate | date : "MMMM d, y" }}<br />
+            {{ userCertificateInfo.issuedDate | date : "dd/MM/yyyy" }}<br />
             <span *ngIf="userCertificateInfo.description != null">
               <span class="fw-bold">{{ "Description" | translate }} :</span>
               {{ userCertificateInfo.description }}

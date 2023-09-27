@@ -514,10 +514,18 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
       certificates: this.fb.control([], [Validators.required]),
     });
 
+    // const date = new Date().toISOString().substring(0, 10);
+    // const dateParts = date.split('-');
+    // const formattedDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
+    const formattedDate = new Date().toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
     this.userCertificateForm = this.fb.group({
       certificateName: this.fb.control('', [Validators.required]),
       provider: this.fb.control('', [Validators.required]),
-      issuedDate: this.fb.control(new Date().toISOString().substring(0, 10), [Validators.required]),
+      issuedDate: this.fb.control(formattedDate, [Validators.required]),
       description: this.fb.control(''),
       certificateId: this.fb.control(''),
     });
@@ -919,19 +927,19 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
     var dob = this.editUser.dob;
     if (dob != null) {
       dob = dob.substring(0, dob.indexOf('T'));
-      dob = this.datePipe.transform(dob, 'MM/dd/yyyy');
+      dob = this.datePipe.transform(dob, 'dd/MM/yyyy');
     }
 
-    const currentDate = new Date().toLocaleDateString('en-US', {
-      month: '2-digit',
+    const currentDate = new Date().toLocaleDateString('en-GB', {
       day: '2-digit',
+      month: '2-digit',
       year: 'numeric'
     });
 
     flatpickr('#date_of_birth', {
       minDate: "1903-12-31",
       maxDate: new Date(),
-      dateFormat: "m/d/Y",
+      dateFormat: "d/m/Y",
       defaultDate: dob
     });
 
@@ -997,6 +1005,8 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
     this.fileToUpload.append("avatarImage", this.selectedImage);
 
     this.updateUserDetails = this.editUserForm.value;
+    const dateParts = this.updateUserDetails.dob.split('/');
+    this.updateUserDetails.dob = `${dateParts[1]}/${dateParts[0]}/${dateParts[2]}`;
     this.fileToUpload.append('id', this.user.id);
     this.fileToUpload.append('firstName', this.updateUserDetails.firstName);
     this.fileToUpload.append('lastName', this.updateUserDetails.lastName);
@@ -1940,23 +1950,38 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
   }
 
   resetCertificateModal() {
+    debugger
     this.isSubmitted = false;
     this.userCertificate.certificates = [];
     this.uploadImage = null;
+    // const date = new Date().toISOString().substring(0, 10);
+    // const dateParts = date.split('-');
+    // const formattedDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
+    const formattedDate = new Date().toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
     this.userCertificateForm = this.fb.group({
       certificateName: this.fb.control('', [Validators.required]),
       provider: this.fb.control('', [Validators.required]),
-      issuedDate: this.fb.control(new Date().toISOString().substring(0, 10), [Validators.required]),
+      issuedDate: this.fb.control(formattedDate, [Validators.required]),
       description: this.fb.control(''),
       certificateId: this.fb.control(''),
     });
     this.certificateToUpload.set('certificateImage', '');
+    const currentDate = new Date().toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
     flatpickr('#issuedDate', {
       minDate: "1903-12-31",
       maxDate: new Date(),
-      dateFormat: "m/d/Y",
-      defaultDate: new Date()
+      dateFormat: "d/m/Y",
+      defaultDate: currentDate
     });
+    this.cd.detectChanges();
   }
 
   handleCertificates(event: any) {
@@ -2110,10 +2135,18 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
   }
 
   initializeCertificateForm() {
+    // const date = new Date().toISOString().substring(0, 10);
+    // const dateParts = date.split('-');
+    // const formattedDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
+    const formattedDate = new Date().toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
     this.userCertificateForm = this.fb.group({
       certificateName: this.fb.control('', [Validators.required]),
       provider: this.fb.control('', [Validators.required]),
-      issuedDate: this.fb.control(new Date().toISOString().substring(0, 10), [Validators.required]),
+      issuedDate: this.fb.control(formattedDate, [Validators.required]),
       description: this.fb.control(''),
       certificateId: this.fb.control(''),
     });
@@ -2132,7 +2165,8 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
 
     this.loadingIcon = true;
     var formValue = this.userCertificateForm.value;
-
+    const dateParts = formValue.issuedDate.split('/');
+    formValue.issuedDate = `${dateParts[1]}/${dateParts[0]}/${dateParts[2]}`;
     //here we will add if id has
     if (formValue.certificateId != "") {
       this.certificateToUpload.append('certificateId', formValue.certificateId);
@@ -2186,12 +2220,12 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
   editUserCertificate(userCertificateInfo: any) {
     debugger
     var issuedDate = userCertificateInfo.issuedDate.substring(0, userCertificateInfo.issuedDate.indexOf('T'));
-    issuedDate = this.datePipe.transform(issuedDate, 'MM/dd/yyyy');
+    issuedDate = this.datePipe.transform(issuedDate, 'dd/MM/yyyy');
 
     flatpickr('#issuedDate', {
       minDate: "1903-12-31",
       maxDate: new Date(),
-      dateFormat: "m/d/Y",
+      dateFormat: "d/m/Y",
       defaultDate: issuedDate
     });
 

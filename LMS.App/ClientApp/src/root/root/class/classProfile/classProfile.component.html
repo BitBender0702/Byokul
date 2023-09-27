@@ -1743,7 +1743,7 @@
                   <span class="fw-bold">{{ "ProviderName" | translate }} :</span>
                   {{ classCertificateInfo.provider }}<br />
                   <span class="fw-bold">{{ "IssuedDate" | translate }} :</span>
-                  {{ classCertificateInfo.issuedDate | date : "MMMM d, y"
+                  {{ classCertificateInfo.issuedDate | date : "dd/MM/yyyy"
                   }}<br />
                   <span *ngIf="classCertificateInfo.description != null">
                     <span class="fw-bold">{{ "Description" | translate }} :</span>

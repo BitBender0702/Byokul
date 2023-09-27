@@ -487,11 +487,16 @@ export class SchoolProfileComponent
       certificates: this.fb.control([], [Validators.required]),
     });
 
+    const formattedDate = new Date().toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
     this.schoolCertificateForm = this.fb.group({
       schoolId: this.fb.control(''),
       certificateName: this.fb.control('', [Validators.required]),
       provider: this.fb.control('', [Validators.required]),
-      issuedDate: this.fb.control(new Date().toISOString().substring(0, 10), [Validators.required]),
+      issuedDate: this.fb.control(formattedDate, [Validators.required]),
       description: this.fb.control(''),
       certificateId: this.fb.control(''),
     });
@@ -1024,13 +1029,13 @@ export class SchoolProfileComponent
       var founded = this.editSchool.founded;
       if (founded != null) {
         founded = founded.substring(0, founded.indexOf('T'));
-        founded = this.datePipe.transform(founded, 'MM/dd/yyyy');
+        founded = this.datePipe.transform(founded, 'dd/MM/yyyy');
       }
 
       flatpickr('#founded', {
         minDate: "1903-12-31",
         maxDate: new Date(),
-        dateFormat: "m/d/Y",
+        dateFormat: "d/m/Y",
         defaultDate: founded
       });
 
@@ -1063,8 +1068,10 @@ export class SchoolProfileComponent
 
   dateLessThan(from: string, to: string) {
     return (group: FormGroup): { [key: string]: any } => {
+      debugger
       let f = group.controls[from];
-      let t = to;
+      const dateParts = to.split('-');
+      let t = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
       if (f.value > t) {
         return {
           dates: `Founded date should be less than Current date`,
@@ -1087,6 +1094,8 @@ export class SchoolProfileComponent
     this.fileToUpload.append("avatarImage", this.selectedImage);
 
     this.updateSchoolDetails = this.editSchoolForm.value;
+    const dateParts = this.updateSchoolDetails.founded.split('/');
+    this.updateSchoolDetails.founded = `${dateParts[1]}/${dateParts[0]}/${dateParts[2]}`;
     this.fileToUpload.append('schoolId', this.school.schoolId);
     this.fileToUpload.append('schoolName', this.updateSchoolDetails.schoolName);
     this.fileToUpload.append(
@@ -1373,10 +1382,15 @@ export class SchoolProfileComponent
     this.isSubmitted = false;
     // this.addSchoolCertificate.certificates = [];
     this.uploadImage = null;
+    const formattedDate = new Date().toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
     this.schoolCertificateForm = this.fb.group({
       certificateName: this.fb.control('', [Validators.required]),
       provider: this.fb.control('', [Validators.required]),
-      issuedDate: this.fb.control(new Date().toISOString().substring(0, 10), [Validators.required]),
+      issuedDate: this.fb.control(formattedDate, [Validators.required]),
       description: this.fb.control(''),
       certificateId: this.fb.control(''),
     });
@@ -1384,7 +1398,7 @@ export class SchoolProfileComponent
     flatpickr('#issuedDate', {
       minDate: "1903-12-31",
       maxDate: new Date(),
-      dateFormat: "m/d/Y",
+      dateFormat: "d/m/Y",
       defaultDate: new Date()
     });
   }
@@ -2477,7 +2491,8 @@ export class SchoolProfileComponent
 
     this.loadingIcon = true;
     var formValue = this.schoolCertificateForm.value;
-
+    const dateParts = formValue.issuedDate.split('/');
+    formValue.issuedDate = `${dateParts[1]}/${dateParts[0]}/${dateParts[2]}`;
     //here we will add if id has
     if (formValue.certificateId != "") {
       this.certificateToUpload.append('certificateId', formValue.certificateId);
@@ -2524,12 +2539,12 @@ export class SchoolProfileComponent
     // dob = dob.substring(0, dob.indexOf('T'));     
 
     var issuedDate = schoolCertificateInfo.issuedDate.substring(0, schoolCertificateInfo.issuedDate.indexOf('T'));
-    issuedDate = this.datePipe.transform(issuedDate, 'MM/dd/yyyy');
+    issuedDate = this.datePipe.transform(issuedDate, 'dd/MM/yyyy');
 
     flatpickr('#issuedDate', {
       minDate: "1903-12-31",
       maxDate: new Date(),
-      dateFormat: "m/d/Y",
+      dateFormat: "d/m/Y",
       defaultDate: issuedDate
     });
 
