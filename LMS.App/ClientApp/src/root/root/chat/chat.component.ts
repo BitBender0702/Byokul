@@ -425,6 +425,9 @@ export class ChatComponent
               profileURL: result.avatar,
               chatType: response.chatType,
               chats: [],
+              chatHeadId: response.chatHeadId,
+              isPinned: false,
+              unreadMessageCount: 1
             };
 
             debugger
@@ -1369,7 +1372,7 @@ export class ChatComponent
               chats: [],
               unreadMessageCount: 0,
               chatHeadId: '1',
-              // isPinned: false
+              isPinned: false
             };
 
             this.allChatUsers.unshift(user);
@@ -3075,7 +3078,7 @@ export class ChatComponent
 
   getObjectKeys(obj: any): string[] {
     if (obj != null) {
-      console.log(Object.keys(obj));
+      // console.log(Object.keys(obj));
       return Object.keys(obj).sort();
     }
     return [];
