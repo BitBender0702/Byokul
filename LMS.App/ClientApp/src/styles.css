@@ -161,6 +161,35 @@ a.text_dark:hover {
   min-width: auto;
 }
 
+.upload-notification {
+  position: fixed;
+  top: 50px;
+  right: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 400px;
+  background: linear-gradient(90.02deg, #ff7b1c 0.02%, #ffa41c 99.98%);
+  padding: 12px 40px;
+  font-family: "Poppins", sans-serif;
+  border-radius: 16px;
+  z-index: 9999;
+}
+
+.upload-notification__title {
+  margin-bottom: 16px;
+  color: #fff;
+  font-size: 24px;
+}
+
+.upload-notification__percentage {
+  color: #fff;
+  margin-bottom: 0;
+  font-size: 24px;
+  font-weight: bold;
+}
+
 .form-control,
 select.form-select,
 .custom-language-select .ms-options-wrap > button {
@@ -514,6 +543,7 @@ h3.subhead-btn {
   height: 44px;
   border-radius: 8px !important;
   font-size: 14px;
+  white-space: nowrap;
 }
 
 hr.earning-hr {
@@ -1283,7 +1313,7 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .school-grid-thumbnail .medium-thumnail {
   display: flex;
-  /* height: 180px; */
+  height: 100%;
   overflow: hidden;
 }
 
@@ -2977,7 +3007,7 @@ p-autocomplete li:before {
 /*---- Loader css end ---*/
 
 .delete-modal .modal-dialog {
-  max-width: 450px;
+  max-width: 1240px;
 }
 .delete-modal h2 {
   margin-bottom: 36px;
@@ -3611,6 +3641,7 @@ p-autocomplete li:before {
     max-width: 110px;
   }
   .live-header .search-header .btn.search-icon {
+    display: none;
     position: relative;
     height: 33px;
     width: 45px;
