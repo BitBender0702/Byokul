@@ -78,9 +78,14 @@ export class ChatComponent
   @ViewChild('chatList') chatList!: ElementRef;
   @ViewChild('schoolChatList') schoolChatList!: ElementRef;
   @ViewChild('videoPlayer', { static: false }) videoPlayer!: ElementRef;
-//   batch = `<span class="verified-badge " style="font-size: 90%;">
-//   <img src="../../../../assets/images/verified-badge.svg" style="height: 20px;" class="m-0"/>
-// </span>`
+
+  schoolVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
+  <img src="../../../../assets/images/verified-badge.svg" style="height: 20px;" class="m-0"/>
+   </span>`
+userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
+<img src="../../../../assets/images/green-verified.svg" style="height: 20px;" class="m-0"/>
+</span>`
+
   chartOptions: ChartConfiguration['options'] = {
     responsive: true,
     scales: {
@@ -1512,33 +1517,43 @@ export class ChatComponent
 
     schoolIbList.forEach((item) => {
       if (item.school != null && !(item.userName.indexOf('(') >= 0)) {
-          let schoolVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
-                       <img src="../../../../assets/images/verified-badge.svg" style="height: 20px;" class="m-0"/>
-                        </span>`
-          var userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
-          <img src="../../../../assets/images/green-verified.svg" style="height: 20px;" class="m-0"/>
-           </span>`
+          
+        
             //item.userName = item.userName + '(' + item.school.schoolName;
             if(item.isVerified && !item.isUserVerified){
-              item.userName = item.userName +'(' + item.school.schoolName + schoolVerifiedBatch;
+              item.userName = item.userName +'(' + item.school.schoolName + this.schoolVerifiedBatch;
             }
             else if(!item.isVerified && item.isUserVerified){
-              item.userName = item.userName+ userVerifiedBatch +'(' + item.school.schoolName;
+              item.userName = item.userName+ this.userVerifiedBatch +'(' + item.school.schoolName;
             }
             else if(item.isVerified && item.isUserVerified){
-              item.userName = item.userName+ userVerifiedBatch +'(' + item.school.schoolName + schoolVerifiedBatch;
+              item.userName = item.userName+ this.userVerifiedBatch +'(' + item.school.schoolName + this.schoolVerifiedBatch;
             }
             else{
               item.userName = item.userName +'(' + item.school.schoolName
             }
             item.userName = item.userName +")";
-          // }
+          
       }
       if (item.class != null && !(item.userName.indexOf('(') >= 0)) {
-        item.userName = item.userName + '(' + item.class.className + ')';
+        debugger;
+        if(item.isUserVerified){
+          item.userName = item.userName + this.userVerifiedBatch +'(' + item.class.className;
+        }
+        else{
+          item.userName = item.userName +'(' + item.class.className;
+        }
+        item.userName = item.userName + ')';
       }
+
       if (item.course != null && !(item.userName.indexOf('(') >= 0)) {
-        item.userName = item.userName + '(' + item.course.courseName + ')';
+        if(item.isUserVerified){
+          item.userName = item.userName + this.userVerifiedBatch +'(' + item.course.courseName;
+        }
+        else{
+          item.userName = item.userName +'(' + item.course.courseName;
+        }
+        item.userName = item.userName + ')';
       }
     });
 
@@ -2785,6 +2800,7 @@ export class ChatComponent
 
   @HostListener('scroll', ['$event'])
   scrollHandler(event: any) {
+    debugger;
     const element = event.target; // get the scrolled element
     if (element.scrollHeight - element.scrollTop === element.clientHeight) {
       if (!this.chatHeadScrolled && this.scrollChatHeadsResponseCount != 0) {

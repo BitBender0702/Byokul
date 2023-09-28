@@ -2300,8 +2300,9 @@
                             item.class?.className
                           ]"
                           class="mb-0 cursor_pointer"
+                          [innerHTML]="item?.userName"
                         >
-                          {{ item?.userName }}
+                          <!-- {{ item?.userName }} -->
                         </h2>
                         <h2
                           *ngIf="item.chatType == 5"
@@ -2311,8 +2312,9 @@
                             item.course.courseName
                           ]"
                           class="mb-0 cursor_pointer"
+                          [innerHTML]="item?.userName"
                         >
-                          {{ item?.userName }}
+                          <!-- {{ item?.userName }} -->
                         </h2>
                         <span
                           *ngIf="
