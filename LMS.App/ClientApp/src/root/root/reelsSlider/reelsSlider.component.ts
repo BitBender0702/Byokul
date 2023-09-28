@@ -1483,6 +1483,39 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
     console.log('hy')
   }
 
+  likeUnlikeComments(commentId: string, _isLike: boolean, _isCommentLikedByCurrentUser: boolean, _likeCount: number, reel?:any) {
+    debugger;
+    var comment: any[] = reel.comments;
+    var isCommentLiked = comment.find(x => x.id == commentId);
+    this.initializeCommentLikeUnlike();
+    this.commentLikeUnlike.userId = this.sender.id;
+    this.commentLikeUnlike.commentId = commentId;
+    this.commentLikeUnlike.groupName = isCommentLiked.groupName;
+    if (isCommentLiked.isCommentLikedByCurrentUser) {
+      isCommentLiked.isCommentLikedByCurrentUser = false;
+      isCommentLiked.likeCount = isCommentLiked.likeCount - 1;
+      this.commentLikeUnlike.isLike = false;
+      this.commentLikeUnlike.likeCount = isCommentLiked.likeCount;
+    }
+    else {
+      isCommentLiked.isCommentLikedByCurrentUser = true;
+      isCommentLiked.likeCount = isCommentLiked.likeCount + 1;
+
+      this.commentLikeUnlike.isLike = true;
+      this.commentLikeUnlike.likeCount = isCommentLiked.likeCount;
+    }
+    // if(this.sender.id != isCommentLiked.user.id){
+      this.signalRService.notifyCommentLike(this.commentLikeUnlike);
+      if(isCommentLiked.user.id != this.sender.id && this.commentLikeUnlike.isLike){
+        var translatedMessage = this.translateService.instant('liked your comment');
+        var notificationContent = translatedMessage;
+        this._notificationService.initializeNotificationViewModel(isCommentLiked.user.id, NotificationType.CommentSent, notificationContent, this.sender.id, reel.id, reel.postType, null, null).subscribe((response) => {
+      });
+    }
+
+    // }
+    // this._signalRService.sendNotification();
+  }
 
 }
 
