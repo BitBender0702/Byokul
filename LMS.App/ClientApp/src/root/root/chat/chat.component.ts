@@ -445,7 +445,13 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
             };
 
             debugger
-            this.allChatUsers.unshift(userDetails);
+            if(this.chatHeadId != '1'){
+              this.allChatUsers.unshift(userDetails);  
+            }
+            else{
+              var userChatead = this.allChatUsers.find((x: { chatHeadId: string; }) => x.chatHeadId == '1');  
+              userChatead.chatHeadId = response.chatHeadId;
+            }
             this.senderID = userDetails.userID;
             this.chatType = response.chatType;
             var users: any[] = this.allChatUsers;

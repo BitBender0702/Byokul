@@ -101,10 +101,10 @@ public class ChatHubs : Hub
             await Clients.Client(receiverConnectionId).SendAsync("ReceiveMessage", chatMessageViewModel, "success");
         }
 
-        if (senderConnectionId is not null)
-        {
-            await Clients.Client(senderConnectionId).SendAsync("ReceiveMessage", chatMessageViewModel, "success");
-        }
+        //if (senderConnectionId is not null)
+        //{
+        //    await Clients.Client(senderConnectionId).SendAsync("ReceiveMessage", chatMessageViewModel, "success");
+        //}
 
     }
 
