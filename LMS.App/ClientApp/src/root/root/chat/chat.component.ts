@@ -78,9 +78,14 @@ export class ChatComponent
   @ViewChild('chatList') chatList!: ElementRef;
   @ViewChild('schoolChatList') schoolChatList!: ElementRef;
   @ViewChild('videoPlayer', { static: false }) videoPlayer!: ElementRef;
-//   batch = `<span class="verified-badge " style="font-size: 90%;">
-//   <img src="../../../../assets/images/verified-badge.svg" style="height: 20px;" class="m-0"/>
-// </span>`
+
+  schoolVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
+  <img src="../../../../assets/images/verified-badge.svg" style="height: 20px;" class="m-0"/>
+   </span>`
+userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
+<img src="../../../../assets/images/green-verified.svg" style="height: 20px;" class="m-0"/>
+</span>`
+
   chartOptions: ChartConfiguration['options'] = {
     responsive: true,
     scales: {
@@ -2885,6 +2890,7 @@ export class ChatComponent
 
   @HostListener('scroll', ['$event'])
   scrollHandler(event: any) {
+    debugger;
     const element = event.target; // get the scrolled element
     const scrollPosition = element.scrollHeight - element.scrollTop;
   const isScrollAtBottom = scrollPosition >= element.scrollHeight - element.clientHeight;

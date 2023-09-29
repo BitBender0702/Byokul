@@ -20,6 +20,15 @@
   cursor: pointer;
 }
 
+.videofile {
+  height: 64%;
+}
+.videofile img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
 .heightForText {
   height: 300px;
 }
