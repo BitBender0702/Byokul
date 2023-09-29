@@ -93,9 +93,18 @@ public class ChatHubs : Hub
 
         var reposnseMessage = await _chatService.AddChatMessage(chatMessageViewModel);
         chatMessageViewModel.Id = reposnseMessage.Id;
-        var a = UserIDConnectionID[chatMessageViewModel.Receiver.ToString()];
-        if (a is not null)
-            await Clients.Client(a).SendAsync("ReceiveMessage", chatMessageViewModel, "success");
+        var receiverConnectionId = UserIDConnectionID[chatMessageViewModel.Receiver.ToString()];
+        var senderConnectionId = UserIDConnectionID[chatMessageViewModel.Sender.ToString()];
+
+        if (receiverConnectionId is not null)
+        {
+            await Clients.Client(receiverConnectionId).SendAsync("ReceiveMessage", chatMessageViewModel, "success");
+        }
+
+        if (senderConnectionId is not null)
+        {
+            await Clients.Client(senderConnectionId).SendAsync("ReceiveMessage", chatMessageViewModel, "success");
+        }
 
     }
 

@@ -605,7 +605,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
   handleImageInput(event: any) {
     debugger;
     if(this.images.length  >= 15){
-      var translatedMessage = this.translateService.instant('ImagesMustBeLessThan15');
+      var translatedMessage = this.translateService.instant('NoOfSelectedImagesExceeds');
       var translateSummery = this.translateService.instant('Info');
       this.messageService.add({ severity: 'info', summary: translateSummery, life: 3000, detail: translatedMessage });
       // this.noOfSelectedImagesExceeds = true;
@@ -622,7 +622,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
      this.numberOfImages++
     }
     if (this.numberOfImages >= 16) {
-      var translatedMessage = this.translateService.instant('ImagesMustBeLessThan15');
+      var translatedMessage = this.translateService.instant('NoOfSelectedImagesExceeds');
       var translateSummery = this.translateService.instant('Info');
       this.messageService.add({ severity: 'info', summary: translateSummery, life: 3000, detail: translatedMessage });
       return;
@@ -1677,40 +1677,101 @@ export class CreatePostComponent implements OnInit, OnDestroy {
 
     var numberOfImages = this.images.length;
     var numberOfVideo = this.videos.length;
-    // this.numberOfImages = this.images.length;
-    // this.numberOfVideo = this.videos.length;
+    // this.numberOfImages = 0;
+    // this.numberOfVideo = 0;
+    var imageFiles = [];
+    var videoFiles = [];
+    this.numberOfImages = this.images.length;
+    this.numberOfVideo = this.videos.length;
     debugger;
     if (files) {
+     
+      
       for (let i = 0; i < files.length; i++) {
         const file: File = files.item(i)!;
         if (file.type.startsWith('image/')) {
           this.numberOfImages++;
-          if(this.numberOfImages >= 16 && !showValidation){
-            var translatedMessage = this.translateService.instant('ImagesMustBeLessThan15');
-            var translateSummery = this.translateService.instant('Info');
-            this.messageService.add({ severity: 'info', summary: translateSummery, life: 3000, detail: translatedMessage });
-            showValidation = true;
-          }
-          this.handleImageInput2(file);
+          // if(this.numberOfImages >= 16 && !showValidation){
+          //   var translatedMessage = this.translateService.instant('ImagesMustBeLessThan15');
+          //   var translateSummery = this.translateService.instant('Info');
+          //   this.messageService.add({ severity: 'info', summary: translateSummery, life: 3000, detail: translatedMessage });
+          //   showValidation = true;
+          // }
+          // if(this.numberOfImages != 0 && this.numberOfVideo != 0 ){
+          //   var translatedMessage = this.translateService.instant('EitherSelectImagesOrVideo');
+          //   var translateSummery = this.translateService.instant('Info');
+          //   this.messageService.add({ severity: 'info', summary: translateSummery, life: 3000, detail: translatedMessage });
+          //   showValidation = true;
+          // }
+          imageFiles.push(file);
+          // if(this.numberOfImages != 0 && this.numberOfVideo == 0 ){
+          //   this.handleImageInput2(file);
+          // }
         } else if (file.type.startsWith('video/')) {
           this.numberOfVideo++;
-          if(this.numberOfVideo >= 2 && !showValidationVideo){
-            this.messageService.add({ severity: 'info', summary: 'Info', life: 3000, detail: 'Only 1 video per post is allowed' });
-            showValidationVideo = true;
-          }
-          if(this.images.length !=0){
-            var translatedMessage = this.translateService.instant('EitherSelectImagesOrVideo');
-            var translateSummery = this.translateService.instant('Info');
-            this.messageService.add({ severity: 'info', summary: translateSummery, life: 3000, detail: translatedMessage });
-          }
-          if(this.images.length == 0){
-            this.handleVideoInput2(file);
-          }
+
+          // if(this.numberOfImages != 0 && this.numberOfVideo != 0 ){
+          //   var translatedMessage = this.translateService.instant('EitherSelectImagesOrVideo');
+          //   var translateSummery = this.translateService.instant('Info');
+          //   this.messageService.add({ severity: 'info', summary: translateSummery, life: 3000, detail: translatedMessage });
+          //   showValidation = true;
+          // }
+
+          // if(this.numberOfVideo >= 2 && this.numberOfImages == 0 && !showValidationVideo){
+          //   this.messageService.add({ severity: 'info', summary: 'Info', life: 3000, detail: 'Only 1 video per post is allowed' });
+          //   showValidationVideo = true;
+          // }
+          // if(this.numberOfImages !=0 && this.numberOfVideo != 0){
+          //   var translatedMessage = this.translateService.instant('EitherSelectImagesOrVideo');
+          //   var translateSummery = this.translateService.instant('Info');
+          //   this.messageService.add({ severity: 'info', summary: translateSummery, life: 3000, detail: translatedMessage });
+          // }
+          videoFiles.push(file);
+          // if(this.images.length == 0){
+          //   this.handleVideoInput2(file);
+          // }
+          // if(this.numberOfImages == 0 && this.numberOfVideo != 0 ){
+          //   this.handleImageInput2(file);
+          // }
           
         }
         else if (file.type.startsWith('application/pdf')) {
           this.handleAttachmentInput2(file);
         }
+      }
+
+      if(this.numberOfImages != 0 && this.numberOfVideo != 0 ){
+        var translatedMessage = this.translateService.instant('EitherSelectImagesOrVideo');
+        var translateSummery = this.translateService.instant('Info');
+        this.messageService.add({ severity: 'info', summary: translateSummery, life: 3000, detail: translatedMessage });
+        showValidation = true;
+      }
+
+      if(this.numberOfImages >= 16 && !showValidation){
+        var translatedMessage = this.translateService.instant('NoOfSelectedImagesExceeds');
+        var translateSummery = this.translateService.instant('Info');
+        this.messageService.add({ severity: 'info', summary: translateSummery, life: 3000, detail: translatedMessage });
+        showValidation = true;
+      }
+
+      if(this.numberOfVideo >= 2 && this.numberOfImages == 0 && !showValidationVideo){
+        var translatedMessage = this.translateService.instant('OnlyOneVideoPerPostAllowed');
+        var translateSummery = this.translateService.instant('Info');
+        this.messageService.add({ severity: 'info', summary: 'Info', life: 3000, detail: 'Only 1 video per post is allowed' });
+        showValidationVideo = true;
+        this.numberOfVideo = 0;
+      }
+
+      if(this.numberOfImages != 0 && this.numberOfVideo == 0 ){
+        imageFiles.forEach(file => {
+          this.handleImageInput2(file);
+        });
+      }
+
+      if(this.numberOfImages == 0 && this.numberOfVideo != 0 && this.numberOfVideo == 1){
+        videoFiles.forEach(file => {
+          this.handleVideoInput2(file);
+        });
       }
     }
     this.fileInput.nativeElement.value = '';

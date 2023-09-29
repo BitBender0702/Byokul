@@ -217,10 +217,10 @@ namespace LMS.Services.Chat
 
         public async Task<List<ChatUsersViewModel>> GetAllChatHeadForLoggedInUser(Guid userId, int pageNumber, string? searchString)
         {
-            int pageSize = 10;
+            int pageSize =10;
             List<ChatUsersViewModel> users = new List<ChatUsersViewModel>();
             var chatHeads = new List<ChatHead>();
-            chatHeads = _chatHeadRepository.GetAll().Include(x => x.Receiver).Include(x => x.Sender).Where(x => x.SenderId == userId.ToString() || x.ReceiverId == userId.ToString()).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+            chatHeads = _chatHeadRepository.GetAll().Include(x => x.Receiver).Include(x => x.Sender).Where(x => x.SenderId == userId.ToString() || x.ReceiverId == userId.ToString()).ToList();
 
             if (searchString != null)
             {
@@ -334,7 +334,8 @@ namespace LMS.Services.Chat
 
             }).ToList();
 
-            users = users.Concat(third).ToList();
+            var thirdSchools = third.Where(x => x.School.OwnerId != userId.ToString()).ToList();
+            users = users.Concat(thirdSchools).ToList();
 
             var fourth = chatHeads.Where(x => x.SenderId == userId.ToString() && x.ChatType == ChatType.School).Select(x => new ChatUsersViewModel
             {
@@ -350,7 +351,8 @@ namespace LMS.Services.Chat
                 //UnreadMessageCount = x.UnreadMessageCount
             }).ToList();
 
-            users = users.Concat(fourth).ToList();
+            var fourthSchools = fourth.Where(x => x.School.OwnerId != userId.ToString()).ToList();
+            users = users.Concat(fourthSchools).ToList();
 
             var five = chatHeads.Where(x => x.ReceiverId == userId.ToString() && x.ChatType == ChatType.Class).Select(x => new ChatUsersViewModel
             {
@@ -366,8 +368,8 @@ namespace LMS.Services.Chat
                 IsUserVerified = GetUserInfo(x.SenderId).IsVarified
                 //IsUserVerified = x.Sender.IsVarified
             }).ToList();
-
-            users = users.Concat(five).ToList();
+            var fiveClasses = five.Where(x => x.Class.CreatedById != userId.ToString()).ToList();
+            users = users.Concat(fiveClasses).ToList();
 
             var six = chatHeads.Where(x => x.SenderId == userId.ToString() && x.ChatType == ChatType.Class).Select(x => new ChatUsersViewModel
             {
@@ -383,8 +385,8 @@ namespace LMS.Services.Chat
 
                 //UnreadMessageCount = x.UnreadMessageCount
             }).ToList();
-
-            users = users.Concat(six).ToList();
+            var sixClasses = six.Where(x => x.Class.CreatedById != userId.ToString()).ToList();
+            users = users.Concat(sixClasses).ToList();
 
             var seven = chatHeads.Where(x => x.ReceiverId == userId.ToString() && x.ChatType == ChatType.Course).Select(x => new ChatUsersViewModel
             {
@@ -400,8 +402,8 @@ namespace LMS.Services.Chat
                 IsUserVerified = GetUserInfo(x.SenderId).IsVarified
                 //IsUserVerified = x.Sender.IsVarified
             }).ToList();
-
-            users = users.Concat(seven).ToList();
+            var sevenCourses = seven.Where(x => x.Course.CreatedById != userId.ToString()).ToList();
+            users = users.Concat(sevenCourses).ToList();
 
             var eight = chatHeads.Where(x => x.SenderId == userId.ToString() && x.ChatType == ChatType.Course).Select(x => new ChatUsersViewModel
             {
@@ -417,8 +419,8 @@ namespace LMS.Services.Chat
 
                 //UnreadMessageCount = x.UnreadMessageCount
             }).ToList();
-
-            users = users.Concat(eight).ToList();
+            var eightCourses = eight.Where(x => x.Course.CreatedById != userId.ToString()).ToList();
+            users = users.Concat(eightCourses).ToList();
 
             var chatRepo = _chatMessageRepository.GetAll();
             var attachRepo = _attachmentRepository.GetAll();
@@ -494,7 +496,7 @@ namespace LMS.Services.Chat
             {
                 firstCourse.Chats = await GetParticularUserChat(firstCourse.ChatHeadId, userId, firstCourse.UserID, ChatType.Course);
             }
-            return users;
+            return users.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
         }
 
 
@@ -503,7 +505,7 @@ namespace LMS.Services.Chat
             int pageSize = 10;
             List<ChatUsersViewModel> users = new List<ChatUsersViewModel>();
             var chatHeads = new List<ChatHead>();
-            chatHeads = _chatHeadRepository.GetAll().Include(x => x.Receiver).Where(x => x.SenderId == userId.ToString() || x.ReceiverId == userId.ToString()).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+            chatHeads = _chatHeadRepository.GetAll().Include(x => x.Receiver).Where(x => x.SenderId == userId.ToString() || x.ReceiverId == userId.ToString() && x.ChatType != ChatType.Personal).ToList();
 
             if (searchString != null)
             {
@@ -609,11 +611,12 @@ namespace LMS.Services.Chat
                 School = GetSchoolInfo(x.ChatTypeId),
                 ChatType = x.ChatType,
                 ChatTypeId = x.ChatTypeId,
-
-                UnreadMessageCount = x.UnreadMessageCount
+                UnreadMessageCount = x.UnreadMessageCount,
+                IsVerified = GetSchoolInfo(x.ChatTypeId).IsVarified,
+                IsUserVerified = GetUserInfo(x.SenderId).IsVarified
             }).ToList();
-
-            users = users.Concat(third).ToList();
+            var thirdSchools = third.Where(x => x.School.OwnerId == userId.ToString()).ToList();
+            users = users.Concat(thirdSchools).ToList();
 
             var fourth = chatHeads.Where(x => x.SenderId == userId.ToString() && x.ChatType == ChatType.School && x.ChatTypeId == schoolId).Select(x => new ChatUsersViewModel
             {
@@ -624,11 +627,12 @@ namespace LMS.Services.Chat
                 School = GetSchoolInfo(x.ChatTypeId),
                 ChatType = x.ChatType,
                 ChatTypeId = x.ChatTypeId,
-
+                IsVerified = GetSchoolInfo(x.ChatTypeId).IsVarified,
+                IsUserVerified = GetUserInfo(x.ReceiverId).IsVarified
                 //UnreadMessageCount = x.UnreadMessageCount
             }).ToList();
-
-            users = users.Concat(fourth).ToList();
+            var fourthSchools = fourth.Where(x => x.School.OwnerId == userId.ToString()).ToList();
+            users = users.Concat(fourthSchools).ToList();
 
 
 
@@ -641,11 +645,11 @@ namespace LMS.Services.Chat
                 Class = GetClassInfo(x.ChatTypeId),
                 ChatType = x.ChatType,
                 ChatTypeId = x.ChatTypeId,
-
-                UnreadMessageCount = x.UnreadMessageCount
+                UnreadMessageCount = x.UnreadMessageCount,
+                IsUserVerified = GetUserInfo(x.SenderId).IsVarified
             }).ToList();
-
-            users = users.Concat(five).ToList();
+            var fifthClassess = five.Where(x => x.Class.CreatedById == userId.ToString()).ToList();
+            users = users.Concat(fifthClassess).ToList();
 
             var six = chatHeads.Where(x => x.SenderId == userId.ToString() && x.ChatType == ChatType.Class && x.SchoolId == schoolId).Select(x => new ChatUsersViewModel
             {
@@ -656,11 +660,12 @@ namespace LMS.Services.Chat
                 Class = GetClassInfo(x.ChatTypeId),
                 ChatType = x.ChatType,
                 ChatTypeId = x.ChatTypeId,
+                IsUserVerified = GetUserInfo(x.ReceiverId).IsVarified
 
                 //UnreadMessageCount = x.UnreadMessageCount
             }).ToList();
-
-            users = users.Concat(six).ToList();
+            var sixthClassess = six.Where(x => x.Class.CreatedById == userId.ToString()).ToList();
+            users = users.Concat(sixthClassess).ToList();
 
             var seven = chatHeads.Where(x => x.ReceiverId == userId.ToString() && x.ChatType == ChatType.Course && x.SchoolId == schoolId).Select(x => new ChatUsersViewModel
             {
@@ -671,11 +676,11 @@ namespace LMS.Services.Chat
                 Course = GetCourseInfo(x.ChatTypeId),
                 ChatType = x.ChatType,
                 ChatTypeId = x.ChatTypeId,
-
+                IsUserVerified = GetUserInfo(x.SenderId).IsVarified,
                 UnreadMessageCount = x.UnreadMessageCount
             }).ToList();
-
-            users = users.Concat(seven).ToList();
+            var seventhCourses = seven.Where(x => x.Course.CreatedById == userId.ToString()).ToList();
+            users = users.Concat(seventhCourses).ToList();
 
             var eight = chatHeads.Where(x => x.SenderId == userId.ToString() && x.ChatType == ChatType.Course && x.SchoolId == schoolId).Select(x => new ChatUsersViewModel
             {
@@ -686,11 +691,11 @@ namespace LMS.Services.Chat
                 Course = GetCourseInfo(x.ChatTypeId),
                 ChatType = x.ChatType,
                 ChatTypeId = x.ChatTypeId,
-
+                IsUserVerified = GetUserInfo(x.ReceiverId).IsVarified
                 //UnreadMessageCount = x.UnreadMessageCount
             }).ToList();
-
-            users = users.Concat(eight).ToList();
+            var eightCourses = eight.Where(x => x.Course.CreatedById == userId.ToString()).ToList();
+            users = users.Concat(eightCourses).ToList();
 
             var chatRepo = _chatMessageRepository.GetAll();
             var attachRepo = _attachmentRepository.GetAll();
@@ -766,7 +771,7 @@ namespace LMS.Services.Chat
             {
                 firstCourse.Chats = await GetParticularUserChat(firstCourse.ChatHeadId, userId, firstCourse.UserID, ChatType.Course);
             }
-            return users;
+            return users.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
         }
 
         public UserDetailsViewModel GetUserInfo(string? userId)

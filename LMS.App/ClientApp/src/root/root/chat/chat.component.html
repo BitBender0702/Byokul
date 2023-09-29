@@ -1170,55 +1170,44 @@
                       <div class="leftuser-chat-icon">
                         <img
                           *ngIf="item.chatType == 1"
-                          [routerLink]="['/user/userProfile', item.userID]"
+                         
                           [src]="item?.profileURL"
                           alt=""
-                          class="cursor_pointer"
+                        
                         />
                       </div>
                       <div class="leftuser-chat-icon">
                         <img
                           *ngIf="item.chatType == 3"
-                          [routerLink]="[
-                            '/profile/school',
-                            item.school.schoolName
-                          ]"
+                         
                           [src]="item?.profileURL"
                           alt=""
-                          class="cursor_pointer"
+                          
                         />
                       </div>
                       <div class="leftuser-chat-icon">
                         <img
                           *ngIf="item.chatType == 4"
-                          [routerLink]="[
-                            '/profile/class',
-                            item.class.school?.schoolName,
-                            item.class.className
-                          ]"
+                         
                           [src]="item?.profileURL"
                           alt=""
-                          class="cursor_pointer"
+                          
                         />
                       </div>
                       <div class="leftuser-chat-icon">
                         <img
                           *ngIf="item.chatType == 5"
-                          [routerLink]="[
-                            '/profile/course',
-                            item.course?.school?.schoolName,
-                            item.course.courseName
-                          ]"
+                          
                           [src]="item?.profileURL"
                           alt=""
-                          class="cursor_pointer"
+                          
                         />
                       </div>
 
                       <h2
                         *ngIf="item.chatType == 1"
-                        [routerLink]="['/user/userProfile', item.userID]"
-                        class="mb-0 cursor_pointer"
+                        
+                        class="mb-0"
                       >
                         {{ item?.userName }}
 
@@ -1237,11 +1226,8 @@
                       </h2>
                       <h2
                         *ngIf="item.chatType == 3"
-                        [routerLink]="[
-                          '/profile/school',
-                          item.school.schoolName
-                        ]"
-                        class="mb-0 cursor_pointer"
+                        
+                        class="mb-0"
                       >
                         {{ item?.userName }}
                         <span
@@ -1255,23 +1241,15 @@
                       </h2>
                       <h2
                         *ngIf="item.chatType == 4"
-                        [routerLink]="[
-                          '/profile/class',
-                          item.class.school?.schoolName,
-                          item.class.className
-                        ]"
-                        class="mb-0 cursor_pointer"
+                       
+                        class="mb-0"
                       >
                         {{ item?.userName }}
                       </h2>
                       <h2
                         *ngIf="item.chatType == 5"
-                        [routerLink]="[
-                          '/profile/course',
-                          item.course?.school?.schoolName,
-                          item.course.courseName
-                        ]"
-                        class="mb-0 cursor_pointer"
+                       
+                        class="mb-0"
                       >
                         {{ item?.userName }}
                       </h2>
@@ -1347,7 +1325,7 @@
               style="width: max-content"
               *ngIf="topChatViewIcon != null || topChatViewName != null"
             >
-              <div class="d-flex align-items-center">
+              <div class="d-flex align-items-center cursor_pointer">
                 <div
                   class="icon rounded-circle"
                   style="width: 50px; height: 50px; background-color: #7c8da7"
@@ -2264,26 +2242,23 @@
                       <div class="chat-username d-flex align-items-center mb-2">
                         <div class="leftuser-chat-icon">
                           <img
-                            [routerLink]="['/user/userProfile', item.userID]"
+                           
                             [src]="item?.profileURL"
                             alt=""
-                            class="cursor_pointer"
+                          
                           />
                         </div>
                         <h2
                           *ngIf="item.chatType == 1"
-                          [routerLink]="['/user/userProfile', item.userID]"
-                          class="mb-0 cursor_pointer"
+                          
+                          class="mb-0"
                         >
                           {{ item?.userName }}
                         </h2>
                         <h2
                           *ngIf="item.chatType == 3"
-                          [routerLink]="[
-                            '/profile/school',
-                            item.school.schoolName
-                          ]"
-                          class="mb-0 cursor_pointer schoolHead"
+                          
+                          class="mb-0"
                           [innerHTML]="item?.userName"
                         >
                           <!-- {{ item?.userName }} ( {{item.school.schoolName}}
@@ -2294,25 +2269,19 @@
                         </h2>
                         <h2
                           *ngIf="item.chatType == 4"
-                          [routerLink]="[
-                            '/profile/class',
-                            item.class?.school?.schoolName,
-                            item.class?.className
-                          ]"
-                          class="mb-0 cursor_pointer"
+                          
+                          class="mb-0"
+                          [innerHTML]="item?.userName"
                         >
-                          {{ item?.userName }}
+                          <!-- {{ item?.userName }} -->
                         </h2>
                         <h2
                           *ngIf="item.chatType == 5"
-                          [routerLink]="[
-                            '/profile/course',
-                            item.course?.school?.schoolName,
-                            item.course.courseName
-                          ]"
-                          class="mb-0 cursor_pointer"
+                          
+                          class="mb-0"
+                          [innerHTML]="item?.userName"
                         >
-                          {{ item?.userName }}
+                          <!-- {{ item?.userName }} -->
                         </h2>
                         <span
                           *ngIf="
@@ -2376,7 +2345,7 @@
             </aside>
             <main>
               <div class="m-auto" style="width: max-content;" *ngIf="topChatViewIcon!=null || topChatViewName!=null">
-                <div class="d-flex align-items-center">
+                <div class="d-flex align-items-center cursor_pointer">
                   <div class="icon rounded-circle" style="width: 50px; height:50px; background-color: #7c8da7;" (click)="redirectToUser(topSchoolInboxChatHeadUser.userID)">
                    <img [src]="topChatViewIcon" style="width:100%; height:100%;" alt="" class="rounded-circle">
                   </div>
