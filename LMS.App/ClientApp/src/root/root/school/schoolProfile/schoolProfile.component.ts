@@ -2614,6 +2614,7 @@ export class SchoolProfileComponent
     const video = document.querySelector(`[src="${item.thumbnailUrl}"]`) as HTMLVideoElement;
     if (video) {
       video.play();
+      video.muted = true;
     }
   }
   openOfficialModal(schoolName:string,userId?:string,userName?:string,isEdit?:boolean){

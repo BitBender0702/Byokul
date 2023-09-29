@@ -95,3 +95,12 @@
   color: white;
   text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
+
+.videofile {
+  height: 64%;
+}
+.videofile img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
