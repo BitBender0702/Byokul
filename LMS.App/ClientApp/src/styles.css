@@ -3007,7 +3007,7 @@ p-autocomplete li:before {
 /*---- Loader css end ---*/
 
 .delete-modal .modal-dialog {
-  max-width: 1240px;
+  max-width: 500px;
 }
 .delete-modal h2 {
   margin-bottom: 36px;
