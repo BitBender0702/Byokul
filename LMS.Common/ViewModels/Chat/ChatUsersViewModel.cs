@@ -28,9 +28,7 @@ namespace LMS.Common.ViewModels.Chat
         public bool IsPinned { get; set; } = false;
         public int UnreadMessageCount { get; set; }
         public Guid User2ID { get; set; }
-
         public bool IsVerified { get; set; }
-
         public bool IsUserVerified { get; set; }
     }
 }

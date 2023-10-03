@@ -39,7 +39,9 @@ loadingIcon:boolean = false;
        if(response.result == "success"){
         // confirmEmailResponse.next({confirmEmail: "confirm"});
         this.router.navigate(['../login'], { relativeTo: this.route });
-        confirmEmailResponse.next(this.email); 
+        setTimeout(() => {
+          confirmEmailResponse.next(this.email); 
+        }, 500);
        }
        else{ 
         this.isDataLoaded = true;

@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectorRef, Component, ElementRef, Injector, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -9,7 +9,7 @@ import { AuthenticatedResponse } from 'src/root/interfaces/auth_response';
 import { LoginModel } from 'src/root/interfaces/login';
 import { RolesEnum } from 'src/root/RolesEnum/rolesEnum';
 import { MultilingualComponent } from 'src/root/root/sharedModule/Multilingual/multilingual.component';
-import { BehaviorSubject, finalize, Subject } from 'rxjs';
+import { BehaviorSubject, finalize, Subject, Subscription } from 'rxjs';
 import { MessageService } from 'primeng/api';
 import { SignalrService } from 'src/root/service/signalr.service';
 import { UserService } from 'src/root/service/user.service';
@@ -35,7 +35,7 @@ declare var $: any;
     providers: [MessageService]
   })
 
-export class LoginComponent extends MultilingualComponent implements OnInit {
+export class LoginComponent extends MultilingualComponent implements OnInit, OnDestroy{
     invalidLogin!: boolean;
     loginForm!:FormGroup;
     EMAIL_PATTERN = '[a-zA-Z0-9]+?(\\.[a-zA-Z0-9]+)*@[a-zA-Z]+\\.[a-zA-Z]{2,3}';
@@ -51,12 +51,13 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
     isSetPassword!: boolean;
     isChangePassword!: boolean;
     isPasswordVisible:boolean=false;
+    confirmEmailSubscription!:Subscription;
     @ViewChild('passwordInput') passwordInput!: ElementRef<HTMLInputElement>;
   
 
 
     
-    constructor(injector: Injector, private translateService: TranslateService, public messageService:MessageService,private fb: FormBuilder,private router: Router,private signalRService: SignalrService, 
+    constructor(injector: Injector, public translateService: TranslateService, public messageService:MessageService,private fb: FormBuilder,private router: Router,private signalRService: SignalrService, 
       private userService: UserService,
       private http: HttpClient,authService:AuthService,private route: ActivatedRoute,private cd: ChangeDetectorRef) { 
       super(injector);
@@ -87,6 +88,30 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
          console.log(error);   
       }
 
+      if (!this.confirmEmailSubscription) {
+        this.confirmEmailSubscription = confirmEmailResponse.subscribe(response => {
+           debugger
+           this.cd.detectChanges();
+           if(response != ''){
+             this.isConfirmEmail = true;
+             this.loginForm.controls.email.setValue(response);    
+             const translatedMessage = this.translateService.instant('EmailConfirmedSuccessfully');
+             const translatedSummary = this.translateService.instant('Success');
+             this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage,
+             });        
+           }
+           else{
+             this.isConfirmEmail = false;
+           }
+             // if(this.isConfirmEmail){
+             //   const translatedMessage = this.translateService.instant('EmailConfirmedSuccessfully');
+             //   const translatedSummary = this.translateService.instant('Success');
+             //   this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage});     
+             // }
+   
+         });
+       }
+
       registrationResponse.subscribe(response => {
         this.isRegister = response;
       });
@@ -96,6 +121,7 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
       });
 
       resetPassResponse.subscribe(response => {
+        debugger
         this.cd.detectChanges();
         this.isResetpassword = response;
         if(this.isResetpassword){
@@ -127,23 +153,12 @@ export class LoginComponent extends MultilingualComponent implements OnInit {
           });       
         }
       });
+    }
 
-      confirmEmailResponse.subscribe(response => {
-        this.cd.detectChanges();
-        if(response != ''){
-          this.isConfirmEmail = true;
-          this.loginForm.controls.email.setValue(response);     
-        }
-        else{
-          this.isConfirmEmail = false;
-        }
-        if(this.isConfirmEmail){
-          const translatedMessage = this.translateService.instant('EmailConfirmedSuccessfully');
-          const translatedSummary = this.translateService.instant('Success');
-          this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage,
-          });     
-        }
-      });
+    ngOnDestroy(): void {
+      if (this.confirmEmailSubscription) {
+        this.confirmEmailSubscription.unsubscribe();
+      }
     }
   
     onPasswordShow(){

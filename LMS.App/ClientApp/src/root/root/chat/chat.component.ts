@@ -362,7 +362,7 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
             response.senderId,
             Number(response.chatType)
           )
-          .subscribe((result) => {});
+          .subscribe((result) => {});  
       } else {
         if (this.chatHeadId != '1') {
           // unreadChatResponse.next({readMessagesCount:1,type:"add"});
