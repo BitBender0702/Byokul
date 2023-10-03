@@ -1120,8 +1120,9 @@
           </div> -->
         
           <div class="message-box">
-           
-            <aside class="chat-aside">
+           <ng-container>
+            <aside class="chat-aside" [ngClass]="isChatSelected && !isChatHeadSelected ? 'd-none' : !isChatSelected && isChatHeadSelected ? 'd-inline-block' : !isChatSelected && !isChatHeadSelected? 'd-inline-block': 'd-inline-block'"
+            >
               <ul
                 class="before-none position-relative"
                 #chatHeadsScrollList
@@ -1334,7 +1335,9 @@
                 </li>
               </ul>
             </aside>
-            <main>
+          </ng-container>
+          <ng-container>
+            <main [ngClass]="!isChatSelected && isChatHeadSelected ? 'd-none' : isChatSelected && !isChatHeadSelected ? 'd-inline-block' : !isChatSelected && !isChatHeadSelected? 'd-inline-block': 'd-inline-block'">
               <div
               class="m-auto"
               style="width: max-content"
@@ -2219,6 +2222,7 @@
                 </div>
               </div>
             </main>
+          </ng-container>
           </div>
         </div>
 
@@ -2244,7 +2248,7 @@
                  </div>
                </div>
             </div> -->
-            <aside class="chat-aside">
+            <aside class="chat-aside" class="chat-aside" [ngClass]="isChatSelected && !isChatHeadSelected ? 'd-none' : !isChatSelected && isChatHeadSelected ? 'd-inline-block' : !isChatSelected && !isChatHeadSelected? 'd-inline-block': 'd-inline-block'">
               
               <ul class="before-none position-relative">
                 <div *ngIf="schoolInboxList != undefined">
@@ -2375,7 +2379,7 @@
                 </div>
               </ul>
             </aside>
-            <main>
+            <main [ngClass]="!isChatSelected && isChatHeadSelected ? 'd-none' : isChatSelected && !isChatHeadSelected ? 'd-inline-block' : !isChatSelected && !isChatHeadSelected? 'd-inline-block': 'd-inline-block'">
               <div class="m-auto" style="width: max-content;" *ngIf="topChatViewIcon!=null || topChatViewName!=null">
                 <div class="d-flex align-items-center cursor_pointer">
                   <div class="icon rounded-circle" style="width: 50px; height:50px; background-color: #7c8da7;" (click)="redirectToUser(topSchoolInboxChatHeadUser.userID)">

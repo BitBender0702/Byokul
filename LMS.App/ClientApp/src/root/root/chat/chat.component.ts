@@ -212,6 +212,10 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
   isGenerateChatLi: boolean = false;
   groupedMessages: any;
   @ViewChild('chatHeadsScrollList') chatHeadsScrollList!: ElementRef;
+  isScreenPc: boolean = false;
+  isScreenMobile: boolean = false;
+  isChatSelected:boolean=false;
+  isChatHeadSelected:boolean=false;
   // @ViewChild('chatScrollList') chatScrollList!: ElementRef;
 
   constructor(
@@ -249,6 +253,15 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
 
   ngOnInit() {
     debugger;
+    this.checkScreenSize();
+
+    if(this.isScreenMobile){
+      this.isChatHeadSelected=true;
+      this.isChatSelected=false
+    }
+    
+
+
     this.loadingIcon = true;
     var selectedLang = localStorage.getItem('selectedLanguage');
     this.gender = localStorage.getItem('gender') ?? '';
@@ -1797,8 +1810,15 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
     school?: any
   ) {
     debugger;
+
+    
     this.topChatViewIcon=receiverAvatar;
     this.topChatViewName=username;
+
+    if(this.isScreenMobile){
+      this.isChatHeadSelected=false;
+      this.isChatSelected=true;
+    }
     
 
     
@@ -2893,7 +2913,16 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
   }
 
   back(): void {
-    window.history.back();
+    if(this.isScreenPc) window.history.back();
+    else if(this.isScreenMobile){
+      if(!this.isChatHeadSelected && this.isChatSelected){
+        this.isChatHeadSelected=true;
+        this.isChatSelected=false;
+      }
+      else{
+        window.history.back();
+      }
+    }
   }
 
   openSidebar() {
@@ -3245,6 +3274,26 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(fileUrl);
+  }
+
+  @HostListener('window:resize')
+  onWindowResize() {
+    this.checkScreenSize();
+  }
+
+  private checkScreenSize() {
+    const screenWidth = window.innerWidth;
+    this.isScreenPc = screenWidth >= 992;
+    this.isScreenMobile = screenWidth < 992;
+
+    if(this.isScreenMobile){
+      this.isChatHeadSelected=true;
+      this.isChatSelected=false;
+    }
+    if(this.isScreenPc){
+      this.isChatHeadSelected=false;
+      this.isChatSelected=false;
+    }
   }
 }
 
