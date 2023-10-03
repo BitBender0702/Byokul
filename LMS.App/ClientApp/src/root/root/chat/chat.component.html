@@ -1169,12 +1169,27 @@
                     <div class="chat-username d-flex align-items-center mb-2">
                       <div class="leftuser-chat-icon">
                         <img
-                          *ngIf="item.chatType == 1"
+                          *ngIf="item.chatType == 1 && item?.profileURL != null"
                          
                           [src]="item?.profileURL"
                           alt=""
                         
                         />
+                        <img
+                        *ngIf="item.chatType == 1 &&
+                        item?.profileURL == null && item.gender == 1
+                        "
+                        src="../../../assets/images/maleProfile.jfif"
+                        class="me-2 cursor_pointer"
+                      />
+                      <img
+                        *ngIf="item.chatType == 1 &&
+                        item?.profileURL == null &&
+                          (item.gender == 2 || item.gender == 3)
+                        "
+                        src="../../../assets/images/femaleProfile.jfif"
+                        class="me-2 cursor_pointer"
+                      />
                       </div>
                       <div class="leftuser-chat-icon">
                         <img
@@ -1331,12 +1346,29 @@
                   style="width: 50px; height: 50px; background-color: #7c8da7"
                 >
                   <img
-                    *ngIf="topChatViewChatType == 1"
+                    *ngIf="topChatViewChatType == 1 && topChatHeadUser?.profileURL!=null"
                     [routerLink]="['/user/userProfile', topChatHeadUser.userID]"
                     [src]="topChatHeadUser?.profileURL"
                     alt=""
                     class="rounded-circle"
                   />
+                  <img
+                    *ngIf="topChatViewChatType == 1 && topChatHeadUser?.profileURL==null && topChatHeadUser?.gender==1"
+                    [routerLink]="['/user/userProfile', topChatHeadUser.userID]"
+                    src="../../../assets/images/maleProfile.jfif"
+                    alt=""
+                    class="rounded-circle"
+                  />
+                  <img
+                    *ngIf="topChatViewChatType == 1 && topChatHeadUser?.profileURL==null && (topChatHeadUser?.gender==2 || topChatHeadUser?.gender==3)"
+                    [routerLink]="['/user/userProfile', topChatHeadUser.userID]"
+                    src="../../../assets/images/femaleProfile.jfif"
+                    alt=""
+                    class="rounded-circle"
+                  />
+                 
+                
+                  
                   <img
                     *ngIf="topChatViewChatType == 3"
                     [routerLink]="['/profile/school', topChatHeadUser?.school?.schoolName]"

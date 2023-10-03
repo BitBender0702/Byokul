@@ -108,7 +108,7 @@ namespace LMS.Services.UserDashboard
                 .Include(x => x.Course)
                 .Where(x => x.Student.UserId == userId && !x.Course.IsDeleted).ToListAsync();
 
-            var followedCourses = _mapper.Map<IEnumerable<CourseViewModel>>(courseStudents.Select(x => x.Course).ToList());
+             var followedCourses = _mapper.Map<IEnumerable<CourseViewModel>>(courseStudents.Select(x => x.Course).ToList());
             model.FollowedCourses = followedCourses;
 
             //unread messages

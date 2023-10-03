@@ -299,7 +299,8 @@ namespace LMS.Services.Chat
                 ChatType = x.ChatType,
                 ChatTypeId = x.ChatTypeId,
                 UnreadMessageCount = x.UnreadMessageCount,
-                IsUserVerified=x.Sender.IsVarified
+                IsUserVerified=x.Sender.IsVarified,
+                Gender=x.Sender.Gender
             }).ToList();
 
             users = users.Concat(first).ToList();
@@ -312,7 +313,9 @@ namespace LMS.Services.Chat
                 ChatHeadId = x.Id,
                 ChatType = x.ChatType,
                 ChatTypeId = x.ChatTypeId,
-                IsUserVerified = x.Receiver.IsVarified
+                IsUserVerified = x.Receiver.IsVarified,
+                Gender = x.Receiver.Gender
+            
                 /*, UnreadMessageCount = x.UnreadMessageCount */
             }).ToList();
 
