@@ -1,30 +1,60 @@
 <div *ngIf="isDataLoaded">
   <section class="f-poppins">
     <div *ngIf="isOpenModal">
-      <create-post [isOpenModal]="isOpenModal" [classId]="classId"></create-post>
+      <create-post
+        [isOpenModal]="isOpenModal"
+        [classId]="classId"
+      ></create-post>
     </div>
     <div class="main_content">
       <div class="main_content-max-width">
-        <div class="create-post-header d-flex justify-content-between d-none d-xl-flex">
-          <button #hiddenButton hidden (click)="cropModalOpen(cropTemplate)"></button>
-          <button #openClassOwnCertificate hidden data-bs-toggle="modal" data-bs-target="#classOwnCertificate"></button>
-          <button (click)="back()" type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark">
+        <div
+          class="create-post-header d-flex justify-content-between d-none d-xl-flex"
+        >
+          <button
+            #hiddenButton
+            hidden
+            (click)="cropModalOpen(cropTemplate)"
+          ></button>
+          <button
+            #openClassOwnCertificate
+            hidden
+            data-bs-toggle="modal"
+            data-bs-target="#classOwnCertificate"
+          ></button>
+          <button
+            (click)="back()"
+            type="button"
+            class="back-button bg-transparent border-0 font_16 fw_400 text_dark"
+          >
             <img lazyLoad="../../../../assets/images/arrow-left.svg" />
             {{ "Back" | translate }}
           </button>
-          <button *ngIf="
+          <button
+            *ngIf="
               (isOwner || hasIssueCertificatePermission) &&
               class.serviceType.type == 'Paid'
-            " (click)="createCertificate(class.classId, '1')" type="button"
-            class="btn custom-btn primary_btn earning-btn fw_400 h_44">
+            "
+            (click)="createCertificate(class.classId, '1')"
+            type="button"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44"
+          >
             {{ "CreateCertificate" | translate }}
           </button>
-          <button *ngIf="isOwner || (hasPostPermission && !userIsBanned)" (click)="openPostModal(true)" type="button"
-            class="btn custom-btn primary_btn earning-btn fw_400 h_44">
+          <button
+            *ngIf="isOwner || (hasPostPermission && !userIsBanned)"
+            (click)="openPostModal(true)"
+            type="button"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44"
+          >
             {{ "GoLive" | translate }}
           </button>
-          <button *ngIf="isOwner || (hasPostPermission && !userIsBanned)" (click)="openPostModal(false)" type="button"
-            class="btn custom-btn primary_btn earning-btn fw_400 h_44">
+          <button
+            *ngIf="isOwner || (hasPostPermission && !userIsBanned)"
+            (click)="openPostModal(false)"
+            type="button"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44"
+          >
             {{ "CreatePost" | translate }}
           </button>
           <!-- <button
@@ -35,19 +65,29 @@
           >
             {{ "Buyfor" | translate }} ${{ class.price }}
           </button> -->
-          <button *ngIf="
+          <button
+            *ngIf="
               !isOwner &&
               class.price != null &&
               class.price != 0 &&
-              !class.isClassAccessable
-              && !userIsBanned
-            " (click)="openPaymentModal()" type="button" class="btn custom-btn primary_btn earning-btn fw_400 h_44">
+              !class.isClassAccessable &&
+              !userIsBanned
+            "
+            (click)="openPaymentModal()"
+            type="button"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44"
+          >
             {{ "Buyfor" | translate }} {{ class.price }} {{ class.currency }}
           </button>
         </div>
-        <div class="live-header d-flex align-items-center justify-content-between">
-          <button (click)="back()" type="button"
-            class="back-button bg-transparent border-0 font_16 fw_400 text_dark d-xl-none">
+        <div
+          class="live-header d-flex align-items-center justify-content-between"
+        >
+          <button
+            (click)="back()"
+            type="button"
+            class="back-button bg-transparent border-0 font_16 fw_400 text_dark d-xl-none"
+          >
             <img lazyLoad="../../../../assets/images/arrow-left.svg" />
             {{ "Back" | translate }}
           </button>
@@ -55,13 +95,18 @@
             <img lazyLoad="../../../../assets/images/logo.svg" />
           </span>
           <div class="d-xl-none">
-            <button type="button" class="mobile-search border_btn notification-btn position-relative border-0 bg-transparent"
-            (click)="openSidebar()">
+            <button
+              type="button"
+              class="mobile-search border_btn notification-btn position-relative border-0 bg-transparent"
+              (click)="openSidebar()"
+            >
               <img lazyLoad="../../../../assets/images/menu.svg" />
               <span
-              *ngIf="hamburgerCount != 0" style="right: 0px;top: 2px;"
-              class="badge rounded-circle d-inline-flex align-items-center justify-content-center fw_700 font_12"
-              >{{ hamburgerCount }}</span>
+                *ngIf="hamburgerCount != 0"
+                style="right: 0px; top: 2px"
+                class="badge rounded-circle d-inline-flex align-items-center justify-content-center fw_700 font_12"
+                >{{ hamburgerCount }}</span
+              >
             </button>
           </div>
         </div>
@@ -75,8 +120,13 @@
           <div class="d-flex align-items-center flex-wrap flex-md-nowrap">
             <div class="d-flex align-items-center mb-3 mb-md-0">
               <div class="position-relative">
-                <div class="school-profile-icon rounded-circle class-course-image">
-                  <img *ngIf="class.avatar != 'null'" [lazyLoad]="class.avatar" />
+                <div
+                  class="school-profile-icon rounded-circle class-course-image"
+                >
+                  <img
+                    *ngIf="class.avatar != 'null'"
+                    [lazyLoad]="class.avatar"
+                  />
                 </div>
                 <div class="univ-logo">
                   <img [lazyLoad]="class.school.avatar" />
@@ -88,7 +138,9 @@
             </div>
 
             <div class="school-profile-content edit-profilehover w-100">
-              <div class="d-flex justify-content-between flex-wrap class_request align-items-center mb-4">
+              <div
+                class="d-flex justify-content-between flex-wrap class_request align-items-center mb-4"
+              >
                 <h2 class="font_24 fw_700 mb-0 d-none d-md-block">
                   {{ class.className }}
                 </h2>
@@ -101,33 +153,58 @@
                     {{ class.endDate | date : "dd/MM/yyyy" }}
                   </span>
                   <span class="sepearator mx-4">|</span>
-                  <span class="date-class text_ltgray font_14">{{ class.posts.length }} {{ "Lectures" | translate
-                    }}</span>
+                  <span class="date-class text_ltgray font_14"
+                    >{{ class.posts.length }} {{ "Lectures" | translate }}</span
+                  >
                 </div>
               </div>
 
               <div class="position-relative" *ngIf="!userIsBanned">
-                <div class="d-flex justify-content-between flex-wrap class_request align-items-center">
+                <div
+                  class="d-flex justify-content-between flex-wrap class_request align-items-center"
+                >
                   <div>
-                    <div class="followers_name d-inline-flex align-items-center gap-1 font_16 mr-_24">
-                      <img lazyLoad="../../../../assets/images/Star-solid-dark.svg" />{{ "Rating" | translate }}:
+                    <div
+                      class="followers_name d-inline-flex align-items-center gap-1 font_16 mr-_24"
+                    >
+                      <img
+                        lazyLoad="../../../../assets/images/Star-solid-dark.svg"
+                      />{{ "Rating" | translate }}:
                       <b class="fw_700">{{ class.rating }}</b>
                     </div>
-                    <div class="followers_name d-inline-flex align-items-center gap-1 font_16 mr-_24">
-                      <img lazyLoad="../../../../assets/images/students-icon.svg" />{{ "Students" | translate }}:
-                      <b class="fw_700"><a style="
+                    <div
+                      class="followers_name d-inline-flex align-items-center gap-1 font_16 mr-_24"
+                    >
+                      <img
+                        lazyLoad="../../../../assets/images/students-icon.svg"
+                      />{{ "Students" | translate }}:
+                      <b class="fw_700"
+                        ><a
+                          style="
                             text-decoration: none;
                             cursor: pointer;
                             color: black;
-                          " [routerLink]="['/user/studentList', class.classId, 2]">{{ class.students }}</a></b>
+                          "
+                          [routerLink]="['/user/studentList', class.classId, 2]"
+                          >{{ class.students }}</a
+                        ></b
+                      >
                     </div>
-                    <div class="followers_name d-inline-flex align-items-center gap-1 font_16 mr-_24">
-                      <img lazyLoad="../../../../assets/images/Edit-dark.svg" />{{ "Post" | translate }}:
+                    <div
+                      class="followers_name d-inline-flex align-items-center gap-1 font_16 mr-_24"
+                    >
+                      <img
+                        lazyLoad="../../../../assets/images/Edit-dark.svg"
+                      />{{ "Post" | translate }}:
                       <b class="fw_700">{{ class.posts.length }}</b>
                     </div>
                   </div>
 
-                  <div class="hover-double-button" style="margin-top: -15px;" *ngIf="!userIsBanned">
+                  <div
+                    class="hover-double-button"
+                    style="margin-top: -15px"
+                    *ngIf="!userIsBanned"
+                  >
                     <!-- <button
                       *ngIf="isOwner"
                       (click)="
@@ -146,57 +223,101 @@
                     >
                       {{ "Rate" | translate }}
                     </button> -->
-                    <button *ngIf="isOwner" class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins"
-                      data-bs-toggle="modal" data-bs-target="#confirm-courseChange">
+                    <button
+                      *ngIf="isOwner"
+                      class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins"
+                      data-bs-toggle="modal"
+                      data-bs-target="#confirm-courseChange"
+                    >
                       {{ "ConvertToCourse" | translate }}
                     </button>
-                    <button *ngIf="isOwner || hasUpdateClassPermission" (click)="getClassDetails(class.classId)"
-                      class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins ms-1" data-bs-toggle="modal"
-                      data-bs-target="#editClass">
-                      <img lazyLoad="../../../../assets/images/Setting-solid-dark.svg" class="me-2" />
+                    <button
+                      *ngIf="isOwner || hasUpdateClassPermission"
+                      (click)="getClassDetails(class.classId)"
+                      class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins ms-1"
+                      data-bs-toggle="modal"
+                      data-bs-target="#editClass"
+                    >
+                      <img
+                        lazyLoad="../../../../assets/images/Setting-solid-dark.svg"
+                        class="me-2"
+                      />
                       {{ "EditProfile" | translate }}
                     </button>
-                    <button *ngIf="isOwner" class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins"
-                      data-bs-toggle="modal" data-bs-target="#deleteclass">
+                    <button
+                      *ngIf="isOwner"
+                      class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins"
+                      data-bs-toggle="modal"
+                      data-bs-target="#deleteclass"
+                    >
                       {{ "DeleteClass" | translate }}
                     </button>
-                    <button *ngIf="isOwner" class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins"
-                      data-bs-toggle="modal" data-bs-target="#enableDisableClass">
+                    <button
+                      *ngIf="isOwner"
+                      class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins"
+                      data-bs-toggle="modal"
+                      data-bs-target="#enableDisableClass"
+                    >
                       <span *ngIf="!class.isDisableByOwner">{{
                         "DisableClass" | translate
-                        }}</span>
+                      }}</span>
                       <span *ngIf="class.isDisableByOwner">{{
                         "EnableClass" | translate
-                        }}</span>
+                      }}</span>
                     </button>
-                    <button *ngIf="isOwner" style="min-width: 50px" type="button" (click)="openProfileShareModal()"
-                      class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn me-0 minw-142 class-request-msg">
-                      <img lazyLoad="../../../../assets/images/Upload-dark.svg" class="d-block mx-auto" />
+                    <button
+                      *ngIf="isOwner"
+                      style="min-width: 50px"
+                      type="button"
+                      (click)="openProfileShareModal()"
+                      class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn me-0 minw-142 class-request-msg"
+                    >
+                      <img
+                        lazyLoad="../../../../assets/images/Upload-dark.svg"
+                        class="d-block mx-auto"
+                      />
                     </button>
                   </div>
 
                   <!-- // right here -->
-                  <div *ngIf="!isOwner && !userIsBanned">
-                    <button *ngIf="!isOwner && !isRatedByUser"
+                  <div
+                    class="d-flex align-items-center gap-3"
+                    *ngIf="!isOwner && !userIsBanned"
+                  >
+                    <button
+                      *ngIf="!isOwner && !isRatedByUser"
                       class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn me-0 minw-142 class-request-msg"
-                      data-bs-toggle="modal" data-bs-target="#rate-class">
+                      data-bs-toggle="modal"
+                      data-bs-target="#rate-class"
+                    >
                       {{ "Rate" | translate }}
                     </button>
-  
-                    <button *ngIf="!isOwner" type="button" (click)="
+
+                    <button
+                      *ngIf="!isOwner"
+                      type="button"
+                      (click)="
                         requestMessage(class.createdById, '4', class.classId)
                       "
-                      class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn me-0 minw-142 class-request-msg">
+                      class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn me-0 minw-142 class-request-msg"
+                    >
                       {{ "RequestMessage" | translate }}
                     </button>
-  
-                    <button *ngIf="!isOwner" style="min-width: 50px" type="button" (click)="openProfileShareModal()"
-                      class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn me-0 minw-142 class-request-msg">
-                      <img lazyLoad="../../../../assets/images/Upload-dark.svg" class="d-block mx-auto" />
+
+                    <button
+                      *ngIf="!isOwner"
+                      style="min-width: 50px"
+                      type="button"
+                      (click)="openProfileShareModal()"
+                      class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn me-0 minw-142 class-request-msg"
+                    >
+                      <img
+                        lazyLoad="../../../../assets/images/Upload-dark.svg"
+                        class="d-block mx-auto"
+                      />
                     </button>
                   </div>
                 </div>
-                
               </div>
             </div>
           </div>
@@ -204,34 +325,55 @@
             {{ class.description }}
           </p>
         </div>
-        <div *ngIf="
+        <div
+          *ngIf="
             class.classCertificates.length != 0 ||
             this.isOwner ||
             hasAddClassCertificatesPermission
-          ">
+          "
+        >
           <div class="teacher-tags tag-box hover-tags">
             <div class="teacher-tags tag-box mt-0 hover-tags">
               <div class="teacher-content font_14 d-inline-block">
                 <img lazyLoad="../../../../assets/images/dark-star.svg" />{{
-                "Sertificates" | translate
+                  "Sertificates" | translate
                 }}
               </div>
 
-              <span *ngFor="let item of class.classCertificates" class="custom-tag"><span
-                  (click)="openClassCertificate(item)">{{
+              <span
+                *ngFor="let item of class.classCertificates"
+                class="custom-tag"
+                ><span (click)="openClassCertificate(item)">{{
                   item.name
-                  }}</span><button (click)="getDeletedCertificate(item.id)"
-                  class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal"
-                  data-bs-target="#delete-classCertificate">
-                  <img *ngIf="isOwner || hasAddClassCertificatesPermission"
-                    lazyLoad="../../../../assets/images/cross-sm-light.svg" /></button></span>
+                }}</span
+                ><button
+                  (click)="getDeletedCertificate(item.id)"
+                  class="border-0 bg-transparent p-0 position-absolute delete-tag"
+                  data-bs-toggle="modal"
+                  data-bs-target="#delete-classCertificate"
+                >
+                  <img
+                    *ngIf="isOwner || hasAddClassCertificatesPermission"
+                    lazyLoad="../../../../assets/images/cross-sm-light.svg"
+                  /></button
+              ></span>
 
-              <span *ngIf="isOwner || hasAddClassCertificatesPermission" class="custom-tag"
-                (click)="resetCertificateModal()" data-bs-toggle="modal" data-bs-target="#add-certificate">{{
-                "AddCertificates" | translate
-                }}<button (click)="resetCertificateModal()" data-bs-toggle="modal" data-bs-target="#add-certificate"
-                  class="border-0 bg-transparent p-0 position-absolute delete-tag">
-                  <img lazyLoad="../../../../assets/images/school/plus-light.svg" />
+              <span
+                *ngIf="isOwner || hasAddClassCertificatesPermission"
+                class="custom-tag"
+                (click)="resetCertificateModal()"
+                data-bs-toggle="modal"
+                data-bs-target="#add-certificate"
+                >{{ "AddCertificates" | translate
+                }}<button
+                  (click)="resetCertificateModal()"
+                  data-bs-toggle="modal"
+                  data-bs-target="#add-certificate"
+                  class="border-0 bg-transparent p-0 position-absolute delete-tag"
+                >
+                  <img
+                    lazyLoad="../../../../assets/images/school/plus-light.svg"
+                  />
                 </button>
               </span>
             </div>
@@ -241,22 +383,41 @@
           <div class="teacher-tags tag-box mt-0 hover-tags">
             <div class="teacher-content font_14 d-inline-block">
               <img lazyLoad="../../../../assets/images/Volume-Down.svg" />{{
-              "Languages" | translate
+                "Languages" | translate
               }}
             </div>
 
-            <span *ngFor="let item of class.languages" class="custom-tag">{{ item.name
-              }}<button *ngIf="class.languages.length > 1" (click)="getDeletedLanguage(item.id)"
-                class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal"
-                data-bs-target="#delete-classLanguage">
-                <img *ngIf="isOwner || hasAddLanguagesPermission"
-                  lazyLoad="../../../../assets/images/cross-sm-light.svg" /></button></span>
+            <span *ngFor="let item of class.languages" class="custom-tag"
+              >{{ item.name
+              }}<button
+                *ngIf="class.languages.length > 1"
+                (click)="getDeletedLanguage(item.id)"
+                class="border-0 bg-transparent p-0 position-absolute delete-tag"
+                data-bs-toggle="modal"
+                data-bs-target="#delete-classLanguage"
+              >
+                <img
+                  *ngIf="isOwner || hasAddLanguagesPermission"
+                  lazyLoad="../../../../assets/images/cross-sm-light.svg"
+                /></button
+            ></span>
 
-            <span *ngIf="isOwner || hasAddLanguagesPermission" class="custom-tag" (click)="resetLanguageModal()"
-              data-bs-toggle="modal" data-bs-target="#add-language">{{ "AddLanguage" | translate
-              }}<button (click)="resetLanguageModal()" class="border-0 bg-transparent p-0 position-absolute delete-tag"
-                data-bs-toggle="modal" data-bs-target="#add-language">
-                <img lazyLoad="../../../../assets/images/school/plus-light.svg" />
+            <span
+              *ngIf="isOwner || hasAddLanguagesPermission"
+              class="custom-tag"
+              (click)="resetLanguageModal()"
+              data-bs-toggle="modal"
+              data-bs-target="#add-language"
+              >{{ "AddLanguage" | translate
+              }}<button
+                (click)="resetLanguageModal()"
+                class="border-0 bg-transparent p-0 position-absolute delete-tag"
+                data-bs-toggle="modal"
+                data-bs-target="#add-language"
+              >
+                <img
+                  lazyLoad="../../../../assets/images/school/plus-light.svg"
+                />
               </button>
             </span>
           </div>
@@ -266,16 +427,23 @@
             <div class="teacher-tags tag-box mt-0 hover-tags">
               <div class="teacher-content font_14 d-inline-block">
                 <img lazyLoad="../../../../assets/images/Profile-dark.svg" />{{
-                "Officials" | translate
+                  "Officials" | translate
                 }}
               </div>
 
-              <span *ngFor="let item of class.teachers" class="custom-tag">{{ item.firstName + " " + item.lastName
-                }}<button (click)="getDeletedTeacher(item.teacherId)"
-                  class="border-0 bg-transparent p-0 position-absolute delete-tag" data-bs-toggle="modal"
-                  data-bs-target="#delete-classTeacher">
-                  <img *ngIf="isOwner || hasManageTeachersPermission"
-                    lazyLoad="../../../../assets/images/cross-sm-light.svg" /></button></span>
+              <span *ngFor="let item of class.teachers" class="custom-tag"
+                >{{ item.firstName + " " + item.lastName
+                }}<button
+                  (click)="getDeletedTeacher(item.teacherId)"
+                  class="border-0 bg-transparent p-0 position-absolute delete-tag"
+                  data-bs-toggle="modal"
+                  data-bs-target="#delete-classTeacher"
+                >
+                  <img
+                    *ngIf="isOwner || hasManageTeachersPermission"
+                    lazyLoad="../../../../assets/images/cross-sm-light.svg"
+                  /></button
+              ></span>
 
               <!-- <span
                 *ngIf="isOwner || hasManageTeachersPermission"
@@ -304,18 +472,26 @@
             <img lazyLoad="../../../../assets/images/Location-dark.svg" />
             {{ "Location" | translate }}
           </div>
-          <span class="custom-tag d-inline-flex align-items-center">{{ class.school.countryName }} <span
-              class="vr-border"></span>
+          <span class="custom-tag d-inline-flex align-items-center"
+            >{{ class.school.countryName }} <span class="vr-border"></span>
           </span>
         </div>
         <hr class="hr-gray" />
-        <h3 *ngIf="userIsBanned" class="school-profile-tabs d-flex align-content-center justify-content-center position-relative" style="color:orange">
-          {{"BannedFromClass" | translate}}
+        <h3
+          *ngIf="userIsBanned"
+          class="school-profile-tabs d-flex align-content-center justify-content-center position-relative"
+          style="color: orange"
+        >
+          {{ "BannedFromClass" | translate }}
         </h3>
-        <div class="school-profile-tabs d-flex align-content-center justify-content-center position-relative" *ngIf="!userIsBanned">
+        <div
+          class="school-profile-tabs d-flex align-content-center justify-content-center position-relative"
+          *ngIf="!userIsBanned"
+        >
           <div></div>
           <!-- *ngIf="isOwner || isAllowedForFileStorage" -->
-          <button type="button"
+          <button
+            type="button"
             class="btn button-stroage font_16 fw_600 text_dark d-inline-flex align-items-center justify-content-center"
             [routerLink]="[
               '/user/fileStorage',
@@ -323,8 +499,12 @@
               class.createdById,
               class.schoolId,
               1
-            ]">
-            <img lazyLoad="../../../../assets/images/Folder.svg" class="me-2" />{{ "FileStorage" | translate }}
+            ]"
+          >
+            <img
+              lazyLoad="../../../../assets/images/Folder.svg"
+              class="me-2"
+            />{{ "FileStorage" | translate }}
           </button>
           <div class="button-list-grid-filter">
             <!-- <button
@@ -354,63 +534,119 @@
           </div>
         </div>
 
-        <div *ngIf="class.isClassAccessable || hasPostPermission" class="tab-content" id="pills-tabContent">
-          <div class="tab-pane fade show active" id="school-feed-tab-pane" role="tabpanel"
-            aria-labelledby="school-feed-tab" tabindex="0">
+        <div
+          *ngIf="class.isClassAccessable || hasPostPermission"
+          class="tab-content"
+          id="pills-tabContent"
+        >
+          <div
+            class="tab-pane fade show active"
+            id="school-feed-tab-pane"
+            role="tabpanel"
+            aria-labelledby="school-feed-tab"
+            tabindex="0"
+          >
             <div class="feed-section">
               <div class="feed-box position-relative">
-                <reels-loading-spinner [reelsLoadingIcon]="reelsLoadingIcon"
-                  class="position-absolute translate-middle reel_spinner_position"></reels-loading-spinner>
+                <reels-loading-spinner
+                  [reelsLoadingIcon]="reelsLoadingIcon"
+                  class="position-absolute translate-middle reel_spinner_position"
+                ></reels-loading-spinner>
                 <div class="feedbox-inner d-flex">
-                  <carousel #carouselReels [itemsPerSlide]="itemsPerSlide" [singleSlideOffset]="singleSlideOffset"
-                    [interval]="0" [noWrap]="noWrap" (touchstart)="touchStart($event)" (touchend)="touchEnd($event)">
+                  <carousel
+                    #carouselReels
+                    [itemsPerSlide]="itemsPerSlide"
+                    [singleSlideOffset]="singleSlideOffset"
+                    [interval]="0"
+                    [noWrap]="noWrap"
+                    (touchstart)="touchStart($event)"
+                    (touchend)="touchEnd($event)"
+                  >
                     <div *ngFor="let post of class.reels">
-                      <div *ngIf="post.postType == 3 && post.postAuthorType == 2">
-                        <slide *ngFor="let postAttachment of post.postAttachments">
+                      <div
+                        *ngIf="post.postType == 3 && post.postAuthorType == 2"
+                      >
+                        <slide
+                          *ngFor="let postAttachment of post.postAttachments"
+                        >
                           <div *ngIf="postAttachment.fileType == 2">
-                            <div class="feedimg-box position-relative text-light position-relative">
-                              <a (click)="
+                            <div
+                              class="feedimg-box position-relative text-light position-relative"
+                            >
+                              <a
+                                (click)="
                                   openReelsViewModal(
                                     postAttachment.id,
                                     postAttachment.postId
                                   )
-                                " style="cursor: pointer">
+                                "
+                                style="cursor: pointer"
+                              >
                                 <div class="videofile">
                                   <!-- style="height: 300px"  -->
-                                  <img class="w-100" [lazyLoad]="postAttachment.fileThumbnail" />
+                                  <img
+                                    class="w-100"
+                                    [lazyLoad]="postAttachment.fileThumbnail"
+                                  />
                                 </div>
                               </a>
-                              <div class="pinned-view d-flex justify-content-between align-items-start">
-                                <button type="button"
-                                  class="view font_12 bg-transparent border-0 text-light cursor_auto">
-                                  <img lazyLoad="../../../../assets/images/eye-light.svg" />
+                              <div
+                                class="pinned-view d-flex justify-content-between align-items-start"
+                              >
+                                <button
+                                  type="button"
+                                  class="view font_12 bg-transparent border-0 text-light cursor_auto"
+                                >
+                                  <img
+                                    lazyLoad="../../../../assets/images/eye-light.svg"
+                                  />
                                   {{ post.views.length }}
                                 </button>
-                                <button *ngIf="
+                                <button
+                                  *ngIf="
                                     postAttachment.post.isPinned && isOwner
-                                  " (click)="
+                                  "
+                                  (click)="
                                     pinUnpinPost(postAttachment.post.id, false)
-                                  " type="button" class="pinned bg-transparent border-0">
-                                  <img lazyLoad="../../../../assets/images/pinned-orange.svg" />
+                                  "
+                                  type="button"
+                                  class="pinned bg-transparent border-0"
+                                >
+                                  <img
+                                    lazyLoad="../../../../assets/images/pinned-orange.svg"
+                                  />
                                 </button>
-                                <button *ngIf="
+                                <button
+                                  *ngIf="
                                     !postAttachment.post.isPinned && isOwner
-                                  " (click)="
+                                  "
+                                  (click)="
                                     pinUnpinPost(postAttachment.post.id, true)
-                                  " type="button" class="pinned bg-transparent border-0">
-                                  <img lazyLoad="../../../../assets/images/pinned-gray.svg" />
+                                  "
+                                  type="button"
+                                  class="pinned bg-transparent border-0"
+                                >
+                                  <img
+                                    lazyLoad="../../../../assets/images/pinned-gray.svg"
+                                  />
                                 </button>
                               </div>
                               <div class="feed-name font_14 text_sec1 hideName">
                                 <img [lazyLoad]="class.avatar" />
                                 {{ class.className }}
                               </div>
-                              <div class="feed-title font_14 text_sec1 d-flex align-content-center fw_600">
+                              <div
+                                class="feed-title font_14 text_sec1 d-flex align-content-center fw_600"
+                              >
                                 {{ post.title }}
-                                <span class="fw-light ms-2" *ngFor="
+                                <span
+                                  class="fw-light ms-2"
+                                  *ngFor="
                                     let item of parseTheTags(post.postTags);
                                     let isLast = last
-                                  ">#{{ item }}{{ isLast ? "" : ", " }}</span>
+                                  "
+                                  >#{{ item }}{{ isLast ? "" : ", " }}</span
+                                >
                               </div>
                             </div>
                           </div>
@@ -423,11 +659,16 @@
             </div>
             <div class="school-grid-view grid-active" *ngIf="isProfileGrid">
               <ng-container *ngFor="let post of class.posts">
-                <div *ngIf="
+                <div
+                  *ngIf="
                     (post.postType == 1 && post.postAuthorType == 2) ||
                     post.isLive
-                  " class="school-grid-box position-relative">
-                  <div class="schoolgrid-header d-flex align-items-center position-relative justify-content-between">
+                  "
+                  class="school-grid-box position-relative"
+                >
+                  <div
+                    class="schoolgrid-header d-flex align-items-center position-relative justify-content-between"
+                  >
                     <div class="d-flex align-items-center gap-2">
                       <div class="school-gridprofile-icon">
                         <img [lazyLoad]="class.avatar" />
@@ -446,257 +687,510 @@
                       </p> -->
 
                       <p
-                      *ngIf="post.createdOn != null"
-                      class="font_14 school-grid-date d-inline-block mb-0 me-1"
-                    >
-                      {{ post.createdOn | ChangeTimeZonePipe | date : "dd" }}
-                      {{ post.createdOn | ChangeTimeZonePipe | date : "MMMM"|translate }}
-                    </p>
-                    <p
-                      *ngIf="post.createdOn != null"
-                      class="font_14 school-grid-date d-inline-block mb-0 me-3"
-                    >
-                      {{post.createdOn | ChangeTimeZonePipe | date : "yyyy"}}
-                    </p>
-                    <p
-                      *ngIf="post.createdOn != null"
-                      class="font_14 school-grid-date d-inline-block mb-0 me-3"
-                    >
-                      {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm a" }}
-                    </p>
-                      <button *ngIf="post.isPinned && isOwner" (click)="pinUnpinPost(post.id, false)" type="button"
-                        class="bg-transparent border-0 pinned-grid-chat">
-                        <img lazyLoad="../../../../assets/images/pinned-orange.svg" />
+                        *ngIf="post.createdOn != null"
+                        class="font_14 school-grid-date d-inline-block mb-0 me-1"
+                      >
+                        {{ post.createdOn | ChangeTimeZonePipe | date : "dd" }}
+                        {{
+                          post.createdOn
+                            | ChangeTimeZonePipe
+                            | date : "MMMM"
+                            | translate
+                        }}
+                      </p>
+                      <p
+                        *ngIf="post.createdOn != null"
+                        class="font_14 school-grid-date d-inline-block mb-0 me-3"
+                      >
+                        {{
+                          post.createdOn | ChangeTimeZonePipe | date : "yyyy"
+                        }}
+                      </p>
+                      <p
+                        *ngIf="post.createdOn != null"
+                        class="font_14 school-grid-date d-inline-block mb-0 me-3"
+                      >
+                        {{
+                          post.createdOn | ChangeTimeZonePipe | date : "hh:mm a"
+                        }}
+                      </p>
+                      <button
+                        *ngIf="post.isPinned && isOwner"
+                        (click)="pinUnpinPost(post.id, false)"
+                        type="button"
+                        class="bg-transparent border-0 pinned-grid-chat"
+                      >
+                        <img
+                          lazyLoad="../../../../assets/images/pinned-orange.svg"
+                        />
                       </button>
-                      <button *ngIf="!post.isPinned && isOwner" (click)="pinUnpinPost(post.id, true)" type="button"
-                        class="bg-transparent border-0 pinned-grid-chat">
-                        <img lazyLoad="../../../../assets/images/pinned-gray.svg" />
+                      <button
+                        *ngIf="!post.isPinned && isOwner"
+                        (click)="pinUnpinPost(post.id, true)"
+                        type="button"
+                        class="bg-transparent border-0 pinned-grid-chat"
+                      >
+                        <img
+                          lazyLoad="../../../../assets/images/pinned-gray.svg"
+                        />
                       </button>
                     </div>
                   </div>
 
-                  <div class="school-grid-body" (click)="openPostsViewModal(post)">
-                    <div class="d-flex justify-content-between align-items-center">
-                      <h4 class="font_20 fw_600 text_sec1 mb-3">{{ post.title }}</h4>
-                      <h4 *ngIf="post?.isLiveStreamEnded || post?.externalMeetingId != null" style="color:red">Streamed</h4>
+                  <div
+                    class="school-grid-body"
+                    (click)="openPostsViewModal(post)"
+                  >
+                    <div
+                      class="d-flex justify-content-between align-items-center"
+                    >
+                      <h4 class="font_20 fw_600 text_sec1 mb-3">
+                        {{ post.title }}
+                      </h4>
+                      <h4
+                        *ngIf="
+                          post?.isLiveStreamEnded ||
+                          post?.externalMeetingId != null
+                        "
+                        style="color: red"
+                      >
+                        Streamed
+                      </h4>
                     </div>
                     <p class="text_sec1 font_14" style="cursor: pointer">
                       {{ post.description }}
                     </p>
                     <div class="teacher-tags tag-box hashtag_box">
-                      <ng-container *ngFor="let attachment of filteredAttachments">
-                        <span *ngIf="attachment.postId == post.id" class="custom-tag cursor_pointer" (click)="
+                      <ng-container
+                        *ngFor="let attachment of filteredAttachments"
+                      >
+                        <span
+                          *ngIf="attachment.postId == post.id"
+                          class="custom-tag cursor_pointer"
+                          (click)="
                             openCertificateViewModal(
                               attachment.fileUrl,
                               attachment.fileName,
                               5,
                               $event
                             )
-                          ">{{ attachment.fileName }}</span>
+                          "
+                          >{{ attachment.fileName }}</span
+                        >
                       </ng-container>
                     </div>
                     <div class="teacher-tags tag-box hashtag_box">
-                      <span *ngFor="let tag of parseTheTags(post.postTags)" class="custom-tag">#{{ tag }}</span>
+                      <span
+                        *ngFor="let tag of parseTheTags(post.postTags)"
+                        class="custom-tag"
+                        >#{{ tag }}</span
+                      >
                     </div>
-                    <div *ngIf="post.postAttachments.length" class="school-grid-thumbnail new-school-grid-thumbnail"
-                      style="cursor: pointer">
+                    <div
+                      *ngIf="post.postAttachments.length"
+                      class="school-grid-thumbnail new-school-grid-thumbnail"
+                      style="cursor: pointer"
+                    >
                       <div class="row gx-1 h-100">
-                        <div *ngIf="post.postAttachments.length == 1" class="col-md-12 h-100">
-                          <div class="school-large-thumbnail shadow-thumnail position-relative">
-                            <img *ngIf="
+                        <div
+                          *ngIf="post.postAttachments.length == 1"
+                          class="col-md-12 h-100"
+                        >
+                          <div
+                            class="school-large-thumbnail shadow-thumnail position-relative"
+                          >
+                            <img
+                              *ngIf="
                                 post.postAttachments.length == 1 &&
                                 post.postAttachments[0]?.fileType == 2
-                              " class="w-100" style="cursor: pointer" [lazyLoad]="
+                              "
+                              class="w-100"
+                              style="cursor: pointer"
+                              [lazyLoad]="
                                 post.postAttachments[0]?.fileThumbnail
-                              " />
-                              <div class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
-                                <i class="fas fa-play fa-5x" *ngIf="post.postAttachments[0]?.fileType == 2"></i>
-                              </div>
-                            <img *ngIf="post.postAttachments[0]?.fileType == 1" class="w-100"
-                              [lazyLoad]="post.postAttachments[0]?.fileUrl" />
+                              "
+                            />
+                            <div
+                              class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
+                            >
+                              <i
+                                class="fas fa-play fa-5x"
+                                *ngIf="post.postAttachments[0]?.fileType == 2"
+                              ></i>
+                            </div>
+                            <img
+                              *ngIf="post.postAttachments[0]?.fileType == 1"
+                              class="w-100"
+                              [lazyLoad]="post.postAttachments[0]?.fileUrl"
+                            />
                           </div>
                         </div>
 
-                        <div *ngIf="post.postAttachments.length == 2" class="col-md-12 h-100">
-                          <div class="school-large-thumbnail shadow-thumnail position-relative">
-                            <ng-container *ngFor="let attachment of post.postAttachments">
-                              <img *ngIf="attachment?.fileType == 2" preload="metadata" class="w-100"
-                                style="cursor: pointer" [lazyLoad]="attachment?.fileThumbnail" />
-                                <div class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
-                                  <i class="fas fa-play fa-5x" *ngIf="attachment?.fileType == 2"></i>
-                                </div>
-                              <img style="height: 598px; width: 50% !important" *ngIf="attachment?.fileType == 1"
-                                class="w-100" [lazyLoad]="attachment?.fileUrl" />
+                        <div
+                          *ngIf="post.postAttachments.length == 2"
+                          class="col-md-12 h-100"
+                        >
+                          <div
+                            class="school-large-thumbnail shadow-thumnail position-relative"
+                          >
+                            <ng-container
+                              *ngFor="let attachment of post.postAttachments"
+                            >
+                              <img
+                                *ngIf="attachment?.fileType == 2"
+                                preload="metadata"
+                                class="w-100"
+                                style="cursor: pointer"
+                                [lazyLoad]="attachment?.fileThumbnail"
+                              />
+                              <div
+                                class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
+                              >
+                                <i
+                                  class="fas fa-play fa-5x"
+                                  *ngIf="attachment?.fileType == 2"
+                                ></i>
+                              </div>
+                              <img
+                                style="height: 598px; width: 50% !important"
+                                *ngIf="attachment?.fileType == 1"
+                                class="w-100"
+                                [lazyLoad]="attachment?.fileUrl"
+                              />
                             </ng-container>
                           </div>
                         </div>
 
-                        <div *ngIf="post.postAttachments.length == 3" class="col-md-8 h-100">
-                          <div class="school-large-thumbnail shadow-thumnail position-relative">
-                            <img *ngIf="post.postAttachments[0]?.fileType == 2" class="w-100"
-                              style="cursor: pointer; margin-top: -700px" [lazyLoad]="
-                                post.postAttachments[0]?.fileThumbnail
-                              " />
-                              <div class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
-                                <i class="fas fa-play fa-5x" *ngIf="post.postAttachments[0]?.fileType == 2"></i>
-                              </div>
-                            <img *ngIf="post.postAttachments[0]?.fileType == 1" class="w-100"
-                              [lazyLoad]="post.postAttachments[0]?.fileUrl" />
-                          </div>
-                        </div>
-
-                        <div *ngIf="post.postAttachments.length == 3" class="col-md-4 h-100">
-                          <div class="h-100 medium_thumbox d-flex">
-                            <div class="medium-thumnail">
-                              <img *ngIf="post.postAttachments[1]?.fileType == 2" class="w-100" style="cursor: pointer"
-                                [lazyLoad]="
-                                  post.postAttachments[1]?.fileThumbnail
-                                " />
-                              <img *ngIf="post.postAttachments[1]?.fileType == 1" class="w-100"
-                                [lazyLoad]="post.postAttachments[1]?.fileUrl" style="cursor: pointer" />
-                            </div>
-                            <div class="medium-thumnail">
-                              <img *ngIf="post.postAttachments[2]?.fileType == 2" class="w-100" style="cursor: pointer"
-                                [lazyLoad]="
-                                  post.postAttachments[2]?.fileThumbnail
-                                " />
-                              <img *ngIf="post.postAttachments[2]?.fileType == 1" class="w-100"
-                                [lazyLoad]="post.postAttachments[2]?.fileUrl" style="cursor: pointer" />
-                            </div>
-                          </div>
-                        </div>
-
-                        <div *ngIf="post.postAttachments.length > 3" class="col-md-8 h-100">
-                          <div class="school-large-thumbnail shadow-thumnail position-relative">
-                            <img *ngIf="post.postAttachments[0]?.fileType == 2" class="w-100" style="cursor: pointer"
+                        <div
+                          *ngIf="post.postAttachments.length == 3"
+                          class="col-md-8 h-100"
+                        >
+                          <div
+                            class="school-large-thumbnail shadow-thumnail position-relative"
+                          >
+                            <img
+                              *ngIf="post.postAttachments[0]?.fileType == 2"
+                              class="w-100"
+                              style="cursor: pointer; margin-top: -700px"
                               [lazyLoad]="
                                 post.postAttachments[0]?.fileThumbnail
-                              " />
-                              <div class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
-                                <i class="fas fa-play fa-5x" *ngIf="post.postAttachments[0]?.fileType == 2"></i>
-                              </div>
-                            <img *ngIf="post.postAttachments[0]?.fileType == 1" class="w-100"
-                              [lazyLoad]="post.postAttachments[0]?.fileUrl" />
+                              "
+                            />
+                            <div
+                              class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
+                            >
+                              <i
+                                class="fas fa-play fa-5x"
+                                *ngIf="post.postAttachments[0]?.fileType == 2"
+                              ></i>
+                            </div>
+                            <img
+                              *ngIf="post.postAttachments[0]?.fileType == 1"
+                              class="w-100"
+                              [lazyLoad]="post.postAttachments[0]?.fileUrl"
+                            />
                           </div>
                         </div>
 
-                        <div *ngIf="post.postAttachments.length > 3" class="col-md-4 h-100">
+                        <div
+                          *ngIf="post.postAttachments.length == 3"
+                          class="col-md-4 h-100"
+                        >
+                          <div class="h-100 medium_thumbox d-flex">
+                            <div class="medium-thumnail">
+                              <img
+                                *ngIf="post.postAttachments[1]?.fileType == 2"
+                                class="w-100"
+                                style="cursor: pointer"
+                                [lazyLoad]="
+                                  post.postAttachments[1]?.fileThumbnail
+                                "
+                              />
+                              <img
+                                *ngIf="post.postAttachments[1]?.fileType == 1"
+                                class="w-100"
+                                [lazyLoad]="post.postAttachments[1]?.fileUrl"
+                                style="cursor: pointer"
+                              />
+                            </div>
+                            <div class="medium-thumnail">
+                              <img
+                                *ngIf="post.postAttachments[2]?.fileType == 2"
+                                class="w-100"
+                                style="cursor: pointer"
+                                [lazyLoad]="
+                                  post.postAttachments[2]?.fileThumbnail
+                                "
+                              />
+                              <img
+                                *ngIf="post.postAttachments[2]?.fileType == 1"
+                                class="w-100"
+                                [lazyLoad]="post.postAttachments[2]?.fileUrl"
+                                style="cursor: pointer"
+                              />
+                            </div>
+                          </div>
+                        </div>
+
+                        <div
+                          *ngIf="post.postAttachments.length > 3"
+                          class="col-md-8 h-100"
+                        >
+                          <div
+                            class="school-large-thumbnail shadow-thumnail position-relative"
+                          >
+                            <img
+                              *ngIf="post.postAttachments[0]?.fileType == 2"
+                              class="w-100"
+                              style="cursor: pointer"
+                              [lazyLoad]="
+                                post.postAttachments[0]?.fileThumbnail
+                              "
+                            />
+                            <div
+                              class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
+                            >
+                              <i
+                                class="fas fa-play fa-5x"
+                                *ngIf="post.postAttachments[0]?.fileType == 2"
+                              ></i>
+                            </div>
+                            <img
+                              *ngIf="post.postAttachments[0]?.fileType == 1"
+                              class="w-100"
+                              [lazyLoad]="post.postAttachments[0]?.fileUrl"
+                            />
+                          </div>
+                        </div>
+
+                        <div
+                          *ngIf="post.postAttachments.length > 3"
+                          class="col-md-4 h-100"
+                        >
                           <div class="h-100 medium_thumbox d-flex">
                             <div class="medium-thumnail position-relative">
-                              <img class="w-100 position-relative" lazyLoad="../../../../assets/images/blurImage.jfif"
-                                style="cursor: pointer" />
-                              <div class="position-absolute" style="
+                              <img
+                                class="w-100 position-relative"
+                                lazyLoad="../../../../assets/images/blurImage.jfif"
+                                style="cursor: pointer"
+                              />
+                              <div
+                                class="position-absolute"
+                                style="
                                   top: 50%;
                                   left: 50%;
                                   transform: translate(-50%, -50%);
                                   font-size: 52px;
                                   font-weight: 600;
-                                ">
+                                "
+                              >
                                 +{{ post.postAttachments.length - 2 }}
                               </div>
                             </div>
                             <div class="medium-thumnail">
-                              <img *ngIf="post.postAttachments[1]?.fileType == 2" class="w-100" style="cursor: pointer"
+                              <img
+                                *ngIf="post.postAttachments[1]?.fileType == 2"
+                                class="w-100"
+                                style="cursor: pointer"
                                 [lazyLoad]="
                                   post.postAttachments[1]?.fileThumbnail
-                                " />
-                              <img *ngIf="post.postAttachments[1]?.fileType == 1" class="w-100"
-                                [lazyLoad]="post.postAttachments[2]?.fileUrl" style="cursor: pointer" />
+                                "
+                              />
+                              <img
+                                *ngIf="post.postAttachments[1]?.fileType == 1"
+                                class="w-100"
+                                [lazyLoad]="post.postAttachments[2]?.fileUrl"
+                                style="cursor: pointer"
+                              />
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                  <div *ngIf="post.postAttachments.length" class="school-grid-footer above-thumbnail">
-                    <button type="button" class="bg-transparent border-0 function-btns text-light cursor_auto">
-                      <img lazyLoad="../../../../assets/images/eye-light.svg" class="d-block mx-auto" />
+                  <div
+                    *ngIf="post.postAttachments.length"
+                    class="school-grid-footer above-thumbnail"
+                  >
+                    <button
+                      type="button"
+                      class="bg-transparent border-0 function-btns text-light cursor_auto"
+                    >
+                      <img
+                        lazyLoad="../../../../assets/images/eye-light.svg"
+                        class="d-block mx-auto"
+                      />
                       {{ post.views.length }}
                     </button>
-                    <button (click)="
+                    <button
+                      (click)="
                         likeUnlikePosts(post.id, true, post.postType, post)
-                      " type="button" class="bg-transparent border-0 function-btns text-light">
-                      <img *ngIf="post.isPostLikedByCurrentUser" lazyLoad="../../../assets/images/heart-red.svg"
-                        class="d-block mx-auto" />
-                      <img *ngIf="!post.isPostLikedByCurrentUser" lazyLoad="../../../../assets/images/Heart-light.svg"
-                        class="d-block mx-auto" />
+                      "
+                      type="button"
+                      class="bg-transparent border-0 function-btns text-light"
+                    >
+                      <img
+                        *ngIf="post.isPostLikedByCurrentUser"
+                        lazyLoad="../../../assets/images/heart-red.svg"
+                        class="d-block mx-auto"
+                      />
+                      <img
+                        *ngIf="!post.isPostLikedByCurrentUser"
+                        lazyLoad="../../../../assets/images/Heart-light.svg"
+                        class="d-block mx-auto"
+                      />
 
-                      <span *ngIf="
+                      <span
+                        *ngIf="
                           likesLength != undefined &&
                           currentLikedPostId == post.id
-                        ">{{ likesLength }}</span>
+                        "
+                        >{{ likesLength }}</span
+                      >
                       <span *ngIf="currentLikedPostId != post.id">{{
                         post.likes.length
-                        }}</span>
+                      }}</span>
                     </button>
 
-                    <button (click)="openPostsViewModal(post)" type="button"
-                      class="bg-transparent border-0 function-btns text-light">
-                      <img lazyLoad="../../../../assets/images/Chat-light.svg" class="d-block mx-auto" />
+                    <button
+                      (click)="openPostsViewModal(post)"
+                      type="button"
+                      class="bg-transparent border-0 function-btns text-light"
+                    >
+                      <img
+                        lazyLoad="../../../../assets/images/Chat-light.svg"
+                        class="d-block mx-auto"
+                      />
                       {{ post.commentsCount }}
                     </button>
-                    <button (click)="savePost(post.id)" type="button"
-                      class="bg-transparent border-0 function-btns text-light">
-                      <img *ngIf="!post.isPostSavedByCurrentUser"
-                        lazyLoad="../../../../assets/images/Bookmark-light.svg" class="d-block mx-auto" />
-                      <img *ngIf="post.isPostSavedByCurrentUser" lazyLoad="../../../../assets/images/Bookmark-light.svg"
-                        class="d-block mx-auto" />
+                    <button
+                      (click)="savePost(post.id)"
+                      type="button"
+                      class="bg-transparent border-0 function-btns text-light"
+                    >
+                      <img
+                        *ngIf="!post.isPostSavedByCurrentUser"
+                        lazyLoad="../../../../assets/images/Bookmark-light.svg"
+                        class="d-block mx-auto"
+                      />
+                      <img
+                        *ngIf="post.isPostSavedByCurrentUser"
+                        lazyLoad="../../../../assets/images/Bookmark-light.svg"
+                        class="d-block mx-auto"
+                      />
                       {{ post.savedPostsCount }}
                     </button>
-                    <button (click)="
+                    <button
+                      (click)="
                         openSharePostModal(
                           post.id,
                           post.postType,
                           post.title,
                           post.description
                         )
-                      " type="button" class="bg-transparent border-0 function-btns text-light">
-                      <img lazyLoad="../../../../assets/images/Upload-light.svg" class="d-block mx-auto" />
+                      "
+                      type="button"
+                      class="bg-transparent border-0 function-btns text-light"
+                    >
+                      <img
+                        lazyLoad="../../../../assets/images/Upload-light.svg"
+                        class="d-block mx-auto"
+                      />
                       {{ post.postSharedCount }}
                     </button>
                   </div>
 
-                  <div *ngIf="post.postAttachments.length == 0" class="school-grid-footer">
-                    <button type="button" class="bg-transparent border-0 function-btns text-light cursor_auto">
-                      <img lazyLoad="../../../../assets/images/eye.svg" class="d-block mx-auto" />
+                  <div
+                    *ngIf="post.postAttachments.length == 0"
+                    class="school-grid-footer"
+                  >
+                    <button
+                      type="button"
+                      class="bg-transparent border-0 function-btns text-light cursor_auto"
+                    >
+                      <img
+                        lazyLoad="../../../../assets/images/eye.svg"
+                        class="d-block mx-auto"
+                      />
                       <span class="textBlack">{{ post.views.length }}</span>
                     </button>
-                    <button (click)="
+                    <button
+                      (click)="
                         likeUnlikePosts(post.id, true, post.postType, post)
-                      " type="button" class="bg-transparent border-0 function-btns text-light">
-                      <img *ngIf="post.isPostLikedByCurrentUser" lazyLoad="../../../assets/images/heart-red.svg"
-                        class="d-block mx-auto" />
-                      <img *ngIf="!post.isPostLikedByCurrentUser" lazyLoad="../../../../assets/images/Heart-dark.svg"
-                        class="d-block mx-auto" />
+                      "
+                      type="button"
+                      class="bg-transparent border-0 function-btns text-light"
+                    >
+                      <img
+                        *ngIf="post.isPostLikedByCurrentUser"
+                        lazyLoad="../../../assets/images/heart-red.svg"
+                        class="d-block mx-auto"
+                      />
+                      <img
+                        *ngIf="!post.isPostLikedByCurrentUser"
+                        lazyLoad="../../../../assets/images/Heart-dark.svg"
+                        class="d-block mx-auto"
+                      />
 
-                      <span class="textBlack" *ngIf="
+                      <span
+                        class="textBlack"
+                        *ngIf="
                           likesLength != undefined &&
                           currentLikedPostId == post.id
-                        ">{{ likesLength }}</span>
-                      <span class="textBlack" *ngIf="currentLikedPostId != post.id">{{ post.likes.length }}</span>
+                        "
+                        >{{ likesLength }}</span
+                      >
+                      <span
+                        class="textBlack"
+                        *ngIf="currentLikedPostId != post.id"
+                        >{{ post.likes.length }}</span
+                      >
                     </button>
-                    <button (click)="openPostsViewModal(post)" type="button"
-                      class="bg-transparent border-0 function-btns text-light">
-                      <img lazyLoad="../../../../assets/images/Chat-dark.svg" class="d-block mx-auto" />
+                    <button
+                      (click)="openPostsViewModal(post)"
+                      type="button"
+                      class="bg-transparent border-0 function-btns text-light"
+                    >
+                      <img
+                        lazyLoad="../../../../assets/images/Chat-dark.svg"
+                        class="d-block mx-auto"
+                      />
                       <span class="textBlack"> {{ post.commentsCount }}</span>
                     </button>
-                    <button (click)="savePost(post.id)" type="button"
-                      class="bg-transparent border-0 function-btns text-light">
-                      <img *ngIf="!post.isPostSavedByCurrentUser" lazyLoad="../../../../assets/images/Bookmark-dark.svg"
-                        class="d-block mx-auto" />
-                      <img height="20px" *ngIf="post.isPostSavedByCurrentUser"
-                        lazyLoad="../../../../assets/images/bookmark-dash-fill.svg" class="d-block mx-auto" />
+                    <button
+                      (click)="savePost(post.id)"
+                      type="button"
+                      class="bg-transparent border-0 function-btns text-light"
+                    >
+                      <img
+                        *ngIf="!post.isPostSavedByCurrentUser"
+                        lazyLoad="../../../../assets/images/Bookmark-dark.svg"
+                        class="d-block mx-auto"
+                      />
+                      <img
+                        height="20px"
+                        *ngIf="post.isPostSavedByCurrentUser"
+                        lazyLoad="../../../../assets/images/bookmark-dash-fill.svg"
+                        class="d-block mx-auto"
+                      />
                       <span class="textBlack">{{ post.savedPostsCount }}</span>
                     </button>
-                    <button (click)="
+                    <button
+                      (click)="
                         openSharePostModal(
                           post.id,
                           post.postType,
                           post.title,
                           post.description
                         )
-                      " type="button" class="bg-transparent border-0 function-btns text-light">
-                      <img lazyLoad="../../../../assets/images/Upload-dark.svg" class="d-block mx-auto" />
+                      "
+                      type="button"
+                      class="bg-transparent border-0 function-btns text-light"
+                    >
+                      <img
+                        lazyLoad="../../../../assets/images/Upload-dark.svg"
+                        class="d-block mx-auto"
+                      />
                       <span class="textBlack">{{ post.postSharedCount }}</span>
                     </button>
                   </div>
@@ -707,29 +1201,46 @@
             <div class="list-schol-profile" *ngIf="!isProfileGrid">
               <div class="row">
                 <ng-container *ngFor="let post of class.posts; let i = index">
-                  <div class="col-12 imgDisplay" *ngIf="
+                  <div
+                    class="col-12 imgDisplay"
+                    *ngIf="
                       (isScreenPc && i % 3 == 0) ||
                       (isScreenTablet && i % 2 == 0) ||
                       (isScreenMobile && i % 1 == 0)
-                    " style="display: none">
-                    <div [ngClass]="
+                    "
+                    style="display: none"
+                  >
+                    <div
+                      [ngClass]="
                         isGridItemInfo
                           ? 'd-block school-grid-box position-relative school-list-box h-100'
                           : 'd-none school-grid-box position-relative school-list-box h-100'
-                      " *ngIf="gridItemInfo != undefined">
+                      "
+                      *ngIf="gridItemInfo != undefined"
+                    >
                       <div class="row post-list-preview-sec">
-                        <div [ngClass]="
+                        <div
+                          [ngClass]="
                             gridItemInfo.postAttachments.length > 0
                               ? 'd-block col-lg-6'
                               : 'd-none'
-                          ">
+                          "
+                        >
                           <carousel [interval]="0">
-                            <div *ngFor="
+                            <div
+                              *ngFor="
                                 let postAttachment of gridItemInfo.postAttachments
-                              " class="school-grid-thumbnail">
+                              "
+                              class="school-grid-thumbnail"
+                            >
                               <slide *ngIf="postAttachment.fileType == 2">
-                                <div *ngIf="postAttachment?.fileType == 2" class="videofile">
-                                  <videoJs-component [postAttachment]="postAttachment"></videoJs-component>
+                                <div
+                                  *ngIf="postAttachment?.fileType == 2"
+                                  class="videofile"
+                                >
+                                  <videoJs-component
+                                    [postAttachment]="postAttachment"
+                                  ></videoJs-component>
 
                                   <!-- <video
                                   [id] = "getRandomClass(i,false)"
@@ -758,47 +1269,72 @@
                                   class="w-100"
                                   [src]="postAttachment?.fileUrl"
                                 /> -->
-                                <img *ngIf="postAttachment?.fileType == 1" class="w-100"
-                                  [src]="postAttachment?.fileUrl" />
+                                <img
+                                  *ngIf="postAttachment?.fileType == 1"
+                                  class="w-100"
+                                  [src]="postAttachment?.fileUrl"
+                                />
                               </slide>
                             </div>
                           </carousel>
                         </div>
-                        <div [ngClass]="
+                        <div
+                          [ngClass]="
                             gridItemInfo.postAttachments.length > 0
                               ? 'col-lg-6'
                               : 'col-lg-12 heightForText'
-                          ">
-                          <div class="class-preview-right position-relative h-100">
-                            <ul *ngIf="gridItemInfo?.createdBy == userId"
+                          "
+                        >
+                          <div
+                            class="class-preview-right position-relative h-100"
+                          >
+                            <ul
+                              *ngIf="gridItemInfo?.createdBy == userId"
                               class="list-unstyled d-flex more-action-btn before-none pe-2 me-1 mb-0"
-                              style="position: absolute; right: 50px">
+                              style="position: absolute; right: 50px"
+                            >
                               <li class="d-inline-block ps-0 mb-0">
                                 <div class="dropdown">
                                   <button
                                     class="bg-transparent dropdown-toggle border-0 action-more-btn after-none pt-1"
-                                    type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    type="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                  >
                                     <i class="fa-solid fa-ellipsis"></i>
                                   </button>
                                   <ul class="dropdown-menu">
                                     <li>
-                                      <a style="cursor: pointer" class="dropdown-item" (click)="
+                                      <a
+                                        style="cursor: pointer"
+                                        class="dropdown-item"
+                                        (click)="
                                           getDeletedPostId(gridItemInfo?.id)
-                                        " data-bs-toggle="modal" data-bs-target="#delete-Class">{{ "Delete" | translate
-                                        }}
+                                        "
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#delete-Class"
+                                        >{{ "Delete" | translate }}
                                       </a>
                                     </li>
                                     <li>
-                                      <a style="cursor: pointer" class="dropdown-item" (click)="
+                                      <a
+                                        style="cursor: pointer"
+                                        class="dropdown-item"
+                                        (click)="
                                           openEditPostModal(gridItemInfo)
-                                        " data-bs-toggle="modal" data-bs-target="#delete-Class">{{ "Edit" | translate
-                                        }}
-                                        <div *ngIf="gridItemInfo.updatedOn != null">
-                                          (<span>{{ "UpdatedOn" | translate }} -
+                                        "
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#delete-Class"
+                                        >{{ "Edit" | translate }}
+                                        <div
+                                          *ngIf="gridItemInfo.updatedOn != null"
+                                        >
+                                          (<span
+                                            >{{ "UpdatedOn" | translate }} -
                                           </span>
                                           {{
-                                          gridItemInfo.updatedOn
-                                          | date : "d MMMM y h:mm a"
+                                            gridItemInfo.updatedOn
+                                              | date : "d MMMM y h:mm a"
                                           }})
                                         </div>
                                       </a>
@@ -807,35 +1343,61 @@
                                 </div>
                               </li>
                             </ul>
-                            <button (click)="hideGridItemInfo()" type="button"
-                              class="bg-transparent border-0 close-preview">
-                              <img lazyLoad="../../../../assets/images/cross.svg" />
+                            <button
+                              (click)="hideGridItemInfo()"
+                              type="button"
+                              class="bg-transparent border-0 close-preview"
+                            >
+                              <img
+                                lazyLoad="../../../../assets/images/cross.svg"
+                              />
                             </button>
                             <div class="schoolgrid-header">
-                              <div class="d-flex align-items-center position-relative">
+                              <div
+                                class="d-flex align-items-center position-relative"
+                              >
                                 <div class="school-gridprofile-icon">
                                   <img [lazyLoad]="class.avatar" />
                                 </div>
-                                <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">
+                                <h2
+                                  class="d-inline-block font_16 fw_600 text_sec1 mb-0"
+                                >
                                   {{ gridItemInfo.title }}
                                 </h2>
                                 <div *ngIf="gridItemInfo.isLive">
-                                  <img lazyLoad="../../../../assets/images/live_img.png" />
+                                  <img
+                                    lazyLoad="../../../../assets/images/live_img.png"
+                                  />
                                 </div>
                               </div>
                               <br />
 
-                              <p class="font_14 school-grid-date d-inline-block mb-0">
-                                {{ gridItemInfo.createdOn | ChangeTimeZonePipe | date : "MMMM d" }} -
-                                {{ gridItemInfo.createdOn | ChangeTimeZonePipe | date : "hh:mm a" }}
+                              <p
+                                class="font_14 school-grid-date d-inline-block mb-0"
+                              >
+                                {{
+                                  gridItemInfo.createdOn
+                                    | ChangeTimeZonePipe
+                                    | date : "MMMM d"
+                                }}
+                                -
+                                {{
+                                  gridItemInfo.createdOn
+                                    | ChangeTimeZonePipe
+                                    | date : "hh:mm a"
+                                }}
                               </p>
                             </div>
                             <p class="text_sec1 font_14 pt-3">
                               {{ gridItemInfo.description }}
                             </p>
                             <div class="teacher-tags tag-box hashtag_box">
-                              <ng-container *ngFor="let attachment of filteredAttachments">
-                                <span *ngIf="attachment.postId == gridItemInfo.id" class="custom-tag cursor_pointer"
+                              <ng-container
+                                *ngFor="let attachment of filteredAttachments"
+                              >
+                                <span
+                                  *ngIf="attachment.postId == gridItemInfo.id"
+                                  class="custom-tag cursor_pointer"
                                   (click)="
                                     openCertificateViewModal(
                                       attachment.fileUrl,
@@ -843,62 +1405,118 @@
                                       5,
                                       $event
                                     )
-                                  ">{{ attachment.fileName }}</span>
+                                  "
+                                  >{{ attachment.fileName }}</span
+                                >
                               </ng-container>
                             </div>
-                            <div *ngIf="gridItemInfo.postTags.length != 0" class="teacher-tags tag-box hashtag_box">
-                              <span *ngFor="let tag of parseTheTags(postsTagValues)" class="custom-tag">#{{ tag
-                                }}</span>
+                            <div
+                              *ngIf="gridItemInfo.postTags.length != 0"
+                              class="teacher-tags tag-box hashtag_box"
+                            >
+                              <span
+                                *ngFor="let tag of parseTheTags(postsTagValues)"
+                                class="custom-tag"
+                                >#{{ tag }}</span
+                              >
                             </div>
-                            <div class="school-grid-footer preview-right-action">
-                              <button type="button" class="bg-transparent border-0 function-btns cursor_auto">
-                                <img lazyLoad="../../../../assets/images/eye.svg" class="d-block mx-auto" />
+                            <div
+                              class="school-grid-footer preview-right-action"
+                            >
+                              <button
+                                type="button"
+                                class="bg-transparent border-0 function-btns cursor_auto"
+                              >
+                                <img
+                                  lazyLoad="../../../../assets/images/eye.svg"
+                                  class="d-block mx-auto"
+                                />
                                 <span class="textBlack">{{
                                   gridItemInfo.views.length
-                                  }}</span>
+                                }}</span>
                               </button>
-                              <button (click)="
+                              <button
+                                (click)="
                                   likeUnlikePosts(
                                     gridItemInfo.id,
                                     true,
                                     gridItemInfo.postType,
                                     gridItemInfo
                                   )
-                                " type="button" class="bg-transparent border-0 function-btns text-light">
-                                <img *ngIf="gridItemInfo.isPostLikedByCurrentUser"
-                                  lazyLoad="../../../assets/images/heart-red.svg" class="d-block mx-auto" />
-                                <img *ngIf="!gridItemInfo.isPostLikedByCurrentUser"
-                                  lazyLoad="../../../../assets/images/Heart-dark.svg" class="d-block mx-auto" />
+                                "
+                                type="button"
+                                class="bg-transparent border-0 function-btns text-light"
+                              >
+                                <img
+                                  *ngIf="gridItemInfo.isPostLikedByCurrentUser"
+                                  lazyLoad="../../../assets/images/heart-red.svg"
+                                  class="d-block mx-auto"
+                                />
+                                <img
+                                  *ngIf="!gridItemInfo.isPostLikedByCurrentUser"
+                                  lazyLoad="../../../../assets/images/Heart-dark.svg"
+                                  class="d-block mx-auto"
+                                />
 
-                                <span class="textBlack" *ngIf="
+                                <span
+                                  class="textBlack"
+                                  *ngIf="
                                     likesLength != undefined &&
                                     currentLikedPostId == gridItemInfo.id
-                                  ">{{ likesLength }}</span>
-                                <span class="textBlack" *ngIf="currentLikedPostId != gridItemInfo.id">{{
-                                  gridItemInfo.likes.length }}</span>
+                                  "
+                                  >{{ likesLength }}</span
+                                >
+                                <span
+                                  class="textBlack"
+                                  *ngIf="currentLikedPostId != gridItemInfo.id"
+                                  >{{ gridItemInfo.likes.length }}</span
+                                >
                               </button>
-                              <button (click)="openPostsViewModal(gridItemInfo)" type="button"
-                                class="bg-transparent border-0 function-btns">
-                                <img lazyLoad="../../../../assets/images/Chat-dark.svg" class="d-block mx-auto" />
+                              <button
+                                (click)="openPostsViewModal(gridItemInfo)"
+                                type="button"
+                                class="bg-transparent border-0 function-btns"
+                              >
+                                <img
+                                  lazyLoad="../../../../assets/images/Chat-dark.svg"
+                                  class="d-block mx-auto"
+                                />
                                 {{ gridItemInfo.commentsCount }}
                               </button>
-                              <button (click)="savePost(gridItemInfo.id)" type="button"
-                                class="bg-transparent border-0 function-btns">
-                                <img *ngIf="!gridItemInfo.isPostSavedByCurrentUser"
-                                  lazyLoad="../../../../assets/images/Bookmark-dark.svg" class="d-block mx-auto" />
-                                <img height="20px" *ngIf="gridItemInfo.isPostSavedByCurrentUser"
-                                  lazyLoad="../../../../assets/images/bookmark-dash-fill.svg" class="d-block mx-auto" />
+                              <button
+                                (click)="savePost(gridItemInfo.id)"
+                                type="button"
+                                class="bg-transparent border-0 function-btns"
+                              >
+                                <img
+                                  *ngIf="!gridItemInfo.isPostSavedByCurrentUser"
+                                  lazyLoad="../../../../assets/images/Bookmark-dark.svg"
+                                  class="d-block mx-auto"
+                                />
+                                <img
+                                  height="20px"
+                                  *ngIf="gridItemInfo.isPostSavedByCurrentUser"
+                                  lazyLoad="../../../../assets/images/bookmark-dash-fill.svg"
+                                  class="d-block mx-auto"
+                                />
                                 {{ gridItemInfo.savedPostsCount }}
                               </button>
-                              <button (click)="
+                              <button
+                                (click)="
                                   openSharePostModal(
                                     gridItemInfo.id,
                                     gridItemInfo.postType,
                                     gridItemInfo.title,
                                     gridItemInfo.description
                                   )
-                                " type="button" class="bg-transparent border-0 function-btns">
-                                <img lazyLoad="../../../../assets/images/Upload-dark.svg" class="d-block mx-auto" />
+                                "
+                                type="button"
+                                class="bg-transparent border-0 function-btns"
+                              >
+                                <img
+                                  lazyLoad="../../../../assets/images/Upload-dark.svg"
+                                  class="d-block mx-auto"
+                                />
                                 {{ gridItemInfo.postSharedCount }}
                               </button>
                             </div>
@@ -907,93 +1525,170 @@
                       </div>
                     </div>
                   </div>
-                  <div *ngIf="
+                  <div
+                    *ngIf="
                       (post.postType == 1 && post.postAuthorType == 2) ||
                       post.isLive
-                    " class="col-md-6 col-xl-4 {{ post.id }}" (click)="showPostDiv(post)">
-                    <div class="school-grid-box position-relative school-list-box mb-0">
+                    "
+                    class="col-md-6 col-xl-4 {{ post.id }}"
+                    (click)="showPostDiv(post)"
+                  >
+                    <div
+                      class="school-grid-box position-relative school-list-box mb-0"
+                    >
                       <div class="schoolgrid-header">
-                        <div class="d-flex align-items-center justify-content-between">
+                        <div
+                          class="d-flex align-items-center justify-content-between"
+                        >
                           <div class="d-flex align-items-center gap-3">
                             <div class="school-gridprofile-icon">
                               <img [lazyLoad]="class.avatar" />
                             </div>
-                            <h2 class="d-inline-block font_16 fw_600 text_sec1 mb-0">
+                            <h2
+                              class="d-inline-block font_16 fw_600 text_sec1 mb-0"
+                            >
                               {{ post.title }}
                             </h2>
                             <div *ngIf="post.isLive">
-                              <img lazyLoad="../../../../assets/images/live_img.png" />
+                              <img
+                                lazyLoad="../../../../assets/images/live_img.png"
+                              />
                             </div>
                           </div>
                           <div class="right-action">
-                            <button *ngIf="post.isPinned && isOwner" (click)="pinUnpinPost(post.id, false)"
-                              type="button" class="bg-transparent border-0 pinned-grid-chat">
-                              <img lazyLoad="../../../../assets/images/pinned-orange.svg" />
+                            <button
+                              *ngIf="post.isPinned && isOwner"
+                              (click)="pinUnpinPost(post.id, false)"
+                              type="button"
+                              class="bg-transparent border-0 pinned-grid-chat"
+                            >
+                              <img
+                                lazyLoad="../../../../assets/images/pinned-orange.svg"
+                              />
                             </button>
-                            <button *ngIf="!post.isPinned && isOwner" (click)="pinUnpinPost(post.id, true)"
-                              type="button" class="bg-transparent border-0 pinned-grid-chat">
-                              <img lazyLoad="../../../../assets/images/pinned-gray.svg" />
+                            <button
+                              *ngIf="!post.isPinned && isOwner"
+                              (click)="pinUnpinPost(post.id, true)"
+                              type="button"
+                              class="bg-transparent border-0 pinned-grid-chat"
+                            >
+                              <img
+                                lazyLoad="../../../../assets/images/pinned-gray.svg"
+                              />
                             </button>
                           </div>
                         </div>
                         <hr />
-                        <div class="d-flex align-items-center justify-content-between">
-                          <div class="d-flex justify-content-between date-view-list">
+                        <div
+                          class="d-flex align-items-center justify-content-between"
+                        >
+                          <div
+                            class="d-flex justify-content-between date-view-list"
+                          >
                             <!-- <p *ngIf="post.createdOn != null" class="font_14 school-grid-date d-inline-block mb-0">
                               {{ post.createdOn | ChangeTimeZonePipe | date : "MMMM d" }} -
                               {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm" }}
                             </p> -->
 
                             <p
-                            *ngIf="post.createdOn != null"
-                            class="font_14 school-grid-date d-inline-block mb-0 me-1"
-                          >
-                            {{ post.createdOn | ChangeTimeZonePipe | date : "dd" }}
-                            {{ post.createdOn | ChangeTimeZonePipe | date : "MMMM"|translate }}
-                          </p>
-                          <p
-                            *ngIf="post.createdOn != null"
-                            class="font_14 school-grid-date d-inline-block mb-0 me-3"
-                          >
-                            {{post.createdOn | ChangeTimeZonePipe | date : "yyyy"}}
-                          </p>
-                          <p
-                            *ngIf="post.createdOn != null"
-                            class="font_14 school-grid-date d-inline-block mb-0 me-3"
-                          >
-                            {{ post.createdOn | ChangeTimeZonePipe | date : "hh:mm a" }}
-                          </p>
+                              *ngIf="post.createdOn != null"
+                              class="font_14 school-grid-date d-inline-block mb-0 me-1"
+                            >
+                              {{
+                                post.createdOn
+                                  | ChangeTimeZonePipe
+                                  | date : "dd"
+                              }}
+                              {{
+                                post.createdOn
+                                  | ChangeTimeZonePipe
+                                  | date : "MMMM"
+                                  | translate
+                              }}
+                            </p>
+                            <p
+                              *ngIf="post.createdOn != null"
+                              class="font_14 school-grid-date d-inline-block mb-0 me-3"
+                            >
+                              {{
+                                post.createdOn
+                                  | ChangeTimeZonePipe
+                                  | date : "yyyy"
+                              }}
+                            </p>
+                            <p
+                              *ngIf="post.createdOn != null"
+                              class="font_14 school-grid-date d-inline-block mb-0 me-3"
+                            >
+                              {{
+                                post.createdOn
+                                  | ChangeTimeZonePipe
+                                  | date : "hh:mm a"
+                              }}
+                            </p>
                           </div>
-                          <button type="button" class="view font_12 bg-transparent border-0 cursor_auto">
-                            <img lazyLoad="../../../../assets/images/eye.svg" class="me-2" />
+                          <button
+                            type="button"
+                            class="view font_12 bg-transparent border-0 cursor_auto"
+                          >
+                            <img
+                              lazyLoad="../../../../assets/images/eye.svg"
+                              class="me-2"
+                            />
                             {{ post.views.length }}
                           </button>
                         </div>
                       </div>
                       <div class="school-grid-body">
-                        <div class="school-grid-thumbnail" style="cursor: pointer" (click)="showPostDiv(post.id)">
+                        <div
+                          class="school-grid-thumbnail"
+                          style="cursor: pointer"
+                          (click)="showPostDiv(post.id)"
+                        >
                           <div class="row gx-1">
                             <div class="col-md-12">
-                              <div [ngClass]="
+                              <div
+                                [ngClass]="
                                   post.postAttachments.length > 0
                                     ? 'school-large-thumbnail shadow-thumnail position-relative'
                                     : 'position-relative'
-                                ">
-                                <div *ngIf="
+                                "
+                              >
+                                <div
+                                  *ngIf="
                                     post.postAttachments[0]?.fileUrl == null
-                                  " class="description_scroll" [id]="getRandomClass(i, false)">
+                                  "
+                                  class="description_scroll"
+                                  [id]="getRandomClass(i, false)"
+                                >
                                   {{ post.description }}
                                 </div>
-                                <div *ngIf="post.postAttachments[0]?.fileType == 2" class="videofile">
-                                  <img style="height: 300px" [lazyLoad]="
+                                <div
+                                  *ngIf="post.postAttachments[0]?.fileType == 2"
+                                  class="videofile"
+                                >
+                                  <img
+                                    style="height: 300px"
+                                    [lazyLoad]="
                                       post.postAttachments[0]?.fileThumbnail
-                                    " />
-                                    <div class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
-                                      <i class="fas fa-play fa-5x" *ngIf="post.postAttachments[0]?.fileType == 2"></i>
-                                    </div>
+                                    "
+                                  />
+                                  <div
+                                    class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
+                                  >
+                                    <i
+                                      class="fas fa-play fa-5x"
+                                      *ngIf="
+                                        post.postAttachments[0]?.fileType == 2
+                                      "
+                                    ></i>
+                                  </div>
                                 </div>
-                                <img *ngIf="post.postAttachments[0]?.fileType == 1" class="w-100"
-                                  [lazyLoad]="post.postAttachments[0]?.fileUrl" />
+                                <img
+                                  *ngIf="post.postAttachments[0]?.fileType == 1"
+                                  class="w-100"
+                                  [lazyLoad]="post.postAttachments[0]?.fileUrl"
+                                />
                               </div>
                             </div>
                           </div>
@@ -1007,44 +1702,78 @@
           </div>
         </div>
         <!-- Modal -->
-        <div class="modal fade edit-school-modal" id="editClass" tabindex="-1" aria-labelledby="editClass"
-          aria-hidden="true">
+        <div
+          class="modal fade edit-school-modal"
+          id="editClass"
+          tabindex="-1"
+          aria-labelledby="editClass"
+          aria-hidden="true"
+        >
           <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-              <div class="modal-header border-0 justify-content-center position-relative">
-                <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center" id="editschool">
+              <div
+                class="modal-header border-0 justify-content-center position-relative"
+              >
+                <h1
+                  class="modal-title font_22 text_dark fw_700 border-0 text-center"
+                  id="editschool"
+                >
                   {{ "EditClassProfile" | translate }}
                 </h1>
-                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close">
+                <button
+                  type="button"
+                  class="btn-close shadow-none"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                >
                   <img lazyLoad="../../../../assets/images/cross.svg" />
                 </button>
               </div>
               <div class="modal-body">
                 <div class="edit-profile-header text-center mb-4">
-                  <div class="rounded-circle modal-school-icon text-center mb-2 class-icon-profile">
+                  <div
+                    class="rounded-circle modal-school-icon text-center mb-2 class-icon-profile"
+                  >
                     <div *ngIf="uploadImage != ''">
                       <img [lazyLoad]="uploadImage" />
                     </div>
                     <div *ngIf="uploadImage == ''">
-                      <img *ngIf="classAvatar != 'null' && classAvatar != ''" lazyLoad="{{ classAvatar }}"
-                        style="scale: 1.8" />
+                      <img
+                        *ngIf="classAvatar != 'null' && classAvatar != ''"
+                        lazyLoad="{{ classAvatar }}"
+                        style="scale: 1.8"
+                      />
                     </div>
                   </div>
 
-                  <input #imageFile
+                  <input
+                    #imageFile
                     class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins position-static opacity-100"
-                    type="file" name="Edit Picture" id="avatar" (change)="onFileChange($event)" accept="image/*" />
-                  <button *ngIf="
+                    type="file"
+                    name="Edit Picture"
+                    id="avatar"
+                    (change)="onFileChange($event)"
+                    accept="image/*"
+                  />
+                  <button
+                    *ngIf="
                       (uploadImage != '' && uploadImage != undefined) ||
                       (classAvatar != '' && classAvatar != null)
-                    " (click)="removeLogo()" class="btn border-0 font_12 text_dark f-poppins">
+                    "
+                    (click)="removeLogo()"
+                    class="btn border-0 font_12 text_dark f-poppins"
+                  >
                     {{ "DeletePhoto" | translate }}
                   </button>
                   <!-- <button class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins position-static opacity-100">{{'EditPicture'| translate }}</button> -->
                 </div>
-                <div class="text-line-border position-relative text-center mb-4">
-                  <span class="line-text font_12 text_ltgray fw_400 text-center">{{ "GeneralInformation" | translate
-                    }}</span>
+                <div
+                  class="text-line-border position-relative text-center mb-4"
+                >
+                  <span
+                    class="line-text font_12 text_ltgray fw_400 text-center"
+                    >{{ "GeneralInformation" | translate }}</span
+                  >
                 </div>
                 <form [formGroup]="editClassForm" class="latest-form">
                   <div class="row">
@@ -1052,41 +1781,81 @@
                       <div class="form-group">
                         <label class="font_10">{{
                           "SchoolName" | translate
-                          }}</label>
-                        <input [attr.disabled]="disabled" formControlName="schoolName" type="text" name="schoolOwner"
-                          class="form-control w-100" />
+                        }}</label>
+                        <input
+                          [attr.disabled]="disabled"
+                          formControlName="schoolName"
+                          type="text"
+                          name="schoolOwner"
+                          class="form-control w-100"
+                        />
                       </div>
                     </div>
                     <div class="col-md-4">
                       <div class="form-group">
-                        <label class="font_10">{{ "ClassName" | translate }}*</label>
-                        <input formControlName="className" type="text" placeholder="Class Name" name="classname"
-                          maxlength="60" class="form-control w-100" />
-                        <small class="p-error" style="color: orange" *ngIf="
+                        <label class="font_10"
+                          >{{ "ClassName" | translate }}*</label
+                        >
+                        <input
+                          formControlName="className"
+                          type="text"
+                          placeholder="Class Name"
+                          name="classname"
+                          maxlength="60"
+                          class="form-control w-100"
+                        />
+                        <small
+                          class="p-error"
+                          style="color: orange"
+                          *ngIf="
                             isSubmitted &&
                             editClassForm.controls.className.errors
-                          ">{{ "ClassNameRequired" | translate }}
+                          "
+                          >{{ "ClassNameRequired" | translate }}
                         </small>
                       </div>
                     </div>
                     <div class="col-md-4">
                       <div class="form-group">
-                        <label class="font_10">{{ "NumberofStudents" | translate }}*</label>
-                        <input formControlName="noOfStudents" type="number" placeholder="" name="noOfStudents" min="1"
-                          max="999" class="form-control w-100" />
-                        <small class="p-error" style="color: orange" *ngIf="
+                        <label class="font_10"
+                          >{{ "NumberofStudents" | translate }}*</label
+                        >
+                        <input
+                          formControlName="noOfStudents"
+                          type="number"
+                          placeholder=""
+                          name="noOfStudents"
+                          min="1"
+                          max="999"
+                          class="form-control w-100"
+                        />
+                        <small
+                          class="p-error"
+                          style="color: orange"
+                          *ngIf="
                             isSubmitted &&
                             editClassForm.controls.noOfStudents.errors
-                          ">{{ "NoOfStudentsRequired" | translate }}
+                          "
+                          >{{ "NoOfStudentsRequired" | translate }}
                         </small>
                       </div>
                     </div>
                     <div class="col-md-6">
                       <div class="form-group">
-                        <label class="font_10">{{ "Start" | translate }}*</label>
-                        <input #startDate autocomplete="off" type="text" placeholder="mm/dd/yyyy"
-                          class="form-control w-100 date_calendar" name="startDate" formControlName="startDate"
-                          id="start_date" (click)="getSelectedLanguage()" />
+                        <label class="font_10"
+                          >{{ "Start" | translate }}*</label
+                        >
+                        <input
+                          #startDate
+                          autocomplete="off"
+                          type="text"
+                          placeholder="mm/dd/yyyy"
+                          class="form-control w-100 date_calendar"
+                          name="startDate"
+                          formControlName="startDate"
+                          id="start_date"
+                          (click)="getSelectedLanguage()"
+                        />
 
                         <!-- <input
                           formControlName="startDate"
@@ -1096,23 +1865,40 @@
                           name="start"
                           class="form-control w-100"
                         /> -->
-                        <small class="p-error" style="color: orange" *ngIf="
+                        <small
+                          class="p-error"
+                          style="color: orange"
+                          *ngIf="
                             isSubmitted &&
                             editClassForm.controls.startDate.errors
-                          ">{{ "StartDateRequired" | translate }}
+                          "
+                          >{{ "StartDateRequired" | translate }}
                         </small>
-                        <small class="p-error" style="color: orange; margin-left: 0px"
-                          *ngIf="isSubmitted && editClassForm.errors">
+                        <small
+                          class="p-error"
+                          style="color: orange; margin-left: 0px"
+                          *ngIf="isSubmitted && editClassForm.errors"
+                        >
                           {{ editClassForm.errors.dates }}
                         </small>
                       </div>
                     </div>
                     <div class="col-md-6">
                       <div class="form-group">
-                        <label class="font_10">{{ "Finish" | translate }}*</label>
-                        <input #endDate autocomplete="off" type="text" placeholder="mm/dd/yyyy"
-                          class="form-control w-100 date_calendar" name="endDate" formControlName="endDate"
-                          id="end_date" (click)="getSelectedLanguage()" />
+                        <label class="font_10"
+                          >{{ "Finish" | translate }}*</label
+                        >
+                        <input
+                          #endDate
+                          autocomplete="off"
+                          type="text"
+                          placeholder="mm/dd/yyyy"
+                          class="form-control w-100 date_calendar"
+                          name="endDate"
+                          formControlName="endDate"
+                          id="end_date"
+                          (click)="getSelectedLanguage()"
+                        />
                         <!-- <input
                           formControlName="endDate"
                           type="date"
@@ -1121,9 +1907,13 @@
                           name="start"
                           class="form-control w-100"
                         /> -->
-                        <small class="p-error" style="color: orange" *ngIf="
+                        <small
+                          class="p-error"
+                          style="color: orange"
+                          *ngIf="
                             isSubmitted && editClassForm.controls.endDate.errors
-                          ">{{ "EndDateRequired" | translate }}
+                          "
+                          >{{ "EndDateRequired" | translate }}
                         </small>
                       </div>
                     </div>
@@ -1131,16 +1921,28 @@
                     <div class="col-md-6">
                       <div class="row">
                         <div class="col mt-3 mb-2">
-                          <input (click)="getFreeClass()" formControlName="serviceTypeId" type="radio" id="forFree"
-                            name="serviceTypeId" value="704fedc6-834c-4921-a63b-7e53c5276b31" />
+                          <input
+                            (click)="getFreeClass()"
+                            formControlName="serviceTypeId"
+                            type="radio"
+                            id="forFree"
+                            name="serviceTypeId"
+                            value="704fedc6-834c-4921-a63b-7e53c5276b31"
+                          />
                           <label for="forFree">
                             {{ "Free" | translate }}
                           </label>
                         </div>
 
                         <div class="col mt-3 mb-2">
-                          <input (click)="getPaidClass()" formControlName="serviceTypeId" type="radio" id="forPaid"
-                            name="serviceTypeId" value="0d846894-caa4-42f3-8e8a-9dba6467672b" />
+                          <input
+                            (click)="getPaidClass()"
+                            formControlName="serviceTypeId"
+                            type="radio"
+                            id="forPaid"
+                            name="serviceTypeId"
+                            value="0d846894-caa4-42f3-8e8a-9dba6467672b"
+                          />
                           <label for="forPaid">
                             {{ "Paid" | translate }}
                           </label>
@@ -1150,56 +1952,106 @@
 
                     <div *ngIf="isClassPaid" class="col-md-6">
                       <div class="form-group">
-                        <label class="font_10">{{ "Price" | translate }}*</label>
+                        <label class="font_10"
+                          >{{ "Price" | translate }}*</label
+                        >
                         <div class="d-flex">
-                          <input formControlName="price" type="number" min="1" placeholder="{{ 'Price' | translate }}"
-                            name="price" class="form-control priceInputWidth" />
-                          <select class="form-select rounded-8 w-100" formControlName="currency"
-                            aria-label="Default select example">
-                            <option *ngFor="let currency of currencies" [value]="currency.key">
+                          <input
+                            formControlName="price"
+                            type="number"
+                            min="1"
+                            placeholder="{{ 'Price' | translate }}"
+                            name="price"
+                            class="form-control priceInputWidth"
+                          />
+                          <select
+                            class="form-select rounded-8 w-100"
+                            formControlName="currency"
+                            aria-label="Default select example"
+                          >
+                            <option
+                              *ngFor="let currency of currencies"
+                              [value]="currency.key"
+                            >
                               {{ currency.value }}
                             </option>
                           </select>
                         </div>
-                        <small class="p-error" style="color: orange" *ngIf="
+                        <small
+                          class="p-error"
+                          style="color: orange"
+                          *ngIf="
                             isSubmitted && editClassForm.controls.price.errors
-                          ">
+                          "
+                        >
                           {{ "PriceRequired" | translate }}
                         </small>
                       </div>
                     </div>
                     <div class="col-md-12">
                       <div class="form-group">
-                        <label class="font_10">{{ "Visibility" | translate }}*</label>
-                        <select class="form-select rounded-8 w-100" formControlName="accessibilityId">
-                          <option *ngFor="let item of accessibility; let i = index" [value]="item.id" [selected]="i">
+                        <label class="font_10"
+                          >{{ "Visibility" | translate }}*</label
+                        >
+                        <select
+                          class="form-select rounded-8 w-100"
+                          formControlName="accessibilityId"
+                        >
+                          <option
+                            *ngFor="let item of accessibility; let i = index"
+                            [value]="item.id"
+                            [selected]="i"
+                          >
                             {{ item.name }}
                           </option>
                         </select>
-                        <small class="p-error" style="color: orange" *ngIf="
+                        <small
+                          class="p-error"
+                          style="color: orange"
+                          *ngIf="
                             isSubmitted &&
                             editClassForm.controls.accessibilityId.errors
-                          ">{{ "ThisFieldRequired" | translate }}
+                          "
+                          >{{ "ThisFieldRequired" | translate }}
                         </small>
                       </div>
                     </div>
                     <div class="col-md-12">
                       <div class="form-group lang-w100">
-                        <label class="font_10">{{ "Language" | translate }}*</label>
+                        <label class="font_10"
+                          >{{ "Language" | translate }}*</label
+                        >
                         <div class="custom-language-select">
-                          <p-multiSelect [defaultLabel]="'Select Languages'" [panelStyle]="{ width: '100%' }"
-                            [filter]="false" [showToggleAll]="false" [options]="languages" optionLabel="name"
-                            optionValue="id" name="languageSelect[]" class="form-control" multiple id="languageSelect"
-                            formControlName="languageIds">
-                            <option *ngFor="let language of languages; let i = index" [value]="language.id"
-                              [selected]="i">
+                          <p-multiSelect
+                            [defaultLabel]="'Select Languages'"
+                            [panelStyle]="{ width: '100%' }"
+                            [filter]="false"
+                            [showToggleAll]="false"
+                            [options]="languages"
+                            optionLabel="name"
+                            optionValue="id"
+                            name="languageSelect[]"
+                            class="form-control"
+                            multiple
+                            id="languageSelect"
+                            formControlName="languageIds"
+                          >
+                            <option
+                              *ngFor="let language of languages; let i = index"
+                              [value]="language.id"
+                              [selected]="i"
+                            >
                               {{ language.name }}
                             </option>
                           </p-multiSelect>
-                          <small class="p-error" style="color: orange" *ngIf="
+                          <small
+                            class="p-error"
+                            style="color: orange"
+                            *ngIf="
                               isSubmitted &&
                               editClassForm.controls.languageIds.errors
-                            ">{{ "AtLeastOneLanguageRequired" | translate }}
+                            "
+                            >{{ "AtLeastOneLanguageRequired" | translate }}
                           </small>
                         </div>
                       </div>
@@ -1208,29 +2060,42 @@
                       <div class="form-group">
                         <label class="font_10">{{
                           "ClassBio" | translate
-                          }}</label>
+                        }}</label>
                         <!-- <input
                           formControlName="description"
                           type="text"
                           class="form-control"
                           placeholder="{{ 'ClassBio' | translate }}"
                         /> -->
-                        <textarea maxlength="200" type="text" formControlName="description"
-                          class="form-control resize-none ht_96" placeholder="{{ 'ClassBio' | translate }}"></textarea>
+                        <textarea
+                          maxlength="200"
+                          type="text"
+                          formControlName="description"
+                          class="form-control resize-none ht_96"
+                          placeholder="{{ 'ClassBio' | translate }}"
+                        ></textarea>
                       </div>
                     </div>
                   </div>
                 </form>
               </div>
               <div
-                class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 mt-2">
-                <button #closeEditModal id="closeBtn" type="button"
+                class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 mt-2"
+              >
+                <button
+                  #closeEditModal
+                  id="closeBtn"
+                  type="button"
                   class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
-                  data-bs-dismiss="modal">
+                  data-bs-dismiss="modal"
+                >
                   {{ "DiscardChanges" | translate }}
                 </button>
-                <button (click)="updateClass()" type="button"
-                  class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step">
+                <button
+                  (click)="updateClass()"
+                  type="button"
+                  class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
+                >
                   {{ "Save" | translate }}
                 </button>
               </div>
@@ -1238,37 +2103,63 @@
           </div>
         </div>
 
-        <div class="modal fade edit-school-modal delete-modal" id="enableDisableClass" tabindex="-1"
-          aria-labelledby="enableDisableClass" aria-hidden="true">
+        <div
+          class="modal fade edit-school-modal delete-modal"
+          id="enableDisableClass"
+          tabindex="-1"
+          aria-labelledby="enableDisableClass"
+          aria-hidden="true"
+        >
           <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-              <div class="modal-header border-0 justify-content-center position-relative">
-                <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">
+              <div
+                class="modal-header border-0 justify-content-center position-relative"
+              >
+                <h1
+                  class="modal-title font_22 text_dark fw_700 border-0 text-center"
+                >
                   {{ "Enable/DisableClass" | translate }}
                 </h1>
-                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close">
+                <button
+                  type="button"
+                  class="btn-close shadow-none"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                >
                   <img lazyLoad="../../../../assets/images/cross.svg" />
                 </button>
               </div>
               <div class="modal-body">
                 <div class="form-group">
-                  <h2 *ngIf="!class.isDisableByOwner" class="text-center font_16 f-poppins">
+                  <h2
+                    *ngIf="!class.isDisableByOwner"
+                    class="text-center font_16 f-poppins"
+                  >
                     {{ "DoYouWantToDisableClass" | translate }}
                   </h2>
-                  <h2 *ngIf="class.isDisableByOwner" class="text-center font_16 f-poppins">
+                  <h2
+                    *ngIf="class.isDisableByOwner"
+                    class="text-center font_16 f-poppins"
+                  >
                     {{ "DoYouWantToUnableClass" | translate }}
                   </h2>
                 </div>
                 <div
-                  class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-2 mt-4">
-                  <button type="button"
+                  class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-2 mt-4"
+                >
+                  <button
+                    type="button"
                     class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
-                    data-bs-dismiss="modal">
+                    data-bs-dismiss="modal"
+                  >
                     {{ "No" | translate }}
                   </button>
-                  <button (click)="unableDisableClass()" type="button"
+                  <button
+                    (click)="unableDisableClass()"
+                    type="button"
                     class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
-                    data-bs-dismiss="modal">
+                    data-bs-dismiss="modal"
+                  >
                     {{ "Yes" | translate }}
                   </button>
                 </div>
@@ -1277,15 +2168,29 @@
           </div>
         </div>
 
-        <div class="modal fade edit-school-modal delete-modal" id="deleteclass" tabindex="-1"
-          aria-labelledby="deleteclass" aria-hidden="true">
+        <div
+          class="modal fade edit-school-modal delete-modal"
+          id="deleteclass"
+          tabindex="-1"
+          aria-labelledby="deleteclass"
+          aria-hidden="true"
+        >
           <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-              <div class="modal-header border-0 justify-content-center position-relative">
-                <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">
+              <div
+                class="modal-header border-0 justify-content-center position-relative"
+              >
+                <h1
+                  class="modal-title font_22 text_dark fw_700 border-0 text-center"
+                >
                   {{ "DeleteClass" | translate }}
                 </h1>
-                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close">
+                <button
+                  type="button"
+                  class="btn-close shadow-none"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                >
                   <img lazyLoad="../../../../assets/images/cross.svg" />
                 </button>
               </div>
@@ -1296,15 +2201,21 @@
                   </h2>
                 </div>
                 <div
-                  class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-2 mt-4">
-                  <button type="button"
+                  class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-2 mt-4"
+                >
+                  <button
+                    type="button"
                     class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
-                    data-bs-dismiss="modal">
+                    data-bs-dismiss="modal"
+                  >
                     {{ "No" | translate }}
                   </button>
-                  <button (click)="deleteClass()" type="button"
+                  <button
+                    (click)="deleteClass()"
+                    type="button"
                     class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
-                    data-bs-dismiss="modal">
+                    data-bs-dismiss="modal"
+                  >
                     {{ "Yes" | translate }}
                   </button>
                 </div>
@@ -1313,46 +2224,83 @@
           </div>
         </div>
 
-        <div class="modal fade edit-school-modal" id="add-language" tabindex="-1" aria-labelledby="add-language"
-          aria-hidden="true">
+        <div
+          class="modal fade edit-school-modal"
+          id="add-language"
+          tabindex="-1"
+          aria-labelledby="add-language"
+          aria-hidden="true"
+        >
           <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-              <div class="modal-header border-0 justify-content-center position-relative">
-                <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">
+              <div
+                class="modal-header border-0 justify-content-center position-relative"
+              >
+                <h1
+                  class="modal-title font_22 text_dark fw_700 border-0 text-center"
+                >
                   {{ "AddLanguage" | translate }}
                 </h1>
-                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close">
+                <button
+                  type="button"
+                  class="btn-close shadow-none"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                >
                   <img lazyLoad="../../../../assets/images/cross.svg" />
                 </button>
               </div>
               <div class="modal-body">
-                <form [formGroup]="languageForm" class="latest-form add-tag-step">
+                <form
+                  [formGroup]="languageForm"
+                  class="latest-form add-tag-step"
+                >
                   <div class="form-group">
                     <label class="font_10">{{ "Language" | translate }}</label>
                     <span class="p-fluid">
-                      <p-autoComplete formControlName="languages" [showEmptyMessage]="true"
-                        [emptyMessage]="'NoResultFound' | translate" [forceSelection]="true" [size]="200"
-                        (onSelect)="captureLanguageId($event)" (onUnselect)="removeLanguage($event)"
-                        placeholder="{{ 'TypeLanguageToAdd' | translate }}" class="form-control w-100"
-                        [suggestions]="filteredLanguages" (completeMethod)="filterLanguages($event)" field="name"
-                        [multiple]="true">
+                      <p-autoComplete
+                        formControlName="languages"
+                        [showEmptyMessage]="true"
+                        [emptyMessage]="'NoResultFound' | translate"
+                        [forceSelection]="true"
+                        [size]="200"
+                        (onSelect)="captureLanguageId($event)"
+                        (onUnselect)="removeLanguage($event)"
+                        placeholder="{{ 'TypeLanguageToAdd' | translate }}"
+                        class="form-control w-100"
+                        [suggestions]="filteredLanguages"
+                        (completeMethod)="filterLanguages($event)"
+                        field="name"
+                        [multiple]="true"
+                      >
                       </p-autoComplete>
                     </span>
                   </div>
 
-                  <small class="p-error" style="color: orange; margin-left: 200px" *ngIf="
+                  <small
+                    class="p-error"
+                    style="color: orange; margin-left: 200px"
+                    *ngIf="
                       isSubmitted && languageForm.controls.languages.errors
-                    ">{{ "AtLeastOneLanguageRequired" | translate }}
+                    "
+                    >{{ "AtLeastOneLanguageRequired" | translate }}
                   </small>
                   <div
-                    class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 mt-4">
-                    <button #closeLanguageModal type="button"
+                    class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 mt-4"
+                  >
+                    <button
+                      #closeLanguageModal
+                      type="button"
                       class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
-                      data-bs-dismiss="modal">
+                      data-bs-dismiss="modal"
+                    >
                       {{ "DiscardChanges" | translate }}
                     </button>
-                    <button (click)="saveClassLanguages()" type="button"
-                      class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step">
+                    <button
+                      (click)="saveClassLanguages()"
+                      type="button"
+                      class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
+                    >
                       {{ "Save" | translate }}
                     </button>
                   </div>
@@ -1362,15 +2310,29 @@
           </div>
         </div>
 
-        <div class="modal fade edit-school-modal delete-modal" id="delete-classLanguage" tabindex="-1"
-          aria-labelledby="delete-language" aria-hidden="true">
+        <div
+          class="modal fade edit-school-modal delete-modal"
+          id="delete-classLanguage"
+          tabindex="-1"
+          aria-labelledby="delete-language"
+          aria-hidden="true"
+        >
           <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-              <div class="modal-header border-0 justify-content-center position-relative">
-                <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">
+              <div
+                class="modal-header border-0 justify-content-center position-relative"
+              >
+                <h1
+                  class="modal-title font_22 text_dark fw_700 border-0 text-center"
+                >
                   {{ "DeleteLanguage" | translate }}
                 </h1>
-                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close">
+                <button
+                  type="button"
+                  class="btn-close shadow-none"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                >
                   <img lazyLoad="../../../../assets/images/cross.svg" />
                 </button>
               </div>
@@ -1381,15 +2343,21 @@
                   </h2>
                 </div>
                 <div
-                  class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-2 mt-4">
-                  <button type="button"
+                  class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-2 mt-4"
+                >
+                  <button
+                    type="button"
                     class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
-                    data-bs-dismiss="modal">
+                    data-bs-dismiss="modal"
+                  >
                     {{ "No" | translate }}
                   </button>
-                  <button (click)="deleteClassLanguage()" type="button"
+                  <button
+                    (click)="deleteClassLanguage()"
+                    type="button"
                     class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
-                    data-bs-dismiss="modal">
+                    data-bs-dismiss="modal"
+                  >
                     {{ "Yes" | translate }}
                   </button>
                 </div>
@@ -1398,46 +2366,81 @@
           </div>
         </div>
 
-        <div class="modal fade edit-school-modal" id="add-classTeacher" tabindex="-1" aria-labelledby="add-classTeacher"
-          aria-hidden="true">
+        <div
+          class="modal fade edit-school-modal"
+          id="add-classTeacher"
+          tabindex="-1"
+          aria-labelledby="add-classTeacher"
+          aria-hidden="true"
+        >
           <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-              <div class="modal-header border-0 justify-content-center position-relative">
-                <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">
+              <div
+                class="modal-header border-0 justify-content-center position-relative"
+              >
+                <h1
+                  class="modal-title font_22 text_dark fw_700 border-0 text-center"
+                >
                   {{ "AddTeacher" | translate }}
                 </h1>
-                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close">
+                <button
+                  type="button"
+                  class="btn-close shadow-none"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                >
                   <img lazyLoad="../../../../assets/images/cross.svg" />
                 </button>
               </div>
               <div class="modal-body">
-                <form [formGroup]="teacherForm" class="latest-form add-tag-step">
+                <form
+                  [formGroup]="teacherForm"
+                  class="latest-form add-tag-step"
+                >
                   <div class="form-group">
                     <label class="font_10">{{ "Teacher" | translate }}</label>
                     <span class="p-fluid">
-                      <p-autoComplete formControlName="teachers" [showEmptyMessage]="true"
-                        [emptyMessage]="'NoResultFound' | translate" [forceSelection]="true" [size]="200"
-                        (onSelect)="captureTeacherId($event)" (onUnselect)="removeTeacher($event)"
-                        placeholder="{{ 'TypeTeacherToAdd' | translate }}" class="form-control w-100"
-                        [suggestions]="filteredTeachers" (completeMethod)="filterTeachers($event)" field="firstName"
-                        [multiple]="true">
+                      <p-autoComplete
+                        formControlName="teachers"
+                        [showEmptyMessage]="true"
+                        [emptyMessage]="'NoResultFound' | translate"
+                        [forceSelection]="true"
+                        [size]="200"
+                        (onSelect)="captureTeacherId($event)"
+                        (onUnselect)="removeTeacher($event)"
+                        placeholder="{{ 'TypeTeacherToAdd' | translate }}"
+                        class="form-control w-100"
+                        [suggestions]="filteredTeachers"
+                        (completeMethod)="filterTeachers($event)"
+                        field="firstName"
+                        [multiple]="true"
+                      >
                       </p-autoComplete>
                     </span>
                   </div>
 
-                  <small class="p-error" style="color: orange; margin-left: 200px"
-                    *ngIf="isSubmitted && teacherForm.controls.teachers.errors">{{ "SelectAtLeastOneTeacher" | translate
-                    }}
+                  <small
+                    class="p-error"
+                    style="color: orange; margin-left: 200px"
+                    *ngIf="isSubmitted && teacherForm.controls.teachers.errors"
+                    >{{ "SelectAtLeastOneTeacher" | translate }}
                   </small>
                   <div
-                    class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 mt-4">
-                    <button #closeTeacherModal type="button"
+                    class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 mt-4"
+                  >
+                    <button
+                      #closeTeacherModal
+                      type="button"
                       class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
-                      data-bs-dismiss="modal">
+                      data-bs-dismiss="modal"
+                    >
                       {{ "DiscardChanges" | translate }}
                     </button>
-                    <button (click)="saveClassTeachers()" type="button"
-                      class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step">
+                    <button
+                      (click)="saveClassTeachers()"
+                      type="button"
+                      class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
+                    >
                       {{ "Save" | translate }}
                     </button>
                   </div>
@@ -1447,15 +2450,29 @@
           </div>
         </div>
 
-        <div class="modal fade edit-school-modal delete-modal" id="delete-classTeacher" tabindex="-1"
-          aria-labelledby="delete-teacher" aria-hidden="true">
+        <div
+          class="modal fade edit-school-modal delete-modal"
+          id="delete-classTeacher"
+          tabindex="-1"
+          aria-labelledby="delete-teacher"
+          aria-hidden="true"
+        >
           <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-              <div class="modal-header border-0 justify-content-center position-relative">
-                <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">
+              <div
+                class="modal-header border-0 justify-content-center position-relative"
+              >
+                <h1
+                  class="modal-title font_22 text_dark fw_700 border-0 text-center"
+                >
                   {{ "DeleteTeacher" | translate }}
                 </h1>
-                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close">
+                <button
+                  type="button"
+                  class="btn-close shadow-none"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                >
                   <img lazyLoad="../../../../assets/images/cross.svg" />
                 </button>
               </div>
@@ -1466,15 +2483,21 @@
                   </h2>
                 </div>
                 <div
-                  class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-2 mt-4">
-                  <button type="button"
+                  class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-2 mt-4"
+                >
+                  <button
+                    type="button"
                     class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
-                    data-bs-dismiss="modal">
+                    data-bs-dismiss="modal"
+                  >
                     {{ "No" | translate }}
                   </button>
-                  <button (click)="deleteClassTeacher()" type="button"
+                  <button
+                    (click)="deleteClassTeacher()"
+                    type="button"
                     class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
-                    data-bs-dismiss="modal">
+                    data-bs-dismiss="modal"
+                  >
                     {{ "Yes" | translate }}
                   </button>
                 </div>
@@ -1576,15 +2599,29 @@
           </div>
         </div> -->
 
-        <div class="modal fade edit-school-modal" id="add-certificate" tabindex="-1" aria-labelledby="add-certificate"
-          aria-hidden="true">
+        <div
+          class="modal fade edit-school-modal"
+          id="add-certificate"
+          tabindex="-1"
+          aria-labelledby="add-certificate"
+          aria-hidden="true"
+        >
           <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-              <div class="modal-header border-0 justify-content-center position-relative">
-                <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">
+              <div
+                class="modal-header border-0 justify-content-center position-relative"
+              >
+                <h1
+                  class="modal-title font_22 text_dark fw_700 border-0 text-center"
+                >
                   {{ "AddCertificates" | translate }}
                 </h1>
-                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close">
+                <button
+                  type="button"
+                  class="btn-close shadow-none"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                >
                   <img src="../../../../assets/images/cross.svg" />
                 </button>
               </div>
@@ -1593,42 +2630,83 @@
                   <div class="row">
                     <div class="col-md-12">
                       <div class="form-group">
-                        <input formControlName="classId" type="text" name="ClassId" class="form-control w-100"
-                          [disabled]="true" [hidden]="true" />
-                        <label class="font_10">{{ "CertificateName" | translate }}*</label>
-                        <input formControlName="certificateName" type="text" name="CertificateName"
-                          class="form-control w-100" />
+                        <input
+                          formControlName="classId"
+                          type="text"
+                          name="ClassId"
+                          class="form-control w-100"
+                          [disabled]="true"
+                          [hidden]="true"
+                        />
+                        <label class="font_10"
+                          >{{ "CertificateName" | translate }}*</label
+                        >
+                        <input
+                          formControlName="certificateName"
+                          type="text"
+                          name="CertificateName"
+                          class="form-control w-100"
+                        />
                       </div>
-                      <small class="p-error" style="color: orange" *ngIf="
+                      <small
+                        class="p-error"
+                        style="color: orange"
+                        *ngIf="
                           isSubmitted &&
                           classCertificateForm.get('certificateName')?.errors
-                        ">
+                        "
+                      >
                         {{ "CertificateNameRequired" | translate }}
                       </small>
                     </div>
 
                     <div class="col-md-12">
                       <div class="form-group">
-                        <label class="font_10">{{ "ProviderName" | translate }}*</label>
-                        <input formControlName="provider" type="text" name="provider" class="form-control w-100" />
+                        <label class="font_10"
+                          >{{ "ProviderName" | translate }}*</label
+                        >
+                        <input
+                          formControlName="provider"
+                          type="text"
+                          name="provider"
+                          class="form-control w-100"
+                        />
                       </div>
-                      <small class="p-error" style="color: orange" *ngIf="
+                      <small
+                        class="p-error"
+                        style="color: orange"
+                        *ngIf="
                           isSubmitted &&
                           classCertificateForm.get('provider')?.errors
-                        ">
+                        "
+                      >
                         {{ "ProviderNameRequired" | translate }}
                       </small>
                     </div>
                     <div class="col-md-12">
                       <div class="form-group">
-                        <label class="font_10">{{ "IssuedDate" | translate }}*</label>
-                        <input #issuedDate autocomplete="off" type="text" class="form-control w-100 date_calendar"
-                          name="dob" formControlName="issuedDate" id="issuedDate" (click)="getSelectedLanguage()" />
+                        <label class="font_10"
+                          >{{ "IssuedDate" | translate }}*</label
+                        >
+                        <input
+                          #issuedDate
+                          autocomplete="off"
+                          type="text"
+                          class="form-control w-100 date_calendar"
+                          name="dob"
+                          formControlName="issuedDate"
+                          id="issuedDate"
+                          (click)="getSelectedLanguage()"
+                        />
                       </div>
-                      <small class="p-error" style="color: orange" *ngIf="
+                      <small
+                        class="p-error"
+                        style="color: orange"
+                        *ngIf="
                           isSubmitted &&
                           classCertificateForm.controls.issuedDate.errors
-                        ">{{ "IssuedDateRequired" | translate }}
+                        "
+                        >{{ "IssuedDateRequired" | translate }}
                       </small>
                     </div>
 
@@ -1636,9 +2714,13 @@
                       <div class="form-group">
                         <label class="font_10">{{
                           "Description" | translate
-                          }}</label>
-                        <textarea maxlength="200" type="text" formControlName="description"
-                          class="form-control resize-none ht_96"></textarea>
+                        }}</label>
+                        <textarea
+                          maxlength="200"
+                          type="text"
+                          formControlName="description"
+                          class="form-control resize-none ht_96"
+                        ></textarea>
                       </div>
                     </div>
 
@@ -1648,13 +2730,21 @@
                           <div class="box-header with-border"></div>
                           <div class="box-body">
                             <span class="position-relative d-inline-block">
-                              <img style="width: 200px" class="mb-3" [src]="uploadImage" />
-                              <button *ngIf="
+                              <img
+                                style="width: 200px"
+                                class="mb-3"
+                                [src]="uploadImage"
+                              />
+                              <button
+                                *ngIf="
                                   uploadImage != undefined &&
                                   uploadImage != null
-                                " (click)="removeUploadCertificateImage()" type="button"
+                                "
+                                (click)="removeUploadCertificateImage()"
+                                type="button"
                                 class="btn dl-school-img d-flex align-items-center justify-content-center rounded-circle position-absolute"
-                                style="height: 27px !important">
+                                style="height: 27px !important"
+                              >
                                 <i class="fa-solid fa-xmark"></i>
                               </button>
                             </span>
@@ -1663,7 +2753,10 @@
                           </div>
                         </div>
                       </div>
-                      <div *ngIf="uploadImage == null || uploadImage == undefined" class="dropzone-wrapper">
+                      <div
+                        *ngIf="uploadImage == null || uploadImage == undefined"
+                        class="dropzone-wrapper"
+                      >
                         <div class="dropzone-desc">
                           <i class="glyphicon glyphicon-download-alt"></i>
                           <p class="text-center fw_400">
@@ -1671,28 +2764,45 @@
                             <b>{{ "DragItHere" | translate }}</b>
                           </p>
                         </div>
-                        <input type="file" id="avatar" (change)="handleClassCertificate($event)" class="dropzone"
-                          accept="image/*" />
+                        <input
+                          type="file"
+                          id="avatar"
+                          (change)="handleClassCertificate($event)"
+                          class="dropzone"
+                          accept="image/*"
+                        />
                       </div>
                     </div>
-                    <small class="p-error" style="color: orange; margin-left: 180px" *ngIf="
+                    <small
+                      class="p-error"
+                      style="color: orange; margin-left: 180px"
+                      *ngIf="
                         isSubmitted &&
                         (this.uploadImage == undefined ||
                           this.uploadImage == null)
-                      ">
+                      "
+                    >
                       {{ "CertificateImageRequired" | translate }}
                     </small>
                   </div>
 
                   <div
-                    class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 mt-4">
-                    <button #closeCertificateModal id="closeBtn" type="button"
+                    class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4 mt-4"
+                  >
+                    <button
+                      #closeCertificateModal
+                      id="closeBtn"
+                      type="button"
                       class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
-                      data-bs-dismiss="modal">
+                      data-bs-dismiss="modal"
+                    >
                       {{ "DiscardChanges" | translate }}
                     </button>
-                    <button (click)="saveClassCertificate()" type="button"
-                      class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step">
+                    <button
+                      (click)="saveClassCertificate()"
+                      type="button"
+                      class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
+                    >
                       {{ "Save" | translate }}
                     </button>
                   </div>
@@ -1702,34 +2812,59 @@
           </div>
         </div>
 
-        <div class="modal fade edit-school-modal delete-modal post-view-large" id="classOwnCertificate" tabindex="-1"
-          aria-labelledby="classOwnCertificate" aria-hidden="true">
+        <div
+          class="modal fade edit-school-modal delete-modal post-view-large"
+          id="classOwnCertificate"
+          tabindex="-1"
+          aria-labelledby="classOwnCertificate"
+          aria-hidden="true"
+        >
           <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-              <div class="modal-header border-0 justify-content-center position-relative">
-                <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">
+              <div
+                class="modal-header border-0 justify-content-center position-relative"
+              >
+                <h1
+                  class="modal-title font_22 text_dark fw_700 border-0 text-center"
+                >
                   {{ "Certificate" | translate }}
                 </h1>
-                <ul *ngIf="isOwner" class="list-unstyled d-flex more-action-btn before-none pe-2 me-1 mb-0"
-                  style="position: absolute; right: 50px; top: 28px">
+                <ul
+                  *ngIf="isOwner"
+                  class="list-unstyled d-flex more-action-btn before-none pe-2 me-1 mb-0"
+                  style="position: absolute; right: 50px; top: 28px"
+                >
                   <li class="d-inline-block ps-0 mb-0">
                     <div class="dropdown">
-                      <button class="bg-transparent dropdown-toggle border-0 action-more-btn after-none pt-1"
-                        type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      <button
+                        class="bg-transparent dropdown-toggle border-0 action-more-btn after-none pt-1"
+                        type="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                      >
                         <i class="fa-solid fa-ellipsis"></i>
                       </button>
                       <ul class="dropdown-menu">
                         <li>
-                          <a style="cursor: pointer" class="dropdown-item"
-                            (click)="editClassCertificate(classCertificateInfo)" data-bs-toggle="modal"
-                            data-bs-target="#add-certificate">{{ "Edit" | translate }}
+                          <a
+                            style="cursor: pointer"
+                            class="dropdown-item"
+                            (click)="editClassCertificate(classCertificateInfo)"
+                            data-bs-toggle="modal"
+                            data-bs-target="#add-certificate"
+                            >{{ "Edit" | translate }}
                           </a>
                         </li>
                       </ul>
                     </div>
                   </li>
                 </ul>
-                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close">
+                <button
+                  type="button"
+                  class="btn-close shadow-none"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                >
                   <img src="../../../../assets/images/cross.svg" />
                 </button>
               </div>
@@ -1739,15 +2874,21 @@
                 </div>
                 <br />
                 <div>
-                  <span class="fw-bold">{{ "CertificateName" | translate }} :</span>
+                  <span class="fw-bold"
+                    >{{ "CertificateName" | translate }} :</span
+                  >
                   {{ classCertificateInfo.name }}<br />
-                  <span class="fw-bold">{{ "ProviderName" | translate }} :</span>
+                  <span class="fw-bold"
+                    >{{ "ProviderName" | translate }} :</span
+                  >
                   {{ classCertificateInfo.provider }}<br />
                   <span class="fw-bold">{{ "IssuedDate" | translate }} :</span>
                   {{ classCertificateInfo.issuedDate | date : "dd/MM/yyyy"
                   }}<br />
                   <span *ngIf="classCertificateInfo.description != null">
-                    <span class="fw-bold">{{ "Description" | translate }} :</span>
+                    <span class="fw-bold"
+                      >{{ "Description" | translate }} :</span
+                    >
                     {{ classCertificateInfo.description }}
                   </span>
                 </div>
@@ -1756,15 +2897,29 @@
           </div>
         </div>
 
-        <div class="modal fade edit-school-modal delete-modal" id="delete-classCertificate" tabindex="-1"
-          aria-labelledby="delete-certificate" aria-hidden="true">
+        <div
+          class="modal fade edit-school-modal delete-modal"
+          id="delete-classCertificate"
+          tabindex="-1"
+          aria-labelledby="delete-certificate"
+          aria-hidden="true"
+        >
           <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-              <div class="modal-header border-0 justify-content-center position-relative">
-                <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">
+              <div
+                class="modal-header border-0 justify-content-center position-relative"
+              >
+                <h1
+                  class="modal-title font_22 text_dark fw_700 border-0 text-center"
+                >
                   {{ "DeleteCertificate" | translate }}
                 </h1>
-                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close">
+                <button
+                  type="button"
+                  class="btn-close shadow-none"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                >
                   <img lazyLoad="../../../../assets/images/cross.svg" />
                 </button>
               </div>
@@ -1775,15 +2930,21 @@
                   </h2>
                 </div>
                 <div
-                  class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-2 mt-4">
-                  <button type="button"
+                  class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-2 mt-4"
+                >
+                  <button
+                    type="button"
                     class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
-                    data-bs-dismiss="modal">
+                    data-bs-dismiss="modal"
+                  >
                     {{ "No" | translate }}
                   </button>
-                  <button (click)="deleteClassCertificate()" type="button"
+                  <button
+                    (click)="deleteClassCertificate()"
+                    type="button"
                     class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
-                    data-bs-dismiss="modal">
+                    data-bs-dismiss="modal"
+                  >
                     {{ "Yes" | translate }}
                   </button>
                 </div>
@@ -1794,7 +2955,9 @@
       </div>
     </div>
   </section>
-  <post-loading-spinner [postLoadingIcon]="postLoadingIcon"></post-loading-spinner>
+  <post-loading-spinner
+    [postLoadingIcon]="postLoadingIcon"
+  ></post-loading-spinner>
 </div>
 <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
 <p-toast></p-toast>
@@ -1802,33 +2965,60 @@
 <ng-template #cropTemplate style="max-width: 700px">
   <div>
     <div class="modal-content">
-      <div class="modal-header border-0 justify-content-center position-relative">
+      <div
+        class="modal-header border-0 justify-content-center position-relative"
+      >
         <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">
           {{ "CropImage" | translate }}
         </h1>
-        <button (click)="closeCropModal()" type="button" class="btn-close shadow-none" data-bs-dismiss="modal"
-          aria-label="Close">
+        <button
+          (click)="closeCropModal()"
+          type="button"
+          class="btn-close shadow-none"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        >
           <img lazyLoad="../../../assets/images/cross.svg" />
         </button>
       </div>
       <div class="modal-body">
-        <image-cropper [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true"
-          [containWithinAspectRatio]="containWithinAspectRatio" [aspectRatio]="4 / 4" [resizeToWidth]="256"
-          [cropperMinWidth]="128" [onlyScaleDown]="true" [roundCropper]="true" [canvasRotation]="canvasRotation"
-          [transform]="transform" [alignImage]="'left'" [style.display]="showCropper ? null : 'none'" format="png"
-          (imageCropped)="imageCropped($event)" (imageLoaded)="imageLoaded()" (cropperReady)="cropperReady($event)"
-          (loadImageFailed)="loadImageFailed()"></image-cropper>
+        <image-cropper
+          [imageChangedEvent]="imageChangedEvent"
+          [maintainAspectRatio]="true"
+          [containWithinAspectRatio]="containWithinAspectRatio"
+          [aspectRatio]="4 / 4"
+          [resizeToWidth]="256"
+          [cropperMinWidth]="128"
+          [onlyScaleDown]="true"
+          [roundCropper]="true"
+          [canvasRotation]="canvasRotation"
+          [transform]="transform"
+          [alignImage]="'left'"
+          [style.display]="showCropper ? null : 'none'"
+          format="png"
+          (imageCropped)="imageCropped($event)"
+          (imageLoaded)="imageLoaded()"
+          (cropperReady)="cropperReady($event)"
+          (loadImageFailed)="loadImageFailed()"
+        ></image-cropper>
       </div>
       <div
-        class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4">
-        <button (click)="closeCropModal()" type="button"
+        class="modal-footer steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-4"
+      >
+        <button
+          (click)="closeCropModal()"
+          type="button"
           class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
-          data-bs-target="#create-post">
+          data-bs-target="#create-post"
+        >
           {{ "DiscardChanges" | translate }}
         </button>
-        <button (click)="applyCropimage()" type="button"
+        <button
+          (click)="applyCropimage()"
+          type="button"
           class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
-          data-bs-target="#create-post">
+          data-bs-target="#create-post"
+        >
           {{ "Apply" | translate }}
         </button>
         <!-- <button (click)="deselectAutocomplete()">avv</button> -->
@@ -1837,36 +3027,65 @@
   </div>
 </ng-template>
 
-<div class="modal fade edit-school-modal delete-modal" id="rate-class" tabindex="-1" aria-labelledby="rate-class"
-  aria-hidden="true">
+<div
+  class="modal fade edit-school-modal delete-modal"
+  id="rate-class"
+  tabindex="-1"
+  aria-labelledby="rate-class"
+  aria-hidden="true"
+>
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <div class="modal-header border-0 justify-content-center position-relative">
+      <div
+        class="modal-header border-0 justify-content-center position-relative"
+      >
         <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">
           {{ "RateClass" | translate }}
         </h1>
-        <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close">
+        <button
+          type="button"
+          class="btn-close shadow-none"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        >
           <img lazyLoad="../../../../assets/images/cross.svg" />
         </button>
       </div>
       <div class="modal-body">
         <div class="form-group">
           <h2 class="text-center font_16 f-poppins">
-            <div class="image-container" *ngFor="let array of fakeArray; let index = index">
-              <button (click)="ratingNumber(index)" style="background-color: white; border: none">
-                <i class="fa-solid fa-star fa-2xl" [style.color]="index < rateNumber ? '#ff8800' : '#eebe87'"></i>
+            <div
+              class="image-container"
+              *ngFor="let array of fakeArray; let index = index"
+            >
+              <button
+                (click)="ratingNumber(index)"
+                style="background-color: white; border: none"
+              >
+                <i
+                  class="fa-solid fa-star fa-2xl"
+                  [style.color]="index < rateNumber ? '#ff8800' : '#eebe87'"
+                ></i>
               </button>
             </div>
           </h2>
         </div>
-        <div class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-2 mt-4">
-          <button type="button"
+        <div
+          class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-2 mt-4"
+        >
+          <button
+            type="button"
             class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
-            data-bs-dismiss="modal">
+            data-bs-dismiss="modal"
+          >
             {{ "Cancel" | translate }}
           </button>
-          <button (click)="rateTheClass()" type="button"
-            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step" data-bs-dismiss="modal">
+          <button
+            (click)="rateTheClass()"
+            type="button"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
+            data-bs-dismiss="modal"
+          >
             {{ "Rate" | translate }}
           </button>
         </div>
@@ -1875,15 +3094,27 @@
   </div>
 </div>
 
-<div class="modal fade edit-school-modal delete-modal" id="confirm-courseChange" tabindex="-1"
-  aria-labelledby="confirm-courseChange" aria-hidden="true">
+<div
+  class="modal fade edit-school-modal delete-modal"
+  id="confirm-courseChange"
+  tabindex="-1"
+  aria-labelledby="confirm-courseChange"
+  aria-hidden="true"
+>
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <div class="modal-header border-0 justify-content-center position-relative">
+      <div
+        class="modal-header border-0 justify-content-center position-relative"
+      >
         <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">
           {{ "ConfirmCourseChange" | translate }}
         </h1>
-        <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close">
+        <button
+          type="button"
+          class="btn-close shadow-none"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        >
           <img lazyLoad="../../../../assets/images/cross.svg" />
         </button>
       </div>
@@ -1893,14 +3124,22 @@
             {{ "DoYouWantToChange" | translate }}
           </h2>
         </div>
-        <div class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-2 mt-4">
-          <button type="button"
+        <div
+          class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-2 mt-4"
+        >
+          <button
+            type="button"
             class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
-            data-bs-dismiss="modal">
+            data-bs-dismiss="modal"
+          >
             {{ "No" | translate }}
           </button>
-          <button (click)="convertToCourse(class.className, class.school.schoolName)" type="button"
-            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step" data-bs-dismiss="modal">
+          <button
+            (click)="convertToCourse(class.className, class.school.schoolName)"
+            type="button"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
+            data-bs-dismiss="modal"
+          >
             {{ "Yes" | translate }}
           </button>
         </div>
