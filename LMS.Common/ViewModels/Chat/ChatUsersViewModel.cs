@@ -30,5 +30,7 @@ namespace LMS.Common.ViewModels.Chat
         public Guid User2ID { get; set; }
         public bool IsVerified { get; set; }
         public bool IsUserVerified { get; set; }
+
+        public int? Gender { get; set; }
     }
 }
