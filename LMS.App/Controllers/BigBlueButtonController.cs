@@ -18,6 +18,7 @@ using LMS.DataAccess.Repository;
 using LMS.Common.Enums;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using LMS.Common.ViewModels.Post;
 
 namespace LMS.App.Controllers
 {
@@ -66,8 +67,12 @@ namespace LMS.App.Controllers
         [HttpPost]
         public async Task<ActionResult> EndMeeting([FromBody] EndMeetingViewModel model)
         {
-            await _bigBlueButtonService.EndMeeting(model);
-            return Ok();
+            var response = await _bigBlueButtonService.EndMeeting(model);
+            if (response == Constants.EndMeetingSuccess)
+            {
+                return Ok(new { Success = true, Message = response });
+            }
+            return Ok(new { Success = false, Message = response });
         }
 
         [Route("callBack")]

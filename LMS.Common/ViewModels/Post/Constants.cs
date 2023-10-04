@@ -13,6 +13,8 @@ namespace LMS.Common.ViewModels.Post
         public static string Image = "image";
         public static string Video = "video";
         public static string Pdf = "pdf";
+        public static string EndMeetingSuccess = "SUCCESS";
+        public static string Failed = "FAILED";
         public static string Word = "msword";
         public static string Excel = "vnd.ms-excel";
         public static string UserDoesNotExist = "User does not exist";
