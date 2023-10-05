@@ -176,7 +176,8 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
     this.createSchoolForm1 = this.fb.group({
       schoolName: this.fb.control('', [Validators.required]),
       countryName: this.fb.control('', [Validators.required]),
-      specializationId: this.fb.control('', [Validators.required]),
+      // specializationId: this.fb.control('', [Validators.required]),
+      // specializationId: this.fb.control(''),
       schoolSlogan: this.fb.control(''),
       founded: this.fb.control('', [Validators.required]),
       accessibilityId: this.fb.control('', [Validators.required]),
@@ -329,7 +330,7 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
 
         // this.fileToUpload.append('countryId',form1Value.countryId);
         this.fileToUpload.append('countryName', form1Value.countryName);
-        this.fileToUpload.append('specializationId', form1Value.specializationId);
+        // this.fileToUpload.append('specializationId', form1Value.specializationId);
 
         this.fileToUpload.append('schoolSlogan', form1Value.schoolSlogan);
         this.fileToUpload.append('accessibilityId', form1Value.accessibilityId);
