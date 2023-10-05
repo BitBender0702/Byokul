@@ -91,6 +91,8 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
   hamburgerCountSubscription!: Subscription;
   hamburgerCount:number = 0;
   commentResponseSubscription!: Subscription;
+  addViewSubscription!: Subscription;
+  liveUsersCountSubscription!: Subscription;
   @ViewChild('groupChatList') groupChatList!: ElementRef;
   @ViewChild('startButton') startButton!: ElementRef;
   @ViewChild('videoPlayer') videoPlayer!: ElementRef<HTMLVideoElement>;
@@ -132,6 +134,7 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
     this._postService.getPostById(this.postId).subscribe((response) => {
       debugger
       this.post = response;
+      this.liveUsersCount = this.post.views.length;
       if(response?.externalMeetingId){
         this.isSimpleStream = true;
       } else{
@@ -374,6 +377,12 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
     }
     if (this.hamburgerCountSubscription) {
       this.hamburgerCountSubscription.unsubscribe();
+    }
+    if (this.addViewSubscription) {
+      this.addViewSubscription.unsubscribe();
+    }
+    if (this.liveUsersCountSubscription) {
+      this.liveUsersCountSubscription.unsubscribe();
     }
   }
 
@@ -736,7 +745,8 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
   }
 
   addViewResponse() {
-    postViewResponse.subscribe(response => {
+    if (!this.addViewSubscription) {
+      this.addViewSubscription = postViewResponse.subscribe(response => {
       debugger
       try{
       if (response.isAddView) {
@@ -744,12 +754,17 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
         // this.post.likes.length = this.post.likes.length + 1;
         // }
         // if(this.likesLength != undefined && this.currentLikedPostId == this.post.id){
-        this.post.views.length = this.post.views.length + 1;
-        this.liveUsersCount = this.post.views.length;
+        // this.post.views.length = this.post.views.length + 1;
+        var isUserViewAlready = this.post.views.find((x: { userId: string; }) => x.userId == this.userId);
+        if(isUserViewAlready == null || this.post.views.length == 0){
+          this.liveUsersCount = this.liveUsersCount + 1;
+          this.post.views.length = this.post.views.length + 1;
+        }
         // }
       }}
       catch{}
     });
+   }
   }
 
   notifyCommentThrottlingResponse() {
@@ -806,12 +821,14 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
   }
 
   liveUsersCountResponse() {
-    liveUsersCountResponse.subscribe(response => {
+    if (!this.liveUsersCountSubscription) {
+      this.liveUsersCountSubscription = liveUsersCountResponse.subscribe(response => {
       debugger;
       if (response.isLeaveStream) {
         this.liveUsersCount = this.liveUsersCount - 1;
       }
     });
+   }
   }
 
   addPostView(postId: string) {

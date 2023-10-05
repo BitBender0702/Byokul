@@ -10,6 +10,7 @@ using System.Xml;
 using System.Security.Cryptography;
 using LMS.DataAccess.Repository;
 using LMS.Data.Entity;
+using LMS.Common.ViewModels.Post;
 
 namespace LMS.Services.BigBlueButton
 {
@@ -217,7 +218,7 @@ namespace LMS.Services.BigBlueButton
             return stringWriter.ToString();
         }
 
-        public async Task EndMeeting(EndMeetingViewModel model)
+        public async Task<string> EndMeeting(EndMeetingViewModel model)
         {
             string endMeetingChecksum = "endmeetingID=" + model.MeetingId + "&password=" + model.Password + this._config.GetValue<string>("BigBlueButtonAPISettings:SharedSecret");
 
@@ -232,11 +233,24 @@ namespace LMS.Services.BigBlueButton
             HttpResponseMessage response = await clients.GetAsync(finalurl);
             var responseData = await response.Content.ReadAsStringAsync();
 
-            var post = _postRepository.GetById(model.PostId);
-            post.IsLive = false;
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(responseData);
+            string json = JsonConvert.SerializeXmlNode(doc, formatting: Newtonsoft.Json.Formatting.None, omitRootObject: true);
+            var result = JsonConvert.DeserializeObject<Response>(json);
 
-            _postRepository.Update(post);
-            _postRepository.Save();
+            if (result.Returncode == Constants.EndMeetingSuccess)
+            {
+                var post = _postRepository.GetById(model.PostId);
+                post.IsLive = false;
+                _postRepository.Update(post);
+                _postRepository.Save();
+                return result.Returncode;
+            }
+            else
+            {
+                return result.Message;
+            }
+
 
         }
     }

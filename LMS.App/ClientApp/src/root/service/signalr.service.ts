@@ -306,6 +306,7 @@ export class SignalrService {
   }
 
   notifyPostView(groupName:string,userId:string) {
+    debugger
     this.hubConnection?.invoke('notifyPostView', groupName,userId)
   }
 

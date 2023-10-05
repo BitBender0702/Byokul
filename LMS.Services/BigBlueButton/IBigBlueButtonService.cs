@@ -12,7 +12,7 @@ namespace LMS.Services.BigBlueButton
     {
         Task<Response> Create(NewMeetingViewModel newMeetingViewModel);
         Task<string> Join(JoinMeetingViewModel joinMeetingViewModel);
-        Task EndMeeting(EndMeetingViewModel endMeetingViewModel);
+        Task<string> EndMeeting(EndMeetingViewModel endMeetingViewModel);
 
     }
 }
