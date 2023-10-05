@@ -743,23 +743,62 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
       }
     });
   }
-
+  viewObj = {};
   addViewResponse() {
     if (!this.addViewSubscription) {
       this.addViewSubscription = postViewResponse.subscribe(response => {
       debugger
       try{
       if (response.isAddView) {
+        if(this.post.views.length == 0){
+          //  this.liveUsersCount = this.liveUsersCount + 1;
+           this.viewObj = {
+            userId:response.userId,
+            postId: this.post.id
+          }
+          console.log(this.viewObj);
+          this.post.views.push(this.viewObj);
+           this.post.views.length = this.post.views.length;
+           this.post.views.length = this.post.views.length;
+        }
+
+        
+        if(this.post.views.length != 0){
+          debugger
+          var isUserViewExist = this.post.views.filter((x:any) => x.userId == response.userId);
+          // var isUserViewExist = this.post.views.find((x: { userId: string; }) => x.userId == response.userId);
+          if(isUserViewExist.length > 0){
+            // this.liveUsersCount = this.liveUsersCount + 1;
+          }
+          else{
+            this.viewObj = {
+              userId:response.userId,
+              postId: this.post.id
+            }
+            console.log(this.viewObj);
+            this.post.views.push(this.viewObj);
+            this.liveUsersCount = this.liveUsersCount + 1;
+            this.post.views.length = this.post.views.length;
+          }
+        }
+
+        // this.liveUsersCount = this.liveUsersCount + 1;
+        // this.post.views.length = this.post.views.length + 1;
         // if(this.currentLikedPostId!= this.post.id){
         // this.post.likes.length = this.post.likes.length + 1;
         // }
         // if(this.likesLength != undefined && this.currentLikedPostId == this.post.id){
         // this.post.views.length = this.post.views.length + 1;
-        var isUserViewAlready = this.post.views.find((x: { userId: string; }) => x.userId == this.userId);
-        if(isUserViewAlready == null || this.post.views.length == 0){
-          this.liveUsersCount = this.liveUsersCount + 1;
-          this.post.views.length = this.post.views.length + 1;
-        }
+        // var viewObj = {
+        //   userId = 
+        // }
+        // var isUserViewAlready = this.post.views.find((x: { userId: string; }) => x.userId == this.userId);
+        // if(isUserViewAlready == null || this.post.views.length == 0){
+        //   this.liveUsersCount = this.liveUsersCount + 1;
+        //   this.post.views.length = this.post.views.length + 1;
+        // }
+        // this.liveUsersCount = this.liveUsersCount + 1;
+        // this.post.views.length = this.post.views.length + 1;
         // }
       }}
       catch{}

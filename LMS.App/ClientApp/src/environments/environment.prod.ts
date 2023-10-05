@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://byokul.com'
+  apiUrl: 'https://byokul-stage.azurewebsites.net'
 };

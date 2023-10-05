@@ -190,7 +190,7 @@ public class ChatHubs : Hub
         {
             isAddView = true;
         }
-        await Clients.Group(groupName).SendAsync("NotifyPostViewToReceiver", isAddView);
+        await Clients.Group(groupName).SendAsync("NotifyPostViewToReceiver", isAddView, userId);
     }
 
     public async Task NotifyShareStream(string groupName)

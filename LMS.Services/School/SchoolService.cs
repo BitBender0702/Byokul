@@ -123,7 +123,7 @@ namespace LMS.Services
 
         public async Task<SchoolViewModel> SaveNewSchool(SchoolViewModel schoolViewModel, string createdById)
         {
-            schoolViewModel.SubscriptionDetails = JsonConvert.DeserializeObject<BuySchoolSubscriptionViewModel>(schoolViewModel.SubscriptionDetailsJson);
+            //schoolViewModel.SubscriptionDetails = JsonConvert.DeserializeObject<BuySchoolSubscriptionViewModel>(schoolViewModel.SubscriptionDetailsJson);
 
             if (schoolViewModel.AvatarImage != null)
             {
@@ -187,9 +187,9 @@ namespace LMS.Services
 
             //else
             //{
-            var subscriptionResponse = await _iyizicoService.BuySchoolSubscription(schoolViewModel.SubscriptionDetails, createdById, school.SchoolId);
-            schoolViewModel.SubscriptionDetails.IsInternationalUser = true;
-            schoolViewModel.SubscriptionDetails.SubscriptionMessage = subscriptionResponse;
+            //var subscriptionResponse = await _iyizicoService.BuySchoolSubscription(schoolViewModel.SubscriptionDetails, createdById, school.SchoolId);
+            //schoolViewModel.SubscriptionDetails.IsInternationalUser = true;
+            //schoolViewModel.SubscriptionDetails.SubscriptionMessage = subscriptionResponse;
             //}
             return schoolViewModel;
         }

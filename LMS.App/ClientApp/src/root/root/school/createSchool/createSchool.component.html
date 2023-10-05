@@ -460,7 +460,7 @@
             </form>
           </div>
 
- <div [ngClass]="step == 2 ? 'tab tab-pane active' : 'tab tab-pane'"
+ <!-- <div [ngClass]="step == 2 ? 'tab tab-pane active' : 'tab tab-pane'"
         >
           <h2 class="font_24 fw-bold text_dark text-center my_32 mt-1">
             School Subscription
@@ -473,7 +473,6 @@
               <div class="col-md-12">
                 <div class="form-group">
                   <label class="font_10">{{'CardNumber'| translate }}*</label>
-                  <!-- <input (keypress)="omit_special_char($event)" formControlName="cardNumber" type="text" placeholder="XXXX-XXXX-XXXX-XXXX" maxlength="19" name="cardNumber" class="form-control w-100" (input)="formatCardNumber($event)"> -->
                   <input [mask]="accountNumberMask" (keypress)="omit_special_char($event)" formControlName="cardNumber" type="text" placeholder="XXXX-XXXX-XXXX-XXXX" maxlength="19" name="cardNumber" class="form-control w-100">
 
                   <small class="p-error" style="color: orange;"
@@ -485,7 +484,6 @@
               <div class="col-md-6">
                 <div class="form-group">
                   <label class="font_10">{{'ExpiresOn'| translate }}*</label>
-                  <!-- <input (keypress)="omit_special_char($event)" formControlName="expiresOn" type="text" placeholder="XX-XX" maxlength="5" name="expiresOn" class="form-control w-100" (input)="formatMonthYear($event)"> -->
                   <input [mask]="monthYearMask" (keypress)="omit_special_char($event)" formControlName="expiresOn" type="text" placeholder="XX-XX" maxlength="5" name="expiresOn" class="form-control w-100">
                   <small class="p-error" style="color: orange;"
                   *ngIf="(isStepCompleted && subscriptionForm.controls.expiresOn.errors)">{{'ExpiresOnRequired'| translate }}
@@ -559,10 +557,10 @@
             </div>
           </form>
         </div>
-   
+    -->
           <div
             [ngClass]="
-              step == 3
+              step == 2
                 ? 'tab tab-pane active final-multiple-step'
                 : 'tab tab-pane final-multiple-step'
             "

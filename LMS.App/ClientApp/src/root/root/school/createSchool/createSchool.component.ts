@@ -364,21 +364,21 @@ export class CreateSchoolComponent extends MultilingualComponent implements OnIn
 
 
     //
-    this.step += 1;
-    this.isStepCompleted = false;
+    // this.step += 1;
+    this.isStepCompleted = true;
 
-    // this._schoolService.createSchool(this.fileToUpload).subscribe((response:any) => {
-    //      var schoolId =  response;
-    //      this.schoolId = schoolId;
-    //      this.loadingIcon = false;
-    //      var form1Value =this.createSchoolForm1.value;
-    //      ownedSchoolResponse.next({schoolId:response.schoolId, schoolAvatar:response.avatar, schoolName:response.schoolName,action:"add"});
-    //      this.step += 1;
-    //      this.isStepCompleted = false;
-    //      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'School created successfully'});
-    // });
-
-
+    this._schoolService.createSchool(this.fileToUpload).subscribe((response:any) => {
+         var schoolId =  response;
+         this.schoolId = schoolId;
+         this.loadingIcon = false;
+         var form1Value =this.createSchoolForm1.value;
+         ownedSchoolResponse.next({schoolId:response.schoolId, schoolAvatar:response.avatar, schoolName:response.schoolName,action:"add"});
+         this.step += 1;
+         this.isStepCompleted = false;
+         const translatedInfoSummary = this.translateService.instant('Success');
+         const translatedMessage = this.translateService.instant('SchoolCreatedSuccessfully');
+         this.messageService.add({severity:'success', summary:translatedInfoSummary,life: 3000, detail:translatedMessage});
+    });
   }
 
   paymentConfirmationWindow:any;

@@ -63,7 +63,7 @@ export const closeIyizicoThreeDAuthWindow = new Subject<{
 
 export const postLikeResponse = new Subject<{isLiked: boolean;}>();
 export const saveStreamResponse = new Subject<{isSaved: boolean;}>();
-export const postViewResponse = new Subject<{isAddView: boolean;}>();
+export const postViewResponse = new Subject<{isAddView: boolean;userId:string}>();
 export const notifyCommentThrotllingResponse = new Subject<{noOfComments: boolean;}>();
 export const liveUsersCountResponse = new Subject<{isLeaveStream: boolean;}>();
 export const endMeetingResponse = new Subject<{}>();
@@ -89,7 +89,7 @@ export class SignalrService {
 
   initializeConnection(token: string) {
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl('https://byokul.com/chatHub', {
+      .withUrl('https://byokul-stage.azurewebsites.net/chatHub', {
          httpClient: new CustomXhrHttpClient(token)
       })
       .withAutomaticReconnect()
@@ -194,9 +194,11 @@ export class SignalrService {
     });
 
     this.hubConnection?.on('NotifyPostViewToReceiver',
-    (isAddView) => {
+    (isAddView,userId) => {
+      debugger
       postViewResponse.next({
-        isAddView:isAddView
+        isAddView:isAddView,
+        userId:userId
       });
     });
 
