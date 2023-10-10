@@ -44,6 +44,21 @@ namespace LMS.App.Controllers
             return Ok(response);
         }
 
+        [Route("getParticularChatHead")]
+        [HttpGet]
+        public async Task<IActionResult> GetParticularChatHead(Guid userId, Guid receiverId, ChatType chatType,Guid? chatTypeId)
+        {
+            var response = await _chatService.GetParticularChatHead(userId, receiverId, chatType,chatTypeId);
+            if (response != null)
+            {
+                return Ok(response);
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
         [Route("getAllSchoolChatUsers")]
         [HttpGet]
         public async Task<IActionResult> GetAllSchoolChatUsers(Guid senderId,Guid schoolId, int pageNumber, string? searchString)

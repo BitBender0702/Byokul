@@ -503,6 +503,78 @@ namespace LMS.Services.Chat
         }
 
 
+        public  async Task<ChatUsersViewModel> GetParticularChatHead(Guid userId, Guid receiverId, ChatType chatType, Guid? chatTypeId)
+        {
+            //List<ChatUsersViewModel> users = new List<ChatUsersViewModel>();
+            try
+            {
+               
+                var chatHead =  await _chatHeadRepository.GetAll().Include(x => x.Receiver).Include(x => x.Sender).Where(x => (x.SenderId == userId.ToString() && x.ReceiverId == receiverId.ToString() && x.ChatType == chatType && x.ChatTypeId==chatTypeId)).FirstOrDefaultAsync();
+                ChatUsersViewModel chatUsersViewModel = new ChatUsersViewModel();
+                if (chatHead != null)
+                {
+                     chatUsersViewModel = new ChatUsersViewModel
+                    {
+                    UserID = new Guid(chatHead.ReceiverId),
+                    User2ID = new Guid(chatHead.SenderId),
+                    LastMessage = chatHead.LastMessage,
+                    ChatHeadId = chatHead.Id,
+                    ChatType = chatHead.ChatType,
+                    ChatTypeId = chatHead.ChatTypeId,
+                    IsUserVerified = chatHead.Receiver.IsVarified,
+                    Gender = chatHead.Receiver.Gender,
+                    ProfileURL = chatHead.Receiver.Avatar,
+                    UserName = chatHead.Receiver.FirstName + " " + chatHead.Receiver.LastName
+                };
+                
+                }
+                else
+                {
+                    chatHead = _chatHeadRepository.GetAll().Include(x => x.Receiver).Include(x => x.Sender).Where(x => (x.SenderId == receiverId.ToString() && x.ReceiverId == userId.ToString() && x.ChatType == chatType && x.ChatTypeId == chatTypeId)).FirstOrDefault();
+               
+                    chatUsersViewModel = new ChatUsersViewModel
+                    {
+                    UserID = new Guid(chatHead.SenderId),
+                    User2ID = new Guid(chatHead.ReceiverId),
+                    LastMessage = chatHead.LastMessage,
+                    ChatHeadId = chatHead.Id,
+                    ChatType = chatHead.ChatType,
+                    ChatTypeId = chatHead.ChatTypeId,
+                    IsUserVerified = chatHead.Sender.IsVarified,
+                    Gender = chatHead.Sender.Gender,
+                    ProfileURL = chatHead.Sender.Avatar,
+                    UserName = chatHead.Sender.FirstName + " " + chatHead.Sender.LastName
+                     /*, UnreadMessageCount = x.UnreadMessageCount */
+                    };
+                }
+                if (chatType == ChatType.School)
+                {
+                    chatUsersViewModel.School = GetSchoolInfo(chatUsersViewModel.ChatTypeId);
+                    chatUsersViewModel.ProfileURL = chatUsersViewModel.School.Avatar;
+                    chatUsersViewModel.UserName = chatUsersViewModel.School.SchoolName;
+                }
+                else if (chatType == ChatType.Class)
+                {
+                    chatUsersViewModel.Class = GetClassInfo(chatUsersViewModel.ChatTypeId);
+                    chatUsersViewModel.ProfileURL = chatUsersViewModel.Class.Avatar;
+                    chatUsersViewModel.UserName = chatUsersViewModel.Class.ClassName;
+                }
+                else if (chatType == ChatType.Course)
+                {
+                    chatUsersViewModel.ProfileURL = chatUsersViewModel.Course.Avatar;
+                    chatUsersViewModel.UserName = chatUsersViewModel.Course.CourseName;
+                }
+              
+                return chatUsersViewModel;
+
+            }
+            catch(Exception ex)
+            {
+                return null;
+            }
+            return null;
+        }
+
         public async Task<List<ChatUsersViewModel>> GetAllSchoolChatHeads(Guid userId, Guid schoolId, int pageNumber, string? searchString)
         {
             int pageSize = 10;
