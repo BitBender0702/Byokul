@@ -25,30 +25,42 @@
       <h1 class="font_22 text_dark fw-bold text-center mb-md-0" style="display: block;">
           {{ post.title }}
       </h1>
-      
-      
+
+
         <h2 class="invisible"></h2>
       </div> -->
-      <div class="create-post-header d-flex justify-content-between d-none d-xl-flex">
-        <button #streamEndMessage hidden data-bs-toggle="modal" data-bs-target="#streamEndPopup"></button>
-        
-        <button (click)="back()" mat-mini-fab type="button" class="back-button bg-transparent border-0 font_16 fw_400 text_dark">
-            <img src="../../../../assets/images/arrow-left.svg" />
-            {{ "Back" | translate }}
+      <div
+        class="create-post-header d-flex justify-content-between d-none d-xl-flex"
+      >
+        <button
+          #streamEndMessage
+          hidden
+          data-bs-toggle="modal"
+          data-bs-target="#streamEndPopup"
+        ></button>
+
+        <button
+          (click)="back()"
+          mat-mini-fab
+          type="button"
+          class="back-button bg-transparent border-0 font_16 fw_400 text_dark"
+        >
+          <img src="../../../../assets/images/arrow-left.svg" />
+          {{ "Back" | translate }}
         </button>
-        
+
         <div class="d-flex flex-column align-items-center flex-grow-1">
-            <h1 class="font_22 text_dark fw-bold text-center mb-md-0">
-                {{ "LiveStream" | translate }}
-            </h1>
-            <h1 class="font_22 text_dark fw-bold text-center mb-md-0">
-                {{ post.title }}
-            </h1>
+          <h1 class="font_22 text_dark fw-bold text-center mb-md-0">
+            {{ "LiveStream" | translate }}
+          </h1>
+          <h1 class="font_22 text_dark fw-bold text-center mb-md-0">
+            {{ post.title }}
+          </h1>
         </div>
-        
+
         <h2 class="invisible"></h2>
-    </div>
-    
+      </div>
+
       <div
         class="live-header d-flex align-items-center justify-content-between"
       >
@@ -71,9 +83,11 @@
           >
             <img src="../../../../assets/images/menu.svg" />
             <span
-              *ngIf="hamburgerCount != 0" style="right: 0px;top: 2px;"
+              *ngIf="hamburgerCount != 0"
+              style="right: 0px; top: 2px"
               class="badge rounded-circle d-inline-flex align-items-center justify-content-center fw_700 font_12"
-              >{{ hamburgerCount }}</span>
+              >{{ hamburgerCount }}</span
+            >
           </button>
         </div>
       </div>
@@ -102,7 +116,7 @@
                       <!-- <h3 style="position: relative;bottom: 467px;">{{'StreamStartingIn'| translate }} {{streamCountDown}}</h3> -->
                       <!-- <p style="position: relative;bottom: 467px;">{{post.coverLetter}}</p> -->
                     </div>
-                    
+
                     <iframe
                       *ngIf="
                         streamUrl != undefined &&
@@ -130,12 +144,16 @@
                       >
                         <source [src]="post.streamUrl" type="video/mp4" />
                       </video>
-                      <button *ngIf="meetingId== ''"
+                      <button
+                        *ngIf="meetingId == ''"
                         class="cr-livedd border-0 shadow-none bg-transparent"
                       >
                         <img src="../../../assets/images/add.png" alt="add" />
                       </button>
-                      <div *ngIf="meetingId == ''" class="livestream-rightbottom">
+                      <div
+                        *ngIf="meetingId == ''"
+                        class="livestream-rightbottom"
+                      >
                         <button
                           class="border-0 shadow-none bg-transparent me-3"
                         >
@@ -159,9 +177,9 @@
                       <strong>{{ post.title }}</strong> {{ post.description }}
                     </div>
                   </div>
-                  
+
                   <button
-                  style="left:75px !important;top: 9px !important;"
+                    style="left: 75px !important; top: 9px !important"
                     (click)="showComments()"
                     type="button"
                     id="live-chat"
@@ -191,7 +209,12 @@
 
                   <div
                     class="d-flex"
-                    style="margin-left: 494px; position: absolute; top: 575px; margin-top: -558px;"
+                    style="
+                      margin-left: 494px;
+                      position: absolute;
+                      top: 575px;
+                      margin-top: -558px;
+                    "
                     *ngIf="isSimpleStream"
                   >
                     <img
@@ -203,7 +226,12 @@
 
                   <div
                     class="d-flex"
-                    style="margin-left: 535px; position: absolute; top: 575px; margin-top: -558px;"
+                    style="
+                      margin-left: 535px;
+                      position: absolute;
+                      top: 575px;
+                      margin-top: -558px;
+                    "
                     *ngIf="!isSimpleStream"
                   >
                     <img
@@ -212,7 +240,6 @@
                     />
                     <span class="ms-1 text-white">{{ liveUsersCount }}</span>
                   </div>
-                  
                 </div>
                 <!-- <div class="text-line-border position-relative text-center my-4">
               <span class="line-text font_12 text_ltgray fw_400 text-center">{{'SelectMediaSources'| translate }}</span>
@@ -342,7 +369,7 @@
                       />
                       {{ post.views.length }}
                     </button>
-                    
+
                     <button
                       (click)="
                         likeUnlikePosts(post.id, true, post.postType, post)
@@ -445,70 +472,99 @@
                       </div>
                       <div
                         *ngFor="let item of post.comments"
-                        class="live-message d-flex position-relative align-items-start"
+                        class="live-message d-flex position-relative align-items-center justify-content-between"
                       >
-                        <img
-                          [routerLink]="['/user/userProfile', item.userId]"
-                          *ngIf="item.userAvatar != null"
-                          [src]="item.userAvatar"
-                          class="comment-user cursor_pointer"
-                        />
-                        <img
-                          [routerLink]="['/user/userProfile', item.userId]"
-                          *ngIf="item.userAvatar == null && gender == '1'"
-                          src="../../../assets/images/maleProfile.jfif"
-                          class="comment-user cursor_pointer"
-                        />
-                        <img
-                          [routerLink]="['/user/userProfile', item.userId]"
-                          *ngIf="
-                            item.userAvatar == null &&
-                            (gender == '2' || gender == '3')
-                          "
-                          src="../../../assets/images/femaleProfile.jfif"
-                          class="comment-user cursor_pointer"
-                        />
-                        <div class="d-flex flex-column">
-                          <p
+                        <div class="d-flex align-items-center gap-3">
+                          <img
                             [routerLink]="['/user/userProfile', item.userId]"
-                            class="font_12 fw_600 text-start mb-0 cursor_pointer"
-                          >
-                            {{ item.userName }}
-                            <span *ngIf="item.user?.isVarified || item?.isUserVerified" class="verified-badge"
-                            ><img src="../../../../assets/images/green-verified.svg"/>
-                           </span>
-                          </p>
-                          <p class="text_sec1 font_12 fw_400 text-start mb-0">
-                            {{ item.content }}
-                          </p>
+                            *ngIf="item.userAvatar != null"
+                            [src]="item.userAvatar"
+                            class="comment-user cursor_pointer"
+                          />
+                          <img
+                            [routerLink]="['/user/userProfile', item.userId]"
+                            *ngIf="item.userAvatar == null && gender == '1'"
+                            src="../../../assets/images/maleProfile.jfif"
+                            class="comment-user cursor_pointer"
+                          />
+                          <img
+                            [routerLink]="['/user/userProfile', item.userId]"
+                            *ngIf="
+                              item.userAvatar == null &&
+                              (gender == '2' || gender == '3')
+                            "
+                            src="../../../assets/images/femaleProfile.jfif"
+                            class="comment-user cursor_pointer"
+                          />
+                          <div class="d-flex flex-column">
+                            <p
+                              [routerLink]="['/user/userProfile', item.userId]"
+                              class="font_12 fw_600 text-start mb-0 cursor_pointer"
+                            >
+                              {{ item.userName }}
+                              <span
+                                *ngIf="
+                                  item.user?.isVarified || item?.isUserVerified
+                                "
+                                class="verified-badge"
+                                ><img
+                                  src="../../../../assets/images/green-verified.svg"
+                                />
+                              </span>
+                            </p>
+                            <p class="text_sec1 font_12 fw_400 text-start mb-0">
+                              {{ item.content }}
+                            </p>
+                          </div>
                         </div>
-                        <button (click)="deleteComment(item)" style="border: 0;" *ngIf="userId == item.userId">
-                          <i class="fa-solid fa-trash"></i>
-                        </button>
-                        <button
-                          (click)="
-                            likeUnlikeComments(
-                              item.id,
-                              true,
-                              item.isCommentLikedByCurrentUser,
-                              item.likeCount
-                            )
-                          "
-                          type="button"
-                          class="btn bg-transparent text_ltgray font_12 p-0 border-0 reel-like-chat"
+                        <div
+                          class="d-flex flex-column align-items-center gap-2"
                         >
-                          <img
-                            *ngIf="item.isCommentLikedByCurrentUser"
-                            src="../../../assets/images/heart-red.svg"
-                            class="d-block"
-                          />
-                          <img
-                            *ngIf="!item.isCommentLikedByCurrentUser"
-                            src="../../../assets/images/Heart-dark.svg"
-                            class="d-block"
-                          />
-                          <span>{{ item.likeCount }}</span>
-                        </button>
+                          <button
+                            class="trash-icon"
+                            (click)="deleteComment(item)"
+                            style="border: 0"
+                            *ngIf="userId == item.userId"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke-width="1.5"
+                              stroke="currentColor"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                              />
+                            </svg>
+                          </button>
+                          <button
+                            (click)="
+                              likeUnlikeComments(
+                                item.id,
+                                true,
+                                item.isCommentLikedByCurrentUser,
+                                item.likeCount
+                              )
+                            "
+                            type="button"
+                            class="btn bg-transparent text_ltgray font_12 p-0 border-0"
+                          >
+                            <img
+                              *ngIf="item.isCommentLikedByCurrentUser"
+                              src="../../../assets/images/heart-red.svg"
+                              class="d-block"
+                            />
+                            <img
+                              *ngIf="!item.isCommentLikedByCurrentUser"
+                              src="../../../assets/images/Heart-dark.svg"
+                              class="d-block"
+                            />
+                            <span>{{ item.likeCount }}</span>
+                          </button>
+                        </div>
                       </div>
                     </div>
                     <div
@@ -576,7 +632,7 @@
           </div>
         </div>
       </div>
-      </div>
+    </div>
   </section>
 
   <!-- <div class="modal fade edit-school-modal" id="add-language" tabindex="-1"
@@ -594,39 +650,39 @@ aria-labelledby="add-language" aria-hidden="true">
 </div>
 </div> -->
 
+  <loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
+  <p-toast></p-toast>
 
-<loading-spinner [loadingIcon]="loadingIcon"></loading-spinner>
-<p-toast></p-toast>
-
-<div
-  class="modal fade edit-school-modal delete-modal"
-  id="streamEndPopup"
-  tabindex="-1"
-  aria-labelledby="streamEndPopup"
-  aria-hidden="true"
->
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div
-        class="modal-header border-0 justify-content-center position-relative"
-      ></div>
-      <div class="modal-body">
-        <div>
-          <h3 class="text-center fw-semibold">Live stream has ended</h3>
-          <h5 class="text-center fw-semibold" style="margin-top: 30px">
-            Full video will be uploaded to {{ post.parentName }} profile
-            shortly.
-          </h5>
+  <div
+    class="modal fade edit-school-modal delete-modal"
+    id="streamEndPopup"
+    tabindex="-1"
+    aria-labelledby="streamEndPopup"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div
+          class="modal-header border-0 justify-content-center position-relative"
+        ></div>
+        <div class="modal-body">
+          <div>
+            <h3 class="text-center fw-semibold">Live stream has ended</h3>
+            <h5 class="text-center fw-semibold" style="margin-top: 30px">
+              Full video will be uploaded to {{ post.parentName }} profile
+              shortly.
+            </h5>
+          </div>
         </div>
+        <button
+          #streamEndModalClose
+          hidden
+          id="closeBtn"
+          type="button"
+          class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
+          data-bs-dismiss="modal"
+        ></button>
       </div>
-      <button
-        #streamEndModalClose
-        hidden
-        id="closeBtn"
-        type="button"
-        class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
-        data-bs-dismiss="modal"
-      ></button>
     </div>
   </div>
 </div>

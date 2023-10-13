@@ -163,6 +163,7 @@
   max-height: 100%;
   width: auto;
   height: auto;
+  margin: 0;
   object-fit: contain;
 }
 
@@ -175,10 +176,8 @@
   object-fit: cover;
 }
 
-
-
-.crossButton{
-  float:right;
+.crossButton {
+  float: right;
   cursor: pointer;
 }
 
@@ -186,5 +185,3 @@
   color: white;
   text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
-
-

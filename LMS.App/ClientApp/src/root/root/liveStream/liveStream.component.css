@@ -1,7 +1,29 @@
-.cover_thumbnail{
-    filter: blur(2px);
+.cover_thumbnail {
+  filter: blur(2px);
 }
 
-.cursor_pointer{
-    cursor: pointer;
+.cursor_pointer {
+  cursor: pointer;
+}
+
+.live-message {
+  margin: 0;
+  padding: 0 10px;
+}
+
+.trash-icon {
+  background-color: transparent;
+}
+
+.trash-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.live-message button {
+  margin: 0;
+}
+
+.live-message .comment-user {
+  margin-right: 0;
 }
