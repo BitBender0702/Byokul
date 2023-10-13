@@ -2945,9 +2945,17 @@
               <span class="followers-name font_16 text_sec1">
                 <span class="serch-follow-image">
                   <img
-                    [lazyLoad]="item.avatar"
-                    class="rounded-circle img_style"
-                  />
+                  *ngIf="item?.avatar != null"
+                  [lazyLoad]="item?.avatar"
+                  class="rounded-circle img_style"
+                />
+                <img *ngIf="item?.avatar == null && item?.gender == 1"
+                src="../../../assets/images/maleProfile.jfif"
+                class="rounded-circle img_style">
+
+                <img *ngIf="item?.avatar == null && (item?.gender == 2 || item?.gender == 3)"
+                src="../../../assets/images/femaleProfile.jfif"
+                class="rounded-circle img_style">
                 </span>
                 <a
                   class="routeLink"

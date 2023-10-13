@@ -1173,6 +1173,9 @@ namespace LMS.Services
                 post.PostAttachments = await GetAttachmentsByPostId(post.Id, loginUserId);
                 post.Likes = await _userService.GetLikesOnPost(post.Id);
                 post.Views = await _userService.GetViewsOnPost(post.Id);
+                post.CommentsCount = await _userService.GetCommentsCountOnPost(post.Id);
+                post.PostSharedCount = await _userSharedPostRepository.GetAll().Where(x => x.PostId == post.Id).CountAsync();
+                post.SavedPostsCount = await _savedPostRepository.GetAll().Where(x => x.PostId == post.Id).CountAsync();
                 if (post.Likes.Any(x => x.UserId == loginUserId && x.PostId == post.Id))
                 {
                     post.IsPostLikedByCurrentUser = true;

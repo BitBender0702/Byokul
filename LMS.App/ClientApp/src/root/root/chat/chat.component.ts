@@ -2929,7 +2929,7 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
     OpenSideBar.next({ isOpenSideBar: true });
   }
 
-  @HostListener('scroll', ['$event'])
+  @HostListener('window:scroll', ['$event'])
   scrollHandler(event: any) {
     debugger;
     const element = event.target; // get the scrolled element

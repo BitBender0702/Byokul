@@ -165,13 +165,18 @@
                     (click)="showComments()"
                     type="button"
                     id="live-chat"
-                    class="live_chats"
+                    class="live_chats notification-btn"
                   >
                     <img
                       style="padding-top: 5px"
                       class="chat-gray-icon"
                       src="../../../assets/images/chat-gray-icon.svg"
                     />
+                    <span *ngIf="unreadCommentsCount > 0"
+                    style="right: 21px;top: 2px;"
+                      class="badge rounded-circle d-inline-flex align-items-center justify-content-center fw_700 font_12"
+                      >{{unreadCommentsCount}}</span
+                    >
                     <img
                       *ngIf="!showCommentsField"
                       src="../../../assets/images/chevron-right-light.svg"
@@ -324,6 +329,7 @@
                         src="../../../assets/images/chat-icon.svg"
                         class="d-block"
                       />
+                      
                       {{ post.comments?.length }}
                     </button>
                     <button

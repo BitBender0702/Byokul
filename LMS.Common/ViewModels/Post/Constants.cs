@@ -52,7 +52,7 @@ namespace LMS.Common.ViewModels.Post
         public static string FollowerBannedSuccessfully = "Follower banned successfully";
         public static string ClassOrCoursePinnedSuccessfully = "Class/course pinned successfully";
         public static string ClassOrCourseUnPinnedSuccessfully = "Class/course unpinned successfully";
-
+        public static string VideoReadyToStream = "Your video is ready to stream.You can start stream now";
         public static string FollowerOrUserIdNotValid = "FollowerId/UserId not valid";
         public static string TeacherAddedSuccessfully = "Teacher added successfully";
         public static string TeacherUpdatedSuccessfully = "Teacher updated successfully";

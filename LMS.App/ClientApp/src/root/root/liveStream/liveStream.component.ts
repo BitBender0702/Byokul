@@ -90,6 +90,7 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
   cacheBuster: number = Math.random();
   hamburgerCountSubscription!: Subscription;
   hamburgerCount:number = 0;
+  unreadCommentsCount: number = 0;
   commentResponseSubscription!: Subscription;
   addViewSubscription!: Subscription;
   liveUsersCountSubscription!: Subscription;
@@ -134,7 +135,13 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
     this._postService.getPostById(this.postId).subscribe((response) => {
       debugger
       this.post = response;
-      this.liveUsersCount = this.post.views.length;
+      var isUserViewExist = this.post.views.filter((x:any) => x.userId == this.userId);
+      if(isUserViewExist.length > 0){
+        this.liveUsersCount = this.post.views.length - 1;
+      }
+      else{
+        this.liveUsersCount = this.post.views.length;
+      }
       if(response?.externalMeetingId){
         this.isSimpleStream = true;
       } else{
@@ -445,6 +452,7 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
     }
     else {
       this.showCommentsField = true;
+      this.unreadCommentsCount = 0;
     }
   }
 
@@ -659,6 +667,9 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
         }
         var commentObj = { id: response.id, content: response.message, likeCount: 0, isCommentLikedByCurrentUser: false, userAvatar: response.senderAvatar, userName: response.userName, userId: response.userId, isUserVerified: response.isUserVerified };
         comment.push(commentObj);
+        if(!this.showCommentsField){
+          this.unreadCommentsCount++;
+        }
         this.cd.detectChanges();
         this.groupChatList.nativeElement.scrollTop = this.groupChatList.nativeElement.scrollHeight;
       });
@@ -759,16 +770,16 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
           console.log(this.viewObj);
           this.post.views.push(this.viewObj);
            this.post.views.length = this.post.views.length;
-           this.post.views.length = this.post.views.length;
+          //  this.post.views.length = this.post.views.length;
         }
 
         
         if(this.post.views.length != 0){
           debugger
           var isUserViewExist = this.post.views.filter((x:any) => x.userId == response.userId);
-          // var isUserViewExist = this.post.views.find((x: { userId: string; }) => x.userId == response.userId);
           if(isUserViewExist.length > 0){
-            // this.liveUsersCount = this.liveUsersCount + 1;
+            debugger
+            this.liveUsersCount = this.liveUsersCount + 1;
           }
           else{
             this.viewObj = {
@@ -1031,6 +1042,7 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
   }
 
   onVideoTimeUpdate(event: any) {
+    debugger
     if (this.isOwner) {
       if (!this.isUpdateAllowed) {
         return; // Skip execution if update is not allowed

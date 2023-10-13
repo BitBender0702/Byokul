@@ -1953,6 +1953,7 @@ export class UserProfileComponent extends MultilingualComponent implements OnIni
     debugger
     this.isSubmitted = false;
     this.userCertificate.certificates = [];
+    this.uploadImageName = "";
     this.uploadImage = null;
     // const date = new Date().toISOString().substring(0, 10);
     // const dateParts = date.split('-');

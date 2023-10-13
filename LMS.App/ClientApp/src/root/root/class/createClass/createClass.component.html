@@ -489,7 +489,7 @@
               </div>
             </form>
           </div>
-          <div [ngClass]="step == 1 ? 'tab tab-pane active' : 'tab tab-pane'">
+          <!-- <div [ngClass]="step == 1 ? 'tab tab-pane active' : 'tab tab-pane'">
             <p class="text-center font_16 fw_600 step-desc">
               {{ "CreateClassStep2" | translate }}
             </p>
@@ -498,7 +498,7 @@
               [formGroup]="createClassForm2"
               class="latest-form add-tag-step"
             >
-              <!-- <div class="tag-form-group">
+              <div class="tag-form-group">
                 <label class="font_10">{{
                   "TypeDisciplineNameToAdd" | translate
                 }}</label>
@@ -523,7 +523,7 @@
                     >{{ discipline?.name }}</span
                   >
                 </div>
-              </div> -->
+              </div>
 
               <div class="tag-form-group">
                 <label class="font_10">{{
@@ -617,10 +617,10 @@
                 </button>
               </div>
             </form>
-          </div>
+          </div> -->
           <div
             [ngClass]="
-              step == 2
+              step == 1
                 ? 'tab tab-pane active final-multiple-step'
                 : 'tab tab-pane final-multiple-step'
             "

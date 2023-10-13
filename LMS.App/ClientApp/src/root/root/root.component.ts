@@ -502,8 +502,10 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
                 var notificationContent = translatedMessage;
                 this.messageService.add({ severity: 'success', summary: translatedSummary, life: 3000, detail: translatedMessage });
                 //var chatType = this.from == "user" ? 1 :this.from == "school" ? 3 : this.from == "class" ? 4 : undefined;
-                this._notificationService.initializeNotificationViewModel(this.loginUserId, NotificationType.PostUploaded, notificationContent, this.loginUserId, response.id, response.postType, null, null, chatType,null).subscribe((response) => {
-                });
+                if(response.dateTime == null){
+                  this._notificationService.initializeNotificationViewModel(this.loginUserId, NotificationType.PostUploaded, notificationContent, this.loginUserId, response.id, response.postType, null, null, chatType,null).subscribe((response) => {
+                  });
+                }
               }
               else {
                 if (!response.isPostSchedule) {
@@ -880,9 +882,10 @@ fileUploadProgress: { [key: string]: number } = {};
   ): Promise<{ success: boolean, message: string, blobUrl?: string }> {
     try {
       let blockBlobClient = client.getBlockBlobClient(name);
+      const encodedFileName = encodeURIComponent(fileName);
       const blobHTTPHeaders = {
       blobContentType: content.type,
-      blobContentDisposition: `attachment; filename="${fileName}"`
+      blobContentDisposition: `attachment; filename="${encodedFileName}"`
       };
 
       const uploadOptions = {

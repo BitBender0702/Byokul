@@ -450,7 +450,9 @@
   "ImagesMustBeLessThan15": "Images must be less than 15",
   "OnlyOneVideoPerPostAllowed": "Only 1 video per post is allowed",
   "EitherSelectImagesOrVideo": "You can either select images or video",
-  "SchoolCreatedSuccessfully": "School created successfully"
+  "SchoolCreatedSuccessfully": "School created successfully",
+  "ClassCreatedSuccessfully": "Class created successfully",
+  "CourseCreatedSuccessfully": "Course created successfully"
 
 
 

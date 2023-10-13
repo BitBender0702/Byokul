@@ -1381,6 +1381,7 @@ export class SchoolProfileComponent
   resetCertificateModal() {
     this.isSubmitted = false;
     // this.addSchoolCertificate.certificates = [];
+    this.uploadImageName = "";
     this.uploadImage = null;
     const formattedDate = new Date().toLocaleDateString('en-GB', {
       day: '2-digit',

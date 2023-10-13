@@ -809,6 +809,8 @@ export class CreatePostComponent implements OnInit, OnDestroy {
 
   liveTabSelected(){
     this.isLiveTabopen = true;
+    this.isPostTabOpen = false;
+    this.isOpenReelsTab = false;
   }
 
   getVideoThumbnail(videoUrl: string, fileName: string, callback: (thumbnailUrl: string) => void) {
@@ -1428,15 +1430,43 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     this.closeAttachmentModal();
   }
 
+  initialReelVideos:any [] = [];
   reelsTab() {
+    debugger
     this.totalFilesLength = 0;
+    // if(this.videos.length != 0 && this.isPostTabOpen){
+    //   this.initialPostVideos = this.videos;
+    //   this.videos = [...this.videos,...this.initialReelVideos];
+    // }
+    // else{
+      this.videos = [];
+      this.uploadVideo = [];
+    // }
     this.isOpenReelsTab = true;
     this.isLiveTabopen = false;
+    this.isPostTabOpen = false;
+    this.isVideoUpload = false;
+    this.isThumbnailUpload = false;
+    this.isVideoSelected = false;
   }
 
+  initialPostVideos:any [] = [];
+  isPostTabOpen:boolean = false;
   postTab() {
+    debugger
+    // if(this.videos.length != 0 && this.isOpenReelsTab){
+    //   this.initialReelVideos = this.videos;
+    //   this.videos = [...this.videos,...this.initialPostVideos];
+    // }
+    // else{
+      this.reel = "";
+      this.uploadReel = null;
+      
+    // }
     this.isOpenReelsTab = false;
     this.isLiveTabopen = false;
+    this.isPostTabOpen = true;
+    
   }
 
   captureAttachmentUrl(event: any) {

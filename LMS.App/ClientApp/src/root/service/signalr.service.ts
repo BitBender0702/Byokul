@@ -89,7 +89,7 @@ export class SignalrService {
 
   initializeConnection(token: string) {
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl('https://byokul-stage.azurewebsites.net/chatHub', {
+      .withUrl('https://byokul.com/chatHub', {
          httpClient: new CustomXhrHttpClient(token)
       })
       .withAutomaticReconnect()

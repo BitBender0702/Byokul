@@ -30,11 +30,11 @@ public class ChatHubs : Hub
 
     private IGenericRepository<Course> _courseRepository;
 
-    private readonly IPostService _postService;
+    //private readonly IPostService _postService;
 
 
 
-    public ChatHubs(UserManager<User> userManager, IGenericRepository<Course> courseRepository, IPostService postService, IChatService chatService, IGenericRepository<View> viewRepository, INotificationService notificationService, IGenericRepository<UserFollower> userFollowerRepository, IGenericRepository<User> userRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Teacher> teacherRepository)
+    public ChatHubs(UserManager<User> userManager, IGenericRepository<Course> courseRepository/*, IPostService postService*/, IChatService chatService, IGenericRepository<View> viewRepository, INotificationService notificationService, IGenericRepository<UserFollower> userFollowerRepository, IGenericRepository<User> userRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Teacher> teacherRepository)
     {
         _userManager = userManager;
         _chatService = chatService;
@@ -46,8 +46,12 @@ public class ChatHubs : Hub
         _classRepository = classRepository;
         _teacherRepository = teacherRepository;
         _courseRepository = courseRepository;
-        _postService = postService;
+        //_postService = postService;
     }
+
+    //public ChatHubs()
+    //{
+    //}
 
     static Dictionary<string, string> UserIDConnectionID = new Dictionary<string, string>();
 

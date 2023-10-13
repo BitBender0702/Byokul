@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, Injector, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { MultilingualComponent } from '../sharedModule/Multilingual/multilingual.component';
 // import * as $ from 'jquery';
@@ -102,6 +102,8 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   post: any;
   postId:string = "";
   reelSubscription!:Subscription;
+  commentsScrolled: boolean = false;
+  scrollCommentsResponseCount: number = 1;
   @ViewChild('groupChatList') groupChatList!: ElementRef;
 
 
@@ -110,7 +112,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   private _studentService;
   private _reelsService;
 
-  constructor(injector: Injector, private bsModalService: BsModalService, private route: ActivatedRoute, private translateService: TranslateService, public messageService: MessageService, private userService: UserService,private reelService: ReelsService,private studentService: StudentService, private schoolService: SchoolService, private classService: ClassService, private courseService: CourseService, private notificationService: NotificationService, private postService: PostService, private chatService: ChatService, private signalRService: SignalrService, private cd: ChangeDetectorRef) {
+  constructor(injector: Injector,private bsModalService: BsModalService, private route: ActivatedRoute, private translateService: TranslateService, public messageService: MessageService, private userService: UserService,private reelService: ReelsService,private studentService: StudentService, private schoolService: SchoolService, private classService: ClassService, private courseService: CourseService, private notificationService: NotificationService, private postService: PostService, private chatService: ChatService, private signalRService: SignalrService, private cd: ChangeDetectorRef, private renderer: Renderer2) {
     super(injector);
     this._userService = userService;
     this._schoolService = schoolService;
@@ -187,7 +189,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
     if (!this.commentResponseSubscription) {
       this.commentResponseSubscription = commentResponse.subscribe(response => {
         debugger;
-        var comment: any[] = this.reels.post.comments;
+        var comment: any[] = this.reel.comments;
         var commentObj = { id: response.id, content: response.message, likeCount: 0, isCommentLikedByCurrentUser: false, userAvatar: response.senderAvatar, userName: response.userName, userId: response.userId, isUserVerified: response.isUserVerified };
         comment.push(commentObj);
         this.cd.detectChanges();
@@ -199,7 +201,8 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       commentDeleteResponse.subscribe(response =>{
         debugger;
         let indexOfComment = this.reel.comments.findIndex((x:any) => x.id == response.commentId)
-        this.reel.comments.splice(indexOfComment, 1)
+        this.reel.comments.splice(indexOfComment, 1);
+        this.reel.commentsCount--;
       })
     }
 
@@ -254,6 +257,15 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       // })
     });
    }
+
+   var modal = document.getElementById('comments-modal');
+   window.onclick = (event) => {
+    if (event.target == modal) {
+      if (modal != null) {
+        this.isModalOpen = false;
+      }
+    }
+  }
   }
 
   ngOnDestroy(): void {
@@ -1061,17 +1073,20 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
     }
   }
 
+  isModalOpen:boolean = false;
   openCommentsSection(reel: any) {
     debugger;
+    this.isModalOpen = true;
     this.reel = reel;
+    this.commentsPageNumber = 1;
     this._chatService.getComments(reel.id, this.commentsPageNumber).subscribe((response) => {
-      
       this.reel.comments = response;
     });
 
     this._userService.getUser(this.userId).subscribe((response) => {
       this.sender = response;
     });
+    this._signalRService.createGroupName(reel.id)
   }
 
   showCommentsDiv(isShowComments: boolean) {
@@ -1089,16 +1104,39 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
 
   @HostListener('scroll', ['$event'])
   scrollHandler(event: any) {
-    //  const element = event.target;
-    //  if (element.scrollTop === 0) {
-    //     if(!this.commentsScrolled && this.scrollCommentsResponseCount != 0){
-    //         this.commentsScrolled = true;
-    //         this.commentsLoadingIcon = true;
-    //         this.commentsPageNumber++;
-    //         this.getNextComments();
-    //         }
-    //  }
+     const element = event.target;
+     if (element.scrollTop === 0) {
+        if(!this.commentsScrolled && this.scrollCommentsResponseCount != 0){
+            this.commentsScrolled = true;
+            this.commentsLoadingIcon = true;
+            this.commentsPageNumber++;
+            this.getNextComments();
+            }
+     }
 
+  }
+
+  getNextComments() {
+    debugger;
+    this._chatService.getComments(this.reel.id, this.commentsPageNumber).subscribe((response) => {
+      this.reel.comments = response.concat(this.reel.comments);
+      this.cd.detectChanges();
+      this.commentsLoadingIcon = false;
+      this.scrollCommentsResponseCount = response.length;
+      this.commentsScrolled = false;
+      const chatList = this.groupChatList.nativeElement;
+      const chatListHeight = chatList.scrollHeight;
+      this.groupChatList.nativeElement.scrollTop = this.groupChatList.nativeElement.clientHeight;
+      const scrollOptions = {
+        duration: 300,
+        easing: 'ease-in-out'
+      };
+      chatList.scrollTo({
+        top: this.groupChatList.nativeElement.scrollTop,
+        left: 0,
+        ...scrollOptions
+      });
+    });
   }
 
   @HostListener('window:resize')
@@ -1259,6 +1297,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
 
   @HostListener('wheel', ['$event'])
   onMouseWheel(event: WheelEvent) {
+    if(!this.isModalOpen){
     if (event.deltaY < 0) {
       // Scroll up
       this.carousel.slickPrev();
@@ -1266,6 +1305,7 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
       // Scroll down
       this.carousel.slickNext();
     }
+  }
 
   }
 
@@ -1515,6 +1555,11 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
 
     // }
     // this._signalRService.sendNotification();
+  }
+
+  modalClose(){
+    this.isModalOpen = false;
+    this.cd.detectChanges();
   }
 
 }

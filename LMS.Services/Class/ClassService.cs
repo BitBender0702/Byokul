@@ -443,13 +443,14 @@ namespace LMS.Services
                 //    model.IsFileStorageAccessible = true;
                 //}
 
-                var isClassAccessible = await _classCourseTransactionRepository.GetAll().Where(x => x.ClassId == model.ClassId && x.UserId == loginUserId && x.PaymentId != null).FirstOrDefaultAsync();
+                //var isClassAccessible = await _classCourseTransactionRepository.GetAll().Where(x => x.ClassId == model.ClassId && x.UserId == loginUserId && x.PaymentId != null).FirstOrDefaultAsync();
 
-                if (isClassAccessible != null || model.CreatedById == loginUserId)
-                {
-                    model.IsClassAccessable = true;
-                }
+                //if (isClassAccessible != null || model.CreatedById == loginUserId)
+                //{
+                //    model.IsClassAccessable = true;
+                //}
 
+                model.IsClassAccessable = true;
                 return model;
             }
             return null;
@@ -514,11 +515,12 @@ namespace LMS.Services
             //    model.IsFileStorageAccessible = true;
             //}
 
-            if (isClassAccessible != null || model.CreatedById == loginUserId)
-            {
-                model.IsClassAccessable = true;
-            }
+            //if (isClassAccessible != null || model.CreatedById == loginUserId)
+            //{
+            //    model.IsClassAccessable = true;
+            //}
 
+            model.IsClassAccessable = true;
             return model;
         }
 
@@ -733,6 +735,9 @@ namespace LMS.Services
                 post.PostAttachments = await GetAttachmentsByPostId(post.Id);
                 post.Likes = await _userService.GetLikesOnPost(post.Id);
                 post.Views = await _userService.GetViewsOnPost(post.Id);
+                post.CommentsCount = await _userService.GetCommentsCountOnPost(post.Id);
+                post.PostSharedCount = await _userSharedPostRepository.GetAll().Where(x => x.PostId == post.Id).CountAsync();
+                post.SavedPostsCount = await _savedPostRepository.GetAll().Where(x => x.PostId == post.Id).CountAsync();
 
                 if (post.Likes.Any(x => x.UserId == loginUserId && x.PostId == post.Id))
                 {

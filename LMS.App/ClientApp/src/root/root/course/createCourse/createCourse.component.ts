@@ -364,7 +364,7 @@ captureTeacherId(event: any) {
         this.fileToUpload.append('description', this.course.description);
         this.fileToUpload.append('price', this.course.price?.toString());
         this.fileToUpload.append('currency',this.course.currency);
-        this.step += 1;
+        // this.step += 1;
         this.isStepCompleted = false;
         this.nextPage = true;
     
@@ -372,6 +372,7 @@ captureTeacherId(event: any) {
         this.createCourseForm3.patchValue({
           courseUrl: 'byokul.com/profile/course/' + this.selectedSchool.schoolName.split(' ').join('').replace(" ","").toLowerCase() + "/" +  this.course.courseName.split(' ').join('').replace(" ","").toLowerCase(),
           });
+          this.forwardStep2();
         }
        else{
         var schoolId = this.createCourseForm1.controls['schoolId'].value;
@@ -380,6 +381,7 @@ captureTeacherId(event: any) {
           this.createCourseForm3.patchValue({
             courseUrl: 'byokul.com/profile/course/' + this.selectedSchool.schoolName.split(' ').join('').replace(" ","").toLowerCase() + "/" +  this.course.courseName.split(' ').join('').replace(" ","").toLowerCase(),
           });
+          this.forwardStep2();
         });  
       
         }
@@ -450,7 +452,9 @@ captureTeacherId(event: any) {
       ownedCourseResponse.next({courseId:response.courseId, courseAvatar:response.avatar, courseName:response.courseName,schoolName:response.school.schoolName,action:"add"});
       this.step += 1;
       this.isStepCompleted = false;
-      this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Course created successfully'});
+      const translatedInfoSummary = this.translateService.instant('Success');
+      const translatedMessage = this.translateService.instant('CourseCreatedSuccessfully');
+      this.messageService.add({severity:'success', summary:translatedInfoSummary,life: 3000, detail:translatedMessage});
     });
   }
 

@@ -40,9 +40,12 @@ namespace LMS.Services.Middleware
         }
 
         public async Task InvokeAsync(HttpContext context)
-        {
+       {
             string requestedPath = context.Request.Path.ToString().ToLower();
-            
+            if (requestedPath.Contains("+"))
+            {
+                requestedPath.Replace("+", "");
+            }
             if (requestedPath.Contains("/profile/school/") || requestedPath.Contains("/profile/class") || requestedPath.Contains("/profile/course"))
             {
                 string path = context.Request.Path.ToString();

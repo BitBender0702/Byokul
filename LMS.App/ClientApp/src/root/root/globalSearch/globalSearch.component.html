@@ -73,9 +73,17 @@
                 <div class="d-flex align-items-center justify-content-between">
                   <span class="followers-name font_16 text_sec1 fw_600">
                     <img
+                    *ngIf="item?.avatar != null"
                       [src]="item.avatar"
                       class="rounded-circle me-3 img_style"
                     />
+                    <img *ngIf="item?.avatar == null && item?.gender == 1"
+                    src="../../../assets/images/maleProfile.jfif"
+                    class="rounded-circle me-3 img_style">
+  
+                    <img *ngIf="item?.avatar == null && (item?.gender == 2 || item?.gender == 3)"
+                    src="../../../assets/images/femaleProfile.jfif"
+                    class="rounded-circle me-3 img_style">
                     <a
                       class="routeLink"
                       [routerLink]="['/user/userProfile', item.id]"

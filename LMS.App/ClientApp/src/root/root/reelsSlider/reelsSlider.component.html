@@ -74,7 +74,7 @@
         <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">
           {{ "Comments" | translate }}
         </h1>
-        <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close">
+        <button (click)="modalClose()" type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close">
           <img src="../../../../assets/images/cross.svg" />
         </button>
       </div>

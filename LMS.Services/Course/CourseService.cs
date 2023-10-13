@@ -394,7 +394,7 @@ namespace LMS.Services
                 if(singleLanguage == null)
                 {
                     var newCourseName = System.Web.HttpUtility.UrlEncode(courseName, Encoding.GetEncoding("iso-8859-7")).Replace("%3f", "").Replace("+", "").Replace(".", "").ToLower();
-                    singleLanguage = courseList.Where(x => (System.Web.HttpUtility.UrlEncode(x.CourseName.Replace(" ", "").Replace(".", "").ToLower(), Encoding.GetEncoding("iso-8859-7")) == newCourseName)).FirstOrDefault();
+                    singleLanguage = courseList.Where(x => (System.Web.HttpUtility.UrlEncode(x.CourseName.Replace(" ", "").Replace(".", "").Replace("+", "").ToLower(), Encoding.GetEncoding("iso-8859-7")) == newCourseName)).FirstOrDefault();
                 }
 
 
@@ -453,11 +453,12 @@ namespace LMS.Services
 
                     var isClassAccessible = await _classCourseTransactionRepository.GetAll().Where(x => x.CourseId == model.CourseId && x.UserId == loginUserId && x.PaymentId != null).FirstOrDefaultAsync();
 
-                    if (isClassAccessible != null || courses.CreatedById == loginUserId)
-                    {
-                        model.IsCourseAccessable = true;
-                        
-                    }
+                    //if (isClassAccessible != null || courses.CreatedById == loginUserId)
+                    //{
+                    //    model.IsCourseAccessable = true;
+
+                    //}
+                    model.IsCourseAccessable = true;
 
                     return courses;
 
@@ -565,10 +566,11 @@ namespace LMS.Services
 
                 var isCourseAccessible = await _classCourseTransactionRepository.GetAll().Where(x => x.CourseId == model.CourseId && x.UserId == loginUserId).FirstOrDefaultAsync();
 
-                if (isCourseAccessible != null || model.CreatedById == loginUserId)
-                {
-                    model.IsCourseAccessable = true;
-                }
+                //if (isCourseAccessible != null || model.CreatedById == loginUserId)
+                //{
+                //    model.IsCourseAccessable = true;
+                //}
+                model.IsCourseAccessable = true;
                 return courses;
 
 

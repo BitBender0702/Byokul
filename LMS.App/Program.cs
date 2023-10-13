@@ -36,6 +36,7 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.AspNetCore.Http.Features;
 using LMS.Services.Iyizico;
 using LMS.Services.Middleware;
+using Microsoft.AspNetCore.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -110,6 +111,8 @@ builder.Services.AddScoped<IIyizicoService, IyizicoService>();
 builder.Services.AddScoped<CustomerService>();
 builder.Services.AddScoped<ChargeService>();
 builder.Services.AddScoped<TokenService>();
+builder.Services.AddScoped<ChatHubs>();
+
 StripeConfiguration.ApiKey = configuration.GetSection("Stripe")["SecretKey"];
 
 builder.Services.AddOptions();

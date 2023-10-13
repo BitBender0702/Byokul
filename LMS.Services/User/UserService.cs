@@ -761,6 +761,8 @@ namespace LMS.Services
                 post.Likes = await GetLikesOnPost(post.Id);
                 post.Views = await GetViewsOnPost(post.Id);
                 post.CommentsCount = await GetCommentsCountOnPost(post.Id);
+                post.PostSharedCount = await _userSharedPostRepository.GetAll().Where(x => x.PostId == post.Id).CountAsync();
+                post.SavedPostsCount = await _savedPostRepository.GetAll().Where(x => x.PostId == post.Id).CountAsync();
                 if (post.Likes.Any(x => x.UserId == userId && x.PostId == post.Id))
                 {
                     post.IsPostLikedByCurrentUser = true;
@@ -1698,7 +1700,8 @@ namespace LMS.Services
                 Id = new Guid(x.Id),
                 Name = x.FirstName + " " + x.LastName,
                 Type = (int)PostAuthorTypeEnum.User,
-                Avatar = x.Avatar
+                Avatar = x.Avatar,
+                Gender = x.Gender
 
             }).Take(5).ToListAsync();
 
@@ -1838,7 +1841,8 @@ namespace LMS.Services
                 Id = new Guid(x.Id),
                 Name = x.FirstName + " " + x.LastName,
                 Type = (int)PostAuthorTypeEnum.User,
-                Avatar = x.Avatar
+                Avatar = x.Avatar,
+                Gender = x.Gender
 
             }).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
 

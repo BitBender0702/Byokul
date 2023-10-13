@@ -999,6 +999,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     debugger
     this.isSubmitted = false;
     // this.courseCertificate.certificates = [];
+    this.uploadImageName = "";
     this.uploadImage = null;
     this.initializeCourseCertificateForm();
     this.certificateToUpload.set('certificateImage', '');

@@ -89,7 +89,7 @@ namespace LMS.Services
 
         public async Task<List<NotificationViewModel>> GetNotifications(string userId, int pageNumber)
         {
-            int pageSize = 12;
+            int pageSize = 16;
             var notifications = await _notificationRepository.GetAll().Include(x => x.User).Include(x => x.Post).Where(x => x.UserId == userId).OrderByDescending(x => x.DateTime).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
             return _mapper.Map<List<NotificationViewModel>>(notifications);
         }

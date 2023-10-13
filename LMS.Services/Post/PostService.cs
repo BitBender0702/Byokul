@@ -23,6 +23,11 @@ using System.Collections;
 using LMS.DataAccess.GenericRepository;
 using System.Text.RegularExpressions;
 using LMS.Common.ViewModels.Common;
+using Microsoft.AspNetCore.SignalR;
+using iText.Kernel.Pdf.Canvas.Parser.ClipperLib;
+//using LMS.Data.Entity.Chat;
+using LMS.Data.Migrations;
+using System.Threading;
 
 namespace LMS.Services
 {
@@ -49,9 +54,12 @@ namespace LMS.Services
         private readonly INotificationService _notificationService;
         private readonly IBigBlueButtonService _bigBlueButtonService;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IHubContext<ChatHubs> _hubContext;
         private IConfiguration _config;
+        private readonly ChatHubs _chatHubs;
 
-        public PostService(IMapper mapper, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<User> userRepository, IGenericRepository<Like> likeRpository, IGenericRepository<View> viewRepository, IGenericRepository<Comment> commentRepository, IGenericRepository<CommentLike> commentLikeRepository, IGenericRepository<SavedPost> savedPostRepository, IBlobService blobService, IUserService userService, IChatService chatService, IBigBlueButtonService bigBlueButtonService, IConfiguration config, IGenericRepository<UserSharedPost> userSharedPostRepository, INotificationService notificationService, IGenericRepository<Notification> notificationRepository, IWebHostEnvironment webHostEnvironment)
+
+        public PostService(IMapper mapper, IGenericRepository<Post> postRepository, IGenericRepository<PostAttachment> postAttachmentRepository, IGenericRepository<PostTag> postTagRepository, IGenericRepository<School> schoolRepository, IGenericRepository<Class> classRepository, IGenericRepository<Course> courseRepository, IGenericRepository<User> userRepository, IGenericRepository<Like> likeRpository, IGenericRepository<View> viewRepository, IGenericRepository<Comment> commentRepository, IGenericRepository<CommentLike> commentLikeRepository, IGenericRepository<SavedPost> savedPostRepository, IBlobService blobService, IUserService userService, IChatService chatService, IBigBlueButtonService bigBlueButtonService, IConfiguration config, IGenericRepository<UserSharedPost> userSharedPostRepository, INotificationService notificationService, IGenericRepository<Notification> notificationRepository, IHubContext<ChatHubs> hubContext, IWebHostEnvironment webHostEnvironment, ChatHubs chatHubs)
         {
             _mapper = mapper;
             _postRepository = postRepository;
@@ -74,7 +82,9 @@ namespace LMS.Services
             _userSharedPostRepository = userSharedPostRepository;
             _notificationService = notificationService;
             _notificationRepository = notificationRepository;
+            _hubContext = hubContext;
             _webHostEnvironment = webHostEnvironment;
+            _chatHubs = chatHubs;
         }
         public async Task<PostViewModel> SavePost(PostViewModel postViewModel, string createdById)
         {
@@ -175,6 +185,7 @@ namespace LMS.Services
                     postViewModel.ReelId = await _postAttachmentRepository.GetAll().Where(x => x.PostId == post.Id).Select(x => x.Id).FirstAsync();
                 }
 
+                postViewModel.DateTime = post.DateTime;
                 return postViewModel;
 
             }
@@ -432,11 +443,10 @@ namespace LMS.Services
         public async Task ScheduleLiveStream(PostViewModel postViewModel, string userId, DateTimeOffset scheduledTime)
         {
             postViewModel.DateTime = null;
-            var scheduleJobId = BackgroundJob.Schedule(() => SaveLiveStreamInfo(postViewModel.Id, userId), scheduledTime);
-
+            var scheduleJobId = BackgroundJob.Schedule(() => SaveLiveStreamInfo(postViewModel.Id, userId, postViewModel.PostAuthorType), scheduledTime);
         }
 
-        public async Task SaveLiveStreamInfo(Guid id, string userId)
+        public async Task SaveLiveStreamInfo(Guid id, string userId, int postAuthorType)
         {
             var post = _postRepository.GetById(id);
             //var postAttachment = await _postAttachmentRepository.GetAll().Where(x => x.PostId == postViewModel.Id).FirstAsync();
@@ -447,6 +457,28 @@ namespace LMS.Services
             post.IsPostSchedule = false;
             _postRepository.Update(post);
             _postRepository.Save();
+
+            var from = postAuthorType == 1 ? "school" : postAuthorType == 2 ? "class" : postAuthorType == 4 ? "user" : null;
+            var chatType = from == "user" ? 1 : from == "school" ? 3 : from == "class" ? 4 : 0;
+
+            // here we aill add signal to send notification
+            var user = _userRepository.GetById(userId);
+            var model = new NotificationViewModel();
+            {
+                model.Id = Guid.NewGuid();
+                model.UserId = userId;
+                model.ActionDoneBy = userId;
+                model.Avatar = user.Avatar;
+                model.IsRead = false;
+                model.NotificationContent = user.FirstName + " " + user.LastName + " " + Constants.VideoReadyToStream;
+                model.NotificationType = NotificationTypeEnum.PostUploaded;
+                model.PostId = id;
+                model.PostType = (int)PostTypeEnum.Stream;
+                model.ChatType = (Data.Entity.Chat.ChatType)chatType;
+            }
+
+            //var chatHub = new ChatHubs();
+            await _chatHubs.SendNotification(model);
             //}
             //else
             //{

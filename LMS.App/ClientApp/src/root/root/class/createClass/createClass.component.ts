@@ -385,6 +385,7 @@ captureTeacherId(event: any) {
   }
 
   forwardStep() {
+    debugger
     this.isStepCompleted = true;
     this.class=this.createClassForm1.value;
 
@@ -426,6 +427,7 @@ captureTeacherId(event: any) {
     this.fileToUpload.append('classTags', JSON.stringify(this.tagList))
     // this.schoolName = this.class.schoolId.schoolName.split(' ').join('');
     this._classService.isClassNameExist(this.class.className).subscribe((response) => {
+      debugger
       if(!response){
         this.createClassForm1.setErrors({ unauthenticated: true });
         return;
@@ -450,7 +452,7 @@ captureTeacherId(event: any) {
     this.fileToUpload.append('languageIds',JSON.stringify(this.class.languageIds));
     this.fileToUpload.append('price',this.class.price?.toString());
     this.fileToUpload.append('currency',this.class.currency);
-        this.step += 1;
+        // this.step += 1;
         this.isStepCompleted = false;
         this.nextPage = true;
     
@@ -458,6 +460,7 @@ captureTeacherId(event: any) {
         this.createClassForm3.patchValue({
           classUrl: 'byokul.com/profile/class/' + this.selectedSchool.schoolName.split(' ').join('').replace(" ","").toLowerCase() + "/" +  this.class.className.split(' ').join('').replace(" ","").toLowerCase(),
           });
+          this.forwardStep2();
         }
        else{
         var schoolId = this.createClassForm1.controls['schoolId'].value;
@@ -466,10 +469,13 @@ captureTeacherId(event: any) {
           this.createClassForm3.patchValue({
             classUrl: 'byokul.com/profile/class/' + this.selectedSchool.schoolName.split(' ').join('').replace(" ","").toLowerCase() + "/" +  this.class.className.split(' ').join('').replace(" ","").toLowerCase(),
           });
+          this.forwardStep2();
         });  
       
         }
       }
+
+   
     });
     // this.class.schoolId = schoolId;
     // this.fileToUpload.append('schoolId', this.class.schoolId);
@@ -534,6 +540,7 @@ captureTeacherId(event: any) {
     this.fileToUpload.append('disciplineIds',JSON.stringify(this.disciplineIds));
     this.fileToUpload.append('studentIds',JSON.stringify(this.studentIds));
     this.fileToUpload.append('teacherIds',JSON.stringify(this.teacherIds));
+
     this.classUrl = 'byokul.com/profile/class/' + this.selectedSchool.schoolName.split(' ').join('').replace(" ","").toLowerCase() + "/" +  this.className.split(' ').join('').replace(" ","").toLowerCase();
     this.fileToUpload.append('classUrl',JSON.stringify(this.classUrl));
     this._classService.createClass(this.fileToUpload).subscribe((response:any) => {
@@ -543,7 +550,9 @@ captureTeacherId(event: any) {
          ownedClassResponse.next({classId:response.classId, classAvatar:response.avatar, className:response.className,schoolName:response.school.schoolName,action:"add"});
          this.step += 1;
          this.isStepCompleted = false;
-         this.messageService.add({severity:'success', summary:'Success',life: 3000, detail:'Class added successfully'});
+         const translatedInfoSummary = this.translateService.instant('Success');
+         const translatedMessage = this.translateService.instant('ClassCreatedSuccessfully');
+         this.messageService.add({severity:'success', summary:translatedInfoSummary,life: 3000, detail:translatedMessage});
     });
   }
   backStep() {

@@ -299,7 +299,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     this.minDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
 
 
-    var className = this.className.split('.').join("").split(" ").join("").toLowerCase();
+    var className = this.className.split('.').join("").split(" ").join("").split("+").join("").toLowerCase();
     console.log("after removing ." + className);
 
     // this.className = this.route.snapshot.paramMap.get('className')??'';
@@ -1156,7 +1156,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   resetCertificateModal() {
     this.isSubmitted = false;
     // this.classCertificate.certificates = [];
-
+    this.uploadImageName = "";
     this.uploadImage = null;
     this.initializeClassCertificateForm();
     this.certificateToUpload.set('certificateImage', '');

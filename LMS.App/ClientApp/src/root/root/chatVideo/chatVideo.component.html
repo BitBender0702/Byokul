@@ -12,7 +12,7 @@ aria-labelledby="create-post" aria-hidden="true" area-modal="true">
     </div>
     <div class="modal-body">
         <div class="attach-img-full">
-            <video #videoPlayer width="100%" height="700" controls class="video-js vjs-big-play-centered" preload="metadata">
+            <video #videoPlayer oncontextmenu="return false" width="100%" height="700" controls class="video-js vjs-big-play-centered" preload="metadata">
                   <source [src]="fileUrl" type="video/mp4"/>
             </video>
         </div>
