@@ -1,13 +1,18 @@
 .followers-name {
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+@media screen and (min-width: 768px) {
+  .followers-name {
+    align-items: center;
   }
-  
-  .followers-name img {
-    flex: 0 0 auto;
-    width: 40px;
-    height: 40px;
-    object-fit: cover;
-  }
-  
+}
+
+.followers-name img {
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+}
