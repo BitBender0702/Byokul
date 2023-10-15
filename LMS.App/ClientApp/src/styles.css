@@ -166,10 +166,9 @@ a.text_dark:hover {
   top: 50px;
   right: 50px;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-width: 400px;
+  gap: 16px;
   background: linear-gradient(90.02deg, #ff7b1c 0.02%, #ffa41c 99.98%);
   padding: 12px 40px;
   font-family: "Poppins", sans-serif;
@@ -178,9 +177,9 @@ a.text_dark:hover {
 }
 
 .upload-notification__title {
-  margin-bottom: 16px;
   color: #fff;
-  font-size: 24px;
+  margin-bottom: 0;
+  font-size: 21px;
 }
 
 .upload-notification__percentage {
@@ -741,6 +740,7 @@ button.comment-btn {
 }
 
 .live-action-buttons button img {
+  flex: 0 0 auto;
   margin-bottom: 5px;
 }
 
