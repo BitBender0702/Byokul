@@ -1,3 +1,28 @@
+.live-message .comment-user {
+  margin-right: 0;
+}
+
+.reel-like-chat {
+  position: static;
+}
+
+.live-message {
+  padding-right: 0;
+}
+
+.trash-icon {
+  background-color: transparent;
+}
+
+.trash-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.live-message button {
+  margin: 0;
+}
+
 .verified-badge img {
   width: 24px;
   height: 24px;
