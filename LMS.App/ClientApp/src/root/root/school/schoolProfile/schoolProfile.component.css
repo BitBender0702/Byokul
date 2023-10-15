@@ -6,6 +6,12 @@
   width: 100%;
 }
 
+@media screen and (min-width: 768px) {
+  .follow-btn {
+    padding: 6px 19px;
+  }
+}
+
 .orange-button {
   display: inline-flex;
   align-items: center;
@@ -104,6 +110,7 @@
 
 .prev-step-btn {
   white-space: nowrap;
+  margin-right: 0;
 }
 
 .right-action {
