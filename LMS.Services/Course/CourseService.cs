@@ -476,11 +476,11 @@ namespace LMS.Services
 
                 var isCourseAccessible = await _classCourseTransactionRepository.GetAll().Where(x => x.CourseId == model.CourseId && x.UserId == loginUserId && x.PaymentId != null).FirstOrDefaultAsync();
 
-                if (isCourseAccessible != null || singleLanguage.CreatedById == loginUserId)
-                {
-                    model.IsCourseAccessable = true;
-                }
-
+                //if (isCourseAccessible != null || singleLanguage.CreatedById == loginUserId)
+                //{
+                //    model.IsCourseAccessable = true;
+                //}
+                model.IsCourseAccessable = true;
                 model.Languages = await GetLanguages(singleLanguage.CourseId);
                 model.Disciplines = await GetDisciplines(singleLanguage.CourseId);
                 model.Students = await GetStudents(singleLanguage.CourseId);
