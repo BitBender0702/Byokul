@@ -1,3 +1,11 @@
+#classOwnCertificate .modal-dialog {
+  max-width: 600px;
+}
+
+#classOwnCertificate .modal-dialog img {
+  width: 100%;
+}
+
 .tag-box .teacher-tags {
   margin-bottom: 10px;
 }
@@ -76,15 +84,13 @@
   }
 }
 
-.priceInputWidth{
+.priceInputWidth {
   width: 268%;
 }
 
-
-
 .image-container {
-  display: inline-block; 
-  margin-right: 10px; 
+  display: inline-block;
+  margin-right: 10px;
 }
 
 .image-container:last-child {
