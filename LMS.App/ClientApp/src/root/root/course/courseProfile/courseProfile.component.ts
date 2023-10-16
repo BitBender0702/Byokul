@@ -216,6 +216,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
   isBanned:any;
   isStorageUnAvailable:boolean=false;
   ngOnInit(): void {
+    debugger
     this.checkScreenSize();
     if (this.isScreenMobile) {
       this.itemsPerSlide = 2;
@@ -236,7 +237,8 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
     var selectedLang = localStorage.getItem("selectedLanguage");
     this.translate.use(selectedLang ?? '');
 
-    let newCourseName = this.courseName.split('.').join("").split(" ").join("").toLowerCase();
+    var newCourseName = this.courseName.split('.').join("").split(" ").join("").split("+").join("").replace(" ","").replace(/[\s.+$/,@\[\]#?/:=&]/g, '').toLowerCase();
+    newCourseName = decodeURIComponent(newCourseName);
     this._courseService.getCourseById(newCourseName).subscribe((response) => {
       debugger
       this.postsPageNumber = 1;
@@ -381,7 +383,7 @@ export class CourseProfileComponent extends MultilingualComponent implements OnI
         //   }
         // const translatedSummary = this.translateService.instant('Success');
         // this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage,});      
-        let newCourseName = this.courseName.split('.').join("").split(" ").join("").toLowerCase()   
+        let newCourseName = this.courseName.split('.').join("").split(" ").join("").split("+").join("").replace(" ","").replace(/[\s.+$/,@\[\]#?/:=&]/g, '').toLowerCase()   
         this._courseService.getCourseById(newCourseName).subscribe((response) => {
           this.course = response;
           this.titleService.setTitle(this.course.courseName);

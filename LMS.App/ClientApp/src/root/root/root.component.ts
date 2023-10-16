@@ -23,6 +23,7 @@ import { VideoLibraryService } from '../service/videoLibrary.service';
 import { addVideoInLibraryResponse } from './schoolVideoLibrary/schoolVideoLibrary.component';
 import { SchoolService } from '../service/school.service';
 import { banUnbanUserProgression } from '../admin/registeredUsers/registeredUsers.component';
+import { thumbnailUploadResponse } from './class/createClass/createClass.component';
 // import { userPermission } from './class/classProfile/classProfile.component';
 export const userPermission = new Subject<{ userPermissions: any }>();
 
@@ -41,6 +42,10 @@ export const postUploadOnBlob = new Subject<{
   videoThumbnails?: any,
   schoolId?: string,
   checkLimitSchoolId?: string
+}>();
+
+export const uploadClassOrCourseThumbail = new Subject<{
+   uploadFile:any;
 }>();
 
 // export const userPermissions = new Subject();
@@ -65,6 +70,7 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
   postProgressSubscription!: Subscription;
   postUploadOnBlobSubscription!: Subscription;
   reelUploadOnBlobSubscription!: Subscription;
+  uploadClassCourseThumbSubscription!: Subscription;
   addPostSubscription!: Subscription;
   paymentConfirmSubscription!: Subscription;
   loginUserId: string = "";
@@ -139,6 +145,31 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
     // this.meta.addTag({ property: 'og:image', content: "../../assets/images/logo.svg" });
     this.meta.updateTag({ property: 'og:url', content: "byokul.com" });
 
+    if (!this.uploadClassCourseThumbSubscription) {
+      this.uploadClassCourseThumbSubscription = uploadClassOrCourseThumbail.subscribe(async (uploadResponse) => {
+        debugger
+        this._userService.getBlobSasToken().subscribe(async (response: any) => {
+          debugger
+          this.cd.detectChanges();
+          this.loadBytes = 0;
+          this.totalFileSize = 0;
+          this.overallProgress = 0;
+          this.fileUploadProgress = {};
+          // this.openProgressBar.nativeElement.click();
+          this.totalUploadFilesSize = 0;
+          this.uploadVideoUrlList = [];
+          this.totalFileSize = uploadResponse.uploadFile.size;
+          if(uploadResponse.uploadFile.type.startsWith('image/')) {
+            await this.uploadVideosOnBlob(uploadResponse.uploadFile, UploadTypeEnum.Image, response.sasToken,this.totalFileSize,true);
+          }
+          if (uploadResponse.uploadFile.type.startsWith('video/')) {
+            await this.uploadVideosOnBlob(uploadResponse.uploadFile, UploadTypeEnum.Video, response.sasToken,this.totalFileSize,true);
+          }
+          // await Promise();
+          thumbnailUploadResponse.next({thumbnailUrl:this.uploadVideoUrlList[0].blobUrl});
+      })
+    });
+  }
     if (!this.paymentConfirmSubscription) {
       this.paymentConfirmSubscription = deleteReelResponse.subscribe(response => {
         debugger
@@ -761,6 +792,9 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
     if (this.banUnbanUserSubscription) {
       this.banUnbanUserSubscription.unsubscribe();
     }
+    if (this.uploadClassCourseThumbSubscription) {
+      this.uploadClassCourseThumbSubscription.unsubscribe();
+    }
   }
 
   loginUserInfo() {
@@ -809,10 +843,16 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
   combinedProgress:number = 0;
 
 fileUploadProgress: { [key: string]: number } = {};
-  public async uploadVideosOnBlob(file: File, fileType: number, token: string, totalFileSize:number) {
+  public async uploadVideosOnBlob(file: File, fileType: number, token: string, totalFileSize:number,isThumbnail?:boolean) {
     debugger
 
     var sasToken = "?" + token;
+    const id = uuidv4();
+
+    if(isThumbnail){
+      var blobName = `${id.toString()}${file.name.substring(file.name.lastIndexOf('.'))}`;
+    }
+    else{
     var prefix = "attachments";
     if (fileType == UploadTypeEnum.Image)
       prefix = "images";
@@ -820,13 +860,20 @@ fileUploadProgress: { [key: string]: number } = {};
       prefix = "videos";
     else if (fileType == UploadTypeEnum.Thumbnail)
       prefix = "images"
+    var blobName = `${prefix}/${id.toString()}${file.name.substring(file.name.lastIndexOf('.'))}`;    
+   }
 
-    const id = uuidv4();
-    const blobName = `${prefix}/${id.toString()}${file.name.substring(file.name.lastIndexOf('.'))}`;
     var containerName = Constant.ContainerName;
     const blobStorageName = Constant.blobStorageName;
-    var containerClient = new BlobServiceClient(`https://${blobStorageName}.blob.core.windows.net?${sasToken}`)
+    if(isThumbnail)
+    {
+      var containerClient = new BlobServiceClient(`https://${blobStorageName}.blob.core.windows.net?${sasToken}`)
+      .getContainerClient("classthumbnail");
+    }
+    else{
+      var containerClient = new BlobServiceClient(`https://${blobStorageName}.blob.core.windows.net?${sasToken}`)
       .getContainerClient("userposts");
+    }
 
       const response = await this.uploadToBlob(
         file,

@@ -476,7 +476,7 @@ namespace LMS.Services
             requiredIds.AddRange(classStudentsData.Select(c => new FeedConvertDTO { Id = c.ClassId, ParentImageUrl = c.Class.Avatar, ParentName = c.Class.ClassName, SchoolName = c.Class.School.SchoolName, IsParentVerified = false }).ToList());
             requiredIds.AddRange(courseStudentsData.Select(c => new FeedConvertDTO { Id = c.CourseId, ParentImageUrl = c.Course.Avatar, ParentName = c.Course.CourseName, SchoolName = c.Course.School.SchoolName, IsParentVerified = false }).ToList());
 
-            requiredIds.AddRange(myData.Select(c => new FeedConvertDTO { Id = new Guid(c.Id), ParentImageUrl = c.Avatar, ParentName = c.FirstName, SchoolName = "", IsParentVerified = c.IsVarified }).ToList());
+            requiredIds.AddRange(myData.Select(c => new FeedConvertDTO { Id = new Guid(c.Id), ParentImageUrl = c.Avatar, ParentName = c.FirstName + " " + c.LastName, SchoolName = "", IsParentVerified = c.IsVarified }).ToList());
 
             requiredIds.AddRange(mySchoolData.Select(c => new FeedConvertDTO { Id = c.SchoolId, ParentImageUrl = c.Avatar, ParentName = c.SchoolName, SchoolName = "", IsParentVerified = c.IsVarified }).ToList());
 
@@ -1969,7 +1969,7 @@ namespace LMS.Services
             requiredIds.AddRange(classStudentsData.Select(c => new FeedConvertDTO { Id = c.ClassId, ParentImageUrl = c.Class.Avatar, ParentName = c.Class.ClassName, SchoolName = c.Class.School.SchoolName, IsParentVerified = false }).ToList());
             requiredIds.AddRange(courseStudentsData.Select(c => new FeedConvertDTO { Id = c.CourseId, ParentImageUrl = c.Course.Avatar, ParentName = c.Course.CourseName, SchoolName = c.Course.School.SchoolName, IsParentVerified = false }).ToList());
 
-            requiredIds.AddRange(myData.Select(c => new FeedConvertDTO { Id = new Guid(c.Id), ParentImageUrl = c.Avatar, ParentName = c.FirstName, SchoolName = "", IsParentVerified = c.IsVarified }).ToList());
+            requiredIds.AddRange(myData.Select(c => new FeedConvertDTO { Id = new Guid(c.Id), ParentImageUrl = c.Avatar, ParentName = c.FirstName + " " + c.LastName, SchoolName = "", IsParentVerified = c.IsVarified }).ToList());
 
             requiredIds.AddRange(mySchoolData.Select(c => new FeedConvertDTO { Id = c.SchoolId, ParentImageUrl = c.Avatar, ParentName = c.SchoolName, SchoolName = "", IsParentVerified = c.IsVarified }).ToList());
 

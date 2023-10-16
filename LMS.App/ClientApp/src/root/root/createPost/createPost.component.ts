@@ -715,6 +715,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
       this.initializeVideoObject();
     });
     this.scheduleVideoRequired = false;
+    this.thumbnailRequired = false;
     this.isVideoUpload = true;
     this.isImageSelected = false;
     this.isVideoSelected = true;
@@ -798,6 +799,7 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     this.scheduleVideoRequired = false;
     this.isVideoUpload = true;
     this.isThumbnailUpload = true;
+    this.thumbnailRequired = false;
     this.isVideoSelected = true;
     this.isImageSelected = false;
     var test = this.isLiveTabopen;
@@ -1545,6 +1547,10 @@ export class CreatePostComponent implements OnInit, OnDestroy {
     //   return;
     // }
 
+    if(this.videos.length == 0 && this.images.length == 0){
+      this.thumbnailRequired = true;
+      return;
+    }
 
     if (!this.createLiveForm.valid) {
       return;

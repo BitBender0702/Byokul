@@ -637,7 +637,8 @@
   "EitherSelectImagesOrVideo": "You can either select images or video",
   "SchoolCreatedSuccessfully": "School created successfully",
   "ClassCreatedSuccessfully": "Class created successfully",
-  "CourseCreatedSuccessfully": "Course created successfully"
+  "CourseCreatedSuccessfully": "Course created successfully",
+  "SelectThumbnailOrVideoToStream": "Please select a thumbnail or video to stream"
 
 
 

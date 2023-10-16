@@ -40,24 +40,24 @@ namespace LMS.Services.Middleware
         }
 
         public async Task InvokeAsync(HttpContext context)
-       {
+        {
             string requestedPath = context.Request.Path.ToString().ToLower();
-            if (requestedPath.Contains("+"))
-            {
-                requestedPath.Replace("+", "");
-            }
+            //if (requestedPath.Contains("+"))
+            //{
+            //    requestedPath.Replace("+", "");
+            //}
             if (requestedPath.Contains("/profile/school/") || requestedPath.Contains("/profile/class") || requestedPath.Contains("/profile/course"))
             {
                 string path = context.Request.Path.ToString();
                 var containsSlash = path.Substring(path.Length - 1);
                 if (containsSlash != "/")
                 {
-                    string newPath =path + "/";
+                    string newPath = path + "/";
                     context.Response.Redirect(newPath);
                     //await _next(context);
                     return;
                 }
-            }  
+            }
             await _next(context);
         }
     }

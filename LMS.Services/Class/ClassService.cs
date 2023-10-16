@@ -387,13 +387,13 @@ namespace LMS.Services
                     .Include(x => x.Accessibility)
                     .Include(x => x.CreatedBy).ToListAsync();
 
-                var singleLanguage = classesList.Where(x => Encoding.UTF8.GetBytes(x.ClassName.Replace(" ", "").Replace("+", "").Replace(".", "").ToLower()).SequenceEqual(data)).FirstOrDefault();
+                var singleLanguage = classesList.Where(x => Encoding.UTF8.GetBytes(Regex.Replace(x.ClassName, @"\s", "").ToLower()).SequenceEqual(data)).FirstOrDefault();
                 //var newClassName = "";
 
                 if (singleLanguage == null)
                 {
                     var newClassName = System.Web.HttpUtility.UrlEncode(className, Encoding.GetEncoding("iso-8859-7")).Replace("%3f", "").Replace("+", "").Replace(".", "").ToLower();
-                    singleLanguage = classesList.Where(x => (System.Web.HttpUtility.UrlEncode(x.ClassName.Replace(" ", "").Replace(".", "").ToLower(), Encoding.GetEncoding("iso-8859-7")) == newClassName)).FirstOrDefault();
+                    singleLanguage = classesList.Where(x => (System.Web.HttpUtility.UrlEncode(Regex.Replace(x.ClassName, @"\s", "").ToLower(), Encoding.GetEncoding("iso-8859-7")) == newClassName)).FirstOrDefault();
                 }
 
                 //var classes = classesList.Where(x => (System.Web.HttpUtility.UrlEncode(x.ClassName.Replace(" ", "").Replace(".", "").ToLower(), Encoding.GetEncoding("iso-8859-7")) == className) && !x.IsDeleted).FirstOrDefault();

@@ -202,23 +202,7 @@ namespace LMS.App.Controllers
             postAttachment.FileUrl = fileUrl;
             _postAttachmentRepository.Update(postAttachment);
             _postAttachmentRepository.Save();
-
-            //var postAttach = new PostAttachment
-            //{
-            //    PostId = post.Id,
-            //    FileName = file.FileName,
-            //    FileUrl = fileUrl,
-            //    FileType = (int)FileTypeEnum.Video,
-            //    CreatedById = post.CreatedById,
-            //    CreatedOn = DateTime.UtcNow
-            //};
-
-            //_postAttachmentRepository.Insert(postAttach);
-            //_postAttachmentRepository.Save();
-
-
-            //var files = context.Request.Form.Files;
-            //var fileCount = files.Count;
+ 
         }
 
     }

@@ -631,7 +631,9 @@
   "EitherSelectImagesOrVideo": "Resim veya video seçebilirsiniz",
   "SchoolCreatedSuccessfully": "Okul başarıyla oluşturuldu",
   "ClassCreatedSuccessfully": "Class created successfully",
-  "CourseCreatedSuccessfully": "Course created successfully"
+  "CourseCreatedSuccessfully": "Course created successfully",
+  "SelectThumbnailOrVideoToStream": "Lütfen yayınlanacak bir küçük resim veya video seçin"
+
 
 
 

@@ -208,6 +208,8 @@ export class SideBarComponent extends MultilingualComponent implements OnInit, O
       reqSchool.avatar = response.schoolAvatar;
       setTimeout(() => {
         this.router.navigateByUrl(`profile/school/${response.schoolName.replace(" ","").toLowerCase()}`);
+        // var schoolName = reqSchool.schoolName.split('.').join("").split(" ").join("").replace(/[\s.+$/,@\[\]#?/:=&]/g, '').toLowerCase()
+        // this.router.navigateByUrl(`profile/school/${schoolName.toLowerCase()}`);
       }, 3000);
     }
   }
@@ -245,6 +247,7 @@ export class SideBarComponent extends MultilingualComponent implements OnInit, O
         this.router.routeReuseStrategy.shouldReuseRoute = () => false;
         this.router.onSameUrlNavigation = 'reload';
         this.router.navigateByUrl(`profile/class/${reqClass.school.schoolName.replace(" ","").toLowerCase()}/${response.className.replace(" ","").toLowerCase()}`); 
+        // this.router.navigateByUrl(`profile/class/${reqClass.school.schoolName.split('.').join("").split(" ").join("").replace(/[\s.+$/,@\[\]#?/:=&]/g, '').toLowerCase().toLowerCase()}/${response.className.split('.').join("").split(" ").join("").replace(/[\s.+$/,@\[\]#?/:=&]/g, '').toLowerCase().toLowerCase()}`); 
       }, 3000);
      }
     }
@@ -279,6 +282,7 @@ export class SideBarComponent extends MultilingualComponent implements OnInit, O
         this.router.routeReuseStrategy.shouldReuseRoute = () => false;
         this.router.onSameUrlNavigation = 'reload';
         this.router.navigateByUrl(`profile/course/${reqClass.school.schoolName.replace(" ","").toLowerCase()}/${response.courseName.replace(" ","").toLowerCase()}`);
+        // this.router.navigateByUrl(`profile/course/${reqClass.school.schoolName.split('.').join("").split(" ").join("").replace(/[\s.+$/,@\[\]#?/:=&]/g, '').toLowerCase().toLowerCase()}/${response.courseName.split('.').join("").split(" ").join("").replace(/[\s.+$/,@\[\]#?/:=&]/g, '').toLowerCase().toLowerCase()}`);
       }, 3000);
     }
   }
@@ -338,12 +342,16 @@ export class SideBarComponent extends MultilingualComponent implements OnInit, O
   }
 
   getSelectedSchool(schoolName:string){
-    schoolName = schoolName.split('.').join("").split(" ").join("").toLowerCase()
+    debugger
+    // schoolName = schoolName.split('.').join("").split(" ").join("").replace(/[\s.+$/,@\[\]#?/:=&]/g, '').toLowerCase()
+    schoolName = encodeURIComponent(schoolName.toLowerCase());
     this.router.navigateByUrl(`profile/school/${schoolName}`);
     this.closeSidebar()
   }
 
   getSelectedClass(className:string,schoolName:string){
+    // className = className.split('.').join("").split(" ").join("").replace(/[\s.+$/,@\[\]#?/:=&]/g, '').toLowerCase()
+    // schoolName = schoolName.split('.').join("").split(" ").join("").replace(/[\s.+$/,@\[\]#?/:=&]/g, '').toLowerCase()
     className = className.split('.').join("").split(" ").join("").toLowerCase()
     schoolName = schoolName.split('.').join("").split(" ").join("").toLowerCase()
     this.router.navigateByUrl(`profile/class/${schoolName}/${className}`);
@@ -352,6 +360,8 @@ export class SideBarComponent extends MultilingualComponent implements OnInit, O
   }
 
   getSelectedCourse(courseName:string,schoolName:string){
+    // courseName = courseName.split('.').join("").split(" ").join("").split('+').join("").replace(/[\s.+$/,@\[\]#?/:=&]/g, '').toLowerCase()
+    // schoolName = schoolName.split('.').join("").split(" ").join("").split('+').join("").replace(/[\s.+$/,@\[\]#?/:=&]/g, '').toLowerCase()
     courseName = courseName.split('.').join("").split(" ").join("").toLowerCase()
     schoolName = schoolName.split('.').join("").split(" ").join("").toLowerCase()
     this.router.navigateByUrl(`profile/course/${schoolName}/${courseName}`);

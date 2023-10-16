@@ -52,8 +52,8 @@
                     class="d-block rightImagesWidth" /> {{classCourseDetails.classCourseItem.commentsCount}}</button>
                 <button *ngIf="classCourseDetails.classCourseItem.type == 1" type="button" class="btn bg-transparent text_ltgray font_12 cursor_auto"><img src="../../../assets/images/eye.svg"
                     class="d-block rightImagesWidth" /> {{classCourseDetails.classCourseItem.classViews.length}}</button>
-                    <button *ngIf="classCourseDetails.classCourseItem.type == 2" type="button" class="btn bg-transparent text_ltgray font_12"><img src="../../../assets/images/eye.svg"
-                      class="d-block" /> {{classCourseDetails.classCourseItem.courseViews.length}}</button>
+                    <button *ngIf="classCourseDetails.classCourseItem.type == 2" type="button" class="btn bg-transparent text_ltgray font_12 cursor_auto"><img src="../../../assets/images/eye.svg"
+                      class="d-block" style="max-width: 20px;"/> {{classCourseDetails.classCourseItem.courseViews.length}}</button>
                     <button (click)="likeUnlikeClassCourse(classCourseDetails.classCourseItem.id,true,classCourseDetails.classCourseItem.type)" type="button" class="btn bg-transparent text_ltgray font_12">
                       <img *ngIf="classCourseDetails.classCourseItem.isLikedByCurrentUser" src="../../../assets/images/heart-red.svg" class="d-block rightImagesWidth" />
                       <img *ngIf="!classCourseDetails.classCourseItem.isLikedByCurrentUser" src="../../../assets/images/Heart-dark.svg" class="d-block rightImagesWidth" />

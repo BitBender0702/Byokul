@@ -483,6 +483,7 @@
                   (click)="forwardStep()"
                   type="button"
                   class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 text-uppercase next-step"
+                  [disabled]="isNextButtonDisabled"
                 >
                   {{ "Next" | translate }}
                 </button>

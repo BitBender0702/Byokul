@@ -16,6 +16,9 @@ import { Dimensions, ImageCroppedEvent, ImageTransform } from 'ngx-image-cropper
 import { DomSanitizer } from '@angular/platform-browser';
 import { enumToObjects } from 'src/root/Enums/getEnum';
 import { CurrencyEnum } from 'src/root/Enums/CurrencyEnum';
+import { UploadTypeEnum } from 'src/root/Enums/uploadTypeEnum';
+import { uploadClassOrCourseThumbail } from '../../root.component';
+import { thumbnailUploadResponse } from '../../class/createClass/createClass.component';
 
 
 export const ownedCourseResponse =new Subject<{courseId: string, courseAvatar : string,courseName:string,schoolName:string, action:string}>(); 
@@ -87,7 +90,9 @@ export class CreateCourseComponent extends MultilingualComponent implements OnIn
   transform: ImageTransform = {};
   changeLanguageSubscription!: Subscription;
   hamburgerCountSubscription!: Subscription;
+  thumbnailUploadSubscription!: Subscription;
   hamburgerCount:number = 0;
+  isNextButtonDisabled:boolean = false;
   @ViewChild('hiddenButton') hiddenButtonRef!: ElementRef;
 
 
@@ -199,6 +204,14 @@ export class CreateCourseComponent extends MultilingualComponent implements OnIn
       this.hamburgerCount = response.hamburgerCount;
     });
   }
+
+  if(!this.thumbnailUploadSubscription) {
+    this.thumbnailUploadSubscription = thumbnailUploadResponse.subscribe(response => {
+      debugger
+      this.isNextButtonDisabled = false;
+      this.fileToUpload.append("thumbnailUrl", response.thumbnailUrl);
+    });
+  }
   notifyMessageAndNotificationCount.next({});
 }
 
@@ -208,6 +221,9 @@ ngOnDestroy(): void {
   }
   if (this.hamburgerCountSubscription) {
     this.hamburgerCountSubscription.unsubscribe();
+  }
+  if (this.thumbnailUploadSubscription) {
+    this.thumbnailUploadSubscription.unsubscribe();
   }
 }
 
@@ -282,8 +298,7 @@ captureTeacherId(event: any) {
   // }
 
   handleImageInput(event: any) {
-    debugger;
-  
+    this.isNextButtonDisabled = true;
     if (event.target.files[0].type === "video/mp4") {
       const videoElement = document.createElement('video');
       videoElement.src = URL.createObjectURL(event.target.files[0]);
@@ -304,8 +319,15 @@ captureTeacherId(event: any) {
     }
     debugger;
     this.fileToUpload = new FormData();
-    this.fileToUpload.append("thumbnail", event.target.files[0], event.target.files[0].name);
+    // this.fileToUpload.append("thumbnail", event.target.files[0], event.target.files[0].name);
     this.uploadImageName = event.target.files[0].name;
+    if(event.target.files[0].type.startsWith('image/')) {
+      this.fileToUpload.append("thumbnailType", UploadTypeEnum.Image.toString());
+    }
+    else{
+      this.fileToUpload.append("thumbnailType", UploadTypeEnum.Video.toString());
+    }
+    uploadClassOrCourseThumbail.next({uploadFile: event.target.files[0]});
   }
   
 

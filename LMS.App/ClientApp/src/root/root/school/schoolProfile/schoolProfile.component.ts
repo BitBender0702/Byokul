@@ -313,6 +313,7 @@ export class SchoolProfileComponent
     this._userService = userService;
     this._signalrService = signalRService;
     this.schoolParamsData$ = this.route.params.subscribe((routeParams) => {
+      debugger
       this.schoolName = routeParams.schoolName;
       if (!this.loadingIcon && this.isOnInitInitialize) {
         this.ngOnInit();
@@ -385,9 +386,9 @@ export class SchoolProfileComponent
     var selectedLang = localStorage.getItem('selectedLanguage');
     this.translate.use(selectedLang ?? '');
 
+debugger
 
-
-    this._schoolService.getSchoolById(this.schoolName.split('.').join("").split(" ").join("").toLowerCase()).subscribe(async (response) => {
+    this._schoolService.getSchoolById(this.schoolName.replace(/\s/g, '').toLowerCase()).subscribe(async (response) => {
       debugger
 
       this.frontEndPageNumber = 1;
@@ -553,8 +554,8 @@ export class SchoolProfileComponent
         // // this.loadingIcon = true;
         // const translatedSummary = this.translateService.instant('Success');
         // this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage,});
-        let newSchoolName = this.schoolName.split('.').join("").split(" ").join("").toLowerCase()
-        this._schoolService.getSchoolById(newSchoolName).subscribe((response) => {
+        let newSchoolName = this.schoolName.split('.').join("").split(" ").join("").replace(/[\s.+$/,@\[\]#?/:=&]/g, '').toLowerCase()
+        this._schoolService.getSchoolById(newSchoolName.replace(/\s/g, '').toLowerCase()).subscribe((response) => {
           this.school = response;
 
           if(response.isDisableByOwner && !this.isOwner){
@@ -1172,6 +1173,8 @@ export class SchoolProfileComponent
       );
     };
     reader.readAsDataURL(event.target.files[0]);
+
+    
   }
 
   handleCertificates(event: any) {

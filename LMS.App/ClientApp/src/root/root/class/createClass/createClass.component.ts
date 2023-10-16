@@ -22,8 +22,11 @@ import { Dimensions, ImageCroppedEvent, ImageTransform } from 'ngx-image-cropper
 import { DomSanitizer } from '@angular/platform-browser';
 import { enumToObjects } from 'src/root/Enums/getEnum';
 import { CurrencyEnum } from 'src/root/Enums/CurrencyEnum';
+import { uploadClassOrCourseThumbail } from '../../root.component';
+import { UploadTypeEnum } from 'src/root/Enums/uploadTypeEnum';
 
 export const ownedClassResponse =new Subject<{classId: string, classAvatar : string,className:string,schoolName:string, action:string}>(); 
+export const thumbnailUploadResponse =new Subject<{thumbnailUrl: string}>(); 
 
 
 @Component({
@@ -99,7 +102,9 @@ export class CreateClassComponent extends MultilingualComponent implements OnIni
   @ViewChild('endDate') endDateRef!: ElementRef;
   changeLanguageSubscription!: Subscription;
   hamburgerCountSubscription!: Subscription;
+  thumbnailUploadSubscription!: Subscription;
   hamburgerCount:number = 0;
+  isNextButtonDisabled:boolean = false;
 
 
   constructor(injector: Injector,private translateService: TranslateService,private bsModalService: BsModalService,private datePipe: DatePipe,public messageService:MessageService,private route: ActivatedRoute,private router: Router,private fb: FormBuilder,classService: ClassService,private http: HttpClient,private domSanitizer: DomSanitizer) {
@@ -214,6 +219,14 @@ if (!this.hamburgerCountSubscription) {
     this.hamburgerCount = response.hamburgerCount;
   });
 }
+
+if(!this.thumbnailUploadSubscription) {
+this.thumbnailUploadSubscription = thumbnailUploadResponse.subscribe(response => {
+  debugger
+  this.isNextButtonDisabled = false;
+  this.fileToUpload.append("thumbnailUrl", response.thumbnailUrl);
+});
+}
 notifyMessageAndNotificationCount.next({});
 }
 
@@ -223,6 +236,9 @@ ngOnDestroy(): void {
   }
   if (this.hamburgerCountSubscription) {
     this.hamburgerCountSubscription.unsubscribe();
+  }
+  if (this.thumbnailUploadSubscription) {
+    this.thumbnailUploadSubscription.unsubscribe();
   }
 }
 
@@ -337,7 +353,8 @@ captureTeacherId(event: any) {
   // }
   
   handleImageInput(event: any) {
-  
+    debugger
+    this.isNextButtonDisabled = true;
     if (event.target.files[0].type === "video/mp4") {
       const videoElement = document.createElement('video');
       videoElement.src = URL.createObjectURL(event.target.files[0]);
@@ -355,8 +372,16 @@ captureTeacherId(event: any) {
       }
     }
     this.fileToUpload = new FormData();
-    this.fileToUpload.append("thumbnail", event.target.files[0], event.target.files[0].name);
+    // this.fileToUpload.append("thumbnail", event.target.files[0], event.target.files[0].name);
     this.uploadImageName = event.target.files[0].name;
+    if(event.target.files[0].type.startsWith('image/')) {
+      this.fileToUpload.append("thumbnailType", UploadTypeEnum.Image.toString());
+    }
+    else{
+      this.fileToUpload.append("thumbnailType", UploadTypeEnum.Video.toString());
+    }
+    uploadClassOrCourseThumbail.next({uploadFile: event.target.files[0]});
+
   }
 
 

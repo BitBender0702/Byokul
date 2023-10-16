@@ -47,9 +47,11 @@ export class SchoolService{
     }
 
     getSchoolById(schoolName:string):Observable<any>{
+        debugger
         this.token = localStorage.getItem("jwt")?? '';
         this.headers = new HttpHeaders().set("Authorization", "Bearer " + this.token);
-        return this.http.get(`${this.apiUrl}/school/getSchoolByName` + '?schoolName=' + schoolName,{headers: this.headers});
+        const params = new HttpParams().set('schoolName', schoolName);
+        return this.http.get(`${this.apiUrl}/school/getSchoolByName`,{headers: this.headers, params: params});
     }
 
     saveSchoolFollower(followUnfollowUser:FollowUnfollow):Observable<any>{

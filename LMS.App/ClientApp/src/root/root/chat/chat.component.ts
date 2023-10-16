@@ -1284,7 +1284,9 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
           var isuserExist = chatUsers.find(
             (x) => x.userID == this.userId && x.chatType == '3' && x.chatTypeId == this.schoolInfo.chatTypeId
           );
-          if(isuserExist != undefined){
+          if (isuserExist == undefined) {
+            this.allChatUsers.unshift(this.schoolInfo);
+          } else {
             if (isuserExist.school.ownerId == this.senderId) {
               this.getUsersChat(
                 isuserExist.chatHeadId,
@@ -1309,17 +1311,6 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
                 1
               );
             }
-          }
-
-         else{
-            this._chatService.getParticularChatUser(this.sender.id,this.userId,3,this.schoolInfo.chatTypeId).subscribe(res=>{
-              isuserExist = res;
-              this.allChatUsers.unshift(isuserExist);
-              if (isuserExist == undefined) {
-                this.allChatUsers.unshift(this.schoolInfo);
-              }
-            })
-            
           }
         }
 
@@ -1410,7 +1401,24 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
           var isuserExist = chatUsers.find(
             (x) => x.userID == this.userId && x.chatType == '1'
           );
-          if(isuserExist != undefined) {
+          if (isuserExist == undefined) {
+            var user = {
+              userName: this.user.firstName + ' ' + this.user.lastName,
+              receiverName: this.user.firstName + ' ' + this.user.lastName,
+              userID: this.user.id,
+              profileURL: this.user.avatar,
+              chatType: this.chatType,
+              chats: [],
+              unreadMessageCount: 0,
+              chatHeadId: '1',
+              isPinned: false
+            };
+
+            this.allChatUsers.unshift(user);
+            // if(this.allChatUsers.length == 0){
+            //   this.allChatUsers.push(user);
+            // }
+          } else {
             this.getUsersChat(
               isuserExist.chatHeadId,
               isuserExist.userID,
@@ -1422,48 +1430,6 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
               1
             );
           }
-
-          if(isuserExist == undefined){
-            debugger
-              this._chatService.getParticularChatUser(this.sender.id,this.userId,1,this.chatTypeId).subscribe(res=>{
-                debugger
-                isuserExist = res;
-                this.allChatUsers.unshift(isuserExist);
-                this.getUsersChat(
-                  isuserExist.chatHeadId,
-                  isuserExist.userID,
-                  isuserExist.profileURL,
-                  isuserExist.userName,
-                  isuserExist.chatType,
-                  'FromMyInbox',
-                  10,
-                  1
-                );
-
-                if (isuserExist == undefined) {
-                  var user = {
-                    userName: this.user.firstName + ' ' + this.user.lastName,
-                    receiverName: this.user.firstName + ' ' + this.user.lastName,
-                    userID: this.user.id,
-                    profileURL: this.user.avatar,
-                    chatType: this.chatType,
-                    chats: [],
-                    unreadMessageCount: 0,
-                    chatHeadId: '1',
-                    isPinned: false
-                  };
-      
-                  this.allChatUsers.unshift(user);
-                  // if(this.allChatUsers.length == 0){
-                  //   this.allChatUsers.push(user);
-                  // }
-                } 
-
-              });
-            
-             
-          }
-        
         }
 
         this.selectedChatHeadDiv = true;
@@ -1936,7 +1902,6 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
     let currentChatHead = chatUsers.find(
       (x) => x.userID == recieverId && x.chatType == chatType
     );
-
     if (currentChatHead == undefined) {
       var schoolChatUsers: any[] = this.schoolInboxList;
       currentChatHead = schoolChatUsers.find(
@@ -2160,6 +2125,11 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
         this.selectedFile = [];
         this.invalidMessage = false;
       });
+
+
+      this.invalidMessage = false;
+
+
   }
 
   // handleVideos(event: any) {
@@ -2361,15 +2331,27 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
   getTextMessage(event: any, receiverId: string) {
     if (this.messageToUser == '') {
       this.invalidMessage = true;
-    } else {
+    }
+    else if (event.code == 'Enter' || event.keyCode === 13 || event.keyCode === 108) {
       this.invalidMessage = false;
-      if (
-        event.code == 'Enter' ||
-        event.keyCode === 13 ||
-        event.keyCode === 108
-      ) {
-        this.sendToUser(receiverId);
-      }
+      this.sendToUser(receiverId);
+    }
+    else{
+      this.invalidMessage = false;
+    }
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent): void {
+    if (event.key === 'Enter' || event.keyCode === 13 || event.keyCode === 108) {
+     this.getAttachmentsMessage();
+    }
+  }
+
+  getAttachmentsMessage() {
+    if(this.uploadImage.length != 0 || this.uploadVideo.length != 0 || this.uploadAttachments != 0){
+      this.invalidMessage = false;
+      this.sendToUser(this.recieverId);
     }
   }
 

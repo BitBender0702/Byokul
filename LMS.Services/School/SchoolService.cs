@@ -445,17 +445,21 @@ namespace LMS.Services
                 .Include(x => x.School)
                 .ThenInclude(x => x.CreatedBy).ToListAsync();
 
-                var singleLanguage = schoolLanguages.Where(x => Encoding.UTF8.GetBytes(x.School.SchoolName.Replace(" ", "").Replace("+", "").Replace(".", "").ToLower()).SequenceEqual(data)).ToList();
+
+                var singleLanguage1 = schoolLanguages.Where(x => Encoding.UTF8.GetBytes(x.School.SchoolName.Replace(" ", "").ToLower()).SequenceEqual(data)).ToList();
+
+                var singleLanguage = schoolLanguages.Where(x => Encoding.UTF8.GetBytes(Regex.Replace(x.School.SchoolName, @"\s", "").ToLower()).SequenceEqual(data)).ToList();
+
                 //schoolLanguages = schoolLanguages.Where(x => ((x.School.SchoolName.Replace(" ", "").Replace("+", "").Replace(".", "").ToLower()) == schoolName) && !x.School.IsDeleted).ToList();
                 if (!singleLanguage.Any())
                 {
                     var newSchoolName = System.Web.HttpUtility.UrlEncode(schoolName, Encoding.GetEncoding("iso-8859-1")).Replace("%3f", "").Replace("+", "").Replace(".", "").ToLower();
-                    singleLanguage = schoolLanguages.Where(x => (System.Web.HttpUtility.UrlEncode(x.School.SchoolName.Replace(" ", "").Replace("+", "").Replace(".", "").ToLower(), Encoding.GetEncoding("iso-8859-7")) == newSchoolName)).ToList();
+                    singleLanguage = schoolLanguages.Where(x => (System.Web.HttpUtility.UrlEncode(Regex.Replace(x.School.SchoolName, @"\s", "").ToLower(), Encoding.GetEncoding("iso-8859-7")) == newSchoolName)).ToList();
                 }
                 if (!singleLanguage.Any())
                 {
                     var newSchoolName2 = System.Web.HttpUtility.UrlEncode(schoolName, Encoding.GetEncoding("iso-8859-1")).Replace("%3f", "").Replace("+", "").Replace(".", "").ToLower();
-                    singleLanguage = schoolLanguages.Where(x => (System.Web.HttpUtility.UrlEncode(x.School.SchoolName.Replace(" ", "").Replace("+", "").Replace(".", "").ToLower(), Encoding.GetEncoding("iso-8859-1")) == newSchoolName2)).ToList();
+                    singleLanguage = schoolLanguages.Where(x => (System.Web.HttpUtility.UrlEncode(Regex.Replace(x.School.SchoolName, @"\s", "").ToLower(), Encoding.GetEncoding("iso-8859-1")) == newSchoolName2)).ToList();
                     //singleLanguage = schoolLanguages.Where(x => (System.Web.HttpUtility.UrlEncode(x.School.SchoolName, Encoding.GetEncoding("iso-8859-1")).Replace("%3f", "").Replace("+", "").Replace(".", "").ToLower() == newSchoolName2)).ToList();
                 }
 
