@@ -531,6 +531,8 @@ namespace LMS.Services.Chat
                 else
                 {
                     chatHead = _chatHeadRepository.GetAll().Include(x => x.Receiver).Include(x => x.Sender).Where(x => (x.SenderId == receiverId.ToString() && x.ReceiverId == userId.ToString() && x.ChatType == chatType && x.ChatTypeId == chatTypeId)).FirstOrDefault();
+                    
+                    //if(chatHead == null) { return null; }
                
                     chatUsersViewModel = new ChatUsersViewModel
                     {
@@ -552,6 +554,7 @@ namespace LMS.Services.Chat
                     chatUsersViewModel.School = GetSchoolInfo(chatUsersViewModel.ChatTypeId);
                     chatUsersViewModel.ProfileURL = chatUsersViewModel.School.Avatar;
                     chatUsersViewModel.UserName = chatUsersViewModel.School.SchoolName;
+                    chatUsersViewModel.IsVerified = chatUsersViewModel.School.IsVarified;
                 }
                 else if (chatType == ChatType.Class)
                 {
@@ -956,7 +959,7 @@ namespace LMS.Services.Chat
 
         public async Task RemoveUnreadMessageCount(Guid SenderId, Guid ReceiverId, ChatType chatType)
         {
-            var result = await _chatHeadRepository.GetAll().Where(x => /*(x.SenderId == SenderId.ToString() && x.ReceiverId == ReceiverId.ToString() && x.ChatType == chatType) || (*/x.SenderId == ReceiverId.ToString() && x.ReceiverId == SenderId.ToString() && x.ChatType == chatType)/*)*/.FirstOrDefaultAsync();
+            var result = await _chatHeadRepository.GetAll().Where(x => /*(x.SenderId == SenderId.ToString() && x.ReceiverId == ReceiverId.ToString() && x.ChatType == chatType) || (*/x.SenderId == ReceiverId.ToString() && x.ReceiverId == SenderId.ToString() && x.ChatType == chatType )/*)*/.FirstOrDefaultAsync();
             if (result != null)
             {
                 if (result.UnreadMessageCount != 0)
@@ -967,6 +970,21 @@ namespace LMS.Services.Chat
                 }
             }
         }
+
+        public async Task RemoveUnreadMessageCount(Guid SenderId, Guid ReceiverId, ChatType chatType, Guid chatHeadId)
+        {
+            var result = await _chatHeadRepository.GetAll().Where(x => /*(x.SenderId == SenderId.ToString() && x.ReceiverId == ReceiverId.ToString() && x.ChatType == chatType) || (*/x.SenderId == ReceiverId.ToString() && x.ReceiverId == SenderId.ToString() && x.ChatType == chatType && x.Id == chatHeadId)/*)*/.FirstOrDefaultAsync();
+            if (result != null)
+            {
+                if (result.UnreadMessageCount != 0)
+                {
+                    result.UnreadMessageCount = 0;
+                    _chatHeadRepository.Update(result);
+                    _chatHeadRepository.Save();
+                }
+            }
+        }
+
 
         public async Task<CommentViewModel> AddComment(CommentViewModel chatViewModel)
         {

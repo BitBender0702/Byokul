@@ -52,6 +52,5 @@ namespace LMS.Common.ViewModels.School
         public double? AvailableStorageSpace { get; set; }
 
 
-
     }
 }

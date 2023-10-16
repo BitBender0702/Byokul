@@ -23,6 +23,8 @@ namespace LMS.Common.ViewModels.Post
         public static string Turkey = "Turkey";
         public static string Success = "Success";
         public static string IncorrectPassword = "The password you entered is incorrect";
+        public static string ChatDoesNotExist = "Chat doesn't exist";
+        public static string ChatExists = "Chat exists";
         public static string EmailNotConfirmed = "email not confirm";
         public static string UserNotFound = "This email is not registered";
         public static string ResetTokenExpired = "reset token expired";
