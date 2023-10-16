@@ -1,79 +1,84 @@
-.button-list-grid-filter{
-    position: absolute;
-    right: 0;
+#courseOwnCertificate .modal-dialog {
+  max-width: 600px;
 }
 
-.heightForText{
-    height: 300px;
-  }
+#courseOwnCertificate .modal-dialog img {
+  width: 100%;
+}
 
-  .cursor_auto{
-    cursor: auto;
-  }
+.button-list-grid-filter {
+  position: absolute;
+  right: 0;
+}
 
-  .reel_spinner_position{
-    top: 114px;
-    right: 92px;
-    z-index: 999;
-  }
+.heightForText {
+  height: 300px;
+}
 
-  .date_calendar {
-    background-image: url(../../../../assets/images/Calendar.svg);
-    background-repeat: no-repeat;
-    background-position: center right 16px;
-  }
+.cursor_auto {
+  cursor: auto;
+}
 
-  .description_scroll{
-    overflow-y: auto;
-    height:150px;
-  }
+.reel_spinner_position {
+  top: 114px;
+  right: 92px;
+  z-index: 999;
+}
 
-  .description_scroll::-webkit-scrollbar {
-    width: 2px;
-  }
+.date_calendar {
+  background-image: url(../../../../assets/images/Calendar.svg);
+  background-repeat: no-repeat;
+  background-position: center right 16px;
+}
 
-  .video-js{
-    height: 300px;
-  }
+.description_scroll {
+  overflow-y: auto;
+  height: 150px;
+}
 
-  .cursor_pointer{
-    cursor: pointer;
-  }
+.description_scroll::-webkit-scrollbar {
+  width: 2px;
+}
 
-  .preserve-line-breaks {
-    white-space: pre-wrap;
-  }
+.video-js {
+  height: 300px;
+}
 
-  .right-action {
-    position: absolute;
-    right: 0;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 10px;
-  }
-  
-  @media screen and (max-width: 767px) {
-    .hideName {
-      display: none;
-    }
-  }
-  
-  .priceInputWidth{
-    width: 268%;
-  }
+.cursor_pointer {
+  cursor: pointer;
+}
 
+.preserve-line-breaks {
+  white-space: pre-wrap;
+}
 
+.right-action {
+  position: absolute;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+@media screen and (max-width: 767px) {
+  .hideName {
+    display: none;
+  }
+}
+
+.priceInputWidth {
+  width: 268%;
+}
 
 .image-container {
-  display: inline-block; 
-  margin-right: 10px; 
+  display: inline-block;
+  margin-right: 10px;
 }
 
 .image-container:last-child {
   margin-right: 0;
 }
-  
 
 .fas.fa-play {
   color: white;

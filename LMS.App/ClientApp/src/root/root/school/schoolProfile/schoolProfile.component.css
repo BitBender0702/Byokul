@@ -1,3 +1,17 @@
+#schoolOwnCertificate .modal-dialog {
+  max-width: 600px;
+}
+
+#schoolOwnCertificate .modal-dialog img {
+  width: 100%;
+}
+
+@media screen and (min-width: 768px) {
+  .follow-btn {
+    padding: 6px 19px;
+  }
+}
+
 .orange-button {
   display: inline-flex;
   align-items: center;
@@ -96,6 +110,7 @@
 
 .prev-step-btn {
   white-space: nowrap;
+  margin-right: 0;
 }
 
 .right-action {
@@ -115,12 +130,10 @@
   min-width: 130px;
 }
 
-.flag_style{
-width: 25px;
-height: 25px;
+.flag_style {
+  width: 25px;
+  height: 25px;
 }
-
-
 
 /* .flex-container {
   display: flex;
@@ -138,7 +151,6 @@ height: 25px;
     display: none;
   }
 }
-
 
 .fas.fa-play {
   color: white;

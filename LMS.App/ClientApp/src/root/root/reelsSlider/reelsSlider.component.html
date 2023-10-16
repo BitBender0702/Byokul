@@ -66,106 +66,219 @@
   </section>
  -->
 
-<div class="modal fade edit-school-modal delete-modal" id="comments-modal" tabindex="-1"
-  aria-labelledby="comments-modal" aria-hidden="true">
+<div
+  class="modal fade edit-school-modal delete-modal"
+  id="comments-modal"
+  tabindex="-1"
+  aria-labelledby="comments-modal"
+  aria-hidden="true"
+>
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <div class="modal-header border-0 justify-content-center position-relative">
+      <div
+        class="modal-header border-0 justify-content-center position-relative"
+      >
         <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">
           {{ "Comments" | translate }}
         </h1>
-        <button (click)="modalClose()" type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close">
+        <button
+          (click)="modalClose()"
+          type="button"
+          class="btn-close shadow-none"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        >
           <img src="../../../../assets/images/cross.svg" />
         </button>
       </div>
       <div class="modal-body">
         <div class="live-chat-box text-center" *ngIf="reel != undefined">
-          <div *ngIf="reel.createdBy == userId && isCommentsDisabled" (click)="showCommentsDiv(true)"
-            class="chat-enabled d-inline-flex align-items-center cursor_pointer">
+          <div
+            *ngIf="reel.createdBy == userId && isCommentsDisabled"
+            (click)="showCommentsDiv(true)"
+            class="chat-enabled d-inline-flex align-items-center cursor_pointer"
+          >
             <img src="../../../assets/images/Unlock.svg" />{{
-            "ChatDisabled" | translate
+              "ChatDisabled" | translate
             }}
           </div>
-          <div *ngIf="reel.createdBy == userId && !isCommentsDisabled" (click)="showCommentsDiv(false)"
-            class="chat-enabled d-inline-flex align-items-center cursor_pointer">
+          <div
+            *ngIf="reel.createdBy == userId && !isCommentsDisabled"
+            (click)="showCommentsDiv(false)"
+            class="chat-enabled d-inline-flex align-items-center cursor_pointer"
+          >
             <img src="../../../assets/images/Unlock.svg" />{{
-            "ChatEnabled" | translate
+              "ChatEnabled" | translate
             }}
           </div>
           <div>
             <span *ngIf="reel.createdBy != userId && isCommentsDisabled">{{
               "CommentsAreDisabled" | translate
-              }}</span>
+            }}</span>
           </div>
-          <div *ngIf="!isCommentsDisabled" #groupChatList id="groupChat" class="live-chat-outer position-relative"
-            (scroll)="scrollHandler($event)">
-            <div *ngIf="commentsLoadingIcon" class="postloader-main position-absolute translate-middle">
-              <div class="postlds-ring" style="margin-left: 200px; margin-bottom: 214px">
+          <div
+            *ngIf="!isCommentsDisabled"
+            #groupChatList
+            id="groupChat"
+            class="live-chat-outer position-relative"
+            (scroll)="scrollHandler($event)"
+          >
+            <div
+              *ngIf="commentsLoadingIcon"
+              class="postloader-main position-absolute translate-middle"
+            >
+              <div
+                class="postlds-ring"
+                style="margin-left: 200px; margin-bottom: 214px"
+              >
                 <div></div>
                 <div></div>
                 <div></div>
                 <div></div>
               </div>
             </div>
-            <div *ngFor="let item of reel.comments" class="live-message d-flex position-relative align-items-start">
-              <img (click)="hideCommentModal()" [routerLink]="['/user/userProfile', item.userId]"
-                *ngIf="item.userAvatar != null" [src]="item.userAvatar" class="comment-user cursorPointer" />
-              <img (click)="hideCommentModal()" [routerLink]="['/user/userProfile', item.userId]"
-                *ngIf="item.userAvatar == null && gender == '1'" src="../../../assets/images/maleProfile.jfif"
-                class="comment-user cursorPointer" />
-              <img (click)="hideCommentModal()" [routerLink]="['/user/userProfile', item.userId]" *ngIf="
-                  item.userAvatar == null && (gender == '2' || gender == '3')
-                " src="../../../assets/images/femaleProfile.jfif" class="comment-user cursorPointer" />
+            <div
+              *ngFor="let item of reel.comments"
+              class="live-message d-flex position-relative align-items-start justify-content-between"
+            >
+              <div class="d-flex align-items-center gap-2">
+                <img
+                  (click)="hideCommentModal()"
+                  [routerLink]="['/user/userProfile', item.userId]"
+                  *ngIf="item.userAvatar != null"
+                  [src]="item.userAvatar"
+                  class="comment-user cursorPointer"
+                />
+                <img
+                  (click)="hideCommentModal()"
+                  [routerLink]="['/user/userProfile', item.userId]"
+                  *ngIf="item.userAvatar == null && gender == '1'"
+                  src="../../../assets/images/maleProfile.jfif"
+                  class="comment-user cursorPointer"
+                />
+                <img
+                  (click)="hideCommentModal()"
+                  [routerLink]="['/user/userProfile', item.userId]"
+                  *ngIf="
+                    item.userAvatar == null && (gender == '2' || gender == '3')
+                  "
+                  src="../../../assets/images/femaleProfile.jfif"
+                  class="comment-user cursorPointer"
+                />
+                <div>
+                  <p
+                    (click)="hideCommentModal()"
+                    [routerLink]="['/user/userProfile', item.userId]"
+                    class="d-flex align-items-center gap-2 font_12 fw_600 text-start mb-0"
+                  >
+                    {{ item.userName }}
+                    <span
+                      *ngIf="item.user?.isVarified || item?.isUserVerified"
+                      class="verified-badge"
+                      ><img
+                        src="../../../../assets/images/green-verified.svg"
+                      />
+                    </span>
+                  </p>
+                  <p class="text_sec1 font_12 fw_400 text-start mb-0">
+                    {{ item.content }}
+                  </p>
+                </div>
+              </div>
               <div>
-                <p (click)="hideCommentModal()" [routerLink]="['/user/userProfile', item.userId]"
-                  class="d-flex flex-column cursorPointer" class="font_12 fw_600 text-start mb-0">
-                  {{ item.userName }}
-                  <span *ngIf="item.user?.isVarified || item?.isUserVerified" class="verified-badge"><img
-                      src="../../../../assets/images/green-verified.svg" />
-                  </span>
-                </p>
-                <p class="text_sec1 font_12 fw_400 text-start mb-0">
-                  {{ item.content }}
-                </p>
                 <div class="d-flex flex-column gap-1">
-                  <button (click)="deleteComment(item)" style="border: 0;" *ngIf="userId == item.userId">
-                    <i class="fa-solid fa-trash"></i>
+                  <button
+                    (click)="deleteComment(item)"
+                    style="border: 0"
+                    *ngIf="userId == item.userId"
+                    class="trash-icon"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                      />
+                    </svg>
                   </button>
-                  <button (click)="
-                                      likeUnlikeComments(
-                                        item.id,
-                                        true,
-                                        item.isCommentLikedByCurrentUser,
-                                        item.likeCount,
-                                        reel
-                                      )
-                                    " type="button"
-                    class="btn bg-transparent text_ltgray font_12 p-0 border-0 reel-like-chat">
-                    <img *ngIf="item.isCommentLikedByCurrentUser" src="../../../assets/images/heart-red.svg"
-                      class="d-block" />
-                    <img *ngIf="!item.isCommentLikedByCurrentUser" src="../../../assets/images/Heart-dark.svg"
-                      class="d-block" />
+                  <button
+                    (click)="
+                      likeUnlikeComments(
+                        item.id,
+                        true,
+                        item.isCommentLikedByCurrentUser,
+                        item.likeCount,
+                        reel
+                      )
+                    "
+                    type="button"
+                    class="btn bg-transparent text_ltgray font_12 p-0 border-0 reel-like-chat"
+                  >
+                    <img
+                      *ngIf="item.isCommentLikedByCurrentUser"
+                      src="../../../assets/images/heart-red.svg"
+                      class="d-block"
+                    />
+                    <img
+                      *ngIf="!item.isCommentLikedByCurrentUser"
+                      src="../../../assets/images/Heart-dark.svg"
+                      class="d-block"
+                    />
                     <span>{{ item.likeCount }}</span>
                   </button>
                 </div>
               </div>
             </div>
           </div>
-          <div *ngIf="!isCommentsDisabled" class="add-comment d-flex align-items-center justify-content-between"
-            style="margin-left: -40px">
-            <span class="bg-transparent rounded-circle comment-post-user rounded-circle">
-              <img [routerLink]="['/user/userProfile', sender?.id]" *ngIf="sender?.avatar != null"
-                [src]="sender?.avatar" class="comment-user cursorPointer" />
-              <img [routerLink]="['/user/userProfile', sender?.id]" *ngIf="sender?.avatar == null && gender == '1'"
-                src="../../../assets/images/maleProfile.jfif" class="comment-user cursorPointer" />
-              <img [routerLink]="['/user/userProfile', sender?.id]" *ngIf="
+          <div
+            *ngIf="!isCommentsDisabled"
+            class="add-comment d-flex align-items-center justify-content-between"
+          >
+            <span
+              class="bg-transparent rounded-circle comment-post-user rounded-circle"
+            >
+              <img
+                [routerLink]="['/user/userProfile', sender?.id]"
+                *ngIf="sender?.avatar != null"
+                [src]="sender?.avatar"
+                class="comment-user cursorPointer"
+              />
+              <img
+                [routerLink]="['/user/userProfile', sender?.id]"
+                *ngIf="sender?.avatar == null && gender == '1'"
+                src="../../../assets/images/maleProfile.jfif"
+                class="comment-user cursorPointer"
+              />
+              <img
+                [routerLink]="['/user/userProfile', sender?.id]"
+                *ngIf="
                   sender?.avatar == null && (gender == '2' || gender == '3')
-                " src="../../../assets/images/femaleProfile.jfif" class="comment-user cursorPointer" />
+                "
+                src="../../../assets/images/femaleProfile.jfif"
+                class="comment-user cursorPointer"
+              />
             </span>
-            <input [disabled]="isBanned" (keyup.enter)="sendToGroup(reel)" [(ngModel)]="messageToGroup" type="text"
-              class="form-control rounded-8 font_14 fw_400" placeholder="{{'YourMessage'| translate }}">
-            <button (click)="sendToGroup(reel)" type="button" class="comment-btn border-0"><img
-                src="../../../assets/images/arrowup.svg" /></button>
+            <input
+              [disabled]="isBanned"
+              (keyup.enter)="sendToGroup(reel)"
+              [(ngModel)]="messageToGroup"
+              type="text"
+              class="form-control rounded-8 font_14 fw_400"
+              placeholder="{{ 'YourMessage' | translate }}"
+            />
+            <button
+              (click)="sendToGroup(reel)"
+              type="button"
+              class="comment-btn border-0"
+            >
+              <img src="../../../assets/images/arrowup.svg" />
+            </button>
           </div>
         </div>
       </div>
@@ -178,10 +291,15 @@
 <section class="f-poppins desktop-slider">
   <div class="main_content">
     <div class="main_content-max-width">
-      <div class="live-header d-flex align-items-center justify-content-between">
+      <div
+        class="live-header d-flex align-items-center justify-content-between"
+      >
         <div class="live-headerinner">
-          <button (click)="back()" type="button"
-            class="back-button bg-transparent border-0 font_16 fw_400 text_dark cursorPointer">
+          <button
+            (click)="back()"
+            type="button"
+            class="back-button bg-transparent border-0 font_16 fw_400 text_dark cursorPointer"
+          >
             <img src="../../../assets/images/arrow-left.svg" />
             {{ "Back" | translate }}
           </button>
@@ -190,73 +308,123 @@
 
       <div class="slick-outer-box">
         <div class="slick">
-          <ngx-slick-carousel #slickCarouselRef class="carousel desktop-slider" [config]="carouselConfig"
-            (afterChange)="afterChange($event)" (beforeChange)="beforeChange($event)">
+          <ngx-slick-carousel
+            #slickCarouselRef
+            class="carousel desktop-slider"
+            [config]="carouselConfig"
+            (afterChange)="afterChange($event)"
+            (beforeChange)="beforeChange($event)"
+          >
             <div ngxSlickItem *ngFor="let item of reels; let i = index">
               <div class="f-poppins live-outerbox">
                 <div class="live-content" id="reel_content">
                   <div class="live-inner w-100 reel_mobile">
                     <div class="live-image overflow-hidden position-relative">
                       <div class="reel_videoinner">
-                        <videoJs-component #videoComp id="video-{{ i }}" *ngFor="let video of item.postAttachments"
-                          [postAttachment]="video" [isReelView]="true" (touchstart)="onTouchStart($event, i, item)"
-                          (touchend)="onTouchEnd($event, i, item)"></videoJs-component>
+                        <videoJs-component
+                          #videoComp
+                          id="video-{{ i }}"
+                          *ngFor="let video of item.postAttachments"
+                          [postAttachment]="video"
+                          [isReelView]="true"
+                          (touchstart)="onTouchStart($event, i, item)"
+                          (touchend)="onTouchEnd($event, i, item)"
+                        ></videoJs-component>
                         <!-- <video [id]="'video-' + i" controls controlsList="nodownload noremoteplayback" *ngFor="let video of item.postAttachments" loop [src]="video.fileUrl"  type="video/mp4" (click)="toggleVideoPlayback($event)"></video> -->
                       </div>
                       <div class="d-flex">
                         <div class="reel-username font_16 white_text d-flex">
-                          <a *ngIf="item.postAuthorType == 1" (click)="getSelectedSchool(item.parentName)"
-                            class="routeLink d-flex align-items-center">
+                          <a
+                            *ngIf="item.postAuthorType == 1"
+                            (click)="getSelectedSchool(item.parentName)"
+                            class="routeLink d-flex align-items-center"
+                          >
                             <img [src]="item.parentImageUrl" class="me-2" />
-                            {{ item.parentName }} <span *ngIf="item.isParentVerified" class="verified-badge"><img
-                                src="../../../../assets/images/verified-badge.svg" /></span>
+                            {{ item.parentName }}
+                            <span
+                              *ngIf="item.isParentVerified"
+                              class="verified-badge"
+                              ><img
+                                src="../../../../assets/images/verified-badge.svg"
+                            /></span>
                           </a>
 
-                          <a *ngIf="item.postAuthorType == 2" (click)="
-                          getSelectedClass(
-                            item.parentName,
-                            item.schoolName
-                          )
-                          " [routerLink]="[
-                          '/profile/class',
-                          item.parentName
-                          ]" class="routeLink d-flex align-items-center">
+                          <a
+                            *ngIf="item.postAuthorType == 2"
+                            (click)="
+                              getSelectedClass(item.parentName, item.schoolName)
+                            "
+                            [routerLink]="['/profile/class', item.parentName]"
+                            class="routeLink d-flex align-items-center"
+                          >
                             <img [src]="item.parentImageUrl" class="me-2" />
-                            {{item.parentName}}
+                            {{ item.parentName }}
                           </a>
-                          <a *ngIf="item.postAuthorType == 3" (click)="
-                          getSelectedCourse(
-                            item.parentName,
-                            item.schoolName
-                          )
-                          " class="routeLink d-flex align-items-center">
+                          <a
+                            *ngIf="item.postAuthorType == 3"
+                            (click)="
+                              getSelectedCourse(
+                                item.parentName,
+                                item.schoolName
+                              )
+                            "
+                            class="routeLink d-flex align-items-center"
+                          >
                             <img [src]="item.parentImageUrl" class="me-2" />
-                            {{item.parentName}}
+                            {{ item.parentName }}
                           </a>
-                          <a *ngIf="item.postAuthorType == 4" (click)="getUserDetails(item.parentId)"
-                            class="routeLink d-flex align-items-center">
-                            <img *ngIf="item.parentImageUrl != null" [lazyLoad]="item.parentImageUrl" class="me-2" />
-                            <img *ngIf="
-                          item.parentImageUrl == null &&
-                          gender == '1'
-                          " lazyLoad="../../../assets/images/maleProfile.jfif" class="me-2" />
-                            <img *ngIf="
-                          item.parentImageUrl == null &&
-                          (gender == '2' || gender == '3')
-                          " lazyLoad="../../../assets/images/femaleProfile.jfif" class="me-2" />
-                            {{item.parentName}} <span *ngIf="item.isParentVerified" class="verified-badge"><img
-                                src="../../../../assets/images/green-verified.svg" /></span>
+                          <a
+                            *ngIf="item.postAuthorType == 4"
+                            (click)="getUserDetails(item.parentId)"
+                            class="routeLink d-flex align-items-center"
+                          >
+                            <img
+                              *ngIf="item.parentImageUrl != null"
+                              [lazyLoad]="item.parentImageUrl"
+                              class="me-2"
+                            />
+                            <img
+                              *ngIf="
+                                item.parentImageUrl == null && gender == '1'
+                              "
+                              lazyLoad="../../../assets/images/maleProfile.jfif"
+                              class="me-2"
+                            />
+                            <img
+                              *ngIf="
+                                item.parentImageUrl == null &&
+                                (gender == '2' || gender == '3')
+                              "
+                              lazyLoad="../../../assets/images/femaleProfile.jfif"
+                              class="me-2"
+                            />
+                            {{ item.parentName }}
+                            <span
+                              *ngIf="item.isParentVerified"
+                              class="verified-badge"
+                              ><img
+                                src="../../../../assets/images/green-verified.svg"
+                            /></span>
                           </a>
                         </div>
                         <div>
-                          <ul *ngIf="item?.createdBy == userId"
+                          <ul
+                            *ngIf="item?.createdBy == userId"
                             class="list-unstyled d-flex more-action-btn before-none pe-2 me-1 mb-0"
-                            style="position: absolute;right: 10px;top: 21px;">
+                            style="position: absolute; right: 10px; top: 21px"
+                          >
                             <li class="d-inline-block ps-0 mb-0">
                               <div class="dropdown">
-                                <button class="bg-transparent dropdown-toggle border-0 action-more-btn after-none pt-1"
-                                  type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                  <i class="fa-solid fa-ellipsis" style="color: white;"></i>
+                                <button
+                                  class="bg-transparent dropdown-toggle border-0 action-more-btn after-none pt-1"
+                                  type="button"
+                                  data-bs-toggle="dropdown"
+                                  aria-expanded="false"
+                                >
+                                  <i
+                                    class="fa-solid fa-ellipsis"
+                                    style="color: white"
+                                  ></i>
                                 </button>
                                 <ul class="dropdown-menu">
                                   <li>
@@ -268,22 +436,54 @@
                                   data-bs-target="#delete-Class"
                                   >{{ "Delete" | translate }}
                                 </a> -->
-                                    <a style="cursor: pointer" class="dropdown-item" data-bs-toggle="modal"
-                                      data-bs-target="#delete-reel" (click)="getDeleteId(item?.id, i)">
+                                    <a
+                                      style="cursor: pointer"
+                                      class="dropdown-item"
+                                      data-bs-toggle="modal"
+                                      data-bs-target="#delete-reel"
+                                      (click)="getDeleteId(item?.id, i)"
+                                    >
                                       {{ "Delete" | translate }}
                                     </a>
                                   </li>
                                   <li>
-                                    <a style="cursor: pointer" class="dropdown-item" (click)="openPostModal(item)"
-                                      data-bs-toggle="modal" data-bs-target="#delete-Class">{{ "Edit" | translate }}
+                                    <a
+                                      style="cursor: pointer"
+                                      class="dropdown-item"
+                                      (click)="openPostModal(item)"
+                                      data-bs-toggle="modal"
+                                      data-bs-target="#delete-Class"
+                                      >{{ "Edit" | translate }}
                                       <div *ngIf="item.updatedOn != null">
-                                        (<p class="d-inline-block">{{ "UpdatedOn" | translate }} - </p>
-                                        <p class="d-inline-block me-1">{{ item.updatedOn|ChangeTimeZonePipe | date :
-                                          "d"}}</p>
-                                        <p class="d-inline-block me-1">{{ item.updatedOn|ChangeTimeZonePipe | date :
-                                          "MMMM" | translate}}</p>
-                                        <p class="d-inline-block">{{ item.updatedOn|ChangeTimeZonePipe | date : "y h:mm
-                                          a"}}</p>)
+                                        (
+                                        <p class="d-inline-block">
+                                          {{ "UpdatedOn" | translate }} -
+                                        </p>
+                                        <p class="d-inline-block me-1">
+                                          {{
+                                            item.updatedOn
+                                              | ChangeTimeZonePipe
+                                              | date : "d"
+                                          }}
+                                        </p>
+                                        <p class="d-inline-block me-1">
+                                          {{
+                                            item.updatedOn
+                                              | ChangeTimeZonePipe
+                                              | date : "MMMM"
+                                              | translate
+                                          }}
+                                        </p>
+                                        <p class="d-inline-block">
+                                          {{
+                                            item.updatedOn
+                                              | ChangeTimeZonePipe
+                                              | date
+                                                : "y h:mm
+                                          a"
+                                          }}
+                                        </p>
+                                        )
                                       </div>
                                     </a>
                                   </li>
@@ -298,52 +498,97 @@
                           {{ item.title }}
                           <span class="font_14 fw_400 ms-3">{{
                             item.description
-                            }}</span>
+                          }}</span>
                         </h5>
                       </div>
-                      <div class="live-action-buttons d-flex justify-content-between">
-                        <button type="button" class="btn bg-transparent text_ltgray font_12 cursor_auto"
-                          data-bs-toggle="modal" data-bs-target="#comments-modal" (click)="openCommentsSection(item)">
-                          <img src="../../../assets/images/chat-icon.svg" class="d-block" />
+                      <div
+                        class="live-action-buttons d-flex justify-content-between"
+                      >
+                        <button
+                          type="button"
+                          class="btn bg-transparent text_ltgray font_12 cursor_auto"
+                          data-bs-toggle="modal"
+                          data-bs-target="#comments-modal"
+                          (click)="openCommentsSection(item)"
+                        >
+                          <img
+                            src="../../../assets/images/chat-icon.svg"
+                            class="d-block"
+                          />
                           {{ item.commentsCount }}
                         </button>
-                        <button type="button" class="btn bg-transparent text_ltgray font_12 cursor_auto">
-                          <img src="../../../assets/images/eye.svg" class="d-block" />
+                        <button
+                          type="button"
+                          class="btn bg-transparent text_ltgray font_12 cursor_auto"
+                        >
+                          <img
+                            src="../../../assets/images/eye.svg"
+                            class="d-block"
+                          />
                           {{ item.views?.length }}
                         </button>
-                        <button (click)="
+                        <button
+                          (click)="
                             likeUnlikePosts(item.id, true, item.postType, item)
-                          " type="button" class="btn bg-transparent text_ltgray font_12">
-                          <img *ngIf="item.isPostLikedByCurrentUser" src="../../../assets/images/heart-red.svg"
-                            class="d-block" />
-                          <img *ngIf="!item.isPostLikedByCurrentUser" src="../../../assets/images/Heart-dark.svg"
-                            class="d-block" />
+                          "
+                          type="button"
+                          class="btn bg-transparent text_ltgray font_12"
+                        >
+                          <img
+                            *ngIf="item.isPostLikedByCurrentUser"
+                            src="../../../assets/images/heart-red.svg"
+                            class="d-block"
+                          />
+                          <img
+                            *ngIf="!item.isPostLikedByCurrentUser"
+                            src="../../../assets/images/Heart-dark.svg"
+                            class="d-block"
+                          />
 
-                          <span *ngIf="
+                          <span
+                            *ngIf="
                               likesLength != undefined &&
                               currentLikedPostId == item.id
-                            ">{{ likesLength }}</span>
+                            "
+                            >{{ likesLength }}</span
+                          >
                           <span *ngIf="currentLikedPostId != item.id">{{
                             item.likes.length
-                            }}</span>
+                          }}</span>
                         </button>
-                        <button (click)="saveReel(item.id, item)" type="button"
-                          class="btn bg-transparent text_ltgray font_12">
-                          <img *ngIf="!item.isPostSavedByCurrentUser" src="../../../../assets/images/Bookmark-dark.svg"
-                            class="d-block mx-auto" />
-                          <img *ngIf="item.isPostSavedByCurrentUser" src="../../../../assets/images/Bookmark-dark.svg"
-                            class="d-block mx-auto" />
+                        <button
+                          (click)="saveReel(item.id, item)"
+                          type="button"
+                          class="btn bg-transparent text_ltgray font_12"
+                        >
+                          <img
+                            *ngIf="!item.isPostSavedByCurrentUser"
+                            src="../../../../assets/images/Bookmark-dark.svg"
+                            class="d-block mx-auto"
+                          />
+                          <img
+                            *ngIf="item.isPostSavedByCurrentUser"
+                            src="../../../../assets/images/Bookmark-dark.svg"
+                            class="d-block mx-auto"
+                          />
                           {{ item.savedPostsCount }}
                         </button>
-                        <button (click)="
+                        <button
+                          (click)="
                             openSharePostModal(
                               item,
                               item.postType,
                               item.title,
                               item.description
                             )
-                          " type="button" class="btn bg-transparent text_ltgray font_12">
-                          <img src="../../../assets/images/Upload.svg" class="d-block" />
+                          "
+                          type="button"
+                          class="btn bg-transparent text_ltgray font_12"
+                        >
+                          <img
+                            src="../../../assets/images/Upload.svg"
+                            class="d-block"
+                          />
                           {{ item.postSharedCount }}
                         </button>
                       </div>
@@ -360,8 +605,6 @@
 </section>
 <!-- <button (click)="addSlide()">Add</button> -->
 <p-toast></p-toast>
-
-
 
 <!-- <div
   class="modal fade edit-school-modal delete-modal"
@@ -388,7 +631,7 @@
         </button>
       </div>
       <div class="modal-body">
-        
+
         <div
           class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-2 mt-4"
         >
@@ -413,16 +656,27 @@
   </div>
 </div> -->
 
-
-<div class="modal fade edit-school-modal delete-modal" id="delete-reel" tabindex="-1" aria-labelledby="delete-reel"
-  aria-hidden="true">
+<div
+  class="modal fade edit-school-modal delete-modal"
+  id="delete-reel"
+  tabindex="-1"
+  aria-labelledby="delete-reel"
+  aria-hidden="true"
+>
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <div class="modal-header border-0 justify-content-center position-relative">
+      <div
+        class="modal-header border-0 justify-content-center position-relative"
+      >
         <h1 class="modal-title font_22 text_dark fw_700 border-0 text-center">
           {{ "DeleteReel" | translate }}
         </h1>
-        <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close">
+        <button
+          type="button"
+          class="btn-close shadow-none"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        >
           <img lazyLoad="../../../../assets/images/cross.svg" />
         </button>
       </div>
@@ -432,14 +686,22 @@
             {{ "DoYouWantToDelete" | translate }}
           </h2>
         </div>
-        <div class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-2 mt-4">
-          <button type="button"
+        <div
+          class="steps_btns d-flex align-items-center justify-content-between flex-sm-nowrap border-0 pb-2 mt-4"
+        >
+          <button
+            type="button"
             class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 prev-step-btn prev-step"
-            data-bs-dismiss="modal">
+            data-bs-dismiss="modal"
+          >
             {{ "No" | translate }}
           </button>
-          <button (click)="getDeletedPostId(deleteId)" type="button"
-            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step" data-bs-dismiss="modal">
+          <button
+            (click)="getDeletedPostId(deleteId)"
+            type="button"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44 w-100 font_16 next-step"
+            data-bs-dismiss="modal"
+          >
             {{ "Yes" | translate }}
           </button>
         </div>
