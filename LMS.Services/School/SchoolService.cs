@@ -431,6 +431,7 @@ namespace LMS.Services
         public async Task<SchoolDetailsViewModel> GetSchoolByName(string schoolName, string loginUserId)
         {
             SchoolDetailsViewModel model = new SchoolDetailsViewModel();
+            schoolName = Uri.UnescapeDataString(schoolName);
 
             if (schoolName != null)
             {

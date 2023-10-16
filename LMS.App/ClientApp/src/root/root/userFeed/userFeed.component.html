@@ -458,7 +458,11 @@
                           ><img src="../../../../assets/images/green-verified.svg"
                         /></span>
                         </a>
-                      </h2>
+                        </h2>
+                          <img *ngIf="post.postAuthorType == 1" src="../../../assets/images/School.svg" class="icon_style" /> 
+                          <img *ngIf="post.postAuthorType == 2" src="../../../assets/images/Class.svg" class="icon_style" /> 
+                          <img *ngIf="post.postAuthorType == 3" src="../../../assets/images/Course.svg" class="icon_style"/>
+                          <img *ngIf="post.postAuthorType == 4" src="../../../assets/images/User.svg" class="icon_style"/>
                     </div>
                     <div>
                       <!-- <p
@@ -1797,6 +1801,10 @@
                           ><img src="../../../../assets/images/green-verified.svg"
                         /></span>
                         </a>
+                        <img *ngIf="post.postAuthorType == 1" src="../../../assets/images/School.svg" class="icon_style" /> 
+                        <img *ngIf="post.postAuthorType == 2" src="../../../assets/images/Class.svg" class="icon_style" /> 
+                        <img *ngIf="post.postAuthorType == 3" src="../../../assets/images/Course.svg" class="icon_style"/>
+                        <img *ngIf="post.postAuthorType == 4" src="../../../assets/images/User.svg" class="icon_style"/>
                       </h2>
                     </div>
                     <div>

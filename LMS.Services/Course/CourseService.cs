@@ -373,7 +373,8 @@ namespace LMS.Services
 
         public async Task<CourseDetailsViewModel> GetCourseByName(string courseName, string loginUserId)
         {
-            CourseDetailsViewModel model = new CourseDetailsViewModel();    
+            CourseDetailsViewModel model = new CourseDetailsViewModel();
+            courseName = Uri.UnescapeDataString(courseName);
 
             if (courseName != null)
             {

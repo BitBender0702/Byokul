@@ -310,7 +310,7 @@
                 class="custom-tag"
                 ><span [routerLink]="['/profile/school', item.schoolName]">{{
                   item.schoolName
-                }}</span
+                }}</span>
                 ><button
                   (click)="getDeletedSchool(item.schoolId)"
                   class="border-0 bg-transparent p-0 position-absolute delete-tag"
@@ -667,15 +667,14 @@
                       <h2
                         class="d-inline-block font_20 fw_600 text_sec1 mb-0 word-break"
                       >
-                        {{ post.parentName
-                        }}<span
-                          *ngIf="post.isParentVerified"
-                          class="verified-badge"
-                          ><img
-                            src="../../../../assets/images/green-verified.svg"
-                        /></span>
+                        {{post.parentName}}<span *ngIf="post.isParentVerified" class="verified-badge"><img src="../../../../assets/images/green-verified.svg"/></span>
                       </h2>
-                      <div *ngIf="post.isLive">
+                      <sharedSSC-component [sharedProfileUrl]="post.sharedProfileUrl"></sharedSSC-component>
+                    
+                      <!-- <img class="ms-5" src="../../../../assets/images/Upload-dark.svg"/>
+                      <h4 class="fw-500 ms-3 font_16 mt-2" style="color: grey">{{ "SharedPost" | translate }}</h4> -->
+                 
+                    <div *ngIf="post.isLive">
                         <img src="../../../../assets/images/live_img.png" />
                       </div>
                       <br />

@@ -498,6 +498,9 @@
                             *ngIf="item.avatar != null && item.avatar != 'null'"
                             [src]="item.avatar"
                           />
+                          <img
+                          *ngIf="item.avatar == null || item.avatar == 'null'"
+                          src="../../../../assets/images/classLogo.png"/>
                         </div>
                         <a
                           style="cursor: pointer; word-break: break-all"
@@ -562,6 +565,9 @@
                             *ngIf="item.avatar != null && item.avatar != 'null'"
                             [src]="item.avatar"
                           />
+                          <img
+                          *ngIf="item.avatar == null || item.avatar == 'null'"
+                          src="../../../../assets/images/classLogo.png"/>
                         </div>
                         <a
                           style="cursor: pointer; word-break: break-all"

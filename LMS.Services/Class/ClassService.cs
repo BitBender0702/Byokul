@@ -374,6 +374,7 @@ namespace LMS.Services
         public async Task<ClassDetailsViewModel> GetClassByName(string className, string loginUserId)
         {
             ClassDetailsViewModel model = new ClassDetailsViewModel();
+            className = Uri.UnescapeDataString(className);
             if (className != null)
             {
                 var data = Encoding.UTF8.GetBytes(className);

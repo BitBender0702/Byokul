@@ -185,3 +185,8 @@
   color: white;
   text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
+
+.icon_style{
+  margin-left: 15px;
+  width: 24px;
+}

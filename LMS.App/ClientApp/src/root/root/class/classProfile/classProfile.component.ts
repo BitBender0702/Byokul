@@ -299,11 +299,11 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     this.minDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
 
 
-    var className = this.className.split('.').join("").split(" ").join("").split("+").join("").replace(" ","").toLowerCase();
-    console.log("after removing ." + className);
+    // var className = this.className.split('.').join("").split(" ").join("").split("+").join("").replace(" ","").toLowerCase();
+    // console.log("after removing ." + className);
 
     // this.className = this.route.snapshot.paramMap.get('className')??'';
-    let newClassName = this.className.split('.').join("").split(" ").join("").split("+").join("").replace(" ","").replace(/[\s.+$/,@\[\]#?/:=&]/g, '').toLowerCase();
+    let newClassName = this.className.split(" ").join("").toLowerCase();
 
     this._classService.getClassById(newClassName).subscribe((response) => {
       debugger;
@@ -463,7 +463,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
         //   }
         // const translatedSummary = this.translateService.instant('Success');
         // this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage,});
-        let newClassName = this.className.split('.').join("").split(" ").join("").split("+").join("").replace(" ","").replace(/[\s.+$/,@\[\]#?/:=&]/g, '').toLowerCase()
+        let newClassName = this.className.split(" ").join("").toLowerCase()
         this._classService.getClassById(newClassName).subscribe((response) => {
           this.class = response;
           this.titleService.setTitle(this.class.className);

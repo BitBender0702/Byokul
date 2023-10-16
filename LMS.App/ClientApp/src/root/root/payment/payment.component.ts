@@ -182,7 +182,7 @@ export const paymentStatusResponse =new Subject();
     }
 
     closeModal(){
-      this.bsModalService.hide();
+      this.bsModalService.hide(this.bsModalService.config.id);
     }
 
     formatCardNumber(event:any) {

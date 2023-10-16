@@ -45,7 +45,9 @@ export class ClassService{
     }
 
     getClassById(className:string):Observable<any>{
-        return this.http.get(`${this.apiUrl}/class/getClassByName` + '?className=' + className,{headers: this.headers});
+        const encodedClassName = encodeURIComponent(className);
+        const params = new HttpParams().set('className', encodedClassName);
+        return this.http.get(`${this.apiUrl}/class/getClassByName`,{headers: this.headers, params: params});
     }
 
     getClassEditDetails(classId:string):Observable<any>{

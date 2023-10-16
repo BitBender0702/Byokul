@@ -50,7 +50,8 @@ export class SchoolService{
         debugger
         this.token = localStorage.getItem("jwt")?? '';
         this.headers = new HttpHeaders().set("Authorization", "Bearer " + this.token);
-        const params = new HttpParams().set('schoolName', schoolName);
+        const encodedSchoolName = encodeURIComponent(schoolName);
+        const params = new HttpParams().set('schoolName', encodedSchoolName);
         return this.http.get(`${this.apiUrl}/school/getSchoolByName`,{headers: this.headers, params: params});
     }
 

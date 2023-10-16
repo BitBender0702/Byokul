@@ -276,7 +276,10 @@
                               />
                             </div>
                             <div class="live-bottom-text p-3">
-                              <h5 class="font_14 mb-0 fw_600 text_sec1">
+                              <h5 *ngIf="postAttachment.post.sharedProfileUrl != null" class="font_14 mb-0 fw_600 text_sec1 cursor_pointer" (click)="navigateToUrl(postAttachment.post.sharedProfileUrl)">
+                                {{ postAttachment.post.title }}
+                              </h5>
+                              <h5 *ngIf="postAttachment.post.sharedProfileUrl == null" class="font_14 mb-0 fw_600 text_sec1">
                                 {{ postAttachment.post.title }}
                               </h5>
                             </div>
@@ -934,7 +937,10 @@
                         [src]="postAttachment.fileUrl"
                       />
                       <div class="live-bottom-text p-3">
-                        <h5 class="font_14 mb-0 fw_600 text_sec1">
+                        <h5 *ngIf="postAttachment.post.sharedProfileUrl != null" class="font_14 mb-0 fw_600 text_sec1 cursor_pointer" (click)="navigateToUrl(postAttachment.post.sharedProfileUrl)">
+                          {{ postAttachment.post.title }}
+                        </h5>
+                        <h5 *ngIf="postAttachment.post.sharedProfileUrl == null" class="font_14 mb-0 fw_600 text_sec1">
                           {{ postAttachment.post.title }}
                         </h5>
                       </div>

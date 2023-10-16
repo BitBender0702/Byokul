@@ -352,8 +352,8 @@ export class SideBarComponent extends MultilingualComponent implements OnInit, O
   getSelectedClass(className:string,schoolName:string){
     // className = className.split('.').join("").split(" ").join("").replace(/[\s.+$/,@\[\]#?/:=&]/g, '').toLowerCase()
     // schoolName = schoolName.split('.').join("").split(" ").join("").replace(/[\s.+$/,@\[\]#?/:=&]/g, '').toLowerCase()
-    className = className.split('.').join("").split(" ").join("").toLowerCase()
-    schoolName = schoolName.split('.').join("").split(" ").join("").toLowerCase()
+    className = className.split(" ").join("").toLowerCase()
+    schoolName = schoolName.split(" ").join("").toLowerCase()
     this.router.navigateByUrl(`profile/class/${schoolName}/${className}`);
     this.closeSidebar()
 
@@ -362,8 +362,8 @@ export class SideBarComponent extends MultilingualComponent implements OnInit, O
   getSelectedCourse(courseName:string,schoolName:string){
     // courseName = courseName.split('.').join("").split(" ").join("").split('+').join("").replace(/[\s.+$/,@\[\]#?/:=&]/g, '').toLowerCase()
     // schoolName = schoolName.split('.').join("").split(" ").join("").split('+').join("").replace(/[\s.+$/,@\[\]#?/:=&]/g, '').toLowerCase()
-    courseName = courseName.split('.').join("").split(" ").join("").toLowerCase()
-    schoolName = schoolName.split('.').join("").split(" ").join("").toLowerCase()
+    courseName = courseName.split(" ").join("").toLowerCase()
+    schoolName = schoolName.split(" ").join("").toLowerCase()
     this.router.navigateByUrl(`profile/course/${schoolName}/${courseName}`);
     this.closeSidebar()
 

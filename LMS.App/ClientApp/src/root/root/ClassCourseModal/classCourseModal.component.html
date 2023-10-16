@@ -46,6 +46,24 @@
              
             </div>
             <div>
+              <span
+                *ngIf="classCourseDetails.classCourseItem.price != null && classCourseDetails.classCourseItem.price != 0"
+                class="payment-profile font_12 text_ltgray ms-2" style="margin-left: 65px !important;">
+               <strong class="cost_theme font_14">${{ classCourseDetails.classCourseItem.price }}
+               </strong>{{ "OnePayment" | translate }}
+              </span>
+              <button
+            *ngIf="
+              !isOwner &&
+              classCourseDetails.classCourseItem.price != null &&
+              classCourseDetails.classCourseItem.price != 0
+            "
+            (click)="openPaymentModal(classCourseDetails.classCourseItem)"
+            type="button"
+            class="btn custom-btn primary_btn earning-btn fw_400 h_44 ps-4 pe-4"
+          >
+            {{ "Buy" | translate }} {{ classCourseDetails.price }} {{ classCourseDetails.currency }}
+          </button>
               <div [ngClass]="showCommentsField? 'accordion-open d-block' : 'accordion-open d-none'" id="live-chat-open" style="display:none;max-width: 505px;">
               <div class="live-action-buttons d-flex justify-content-between">
                 <button type="button" class="btn bg-transparent text_ltgray font_12 cursor_auto"><img src="../../../assets/images/chat-icon.svg"

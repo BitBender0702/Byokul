@@ -18,6 +18,7 @@ import { ClassCourseFilterTypeEnum } from 'src/root/Enums/classCourseFilterTypeE
 import { ClassService } from 'src/root/service/class.service';
 import { CourseService } from 'src/root/service/course.service';
 import { FormGroup } from '@angular/forms';
+import { PaymentComponent } from '../payment/payment.component';
 export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,type:string}>();  
 
 
@@ -35,6 +36,7 @@ export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,ty
     isClassCourseLiked!: boolean;
     likesClassCourseLength!: number;
     likeUnlikeClassCourses!: LikeUnlikeClassCourse;
+    isOwner!: boolean;
     private _schoolService;
     private _signalRService;
     private _userService;
@@ -87,9 +89,9 @@ export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,ty
 
      ngOnInit(): void {
       debugger
+         this.classCourseDetails = this.options.initialState;
          this.getLoginUserId();
          this.gender = localStorage.getItem("gender")??'';
-         this.classCourseDetails = this.options.initialState;
          this._chatService.getComments(this.classCourseDetails.classCourseItem.id,this.pageNumber).subscribe((response) => {
           this.isDataLoaded = true;
           this.classCourseDetails.classCourseItem.comments = response;
@@ -133,12 +135,19 @@ export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,ty
      }
 
     getLoginUserId(){
+      debugger
       var validToken = localStorage.getItem("jwt");
       if (validToken != null) {
         let jwtData = validToken.split('.')[1]
         let decodedJwtJsonData = window.atob(jwtData)
         let decodedJwtData = JSON.parse(decodedJwtJsonData);
         this.userId = decodedJwtData.jti;
+        if (this.userId == this.classCourseDetails.classCourseItem.createdById) {
+          this.isOwner = true;
+        }
+        else {
+          this.isOwner = false;
+        }
       }
     }
 
@@ -345,5 +354,14 @@ export const savedClassCourseResponse =new Subject<{isSaved:boolean,id:string,ty
 
   hideCommentModal(){
     this.bsModalService.hide();
+  }
+
+  openPaymentModal(classCourseItem:any) {
+    debugger
+    var classDetails = { "id": classCourseItem.id, "name": classCourseItem.name, "avatar": classCourseItem.avatar, "type": classCourseItem.type, "amount": classCourseItem.price, "currency": classCourseItem.currency }
+    const initialState = {
+      paymentDetails: classDetails
+    };
+    this.bsModalService.show(PaymentComponent, { initialState });
   }
 }

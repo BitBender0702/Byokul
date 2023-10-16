@@ -15,7 +15,7 @@ import { MessageService } from 'primeng/api';
 
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { Subject, Subscription } from 'rxjs';
+import { Subject, Subscription, config } from 'rxjs';
 
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';

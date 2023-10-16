@@ -124,9 +124,11 @@
                   class="school-profile-icon rounded-circle class-course-image"
                 >
                   <img
-                    *ngIf="class.avatar != 'null'"
+                    *ngIf="class.avatar != 'null' && class.avatar != null"
                     [lazyLoad]="class.avatar"
                   />
+                  <img *ngIf="class.avatar == null || class.avatar == 'null'"
+                   src="../../../../assets/images/classLogo.png"/>
                 </div>
                 <div class="univ-logo">
                   <img [lazyLoad]="class.school.avatar" />

@@ -102,6 +102,7 @@ import { AddOfficialComponent } from './root/addOfficial/addOfficial.component';
 import { DeleteConfirmationComponent } from './root/delete-confirmation/delete-confirmation.component';
 import { DeleteOrDisableComponent } from './root/deleteOrDisableSCC/delete-or-disable.component';
 import { ChangeTimeZonePipe } from './ChangeTimeZonePipe';
+import { SharedSSCComponent } from './root/sharedSSC/sharedSSCComponent';
 
 
 export const options: Partial<IConfig> = {
@@ -222,10 +223,9 @@ const routes: Routes = [
     SchoolVideoLibraryComponent,
     AddOfficialComponent,
     DeleteConfirmationComponent,
-
-
     DeleteOrDisableComponent,
-    ChangeTimeZonePipe
+    ChangeTimeZonePipe,
+    SharedSSCComponent
 
 
 

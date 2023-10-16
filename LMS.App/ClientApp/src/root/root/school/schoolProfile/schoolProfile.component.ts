@@ -554,7 +554,7 @@ debugger
         // // this.loadingIcon = true;
         // const translatedSummary = this.translateService.instant('Success');
         // this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage,});
-        let newSchoolName = this.schoolName.split('.').join("").split(" ").join("").replace(/[\s.+$/,@\[\]#?/:=&]/g, '').toLowerCase()
+        let newSchoolName = this.schoolName.split(" ").join("").toLowerCase();
         this._schoolService.getSchoolById(newSchoolName.replace(/\s/g, '').toLowerCase()).subscribe((response) => {
           this.school = response;
 

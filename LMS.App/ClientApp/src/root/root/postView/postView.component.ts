@@ -836,6 +836,10 @@ export class PostViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
   }
 
+  navigateToUrl(url:string){
+    window.location.href = 'https://byokul.com/profile/school/Elementary%20School';
+  }
+
 
 
 

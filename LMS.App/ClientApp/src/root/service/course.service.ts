@@ -53,7 +53,9 @@ export class CourseService{
     }
 
     getCourseById(courseName:string):Observable<any>{
-        return this.http.get(`${this.apiUrl}/course/getCourseByName` + '?courseName=' + courseName,{headers: this.headers});
+        const encodedCourseName = encodeURIComponent(courseName);
+        const params = new HttpParams().set('courseName', encodedCourseName);
+        return this.http.get(`${this.apiUrl}/course/getCourseByName`,{headers: this.headers, params: params});
     }
 
     saveCourseLanguages(addLanguages:any):Observable<any>{
