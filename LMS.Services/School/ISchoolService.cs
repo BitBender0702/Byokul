@@ -1,4 +1,5 @@
 ﻿using LMS.Common.Enums;
+using LMS.Common.ViewModels.Chat;
 using LMS.Common.ViewModels.Class;
 using LMS.Common.ViewModels.Common;
 using LMS.Common.ViewModels.Post;
@@ -45,7 +46,7 @@ namespace LMS.Services
         Task<IEnumerable<CombineClassCourseViewModel>> GetSchoolClasses(Guid? schoolId, string userId, int pageNumber);
         Task<IEnumerable<CombineClassCourseViewModel>> GetSchoolCourses(Guid? schoolId, string userId, int pageNumber);
         Task<bool> PinUnpinClassCourse(Guid id, ClassCourseEnum type, bool isPinned);
-        Task<List<SchoolViewModel>> GetUserAllSchools(string userId);
+        Task<List<UserSchoolsViewModel>> GetUserAllSchools(string userId);
         Task<IEnumerable<PostDetailsViewModel>> GetPostsBySchool(Guid schoolId, string loginUserId, int pageNumber, int pageSize);
         Task<IEnumerable<PostDetailsViewModel>> GetReelsBySchool(Guid schoolId, string loginUserId, int pageNumber, int pageSize);
         Task<SchoolsClassCourseViewModel> GetSchoolsClassCourse(IEnumerable<string> schoolIds);

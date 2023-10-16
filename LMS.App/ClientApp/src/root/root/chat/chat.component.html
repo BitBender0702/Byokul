@@ -40,16 +40,17 @@
                 <li class="nav-item ps-0 mb-0" role="presentation">
                   <div class="dropdown">
                     <button
-                      class="bg-transparent dropdown-toggle rounded-circle"
+                      class="bg-transparent dropdown-toggle rounded-circle notification-btn"
                       type="button"
                       data-bs-toggle="dropdown"
                       aria-expanded="false"
                       (click)="showSchoolInboxDiv()"
                     >
                       {{ "MySchoolInbox" | translate }}
+                      <span *ngIf="totalUnreadMessageCount!=null && totalUnreadMessageCount!=0" style="top: 8px; left:127px" class="badge rounded-circle d-inline-flex align-items-center justify-content-center fw_700 font_12">{{totalUnreadMessageCount}}</span>
                     </button>
                     <ul class="dropdown-menu">
-                      <li *ngFor="let item of userSchoolsList">
+                      <li *ngFor="let item of userSchoolsList" class="notification-btn">
                         <a
                           (click)="getSelectedSchoolInbox(item.schoolId)"
                           class="ps-0 mb-0 dropdown-item nav-link btn chat-channel-button px-3"
@@ -62,14 +63,13 @@
                           aria-selected="false"
                           tabindex="-1"
                           style="cursor: pointer"
-                          >{{ item.schoolName }}
+                          >{{ item?.schoolName }}
                           <span  class="verified-badge" style="font-size: 90%;" *ngIf="item.isVarified">
-                        <img  src="../../../../assets/images/verified-badge.svg" style="height: 20px;"
-                        />
-                      
-                      </span>
-                          </a
-                        >
+                            <img  src="../../../../assets/images/verified-badge.svg" style="height: 20px;"
+                            />
+                          </span>
+                        </a>
+                        <span *ngIf="item?.schoolUnreadMessageCount!=null && item?.schoolUnreadMessageCount!=0" style="right: 0px; top: 8px;" class="badge rounded-circle d-inline-flex align-items-center justify-content-center fw_700 font_12">{{item?.schoolUnreadMessageCount}}</span>
                       </li>
                     </ul>
                   </div>
@@ -2384,11 +2384,13 @@
                         </h2>
                         <span
                           *ngIf="
-                            item?.unreadMessageCount != 0 &&
+                          item?.unreadMessageCount != 0 &&
                             item?.unreadMessageCount != null
                           "
                           class="badge rounded-circle d-inline-flex align-items-center justify-content-center fw_700 font_12 badgeBackground"
-                          >{{ item?.unreadMessageCount }}</span
+                          >
+                          {{ item?.unreadMessageCount }}
+                          </span
                         >
                       </div>
                       <p

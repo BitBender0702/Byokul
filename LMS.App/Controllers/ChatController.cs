@@ -51,11 +51,11 @@ namespace LMS.App.Controllers
             var response = await _chatService.GetParticularChatHead(userId, receiverId, chatType,chatTypeId);
             if (response != null)
             {
-                return Ok(response);
+                return Ok(new { Success = true, Message = Constants.ChatExists,Data=response });
             }
             else
             {
-                return BadRequest();
+                return Ok(new { Success = true, Message = Constants.ChatDoesNotExist });
             }
         }
 
@@ -71,7 +71,7 @@ namespace LMS.App.Controllers
         [HttpGet]
         public async Task<IActionResult> GetUsersChat(Guid ChatHeadId, Guid senderId, Guid receiverId,ChatType chatType, int pageSize=10, int pageNumber=1)
         {
-            await _chatService.RemoveUnreadMessageCount(senderId, receiverId, chatType);
+            await _chatService.RemoveUnreadMessageCount(senderId, receiverId, chatType, ChatHeadId);
             var response = await _chatService.GetParticularUserChat(ChatHeadId,senderId, receiverId,chatType,  pageSize,  pageNumber);
             return Ok(response);
         }

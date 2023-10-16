@@ -52,6 +52,7 @@ import {
 } from 'src/root/user-template/side-bar/side-bar.component';
 import { MessageService } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
+import { Constant } from 'src/root/interfaces/constant';
 // export const unreadChatResponse =new Subject<{readMessagesCount: number,type:string}>();
 
 @Component({
@@ -216,6 +217,8 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
   isScreenMobile: boolean = false;
   isChatSelected:boolean=false;
   isChatHeadSelected:boolean=false;
+  totalUnreadMessageCount:number=0;
+  
   // @ViewChild('chatScrollList') chatScrollList!: ElementRef;
 
   constructor(
@@ -346,12 +349,15 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
       this._userService.getUser(this.senderId).subscribe((response) => {
         this.sender = response;
         this.getChatUsersList(this.senderId);
+        // this.getChatsFurtherProcess();
       });
 
       this._schoolService
         .getUserAllSchools(this.senderId)
         .subscribe((response) => {
+          debugger
           this.userSchoolsList = response;
+          this.totalUnreadMessageCount = this.userSchoolsList[0]?.totalSchoolsUnreadMessageCount
         });
     }
 
@@ -368,7 +374,7 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
       // }
       // unreadChatResponse.next({readMessagesCount:1,type:"add"});
       if (this.chatHeadId == response.chatHeadId) {
-        var user = this.allChatUsers.find((x: { chatheadId: string; }) => x.chatheadId == '1');
+        var user = this.allChatUsers.find((x: { chatheadId: string }) => x.chatheadId == '1');
         this._chatService
           .removeUnreadMessageCount(
             response.receiverId,
@@ -1228,6 +1234,7 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
         }
       });
     }
+  
   }
 
   ngAfterViewInit() {}
@@ -1258,6 +1265,13 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
 
         this.initialChatUsersData = response;
 
+        this.topChatHeadUser = this.allChatUsers[0];
+        this.topChatViewIcon=this.allChatUsers[0]?.profileURL;
+        this.topChatViewName=this.allChatUsers[0].userName;
+        this.topChatViewIsSchoolVerified=this.allChatUsers[0].isVerified;
+        this.topChatViewIsUserVerified=this.allChatUsers[0].isUserVerified;
+        this.topChatViewChatType = this.allChatUsers[0].chatType;
+
         var chatUsers: any[] = this.allChatUsers;
         // this.schoolInboxList = chatUsers.filter(
         //   (x) => x.chatType == 3 && x.school.ownerId == this.sender.id
@@ -1276,6 +1290,7 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
         this.schoolInboxes = this.schoolInboxList;
 
         if (this.userId != null && this.chatType == '3') {
+          debugger
           var chatUsers: any[] = this.allChatUsers;
           // var chats = chatUsers.filter(x => x.chatType == 3 && x.school.ownerId == this.sender.id);
           // chats = chats.filter(x => x.chatType == 4 && x.class.ownerId == this.sender.id);
@@ -1284,10 +1299,9 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
           var isuserExist = chatUsers.find(
             (x) => x.userID == this.userId && x.chatType == '3' && x.chatTypeId == this.schoolInfo.chatTypeId
           );
-          if (isuserExist == undefined) {
-            this.allChatUsers.unshift(this.schoolInfo);
-          } else {
+          if(isuserExist != undefined){
             if (isuserExist.school.ownerId == this.senderId) {
+              
               this.getUsersChat(
                 isuserExist.chatHeadId,
                 isuserExist.userID,
@@ -1300,6 +1314,7 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
                 isuserExist.school.schoolId
               );
             } else {
+              // this.allChatUsers.unshift(isuserExist)
               this.getUsersChat(
                 isuserExist.chatHeadId,
                 isuserExist.userID,
@@ -1311,17 +1326,44 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
                 1
               );
             }
+            this.getChatsFurtherProcess()
+          }
+
+         else{
+          debugger
+            this._chatService.getParticularChatUser(this.sender.id,this.userId,3,this.schoolInfo.chatTypeId).subscribe(res=>{
+              debugger
+              if(res.message==Constant.ChatExists){
+              isuserExist = res.data;
+              this.allChatUsers.unshift(isuserExist);
+              this.getUsersChat(
+                isuserExist.chatHeadId,
+                isuserExist.userID,
+                isuserExist.profileURL,
+                isuserExist.userName,
+                isuserExist.chatType,
+                'FromMyInbox',
+                10,
+                1
+              );
+              }
+             else{
+                this.allChatUsers.unshift(this.schoolInfo);
+              }
+              this.getChatsFurtherProcess();
+            });
+            
           }
         }
 
         if (this.userId != null && this.chatType == '4') {
+          debugger
           var chatUsers: any[] = this.allChatUsers;
           var isuserExist = chatUsers.find(
             (x) => x.userID == this.userId && x.chatType == '4' && x.chatTypeId == this.classInfo.chatTypeId
           );
-          if (isuserExist == undefined) {
-            this.allChatUsers.unshift(this.classInfo);
-          } else {
+          if (isuserExist != undefined) {
+            // this.allChatUsers.unshift(isuserExist);
             this.getUsersChat(
               isuserExist.chatHeadId,
               isuserExist.userID,
@@ -1332,29 +1374,57 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
               10,
               1
             );
+            this.getChatsFurtherProcess()
           }
+          else{
+            this._chatService.getParticularChatUser(this.sender.id,this.userId,4,this.classInfo.chatTypeId).subscribe(res=>{
+              if(res.message==Constant.ChatExists){
+              isuserExist = res.data;
+              this.allChatUsers.unshift(isuserExist);
+              }
+             else{
+                this.allChatUsers.unshift(this.classInfo);
+              }
+              this.getChatsFurtherProcess();
+            });
+            
+          }
+         
         }
 
         if (this.userId != null && this.chatType == '5') {
+          debugger
           var chatUsers: any[] = this.allChatUsers;
           var isuserExist = chatUsers.find(
             (x) => x.userID == this.userId && x.chatType == '5' && x.chatTypeId == this.courseInfo.chatTypeId
           );
-          if (isuserExist == undefined) {
-            this.allChatUsers.unshift(this.courseInfo);
-          } else {
-            this.getUsersChat(
-              isuserExist.chatHeadId,
-              isuserExist.userID,
-              isuserExist.profileURL,
-              isuserExist.userName,
-              isuserExist.chatType,
-              'FromMyInbox',
-              10,
-              1
-            );
-          }
+         if (isuserExist != undefined) {
+          // this.allChatUsers.unshift(isuserExist)
+          this.getUsersChat(
+            isuserExist.chatHeadId,
+            isuserExist.userID,
+            isuserExist.profileURL,
+            isuserExist.userName,
+            isuserExist.chatType,
+            'FromMyInbox',
+            10,
+            1
+          );
+          this.getChatsFurtherProcess();
         }
+        else{
+          this._chatService.getParticularChatUser(this.sender.id,this.userId,5,this.courseInfo.chatTypeId).subscribe(res=>{
+            if(res.message==Constant.ChatExists){
+              isuserExist = res.data;
+              this.allChatUsers.unshift(isuserExist);
+              }
+             else{
+                this.allChatUsers.unshift(this.courseInfo);
+              }
+              this.getChatsFurtherProcess();
+          });   
+        }
+      }
 
         // this.schoolInboxList.forEach((item: any) => {
         //   var chats: any = {};
@@ -1401,24 +1471,8 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
           var isuserExist = chatUsers.find(
             (x) => x.userID == this.userId && x.chatType == '1'
           );
-          if (isuserExist == undefined) {
-            var user = {
-              userName: this.user.firstName + ' ' + this.user.lastName,
-              receiverName: this.user.firstName + ' ' + this.user.lastName,
-              userID: this.user.id,
-              profileURL: this.user.avatar,
-              chatType: this.chatType,
-              chats: [],
-              unreadMessageCount: 0,
-              chatHeadId: '1',
-              isPinned: false
-            };
-
-            this.allChatUsers.unshift(user);
-            // if(this.allChatUsers.length == 0){
-            //   this.allChatUsers.push(user);
-            // }
-          } else {
+          if(isuserExist != undefined) {
+            // this.allChatUsers.unshift(isuserExist);
             this.getUsersChat(
               isuserExist.chatHeadId,
               isuserExist.userID,
@@ -1429,71 +1483,131 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
               10,
               1
             );
+          
           }
-        }
 
-        this.selectedChatHeadDiv = true;
-        this.firstuserChats = this.allChatUsers[0]?.chats;
-        if (this.firstuserChats) {
-          this.firstuserChats = this.firstuserChats.reduce(
-            (groupedChats: any, chat: any) => {
-              const date = chat.time.slice(0, 10);
-              // const dateTime = new Date(chat.time);
-              // const date = dateTime.toISOString().split('T')[0]; // Extracting the date portion
+         else{
+            debugger
+              this._chatService.getParticularChatUser(this.sender.id,this.userId,1,this.chatTypeId).subscribe(res=>{
 
-              if (groupedChats[date]) {
-                groupedChats[date].push(chat);
-              } else {
-                groupedChats[date] = [chat];
-              }
+                if(res.message==Constant.ChatExists){
+                  isuserExist = res.data;
+                  this.allChatUsers.unshift(isuserExist);
+                  this.getUsersChat(
+                    isuserExist.chatHeadId,
+                    isuserExist.userID,
+                    isuserExist.profileURL,
+                    isuserExist.userName,
+                    isuserExist.chatType,
+                    'FromMyInbox',
+                    10,
+                    1
+                  );
+                  
+                  }
 
-              return groupedChats;
-            },
-            {}
-          );
-        }
-        var a = 10;
-        this.userName = this.allChatUsers[0].userName;
-        this.recieverId = this.allChatUsers[0]?.userID;
-        this.receiverAvatar = this.allChatUsers[0]?.profileURL;
-        this.receiverName = this.allChatUsers[0]?.userName;
-        this.chatType = this.allChatUsers[0]?.chatType;
-        this.profileURL = this.sender.avatar;
-        unreadChatResponse.next({
-          readMessagesCount: this.allChatUsers[0]?.unreadMessageCount,
-          type: 'remove',
-        });
-        this.allChatUsers[0].unreadMessageCount = 0;
+                else {
+                  var user = {
+                    userName: this.user.firstName + ' ' + this.user.lastName,
+                    receiverName: this.user.firstName + ' ' + this.user.lastName,
+                    userID: this.user.id,
+                    profileURL: this.user.avatar,
+                    chatType: this.chatType,
+                    chats: [],
+                    unreadMessageCount: 0,
+                    chatHeadId: '1',
+                    isPinned: false,
+                    gender:this.user.gender
+                  };
+                  this.allChatUsers.unshift(user);
+                   this.topChatHeadUser = this.allChatUsers[0];
+                  this.topChatViewIcon=this.allChatUsers[0]?.profileURL;
+                  this.topChatViewName=this.allChatUsers[0].userName;
+                  this.topChatViewIsSchoolVerified=this.allChatUsers[0].isVerified;
+                  this.topChatViewIsUserVerified=this.allChatUsers[0].isUserVerified;
+                  this.topChatViewChatType = this.allChatUsers[0].chatType;
+                  
+                } 
 
-        this.chatHeadId = this.allChatUsers[0].chatHeadId;
-        this.cd.detectChanges();
-        this.chatList.nativeElement.scrollTop =
-          this.chatList.nativeElement.scrollHeight;
+                debugger
+                this.getChatsFurtherProcess();
 
-        var dynamicMessages = localStorage.getItem('messages') ?? '';
-        if (dynamicMessages != '') {
-          var dynamicMessagesArray = JSON.parse(dynamicMessages);
-          var isChatHeadExist = dynamicMessagesArray.find(
-            (x: { chatHeadId: any }) =>
-              x.chatHeadId == this.allChatUsers[0].chatHeadId
-          );
-          if (isChatHeadExist != null) {
-            this.messageToUser = isChatHeadExist.messageToUser;
+              });
+            
+             
           }
+        
         }
-        if (dynamicMessages == '') {
-          var messageList: any = [];
-          localStorage.setItem('messages', JSON.stringify(messageList));
-        }
-        this.selectedChatHeadId = this.allChatUsers[0].chatHeadId;
 
-        this.topChatHeadUser = this.allChatUsers[0];
-        this.topChatViewIcon=this.allChatUsers[0]?.profileURL;
-        this.topChatViewName=this.allChatUsers[0].userName;
-        this.topChatViewIsSchoolVerified=this.allChatUsers[0].isVerified;
-        this.topChatViewIsUserVerified=this.allChatUsers[0].isUserVerified;
-        this.topChatViewChatType = this.allChatUsers[0].chatType;
+       this.getChatsFurtherProcess();
+
       });
+
+  }
+
+  getChatsFurtherProcess(){
+    this.selectedChatHeadDiv = true;
+    this.firstuserChats = this.allChatUsers[0]?.chats;
+    if (this.firstuserChats) {
+      this.firstuserChats = this.firstuserChats.reduce(
+        (groupedChats: any, chat: any) => {
+          const date = chat.time.slice(0, 10);
+          // const dateTime = new Date(chat.time);
+          // const date = dateTime.toISOString().split('T')[0]; // Extracting the date portion
+
+          if (groupedChats[date]) {
+            groupedChats[date].push(chat);
+          } else {
+            groupedChats[date] = [chat];
+          }
+
+          return groupedChats;
+        },
+        {}
+      );
+    }
+    var a = 10;
+    this.userName = this.allChatUsers[0].userName;
+    this.recieverId = this.allChatUsers[0]?.userID;
+    this.receiverAvatar = this.allChatUsers[0]?.profileURL;
+    this.receiverName = this.allChatUsers[0]?.userName;
+    // this.chatType = this.allChatUsers[0]?.chatType;
+    this.profileURL = this.sender.avatar;
+    unreadChatResponse.next({
+      readMessagesCount: this.allChatUsers[0]?.unreadMessageCount,
+      type: 'remove',
+    });
+    this.allChatUsers[0].unreadMessageCount = 0;
+
+    this.chatHeadId = this.allChatUsers[0].chatHeadId;
+    this.cd.detectChanges();
+    this.chatList.nativeElement.scrollTop =
+      this.chatList.nativeElement.scrollHeight;
+
+    var dynamicMessages = localStorage.getItem('messages') ?? '';
+    if (dynamicMessages != '') {
+      var dynamicMessagesArray = JSON.parse(dynamicMessages);
+      var isChatHeadExist = dynamicMessagesArray.find(
+        (x: { chatHeadId: any }) =>
+          x.chatHeadId == this.allChatUsers[0].chatHeadId
+      );
+      if (isChatHeadExist != null) {
+        this.messageToUser = isChatHeadExist.messageToUser;
+      }
+    }
+    if (dynamicMessages == '') {
+      var messageList: any = [];
+      localStorage.setItem('messages', JSON.stringify(messageList));
+    }
+    this.selectedChatHeadId = this.allChatUsers[0].chatHeadId;
+
+    // this.topChatHeadUser = this.allChatUsers[0];
+    // this.topChatViewIcon=this.allChatUsers[0]?.profileURL;
+    // this.topChatViewName=this.allChatUsers[0].userName;
+    // this.topChatViewIsSchoolVerified=this.allChatUsers[0].isVerified;
+    // this.topChatViewIsUserVerified=this.allChatUsers[0].isUserVerified;
+    // this.topChatViewChatType = this.allChatUsers[0].chatType;
+    debugger;
   }
 
   clearChat() {
@@ -1719,13 +1833,31 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
     // this.schoolInboxList = newList;
     // console.log(this.schoolInboxList)
     // console.log("-----")
+    var schoolIdForCheckingUnreadMessageCount:string
+    if(this.schoolInboxList[0].chatType=='3'){
+      schoolIdForCheckingUnreadMessageCount = this.schoolInboxList[0].school.schoolId;
+     }
+     if(this.schoolInboxList[0].chatType=='4'){
+      schoolIdForCheckingUnreadMessageCount = this.schoolInboxList[0].class.schoolId;
+     }
+     if(this.schoolInboxList[0].chatType=='5'){
+      schoolIdForCheckingUnreadMessageCount = this.schoolInboxList[0].course.schoolId;
+     }
+     this.userSchoolsList.forEach((element:any) => {
+      if(element.schoolId == schoolIdForCheckingUnreadMessageCount){
+        element.schoolUnreadMessageCount -=  this.schoolInboxList[0]?.unreadMessageCount;
+      }
+    });
     this.chatHeadId = this.schoolInboxList[0].chatHeadId;
-
+    this.totalUnreadMessageCount -= this.schoolInboxList[0]?.unreadMessageCount;
+    if(this.totalUnreadMessageCount<0) this.totalUnreadMessageCount=0;
     unreadChatResponse.next({
       readMessagesCount: this.schoolInboxList[0]?.unreadMessageCount,
       type: 'remove',
     });
+
     this.schoolInboxList[0].unreadMessageCount = 0;
+    
     if (this.schoolInboxList[0].school != null) {
       this.senderAvatar = this.schoolInboxList[0].school.avatar;
       this.senderName = this.schoolInboxList[0].school.schoolName;
@@ -1821,7 +1953,7 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
     }
     
 
-    
+ 
     if(From=="FromMyInbox"){
       this.topChatHeadUser = this.allChatUsers.find((item:any)=>item.chatHeadId == chatHeadId)
       
@@ -1897,23 +2029,49 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
     //localStorage.setItem("chatHead", chatHeadId);
 
     // here for remove unread message count from chathead and also minus from total count
+var currentChatHead:any;
+var schoolId:string;
+if(From=="FromMyInbox"){
+  var chatUsers: any[] = this.allChatUsers;
+  currentChatHead = chatUsers.find(
+    (x) => x.userID == recieverId && x.chatType == chatType
+  );
+}
 
-    var chatUsers: any[] = this.allChatUsers;
-    let currentChatHead = chatUsers.find(
-      (x) => x.userID == recieverId && x.chatType == chatType
-    );
-    if (currentChatHead == undefined) {
-      var schoolChatUsers: any[] = this.schoolInboxList;
-      currentChatHead = schoolChatUsers.find(
-        (x) => x.userID == recieverId && x.chatType == chatType
-      );
-    }
-    if (currentChatHead.unreadMessageCount > 0) {
+else{
+  var schoolChatUsers: any[] = this.schoolInboxList;
+  currentChatHead = schoolChatUsers.find(
+     (x) => x.userID == recieverId && x.chatType == chatType
+   );
+  let schoolData  = schoolChatUsers.find(
+    (x) => x.chatHeadId == chatHeadId
+  )
+
+ if(chatType=='3'){
+  schoolId = schoolData.school.schoolId;
+ }
+ if(chatType=='4'){
+  schoolId = schoolData.class.schoolId;
+ }
+ if(chatType=='5'){
+  schoolId = schoolData.course.schoolId;
+ }
+}
+    
+    if (currentChatHead?.unreadMessageCount > 0) {
+      this.totalUnreadMessageCount -= currentChatHead?.unreadMessageCount;
+      if(this.totalUnreadMessageCount<0) this.totalUnreadMessageCount=0;
+      this.userSchoolsList.forEach((element:any) => {
+        if(element.schoolId == schoolId){
+          element.schoolUnreadMessageCount -= currentChatHead?.unreadMessageCount;
+        }
+      });
       unreadChatResponse.next({
-        readMessagesCount: currentChatHead.unreadMessageCount,
+        readMessagesCount: currentChatHead?.unreadMessageCount,
         type: 'remove',
       });
-      currentChatHead.unreadMessageCount = 0;
+     
+      if(currentChatHead) currentChatHead.unreadMessageCount = 0;
     }
 
     //document.getElementById('chat')?.addEventListener('scroll', this.myScrollFunction, false);
@@ -1965,12 +2123,12 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
           );
           var schoolChats = this.groupBySchoolChat(response);
           this.schoolInboxList[0].chats = schoolChats;
-          this.senderAvatar = currentChatHead.class?.avatar;
-          this.senderName = currentChatHead.class?.className;
+          this.senderAvatar = currentChatHead?.class?.avatar;
+          this.senderName = currentChatHead?.class?.className;
           this.loadingIcon = false;
-          this.schoolInboxUserName = currentChatHead.userName;
-          this.schoolInboxUserAvatar = currentChatHead.profileURL;
-          this.schoolInboxReceiverId = currentChatHead.userID;
+          this.schoolInboxUserName = currentChatHead?.userName;
+          this.schoolInboxUserAvatar = currentChatHead?.profileURL;
+          this.schoolInboxReceiverId = currentChatHead?.userID;
           // this.schoolInboxList[0].school = null;
           // this.schoolInboxList[0].course = null;
           // this.schoolInboxList[0].class = currentChatHead.class;
@@ -1984,12 +2142,12 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
             this.chatType = '3';
             var schoolChats = this.groupBySchoolChat(response);
             this.schoolInboxList[0].chats = schoolChats;
-            this.senderAvatar = currentChatHead.school.avatar;
-            this.senderName = currentChatHead.school.schoolName;
+            this.senderAvatar = currentChatHead?.school.avatar;
+            this.senderName = currentChatHead?.school.schoolName;
             this.loadingIcon = false;
-            this.schoolInboxUserName = currentChatHead.userName;
-            this.schoolInboxUserAvatar = currentChatHead.profileURL;
-            this.schoolInboxReceiverId = currentChatHead.userID;
+            this.schoolInboxUserName = currentChatHead?.userName;
+            this.schoolInboxUserAvatar = currentChatHead?.profileURL;
+            this.schoolInboxReceiverId = currentChatHead?.userID;
             // }
           } else {
             if (chatType == '5' && From == 'FromSchoolInbox') {
@@ -1997,12 +2155,12 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
               this.chatType = '5';
               var schoolChats = this.groupBySchoolChat(response);
               this.schoolInboxList[0].chats = schoolChats;
-              this.senderAvatar = currentChatHead.course.avatar;
-              this.senderName = currentChatHead.course.courseName;
+              this.senderAvatar = currentChatHead?.course.avatar;
+              this.senderName = currentChatHead?.course.courseName;
               this.loadingIcon = false;
-              this.schoolInboxUserName = currentChatHead.userName;
-              this.schoolInboxUserAvatar = currentChatHead.profileURL;
-              this.schoolInboxReceiverId = currentChatHead.userID;
+              this.schoolInboxUserName = currentChatHead?.userName;
+              this.schoolInboxUserAvatar = currentChatHead?.profileURL;
+              this.schoolInboxReceiverId = currentChatHead?.userID;
               // this.schoolInboxList[0].school = null;
               // this.schoolInboxList[0].course = currentChatHead.course;
               // this.schoolInboxList[0].class = null;
@@ -2016,10 +2174,13 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
               this.profileURL = this.sender.avatar;
               this.loadingIcon = false;
 
-              if (!this.firstuserChats || this.firstuserChats.length == 0)
-                this.firstuserChats = response;
-              // her from grouping
-              else this.firstuserChats = {};
+              // if (!this.firstuserChats || this.firstuserChats.length == 0)
+              //  {
+              //   //this.firstuserChats = response;
+              //  }
+              // // her from grouping
+              // else 
+              this.firstuserChats = {};
               response.forEach((item: any) => {
                 const date = item.time.slice(0, 10);
                 // const dateTime = new Date(item.time);
@@ -2125,11 +2286,6 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
         this.selectedFile = [];
         this.invalidMessage = false;
       });
-
-
-      this.invalidMessage = false;
-
-
   }
 
   // handleVideos(event: any) {
@@ -2331,27 +2487,15 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
   getTextMessage(event: any, receiverId: string) {
     if (this.messageToUser == '') {
       this.invalidMessage = true;
-    }
-    else if (event.code == 'Enter' || event.keyCode === 13 || event.keyCode === 108) {
+    } else {
       this.invalidMessage = false;
-      this.sendToUser(receiverId);
-    }
-    else{
-      this.invalidMessage = false;
-    }
-  }
-
-  @HostListener('document:keydown', ['$event'])
-  handleKeyboardEvent(event: KeyboardEvent): void {
-    if (event.key === 'Enter' || event.keyCode === 13 || event.keyCode === 108) {
-     this.getAttachmentsMessage();
-    }
-  }
-
-  getAttachmentsMessage() {
-    if(this.uploadImage.length != 0 || this.uploadVideo.length != 0 || this.uploadAttachments != 0){
-      this.invalidMessage = false;
-      this.sendToUser(this.recieverId);
+      if (
+        event.code == 'Enter' ||
+        event.keyCode === 13 ||
+        event.keyCode === 108
+      ) {
+        this.sendToUser(receiverId);
+      }
     }
   }
 
@@ -2644,7 +2788,7 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
         this.replyMessageType = null;
         this.isForwarded = false;
        debugger
-        const userIndex = this.allChatUsers.findIndex((x: { chatHeadId: string; }) => x.chatHeadId === this.chatHeadId);
+        const userIndex = this.allChatUsers.findIndex((x:any) => x.chatHeadId === this.chatHeadId);
         if (userIndex !== -1) {
           const user = this.allChatUsers.find((x: { chatHeadId: string; }) => x.chatHeadId === this.chatHeadId);
           if(!user.isPinned){
@@ -2926,7 +3070,7 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
 
   showSchoolInboxDiv() {
     debugger;
-    this.chatType = this.schoolInboxList[0].chatType;
+    this.chatType = this.schoolInboxList[0]?.chatType;
   }
 
   back(): void {
@@ -2946,7 +3090,7 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
     OpenSideBar.next({ isOpenSideBar: true });
   }
 
-  @HostListener('window:scroll', ['$event'])
+  @HostListener('scroll', ['$event'])
   scrollHandler(event: any) {
     debugger;
     const element = event.target; // get the scrolled element
@@ -2971,7 +3115,29 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
         this.searchString
       )
       .subscribe((response) => {
-        this.allChatUsers = [...this.allChatUsers, ...response];
+        //this.allChatUsers = [...this.allChatUsers, ...response];
+
+
+        // Combine this.allChatUsers and response into a single array
+        const combinedArray = [...this.allChatUsers, ...response];
+        // Create a set to keep track of unique records
+        const uniqueChatHeadIds = new Set();
+        // Iterate through the combined array and add unique records to the set
+        const uniqueRecords = combinedArray.filter(user => {
+          const chatHeadId = user.chatHeadId;
+          if (!uniqueChatHeadIds.has(chatHeadId)) {
+            uniqueChatHeadIds.add(chatHeadId);
+            return true; // Include the record in the result
+          }
+          return false; // Skip duplicate records
+        });
+        
+        // Update this.allChatUsers with the unique records
+        this.allChatUsers = uniqueRecords;
+
+
+
+
         this.chatHeadsLoadingIcon = false;
         this.cd.detectChanges();
         this.scrollChatHeadsResponseCount = response.length;
@@ -3250,6 +3416,7 @@ userVerifiedBatch = `<span class="verified-badge " style="font-size: 70%;">
   }
 
   getObjectKeys(obj: any): string[] {
+  
     if (obj != null) {
       // console.log(Object.keys(obj));
       return Object.keys(obj).sort();

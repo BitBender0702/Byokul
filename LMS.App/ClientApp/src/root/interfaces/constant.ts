@@ -34,6 +34,8 @@ export class Constant {
     public static TeacherUpdatedSuccessfully = "Teacher updated successfully";
     public static VideoLibrary = "videoLibrary";
     public static Reel = "reel";
+    public static  ChatDoesNotExist = "Chat doesn't exist";
+    public static  ChatExists = "Chat exists";
 
 
 
