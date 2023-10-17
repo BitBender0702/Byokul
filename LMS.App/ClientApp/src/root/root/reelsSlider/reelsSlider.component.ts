@@ -1228,6 +1228,10 @@ export class ReelsSliderComponent extends MultilingualComponent implements OnIni
   getVolume:any;
   afterChange(event: any) {
     const currentItem = this.reels[event.currentSlide];
+    document.querySelectorAll('video').forEach(vid   =>{
+      const videoElement = vid as HTMLVideoElement
+      videoElement.pause();
+    });
     this.addPostView(currentItem.id, currentItem);
     const currentSlideIndex = event.currentSlide;
     const videojsElement: HTMLVideoElement | null = document.querySelector(`#video-${currentSlideIndex}`);
