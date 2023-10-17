@@ -65,6 +65,7 @@
   <ItemGroup>
     <Folder Include="bin\Debug\net6.0\" />
     <Folder Include="FfmpegVideos\" />
+    <Folder Include="CompressVideos\" />
     <Folder Include="Properties\PublishProfiles\" />
     <Folder Include="wwwroot\certificateTemplate\" />
     <Folder Include="wwwroot\graduateCertificates\" />

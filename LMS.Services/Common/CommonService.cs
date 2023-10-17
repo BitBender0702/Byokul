@@ -50,9 +50,10 @@ namespace LMS.Services.Common
 
         public async Task<MemoryStream> CompressVideo(string fileName, byte[] videoData)
         {
+            //fileName = fileName.Substring(0, fileName.LastIndexOf('.'));
             fileName = fileName.Replace(" ", "-");
             var path = _webHostEnvironment.ContentRootPath;
-            var tempDirectoryPath = Path.Combine(path, "FfmpegVideos/");
+            var tempDirectoryPath = Path.Combine(path, "CompressVideos/");
 
             System.IO.File.WriteAllBytes(tempDirectoryPath + fileName, videoData);
             string ffmpegFileName = Path.Combine(path, "Ffmpeg/ffmpeg.exe");
@@ -69,7 +70,7 @@ namespace LMS.Services.Common
                 psi.CreateNoWindow = false;
                 psi.FileName = ffmpegFileName;
                 psi.WorkingDirectory = Directory.GetCurrentDirectory();
-                psi.Arguments = $" -i {tempDirectoryPath}{fileName} -vcodec libx265 -crf 28 -tune fastdecode -preset ultrafast -threads 10 -r 23 -acodec aac {compressVideo}";
+                psi.Arguments = $" -i {tempDirectoryPath}{fileName} -vcodec h264 -crf 28 -tune fastdecode -preset ultrafast -threads 10 -r 23 -acodec aac {compressVideo}";
 
                 var process = new Process
                 {
@@ -90,6 +91,7 @@ namespace LMS.Services.Common
                 throw err;
             }
 
+            
             var byteArray = System.IO.File.ReadAllBytes(compressVideo);
             var stream = new MemoryStream(byteArray);
             return stream;

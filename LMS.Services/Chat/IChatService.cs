@@ -29,7 +29,6 @@ namespace LMS.Services.Chat
         Task<CommentViewModel> AddComment(CommentViewModel model);
         Task<List<CommentViewModel>> GetComments(Guid id,string userId, int pageNumber);
         Task<CommentLikeUnlikeViiewModel> LikeUnlikeComment(CommentLikeUnlikeViiewModel model);
-
         Task<bool?> DeleteCommentById(CommentLikeUnlikeViiewModel model);
 
     }

@@ -441,7 +441,7 @@ namespace LMS.Services
         }
 
         public async Task ScheduleLiveStream(PostViewModel postViewModel, string userId, DateTimeOffset scheduledTime)
-        {
+        {          
             postViewModel.DateTime = null;
             var scheduleJobId = BackgroundJob.Schedule(() => SaveLiveStreamInfo(postViewModel.Id, userId, postViewModel.PostAuthorType), scheduledTime);
         }
@@ -477,7 +477,9 @@ namespace LMS.Services
                 model.ChatType = (Data.Entity.Chat.ChatType)chatType;
             }
 
-            //var chatHub = new ChatHubs();
+            var responseNotification = await _notificationService.AddNotification(model);
+            var userConnectionId = _chatHubs.GetUserConnectionId(userId);
+            await _hubContext.Clients.Client(userConnectionId).SendAsync("ReceiveNotification", responseNotification);
             await _chatHubs.SendNotification(model);
             //}
             //else
