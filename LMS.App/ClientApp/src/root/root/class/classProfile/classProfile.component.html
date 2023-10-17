@@ -111,8 +111,12 @@
           </div>
         </div>
         <div class="d-flex justify-content-end mt-5 create_post_btn">
-          <button *ngIf="isOwner || hasPostPermission" (click)="openPostModal()" type="button"
-            class="step-edit-button btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase next-step">
+          <button
+            *ngIf="isOwner || hasPostPermission"
+            (click)="openPostModal()"
+            type="button"
+            class="step-edit-button btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase next-step"
+          >
             <img lazyLoad="../../../assets/images/Edit-light.svg" alt="edit" />
           </button>
         </div>
@@ -127,8 +131,10 @@
                     *ngIf="class.avatar != 'null' && class.avatar != null"
                     [lazyLoad]="class.avatar"
                   />
-                  <img *ngIf="class.avatar == null || class.avatar == 'null'"
-                   src="../../../../assets/images/classLogo.png"/>
+                  <img
+                    *ngIf="class.avatar == null || class.avatar == 'null'"
+                    src="../../../../assets/images/classLogo.png"
+                  />
                 </div>
                 <div class="univ-logo">
                   <img [lazyLoad]="class.school.avatar" />
@@ -141,7 +147,7 @@
 
             <div class="school-profile-content edit-profilehover w-100">
               <div
-                class="d-flex justify-content-between flex-wrap class_request align-items-center mb-4"
+                class="d-flex justify-content-between flex-wrap align-items-center mb-4"
               >
                 <h2 class="font_24 fw_700 mb-0 d-none d-md-block">
                   {{ class.className }}
@@ -163,11 +169,11 @@
 
               <div class="position-relative" *ngIf="!userIsBanned">
                 <div
-                  class="d-flex justify-content-between flex-wrap class_request align-items-center"
+                  class="d-flex justify-content-between flex-wrap align-items-center gap-3"
                 >
-                  <div>
+                  <div class="d-flex align-items-center flex-wrap gap-3">
                     <div
-                      class="followers_name d-inline-flex align-items-center gap-1 font_16 mr-_24"
+                      class="followers_name d-inline-flex align-items-center gap-1"
                     >
                       <img
                         lazyLoad="../../../../assets/images/Star-solid-dark.svg"
@@ -175,7 +181,7 @@
                       <b class="fw_700">{{ class.rating }}</b>
                     </div>
                     <div
-                      class="followers_name d-inline-flex align-items-center gap-1 font_16 mr-_24"
+                      class="followers_name d-inline-flex align-items-center gap-1"
                     >
                       <img
                         lazyLoad="../../../../assets/images/students-icon.svg"
@@ -193,7 +199,7 @@
                       >
                     </div>
                     <div
-                      class="followers_name d-inline-flex align-items-center gap-1 font_16 mr-_24"
+                      class="followers_name d-inline-flex align-items-center gap-1"
                     >
                       <img
                         lazyLoad="../../../../assets/images/Edit-dark.svg"
@@ -203,8 +209,7 @@
                   </div>
 
                   <div
-                    class="hover-double-button"
-                    style="margin-top: -15px"
+                    class="d-flex flex-wrap align-items-center gap-2"
                     *ngIf="!userIsBanned"
                   >
                     <!-- <button
@@ -283,7 +288,7 @@
 
                   <!-- // right here -->
                   <div
-                    class="d-flex align-items-center gap-3"
+                    class="d-flex align-items-center flex-wrap gap-3"
                     *ngIf="!isOwner && !userIsBanned"
                   >
                     <button

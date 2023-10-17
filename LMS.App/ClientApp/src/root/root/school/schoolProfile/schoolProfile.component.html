@@ -136,7 +136,7 @@
               class="position-relative d-flex align-items-center justify-content-between gap-3 flex-xl-row flex-column"
             >
               <div
-                class="d-flex align-items-start align-items-lg-center flex-column flex-xxl-row gap-4"
+                class="d-flex align-items-start align-items-lg-center flex-column flex-xxl-row gap-2 gap-lg-4"
                 *ngIf="!userIsBanned"
               >
                 <div class="d-flex flex-wrap gap-4">
@@ -189,6 +189,62 @@
                     <b class="fw_700">{{ school.posts.length }}</b>
                   </div>
                 </div>
+                <div class="d-flex align-items-center flex-wrap gap-3">
+                  <button
+                    *ngIf="isOwner || hasUpdateSchoolPermission"
+                    (click)="getSchoolDetails(school.schoolId)"
+                    class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins"
+                    data-bs-toggle="modal"
+                    data-bs-target="#editschool"
+                  >
+                    <img
+                      lazyLoad="../../../../assets/images/Setting-solid-dark.svg"
+                      class="me-2"
+                    />
+                    {{ "EditProfile" | translate }}
+                  </button>
+                  <button
+                    *ngIf="isOwner"
+                    class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins"
+                    data-bs-toggle="modal"
+                    data-bs-target="#deleteschool"
+                  >
+                    {{ "DeleteSchool" | translate }}
+                  </button>
+                  <button
+                    *ngIf="isOwner"
+                    class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins"
+                    data-bs-toggle="modal"
+                    data-bs-target="#enableDisableSchool"
+                  >
+                    <span *ngIf="!school.isDisableByOwner">{{
+                      "DisableSchool" | translate
+                    }}</span>
+                    <span *ngIf="school.isDisableByOwner">{{
+                      "EnableSchool" | translate
+                    }}</span>
+                  </button>
+                  <!-- <button
+                  style="min-width: 50px"
+                  type="button"
+                  (click)="openPostModal(false, true)"
+                  class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn me-0 minw-142 class-request-msg"
+                >
+                  <img
+                    lazyLoad="../../../../assets/images/Upload-dark.svg"
+                    class="d-block mx-auto"
+                  />
+                </button> -->
+
+                  <!-- <button style="min-width: 50px;" type="button"
+                  [routerLink]="['/user/schoolVideoLibrary', school.schoolId]"
+                  class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn me-0 minw-142 class-request-msg">
+                  <img
+                  lazyLoad="../../../../assets/images/Folder.svg"
+                    class="d-block mx-auto"
+                  />
+                </button> -->
+                </div>
                 <div class="d-flex flex-wrap gap-2 gap-lg-4">
                   <button
                     *ngIf="!isOwner && !isFollowed"
@@ -229,63 +285,6 @@
                     />
                   </button>
                 </div>
-              </div>
-
-              <div class="d-flex align-items-center flex-wrap gap-3">
-                <button
-                  *ngIf="isOwner || hasUpdateSchoolPermission"
-                  (click)="getSchoolDetails(school.schoolId)"
-                  class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins"
-                  data-bs-toggle="modal"
-                  data-bs-target="#editschool"
-                >
-                  <img
-                    lazyLoad="../../../../assets/images/Setting-solid-dark.svg"
-                    class="me-2"
-                  />
-                  {{ "EditProfile" | translate }}
-                </button>
-                <button
-                  *ngIf="isOwner"
-                  class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins"
-                  data-bs-toggle="modal"
-                  data-bs-target="#deleteschool"
-                >
-                  {{ "DeleteSchool" | translate }}
-                </button>
-                <button
-                  *ngIf="isOwner"
-                  class="edit-sprofilebtn btn border-0 font_12 text_dark f-poppins"
-                  data-bs-toggle="modal"
-                  data-bs-target="#enableDisableSchool"
-                >
-                  <span *ngIf="!school.isDisableByOwner">{{
-                    "DisableSchool" | translate
-                  }}</span>
-                  <span *ngIf="school.isDisableByOwner">{{
-                    "EnableSchool" | translate
-                  }}</span>
-                </button>
-                <!-- <button
-                  style="min-width: 50px"
-                  type="button"
-                  (click)="openPostModal(false, true)"
-                  class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn me-0 minw-142 class-request-msg"
-                >
-                  <img
-                    lazyLoad="../../../../assets/images/Upload-dark.svg"
-                    class="d-block mx-auto"
-                  />
-                </button> -->
-
-                <!-- <button style="min-width: 50px;" type="button"
-                  [routerLink]="['/user/schoolVideoLibrary', school.schoolId]"
-                  class="btn custom-btn primary_btn earning-btn fw_400 h_44 font_16 text-uppercase prev-step-btn me-0 minw-142 class-request-msg">
-                  <img
-                  lazyLoad="../../../../assets/images/Folder.svg"
-                    class="d-block mx-auto"
-                  />
-                </button> -->
               </div>
             </div>
             <p class="font_16 mt-4 preserve-line-breaks">

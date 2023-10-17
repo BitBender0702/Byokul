@@ -3,6 +3,14 @@
   z-index: 100000;
 }
 
+#userOwnCertificate .modal-dialog {
+  max-width: 960px;
+}
+
+#userOwnCertificate .modal-dialog img {
+  width: 100%;
+}
+
 .orange-button {
   display: inline-flex;
   align-items: center;

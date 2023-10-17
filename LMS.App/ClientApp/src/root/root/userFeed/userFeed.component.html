@@ -88,7 +88,7 @@
             </button>
           </div>
         </div>
-        <!-- <div class="d-flex justify-content-end mt-5 create_post_btn">
+        <div class="d-flex justify-content-end mt-5 create_post_btn">
           <button
             (click)="openPostModal()"
             type="button"
@@ -96,7 +96,7 @@
           >
             <img lazyLoad="../../../assets/images/Edit-light.svg" alt="edit" />
           </button>
-        </div> -->
+        </div>
         <div
           class="school-profile-tabs d-flex align-content-center justify-content-center position-relative"
         >
@@ -319,9 +319,9 @@
                               />
                               <img *ngIf="post.isParentVerified && post.postAuthorType == 1" src="../../../../assets/images/verified-badge.svg" style="height: 20px;"
                               />
-                            
+
                             </span>
-                              
+
                               </div>
                               <div
                                 class="feed-title font_14 text_sec1 d-flex align-content-center fw_600"
@@ -438,7 +438,7 @@
                           "
                           class="routeLink"
                         >
-                          {{ post.parentName }} 
+                          {{ post.parentName }}
                         </a>
                         <a
                           *ngIf="post.postAuthorType == 3"
@@ -459,8 +459,8 @@
                         /></span>
                         </a>
                         </h2>
-                          <img *ngIf="post.postAuthorType == 1" src="../../../assets/images/School.svg" class="icon_style" /> 
-                          <img *ngIf="post.postAuthorType == 2" src="../../../assets/images/Class.svg" class="icon_style" /> 
+                          <img *ngIf="post.postAuthorType == 1" src="../../../assets/images/School.svg" class="icon_style" />
+                          <img *ngIf="post.postAuthorType == 2" src="../../../assets/images/Class.svg" class="icon_style" />
                           <img *ngIf="post.postAuthorType == 3" src="../../../assets/images/Course.svg" class="icon_style"/>
                           <img *ngIf="post.postAuthorType == 4" src="../../../assets/images/User.svg" class="icon_style"/>
                     </div>
@@ -1665,7 +1665,7 @@
                               />
                               <img *ngIf="post.isParentVerified && post.postAuthorType == 1" src="../../../../assets/images/verified-badge.svg" style="height: 20px;"
                               />
-                            
+
                             </span>
                               </div>
                               <div
@@ -1801,8 +1801,8 @@
                           ><img src="../../../../assets/images/green-verified.svg"
                         /></span>
                         </a>
-                        <img *ngIf="post.postAuthorType == 1" src="../../../assets/images/School.svg" class="icon_style" /> 
-                        <img *ngIf="post.postAuthorType == 2" src="../../../assets/images/Class.svg" class="icon_style" /> 
+                        <img *ngIf="post.postAuthorType == 1" src="../../../assets/images/School.svg" class="icon_style" />
+                        <img *ngIf="post.postAuthorType == 2" src="../../../assets/images/Class.svg" class="icon_style" />
                         <img *ngIf="post.postAuthorType == 3" src="../../../assets/images/Course.svg" class="icon_style"/>
                         <img *ngIf="post.postAuthorType == 4" src="../../../assets/images/User.svg" class="icon_style"/>
                       </h2>
@@ -1838,7 +1838,7 @@
                     class="school-grid-body videoChange"
                     (click)="openPostsViewModal(post, 'globalFeed')"
                   >
-                    
+
                     <div class="d-flex justify-content-between align-items-center">
                       <!-- <h4 class="font_20 fw_600 text_sec1 mb-3">{{ post.title }}</h4> -->
                       <h4 class="d-inline-block font_20 fw_600 text_sec1 mb-3">
@@ -3012,7 +3012,7 @@
                     {{ item.name }}
                   </a>
                 </ng-container>
-                
+
               </span>
             </div>
           </li>
