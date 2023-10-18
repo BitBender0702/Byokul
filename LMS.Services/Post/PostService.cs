@@ -480,7 +480,7 @@ namespace LMS.Services
             var responseNotification = await _notificationService.AddNotification(model);
             var userConnectionId = _chatHubs.GetUserConnectionId(userId);
             await _hubContext.Clients.Client(userConnectionId).SendAsync("ReceiveNotification", responseNotification);
-            await _chatHubs.SendNotification(model);
+            //await _chatHubs.SendNotification(model);
             //}
             //else
             //{

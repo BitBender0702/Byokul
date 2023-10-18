@@ -1287,4 +1287,7 @@ export class UserFeedComponent extends MultilingualComponent implements OnInit, 
     this.showSearchButtonForMobile=true;
   }
 
+  navigateToUrl(url:string){
+    window.location.href = url;
+  }
 }

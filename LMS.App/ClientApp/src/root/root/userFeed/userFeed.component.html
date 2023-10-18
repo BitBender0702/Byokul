@@ -502,7 +502,10 @@
                   </h4> -->
                   <div class="d-flex justify-content-between align-items-center">
                     <!-- <h4 class="font_20 fw_600 text_sec1 mb-3">{{ post.title }}</h4> -->
-                    <h4 class="d-inline-block font_20 fw_600 text_sec1 mb-3">
+                    <h4 *ngIf="post.sharedProfileUrl != null" class="d-inline-block font_20 fw_600 text_sec1 mb-3 cursor_pointer"(click)="navigateToUrl(post.sharedProfileUrl)">
+                      {{ post.title }}
+                    </h4>
+                    <h4 *ngIf="post.sharedProfileUrl == null" class="d-inline-block font_20 fw_600 text_sec1 mb-3">
                       {{ post.title }}
                     </h4>
                     <h4 *ngIf="post?.isLiveStreamEnded || post?.externalMeetingId != null" style="color:red">Streamed</h4>
