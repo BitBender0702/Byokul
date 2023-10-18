@@ -691,7 +691,8 @@ namespace LMS.Services.Chat
                 ChatTypeId = x.ChatTypeId,
                 UnreadMessageCount = x.UnreadMessageCount,
                 IsVerified = GetSchoolInfo(x.ChatTypeId).IsVarified,
-                IsUserVerified = GetUserInfo(x.SenderId).IsVarified
+                IsUserVerified = GetUserInfo(x.SenderId).IsVarified,
+                Gender=x.Sender.Gender
             }).ToList();
             var thirdSchools = third.Where(x => x.School.OwnerId == userId.ToString()).ToList();
             users = users.Concat(thirdSchools).ToList();
@@ -706,7 +707,8 @@ namespace LMS.Services.Chat
                 ChatType = x.ChatType,
                 ChatTypeId = x.ChatTypeId,
                 IsVerified = GetSchoolInfo(x.ChatTypeId).IsVarified,
-                IsUserVerified = GetUserInfo(x.ReceiverId).IsVarified
+                IsUserVerified = GetUserInfo(x.ReceiverId).IsVarified,
+                Gender=x.Receiver.Gender
                 //UnreadMessageCount = x.UnreadMessageCount
             }).ToList();
             var fourthSchools = fourth.Where(x => x.School.OwnerId == userId.ToString()).ToList();
@@ -724,7 +726,8 @@ namespace LMS.Services.Chat
                 ChatType = x.ChatType,
                 ChatTypeId = x.ChatTypeId,
                 UnreadMessageCount = x.UnreadMessageCount,
-                IsUserVerified = GetUserInfo(x.SenderId).IsVarified
+                IsUserVerified = GetUserInfo(x.SenderId).IsVarified,
+                Gender = x.Sender.Gender
             }).ToList();
             var fifthClassess = five.Where(x => x.Class.CreatedById == userId.ToString()).ToList();
             users = users.Concat(fifthClassess).ToList();
@@ -738,7 +741,8 @@ namespace LMS.Services.Chat
                 Class = GetClassInfo(x.ChatTypeId),
                 ChatType = x.ChatType,
                 ChatTypeId = x.ChatTypeId,
-                IsUserVerified = GetUserInfo(x.ReceiverId).IsVarified
+                IsUserVerified = GetUserInfo(x.ReceiverId).IsVarified,
+                Gender = x.Receiver.Gender
 
                 //UnreadMessageCount = x.UnreadMessageCount
             }).ToList();
@@ -755,7 +759,8 @@ namespace LMS.Services.Chat
                 ChatType = x.ChatType,
                 ChatTypeId = x.ChatTypeId,
                 IsUserVerified = GetUserInfo(x.SenderId).IsVarified,
-                UnreadMessageCount = x.UnreadMessageCount
+                UnreadMessageCount = x.UnreadMessageCount,
+                Gender = x.Sender.Gender,
             }).ToList();
             var seventhCourses = seven.Where(x => x.Course.CreatedById == userId.ToString()).ToList();
             users = users.Concat(seventhCourses).ToList();
@@ -769,7 +774,8 @@ namespace LMS.Services.Chat
                 Course = GetCourseInfo(x.ChatTypeId),
                 ChatType = x.ChatType,
                 ChatTypeId = x.ChatTypeId,
-                IsUserVerified = GetUserInfo(x.ReceiverId).IsVarified
+                IsUserVerified = GetUserInfo(x.ReceiverId).IsVarified,
+                Gender = x.Receiver.Gender
                 //UnreadMessageCount = x.UnreadMessageCount
             }).ToList();
             var eightCourses = eight.Where(x => x.Course.CreatedById == userId.ToString()).ToList();

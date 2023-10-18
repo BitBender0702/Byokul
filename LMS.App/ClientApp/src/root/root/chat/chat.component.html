@@ -1582,7 +1582,7 @@
                             )
                           "
                         >
-                          <img [src]="userChat.replyChatContent" />
+                          <img [src]="userChat.replyChatContent" style="height: 100%;" />
                         </div>
                       </span>
                       <span *ngIf="userChat.replyMessageType == 2">
@@ -1652,7 +1652,7 @@
                             )
                           "
                         >
-                          <img [src]="userChat.forwardedFileURL" />
+                          <img [src]="userChat.forwardedFileURL" style="height: 100%;"/>
                         </div>
                       </span>
                       <span
@@ -1786,7 +1786,7 @@
                               class="fa-sharp fa-solid fa-share fa-rotate-180 font_16"
                             ></i>
                           </span>
-                          <img [src]="item.fileURL" />
+                          <img [src]="item.fileURL" style="height: 100%;"/>
                         </div>
                       </div>
 
@@ -2341,11 +2341,23 @@
                       <div class="chat-username d-flex align-items-center mb-2">
                         <div class="leftuser-chat-icon">
                           <img
-                           
+                          *ngIf="item?.profileURL != null"
                             [src]="item?.profileURL"
                             alt=""
                           
                           />
+                          <img
+                          *ngIf="item?.profileURL == null && item?.gender==1"
+                          src="../../../assets/images/maleProfile.jfif"
+                          alt=""
+                          />
+                          <img
+                           *ngIf="item?.profileURL == null &&
+                           (item?.gender == 2 || item?.gender == 3)
+                           "
+                           src="../../../assets/images/femaleProfile.jfif"
+                           class="me-2"
+                           />
                         </div>
                         <h2
                           *ngIf="item.chatType == 1"
@@ -2448,7 +2460,9 @@
               <div class="m-auto" style="width: max-content;" *ngIf="topChatViewIcon!=null || topChatViewName!=null">
                 <div class="d-flex align-items-center cursor_pointer">
                   <div class="icon rounded-circle" style="width: 50px; height:50px; background-color: #7c8da7;" (click)="redirectToUser(topSchoolInboxChatHeadUser.userID)">
-                   <img [src]="topChatViewIcon" style="width:100%; height:100%;" alt="" class="rounded-circle">
+                   <img *ngIf="topSchoolInboxChatHeadUser?.profileURL!=null" [src]="topSchoolInboxChatHeadUser?.profileURL" style="width:100%; height:100%;" alt="" class="rounded-circle">
+                   <img *ngIf="topSchoolInboxChatHeadUser?.profileURL==null && topSchoolInboxChatHeadUser?.gender==1"  src="../../../assets/images/maleProfile.jfif" style="width:100%; height:100%;" alt="" class="rounded-circle">
+                   <img *ngIf="topSchoolInboxChatHeadUser?.profileURL==null && (topSchoolInboxChatHeadUser?.gender == 2 || topSchoolInboxChatHeadUser?.gender == 3)" src="../../../assets/images/femaleProfile.jfif" style="width:100%; height:100%;" alt="" class="rounded-circle">
                   </div>
                    <div class="name p-3 d-flex" [innerHTML]="topChatViewName" (click)="redirectToUser(topSchoolInboxChatHeadUser.userID)" >
                     
@@ -2530,7 +2544,7 @@
                             )
                           "
                         >
-                          <img [src]="userChat.replyChatContent" />
+                          <img [src]="userChat.replyChatContent" style="height: 100%;"/>
                         </div>
                       </span>
                       <span *ngIf="userChat.replyMessageType == 2">
@@ -2601,7 +2615,7 @@
                             )
                           "
                         >
-                          <img [src]="userChat.forwardedFileURL" />
+                          <img [src]="userChat.forwardedFileURL" style="height: 100%;"/>
                         </div>
                       </span>
                       <span
@@ -2728,7 +2742,7 @@
                             showFullChatImage(item.fileName, item.fileURL)
                           "
                         >
-                          <img [src]="item.fileURL" />
+                          <img [src]="item.fileURL" style="height: 100%;"/>
                         </div>
                       </div>
 
@@ -2990,21 +3004,7 @@
                     ></span>
                   </div>
                 </div>
-                <div
-                  class="add-comment d-flex align-items-center justify-content-between pt-0"
-                >
-                  <span
-                    class="bg-transparent rounded-circle comment-post-user rounded-circle"
-                    ><img class="rounded-circle" [src]="sender.avatar" />
-                  </span>
-                  <input
-                    (keyup)="getTextMessage($event, schoolInboxReceiverId)"
-                    [(ngModel)]="messageToUser"
-                    type="text"
-                    class="form-control rounded-8 font_14 fw_400"
-                    placeholder="Your message"
-                  />
-                  <br />
+                <div class="chat-upload">
                   <div *ngIf="uploadImage != undefined">
                     <span
                       *ngFor="let item of uploadImage"
@@ -3066,6 +3066,81 @@
                       ></span>
                     </div>
                   </div>
+                </div>
+                <div
+                  class="add-comment d-flex align-items-center justify-content-between pt-0"
+                >
+                  <span
+                    class="bg-transparent rounded-circle comment-post-user rounded-circle"
+                    ><img class="rounded-circle" [src]="sender.avatar" />
+                  </span>
+                  <input
+                    (keyup)="getTextMessage($event, schoolInboxReceiverId)"
+                    [(ngModel)]="messageToUser"
+                    type="text"
+                    class="form-control rounded-8 font_14 fw_400"
+                    placeholder="Your message"
+                  />
+                  <br />
+                  <!-- <div *ngIf="uploadImage != undefined">
+                    <span
+                      *ngFor="let item of uploadImage"
+                      class="position-relative d-inline-block"
+                    >
+                      <img
+                        [src]="item.fileURL"
+                        style="height: 150px; max-width: 100%"
+                      />
+                      <button
+                        (click)="removeUploadFile(item.fileURL)"
+                        type="button"
+                        class="btn dl-post-img d-flex align-items-center justify-content-center rounded-circle position-absolute"
+                      >
+                        <i class="fa-solid fa-xmark"></i>
+                      </button>
+                    </span>
+                  </div>
+
+                  <div *ngIf="uploadVideo != undefined">
+                    <span
+                      *ngFor="let item of uploadVideo"
+                      class="position-relative d-inline-block"
+                    >
+                      <div class="videofile">
+                        <img
+                          [src]="item.videoUrl"
+                          style="height: 150px; max-width: 100%"
+                        />
+                        
+                      </div>
+                      <button
+                        (click)="removeUploadFile(item.name)"
+                        type="button"
+                        class="btn dl-post-img d-flex align-items-center justify-content-center rounded-circle position-absolute"
+                      >
+                        <i class="fa-solid fa-xmark"></i>
+                      </button>
+                    </span>
+                  </div>
+
+                  <div *ngIf="uploadAttachments != undefined">
+                    <div
+                      class="teacher-tags tag-box hashtag_post mt-4 mb-2 hover-tags"
+                    >
+                      <span
+                        *ngFor="let item of uploadAttachments"
+                        class="custom-tag"
+                        >{{ item.fileName }}
+                        <button
+                          (click)="removeUploadFile(item.fileURL)"
+                          class="border-0 bg-transparent p-0 position-absolute delete-tag"
+                        >
+                          <img
+                            src="../../../assets/images/cross-sm-light.svg"
+                          /></button
+                      ></span>
+                    </div>
+                  </div> -->
 
                   <div class="post-bot-left d-flex">
                     <label

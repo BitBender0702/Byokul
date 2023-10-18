@@ -2821,7 +2821,7 @@ else{
 
   generateChatLi(response: any, profileImage: string, chatType: string) {
     debugger;
-    this.cd.detectChanges();
+    // this.cd.detectChanges();
     const date = new Date();
     const year = date.getUTCFullYear();
     const month = date.getUTCMonth() + 1; // Add 1 because getUTCMonth() returns a zero-based index
@@ -3035,10 +3035,11 @@ else{
       }
     }
 
-    this.cd.detectChanges();
+    // this.cd.detectChanges();
     this.chatList.nativeElement.scrollTop =
       this.chatList.nativeElement.scrollHeight;
     this.forwardedId = '';
+    this.uploadImage=[];
   }
 
   showFullChatImage(fileName: string, fileUrl: string): any {
