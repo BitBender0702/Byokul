@@ -106,7 +106,7 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
 
 
   constructor(injector: Injector, private renderer: Renderer2, private modalService: NgbModal, private bsModalService: BsModalService,private location: Location,studentService: StudentService,
-    private cd: ChangeDetectorRef, public messageService: MessageService, private route: ActivatedRoute, private domSanitizer: DomSanitizer, signalrService: SignalrService, postService: PostService, chatService: ChatService, userService: UserService, notificationService: NotificationService, bigBlueButtonService: BigBlueButtonService) {
+    private cd: ChangeDetectorRef, public messageService: MessageService, private route: ActivatedRoute, private domSanitizer: DomSanitizer, signalrService: SignalrService, postService: PostService, chatService: ChatService, userService: UserService, notificationService: NotificationService, bigBlueButtonService: BigBlueButtonService, private router : Router) {
     super(injector);
     this._signalrService = signalrService;
     this._postService = postService;
@@ -982,8 +982,9 @@ export class LiveStreamComponent extends MultilingualComponent implements OnInit
       this.messageService.add({ severity: 'success', summary: 'Success', life: 3000, detail: 'This class is private/paid, you cant share the post!' });
     }
     else {
+      var streamUrl = "byokul.com" + this.router.url;
       const initialState = {
-        streamUrl: this.streamUrl,
+        streamUrl: streamUrl,
         streamId: this.post.id
       };
       this.bsModalService.show(SharePostComponent, { initialState });

@@ -206,8 +206,9 @@ export class SideBarComponent extends MultilingualComponent implements OnInit, O
       var reqSchool = ownedSchools.find(x=> x.schoolId == response.schoolId);
       reqSchool.schoolName = response.schoolName;
       reqSchool.avatar = response.schoolAvatar;
+      const encodedSchoolName = encodeURIComponent(reqSchool.schoolName.replace(" ",""));
       setTimeout(() => {
-        this.router.navigateByUrl(`profile/school/${response.schoolName.replace(" ","").toLowerCase()}`);
+        this.router.navigateByUrl(`profile/school/${encodedSchoolName.toLowerCase()}`);
         // var schoolName = reqSchool.schoolName.split('.').join("").split(" ").join("").replace(/[\s.+$/,@\[\]#?/:=&]/g, '').toLowerCase()
         // this.router.navigateByUrl(`profile/school/${schoolName.toLowerCase()}`);
       }, 3000);
@@ -241,12 +242,14 @@ export class SideBarComponent extends MultilingualComponent implements OnInit, O
       var reqClass = ownedClasses.find(x=> x.classId == response.classId);
       reqClass.className = response.className;
       reqClass.avatar = response.classAvatar;
-      
+      const encodedSchoolName = encodeURIComponent(reqClass.school.schoolName.replace(" ",""));
+      const encodedClassName = encodeURIComponent(response.className.replace(" ",""));
+
 
       setTimeout(() => {
         this.router.routeReuseStrategy.shouldReuseRoute = () => false;
         this.router.onSameUrlNavigation = 'reload';
-        this.router.navigateByUrl(`profile/class/${reqClass.school.schoolName.replace(" ","").toLowerCase()}/${response.className.replace(" ","").toLowerCase()}`); 
+        this.router.navigateByUrl(`profile/class/${encodedSchoolName.toLowerCase()}/${encodedClassName.toLowerCase()}`); 
         // this.router.navigateByUrl(`profile/class/${reqClass.school.schoolName.split('.').join("").split(" ").join("").replace(/[\s.+$/,@\[\]#?/:=&]/g, '').toLowerCase().toLowerCase()}/${response.className.split('.').join("").split(" ").join("").replace(/[\s.+$/,@\[\]#?/:=&]/g, '').toLowerCase().toLowerCase()}`); 
       }, 3000);
      }
@@ -278,10 +281,14 @@ export class SideBarComponent extends MultilingualComponent implements OnInit, O
       var reqClass = ownedCourses.find(x=> x.courseId == response.courseId);
       reqClass.courseName = response.courseName;
       reqClass.avatar = response.courseAvatar;
+
+      const encodedSchoolName = encodeURIComponent(reqClass.school.schoolName.replace(" ",""));
+      const encodedCourseName = encodeURIComponent(response.courseName.replace(" ",""));
+
       setTimeout(() => {
         this.router.routeReuseStrategy.shouldReuseRoute = () => false;
         this.router.onSameUrlNavigation = 'reload';
-        this.router.navigateByUrl(`profile/course/${reqClass.school.schoolName.replace(" ","").toLowerCase()}/${response.courseName.replace(" ","").toLowerCase()}`);
+        this.router.navigateByUrl(`profile/course/${encodedSchoolName.toLowerCase()}/${encodedCourseName.toLowerCase()}`);
         // this.router.navigateByUrl(`profile/course/${reqClass.school.schoolName.split('.').join("").split(" ").join("").replace(/[\s.+$/,@\[\]#?/:=&]/g, '').toLowerCase().toLowerCase()}/${response.courseName.split('.').join("").split(" ").join("").replace(/[\s.+$/,@\[\]#?/:=&]/g, '').toLowerCase().toLowerCase()}`);
       }, 3000);
     }
@@ -352,19 +359,24 @@ export class SideBarComponent extends MultilingualComponent implements OnInit, O
   getSelectedClass(className:string,schoolName:string){
     // className = className.split('.').join("").split(" ").join("").replace(/[\s.+$/,@\[\]#?/:=&]/g, '').toLowerCase()
     // schoolName = schoolName.split('.').join("").split(" ").join("").replace(/[\s.+$/,@\[\]#?/:=&]/g, '').toLowerCase()
-    className = className.split(" ").join("").toLowerCase()
-    schoolName = schoolName.split(" ").join("").toLowerCase()
-    this.router.navigateByUrl(`profile/class/${schoolName}/${className}`);
+    className = className.split(" ").join("").toLowerCase();
+    schoolName = schoolName.split(" ").join("").toLowerCase();
+    const encodedClassName = encodeURIComponent(className);
+    const encodedSchoolName = encodeURIComponent(schoolName);
+    this.router.navigateByUrl(`profile/class/${encodedSchoolName}/${encodedClassName}`);
     this.closeSidebar()
 
   }
 
   getSelectedCourse(courseName:string,schoolName:string){
+    debugger
     // courseName = courseName.split('.').join("").split(" ").join("").split('+').join("").replace(/[\s.+$/,@\[\]#?/:=&]/g, '').toLowerCase()
     // schoolName = schoolName.split('.').join("").split(" ").join("").split('+').join("").replace(/[\s.+$/,@\[\]#?/:=&]/g, '').toLowerCase()
     courseName = courseName.split(" ").join("").toLowerCase()
     schoolName = schoolName.split(" ").join("").toLowerCase()
-    this.router.navigateByUrl(`profile/course/${schoolName}/${courseName}`);
+    const encodedCourseName = encodeURIComponent(courseName);
+    const encodedSchoolName = encodeURIComponent(schoolName);
+    this.router.navigateByUrl(`profile/course/${encodedSchoolName}/${encodedCourseName}`);
     this.closeSidebar()
 
   }

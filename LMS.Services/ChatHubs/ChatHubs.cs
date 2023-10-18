@@ -121,6 +121,12 @@ public class ChatHubs : Hub
         return Context.ConnectionId;
     }
 
+    public string GetUserConnectionId(string UserID)
+    {
+        
+        return UserIDConnectionID[UserID];
+    }
+
     public Task JoinGroup(string group) => Groups.AddToGroupAsync(Context.ConnectionId, group);
 
     public async Task SendMessageToGroup(CommentViewModel model)
