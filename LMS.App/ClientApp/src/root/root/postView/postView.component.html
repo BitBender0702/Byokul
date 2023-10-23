@@ -747,11 +747,13 @@
                                     *ngIf="item.isCommentLikedByCurrentUser"
                                     src="../../../assets/images/heart-red.svg"
                                     class="d-block"
+                                    style="min-width: 20px; min-height: 20px"
                                   />
                                   <img
                                     *ngIf="!item.isCommentLikedByCurrentUser"
                                     src="../../../assets/images/Heart-dark.svg"
                                     class="d-block"
+                                    style="min-width: 20px; min-height: 20px"
                                   />
                                   <span>{{ item.likeCount }}</span>
                                 </button>
