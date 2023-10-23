@@ -4,6 +4,11 @@
   }
 }
 
+.oficial-name {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
 .custom-language-select ::ng-deep .p-multiselect-item {
   display: flex;
   flex-direction: row-reverse;
