@@ -28,7 +28,7 @@ namespace LMS.Services
         Task<bool> DeleteCourseTeacher(CourseTeacherViewModel model);
         Task SaveCourseCertificates(SaveCourseCertificateViewModel model);
         Task DeleteCourseCertificate(CourseCertificateViewModel model);
-        Task<ClassViewModel> ConvertToClass(string courseName);
+        Task<ClassViewModel> ConvertToClass(Guid courseId);
         //Task<CourseViewModel> GetCourseByName(string courseName, string schoolName);
         Task<bool> IsCourseNameExist(string className);
         Task<List<CourseLikeViewModel>> GetLikesOnCourse(Guid courseId);

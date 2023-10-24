@@ -325,8 +325,10 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
                     if (uploadResponse.videos.length != 0 || uploadResponse.attachment.length != 0) {
                       var translatedMessage = this.translateService.instant('PostReadyToViewMessage');
                       var notificationContent = translatedMessage;
+                      if(response.dateTime == null){
                       this._notificationService.initializeNotificationViewModel(this.loginUserId, NotificationType.PostUploaded, notificationContent, this.loginUserId, response.id, response.postType, null, null).subscribe((response) => {
                       });
+                     }
                     }
                   });
                 } else{
@@ -426,8 +428,10 @@ export class RootComponent extends MultilingualComponent implements OnInit, OnDe
                     var translatedMessage = this.translateService.instant('PostReadyToViewMessage');
                     var notificationContent = translatedMessage;
                     // this.uploadVideoUrlList = [];
+                    if(response.dateTime == null){
                     this._notificationService.initializeNotificationViewModel(this.loginUserId, NotificationType.PostUploaded, notificationContent, this.loginUserId, response.id, response.postType, null, response.reelId).subscribe((response) => {
                     });
+                   }
                     // this.close();
                     // this.ngOnInit();
                   });

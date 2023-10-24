@@ -282,8 +282,8 @@ export class SideBarComponent extends MultilingualComponent implements OnInit, O
       reqClass.courseName = response.courseName;
       reqClass.avatar = response.courseAvatar;
 
-      const encodedSchoolName = encodeURIComponent(reqClass.school.schoolName.replace(" ",""));
-      const encodedCourseName = encodeURIComponent(response.courseName.replace(" ",""));
+      const encodedSchoolName = encodeURIComponent(reqClass.school.schoolName);
+      const encodedCourseName = encodeURIComponent(response.courseName);
 
       setTimeout(() => {
         this.router.routeReuseStrategy.shouldReuseRoute = () => false;

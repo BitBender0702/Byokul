@@ -75,7 +75,7 @@ namespace LMS.App.Controllers
         public async Task<IActionResult> GetClassByName(string className)
         {
             var userId = await GetUserIdAsync(this._userManager);
-            var response = await _classService.GetClassByName(className, userId);
+            var response = await _classService.GetClassByName(className, userId, false);
             return Ok(response);
         }
 
@@ -207,11 +207,19 @@ namespace LMS.App.Controllers
         //    return Ok(response);
         //}
 
+        //[Route("convertToCourse")]
+        //[HttpPost]
+        //public async Task<IActionResult> ConvertToCourse(string className)
+        //{
+        //    var response = await _classService.ConvertToCourse(className);
+        //    return Ok(response);
+        //}
+
         [Route("convertToCourse")]
         [HttpPost]
-        public async Task<IActionResult> ConvertToCourse(string className)
+        public async Task<IActionResult> ConvertToCourse(Guid classId)
         {
-           var response = await _classService.ConvertToCourse(className);
+            var response = await _classService.ConvertToCourse(classId);
             return Ok(response);
         }
 

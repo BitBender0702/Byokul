@@ -67,7 +67,9 @@ namespace LMS.Services.BigBlueButton
                 var result = JsonConvert.DeserializeObject<Response>(json);
 
                 //Join as a moderator
-                string fullName = newMeetingViewModel.ModeratorName;
+                //response.StreamUrl = Uri.EscapeDataString(response.StreamUrl);
+
+                string fullName = Uri.EscapeDataString(newMeetingViewModel.ModeratorName);
                 string joinChecksum = "joinfullName=" + fullName + "&meetingID=" + meetingId + "&password=" + moderatorPW + "&redirect=true" + "&lockSettingsDisableCam=true" + "&lockSettingsDisableMic=true" + "&userdata-bbb_auto_join_audio=true" + "&userdata-bbb_skip_check_audio=true" + "&userdata-bbb_skip_video_preview=true" + "&userdata-bbb_listen_only_mode=false" + "&userdata-bbb_auto_swap_layout=true" + secretKey;
 
                 string joinchecksum = Hash(joinChecksum);

@@ -37,8 +37,9 @@ loadingIcon:boolean = false;
     this._authService.confirmEmail(this.token,this.email).subscribe((response) => {
       debugger
        if(response.result == "success"){
+
         // confirmEmailResponse.next({confirmEmail: "confirm"});
-        this.router.navigate(['../login'], { relativeTo: this.route });
+        this.router.navigate(['../login'], { relativeTo: this.route,queryParams: { confirmedEmail: true } });
         setTimeout(() => {
           confirmEmailResponse.next(this.email); 
         }, 500);

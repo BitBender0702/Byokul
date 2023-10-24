@@ -30,7 +30,7 @@ namespace LMS.Services
         Task<bool> PinUnpinSavedPost(Guid postId, bool isPinned, string userId);
         //Task<bool> PinUnpinSharedPost(Guid attachmentId, bool isPinned);
         Task<bool> PinUnpinLikedPost(Guid postId, bool isPinned, string userId);
-        Task DeletePost(Guid id);
+        Task<bool> DeletePost(Guid id);
         Task UpdateCommentThrottling(Guid postId, int noOfComments);
         Task SaveStreamAsPost(Guid postId);
         Task SaveLiveVideoTime(Guid postId, float videoTotalTime, float videoLiveTime);

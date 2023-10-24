@@ -103,6 +103,13 @@ import { DeleteConfirmationComponent } from './root/delete-confirmation/delete-c
 import { DeleteOrDisableComponent } from './root/deleteOrDisableSCC/delete-or-disable.component';
 import { ChangeTimeZonePipe } from './ChangeTimeZonePipe';
 import { SharedSSCComponent } from './root/sharedSSC/sharedSSCComponent';
+import { AppTermsOfServiceComponent } from './root/FlutterStaticPages/TermsOfService/termsOfService.component';
+import { AppPrivacyPolicyComponent } from './root/FlutterStaticPages/privacyPolicy/privacyPolicy.component';
+import { AppAboutUsComponent } from './root/FlutterStaticPages/aboutUs/aboutUs.component';
+import { AppContactComponent } from './root/FlutterStaticPages/contact/contact.component';
+import { AppDeliveryAndReturnComponent } from './root/FlutterStaticPages/deliveryAndReturn/deliveryAndReturn.component';
+import { AppDsaForStudentsComponent } from './root/FlutterStaticPages/dsaForStudents/dsaForStudents.component';
+import { AppDsaForSchoolComponent } from './root/FlutterStaticPages/dsaForSchool/dsaForSchool.component';
 
 
 export const options: Partial<IConfig> = {
@@ -145,16 +152,16 @@ const routes: Routes = [
     path: 'liveStream/:postId/:from',component:LiveStreamComponent, canActivate: [AuthGuard]
   },
   {
-    path: 'aboutUs',component:AboutUsComponent, canActivate: [AuthGuard]
+    path: 'aboutUs',component:AboutUsComponent
   },
   {
-    path: 'faq',component:FaqComponent, canActivate: [AuthGuard]
+    path: 'faq',component:FaqComponent
   },
   {
-    path: 'privacyPolicy',component:PrivecyPolicyComponent, canActivate: [AuthGuard]
+    path: 'privacyPolicy',component:PrivecyPolicyComponent
   },
   {
-    path: 'termsOfServices',component:TermsOfServiceComponent, canActivate: [AuthGuard]
+    path: 'termsOfServices',component:TermsOfServiceComponent
   },
   {
     path: 'contact',component:ContactComponent, canActivate: [AuthGuard]
@@ -167,6 +174,27 @@ const routes: Routes = [
   },
   {
     path: 'distanceSalesAgreementForStudents',component:DSAForStudentsComponent, canActivate: [AuthGuard]
+  },
+  {
+    path: 'appTermsOfService/:lang',component:AppTermsOfServiceComponent
+  },
+  {
+    path: 'appPrivacyPolicy/:lang',component:AppPrivacyPolicyComponent
+  },
+  {
+    path: 'appAboutUs/:lang',component:AppAboutUsComponent
+  },
+  {
+    path: 'appContact/:lang',component:AppContactComponent
+  },
+  {
+    path: 'appDeliveryAndReturn/:lang',component:AppDeliveryAndReturnComponent
+  },
+  {
+    path: 'appDsaForSchool/:lang',component:AppDsaForSchoolComponent
+  },
+  {
+    path: 'appDsaForStudents/:lang',component:AppDsaForStudentsComponent
   },
   
 
@@ -225,7 +253,14 @@ const routes: Routes = [
     DeleteConfirmationComponent,
     DeleteOrDisableComponent,
     ChangeTimeZonePipe,
-    SharedSSCComponent
+    SharedSSCComponent,
+    AppTermsOfServiceComponent,
+    AppPrivacyPolicyComponent,
+    AppAboutUsComponent,
+    AppContactComponent,
+    AppDeliveryAndReturnComponent,
+    AppDsaForSchoolComponent,
+    AppDsaForStudentsComponent
 
 
 

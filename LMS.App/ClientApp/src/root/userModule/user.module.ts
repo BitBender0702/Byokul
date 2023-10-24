@@ -144,6 +144,7 @@ const routes: Routes = [
   {
     path: 'schoolVideoLibrary/:schoolId',component:SchoolVideoLibraryComponent, canActivate: [AuthGuard]
   },
+  
 
 
 

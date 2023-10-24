@@ -68,12 +68,10 @@ namespace LMS.Common.ViewModels.Post
         public static string PostUnsavedSavedSuccessully = "Post has been unsaved successfully";
         public static string StudentIsBanned = "Student is banned";
         public static string StudentIsUnBanned = "Student is unbanned";
-
+        public static string PostDeletedSuccessfully = "Post deleted successfully";
+        public static string PostReadyToViewMessage = "Your post is ready to view.You can now watch it";
         public static string NoPermissionForBan = "You do not have the permission to ban the student";
-
-
         public static string HasAllBannedUser = "All the banned user's are present";
-
         public static string FollowerBannedSuccessully = "Follower banned successully";
         public static string FollowerUnBannedSuccessully = "Follower unbanned successully";
         public static string FollowerOrSchoolIdNotValid = "FollowerId/SchoolId not valid";

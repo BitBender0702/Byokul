@@ -371,10 +371,13 @@ namespace LMS.Services
             await SaveClassTeachers(teacherIds, classId);
         }
 
-        public async Task<ClassDetailsViewModel> GetClassByName(string className, string loginUserId)
+        public async Task<ClassDetailsViewModel> GetClassByName(string className, string loginUserId, bool fromCourse)
         {
             ClassDetailsViewModel model = new ClassDetailsViewModel();
-            className = Uri.UnescapeDataString(className);
+            if (!fromCourse)
+            {
+                className = Uri.UnescapeDataString(className);
+            }
             if (className != null)
             {
                 var data = Encoding.UTF8.GetBytes(className);
@@ -956,9 +959,24 @@ namespace LMS.Services
             return true;
         }
 
-        public async Task<ClassViewModel> ConvertToCourse(string className)
+        //public async Task<ClassViewModel> ConvertToCourse(string className)
+        //{
+        //    Class classes = await _classRepository.GetAll().Include(x => x.School).Where(x => x.ClassName.Replace(" ", "").ToLower() == className).FirstOrDefaultAsync();
+        //    if (classes != null)
+        //    {
+        //        classes.IsCourse = true;
+        //        _classRepository.Update(classes);
+        //        _classRepository.Save();
+        //        //return true;
+        //    }
+        //    return _mapper.Map<ClassViewModel>(classes);
+        //}
+
+
+        public async Task<ClassViewModel> ConvertToCourse(Guid classId)
         {
-            Class classes = await _classRepository.GetAll().Include(x => x.School).Where(x => x.ClassName.Replace(" ", "").ToLower() == className).FirstOrDefaultAsync();
+            var item = await _classRepository.GetAll().ToListAsync();
+            Class classes = await _classRepository.GetAll().Include(x => x.School).Where(x => x.ClassId == classId).FirstOrDefaultAsync();
             if (classes != null)
             {
                 classes.IsCourse = true;

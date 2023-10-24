@@ -303,7 +303,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
     // console.log("after removing ." + className);
 
     // this.className = this.route.snapshot.paramMap.get('className')??'';
-    let newClassName = this.className.split(" ").join("").toLowerCase();
+    let newClassName = this.className.replace(/\s/g, '').toLowerCase();
 
     this._classService.getClassById(newClassName).subscribe((response) => {
       debugger;
@@ -463,7 +463,7 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
         //   }
         // const translatedSummary = this.translateService.instant('Success');
         // this.messageService.add({severity: 'success',summary: translatedSummary,life: 3000,detail: translatedMessage,});
-        let newClassName = this.className.split(" ").join("").toLowerCase()
+        let newClassName = this.className.replace(/\s/g, '').toLowerCase()
         this._classService.getClassById(newClassName).subscribe((response) => {
           this.class = response;
           this.titleService.setTitle(this.class.className);
@@ -1262,13 +1262,16 @@ export class ClassProfileComponent extends MultilingualComponent implements OnIn
   }
 
 
-  convertToCourse(className: string, schoolName: string) {
+  convertToCourse(className: string, schoolName: string,classId: string) {
     className = className.split(" ").join("").toLowerCase()
     schoolName = schoolName.split(" ").join("").toLowerCase()
-    this._classService.convertToCourse(className).subscribe((response) => {
+    this._classService.convertToCourse(classId).subscribe((response) => {
+      debugger
       // localStorage.setItem("isClassConvertIntoCourse", JSON.stringify(true));
       convertIntoCourseResponse.next({ courseId: response.classId, courseName: response.className, avatar: response.avatar, school: response.school });
       debugger
+      const encodedClassName = encodeURIComponent(className);
+      const encodedSchoolName = encodeURIComponent(schoolName);
       this.router.navigate([`profile/course/${schoolName}/${className}`],
         { state: { convertIntoCourse: true } });
       //window.location.href = `profile/course/${schoolName.replace(" ","").toLowerCase()}/${className.replace(" ","").toLowerCase()}`;
